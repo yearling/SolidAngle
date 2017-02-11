@@ -16,31 +16,42 @@
     <Filter Include="Source\ThirdParty">
       <UniqueIdentifier>{47e22d80-7f80-4c34-8b5d-dd7d0c5bd72d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Editor\Core">
+    <Filter Include="Source\Runtime\Core">
       <UniqueIdentifier>{71e141a1-dc32-473a-829b-86597291a7b0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Editor\Core\Public">
+    <Filter Include="Source\Runtime\Core\Public">
       <UniqueIdentifier>{defdc5c7-13ba-41b5-b40e-3c2ec2fd0983}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Editor\Core\Private">
-      <UniqueIdentifier>{fcb28443-31e8-424e-bd9b-88abbfc05797}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Editor\Core\Public\Math">
+    <Filter Include="Source\Runtime\Core\Public\Math">
       <UniqueIdentifier>{ebade571-9daa-41f3-9732-cff5eb208ae1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Editor\Core\Public\HAL">
+    <Filter Include="Source\Runtime\Core\Public\HAL">
       <UniqueIdentifier>{a368715a-ba80-4071-8bcc-ed9821d2069c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Editor\Core\Public\GenericPlatform">
+    <Filter Include="Source\Runtime\Core\Public\GenericPlatform">
       <UniqueIdentifier>{ddb3dd97-15ba-4bf9-a145-7d2d78243301}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Private">
+      <UniqueIdentifier>{fcb28443-31e8-424e-bd9b-88abbfc05797}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Public\Windows">
+      <UniqueIdentifier>{ab1bcf68-1d62-4a84-a413-bab994205b7c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\core\Public\HAL\Platform.h">
-      <Filter>Source\Editor\Core\Public\HAL</Filter>
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\core\Public\GenericPlatform\GenericPlatform.h">
-      <Filter>Source\Editor\Core\Public\GenericPlatform</Filter>
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WIndowsPlatform.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Runtime\TestMain.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
