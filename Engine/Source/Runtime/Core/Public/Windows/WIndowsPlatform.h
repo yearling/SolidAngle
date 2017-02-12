@@ -101,7 +101,7 @@ typedef YWindowsPlatformTypes YPlatformTypes;
 #if defined(__clang__)
 #define CONSTEXPR constexpr
 #else
-#define CONSTEXPR
+#define CONSTEXPR constexpr
 #endif
 #define ABSTRACT abstract
 

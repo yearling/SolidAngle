@@ -48,6 +48,27 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WIndowsPlatform.h">
       <Filter>Source\Runtime\Core\Public\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Vector.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAngleMath.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformMath.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformMath.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformMath.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Color.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\MathUtility.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\TestMain.cpp">

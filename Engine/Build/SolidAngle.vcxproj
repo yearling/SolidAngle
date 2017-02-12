@@ -112,7 +112,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>PLATFORM_WINDOWS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>PLATFORM_WINDOWS;CORE_API=;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -145,7 +145,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>PLATFORM_WINDOWS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>PLATFORM_WINDOWS;CORE_API=;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -157,8 +157,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatform.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformMath.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\Platform.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformMath.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Color.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\MathUtility.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAngleMath.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Vector.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WIndowsPlatform.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformMath.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\TestMain.cpp" />
