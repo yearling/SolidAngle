@@ -22,7 +22,7 @@
     <ProjectGuid>{669FD926-7A8E-490D-9DEA-D050FBFC4CCE}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>SolidAngle</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -112,7 +112,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>PLATFORM_WINDOWS;CORE_API=;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>PLATFORM_WINDOWS;CORE_API=;_DEBUG;_CONSOLE;WITH_DEV_AUTOMATION_TESTS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -156,6 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\Core\Private\GenericPlatform\CorePrivatePCH.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatform.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformMath.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\Platform.h" />
@@ -163,11 +164,13 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Color.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\MathUtility.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAngleMath.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAngleMathUtility.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Vector.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WIndowsPlatform.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformMath.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformMath.cpp" />
     <ClCompile Include="..\Source\Runtime\TestMain.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

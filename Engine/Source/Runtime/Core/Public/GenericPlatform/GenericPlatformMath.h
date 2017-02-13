@@ -174,7 +174,7 @@ struct YGenericPlatformMath
 
 	static CORE_API void		SRandInit(int32 Seed);
 
-	static CORE_API void		GetRandSeed();
+	static CORE_API int32		GetRandSeed();
 	// Returns a seeded random float in the range[0, 1), using the seed from SRandInit()
 	static CORE_API float		SRand();
 
@@ -308,5 +308,56 @@ struct YGenericPlatformMath
 	{
 		return Comparand >= 0.f ? ValueGEZero : ValueLTZero;
 	}
+
+	// Compute absolute value in a generic way
+	template< class T >
+	static CONSTEXPR FORCEINLINE T Abs(const T A)
+	{
+		return (A >= (T)0) ? A : -A;
+	}
+
+	// Returns 1, 0, or -1 depending on relation of T to 0
+	template< class T >
+	static CONSTEXPR FORCEINLINE T Sign(const T A)
+	{
+		return (A > (T)0) ? (T)1 : ( (A< (T)0)? (T)-1 : (T) 0);
+	}
+
+	// Returns higher value in a generic way
+	template< class T >
+	static CONSTEXPR FORCEINLINE T Max(const T A, const T B)
+	{
+		return (A >= B) ? A : B;
+	}
+
+	// Returns lower value in a generic way
+	template< class T> 
+	static CONSTEXPR FORCEINLINE T Min(const T A, const T B)
+	{
+		return (A <= B) ? A : B;
+	}
+
+	// MIn of Array
+	// !!FIX ME by zyx
+	//template< class T>
+	//static FORCEINLINE T Min(const TArray<T>& Values, int32* MinIndex = nullptr);
+
+	// Max of Array
+	// !!FIX ME by zyx
+	//template< class T >
+	//static FORCEINLINE T Max(const TArray<T>& Values, int32* MaxIndex = nullptr);
+#if WITH_DEV_AUTOMATION_TESTS
+	/** Test some of the tricky functions above **/
+	static void AutoTest();
+#endif
+private:
+	//  Error reporting for Fmod. Not inlined to avoid compilation issues and avoid all the checks and error reporting at all callsites. 
+	static CORE_API void FmodReportError(float X, float Y);
 };
+
+template<>
+FORCEINLINE float YGenericPlatformMath::Abs(const float A)
+{
+	return fabsf(A);
+}
 
