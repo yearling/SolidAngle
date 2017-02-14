@@ -78,6 +78,27 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAngleMathUtility.h">
       <Filter>Source\Runtime\Core\Public\Math</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\MinWindows.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\PostWindowsApi.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsHWrapper.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\PreWindowsApi.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformCompilerSetup.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsSystemIncludes.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAnglePlatformMathSSE.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\TestMain.cpp">

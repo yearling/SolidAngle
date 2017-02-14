@@ -63,3 +63,9 @@ struct	YLinearColor;
 
 #define THRESH_VECTOR_NORMALIZED		(0.01f)		/** Allowed error for a normalized vector (against squared magnitude) */
 #define THRESH_QUAT_NORMALIZED			(0.01f)		/** Allowed error for a normalized quaternion (against squared magnitude) */
+
+// Structure for all math helper functions, inherits from platform math to pick up platform-specific implementations
+struct YMath :public YPlatformMath
+{
+
+};
