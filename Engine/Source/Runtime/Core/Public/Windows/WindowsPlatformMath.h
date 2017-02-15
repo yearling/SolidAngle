@@ -8,8 +8,6 @@
 
 #include "Math/SolidAnglePlatformMathSSE.h"
 
-//!!FIXME by zyx,添加_isnan的头文件，不知道UE是怎么加进去的
-#include <float.h>
 /**
 * Windows implementation of the Math OS functions
 **/

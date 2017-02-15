@@ -1,7 +1,4 @@
 #pragma once
-//目前不太清楚UE是如何引进标准库的<math.h>的，这里直接加上了
-#include <math.h>
-#include <stdlib.h>
 
 struct YGenericPlatformMath
 {
