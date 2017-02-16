@@ -447,5 +447,83 @@ struct YMath :public YPlatformMath
 	*
 	* @return	true if 'Direction' is facing AxisX (Direction dot AxisX >= 0.f)
 	*/
+	static CORE_API bool		GetDotDistance(YVector& outDotDist, const YVector& Direction, const YVector& AxisX, const YVector& AxisY, const YVector& AxisZ);
 
+	/**
+	* Returns Azimuth and Elevation of vector 'Direction' in coordinate system O(AxisX,AxisY,AxisZ).
+	*
+	* Orientation: (consider 'O' the first person view of the player, and 'Direction' a vector pointing to an enemy)
+	* - positive azimuth means enemy is on the right of crosshair. (negative means left).
+	* - positive elevation means enemy is on top of crosshair, negative means below.
+	*
+	* @param	Direction		Direction of target.
+	* @param	AxisX			X component of reference system.
+	* @param	AxisY			Y component of reference system.
+	* @param	AxisZ			Z component of reference system.
+	*
+	* @return	YVector2D	X = Azimuth angle (in radians) (-PI, +PI)
+	*						Y = Elevation angle (in radians) (-PI/2, +PI/2)
+	*/
+	static CORE_API YVector2D	GetAzimuthAndElevation(const YVector& Direction, const YVector &AxisX, const YVector& AxisY, const YVector& AxisZ);
+
+	// Interpolation Functions
+
+	// Calculates the percentage along a line from MinValue to MaxValue that Value is.
+	static FORCEINLINE float	GetRangePct(float MinValue, float MaxValue, float Value)
+	{
+		return (Value - MinValue) / (MaxValue - MinValue);
+	}
+
+	// Calculates the percentage along a line from MinValue to MaxValue that Value is, range is represented by YVector2
+	static float				GetRangePct(YVector2D const & Range, float Value);
+
+	// Basically a Vector2D Version of Lerp
+	static float				GetRangeValue(YVector2D const& Range, float Pct);
+
+	// For the given Value clamped to the [Input:Range] inclusive, returns the corresponding percentage in [Output:Range] Inclusive.
+	static FORCEINLINE float	GetMappedRangeValueClamped(const YVector2D& InputRange, const YVector2D& OutputRange, const float Value)
+	{
+		const float ClampedPct = Clamp<float>(GetRangePct(InputRange, Value), 0.0f, 1.0f);
+		return GetRangeValue(OutputRange, ClampedPct);
+	}
+
+	// Performs a linear interpolation between two values, Alpha ranges from 0-1
+	template< class T, class U>
+	static FORCEINLINE T		Lerp(const T& A, const T& B, const U& Alpha)
+	{
+		return (T)(A + Alpha * (B - A));
+	}
+
+	// Performs a linear interpolation between two values, Alpha ranges from 0-1. Handles full numeric range of T 
+	template<class T>
+	static FORCEINLINE T		LerpStable(const T& A, const T& B, double Alpha)
+	{
+		return (T)((A*(1.0 - Alpha)) + (B*Alpha));
+	}
+
+	// Performs a linear interpolation between two values, Alpha ranges from 0-1. Handles full numeric range of T 
+	template<class T>
+	static FORCEINLINE T		LerpStable(const T& A, const T& B, float Alpha)
+	{
+		return (T)((A*(1.0f - Alpha)) + (B*Alpha));
+	}
+
+	// Performs a 2D linear interpolation between four values, FracX, FracY ranges form 0~1
+	template< class T, class U>
+	static FORCEINLINE T		BiLerp(const T& P00, const T& P10, const T& P01, const T& p11, const U& FracX, const U& FracY)
+	{
+		return Lerp(Lerp(P00, P10, FracX), Lerp(P01, P11, FracX), FracY);
+	}
+
+	// Performs a cubic interpolation
+	// P :end Points
+	// T :tangent directions at end points
+	// A : distance along spline
+	template< class T, class U>
+	static FORCEINLINE T		CubicInterp(const T& P0, const T& T0, const T& P1, const T& T1, const U& Alpha)
+	{
+		const float A2 = Alpha*Alpha;
+		const float A3 = A2*Alpha;
+		return (T)(((2 * A3) - (3 * A2) + 1) * P0) + ((A3 - (2 * A2) + A) * T0) + ((A3 - A2) * T1) + (((-2 * A3) + (3 * A2)) * P1);
+	}
 };
