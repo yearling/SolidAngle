@@ -312,4 +312,140 @@ struct YMath :public YPlatformMath
 	}
 #undef FASTASIN_HALF_PI
 
+	// Conversion Functions
+	// Converts radians to degrees
+	template<class T>
+	static FORCEINLINE auto		RadiansToDegrees(T const & RadVal) ->decltype(RadVal* (180.f / PI))
+	{
+		return RadVal*(180.f / PI);
+	}
+
+	// Converts degrees to radians
+	template<class T>
+	static FORCEINLINE auto		DegreesToRadians(T const& DegVal) -> decltype(DegVal * (PI / 180.f))
+	{
+		return DegVal * (PI / 180.f);
+	}
+
+	//Clamps an arbitrary angle to be between the given angles.  Will clamp to nearest boundary.
+	static float CORE_API		ClampAngle(float AngleDegrees, float MinAngleDegrees, float MaxAngleDegrees);
+
+	//Find the smallest angle between two headings (in degrees)
+	static FORCEINLINE float	FindDeltaAngleDegrees(float A1, float A2)
+	{
+		float Delta = A2 - A1;
+		// If Change is larger than 180
+		if(Delta > 180.0f)
+		{
+			Delta = Delta - 360.0f;
+		}
+		else if(Delta < -180.0f)
+		{
+			Delta = Delta + 360.0f;
+		}
+		// Return delta in [-180,180] range
+		return Delta;
+	}
+	
+	// Find the smallest angle between two headings( in radians)
+	static FORCEINLINE float	FindDeltaAngleRadians(float A1, float A2)
+	{
+		// Find the difference
+		float Delta = A2 - A1;
+		if(Delta > PI)
+		{
+			Delta = Delta - (PI*2.0f);
+		}
+		else if(Delta < -PI)
+		{
+			Delta = Delta + (PI*2.0f);
+		}
+		// Return delta in [-PI,PI] range
+		return Delta;
+	}
+
+	// Given a heading which may be outside the +/- PI range, 'unwind' it back into that range.
+	static FORCEINLINE float	UnwindRadians(float A)
+	{
+		while (A > PI)
+		{
+			A -= ((float)PI * 2.0f);
+		}
+		
+		while (A < -PI)
+		{
+			A += ((float)PI *2.0f);
+		}
+
+		return A;
+	}
+
+	// Given a heading which may be outside of the +/- 180 degree,'unwind'it back into that range
+	static FORCEINLINE float	UnwindDegree(float A)
+	{
+		while (A > 180.0f)
+		{
+			A -= 360.0f;
+		}
+
+		while (A < -180.0f)
+		{
+			A += 360.0f;
+		}
+
+		return A;
+	}
+
+	// Given two angles in degrees, 'wind' the rotation in Angle1 so that it avoids >180 degree flips.
+	// Good for winding rotations previously expressed as quaternions into a euler - angle representation.
+	// Angle 0 : the first angle that we wind relative to.
+	// Angle 1 : the second angle that we may wind relative to the first. 
+	static CORE_API void		WindRelativeAnglesDegrees(float InAngle0, float& InOutAngle1);
+
+	// Returns a new rotation component value
+	// InCurrent is the current rotation value
+	// InDesired is the desired rotation value
+	// InDeltaRate is the rotation amount to apply
+	// return a new rotation component value
+	static CORE_API float		FixedTurn(float InCurrent, float InDesired, float InDeltaRate);
+
+	// Converts given Cartesian coordinate pair to Polar coordinate system.
+	static FORCEINLINE void		CartesianToPolar(const float X, const float Y, float &OutRad, float &OutAng)
+	{
+		OutRad = Sqrt(Square(X) + Square(Y));
+		OutAng = Atan2(Y, X);
+	}
+
+	// Converts given Cartesian coordinate pair to Polar coordinate system.
+	static FORCEINLINE void		CartesianToPolar(const YVector2D InCart, const YVector2D& OutPolar);
+	 
+	// Converts given Polar coordinate pair to Cartesian coordinate system
+	static FORCEINLINE void		PolarToCartesion(const float Rad, const float Ang, float& OutX, float& OutY)
+	{
+		OutX = Rad* Cos(Ang);
+		OutY = Rad* Cos(Rad);
+	}
+
+	// Converts given Polar coordinate pair to Cartesian coordinate system
+	static FORCEINLINE void		PolarToCartesion(const YVector2D InPolar, YVector2D& OutCart);
+
+	/**
+	* Calculates the dotted distance of vector 'Direction' to coordinate system O(AxisX,AxisY,AxisZ).
+	*
+	* Orientation: (consider 'O' the first person view of the player, and 'Direction' a vector pointing to an enemy)
+	* - positive azimuth means enemy is on the right of crosshair. (negative means left).
+	* - positive elevation means enemy is on top of crosshair, negative means below.
+	*
+	* @Note: 'Azimuth' (.X) sign is changed to represent left/right and not front/behind. front/behind is the funtion's return value.
+	*
+	* @param	OutDotDist	.X = 'Direction' dot AxisX relative to plane (AxisX,AxisZ). (== Cos(Azimuth))
+	*						.Y = 'Direction' dot AxisX relative to plane (AxisX,AxisY). (== Sin(Elevation))
+	* @param	Direction	direction of target.
+	* @param	AxisX		X component of reference system.
+	* @param	AxisY		Y component of reference system.
+	* @param	AxisZ		Z component of reference system.
+	*
+	* @return	true if 'Direction' is facing AxisX (Direction dot AxisX >= 0.f)
+	*/
+
 };
