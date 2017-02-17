@@ -526,4 +526,139 @@ struct YMath :public YPlatformMath
 		const float A3 = A2*Alpha;
 		return (T)(((2 * A3) - (3 * A2) + 1) * P0) + ((A3 - (2 * A2) + A) * T0) + ((A3 - A2) * T1) + (((-2 * A3) + (3 * A2)) * P1);
 	}
+
+	/**
+	* Performs a first derivative cubic interpolation
+	*
+	* @param  P - end points
+	* @param  T - tangent directions at end points
+	* @param  Alpha - distance along spline
+	*
+	* @return  Interpolated value
+	*/
+	template< class T, class U >
+	static FORCEINLINE T		CubicInterpDerivative(const T& P0, const T& T0, const T& P1, const T& T1, const U& A)
+	{
+		T a = 6.f*P0 + 3.f*T0 + 3.f*T1 - 6.f*P1;
+		T b = -6.f*P0 - 4.f*T0 - 2.f*T1 + 6.f*P1;
+		T c = T0;
+
+		const float A2 = A  * A;
+
+		return (a * A2) + (b * A) + c;
+	}
+
+	/**
+	* Performs a second derivative cubic interpolation
+	*
+	* @param  P - end points
+	* @param  T - tangent directions at end points
+	* @param  Alpha - distance along spline
+	*
+	* @return  Interpolated value
+	*/
+	template< class T, class U >
+	static FORCEINLINE T		CubicInterpSecondDerivative(const T& P0, const T& T0, const T& P1, const T& T1, const U& A)
+	{
+		T a = 12.f*P0 + 6.f*T0 + 6.f*T1 - 12.f*P1;
+		T b = -6.f*P0 - 4.f*T0 - 2.f*T1 + 6.f*P1;
+
+		return (a * A) + b;
+	}
+
+	//Interpolate between A and B, applying an ease in function. Exp controls the degree of the curve.
+	template< class T>
+	static FORCEINLINE T		InterEaseIn(const T& A, const T& B, float Alpha, float Exp)
+	{
+		float const ModifiedAlpha = Pow(Alpha, Exp);
+		return Lerp<T>(A, B, ModifiedAlpha);
+	}
+
+	// Interpolate between A and B, applying an ease out function. Exp controls the degree of the curve.
+	template<class T>
+	static FORCEINLINE T		InterpEaseOut(const T& A, const T& B, float Alpha, float Exp)
+	{
+		const float ModifiedAlpha = 1.0f - Pow(1.0f - Alpha, Exp);
+		return Lerp<T>(A, B, ModifiedAlpha);
+	}
+
+	// Interpolate between A and B, applying an ease in/out function. ExpControls the degree of the curve
+	template<class T>
+	static FORCEINLINE T		InterpEaseInOut(const T& A, const T& B, float Alpha, float Exp)
+	{
+		return Lerp<T>(A, B, (Alpha < 0.5f) ?
+			InterpEaseIn(0.f, 1.f, Alpha * 2.f, Exp) * 0.5f :
+			InterpEaseOut(0.f, 1.f, Alpha * 2.f - 1.f, Exp) * 0.5f + 0.5f);
+	}
+
+	// Interpolate between A and B, applying a step function
+	// 感觉这个函数有问题，除NumIntervals没看懂，觉得应该是除StempsAsFloat
+	template< class T>
+	static FORCEINLINE	T		InterStep(const T& A, const T& B, float Alpha, int32 Steps)
+	{
+		if (Steps <= 1 || Alpha <= 0)
+		{
+			return A;
+		}
+		else if (Alpha >= 1)
+		{
+			return B;
+		}
+
+		const float StempsAsFloat = static_cast<float>(Steps);
+		const float NumIntervals = StempsAsFloat - 1.0f;
+		const float ModifiedAlpha = FloorToFloat(Alpha*StempsAsFloat) / NumIntervals;
+		return Lerp<T>(A, B, ModifiedAlpha);
+	}
+
+	// Interpolation between A and B, applying a sinusoidal in function
+	template< class T>
+	static FORCEINLINE T		InterpSinIn(const T& A, const T& B, float Alpha)
+	{
+		float const ModifiedAlpha = -1.0f *Cos(Alpha*HALF_PI) + 1.0f;
+		return Lerp<T>(A, B, ModifiedAlpha);
+	}
+
+	// Interpolation between A and B, applying a sinusoidal out function
+
+	template< class T> 
+	static FORCEINLINE T		InterSinOut(const T& A, const T& B, float Alpha)
+	{
+		float const ModifiedAlpha = Sin(Alpha * HALF_PI);
+		return Lerp<T>(A, B, ModifiedAlpha);
+	}
+
+	// Interpolation between A and B, applying a sinusoial in/out funciton
+	template<class T>
+	static FORCEINLINE T		InterpSinOut(const T& A, const T& B, float Alpha)
+	{
+		return Lerp<T>(A, B, (Alpha < 0.5f) ?
+			InterpSinIn(0.f, 1.f, Alpha * 2.f) * 0.5f :
+			InterpSinOut(0.f, 1.f, Alpha * 2.f - 1.f) * 0.5f + 0.5f);
+	}
+
+	// Interpolation between A and B, applying an exponential in function.
+	template<class T>
+	static FORCEINLINE T		InterpExpoIn(const T& A, const T& B, float Alpha)
+	{
+		float const ModifiedAlpha = (Alpha == 0.0f) ? 0.0f : Pow(2.0f, 10.0f *(Alpha - 1.0f));
+		return Lerp<T>(A, B, ModifiedAlpha);
+	}
+
+	// Interpolation between A and B, applying an exponential out function.
+	template<class T>
+	static FORCEINLINE T		InterpExpoOut(const T& A, const T& B, float Alpha)
+	{
+		float const ModifiedAlpha = (Alpha == 1.0f) ? 1.0f : -Pow(2.0f, -10.0f * Alpha) + 1.0f;
+		return Lerp<T>(A, B, ModifiedAlpha);
+	}
+
+	// Interpolation between A and B, applying an exponential in/out function.
+	template< class T>
+	static FORCEINLINE T		InterpExoInOut(const T& A, const T& B, float Alpha)
+	{
+		return Lerp<T>(A, B, (Alpha < 0.5f) ?
+			InterpExpoIn(0.f, 1.f, Alpha * 2.f) * 0.5f :
+			InterpExpoOut(0.f, 1.f, Alpha * 2.f - 1.f) * 0.5f + 0.5f);
+	}
 };
