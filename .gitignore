@@ -102,6 +102,7 @@
 !FAQ
 !VERSION
 !ChangeLog
+!*.pdf
 
 # Ignore Unix backup files
 *~

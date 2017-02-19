@@ -1,0 +1,1 @@
+[Simple Intersection Tests For Games](http://www.gamasutra.com/view/feature/131790/simple_intersection_tests_for_games.php?print=1)

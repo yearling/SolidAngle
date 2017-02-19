@@ -565,6 +565,8 @@ struct YMath :public YPlatformMath
 
 		return (a * A) + b;
 	}
+	
+	// !!Note by zyx, 带In的都是凹的曲线，带Out的都是凸的曲线
 
 	//Interpolate between A and B, applying an ease in function. Exp controls the degree of the curve.
 	template< class T>
@@ -661,4 +663,210 @@ struct YMath :public YPlatformMath
 			InterpExpoIn(0.f, 1.f, Alpha * 2.f) * 0.5f :
 			InterpExpoOut(0.f, 1.f, Alpha * 2.f - 1.f) * 0.5f + 0.5f);
 	}
+
+	// Interpolation between A and B, applying a circular in function. 
+	template< class T >
+	static FORCEINLINE T		InterpCircularIn(const T& A, const T& B, float Alpha)
+	{
+		float const ModifiedAlpha = -1.f * (Sqrt(1.f - Alpha * Alpha) - 1.f);
+		return Lerp<T>(A, B, ModifiedAlpha);
+	}
+
+	// Interpolation between A and B, applying a circular out function. 
+	template< class T >
+	static FORCEINLINE T		InterpCircularOut(const T& A, const T& B, float Alpha)
+	{
+		Alpha -= 1.f;
+		float const ModifiedAlpha = Sqrt(1.f - Alpha  * Alpha);
+		return Lerp<T>(A, B, ModifiedAlpha);
+	}
+
+	// Interpolation between A and B, applying a circular in/out function.
+	template< class T >
+	static FORCEINLINE T		InterpCircularInOut(const T& A, const T& B, float Alpha)
+	{
+		return Lerp<T>(A, B, (Alpha < 0.5f) ?
+			InterpCircularIn(0.f, 1.f, Alpha * 2.f) * 0.5f :
+			InterpCircularOut(0.f, 1.f, Alpha * 2.f - 1.f) * 0.5f + 0.5f);
+	}
+
+	// Rotator specific interpolation
+	template<class T>
+	static YRotator				Lerp(const YRotator& A, const YRotator& B, const T& Alpha);
+
+	// Quat-specific interpolation
+	template<class T>
+	static YQuat				Lerp(const YQuat& A, const YQuat& B, const T& Alpha);
+	template<class T>
+	static YQuat				BiLerp(const YQuat& P00, const YQuat& P10, const YQuat& P01, const YQuat& P11, float FracX, float FracY);
+
+	// In the case of quaternions, we use a bezier like approach.
+	// T - Actual 'control' orientations
+	template<class T>
+	static YQuat				CubicInterp(const YQuat& P0, const YQuat& T0, const YQuat& P1, const YQuat& T1, const T& A);
+
+	/*
+	*	Cubic Catmull-Rom Spline interpolation. Based on http://www.cemyuksel.com/research/catmullrom_param/catmullrom.pdf
+	*	Curves are guaranteed to pass through the control points and are easily chained together.
+	*	Equation supports abitrary parameterization. eg. Uniform=0,1,2,3 ; chordal= |Pn - Pn-1| ; centripetal = |Pn - Pn-1|^0.5
+	*	P0 - The control point preceding the interpolation range.
+	*	P1 - The control point starting the interpolation range.
+	*	P2 - The control point ending the interpolation range.
+	*	P3 - The control point following the interpolation range.
+	*	T0-3 - The interpolation parameters for the corresponding control points.
+	*	T - The interpolation factor in the range 0 to 1. 0 returns P1. 1 returns P2.
+	*/
+	template< class U > 
+	static U					CubicCRSplineInterp(const U& P0, const U& P1, const U& P2, const U& P3, const float T0, const float T1, const float T2, const float T3, const float T);
+
+	/* Same as CubicCRSplineInterp but with additional saftey checks. If the checks fail P1 is returned. **/
+	template< class U > 
+	static U					CubicCRSplineInterpSafe(const U& P0, const U& P1, const U& P2, const U& P3, const float T0, const float T1, const float T2, const float T3, const float T);
+
+	//Special-case interpolation
+
+	// Interpolate float from Current to Target with constant step
+	static CORE_API float		VInterpConstantTo(const float& Current, const float& Target, float DeltaTime, float InterpSpeed);
+
+	// Interpolate float from Current to Target. Scaled by distance to Target, so it has a strong start speed and ease out.
+	static CORE_API float		VInterpTo(const float& Current, const float& Target, float DeltaTime, float InterpSpeed);
+
+
+	// Interpolate a normal vector Current to Target, by interpolating the angle between those vectors with constant step
+	static CORE_API YVector		VInterpNormalRotationTo(const YVector& Current, const YVector& Target, float DeltaTime, float RotationSpeedDegrees);
+
+	// Interpolate vector from Current to Target with constant step
+	static CORE_API YVector		VInterpConstantTo(const YVector& Current, const YVector& Target, float DeltaTime, float InterpSpeed);
+
+	// Interpolate vector from Current to Target. Scaled by distance to Target, so it has a strong start speed and ease out.
+	static CORE_API YVector		VInterpTo(const YVector& Current, const YVector& Target, float DeltaTime, float InterpSpeed);
+
+	// Interpolate vector2D from Current to Target with constant step
+	static CORE_API YVector2D	Vector2DInterpConstantTo(const YVector2D& Current, const YVector2D& Target, float DeltaTime, float InterpSpeed);
+
+	// Interpolate vector2D from Current to Target. Scaled by distance to Target, so it has a strong start speed and ease out.
+	static CORE_API YVector2D	VInterpTo(const YVector2D& Current, const YVector2D& Target, float DeltaTime, float InterpSpeed);
+
+	// Interpolate rotator from Current to Target with constant step
+	static CORE_API YRotator	VInterpConstantTo(const YRotator& Current, const YRotator& Target, float DeltaTime, float InterpSpeed);
+
+	// Interpolate rotator from Current to Target. Scaled by distance to Target, so it has a strong start speed and ease out.
+	static CORE_API YRotator	VInterpTo(const YRotator& Current, const YRotator& Target, float DeltaTime, float InterpSpeed);
+
+	// Interpolate Linear Color from Current to Target. Scaled by distance to Target, so it has a strong start speed and ease out.
+	static CORE_API YLinearColor	VInterpTo(const YRotator& Current, const YRotator& Target, float DeltaTime, float InterpSpeed);
+
+	// Simple function to creat a pulsating scalar value
+	// InCurrentTime:			Current absolute time
+	// InPulsesPerSecond :		How Many full pules per second?
+	// InPhase:					Optional Phase amount, between 0.0 and 1.0 (to sychronize pulses)
+	// Return:					Pulsating Value (0.0~1.0)
+	static FORCEINLINE float	MakePulsatingValue(const double InCurrentTime, const float InPulsesPerSecond, const float InPhase = 0.0f);
+
+		// Geomerty intersection
+
+		//b Find the intersection of an infinite line(defined by two point) and a plane.
+		// Assumes that the line and plane do indeed intersect; you mush make sure they 
+		// are NOT parallel before calling
+
+	static YVector				LinePlaneIntersection(const YVector& Point1, const YVector& Ponint2, const YVector& PlaneOrigin, const YVector& PlaneNormal);
+	static YVector				LinePlaneIntersection(const YVector& Point1, const YVector& Point2, const YPlane& Plane);
+
+	// InOutScissorRect should be set to View.ViewRect before the call
+	// return 0: light is not visible,
+	// return 1: use scissor rect,
+	// return 2: no scissor rect needed.
+	static CORE_API uint32		ComputeProjectedSphereSissoreRect(struct YIntRect& InOutSissorRect, YVector SphereOrigin, float Radius, YVector ViewOrigin, const YMatrix& ViewMatrix, const YMatrix& ProjMatrix);
+
+	// Determine if a plane and an AABB intersect
+	// p:						the plane to test
+	// AABB:					the AABB to text
+	// return :					if collision occurs 
+	static CORE_API bool		PlaneAABBIntersection(const YPlane& P, const YBox& AABB);
+
+	// Perform a sphere vs box intersection test using Arvo's algorithm
+	// UE的实现比较慢，有一种更快的方法，可以对比一下
+	static bool					SphereAABBIntersection(const YVector& SphereCenter, const float RadiusSquared, const YBox& AABB);
+
+	// Convert a sphere into a point plus radius squared for the test above
+	static bool					SphereAABBIntersection(const YSphere& Sphere, const YBox& AABB);
+
+	// Determines whether a point is inside a box
+	static bool					PointBoxIntersection(const YVector& Point, const YBox& Box);
+
+	// Determines whether a line intersects a box
+	static bool					LineBoxIntersection(const YBox& Box, const YVector& Start, const YVector& End, const YVector& Direction);
+	// Determines whether a line intersects a box. This overload avoid the need to do the reciprocal every time.
+	static bool					LineBoxIntersection(const YBox& Box, const YVector& Start, const YVector& End, const YVector& Direction, const YVector& OneOverDirection);
+
+	// Swept-Box vs Box test
+	static CORE_API bool		LineExtentBoxIntersection(const YBox& inBox, const YVector& Start, const YVector& End, const YVector& Extent, YVector& HitLocation, YVector& HitNormal, float & HitTime);
+	
+	// Determins whether a line intersects a sphere
+	static bool					LineSphereIntersection(const YVector& Start, const YVector& Dir, float Length, const YVector& Origin, float Radius);
+
+	// Assume the cone tip is at 0,0,0 (means the SphereCenter is relative to the cone tip)
+	// Return true: one and sphere do intersect
+	// Return false: otherwise
+	static CORE_API bool		SphereConeIntersection(const YVector& SphereCenter, float SphereRadius, const YVector& ConeAxis, float ConeAngleSin, float ConeAngleCos);
+
+	// Find the point on line segment form LineStart to LineEnd which is closet to Point
+	static CORE_API YVector		ClosetPointOnLine(const YVector& LineStart, const YVector& LineEnd, const YVector& Point);
+
+	// Compute intersection point of three planes. Return 1 if Valid, 0 if infinite.
+	static bool					IntersectPlant3(YVector& I, const YPlane& P1, const YPlane& P2, const YPlane& P3);
+
+	// Compute intersection point and direction of line joining two planes
+	// Return 1 if valid, 0 if infinite
+	static bool					IntersectPlant2(YVector& I, YVector& D, const YPlane& P1, const YPlane& P2);
+
+	// Calculates the distance of a given Point in world space to a give line,
+	// defined by the vector coupe(Origin, Direction)
+	// Point:					Point to check distance to Axis
+	// Direction:				unit vector indicating the direction to check against
+	// Origin:					point of reference used to calculate distance
+	// OutClosestPoint:			optional point that represents the closest point project onto Axis
+	// Return :					distance of Point from line defined by (Origin, Direction)
+	static CORE_API float		PointDistToLine(const YVector& Point, const YVector& Line, const YVector& Origin, YVector &OutClosestPoint);
+	static CORE_API float		PointDistToLine(const YVector& Point, const YVector& LIne, const YVector& Origin);
+
+	// Return closest point on a segment to a given point
+	// The idea is to project point on line formed by segment.
+	// Then we see if the closest point on the line is outside of segment or inside.
+	// Point:					point for which we find the closest point on the segment.
+	// StartPoint:				StartPoint of Segment.
+	// EndPoint:				EndPont of Segment.
+	// Return:					point on the segment defined by (StartPoint, EndPoint) that is closest to Point.
+	static CORE_API YVector		ClosestPointOnSegment(const YVector& Point, const YVector& StartPoint, const YVector& EndPoint);
+
+	// YVector2D version of ClosestPointOnSegment.
+	// Returns closest point on a segment to a given 2D point.
+	// The idea is to project point on line formed by segment.
+	// Then we see if the closest point on the line is outside of segment or inseide.
+	// Point:					point for which we find the closest point on the segment.
+	// StartPoint:				StartPoint of Segment.
+	// EndPoint:				EndPoint of Segment.
+	// Return:					point on the segment defined by (StartPoint, EndPoint) that is closest to Point.
+	static CORE_API YVector2D	ClosestPointOnSegment(const YVector2D& Point, const YVector2D & StartPint, const YVector2D &EndPoint);
+
+	// Return distance from a point to the closet point on a segment.
+	// Point:					point to check distance for
+	// StartPoint:				StartPoint of Segment
+	// EndPoint:				EndPoint of Segment
+	// Return:					closest distance from Point to segment defined by (StartPoint, EndPoint)
+	static CORE_API float		PointDistToSegment(const YVector& Point, const YVector &StartPoint, const YVector &EndPoint);
+
+	// Return square of the distance from a point to the closest point on a segemnt.
+	// Point:					point to check distance for
+	// StartPoint:				StartPoint of Segment
+	// EndPoint:				EndPoint of Segment
+	// Return:					square of closest distance from Point to segment defined by (StartPoint, EndPoint)
+	static CORE_API float		PointDistToSegmentSquared(const YVector& Point, const YVector &StartPoint, const YVector &EndPoint);
+
+	// Find closest points between 2 Segments
+	// (A1, B1)					defines the first segment.
+	// (A2, B2)					defines the second segment.
+	// OutP1					Closest point on segment 1 to segment 2.
+	// OutP2					Closest point on segment 2 to segment 1.
+	static CORE_API void		SegmentDistToSegment(YVector A1, YVector B1, YVector A2, YVector B2, YVector& OutP1, YVector& OutP2);
 };
