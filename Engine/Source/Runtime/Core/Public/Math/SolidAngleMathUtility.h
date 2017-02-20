@@ -1060,4 +1060,54 @@ struct YMath :public YPlatformMath
 		uint8 Mask = 1 << (Index & 0x7);
 		return (*BytePtr & Mask) != 0;
 	}
+
+	// Set a bit in memory created form bitflags (uint32 Value:1), used for EngineShowFlags
+	// TestBitFieldFunctions() tests the implementation
+	static FORCEINLINE void		SetBoolInBitField(uint8* Ptr, uint32 Index, bool bSet)
+	{
+		uint8* BytePtr = Ptr + Index / 8;
+		uint8 Mask = 1 << (Index & 0x7);
+		if (bSet)
+		{
+			*BytePtr |= Mask;
+		}
+		else
+		{
+			*BytePtr &= ~Mask;
+		}
+	}
+
+	// Handy to apply scaling in the editor
+	// Dst in and out
+	static CORE_API void		ApplyScaleToFloat(float& Dst, const YVector& DeltaScale, float Magnitude = 1.0f);
+
+	// x: assumed to be in this range[0,1]
+	// return : [0,255]
+	static FORCEINLINE uint8	Quantize8UnsigedByte(float X)
+	{
+		int32 Ret = (int32)(X * 255.999f);
+		return Ret;
+	}
+
+	// x assumed in this range[-1,1]
+	// return [0,255]
+	static FORCEINLINE uint8	Quantize8SignedByte(float X)
+	{
+		float y = X*0.5f + 0.5f;
+		return Quantize8UnsigedByte(y);
+	}
+
+#if WITH_DIRECTXMATH
+	#define SIMD_ALIGMENT (16)
+#elif PLATFORM_ENABLE_VECTORINTRINSICS
+	#define SIMD_ALIGMENT (16)
+	#include "SolidAngleMathSSE.h"
+#elif PLATFORM_ENABLE_VECTORINTRINSICS_NEON
+	#define SIME_ALIGNMENT (16)
+	#include "SolidAngleMathNeon"
+#else
+	#define SIME_ALIGNMENT (4)
+#endif
+	extern CORE_API  const VectorRegister VECTOR_INV_255;
+
 };

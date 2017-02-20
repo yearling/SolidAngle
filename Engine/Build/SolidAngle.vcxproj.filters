@@ -105,6 +105,9 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformIncludes.h">
       <Filter>Source\Runtime\Core\Public\HAL</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAngleMathSSE.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\TestMain.cpp">

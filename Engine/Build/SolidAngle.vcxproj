@@ -146,7 +146,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>PLATFORM_WINDOWS;CORE_API=;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>PLATFORM_WINDOWS;CORE_API=;WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -167,6 +167,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Color.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\MathUtility.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAngleMath.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAngleMathSSE.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAngleMathUtility.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAnglePlatformMathSSE.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Vector.h" />
