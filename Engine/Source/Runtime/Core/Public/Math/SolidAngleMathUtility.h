@@ -869,4 +869,195 @@ struct YMath :public YPlatformMath
 	// OutP1					Closest point on segment 1 to segment 2.
 	// OutP2					Closest point on segment 2 to segment 1.
 	static CORE_API void		SegmentDistToSegment(YVector A1, YVector B1, YVector A2, YVector B2, YVector& OutP1, YVector& OutP2);
+
+	// Find closest points between 2 Segments
+	// (A1, B1)					defines the first segment.
+	// (A2, B2)					defines the second segment.
+	// OutP1					Closest point on segment 1 to segment 2.
+	// OutP2					Closest point on segment 2 to segment 1.
+	static CORE_API void		SegmentDistToSegmentSafe(YVector A1, YVector B1, YVector A2, YVector B2, YVector& OutP1, YVector& OutP2);
+
+	// returns the time (t) of the intersection of the passed segment and a plane (could be <0 or >1)
+	// StartPoint:				Start point of segment
+	// EndPoint:				End point of segment
+	// Plane:					plane to intersect with
+	static CORE_API float		GetTForSegmentPlaneIntersect(const YVector& StartPoint, const YVector& EndPoint, const YVector& Plane);
+
+	// Returns true if this is an intersection between the segment specified by StartPoint, and EndPoint
+	// And the Plane on which polygon Plane lies. If there is an intersection, the point is placed in out_IntersectionPoint
+	// StartPoint:				start point of segment
+	// EndPoint:				end point of segment
+	// Plane:					plane to intersect with
+	// OutIntersectionPoint:	out var for the point on the segment that intersects the mesh(if any)
+	// Return true:				if intersection occured.
+	static CORE_API float		SegmentIntersection2D(const YVector& SegmentStartA, const YVector& SegmentEndA, const YVector& SegmentStartB, const YVector& SegmentEndB, YVector& outIntersectionPoint);
+
+	// Return closest point on a triangle to a point
+	// The idea is to identify the halfplanes that the point is
+	// in relative to each triangle segment "plane"
+	// Point:					point to check distance for
+	// A,B,C					counter clockwise ordering of points defining a triangle
+	static CORE_API YVector		ClosestPointOnTriangleToPoint(const YVector& Point, const YVector& A, const YVector& B, const YVector& C);
+
+	// Find closest point on a Sphere to a Line.
+	// When line intersects Sphere, then closest point to LineOrigin is returned.
+	// SphereOrigin				Origin of Sphere
+	// SphereRadius				Radius of Sphere
+	// LineOrigin				Origin of line
+	// LineDir					Direction of line. Needs to be normalized!!
+	// OutClosestPoint			Closest point on sphere to given line.
+	static CORE_API void		SphereDistToLine(YVector SphereOrigin, float SphereRaius, YVector LineDirNormalized, YVector& OutClosestPoint);
+
+	// Calculates whether a Point is within a cone segment, and also what percentage within the cone(100 % is along the center line, whereas 0 % is along the edge)
+	// Point:					The Point in question
+	// ConeStartPoint:			the beginning of the cone(with the smallest radius)
+	// ConeLine:				the line out from the start point that ends at the largest radius point of the cone
+	// radiusAtStart:			the radius at the ConeStartPoint(0 for a 'proper' cone)
+	// radiusAtEnd:				the largest radius of the cone
+	// percentageOut:			output variable the holds how much within the cone the point is(1 = on center line, 0 = on exact edge or outside cone).
+	// return true:				if the point is within the cone, false otherwise.
+	static CORE_API void		GetDistanceWithinConeSegment(YVector Point, YVector ConeStartPoint, YVector ConeLine, float RadiusAtStart, float RadiusAtEnd, float & PercentageOut);
+	
+	// Determines whether a given set of points are coplanar, with a tolerance.Any three points or less are always coplanar.
+	// Points:					The set of points to determine coplanarity for.
+	// Tolerance:				Larger numbers means more variance is allowed.
+	// return:					Whether the points are relatively coplanar, based on the tolerance
+	// !!FIXME by zyx, do not have containers now
+	//static CORE_API void		PointsAreCoplanner(const YArray<YVector> &Points, const float Tolerance = 0.1f);
+
+	// Converts a floating point number to the nearest integer, equidistant ties go to the value which is closest to an even value : 1.5 becomes 2, 0.5 becomes 0
+	// F:						Floating point value to convert
+	// return:					The rounded integer
+	static CORE_API float		RoundHalfToEvent(float F);
+	static CORE_API double		RoundHalfToEvent(double F);
+
+	// Converts a floating point number to an integer which is further from zero, "larger" in absolute value : 0.1 becomes 1, -0.1 becomes - 1
+	// F:						Floating point value to convert
+	// return:					The rounded integer
+	static FORCEINLINE float	RoundFromZero(float F)
+	{
+		return (F < 0.0f) ? FloorToFloat(F) : CeilToFloat(F);
+	}
+
+	static FORCEINLINE double	RoundFromZero(double F)
+	{
+		return (F < 0.0f) ? FloorToDouble(F) : CeilToDouble(F);
+	}
+
+	// Converts a floating point number to an integer which is closer to zero, "smaller" in absolute value : 0.1 becomes 0, -0.1 becomes 0
+	// F:						Floating point value to convert
+	// return:					The rounded integer
+
+	static FORCEINLINE float	RoundToZero(float F)
+	{
+		return (F < 0.0f) ? CeilToFloat(F) : FloorToFloat(F);
+	}
+
+	static FORCEINLINE double	RoundToZero(double F)
+	{
+		return (F < 0.0f) ? CeilToDouble(F) : FloorToDouble(F);
+	}
+
+	// Converts a floating point number to an integer which is more negative : 0.1 becomes 0, -0.1 becomes - 1
+	// F:						Floating point value to convert
+	// return:					The rounded integer
+	static FORCEINLINE float	RoundToNegativeInfinity(float F)
+	{
+		return FloorToFloat(F);
+	}
+
+	static FORCEINLINE double	RoundToNegativeInfinity(double F)
+	{
+		return FloorToDouble(F);
+	}
+
+	// Converts a floating point number to an integer which is more positive: 0.1 becomes 1, -0.1 becomes 0
+	// F:						Floating point value to convert
+	// return:					The rounded integer
+	static FORCEINLINE float RoundToPositiveInfinity(float F)
+	{
+		return CeilToFloat(F);
+	}
+
+	static FORCEINLINE double RoundToPositiveInfinity(double F)
+	{
+		return CeilToDouble(F);
+	}
+
+	// Formatting functions
+	// Formats an integer value into a human readable string(i.e. 12345 becomes "12,345")
+	// Val:						The value to use
+	// return: FString			The human readable string 
+	// !!FIXME by zyx, do not have YString types
+	//static CORE_API YString		FormatIntToHumanReadable(int32 Val);
+
+	// Utilities
+	// Tests a memory region to see that it's working properly.
+	// BaseAddress:				Starting address
+	// NumBytes:				Number of bytes to test(will be rounded down to a multiple of 4)
+	// return: true				if the memory region passed the test
+	static CORE_API bool		MemoryTest(void* BaseAddress, uint32 NumBytes);
+
+	// Evaluates a numerical equation.
+	// Operators and precedence: 1 : +-2 : / % 3 : *4 : ^ 5 : &|
+	// Unary : -
+	// Types : Numbers(0 - 9.), Hex($0 - $f)
+	// Grouping : ()
+	// Str:						String containing the equation.
+	// OutValue:				Pointer to storage for the result.
+	// return					1 if successful, 0 if equation fails.
+	// !!FIXME by zyx, do not have YString types
+	//static CORE_API bool		Eval(YString Str, float& OutValue);
+
+	// Computes the barycentric coordinates for a given point in a triangle - simpler version
+	// Point:					point to convert to barycentric coordinates(in plane of ABC)
+	// A, B, C:					three non - colinear points defining a triangle in CCW
+	//return Vector:			containing the three weights a, b, c such that Point = a*A + b*B + c*C
+	//	or Point = A + b*(B - A) + c*(C - A) = (1 - b - c)*A + b*B + c*C
+	static CORE_API YVector		GetBaryCentric2D(const YVector& Point, const YVector& A, const YVector& B, const YVector& C);
+
+	// Computes the barycentric coordinates for a given point in a triangle 
+	// Point:					point to convert to barycentric coordinates(in plane of ABC)
+	// A, B, C:					three non - colinear points defining a triangle in CCW
+	//return Vector:			containing the three weights a, b, c such that Point = a*A + b*B + c*C
+	//	or Point = A + b*(B - A) + c*(C - A) = (1 - b - c)*A + b*B + c*C
+	static CORE_API YVector		ComputeBaryCentric2D(const YVector& Point, const YVector& A, const YVector& B, const YVector& C);
+
+	// Computes the barycentric coordinates for a given point on a tetrahedron(3D)
+	// Point:					point to convert to barycentric coordinates
+	// A, B, C, D:				four points defining a tetrahedron
+	// return Vector:			 containing the four weights a, b, c, d such that Point = a*A + b*B + c*C + d*D
+	static CORE_API YVector4	ComputeBaryCentric3D(const YVector& Point, const YVector& A, const YVector& B, const YVector& C, const YVector& D);
+
+	// Returns a smooth Hermite interpolation between 0 and 1 for the value X(where X ranges between A and B)
+	// Clamped to 0 for X <= A and 1 for X >= B.
+	// A:						Minimum value of X
+	// B:						Maximum value of X
+	// X:						Parameter
+	// return:					Smoothed value between 0 and 1
+	static float				SmoothStep(float A, float B, float X)
+	{
+		if (X < A)
+		{
+			return 0.0f;
+		}
+		else if (X >= B)
+		{
+			return 1.0f;
+		}
+		const float InterpFraction = (X - A) / (B - A);
+		return InterpFraction * InterpFraction * (3.0f - 2.0f * InterpFraction);
+	}
+
+	/** 32 bit values where BitFlag[x] == (1<<x) */
+	static CORE_API const uint32 BitFlag[32];
+
+	// Get a bit in memory created from bitflags(uint32 Value : 1), used for EngineShowFlags,
+	// TestBitFieldFunctions() tests the implementation
+	static FORCEINLINE bool		ExtractBoolFromBitField(uint8* Ptr, uint32 Index)
+	{
+		uint8* BytePtr = Ptr + Index / 8;
+		uint8 Mask = 1 << (Index & 0x7);
+		return (*BytePtr & Mask) != 0;
+	}
 };

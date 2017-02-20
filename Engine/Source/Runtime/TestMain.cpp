@@ -24,13 +24,11 @@
 //}
 int main()
 {
-	std::cout << sizeof(void*) << std::endl;
-	std::cout << YGenericPlatformMath::TruncToInt(0.2f) << std::endl;
-	std::cout << YGenericPlatformMath::TruncToInt(0.5f) << std::endl;
-	std::cout << YGenericPlatformMath::TruncToInt(0.9f) << std::endl;
-	std::cout << YGenericPlatformMath::RoundToInt(0.2f) << std::endl;
-	std::cout << YGenericPlatformMath::RoundToInt(0.5f) << std::endl;
-	std::cout << YGenericPlatformMath::RoundToInt(0.9f) << std::endl;
-	std::cout << YGenericPlatformMath::FloorLog2(10) << std::endl;
-	std::cout << YGenericPlatformMath::CeilLogTwo(16) << std::endl;
+	struct bs
+	{
+		int a : 8;
+		int b : 2;
+	/*	int c : 6;*/
+	};
+	std::cout << sizeof(bs) << std::endl;
 }
