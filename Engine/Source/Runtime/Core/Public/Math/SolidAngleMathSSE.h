@@ -51,3 +51,50 @@ FORCEINLINE VectorRegisterInt		MakeVectorRegisterInt(int32 X, int32 Y, int32 Z, 
 {
 	return _mm_setr_epi32(X, Y, Z, W);
 }
+
+// Constants:
+#include "SolidAngleVectorConstant.h"
+
+//Instinsics
+
+// Return a vector with all zeros
+#define VectorZero()			_mm_setzero_ps()
+
+// Return a vector with all ones
+#define VectorOne()				(GlobalVectorConstants::FloatOne)
+
+// Return an component from a vector
+// Vec:							VectorRegister
+// ComponentIndex:				Which component to gex, X=0, Y=1, Z=2, W=3
+// Return:						The component as a float
+FORCEINLINE float				VectorGetComponent(VectorRegister Vec, uint32 ComponentIndex)
+{
+	return ((float*)&(Vec))[ComponentIndex];
+}
+
+// Load 4 FLOATs from unaligned memory
+// Ptr:							Unaligned memory pointer to the 4 FLOATs
+// Return:						VectorRegister(Ptr[0],Ptr[1],Ptr[2],Ptr[3])
+#define VectorLoad( Ptr )		_mm_loadu_ps( (float*)(Ptr))
+
+// Load 3 FLOATs from unaligned memory and leaves W undefined.
+// Ptr:							Unaligned memory pointer to the 3 FLOATs
+// Return:						VectorRegister(Ptr[0],Ptr[1],Ptr[2],undefined)
+#define VectorLoadFloat3( Ptr ) MakeVectorRegister( ((const float*)(Ptr))[0], ((const float*)(Ptr))[1], ((const float*)(Ptr))[2], 0.0f )
+
+// Load 3 FLOATs from unaligned memory and sets W = 0.0f
+// Ptr:							Unaligned memory pointer to the 3 FLOATs
+// Return:						VectorRegister(Ptr[0],Ptr[1],Ptr[2], 0.0f)
+#define VectorLoadFloat3_W0( Ptr ) MakeVectorRegister( ((const float*)(Ptr))[0], ((const float*)(Ptr))[1], ((const float*)(Ptr))[2], 0.0f )
+
+// Load 3 FLOATs from unaligned memory and sets W = 1.0f
+// Ptr:							Unaligned memory pointer to the 3 FLOATs
+// Return:						VectorRegister(Ptr[0],Ptr[1],Ptr[2], 1.0f)
+#define VectorLoadFloat3_W1( Ptr ) MakeVectorRegister( ((const float*)(Ptr))[0], ((const float*)(Ptr))[1], ((const float*)(Ptr))[2], 1.0f )
+
+// Load 4 FLOATs from aligned memory
+// Ptr:							Aligned memory pointer to the 4 FLOATs
+// Return:						VectorRegister(Ptr[0],Ptr[1],Ptr[2], Ptr[3])
+#define VectorLoadAligned( Ptr )  _mm_load_ps((float*)Ptr)
+
+

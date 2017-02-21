@@ -21,7 +21,7 @@ CORE_API float YGenericPlatformMath::SRand()
 	Temp.f = SRandTemp;
 	Result.i = (Temp.i & 0xff800000) | (GSRandSeed & 0x007fffff);
 	//!!FIXME by zyx,这里应该换为YPlatformMath
-	return YGenericPlatformMath::Fractional(Result.f);
+	return YPlatformMath::Fractional(Result.f);
 }
 
 CORE_API float YGenericPlatformMath::Atan2(float Y, float X)

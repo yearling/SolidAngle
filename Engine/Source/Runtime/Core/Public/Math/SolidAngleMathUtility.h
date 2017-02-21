@@ -125,7 +125,7 @@ struct YMath :public YPlatformMath
 
 	// Checks if value is within a range, exclusive on MaxValue[Min,Max)
 	template< class T >
-	static FORCEINLINE bool		IsWithin(const T& TestValue, const T& MinValue, const U& MaxValue)
+	static FORCEINLINE bool		IsWithin(const T& TestValue, const T& MinValue, const T& MaxValue)
 	{
 		return ((MinValue <= TestValue) && (TestValue < MaxValue));
 	}
@@ -754,7 +754,7 @@ struct YMath :public YPlatformMath
 	static CORE_API YRotator	VInterpTo(const YRotator& Current, const YRotator& Target, float DeltaTime, float InterpSpeed);
 
 	// Interpolate Linear Color from Current to Target. Scaled by distance to Target, so it has a strong start speed and ease out.
-	static CORE_API YLinearColor	VInterpTo(const YRotator& Current, const YRotator& Target, float DeltaTime, float InterpSpeed);
+	static CORE_API YLinearColor	CInterpTo(const YRotator& Current, const YRotator& Target, float DeltaTime, float InterpSpeed);
 
 	// Simple function to creat a pulsating scalar value
 	// InCurrentTime:			Current absolute time
@@ -1108,6 +1108,6 @@ struct YMath :public YPlatformMath
 #else
 	#define SIME_ALIGNMENT (4)
 #endif
-	extern CORE_API  const VectorRegister VECTOR_INV_255;
+	//extern CORE_API  const VectorRegister VECTOR_INV_255;
 
 };

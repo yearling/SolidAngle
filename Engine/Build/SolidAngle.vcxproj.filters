@@ -108,6 +108,9 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAngleMathSSE.h">
       <Filter>Source\Runtime\Core\Public\Math</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAngleVectorConstant.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\TestMain.cpp">

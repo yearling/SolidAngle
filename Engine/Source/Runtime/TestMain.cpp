@@ -1,7 +1,7 @@
 
-#include <HAL/PlatformIncludes.h>
-#include<iostream>
-#include <intrin.h>
+//#include <HAL/PlatformIncludes.h>
+#include <iostream>
+//#include <intrin.h>
 #include <stdio.h>
 
 //#pragma intrinsic(_mm_cvtt_ss2si)
@@ -24,11 +24,5 @@
 //}
 int main()
 {
-	struct bs
-	{
-		int a : 8;
-		int b : 2;
-	/*	int c : 6;*/
-	};
-	std::cout << sizeof(bs) << std::endl;
+	double c = cosf(10);
 }

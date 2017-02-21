@@ -62,12 +62,12 @@ struct FWindowsPlatformMath : public YGenericPlatformMath
 
 	static FORCEINLINE float InvSqrt(float F)
 	{
-		return UnrealPlatformMathSSE::InvSqrt(F);
+		return SolidAnglePlatformMathSSE::InvSqrt(F);
 	}
 
 	static FORCEINLINE float InvSqrtEst(float F)
 	{
-		return UnrealPlatformMathSSE::InvSqrtEst(F);
+		return SolidAnglePlatformMathSSE::InvSqrtEst(F);
 	}
 
 
