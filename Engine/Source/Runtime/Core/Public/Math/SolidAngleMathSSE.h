@@ -38,6 +38,7 @@ FORCEINLINE VectorRegister		MakeVectorRegister(uint32 X, uint32 Y, uint32 Z, uin
 // return	Vector of the 4 FLOATs
 FORCEINLINE VectorRegister		MakeVectorRegister(float X, float Y, float Z, float W)
 {
+	// !!Note by zyx, 这里是带r的版本，反着从低位向高位填。不带r的__mm_set_ps是从高位向低位填
 	return _mm_setr_ps(X, Y, Z, W);
 }
 
@@ -97,4 +98,115 @@ FORCEINLINE float				VectorGetComponent(VectorRegister Vec, uint32 ComponentInde
 // Return:						VectorRegister(Ptr[0],Ptr[1],Ptr[2], Ptr[3])
 #define VectorLoadAligned( Ptr )  _mm_load_ps((float*)Ptr)
 
+// Loads 1 float from unaligned memory and replicates it to all 4 elements.
+//Ptr:							Unaligned memory pointer to the float
+//Return:						VectorRegister(Ptr[0], Ptr[0], Ptr[0], Ptr[0])
+#define VectorLoadFloat1( Ptr ) _mm_load_ps1((float*)(Ptr))
 
+// Creates a vector out of three FLOATs and leaves W undefined.
+// X:							1st float component
+// Y:							2nd float component
+// Z:							3rd float component
+// Return:						VectorRegister(X, Y, Z, undefined)
+#define VectorSetFloat3( X, Y, Z )		MakeVectorRegister( X, Y, Z, 0.0f)
+
+// Propagates passed in float to all registers
+// F:							Float to Set
+// Result:						VectorRegister(F,F,F,F)
+#define VectorSetFloat1( F )	_mm_set_ps1( F )
+
+// Creates a vector out of four FLOATs.
+// X:							1st float component
+// Y:							2nd float component
+// Z:							3rd float component
+// W:							4th float component
+// return:						VectorRegister(X, Y, Z, W)
+#define VectorSet( X, Y, Z, W )			MakeVectorRegister( X, Y, Z, W )
+
+// Stores a vector to aligned memory.
+// Vec:							Vector to store
+// Ptr:							Aligned memory pointer
+#define VectorStoreAligned( Vec, Ptr )	_mm_store_ps( (float*)(Ptr), Vec) 
+
+//Performs non-temporal store of a vector to aligned memory without polluting the caches
+// !!Note by zyx,没看明白Poluuting the caches是什么意思
+// Vec:							Vector to store
+// Ptr:							Aligned memory pointer
+#define VectorStoreAlignedStreamed( Vec, Ptr )	_mm_stream_ps( (float*)(Ptr), Vec )
+
+// Stores a vector to memory(aligned or unaligned).
+// Vec:							Vector to store
+// Ptr:							Memory pointer
+#define VectorStore( Vec, Ptr )			_mm_storeu_ps( (float*)(Ptr), Vec )
+
+// Stores the XYZ components of a vector to unaligned memory.
+// Vec:							Vector to store XYZ
+// Ptr:							Unaligned memory pointer
+FORCEINLINE void				VectorStoreFloat3(const VectorRegister& Vec, void* Ptr)
+{
+#if 0   // !!Note by zyx, Implement by UE
+	union { VectorRegister v; float f[4]; } Tmp;
+	Tmp.v = Vec;
+	float* FloatPtr = (float*)(Ptr);
+	FloatPtr[0] = Tmp.f[0];
+	FloatPtr[1] = Tmp.f[1];
+	FloatPtr[2] = Tmp.f[2];
+#else
+	float* FloatPtr = (float*)(Ptr);
+	FloatPtr[0] = ((const float*)&(Vec))[0];
+	FloatPtr[1] = ((const float*)&(Vec))[1];
+	FloatPtr[2] = ((const float*)&(Vec))[2];
+#endif
+}
+
+// Stores the X component of a vector to unaligned memory.
+// Vec:							Vector to store X
+// Ptr:							Unaligned memory pointer
+#define VectorStoreFloat1( Vec, Ptr )	_mm_store_ss((float*)(Ptr), Vec)
+
+// Replicates one element into all four elements and returns the new vector.
+// Vec:							Source Vector
+// ElementIndex:				Index(0-3） of the element to replicate
+// Return:						VectorRegister( Vec[ElementIndex], Vec[ElementIndex], Vec[ElementIndex], Vec[ElementIndex] )
+// !!Note by zyx, 实现原理如下
+//__m128 _mm_shuffle_ps(__m128 a, __m128 b, unsigned int imm8)
+//{
+//	SELECT4(src, control) { //下面会调用，就是根据control（2bit,4种值，对应__m128的每个float)
+//		CASE(control[1:0])
+//			0:	tmp[31:0] : = src[31:0]
+//			1 : tmp[31:0] : = src[63:32]
+//			2 : tmp[31:0] : = src[95:64]
+//			3 : tmp[31:0] : = src[127:96]
+//			ESAC
+//			RETURN tmp[31:0]
+//	}
+//
+//		dst[31:0] : = SELECT4(a[127:0], imm8[1:0])
+//		dst[63:32] : = SELECT4(a[127:0], imm8[3:2])
+//		dst[95:64] : = SELECT4(b[127:0], imm8[5:4])
+//		dst[127:96] : = SELECT4(b[127:0], imm8[7:6])
+//}
+#define VectorReplicate( Vec, ElementIndex )	_mm_shuffle_ps( Vec, Vec, SHUFFLEMASK(ElementIndex,ElementIndex,ElementIndex,ElementIndex) )
+
+// Returns the absolute value (component-wise).
+// Vec:							Source vector
+// return:						VectorRegister( abs(Vec.x), abs(Vec.y), abs(Vec.z), abs(Vec.w) )
+// // !!Note by zyx, 实现原理:浮点最高位为符号位，与0x7FFFFFFF作与操作
+#define VectorAbs( Vec )		_mm_and_ps(Vec, GlobalVectorConstants::SignMask)
+
+// Returns the negated value (component-wise).
+// Vec:							Source Vector
+// Return:						VectorRegister( -Vec.x, -Vec.y, -Vec.z, -Vec.w )
+#define VectorNegate( Vec )		_mm_sub_ps(_mm_setzero_ps(),Vec)
+
+// Adds two vectors(component - wise) and returns the result.
+// Vec1:						1st vector
+// Vec2:						2nd vector
+// Return:						VectorRegister(Vec1.x + Vec2.x, Vec1.y + Vec2.y, Vec1.z + Vec2.z, Vec1.w + Vec2.w)
+#define VectorAdd( Vec1, Vec2 )			_mm_add_ps( Vec1, Vec2 )
+
+// Subtracts a vector from another (component-wise) and returns the result.
+// Vec1:						1st vector
+// Vec2:						2nd vector
+// return						VectorRegister( Vec1.x-Vec2.x, Vec1.y-Vec2.y, Vec1.z-Vec2.z, Vec1.w-Vec2.w )
+#define VectorSubtract( Vec1, Vec2 )	_mm_sub_ps( Vec1, Vec2 )

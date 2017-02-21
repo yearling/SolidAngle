@@ -54,8 +54,8 @@ SSE中大部分指令要求地址是16bytes对齐的，要理解这个问题，�
 ###大小端问题
 x86的little-endian特性，位址较低的byte会放在暂存器的右边。也就是说，若以上面的input为例，在载入到XMM暂存器后，暂存器中的DATA0会是1.0，而DATA1是2.0，DATA2是3.0，DATA3是4.0。如果需要以相反的顺序载入的话，可以用_mm_loadr_ps 这个intrinsic，根据需要进行选择。
 
-##指令集操作
-### Load/Store/Set
+##[指令集操作](https://software.intel.com/sites/landingpage/IntrinsicsGuide/)[msdn](https://msdn.microsoft.com/zh-cn/library/hh977022.aspx)
+### Load/Store/Set 
 ####Load
 从内存到寄存器
 
@@ -66,8 +66,10 @@ x86的little-endian特性，位址较低的byte会放在暂存器的右边。也
 ####Set
 
 	__m128 _mm_set_ss (float w)  
-	__m128 _mm_set_ps (float z, float y, float x, float w) 
-	__m128 _mm_setzero_ps ()  
+	__m128 _mm_set_ps (float w, float z, float y, float x)
+	__m128 _mm_setr_ps (float x, float y, float z, float w) //不带r的是从高位开始填，是反着的，带r的符合正常习惯 
+	__m128 _mm_setzero_ps ()                                //清零
+	__m128i _mm_setr_epi32 (int e3, int e2, int e1, int e0) //设整数
 
 ####Store
 从寄存器到内存
@@ -79,11 +81,30 @@ x86的little-endian特性，位址较低的byte会放在暂存器的右边。也
 	
 	__m128 _mm_add_ss (__m128 a, __m128 b)  
 	__m128 _mm_add_ps (__m128 a, __m128 b)  
+####减法
+	__m128 _mm_sub_ps (__m128 a, __m128 b)
 
-
-
-
-
+####shuffle
+	__m128 _mm_shuffle_ps (__m128 a, __m128 b, unsigned int imm8)
+	{
+		SELECT4(src, control){ //下面会调用，就是根据control（2bit,4种值，对应__m128的每个float)
+			CASE(control[1:0])
+			0:	tmp[31:0] := src[31:0]
+			1:	tmp[31:0] := src[63:32]
+			2:	tmp[31:0] := src[95:64]
+			3:	tmp[31:0] := src[127:96]
+			ESAC
+			RETURN tmp[31:0]
+		}
+		
+		dst[31:0] := SELECT4(a[127:0], imm8[1:0]) 
+		dst[63:32] := SELECT4(a[127:0], imm8[3:2])
+		dst[95:64] := SELECT4(b[127:0], imm8[5:4])
+		dst[127:96] := SELECT4(b[127:0], imm8[7:6])
+	}
+	用于快速的将vector的值全赋为其某一元素，见VectorReplicate
+#### and
+	__m128 _mm_and_ps (__m128 a, __m128 b)
 
 
 
