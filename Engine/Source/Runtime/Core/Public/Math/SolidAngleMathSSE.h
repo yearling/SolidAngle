@@ -15,7 +15,7 @@ typedef __m128d					VectorRegisterDouble;
 // A1	Selects which element(0 - 3) from 'A' into 2nd slot in the result
 // B2	Selects which element(0 - 3) from 'B' into 3rd slot in the result
 // B3	Selects which element(0 - 3) from 'B' into 4th slot in the result
-#define SHUFFLEMASK(A0,A1,B2,B3) ( (A0) | ((A1)<<2) | ((B2)<<4) | ((B3)<<6) 
+#define SHUFFLEMASK(A0,A1,B2,B3) ( (A0) | ((A1)<<2) | ((B2)<<4) | ((B3)<<6) )
 
 // Returns a bitwise equivalent vector based on 4 DWORDs.
 // X		1st uint32 component
@@ -222,4 +222,87 @@ FORCEINLINE void				VectorStoreFloat3(const VectorRegister& Vec, void* Ptr)
 // Vec2:						2nd vector
 // Vec3:						3rd vector
 // Return:						VectorRegister(Vec1.x*Vec2.x + Vec3.x, Vec1.y*Vec2.y + Vec3.y, Vec1.z*Vec2.z + Vec3.z, Vec1.w*Vec2.w + Vec3.w)
-#define VectorMultiplyAdd( Vec1, Vec2, Vec3 ) _mm_add_ps(_mm_mul_ps( Vec1, Vec2), Vec3 40)
+#define VectorMultiplyAdd( Vec1, Vec2, Vec3 )	_mm_add_ps(_mm_mul_ps( Vec1, Vec2), Vec3)
+
+// Calculates the dot3 product of two vectors and returns a vector with the result in all 4 components.
+//  Only really efficient on Xbox 360
+// Vec1:						1st vector
+// Vec2:						2nd vector
+// return:						d = dot3(Vec1.xyz, Vec2.xyz), VectorRegister(d, d, d, d)
+FORCEINLINE VectorRegister		VectorDot3(const VectorRegister& Vec1, const VectorRegister& Vec2)
+{
+	VectorRegister Temp = VectorMultiply(Vec1, Vec2);
+	return VectorAdd(VectorReplicate(Temp, 0), VectorAdd(VectorReplicate(Temp, 1), VectorReplicate(Temp, 2)));
+}
+
+// Calculates the dot4 product of two vectors and returns a vector with the result in all 4 components.
+//  Only really efficient on Xbox 360
+// Vec1:						1st vector
+// Vec2:						2nd vector
+// Return:						d = dot4(Vec1.xyzw, Vec2.xyzw), VectorRegister(d, d, d, d)
+FORCEINLINE VectorRegister VectorDot4(const VectorRegister& Vec1, const VectorRegister& Vec2)
+{
+	VectorRegister Temp1, Temp2;
+	Temp1 = VectorMultiply(Vec1, Vec2);
+	Temp2 = _mm_shuffle_ps(Temp1, Temp1, SHUFFLEMASK(2, 3, 0, 1));	// (Z,W,X,Y).
+	Temp1 = VectorAdd(Temp1, Temp2);								// (X*X + Z*Z, Y*Y + W*W, Z*Z + X*X, W*W + Y*Y)
+	Temp2 = _mm_shuffle_ps(Temp1, Temp1, SHUFFLEMASK(1, 2, 3, 0));	// Rotate left 4 bytes (Y,Z,W,X).
+	return VectorAdd(Temp1, Temp2);								// (X*X + Z*Z + Y*Y + W*W, Y*Y + W*W + Z*Z + X*X, Z*Z + X*X + W*W + Y*Y, W*W + Y*Y + X*X + Z*Z)
+}
+
+// Creates a four - part mask based on component - wise == compares of the input vectors
+// Vec1:						1st vector
+// Vec2:						2nd vector
+// Return:						VectorRegister(Vec1.x == Vec2.x ? 0xFFFFFFFF : 0, same for yzw)
+#define VectorCompareEQ( Vec1, Vec2 )			_mm_cmpeq_ps( Vec1, Vec2 )
+
+// Creates a four - part mask based on component - wise != compares of the input vectors
+// Vec1:						1st vector
+// Vec2:						2nd vector
+// Return:						VectorRegister(Vec1.x != Vec2.x ? 0xFFFFFFFF : 0, same for yzw)
+#define VectorCompareNE( Vec1, Vec2 )			_mm_cmpneq_ps( Vec1, Vec2 )
+
+// Creates a four - part mask based on component - wise > compares of the input vectors
+// Vec1:						1st vector
+// Vec2:						2nd vector
+// Return:						VectorRegister(Vec1.x > Vec2.x ? 0xFFFFFFFF : 0, same for yzw)
+#define VectorCompareGT( Vec1, Vec2 )			_mm_cmpgt_ps( Vec1, Vec2 )
+
+// Creates a four - part mask based on component - wise >= compares of the input vectors
+// Vec1:						1st vector
+// Vec2:						2nd vector
+// Return:						VectorRegister(Vec1.x >= Vec2.x ? 0xFFFFFFFF : 0, same for yzw)
+#define VectorCompareGE( Vec1, Vec2 )			_mm_cmpge_ps( Vec1, Vec2 )
+
+// Does a bitwise vector selection based on a mask(e.g., created from VectorCompareXX)
+// Mask:						Mask(when 1: use the corresponding bit from Vec1 otherwise from Vec2)
+// Vec1:						1st vector
+// Vec2:						2nd vector
+// Return:						VectorRegister(for each bit i : Mask[i] ? Vec1[i] : Vec2[i])
+FORCEINLINE VectorRegister VectorSelect(const VectorRegister& Mask, const VectorRegister& Vec1, const VectorRegister& Vec2)
+{
+	return _mm_xor_ps(Vec2, _mm_and_ps(Mask, _mm_xor_ps(Vec1, Vec2)));
+}
+
+// Combines two vectors using bitwise OR(treating each vector as a 128 bit field)
+// Vec1:						1st vector
+// Vec2:						2nd vector
+// Return:						VectorRegister(for each bit i : Vec1[i] | Vec2[i])
+#define VectorBitwiseOr(Vec1, Vec2)  _mm_or_ps(Vec1, Vec2)
+
+// Combines two vectors using bitwise AND (treating each vector as a 128 bit field)
+// Vec1:						1st vector
+// Vec2:						2nd vector
+// Return:						VectorRegister(for each bit i : Vec1[i] & Vec2[i])
+#define VectorBitwiseAnd(Vec1, Vec2)  _mm_and_ps(Vec1, Vec2)
+
+// Combines two vectors using bitwise XOR (treating each vector as a 128 bit field)
+// Vec1:						1st vector
+// Vec2:						2nd vector
+// Return:						VectorRegister(for each bit i : Vec1[i] ^ Vec2[i])
+#define VectorBitwiseXor(Vec1, Vec2)  _mm_xor_ps(Vec1, Vec2)
+
+// Calculates the cross product of two vectors(XYZ components).W is set to 0.
+// Vec1:						1st vector
+// Vec2:						2nd vector
+// Return:						cross(Vec1.xyz, Vec2.xyz).W is set to 0.
