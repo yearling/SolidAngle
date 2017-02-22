@@ -102,7 +102,14 @@
 !FAQ
 !VERSION
 !ChangeLog
+
+# !!Note by zyx,用来添加文档使用
 !*.pdf
+!*.docx
+!*.jpeg
+!*.jpg
+!*.png
+!*.gif
 
 # Ignore Unix backup files
 *~

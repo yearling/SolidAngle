@@ -208,5 +208,18 @@ FORCEINLINE void				VectorStoreFloat3(const VectorRegister& Vec, void* Ptr)
 // Subtracts a vector from another (component-wise) and returns the result.
 // Vec1:						1st vector
 // Vec2:						2nd vector
-// return						VectorRegister( Vec1.x-Vec2.x, Vec1.y-Vec2.y, Vec1.z-Vec2.z, Vec1.w-Vec2.w )
+// Return						VectorRegister( Vec1.x-Vec2.x, Vec1.y-Vec2.y, Vec1.z-Vec2.z, Vec1.w-Vec2.w )
 #define VectorSubtract( Vec1, Vec2 )	_mm_sub_ps( Vec1, Vec2 )
+
+// Multiplies two vectors (component-wise) and returns the result.
+// Vec1:						1st vector
+// Vec2:						2nd vector
+// Return:						VectorRegister( Vec1.x*Vec2.x, Vec1.y*Vec2.y, Vec1.z*Vec2.z, Vec1.w*Vec2.w )
+#define VectorMultiply( Vec1, Vec2 )	_mm_mul_ps( Vec1, Vec2 )
+
+// Multiplies two vectors(component - wise), adds in the third vector and returns the result.
+// Vec1:						1st vector
+// Vec2:						2nd vector
+// Vec3:						3rd vector
+// Return:						VectorRegister(Vec1.x*Vec2.x + Vec3.x, Vec1.y*Vec2.y + Vec3.y, Vec1.z*Vec2.z + Vec3.z, Vec1.w*Vec2.w + Vec3.w)
+#define VectorMultiplyAdd( Vec1, Vec2, Vec3 ) _mm_add_ps(_mm_mul_ps( Vec1, Vec2), Vec3 40)
