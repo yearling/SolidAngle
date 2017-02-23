@@ -306,3 +306,38 @@ FORCEINLINE VectorRegister VectorSelect(const VectorRegister& Mask, const Vector
 // Vec1:						1st vector
 // Vec2:						2nd vector
 // Return:						cross(Vec1.xyz, Vec2.xyz).W is set to 0.
+FORCEINLINE VectorRegister VectorCross(const VectorRegister& Vec1, const VectorRegister& Vec2)
+{
+	VectorRegister A_YZXW = _mm_shuffle_ps(Vec1, Vec1, SHUFFLEMASK(1, 2, 0, 3));
+	VectorRegister B_ZXYW = _mm_shuffle_ps(Vec2, Vec2, SHUFFLEMASK(2, 0, 1, 3));
+	VectorRegister A_ZXYW = _mm_shuffle_ps(Vec1, Vec1, SHUFFLEMASK(2, 0, 1, 3));
+	VectorRegister B_YZXW = _mm_shuffle_ps(Vec2, Vec2, SHUFFLEMASK(1, 2, 0, 3));
+	return VectorSubtract(VectorMultiply(A_YZXW, B_ZXYW), VectorMultiply(A_ZXYW, B_YZXW));
+}
+
+// Calculates x raised to the power of y(component - wise).
+// Base:						Base vector
+// Exponent:					Exponent vector
+// Return:						VectorRegister(Base.x^Exponent.x, Base.y^Exponent.y, Base.z^Exponent.z, Base.w^Exponent.w)
+FORCEINLINE VectorRegister VectorPow(const VectorRegister& Base, const VectorRegister& Exponent)
+{
+	//@TODO: Optimize
+	union { VectorRegister v; float f[4]; } B, E;
+	B.v = Base;
+	E.v = Exponent;
+	return _mm_setr_ps(powf(B.f[0], E.f[0]), powf(B.f[1], E.f[1]), powf(B.f[2], E.f[2]), powf(B.f[3], E.f[3]));
+}
+
+// Returns an estimate of 1/sqrt(c) for each component of the vector
+// Vector:						Vector
+// Return:						VectorRegister(1/sqrt(t), 1/sqrt(t), 1/sqrt(t), 1/sqrt(t))
+#define VectorReciprocalSqrt(Vec)		_mm_rsqrt_ps( Vec )
+
+/**
+* Computes an estimate of the reciprocal of a vector (component-wise) and returns the result.
+*
+* @param Vec	1st vector
+* @return		VectorRegister( (Estimate) 1.0f / Vec.x, (Estimate) 1.0f / Vec.y, (Estimate) 1.0f / Vec.z, (Estimate) 1.0f / Vec.w )
+*/
+#define VectorReciprocal(Vec)			_mm_rcp_ps(Vec)
+
