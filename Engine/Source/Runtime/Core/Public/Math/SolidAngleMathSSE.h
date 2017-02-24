@@ -341,3 +341,235 @@ FORCEINLINE VectorRegister VectorPow(const VectorRegister& Base, const VectorReg
 */
 #define VectorReciprocal(Vec)			_mm_rcp_ps(Vec)
 
+// Return Reciprocal Length of the vector (estimate)
+// Vector:						Vector
+// Return:						VectorRegister(rlen, rlen, rlen, rlen) when rlen = 1/sqrt(dot4(V))
+FORCEINLINE VectorRegister VectorReciprocalLen(const VectorRegister& Vector)
+{
+	VectorRegister RecipLen = VectorDot4(Vector, Vector);
+	return VectorReciprocalSqrt(RecipLen);
+}
+
+// Return the reciprocal of the square root of each component
+// Vector:						Vector
+// Return:						VectorRegister(1 / sqrt(Vec.X), 1 / sqrt(Vec.Y), 1 / sqrt(Vec.Z), 1 / sqrt(Vec.W))
+FORCEINLINE VectorRegister VectorReciprocalSqrtAccurate(const VectorRegister& Vec)
+{
+	// Perform two passes of Newton-Raphson iteration on the hardware estimate
+	//    v^-0.5 = x
+	// => x^2 = v^-1
+	// => 1/(x^2) = v
+	// => F(x) = x^-2 - v
+	//    F'(x) = -2x^-3
+
+	//    x1 = x0 - F(x0)/F'(x0)
+	// => x1 = x0 + 0.5 * (x0^-2 - Vec) * x0^3
+	// => x1 = x0 + 0.5 * (x0 - Vec * x0^3)
+	// => x1 = x0 + x0 * (0.5 - 0.5 * Vec * x0^2)
+
+	const VectorRegister OneHalf = GlobalVectorConstants::FloatOneHalf;
+	const VectorRegister VecDivBy2 = VectorMultiply(Vec, OneHalf);
+
+	// Initial estimate
+	const VectorRegister x0 = VectorReciprocalSqrt(Vec);
+
+	// First iteration
+	VectorRegister x1 = VectorMultiply(x0, x0);
+	x1 = VectorSubtract(OneHalf, VectorMultiply(VecDivBy2, x1));
+	x1 = VectorMultiplyAdd(x0, x1, x0);
+
+	// Second iteration
+	VectorRegister x2 = VectorMultiply(x1, x1);
+	x2 = VectorSubtract(OneHalf, VectorMultiply(VecDivBy2, x2));
+	x2 = VectorMultiplyAdd(x1, x2, x1);
+
+	return x2;
+}
+
+// Computes the reciprocal of a vector(component - wise) and returns the result.
+// Vec:							1st vector
+// Return:						VectorRegister(1.0f / Vec.x, 1.0f / Vec.y, 1.0f / Vec.z, 1.0f / Vec.w)
+FORCEINLINE VectorRegister VectorReciprocalAccurate(const VectorRegister& Vec)
+{
+	// Perform two passes of Newton-Raphson iteration on the hardware estimate
+	//   x1 = x0 - f(x0) / f'(x0)
+	//
+	//    1 / Vec = x
+	// => x * Vec = 1 
+	// => F(x) = x * Vec - 1
+	//    F'(x) = Vec
+	// => x1 = x0 - (x0 * Vec - 1) / Vec
+	//
+	// Since 1/Vec is what we're trying to solve, use an estimate for it, x0
+	// => x1 = x0 - (x0 * Vec - 1) * x0 = 2 * x0 - Vec * x0^2 
+
+	// Initial estimate
+	const VectorRegister x0 = VectorReciprocal(Vec);
+
+	// First iteration
+	const VectorRegister x0Squared = VectorMultiply(x0, x0);
+	const VectorRegister x0Times2 = VectorAdd(x0, x0);
+	const VectorRegister x1 = VectorSubtract(x0Times2, VectorMultiply(Vec, x0Squared));
+
+	// Second iteration
+	const VectorRegister x1Squared = VectorMultiply(x1, x1);
+	const VectorRegister x1Times2 = VectorAdd(x1, x1);
+	const VectorRegister x2 = VectorSubtract(x1Times2, VectorMultiply(Vec, x1Squared));
+
+	return x2;
+}
+
+// Normalize vector
+// Vector:						Vector to normalize
+// Return:						Normalized VectorRegister
+FORCEINLINE VectorRegister VectorNormalize(const VectorRegister& Vector)
+{
+	return VectorMultiply(Vector, VectorReciprocalLen(Vector));
+}
+
+// Loads XYZ and sets W = 0
+// Vector:						VectorRegister
+// Return:						VectorRegister(X, Y, Z, 0.0f)
+#define VectorSet_W0( Vec )		_mm_and_ps( Vec, GlobalVectorConstants::XYZMask )
+
+// Loads XYZ and sets W = 1
+// Vector:						VectorRegister
+// Return:						VectorRegister(X, Y, Z, 1.0f)
+FORCEINLINE VectorRegister VectorSet_W1(const VectorRegister& Vector)
+{
+	// Temp = (Vector[2]. Vector[3], 1.0f, 1.0f)
+	VectorRegister Temp = _mm_movehl_ps(VectorOne(), Vector);
+
+	// Return (Vector[0], Vector[1], Vector[2], 1.0f)
+	return _mm_shuffle_ps(Vector, Temp, SHUFFLEMASK(0, 1, 0, 3));
+}
+
+// Multiplies two 4x4 matrices.
+// Result:						Pointer to where the result should be stored
+// Matrix1:						Pointer to the first matrix
+// Matrix2:						Pointer to the second matrix
+FORCEINLINE void VectorMatrixMultiply(void *Result, const void* Matrix1, const void* Matrix2)
+{
+	const VectorRegister *A = (const VectorRegister *)Matrix1;
+	const VectorRegister *B = (const VectorRegister *)Matrix2;
+	VectorRegister *R = (VectorRegister *)Result;
+	VectorRegister Temp, R0, R1, R2, R3;
+
+	// First row of result (Matrix1[0] * Matrix2).
+	Temp = VectorMultiply(VectorReplicate(A[0], 0), B[0]);
+	Temp = VectorMultiplyAdd(VectorReplicate(A[0], 1), B[1], Temp);
+	Temp = VectorMultiplyAdd(VectorReplicate(A[0], 2), B[2], Temp);
+	R0 = VectorMultiplyAdd(VectorReplicate(A[0], 3), B[3], Temp);
+
+	// Second row of result (Matrix1[1] * Matrix2).
+	Temp = VectorMultiply(VectorReplicate(A[1], 0), B[0]);
+	Temp = VectorMultiplyAdd(VectorReplicate(A[1], 1), B[1], Temp);
+	Temp = VectorMultiplyAdd(VectorReplicate(A[1], 2), B[2], Temp);
+	R1 = VectorMultiplyAdd(VectorReplicate(A[1], 3), B[3], Temp);
+
+	// Third row of result (Matrix1[2] * Matrix2).
+	Temp = VectorMultiply(VectorReplicate(A[2], 0), B[0]);
+	Temp = VectorMultiplyAdd(VectorReplicate(A[2], 1), B[1], Temp);
+	Temp = VectorMultiplyAdd(VectorReplicate(A[2], 2), B[2], Temp);
+	R2 = VectorMultiplyAdd(VectorReplicate(A[2], 3), B[3], Temp);
+
+	// Fourth row of result (Matrix1[3] * Matrix2).
+	Temp = VectorMultiply(VectorReplicate(A[3], 0), B[0]);
+	Temp = VectorMultiplyAdd(VectorReplicate(A[3], 1), B[1], Temp);
+	Temp = VectorMultiplyAdd(VectorReplicate(A[3], 2), B[2], Temp);
+	R3 = VectorMultiplyAdd(VectorReplicate(A[3], 3), B[3], Temp);
+
+	// Store result
+	R[0] = R0;
+	R[1] = R1;
+	R[2] = R2;
+	R[3] = R3;
+}
+
+// Calculate the inverse of an YMatrix.
+// DstMatrix:					FMatrix pointer to where the result should be stored
+// SrcMatrix:					FMatrix pointer to the Matrix to be inversed
+// TODO : Vector version of this function that doesn't use D3DX
+FORCEINLINE void VectorMatrixInverse(void* DstMatrix, const void* SrcMatrix)
+{
+	typedef float Float4x4[4][4];
+	const Float4x4& M = *((const Float4x4*)SrcMatrix);
+	Float4x4 Result;
+	float Det[4];
+	Float4x4 Tmp;
+
+	Tmp[0][0] = M[2][2] * M[3][3] - M[2][3] * M[3][2];
+	Tmp[0][1] = M[1][2] * M[3][3] - M[1][3] * M[3][2];
+	Tmp[0][2] = M[1][2] * M[2][3] - M[1][3] * M[2][2];
+
+	Tmp[1][0] = M[2][2] * M[3][3] - M[2][3] * M[3][2];
+	Tmp[1][1] = M[0][2] * M[3][3] - M[0][3] * M[3][2];
+	Tmp[1][2] = M[0][2] * M[2][3] - M[0][3] * M[2][2];
+
+	Tmp[2][0] = M[1][2] * M[3][3] - M[1][3] * M[3][2];
+	Tmp[2][1] = M[0][2] * M[3][3] - M[0][3] * M[3][2];
+	Tmp[2][2] = M[0][2] * M[1][3] - M[0][3] * M[1][2];
+
+	Tmp[3][0] = M[1][2] * M[2][3] - M[1][3] * M[2][2];
+	Tmp[3][1] = M[0][2] * M[2][3] - M[0][3] * M[2][2];
+	Tmp[3][2] = M[0][2] * M[1][3] - M[0][3] * M[1][2];
+
+	Det[0] = M[1][1] * Tmp[0][0] - M[2][1] * Tmp[0][1] + M[3][1] * Tmp[0][2];
+	Det[1] = M[0][1] * Tmp[1][0] - M[2][1] * Tmp[1][1] + M[3][1] * Tmp[1][2];
+	Det[2] = M[0][1] * Tmp[2][0] - M[1][1] * Tmp[2][1] + M[3][1] * Tmp[2][2];
+	Det[3] = M[0][1] * Tmp[3][0] - M[1][1] * Tmp[3][1] + M[2][1] * Tmp[3][2];
+
+	float Determinant = M[0][0] * Det[0] - M[1][0] * Det[1] + M[2][0] * Det[2] - M[3][0] * Det[3];
+	const float	RDet = 1.0f / Determinant;
+
+	Result[0][0] = RDet * Det[0];
+	Result[0][1] = -RDet * Det[1];
+	Result[0][2] = RDet * Det[2];
+	Result[0][3] = -RDet * Det[3];
+	Result[1][0] = -RDet * (M[1][0] * Tmp[0][0] - M[2][0] * Tmp[0][1] + M[3][0] * Tmp[0][2]);
+	Result[1][1] = RDet * (M[0][0] * Tmp[1][0] - M[2][0] * Tmp[1][1] + M[3][0] * Tmp[1][2]);
+	Result[1][2] = -RDet * (M[0][0] * Tmp[2][0] - M[1][0] * Tmp[2][1] + M[3][0] * Tmp[2][2]);
+	Result[1][3] = RDet * (M[0][0] * Tmp[3][0] - M[1][0] * Tmp[3][1] + M[2][0] * Tmp[3][2]);
+	Result[2][0] = RDet * (
+		M[1][0] * (M[2][1] * M[3][3] - M[2][3] * M[3][1]) -
+		M[2][0] * (M[1][1] * M[3][3] - M[1][3] * M[3][1]) +
+		M[3][0] * (M[1][1] * M[2][3] - M[1][3] * M[2][1])
+		);
+	Result[2][1] = -RDet * (
+		M[0][0] * (M[2][1] * M[3][3] - M[2][3] * M[3][1]) -
+		M[2][0] * (M[0][1] * M[3][3] - M[0][3] * M[3][1]) +
+		M[3][0] * (M[0][1] * M[2][3] - M[0][3] * M[2][1])
+		);
+	Result[2][2] = RDet * (
+		M[0][0] * (M[1][1] * M[3][3] - M[1][3] * M[3][1]) -
+		M[1][0] * (M[0][1] * M[3][3] - M[0][3] * M[3][1]) +
+		M[3][0] * (M[0][1] * M[1][3] - M[0][3] * M[1][1])
+		);
+	Result[2][3] = -RDet * (
+		M[0][0] * (M[1][1] * M[2][3] - M[1][3] * M[2][1]) -
+		M[1][0] * (M[0][1] * M[2][3] - M[0][3] * M[2][1]) +
+		M[2][0] * (M[0][1] * M[1][3] - M[0][3] * M[1][1])
+		);
+	Result[3][0] = -RDet * (
+		M[1][0] * (M[2][1] * M[3][2] - M[2][2] * M[3][1]) -
+		M[2][0] * (M[1][1] * M[3][2] - M[1][2] * M[3][1]) +
+		M[3][0] * (M[1][1] * M[2][2] - M[1][2] * M[2][1])
+		);
+	Result[3][1] = RDet * (
+		M[0][0] * (M[2][1] * M[3][2] - M[2][2] * M[3][1]) -
+		M[2][0] * (M[0][1] * M[3][2] - M[0][2] * M[3][1]) +
+		M[3][0] * (M[0][1] * M[2][2] - M[0][2] * M[2][1])
+		);
+	Result[3][2] = -RDet * (
+		M[0][0] * (M[1][1] * M[3][2] - M[1][2] * M[3][1]) -
+		M[1][0] * (M[0][1] * M[3][2] - M[0][2] * M[3][1]) +
+		M[3][0] * (M[0][1] * M[1][2] - M[0][2] * M[1][1])
+		);
+	Result[3][3] = RDet * (
+		M[0][0] * (M[1][1] * M[2][2] - M[1][2] * M[2][1]) -
+		M[1][0] * (M[0][1] * M[2][2] - M[0][2] * M[2][1]) +
+		M[2][0] * (M[0][1] * M[1][2] - M[0][2] * M[1][1])
+		);
+
+	memcpy(DstMatrix, &Result, 16 * sizeof(float));
+}
