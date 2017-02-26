@@ -66,7 +66,7 @@ FORCEINLINE VectorRegisterInt		MakeVectorRegisterInt(int32 X, int32 Y, int32 Z, 
 
 // Return an component from a vector
 // Vec:							VectorRegister
-// ComponentIndex:				Which component to gex, X=0, Y=1, Z=2, W=3
+// ComponentIndex:				Which component to get, X=0, Y=1, Z=2, W=3
 // Return:						The component as a float
 FORCEINLINE float				VectorGetComponent(VectorRegister Vec, uint32 ComponentIndex)
 {
@@ -572,4 +572,500 @@ FORCEINLINE void VectorMatrixInverse(void* DstMatrix, const void* SrcMatrix)
 		);
 
 	memcpy(DstMatrix, &Result, 16 * sizeof(float));
+}
+
+//Calculate Homogeneous transform.
+// VecP:						VectorRegister
+// MatrixM:						YMatrix pointer to the Matrix to apply transform
+// Return:						VectorRegister = VecP*MatrixM
+
+FORCEINLINE VectorRegister VectorTransformVector(const VectorRegister&  VecP, const void* MatrixM)
+{
+	const VectorRegister *M = (const VectorRegister *)MatrixM;
+	VectorRegister VTempX, VTempY, VTempZ, VTempW;
+
+	// Splat x,y,z and w
+	VTempX = VectorReplicate(VecP, 0);
+	VTempY = VectorReplicate(VecP, 1);
+	VTempZ = VectorReplicate(VecP, 2);
+	VTempW = VectorReplicate(VecP, 3);
+	// Mul by the matrix
+	VTempX = VectorMultiply(VTempX, M[0]);
+	VTempY = VectorMultiply(VTempY, M[1]);
+	VTempZ = VectorMultiply(VTempZ, M[2]);
+	VTempW = VectorMultiply(VTempW, M[3]);
+	// Add them all together
+	VTempX = VectorAdd(VTempX, VTempY);
+	VTempZ = VectorAdd(VTempZ, VTempW);
+	VTempX = VectorAdd(VTempX, VTempZ);
+
+	return VTempX;
+}
+
+// Returns the minimum values of two vectors(component - wise).
+// Vec1:						1st vector
+// Vec2:						2nd vector
+// Return:						VectorRegister(min(Vec1.x, Vec2.x), min(Vec1.y, Vec2.y), min(Vec1.z, Vec2.z), min(Vec1.w, Vec2.w))
+#define VectorMin( Vec1, Vec2 )			_mm_min_ps( Vec1, Vec2 )
+
+// Returns the maximum values of two vectors(component - wise).
+// Vec1:						1st vector
+// Vec2:						2nd vector
+// Return:						VectorRegister( max(Vec1.x,Vec2.x), max(Vec1.y,Vec2.y), max(Vec1.z,Vec2.z), max(Vec1.w,Vec2.w) )
+#define VectorMin( Vec1, Vec2 )			_mm_max_ps( Vec1, Vec2 )
+
+// Swizzle the 4 components of a vector and returns the result.
+// Vec:							Source vector
+// X:							Index for which component to use for X(literal 0 - 3)
+// Y:							Index for which component to use for Y(literal 0 - 3)
+// Z:							Index for which component to use for Z(literal 0 - 3)
+// W:							Index for which component to use for W(literal 0 - 3)
+// !!Note by zyx, 宏没法重载，只能叫两个名子，参考与下面的Shuffle函数
+#define VectorSwizzle( Vec, X, Y, Z, W )	_mm_shuffle_ps( Vec, Vec, SHUFFLEMASK(X,Y,Z,W) )
+
+//Creates a vector through selecting two components from each vector via a shuffle mask.
+// Vec1:						Source vector1
+// Vec2:						Source vector2
+// X:							Index for which component of Vector1 to use for X(literal 0 - 3)
+// Y:							Index for which component to Vector1 to use for Y(literal 0 - 3)
+// Z:							Index for which component to Vector2 to use for Z(literal 0 - 3)
+// W:							Index for which component to Vector2 to use for W(literal 0 - 3)
+#define VectorShuffle( Vec1, Vec2, X, Y, Z, W )	_mm_shuffle_ps( Vec1, Vec2, SHUFFLEMASK(X,Y,Z,W) )
+
+//These functions return a vector mask to indicate which components pass the comparison.
+//Each component is 0xffffffff if it passes, 0x00000000 if it fails.
+// Vec1:						1st source vector
+// Vec2:						2nd source vector
+// Return:						Vector with a mask for each component.
+#define VectorMask_LT( Vec1, Vec2 )			_mm_cmplt_ps(Vec1, Vec2)
+#define VectorMask_LE( Vec1, Vec2 )			_mm_cmple_ps(Vec1, Vec2)
+#define VectorMask_GT( Vec1, Vec2 )			_mm_cmpgt_ps(Vec1, Vec2)
+#define VectorMask_GE( Vec1, Vec2 )			_mm_cmpge_ps(Vec1, Vec2)
+#define VectorMask_EQ( Vec1, Vec2 )			_mm_cmpeq_ps(Vec1, Vec2)
+#define VectorMask_NE( Vec1, Vec2 )			_mm_cmpneq_ps(Vec1, Vec2
+
+// Returns an integer bit - mask(0x00 - 0x0f) based on the sign - bit for each component in a vector.
+// VecMask:						Vector
+// Return:						Bit 0 = sign(VecMask.x), Bit 1 = sign(VecMask.y), Bit 2 = sign(VecMask.z), Bit 3 = sign(VecMask.w)
+
+#define VectorMaskBits( VecMask )			_mm_movemask_ps( VecMask )
+
+// Divides two vectors(component - wise) and returns the result.
+// Vec1:						1st vector
+// Vec2:						2nd vector
+// Return:						VectorRegister(Vec1.x / Vec2.x, Vec1.y / Vec2.y, Vec1.z / Vec2.z, Vec1.w / Vec2.w)
+#define VectorDivide( Vec1, Vec2 )		_mm_div_ps( Vec1, Vec2 ) 
+
+//Counts the number of trailing zeros in the bit representation of the value,
+//counting from least - significant bit to most.
+// Value:						the value to determine the number of leading zeros for 
+// Return:						the number of zeros before the first "on" bit
+#if PLATFORM_WINDOWS
+#pragma intrinsic( _BitScanForward )
+FORCEINLINE uint32 appCountTrailingZeros(uint32 Value)
+{
+	if (Value == 0)
+	{
+		return 32;
+	}
+	uint32 BitIndex;	// 0-based, where the LSB is 0 and MSB is 31
+	_BitScanForward((::DWORD *)&BitIndex, Value);	// Scans from LSB to MSB
+	return BitIndex;
+}
+#else // PLATFORM_WINDOWS
+FORCEINLINE uint32 appCountTrailingZeros(uint32 Value)
+{
+	if (Value == 0)
+	{
+		return 32;
+	}
+	return __builtin_ffs(Value) - 1;
+}
+#endif // PLATFORM_WINDOWS
+
+// Merges the XYZ components of one vector with the W component of another vector and returns the result.
+// VecXYZ:						Source vector for XYZ_
+// VecW:						Source register for ___W(note: the fourth component is used, not the first)
+// Return:						VectorRegister(VecXYZ.x, VecXYZ.y, VecXYZ.z, VecW.w)
+#define VectorMergeVecXYZ_VecW( VecXYZ, VecW )	VectorSelect( GlobalVectorConstants::XYZMask, VecXYZ, VecW )
+
+// Loads 4 BYTEs from unaligned memory and converts them into 4 FLOATs.
+// IMPORTANT: You need to call VectorResetFloatRegisters() before using scalar FLOATs after you've used this intrinsic!
+// Ptr:							Unaligned memory pointer to the 4 BYTEs.
+// Return:						VectorRegister(float(Ptr[0]), float(Ptr[1]), float(Ptr[2]), float(Ptr[3]))
+// Looks complex but is really quite straightforward:
+// Load as 32-bit value, unpack 4x unsigned bytes to 4x 16-bit ints, then unpack again into 4x 32-bit ints, then convert to 4x floats
+#define VectorLoadByte4( Ptr )			_mm_cvtepi32_ps(_mm_unpacklo_epi16(_mm_unpacklo_epi8(_mm_cvtsi32_si128(*(int32*)Ptr), _mm_setzero_si128()), _mm_setzero_si128()))
+
+// Loads 4 BYTEs from unaligned memory and converts them into 4 FLOATs in reversed order.
+// IMPORTANT: You need to call VectorResetFloatRegisters() before using scalar FLOATs after you've used this intrinsic!
+// Ptr:							Unaligned memory pointer to the 4 BYTEs.
+// Return:						VectorRegister(float(Ptr[3]), float(Ptr[2]), float(Ptr[1]), float(Ptr[0]))
+FORCEINLINE VectorRegister VectorLoadByte4Reverse(void* Ptr)
+{
+	VectorRegister Temp = VectorLoadByte4(Ptr);
+	return _mm_shuffle_ps(Temp, Temp, SHUFFLEMASK(3, 2, 1, 0));
+}
+
+// Converts the 4 FLOATs in the vector to 4 BYTEs, clamped to[0, 255], and stores to unaligned memory.
+// IMPORTANT: You need to call VectorResetFloatRegisters() before using scalar FLOATs after you've used this intrinsic!
+// Vec:							Vector containing 4 FLOATs
+// Ptr:							Unaligned memory pointer to store the 4 BYTEs.
+FORCEINLINE void VectorStoreByte4(const VectorRegister& Vec, void* Ptr)
+{
+	// Looks complex but is really quite straightforward:
+	// Convert 4x floats to 4x 32-bit ints, then pack into 4x 16-bit ints, then into 4x 8-bit unsigned ints, then store as a 32-bit value
+	*(int32*)Ptr = _mm_cvtsi128_si32(_mm_packus_epi16(_mm_packs_epi32(_mm_cvttps_epi32(Vec), _mm_setzero_si128()), _mm_setzero_si128()));
+}
+
+//Loads packed RGB10A2(4 bytes) from unaligned memory and converts them into 4 FLOATs.
+//IMPORTANT: You need to call VectorResetFloatRegisters() before using scalar FLOATs after you've used this intrinsic!
+// Ptr:							Unaligned memory pointer to the RGB10A2(4 bytes).
+// Return:						VectorRegister with 4 FLOATs loaded from Ptr.
+FORCEINLINE VectorRegister		VectorLoadURGB10A2N(void* Ptr)
+{
+	VectorRegister Tmp;
+
+	Tmp = _mm_and_ps(_mm_load_ps1((const float *)Ptr), MakeVectorRegister(0x3FFu, 0x3FFu << 10, 0x3FFu << 20, 0x3u << 30));
+	Tmp = _mm_xor_ps(Tmp, VectorSet(0, 0, 0, 0x80000000));
+	Tmp = _mm_cvtepi32_ps(*(const VectorRegisterInt*)&Tmp);
+	Tmp = _mm_add_ps(Tmp, VectorSet(0, 0, 0, 32768.0f*65536.0f));
+	Tmp = _mm_mul_ps(Tmp, VectorSet(1.0f / 1023.0f, 1.0f / (1023.0f*1024.0f), 1.0f / (1023.0f*1024.0f*1024.0f), 1.0f / (3.0f*1024.0f*1024.0f*1024.0f)));
+
+	return Tmp;
+}
+
+//Converts the 4 FLOATs in the vector RGB10A2, clamped to[0, 1023] and [0, 3], and stores to unaligned memory.
+//IMPORTANT: You need to call VectorResetFloatRegisters() before using scalar FLOATs after you've used this intrinsic!
+// Vec:							Vector containing 4 FLOATs
+// Ptr:							Unaligned memory pointer to store the packed RGBA16(8 bytes).
+FORCEINLINE void				VectorStoreURGB10A2N(const VectorRegister& Vec, void* Ptr)
+{
+	VectorRegister Tmp;
+	Tmp = _mm_max_ps(Vec, MakeVectorRegister(0.0f, 0.0f, 0.0f, 0.0f));
+	Tmp = _mm_min_ps(Tmp, MakeVectorRegister(1.0f, 1.0f, 1.0f, 1.0f));
+	Tmp = _mm_mul_ps(Tmp, MakeVectorRegister(1023.0f, 1023.0f*1024.0f*0.5f, 1023.0f*1024.0f*1024.0f, 3.0f*1024.0f*1024.0f*1024.0f*0.5f));
+
+	VectorRegisterInt TmpI;
+	TmpI = _mm_cvttps_epi32(Tmp);
+	TmpI = _mm_and_si128(TmpI, MakeVectorRegisterInt(0x3FFu, 0x3FFu << (10 - 1), 0x3FFu << 20, 0x3u << (30 - 1)));
+
+	VectorRegisterInt TmpI2;
+	TmpI2 = _mm_shuffle_epi32(TmpI, _MM_SHUFFLE(3, 2, 3, 2));
+	TmpI = _mm_or_si128(TmpI, TmpI2);
+
+	TmpI2 = _mm_shuffle_epi32(TmpI, _MM_SHUFFLE(1, 1, 1, 1));
+	TmpI2 = _mm_add_epi32(TmpI2, TmpI2);
+	TmpI = _mm_or_si128(TmpI, TmpI2);
+
+	_mm_store_ss((float *)Ptr, *(const VectorRegister*)&TmpI);
+}
+
+//Loads packed RGBA16(4 bytes) from unaligned memory and converts them into 4 FLOATs.
+//IMPORTANT: You need to call VectorResetFloatRegisters() before using scalar FLOATs after you've used this intrinsic!
+// Ptr:							Unaligned memory pointer to the RGBA16(8 bytes).
+// Return:						VectorRegister with 4 FLOATs loaded from Ptr.
+FORCEINLINE VectorRegister VectorLoadURGBA16N(void* Ptr)
+{
+	VectorRegisterDouble TmpD = _mm_load1_pd(reinterpret_cast<const double *>(Ptr));
+
+	VectorRegisterInt Mask = MakeVectorRegisterInt(0x0000FFFF, 0x0000FFFF, 0xFFFF0000, 0xFFFF0000);
+	VectorRegisterInt FlipSign = MakeVectorRegisterInt(0, 0, 0x80000000, 0x80000000);
+
+	VectorRegister Tmp = _mm_and_ps(
+		reinterpret_cast<const VectorRegister*>(&TmpD)[0],
+		reinterpret_cast<const VectorRegister*>(&Mask)[0]
+	);
+
+	Tmp = _mm_xor_ps(Tmp, reinterpret_cast<const VectorRegister*>(&FlipSign)[0]);
+	Tmp = _mm_cvtepi32_ps(reinterpret_cast<const VectorRegisterInt*>(&Tmp)[0]);
+	Tmp = _mm_add_ps(Tmp, MakeVectorRegister(0, 0, 32768.0f*65536.0f, 32768.0f*65536.0f));
+	Tmp = _mm_mul_ps(Tmp, MakeVectorRegister(1.0f / 65535.0f, 1.0f / 65535.0f, 1.0f / (65535.0f*65536.0f), 1.0f / (65535.0f*65536.0f)));
+	return _mm_shuffle_ps(Tmp, Tmp, _MM_SHUFFLE(3, 1, 2, 0));
+}
+
+//Converts the 4 FLOATs in the vector RGBA16, clamped to [0, 65535], and stores to unaligned memory.
+//IMPORTANT: You need to call VectorResetFloatRegisters() before using scalar FLOATs after you've used this intrinsic!
+// Vec:							Vector containing 4 FLOATs
+// Ptr:							Unaligned memory pointer to store the packed RGB10A2(4 bytes).
+FORCEINLINE void VectorStoreURGBA16N(const VectorRegister& Vec, void* Ptr)
+{
+
+	VectorRegister Tmp;
+	Tmp = _mm_max_ps(Vec, MakeVectorRegister(0.0f, 0.0f, 0.0f, 0.0f));
+	Tmp = _mm_min_ps(Tmp, MakeVectorRegister(1.0f, 1.0f, 1.0f, 1.0f));
+	Tmp = _mm_mul_ps(Tmp, MakeVectorRegister(65535.0f, 65535.0f, 65535.0f, 65535.0f));
+
+	VectorRegisterInt TmpI = _mm_cvtps_epi32(Tmp);
+
+	uint16* Out = (uint16*)Ptr;
+	Out[0] = static_cast<int16>(_mm_extract_epi16(TmpI, 0));
+	Out[1] = static_cast<int16>(_mm_extract_epi16(TmpI, 2));
+	Out[2] = static_cast<int16>(_mm_extract_epi16(TmpI, 4));
+	Out[3] = static_cast<int16>(_mm_extract_epi16(TmpI, 6));
+}
+
+// Returns non - zero if any element in Vec1 is greater than the corresponding element in Vec2, otherwise 0.
+// Vec1:						1st source vector
+// Vec2							2nd source vector
+// Return:						Non - zero integer if (Vec1.x > Vec2.x) || (Vec1.y > Vec2.y) || (Vec1.z > Vec2.z) || (Vec1.w > Vec2.w)
+#define VectorAnyGreaterThan( Vec1, Vec2 )		_mm_movemask_ps( _mm_cmpgt_ps(Vec1, Vec2) )
+
+//Resets the floating point registers so that they can be used again.
+// Some intrinsics use these for MMX purposes(e.g.VectorLoadByte4 and VectorStoreByte4).
+// This is no longer necessary now that we don't use MMX instructions
+#define VectorResetFloatRegisters()
+
+// Returns the control register.
+// Return:						The uint32 control register
+#define VectorGetControlRegister()		_mm_getcsr()
+
+// Sets the control register.
+// ControlStatus:				The uint32 control status value to set
+#define	VectorSetControlRegister(ControlStatus) _mm_setcsr( ControlStatus )
+
+// Control status bit to round all floating point math results towards zero.
+#define VECTOR_ROUND_TOWARD_ZERO		_MM_ROUND_TOWARD_ZERO
+
+//Multiplies two quaternions; the order matters.
+//Order matters when composing quaternions : C = VectorQuaternionMultiply2(A, B) will yield a quaternion C = A * B
+//that logically first applies B then A to any subsequent transformation(right first, then left).
+// Quat1:						Pointer to the first quaternion
+// Quat2:						Pointer to the second quaternion
+// Return:						Quat1 * Quat2
+FORCEINLINE VectorRegister VectorQuaternionMultiply2(const VectorRegister& Quat1, const VectorRegister& Quat2)
+{
+	VectorRegister Result = VectorMultiply(VectorReplicate(Quat1, 3), Quat2);
+	Result = VectorMultiplyAdd(VectorMultiply(VectorReplicate(Quat1, 0), VectorSwizzle(Quat2, 3, 2, 1, 0)), GlobalVectorConstants::QMULTI_SIGN_MASK0, Result);
+	Result = VectorMultiplyAdd(VectorMultiply(VectorReplicate(Quat1, 1), VectorSwizzle(Quat2, 2, 3, 0, 1)), GlobalVectorConstants::QMULTI_SIGN_MASK1, Result);
+	Result = VectorMultiplyAdd(VectorMultiply(VectorReplicate(Quat1, 2), VectorSwizzle(Quat2, 1, 0, 3, 2)), GlobalVectorConstants::QMULTI_SIGN_MASK2, Result);
+
+	return Result;
+}
+
+// Multiplies two quaternions; the order matters.
+// When composing quaternions : VectorQuaternionMultiply(C, A, B) will yield a quaternion C = A * B
+// that logically first applies B then A to any subsequent transformation(right first, then left).
+// Result:						Pointer to where the result Quat1 * Quat2 should be stored
+// Quat1:						Pointer to the first quaternion(must not be the destination)
+// Quat2:						Pointer to the second quaternion(must not be the destination)
+
+FORCEINLINE void VectorQuaternionMultiply(void* RESTRICT Result, const void* RESTRICT Quat1, const void* RESTRICT Quat2)
+{
+	*((VectorRegister *)Result) = VectorQuaternionMultiply2(*((const VectorRegister *)Quat1), *((const VectorRegister *)Quat2));
+}
+
+// Returns true if the vector contains a component that is either NAN or +/-infinite.
+inline bool VectorContainsNaNOrInfinite(const VectorRegister& Vec)
+{
+	// https://en.wikipedia.org/wiki/IEEE_754-1985
+	// Infinity is represented with all exponent bits set, with the correct sign bit.
+	// NaN is represented with all exponent bits set, plus at least one fraction/significand bit set.
+	// This means finite values will not have all exponent bits set, so check against those bits.
+
+	// Mask off Exponent
+	VectorRegister ExpTest = VectorBitwiseAnd(Vec, GlobalVectorConstants::FloatInfinity);
+	// Compare to full exponent. If any are full exponent (not finite), the signs copied to the mask are non-zero, otherwise it's zero and finite.
+	bool IsFinite = VectorMaskBits(VectorCompareEQ(ExpTest, GlobalVectorConstants::FloatInfinity)) == 0;
+	return !IsFinite;
+}
+
+FORCEINLINE VectorRegister VectorTruncate(const VectorRegister& X)
+{
+	// cvt abbreviate from convert
+	return _mm_cvtepi32_ps(_mm_cvttps_epi32(X));
+}
+
+FORCEINLINE VectorRegister VectorFractional(const VectorRegister& X)
+{
+	return VectorSubtract(X, VectorTruncate(X));
+}
+
+FORCEINLINE VectorRegister VectorCeil(const VectorRegister& X)
+{
+	VectorRegister Trunc = VectorTruncate(X);
+	VectorRegister PosMask = VectorCompareGE(X, GlobalVectorConstants::FloatZero);
+	VectorRegister Add = VectorSelect(PosMask, GlobalVectorConstants::FloatOne, (GlobalVectorConstants::FloatZero));
+	return VectorAdd(Trunc, Add);
+}
+
+FORCEINLINE VectorRegister VectorFloor(const VectorRegister& X)
+{
+	VectorRegister Trunc = VectorTruncate(X);
+	VectorRegister PosMask = VectorCompareGE(X, (GlobalVectorConstants::FloatZero));
+	VectorRegister Sub = VectorSelect(PosMask, (GlobalVectorConstants::FloatZero), (GlobalVectorConstants::FloatOne));
+	return VectorSubtract(Trunc, Sub);
+}
+
+FORCEINLINE VectorRegister VectorMod(const VectorRegister& X, const VectorRegister& Y)
+{
+	VectorRegister Temp = VectorTruncate(VectorDivide(X, Y));
+	return VectorSubtract(X, VectorMultiply(Y, Temp));
+}
+
+FORCEINLINE VectorRegister VectorSign(const VectorRegister& X)
+{
+	VectorRegister Mask = VectorCompareGE(X, (GlobalVectorConstants::FloatZero));
+	return VectorSelect(Mask, (GlobalVectorConstants::FloatOne), (GlobalVectorConstants::FloatMinusOne));
+}
+
+FORCEINLINE VectorRegister VectorStep(const VectorRegister& X)
+{
+	VectorRegister Mask = VectorCompareGE(X, (GlobalVectorConstants::FloatZero));
+	return VectorSelect(Mask, (GlobalVectorConstants::FloatOne), (GlobalVectorConstants::FloatZero));
+}
+
+//TODO: Vectorize
+FORCEINLINE VectorRegister VectorExp(const VectorRegister& X)
+{
+	return MakeVectorRegister(FMath::Exp(VectorGetComponent(X, 0)), FMath::Exp(VectorGetComponent(X, 1)), FMath::Exp(VectorGetComponent(X, 2)), FMath::Exp(VectorGetComponent(X, 3)));
+}
+
+//TODO: Vectorize
+FORCEINLINE VectorRegister VectorExp2(const VectorRegister& X)
+{
+	return MakeVectorRegister(FMath::Exp2(VectorGetComponent(X, 0)), FMath::Exp2(VectorGetComponent(X, 1)), FMath::Exp2(VectorGetComponent(X, 2)), FMath::Exp2(VectorGetComponent(X, 3)));
+}
+
+//TODO: Vectorize
+FORCEINLINE VectorRegister VectorLog(const VectorRegister& X)
+{
+	return MakeVectorRegister(FMath::Loge(VectorGetComponent(X, 0)), FMath::Loge(VectorGetComponent(X, 1)), FMath::Loge(VectorGetComponent(X, 2)), FMath::Loge(VectorGetComponent(X, 3)));
+}
+
+//TODO: Vectorize
+FORCEINLINE VectorRegister VectorLog2(const VectorRegister& X)
+{
+	return MakeVectorRegister(FMath::Log2(VectorGetComponent(X, 0)), FMath::Log2(VectorGetComponent(X, 1)), FMath::Log2(VectorGetComponent(X, 2)), FMath::Log2(VectorGetComponent(X, 3)));
+}
+
+/**
+* Using "static const float ..." or "static const VectorRegister ..." in functions creates the branch and code to construct those constants.
+* Doing this in FORCEINLINE not only means you introduce a branch per static, but you bloat the inlined code immensely.
+* Defining these constants at the global scope causes them to be created at startup, and avoids the cost at the function level.
+* Doing it at the function level is okay for anything that is a simple "const float", but usage of "sqrt()" here forces actual function calls.
+* 就是说如果使用static const的话，会内部创建
+*  if( bCreated)
+*  {
+*      = initialized value
+*  }
+*  如果这个函数还是inline的，就扩展到了各个代码中，
+*  会降低函数执行效率，这里把所有的static const vector放到global空间，就不会有这种问题
+*/
+namespace VectorSinConstantsSSE
+{
+	static const float p = 0.225f;
+	static const float a = (16 * sqrt(p));
+	static const float b = ((1 - p) / sqrt(p));
+	static const VectorRegister A = MakeVectorRegister(a, a, a, a);
+	static const VectorRegister B = MakeVectorRegister(b, b, b, b);
+}
+
+FORCEINLINE VectorRegister VectorSin(const VectorRegister& X)
+{
+	//Sine approximation using a squared parabola restrained to f(0) = 0, f(PI) = 0, f(PI/2) = 1.
+	//based on a good discussion here http://forum.devmaster.net/t/fast-and-accurate-sine-cosine/9648
+	//After approx 2.5 million tests comparing to sin(): 
+	//Average error of 0.000128
+	//Max error of 0.001091
+
+	VectorRegister y = VectorMultiply(X, GlobalVectorConstants::OneOverTwoPi);
+	y = VectorSubtract(y, VectorFloor(VectorAdd(y, GlobalVectorConstants::FloatOneHalf)));
+	y = VectorMultiply(VectorSinConstantsSSE::A, VectorMultiply(y, VectorSubtract(GlobalVectorConstants::FloatOneHalf, VectorAbs(y))));
+	return VectorMultiply(y, VectorAdd(VectorSinConstantsSSE::B, VectorAbs(y)));
+}
+
+FORCEINLINE VectorRegister VectorCos(const VectorRegister& X)
+{
+	return VectorSin(VectorAdd(X, GlobalVectorConstants::PiByTwo));
+}
+
+
+// Computes the sine and cosine of each component of a Vector.
+// VSinAngles:					VectorRegister Pointer to where the Sin result should be stored
+// VCosAngles:					VectorRegister Pointer to where the Cos result should be stored
+// VAngles:						 VectorRegister Pointer to the input angles
+FORCEINLINE void VectorSinCos(VectorRegister* RESTRICT VSinAngles, VectorRegister* RESTRICT VCosAngles, const VectorRegister* RESTRICT VAngles)
+{
+	// Map to [-pi, pi]
+	// X = A - 2pi * round(A/2pi)
+	// Note the round(), not truncate(). In this case round() can round halfway cases using round-to-nearest-even OR round-to-nearest.
+
+	// Quotient = round(A/2pi)
+	VectorRegister Quotient = VectorMultiply(*VAngles, GlobalVectorConstants::OneOverTwoPi);
+	Quotient = _mm_cvtepi32_ps(_mm_cvtps_epi32(Quotient)); // round to nearest even is the default rounding mode but that's fine here.
+														   // X = A - 2pi * Quotient
+	VectorRegister X = VectorSubtract(*VAngles, VectorMultiply(GlobalVectorConstants::TwoPi, Quotient));
+
+	// Map in [-pi/2,pi/2]
+	VectorRegister sign = VectorBitwiseAnd(X, GlobalVectorConstants::SignBit);
+	VectorRegister c = VectorBitwiseOr(GlobalVectorConstants::Pi, sign);  // pi when x >= 0, -pi when x < 0
+	VectorRegister absx = VectorAbs(X);
+	VectorRegister rflx = VectorSubtract(c, X);
+	VectorRegister comp = VectorCompareGT(absx, GlobalVectorConstants::PiByTwo);
+	X = VectorSelect(comp, rflx, X);
+	sign = VectorSelect(comp, GlobalVectorConstants::FloatMinusOne, GlobalVectorConstants::FloatOne);
+
+	const VectorRegister XSquared = VectorMultiply(X, X);
+
+	// 11-degree minimax approximation
+	//*ScalarSin = (((((-2.3889859e-08f * y2 + 2.7525562e-06f) * y2 - 0.00019840874f) * y2 + 0.0083333310f) * y2 - 0.16666667f) * y2 + 1.0f) * y;
+	const VectorRegister SinCoeff0 = MakeVectorRegister(1.0f, -0.16666667f, 0.0083333310f, -0.00019840874f);
+	const VectorRegister SinCoeff1 = MakeVectorRegister(2.7525562e-06f, -2.3889859e-08f, /*unused*/ 0.f, /*unused*/ 0.f);
+
+	VectorRegister S;
+	S = VectorReplicate(SinCoeff1, 1);
+	S = VectorMultiplyAdd(XSquared, S, VectorReplicate(SinCoeff1, 0));
+	S = VectorMultiplyAdd(XSquared, S, VectorReplicate(SinCoeff0, 3));
+	S = VectorMultiplyAdd(XSquared, S, VectorReplicate(SinCoeff0, 2));
+	S = VectorMultiplyAdd(XSquared, S, VectorReplicate(SinCoeff0, 1));
+	S = VectorMultiplyAdd(XSquared, S, VectorReplicate(SinCoeff0, 0));
+	*VSinAngles = VectorMultiply(S, X);
+
+	// 10-degree minimax approximation
+	//*ScalarCos = sign * (((((-2.6051615e-07f * y2 + 2.4760495e-05f) * y2 - 0.0013888378f) * y2 + 0.041666638f) * y2 - 0.5f) * y2 + 1.0f);
+	const VectorRegister CosCoeff0 = MakeVectorRegister(1.0f, -0.5f, 0.041666638f, -0.0013888378f);
+	const VectorRegister CosCoeff1 = MakeVectorRegister(2.4760495e-05f, -2.6051615e-07f, /*unused*/ 0.f, /*unused*/ 0.f);
+
+	VectorRegister C;
+	C = VectorReplicate(CosCoeff1, 1);
+	C = VectorMultiplyAdd(XSquared, C, VectorReplicate(CosCoeff1, 0));
+	C = VectorMultiplyAdd(XSquared, C, VectorReplicate(CosCoeff0, 3));
+	C = VectorMultiplyAdd(XSquared, C, VectorReplicate(CosCoeff0, 2));
+	C = VectorMultiplyAdd(XSquared, C, VectorReplicate(CosCoeff0, 1));
+	C = VectorMultiplyAdd(XSquared, C, VectorReplicate(CosCoeff0, 0));
+	*VCosAngles = VectorMultiply(C, sign);
+}
+
+//TODO: Vectorize
+FORCEINLINE VectorRegister VectorTan(const VectorRegister& X)
+{
+	return MakeVectorRegister(FMath::Tan(VectorGetComponent(X, 0)), FMath::Tan(VectorGetComponent(X, 1)), FMath::Tan(VectorGetComponent(X, 2)), FMath::Tan(VectorGetComponent(X, 3)));
+}
+
+//TODO: Vectorize
+FORCEINLINE VectorRegister VectorASin(const VectorRegister& X)
+{
+	return MakeVectorRegister(FMath::Asin(VectorGetComponent(X, 0)), FMath::Asin(VectorGetComponent(X, 1)), FMath::Asin(VectorGetComponent(X, 2)), FMath::Asin(VectorGetComponent(X, 3)));
+}
+
+//TODO: Vectorize
+FORCEINLINE VectorRegister VectorACos(const VectorRegister& X)
+{
+	return MakeVectorRegister(FMath::Acos(VectorGetComponent(X, 0)), FMath::Acos(VectorGetComponent(X, 1)), FMath::Acos(VectorGetComponent(X, 2)), FMath::Acos(VectorGetComponent(X, 3)));
+}
+
+//TODO: Vectorize
+FORCEINLINE VectorRegister VectorATan(const VectorRegister& X)
+{
+	return MakeVectorRegister(FMath::Atan(VectorGetComponent(X, 0)), FMath::Atan(VectorGetComponent(X, 1)), FMath::Atan(VectorGetComponent(X, 2)), FMath::Atan(VectorGetComponent(X, 3)));
+}
+
+//TODO: Vectorize
+FORCEINLINE VectorRegister VectorATan2(const VectorRegister& X, const VectorRegister& Y)
+{
+	return MakeVectorRegister(FMath::Atan2(VectorGetComponent(X, 0), VectorGetComponent(Y, 0)),
+		FMath::Atan2(VectorGetComponent(X, 1), VectorGetComponent(Y, 1)),
+		FMath::Atan2(VectorGetComponent(X, 2), VectorGetComponent(Y, 2)),
+		FMath::Atan2(VectorGetComponent(X, 3), VectorGetComponent(Y, 3)));
 }
