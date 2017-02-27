@@ -116,4 +116,4 @@ struct FWindowsPlatformMath : public YGenericPlatformMath
 #endif
 };
 
-typedef YGenericPlatformMath	YPlatformMath;
+typedef FWindowsPlatformMath	YPlatformMath;

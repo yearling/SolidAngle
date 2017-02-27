@@ -1097,17 +1097,5 @@ struct YMath :public YPlatformMath
 		return Quantize8UnsigedByte(y);
 	}
 
-#if WITH_DIRECTXMATH
-	#define SIMD_ALIGMENT (16)
-#elif PLATFORM_ENABLE_VECTORINTRINSICS
-	#define SIMD_ALIGMENT (16)
-	#include "SolidAngleMathSSE.h"
-#elif PLATFORM_ENABLE_VECTORINTRINSICS_NEON
-	#define SIME_ALIGNMENT (16)
-	#include "SolidAngleMathNeon"
-#else
-	#define SIME_ALIGNMENT (4)
-#endif
-	//extern CORE_API  const VectorRegister VECTOR_INV_255;
 
 };

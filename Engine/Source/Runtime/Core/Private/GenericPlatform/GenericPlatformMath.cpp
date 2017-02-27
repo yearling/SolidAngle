@@ -27,7 +27,6 @@ CORE_API float YGenericPlatformMath::SRand()
 CORE_API float YGenericPlatformMath::Atan2(float Y, float X)
 {
 	//FIXME!! PI应该在SolidAngleMathUtility.h里定义
-#define PI 3.1415926
 	//return atan2f(Y,X);
 	// atan2f occasionally returns NaN with perfectly valid input (possibly due to a compiler or library bug).
 	// We are replacing it with a minimax approximation with a max relative error of 7.15255737e-007 compared to the C library function.
