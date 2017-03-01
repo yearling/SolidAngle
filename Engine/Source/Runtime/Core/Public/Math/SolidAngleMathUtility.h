@@ -234,11 +234,12 @@ struct YMath :public YPlatformMath
 	}
 
 	// Compute the base 2 logarithm of the specified value
-	static FORCEINLINE float	log2(float Value)
-	{
-		static const float LogToLog2 = 1.f / Loge(2.0f);
-		return Loge(Value)* LogToLog2;
-	}
+	// !!Note by zyx,static inline的性能问题，被废弃
+	//static FORCEINLINE float	Log2(float Value)
+	//{
+	//	static const float LogToLog2 = 1.f / Loge(2.0f);
+	//	return Loge(Value)* LogToLog2;
+	//}
 
 	// Compute the sine and cosine of a scalar float
 	static FORCEINLINE void		SinCos(float* ScalarSin, float* ScalarCos, float Value)
@@ -1096,6 +1097,4 @@ struct YMath :public YPlatformMath
 		float y = X*0.5f + 0.5f;
 		return Quantize8UnsigedByte(y);
 	}
-
-
 };

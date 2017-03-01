@@ -392,13 +392,13 @@ namespace YHasOperatorImpl
 template <typename T>
 struct THasOperatorEquals
 {
-	enum { Value = FHasOperatorImpl::Equals<T>::Value };
+	enum { Value = YHasOperatorImpl::Equals<T>::Value };
 };
 
 template <typename T>
 struct THasOperatorNotEquals
 {
-	enum { Value = FHasOperatorImpl::NotEquals<T>::Value };
+	enum { Value = YHasOperatorImpl::NotEquals<T>::Value };
 };
 
 #if PLATFORM_COMPILER_HAS_EXPLICIT_OPERATORS
