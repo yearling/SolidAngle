@@ -134,7 +134,13 @@
 **VectorStep**  
 
 ###三角函数
-**VectorSin**  VectorSin
+**VectorSin**
 **VectorCos**  
 **VectorSinCos**
+**VectorTan**  
+**VectorASin**  
+**VectorACos**  
+**VectorATan**  
+**VectorATan2**  
+
 ###Constant 常数

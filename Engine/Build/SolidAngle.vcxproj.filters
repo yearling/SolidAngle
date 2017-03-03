@@ -40,6 +40,9 @@
     <Filter Include="Source\Runtime\Core\Private\GenericPlatform">
       <UniqueIdentifier>{8b22a25a-2984-4509-b428-0d5a898afd35}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Runtime\Core\Public\Misc">
+      <UniqueIdentifier>{de185ca6-ef43-4412-80ec-3517c96532c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\core\Public\HAL\Platform.h">
@@ -119,6 +122,30 @@
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Core.h">
       <Filter>Source\Runtime\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CoreMiscDefines.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Build.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\YIntPoint.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\IntVector.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\IntRect.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Vector2D.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\NumericLimits.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Vector4.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
