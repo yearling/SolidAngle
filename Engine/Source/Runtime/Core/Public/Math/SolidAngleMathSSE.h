@@ -487,8 +487,8 @@ FORCEINLINE void VectorMatrixMultiply(void *Result, const void* Matrix1, const v
 }
 
 // Calculate the inverse of an YMatrix.
-// DstMatrix:					FMatrix pointer to where the result should be stored
-// SrcMatrix:					FMatrix pointer to the Matrix to be inversed
+// DstMatrix:					YMatrix pointer to where the result should be stored
+// SrcMatrix:					YMatrix pointer to the Matrix to be inversed
 // TODO : Vector version of this function that doesn't use D3DX
 FORCEINLINE void VectorMatrixInverse(void* DstMatrix, const void* SrcMatrix)
 {

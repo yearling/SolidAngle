@@ -283,26 +283,26 @@ public:
 	* @param Tolerance Minimum squared length of vector for normalization.
 	* @return A normalized copy of the vector or a zero vector.
 	*/
-	FORCEINLINE YVector4 GetSafeNormal(float Tolerance = SMALL_NUMBER) const;
+	FORCEINLINE YVector4		GetSafeNormal(float Tolerance = SMALL_NUMBER) const;
 
 	/**
 	* Calculates normalized version of vector without checking if it is non-zero.
 	*
 	* @return Normalized version of vector.
 	*/
-	FORCEINLINE YVector4 GetUnsafeNormal3() const;
+	FORCEINLINE YVector4		GetUnsafeNormal3() const;
 	/**
 	* Return the FRotator orientation corresponding to the direction in which the vector points.
 	* Sets Yaw and Pitch to the proper numbers, and sets roll to zero because the roll can't be determined from a vector.
 	* @return FRotator from the Vector's direction.
 	*/
-	CORE_API YRotator ToOrientationRotator() const;
+	CORE_API YRotator			ToOrientationRotator() const;
 
 	/**
 	* Return the Quaternion orientation corresponding to the direction in which the vector points.
 	* @return Quaternion from the Vector's direction.
 	*/
-	CORE_API YQuat ToOrientationQuat() const;
+	CORE_API YQuat				ToOrientationQuat() const;
 
 	/**
 	* Return the FRotator orientation corresponding to the direction in which the vector points.
@@ -311,7 +311,7 @@ public:
 	* @return FRotator from the Vector's direction.
 	* @see ToOrientationRotator()
 	*/
-	CORE_API YRotator Rotation() const;
+	CORE_API YRotator			Rotation() const;
 
 	/**
 	* Set all of the vectors coordinates.
@@ -321,36 +321,36 @@ public:
 	* @param InZ New Z Coordinate.
 	* @param InW New W Coordinate.
 	*/
-	FORCEINLINE void Set(float InX, float InY, float InZ, float InW);
+	FORCEINLINE void			Set(float InX, float InY, float InZ, float InW);
 
 	/**
 	* Get the length of this vector not taking W component into account.
 	*
 	* @return The length of this vector.
 	*/
-	float Size3() const;
+	float						Size3() const;
 
 	/**
 	* Get the squared length of this vector not taking W component into account.
 	*
 	* @return The squared length of this vector.
 	*/
-	float SizeSquared3() const;
+	float						SizeSquared3() const;
 
 	/** Utility to check if there are any non-finite values (NaN or Inf) in this vector. */
-	bool ContainsNaN() const;
+	bool						ContainsNaN() const;
 
 	/** Utility to check if all of the components of this vector are nearly zero given the tolerance. */
-	bool IsNearlyZero3(float Tolerance = KINDA_SMALL_NUMBER) const;
+	bool						IsNearlyZero3(float Tolerance = KINDA_SMALL_NUMBER) const;
 
 	/** Reflect vector. */
-	YVector4 Reflect3(const YVector4& Normal) const;
+	YVector4					Reflect3(const YVector4& Normal) const;
 
 	/**
 	* Find good arbitrary axis vectors to represent U and V axes of a plane,
 	* given just the normal.
 	*/
-	void FindBestAxisVectors3(YVector4& Axis1, YVector4& Axis2) const;
+	void						FindBestAxisVectors3(YVector4& Axis1, YVector4& Axis2) const;
 
 #if ENABLE_NAN_DIAGNOSTIC
 	FORCEINLINE void DiagnosticCheckNaN()

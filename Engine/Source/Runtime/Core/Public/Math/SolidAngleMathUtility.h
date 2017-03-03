@@ -815,11 +815,11 @@ struct YMath :public YPlatformMath
 	static CORE_API YVector		ClosetPointOnLine(const YVector& LineStart, const YVector& LineEnd, const YVector& Point);
 
 	// Compute intersection point of three planes. Return 1 if Valid, 0 if infinite.
-	static bool					IntersectPlant3(YVector& I, const YPlane& P1, const YPlane& P2, const YPlane& P3);
+	static bool					IntersectPlanes3(YVector& I, const YPlane& P1, const YPlane& P2, const YPlane& P3);
 
 	// Compute intersection point and direction of line joining two planes
 	// Return 1 if valid, 0 if infinite
-	static bool					IntersectPlant2(YVector& I, YVector& D, const YPlane& P1, const YPlane& P2);
+	static bool					IntersectPlanes2(YVector& I, YVector& D, const YPlane& P1, const YPlane& P2);
 
 	// Calculates the distance of a given Point in world space to a give line,
 	// defined by the vector coupe(Origin, Direction)
