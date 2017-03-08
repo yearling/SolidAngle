@@ -43,6 +43,9 @@
     <Filter Include="Source\Runtime\Core\Public\Misc">
       <UniqueIdentifier>{de185ca6-ef43-4412-80ec-3517c96532c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Runtime\Core\Public\Templates">
+      <UniqueIdentifier>{330c8fde-1f53-4915-a1d8-93b99155ec0b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\core\Public\HAL\Platform.h">
@@ -170,6 +173,12 @@
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Range.h">
       <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\EnableIf.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\CoreTypes.h">
+      <Filter>Source\Runtime\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
