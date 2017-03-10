@@ -447,17 +447,17 @@ public:
 	* @return Text describing the vector.
 	*/
 	//!!FIXME by zyx
-	//FString ToString() const;
+	//YString ToString() const;
 
 	/**
-	* Initialize this Vector based on an FString. The String is expected to contain X=, Y=.
+	* Initialize this Vector based on an YString. The String is expected to contain X=, Y=.
 	* The YVector2D will be bogus when InitFromString returns false.
 	*
-	* @param	InSourceString	FString containing the vector values.
+	* @param	InSourceString	YString containing the vector values.
 	* @return true if the X,Y values were read successfully; false otherwise.
 	*/
 	//!!FIXME by zyx
-	//bool InitFromString(const FString& InSourceString);
+	//bool InitFromString(const YString& InSourceString);
 
 	/**
 	* Serialize a vector.
@@ -896,14 +896,14 @@ FORCEINLINE YVector2D YVector2D::GetAbs() const
 
 
 //!!FIXME by zyx
-//FORCEINLINE FString YVector2D::ToString() const
+//FORCEINLINE YString YVector2D::ToString() const
 //{
-//	return FString::Printf(TEXT("X=%3.3f Y=%3.3f"), X, Y);
+//	return YString::Printf(TEXT("X=%3.3f Y=%3.3f"), X, Y);
 //}
 //
 
 //!!FIXME by zyx
-//FORCEINLINE bool YVector2D::InitFromString(const FString& InSourceString)
+//FORCEINLINE bool YVector2D::InitFromString(const YString& InSourceString)
 //{
 //	X = Y = 0;
 //

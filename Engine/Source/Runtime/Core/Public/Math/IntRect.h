@@ -250,7 +250,7 @@ public:
 	* @return A string describing the rectangle.
 	*/
 	//!!FIXME by zyx
-	//FString ToString() const;
+	//YString ToString() const;
 
 	/**
 	* Gets the width of the rectangle.
@@ -530,9 +530,9 @@ FORCEINLINE YIntPoint YIntRect::Size() const
 }
 
 //!!FIXME by zyx
-//FORCEINLINE FString YIntRect::ToString() const
+//FORCEINLINE YString YIntRect::ToString() const
 //{
-//	return FString::Printf(TEXT("Min=(%s) Max=(%s)"), *Min.ToString(), *Max.ToString());
+//	return YString::Printf(TEXT("Min=(%s) Max=(%s)"), *Min.ToString(), *Max.ToString());
 //}
 //
 

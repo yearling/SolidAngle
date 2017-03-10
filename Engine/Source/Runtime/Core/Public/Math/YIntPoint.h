@@ -506,9 +506,9 @@ FORCEINLINE int32 YIntPoint::SizeSquared() const
 
 
 //!!FIXME by zyx
-//FORCEINLINE FString YIntPoint::ToString() const
+//FORCEINLINE YString YIntPoint::ToString() const
 //{
-//	return FString::Printf(TEXT("X=%d Y=%d"), X, Y);
+//	return YString::Printf(TEXT("X=%d Y=%d"), X, Y);
 //}
 //
 //!!FIXME by zyx

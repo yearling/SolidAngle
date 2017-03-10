@@ -209,7 +209,7 @@ public:
 	* @return A string describing the vector.
 	*/
 	//!!FIXME by zyx
-	//FString ToString() const;
+	//YString ToString() const;
 
 public:
 
@@ -428,9 +428,9 @@ FORCEINLINE bool YIntVector::IsZero() const
 
 
 //!!FIXME by zyx
-//FORCEINLINE FString YIntVector::ToString() const
+//FORCEINLINE YString YIntVector::ToString() const
 //{
-//	return FString::Printf(TEXT("X=%d Y=%d Z=%d"), X, Y, Z);
+//	return YString::Printf(TEXT("X=%d Y=%d Z=%d"), X, Y, Z);
 //}
 
 //!!FIXME by zyx

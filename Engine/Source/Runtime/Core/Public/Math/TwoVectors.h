@@ -430,9 +430,9 @@ FORCEINLINE float& YTwoVectors::operator[](int32 i)
 }
 
 //!!FIXME by zyx
-//FORCEINLINE FString YTwoVectors::ToString() const
+//FORCEINLINE YString YTwoVectors::ToString() const
 //{
-//	return FString::Printf(TEXT("V1=(%s) V2=(%s)"), *v1.ToString(), *v2.ToString());
+//	return YString::Printf(TEXT("V1=(%s) V2=(%s)"), *v1.ToString(), *v2.ToString());
 //}
 //!!FIXME by zyx
 //template <> struct TIsPODType<YTwoVectors> { enum { Value = true }; };

@@ -293,21 +293,21 @@ public:
 	* @return Text describing the vector.
 	*/
 	//!!FIXME by zyx
-	//FString ToString() const;
+	//YString ToString() const;
 
 	/** Get a short textural representation of this vector, for compact readable logging. */
 	//!!FIXME by zyx
-	//FString ToCompactString() const;
+	//YString ToCompactString() const;
 
 	/**
-	* Initialize this Rotator based on an FString. The String is expected to contain P=, Y=, R=.
+	* Initialize this Rotator based on an YString. The String is expected to contain P=, Y=, R=.
 	* The FRotator will be bogus when InitFromString returns false.
 	*
-	* @param InSourceString	FString containing the rotator values.
+	* @param InSourceString	YString containing the rotator values.
 	* @return true if the P,Y,R values were read successfully; false otherwise.
 	*/
 	//!!FIXME by zyx
-	//bool InitFromString(const FString& InSourceString);
+	//bool InitFromString(const YString& InSourceString);
 
 	/**
 	* Utility to check if there are any non-finite values (NaN or Inf) in this Rotator.
@@ -664,52 +664,52 @@ FORCEINLINE void YRotator::Normalize()
 }
 
 //!!FIXME by zyx
-//FORCEINLINE FString YRotator::ToString() const
+//FORCEINLINE YString YRotator::ToString() const
 //{
-//	return FString::Printf(TEXT("P=%f Y=%f R=%f"), Pitch, Yaw, Roll);
+//	return YString::Printf(TEXT("P=%f Y=%f R=%f"), Pitch, Yaw, Roll);
 //}
 
 
 //!!FIXME by zyx
-//FORCEINLINE FString YRotator::ToCompactString() const
+//FORCEINLINE YString YRotator::ToCompactString() const
 //{
 //	if (IsNearlyZero())
 //	{
-//		return FString::Printf(TEXT("R(0)"));
+//		return YString::Printf(TEXT("R(0)"));
 //	}
 //
-//	FString ReturnString(TEXT("R("));
+//	YString ReturnString(TEXT("R("));
 //	bool bIsEmptyString = true;
 //	if (!YMath::IsNearlyZero(Pitch))
 //	{
-//		ReturnString += FString::Printf(TEXT("P=%.2f"), Pitch);
+//		ReturnString += YString::Printf(TEXT("P=%.2f"), Pitch);
 //		bIsEmptyString = false;
 //	}
 //	if (!YMath::IsNearlyZero(Yaw))
 //	{
 //		if (!bIsEmptyString)
 //		{
-//			ReturnString += FString(TEXT(", "));
+//			ReturnString += YString(TEXT(", "));
 //		}
-//		ReturnString += FString::Printf(TEXT("Y=%.2f"), Yaw);
+//		ReturnString += YString::Printf(TEXT("Y=%.2f"), Yaw);
 //		bIsEmptyString = false;
 //	}
 //	if (!YMath::IsNearlyZero(Roll))
 //	{
 //		if (!bIsEmptyString)
 //		{
-//			ReturnString += FString(TEXT(", "));
+//			ReturnString += YString(TEXT(", "));
 //		}
-//		ReturnString += FString::Printf(TEXT("R=%.2f"), Roll);
+//		ReturnString += YString::Printf(TEXT("R=%.2f"), Roll);
 //		bIsEmptyString = false;
 //	}
-//	ReturnString += FString(TEXT(")"));
+//	ReturnString += YString(TEXT(")"));
 //	return ReturnString;
 //}
 
 
 //!!FIXME by zyx
-//FORCEINLINE bool YRotator::InitFromString(const FString& InSourceString)
+//FORCEINLINE bool YRotator::InitFromString(const YString& InSourceString)
 //{
 //	Pitch = Yaw = Roll = 0;
 //

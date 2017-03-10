@@ -987,7 +987,7 @@ struct YMath :public YPlatformMath
 	// Formatting functions
 	// Formats an integer value into a human readable string(i.e. 12345 becomes "12,345")
 	// Val:						The value to use
-	// return: FString			The human readable string 
+	// return: YString			The human readable string 
 	// !!FIXME by zyx, do not have YString types
 	//static CORE_API YString		FormatIntToHumanReadable(int32 Val);
 

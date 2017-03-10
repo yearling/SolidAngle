@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreTypes.h"
+#include <type_traits>
 
 /**
 * Traits class which tests if a type is a pointer.

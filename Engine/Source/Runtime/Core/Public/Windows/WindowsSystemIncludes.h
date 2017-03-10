@@ -1,19 +1,20 @@
 #pragma once
-#include "Windows/WindowsPlatformCompilerSetup.h"
-#include "Windows/WindowsHWrapper.h"
+#include "CoreTypes.h"
+#include "WindowsPlatformCompilerSetup.h"
+#include "MinimalWindowsApi.h"
 
 // Macro for releasing COM objects
 #define SAFE_RELEASE(p) { if(p) { (p)->Release(); (p)=NULL; } }
 
 // Current instance
-extern "C" CORE_API HINSTANCE hInstance;
+extern "C" CORE_API Windows::HINSTANCE hInstance;
 
 // SIMD intrinsics
+THIRD_PARTY_INCLUDES_START
 #include <intrin.h>
 
 #include <stdint.h>
 #include <tchar.h>
-
 
 // When compiling under Windows, these headers cause us particular problems.  We need to make sure they're included before we pull in our 
 // 'DoNotUseOldUE4Type' namespace.  This is because these headers will redeclare various numeric typedefs, but under the Clang and Visual
@@ -35,3 +36,13 @@ extern "C" CORE_API HINSTANCE hInstance;
 // MSVC-specific attributes so there should never be collisions.
 using namespace vc_attributes;
 #endif
+THIRD_PARTY_INCLUDES_END
+
+#ifndef OUT
+#define OUT
+#endif
+
+#ifndef IN
+#define IN
+#endif
+

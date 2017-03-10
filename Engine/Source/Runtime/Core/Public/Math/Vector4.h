@@ -265,17 +265,17 @@ public:
 	* @return Text describing the vector.
 	*/
 	//!!FIXME by zyx
-	//FString ToString() const;
+	//YString ToString() const;
 
 	/**
-	* Initialize this Vector based on an FString. The String is expected to contain X=, Y=, Z=, W=.
+	* Initialize this Vector based on an YString. The String is expected to contain X=, Y=, Z=, W=.
 	* The YVector4 will be bogus when InitFromString returns false.
 	*
-	* @param InSourceString	FString containing the vector values.
+	* @param InSourceString	YString containing the vector values.
 	* @return true if the X,Y,Z values were read successfully; false otherwise.
 	*/
 	//!!FIXME by zyx
-	//bool InitFromString(const FString& InSourceString);
+	//bool InitFromString(const YString& InSourceString);
 
 	/**
 	* Returns a normalized copy of the vector if safe to normalize.
@@ -561,13 +561,13 @@ FORCEINLINE bool YVector4::Equals(const YVector4& V, float Tolerance) const
 }
 
 //!!FIXME by zyx
-//FORCEINLINE FString YVector4::ToString() const
+//FORCEINLINE YString YVector4::ToString() const
 //{
-//	return FString::Printf(TEXT("X=%3.3f Y=%3.3f Z=%3.3f W=%3.3f"), X, Y, Z, W);
+//	return YString::Printf(TEXT("X=%3.3f Y=%3.3f Z=%3.3f W=%3.3f"), X, Y, Z, W);
 //}
 
 //!!FIXME by zyx
-//FORCEINLINE bool YVector4::InitFromString(const FString& InSourceString)
+//FORCEINLINE bool YVector4::InitFromString(const YString& InSourceString)
 //{
 //	X = Y = Z = 0;
 //	W = 1.0f;

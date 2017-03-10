@@ -1,7 +1,10 @@
 #pragma once
 
 #include "CoreTypes.h"
+#include "CoreFwd.h"
 #include "Containers/ContainersFwd.h"
+#include "Misc/Timespan.h"
+#include "hal/PlatformCrt.h"
 #include "Templates/EnableIf.h"
 #include "Templates/AndOrNot.h"
 #include "Templates/AreTypesEqual.h"
@@ -31,3 +34,4 @@
 #include "Math/NumericLimits.h"
 #include "Math/SolidAngleMathUtility.h"
 #include "Math/SolidAngleMath.h"
+#include "Templates/SolidAngleTypeTraits.h"

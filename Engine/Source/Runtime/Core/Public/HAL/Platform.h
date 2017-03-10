@@ -1,18 +1,129 @@
 #pragma once
 
+// define all other platforms to be zero
+//@port Define the platform here to be zero when compiling for other platforms
 #if !defined(PLATFORM_WINDOWS)
 #define PLATFORM_WINDOWS 0
 #endif
+#if !defined(PLATFORM_XBOXONE)
+#define PLATFORM_XBOXONE 0
+#endif
+#if !defined(PLATFORM_MAC)
+#define PLATFORM_MAC 0
+#endif
+#if !defined(PLATFORM_PS4)
+#define PLATFORM_PS4 0
+#endif
+#if !defined(PLATFORM_IOS)
+#define PLATFORM_IOS 0
+#endif
+#if !defined(PLATFORM_TVOS)
+#define PLATFORM_TVOS 0
+#endif
+#if !defined(PLATFORM_ANDROID)
+#define PLATFORM_ANDROID 0
+#endif
+#if !defined(PLATFORM_ANDROID_ARM)
+#define PLATFORM_ANDROID_ARM 0
+#endif
+#if !defined(PLATFORM_ANDROID_ARM64)
+#define PLATFORM_ANDROID_ARM64 0
+#endif
+#if !defined(PLATFORM_ANDROID_X86)
+#define PLATFORM_ANDROID_X86 0
+#endif
+#if !defined(PLATFORM_ANDROID_X64)
+#define PLATFORM_ANDROID_X64 0
+#endif
+#if !defined(PLATFORM_ANDROID_VULKAN)
+#define PLATFORM_ANDROID_VULKAN 0
+#endif
+#if !defined(PLATFORM_ANDROIDESDEFERRED)
+#define PLATFORM_ANDROIDESDEFERRED 0
+#endif
+#if !defined(PLATFORM_APPLE)
+#define PLATFORM_APPLE 0
+#endif
+#if !defined(PLATFORM_HTML5)
+#define PLATFORM_HTML5 0
+#endif
+#if !defined(PLATFORM_HTML5_BROWSER)
+#define PLATFORM_HTML5_BROWSER 0
+#endif
+#if !defined(PLATFORM_HTML5_WIN32)
+#define PLATFORM_HTML5_WIN32 0
+#endif
+#if !defined(PLATFORM_LINUX)
+#define PLATFORM_LINUX 0
+#endif
+#if !defined(PLATFORM_SWITCH)
+#define PLATFORM_SWITCH 0
+#endif
 
-#include "GenericPlatform/GenericPlatform.h"
-
+// Platform specific compiler pre-setup.
 #if PLATFORM_WINDOWS
-#include "Windows/WindowsPlatform.h"
+#include "Windows/WindowsPlatformCompilerPreSetup.h"
+#elif PLATFORM_PS4
+#include "PS4/PS4PlatformCompilerPreSetup.h"
+#elif PLATFORM_XBOXONE
+#include "XboxOne/XboxOnePlatformCompilerPreSetup.h"
+#elif PLATFORM_MAC
+#include "Mac/MacPlatformCompilerPreSetup.h"
+#elif PLATFORM_IOS
+#include "IOS/IOSPlatformCompilerPreSetup.h"
+#elif PLATFORM_ANDROID
+#include "Android/AndroidPlatformCompilerPreSetup.h"
+#elif PLATFORM_HTML5
+#include "HTML5/HTML5PlatformCompilerPreSetup.h"
+#elif PLATFORM_LINUX
+#include "Linux/LinuxPlatformCompilerPreSetup.h"
+#elif PLATFORM_SWITCH
+#include "Switch/SwitchPlatformCompilerPreSetup.h"
 #else
 #error Unknown Compiler
 #endif
 
-// Base defines, must define these for the platform, there are no default
+// Generic compiler pre-setup.
+#include "GenericPlatform/GenericPlatformCompilerPreSetup.h"
+
+#if PLATFORM_APPLE
+#include <stddef.h> // needed for size_t
+#endif
+
+#include "GenericPlatform/GenericPlatform.h"
+
+//---------------------------------------------------------
+// Identify the current platform and include that header
+//---------------------------------------------------------
+
+//@port Identify the platform here and include the platform header to setup the platform types, etc
+#if PLATFORM_WINDOWS
+#include "Windows/WIndowsPlatform.h"
+#elif PLATFORM_PS4
+#include "PS4/PS4Platform.h"
+#elif PLATFORM_XBOXONE
+#include "XboxOne/XboxOnePlatform.h"
+#elif PLATFORM_MAC
+#include "Mac/MacPlatform.h"
+#elif PLATFORM_IOS
+#include "IOS/IOSPlatform.h"
+#elif PLATFORM_ANDROID
+#include "Android/AndroidPlatform.h"
+#elif PLATFORM_HTML5
+#include "HTML5/HTML5Platform.h"
+#elif PLATFORM_LINUX
+#include "Linux/LinuxPlatform.h"
+#elif PLATFORM_SWITCH
+#include "Switch/SwitchPlatform.h"
+#else
+#error Unknown Compiler
+#endif
+
+//------------------------------------------------------------------
+// Finalize define setup
+//------------------------------------------------------------------
+
+// Base defines, must define these for the platform, there are no defaults
 #ifndef PLATFORM_DESKTOP
 #error "PLATFORM_DESKTOP must be defined"
 #endif
@@ -21,9 +132,11 @@
 #endif
 
 // Base defines, these have defaults
-// 下面这些值是default values，如果没有在上面的比如“WindowsPlatform”中设置
 #ifndef PLATFORM_LITTLE_ENDIAN
 #define PLATFORM_LITTLE_ENDIAN				0
+#endif
+#ifndef PLATFORM_SUPPORTS_UNALIGNED_INT_LOADS
+#define PLATFORM_SUPPORTS_UNALIGNED_INT_LOADS	0
 #endif
 #ifndef PLATFORM_EXCEPTIONS_DISABLED
 #define PLATFORM_EXCEPTIONS_DISABLED		!PLATFORM_DESKTOP
@@ -53,6 +166,13 @@
 #ifndef PLATFORM_USE_SYSTEM_VSWPRINTF
 #define PLATFORM_USE_SYSTEM_VSWPRINTF		1
 #endif
+#ifndef PLATFORM_COMPILER_CLANG
+#if defined(__clang__)
+#define PLATFORM_COMPILER_CLANG			1
+#else
+#define PLATFORM_COMPILER_CLANG			0
+#endif // defined(__clang__)
+#endif
 #ifndef PLATFORM_COMPILER_DISTINGUISHES_INT_AND_LONG
 #define PLATFORM_COMPILER_DISTINGUISHES_INT_AND_LONG			0
 #endif
@@ -62,20 +182,14 @@
 #ifndef PLATFORM_COMPILER_HAS_DEFAULTED_FUNCTIONS
 #define PLATFORM_COMPILER_HAS_DEFAULTED_FUNCTIONS	1
 #endif
-#ifndef PLATFORM_COMPILER_HAS_VARIADIC_TEMPLATES
-#define PLATFORM_COMPILER_HAS_VARIADIC_TEMPLATES	1
-#endif
-#ifndef PLATFORM_COMPILER_HAS_DEFAULT_FUNCTION_TEMPLATE_ARGUMENTS
-#define PLATFORM_COMPILER_HAS_DEFAULT_FUNCTION_TEMPLATE_ARGUMENTS	1
-#endif
-#ifndef PLATFORM_COMPILER_HAS_EXPLICIT_OPERATORS
-#define PLATFORM_COMPILER_HAS_EXPLICIT_OPERATORS	1
-#endif
 #ifndef PLATFORM_COMPILER_COMMON_LANGUAGE_RUNTIME_COMPILATION
 #define PLATFORM_COMPILER_COMMON_LANGUAGE_RUNTIME_COMPILATION 0
 #endif
 #ifndef PLATFORM_COMPILER_HAS_TCHAR_WMAIN
 #define PLATFORM_COMPILER_HAS_TCHAR_WMAIN 0
+#endif
+#ifndef PLATFORM_TCHAR_IS_1_BYTE
+#define PLATFORM_TCHAR_IS_1_BYTE			0
 #endif
 #ifndef PLATFORM_TCHAR_IS_4_BYTES
 #define PLATFORM_TCHAR_IS_4_BYTES			0
@@ -118,6 +232,9 @@
 #endif
 #ifndef PLATFORM_HAS_BSD_SOCKET_FEATURE_GETHOSTNAME
 #define PLATFORM_HAS_BSD_SOCKET_FEATURE_GETHOSTNAME	1
+#endif
+#ifndef PLATFORM_HAS_BSD_SOCKET_FEATURE_GETADDRINFO
+#define PLATFORM_HAS_BSD_SOCKET_FEATURE_GETADDRINFO	1
 #endif
 #ifndef PLATFORM_HAS_BSD_SOCKET_FEATURE_CLOSE_ON_EXEC
 #define PLATFORM_HAS_BSD_SOCKET_FEATURE_CLOSE_ON_EXEC	0
@@ -165,6 +282,10 @@
 #define PLATFORM_USES_FIXED_GMalloc_CLASS		0
 #endif
 
+#ifndef PLATFORM_USES_STACKBASED_MALLOC_CRASH
+#define PLATFORM_USES_STACKBASED_MALLOC_CRASH	0
+#endif
+
 #ifndef PLATFORM_SUPPORTS_MULTIPLE_NATIVE_WINDOWS
 #define PLATFORM_SUPPORTS_MULTIPLE_NATIVE_WINDOWS	1
 #endif
@@ -193,6 +314,30 @@
 #define PLATFORM_RHITHREAD_DEFAULT_BYPASS					1
 #endif
 
+#ifndef PLATFORM_HAS_UMA
+#define PLATFORM_HAS_UMA 0
+#endif
+
+#ifndef PLATFORM_NUM_AUDIODECOMPRESSION_PRECACHE_BUFFERS
+#define PLATFORM_NUM_AUDIODECOMPRESSION_PRECACHE_BUFFERS 2
+#endif
+
+#ifndef PLATFORM_USES_FACE_BUTTON_RIGHT_FOR_ACCEPT
+#define PLATFORM_USES_FACE_BUTTON_RIGHT_FOR_ACCEPT		0
+#endif
+
+// deprecated, do not use
+#define PLATFORM_HAS_THREADSAFE_RHIGetRenderQueryResult	#
+#define PLATFORM_SUPPORTS_RHI_THREAD #
+#define PLATFORM_RHI_USES_CONTEXT_OBJECT # // deprecated, do not use; all platforms must use a context object
+#define PLATFORM_SUPPORTS_PARALLEL_RHI_EXECUTE # // deprecated, do not use; see GRHISupportsParallelRHIExecute
+
+
+//These are deprecated old defines that we want to make sure are not used
+#define CONSOLE (#)
+#define MOBILE (#)
+#define PLATFORM_CONSOLE (#)
+
 // These is computed, not predefined
 #define PLATFORM_32BITS					(!PLATFORM_64BITS)
 
@@ -217,8 +362,33 @@
 #ifndef RESTRICT
 #define RESTRICT __restrict						/* no alias hint */
 #endif
+
+/* Wrap a function signature in these to warn that callers should not ignore the return value */
+#ifndef FUNCTION_CHECK_RETURN_START
+#define FUNCTION_CHECK_RETURN_START
+#endif
+#ifndef FUNCTION_CHECK_RETURN_END
+#define FUNCTION_CHECK_RETURN_END
+#endif
+
+/* Wrap a function signature in these to indicate that the function never returns */
+#ifndef FUNCTION_NO_RETURN_START
+#define FUNCTION_NO_RETURN_START
+#endif
+#ifndef FUNCTION_NO_RETURN_END
+#define FUNCTION_NO_RETURN_END
+#endif
+
+/* Wrap a function signature in these to indicate that the function never returns nullptr */
+#ifndef FUNCTION_NON_NULL_RETURN_START
+#define FUNCTION_NON_NULL_RETURN_START
+#endif
+#ifndef FUNCTION_NON_NULL_RETURN_END
+#define FUNCTION_NON_NULL_RETURN_END
+#endif
+
 #ifndef FUNCTION_CHECK_RETURN
-#define FUNCTION_CHECK_RETURN(...) __VA_ARGS__	/* Wrap a function signature in this to warn that callers should not ignore the return value */
+#define FUNCTION_CHECK_RETURN(...) DEPRECATED_MACRO(4.12, "FUNCTION_CHECK_RETURN has been deprecated and should be replaced with FUNCTION_CHECK_RETURN_START and FUNCTION_CHECK_RETURN_END.") FUNCTION_CHECK_RETURN_START __VA_ARGS__ FUNCTION_CHECK_RETURN_END
 #endif
 
 #ifndef ASSUME										/* Hints compiler that expression is true; generally restricted to comparisons against constants */
@@ -253,6 +423,10 @@
 #define DISABLE_FUNCTION_OPTIMIZATION
 #endif
 
+// Enable/disable optimizations for a specific function to improve build times
+#define BEGIN_FUNCTION_BUILD_OPTIMIZATION PRAGMA_DISABLE_OPTIMIZATION
+#define END_FUNCTION_BUILD_OPTIMIZATION   PRAGMA_ENABLE_OPTIMIZATION
+
 #ifndef FORCEINLINE_DEBUGGABLE_ACTUAL
 #define FORCEINLINE_DEBUGGABLE_ACTUAL inline
 #endif
@@ -264,6 +438,18 @@
 // Backwater of the spec. All compilers support this except microsoft, and they will soon
 #ifndef TYPENAME_OUTSIDE_TEMPLATE
 #define TYPENAME_OUTSIDE_TEMPLATE	typename
+#endif
+
+// Legacy method modifier macros.  You shouldn't use these macros in modern code.  Use the built-in keyword directly.
+#ifndef OVERRIDE
+#define OVERRIDE \
+		EMIT_DEPRECATED_WARNING_MESSAGE("OVERRIDE macro is deprecated. Please use override keyword instead.") \
+		override
+#endif
+#ifndef FINAL						
+#define FINAL \
+		EMIT_DEPRECATED_WARNING_MESSAGE("FINAL macro is deprecated. Please use final keyword instead.") \
+		final
 #endif
 
 // Method modifiers
@@ -315,6 +501,18 @@
 #define PLATFORM_CACHE_LINE_SIZE	128
 #endif
 
+// Compile-time warnings and errors. Use these as "#pragma COMPILER_WARNING("XYZ")". GCC does not expand macro parameters to _Pragma, so we can't wrap the #pragma part.
+#ifdef _MSC_VER
+#define MSC_FORMAT_DIAGNOSTIC_HELPER_2(x) #x
+#define MSC_FORMAT_DIAGNOSTIC_HELPER(x) MSC_FORMAT_DIAGNOSTIC_HELPER_2(x) 
+#define COMPILE_WARNING(x) __pragma(message(__FILE__ "(" MSC_FORMAT_DIAGNOSTIC_HELPER(__LINE__) "): warning: " x))
+#define COMPILE_ERROR(x) __pragma(message(__FILE__ "(" MSC_FORMAT_DIAGNOSTIC_HELPER(__LINE__) "): error: " x))
+#else
+#define GCC_DIAGNOSTIC_HELPER(x) _Pragma(#x)
+#define COMPILE_WARNING(x) GCC_DIAGNOSTIC_HELPER(GCC warning x)
+#define COMPILE_ERROR(x) GCC_DIAGNOSTIC_HELPER(GCC error x)
+#endif
+
 // These have to be forced inline on some OSes so the dynamic loader will not 
 // resolve to our allocators for the system libraries.
 #ifndef OPERATOR_NEW_INLINE
@@ -334,6 +532,12 @@
 #define OPERATOR_DELETE_NOTHROW_SPEC throw()
 #endif
 
+#ifndef checkAtCompileTime
+#define checkAtCompileTime(expr, msg) \
+		EMIT_DEPRECATED_WARNING_MESSAGE("checkAtCompileTime is deprecated. Please use static_assert instead.") \
+		static_assert(expr, #msg)
+#endif
+
 // DLL export and import definitions
 #ifndef DLLEXPORT
 #define DLLEXPORT
@@ -350,68 +554,33 @@
 #define private_subobject public
 #endif
 
-// explicit bool support
-namespace YHasOperatorImpl
-{
-	struct YNotSpecified {};
-
-	template <typename T>
-	struct YReturnValueCheck
-	{
-		static char(&Func())[2];
-	};
-
-	template <>
-	struct YReturnValueCheck<YNotSpecified>
-	{
-		static char(&Func())[1];
-	};
-
-	template <typename T>
-	YNotSpecified operator==(const T&, const T&);
-
-	template <typename T>
-	YNotSpecified operator!=(const T&, const T&);
-
-	template <typename T>
-	const T& Make();
-
-	template <typename T>
-	struct Equals
-	{
-		enum { Value = sizeof(YReturnValueCheck<decltype(Make<T>() == Make<T>())>::Func()) == sizeof(char[2]) };
-	};
-
-	template <typename T>
-	struct NotEquals
-	{
-		enum { Value = sizeof(YReturnValueCheck<decltype(Make<T>() != Make<T>())>::Func()) == sizeof(char[2]) };
-	};
-}
-
-template <typename T>
-struct THasOperatorEquals
-{
-	enum { Value = YHasOperatorImpl::Equals<T>::Value };
-};
-
-template <typename T>
-struct THasOperatorNotEquals
-{
-	enum { Value = YHasOperatorImpl::NotEquals<T>::Value };
-};
-
-#if PLATFORM_COMPILER_HAS_EXPLICIT_OPERATORS
-#define FORCEINLINE_EXPLICIT_OPERATOR_BOOL FORCEINLINE explicit operator bool
-#define SAFE_BOOL_OPERATORS(...)		// not needed when compiler supports explicit operator bool()
-#endif
-
-
 // Console ANSICHAR/TCHAR command line handling
 #if PLATFORM_COMPILER_HAS_TCHAR_WMAIN
 #define INT32_MAIN_INT32_ARGC_TCHAR_ARGV() int32 wmain(int32 ArgC, TCHAR* ArgV[])
+#else
+#define INT32_MAIN_INT32_ARGC_TCHAR_ARGV() \
+int32 tchar_main(int32 ArgC, TCHAR* ArgV[]); \
+int32 main(int32 ArgC, ANSICHAR* Utf8ArgV[]) \
+{ \
+	TCHAR** ArgV = new TCHAR*[ArgC]; \
+	for (int32 a = 0; a < ArgC; a++) \
+	{ \
+		FUTF8ToTCHAR ConvertFromUtf8(Utf8ArgV[a]); \
+		ArgV[a] = new TCHAR[ConvertFromUtf8.Length() + 1]; \
+		FCString::Strcpy(ArgV[a], ConvertFromUtf8.Length(), ConvertFromUtf8.Get()); \
+	} \
+	int32 Result = tchar_main(ArgC, ArgV); \
+	for (int32 a = 0; a < ArgC; a++) \
+	{ \
+		delete[] ArgV[a]; \
+	} \
+	delete[] ArgV; \
+	return Result; \
+} \
+int32 tchar_main(int32 ArgC, TCHAR* ArgV[])
 #endif
 
+template<typename, typename> struct TAreTypesEqual;
 //------------------------------------------------------------------
 // Transfer the platform types to global types
 //------------------------------------------------------------------

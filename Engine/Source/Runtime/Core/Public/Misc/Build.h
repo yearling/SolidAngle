@@ -1,4 +1,6 @@
 #pragma once
+
+
 /*--------------------------------------------------------------------------------
 Build configuration coming from UBT, do not modify
 --------------------------------------------------------------------------------*/
@@ -16,14 +18,17 @@ Build configuration coming from UBT, do not modify
 #ifndef UE_BUILD_SHIPPING
 #define UE_BUILD_SHIPPING			0
 #endif
-#ifndef UE_BUILD_SHIPPING_EDITOR
-#define UE_BUILD_SHIPPING_EDITOR	(#)
-#endif
 #ifndef UE_GAME
 #define UE_GAME						0
 #endif
 #ifndef UE_EDITOR
 #define UE_EDITOR					0
+#endif
+#ifndef UE_BUILD_SHIPPING_WITH_EDITOR
+#define UE_BUILD_SHIPPING_WITH_EDITOR 0
+#endif
+#ifndef UE_BUILD_DOCS
+#define UE_BUILD_DOCS				0
 #endif
 
 /**

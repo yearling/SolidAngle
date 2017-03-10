@@ -4,9 +4,9 @@ class YDefaultSetAllocator;
 
 class YString;
 
-template<typename KeyType, typename ValueType> class YPair;
-template<typename T, typename Allocator = FDefaultAllocator> class YArray;
-template<typename T> class YTransArray;
-template<typename KeyType, typename ValueType, bool bInAllowDuplicateKeys> struct YDefaultMapKeyFuncs;
-template<typename KeyType, typename ValueType, typename SetAllocator = YDefaultSetAllocator, typename KeyFuncs = YDefaultMapKeyFuncs<KeyType, ValueType, false> > class YMap;
-template<typename KeyType, typename ValueType, typename SetAllocator = YDefaultSetAllocator, typename KeyFuncs = YDefaultMapKeyFuncs<KeyType, ValueType, true > > class YMultiMap;
+template<typename KeyType, typename ValueType> class TPair;
+template<typename T, typename Allocator = FDefaultAllocator> class TArray;
+template<typename T> class TTransArray;
+template<typename KeyType, typename ValueType, bool bInAllowDuplicateKeys> struct TDefaultMapKeyFuncs;
+template<typename KeyType, typename ValueType, typename SetAllocator = YDefaultSetAllocator, typename KeyFuncs = TDefaultMapKeyFuncs<KeyType, ValueType, false> > class TMap;
+template<typename KeyType, typename ValueType, typename SetAllocator = YDefaultSetAllocator, typename KeyFuncs = TDefaultMapKeyFuncs<KeyType, ValueType, true > > class TMultiMap;

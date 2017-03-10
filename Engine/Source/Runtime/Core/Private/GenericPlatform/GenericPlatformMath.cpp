@@ -20,20 +20,17 @@ CORE_API float YGenericPlatformMath::SRand()
 	const float SRandTemp = 1.0f;
 	Temp.f = SRandTemp;
 	Result.i = (Temp.i & 0xff800000) | (GSRandSeed & 0x007fffff);
-	//!!FIXME by zyx,这里应该换为YPlatformMath
 	return YPlatformMath::Fractional(Result.f);
 }
 
 CORE_API float YGenericPlatformMath::Atan2(float Y, float X)
 {
-	//FIXME!! PI应该在SolidAngleMathUtility.h里定义
 	//return atan2f(Y,X);
 	// atan2f occasionally returns NaN with perfectly valid input (possibly due to a compiler or library bug).
 	// We are replacing it with a minimax approximation with a max relative error of 7.15255737e-007 compared to the C library function.
 	// On PC this has been measured to be 2x faster than the std C version.
-	//!!FIXME by zyx,这里应该换为YMath
-	const float absX = YGenericPlatformMath::Abs(X);
-	const float absY = YGenericPlatformMath::Abs(Y);
+	const float absX = YMath::Abs(X);
+	const float absY = YMath::Abs(Y);
 	const bool yAbsBigger = (absY > absX);
 	float t0 = yAbsBigger ? absY : absX; // Max(absY, absX)
 	float t1 = yAbsBigger ? absX : absY; // Min(absX, absY)

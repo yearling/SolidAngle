@@ -681,7 +681,7 @@ public:
 	* @return A string describing the vector.
 	*/
 	//!!FIXME by zyx
-	//FString ToString() const;
+	//YString ToString() const;
 
 	/**
 	* Get a locale aware textual representation of this vector.
@@ -693,21 +693,21 @@ public:
 
 	/** Get a short textural representation of this vector, for compact readable logging. */
 	//!!FIXME by zyx
-	//FString ToCompactString() const;
+	//YString ToCompactString() const;
 
 	/** Get a short locale aware textural representation of this vector, for compact readable logging. */
 	//!!FIXME by zyx
 	//FText ToCompactText() const;
 
 	/**
-	* Initialize this Vector based on an FString. The String is expected to contain X=, Y=, Z=.
+	* Initialize this Vector based on an YString. The String is expected to contain X=, Y=, Z=.
 	* The YVector will be bogus when InitFromString returns false.
 	*
-	* @param	InSourceString	FString containing the vector values.
+	* @param	InSourceString	YString containing the vector values.
 	* @return true if the X,Y,Z values were read successfully; false otherwise.
 	*/
 	//!!FIXME by zyx
-	//bool InitFromString(const FString& InSourceString);
+	//bool InitFromString(const YString& InSourceString);
 
 	/**
 	* Converts a Cartesian unit vector into spherical coordinates on the unit sphere.
@@ -1735,9 +1735,9 @@ FORCEINLINE bool YVector::IsUnit(float LengthSquaredTolerance) const
 }
 
 //!!FIXME by zyx
-//FORCEINLINE FString YVector::ToString() const
+//FORCEINLINE YString YVector::ToString() const
 //{
-//	return FString::Printf(TEXT("X=%3.3f Y=%3.3f Z=%3.3f"), X, Y, Z);
+//	return YString::Printf(TEXT("X=%3.3f Y=%3.3f Z=%3.3f"), X, Y, Z);
 //}
 
 //!!FIXME by zyx
@@ -1805,44 +1805,44 @@ FORCEINLINE bool YVector::IsUnit(float LengthSquaredTolerance) const
 //}
 
 //!!FIXME by zyx
-//FORCEINLINE FString YVector::ToCompactString() const
+//FORCEINLINE YString YVector::ToCompactString() const
 //{
 //	if (IsNearlyZero())
 //	{
-//		return FString::Printf(TEXT("V(0)"));
+//		return YString::Printf(TEXT("V(0)"));
 //	}
 //
-//	FString ReturnString(TEXT("V("));
+//	YString ReturnString(TEXT("V("));
 //	bool bIsEmptyString = true;
 //	if (!YMath::IsNearlyZero(X))
 //	{
-//		ReturnString += FString::Printf(TEXT("X=%.2f"), X);
+//		ReturnString += YString::Printf(TEXT("X=%.2f"), X);
 //		bIsEmptyString = false;
 //	}
 //	if (!YMath::IsNearlyZero(Y))
 //	{
 //		if (!bIsEmptyString)
 //		{
-//			ReturnString += FString(TEXT(", "));
+//			ReturnString += YString(TEXT(", "));
 //		}
-//		ReturnString += FString::Printf(TEXT("Y=%.2f"), Y);
+//		ReturnString += YString::Printf(TEXT("Y=%.2f"), Y);
 //		bIsEmptyString = false;
 //	}
 //	if (!YMath::IsNearlyZero(Z))
 //	{
 //		if (!bIsEmptyString)
 //		{
-//			ReturnString += FString(TEXT(", "));
+//			ReturnString += YString(TEXT(", "));
 //		}
-//		ReturnString += FString::Printf(TEXT("Z=%.2f"), Z);
+//		ReturnString += YString::Printf(TEXT("Z=%.2f"), Z);
 //		bIsEmptyString = false;
 //	}
-//	ReturnString += FString(TEXT(")"));
+//	ReturnString += YString(TEXT(")"));
 //	return ReturnString;
 //}
 
 //!!FIXME by zyx
-//FORCEINLINE bool YVector::InitFromString(const FString& InSourceString)
+//FORCEINLINE bool YVector::InitFromString(const YString& InSourceString)
 //{
 //	X = Y = Z = 0;
 //

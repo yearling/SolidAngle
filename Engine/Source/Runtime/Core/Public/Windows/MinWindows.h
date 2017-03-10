@@ -1,12 +1,15 @@
 #pragma once
-#ifdef _WINDOWS_
+
+#include "CoreTypes.h"
+
+#if defined(_WINDOWS_) && !defined(UE4_MINIMAL_WINDOWS_INCLUDE)
 #pragma message ( " " )
 #pragma message ( "You have included windows.h before MinWindows.h" )
 #pragma message ( "All useless stuff from the windows headers won't be excluded !!!" )
 #pragma message ( " " )
 #endif // _WINDOWS_
 
-//以下这些宏都是在<Windows.h>中有说明的，有来不包含某些头文件
+#define UE4_MINIMAL_WINDOWS_INCLUDE
 
 // WIN32_LEAN_AND_MEAN excludes rarely-used services from windows headers.
 #define WIN32_LEAN_AND_MEAN
@@ -58,6 +61,4 @@
 #define NORPC
 
 // Finally now we can include windows.h
-#include <windows.h>
-
-
+#include <Windows.h>
