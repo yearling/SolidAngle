@@ -206,6 +206,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\YIntPoint.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Build.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CoreMiscDefines.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\AndOrNot.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\EnableIf.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\MinWindows.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\PostWindowsApi.h" />

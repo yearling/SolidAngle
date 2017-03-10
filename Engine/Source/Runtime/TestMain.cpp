@@ -1,13 +1,26 @@
 #include "Core.h"
 #include <iostream>
 
-TEnableIf<true, int>::Type  foo()
+struct TRUEValue
 {
-	std::cout << "TEnableIf : true" << std::endl;
-	return 5;
-}
+	enum 
+	{
+		Value = true
+	};
+};
+
+struct FALSEValue
+{
+	enum 
+	{
+		Value = false
+	};
+};
 int main()
 {
-	foo();
+	static_assert(TAnd<>::Value,"should be true");
+	static_assert(TAnd<TAnd<TRUEValue,TRUEValue>,TRUEValue>::Value,"should be true");
+	static_assert(YAnd<>::Value,"should be true");
+	//static_assert(!YAnd<FALSEValue>::Value,"should be true");
 	return 0;
 }

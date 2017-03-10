@@ -180,6 +180,9 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\CoreTypes.h">
       <Filter>Source\Runtime\Core</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\AndOrNot.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\TestMain.cpp">
