@@ -207,7 +207,13 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Build.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CoreMiscDefines.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\AndOrNot.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\AreTypesEqual.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\EnableIf.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsArithmetic.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsFloatingPoint.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsIntegral.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsPointer.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\RemoveCV.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\MinWindows.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\PostWindowsApi.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\PreWindowsApi.h" />
