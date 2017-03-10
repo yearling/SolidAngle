@@ -46,6 +46,12 @@
     <Filter Include="Source\Runtime\Core\Public\Templates">
       <UniqueIdentifier>{330c8fde-1f53-4915-a1d8-93b99155ec0b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Runtime\Core\Public\Containers">
+      <UniqueIdentifier>{a8dad901-9034-40dc-8791-51583f55f619}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Public\Traits">
+      <UniqueIdentifier>{fafff3c2-18f6-4f8d-9756-e72d3a7d49da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\core\Public\HAL\Platform.h">
@@ -199,6 +205,69 @@
       <Filter>Source\Runtime\Core\Public\Templates</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsPointer.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsPODType.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsSigned.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsTriviallyCopyAssignable.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsTriviallyCopyConstructible.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\PointerConvertibleFromTo.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\TypeWrapper.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\AlignmentTemplates.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\RemoveReference.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\ChooseClass.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IntegralConstant.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsClass.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\AlignOf.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\TypeCompatibleBytes.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\ContainersFwd.h">
+      <Filter>Source\Runtime\Core\Public\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Traits\IsContiguousContainer.h">
+      <Filter>Source\Runtime\Core\Public\Traits</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsTriviallyDestructible.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsEnumClass.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\Less.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\Greater.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\SolidAngleTypeTraits.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsEnum.h">
       <Filter>Source\Runtime\Core\Public\Templates</Filter>
     </ClInclude>
   </ItemGroup>

@@ -38,7 +38,7 @@ struct TOr;
 template<bool LHS, typename... RHS>
 struct TOrValue
 {
-	enum { Value = TOr<...>::Value};
+	enum { Value = TOr<RHS...>::Value};
 };
 
 template<typename... RHS>
@@ -48,7 +48,7 @@ struct TOrValue<true, RHS...>
 };
 
 template<typename LHS, typename... RHS>
-struct Tor: TOrValue<LHS::Value,RHS...>
+struct TOr<LHS,RHS...>: TOrValue<LHS::Value,RHS...>
 {};
 
 template<>

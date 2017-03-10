@@ -522,3 +522,31 @@ namespace TypeTests
 	static_assert(SIZE_T(-1) > SIZE_T(0), "SIZE_T type sign test failed.");
 }
 
+// Platform specific compiler setup.
+#if PLATFORM_WINDOWS
+#include "Windows/WindowsPlatformCompilerSetup.h"
+#elif PLATFORM_PS4
+#include "PS4/PS4CompilerSetup.h"
+#elif PLATFORM_XBOXONE
+#include "XboxOne/XboxOneCompilerSetup.h"
+#elif PLATFORM_MAC
+#include "Mac/MacPlatformCompilerSetup.h"
+#elif PLATFORM_IOS
+#include "IOS/IOSPlatformCompilerSetup.h"
+#elif PLATFORM_ANDROID
+#include "Android/AndroidCompilerSetup.h"
+#elif PLATFORM_HTML5
+#include "HTML5/HTML5PlatformCompilerSetup.h"
+#elif PLATFORM_LINUX
+#include "Linux/LinuxPlatformCompilerSetup.h"
+#elif PLATFORM_SWITCH
+#include "Switch/SwitchPlatformCompilerSetup.h"
+#else
+#error Unknown Compiler
+#endif
+
+// If we don't have a platform-specific define for the TEXT macro, define it now.
+#if !defined(TEXT) && !UE_BUILD_DOCS
+#define TEXT_PASTE(x) L ## x
+#define TEXT(x) TEXT_PASTE(x)
+#endif

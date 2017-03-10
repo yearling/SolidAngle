@@ -494,6 +494,9 @@ struct YMath :public YPlatformMath
 	{
 		return (T)(A + Alpha * (B - A));
 	}
+	// Rotator specific interpolation
+	template< class U > static YRotator Lerp(const YRotator& A, const YRotator& B, const U& Alpha);
+	template< class U > static YRotator LerpRange(const YRotator& A, const YRotator& B, const U& Alpha);
 
 	// Performs a linear interpolation between two values, Alpha ranges from 0-1. Handles full numeric range of T 
 	template<class T>
@@ -690,10 +693,6 @@ struct YMath :public YPlatformMath
 			InterpCircularIn(0.f, 1.f, Alpha * 2.f) * 0.5f :
 			InterpCircularOut(0.f, 1.f, Alpha * 2.f - 1.f) * 0.5f + 0.5f);
 	}
-
-	// Rotator specific interpolation
-	template<class T>
-	static YRotator				Lerp(const YRotator& A, const YRotator& B, const T& Alpha);
 
 	// Quat-specific interpolation
 	template<class T>
