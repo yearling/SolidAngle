@@ -235,13 +235,13 @@ public:
 	* @return Reference to Archive after serialization.
 	*/
 	//!!FIXME by zyx
-	//friend FArchive& operator<<(FArchive& Ar, YPlane &P)
+	//friend YArchive& operator<<(YArchive& Ar, YPlane &P)
 	//{
 	//	return Ar << (YVector&)P << P.W;
 	//}
 
 	//!!FIXME by zyx
-	//bool Serialize(FArchive& Ar)
+	//bool Serialize(YArchive& Ar)
 	//{
 	//	if (Ar.UE4Ver() >= VER_UE4_ADDED_NATIVE_SERIALIZATION_FOR_IMMUTABLE_STRUCTURES)
 	//	{
@@ -258,7 +258,7 @@ public:
 	*/
 
 	//!!FIXME by zyx
-//	bool NetSerialize(FArchive& Ar, class UPackageMap*, bool& bOutSuccess)
+//	bool NetSerialize(YArchive& Ar, class UPackageMap*, bool& bOutSuccess)
 //	{
 //		if (Ar.IsLoading())
 //		{

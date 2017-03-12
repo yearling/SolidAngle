@@ -295,7 +295,7 @@ public:
 	* @return Reference to the Archive after serialization.
 	*/
 	//!!FIXME by zyx
-	//friend FArchive& operator<<(FArchive& Ar, YIntRect& Rect)
+	//friend YArchive& operator<<(YArchive& Ar, YIntRect& Rect)
 	//{
 	//	return Ar << Rect.Min.X << Rect.Min.Y << Rect.Max.X << Rect.Max.Y;
 	//}
@@ -311,7 +311,7 @@ FORCEINLINE YIntRect YIntRect::Scale(float Fraction) const
 }
 
 
-/* FIntRect inline functions
+/* YIntRect inline functions
 *****************************************************************************/
 
 FORCEINLINE YIntRect::YIntRect()

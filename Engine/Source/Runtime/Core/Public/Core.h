@@ -35,3 +35,4 @@
 #include "Math/SolidAngleMathUtility.h"
 #include "Math/SolidAngleMath.h"
 #include "Templates/SolidAngleTypeTraits.h"
+#include "Templates/SolidAngleTemplate.h"

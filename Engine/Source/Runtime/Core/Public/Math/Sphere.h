@@ -165,7 +165,7 @@ public:
 	* @return The archive.
 	*/
 	//!!FIXME by zyx
-	//friend FArchive& operator<<(FArchive& Ar, FSphere& Sphere)
+	//friend YArchive& operator<<(YArchive& Ar, FSphere& Sphere)
 	//{
 	//	Ar << Sphere.Center << Sphere.W;
 

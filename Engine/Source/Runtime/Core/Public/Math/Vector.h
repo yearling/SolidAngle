@@ -937,7 +937,7 @@ public:
 	* @return Reference to Archive after serialization.
 	*/
 	//!!FIXME by zyx
-	//friend FArchive& operator<<(FArchive& Ar, YVector& V)
+	//friend YArchive& operator<<(YArchive& Ar, YVector& V)
 	//{
 	//	// @warning BulkSerialize: YVector is serialized as memory dump
 	//	// See TArray::BulkSerialize for detailed description of implied limitations.
@@ -945,7 +945,7 @@ public:
 	//}
 
 	//!!FIXME by zyx
-	//bool Serialize(FArchive& Ar)
+	//bool Serialize(YArchive& Ar)
 	//{
 	//	Ar << *this;
 	//	return true;
@@ -958,7 +958,7 @@ public:
 	* @see YVector_NetQuantize, YVector_NetQuantize10, YVector_NetQuantize100, YVector_NetQuantizeNormal
 	*/
 	//!!FIXME by zyx
-	//CORE_API bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
+	//CORE_API bool NetSerialize(YArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
 };
 
 

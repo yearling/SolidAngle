@@ -467,7 +467,7 @@ public:
 	* @return Reference to Archive after serialization.
 	*/
 	//!!FIXME by zyx
-	//friend FArchive& operator<<(FArchive& Ar, YVector2D& V)
+	//friend YArchive& operator<<(YArchive& Ar, YVector2D& V)
 	//{
 	//	// @warning BulkSerialize: YVector2D is serialized as memory dump
 	//	// See TArray::BulkSerialize for detailed description of implied limitations.
@@ -475,7 +475,7 @@ public:
 	//}
 
 	//!!FIXME by zyx
-	//bool Serialize(FArchive& Ar)
+	//bool Serialize(YArchive& Ar)
 	//{
 	//	Ar << *this;
 	//	return true;
@@ -510,7 +510,7 @@ public:
 	* YVectors NetSerialize without quantization (ie exact values are serialized).
 	*/
 	//!!FIXME by zyx
-	//CORE_API bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
+	//CORE_API bool NetSerialize(YArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
 
 	/** Converts spherical coordinates on the unit sphere into a Cartesian unit length vector. */
 	inline YVector SphericalToUnitCartesian() const;

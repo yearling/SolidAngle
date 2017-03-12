@@ -322,7 +322,7 @@ public:
 	* @param	Ar	Archive to serialize to/ from
 	*/
 	//!!FIXME by zyx
-	//CORE_API void SerializeCompressed(FArchive& Ar);
+	//CORE_API void SerializeCompressed(YArchive& Ar);
 
 	/**
 	* Serializes the rotator compressed for e.g. network transmission (use shorts though).
@@ -330,12 +330,12 @@ public:
 	* @param	Ar	Archive to serialize to/ from
 	*/
 	//!!FIXME by zyx
-	//CORE_API void SerializeCompressedShort(FArchive& Ar);
+	//CORE_API void SerializeCompressedShort(YArchive& Ar);
 
 	/**
 	*/
 	//!!FIXME by zyx
-	//CORE_API bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
+	//CORE_API bool NetSerialize(YArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
 
 public:
 
@@ -405,14 +405,14 @@ public:
 	* @return Reference to Archive after serialization.
 	*/
 	//!!FIXME by zyx
-	//friend FArchive& operator<<(FArchive& Ar, YRotator& R)
+	//friend YArchive& operator<<(YArchive& Ar, YRotator& R)
 	//{
 	//	Ar << R.Pitch << R.Yaw << R.Roll;
 	//	return Ar;
 	//}
 
 	//!!FIXME by zyx
-	//bool Serialize(FArchive& Ar)
+	//bool Serialize(YArchive& Ar)
 	//{
 	//	Ar << *this;
 	//	return true;

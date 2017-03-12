@@ -1147,7 +1147,7 @@ public:
 	* IMPORTANT:
 	*   - This is Overridden in XeD3dResourceArray.h Please make certain changes are propogated accordingly
 	*
-	* @param Ar	FArchive to bulk serialize this TArray to/from
+	* @param Ar	YArchive to bulk serialize this TArray to/from
 	*/
 	void BulkSerialize(YArchive& Ar, bool bForcePerElementSerialization = false)
 	{

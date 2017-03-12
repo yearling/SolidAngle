@@ -126,7 +126,7 @@ struct CORE_API YGenericPlatformMemory
 	* the enums are relatively platform-dependent, although the general ones (Physical, GPU)
 	* are straightforward. A platform can add more of these, and it won't affect other
 	* platforms, other than a minuscule amount of memory for the StatManager to track the
-	* max available memory for each region (uses an array FPlatformMemory::MCR_MAX big)
+	* max available memory for each region (uses an array YPlatformMemory::MCR_MAX big)
 	*/
 	enum EMemoryCounterRegion
 	{

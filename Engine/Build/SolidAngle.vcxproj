@@ -99,7 +99,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32;PLATFORM_WINDOWS;CORE_API=;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;WIN32;PLATFORM_WINDOWS;CORE_API=;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public;</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
@@ -114,7 +114,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;PLATFORM_WINDOWS;CORE_API=;_DEBUG;_CONSOLE;WITH_DEV_AUTOMATION_TESTS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;PLATFORM_WINDOWS;CORE_API=;_DEBUG;_CONSOLE;WITH_DEV_AUTOMATION_TESTS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FloatingPointModel>Fast</FloatingPointModel>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
@@ -136,7 +136,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32;PLATFORM_WINDOWS;CORE_API=;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;WIN32;PLATFORM_WINDOWS;CORE_API=;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public;</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
@@ -155,7 +155,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;PLATFORM_WINDOWS;CORE_API=;WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;PLATFORM_WINDOWS;CORE_API=;WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <BrowseInformation>true</BrowseInformation>
@@ -180,6 +180,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\CoreFwd.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\CoreTypes.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatform.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformAtomics.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformCompilerPreSetup.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformMath.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformMemory.h" />
@@ -188,7 +189,9 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformStricmp.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformString.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\MicrosoftPlatformString.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\MemoryBase.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\Platform.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformAtomics.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformCrt.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformIncludes.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformMath.h" />
@@ -233,6 +236,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CString.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\DateTime.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\EngineVersionBase.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Exec.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\OutputDevice.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\StringFormatArg.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Timespan.h" />
@@ -266,7 +270,9 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\RemoveReference.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\SolidAngleTemplate.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\SolidAngleTypeTraits.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\Sorting.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\TypeCompatibleBytes.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\TypeHash.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\TypeWrapper.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Traits\IsContiguousContainer.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\MinimalWindowsApi.h" />
@@ -275,6 +281,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\PreWindowsApi.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsHWrapper.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WIndowsPlatform.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformAtomics.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformCompilerPreSetup.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformCompilerSetup.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformMath.h" />

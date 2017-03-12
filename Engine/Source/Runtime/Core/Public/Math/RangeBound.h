@@ -140,7 +140,7 @@ public:
 	* @return The archive.
 	*/
 	//!!FIXME by zyx
-	//friend class FArchive& operator<<(class FArchive& Ar, TRangeBound& Bound)
+	//friend class YArchive& operator<<(class YArchive& Ar, TRangeBound& Bound)
 	//{
 	//	return Ar << (uint8&)Bound.Type << Bound.Value;
 	//}

@@ -215,13 +215,13 @@ public:
 	* @return Reference to the Archive after serialization.
 	*/
 	//!!FIXME by zyx
-	//friend FArchive& operator<<(FArchive& Ar, YTwoVectors& TwoVectors)
+	//friend YArchive& operator<<(YArchive& Ar, YTwoVectors& TwoVectors)
 	//{
 	//	return Ar << TwoVectors.v1 << TwoVectors.v2;
 	//}
 
 	//!!FIXME by zyx
-	//bool Serialize(FArchive& Ar)
+	//bool Serialize(YArchive& Ar)
 	//{
 	//	Ar << *this;
 	//	return true;

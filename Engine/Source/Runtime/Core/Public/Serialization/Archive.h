@@ -32,7 +32,7 @@ template<class TEnum> class TEnumAsByte;
 */
 template<class T> class TCheckedObjPtr
 {
-	friend class FArchive;
+	friend class YArchive;
 
 public:
 	TCheckedObjPtr()
@@ -114,25 +114,25 @@ protected:
 * Base class for archives that can be used for loading, saving, and garbage
 * collecting in a byte order neutral way.
 */
-class CORE_API FArchive
+class CORE_API YArchive
 {
 public:
 
 	/** Default constructor. */
-	FArchive();
+	YArchive();
 
 	/** Copy constructor. */
-	FArchive(const FArchive&);
+	YArchive(const YArchive&);
 
 	/**
 	* Copy assignment operator.
 	*
 	* @param ArchiveToCopy The archive to copy from.
 	*/
-	FArchive& operator=(const FArchive& ArchiveToCopy);
+	YArchive& operator=(const YArchive& ArchiveToCopy);
 
 	/** Destructor. */
-	virtual ~FArchive();
+	virtual ~YArchive();
 
 public:
 
@@ -144,7 +144,7 @@ public:
 	* @param Value The value to serialize.
 	* @return This instance.
 	*/
-	virtual FArchive& operator<<(class FName& Value)
+	virtual YArchive& operator<<(class FName& Value)
 	{
 		return *this;
 	}
@@ -155,7 +155,7 @@ public:
 	* @param Ar The archive to serialize from or to.
 	* @param Value The value to serialize.
 	*/
-	virtual FArchive& operator<<(class FText& Value);
+	virtual YArchive& operator<<(class FText& Value);
 
 	/**
 	* Serializes an UObject value from or into this archive.
@@ -165,7 +165,7 @@ public:
 	* @param Value The value to serialize.
 	* @return This instance.
 	*/
-	virtual FArchive& operator<<(class UObject*& Value)
+	virtual YArchive& operator<<(class UObject*& Value)
 	{
 		return *this;
 	}
@@ -177,7 +177,7 @@ public:
 	* @param Value The value to serialize.
 	* @return This instance.
 	*/
-	template<class T> FORCEINLINE FArchive& operator<<(TCheckedObjPtr<T>& Value)
+	template<class T> FORCEINLINE YArchive& operator<<(TCheckedObjPtr<T>& Value)
 	{
 		Value.bError = false;
 
@@ -221,7 +221,7 @@ public:
 	* @param Value The value to serialize.
 	* @return This instance.
 	*/
-	virtual FArchive& operator<<(class FLazyObjectPtr& Value);
+	virtual YArchive& operator<<(class FLazyObjectPtr& Value);
 
 	/**
 	* Serializes asset pointer from or into this archive.
@@ -231,7 +231,7 @@ public:
 	* @param Value The asset pointer to serialize.
 	* @return This instance.
 	*/
-	virtual FArchive& operator<<(class FAssetPtr& Value);
+	virtual YArchive& operator<<(class FAssetPtr& Value);
 
 	/**
 	* Serializes string asset reference from or into this archive.
@@ -239,7 +239,7 @@ public:
 	* @param Value String asset reference to serialize.
 	* @return This instance.
 	*/
-	virtual FArchive& operator<<(struct FStringAssetReference& Value);
+	virtual YArchive& operator<<(struct YStringAssetReference& Value);
 
 	/**
 	* Serializes FWeakObjectPtr value from or into this archive.
@@ -249,7 +249,7 @@ public:
 	* @param Value The value to serialize.
 	* @return This instance.
 	*/
-	virtual FArchive& operator<<(struct FWeakObjectPtr& Value);
+	virtual YArchive& operator<<(struct FWeakObjectPtr& Value);
 
 	/**
 	* Inform the archive that a blueprint would like to force finalization, normally
@@ -264,7 +264,7 @@ public:
 	* @param Ar The archive to serialize from or to.
 	* @param Value The value to serialize.
 	*/
-	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, ANSICHAR& Value)
+	FORCEINLINE friend YArchive& operator<<(YArchive& Ar, ANSICHAR& Value)
 	{
 #if DEVIRTUALIZE_FLinkerLoad_Serialize
 		if (!Ar.FastPathLoad<sizeof(Value)>(&Value))
@@ -281,7 +281,7 @@ public:
 	* @param Ar The archive to serialize from or to.
 	* @param Value The value to serialize.
 	*/
-	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, WIDECHAR& Value)
+	FORCEINLINE friend YArchive& operator<<(YArchive& Ar, WIDECHAR& Value)
 	{
 #if DEVIRTUALIZE_FLinkerLoad_Serialize
 		if (!Ar.FastPathLoad<sizeof(Value)>(&Value))
@@ -298,7 +298,7 @@ public:
 	* @param Ar The archive to serialize from or to.
 	* @param Value The value to serialize.
 	*/
-	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, uint8& Value)
+	FORCEINLINE friend YArchive& operator<<(YArchive& Ar, uint8& Value)
 	{
 #if DEVIRTUALIZE_FLinkerLoad_Serialize
 		if (!Ar.FastPathLoad<sizeof(Value)>(&Value))
@@ -316,7 +316,7 @@ public:
 	* @param Value The value to serialize.
 	*/
 	template<class TEnum>
-	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, TEnumAsByte<TEnum>& Value)
+	FORCEINLINE friend YArchive& operator<<(YArchive& Ar, TEnumAsByte<TEnum>& Value)
 	{
 #if DEVIRTUALIZE_FLinkerLoad_Serialize
 		if (!Ar.FastPathLoad<sizeof(Value)>(&Value))
@@ -333,7 +333,7 @@ public:
 	* @param Ar The archive to serialize from or to.
 	* @param Value The value to serialize.
 	*/
-	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, int8& Value)
+	FORCEINLINE friend YArchive& operator<<(YArchive& Ar, int8& Value)
 	{
 #if DEVIRTUALIZE_FLinkerLoad_Serialize
 		if (!Ar.FastPathLoad<sizeof(Value)>(&Value))
@@ -350,7 +350,7 @@ public:
 	* @param Ar The archive to serialize from or to.
 	* @param Value The value to serialize.
 	*/
-	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, uint16& Value)
+	FORCEINLINE friend YArchive& operator<<(YArchive& Ar, uint16& Value)
 	{
 #if DEVIRTUALIZE_FLinkerLoad_Serialize
 		if (!Ar.FastPathLoad<sizeof(Value)>(&Value))
@@ -367,7 +367,7 @@ public:
 	* @param Ar The archive to serialize from or to.
 	* @param Value The value to serialize.
 	*/
-	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, int16& Value)
+	FORCEINLINE friend YArchive& operator<<(YArchive& Ar, int16& Value)
 	{
 #if DEVIRTUALIZE_FLinkerLoad_Serialize
 		if (!Ar.FastPathLoad<sizeof(Value)>(&Value))
@@ -384,7 +384,7 @@ public:
 	* @param Ar The archive to serialize from or to.
 	* @param Value The value to serialize.
 	*/
-	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, uint32& Value)
+	FORCEINLINE friend YArchive& operator<<(YArchive& Ar, uint32& Value)
 	{
 #if DEVIRTUALIZE_FLinkerLoad_Serialize
 		if (!Ar.FastPathLoad<sizeof(Value)>(&Value))
@@ -402,9 +402,9 @@ public:
 	* @param Value The value to serialize.
 	*/
 #if WITH_EDITOR
-	FArchive& operator<<(bool& D);
+	YArchive& operator<<(bool& D);
 #else
-	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, bool& D)
+	FORCEINLINE friend YArchive& operator<<(YArchive& Ar, bool& D)
 	{
 		// Serialize bool as if it were UBOOL (legacy, 32 bit int).
 #if DEVIRTUALIZE_FLinkerLoad_Serialize
@@ -436,7 +436,7 @@ public:
 	* @param Ar The archive to serialize from or to.
 	* @param Value The value to serialize.
 	*/
-	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, int32& Value)
+	FORCEINLINE friend YArchive& operator<<(YArchive& Ar, int32& Value)
 	{
 #if DEVIRTUALIZE_FLinkerLoad_Serialize
 		if (!Ar.FastPathLoad<sizeof(Value)>(&Value))
@@ -454,7 +454,7 @@ public:
 	* @param Ar The archive to serialize from or to.
 	* @param Value The value to serialize.
 	*/
-	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, long& Value)
+	FORCEINLINE friend YArchive& operator<<(YArchive& Ar, long& Value)
 	{
 #if DEVIRTUALIZE_FLinkerLoad_Serialize
 		if (!Ar.FastPathLoad<sizeof(Value)>(&Value))
@@ -472,7 +472,7 @@ public:
 	* @param Ar The archive to serialize from or to.
 	* @param Value The value to serialize.
 	*/
-	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, float& Value)
+	FORCEINLINE friend YArchive& operator<<(YArchive& Ar, float& Value)
 	{
 #if DEVIRTUALIZE_FLinkerLoad_Serialize
 		if (!Ar.FastPathLoad<sizeof(Value)>(&Value))
@@ -489,7 +489,7 @@ public:
 	* @param Ar The archive to serialize from or to.
 	* @param Value The value to serialize.
 	*/
-	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, double& Value)
+	FORCEINLINE friend YArchive& operator<<(YArchive& Ar, double& Value)
 	{
 #if DEVIRTUALIZE_FLinkerLoad_Serialize
 		if (!Ar.FastPathLoad<sizeof(Value)>(&Value))
@@ -506,7 +506,7 @@ public:
 	* @param Ar The archive to serialize from or to.
 	* @param Value The value to serialize.
 	*/
-	FORCEINLINE friend FArchive& operator<<(FArchive &Ar, uint64& Value)
+	FORCEINLINE friend YArchive& operator<<(YArchive &Ar, uint64& Value)
 	{
 #if DEVIRTUALIZE_FLinkerLoad_Serialize
 		if (!Ar.FastPathLoad<sizeof(Value)>(&Value))
@@ -523,7 +523,7 @@ public:
 	* @param Ar The archive to serialize from or to.
 	* @param Value The value to serialize.
 	*/
-	/*FORCEINLINE*/friend FArchive& operator<<(FArchive& Ar, int64& Value)
+	/*FORCEINLINE*/friend YArchive& operator<<(YArchive& Ar, int64& Value)
 	{
 #if DEVIRTUALIZE_FLinkerLoad_Serialize
 		if (!Ar.FastPathLoad<sizeof(Value)>(&Value))
@@ -544,26 +544,26 @@ public:
 		typename EnumType,
 		typename = typename TEnableIf<TIsEnumClass<EnumType>::Value>::Type
 	>
-		FORCEINLINE friend FArchive& operator<<(FArchive& Ar, EnumType& Value)
+		FORCEINLINE friend YArchive& operator<<(YArchive& Ar, EnumType& Value)
 	{
 		return Ar << (__underlying_type(EnumType)&)Value;
 	}
 
 	/**
-	* Serializes an FIntRect value from or into an archive.
+	* Serializes an YIntRect value from or into an archive.
 	*
 	* @param Ar The archive to serialize from or to.
 	* @param Value The value to serialize.
 	*/
-	friend FArchive& operator<<(FArchive& Ar, struct FIntRect& Value);
+	friend YArchive& operator<<(YArchive& Ar, struct YIntRect& Value);
 
 	/**
-	* Serializes an FString value from or into an archive.
+	* Serializes an YString value from or into an archive.
 	*
 	* @param Ar The archive to serialize from or to.
 	* @param Value The value to serialize.
 	*/
-	friend CORE_API FArchive& operator<<(FArchive& Ar, FString& Value);
+	friend CORE_API YArchive& operator<<(YArchive& Ar, YString& Value);
 
 public:
 
@@ -597,7 +597,7 @@ public:
 	*
 	* This is overridden for the specific Archive Types
 	*/
-	virtual FString GetArchiveName() const;
+	virtual YString GetArchiveName() const;
 
 	/**
 	* If this archive is a FLinkerLoad or FLinkerSave, returns a pointer to the ULinker portion.
@@ -709,7 +709,7 @@ public:
 	* @param	V		Data pointer to serialize data from/ to
 	* @param	Length	Length of source data if we're saving, unused otherwise
 	* @param	Flags	Flags to control what method to use for [de]compression and optionally control memory vs speed when compressing
-	* @param	bTreatBufferAsFileReader true if V is actually an FArchive, which is used when saving to read data - helps to avoid single huge allocations of source data
+	* @param	bTreatBufferAsFileReader true if V is actually an YArchive, which is used when saving to read data - helps to avoid single huge allocations of source data
 	* @param	bUsePlatformBitWindow use a platform specific bitwindow setting
 	*/
 	void SerializeCompressed(void* V, int64 Length, ECompressionFlags Flags, bool bTreatBufferAsFileReader = false, bool bUsePlatformBitWindow = false);
@@ -728,7 +728,7 @@ public:
 	// Used to do byte swapping on small items. This does not happen usually, so we don't want it inline
 	void ByteSwap(void* V, int32 Length);
 
-	FORCEINLINE FArchive& ByteOrderSerialize(void* V, int32 Length)
+	FORCEINLINE YArchive& ByteOrderSerialize(void* V, int32 Length)
 	{
 		Serialize(V, Length);
 		if (IsByteSwapping())
@@ -1245,13 +1245,13 @@ public:
 	* Set the localization namespace that this archive should use when serializing text properties.
 	* This is typically the namespace used by the package being serialized (if serializing a package, or an object within a package).
 	*/
-	virtual void SetLocalizationNamespace(const FString& InLocalizationNamespace);
+	virtual void SetLocalizationNamespace(const YString& InLocalizationNamespace);
 
 	/**
 	* Get the localization namespace that this archive should use when serializing text properties.
 	* This is typically the namespace used by the package being serialized (if serializing a package, or an object within a package).
 	*/
-	virtual FString GetLocalizationNamespace() const;
+	virtual YString GetLocalizationNamespace() const;
 #endif // USE_STABLE_LOCALIZATION_KEYS
 
 protected:
@@ -1313,7 +1313,7 @@ public:
 			OriginalFastPathLoadBuffer = nullptr;
 		}
 	};
-	//@todoio FArchive is really a horrible class and the way it is proxied by FLinkerLoad is double terrible. It makes the fast path really hacky and slower than it would need to be.
+	//@todoio YArchive is really a horrible class and the way it is proxied by FLinkerLoad is double terrible. It makes the fast path really hacky and slower than it would need to be.
 	FFastPathLoadBuffer* ActiveFPLB;
 	FFastPathLoadBuffer InlineFPLB;
 
@@ -1332,7 +1332,7 @@ public:
 private:
 
 	/** Copies all of the members except CustomVersionContainer */
-	void CopyTrivialFArchiveStatusMembers(const FArchive& ArchiveStatusToCopy);
+	void CopyTrivialYArchiveStatusMembers(const YArchive& ArchiveStatusToCopy);
 
 public:
 
@@ -1363,10 +1363,10 @@ public:
 	/** Quickly tell if an archive contains script code. */
 	uint8 ArContainsCode : 1;
 
-	/** Used to determine whether FArchive contains a level or world. */
+	/** Used to determine whether YArchive contains a level or world. */
 	uint8 ArContainsMap : 1;
 
-	/** Used to determine whether FArchive contains data required to be gathered for localization. */
+	/** Used to determine whether YArchive contains data required to be gathered for localization. */
 	uint8 ArRequiresLocalizationGather : 1;
 
 	/** Whether we should forcefully swap bytes. */
@@ -1441,7 +1441,7 @@ private:
 
 	/**
 	* All the custom versions stored in the archive.
-	* Stored as a pointer to a heap-allocated object because of a 3-way dependency between TArray, FCustomVersionContainer and FArchive, which is too much work to change right now.
+	* Stored as a pointer to a heap-allocated object because of a 3-way dependency between TArray, FCustomVersionContainer and YArchive, which is too much work to change right now.
 	*/
 	FCustomVersionContainer* CustomVersionContainer;
 
@@ -1455,7 +1455,7 @@ public:
 	private:
 #if WITH_EDITOR
 		uint32 PreviousFlags;
-		FArchive& Ar;
+		YArchive& Ar;
 #endif
 	public:
 		/**
@@ -1465,7 +1465,7 @@ public:
 		* @param Remove should we add these flags or remove them default is to add
 		*/
 #if WITH_EDITOR
-		FScopeSetDebugSerializationFlags(FArchive& InAr, uint32 NewFlags, bool Remove = false)
+		FScopeSetDebugSerializationFlags(YArchive& InAr, uint32 NewFlags, bool Remove = false)
 			: Ar(InAr)
 		{
 
@@ -1486,7 +1486,7 @@ public:
 			Ar.SetDebugSerializationFlags(PreviousFlags);
 		}
 #else
-		FScopeSetDebugSerializationFlags(FArchive& InAr, uint32 NewFlags, bool Remove = false)
+		FScopeSetDebugSerializationFlags(YArchive& InAr, uint32 NewFlags, bool Remove = false)
 		{}
 		~FScopeSetDebugSerializationFlags()
 		{}
@@ -1504,9 +1504,9 @@ public:
 	class FScopeAddDebugData
 	{
 	private:
-		FArchive& Ar;
+		YArchive& Ar;
 	public:
-		CORE_API FScopeAddDebugData(FArchive& InAr, const FName& DebugData);
+		CORE_API FScopeAddDebugData(YArchive& InAr, const FName& DebugData);
 
 		~FScopeAddDebugData()
 		{
@@ -1522,7 +1522,7 @@ private:
 	class UProperty* SerializedProperty;
 
 #if WITH_EDITORONLY_DATA
-	/** Non-zero if on the current stack of serialized properties there's an editor-only property. Needs to live in FArchive because of SerializedProperty. */
+	/** Non-zero if on the current stack of serialized properties there's an editor-only property. Needs to live in YArchive because of SerializedProperty. */
 	int32 EditorOnlyPropertyStack;
 #endif
 
@@ -1530,15 +1530,15 @@ private:
 	/**
 	* The localization namespace that this archive should use when serializing text properties.
 	* This is typically the namespace used by the package being serialized (if serializing a package, or an object within a package).
-	* Stored as a pointer to a heap-allocated string because of a dependency between TArray (thus FString) and FArchive; null should be treated as an empty string.
+	* Stored as a pointer to a heap-allocated string because of a dependency between TArray (thus YString) and YArchive; null should be treated as an empty string.
 	*/
-	class FString* LocalizationNamespacePtr;
+	class YString* LocalizationNamespacePtr;
 
 	/** See SetLocalizationNamespace */
-	void SetBaseLocalizationNamespace(const FString& InLocalizationNamespace);
+	void SetBaseLocalizationNamespace(const YString& InLocalizationNamespace);
 
 	/** See GetLocalizationNamespace */
-	FString GetBaseLocalizationNamespace() const;
+	YString GetBaseLocalizationNamespace() const;
 #endif // USE_STABLE_LOCALIZATION_KEYS
 
 	/**
@@ -1552,7 +1552,7 @@ private:
 /**
 * Template for archive constructors.
 */
-template<class T> T Arctor(FArchive& Ar)
+template<class T> T Arctor(YArchive& Ar)
 {
 	T Tmp;
 	Ar << Tmp;

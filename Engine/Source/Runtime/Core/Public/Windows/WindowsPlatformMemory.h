@@ -79,7 +79,7 @@ struct CORE_API YWindowsPlatformMemory
 		return 32 * 1024 * 1024;
 	}
 
-	static class FMalloc* BaseAllocator();
+	static class YMalloc* BaseAllocator();
 	static YPlatformMemoryStats GetStats();
 	static void GetStatsForMallocProfiler(YGenericMemoryStats& out_Stats);
 	static const YPlatformMemoryConstants& GetConstants();
@@ -96,4 +96,4 @@ protected:
 };
 
 
-typedef YWindowsPlatformMemory FPlatformMemory;
+typedef YWindowsPlatformMemory YPlatformMemory;

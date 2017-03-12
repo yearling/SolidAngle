@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "Containers/SolidAngleString.h"
 struct TRUEValue
 {
 	enum 
@@ -63,7 +64,7 @@ class BaseTest
 public:
 	BaseTest() {};
 	virtual ~BaseTest() {};
-	virtual bool NonTrivial() {};
+	virtual bool NonTrivial() { return true; };
 };
 
 struct PODType
@@ -99,7 +100,7 @@ class DirivedTest :public BaseTest
 public:
 	DirivedTest() {};
 	virtual ~DirivedTest() {}
-	virtual bool NonTrivial() override {}
+	virtual bool NonTrivial() override { return true; }
 };
 
 enum TestEnum { eFirst,eSecond };
@@ -108,8 +109,26 @@ enum class TestClassEnum : uint32
 {
 	eFirst,eSecond
 };
+
+template<typename T>
+typename TEnableIf<TIsArithmetic<T>::Value, T>::Type GetEnableValue(T a)
+{
+	return a;
+}
+
+template<typename T>
+typename TEnableIf<!TIsArithmetic<T>::Value, int>::Type GetEnableValue(T a)
+{
+	return -1;
+}
 int main()
 {
+
+	std::cout << "---------------TEnableIf-----------" << std::endl;
+	std::cout << GetEnableValue(12.0f) << std::endl;
+	DirivedTest EnableDrived;
+	std::cout<< GetEnableValue(EnableDrived)<<std::endl;
+	std::cout << "---------------TAnd-----------" << std::endl;
 	static_assert(TAnd<>::Value, "should be true");
 	static_assert(TAnd<TAnd<TRUEValue, TRUEValue>, TRUEValue>::Value, "should be true");
 	//static_assert(!YAnd<FALSEValue>::Value,"should be true");
@@ -172,5 +191,8 @@ int main()
 	static_assert(TIsEnum<TestEnum>::Value, "should be true");
 	static_assert(TIsEnumClass<TestClassEnum>::Value, "should be true");
 
+
+	std::cout << "\n--------------YString----------" << std::endl;
+	YString strHello;
 	return 0;
 }

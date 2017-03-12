@@ -279,7 +279,7 @@ public:
 	* @return Reference to the Archive after serialization.
 	*/
 	//!!FIXME by zyx
-	//friend FArchive& operator<<(FArchive& Ar, YIntPoint& Point)
+	//friend YArchive& operator<<(YArchive& Ar, YIntPoint& Point)
 	//{
 	//	return Ar << Point.X << Point.Y;
 	//}
@@ -291,7 +291,7 @@ public:
 	* @return true on success, false otherwise.
 	*/
 	//!!FIXME by zyx
-	//bool Serialize(FArchive& Ar)
+	//bool Serialize(YArchive& Ar)
 	//{
 	//	Ar << *this;
 	//	return true;

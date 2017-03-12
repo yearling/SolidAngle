@@ -23,7 +23,7 @@ VarArgs helper macros.
 	{ \
 		va_list ap; \
 		va_start(ap, lastarg); \
-		YCStringWide::GetVarArgs(msg, msgsize, len, fmt, ap); \
+		TCStringWide::GetVarArgs(msg, msgsize, len, fmt, ap); \
 	}
 #define GET_VARARGS_ANSI(msg, msgsize, len, lastarg, fmt) \
 	{ \
@@ -45,7 +45,7 @@ VarArgs helper macros.
 	{ \
 		va_list ap; \
 		va_start(ap, lastarg); \
-		result = YCStringWide::GetVarArgs(msg, msgsize, len, fmt, ap); \
+		result = TCStringWide::GetVarArgs(msg, msgsize, len, fmt, ap); \
 		if (result >= msgsize) \
 		{ \
 			result = -1; \

@@ -40,11 +40,11 @@ namespace ETimespan
 * positive or negative ticks depending on whether the difference is measured forward or backward.
 * Each tick has a resolution of 0.1 microseconds (= 100 nanoseconds).
 *
-* In conjunction with the companion class FDateTime, time spans can be used to perform date and time
+* In conjunction with the companion class YDateTime, time spans can be used to perform date and time
 * based arithmetic, such as calculating the difference between two dates or adding a certain amount
 * of time to a given date.
 *
-* @see FDateTime
+* @see YDateTime
 */
 struct YTimespan
 {

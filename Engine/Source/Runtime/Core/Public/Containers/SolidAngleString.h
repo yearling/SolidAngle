@@ -48,7 +48,7 @@ namespace ESearchDir
 
 /**
 * A dynamically sizeable string.
-* @see https://docs.unrealengine.com/latest/INT/Programming/UnrealArchitecture/StringHandling/FString/
+* @see https://docs.unrealengine.com/latest/INT/Programming/UnrealArchitecture/StringHandling/YString/
 */
 class CORE_API YString
 {
@@ -141,7 +141,7 @@ public:
 	}
 
 	/**
-	* Constructor to create FString with specified number of characters from another string with additional character zero
+	* Constructor to create YString with specified number of characters from another string with additional character zero
 	*
 	* @param InCount how many characters to copy
 	* @param InSrc String to copy from
@@ -157,7 +157,7 @@ public:
 	}
 
 #ifdef __OBJC__
-	/** Convert Objective-C NSString* to FString */
+	/** Convert Objective-C NSString* to YString */
 	FORCEINLINE YString(const NSString* In)
 	{
 		if (In &&[In length] > 0)
@@ -165,18 +165,18 @@ public:
 			// Convert the NSString data into the native TCHAR format for UE4
 			// This returns a buffer of bytes, but they can be safely cast to a buffer of TCHARs
 #if PLATFORM_TCHAR_IS_4_BYTES
-			const CFStringEncoding Encoding = kCFStringEncodingUTF32LE;
+			const CYStringEncoding Encoding = kCYStringEncodingUTF32LE;
 #else
-			const CFStringEncoding Encoding = kCFStringEncodingUTF16LE;
+			const CYStringEncoding Encoding = kCYStringEncodingUTF16LE;
 #endif
 
-			CFRange Range = CFRangeMake(0, CFStringGetLength((__bridge CFStringRef)In));
+			CFRange Range = CFRangeMake(0, CYStringGetLength((__bridge CYStringRef)In));
 			CFIndex BytesNeeded;
-			if (CFStringGetBytes((__bridge CFStringRef)In, Range, Encoding, '?', false, NULL, 0, &BytesNeeded) > 0)
+			if (CYStringGetBytes((__bridge CYStringRef)In, Range, Encoding, '?', false, NULL, 0, &BytesNeeded) > 0)
 			{
 				const size_t Length = BytesNeeded / sizeof(TCHAR);
 				Data.AddUninitialized(Length + 1);
-				CFStringGetBytes((__bridge CFStringRef)In, Range, Encoding, '?', false, (uint8*)Data.GetData(), Length * sizeof(TCHAR) + 1, NULL);
+				CYStringGetBytes((__bridge CYStringRef)In, Range, Encoding, '?', false, (uint8*)Data.GetData(), Length * sizeof(TCHAR) + 1, NULL);
 				Data[Length] = 0;
 			}
 		}
@@ -352,7 +352,7 @@ public:
 	}
 
 #ifdef __OBJC__
-	/** Convert FString to Objective-C NSString */
+	/** Convert YString to Objective-C NSString */
 	FORCEINLINE NSString* GetNSString() const
 	{
 #if PLATFORM_TCHAR_IS_4_BYTES
@@ -563,9 +563,9 @@ public:
 	}
 
 	/**
-	* Concatenates an FString with a TCHAR.
+	* Concatenates an YString with a TCHAR.
 	*
-	* @param Lhs The FString on the left-hand-side of the expression.
+	* @param Lhs The YString on the left-hand-side of the expression.
 	* @param Rhs The char on the right-hand-side of the expression.
 	*
 	* @return The concatenated string.
@@ -582,9 +582,9 @@ public:
 	}
 
 	/**
-	* Concatenates an FString with a TCHAR.
+	* Concatenates an YString with a TCHAR.
 	*
-	* @param Lhs The FString on the left-hand-side of the expression.
+	* @param Lhs The YString on the left-hand-side of the expression.
 	* @param Rhs The char on the right-hand-side of the expression.
 	*
 	* @return The concatenated string.
@@ -602,7 +602,7 @@ public:
 
 private:
 	template <typename LhsType, typename RhsType>
-	FORCEINLINE static YString ConcatFStrings(typename TIdentity<LhsType>::Type Lhs, typename TIdentity<RhsType>::Type Rhs)
+	FORCEINLINE static YString ConcatYStrings(typename TIdentity<LhsType>::Type Lhs, typename TIdentity<RhsType>::Type Rhs)
 	{
 		Lhs.CheckInvariants();
 		Rhs.CheckInvariants();
@@ -619,7 +619,7 @@ private:
 	}
 
 	template <typename RhsType>
-	FORCEINLINE static YString ConcatTCHARsToFString(const TCHAR* Lhs, typename TIdentity<RhsType>::Type Rhs)
+	FORCEINLINE static YString ConcatTCHARsToYString(const TCHAR* Lhs, typename TIdentity<RhsType>::Type Rhs)
 	{
 		checkSlow(Lhs);
 		Rhs.CheckInvariants();
@@ -645,7 +645,7 @@ private:
 	}
 
 	template <typename LhsType>
-	FORCEINLINE static YString ConcatFStringToTCHARs(typename TIdentity<LhsType>::Type Lhs, const TCHAR* Rhs)
+	FORCEINLINE static YString ConcatYStringToTCHARs(typename TIdentity<LhsType>::Type Lhs, const TCHAR* Rhs)
 	{
 		Lhs.CheckInvariants();
 		checkSlow(Rhs);
@@ -663,107 +663,107 @@ private:
 
 public:
 	/**
-	* Concatenate two FStrings.
+	* Concatenate two YStrings.
 	*
-	* @param Lhs The FString on the left-hand-side of the expression.
-	* @param Rhs The FString on the right-hand-side of the expression.
+	* @param Lhs The YString on the left-hand-side of the expression.
+	* @param Rhs The YString on the right-hand-side of the expression.
 	*
 	* @return The concatenated string.
 	*/
 	FORCEINLINE friend YString operator+(const YString& Lhs, const YString& Rhs)
 	{
-		return ConcatFStrings<const YString&, const YString&>(Lhs, Rhs);
+		return ConcatYStrings<const YString&, const YString&>(Lhs, Rhs);
 	}
 
 	/**
-	* Concatenate two FStrings.
+	* Concatenate two YStrings.
 	*
-	* @param Lhs The FString on the left-hand-side of the expression.
-	* @param Rhs The FString on the right-hand-side of the expression.
+	* @param Lhs The YString on the left-hand-side of the expression.
+	* @param Rhs The YString on the right-hand-side of the expression.
 	*
 	* @return The concatenated string.
 	*/
 	FORCEINLINE friend YString operator+(YString&& Lhs, const YString& Rhs)
 	{
-		return ConcatFStrings<YString&&, const YString&>(MoveTemp(Lhs), Rhs);
+		return ConcatYStrings<YString&&, const YString&>(MoveTemp(Lhs), Rhs);
 	}
 
 	/**
-	* Concatenate two FStrings.
+	* Concatenate two YStrings.
 	*
-	* @param Lhs The FString on the left-hand-side of the expression.
-	* @param Rhs The FString on the right-hand-side of the expression.
+	* @param Lhs The YString on the left-hand-side of the expression.
+	* @param Rhs The YString on the right-hand-side of the expression.
 	*
 	* @return The concatenated string.
 	*/
 	FORCEINLINE friend YString operator+(const YString& Lhs, YString&& Rhs)
 	{
-		return ConcatFStrings<const YString&, YString&&>(Lhs, MoveTemp(Rhs));
+		return ConcatYStrings<const YString&, YString&&>(Lhs, MoveTemp(Rhs));
 	}
 
 	/**
-	* Concatenate two FStrings.
+	* Concatenate two YStrings.
 	*
-	* @param Lhs The FString on the left-hand-side of the expression.
-	* @param Rhs The FString on the right-hand-side of the expression.
+	* @param Lhs The YString on the left-hand-side of the expression.
+	* @param Rhs The YString on the right-hand-side of the expression.
 	*
 	* @return The concatenated string.
 	*/
 	FORCEINLINE friend YString operator+(YString&& Lhs, YString&& Rhs)
 	{
-		return ConcatFStrings<YString&&, YString&&>(MoveTemp(Lhs), MoveTemp(Rhs));
+		return ConcatYStrings<YString&&, YString&&>(MoveTemp(Lhs), MoveTemp(Rhs));
 	}
 
 	/**
-	* Concatenates a TCHAR array to an FString.
+	* Concatenates a TCHAR array to an YString.
 	*
 	* @param Lhs The TCHAR array on the left-hand-side of the expression.
-	* @param Rhs The FString on the right-hand-side of the expression.
+	* @param Rhs The YString on the right-hand-side of the expression.
 	*
 	* @return The concatenated string.
 	*/
 	FORCEINLINE friend YString operator+(const TCHAR* Lhs, const YString& Rhs)
 	{
-		return ConcatTCHARsToFString<const YString&>(Lhs, Rhs);
+		return ConcatTCHARsToYString<const YString&>(Lhs, Rhs);
 	}
 
 	/**
-	* Concatenates a TCHAR array to an FString.
+	* Concatenates a TCHAR array to an YString.
 	*
 	* @param Lhs The TCHAR array on the left-hand-side of the expression.
-	* @param Rhs The FString on the right-hand-side of the expression.
+	* @param Rhs The YString on the right-hand-side of the expression.
 	*
 	* @return The concatenated string.
 	*/
 	FORCEINLINE friend YString operator+(const TCHAR* Lhs, YString&& Rhs)
 	{
-		return ConcatTCHARsToFString<YString&&>(Lhs, MoveTemp(Rhs));
+		return ConcatTCHARsToYString<YString&&>(Lhs, MoveTemp(Rhs));
 	}
 
 	/**
-	* Concatenates an FString to a TCHAR array.
+	* Concatenates an YString to a TCHAR array.
 	*
-	* @param Lhs The FString on the left-hand-side of the expression.
+	* @param Lhs The YString on the left-hand-side of the expression.
 	* @param Rhs The TCHAR array on the right-hand-side of the expression.
 	*
 	* @return The concatenated string.
 	*/
 	FORCEINLINE friend YString operator+(const YString& Lhs, const TCHAR* Rhs)
 	{
-		return ConcatFStringToTCHARs<const YString&>(Lhs, Rhs);
+		return ConcatYStringToTCHARs<const YString&>(Lhs, Rhs);
 	}
 
 	/**
-	* Concatenates an FString to a TCHAR array.
+	* Concatenates an YString to a TCHAR array.
 	*
-	* @param Lhs The FString on the left-hand-side of the expression.
+	* @param Lhs The YString on the left-hand-side of the expression.
 	* @param Rhs The TCHAR array on the right-hand-side of the expression.
 	*
 	* @return The concatenated string.
 	*/
 	FORCEINLINE friend YString operator+(YString&& Lhs, const TCHAR* Rhs)
 	{
-		return ConcatFStringToTCHARs<YString&&>(MoveTemp(Lhs), Rhs);
+		return ConcatYStringToTCHARs<YString&&>(MoveTemp(Lhs), Rhs);
 	}
 
 	/**
@@ -783,7 +783,7 @@ public:
 	/**
 	* Concatenate this path with given path ensuring the / character is used between them
 	*
-	* @param Str path FString to be concatenated onto the end of this
+	* @param Str path YString to be concatenated onto the end of this
 	* @return reference to path
 	*/
 	FORCEINLINE YString& operator/=(const YString& Str)
@@ -797,7 +797,7 @@ public:
 	*
 	* @param Lhs Path to concatenate onto.
 	* @param Rhs Path to concatenate.
-	* @return new FString of the path
+	* @return new YString of the path
 	*/
 	FORCEINLINE friend YString operator/(const YString& Lhs, const TCHAR* Rhs)
 	{
@@ -815,7 +815,7 @@ public:
 	*
 	* @param Lhs Path to concatenate onto.
 	* @param Rhs Path to concatenate.
-	* @return new FString of the path
+	* @return new YString of the path
 	*/
 	FORCEINLINE friend YString operator/(YString&& Lhs, const TCHAR* Rhs)
 	{
@@ -833,7 +833,7 @@ public:
 	*
 	* @param Lhs Path to concatenate onto.
 	* @param Rhs Path to concatenate.
-	* @return new FString of the path
+	* @return new YString of the path
 	*/
 	FORCEINLINE friend YString operator/(const YString& Lhs, const YString& Rhs)
 	{
@@ -849,7 +849,7 @@ public:
 	*
 	* @param Lhs Path to concatenate onto.
 	* @param Rhs Path to concatenate.
-	* @return new FString of the path
+	* @return new YString of the path
 	*/
 	FORCEINLINE friend YString operator/(YString&& Lhs, const YString& Rhs)
 	{
@@ -865,7 +865,7 @@ public:
 	*
 	* @param Lhs Path to concatenate onto.
 	* @param Rhs Path to concatenate.
-	* @return new FString of the path
+	* @return new YString of the path
 	*/
 	FORCEINLINE friend YString operator/(const TCHAR* Lhs, const YString& Rhs)
 	{
@@ -1353,12 +1353,12 @@ public:
 	bool IsNumeric() const;
 
 	/**
-	* Constructs FString object similarly to how classic sprintf works.
+	* Constructs YString object similarly to how classic sprintf works.
 	*
-	* @param Format	Format string that specifies how FString should be built optionally using additional args. Refer to standard printf format.
+	* @param Format	Format string that specifies how YString should be built optionally using additional args. Refer to standard printf format.
 	* @param ...		Depending on format function may require additional arguments to build output object.
 	*
-	* @returns FString object that was constructed using format and additional parameters.
+	* @returns YString object that was constructed using format and additional parameters.
 	*/
 	VARARG_DECL(static YString, static YString, return, Printf, VARARG_NONE, const TCHAR*, VARARG_NONE, VARARG_NONE);
 
@@ -1759,8 +1759,8 @@ inline YString BytesToString(const uint8* In, int32 Count)
 }
 
 /**
-* Convert FString of bytes into the byte array.
-* @param String		The FString of byte values
+* Convert YString of bytes into the byte array.
+* @param String		The YString of byte values
 * @param OutBytes		Ptr to memory must be preallocated large enough
 * @param MaxBufferSize	Max buffer size of the OutBytes array, to prevent overflow
 * @return	The number of bytes copied
@@ -1849,8 +1849,8 @@ inline const uint8 TCharToNibble(const TCHAR Char)
 }
 
 /**
-* Convert FString of Hex digits into the byte array.
-* @param HexString		The FString of Hex values
+* Convert YString of Hex digits into the byte array.
+* @param HexString		The YString of Hex values
 * @param OutBytes		Ptr to memory must be preallocated large enough
 * @return	The number of bytes copied
 */
@@ -1879,7 +1879,7 @@ namespace Lex
 	*	Expected functions in this namespace are as follows:
 	*		static bool		TryParseString(T& OutValue, const TCHAR* Buffer);
 	*		static void 	FromString(T& OutValue, const TCHAR* Buffer);
-	*		static FString	ToString(const T& OutValue);
+	*		static YString	ToString(const T& OutValue);
 	*
 	*	Implement custom functionality externally.
 	*/
@@ -1989,10 +1989,10 @@ Special archivers.
 //
 // String output device.
 //
-class FStringOutputDevice : public YString, public YOutputDevice
+class YStringOutputDevice : public YString, public YOutputDevice
 {
 public:
-	FStringOutputDevice(const TCHAR* OutputDeviceName = TEXT("")) :
+	YStringOutputDevice(const TCHAR* OutputDeviceName = TEXT("")) :
 		YString(OutputDeviceName)
 	{
 		bAutoEmitLineTerminator = false;
@@ -2008,33 +2008,33 @@ public:
 
 #if PLATFORM_COMPILER_HAS_DEFAULTED_FUNCTIONS
 
-	FStringOutputDevice(FStringOutputDevice&&) = default;
-	FStringOutputDevice(const FStringOutputDevice&) = default;
-	FStringOutputDevice& operator=(FStringOutputDevice&&) = default;
-	FStringOutputDevice& operator=(const FStringOutputDevice&) = default;
+	YStringOutputDevice(YStringOutputDevice&&) = default;
+	YStringOutputDevice(const YStringOutputDevice&) = default;
+	YStringOutputDevice& operator=(YStringOutputDevice&&) = default;
+	YStringOutputDevice& operator=(const YStringOutputDevice&) = default;
 
 #else
 
-	FORCEINLINE FStringOutputDevice(FStringOutputDevice&& Other)
+	FORCEINLINE YStringOutputDevice(YStringOutputDevice&& Other)
 		: YString((YString&&)Other)
 		, YOutputDevice((YOutputDevice&&)Other)
 	{
 	}
 
-	FORCEINLINE FStringOutputDevice(const FStringOutputDevice& Other)
+	FORCEINLINE YStringOutputDevice(const YStringOutputDevice& Other)
 		: YString((const YString&)Other)
 		, YOutputDevice((const YOutputDevice&)Other)
 	{
 	}
 
-	FORCEINLINE FStringOutputDevice& operator=(FStringOutputDevice&& Other)
+	FORCEINLINE YStringOutputDevice& operator=(YStringOutputDevice&& Other)
 	{
 		(YString&)*this = (YString&&)Other;
 		(YOutputDevice&)*this = (YOutputDevice&&)Other;
 		return *this;
 	}
 
-	FORCEINLINE FStringOutputDevice& operator=(const FStringOutputDevice& Other)
+	FORCEINLINE YStringOutputDevice& operator=(const YStringOutputDevice& Other)
 	{
 		(YString&)*this = (const YString&)Other;
 		(YOutputDevice&)*this = (const YOutputDevice&)Other;
@@ -2052,13 +2052,13 @@ public:
 //
 // String output device.
 //
-class FStringOutputDeviceCountLines : public FStringOutputDevice
+class YStringOutputDeviceCountLines : public YStringOutputDevice
 {
-	typedef FStringOutputDevice Super;
+	typedef YStringOutputDevice Super;
 
 	int32 LineCount;
 public:
-	FStringOutputDeviceCountLines(const TCHAR* OutputDeviceName = TEXT(""))
+	YStringOutputDeviceCountLines(const TCHAR* OutputDeviceName = TEXT(""))
 		: Super(OutputDeviceName)
 		, LineCount(0)
 	{}
@@ -2085,9 +2085,9 @@ public:
 	}
 
 	/**
-	* Appends other FStringOutputDeviceCountLines object to this one.
+	* Appends other YStringOutputDeviceCountLines object to this one.
 	*/
-	virtual FStringOutputDeviceCountLines& operator+=(const FStringOutputDeviceCountLines& Other)
+	virtual YStringOutputDeviceCountLines& operator+=(const YStringOutputDeviceCountLines& Other)
 	{
 		YString::operator+=(Other);
 
@@ -2097,7 +2097,7 @@ public:
 	}
 
 	/**
-	* Appends other FString (as well as it's specializations like FStringOutputDevice)
+	* Appends other YString (as well as it's specializations like YStringOutputDevice)
 	* object to this.
 	*/
 	virtual YString& operator+=(const YString& Other) override
@@ -2114,18 +2114,18 @@ public:
 
 #if PLATFORM_COMPILER_HAS_DEFAULTED_FUNCTIONS
 
-	FStringOutputDeviceCountLines(const FStringOutputDeviceCountLines&) = default;
-	FStringOutputDeviceCountLines& operator=(const FStringOutputDeviceCountLines&) = default;
+	YStringOutputDeviceCountLines(const YStringOutputDeviceCountLines&) = default;
+	YStringOutputDeviceCountLines& operator=(const YStringOutputDeviceCountLines&) = default;
 
 #else
 
-	FORCEINLINE FStringOutputDeviceCountLines(const FStringOutputDeviceCountLines& Other)
+	FORCEINLINE YStringOutputDeviceCountLines(const YStringOutputDeviceCountLines& Other)
 		: Super((const Super&)Other)
 		, LineCount(Other.LineCount)
 	{
 	}
 
-	FORCEINLINE FStringOutputDeviceCountLines& operator=(const FStringOutputDeviceCountLines& Other)
+	FORCEINLINE YStringOutputDeviceCountLines& operator=(const YStringOutputDeviceCountLines& Other)
 	{
 		(Super&)*this = (const Super&)Other;
 		LineCount = Other.LineCount;
@@ -2134,14 +2134,14 @@ public:
 
 #endif
 
-	FORCEINLINE FStringOutputDeviceCountLines(FStringOutputDeviceCountLines&& Other)
+	FORCEINLINE YStringOutputDeviceCountLines(YStringOutputDeviceCountLines&& Other)
 		: Super((Super&&)Other)
 		, LineCount(Other.LineCount)
 	{
 		Other.LineCount = 0;
 	}
 
-	FORCEINLINE FStringOutputDeviceCountLines& operator=(FStringOutputDeviceCountLines&& Other)
+	FORCEINLINE YStringOutputDeviceCountLines& operator=(YStringOutputDeviceCountLines&& Other)
 	{
 		if (this != &Other)
 		{

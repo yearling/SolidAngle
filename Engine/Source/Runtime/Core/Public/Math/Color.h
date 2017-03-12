@@ -320,15 +320,15 @@ struct YLinearColor
 	//}
 
 	/**
-	* Initialize this Color based on an FString. The String is expected to contain R=, G=, B=, A=.
+	* Initialize this Color based on an YString. The String is expected to contain R=, G=, B=, A=.
 	* The YLinearColor will be bogus when InitFromString returns false.
 	*
-	* @param InSourceString FString containing the color values.
+	* @param InSourceString YString containing the color values.
 	* @return true if the R,G,B values were read successfully; false otherwise.
 	*/
 
 	//!!FIXME by zyx
-	//bool						InitFromString(const FString& InSourceString)
+	//bool						InitFromString(const YString& InSourceString)
 	//{
 	//	R = G = B = 0.f;
 	//	A = 1.f;
@@ -401,12 +401,12 @@ public:
 
 	// Serializer.
 	//!!FIXME by zyx
-	//friend FArchive& operator<< (FArchive &Ar, FColor &Color)
+	//friend YArchive& operator<< (YArchive &Ar, FColor &Color)
 	//{
 	//	return Ar << Color.DWColor();
 	//}
 
-	//bool Serialize(FArchive& Ar)
+	//bool Serialize(YArchive& Ar)
 	//{
 	//	Ar << *this;
 	//	return true;
@@ -443,7 +443,7 @@ public:
 	* @see ToHex
 	*/
 	//!!FIXME by zyx
-	//static CORE_API YColor		FromHex(const FString& HexString);
+	//static CORE_API YColor		FromHex(const YString& HexString);
 
 	/**
 	* Makes a random but quite nice color.
@@ -500,20 +500,20 @@ public:
 	* @see ToHex
 	*/
 	//!!FIXME by zyx
-	//FORCEINLINE FString ToString() const
+	//FORCEINLINE YString ToString() const
 	//{
-	//	return FString::Printf(TEXT("(R=%i,G=%i,B=%i,A=%i)"), R, G, B, A);
+	//	return YString::Printf(TEXT("(R=%i,G=%i,B=%i,A=%i)"), R, G, B, A);
 	//}
 
 	/**
-	* Initialize this Color based on an FString. The String is expected to contain R=, G=, B=, A=.
+	* Initialize this Color based on an YString. The String is expected to contain R=, G=, B=, A=.
 	* The FColor will be bogus when InitFromString returns false.
 	*
-	* @param	InSourceString	FString containing the color values.
+	* @param	InSourceString	YString containing the color values.
 	* @return true if the R,G,B values were read successfully; false otherwise.
 	*/
 	//!!FIXME by zyx
-	//bool InitFromString(const FString& InSourceString)
+	//bool InitFromString(const YString& InSourceString)
 	//{
 	//	R = G = B = 0;
 	//	A = 255;

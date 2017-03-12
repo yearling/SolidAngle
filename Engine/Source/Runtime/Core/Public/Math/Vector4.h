@@ -376,13 +376,13 @@ public:
 	* @return Reference to the Archive after serialization.
 	*/
 	//!!FIXME by zyx
-	//friend FArchive& operator<<(FArchive& Ar, YVector4& V)
+	//friend YArchive& operator<<(YArchive& Ar, YVector4& V)
 	//{
 	//	return Ar << V.X << V.Y << V.Z << V.W;
 	//}
 
 	//!!FIXME by zyx
-	//bool Serialize(FArchive& Ar)
+	//bool Serialize(YArchive& Ar)
 	//{
 	//	Ar << *this;
 	//	return true;

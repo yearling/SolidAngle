@@ -47,8 +47,8 @@ enum class EMonthOfYear
 * Midnight 23:59:59.9999999, December 31, 9999 in the Gregorian calendar. Internally, the time
 * values are stored in ticks of 0.1 microseconds (= 100 nanoseconds) since January 1, 0001.
 *
-* To retrieve the current local date and time, use the FDateTime.Now() method. To retrieve the
-* current UTC time, use the FDateTime.UtcNow() method instead.
+* To retrieve the current local date and time, use the YDateTime.Now() method. To retrieve the
+* current UTC time, use the YDateTime.UtcNow() method instead.
 *
 * This class also provides methods to convert dates and times from and to string representations,
 * calculate the number of days in a given month and year, check for leap years and determine the
@@ -238,7 +238,7 @@ public:
 	*
 	* The time part is truncated and becomes 00:00:00.000.
 	*
-	* @return A FDateTime object containing the date.
+	* @return A YDateTime object containing the date.
 	*/
 	YDateTime GetDate() const
 	{
@@ -301,7 +301,7 @@ public:
 	* Returns the Julian Day for this date.
 	*
 	* The Julian Day is the number of days since the inception of the Julian calendar at noon on
-	* Monday, January 1, 4713 B.C.E. The minimum Julian Day that can be represented in FDateTime is
+	* Monday, January 1, 4713 B.C.E. The minimum Julian Day that can be represented in YDateTime is
 	* 1721425.5, which corresponds to Monday, January 1, 0001 in the Gregorian calendar.
 	*
 	* @return Julian Day.
@@ -450,9 +450,9 @@ public:
 	CORE_API bool Serialize(YArchive& Ar);
 
 	/**
-	* Returns the ISO-8601 string representation of the FDateTime.
+	* Returns the ISO-8601 string representation of the YDateTime.
 	*
-	* The resulting string assumes that the FDateTime is in UTC.
+	* The resulting string assumes that the YDateTime is in UTC.
 	*
 	* @return String representation.
 	* @see ParseIso8601, ToString
@@ -460,9 +460,9 @@ public:
 	CORE_API YString ToIso8601() const;
 
 	/**
-	* Returns the RFC 1123 string representation of the FDateTime.
+	* Returns the RFC 1123 string representation of the YDateTime.
 	*
-	* The resulting string assumes that the FDateTime is in UTC.
+	* The resulting string assumes that the YDateTime is in UTC.
 	*
 	* @return String representation.
 	* @see ParseHttpDate, ToString
@@ -596,8 +596,8 @@ public:
 	/**
 	* Converts a string to a date and time.
 	*
-	* Currently, the string must be in the format written by either FDateTime.ToString() or
-	* FTimeStamp.TimestampToFString(). Other formats are not supported at this time.
+	* Currently, the string must be in the format written by either YDateTime.ToString() or
+	* FTimeStamp.TimestampToYString(). Other formats are not supported at this time.
 	*
 	* @param DateTimeString The string to convert.
 	* @param OutDateTime Will contain the parsed date and time.
@@ -609,7 +609,7 @@ public:
 	* Parses a date string in ISO-8601 format.
 	*
 	* @param DateTimeString The string to be parsed
-	* @param OutDateTime FDateTime object (in UTC) corresponding to the input string (which may have been in any timezone).
+	* @param OutDateTime YDateTime object (in UTC) corresponding to the input string (which may have been in any timezone).
 	* @return true if the string was converted successfully, false otherwise.
 	* @see Parse, ToIso8601
 	*/
@@ -620,7 +620,7 @@ public:
 	* https://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3.1
 	*
 	* @param HttpDate The string to be parsed
-	* @param OutDateTime FDateTime object (assumes UTC) corresponding to the input string.
+	* @param OutDateTime YDateTime object (assumes UTC) corresponding to the input string.
 	* @return true if the string was converted successfully, false otherwise.
 	* @see Parse
 	*/
