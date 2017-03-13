@@ -1264,7 +1264,7 @@ public:
 	void InsertZeroed(int32 Index, int32 Count = 1)
 	{
 		InsertUninitialized(Index, Count);
-		FMemory::Memzero((uint8*)AllocatorInstance.GetAllocation() + Index * sizeof(ElementType), Count * sizeof(ElementType));
+		YMemory::Memzero((uint8*)AllocatorInstance.GetAllocation() + Index * sizeof(ElementType), Count * sizeof(ElementType));
 	}
 
 	/**
@@ -1410,7 +1410,7 @@ private:
 			int32 NumToMove = ArrayNum - Index - Count;
 			if (NumToMove)
 			{
-				FMemory::Memmove
+				YMemory::Memmove
 				(
 					(uint8*)AllocatorInstance.GetAllocation() + (Index) * sizeof(ElementType),
 					(uint8*)AllocatorInstance.GetAllocation() + (Index + Count) * sizeof(ElementType),
@@ -1471,7 +1471,7 @@ private:
 			const int32 NumElementsToMoveIntoHole = FPlatformMath::Min(NumElementsInHole, NumElementsAfterHole);
 			if (NumElementsToMoveIntoHole)
 			{
-				FMemory::Memcpy(
+				YMemory::Memcpy(
 					(uint8*)AllocatorInstance.GetAllocation() + (Index) * sizeof(ElementType),
 					(uint8*)AllocatorInstance.GetAllocation() + (ArrayNum - NumElementsToMoveIntoHole) * sizeof(ElementType),
 					NumElementsToMoveIntoHole * sizeof(ElementType)
@@ -1808,7 +1808,7 @@ public:
 	AGRESSIVE_ARRAY_FORCEINLINE int32 AddZeroed(int32 Count = 1)
 	{
 		const int32 Index = AddUninitialized(Count);
-		FMemory::Memzero((uint8*)AllocatorInstance.GetAllocation() + Index * sizeof(ElementType), Count * sizeof(ElementType));
+		YMemory::Memzero((uint8*)AllocatorInstance.GetAllocation() + Index * sizeof(ElementType), Count * sizeof(ElementType));
 		return Index;
 	}
 
@@ -1978,7 +1978,7 @@ public:
 				// this was a non-matching run, we need to move it
 				if (WriteIndex != RunStartIndex)
 				{
-					FMemory::Memmove(&GetData()[WriteIndex], &GetData()[RunStartIndex], sizeof(ElementType)* RunLength);
+					YMemory::Memmove(&GetData()[WriteIndex], &GetData()[RunStartIndex], sizeof(ElementType)* RunLength);
 				}
 				WriteIndex += RunLength;
 			}
@@ -2072,7 +2072,7 @@ public:
 	*/
 	FORCEINLINE void SwapMemory(int32 FirstIndexToSwap, int32 SecondIndexToSwap)
 	{
-		FMemory::Memswap(
+		YMemory::Memswap(
 			(uint8*)AllocatorInstance.GetAllocation() + (sizeof(ElementType)*FirstIndexToSwap),
 			(uint8*)AllocatorInstance.GetAllocation() + (sizeof(ElementType)*SecondIndexToSwap),
 			sizeof(ElementType)

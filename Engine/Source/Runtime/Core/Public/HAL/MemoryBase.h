@@ -134,7 +134,7 @@ public:
 
 	/**
 	*	Initializes stats metadata. We need to do this as soon as possible, but cannot be done in the constructor
-	*	due to the FName::StaticInit
+	*	due to the YName::StaticInit
 	*/
 	virtual void InitializeStatsMetadata();
 

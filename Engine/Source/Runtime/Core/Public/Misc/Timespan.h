@@ -128,7 +128,7 @@ public:
 	/**
 	* Returns the inverse of this time span.
 	*
-	* The value of this time span must be greater than FTimespan::MinValue(), or else an overflow will occur.
+	* The value of this time span must be greater than YTimespan::MinValue(), or else an overflow will occur.
 	*
 	* @return Inverse of this time span.
 	*/
@@ -591,7 +591,7 @@ public:
 	/**
 	* Converts a string to a time span.
 	*
-	* Currently, the string must be in the format written by FTimespan.ToString().
+	* Currently, the string must be in the format written by YTimespan.ToString().
 	* Other formats are not supported at this time.
 	*
 	* @param TimespanString The string to convert.

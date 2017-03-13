@@ -64,6 +64,18 @@
     <Filter Include="Source\Runtime\Core\Public\Internationalization">
       <UniqueIdentifier>{434fdbb7-ed1e-4e87-a391-9b9c550b3b09}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Runtime\Core\Public\SObject">
+      <UniqueIdentifier>{378fe5c9-d9bc-4c5c-a20d-bafb0419b3a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Public\Stats">
+      <UniqueIdentifier>{49ef63be-5a49-4171-bb4f-0679ba6b73ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Public\Delegates">
+      <UniqueIdentifier>{58003bdf-09dd-4c04-ac34-faf07de5396d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Public\Containers\Algo">
+      <UniqueIdentifier>{6a1ca476-5544-435c-bd64-a22a016efc91}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\core\Public\HAL\Platform.h">
@@ -423,6 +435,78 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Exec.h">
       <Filter>Source\Runtime\Core\Public\Math</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\StringConv.h">
+      <Filter>Source\Runtime\Core\Public\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Logging\LogMacros.h">
+      <Filter>Source\Runtime\Core\Public\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Logging\LogCategory.h">
+      <Filter>Source\Runtime\Core\Public\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\NameTypes.h">
+      <Filter>Source\Runtime\Core\Public\SObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\CriticalSection.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsCriticalSection.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\SolidAngleNames.h">
+      <Filter>Source\Runtime\Core\Public\SObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Stats\Stats.h">
+      <Filter>Source\Runtime\Core\Public\Stats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Delegates\Delegate.h">
+      <Filter>Source\Runtime\Core\Public\Delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\SharedPointer.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\map.h">
+      <Filter>Source\Runtime\Core\Public\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\StructBuilder.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\Function.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\Decay.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\Invoke.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\Set.h">
+      <Filter>Source\Runtime\Core\Public\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\SparseArray.h">
+      <Filter>Source\Runtime\Core\Public\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\ScriptArray.h">
+      <Filter>Source\Runtime\Core\Public\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\BitArray.h">
+      <Filter>Source\Runtime\Core\Public\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\Algo\Reverse.h">
+      <Filter>Source\Runtime\Core\Public\Containers\Algo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\CoreGlobals.h">
+      <Filter>Source\Runtime\Core\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformTLS.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformTLS.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformTLS.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\TestMain.cpp">
@@ -431,8 +515,14 @@
     <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformMath.cpp">
       <Filter>Source\Runtime\Core\Private\GenericPlatform</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformMemory.cpp">
+      <Filter>Source\Runtime\Core\Private\GenericPlatform</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <None Include="..\Source\Runtime\Core\Public\SObject\SolidAngleNames.inl">
+      <Filter>Source\Runtime\Core\Public\SObject</Filter>
+    </None>
   </ItemGroup>
 </Project>

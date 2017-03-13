@@ -137,14 +137,14 @@ public:
 public:
 
 	/**
-	* Serializes an FName value from or into this archive.
+	* Serializes an YName value from or into this archive.
 	*
-	* This operator can be implemented by sub-classes that wish to serialize FName instances.
+	* This operator can be implemented by sub-classes that wish to serialize YName instances.
 	*
 	* @param Value The value to serialize.
 	* @return This instance.
 	*/
-	virtual YArchive& operator<<(class FName& Value)
+	virtual YArchive& operator<<(class YName& Value)
 	{
 		return *this;
 	}
@@ -782,7 +782,7 @@ public:
 	/**
 	* Called to register a reference to a specific name value, of type TypeObject (UEnum or UStruct normally). Const so it can be called from PostSerialize
 	*/
-	virtual void MarkSearchableName(const UObject* TypeObject, const FName& ValueName) const { }
+	virtual void MarkSearchableName(const UObject* TypeObject, const YName& ValueName) const { }
 
 	/**
 	* Called to retrieve the archetype from the event driven loader. If this returns null, then call GetArchetype yourself.
@@ -1062,7 +1062,7 @@ public:
 	* @param Version - The version number to set key to
 	* @param FriendlyName - Friendly name corresponding to the key
 	*/
-	void SetCustomVersion(const struct FGuid& Key, int32 Version, FName FriendlyName);
+	void SetCustomVersion(const struct FGuid& Key, int32 Version, YName FriendlyName);
 
 	/**
 	* Toggle saving as Unicode. This is needed when we need to make sure ANSI strings are saved as Unicode
@@ -1498,7 +1498,7 @@ public:
 	uint32 ArDebugSerializationFlags;
 	/** Debug stack storage if you want to add data to the archive for usage further down the serialization stack this should be used in conjunction with the FScopeAddDebugData struct */
 
-	virtual void PushDebugDataString(const FName& DebugData);
+	virtual void PushDebugDataString(const YName& DebugData);
 	virtual void PopDebugDataString() { }
 
 	class FScopeAddDebugData
@@ -1506,7 +1506,7 @@ public:
 	private:
 		YArchive& Ar;
 	public:
-		CORE_API FScopeAddDebugData(YArchive& InAr, const FName& DebugData);
+		CORE_API FScopeAddDebugData(YArchive& InAr, const YName& DebugData);
 
 		~FScopeAddDebugData()
 		{

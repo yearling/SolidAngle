@@ -172,13 +172,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\Core\Private\GenericPlatform\CorePrivatePCH.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\Algo\Reverse.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\Array.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\BitArray.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\ContainerAllocationPolicies.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\ContainersFwd.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\map.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\ScriptArray.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\Set.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\SolidAngleString.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\SparseArray.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\StringConv.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Core.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\CoreFwd.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\CoreGlobals.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\CoreTypes.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Delegates\Delegate.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatform.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformAtomics.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformCompilerPreSetup.h" />
@@ -188,7 +197,9 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformProperties.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformStricmp.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformString.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformTLS.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\MicrosoftPlatformString.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\CriticalSection.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\MemoryBase.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\Platform.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformAtomics.h" />
@@ -199,8 +210,11 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformMisc.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformProperties.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformString.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformTLS.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\SolidAngleMemory.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\TextNamespaceFwd.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Logging\LogCategory.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Logging\LogMacros.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Logging\LogVerbosity.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\CapsuleShape.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Color.h" />
@@ -239,18 +253,25 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Exec.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\OutputDevice.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\StringFormatArg.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\StructBuilder.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Timespan.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\VarArgs.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\SMemoryDefines.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\Archive.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\NameTypes.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\SolidAngleNames.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Stats\Stats.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\AlignmentTemplates.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\AlignOf.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\AndOrNot.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\AreTypesEqual.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\ChooseClass.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\Decay.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\EnableIf.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\Function.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\Greater.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IntegralConstant.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\Invoke.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsArithmetic.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsClass.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsEnum.h" />
@@ -268,6 +289,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\PointerConvertibleFromTo.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\RemoveCV.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\RemoveReference.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\SharedPointer.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\SolidAngleTemplate.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\SolidAngleTypeTraits.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\Sorting.h" />
@@ -279,6 +301,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\MinWindows.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\PostWindowsApi.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\PreWindowsApi.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsCriticalSection.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsHWrapper.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WIndowsPlatform.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformAtomics.h" />
@@ -289,13 +312,16 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformMisc.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformProperties.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformString.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformTLS.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsSystemIncludes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformMath.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformMemory.cpp" />
     <ClCompile Include="..\Source\Runtime\TestMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Source\Runtime\Core\Public\SObject\SolidAngleNames.inl" />
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

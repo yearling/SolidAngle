@@ -2,7 +2,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "Containers/SolidAngleString.h"
+//#include "Containers/SolidAngleString.h"
+#include "Containers/Array.h"
+
 struct TRUEValue
 {
 	enum 
@@ -193,6 +195,6 @@ int main()
 
 
 	std::cout << "\n--------------YString----------" << std::endl;
-	YString strHello;
+	TArray arr;
 	return 0;
 }

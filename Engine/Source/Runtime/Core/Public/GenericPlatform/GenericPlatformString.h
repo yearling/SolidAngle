@@ -179,7 +179,7 @@ struct YGenericPlatformString
 
 private:
 	/**
-	* Forwarding function because we can't call FMemory::Memcpy directly due to #include ordering issues.
+	* Forwarding function because we can't call YMemory::Memcpy directly due to #include ordering issues.
 	*
 	* @param Dest  The destination buffer.
 	* @param Src   The source buffer.
