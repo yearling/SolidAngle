@@ -218,7 +218,7 @@ public:
 	void Log(ELogVerbosity::Type Verbosity, const TCHAR* S);
 	void Log(const class YName& Category, ELogVerbosity::Type Verbosity, const TCHAR* Str);
 	void Log(const YString& S);
-	void Log(const YText& S);
+	void Log(const FText& S);
 	void Log(ELogVerbosity::Type Verbosity, const YString& S);
 	void Log(const class YName& Category, ELogVerbosity::Type Verbosity, const YString& S);
 

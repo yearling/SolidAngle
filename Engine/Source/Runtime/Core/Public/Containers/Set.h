@@ -756,7 +756,7 @@ public:
 	* Describes the set's contents through an output device.
 	* @param Ar - The output device to describe the set's contents through.
 	*/
-	void Dump(FOutputDevice& Ar)
+	void Dump(YOutputDevice& Ar)
 	{
 		Ar.Logf(TEXT("TSet: %i elements, %i hash slots"), Elements.Num(), HashSize);
 		for (int32 HashIndex = 0, LocalHashSize = HashSize; HashIndex < LocalHashSize; ++HashIndex)
@@ -795,7 +795,7 @@ public:
 		return bResult;
 	}
 
-	void DumpHashElements(FOutputDevice& Ar)
+	void DumpHashElements(YOutputDevice& Ar)
 	{
 		for (int32 HashIndex = 0, LocalHashSize = HashSize; HashIndex < LocalHashSize; ++HashIndex)
 		{

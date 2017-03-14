@@ -113,7 +113,8 @@ public:
 	*
 	* @param A Int Point used to set X and Y coordinates, Z is set to zero.
 	*/
-	explicit					YVector(YIntPoint A);
+	//!!FIXME by zyx
+	//explicit					YVector(YIntPoint A);
 
 	/**
 	* Constructor which initializes all components to zero.
@@ -1202,11 +1203,12 @@ FORCEINLINE YVector::YVector(YIntVector InVector)
 	DiagnosticCheckNaN();
 }
 
-FORCEINLINE YVector::YVector(YIntPoint A)
-	: X(A.X), Y(A.Y), Z(0.f)
-{
-	DiagnosticCheckNaN();
-}
+//!!FIXME by zyx
+//FORCEINLINE YVector::YVector(YIntPoint A)
+//	: X(A.X), Y(A.Y), Z(0.f)
+//{
+//	DiagnosticCheckNaN();
+//}
 
 FORCEINLINE YVector::YVector(EForceInit)
 	: X(0.0f), Y(0.0f), Z(0.0f)

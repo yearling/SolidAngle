@@ -43,7 +43,7 @@ struct YLinearColor
 		: R(InR), G(InG), B(InB), A(InA) {}
 
 	/**
-	* Converts an FColor which is assumed to be in sRGB space, into linear color space.
+	* Converts an YColor which is assumed to be in sRGB space, into linear color space.
 	* @param Color The sRGB color that needs to be converted into linear space.
 	*/
 	CORE_API					YLinearColor(const YColor& Color);
@@ -64,13 +64,13 @@ struct YLinearColor
 
 	//Conversions
 	/**
-	* Converts an FColor coming from an observed sRGB output, into a linear color.
+	* Converts an YColor coming from an observed sRGB output, into a linear color.
 	* @param Color The sRGB color that needs to be converted into linear space.
 	*/
 	CORE_API static YLinearColor FromSRGBColor(const YColor& Color);
 
 	/**
-	* Converts an FColor coming from an observed Pow(1/2.2) output, into a linear color.
+	* Converts an YColor coming from an observed Pow(1/2.2) output, into a linear color.
 	* @param Color The Pow(1/2.2) color that needs to be converted into linear space.
 	*/
 	CORE_API static YLinearColor FromPow22Color(const YColor& Color);
@@ -401,7 +401,7 @@ public:
 
 	// Serializer.
 	//!!FIXME by zyx
-	//friend YArchive& operator<< (YArchive &Ar, FColor &Color)
+	//friend YArchive& operator<< (YArchive &Ar, YColor &Color)
 	//{
 	//	return Ar << Color.DWColor();
 	//}
@@ -461,8 +461,8 @@ public:
 	static CORE_API YColor		MakeFromColorTemperature(float Temp);
 
 	/**
-	*	@return a new FColor based of this color with the new alpha value.
-	*	Usage: const FColor& MyColor = FColorList::Green.WithAlpha(128);
+	*	@return a new YColor based of this color with the new alpha value.
+	*	Usage: const YColor& MyColor = FColorList::Green.WithAlpha(128);
 	*/
 	YColor						WithAlpha(uint8 Alpha) const
 	{
@@ -507,7 +507,7 @@ public:
 
 	/**
 	* Initialize this Color based on an YString. The String is expected to contain R=, G=, B=, A=.
-	* The FColor will be bogus when InitFromString returns false.
+	* The YColor will be bogus when InitFromString returns false.
 	*
 	* @param	InSourceString	YString containing the color values.
 	* @return true if the R,G,B values were read successfully; false otherwise.

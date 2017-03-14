@@ -254,7 +254,7 @@ struct CORE_API YWindowsPlatformMisc
 	static const TCHAR* GetDefaultPathSeparator();
 
 	/** @return Get the name of the platform specific file manager (Explorer) */
-	static YText GetFileManagerName();
+	static FText GetFileManagerName();
 
 	/**
 	* Returns whether the platform is running on battery power or not.

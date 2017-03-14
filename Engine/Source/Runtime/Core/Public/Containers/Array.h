@@ -1468,7 +1468,7 @@ private:
 			// Replace the elements in the hole created by the removal with elements from the end of the array, so the range of indices used by the array is contiguous.
 			const int32 NumElementsInHole = Count;
 			const int32 NumElementsAfterHole = ArrayNum - (Index + Count);
-			const int32 NumElementsToMoveIntoHole = FPlatformMath::Min(NumElementsInHole, NumElementsAfterHole);
+			const int32 NumElementsToMoveIntoHole = YPlatformMath::Min(NumElementsInHole, NumElementsAfterHole);
 			if (NumElementsToMoveIntoHole)
 			{
 				YMemory::Memcpy(
@@ -2542,7 +2542,7 @@ public:
 
 		TDereferenceWrapper< ElementType, PREDICATE_CLASS> PredicateWrapper(Predicate);
 		SiftDown(Index, Num(), PredicateWrapper);
-		SiftUp(0, FPlatformMath::Min(Index, Num() - 1), PredicateWrapper);
+		SiftUp(0, YPlatformMath::Min(Index, Num() - 1), PredicateWrapper);
 
 #if DEBUG_HEAP
 		VerifyHeap(PredicateWrapper);

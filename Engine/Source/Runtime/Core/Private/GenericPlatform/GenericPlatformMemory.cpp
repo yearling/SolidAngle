@@ -52,7 +52,7 @@ struct FGenericStatsUpdater
 	static void DoUpdateStats()
 	{
 		// This is slow, so do it on the task graph.
-		FPlatformMemoryStats MemoryStats = FPlatformMemory::GetStats();
+		YPlatformMemoryStats MemoryStats = YPlatformMemory::GetStats();
 		SET_MEMORY_STAT(STAT_TotalPhysical, MemoryStats.TotalPhysical);
 		SET_MEMORY_STAT(STAT_TotalVirtual, MemoryStats.TotalVirtual);
 		SET_MEMORY_STAT(STAT_PageSize, MemoryStats.PageSize);
@@ -66,12 +66,12 @@ struct FGenericStatsUpdater
 		SET_MEMORY_STAT(STAT_PeakUsedVirtual, MemoryStats.PeakUsedVirtual);
 
 		// Platform specific stats.
-		FPlatformMemory::InternalUpdateStats(MemoryStats);
+		YPlatformMemory::InternalUpdateStats(MemoryStats);
 	}
 };
 
-FGenericPlatformMemoryStats::FGenericPlatformMemoryStats()
-	: FGenericPlatformMemoryConstants(FPlatformMemory::GetConstants())
+YGenericPlatformMemoryStats::YGenericPlatformMemoryStats()
+	: YGenericPlatformMemoryConstants(YPlatformMemory::GetConstants())
 	, AvailablePhysical(0)
 	, AvailableVirtual(0)
 	, UsedPhysical(0)
@@ -80,14 +80,14 @@ FGenericPlatformMemoryStats::FGenericPlatformMemoryStats()
 	, PeakUsedVirtual(0)
 {}
 
-bool FGenericPlatformMemory::bIsOOM = false;
-uint64 FGenericPlatformMemory::OOMAllocationSize = 0;
-uint32 FGenericPlatformMemory::OOMAllocationAlignment = 0;
-FGenericPlatformMemory::EMemoryAllocatorToUse FGenericPlatformMemory::AllocatorToUse = Platform;
-void* FGenericPlatformMemory::BackupOOMMemoryPool = nullptr;
+bool YGenericPlatformMemory::bIsOOM = false;
+uint64 YGenericPlatformMemory::OOMAllocationSize = 0;
+uint32 YGenericPlatformMemory::OOMAllocationAlignment = 0;
+YGenericPlatformMemory::EMemoryAllocatorToUse YGenericPlatformMemory::AllocatorToUse = Platform;
+void* YGenericPlatformMemory::BackupOOMMemoryPool = nullptr;
 
 
-void FGenericPlatformMemory::SetupMemoryPools()
+void YGenericPlatformMemory::SetupMemoryPools()
 {
 	SET_MEMORY_STAT(MCR_Physical, 0); // "unlimited" physical memory, we still need to make this call to set the short name, etc
 	SET_MEMORY_STAT(MCR_GPU, 0); // "unlimited" GPU memory, we still need to make this call to set the short name, etc
@@ -96,13 +96,13 @@ void FGenericPlatformMemory::SetupMemoryPools()
 	SET_MEMORY_STAT(MCR_UsedStreamingPool, 0);
 
 	// if the platform chooses to have a BackupOOM pool, create it now
-	if (FPlatformMemory::GetBackMemoryPoolSize() > 0)
+	if (YPlatformMemory::GetBackMemoryPoolSize() > 0)
 	{
-		BackupOOMMemoryPool = FPlatformMemory::BinnedAllocFromOS(FPlatformMemory::GetBackMemoryPoolSize());
+		BackupOOMMemoryPool = YPlatformMemory::BinnedAllocFromOS(YPlatformMemory::GetBackMemoryPoolSize());
 	}
 }
 
-void FGenericPlatformMemory::Init()
+void YGenericPlatformMemory::Init()
 {
 	SetupMemoryPools();
 
@@ -116,7 +116,7 @@ void FGenericPlatformMemory::Init()
 #endif // STATS
 }
 
-void FGenericPlatformMemory::OnOutOfMemory(uint64 Size, uint32 Alignment)
+void YGenericPlatformMemory::OnOutOfMemory(uint64 Size, uint32 Alignment)
 {
 	// Update memory stats before we enter the crash handler.
 	OOMAllocationSize = Size;
@@ -129,11 +129,11 @@ void FGenericPlatformMemory::OnOutOfMemory(uint64 Size, uint32 Alignment)
 	}
 	bIsOOM = true;
 
-	FPlatformMemoryStats PlatformMemoryStats = FPlatformMemory::GetStats();
+	YPlatformMemoryStats PlatformMemoryStats = YPlatformMemory::GetStats();
 	if (BackupOOMMemoryPool)
 	{
-		FPlatformMemory::BinnedFreeToOS(BackupOOMMemoryPool, FPlatformMemory::GetBackMemoryPoolSize());
-		UE_LOG(LogMemory, Warning, TEXT("Freeing %d bytes from backup pool to handle out of memory."), FPlatformMemory::GetBackMemoryPoolSize());
+		YPlatformMemory::BinnedFreeToOS(BackupOOMMemoryPool, YPlatformMemory::GetBackMemoryPoolSize());
+		UE_LOG(LogMemory, Warning, TEXT("Freeing %d bytes from backup pool to handle out of memory."), YPlatformMemory::GetBackMemoryPoolSize());
 	}
 
 	UE_LOG(LogMemory, Warning, TEXT("MemoryStats:")\
@@ -160,21 +160,21 @@ void FGenericPlatformMemory::OnOutOfMemory(uint64 Size, uint32 Alignment)
 	UE_LOG(LogMemory, Fatal, TEXT("Ran out of memory allocating %llu bytes with alignment %u"), Size, Alignment);
 }
 
-FMalloc* FGenericPlatformMemory::BaseAllocator()
+YMalloc* YGenericPlatformMemory::BaseAllocator()
 {
 	return new FMallocAnsi();
 }
 
-FPlatformMemoryStats FGenericPlatformMemory::GetStats()
+YPlatformMemoryStats YGenericPlatformMemory::GetStats()
 {
-	UE_LOG(LogMemory, Warning, TEXT("FGenericPlatformMemory::GetStats not implemented on this platform"));
-	return FPlatformMemoryStats();
+	UE_LOG(LogMemory, Warning, TEXT("YGenericPlatformMemory::GetStats not implemented on this platform"));
+	return YPlatformMemoryStats();
 }
 
-void FGenericPlatformMemory::GetStatsForMallocProfiler(FGenericMemoryStats& out_Stats)
+void YGenericPlatformMemory::GetStatsForMallocProfiler(YGenericMemoryStats& out_Stats)
 {
 #if	STATS
-	FPlatformMemoryStats Stats = FPlatformMemory::GetStats();
+	YPlatformMemoryStats Stats = YPlatformMemory::GetStats();
 
 	// Base common stats for all platforms.
 	out_Stats.Add(GET_STATDESCRIPTION(STAT_TotalPhysical), Stats.TotalPhysical);
@@ -190,39 +190,39 @@ void FGenericPlatformMemory::GetStatsForMallocProfiler(FGenericMemoryStats& out_
 #endif // STATS
 }
 
-const FPlatformMemoryConstants& FGenericPlatformMemory::GetConstants()
+const YPlatformMemoryConstants& YGenericPlatformMemory::GetConstants()
 {
-	UE_LOG(LogMemory, Warning, TEXT("FGenericPlatformMemory::GetConstants not implemented on this platform"));
-	static FPlatformMemoryConstants MemoryConstants;
+	UE_LOG(LogMemory, Warning, TEXT("YGenericPlatformMemory::GetConstants not implemented on this platform"));
+	static YPlatformMemoryConstants MemoryConstants;
 	return MemoryConstants;
 }
 
-uint32 FGenericPlatformMemory::GetPhysicalGBRam()
+uint32 YGenericPlatformMemory::GetPhysicalGBRam()
 {
-	return FPlatformMemory::GetConstants().TotalPhysicalGB;
+	return YPlatformMemory::GetConstants().TotalPhysicalGB;
 }
 
-bool FGenericPlatformMemory::PageProtect(void* const Ptr, const SIZE_T Size, const bool bCanRead, const bool bCanWrite)
+bool YGenericPlatformMemory::PageProtect(void* const Ptr, const SIZE_T Size, const bool bCanRead, const bool bCanWrite)
 {
-	UE_LOG(LogMemory, Verbose, TEXT("FGenericPlatformMemory::PageProtect not implemented on this platform"));
+	UE_LOG(LogMemory, Verbose, TEXT("YGenericPlatformMemory::PageProtect not implemented on this platform"));
 	return false;
 }
 
-void* FGenericPlatformMemory::BinnedAllocFromOS(SIZE_T Size)
+void* YGenericPlatformMemory::BinnedAllocFromOS(SIZE_T Size)
 {
-	UE_LOG(LogMemory, Error, TEXT("FGenericPlatformMemory::BinnedAllocFromOS not implemented on this platform"));
+	UE_LOG(LogMemory, Error, TEXT("YGenericPlatformMemory::BinnedAllocFromOS not implemented on this platform"));
 	return nullptr;
 }
 
-void FGenericPlatformMemory::BinnedFreeToOS(void* Ptr, SIZE_T Size)
+void YGenericPlatformMemory::BinnedFreeToOS(void* Ptr, SIZE_T Size)
 {
-	UE_LOG(LogMemory, Error, TEXT("FGenericPlatformMemory::BinnedFreeToOS not implemented on this platform"));
+	UE_LOG(LogMemory, Error, TEXT("YGenericPlatformMemory::BinnedFreeToOS not implemented on this platform"));
 }
 
-void FGenericPlatformMemory::DumpStats(class FOutputDevice& Ar)
+void YGenericPlatformMemory::DumpStats(class YOutputDevice& Ar)
 {
 	const float InvMB = 1.0f / 1024.0f / 1024.0f;
-	FPlatformMemoryStats MemoryStats = FPlatformMemory::GetStats();
+	YPlatformMemoryStats MemoryStats = YPlatformMemory::GetStats();
 #if !NO_LOGGING
 	const YName CategoryName(LogMemory.GetCategoryName());
 #else
@@ -239,13 +239,13 @@ void FGenericPlatformMemory::DumpStats(class FOutputDevice& Ar)
 
 }
 
-void FGenericPlatformMemory::DumpPlatformAndAllocatorStats(class FOutputDevice& Ar)
+void YGenericPlatformMemory::DumpPlatformAndAllocatorStats(class YOutputDevice& Ar)
 {
-	FPlatformMemory::DumpStats(Ar);
+	YPlatformMemory::DumpStats(Ar);
 	GMalloc->DumpAllocatorStats(Ar);
 }
 
-void FGenericPlatformMemory::MemswapGreaterThan8(void* RESTRICT Ptr1, void* RESTRICT Ptr2, SIZE_T Size)
+void YGenericPlatformMemory::MemswapGreaterThan8(void* RESTRICT Ptr1, void* RESTRICT Ptr2, SIZE_T Size)
 {
 	union PtrUnion
 	{
@@ -311,7 +311,7 @@ void FGenericPlatformMemory::MemswapGreaterThan8(void* RESTRICT Ptr1, void* REST
 	}
 }
 
-FGenericPlatformMemory::FSharedMemoryRegion::FSharedMemoryRegion(const YString& InName, uint32 InAccessMode, void* InAddress, SIZE_T InSize)
+YGenericPlatformMemory::YSharedMemoryRegion::YSharedMemoryRegion(const YString& InName, uint32 InAccessMode, void* InAddress, SIZE_T InSize)
 	: AccessMode(InAccessMode)
 	, Address(InAddress)
 	, Size(InSize)
@@ -319,20 +319,20 @@ FGenericPlatformMemory::FSharedMemoryRegion::FSharedMemoryRegion(const YString& 
 	FCString::Strcpy(Name, sizeof(Name) - 1, *InName);
 }
 
-FGenericPlatformMemory::FSharedMemoryRegion * FGenericPlatformMemory::MapNamedSharedMemoryRegion(const YString& Name, bool bCreate, uint32 AccessMode, SIZE_T Size)
+YGenericPlatformMemory::YSharedMemoryRegion * YGenericPlatformMemory::MapNamedSharedMemoryRegion(const YString& Name, bool bCreate, uint32 AccessMode, SIZE_T Size)
 {
-	UE_LOG(LogHAL, Error, TEXT("FGenericPlatformMemory::MapNamedSharedMemoryRegion not implemented on this platform"));
+	UE_LOG(LogHAL, Error, TEXT("YGenericPlatformMemory::MapNamedSharedMemoryRegion not implemented on this platform"));
 	return NULL;
 }
 
-bool FGenericPlatformMemory::UnmapNamedSharedMemoryRegion(FSharedMemoryRegion * MemoryRegion)
+bool YGenericPlatformMemory::UnmapNamedSharedMemoryRegion(YSharedMemoryRegion * MemoryRegion)
 {
-	UE_LOG(LogHAL, Error, TEXT("FGenericPlatformMemory::UnmapNamedSharedMemoryRegion not implemented on this platform"));
+	UE_LOG(LogHAL, Error, TEXT("YGenericPlatformMemory::UnmapNamedSharedMemoryRegion not implemented on this platform"));
 	return false;
 }
 
 
-void FGenericPlatformMemory::InternalUpdateStats(const FPlatformMemoryStats& MemoryStats)
+void YGenericPlatformMemory::InternalUpdateStats(const YPlatformMemoryStats& MemoryStats)
 {
 	// Generic method is empty. Implement at platform level.
 }

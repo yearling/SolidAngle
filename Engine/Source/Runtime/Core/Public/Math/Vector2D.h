@@ -39,7 +39,8 @@ public:
 	*
 	* @param InPos Integer point used to set this vector.
 	*/
-	FORCEINLINE YVector2D(YIntPoint InPos);
+	//!!FIXME by zyx
+	//FORCEINLINE YVector2D(YIntPoint InPos);
 
 	/**
 	* Constructor which initializes all components to zero.
@@ -418,7 +419,8 @@ public:
 	*
 	* @return New Int Point from this vector.
 	*/
-	YIntPoint IntPoint() const;
+	//!!FIXME by zyx
+	//YIntPoint IntPoint() const;
 
 	/**
 	* Creates a copy of this vector with both axes clamped to the given range.
@@ -545,12 +547,12 @@ FORCEINLINE YVector2D::YVector2D(float InX, float InY)
 	: X(InX), Y(InY)
 { }
 
-
-FORCEINLINE YVector2D::YVector2D(YIntPoint InPos)
-{
-	X = (float)InPos.X;
-	Y = (float)InPos.Y;
-}
+//!!FIXME by zyx
+//FORCEINLINE YVector2D::YVector2D(YIntPoint InPos)
+//{
+//	X = (float)InPos.X;
+//	Y = (float)InPos.Y;
+//}
 
 
 FORCEINLINE YVector2D::YVector2D(EForceInit)
@@ -867,11 +869,11 @@ FORCEINLINE float YVector2D::Component(int32 Index) const
 	return (&X)[Index];
 }
 
-
-FORCEINLINE YIntPoint YVector2D::IntPoint() const
-{
-	return YIntPoint(YMath::RoundToInt(X), YMath::RoundToInt(Y));
-}
+//!!FIXME by zyx
+//FORCEINLINE YIntPoint YVector2D::IntPoint() const
+//{
+//	return YIntPoint(YMath::RoundToInt(X), YMath::RoundToInt(Y));
+//}
 
 
 FORCEINLINE YVector2D YVector2D::ClampAxes(float MinAxisVal, float MaxAxisVal) const

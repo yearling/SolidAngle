@@ -1,3 +1,5 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
@@ -17,25 +19,25 @@ VarArgs helper macros.
 	{ \
 		va_list ap; \
 		va_start(ap, lastarg); \
-		YCString::GetVarArgs(msg, msgsize, len, fmt, ap); \
+		FCString::GetVarArgs(msg, msgsize, len, fmt, ap); \
 	}
 #define GET_VARARGS_WIDE(msg, msgsize, len, lastarg, fmt) \
 	{ \
 		va_list ap; \
 		va_start(ap, lastarg); \
-		TCStringWide::GetVarArgs(msg, msgsize, len, fmt, ap); \
+		FCStringWide::GetVarArgs(msg, msgsize, len, fmt, ap); \
 	}
 #define GET_VARARGS_ANSI(msg, msgsize, len, lastarg, fmt) \
 	{ \
 		va_list ap; \
 		va_start(ap, lastarg); \
-		YCStringAnsi::GetVarArgs(msg, msgsize, len, fmt, ap); \
+		FCStringAnsi::GetVarArgs(msg, msgsize, len, fmt, ap); \
 	}
 #define GET_VARARGS_RESULT(msg, msgsize, len, lastarg, fmt, result) \
 	{ \
 		va_list ap; \
 		va_start(ap, lastarg); \
-		result = YCString::GetVarArgs(msg, msgsize, len, fmt, ap); \
+		result = FCString::GetVarArgs(msg, msgsize, len, fmt, ap); \
 		if (result >= msgsize) \
 		{ \
 			result = -1; \
@@ -45,7 +47,7 @@ VarArgs helper macros.
 	{ \
 		va_list ap; \
 		va_start(ap, lastarg); \
-		result = TCStringWide::GetVarArgs(msg, msgsize, len, fmt, ap); \
+		result = FCStringWide::GetVarArgs(msg, msgsize, len, fmt, ap); \
 		if (result >= msgsize) \
 		{ \
 			result = -1; \
@@ -55,7 +57,7 @@ VarArgs helper macros.
 	{ \
 		va_list ap; \
 		va_start(ap, lastarg); \
-		result = YCStringAnsi::GetVarArgs(msg, msgsize, len, fmt, ap); \
+		result = FCStringAnsi::GetVarArgs(msg, msgsize, len, fmt, ap); \
 		if (result >= msgsize) \
 		{ \
 			result = -1; \

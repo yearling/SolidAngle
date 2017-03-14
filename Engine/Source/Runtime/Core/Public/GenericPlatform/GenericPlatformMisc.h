@@ -59,7 +59,7 @@ namespace EBuildConfigurations
 	* @param Configuration The value to get the text for.
 	* @return The localized Build configuration text
 	*/
-	CORE_API YText ToText(EBuildConfigurations::Type Configuration);
+	CORE_API FText ToText(EBuildConfigurations::Type Configuration);
 }
 
 
@@ -434,11 +434,11 @@ public:
 	/**
 	* Platform specific function for adding a named event that can be viewed in PIX
 	*/
-	FORCEINLINE static void BeginNamedEvent(const struct FColor& Color, const TCHAR* Text)
+	FORCEINLINE static void BeginNamedEvent(const struct YColor& Color, const TCHAR* Text)
 	{
 	}
 
-	FORCEINLINE static void BeginNamedEvent(const struct FColor& Color, const ANSICHAR* Text)
+	FORCEINLINE static void BeginNamedEvent(const struct YColor& Color, const ANSICHAR* Text)
 	{
 	}
 
@@ -820,7 +820,7 @@ public:
 	}
 
 	/** @return Get the name of the platform specific file manager (eg, Explorer on Windows, Finder on OS X) */
-	static YText GetFileManagerName();
+	static FText GetFileManagerName();
 
 	/**
 	* Sample the displayed pixel color from anywhere on the screen using the OS

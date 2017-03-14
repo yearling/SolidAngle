@@ -29,27 +29,27 @@ struct YIntPoint;
 struct YIntRect;
 
 // Misc
-struct YResourceSizeEx;
-class YConsoleVariable;
-class YRunnableThread;
-class YEvent;
-class YPlatformFile;
+struct FResourceSizeEx;
+class FConsoleVariable;
+class FRunnableThread;
+class FEvent;
+class FPlatformFile;
 class YMalloc;
-class YFileHandle;
-class YAutomationTestBase;
+class FFileHandle;
+class FAutomationTestBase;
 struct YGenericMemoryStats;
-class YSHAHash;
-class YScriptArray;
-class YThreadSafeCounter;
+class FSHAHash;
+class FScriptArray;
+class FThreadSafeCounter;
 enum class EModuleChangeReason;
-struct YManifestContext;
+struct FManifestContext;
 class IConsoleObject;
-class YConfigFile;
-class YConfigSection;
+class FConfigFile;
+class FConfigSection;
 
 // Text
-class YText;
-class YTextFilterString;
+class FText;
+class FTextFilterString;
 enum class ETextFilterTextComparisonMode : uint8;
 enum class ETextFilterComparisonOperation : uint8;
 

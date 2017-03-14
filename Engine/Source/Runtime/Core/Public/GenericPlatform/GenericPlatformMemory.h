@@ -35,7 +35,7 @@ struct YGenericPlatformMemoryConstants
 	// It is ok to go outside this range, lookups will just be a little slower
 	uint64 AddressLimit;
 
-	/** Approximate physical RAM in GB; 1 on everything except PC. Used for "course tuning", like FPlatformMisc::NumberOfCores(). */
+	/** Approximate physical RAM in GB; 1 on everything except PC. Used for "course tuning", like YPlatformMisc::NumberOfCores(). */
 	uint32 TotalPhysicalGB;
 
 	/** Default constructor, clears all variables. */
@@ -411,7 +411,7 @@ public:
 	* @param AccessMode mode which we will be accessing it (use values from ESharedMemoryAccess)
 	* @param Size size of the buffer (should be >0. Also, the real size is subject to platform limitations and may be increased to match page size)
 	*
-	* @return pointer to FSharedMemoryRegion (or its descendants) if successful, NULL if not.
+	* @return pointer to YSharedMemoryRegion (or its descendants) if successful, NULL if not.
 	*/
 	static YSharedMemoryRegion* MapNamedSharedMemoryRegion(const YString& Name, bool bCreate, uint32 AccessMode, SIZE_T Size);
 

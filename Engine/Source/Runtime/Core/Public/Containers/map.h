@@ -587,7 +587,7 @@ public:
 	* Describes the map's contents through an output device.
 	* @param Ar - The output device to describe the map's contents through.
 	*/
-	void Dump(FOutputDevice& Ar)
+	void Dump(YOutputDevice& Ar)
 	{
 		Pairs.Dump(Ar);
 	}

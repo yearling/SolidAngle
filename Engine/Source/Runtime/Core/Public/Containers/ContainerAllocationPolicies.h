@@ -10,7 +10,7 @@
 #include "Templates/MemoryOps.h"
 #include "Math/NumericLimits.h"
 
-class YDefaultBitArrayAllocator;
+class FDefaultBitArrayAllocator;
 
 /** branchless pointer selection
 * return A ? A : B;
@@ -689,10 +689,10 @@ struct TAllocatorTraits<TFixedAllocator<NumInlineElements>> : TAllocatorTraitsBa
 //
 
 class FDefaultAllocator;
-class YDefaultBitArrayAllocator;
+class FDefaultBitArrayAllocator;
 
 /** Encapsulates the allocators used by a sparse array in a single type. */
-template<typename InElementAllocator = FDefaultAllocator, typename InBitArrayAllocator = YDefaultBitArrayAllocator>
+template<typename InElementAllocator = FDefaultAllocator, typename InBitArrayAllocator = FDefaultBitArrayAllocator>
 class TSparseArrayAllocator
 {
 public:
@@ -744,7 +744,7 @@ public:
 	{
 		if (NumHashedElements >= MinNumberOfHashedElements)
 		{
-			return FPlatformMath::RoundUpToPowerOfTwo(NumHashedElements / AverageNumberOfElementsPerHashBucket + BaseNumberOfHashBuckets);
+			return YPlatformMath::RoundUpToPowerOfTwo(NumHashedElements / AverageNumberOfElementsPerHashBucket + BaseNumberOfHashBuckets);
 		}
 
 		return 1;
@@ -774,7 +774,7 @@ public:
 	/** Computes the number of hash buckets to use for a given number of elements. */
 	static FORCEINLINE uint32 GetNumberOfHashBuckets(uint32 NumHashedElements)
 	{
-		const uint32 NumDesiredHashBuckets = FPlatformMath::RoundUpToPowerOfTwo(NumHashedElements / AverageNumberOfElementsPerHashBucket);
+		const uint32 NumDesiredHashBuckets = YPlatformMath::RoundUpToPowerOfTwo(NumHashedElements / AverageNumberOfElementsPerHashBucket);
 		if (NumDesiredHashBuckets < NumInlineHashBuckets)
 		{
 			return NumInlineHashBuckets;
@@ -802,10 +802,10 @@ public:
 
 class FDefaultAllocator : public FHeapAllocator { public: typedef FHeapAllocator          Typedef; };
 class FDefaultSetAllocator : public TSetAllocator<> { public: typedef TSetAllocator<>         Typedef; };
-class YDefaultBitArrayAllocator : public TInlineAllocator<4> { public: typedef TInlineAllocator<4>     Typedef; };
+class FDefaultBitArrayAllocator : public TInlineAllocator<4> { public: typedef TInlineAllocator<4>     Typedef; };
 class FDefaultSparseArrayAllocator : public TSparseArrayAllocator<> { public: typedef TSparseArrayAllocator<> Typedef; };
 
 template <> struct TAllocatorTraits<FDefaultAllocator> : TAllocatorTraits<typename FDefaultAllocator::Typedef> {};
 template <> struct TAllocatorTraits<FDefaultSetAllocator> : TAllocatorTraits<typename FDefaultSetAllocator::Typedef> {};
-template <> struct TAllocatorTraits<YDefaultBitArrayAllocator> : TAllocatorTraits<typename YDefaultBitArrayAllocator::Typedef> {};
+template <> struct TAllocatorTraits<FDefaultBitArrayAllocator> : TAllocatorTraits<typename FDefaultBitArrayAllocator::Typedef> {};
 template <> struct TAllocatorTraits<FDefaultSparseArrayAllocator> : TAllocatorTraits<typename FDefaultSparseArrayAllocator::Typedef> {};

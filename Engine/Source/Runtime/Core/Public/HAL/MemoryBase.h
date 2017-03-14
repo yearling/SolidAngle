@@ -30,7 +30,7 @@ struct YGenericMemoryStats;
 
 /**
 * Inherit from FUseSystemMallocForNew if you want your objects to be placed in memory
-* alloced by the system malloc routines, bypassing GMalloc. This is e.g. used by FMalloc
+* alloced by the system malloc routines, bypassing GMalloc. This is e.g. used by YMalloc
 * itself.
 */
 class CORE_API YUseSystemMallocForNew
@@ -141,7 +141,7 @@ public:
 	/**
 	* Handles any commands passed in on the command line
 	*/
-	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar) override
+	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, YOutputDevice& Ar) override
 	{
 		return false;
 	}
@@ -153,7 +153,7 @@ public:
 	virtual void GetAllocatorStats(YGenericMemoryStats& out_Stats);
 
 	/** Dumps current allocator stats to the log. */
-	virtual void DumpAllocatorStats(class FOutputDevice& Ar)
+	virtual void DumpAllocatorStats(class YOutputDevice& Ar)
 	{
 		Ar.Logf(TEXT("Allocator Stats for %s: (not implemented)"), GetDescriptiveName());
 	}

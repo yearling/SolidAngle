@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 //#include "Containers/SolidAngleString.h"
-#include "Containers/Array.h"
+//#include "Containers/Array.h"
 
 struct TRUEValue
 {
@@ -146,7 +146,6 @@ int main()
 	static_assert(!TIsPODType<PODTypeWithStdString>::Value, "shoudl be true");
 	static_assert(TIsTriviallyCopyAssignable<PODType>::Value, "shoudl be true");
 	static_assert(!TIsTriviallyCopyAssignable<PODTypeWithStdVector>::Value, "shoudl be true");
-	static_assert(!IsTriviallyCopyConstructible<PODTypeWithStdVector>::Value, "shoudl be true");
 	static_assert(TPointerIsConvertibleFromTo<DirivedTest, BaseTest>::Value, "shoudl be true");
 	//static_assert(!TIsPODType<PODTypeWithStdVector>::Value, "shoudl be true");
 	//static_assert(TIsTriviallyCopyAssignable<PODTypeWithStdString>::Value, "shoudl be true");
@@ -195,6 +194,6 @@ int main()
 
 
 	std::cout << "\n--------------YString----------" << std::endl;
-	TArray arr;
+	//TArray arr;
 	return 0;
 }

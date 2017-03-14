@@ -1,4 +1,6 @@
 #pragma once
+//!!FIXME by zyx 
+#if 0
 /**
 * Structure for integer rectangles in 2-d space.
 *
@@ -546,3 +548,4 @@ FORCEINLINE bool YIntRect::IsEmpty() const
 	return Width() == 0 && Height() == 0;
 }
 
+#endif

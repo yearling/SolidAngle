@@ -6,7 +6,7 @@
 #include "Misc/AssertionMacros.h"
 #include "SObject/NameTypes.h"
 #include "Templates/SharedPointer.h"
-#include "UObject/WeakObjectPtrTemplates.h"
+#include "SObject/WeakObjectPtrTemplates.h"
 #include "Delegates/MulticastDelegateBase.h"
 #include "Delegates/IntegerSequence.h"
 

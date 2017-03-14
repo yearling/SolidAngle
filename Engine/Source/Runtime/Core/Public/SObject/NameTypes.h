@@ -409,7 +409,7 @@ public:
 		ExpandChunksToIndex(NumElements + NumToAdd - 1);
 		check(Result == NumElements);
 		NumElements += NumToAdd;
-		FPlatformMisc::MemoryBarrier();
+		YPlatformMisc::MemoryBarrier();
 		return Result;
 	}
 	/**
@@ -922,7 +922,7 @@ public:
 	static uint16 GetNonCasePreservingHash(const TCharType* Source);
 
 	static void StaticInit();
-	static void DisplayHash(class FOutputDevice& Ar);
+	static void DisplayHash(class YOutputDevice& Ar);
 	static YString SafeString(int32 InDisplayIndex, int32 InstanceNumber = NAME_NO_NUMBER_INTERNAL)
 	{
 		TNameEntryArray& Names = GetNames();

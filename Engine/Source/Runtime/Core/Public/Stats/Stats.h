@@ -97,9 +97,9 @@
 *			This is an example that will allow using the pools every where, see CORE_API.
 *			THE NAME OF THE POOL MUST START WITH MCR_
 *			Header file.
-*				DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("Physical Memory Pool [Physical]"),	MCR_Physical,		STATGROUP_Memory,  FPlatformMemory::MCR_Physical,	CORE_API);
-*				DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("GPU Memory Pool [GPU]"),				MCR_GPU,			STATGROUP_Memory,  FPlatformMemory::MCR_GPU,		CORE_API);
-*				DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("Texture Memory Pool [Texture]"),		MCR_TexturePool,	STATGROUP_Memory,  FPlatformMemory::MCR_TexturePool,CORE_API);
+*				DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("Physical Memory Pool [Physical]"),	MCR_Physical,		STATGROUP_Memory,  YPlatformMemory::MCR_Physical,	CORE_API);
+*				DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("GPU Memory Pool [GPU]"),				MCR_GPU,			STATGROUP_Memory,  YPlatformMemory::MCR_GPU,		CORE_API);
+*				DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("Texture Memory Pool [Texture]"),		MCR_TexturePool,	STATGROUP_Memory,  YPlatformMemory::MCR_TexturePool,CORE_API);
 *
 *			Source file.
 *				DEFINE_STAT(MCR_Physical);
@@ -113,14 +113,14 @@
 *
 *			Now we have pools, so we can setup memory stats for those pools.
 *			Accessible everywhere.
-*				DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("Index buffer memory"),		STAT_IndexBufferMemory,		STATGROUP_RHI, FPlatformMemory::MCR_GPU, RHI_API);
-*				DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("Vertex buffer memory"),		STAT_VertexBufferMemory,	STATGROUP_RHI, FPlatformMemory::MCR_GPU, RHI_API);
-*				DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("Structured buffer memory"),	STAT_StructuredBufferMemory,STATGROUP_RHI, FPlatformMemory::MCR_GPU, RHI_API);
-*				DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("Pixel buffer memory"),		STAT_PixelBufferMemory,		STATGROUP_RHI, FPlatformMemory::MCR_GPU, RHI_API);
+*				DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("Index buffer memory"),		STAT_IndexBufferMemory,		STATGROUP_RHI, YPlatformMemory::MCR_GPU, RHI_API);
+*				DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("Vertex buffer memory"),		STAT_VertexBufferMemory,	STATGROUP_RHI, YPlatformMemory::MCR_GPU, RHI_API);
+*				DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("Structured buffer memory"),	STAT_StructuredBufferMemory,STATGROUP_RHI, YPlatformMemory::MCR_GPU, RHI_API);
+*				DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("Pixel buffer memory"),		STAT_PixelBufferMemory,		STATGROUP_RHI, YPlatformMemory::MCR_GPU, RHI_API);
 *
 *			Accessible only in the module where defined.
-*				DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("Pool Memory Size"), STAT_TexturePoolSize,				STATGROUP_Streaming, FPlatformMemory::MCR_TexturePool, );
-*				DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("Pool Memory Used"), STAT_TexturePoolAllocatedSize,	STATGROUP_Streaming, FPlatformMemory::MCR_TexturePool, );
+*				DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("Pool Memory Size"), STAT_TexturePoolSize,				STATGROUP_Streaming, YPlatformMemory::MCR_TexturePool, );
+*				DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("Pool Memory Used"), STAT_TexturePoolAllocatedSize,	STATGROUP_Streaming, YPlatformMemory::MCR_TexturePool, );
 *
 *			And the last thing, updating the memory stats.
 *				INC_MEMORY_STAT_BY(STAT_PixelBufferMemory,NumBytes) - increases a memory stat by the specified value
@@ -297,7 +297,7 @@
 #error "STATS must be defined as either zero or one."
 #endif
 
-#include "ProfilingDebugging/UMemoryDefines.h"
+#include "ProfilingDebugging/SMemoryDefines.h"
 
 struct TStatId;
 

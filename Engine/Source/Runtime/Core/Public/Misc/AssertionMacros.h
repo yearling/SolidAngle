@@ -241,7 +241,7 @@ struct YTCharArrayTester
 	static char(&Func(...))[1];
 };
 
-#define IS_TCHAR_ARRAY(expr) (sizeof(FTCharArrayTester::Func(expr)) == 2)
+#define IS_TCHAR_ARRAY(expr) (sizeof(YTCharArrayTester::Func(expr)) == 2)
 
 /** low level fatal error handler. */
 CORE_API void VARARGS LowLevelFatalErrorHandler(const ANSICHAR* File, int32 Line, const TCHAR* Format = TEXT(""), ...);

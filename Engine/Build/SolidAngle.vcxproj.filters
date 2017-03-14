@@ -76,6 +76,9 @@
     <Filter Include="Source\Runtime\Core\Public\Containers\Algo">
       <UniqueIdentifier>{6a1ca476-5544-435c-bd64-a22a016efc91}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Runtime\Core\Public\Async">
+      <UniqueIdentifier>{07a22a4c-aa04-4fc1-a1b8-af7d281d9f35}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\core\Public\HAL\Platform.h">
@@ -507,6 +510,213 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformTLS.h">
       <Filter>Source\Runtime\Core\Public\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\Ticker.h">
+      <Filter>Source\Runtime\Core\Public\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Delegates\IDelegateInstance.h">
+      <Filter>Source\Runtime\Core\Public\Delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Delegates\DelegateSettings.h">
+      <Filter>Source\Runtime\Core\Public\Delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Delegates\DelegateCombinations.h">
+      <Filter>Source\Runtime\Core\Public\Delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\FeedbackContext.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\Text.h">
+      <Filter>Source\Runtime\Core\Public\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\EnumAsByte.h">
+      <Filter>Source\Runtime\Core\Public\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ScopeLock.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\SlowTask.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Optional.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\SlowTaskStack.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Async\Async.h">
+      <Filter>Source\Runtime\Core\Public\Async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\ThreadSafeCounter.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\LockFreeList.h">
+      <Filter>Source\Runtime\Core\Public\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\NoopCounter.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\LockFreeVoidPointerListBase.h">
+      <Filter>Source\Runtime\Core\Public\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\LockFreeListImpl.h">
+      <Filter>Source\Runtime\Core\Public\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Async\TaskGraphInterfaces.h">
+      <Filter>Source\Runtime\Core\Public\Async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\IConsoleManager.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\Event.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\RefCounting.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\LockFreeFixedSizeAllocator.h">
+      <Filter>Source\Runtime\Core\Public\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\MemStack.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\ThreadSingleton.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\TlsAutoCleanup.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\Runnable.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\IQueuedWork.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\RunnableThread.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformAffinity.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformAffinity.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\QueuedThreadPool.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CoreStats.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformTime.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformTime.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformTime.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Async\Future.h">
+      <Filter>Source\Runtime\Core\Public\Async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformProcess.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformProcess.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformProcess.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\CulturePointer.h">
+      <Filter>Source\Runtime\Core\Public\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\TextLocalizationManager.h">
+      <Filter>Source\Runtime\Core\Public\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\UniquePtr.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsArray.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\RemoveExtent.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\MallocAnsi.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformMemoryPoolStats.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\MemoryMisc.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CoreDelegates.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformFile.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\EnumClassFlags.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Stats\Stats2.h">
+      <Filter>Source\Runtime\Core\Public\Stats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\ChunkedArray.h">
+      <Filter>Source\Runtime\Core\Public\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\IndirectArray.h">
+      <Filter>Source\Runtime\Core\Public\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\WeakObjectPtrTemplates.h">
+      <Filter>Source\Runtime\Core\Public\SObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\AutoPointer.h">
+      <Filter>Source\Runtime\Core\Public\SObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Delegates\DelegateBase.h">
+      <Filter>Source\Runtime\Core\Public\Delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Delegates\MulticastDelegateBase.h">
+      <Filter>Source\Runtime\Core\Public\Delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\ScriptDelegates.h">
+      <Filter>Source\Runtime\Core\Public\SObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Delegates\IntegerSequence.h">
+      <Filter>Source\Runtime\Core\Public\Delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Delegates\DelegateInstanceInterface.h">
+      <Filter>Source\Runtime\Core\Public\Delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Delegates\Tuple.h">
+      <Filter>Source\Runtime\Core\Public\Delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Delegates\DelegateInstancesImpl.h">
+      <Filter>Source\Runtime\Core\Public\Delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\SharedPointerInternals.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\CoreMinimal.h">
+      <Filter>Source\Runtime\Core\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\SObjectHierarchyFwd.h">
+      <Filter>Source\Runtime\Core\Public\SObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\UniqueObj.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\Internationalization.h">
+      <Filter>Source\Runtime\Core\Public\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\ObjectVersion.h">
+      <Filter>Source\Runtime\Core\Public\SObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\ObjectMacros.h">
+      <Filter>Source\Runtime\Core\Public\SObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\TestMain.cpp">
@@ -523,6 +733,12 @@
     <None Include="ClassDiagram.cd" />
     <None Include="..\Source\Runtime\Core\Public\SObject\SolidAngleNames.inl">
       <Filter>Source\Runtime\Core\Public\SObject</Filter>
+    </None>
+    <None Include="..\Source\Runtime\Core\Public\Delegates\DelegateSignatureImpl.inl">
+      <Filter>Source\Runtime\Core\Public\Delegates</Filter>
+    </None>
+    <None Include="..\Source\Runtime\Core\Public\Templates\SharedPointerTesting.inl">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
     </None>
   </ItemGroup>
 </Project>
