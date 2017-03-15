@@ -76,7 +76,7 @@ struct YGenericPlatformMemoryStats : public YPlatformMemoryConstants
 	/** The amount of physical memory used by the process, in bytes. */
 	SIZE_T UsedPhysical;
 
-	/** The peak amount of physical memory used by the process, in bytes. */
+	/** 物理内存使用的峰值 The peak amount of physical memory used by the process, in bytes. */
 	SIZE_T PeakUsedPhysical;
 
 	/** Total amount of virtual memory used by the process. */
@@ -326,7 +326,7 @@ struct CORE_API YGenericPlatformMemory
 		return memcpy(Dest, Src, Count);
 	}
 
-	/** On some platforms memcpy optimized for big blocks that avoid L2 cache pollution are available */
+	/** NOTE by zyx, Stream 系列一直没看懂 On some platforms memcpy optimized for big blocks that avoid L2 cache pollution are available */
 	static FORCEINLINE void* StreamingMemcpy(void* Dest, const void* Src, SIZE_T Count)
 	{
 		return memcpy(Dest, Src, Count);

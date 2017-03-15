@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 //#include "Containers/SolidAngleString.h"
-//#include "Containers/Array.h"
+#include "Containers/Array.h"
 
 struct TRUEValue
 {
@@ -194,6 +194,6 @@ int main()
 
 
 	std::cout << "\n--------------YString----------" << std::endl;
-	//TArray arr;
+	TArray<int> arr;
 	return 0;
 }

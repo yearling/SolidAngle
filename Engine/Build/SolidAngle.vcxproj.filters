@@ -297,18 +297,6 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsEnum.h">
       <Filter>Source\Runtime\Core\Public\Templates</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\SolidAngleMemory.h">
-      <Filter>Source\Runtime\Core\Public\HAL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformMemory.h">
-      <Filter>Source\Runtime\Core\Public\HAL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformMemory.h">
-      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformMemory.h">
-      <Filter>Source\Runtime\Core\Public\Windows</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\CoreFwd.h">
       <Filter>Source\Runtime\Core</Filter>
     </ClInclude>
@@ -401,9 +389,6 @@
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformString.h">
       <Filter>Source\Runtime\Core\Public\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\MicrosoftPlatformString.h">
-      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformString.h">
       <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
@@ -717,6 +702,21 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\SObject\ObjectMacros.h">
       <Filter>Source\Runtime\Core\Public\SObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformMemory.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\SolidAngleMemory.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformMemory.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\MicrosoftPlatformString.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformMemory.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\TestMain.cpp">
@@ -740,5 +740,7 @@
     <None Include="..\Source\Runtime\Core\Public\Templates\SharedPointerTesting.inl">
       <Filter>Source\Runtime\Core\Public\Templates</Filter>
     </None>
+    <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
   </ItemGroup>
 </Project>
