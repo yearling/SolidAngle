@@ -16,11 +16,11 @@
 #include "Misc/OutputDeviceConsole.h"
 #include "Templates/UniquePtr.h"
 
-void FGenericPlatformOutputDevices::SetupOutputDevices()
+void YGenericPlatformOutputDevices::SetupOutputDevices()
 {
 	check(GLog);
 
-	GLog->AddOutputDevice(FPlatformOutputDevices::GetLog());
+	GLog->AddOutputDevice(YPlatformOutputDevices::GetLog());
 
 	bool bHasConsole = !FParse::Param(FCommandLine::Get(), TEXT("NOCONSOLE"));
 	if (bHasConsole)
@@ -39,11 +39,11 @@ void FGenericPlatformOutputDevices::SetupOutputDevices()
 		}
 	}
 
-	GLog->AddOutputDevice(FPlatformOutputDevices::GetEventLog());
+	GLog->AddOutputDevice(YPlatformOutputDevices::GetEventLog());
 };
 
 
-YString FGenericPlatformOutputDevices::GetAbsoluteLogFilename()
+YString YGenericPlatformOutputDevices::GetAbsoluteLogFilename()
 {
 	static TCHAR		Filename[1024] = { 0 };
 
@@ -90,7 +90,7 @@ YString FGenericPlatformOutputDevices::GetAbsoluteLogFilename()
 	#define WITH_LOGGING_TO_MEMORY 0
 #endif
 
-class YOutputDevice* FGenericPlatformOutputDevices::GetLog()
+class YOutputDevice* YGenericPlatformOutputDevices::GetLog()
 {
 	static struct FLogOutputDeviceInitializer
 	{
@@ -123,14 +123,14 @@ class YOutputDevice* FGenericPlatformOutputDevices::GetLog()
 }
 
 
-class YOutputDeviceError* FGenericPlatformOutputDevices::GetError()
+class YOutputDeviceError* YGenericPlatformOutputDevices::GetError()
 {
 	static YOutputDeviceAnsiError Singleton;
 	return &Singleton;
 }
 
 
-class YFeedbackContext* FGenericPlatformOutputDevices::GetWarn()
+class YFeedbackContext* YGenericPlatformOutputDevices::GetWarn()
 {
 	static FFeedbackContextAnsi Singleton;
 	return &Singleton;

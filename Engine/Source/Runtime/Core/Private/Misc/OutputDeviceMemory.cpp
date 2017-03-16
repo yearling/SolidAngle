@@ -21,7 +21,7 @@ YOutputDeviceMemory::YOutputDeviceMemory(int32 InPreserveSize /*= 256 * 1024*/, 
 , PreserveSize(InPreserveSize)
 {
 #if DUMP_LOG_ON_EXIT
-	const YString LogFileName = FPlatformOutputDevices::GetAbsoluteLogFilename();
+	const YString LogFileName = YPlatformOutputDevices::GetAbsoluteLogFilename();
 	YOutputDeviceFile::CreateBackupCopy(*LogFileName);
 	IFileManager::Get().Delete(*LogFileName);
 #endif // DUMP_LOG_ON_EXIT
@@ -38,7 +38,7 @@ void YOutputDeviceMemory::TearDown()
 
 	// Dump on exit
 #if DUMP_LOG_ON_EXIT
-	const YString LogFileName = FPlatformOutputDevices::GetAbsoluteLogFilename();
+	const YString LogFileName = YPlatformOutputDevices::GetAbsoluteLogFilename();
 	YArchive* LogFile = IFileManager::Get().CreateFileWriter(*LogFileName, FILEWRITE_AllowRead);
 	if (LogFile)
 	{

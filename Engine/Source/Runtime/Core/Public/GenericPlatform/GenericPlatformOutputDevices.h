@@ -11,7 +11,7 @@ class YOutputDeviceError;
 /**
 * Generic implementation for most platforms
 */
-struct CORE_API FGenericPlatformOutputDevices
+struct CORE_API YGenericPlatformOutputDevices
 {
 	/** Add output devices which can vary depending on platform, configuration, command line parameters. */
 	static void							SetupOutputDevices();

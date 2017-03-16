@@ -415,7 +415,7 @@ void YOutputDeviceFile::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbos
 			// Make log filename.
 			if( !Filename[0] )
 			{
-				FCString::Strcpy(Filename, *FPlatformOutputDevices::GetAbsoluteLogFilename());
+				FCString::Strcpy(Filename, *YPlatformOutputDevices::GetAbsoluteLogFilename());
 			}
 
 			// if the file already exists, create a backup as we are going to overwrite it

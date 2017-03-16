@@ -100,8 +100,10 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;WIN32;PLATFORM_WINDOWS;CORE_API=;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Private\;..\Source\;..\Source\Runtime\Core\Public\;..\Source\Runtime\InputDevice\Public\;</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -115,10 +117,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;PLATFORM_WINDOWS;CORE_API=;_DEBUG;_CONSOLE;WITH_DEV_AUTOMATION_TESTS=1;UE_IS_ENGINE_MODULE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public;..\Source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Private\;..\Source\;..\Source\Runtime\Core\Public\;..\Source\Runtime\InputDevice\Public\;..\Source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FloatingPointModel>Fast</FloatingPointModel>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <BrowseInformation>true</BrowseInformation>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -137,8 +141,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;WIN32;PLATFORM_WINDOWS;CORE_API=;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Private\;..\Source\;..\Source\Runtime\Core\Public\;..\Source\Runtime\InputDevice\Public\;</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -156,9 +161,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;PLATFORM_WINDOWS;CORE_API=;WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Private\;..\Source\;..\Source\Runtime\Core\Public\;..\Source\Runtime\InputDevice\Public\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <BrowseInformation>true</BrowseInformation>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -171,6 +177,11 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\Core\Private\Windows\WindowsEvent.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformFeedbackContextPrivate.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformOutputDevicesPrivate.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Private\Windows\WindowsRunnableThread.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Private\Windows\XInputInterface.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Async\Async.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Async\AsyncFileHandle.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Async\AsyncWork.h" />
@@ -217,6 +228,8 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Delegates\IntegerSequence.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Delegates\MulticastDelegateBase.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Delegates\Tuple.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Features\IModularFeature.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Features\IModularFeatures.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericApplication.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericApplicationMessageHandler.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatform.h" />
@@ -248,6 +261,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformTLS.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericWindow.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericWindowDefinition.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\ICursor.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\IForceFeedbackSystem.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\IInputInterface.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\ITextInputMethodSystem.h" />
@@ -534,24 +548,33 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\TextStoreACP.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsApplication.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsCriticalSection.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsCursor.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsHWrapper.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WIndowsPlatform.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformAtomics.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformCompilerPreSetup.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformCompilerSetup.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformCrashContext.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformFile.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformMath.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformMemory.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformMisc.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformNamedPipe.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformOutputDevices.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformProcess.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformProperties.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformSplash.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformStackWalk.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformString.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformSurvey.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformTime.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformTLS.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsSystemIncludes.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsTextInputMethodSystem.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsWindow.h" />
+    <ClInclude Include="..\Source\Runtime\InputDevice\Public\IHapticDevice.h" />
+    <ClInclude Include="..\Source\Runtime\InputDevice\Public\IInputDevice.h" />
+    <ClInclude Include="..\Source\Runtime\InputDevice\Public\IInputDeviceModule.h" />
     <ClInclude Include="..\Source\Runtime\Launch\Resources\Version.h" />
     <ClInclude Include="..\Source\Runtime\Launch\Resources\Windows\resource.h" />
   </ItemGroup>
@@ -680,8 +703,27 @@
     <ClCompile Include="..\Source\Runtime\Core\Private\Stats\StatsFile.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Stats\StatsMallocProfilerProxy.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Stats\StatsMisc.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\MinimalWindowsApi.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\TextStoreACP.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsApplication.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsCriticalSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsCursor.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformAtomics.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformCrashContext.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformFile.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformMemory.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformMisc.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformNamedPipe.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformOutputDevices.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformProcess.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformSplash.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformStackWalk.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformSurvey.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformTime.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsRunnableThread.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsTextInputMethodSystem.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsWindow.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\XInputInterface.cpp" />
     <ClCompile Include="..\Source\Runtime\TestMain.cpp" />
   </ItemGroup>
   <ItemGroup>

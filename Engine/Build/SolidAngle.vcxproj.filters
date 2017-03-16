@@ -127,6 +127,15 @@
     <Filter Include="Source\Runtime\Core\Private\Stats">
       <UniqueIdentifier>{011bb2bf-1fa4-4c1e-990a-017576855be3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Runtime\Core\Public\Features">
+      <UniqueIdentifier>{d362129b-768e-4768-a955-c4ea75b6f411}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\InputDevice">
+      <UniqueIdentifier>{12d1773f-284e-4a23-b467-f17a07eafb6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\InputDevice\Public">
+      <UniqueIdentifier>{0e579204-0427-475a-8423-80fca020995e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\core\Public\HAL\Platform.h">
@@ -1270,6 +1279,57 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ScopeExit.h">
       <Filter>Source\Runtime\Core\Public\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformFeedbackContextPrivate.h">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformOutputDevicesPrivate.h">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Private\Windows\WindowsRunnableThread.h">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Private\Windows\XInputInterface.h">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Private\Windows\WindowsEvent.h">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsWindow.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsCursor.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\ICursor.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Features\IModularFeatures.h">
+      <Filter>Source\Runtime\Core\Public\Features</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\InputDevice\Public\IInputDevice.h">
+      <Filter>Source\Runtime\InputDevice\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\InputDevice\Public\IInputDeviceModule.h">
+      <Filter>Source\Runtime\InputDevice\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\InputDevice\Public\IHapticDevice.h">
+      <Filter>Source\Runtime\InputDevice\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformFile.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformNamedPipe.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformSplash.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformSurvey.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Features\IModularFeature.h">
+      <Filter>Source\Runtime\Core\Public\Features</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\TestMain.cpp">
@@ -1652,6 +1712,63 @@
     </ClCompile>
     <ClCompile Include="..\Source\Runtime\Core\Private\Stats\StatsCommand.cpp">
       <Filter>Source\Runtime\Core\Private\Stats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformCrashContext.cpp">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformFile.cpp">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformNamedPipe.cpp">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformOutputDevices.cpp">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformProcess.cpp">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformSplash.cpp">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformStackWalk.cpp">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformSurvey.cpp">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformTime.cpp">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsRunnableThread.cpp">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsTextInputMethodSystem.cpp">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsWindow.cpp">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\XInputInterface.cpp">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\MinimalWindowsApi.cpp">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\TextStoreACP.cpp">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsApplication.cpp">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsCriticalSection.cpp">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsCursor.cpp">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformAtomics.cpp">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

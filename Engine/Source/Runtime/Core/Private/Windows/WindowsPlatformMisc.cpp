@@ -897,7 +897,7 @@ void YWindowsPlatformMisc::SubmitErrorReport(const TCHAR* InErrorHist, EErrorRep
 
 				//get the paths that the files will actually have been saved to
 				YString UserIniDumpPath = IFileManager::Get().ConvertToAbsolutePathForExternalAppForWrite(*IniDumpPath);
-				YString LogDirectory = FPlatformOutputDevices::GetAbsoluteLogFilename();
+				YString LogDirectory = YPlatformOutputDevices::GetAbsoluteLogFilename();
 				TCHAR CommandlineLogFile[MAX_SPRINTF] = TEXT("");
 
 				YString UserLogFile = IFileManager::Get().ConvertToAbsolutePathForExternalAppForWrite(*LogDirectory);
