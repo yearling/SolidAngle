@@ -136,6 +136,15 @@
     <Filter Include="Source\Runtime\InputDevice\Public">
       <UniqueIdentifier>{0e579204-0427-475a-8423-80fca020995e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Runtime\Core\Private\Serialization">
+      <UniqueIdentifier>{cc1a96b3-5bbc-4b34-b558-108bc137cbaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Private\SObject">
+      <UniqueIdentifier>{f11d0a82-456b-46d1-a6c4-c102a8c1690e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Private\Internationalization">
+      <UniqueIdentifier>{4c70b918-c860-4e36-a937-e219a24884f0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\core\Public\HAL\Platform.h">
@@ -1330,6 +1339,42 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Features\IModularFeature.h">
       <Filter>Source\Runtime\Core\Public\Features</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\NameAsStringProxyArchive.h">
+      <Filter>Source\Runtime\Core\Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\ArchiveProxy.h">
+      <Filter>Source\Runtime\Core\Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\CompressedChunkInfo.h">
+      <Filter>Source\Runtime\Core\Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\DebugSerializationFlags.h">
+      <Filter>Source\Runtime\Core\Public\SObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\ITextData.h">
+      <Filter>Source\Runtime\Core\Public\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\TextFormatter.h">
+      <Filter>Source\Runtime\Core\Public\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\FastDecimalFormat.h">
+      <Filter>Source\Runtime\Core\Public\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\TextNamespaceUtil.h">
+      <Filter>Source\Runtime\Core\Public\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\EditorObjectVersion.h">
+      <Filter>Source\Runtime\Core\Public\SObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\TextHistory.h">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\TextData.h">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\ITextFormatArgumentModifier.h">
+      <Filter>Source\Runtime\Core\Public\Internationalization</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\TestMain.cpp">
@@ -1769,6 +1814,15 @@
     </ClCompile>
     <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformAtomics.cpp">
       <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\Archive.cpp">
+      <Filter>Source\Runtime\Core\Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\SObject\SolidAngleNames.cpp">
+      <Filter>Source\Runtime\Core\Private\SObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\Text.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

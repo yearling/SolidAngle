@@ -618,7 +618,7 @@ bool FStatsReadFile::PrepareLoading()
 	Stream.ReadFNamesAndMetadataMessages( *Reader, MetadataMessages );
 	State.ProcessMetaDataOnly( MetadataMessages );
 
-	// Find all UObject metadata messages.
+	// Find all SObject metadata messages.
 	for (const FStatMessage& Meta : MetadataMessages)
 	{
 		const YName EncName = Meta.NameAndInfo.GetEncodedName();

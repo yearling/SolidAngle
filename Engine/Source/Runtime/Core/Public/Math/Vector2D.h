@@ -735,16 +735,14 @@ FORCEINLINE YVector2D YVector2D::operator/=(const YVector2D& V)
 
 FORCEINLINE float& YVector2D::operator[](int32 Index)
 {
-	//!!FIXME by zyx
-	//check(Index >= 0 && Index<2);
+	check(Index >= 0 && Index<2);
 	return ((Index == 0) ? X : Y);
 }
 
 
 FORCEINLINE float YVector2D::operator[](int32 Index) const
 {
-	//!!FIXME by zyx
-	//check(Index >= 0 && Index<2);
+	check(Index >= 0 && Index<2);
 	return ((Index == 0) ? X : Y);
 }
 
@@ -866,11 +864,10 @@ FORCEINLINE float YVector2D::Component(int32 Index) const
 	return (&X)[Index];
 }
 
-//!!FIXME by zyx
-//FORCEINLINE YIntPoint YVector2D::IntPoint() const
-//{
-//	return YIntPoint(YLinearColor::RoundToInt(X), YLinearColor::RoundToInt(Y));
-//}
+FORCEINLINE YIntPoint YVector2D::IntPoint() const
+{
+	return YIntPoint(YMath::RoundToInt(X), YMath::RoundToInt(Y));
+}
 
 
 FORCEINLINE YVector2D YVector2D::ClampAxes(float MinAxisVal, float MaxAxisVal) const
@@ -894,23 +891,21 @@ FORCEINLINE YVector2D YVector2D::GetAbs() const
 }
 
 
-//!!FIXME by zyx
-//FORCEINLINE YString YVector2D::ToString() const
-//{
-//	return YString::Printf(TEXT("X=%3.3f Y=%3.3f"), X, Y);
-//}
-//
+FORCEINLINE YString YVector2D::ToString() const
+{
+	return YString::Printf(TEXT("X=%3.3f Y=%3.3f"), X, Y);
+}
 
-//!!FIXME by zyx
-//FORCEINLINE bool YVector2D::InitFromString(const YString& InSourceString)
-//{
-//	X = Y = 0;
-//
-//	// The initialization is only successful if the X and Y values can all be parsed from the string
-//	const bool bSuccessful = FParse::Value(*InSourceString, TEXT("X="), X) && FParse::Value(*InSourceString, TEXT("Y="), Y);
-//
-//	return bSuccessful;
-//}
+
+FORCEINLINE bool YVector2D::InitFromString(const YString& InSourceString)
+{
+	X = Y = 0;
+
+	// The initialization is only successful if the X and Y values can all be parsed from the string
+	const bool bSuccessful = FParse::Value(*InSourceString, TEXT("X="), X) && FParse::Value(*InSourceString, TEXT("Y="), Y);
+
+	return bSuccessful;
+}
 //
 /* YLinearColor inline functions
 *****************************************************************************/

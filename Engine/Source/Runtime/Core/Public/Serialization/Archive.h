@@ -239,7 +239,7 @@ public:
 	* @param Value String asset reference to serialize.
 	* @return This instance.
 	*/
-	virtual YArchive& operator<<(struct YStringAssetReference& Value);
+	virtual YArchive& operator<<(struct FStringAssetReference& Value);
 
 	/**
 	* Serializes FWeakObjectPtr value from or into this archive.
@@ -550,12 +550,12 @@ public:
 	}
 
 	/**
-	* Serializes an YIntRect value from or into an archive.
+	* Serializes an FIntRect value from or into an archive.
 	*
 	* @param Ar The archive to serialize from or to.
 	* @param Value The value to serialize.
 	*/
-	friend YArchive& operator<<(YArchive& Ar, struct YIntRect& Value);
+	friend YArchive& operator<<(YArchive& Ar, struct FIntRect& Value);
 
 	/**
 	* Serializes an YString value from or into an archive.
@@ -1332,7 +1332,7 @@ public:
 private:
 
 	/** Copies all of the members except CustomVersionContainer */
-	void CopyTrivialYArchiveStatusMembers(const YArchive& ArchiveStatusToCopy);
+	void CopyTrivialFArchiveStatusMembers(const YArchive& ArchiveStatusToCopy);
 
 public:
 

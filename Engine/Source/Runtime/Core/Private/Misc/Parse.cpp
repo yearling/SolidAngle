@@ -1093,25 +1093,25 @@ bool FParse::Resolution(const TCHAR* InResolution, uint32& OutX, uint32& OutY, i
 		const uint32 X = YMath::Max(FCString::Atof(*CmdString), 0.0f);
 
 		// Determine whether the user has entered a resolution and extract the Y dimension.
-		YString FString;
+		YString FTmpString;
 
 		// Find separator between values (Example of expected format: 1280x768)
 		const TCHAR* YValue = NULL;
 		if(FCString::Strchr(*CmdString,'x'))
 		{
 			YValue = const_cast<TCHAR*> (FCString::Strchr(*CmdString,'x')+1);
-			FString = YValue;
+			FTmpString = YValue;
 			// Remove any whitespace from the end of the string
-			FString = FString.Trim().TrimTrailing();
+			FTmpString = FTmpString.Trim().TrimTrailing();
 		}
 
 		// If the Y dimensional value exists then setup to use the specified resolution.
 		uint32 Y = 0;
-		if ( YValue && FString.Len() > 0 )
+		if ( YValue && FTmpString.Len() > 0 )
 		{
 			// See if there is a fullscreen flag on the end
-			YString FullScreenChar = FString.Mid(FString.Len() - 1);
-			YString WindowFullScreenChars = FString.Mid(FString.Len() - 2);
+			YString FullScreenChar = FTmpString.Mid(FTmpString.Len() - 1);
+			YString WindowFullScreenChars = FTmpString.Mid(FTmpString.Len() - 2);
 			int32 WindowMode = OutWindowMode;
 			if (!FullScreenChar.IsNumeric())
 			{
@@ -1133,10 +1133,10 @@ bool FParse::Resolution(const TCHAR* InResolution, uint32& OutX, uint32& OutY, i
 					StringTripLen = 1;
 				}
 
-				FString = FString.Left(FString.Len() - StringTripLen).Trim().TrimTrailing();
+				FTmpString = FTmpString.Left(FTmpString.Len() - StringTripLen).Trim().TrimTrailing();
 			}
 
-			if (FString.IsNumeric())
+			if (FTmpString.IsNumeric())
 			{
 				Y = YMath::Max(FCString::Atof(YValue), 0.0f);
 				OutX = X;

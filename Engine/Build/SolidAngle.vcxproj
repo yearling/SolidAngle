@@ -177,6 +177,8 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\TextData.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\TextHistory.h" />
     <ClInclude Include="..\Source\Runtime\Core\Private\Windows\WindowsEvent.h" />
     <ClInclude Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformFeedbackContextPrivate.h" />
     <ClInclude Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformOutputDevicesPrivate.h" />
@@ -325,10 +327,15 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\TlsAutoCleanup.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\Culture.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\CulturePointer.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\FastDecimalFormat.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\Internationalization.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\ITextData.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\ITextFormatArgumentModifier.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\Text.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\TextFormatter.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\TextLocalizationManager.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\TextNamespaceFwd.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\TextNamespaceUtil.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Logging\IMessageLog.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Logging\LogCategory.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Logging\LogMacros.h" />
@@ -471,14 +478,19 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\SMemoryDefines.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\Archive.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\ArchiveLoadCompressedProxy.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\ArchiveProxy.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\ArchiveSaveCompressedProxy.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\BitReader.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\BitWriter.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\BufferReader.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\CompressedChunkInfo.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\CustomVersion.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\MemoryReader.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\MemoryWriter.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\NameAsStringProxyArchive.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\SObject\AutoPointer.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\DebugSerializationFlags.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\EditorObjectVersion.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\SObject\NameTypes.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\SObject\ObjectMacros.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\SObject\ObjectVersion.h" />
@@ -629,6 +641,7 @@
     <ClCompile Include="..\Source\Runtime\Core\Private\HAL\ThreadHeartBeat.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\HAL\ThreadingBase.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\HAL\SolidAngleMemory.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\Text.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Logging\LogCategory.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Logging\LogMacros.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Logging\LogScopedCategoryAndVerbosityOverride.cpp" />
@@ -697,6 +710,8 @@
     <ClCompile Include="..\Source\Runtime\Core\Private\Misc\Timespan.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Misc\UProjectInfo.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Misc\WildcardString.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\Archive.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\SObject\SolidAngleNames.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Stats\Stats2.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Stats\StatsCommand.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Stats\StatsData.cpp" />

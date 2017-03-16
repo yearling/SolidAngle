@@ -1174,7 +1174,7 @@ protected:
 	/** Frames computed from the combined history. */
 	TArray<int32> Frames;
 
-	/** All raw names that contains a path to an UObject. */
+	/** All raw names that contains a path to an SObject. */
 	TSet<YName> UObjectRawNames;
 
 	/** Current stage of processing. */
