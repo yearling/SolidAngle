@@ -103,6 +103,15 @@
     <Filter Include="Source\Runtime\Core\Private\Async">
       <UniqueIdentifier>{dbc94ec2-6acd-4854-b7da-ac9827048545}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Runtime\Core\Private\Containers">
+      <UniqueIdentifier>{a35e568a-794b-4052-a451-b55bc187392d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Private\Containers\Algo">
+      <UniqueIdentifier>{c41cff7b-2e61-4503-b348-b98a927ab90b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Private\DelegateHandle">
+      <UniqueIdentifier>{ec980c39-da4c-4070-a0b1-e9a112334c73}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\core\Public\HAL\Platform.h">
@@ -134,9 +143,6 @@
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\MathUtility.h">
       <Filter>Source\Runtime\Core\Public\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Private\GenericPlatform\CorePrivatePCH.h">
-      <Filter>Source\Runtime\Core\Private</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAngleMathUtility.h">
       <Filter>Source\Runtime\Core\Public\Math</Filter>
@@ -945,6 +951,102 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Async\ParallelFor.h">
       <Filter>Source\Runtime\Core\Public\Async</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\Algo\FindSortedStringCaseInsensitive.h">
+      <Filter>Source\Runtime\Core\Public\Containers\Algo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\Union.h">
+      <Filter>Source\Runtime\Core\Public\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\TimeGuard.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\StackTracker.h">
+      <Filter>Source\Runtime\Core\Public\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\StandardPlatformString.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\FileHelper.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\ArrayView.h">
+      <Filter>Source\Runtime\Core\Public\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\EngineBuildSettings.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformSymbolication.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\ArchiveSaveCompressedProxy.h">
+      <Filter>Source\Runtime\Core\Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\ArchiveLoadCompressedProxy.h">
+      <Filter>Source\Runtime\Core\Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformSurvey.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\ScopedPointer.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Async\AsyncFileHandle.h">
+      <Filter>Source\Runtime\Core\Public\Async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformSplash.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformMallocCrash.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\BigInt.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformFilemanager.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\FileManagerGeneric.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\VarargsHelper.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\UProjectInfo.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformNamedPipe.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\OutputDeviceMemory.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\OutputDeviceDebug.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\OutputDeviceAnsiError.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\FeedbackContextAnsi.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\OutputDeviceHelper.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\OutputDeviceConsole.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformCriticalSection.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\SingleThreadEvent.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\EventPool.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\ColorList.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\TestMain.cpp">
@@ -970,6 +1072,84 @@
     </ClCompile>
     <ClCompile Include="..\Source\Runtime\Core\Private\Async\TaskGraph.cpp">
       <Filter>Source\Runtime\Core\Private\Async</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Containers\Algo\FindSortedStringCaseInsensitive.cpp">
+      <Filter>Source\Runtime\Core\Private\Containers\Algo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Containers\StackTracker.cpp">
+      <Filter>Source\Runtime\Core\Private\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Containers\String.cpp">
+      <Filter>Source\Runtime\Core\Private\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Containers\Ticker.cpp">
+      <Filter>Source\Runtime\Core\Private\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Containers\Union.cpp">
+      <Filter>Source\Runtime\Core\Private\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Containers\LockFreeList.cpp">
+      <Filter>Source\Runtime\Core\Private\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Delegates\DelegateHandle.cpp">
+      <Filter>Source\Runtime\Core\Private\DelegateHandle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformChunkInstall.cpp">
+      <Filter>Source\Runtime\Core\Private\GenericPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformCrashContext.cpp">
+      <Filter>Source\Runtime\Core\Private\GenericPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformFile.cpp">
+      <Filter>Source\Runtime\Core\Private\GenericPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformMallocCrash.cpp">
+      <Filter>Source\Runtime\Core\Private\GenericPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformMisc.cpp">
+      <Filter>Source\Runtime\Core\Private\GenericPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformNamedPipe.cpp">
+      <Filter>Source\Runtime\Core\Private\GenericPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformOutputDevices.cpp">
+      <Filter>Source\Runtime\Core\Private\GenericPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformProcess.cpp">
+      <Filter>Source\Runtime\Core\Private\GenericPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformProperties.cpp">
+      <Filter>Source\Runtime\Core\Private\GenericPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformSplash.cpp">
+      <Filter>Source\Runtime\Core\Private\GenericPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformStackWalk.cpp">
+      <Filter>Source\Runtime\Core\Private\GenericPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformString.cpp">
+      <Filter>Source\Runtime\Core\Private\GenericPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformSurvey.cpp">
+      <Filter>Source\Runtime\Core\Private\GenericPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformSymbolication.cpp">
+      <Filter>Source\Runtime\Core\Private\GenericPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformTime.cpp">
+      <Filter>Source\Runtime\Core\Private\GenericPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericWindow.cpp">
+      <Filter>Source\Runtime\Core\Private\GenericPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\StandardPlatformString.cpp">
+      <Filter>Source\Runtime\Core\Private\GenericPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericApplication.cpp">
+      <Filter>Source\Runtime\Core\Private\GenericPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformAtomics.cpp">
+      <Filter>Source\Runtime\Core\Private\GenericPlatform</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

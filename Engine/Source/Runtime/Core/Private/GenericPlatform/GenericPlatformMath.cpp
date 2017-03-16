@@ -1,40 +1,47 @@
-#include "CorePrivatePCH.h"
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
+#include "GenericPlatform/GenericPlatformMath.h"
+#include "Misc/AssertionMacros.h"
+#include "Math/SolidAngleMathUtility.h"
+#include "Math/BigInt.h"
 
 static int32 GSRandSeed;
 
-CORE_API void YGenericPlatformMath::SRandInit(int32 Seed)
+
+void YGenericPlatformMath::SRandInit( int32 Seed ) 
 {
-	GSRandSeed = Seed;
+	GSRandSeed = Seed; 
 }
 
-CORE_API int32 YGenericPlatformMath::GetRandSeed()
+int32 YGenericPlatformMath::GetRandSeed()
 {
 	return GSRandSeed;
 }
 
-CORE_API float YGenericPlatformMath::SRand()
-{
+float YGenericPlatformMath::SRand() 
+{ 
 	GSRandSeed = (GSRandSeed * 196314165) + 907633515;
 	union { float f; int32 i; } Result;
 	union { float f; int32 i; } Temp;
 	const float SRandTemp = 1.0f;
 	Temp.f = SRandTemp;
 	Result.i = (Temp.i & 0xff800000) | (GSRandSeed & 0x007fffff);
-	return YPlatformMath::Fractional(Result.f);
-}
+	return YPlatformMath::Fractional( Result.f );
+} 
 
-CORE_API float YGenericPlatformMath::Atan2(float Y, float X)
+float YGenericPlatformMath::Atan2(float Y, float X)
 {
 	//return atan2f(Y,X);
 	// atan2f occasionally returns NaN with perfectly valid input (possibly due to a compiler or library bug).
 	// We are replacing it with a minimax approximation with a max relative error of 7.15255737e-007 compared to the C library function.
 	// On PC this has been measured to be 2x faster than the std C version.
+
 	const float absX = YMath::Abs(X);
 	const float absY = YMath::Abs(Y);
 	const bool yAbsBigger = (absY > absX);
 	float t0 = yAbsBigger ? absY : absX; // Max(absY, absX)
 	float t1 = yAbsBigger ? absX : absY; // Min(absX, absY)
-
+	
 	if (t0 == 0.f)
 		return 0.f;
 
@@ -67,28 +74,25 @@ CORE_API float YGenericPlatformMath::Atan2(float Y, float X)
 	return t3;
 }
 
-
-CORE_API void YGenericPlatformMath::FmodReportError(float X, float Y)
+void YGenericPlatformMath::FmodReportError(float X, float Y)
 {
 	if (Y == 0)
 	{
-		//!!FIXME by zyx
+		ensureMsgf(Y != 0, TEXT("YMath::FMod(X=%f, Y=%f) : Y is zero, this is invalid and would result in NaN!"), X, Y);
 	}
 }
 
 #if WITH_DEV_AUTOMATION_TESTS
 extern float TheCompilerDoesntKnowThisIsAlwaysZero;
 
-void YGenericPlatformMath::AutoTest()
+void YGenericPlatformMath::AutoTest() 
 {
-	//!!FIXME by zyx,添加大整数测试，添加check的实现
-	/*
 	check(IsNaN(sqrtf(-1.0f)));
 	check(!IsFinite(sqrtf(-1.0f)));
-	check(!IsFinite(-1.0f / TheCompilerDoesntKnowThisIsAlwaysZero));
-	check(!IsFinite(1.0f / TheCompilerDoesntKnowThisIsAlwaysZero));
-	check(!IsNaN(-1.0f / TheCompilerDoesntKnowThisIsAlwaysZero));
-	check(!IsNaN(1.0f / TheCompilerDoesntKnowThisIsAlwaysZero));
+	check(!IsFinite(-1.0f/TheCompilerDoesntKnowThisIsAlwaysZero));
+	check(!IsFinite(1.0f/TheCompilerDoesntKnowThisIsAlwaysZero));
+	check(!IsNaN(-1.0f/TheCompilerDoesntKnowThisIsAlwaysZero));
+	check(!IsNaN(1.0f/TheCompilerDoesntKnowThisIsAlwaysZero));
 	check(!IsNaN(MAX_FLT));
 	check(IsFinite(MAX_FLT));
 	check(!IsNaN(0.0f));
@@ -102,6 +106,44 @@ void YGenericPlatformMath::AutoTest()
 	check(FloorLog2(2) == 1);
 	check(FloorLog2(12) == 3);
 	check(FloorLog2(16) == 4);
-	*/
+
+	{
+		// Shift test
+		const uint32 ShiftValue[] = { 0xCACACAC2U, 0x1U, 0x0U, 0x0U, 0x0U, 0x0U, 0x0U, 0x0U };
+		int256 TestValue(ShiftValue);
+		int256 Shift(TestValue);
+		Shift <<= 88;
+		Shift >>= 88;
+		check(Shift == TestValue);
+	}
+
+	{
+		int256 Dividend(3806401LL);
+		int256 Divisor(3233LL);
+		int256 Remainder;
+		Dividend.DivideWithRemainder(Divisor, Remainder);
+		check(Dividend.ToInt() == 1177LL);
+		check(Remainder.ToInt() == 1160LL);	
+	}
+
+	{
+		// Division test: 4294967296LL / 897LL = 4788146LL, R = 334LL
+		int256 Dividend(4294967296LL);
+		int256 Divisor(897LL);
+		int256 Remainder;
+		Dividend.DivideWithRemainder(Divisor, Remainder);
+		check(Dividend.ToInt() == 4788146LL);
+		check(Remainder.ToInt() == 334LL);
+	}
+
+	{
+		// Shift test with multiple of 32
+		int256 Value(1);
+		Value <<= 32;
+		check(Value.ToInt() == 4294967296LL);
+		Value >>= 32;
+		check(Value.ToInt() == 1LL);
+	}
 }
-#endif
+
+#endif //WITH_DEV_AUTOMATION_TESTS

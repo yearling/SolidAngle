@@ -1,5 +1,18 @@
 #pragma once
 
+/*=============================================================================================
+GenericPlatformMath.h: Generic platform Math classes, mostly implemented with ANSI C++
+==============================================================================================*/
+
+#pragma once
+
+#include "CoreTypes.h"
+#include "Containers/ContainersFwd.h"
+#include "HAL/PlatformCrt.h"
+
+/**
+* Generic implementation for most platforms
+*/
 struct YGenericPlatformMath
 {
 	// Convert a float to an integer with truncation towards zero.

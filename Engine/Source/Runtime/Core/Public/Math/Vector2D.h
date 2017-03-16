@@ -1,6 +1,13 @@
 #pragma once
 
-#include "SolidAngleMathUtility.h"
+#include "CoreTypes.h"
+#include "Misc/AssertionMacros.h"
+#include "Misc/Crc.h"
+#include "Math/SolidAngleMathUtility.h"
+#include "Containers/SolidAngleString.h"
+#include "Misc/Parse.h"
+#include "Math/IntPoint.h"
+#include "Logging/LogMacros.h"
 
 /**
 * A vector in 2-D space composed of components (X, Y) with floating point precision.
@@ -39,8 +46,7 @@ public:
 	*
 	* @param InPos Integer point used to set this vector.
 	*/
-	//!!FIXME by zyx
-	//FORCEINLINE YVector2D(YIntPoint InPos);
+	FORCEINLINE YVector2D(YIntPoint InPos);
 
 	/**
 	* Constructor which initializes all components to zero.
@@ -419,8 +425,7 @@ public:
 	*
 	* @return New Int Point from this vector.
 	*/
-	//!!FIXME by zyx
-	//YIntPoint IntPoint() const;
+	YIntPoint IntPoint() const;
 
 	/**
 	* Creates a copy of this vector with both axes clamped to the given range.
@@ -448,8 +453,7 @@ public:
 	*
 	* @return Text describing the vector.
 	*/
-	//!!FIXME by zyx
-	//YString ToString() const;
+	YString ToString() const;
 
 	/**
 	* Initialize this Vector based on an YString. The String is expected to contain X=, Y=.
@@ -458,8 +462,7 @@ public:
 	* @param	InSourceString	YString containing the vector values.
 	* @return true if the X,Y values were read successfully; false otherwise.
 	*/
-	//!!FIXME by zyx
-	//bool InitFromString(const YString& InSourceString);
+	bool InitFromString(const YString& InSourceString);
 
 	/**
 	* Serialize a vector.
@@ -468,20 +471,18 @@ public:
 	* @param V Vector being serialized.
 	* @return Reference to Archive after serialization.
 	*/
-	//!!FIXME by zyx
-	//friend YArchive& operator<<(YArchive& Ar, YVector2D& V)
-	//{
-	//	// @warning BulkSerialize: YVector2D is serialized as memory dump
-	//	// See TArray::BulkSerialize for detailed description of implied limitations.
-	//	return Ar << V.X << V.Y;
-	//}
+	friend YArchive& operator<<(YArchive& Ar, YVector2D& V)
+	{
+		// @warning BulkSerialize: YVector2D is serialized as memory dump
+		// See TArray::BulkSerialize for detailed description of implied limitations.
+		return Ar << V.X << V.Y;
+	}
 
-	//!!FIXME by zyx
-	//bool Serialize(YArchive& Ar)
-	//{
-	//	Ar << *this;
-	//	return true;
-	//}
+	bool Serialize(YArchive& Ar)
+	{
+		Ar << *this;
+		return true;
+	}
 
 #if ENABLE_NAN_DIAGNOSTIC
 	FORCEINLINE void DiagnosticCheckNaN()
@@ -511,8 +512,7 @@ public:
 	* Network serialization function.
 	* YVectors NetSerialize without quantization (ie exact values are serialized).
 	*/
-	//!!FIXME by zyx
-	//CORE_API bool NetSerialize(YArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
+	CORE_API bool NetSerialize(YArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
 
 	/** Converts spherical coordinates on the unit sphere into a Cartesian unit length vector. */
 	inline YVector SphericalToUnitCartesian() const;
@@ -524,12 +524,11 @@ public:
 * @param Vector the vector to create a hash value for
 * @return The hash value from the components
 */
-//!!FIXME by zyx
-//FORCEINLINE uint32 GetTypeHash(const YVector2D& Vector)
-//{
-//	// Note: this assumes there's no padding in YVector2D that could contain uncompared data.
-//	return FCrc::MemCrc_DEPRECATED(&Vector, sizeof(Vector));
-//}
+FORCEINLINE uint32 GetTypeHash(const YVector2D& Vector)
+{
+	// Note: this assumes there's no padding in YVector2D that could contain uncompared data.
+	return FCrc::MemCrc_DEPRECATED(&Vector, sizeof(Vector));
+}
 
 /* YVector2D inline functions
 *****************************************************************************/
@@ -539,20 +538,18 @@ FORCEINLINE YVector2D operator*(float Scale, const YVector2D& V)
 	return V.operator*(Scale);
 }
 
-//!!FIXME by zyx
-//template <> struct TIsPODType<YVector2D> { enum { Value = true }; };
+template <> struct TIsPODType<YVector2D> { enum { Value = true }; };
 
 
 FORCEINLINE YVector2D::YVector2D(float InX, float InY)
 	: X(InX), Y(InY)
 { }
 
-//!!FIXME by zyx
-//FORCEINLINE YVector2D::YVector2D(YIntPoint InPos)
-//{
-//	X = (float)InPos.X;
-//	Y = (float)InPos.Y;
-//}
+FORCEINLINE YVector2D::YVector2D(YIntPoint InPos)
+{
+	X = (float)InPos.X;
+	Y = (float)InPos.Y;
+}
 
 
 FORCEINLINE YVector2D::YVector2D(EForceInit)
