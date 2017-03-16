@@ -52,7 +52,7 @@ void ReportImageIntegrityStatus(const TCHAR* InMessage, const int32 InCode)
 	GLog->PanicFlushThreadedLogs();
 	// GErrorMessage here is very unfortunate but it's used internally by the crash context code.
 	FCString::Strcpy(GErrorMessage, ARRAY_COUNT(GErrorMessage), *ErrorString);
-	// Skip macros and FDebug, we always want this to fire
+	// Skip macros and YDebug, we always want this to fire
 	NewReportEnsure(*ErrorString);
 	GErrorMessage[0] = '\0';
 #endif
@@ -97,7 +97,7 @@ void ReportInteractiveEnsure(const TCHAR* InMessage)
 	GLog->PanicFlushThreadedLogs();
 	// GErrorMessage here is very unfortunate but it's used internally by the crash context code.
 	FCString::Strcpy(GErrorMessage, ARRAY_COUNT(GErrorMessage), InMessage);
-	// Skip macros and FDebug, we always want this to fire
+	// Skip macros and YDebug, we always want this to fire
 	NewReportEnsure(InMessage);
 	GErrorMessage[0] = '\0';
 #endif

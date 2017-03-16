@@ -162,7 +162,7 @@ uint32 FThreadHeartBeat::Run()
 				GLog->PanicFlushThreadedLogs();
 				// GErrorMessage here is very unfortunate but it's used internally by the crash context code.
 				FCString::Strcpy(GErrorMessage, ARRAY_COUNT(GErrorMessage), *ErrorMessage);
-				// Skip macros and FDebug, we always want this to fire
+				// Skip macros and YDebug, we always want this to fire
 				NewReportEnsure(*ErrorMessage);
 				GErrorMessage[0] = '\0';
 #endif

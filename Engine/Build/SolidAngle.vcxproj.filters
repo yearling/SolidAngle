@@ -118,6 +118,9 @@
     <Filter Include="Source\Runtime\Core\Private\HAL\Allocators">
       <UniqueIdentifier>{4e01f603-97e7-47c0-b9f8-6145f2d08ac7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Runtime\Core\Private\Logging">
+      <UniqueIdentifier>{896dd03f-7677-4173-8b10-e3f947d4e6b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\core\Public\HAL\Platform.h">
@@ -1119,6 +1122,24 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\ThreadSafeCounter64.h">
       <Filter>Source\Runtime\Core\Public\HAL</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Logging\LogSuppressionInterface.h">
+      <Filter>Source\Runtime\Core\Public\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Logging\LogScopedCategoryAndVerbosityOverride.h">
+      <Filter>Source\Runtime\Core\Public\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Logging\LogScopedVerbosityOverride.h">
+      <Filter>Source\Runtime\Core\Public\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Logging\MessageLog.h">
+      <Filter>Source\Runtime\Core\Public\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Logging\TokenizedMessage.h">
+      <Filter>Source\Runtime\Core\Public\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Logging\IMessageLog.h">
+      <Filter>Source\Runtime\Core\Public\Logging</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\TestMain.cpp">
@@ -1282,6 +1303,27 @@
     </ClCompile>
     <ClCompile Include="..\Source\Runtime\Core\Private\HAL\SolidAngleMemory.cpp">
       <Filter>Source\Runtime\Core\Private\HAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Logging\LogMacros.cpp">
+      <Filter>Source\Runtime\Core\Private\Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Logging\LogScopedCategoryAndVerbosityOverride.cpp">
+      <Filter>Source\Runtime\Core\Private\Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Logging\LogScopedVerbosityOverride.cpp">
+      <Filter>Source\Runtime\Core\Private\Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Logging\LogSuppressionInterface.cpp">
+      <Filter>Source\Runtime\Core\Private\Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Logging\MessageLog.cpp">
+      <Filter>Source\Runtime\Core\Private\Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Logging\TokenizedMessage.cpp">
+      <Filter>Source\Runtime\Core\Private\Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Logging\LogCategory.cpp">
+      <Filter>Source\Runtime\Core\Private\Logging</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
