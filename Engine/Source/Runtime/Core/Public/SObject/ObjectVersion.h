@@ -354,7 +354,7 @@ enum EUnrealEngineObjectUE4Version
 	VER_UE4_ADD_LB_WEIGHTBLEND,
 	// Add root component to an foliage actor, all foliage cluster components will be attached to a root
 	VER_UE4_ADD_ROOTCOMPONENT_TO_FOLIAGEACTOR,
-	// FMaterialInstanceBasePropertyOverrides didn't use proper UObject serialize
+	// FMaterialInstanceBasePropertyOverrides didn't use proper SObject serialize
 	VER_UE4_FIX_MATERIAL_PROPERTY_OVERRIDE_SERIALIZE,
 	// Addition of linear color sampler. color sample type is changed to linear sampler if source texture !sRGB
 	VER_UE4_ADD_LINEAR_COLOR_SAMPLER,

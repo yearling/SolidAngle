@@ -14,7 +14,7 @@
 #include "Misc/Optional.h"
 #include "Misc/CoreMisc.h"
 #include "Modules/ModuleInterface.h"
-//#include "Modules/Boilerplate/ModuleBoilerplate.h"
+#include "Modules/Boilerplate/ModuleBoilerplate.h"
 
 #if WITH_HOT_RELOAD
 /** If true, we are reloading a class for HotReload */
@@ -600,7 +600,7 @@ private:
 	FSimpleMulticastDelegate ProcessLoadedObjectsCallback;
 
 	/** When module manager is linked against an application that supports UObjects, this delegate will be primed
-	at startup to provide information about whether a UObject package is loaded into memory. */
+	at startup to provide information about whether a SObject package is loaded into memory. */
 	FIsPackageLoadedCallback IsPackageLoaded;
 
 	/** Array of engine binaries directories. */

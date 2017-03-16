@@ -1,15 +1,15 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 /*=============================================================================
-UObjectBase.h: Unreal UObject base class
+UObjectBase.h: Unreal SObject base class
 =============================================================================*/
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Stats/Stats.h"
-#include "UObject/ObjectMacros.h"
-#include "UObject/UObjectGlobals.h"
+#include "SObject/ObjectMacros.h"
+#include "SObject/UObjectGlobals.h"
 
 DECLARE_DWORD_COUNTER_STAT_EXTERN(TEXT("STAT_UObjectsStatGroupTester"), STAT_UObjectsStatGroupTester, STATGROUP_UObjects, COREUOBJECT_API);
 
@@ -46,7 +46,7 @@ public:
 	* @param	InOuter				outer for this object
 	* @param	InName				name of the new object
 	*/
-	UObjectBase(UClass* InClass, EObjectFlags InFlags, EInternalObjectFlags InInternalFlags, UObject *InOuter, YName InName);
+	UObjectBase(UClass* InClass, EObjectFlags InFlags, EInternalObjectFlags InInternalFlags, SObject *InOuter, YName InName);
 
 	/**
 	* Final destructor, removes the object from the object array, and indirectly, from any annotations
@@ -54,7 +54,7 @@ public:
 	virtual ~UObjectBase();
 
 	/**
-	* Emit GC tokens for UObjectBase, this might be UObject::StaticClass or Default__Class
+	* Emit GC tokens for UObjectBase, this might be SObject::StaticClass or Default__Class
 	**/
 	static void EmitBaseReferences(UClass *RootClass);
 
@@ -65,7 +65,7 @@ protected:
 	* @param NewName	new name for this object
 	* @param NewOuter	new outer for this object, if NULL, outer will be unchanged
 	*/
-	void LowLevelRename(YName NewName, UObject *NewOuter = NULL);
+	void LowLevelRename(YName NewName, SObject *NewOuter = NULL);
 
 	/** Force any base classes to be registered first */
 	virtual void RegisterDependencies() {}
@@ -116,7 +116,7 @@ public:
 	{
 		return ClassPrivate;
 	}
-	FORCEINLINE UObject* GetOuter() const
+	FORCEINLINE SObject* GetOuter() const
 	{
 		return OuterPrivate;
 	}
@@ -179,7 +179,7 @@ public:
 	/**
 	*	Atomically adds the specified flags.
 	*	Do not use unless you know what you are doing.
-	*	Designed to be used only by parallel GC and UObject loading thread.
+	*	Designed to be used only by parallel GC and SObject loading thread.
 	*/
 	FORCENOINLINE void AtomicallySetFlags(EObjectFlags FlagsToAdd)
 	{
@@ -195,7 +195,7 @@ public:
 	/**
 	*	Atomically clears the specified flags.
 	*	Do not use unless you know what you are doing.
-	*	Designed to be used only by parallel GC and UObject loading thread.
+	*	Designed to be used only by parallel GC and SObject loading thread.
 	*/
 	FORCENOINLINE void AtomicallyClearFlags(EObjectFlags FlagsToClear)
 	{
@@ -224,7 +224,7 @@ private:
 	YName							NamePrivate;
 
 	/** Object this object resides in. */
-	UObject*						OuterPrivate;
+	SObject*						OuterPrivate;
 
 
 	/** Stat id of this object, 0 if nobody asked for it yet */
@@ -248,10 +248,10 @@ namespace Internal
 }
 
 /**
-* Checks to see if the UObject subsystem is fully bootstrapped and ready to go.
+* Checks to see if the SObject subsystem is fully bootstrapped and ready to go.
 * If true, then all objects are registered and auto registration of natives is over, forever.
 *
-* @return true if the UObject subsystem is initialized.
+* @return true if the SObject subsystem is initialized.
 */
 FORCEINLINE bool UObjectInitialized() { return Internal::GObjInitialized; }
 
@@ -345,7 +345,7 @@ struct FCompiledInDeferStruct
 /**
 * Either call the passed in singleton, or if this is hot reload, find the existing struct
 */
-COREUOBJECT_API class UScriptStruct *GetStaticStruct(class UScriptStruct *(*InRegister)(), UObject* StructOuter, const TCHAR* StructName, SIZE_T Size, uint32 Crc);
+COREUOBJECT_API class UScriptStruct *GetStaticStruct(class UScriptStruct *(*InRegister)(), SObject* StructOuter, const TCHAR* StructName, SIZE_T Size, uint32 Crc);
 
 /**
 * Stashes the singleton function that builds a compiled in enum. Later, this is executed.
@@ -367,26 +367,26 @@ struct FCompiledInDeferEnum
 /**
 * Either call the passed in singleton, or if this is hot reload, find the existing enum
 */
-COREUOBJECT_API class UEnum *GetStaticEnum(class UEnum *(*InRegister)(), UObject* EnumOuter, const TCHAR* EnumName);
+COREUOBJECT_API class UEnum *GetStaticEnum(class UEnum *(*InRegister)(), SObject* EnumOuter, const TCHAR* EnumName);
 
-COREUOBJECT_API class UScriptStruct* FindExistingStructIfHotReloadOrDynamic(UObject* Outer, const TCHAR* StructName, SIZE_T Size, uint32 Crc, bool bIsDynamic);
-COREUOBJECT_API class UEnum* FindExistingEnumIfHotReloadOrDynamic(UObject* Outer, const TCHAR* EnumName, SIZE_T Size, uint32 Crc, bool bIsDynamic);
+COREUOBJECT_API class UScriptStruct* FindExistingStructIfHotReloadOrDynamic(SObject* Outer, const TCHAR* StructName, SIZE_T Size, uint32 Crc, bool bIsDynamic);
+COREUOBJECT_API class UEnum* FindExistingEnumIfHotReloadOrDynamic(SObject* Outer, const TCHAR* EnumName, SIZE_T Size, uint32 Crc, bool bIsDynamic);
 
-/** Must be called after a module has been loaded that contains UObject classes */
+/** Must be called after a module has been loaded that contains SObject classes */
 COREUOBJECT_API void ProcessNewlyLoadedUObjects();
 
 #if WITH_HOT_RELOAD
 /** Map of duplicated CDOs for reinstancing during hot-reload purposes. */
-COREUOBJECT_API TMap<UObject*, UObject*>& GetDuplicatedCDOMap();
+COREUOBJECT_API TMap<SObject*, SObject*>& GetDuplicatedCDOMap();
 #endif // WITH_HOT_RELOAD
 
 /**
-* Final phase of UObject initialization. all auto register objects are added to the main data structures.
+* Final phase of SObject initialization. all auto register objects are added to the main data structures.
 */
 void UObjectBaseInit();
 
 /**
-* Final phase of UObject shutdown
+* Final phase of SObject shutdown
 */
 void UObjectBaseShutdown();
 

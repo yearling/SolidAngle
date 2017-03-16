@@ -39,7 +39,7 @@ private:
 	{
 		if (FunctionName != NAME_None)
 		{
-			if (UObject* ObjectPtr = Object.Get())
+			if (SObject* ObjectPtr = Object.Get())
 			{
 				return ((UObjectTemplate*)ObjectPtr)->FindFunction(FunctionName) != nullptr;
 			}
@@ -56,7 +56,7 @@ public:
 	* @param InObject The object to call the function on.
 	* @param InFunctionName The name of the function to call.
 	*/
-	void BindUFunction(UObject* InObject, const YName& InFunctionName)
+	void BindUFunction(SObject* InObject, const YName& InFunctionName)
 	{
 		Object = InObject;
 		FunctionName = InFunctionName;
@@ -69,7 +69,7 @@ public:
 	*/
 	inline bool IsBound() const
 	{
-		return IsBound_Internal<UObject>();
+		return IsBound_Internal<SObject>();
 	}
 
 	/**
@@ -163,10 +163,10 @@ public:
 	*
 	* @return	The object
 	*/
-	UObject* GetUObject()
+	SObject* GetUObject()
 	{
-		// Downcast UObjectBase to UObject
-		return static_cast< UObject* >(Object.Get());
+		// Downcast UObjectBase to SObject
+		return static_cast< SObject* >(Object.Get());
 	}
 
 	/**
@@ -174,10 +174,10 @@ public:
 	*
 	* @return	The object
 	*/
-	const UObject* GetUObject() const
+	const SObject* GetUObject() const
 	{
-		// Downcast UObjectBase to UObject
-		return static_cast< const UObject* >(Object.Get());
+		// Downcast UObjectBase to SObject
+		return static_cast< const SObject* >(Object.Get());
 	}
 
 	/**
@@ -185,10 +185,10 @@ public:
 	*
 	* @return	The object
 	*/
-	UObject* GetUObjectEvenIfUnreachable()
+	SObject* GetUObjectEvenIfUnreachable()
 	{
-		// Downcast UObjectBase to UObject
-		return static_cast< UObject* >(Object.GetEvenIfUnreachable());
+		// Downcast UObjectBase to SObject
+		return static_cast< SObject* >(Object.GetEvenIfUnreachable());
 	}
 
 	/**
@@ -196,10 +196,10 @@ public:
 	*
 	* @return	The object
 	*/
-	const UObject* GetUObjectEvenIfUnreachable() const
+	const SObject* GetUObjectEvenIfUnreachable() const
 	{
-		// Downcast UObjectBase to UObject
-		return static_cast< const UObject* >(Object.GetEvenIfUnreachable());
+		// Downcast UObjectBase to SObject
+		return static_cast< const SObject* >(Object.GetEvenIfUnreachable());
 	}
 
 	/**
@@ -299,7 +299,7 @@ public:
 	* @param	InFunctionName	Function name of the delegate to check
 	* @return	True if the delegate is already in the list.
 	*/
-	bool Contains(const UObject* InObject, YName InFunctionName) const
+	bool Contains(const SObject* InObject, YName InFunctionName) const
 	{
 		return InvocationList.ContainsByPredicate([=](const TScriptDelegate<TWeakPtr>& Delegate) {
 			return Delegate.GetFunctionName() == InFunctionName && Delegate.IsBoundToObjectEvenIfUnreachable(InObject);
@@ -357,7 +357,7 @@ public:
 	* @param	InObject		Object of the delegate to remove
 	* @param	InFunctionName	Function name of the delegate to remove
 	*/
-	void Remove(const UObject* InObject, YName InFunctionName)
+	void Remove(const SObject* InObject, YName InFunctionName)
 	{
 		// Remove the delegate
 		RemoveInternal(InObject, InFunctionName);
@@ -374,7 +374,7 @@ public:
 	*
 	* @param InObject The object to remove bindings for.
 	*/
-	void RemoveAll(UObject* Object)
+	void RemoveAll(SObject* Object)
 	{
 		for (int32 BindingIndex = InvocationList.Num() - 1; BindingIndex >= 0; --BindingIndex)
 		{
@@ -478,12 +478,12 @@ public:
 	* need call this function in normal circumstances.
 	* @return	List of objects bound to this delegate
 	*/
-	TArray< UObject* > GetAllObjects()
+	TArray< SObject* > GetAllObjects()
 	{
-		TArray< UObject* > OutputList;
+		TArray< SObject* > OutputList;
 		for (typename FInvocationList::TIterator CurDelegate(InvocationList); CurDelegate; ++CurDelegate)
 		{
-			UObject* CurObject = CurDelegate->GetUObject();
+			SObject* CurObject = CurDelegate->GetUObject();
 			if (CurObject != nullptr)
 			{
 				OutputList.Add(CurObject);
@@ -542,7 +542,7 @@ protected:
 	* @param	InObject		Object of the delegate to remove
 	* @param	InFunctionName	Function name of the delegate to remove
 	*/
-	void RemoveInternal(const UObject* InObject, YName InFunctionName) const
+	void RemoveInternal(const SObject* InObject, YName InFunctionName) const
 	{
 		int32 FoundDelegate = InvocationList.IndexOfByPredicate([=](const TScriptDelegate<TWeakPtr>& Delegate) {
 			return Delegate.GetFunctionName() == InFunctionName && Delegate.IsBoundToObjectEvenIfUnreachable(InObject);

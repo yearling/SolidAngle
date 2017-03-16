@@ -114,7 +114,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;PLATFORM_WINDOWS;CORE_API=;_DEBUG;_CONSOLE;WITH_DEV_AUTOMATION_TESTS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;PLATFORM_WINDOWS;CORE_API=;_DEBUG;_CONSOLE;WITH_DEV_AUTOMATION_TESTS=1;UE_IS_ENGINE_MODULE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public;..\Source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FloatingPointModel>Fast</FloatingPointModel>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
@@ -187,11 +187,13 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\ContainersFwd.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\EnumAsByte.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\IndirectArray.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\LazyPrintf.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\LockFreeFixedSizeAllocator.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\LockFreeList.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\LockFreeListImpl.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\LockFreeVoidPointerListBase.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\map.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\Queue.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\ScriptArray.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\Set.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\SolidAngleString.h" />
@@ -323,6 +325,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Logging\MessageLog.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Logging\TokenizedMessage.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Axis.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\BasicMathExpressionEvaluator.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\BigInt.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\CapsuleShape.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Color.h" />
@@ -358,8 +361,11 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Vector2D.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Vector4.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\VectorRegister.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\AES.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\App.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\AssertionMacros.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\AutomationTest.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Base64.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\BufferedOutputDevice.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Build.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ByteSwap.h" />
@@ -368,6 +374,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CompressedGrowableBuffer.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Compression.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ConfigCacheIni.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ConfigManifest.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CoreDefines.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CoreDelegates.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CoreMisc.h" />
@@ -375,20 +382,35 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CoreStats.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Crc.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CString.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\DataCodec.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\DateTime.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\DefaultValueHelper.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\EngineBuildSettings.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\EngineVersion.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\EngineVersionBase.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\EnumClassFlags.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\EventPool.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Exec.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ExpressionParser.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ExpressionParserTypes.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\FbxErrors.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\FeedbackContext.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\FeedbackContextMarkup.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\FileHelper.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Guid.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\IFilter.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\InteractiveProcess.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\IQueuedWork.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\LocalTimestampDirectoryVisitor.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\MapErrors.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\MemStack.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\MessageDialog.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\MonitoredProcess.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\MonolithicHeaderBoilerplate.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\NetworkGuid.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\NetworkVersion.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\NoopCounter.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ObjectThumbnail.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Optional.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\OutputDevice.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\OutputDeviceAnsiError.h" />
@@ -399,12 +421,14 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\OutputDeviceFile.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\OutputDeviceHelper.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\OutputDeviceMemory.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\OutputDeviceNull.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\OutputDeviceRedirector.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Parse.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Paths.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\QueuedThreadPool.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\RemoteConfigIni.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ScopedEvent.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ScopedSlowTask.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ScopeLock.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\SecureHash.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\SingleThreadEvent.h" />
@@ -412,12 +436,19 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\SlowTask.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\SlowTaskStack.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\StringFormatArg.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\StringFormatter.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\StringUtility.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\StructBuilder.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\TextFilter.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\TextFilterExpressionEvaluator.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\TextFilterUtils.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\TimeGuard.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Timespan.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\UProjectInfo.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\VarArgs.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\VarargsHelper.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\WildcardString.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Modules\ModuleBoilerplate\ModuleBoilerplate.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Modules\ModuleInterface.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Modules\ModuleManager.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\MallocProfiler.h" />
@@ -426,11 +457,18 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\Archive.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\ArchiveLoadCompressedProxy.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\ArchiveSaveCompressedProxy.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\BitReader.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\BitWriter.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\BufferReader.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\CustomVersion.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\MemoryReader.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\MemoryWriter.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\SObject\AutoPointer.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\SObject\NameTypes.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\SObject\ObjectMacros.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\SObject\ObjectVersion.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\PropertyPortFlags.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\ReleaseObjectVersion.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\SObject\ScriptDelegates.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\SObject\SObjectHierarchyFwd.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\SObject\SolidAngleNames.h" />
@@ -480,6 +518,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\TypeWrapper.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\UniqueObj.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\UniquePtr.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\ValueOrError.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Traits\IsContiguousContainer.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\AllowWindowsPlatformTypes.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\COMPointer.h" />
@@ -509,6 +548,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformTLS.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsSystemIncludes.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsTextInputMethodSystem.h" />
+    <ClInclude Include="..\Source\Runtime\Launch\Resources\Version.h" />
     <ClInclude Include="..\Source\Runtime\Launch\Resources\Windows\resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -569,15 +609,79 @@
     <ClCompile Include="..\Source\Runtime\Core\Private\Logging\LogSuppressionInterface.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Logging\MessageLog.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Logging\TokenizedMessage.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\AES.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\App.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Misc\AssertionMacros.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\AutomationTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\Base64.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\BufferedOutputDevice.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\CommandLine.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\Compression.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\ConfigCacheIni.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\ConfigManifest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\CoreDelegates.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\CoreGlobals.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\CoreMisc.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\Crc.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\CString.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\DataCodec.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\DateTime.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\DefaultValueHelper.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\EngineBuildSettings.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\EngineVersion.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\Exec.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\ExpressionParser.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\ExpressionParserExamples.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\FbxErrors.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\FeedbackContext.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\FeedbackContextMarkup.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\FileHelper.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\Guid.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\GuidGenerator.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\InteractiveProcess.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\LocalTimestampDirectoryVisitor.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\MapErrors.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\MemStack.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\MessageDialog.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\MonitoredProcess.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\NetworkVersion.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\ObjectThumbnail.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\OutputDevice.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\OutputDeviceAnsiError.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\OutputDeviceArchiveWrapper.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\OutputDeviceDebug.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\OutputDeviceFile.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\OutputDeviceHelper.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\OutputDeviceMemory.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\OutputDeviceNull.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\OutputDeviceRedirector.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\Parse.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\Paths.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\RemoteConfigIni.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\SecureHash.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\SlowTask.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\SlowTaskStack.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\StringFormatter.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\StringUtility.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\TextFilterExpressionEvaluator.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\TextFilterTests.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\TextFilterUtils.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\TimeGuard.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\Timespan.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\UProjectInfo.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\WildcardString.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformMemory.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformMisc.cpp" />
     <ClCompile Include="..\Source\Runtime\TestMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Source\Runtime\Core\Private\Misc\AES.tps" />
+    <None Include="..\Source\Runtime\Core\Private\Misc\Crc.tps" />
+    <None Include="..\Source\Runtime\Core\Private\Misc\GuidGenerator.tps" />
     <None Include="..\Source\Runtime\Core\Public\Delegates\DelegateSignatureImpl.inl" />
     <None Include="..\Source\Runtime\Core\Public\HAL\YMemory.inl" />
     <None Include="..\Source\Runtime\Core\Public\Math\Matrix.inl" />
+    <None Include="..\Source\Runtime\Core\Public\Misc\ExpressionParserTypes.inl" />
     <None Include="..\Source\Runtime\Core\Public\SObject\SolidAngleNames.inl" />
     <None Include="..\Source\Runtime\Core\Public\Templates\SharedPointerTesting.inl" />
     <None Include="ClassDiagram.cd" />

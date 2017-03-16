@@ -5,8 +5,8 @@
 #if !PLATFORM_USE_SYSTEM_VSWPRINTF
 
 #include "GenericPlatform/StandardPlatformString.h"
-#include "HAL/UnrealMemory.h"
-#include "Templates/UnrealTemplate.h"
+#include "HAL/SolidAngleMemory.h"
+#include "Templates/SolidAngleTemplate.h"
 #include "Logging/LogCategory.h"
 #include "Logging/LogMacros.h"
 

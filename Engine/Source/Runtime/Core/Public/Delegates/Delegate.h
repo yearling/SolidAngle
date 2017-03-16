@@ -120,7 +120,7 @@
 *  -----------------------------------------------------------------------------------------------
 *
 *	The delegate system understands certain types of objects, and additional features are enabled when
-*  using these objects.  If you bind a delegate to a member of a UObject or shared pointer class, the
+*  using these objects.  If you bind a delegate to a member of a SObject or shared pointer class, the
 *  delegate system can keep a weak reference to the object, so that if the object gets destroyed out
 *  from underneath the delegate, you'll be able to handle these cases by calling IsBound() or
 *  ExecuteIfBound() functions.  Note the special binding syntax for the various types of supported objects.
@@ -155,7 +155,7 @@
 *
 *                       Single-cast delegates:  DECLARE_DELEGATE...()
 *                        Multi-cast delegates:  DECLARE_MULTICAST_DELEGATE...()
-*	 Dynamic (UObject, serializable) delegates:  DECLARE_DYNAMIC_DELEGATE...()
+*	 Dynamic (SObject, serializable) delegates:  DECLARE_DYNAMIC_DELEGATE...()
 */
 
 
@@ -191,7 +191,7 @@
 		{ \
 		} \
 		\
-		/** Construction from an FScriptDelegate must be explicit.  This is really only used by UObject system internals. */ \
+		/** Construction from an FScriptDelegate must be explicit.  This is really only used by SObject system internals. */ \
 		explicit DynamicDelegateName( const TScriptDelegate<>& InScriptDelegate ) \
 			: TBaseDynamicDelegate<TWeakPtr, __VA_ARGS__>( InScriptDelegate ) \
 		{ \
@@ -225,7 +225,7 @@
 		{ \
 		} \
 		\
-		/** Construction from an FScriptDelegate must be explicit.  This is really only used by UObject system internals. */ \
+		/** Construction from an FScriptDelegate must be explicit.  This is really only used by SObject system internals. */ \
 		explicit DynamicDelegateName( const TScriptDelegate<>& InScriptDelegate ) \
 			: TBaseDynamicDelegate<TWeakPtr, __VA_ARGS__>( InScriptDelegate ) \
 		{ \
@@ -251,7 +251,7 @@ class DynamicMulticastDelegateName : public TBaseDynamicMulticastDelegate<TWeakP
 		{ \
 		} \
 		\
-		/** Construction from an FMulticastScriptDelegate must be explicit.  This is really only used by UObject system internals. */ \
+		/** Construction from an FMulticastScriptDelegate must be explicit.  This is really only used by SObject system internals. */ \
 		explicit DynamicMulticastDelegateName( const TMulticastScriptDelegate<>& InMulticastScriptDelegate ) \
 			: TBaseDynamicMulticastDelegate<TWeakPtr, __VA_ARGS__>( InMulticastScriptDelegate ) \
 		{ \

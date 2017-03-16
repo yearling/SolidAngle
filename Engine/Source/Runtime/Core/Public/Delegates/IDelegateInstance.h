@@ -23,7 +23,7 @@ namespace EDelegateInstanceType
 		/** UFunction delegate */
 		UFunction,
 
-		/** Member function pointer to method in UObject-based class */
+		/** Member function pointer to method in SObject-based class */
 		UObjectMethod,
 
 		/** Raw C++ static function pointer */
@@ -118,11 +118,11 @@ public:
 	virtual YName GetFunctionName() const = 0;
 
 	/**
-	* Returns the UObject that this delegate instance is bound to.
+	* Returns the SObject that this delegate instance is bound to.
 	*
-	* @return Pointer to the UObject, or nullptr if not bound to a UObject.
+	* @return Pointer to the SObject, or nullptr if not bound to a SObject.
 	*/
-	virtual UObject* GetUObject() const = 0;
+	virtual SObject* GetUObject() const = 0;
 
 	/**
 	* Returns raw pointer to the delegate method.

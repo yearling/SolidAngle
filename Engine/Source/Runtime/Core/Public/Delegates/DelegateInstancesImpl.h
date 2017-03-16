@@ -28,7 +28,7 @@ enum class ESPMode;
 /**
 * Implements a delegate binding for UFunctions.
 *
-* @params UserClass Must be an UObject derived class.
+* @params UserClass Must be an SObject derived class.
 */
 template <class UserClass, typename FuncType, typename... VarTypes>
 class TBaseUFunctionDelegateInstance;
@@ -44,7 +44,7 @@ private:
 	typedef TBaseUFunctionDelegateInstance<UserClass, RetValType(ParamTypes...), VarTypes...> UnwrappedThisType;
 
 	//!!FIXME by zyx
-	//static_assert(TPointerIsConvertibleFromTo<UserClass, const UObjectBase>::Value, "You cannot use UFunction delegates with non UObject classes.");
+	//static_assert(TPointerIsConvertibleFromTo<UserClass, const UObjectBase>::Value, "You cannot use UFunction delegates with non SObject classes.");
 
 public:
 	TBaseUFunctionDelegateInstance(UserClass* InUserObject, const YName& InFunctionName, VarTypes... Vars)
@@ -96,9 +96,9 @@ public:
 		return EDelegateInstanceType::UFunction;
 	}
 
-	virtual UObject* GetUObject() const override
+	virtual SObject* GetUObject() const override
 	{
-		return (UObject*)UserObjectPtr.Get();
+		return (SObject*)UserObjectPtr.Get();
 	}
 
 	// Deprecated
@@ -194,7 +194,7 @@ public:
 	/**
 	* Creates and initializes a new instance.
 	*
-	* @param InUserObject The UObject to call the function on.
+	* @param InUserObject The SObject to call the function on.
 	* @param InFunctionName The name of the function call.
 	*/
 	TBaseUFunctionDelegateInstance(UserClass* InUserObject, const YName& InFunctionName, VarTypes... Vars)
@@ -284,7 +284,7 @@ public:
 		return SPMode == ESPMode::ThreadSafe ? EDelegateInstanceType::ThreadSafeSharedPointerMethod : EDelegateInstanceType::SharedPointerMethod;
 	}
 
-	virtual UObject* GetUObject() const override
+	virtual SObject* GetUObject() const override
 	{
 		return nullptr;
 	}
@@ -516,7 +516,7 @@ public:
 		return EDelegateInstanceType::RawMethod;
 	}
 
-	virtual UObject* GetUObject() const override
+	virtual SObject* GetUObject() const override
 	{
 		return nullptr;
 	}
@@ -654,7 +654,7 @@ public:
 
 
 /**
-* Implements a delegate binding for UObject methods.
+* Implements a delegate binding for SObject methods.
 */
 template <bool bConst, class UserClass, typename FuncType, typename... VarTypes>
 class TBaseUObjectMethodDelegateInstance;
@@ -670,7 +670,7 @@ private:
 	typedef TBaseUObjectMethodDelegateInstance<bConst, UserClass, RetValType(ParamTypes...), VarTypes...> UnwrappedThisType;
 
 	//!!FIXME by zyx
-	//static_assert(TPointerIsConvertibleFromTo<UserClass, const UObjectBase>::Value, "You cannot use UObject method delegates with raw pointers.");
+	//static_assert(TPointerIsConvertibleFromTo<UserClass, const UObjectBase>::Value, "You cannot use SObject method delegates with raw pointers.");
 
 public:
 	typedef typename TMemFunPtrType<bConst, UserClass, RetValType(ParamTypes..., VarTypes...)>::Type FMethodPtr;
@@ -681,7 +681,7 @@ public:
 		, Payload(Vars...)
 		, Handle(FDelegateHandle::GenerateNewHandle)
 	{
-		// NOTE: UObject delegates are allowed to have a null incoming object pointer.  UObject weak pointers can expire,
+		// NOTE: SObject delegates are allowed to have a null incoming object pointer.  SObject weak pointers can expire,
 		//       an it is possible for a copy of a delegate instance to end up with a null pointer.
 		checkSlow(MethodPtr != nullptr);
 	}
@@ -721,9 +721,9 @@ public:
 		return EDelegateInstanceType::UObjectMethod;
 	}
 
-	virtual UObject* GetUObject() const override
+	virtual SObject* GetUObject() const override
 	{
-		return (UObject*)UserObject.Get();
+		return (SObject*)UserObject.Get();
 	}
 
 	// Deprecated
@@ -792,7 +792,7 @@ public:
 public:
 
 	/**
-	* Creates a new UObject delegate binding for the given user object and method pointer.
+	* Creates a new SObject delegate binding for the given user object and method pointer.
 	*
 	* @param InUserObject User's object that contains the class method.
 	* @param InFunc Member function pointer to your class method.
@@ -927,7 +927,7 @@ public:
 		return EDelegateInstanceType::Raw;
 	}
 
-	virtual UObject* GetUObject() const override
+	virtual SObject* GetUObject() const override
 	{
 		return nullptr;
 	}
@@ -1106,7 +1106,7 @@ public:
 		return EDelegateInstanceType::Functor;
 	}
 
-	virtual UObject* GetUObject() const override
+	virtual SObject* GetUObject() const override
 	{
 		return nullptr;
 	}

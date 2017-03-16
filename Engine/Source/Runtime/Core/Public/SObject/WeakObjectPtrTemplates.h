@@ -13,7 +13,7 @@ struct FWeakObjectPtr;
 
 /***
 *
-* FWeakObjectPtr is a weak pointer to a UObject.
+* FWeakObjectPtr is a weak pointer to a SObject.
 * It can return nullptr later if the object is garbage collected.
 * It has no impact on if the object is garbage collected or not.
 * It can't be directly used across a network.
@@ -22,7 +22,7 @@ struct FWeakObjectPtr;
 **/
 struct FWeakObjectPtr;
 
-template<class T = UObject, class TWeakObjectPtrBase = FWeakObjectPtr>
+template<class T = SObject, class TWeakObjectPtrBase = FWeakObjectPtr>
 struct TWeakObjectPtr;
 
 
@@ -48,11 +48,11 @@ public:
 	* @param Object object to create a weak pointer to
 	**/
 	FORCEINLINE TWeakObjectPtr(const T* Object) :
-		TWeakObjectPtrBase((UObject*)Object)
+		TWeakObjectPtrBase((SObject*)Object)
 	{
 		// This static assert is in here rather than in the body of the class because we want
 		// to be able to define TWeakObjectPtr<UUndefinedClass>.
-		static_assert(TPointerIsConvertibleFromTo<T, const volatile UObject>::Value, "TWeakObjectPtr can only be constructed with UObject types");
+		static_assert(TPointerIsConvertibleFromTo<T, const volatile SObject>::Value, "TWeakObjectPtr can only be constructed with SObject types");
 	}
 
 	/**
@@ -159,10 +159,10 @@ public:
 	}
 
 	/**
-	* Test if this points to a live UObject
+	* Test if this points to a live SObject
 	* @param bEvenIfPendingKill, if this is true, pendingkill objects are considered valid
 	* @param bThreadsafeTest, if true then function will just give you information whether referenced
-	*							UObject is gone forever (@return false) or if it is still there (@return true, no object flags checked).
+	*							SObject is gone forever (@return false) or if it is still there (@return true, no object flags checked).
 	* @return true if Get() would return a valid non-null pointer
 	**/
 	FORCEINLINE bool IsValid(bool bEvenIfPendingKill, bool bThreadsafeTest = false) const
@@ -171,7 +171,7 @@ public:
 	}
 
 	/**
-	* Test if this points to a live UObject. This is an optimized version implying bEvenIfPendingKill=false, bThreadsafeTest=false.
+	* Test if this points to a live SObject. This is an optimized version implying bEvenIfPendingKill=false, bThreadsafeTest=false.
 	* @return true if Get() would return a valid non-null pointer
 	*/
 	FORCEINLINE bool IsValid(/*bool bEvenIfPendingKill = false, bool bThreadsafeTest = false*/) const
@@ -180,7 +180,7 @@ public:
 	}
 
 	/**
-	* Slightly different than !IsValid(), returns true if this used to point to a UObject, but doesn't any more and has not been assigned or reset in the mean time.
+	* Slightly different than !IsValid(), returns true if this used to point to a SObject, but doesn't any more and has not been assigned or reset in the mean time.
 	* @param bIncludingIfPendingKill, if this is true, pendingkill objects are considered stale
 	* @param bThreadsafeTest, set it to true when testing outside of Game Thread. Results in false if WeakObjPtr point to an existing object (no flags checked)
 	* @return true if this used to point at a real object but no longer does.
@@ -223,7 +223,7 @@ FORCENOINLINE bool operator==(const TWeakObjectPtr<LhsT, OtherTWeakObjectPtrBase
 {
 	// It's also possible that these static_asserts may fail for valid conversions because
 	// one or both of the types have only been forward-declared.
-	static_assert(TPointerIsConvertibleFromTo<RhsT, UObject>::Value, "TWeakObjectPtr can only be compared with UObject types");
+	static_assert(TPointerIsConvertibleFromTo<RhsT, SObject>::Value, "TWeakObjectPtr can only be compared with SObject types");
 	static_assert(TPointerIsConvertibleFromTo<LhsT, RhsT>::Value || TPointerIsConvertibleFromTo<RhsT, LhsT>::Value, "Unable to compare TWeakObjectPtr with raw pointer - types are incompatible");
 
 	// NOTE: this constructs a TWeakObjectPtrBase, which has some amount of overhead, so this may not be an efficient operation
@@ -235,7 +235,7 @@ FORCENOINLINE bool operator==(const LhsT* Lhs, const TWeakObjectPtr<RhsT, OtherT
 {
 	// It's also possible that these static_asserts may fail for valid conversions because
 	// one or both of the types have only been forward-declared.
-	static_assert(TPointerIsConvertibleFromTo<LhsT, UObject>::Value, "TWeakObjectPtr can only be compared with UObject types");
+	static_assert(TPointerIsConvertibleFromTo<LhsT, SObject>::Value, "TWeakObjectPtr can only be compared with SObject types");
 	static_assert(TPointerIsConvertibleFromTo<LhsT, RhsT>::Value || TPointerIsConvertibleFromTo<RhsT, LhsT>::Value, "Unable to compare TWeakObjectPtr with raw pointer - types are incompatible");
 
 	// NOTE: this constructs a TWeakObjectPtrBase, which has some amount of overhead, so this may not be an efficient operation
@@ -269,7 +269,7 @@ FORCENOINLINE bool operator!=(const TWeakObjectPtr<LhsT, OtherTWeakObjectPtrBase
 {
 	// It's also possible that these static_asserts may fail for valid conversions because
 	// one or both of the types have only been forward-declared.
-	static_assert(TPointerIsConvertibleFromTo<RhsT, UObject>::Value, "TWeakObjectPtr can only be compared with UObject types");
+	static_assert(TPointerIsConvertibleFromTo<RhsT, SObject>::Value, "TWeakObjectPtr can only be compared with SObject types");
 	static_assert(TPointerIsConvertibleFromTo<LhsT, RhsT>::Value || TPointerIsConvertibleFromTo<RhsT, LhsT>::Value, "Unable to compare TWeakObjectPtr with raw pointer - types are incompatible");
 
 	// NOTE: this constructs a TWeakObjectPtrBase, which has some amount of overhead, so this may not be an efficient operation
@@ -281,7 +281,7 @@ FORCENOINLINE bool operator!=(const LhsT* Lhs, const TWeakObjectPtr<RhsT, OtherT
 {
 	// It's also possible that these static_asserts may fail for valid conversions because
 	// one or both of the types have only been forward-declared.
-	static_assert(TPointerIsConvertibleFromTo<LhsT, UObject>::Value, "TWeakObjectPtr can only be compared with UObject types");
+	static_assert(TPointerIsConvertibleFromTo<LhsT, SObject>::Value, "TWeakObjectPtr can only be compared with SObject types");
 	static_assert(TPointerIsConvertibleFromTo<LhsT, RhsT>::Value || TPointerIsConvertibleFromTo<RhsT, LhsT>::Value, "Unable to compare TWeakObjectPtr with raw pointer - types are incompatible");
 
 	// NOTE: this constructs a TWeakObjectPtrBase, which has some amount of overhead, so this may not be an efficient operation

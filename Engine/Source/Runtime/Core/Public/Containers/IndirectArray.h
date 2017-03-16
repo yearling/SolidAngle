@@ -186,13 +186,13 @@ public:
 	}
 
 	/**
-	* Special serialize function passing the owning UObject along as required
+	* Special serialize function passing the owning SObject along as required
 	* by FUnytpedBulkData serialization.
 	*
 	* @param Ar Archive to serialize with.
-	* @param Owner UObject this structure is serialized within.
+	* @param Owner SObject this structure is serialized within.
 	*/
-	void Serialize(YArchive& Ar, UObject* Owner)
+	void Serialize(YArchive& Ar, SObject* Owner)
 	{
 		CountBytes(Ar);
 		if (Ar.IsLoading())

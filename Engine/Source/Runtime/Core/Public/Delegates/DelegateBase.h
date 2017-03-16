@@ -92,11 +92,11 @@ public:
 #endif
 
 	/**
-	* If this is a UFunction or UObject delegate, return the UObject.
+	* If this is a UFunction or SObject delegate, return the SObject.
 	*
 	* @return The object associated with this delegate if there is one.
 	*/
-	inline class UObject* GetUObject() const
+	inline class SObject* GetUObject() const
 	{
 		if (IDelegateInstance* Ptr = GetDelegateInstanceProtected())
 		{

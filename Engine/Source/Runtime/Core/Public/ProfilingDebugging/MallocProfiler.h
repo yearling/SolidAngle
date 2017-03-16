@@ -121,7 +121,7 @@ struct FCallStackAddressInfo
 	* @param	AddressInfo	AddressInfo to serialize
 	* @return	Passed in archive
 	*/
-	friend FArchive& operator << (FArchive& Ar, FCallStackAddressInfo AddressInfo)
+	friend YArchive& operator << (YArchive& Ar, FCallStackAddressInfo AddressInfo)
 	{
 		Ar << AddressInfo.ProgramCounter
 #if SERIALIZE_SYMBOL_INFO
@@ -141,11 +141,11 @@ FMallocProfilerBufferedFileWriter
 /**
 * Special buffered file writer, used to serialize data before GFileManager is initialized.
 */
-class FMallocProfilerBufferedFileWriter : public FArchive
+class FMallocProfilerBufferedFileWriter : public YArchive
 {
 public:
 	/** Internal file writer used to serialize to HDD. */
-	FArchive*		FileWriter;
+	YArchive*		FileWriter;
 	/** Buffered data being serialized before GameName has been set up. */
 	TArray<uint8>	BufferedData;
 	/** Timestamped filename with path.	*/
@@ -163,7 +163,7 @@ public:
 	*/
 	virtual ~FMallocProfilerBufferedFileWriter();
 
-	//~ Begin FArchive Interface.
+	//~ Begin YArchive Interface.
 	virtual void Serialize(void* V, int64 Length);
 	virtual void Seek(int64 InPos);
 	virtual bool Close();

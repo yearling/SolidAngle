@@ -2099,7 +2099,7 @@ public:
 
 	/**
 	* Searches for the first entry of the specified type, will only work with
-	* TArray<UObject*>. Optionally return the item's index, and can specify
+	* TArray<SObject*>. Optionally return the item's index, and can specify
 	* the start index.
 	*
 	* @param Item (Optional output) If it's not null, then it will point to

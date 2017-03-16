@@ -399,17 +399,16 @@ public:
 	}
 
 	// Serializer.
-	//!!FIXME by zyx
-	//friend YArchive& operator<< (YArchive &Ar, YColor &Color)
-	//{
-	//	return Ar << Color.DWColor();
-	//}
+	friend YArchive& operator<< (YArchive &Ar, YColor &Color)
+	{
+		return Ar << Color.DWColor();
+	}
 
-	//bool Serialize(YArchive& Ar)
-	//{
-	//	Ar << *this;
-	//	return true;
-	//}
+	bool Serialize(YArchive& Ar)
+	{
+		Ar << *this;
+		return true;
+	}
 
 	// Operators.
 	FORCEINLINE bool operator==(const YColor &C) const
@@ -498,11 +497,10 @@ public:
 	* @return The string representation.
 	* @see ToHex
 	*/
-	//!!FIXME by zyx
-	//FORCEINLINE YString ToString() const
-	//{
-	//	return YString::Printf(TEXT("(R=%i,G=%i,B=%i,A=%i)"), R, G, B, A);
-	//}
+	FORCEINLINE YString ToString() const
+	{
+		return YString::Printf(TEXT("(R=%i,G=%i,B=%i,A=%i)"), R, G, B, A);
+	}
 
 	/**
 	* Initialize this Color based on an YString. The String is expected to contain R=, G=, B=, A=.
@@ -511,20 +509,19 @@ public:
 	* @param	InSourceString	YString containing the color values.
 	* @return true if the R,G,B values were read successfully; false otherwise.
 	*/
-	//!!FIXME by zyx
-	//bool InitFromString(const YString& InSourceString)
-	//{
-	//	R = G = B = 0;
-	//	A = 255;
+	bool InitFromString(const YString& InSourceString)
+	{
+		R = G = B = 0;
+		A = 255;
 
-	//	// The initialization is only successful if the R, G, and B values can all be parsed from the string
-	//	const bool bSuccessful = FParse::Value(*InSourceString, TEXT("R="), R) && FParse::Value(*InSourceString, TEXT("G="), G) && FParse::Value(*InSourceString, TEXT("B="), B);
+		// The initialization is only successful if the R, G, and B values can all be parsed from the string
+		const bool bSuccessful = FParse::Value(*InSourceString, TEXT("R="), R) && FParse::Value(*InSourceString, TEXT("G="), G) && FParse::Value(*InSourceString, TEXT("B="), B);
 
-	//	// Alpha is optional, so don't factor in its presence (or lack thereof) in determining initialization success
-	//	FParse::Value(*InSourceString, TEXT("A="), A);
+		// Alpha is optional, so don't factor in its presence (or lack thereof) in determining initialization success
+		FParse::Value(*InSourceString, TEXT("A="), A);
 
-	//	return bSuccessful;
-	//}
+		return bSuccessful;
+	}
 
 	/**
 	* Gets the color in a packed uint32 format packed in the order ARGB.

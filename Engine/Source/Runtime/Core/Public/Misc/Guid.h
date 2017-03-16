@@ -196,7 +196,7 @@ public:
 	* @return true on success, false otherwise.
 	* @see ImportTextItem
 	*/
-	CORE_API bool ExportTextItem(YString& ValueStr, YGuid const& DefaultValue, UObject* Parent, int32 PortFlags, class UObject* ExportRootScope) const;
+	CORE_API bool ExportTextItem(YString& ValueStr, YGuid const& DefaultValue, SObject* Parent, int32 PortFlags, class SObject* ExportRootScope) const;
 
 	/**
 	* Imports the GUIDs value from a text buffer.
@@ -208,7 +208,7 @@ public:
 	* @return true on success, false otherwise.
 	* @see ExportTextItem
 	*/
-	CORE_API bool ImportTextItem(const TCHAR*& Buffer, int32 PortFlags, class UObject* Parent, YOutputDevice* ErrorText);
+	CORE_API bool ImportTextItem(const TCHAR*& Buffer, int32 PortFlags, class SObject* Parent, YOutputDevice* ErrorText);
 
 	/**
 	* Invalidates the GUID.

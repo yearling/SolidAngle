@@ -55,7 +55,7 @@ public:
 	{
 		if (ContainsNaN())
 		{
-			logOrEnsureNanError(TEXT("FVector contains NaN: %s"), *ToString());
+			logOrEnsureNanError(TEXT("YVector contains NaN: %s"), *ToString());
 			*const_cast<YVector*>(this) = ZeroVector;
 		}
 	}
@@ -64,7 +64,7 @@ public:
 	{
 		if (ContainsNaN())
 		{
-			logOrEnsureNanError(TEXT("%s: FVector contains NaN: %s"), Message, *ToString());
+			logOrEnsureNanError(TEXT("%s: YVector contains NaN: %s"), Message, *ToString());
 			*const_cast<YVector*>(this) = ZeroVector;
 		}
 	}
@@ -137,7 +137,7 @@ public:
 
 #ifdef IMPLEMENT_ASSIGNMENT_OPERATOR_MANUALLY
 	/**
-	* Copy another FVector into this one
+	* Copy another YVector into this one
 	*
 	* @param Other The other vector.
 	* @return Reference to vector after copy.
@@ -666,7 +666,7 @@ public:
 	* Similar to the YRotator version, returns a result without roll such that it preserves the up vector.
 	*
 	* @note If you don't care about preserving the up vector and just want the most direct rotation, you can use the faster
-	* 'YQuat::FindBetweenVectors(FVector::ForwardVector, YourVector)' or 'YQuat::FindBetweenNormals(...)' if you know the vector is of unit length.
+	* 'YQuat::FindBetweenVectors(YVector::ForwardVector, YourVector)' or 'YQuat::FindBetweenNormals(...)' if you know the vector is of unit length.
 	*
 	* @return Quaternion from the Vector's direction, without any roll.
 	* @see ToOrientationRotator(), YQuat::FindBetweenVectors()
@@ -731,7 +731,7 @@ public:
 
 	/**
 	* Initialize this Vector based on an YString. The String is expected to contain X=, Y=, Z=.
-	* The FVector will be bogus when InitFromString returns false.
+	* The YVector will be bogus when InitFromString returns false.
 	*
 	* @param	InSourceString	YString containing the vector values.
 	* @return true if the X,Y,Z values were read successfully; false otherwise.
@@ -977,7 +977,7 @@ public:
 	*/
 	friend YArchive& operator<<(YArchive& Ar, YVector& V)
 	{
-		// @warning BulkSerialize: FVector is serialized as memory dump
+		// @warning BulkSerialize: YVector is serialized as memory dump
 		// See TArray::BulkSerialize for detailed description of implied limitations.
 		return Ar << V.X << V.Y << V.Z;
 	}
@@ -998,7 +998,7 @@ public:
 };
 
 
-/* FVector inline functions
+/* YVector inline functions
 *****************************************************************************/
 
 /**
@@ -1015,14 +1015,14 @@ FORCEINLINE YVector operator*(float Scale, const YVector& V)
 
 
 /**
-* Creates a hash value from a FVector.
+* Creates a hash value from a YVector.
 *
 * @param Vector the vector to create a hash value for
 * @return The hash value from the components
 */
 FORCEINLINE uint32 GetTypeHash(const YVector& Vector)
 {
-	// Note: this assumes there's no padding in FVector that could contain uncompared data.
+	// Note: this assumes there's no padding in YVector that could contain uncompared data.
 	return FCrc::MemCrc_DEPRECATED(&Vector, sizeof(Vector));
 }
 
@@ -1968,7 +1968,7 @@ FORCEINLINE float YVector::BoxPushOut(const YVector& Normal, const YVector& Size
 	return YMath::Abs(Normal.X*Size.X) + YMath::Abs(Normal.Y*Size.Y) + YMath::Abs(Normal.Z*Size.Z);
 }
 
-/** Component-wise clamp for FVector */
+/** Component-wise clamp for YVector */
 FORCEINLINE YVector ClampVector(const YVector& V, const YVector& Min, const YVector& Max)
 {
 	return YVector(

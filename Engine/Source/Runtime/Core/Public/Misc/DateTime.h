@@ -231,7 +231,7 @@ public:
 	* @return true on success, false otherwise.
 	* @see ImportTextItem
 	*/
-	CORE_API bool ExportTextItem(YString& ValueStr, YDateTime const& DefaultValue, UObject* Parent, int32 PortFlags, UObject* ExportRootScope) const;
+	CORE_API bool ExportTextItem(YString& ValueStr, YDateTime const& DefaultValue, SObject* Parent, int32 PortFlags, SObject* ExportRootScope) const;
 
 	/**
 	* Gets the date part of this date.
@@ -417,7 +417,7 @@ public:
 	* @return true on success, false otherwise.
 	* @see ExportTextItem
 	*/
-	CORE_API bool ImportTextItem(const TCHAR*& Buffer, int32 PortFlags, UObject* Parent, YOutputDevice* ErrorText);
+	CORE_API bool ImportTextItem(const TCHAR*& Buffer, int32 PortFlags, SObject* Parent, YOutputDevice* ErrorText);
 
 	/**
 	* Gets whether this date's time is in the afternoon.

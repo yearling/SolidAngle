@@ -28,7 +28,7 @@ template<class TEnum> class TEnumAsByte;
 /**
 * TCheckedObjPtr
 *
-* Wrapper for UObject pointers, which checks that the base class is accurate, upon serializing (to prevent illegal casting)
+* Wrapper for SObject pointers, which checks that the base class is accurate, upon serializing (to prevent illegal casting)
 */
 template<class T> class TCheckedObjPtr
 {
@@ -158,20 +158,20 @@ public:
 	virtual YArchive& operator<<(class FText& Value);
 
 	/**
-	* Serializes an UObject value from or into this archive.
+	* Serializes an SObject value from or into this archive.
 	*
-	* This operator can be implemented by sub-classes that wish to serialize UObject instances.
+	* This operator can be implemented by sub-classes that wish to serialize SObject instances.
 	*
 	* @param Value The value to serialize.
 	* @return This instance.
 	*/
-	virtual YArchive& operator<<(class UObject*& Value)
+	virtual YArchive& operator<<(class SObject*& Value)
 	{
 		return *this;
 	}
 
 	/**
-	* Serializes a UObject wrapped in a TCheckedObjPtr container, using the above operator,
+	* Serializes a SObject wrapped in a TCheckedObjPtr container, using the above operator,
 	* and verifies the serialized object is derived from the correct base class, to prevent illegal casting.
 	*
 	* @param Value The value to serialize.
@@ -183,7 +183,7 @@ public:
 
 		if (IsSaving())
 		{
-			UObject* SerializeObj = nullptr;
+			SObject* SerializeObj = nullptr;
 
 			if (Value.IsValid())
 			{
@@ -216,7 +216,7 @@ public:
 	/**
 	* Serializes a lazy object pointer value from or into this archive.
 	*
-	* Most of the time, FLazyObjectPtrs are serialized as UObject*, but some archives need to override this.
+	* Most of the time, FLazyObjectPtrs are serialized as SObject*, but some archives need to override this.
 	*
 	* @param Value The value to serialize.
 	* @return This instance.
@@ -226,7 +226,7 @@ public:
 	/**
 	* Serializes asset pointer from or into this archive.
 	*
-	* Most of the time, FAssetPtrs are serialized as UObject *, but some archives need to override this.
+	* Most of the time, FAssetPtrs are serialized as SObject *, but some archives need to override this.
 	*
 	* @param Value The asset pointer to serialize.
 	* @return This instance.
@@ -587,7 +587,7 @@ public:
 	/** Packs int value into bytes of 7 bits with 8th bit for 'more' */
 	virtual void SerializeIntPacked(uint32& Value);
 
-	virtual void Preload(UObject* Object) { }
+	virtual void Preload(SObject* Object) { }
 
 	virtual void CountBytes(SIZE_T InNum, SIZE_T InMax) { }
 
@@ -631,10 +631,10 @@ public:
 	/**
 	* Attaches/ associates the passed in bulk data object with the linker.
 	*
-	* @param	Owner		UObject owning the bulk data
+	* @param	Owner		SObject owning the bulk data
 	* @param	BulkData	Bulk data object to associate
 	*/
-	virtual void AttachBulkData(UObject* Owner, FUntypedBulkData* BulkData) { }
+	virtual void AttachBulkData(SObject* Owner, FUntypedBulkData* BulkData) { }
 
 	/**
 	* Detaches the passed in bulk data object from the linker.
@@ -772,22 +772,22 @@ public:
 	/**
 	* Called when an object begins serializing property data using script serialization.
 	*/
-	virtual void MarkScriptSerializationStart(const UObject* Obj) { }
+	virtual void MarkScriptSerializationStart(const SObject* Obj) { }
 
 	/**
 	* Called when an object stops serializing property data using script serialization.
 	*/
-	virtual void MarkScriptSerializationEnd(const UObject* Obj) { }
+	virtual void MarkScriptSerializationEnd(const SObject* Obj) { }
 
 	/**
 	* Called to register a reference to a specific name value, of type TypeObject (UEnum or UStruct normally). Const so it can be called from PostSerialize
 	*/
-	virtual void MarkSearchableName(const UObject* TypeObject, const YName& ValueName) const { }
+	virtual void MarkSearchableName(const SObject* TypeObject, const YName& ValueName) const { }
 
 	/**
 	* Called to retrieve the archetype from the event driven loader. If this returns null, then call GetArchetype yourself.
 	*/
-	virtual UObject* GetArchetypeFromLoader(const UObject* Obj)
+	virtual SObject* GetArchetypeFromLoader(const SObject* Obj)
 	{
 		return nullptr;
 	}
@@ -1372,19 +1372,19 @@ public:
 	/** Whether we should forcefully swap bytes. */
 	uint8 ArForceByteSwapping : 1;
 
-	/** If true, we will not serialize the ObjectArchetype reference in UObject. */
+	/** If true, we will not serialize the ObjectArchetype reference in SObject. */
 	uint8 ArIgnoreArchetypeRef : 1;
 
-	/** If true, we will not serialize the ObjectArchetype reference in UObject. */
+	/** If true, we will not serialize the ObjectArchetype reference in SObject. */
 	uint8 ArNoDelta : 1;
 
-	/** If true, we will not serialize the Outer reference in UObject. */
+	/** If true, we will not serialize the Outer reference in SObject. */
 	uint8 ArIgnoreOuterRef : 1;
 
 	/** If true, we will not serialize ClassGeneratedBy reference in UClass. */
 	uint8 ArIgnoreClassGeneratedByRef : 1;
 
-	/** If true, UObject::Serialize will skip serialization of the Class property. */
+	/** If true, SObject::Serialize will skip serialization of the Class property. */
 	uint8 ArIgnoreClassRef : 1;
 
 	/** Whether to allow lazy loading. */

@@ -22,9 +22,6 @@
     <Filter Include="Source\Runtime\Core\Public">
       <UniqueIdentifier>{defdc5c7-13ba-41b5-b40e-3c2ec2fd0983}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Runtime\Core\Public\Math">
-      <UniqueIdentifier>{ebade571-9daa-41f3-9732-cff5eb208ae1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Runtime\Core\Public\HAL">
       <UniqueIdentifier>{a368715a-ba80-4071-8bcc-ed9821d2069c}</UniqueIdentifier>
     </Filter>
@@ -120,6 +117,12 @@
     </Filter>
     <Filter Include="Source\Runtime\Core\Private\Logging">
       <UniqueIdentifier>{896dd03f-7677-4173-8b10-e3f947d4e6b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Public\Math">
+      <UniqueIdentifier>{ebade571-9daa-41f3-9732-cff5eb208ae1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Public\Modules\Boilerplate">
+      <UniqueIdentifier>{4b90dfd2-32cd-458b-8005-a37e05beae69}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1140,6 +1143,118 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Logging\IMessageLog.h">
       <Filter>Source\Runtime\Core\Public\Logging</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\AES.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Launch\Resources\Version.h">
+      <Filter>Source\Runtime\Launch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\AutomationTest.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\Queue.h">
+      <Filter>Source\Runtime\Core\Public\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ScopedSlowTask.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Base64.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\DefaultValueHelper.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ConfigManifest.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\DataCodec.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\PropertyPortFlags.h">
+      <Filter>Source\Runtime\Core\Public\SObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\ReleaseObjectVersion.h">
+      <Filter>Source\Runtime\Core\Public\SObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\CustomVersion.h">
+      <Filter>Source\Runtime\Core\Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ExpressionParser.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\ValueOrError.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ExpressionParserTypes.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\BasicMathExpressionEvaluator.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\FbxErrors.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\InteractiveProcess.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\LocalTimestampDirectoryVisitor.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\MapErrors.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\MonitoredProcess.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\NetworkVersion.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\NetworkGuid.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ObjectThumbnail.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\OutputDeviceNull.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\LazyPrintf.h">
+      <Filter>Source\Runtime\Core\Public\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\StringUtility.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\TextFilterExpressionEvaluator.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\TextFilter.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\TextFilterUtils.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\WildcardString.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\FeedbackContextMarkup.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\StringFormatter.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\IFilter.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Modules\ModuleBoilerplate\ModuleBoilerplate.h">
+      <Filter>Source\Runtime\Core\Public\Modules\Boilerplate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\BitReader.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\BitWriter.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\MemoryReader.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\MemoryWriter.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\MonolithicHeaderBoilerplate.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\TestMain.cpp">
@@ -1325,6 +1440,186 @@
     <ClCompile Include="..\Source\Runtime\Core\Private\Logging\LogCategory.cpp">
       <Filter>Source\Runtime\Core\Private\Logging</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\ConfigManifest.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\CoreDelegates.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\CoreGlobals.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\CoreMisc.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\Crc.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\CString.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\DataCodec.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\DateTime.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\DefaultValueHelper.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\EngineBuildSettings.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\EngineVersion.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\Exec.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\ExpressionParser.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\ExpressionParserExamples.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\FbxErrors.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\FeedbackContext.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\FeedbackContextMarkup.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\FileHelper.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\Guid.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\GuidGenerator.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\InteractiveProcess.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\LocalTimestampDirectoryVisitor.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\MapErrors.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\MemStack.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\MessageDialog.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\MonitoredProcess.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\NetworkVersion.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\ObjectThumbnail.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\OutputDevice.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\OutputDeviceAnsiError.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\OutputDeviceArchiveWrapper.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\OutputDeviceDebug.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\OutputDeviceFile.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\OutputDeviceHelper.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\OutputDeviceMemory.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\OutputDeviceNull.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\OutputDeviceRedirector.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\Parse.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\Paths.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\RemoteConfigIni.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\SecureHash.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\SlowTask.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\SlowTaskStack.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\StringFormatter.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\StringUtility.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\TextFilterExpressionEvaluator.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\TextFilterTests.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\TextFilterUtils.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\TimeGuard.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\Timespan.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\UProjectInfo.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\WildcardString.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\AES.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\App.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\AutomationTest.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\Base64.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\BufferedOutputDevice.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\CommandLine.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\Compression.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\ConfigCacheIni.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
@@ -1342,6 +1637,18 @@
     </None>
     <None Include="..\Source\Runtime\Core\Public\HAL\YMemory.inl">
       <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </None>
+    <None Include="..\Source\Runtime\Core\Private\Misc\Crc.tps">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </None>
+    <None Include="..\Source\Runtime\Core\Private\Misc\GuidGenerator.tps">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </None>
+    <None Include="..\Source\Runtime\Core\Private\Misc\AES.tps">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </None>
+    <None Include="..\Source\Runtime\Core\Public\Misc\ExpressionParserTypes.inl">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
     </None>
   </ItemGroup>
 </Project>
