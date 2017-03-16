@@ -65,7 +65,7 @@ struct CORE_API YWindowsPlatformMemory
 		Windows::HANDLE				Mapping;
 	};
 
-	//~ Begin FGenericPlatformMemory Interface
+	//~ Begin YGenericPlatformMemory Interface
 	static void Init();
 	static uint32 GetBackMemoryPoolSize()
 	{
@@ -92,7 +92,7 @@ protected:
 	friend struct FGenericStatsUpdater;
 
 	static void InternalUpdateStats(const YPlatformMemoryStats& MemoryStats);
-	//~ End FGenericPlatformMemory Interface
+	//~ End YGenericPlatformMemory Interface
 };
 
 

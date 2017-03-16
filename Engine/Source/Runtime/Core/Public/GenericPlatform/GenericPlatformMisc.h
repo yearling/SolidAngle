@@ -829,7 +829,7 @@ public:
 	* @param	InGamma			Optional gamma correction to apply to the screen color
 	* @return					The color of the pixel displayed at the chosen location
 	*/
-	static struct FLinearColor GetScreenPixelColor(const struct YVector2D& InScreenPos, float InGamma = 1.0f);
+	static struct YMath GetScreenPixelColor(const struct YVector2D& InScreenPos, float InGamma = 1.0f);
 
 #if !UE_BUILD_SHIPPING
 	static void SetShouldPromptForRemoteDebugging(bool bInShouldPrompt)

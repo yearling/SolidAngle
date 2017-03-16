@@ -828,7 +828,7 @@ public:
 	*
 	* @param Guid The guid of the custom version.  This must have previously been registered with FCustomVersionRegistration.
 	*/
-	void UsingCustomVersion(const struct FGuid& Guid);
+	void UsingCustomVersion(const struct YGuid& Guid);
 
 	/**
 	* Queries a custom version from the archive.  If the archive is being used to write, the custom version must have already been registered.
@@ -836,7 +836,7 @@ public:
 	* @param Key The guid of the custom version to query.
 	* @return The version number, or 0 if the custom tag isn't stored in the archive.
 	*/
-	int32 CustomVer(const struct FGuid& Key) const;
+	int32 CustomVer(const struct YGuid& Key) const;
 
 	FORCEINLINE bool IsLoading() const
 	{
@@ -1062,7 +1062,7 @@ public:
 	* @param Version - The version number to set key to
 	* @param FriendlyName - Friendly name corresponding to the key
 	*/
-	void SetCustomVersion(const struct FGuid& Key, int32 Version, YName FriendlyName);
+	void SetCustomVersion(const struct YGuid& Key, int32 Version, YName FriendlyName);
 
 	/**
 	* Toggle saving as Unicode. This is needed when we need to make sure ANSI strings are saved as Unicode

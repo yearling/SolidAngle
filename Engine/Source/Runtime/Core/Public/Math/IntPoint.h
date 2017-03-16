@@ -1,8 +1,12 @@
-#pragma once
-//!!FIXME by zyx
-//#include "Containers/UnrealString.h"
-#include "HAL/Platform.h"
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
+#pragma once
+
+#include "CoreTypes.h"
+#include "Misc/AssertionMacros.h"
+#include "Math/SolidAngleMathUtility.h"
+#include "Containers/SolidAngleString.h"
+#include "Templates/TypeHash.h"
 
 /**
 * Structure for integer points in 2-d space.
@@ -43,7 +47,7 @@ public:
 	*
 	* @param EForceInit Force init enum
 	*/
-	FORCEINLINE explicit  YIntPoint(EForceInit);
+	explicit FORCEINLINE YIntPoint(EForceInit);
 
 public:
 
@@ -190,14 +194,14 @@ public:
 	*
 	* @see ComponentMax, GetMax
 	*/
-	FORCEINLINE YIntPoint		ComponentMin(const YIntPoint& Other) const;
+	FORCEINLINE YIntPoint ComponentMin(const YIntPoint& Other) const;
 
 	/**
 	* Get the component-wise max of two points.
 	*
 	* @see ComponentMin, GetMin
 	*/
-	FORCEINLINE YIntPoint		ComponentMax(const YIntPoint& Other) const;
+	FORCEINLINE YIntPoint ComponentMax(const YIntPoint& Other) const;
 
 	/**
 	* Get the larger of the point's two components.
@@ -205,7 +209,7 @@ public:
 	* @return The maximum component of the point.
 	* @see GetMin, Size, SizeSquared
 	*/
-	int32						GetMax() const;
+	int32 GetMax() const;
 
 	/**
 	* Get the smaller of the point's two components.
@@ -213,7 +217,7 @@ public:
 	* @return The minimum component of the point.
 	* @see GetMax, Size, SizeSquared
 	*/
-	int32						GetMin() const;
+	int32 GetMin() const;
 
 	/**
 	* Get the distance of this point from (0,0).
@@ -221,7 +225,7 @@ public:
 	* @return The distance of this point from (0,0).
 	* @see GetMax, GetMin, SizeSquared
 	*/
-	int32						Size() const;
+	int32 Size() const;
 
 	/**
 	* Get the squared distance of this point from (0,0).
@@ -229,15 +233,14 @@ public:
 	* @return The squared distance of this point from (0,0).
 	* @see GetMax, GetMin, Size
 	*/
-	int32						SizeSquared() const;
+	int32 SizeSquared() const;
 
 	/**
 	* Get a textual representation of this point.
 	*
 	* @return A string describing the point.
 	*/
-	//!!FIXME by zyx
-	//YString ToString() const;
+	YString ToString() const;
 
 public:
 
@@ -278,11 +281,10 @@ public:
 	* @param Point The point to serialize.
 	* @return Reference to the Archive after serialization.
 	*/
-	//!!FIXME by zyx
-	//friend YArchive& operator<<(YArchive& Ar, YIntPoint& Point)
-	//{
-	//	return Ar << Point.X << Point.Y;
-	//}
+	friend YArchive& operator<<(YArchive& Ar, YIntPoint& Point)
+	{
+		return Ar << Point.X << Point.Y;
+	}
 
 	/**
 	* Serialize the point.
@@ -290,12 +292,11 @@ public:
 	* @param Ar The archive to serialize into.
 	* @return true on success, false otherwise.
 	*/
-	//!!FIXME by zyx
-	//bool Serialize(YArchive& Ar)
-	//{
-	//	Ar << *this;
-	//	return true;
-	//}
+	bool Serialize(YArchive& Ar)
+	{
+		Ar << *this;
+		return true;
+	}
 };
 
 
@@ -415,16 +416,14 @@ FORCEINLINE YIntPoint YIntPoint::operator/(int32 Divisor) const
 
 FORCEINLINE int32& YIntPoint::operator[](int32 Index)
 {
-	//!!FIXME by zyx
-	//check(Index >= 0 && Index < 2);
+	check(Index >= 0 && Index < 2);
 	return ((Index == 0) ? X : Y);
 }
 
 
 FORCEINLINE int32 YIntPoint::operator[](int32 Index) const
 {
-	//!!FIXME by zyx
-	//check(Index >= 0 && Index < 2);
+	check(Index >= 0 && Index < 2);
 	return ((Index == 0) ? X : Y);
 }
 
@@ -485,11 +484,10 @@ FORCEINLINE int32 YIntPoint::GetMin() const
 	return YMath::Min(X, Y);
 }
 
-//!!FIXME by zyx
-//FORCEINLINE uint32 GetTypeHash(const YIntPoint& InPoint)
-//{
-//	return HashCombine(GetTypeHash(InPoint.X), GetTypeHash(InPoint.Y));
-//}
+FORCEINLINE uint32 GetTypeHash(const YIntPoint& InPoint)
+{
+	return HashCombine(GetTypeHash(InPoint.X), GetTypeHash(InPoint.Y));
+}
 
 
 FORCEINLINE int32 YIntPoint::Size() const
@@ -504,12 +502,9 @@ FORCEINLINE int32 YIntPoint::SizeSquared() const
 	return X*X + Y*Y;
 }
 
+FORCEINLINE YString YIntPoint::ToString() const
+{
+	return YString::Printf(TEXT("X=%d Y=%d"), X, Y);
+}
 
-//!!FIXME by zyx
-//FORCEINLINE YString YIntPoint::ToString() const
-//{
-//	return YString::Printf(TEXT("X=%d Y=%d"), X, Y);
-//}
-//
-//!!FIXME by zyx
-//template <> struct TIsPODType<YIntPoint> { enum { Value = true }; };
+template <> struct TIsPODType<YIntPoint> { enum { Value = true }; };

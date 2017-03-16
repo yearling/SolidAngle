@@ -2,7 +2,7 @@
 #include "Color.h"
 //!!FIXME by zyx
 //#include "ColorList.h"
-#include "YIntPoint.h"
+#include "IntPoint.h"
 #include "IntVector.h"
 #include "Vector2D.h"
 #include "IntRect.h"

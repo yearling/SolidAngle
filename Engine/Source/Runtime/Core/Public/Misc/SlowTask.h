@@ -55,7 +55,7 @@ private:
 	bool bCreatedDialog;
 
 	/** The feedback context that we belong to */
-	FFeedbackContext& Context;
+	YFeedbackContext& Context;
 
 	/** Specify whether the delayed dialog should show a cancel button */
 	bool bDelayedDialogShowCancelButton : 1;
@@ -75,7 +75,7 @@ public:
 	* @param		InDefaultMessage		A message to display to the user to describe the purpose of the scope
 	* @param		bInVisible				When false, this scope will have no effect. Allows for proper scoped objects that are conditionally hidden.
 	*/
-	FSlowTask(float InAmountOfWork, const FText& InDefaultMessage = FText(), bool bInEnabled = true, FFeedbackContext& InContext = *GWarn);
+	FSlowTask(float InAmountOfWork, const FText& InDefaultMessage = FText(), bool bInEnabled = true, YFeedbackContext& InContext = *GWarn);
 
 	/** Function that initializes the scope by adding it to its context's stack */
 	void Initialize();

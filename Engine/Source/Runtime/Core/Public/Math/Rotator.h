@@ -1,8 +1,14 @@
-// Copyright 1998-2016 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
-#include "SolidAngleMathUtility.h"
+#include "CoreTypes.h"
+#include "Math/SolidAngleMathUtility.h"
+#include "Containers/SolidAngleString.h"
+#include "Misc/Parse.h"
+#include "Logging/LogMacros.h"
+#include "Math/Vector.h"
+#include "Math/VectorRegister.h"
 
 /**
 * Implements a container for rotation information.
@@ -33,7 +39,7 @@ public:
 	{
 		if (ContainsNaN())
 		{
-			logOrEnsureNanError(TEXT("FRotator contains NaN: %s"), *ToString());
+			logOrEnsureNanError(TEXT("YRotator contains NaN: %s"), *ToString());
 			*const_cast<YRotator*>(this) = ZeroRotator;
 		}
 	}
@@ -42,26 +48,26 @@ public:
 	{
 		if (ContainsNaN())
 		{
-			logOrEnsureNanError(TEXT("%s: FRotator contains NaN: %s"), Message, *ToString());
+			logOrEnsureNanError(TEXT("%s: YRotator contains NaN: %s"), Message, *ToString());
 			*const_cast<YRotator*>(this) = ZeroRotator;
 		}
 	}
 #else
-	FORCEINLINE void			DiagnosticCheckNaN() const {}
-	FORCEINLINE void			DiagnosticCheckNaN(const TCHAR* Message) const {}
+	FORCEINLINE void DiagnosticCheckNaN() const {}
+	FORCEINLINE void DiagnosticCheckNaN(const TCHAR* Message) const {}
 #endif
 
 	/**
 	* Default constructor (no initialization).
 	*/
-	FORCEINLINE					YRotator() { }
+	FORCEINLINE YRotator() { }
 
 	/**
 	* Constructor
 	*
 	* @param InF Value to set all components to.
 	*/
-	explicit FORCEINLINE		YRotator(float InF);
+	explicit FORCEINLINE YRotator(float InF);
 
 	/**
 	* Constructor.
@@ -70,21 +76,21 @@ public:
 	* @param InYaw Yaw in degrees.
 	* @param InRoll Roll in degrees.
 	*/
-	FORCEINLINE					YRotator(float InPitch, float InYaw, float InRoll);
+	FORCEINLINE YRotator(float InPitch, float InYaw, float InRoll);
 
 	/**
 	* Constructor.
 	*
 	* @param EForceInit Force Init Enum.
 	*/
-	explicit FORCEINLINE		YRotator(EForceInit);
+	explicit FORCEINLINE YRotator(EForceInit);
 
 	/**
 	* Constructor.
 	*
 	* @param Quat Quaternion used to specify rotation.
 	*/
-	explicit CORE_API			YRotator(const YQuat& Quat);
+	explicit CORE_API YRotator(const YQuat& Quat);
 
 public:
 
@@ -123,6 +129,14 @@ public:
 	YRotator operator*=(float Scale);
 
 	// Unary operators.
+
+	/**
+	* Get a negated copy of the rotator.
+	*
+	* @return A negated copy of the rotator.
+	*/
+	DEPRECATED(4.9, "The unary negation operator has been deprecated as componentwise negation is not meaningful for a Rotator. To get the inverse, please use YRotator::GetInverse()")
+		FORCEINLINE YRotator operator-() const;
 
 	// Binary comparison operators.
 
@@ -167,7 +181,7 @@ public:
 
 	/**
 	* Checks whether rotator is nearly zero within specified tolerance, when treated as an orientation.
-	* This means that FRotator(0, 0, 360) is "zero", because it is the same final orientation as the zero rotator.
+	* This means that YRotator(0, 0, 360) is "zero", because it is the same final orientation as the zero rotator.
 	*
 	* @param Tolerance Error Tolerance.
 	* @return true if rotator is nearly zero, within specified tolerance, otherwise false.
@@ -176,7 +190,7 @@ public:
 
 	/**
 	* Checks whether this has exactly zero rotation, when treated as an orientation.
-	* This means that FRotator(0, 0, 360) is "zero", because it is the same final orientation as the zero rotator.
+	* This means that YRotator(0, 0, 360) is "zero", because it is the same final orientation as the zero rotator.
 	*
 	* @return true if this has exactly zero rotation, otherwise false.
 	*/
@@ -184,7 +198,7 @@ public:
 
 	/**
 	* Checks whether two rotators are equal within specified tolerance, when treated as an orientation.
-	* This means that FRotator(0, 0, 360).Equals(FRotator(0,0,0)) is true, because they represent the same final orientation.
+	* This means that YRotator(0, 0, 360).Equals(YRotator(0,0,0)) is true, because they represent the same final orientation.
 	*
 	* @param R The other rotator.
 	* @param Tolerance Error Tolerance.
@@ -292,22 +306,19 @@ public:
 	*
 	* @return Text describing the vector.
 	*/
-	//!!FIXME by zyx
-	//YString ToString() const;
+	YString ToString() const;
 
 	/** Get a short textural representation of this vector, for compact readable logging. */
-	//!!FIXME by zyx
-	//YString ToCompactString() const;
+	YString ToCompactString() const;
 
 	/**
 	* Initialize this Rotator based on an YString. The String is expected to contain P=, Y=, R=.
-	* The FRotator will be bogus when InitFromString returns false.
+	* The YRotator will be bogus when InitFromString returns false.
 	*
 	* @param InSourceString	YString containing the rotator values.
 	* @return true if the P,Y,R values were read successfully; false otherwise.
 	*/
-	//!!FIXME by zyx
-	//bool InitFromString(const YString& InSourceString);
+	bool InitFromString(const YString& InSourceString);
 
 	/**
 	* Utility to check if there are any non-finite values (NaN or Inf) in this Rotator.
@@ -321,21 +332,18 @@ public:
 	*
 	* @param	Ar	Archive to serialize to/ from
 	*/
-	//!!FIXME by zyx
-	//CORE_API void SerializeCompressed(YArchive& Ar);
+	CORE_API void SerializeCompressed(YArchive& Ar);
 
 	/**
 	* Serializes the rotator compressed for e.g. network transmission (use shorts though).
 	*
 	* @param	Ar	Archive to serialize to/ from
 	*/
-	//!!FIXME by zyx
-	//CORE_API void SerializeCompressedShort(YArchive& Ar);
+	CORE_API void SerializeCompressedShort(YArchive& Ar);
 
 	/**
 	*/
-	//!!FIXME by zyx
-	//CORE_API bool NetSerialize(YArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
+	CORE_API bool NetSerialize(YArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
 
 public:
 
@@ -404,23 +412,21 @@ public:
 	* @param R Rotator being serialized.
 	* @return Reference to Archive after serialization.
 	*/
-	//!!FIXME by zyx
-	//friend YArchive& operator<<(YArchive& Ar, YRotator& R)
-	//{
-	//	Ar << R.Pitch << R.Yaw << R.Roll;
-	//	return Ar;
-	//}
+	friend YArchive& operator<<(YArchive& Ar, YRotator& R)
+	{
+		Ar << R.Pitch << R.Yaw << R.Roll;
+		return Ar;
+	}
 
-	//!!FIXME by zyx
-	//bool Serialize(YArchive& Ar)
-	//{
-	//	Ar << *this;
-	//	return true;
-	//}
+	bool Serialize(YArchive& Ar)
+	{
+		Ar << *this;
+		return true;
+	}
 };
 
 
-/* FRotator inline functions
+/* YRotator inline functions
 *****************************************************************************/
 
 /**
@@ -479,6 +485,13 @@ FORCEINLINE YRotator YRotator::operator*= (float Scale)
 	DiagnosticCheckNaN();
 	return *this;
 }
+
+
+FORCEINLINE YRotator YRotator::operator-() const
+{
+	return YRotator(-Pitch, -Yaw, -Roll);
+}
+
 
 FORCEINLINE bool YRotator::operator==(const YRotator& R) const
 {
@@ -663,61 +676,58 @@ FORCEINLINE void YRotator::Normalize()
 	DiagnosticCheckNaN();
 }
 
-//!!FIXME by zyx
-//FORCEINLINE YString YRotator::ToString() const
-//{
-//	return YString::Printf(TEXT("P=%f Y=%f R=%f"), Pitch, Yaw, Roll);
-//}
+FORCEINLINE YString YRotator::ToString() const
+{
+	return YString::Printf(TEXT("P=%f Y=%f R=%f"), Pitch, Yaw, Roll);
+}
 
 
-//!!FIXME by zyx
-//FORCEINLINE YString YRotator::ToCompactString() const
-//{
-//	if (IsNearlyZero())
-//	{
-//		return YString::Printf(TEXT("R(0)"));
-//	}
-//
-//	YString ReturnString(TEXT("R("));
-//	bool bIsEmptyString = true;
-//	if (!YMath::IsNearlyZero(Pitch))
-//	{
-//		ReturnString += YString::Printf(TEXT("P=%.2f"), Pitch);
-//		bIsEmptyString = false;
-//	}
-//	if (!YMath::IsNearlyZero(Yaw))
-//	{
-//		if (!bIsEmptyString)
-//		{
-//			ReturnString += YString(TEXT(", "));
-//		}
-//		ReturnString += YString::Printf(TEXT("Y=%.2f"), Yaw);
-//		bIsEmptyString = false;
-//	}
-//	if (!YMath::IsNearlyZero(Roll))
-//	{
-//		if (!bIsEmptyString)
-//		{
-//			ReturnString += YString(TEXT(", "));
-//		}
-//		ReturnString += YString::Printf(TEXT("R=%.2f"), Roll);
-//		bIsEmptyString = false;
-//	}
-//	ReturnString += YString(TEXT(")"));
-//	return ReturnString;
-//}
+FORCEINLINE YString YRotator::ToCompactString() const
+{
+	if (IsNearlyZero())
+	{
+		return YString::Printf(TEXT("R(0)"));
+	}
+
+	YString ReturnString(TEXT("R("));
+	bool bIsEmptyString = true;
+	if (!YMath::IsNearlyZero(Pitch))
+	{
+		ReturnString += YString::Printf(TEXT("P=%.2f"), Pitch);
+		bIsEmptyString = false;
+	}
+	if (!YMath::IsNearlyZero(Yaw))
+	{
+		if (!bIsEmptyString)
+		{
+			ReturnString += YString(TEXT(", "));
+		}
+		ReturnString += YString::Printf(TEXT("Y=%.2f"), Yaw);
+		bIsEmptyString = false;
+	}
+	if (!YMath::IsNearlyZero(Roll))
+	{
+		if (!bIsEmptyString)
+		{
+			ReturnString += YString(TEXT(", "));
+		}
+		ReturnString += YString::Printf(TEXT("R=%.2f"), Roll);
+		bIsEmptyString = false;
+	}
+	ReturnString += YString(TEXT(")"));
+	return ReturnString;
+}
 
 
-//!!FIXME by zyx
-//FORCEINLINE bool YRotator::InitFromString(const YString& InSourceString)
-//{
-//	Pitch = Yaw = Roll = 0;
-//
-//	// The initialization is only successful if the X, Y, and Z values can all be parsed from the string
-//	const bool bSuccessful = FParse::Value(*InSourceString, TEXT("P="), Pitch) && FParse::Value(*InSourceString, TEXT("Y="), Yaw) && FParse::Value(*InSourceString, TEXT("R="), Roll);
-//	DiagnosticCheckNaN();
-//	return bSuccessful;
-//}
+FORCEINLINE bool YRotator::InitFromString(const YString& InSourceString)
+{
+	Pitch = Yaw = Roll = 0;
+
+	// The initialization is only successful if the X, Y, and Z values can all be parsed from the string
+	const bool bSuccessful = FParse::Value(*InSourceString, TEXT("P="), Pitch) && FParse::Value(*InSourceString, TEXT("Y="), Yaw) && FParse::Value(*InSourceString, TEXT("R="), Roll);
+	DiagnosticCheckNaN();
+	return bSuccessful;
+}
 
 
 FORCEINLINE bool YRotator::ContainsNaN() const
@@ -728,11 +738,10 @@ FORCEINLINE bool YRotator::ContainsNaN() const
 }
 
 
-//!!FIXME by zyx
-//template<> struct TIsPODType<YRotator> { enum { Value = true }; };
+template<> struct TIsPODType<YRotator> { enum { Value = true }; };
 
 
-/* YMath inline functions
+/* YLinearColor inline functions
 *****************************************************************************/
 
 template<class U>

@@ -79,6 +79,30 @@
     <Filter Include="Source\Runtime\Core\Public\Async">
       <UniqueIdentifier>{07a22a4c-aa04-4fc1-a1b8-af7d281d9f35}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Runtime\Core\Private\Windows">
+      <UniqueIdentifier>{2aec2524-afdd-4c10-917b-25b01a19ea8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Public\HAL\Allocators">
+      <UniqueIdentifier>{df1a1ade-8c47-4a0f-b868-0890b5fb33e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Public\Modules">
+      <UniqueIdentifier>{c731dc14-0a2f-4b8e-8d70-fcd835b0752c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Launch">
+      <UniqueIdentifier>{f3afa8d3-cce8-4934-9f90-4be020a7836f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Launch\Resources">
+      <UniqueIdentifier>{dd878f82-cd0c-4161-b1d4-a0ffbc4fd3d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Launch\Resources\Windows">
+      <UniqueIdentifier>{fc16b898-f399-48d7-ad6b-99502b7220df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Private\Misc">
+      <UniqueIdentifier>{8704db42-0381-4315-86c3-9f6884f3846f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Private\Async">
+      <UniqueIdentifier>{dbc94ec2-6acd-4854-b7da-ac9827048545}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\core\Public\HAL\Platform.h">
@@ -164,9 +188,6 @@
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Build.h">
       <Filter>Source\Runtime\Core\Public\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\Math\YIntPoint.h">
-      <Filter>Source\Runtime\Core\Public\Math</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\IntVector.h">
       <Filter>Source\Runtime\Core\Public\Math</Filter>
@@ -483,9 +504,6 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\Algo\Reverse.h">
       <Filter>Source\Runtime\Core\Public\Containers\Algo</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\CoreGlobals.h">
-      <Filter>Source\Runtime\Core\Public</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformTLS.h">
       <Filter>Source\Runtime\Core\Public\HAL</Filter>
     </ClInclude>
@@ -684,9 +702,6 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\SharedPointerInternals.h">
       <Filter>Source\Runtime\Core\Public\Templates</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\CoreMinimal.h">
-      <Filter>Source\Runtime\Core\Public</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\SObject\SObjectHierarchyFwd.h">
       <Filter>Source\Runtime\Core\Public\SObject</Filter>
     </ClInclude>
@@ -717,6 +732,219 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformMemory.h">
       <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\OutputDeviceRedirector.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\MallocTBB.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\MallocStomp.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\MallocBinned.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\MallocJemalloc.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\Allocators\CachedOSPageAllocator.h">
+      <Filter>Source\Runtime\Core\Public\HAL\Allocators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\MallocBinned2.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\AllowWindowsPlatformTypes.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\HideWindowsPlatformTypes.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformStackWalk.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformStackWalk.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformStackWalk.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\FileManager.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Parse.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\MessageDialog.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CommandLine.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Paths.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\Culture.h">
+      <Filter>Source\Runtime\Core\Public\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\OutputDeviceFile.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\OutputDeviceError.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\App.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Guid.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CoreMisc.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\IntPoint.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\ExceptionHandling.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\SecureHash.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Async\AsyncWork.h">
+      <Filter>Source\Runtime\Core\Public\Async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformCompression.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\BufferReader.h">
+      <Filter>Source\Runtime\Core\Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsApplication.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericApplication.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericApplicationMessageHandler.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericWindowDefinition.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericWindow.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\IForceFeedbackSystem.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\IInputInterface.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsTextInputMethodSystem.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\ITextInputMethodSystem.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\TextStoreACP.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\COMPointer.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\EngineVersion.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformCrashContext.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformCrashContext.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformOutputDevices.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformOutputDevices.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformOutputDevices.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformChunkInstall.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Modules\ModuleInterface.h">
+      <Filter>Source\Runtime\Core\Public\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformDriver.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ConfigCacheIni.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\CoreMinimal.h">
+      <Filter>Source\Runtime\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\CoreGlobals.h">
+      <Filter>Source\Runtime\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\ThreadHeartBeat.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\ThreadSafeBool.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Launch\Resources\Windows\resource.h">
+      <Filter>Source\Runtime\Launch\Resources\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Modules\ModuleManager.h">
+      <Filter>Source\Runtime\Core\Public\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Stats\StatsMisc.h">
+      <Filter>Source\Runtime\Core\Public\Stats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ScopedEvent.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\SingleThreadRunnable.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\RandomStream.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Matrix.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Axis.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ByteSwap.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\RotationMatrix.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\RotationTranslationMatrix.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Transform.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Quat.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\ScalarRegister.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\TransformVectorized.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\TransformNonVectorized.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Async\ParallelFor.h">
+      <Filter>Source\Runtime\Core\Public\Async</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\TestMain.cpp">
@@ -727,6 +955,21 @@
     </ClCompile>
     <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformMemory.cpp">
       <Filter>Source\Runtime\Core\Private\GenericPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformMemory.cpp">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformMisc.cpp">
+      <Filter>Source\Runtime\Core\Private\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Misc\AssertionMacros.cpp">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Async\Async.cpp">
+      <Filter>Source\Runtime\Core\Private\Async</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Async\TaskGraph.cpp">
+      <Filter>Source\Runtime\Core\Private\Async</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -740,7 +983,8 @@
     <None Include="..\Source\Runtime\Core\Public\Templates\SharedPointerTesting.inl">
       <Filter>Source\Runtime\Core\Public\Templates</Filter>
     </None>
-    <None Include="ClassDiagram1.cd" />
-    <None Include="ClassDiagram2.cd" />
+    <None Include="..\Source\Runtime\Core\Public\Math\Matrix.inl">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </None>
   </ItemGroup>
 </Project>

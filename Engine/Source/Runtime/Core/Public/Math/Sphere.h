@@ -173,7 +173,7 @@ public:
 	//}
 };
 
-/* YMath inline functions
+/* YLinearColor inline functions
 *****************************************************************************/
 
 /**

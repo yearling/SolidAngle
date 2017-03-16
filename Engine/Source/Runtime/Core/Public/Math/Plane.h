@@ -268,17 +268,17 @@ public:
 //		}
 //		else
 //		{
-//			int16 iX(YMath::RoundToInt(X));
-//			int16 iY(YMath::RoundToInt(Y));
-//			int16 iZ(YMath::RoundToInt(Z));
-//			int16 iW(YMath::RoundToInt(W));
+//			int16 iX(YLinearColor::RoundToInt(X));
+//			int16 iY(YLinearColor::RoundToInt(Y));
+//			int16 iZ(YLinearColor::RoundToInt(Z));
+//			int16 iW(YLinearColor::RoundToInt(W));
 //			Ar << iX << iY << iZ << iW;
 //		}
 //		bOutSuccess = true;
 //		return true;
 //	}
 } GCC_ALIGN(16);
-/* YMath inline functions
+/* YLinearColor inline functions
 *****************************************************************************/
 
 inline YVector YMath::LinePlaneIntersection

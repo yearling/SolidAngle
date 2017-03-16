@@ -1,11 +1,17 @@
 #pragma once
 
-#include "HAL/Platform.h"
+#include "CoreTypes.h"
+#include "Misc/AssertionMacros.h"
 #include "HAL/PlatformMath.h"
 
+
+//#define IMPLEMENT_ASSIGNMENT_OPERATOR_MANUALLY
+
+// Assert on non finite numbers. Used to track NaNs.
 #ifndef ENABLE_NAN_DIAGNOSTIC
 #define ENABLE_NAN_DIAGNOSTIC 0
 #endif
+
 
 // Forward declarations.
 struct  YVector;
@@ -19,7 +25,7 @@ struct  YTwoVectors;
 struct  YTransform;
 class	YSphere;
 struct	YVector2D;
-struct	YLinearColor;
+struct	YMath;
 
 #undef  PI
 #define PI 						(3.1415926535897932f)
@@ -754,7 +760,7 @@ struct YMath :public YPlatformMath
 	static CORE_API YRotator	VInterpTo(const YRotator& Current, const YRotator& Target, float DeltaTime, float InterpSpeed);
 
 	// Interpolate Linear Color from Current to Target. Scaled by distance to Target, so it has a strong start speed and ease out.
-	static CORE_API YLinearColor	CInterpTo(const YRotator& Current, const YRotator& Target, float DeltaTime, float InterpSpeed);
+	static CORE_API YMath	CInterpTo(const YRotator& Current, const YRotator& Target, float DeltaTime, float InterpSpeed);
 
 	// Simple function to creat a pulsating scalar value
 	// InCurrentTime:			Current absolute time

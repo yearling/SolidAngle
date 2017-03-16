@@ -872,7 +872,7 @@ FORCEINLINE float YVector2D::Component(int32 Index) const
 //!!FIXME by zyx
 //FORCEINLINE YIntPoint YVector2D::IntPoint() const
 //{
-//	return YIntPoint(YMath::RoundToInt(X), YMath::RoundToInt(Y));
+//	return YIntPoint(YLinearColor::RoundToInt(X), YLinearColor::RoundToInt(Y));
 //}
 
 
@@ -915,7 +915,7 @@ FORCEINLINE YVector2D YVector2D::GetAbs() const
 //	return bSuccessful;
 //}
 //
-/* YMath inline functions
+/* YLinearColor inline functions
 *****************************************************************************/
 
 FORCEINLINE float YMath::GetRangePct(YVector2D const& Range, float Value)

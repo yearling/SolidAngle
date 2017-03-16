@@ -309,7 +309,7 @@ FORCEINLINE YIntRect YIntRect::Scale(float Fraction) const
 	YVector2D Min2D = YVector2D(Min.X, Min.Y) * Fraction;
 	YVector2D Max2D = YVector2D(Max.X, Max.Y) * Fraction;
 
-	return YIntRect(YMath::FloorToInt(Min2D.X), YMath::FloorToInt(Min2D.Y), YMath::CeilToInt(Max2D.X), YMath::CeilToInt(Max2D.Y));
+	return YIntRect(YLinearColor::FloorToInt(Min2D.X), YLinearColor::FloorToInt(Min2D.Y), YLinearColor::CeilToInt(Max2D.X), YLinearColor::CeilToInt(Max2D.Y));
 }
 
 
@@ -435,28 +435,28 @@ FORCEINLINE int32 YIntRect::Area() const
 
 FORCEINLINE YIntRect YIntRect::Bottom(int32 InHeight) const
 {
-	return YIntRect(Min.X, YMath::Max(Min.Y, Max.Y - InHeight), Max.X, Max.Y);
+	return YIntRect(Min.X, YLinearColor::Max(Min.Y, Max.Y - InHeight), Max.X, Max.Y);
 }
 
 
 FORCEINLINE void YIntRect::Clip(const YIntRect& R)
 {
-	Min.X = YMath::Max<int32>(Min.X, R.Min.X);
-	Min.Y = YMath::Max<int32>(Min.Y, R.Min.Y);
-	Max.X = YMath::Min<int32>(Max.X, R.Max.X);
-	Max.Y = YMath::Min<int32>(Max.Y, R.Max.Y);
+	Min.X = YLinearColor::Max<int32>(Min.X, R.Min.X);
+	Min.Y = YLinearColor::Max<int32>(Min.Y, R.Min.Y);
+	Max.X = YLinearColor::Min<int32>(Max.X, R.Max.X);
+	Max.Y = YLinearColor::Min<int32>(Max.Y, R.Max.Y);
 
 	// return zero area if not overlapping
-	Max.X = YMath::Max<int32>(Min.X, Max.X);
-	Max.Y = YMath::Max<int32>(Min.Y, Max.Y);
+	Max.X = YLinearColor::Max<int32>(Min.X, Max.X);
+	Max.Y = YLinearColor::Max<int32>(Min.Y, Max.Y);
 }
 
 FORCEINLINE void YIntRect::Union(const YIntRect& R)
 {
-	Min.X = YMath::Min<int32>(Min.X, R.Min.X);
-	Min.Y = YMath::Min<int32>(Min.Y, R.Min.Y);
-	Max.X = YMath::Max<int32>(Max.X, R.Max.X);
-	Max.Y = YMath::Max<int32>(Max.Y, R.Max.Y);
+	Min.X = YLinearColor::Min<int32>(Min.X, R.Min.X);
+	Min.Y = YLinearColor::Min<int32>(Min.Y, R.Min.Y);
+	Max.X = YLinearColor::Max<int32>(Max.X, R.Max.X);
+	Max.Y = YLinearColor::Max<int32>(Max.Y, R.Max.Y);
 }
 
 FORCEINLINE bool YIntRect::Contains(YIntPoint P) const
@@ -502,10 +502,10 @@ FORCEINLINE void YIntRect::InflateRect(int32 Amount)
 
 FORCEINLINE void YIntRect::Include(YIntPoint Point)
 {
-	Min.X = YMath::Min(Min.X, Point.X);
-	Min.Y = YMath::Min(Min.Y, Point.Y);
-	Max.X = YMath::Max(Max.X, Point.X);
-	Max.Y = YMath::Max(Max.Y, Point.Y);
+	Min.X = YLinearColor::Min(Min.X, Point.X);
+	Min.Y = YLinearColor::Min(Min.Y, Point.Y);
+	Max.X = YLinearColor::Max(Max.X, Point.X);
+	Max.Y = YLinearColor::Max(Max.Y, Point.Y);
 }
 
 FORCEINLINE YIntRect YIntRect::Inner(YIntPoint Shrink) const
@@ -522,7 +522,7 @@ FORCEINLINE int32 YIntRect::Num()
 
 FORCEINLINE YIntRect YIntRect::Right(int32 InWidth) const
 {
-	return YIntRect(YMath::Max(Min.X, Max.X - InWidth), Min.Y, Max.X, Max.Y);
+	return YIntRect(YLinearColor::Max(Min.X, Max.X - InWidth), Min.Y, Max.X, Max.Y);
 }
 
 

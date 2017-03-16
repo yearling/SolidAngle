@@ -167,7 +167,7 @@ struct CORE_API YWindowsPlatformMisc
 	*
 	* @return					The color of the pixel displayed at the chosen location
 	*/
-	static struct FLinearColor GetScreenPixelColor(const YVector2D& InScreenPos, float InGamma = 1.0f);
+	static struct YLinearColor GetScreenPixelColor(const YVector2D& InScreenPos, float InGamma = 1.0f);
 
 #if !UE_BUILD_SHIPPING
 	static void PromptForRemoteDebugging(bool bIsEnsure);

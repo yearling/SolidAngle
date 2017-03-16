@@ -78,7 +78,7 @@ struct FScopedMallocTimer
 
 
 /*-----------------------------------------------------------------------------
-FMemory.
+YMemory.
 -----------------------------------------------------------------------------*/
 
 struct CORE_API YMemory
@@ -251,7 +251,7 @@ private:
 	static SIZE_T QuantizeSizeExternal(SIZE_T Count, uint32 Alignment = DEFAULT_ALIGNMENT);
 };
 
-#define INLINE_FMEMORY_OPERATION (0) // untested, but should work. Inlines FMemory::Malloc, etc
+#define INLINE_FMEMORY_OPERATION (0) // untested, but should work. Inlines YMemory::Malloc, etc
 
 #if INLINE_FMEMORY_OPERATION
 #if PLATFORM_USES_FIXED_GMalloc_CLASS
@@ -259,7 +259,7 @@ private:
 #endif
 
 #define FMEMORY_INLINE_FUNCTION_DECORATOR FORCEINLINE
-#include "FMemory.inl"
+#include "YMemory.inl"
 #endif
 
 #if PLATFORM_USES_FIXED_GMalloc_CLASS && !FORCE_ANSI_ALLOCATOR && USE_MALLOC_BINNED2

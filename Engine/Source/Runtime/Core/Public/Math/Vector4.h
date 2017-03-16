@@ -1,6 +1,15 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
-#include "Vector.h"
+#include "CoreTypes.h"
+#include "Misc/Crc.h"
+#include "Math/SolidAngleMathUtility.h"
+#include "Containers/SolidAngleString.h"
+#include "Misc/Parse.h"
+#include "Logging/LogMacros.h"
+#include "Math/Vector2D.h"
+#include "Math/Vector.h"
 
 /**
 * A 4D homogeneous vector, 4x1 FLOATs, 16-byte aligned.
@@ -177,7 +186,7 @@ public:
 	* @param V2 The second vector.
 	* @return The 3D Dot product.
 	*/
-	friend FORCEINLINE float	Dot3(const YVector4& V1, const YVector4& V2)
+	friend FORCEINLINE float Dot3(const YVector4& V1, const YVector4& V2)
 	{
 		return V1.X*V2.X + V1.Y*V2.Y + V1.Z*V2.Z;
 	}
@@ -189,7 +198,7 @@ public:
 	* @param V2 The second vector.
 	* @return The 4D Dot Product.
 	*/
-	friend FORCEINLINE float	Dot4(const YVector4& V1, const YVector4& V2)
+	friend FORCEINLINE float Dot4(const YVector4& V1, const YVector4& V2)
 	{
 		return V1.X*V2.X + V1.Y*V2.Y + V1.Z*V2.Z + V1.W*V2.W;
 	}
@@ -240,7 +249,7 @@ public:
 	* @param Index The index of the component.
 	* @return Reference to the component.
 	*/
-	float&						Component(int32 Index);
+	float& Component(int32 Index);
 
 	/**
 	* Error tolerant comparison.
@@ -249,7 +258,7 @@ public:
 	* @param Tolerance Error Tolerance.
 	* @return true if the two vectors are equal within specified tolerance, otherwise false.
 	*/
-	bool						Equals(const YVector4& V, float Tolerance = KINDA_SMALL_NUMBER) const;
+	bool Equals(const YVector4& V, float Tolerance = KINDA_SMALL_NUMBER) const;
 
 	/**
 	* Check if the vector is of unit length, with specified tolerance.
@@ -257,15 +266,14 @@ public:
 	* @param LengthSquaredTolerance Tolerance against squared length.
 	* @return true if the vector is a unit vector within the specified tolerance.
 	*/
-	bool						IsUnit3(float LengthSquaredTolerance = KINDA_SMALL_NUMBER) const;
+	bool IsUnit3(float LengthSquaredTolerance = KINDA_SMALL_NUMBER) const;
 
 	/**
 	* Get a textual representation of the vector.
 	*
 	* @return Text describing the vector.
 	*/
-	//!!FIXME by zyx
-	//YString ToString() const;
+	YString ToString() const;
 
 	/**
 	* Initialize this Vector based on an YString. The String is expected to contain X=, Y=, Z=, W=.
@@ -274,8 +282,7 @@ public:
 	* @param InSourceString	YString containing the vector values.
 	* @return true if the X,Y,Z values were read successfully; false otherwise.
 	*/
-	//!!FIXME by zyx
-	//bool InitFromString(const YString& InSourceString);
+	bool InitFromString(const YString& InSourceString);
 
 	/**
 	* Returns a normalized copy of the vector if safe to normalize.
@@ -283,35 +290,42 @@ public:
 	* @param Tolerance Minimum squared length of vector for normalization.
 	* @return A normalized copy of the vector or a zero vector.
 	*/
-	FORCEINLINE YVector4		GetSafeNormal(float Tolerance = SMALL_NUMBER) const;
+	FORCEINLINE YVector4 GetSafeNormal(float Tolerance = SMALL_NUMBER) const;
+
+	DEPRECATED(4.7, "Deprecated due to unclear name, use GetSafeNormal instead.")
+		FORCEINLINE YVector4 SafeNormal(float Tolerance = SMALL_NUMBER) const;
 
 	/**
 	* Calculates normalized version of vector without checking if it is non-zero.
 	*
 	* @return Normalized version of vector.
 	*/
-	FORCEINLINE YVector4		GetUnsafeNormal3() const;
+	FORCEINLINE YVector4 GetUnsafeNormal3() const;
+
+	DEPRECATED(4.7, "Deprecated due to unclear name, use GetUnsafeNormal3 instead.")
+		FORCEINLINE YVector4 UnsafeNormal3() const;
+
 	/**
-	* Return the FRotator orientation corresponding to the direction in which the vector points.
+	* Return the YRotator orientation corresponding to the direction in which the vector points.
 	* Sets Yaw and Pitch to the proper numbers, and sets roll to zero because the roll can't be determined from a vector.
-	* @return FRotator from the Vector's direction.
+	* @return YRotator from the Vector's direction.
 	*/
-	CORE_API YRotator			ToOrientationRotator() const;
+	CORE_API YRotator ToOrientationRotator() const;
 
 	/**
 	* Return the Quaternion orientation corresponding to the direction in which the vector points.
 	* @return Quaternion from the Vector's direction.
 	*/
-	CORE_API YQuat				ToOrientationQuat() const;
+	CORE_API YQuat ToOrientationQuat() const;
 
 	/**
-	* Return the FRotator orientation corresponding to the direction in which the vector points.
+	* Return the YRotator orientation corresponding to the direction in which the vector points.
 	* Sets Yaw and Pitch to the proper numbers, and sets roll to zero because the roll can't be determined from a vector.
 	* Identical to 'ToOrientationRotator()'.
-	* @return FRotator from the Vector's direction.
+	* @return YRotator from the Vector's direction.
 	* @see ToOrientationRotator()
 	*/
-	CORE_API YRotator			Rotation() const;
+	CORE_API YRotator Rotation() const;
 
 	/**
 	* Set all of the vectors coordinates.
@@ -321,36 +335,50 @@ public:
 	* @param InZ New Z Coordinate.
 	* @param InW New W Coordinate.
 	*/
-	FORCEINLINE void			Set(float InX, float InY, float InZ, float InW);
+	FORCEINLINE void Set(float InX, float InY, float InZ, float InW);
 
 	/**
 	* Get the length of this vector not taking W component into account.
 	*
 	* @return The length of this vector.
 	*/
-	float						Size3() const;
+	float Size3() const;
 
 	/**
 	* Get the squared length of this vector not taking W component into account.
 	*
 	* @return The squared length of this vector.
 	*/
-	float						SizeSquared3() const;
+	float SizeSquared3() const;
+
+	/**
+	* Get the length (magnitude) of this vector, taking the W component into account
+	*
+	* @return The length of this vector
+	*/
+	float Size() const;
+
+	/**
+	* Get the squared length of this vector, taking the W component into account
+	*
+	* @return The squared length of this vector
+	*/
+	float SizeSquared() const;
 
 	/** Utility to check if there are any non-finite values (NaN or Inf) in this vector. */
-	bool						ContainsNaN() const;
+	bool ContainsNaN() const;
 
 	/** Utility to check if all of the components of this vector are nearly zero given the tolerance. */
-	bool						IsNearlyZero3(float Tolerance = KINDA_SMALL_NUMBER) const;
+	bool IsNearlyZero3(float Tolerance = KINDA_SMALL_NUMBER) const;
 
 	/** Reflect vector. */
-	YVector4					Reflect3(const YVector4& Normal) const;
+	YVector4 Reflect3(const YVector4& Normal) const;
 
 	/**
 	* Find good arbitrary axis vectors to represent U and V axes of a plane,
 	* given just the normal.
 	*/
-	void						FindBestAxisVectors3(YVector4& Axis1, YVector4& Axis2) const;
+	void FindBestAxisVectors3(YVector4& Axis1, YVector4& Axis2) const;
 
 #if ENABLE_NAN_DIAGNOSTIC
 	FORCEINLINE void DiagnosticCheckNaN()
@@ -375,18 +403,16 @@ public:
 	* @param V The vector being serialized.
 	* @return Reference to the Archive after serialization.
 	*/
-	//!!FIXME by zyx
-	//friend YArchive& operator<<(YArchive& Ar, YVector4& V)
-	//{
-	//	return Ar << V.X << V.Y << V.Z << V.W;
-	//}
+	friend YArchive& operator<<(YArchive& Ar, YVector4& V)
+	{
+		return Ar << V.X << V.Y << V.Z << V.W;
+	}
 
-	//!!FIXME by zyx
-	//bool Serialize(YArchive& Ar)
-	//{
-	//	Ar << *this;
-	//	return true;
-	//}
+	bool Serialize(YArchive& Ar)
+	{
+		Ar << *this;
+		return true;
+	}
 
 } GCC_ALIGN(16);
 
@@ -398,12 +424,12 @@ public:
 *
 * @return The hash value from the components
 */
-//!!FIXME by zyx
-//FORCEINLINE uint32 GetTypeHash(const YVector4& Vector)
-//{
-//	// Note: this assumes there's no padding in YVector that could contain uncompared data.
-//	return FCrc::MemCrc_DEPRECATED(&Vector, sizeof(Vector));
-//}
+FORCEINLINE uint32 GetTypeHash(const YVector4& Vector)
+{
+	// Note: this assumes there's no padding in YVector that could contain uncompared data.
+	return FCrc::MemCrc_DEPRECATED(&Vector, sizeof(Vector));
+}
+
 
 /* YVector4 inline functions
 *****************************************************************************/
@@ -560,26 +586,26 @@ FORCEINLINE bool YVector4::Equals(const YVector4& V, float Tolerance) const
 	return YMath::Abs(X - V.X) <= Tolerance && YMath::Abs(Y - V.Y) <= Tolerance && YMath::Abs(Z - V.Z) <= Tolerance && YMath::Abs(W - V.W) <= Tolerance;
 }
 
-//!!FIXME by zyx
-//FORCEINLINE YString YVector4::ToString() const
-//{
-//	return YString::Printf(TEXT("X=%3.3f Y=%3.3f Z=%3.3f W=%3.3f"), X, Y, Z, W);
-//}
 
-//!!FIXME by zyx
-//FORCEINLINE bool YVector4::InitFromString(const YString& InSourceString)
-//{
-//	X = Y = Z = 0;
-//	W = 1.0f;
-//
-//	// The initialization is only successful if the X, Y, and Z values can all be parsed from the string
-//	const bool bSuccessful = FParse::Value(*InSourceString, TEXT("X="), X) && FParse::Value(*InSourceString, TEXT("Y="), Y) && FParse::Value(*InSourceString, TEXT("Z="), Z);
-//
-//	// W is optional, so don't factor in its presence (or lack thereof) in determining initialization success
-//	FParse::Value(*InSourceString, TEXT("W="), W);
-//
-//	return bSuccessful;
-//}
+FORCEINLINE YString YVector4::ToString() const
+{
+	return YString::Printf(TEXT("X=%3.3f Y=%3.3f Z=%3.3f W=%3.3f"), X, Y, Z, W);
+}
+
+
+FORCEINLINE bool YVector4::InitFromString(const YString& InSourceString)
+{
+	X = Y = Z = 0;
+	W = 1.0f;
+
+	// The initialization is only successful if the X, Y, and Z values can all be parsed from the string
+	const bool bSuccessful = FParse::Value(*InSourceString, TEXT("X="), X) && FParse::Value(*InSourceString, TEXT("Y="), Y) && FParse::Value(*InSourceString, TEXT("Z="), Z);
+
+	// W is optional, so don't factor in its presence (or lack thereof) in determining initialization success
+	FParse::Value(*InSourceString, TEXT("W="), W);
+
+	return bSuccessful;
+}
 
 
 FORCEINLINE YVector4 YVector4::GetSafeNormal(float Tolerance) const
@@ -593,21 +619,47 @@ FORCEINLINE YVector4 YVector4::GetSafeNormal(float Tolerance) const
 	return YVector4(0.f);
 }
 
+
+FORCEINLINE YVector4 YVector4::SafeNormal(float Tolerance) const
+{
+	return GetSafeNormal(Tolerance);
+}
+
+
 FORCEINLINE YVector4 YVector4::GetUnsafeNormal3() const
 {
 	const float Scale = YMath::InvSqrt(X*X + Y*Y + Z*Z);
 	return YVector4(X*Scale, Y*Scale, Z*Scale, 0.0f);
 }
 
+
+FORCEINLINE YVector4 YVector4::UnsafeNormal3() const
+{
+	return GetUnsafeNormal3();
+}
+
+
 FORCEINLINE float YVector4::Size3() const
 {
 	return YMath::Sqrt(X*X + Y*Y + Z*Z);
 }
 
+
 FORCEINLINE float YVector4::SizeSquared3() const
 {
 	return X*X + Y*Y + Z*Z;
 }
+
+FORCEINLINE float YVector4::Size() const
+{
+	return YMath::Sqrt(X*X + Y*Y + Z*Z + W*W);
+}
+
+FORCEINLINE float YVector4::SizeSquared() const
+{
+	return X*X + Y*Y + Z*Z + W*W;
+}
+
 
 FORCEINLINE bool YVector4::IsUnit3(float LengthSquaredTolerance) const
 {
@@ -683,8 +735,7 @@ FORCEINLINE YVector4 YVector4::operator/(const YVector4& V) const
 	return YVector4(X / V.X, Y / V.Y, Z / V.Z, W / V.W);
 }
 
-//!!FIXME by zyx
-//template <> struct TIsPODType<YVector4> { enum { Value = true }; };
+template <> struct TIsPODType<YVector4> { enum { Value = true }; };
 
 
 /* YVector inline functions

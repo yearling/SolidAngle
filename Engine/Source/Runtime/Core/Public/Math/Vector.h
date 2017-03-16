@@ -1,9 +1,22 @@
-// Copyright 1998-2016 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
-#include "SolidAngleMathUtility.h"
-#include "Vector2D.h"
+#include "CoreTypes.h"
+#include "Misc/AssertionMacros.h"
+#include "Math/NumericLimits.h"
+#include "Misc/Crc.h"
+#include "Math/SolidAngleMathUtility.h"
+#include "Containers/SolidAngleString.h"
+#include "Misc/Parse.h"
+#include "Math/Color.h"
+#include "Math/IntPoint.h"
+#include "Logging/LogMacros.h"
+#include "Math/Vector2D.h"
+#include "Misc/ByteSwap.h"
+#include "Internationalization/Text.h"
+#include "Internationalization/Internationalization.h"
+#include "Math/IntVector.h"
 
 /**
 * A vector in 3-D space composed of components (X, Y, Z) with floating point precision.
@@ -42,7 +55,7 @@ public:
 	{
 		if (ContainsNaN())
 		{
-			logOrEnsureNanError(TEXT("YVector contains NaN: %s"), *ToString());
+			logOrEnsureNanError(TEXT("FVector contains NaN: %s"), *ToString());
 			*const_cast<YVector*>(this) = ZeroVector;
 		}
 	}
@@ -51,7 +64,7 @@ public:
 	{
 		if (ContainsNaN())
 		{
-			logOrEnsureNanError(TEXT("%s: YVector contains NaN: %s"), Message, *ToString());
+			logOrEnsureNanError(TEXT("%s: FVector contains NaN: %s"), Message, *ToString());
 			*const_cast<YVector*>(this) = ZeroVector;
 		}
 	}
@@ -68,7 +81,7 @@ public:
 	*
 	* @param InF Value to set all components to.
 	*/
-	explicit FORCEINLINE		YVector(float InF);
+	explicit FORCEINLINE YVector(float InF);
 
 	/**
 	* Constructor using initial values for each component.
@@ -77,7 +90,7 @@ public:
 	* @param InY Y Coordinate.
 	* @param InZ Z Coordinate.
 	*/
-	FORCEINLINE					YVector(float InX, float InY, float InZ);
+	FORCEINLINE YVector(float InX, float InY, float InZ);
 
 	/**
 	* Constructs a vector from an YVector2D and Z value.
@@ -85,47 +98,46 @@ public:
 	* @param V Vector to copy from.
 	* @param InZ Z Coordinate.
 	*/
-	explicit FORCEINLINE		YVector(const YVector2D V, float InZ);
+	explicit FORCEINLINE YVector(const YVector2D V, float InZ);
 
 	/**
 	* Constructor using the XYZ components from a 4D vector.
 	*
 	* @param V 4D Vector to copy from.
 	*/
-	FORCEINLINE					YVector(const YVector4& V);
+	FORCEINLINE YVector(const YVector4& V);
 
 	/**
 	* Constructs a vector from an YLinearColor.
 	*
 	* @param InColor Color to copy from.
 	*/
-	explicit					YVector(const YLinearColor& InColor);
+	explicit YVector(const YLinearColor& InColor);
 
 	/**
 	* Constructs a vector from an YIntVector.
 	*
 	* @param InVector YIntVector to copy from.
 	*/
-	explicit					YVector(YIntVector InVector);
+	explicit YVector(YIntVector InVector);
 
 	/**
 	* Constructs a vector from an YIntPoint.
 	*
 	* @param A Int Point used to set X and Y coordinates, Z is set to zero.
 	*/
-	//!!FIXME by zyx
-	//explicit					YVector(YIntPoint A);
+	explicit YVector(YIntPoint A);
 
 	/**
 	* Constructor which initializes all components to zero.
 	*
 	* @param EForceInit Force init enum
 	*/
-	explicit FORCEINLINE		YVector(EForceInit);
+	explicit FORCEINLINE YVector(EForceInit);
 
 #ifdef IMPLEMENT_ASSIGNMENT_OPERATOR_MANUALLY
 	/**
-	* Copy another YVector into this one
+	* Copy another FVector into this one
 	*
 	* @param Other The other vector.
 	* @return Reference to vector after copy.
@@ -264,7 +276,7 @@ public:
 	* @param Tolerance Error tolerance.
 	* @return true if the vectors are equal within tolerance limits, false otherwise.
 	*/
-	bool						AllComponentsEqual(float Tolerance = KINDA_SMALL_NUMBER) const;
+	bool AllComponentsEqual(float Tolerance = KINDA_SMALL_NUMBER) const;
 
 	/**
 	* Get a negated copy of the vector.
@@ -346,7 +358,7 @@ public:
 	*
 	* @return Reference to the specified component.
 	*/
-	float&						Component(int32 Index);
+	float& Component(int32 Index);
 
 	/**
 	* Gets a specific component of the vector.
@@ -354,7 +366,7 @@ public:
 	* @param Index The index of the component required.
 	* @return Copy of the specified component.
 	*/
-	float						Component(int32 Index) const;
+	float Component(int32 Index) const;
 
 public:
 
@@ -367,76 +379,76 @@ public:
 	* @param InY New Y coordinate.
 	* @param InZ New Z coordinate.
 	*/
-	void						Set(float InX, float InY, float InZ);
+	void Set(float InX, float InY, float InZ);
 
 	/**
 	* Get the maximum value of the vector's components.
 	*
 	* @return The maximum value of the vector's components.
 	*/
-	float						GetMax() const;
+	float GetMax() const;
 
 	/**
 	* Get the maximum absolute value of the vector's components.
 	*
 	* @return The maximum absolute value of the vector's components.
 	*/
-	float						GetAbsMax() const;
+	float GetAbsMax() const;
 
 	/**
 	* Get the minimum value of the vector's components.
 	*
 	* @return The minimum value of the vector's components.
 	*/
-	float						GetMin() const;
+	float GetMin() const;
 
 	/**
 	* Get the minimum absolute value of the vector's components.
 	*
 	* @return The minimum absolute value of the vector's components.
 	*/
-	float						GetAbsMin() const;
+	float GetAbsMin() const;
 
 	/** Gets the component-wise min of two vectors. */
-	YVector						ComponentMin(const YVector& Other) const;
+	YVector ComponentMin(const YVector& Other) const;
 
 	/** Gets the component-wise max of two vectors. */
-	YVector						ComponentMax(const YVector& Other) const;
+	YVector ComponentMax(const YVector& Other) const;
 
 	/**
 	* Get a copy of this vector with absolute value of each component.
 	*
 	* @return A copy of this vector with absolute value of each component.
 	*/
-	YVector						GetAbs() const;
+	YVector GetAbs() const;
 
 	/**
 	* Get the length (magnitude) of this vector.
 	*
 	* @return The length of this vector.
 	*/
-	float						Size() const;
+	float Size() const;
 
 	/**
 	* Get the squared length of this vector.
 	*
 	* @return The squared length of this vector.
 	*/
-	float						SizeSquared() const;
+	float SizeSquared() const;
 
 	/**
 	* Get the length of the 2D components of this vector.
 	*
 	* @return The 2D length of this vector.
 	*/
-	float						Size2D() const;
+	float Size2D() const;
 
 	/**
 	* Get the squared length of the 2D components of this vector.
 	*
 	* @return The squared 2D length of this vector.
 	*/
-	float						SizeSquared2D() const;
+	float SizeSquared2D() const;
 
 	/**
 	* Checks whether vector is near to zero within a specified tolerance.
@@ -444,14 +456,14 @@ public:
 	* @param Tolerance Error tolerance.
 	* @return true if the vector is near to zero, false otherwise.
 	*/
-	bool						IsNearlyZero(float Tolerance = KINDA_SMALL_NUMBER) const;
+	bool IsNearlyZero(float Tolerance = KINDA_SMALL_NUMBER) const;
 
 	/**
 	* Checks whether all components of the vector are exactly zero.
 	*
 	* @return true if the vector is exactly zero, false otherwise.
 	*/
-	bool						IsZero() const;
+	bool IsZero() const;
 
 	/**
 	* Normalize this vector in-place if it is large enough, set it to (0,0,0) otherwise.
@@ -459,22 +471,22 @@ public:
 	* @param Tolerance Minimum squared length of vector for normalization.
 	* @return true if the vector was normalized correctly, false otherwise.
 	*/
-	bool						Normalize(float Tolerance = SMALL_NUMBER);
+	bool Normalize(float Tolerance = SMALL_NUMBER);
 
 	/**
 	* Checks whether vector is normalized.
 	*
 	* @return true if Normalized, false otherwise.
 	*/
-	bool						IsNormalized() const;
+	bool IsNormalized() const;
 
 	/**
-	* Utility to convert this vector into a unit direction vector and its original length.
+	* Util to convert this vector into a unit direction vector and its original length.
 	*
 	* @param OutDir Reference passed in to store unit direction vector.
 	* @param OutLength Reference passed in to store length of the vector.
 	*/
-	void						ToDirectionAndLength(YVector &OutDir, float &OutLength) const;
+	void ToDirectionAndLength(YVector &OutDir, float &OutLength) const;
 
 	/**
 	* Get a copy of the vector as sign only.
@@ -482,14 +494,14 @@ public:
 	*
 	* @param A copy of the vector with each component set to +1 or -1
 	*/
-	FORCEINLINE YVector			GetSignVector() const;
+	FORCEINLINE YVector GetSignVector() const;
 
 	/**
 	* Projects 2D components of vector based on Z.
 	*
 	* @return Projected version of vector based on Z.
 	*/
-	YVector						Projection() const;
+	YVector Projection() const;
 
 	/**
 	* Calculates normalized version of vector without checking for zero length.
@@ -497,7 +509,10 @@ public:
 	* @return Normalized version of vector.
 	* @see GetSafeNormal()
 	*/
-	FORCEINLINE YVector			GetUnsafeNormal() const;
+	FORCEINLINE YVector GetUnsafeNormal() const;
+
+	DEPRECATED(4.7, "Deprecated due to unclear name, use GetUnsafeNormal instead.")
+		FORCEINLINE YVector UnsafeNormal() const;
 
 	/**
 	* Gets a copy of this vector snapped to a grid.
@@ -506,7 +521,7 @@ public:
 	* @return A copy of this vector snapped to a grid.
 	* @see YMath::GridSnap()
 	*/
-	YVector						GridSnap(const float& GridSz) const;
+	YVector GridSnap(const float& GridSz) const;
 
 	/**
 	* Get a copy of this vector, clamped inside of a cube.
@@ -514,19 +529,31 @@ public:
 	* @param Radius Half size of the cube.
 	* @return A copy of this vector, bound by cube.
 	*/
-	YVector						BoundToCube(float Radius) const;
+	YVector BoundToCube(float Radius) const;
 
 	/** Create a copy of this vector, with its magnitude clamped between Min and Max. */
-	YVector						GetClampedToSize(float Min, float Max) const;
+	YVector GetClampedToSize(float Min, float Max) const;
+
+	DEPRECATED(4.7, "Deprecated due to unclear name, use GetClampedToSize instead.")
+		YVector ClampSize(float Min, float Max) const;
 
 	/** Create a copy of this vector, with the 2D magnitude clamped between Min and Max. Z is unchanged. */
-	YVector						GetClampedToSize2D(float Min, float Max) const;
+	YVector GetClampedToSize2D(float Min, float Max) const;
+
+	DEPRECATED(4.7, "Deprecated due to unclear name, use GetClampedToSize2D instead.")
+		YVector ClampSize2D(float Min, float Max) const;
 
 	/** Create a copy of this vector, with its maximum magnitude clamped to MaxSize. */
-	YVector						GetClampedToMaxSize(float MaxSize) const;
+	YVector GetClampedToMaxSize(float MaxSize) const;
+
+	DEPRECATED(4.7, "Deprecated due to unclear name, use GetClampedToMaxSize instead.")
+		YVector ClampMaxSize(float MaxSize) const;
 
 	/** Create a copy of this vector, with the maximum 2D magnitude clamped to MaxSize. Z is unchanged. */
-	YVector						GetClampedToMaxSize2D(float MaxSize) const;
+	YVector GetClampedToMaxSize2D(float MaxSize) const;
+
+	DEPRECATED(4.7, "Deprecated due to unclear name, use GetClampedToMaxSize2D instead.")
+		YVector ClampMaxSize2D(float MaxSize) const;
 
 	/**
 	* Add a vector to this and clamp the result in a cube.
@@ -534,7 +561,7 @@ public:
 	* @param V Vector to add.
 	* @param Radius Half size of the cube.
 	*/
-	void						AddBounded(const YVector& V, float Radius = MAX_int16);
+	void AddBounded(const YVector& V, float Radius = MAX_int16);
 
 	/**
 	* Gets the reciprocal of this vector, avoiding division by zero.
@@ -542,7 +569,7 @@ public:
 	*
 	* @return Reciprocal of this vector.
 	*/
-	YVector						Reciprocal() const;
+	YVector Reciprocal() const;
 
 	/**
 	* Check whether X, Y and Z are nearly equal.
@@ -550,7 +577,7 @@ public:
 	* @param Tolerance Specified Tolerance.
 	* @return true if X == Y == Z within the specified tolerance.
 	*/
-	bool						IsUniform(float Tolerance = KINDA_SMALL_NUMBER) const;
+	bool IsUniform(float Tolerance = KINDA_SMALL_NUMBER) const;
 
 	/**
 	* Mirror a vector about a normal vector.
@@ -558,7 +585,7 @@ public:
 	* @param MirrorNormal Normal vector to mirror about.
 	* @return Mirrored vector.
 	*/
-	YVector						MirrorByVector(const YVector& MirrorNormal) const;
+	YVector MirrorByVector(const YVector& MirrorNormal) const;
 
 	/**
 	* Mirrors a vector about a plane.
@@ -566,7 +593,7 @@ public:
 	* @param Plane Plane to mirror about.
 	* @return Mirrored vector.
 	*/
-	YVector						MirrorByPlane(const YPlane& Plane) const;
+	YVector MirrorByPlane(const YPlane& Plane) const;
 
 	/**
 	* Rotates around Axis (assumes Axis.Size() == 1).
@@ -575,7 +602,7 @@ public:
 	* @param Axis Axis to rotate around.
 	* @return Rotated Vector.
 	*/
-	YVector						RotateAngleAxis(const float AngleDeg, const YVector& Axis) const;
+	YVector RotateAngleAxis(const float AngleDeg, const YVector& Axis) const;
 
 	/**
 	* Gets a normalized copy of the vector, checking it is safe to do so based on the length.
@@ -584,7 +611,10 @@ public:
 	* @param Tolerance Minimum squared vector length.
 	* @return A normalized copy if safe, (0,0,0) otherwise.
 	*/
-	YVector						GetSafeNormal(float Tolerance = SMALL_NUMBER) const;
+	YVector GetSafeNormal(float Tolerance = SMALL_NUMBER) const;
+
+	DEPRECATED(4.7, "Deprecated due to unclear name, use GetSafeNormal instead.")
+		YVector SafeNormal(float Tolerance = SMALL_NUMBER) const;
 
 	/**
 	* Gets a normalized copy of the 2D components of the vector, checking it is safe to do so. Z is set to zero.
@@ -593,7 +623,10 @@ public:
 	* @param Tolerance Minimum squared vector length.
 	* @return Normalized copy if safe, otherwise returns zero vector.
 	*/
-	YVector						GetSafeNormal2D(float Tolerance = SMALL_NUMBER) const;
+	YVector GetSafeNormal2D(float Tolerance = SMALL_NUMBER) const;
+
+	DEPRECATED(4.7, "Deprecated due to unclear name, use GetSafeNormal2D instead.")
+		YVector SafeNormal2D(float Tolerance = SMALL_NUMBER) const;
 
 	/**
 	* Returns the cosine of the angle between this vector and another projected onto the XY plane (no Z).
@@ -601,7 +634,7 @@ public:
 	* @param B the other vector to find the 2D cosine of the angle with.
 	* @return The cosine.
 	*/
-	FORCEINLINE float			CosineAngle2D(YVector B) const;
+	FORCEINLINE float CosineAngle2D(YVector B) const;
 
 	/**
 	* Gets a copy of this vector projected onto the input vector.
@@ -609,7 +642,7 @@ public:
 	* @param A	Vector to project onto, does not assume it is normalized.
 	* @return Projected vector.
 	*/
-	FORCEINLINE YVector			ProjectOnTo(const YVector& A) const;
+	FORCEINLINE YVector ProjectOnTo(const YVector& A) const;
 
 	/**
 	* Gets a copy of this vector projected onto the input vector, which is assumed to be unit length.
@@ -617,37 +650,37 @@ public:
 	* @param  Normal Vector to project onto (assumed to be unit length).
 	* @return Projected vector.
 	*/
-	FORCEINLINE YVector			ProjectOnToNormal(const YVector& Normal) const;
+	FORCEINLINE YVector ProjectOnToNormal(const YVector& Normal) const;
 
 	/**
-	* Return the FRotator orientation corresponding to the direction in which the vector points.
+	* Return the YRotator orientation corresponding to the direction in which the vector points.
 	* Sets Yaw and Pitch to the proper numbers, and sets Roll to zero because the roll can't be determined from a vector.
 	*
-	* @return FRotator from the Vector's direction, without any roll.
+	* @return YRotator from the Vector's direction, without any roll.
 	* @see ToOrientationQuat()
 	*/
-	CORE_API YRotator			ToOrientationRotator() const;
+	CORE_API YRotator ToOrientationRotator() const;
 
 	/**
 	* Return the Quaternion orientation corresponding to the direction in which the vector points.
-	* Similar to the FRotator version, returns a result without roll such that it preserves the up vector.
+	* Similar to the YRotator version, returns a result without roll such that it preserves the up vector.
 	*
 	* @note If you don't care about preserving the up vector and just want the most direct rotation, you can use the faster
-	* 'FQuat::FindBetweenVectors(YVector::ForwardVector, YourVector)' or 'FQuat::FindBetweenNormals(...)' if you know the vector is of unit length.
+	* 'YQuat::FindBetweenVectors(FVector::ForwardVector, YourVector)' or 'YQuat::FindBetweenNormals(...)' if you know the vector is of unit length.
 	*
 	* @return Quaternion from the Vector's direction, without any roll.
-	* @see ToOrientationRotator(), FQuat::FindBetweenVectors()
+	* @see ToOrientationRotator(), YQuat::FindBetweenVectors()
 	*/
-	CORE_API YQuat				ToOrientationQuat() const;
+	CORE_API YQuat ToOrientationQuat() const;
 
 	/**
-	* Return the FRotator orientation corresponding to the direction in which the vector points.
+	* Return the YRotator orientation corresponding to the direction in which the vector points.
 	* Sets Yaw and Pitch to the proper numbers, and sets Roll to zero because the roll can't be determined from a vector.
 	* @note Identical to 'ToOrientationRotator()' and preserved for legacy reasons.
-	* @return FRotator from the Vector's direction.
+	* @return YRotator from the Vector's direction.
 	* @see ToOrientationRotator(), ToOrientationQuat()
 	*/
-	CORE_API YRotator			Rotation() const;
+	CORE_API YRotator Rotation() const;
 
 	/**
 	* Find good arbitrary axis vectors to represent U and V axes of a plane,
@@ -656,17 +689,17 @@ public:
 	* @param Axis1 Reference to first axis.
 	* @param Axis2 Reference to second axis.
 	*/
-	CORE_API void				FindBestAxisVectors(YVector& Axis1, YVector& Axis2) const;
+	CORE_API void FindBestAxisVectors(YVector& Axis1, YVector& Axis2) const;
 
 	/** When this vector contains Euler angles (degrees), ensure that angles are between +/-180 */
-	CORE_API void				UnwindEuler();
+	CORE_API void UnwindEuler();
 
 	/**
 	* Utility to check if there are any non-finite values (NaN or Inf) in this vector.
 	*
 	* @return true if there are any non-finite values in this vector, false otherwise.
 	*/
-	bool						ContainsNaN() const;
+	bool ContainsNaN() const;
 
 	/**
 	* Check if the vector is of unit length, with specified tolerance.
@@ -674,54 +707,49 @@ public:
 	* @param LengthSquaredTolerance Tolerance against squared length.
 	* @return true if the vector is a unit vector within the specified tolerance.
 	*/
-	FORCEINLINE bool			IsUnit(float LengthSquaredTolerance = KINDA_SMALL_NUMBER) const;
+	FORCEINLINE bool IsUnit(float LengthSquaredTolerance = KINDA_SMALL_NUMBER) const;
 
 	/**
 	* Get a textual representation of this vector.
 	*
 	* @return A string describing the vector.
 	*/
-	//!!FIXME by zyx
-	//YString ToString() const;
+	YString ToString() const;
 
 	/**
 	* Get a locale aware textual representation of this vector.
 	*
 	* @return A string describing the vector.
 	*/
-	//!!FIXME by zyx
-	//FText ToText() const;
+	FText ToText() const;
 
 	/** Get a short textural representation of this vector, for compact readable logging. */
-	//!!FIXME by zyx
-	//YString ToCompactString() const;
+	YString ToCompactString() const;
 
 	/** Get a short locale aware textural representation of this vector, for compact readable logging. */
-	//!!FIXME by zyx
-	//FText ToCompactText() const;
+	FText ToCompactText() const;
 
 	/**
 	* Initialize this Vector based on an YString. The String is expected to contain X=, Y=, Z=.
-	* The YVector will be bogus when InitFromString returns false.
+	* The FVector will be bogus when InitFromString returns false.
 	*
 	* @param	InSourceString	YString containing the vector values.
 	* @return true if the X,Y,Z values were read successfully; false otherwise.
 	*/
-	//!!FIXME by zyx
-	//bool InitFromString(const YString& InSourceString);
+	bool InitFromString(const YString& InSourceString);
 
 	/**
 	* Converts a Cartesian unit vector into spherical coordinates on the unit sphere.
 	* @return Output Theta will be in the range [0, PI], and output Phi will be in the range [-PI, PI].
 	*/
-	YVector2D					UnitCartesianToSpherical() const;
+	YVector2D UnitCartesianToSpherical() const;
 
 	/**
 	* Convert a direction vector into a 'heading' angle.
 	*
 	* @return 'Heading' angle between +/-PI. 0 is pointing down +X.
 	*/
-	float						HeadingAngle() const;
+	float HeadingAngle() const;
 
 	/**
 	* Create an orthonormal basis from a basis with at least two orthogonal vectors.
@@ -733,7 +761,7 @@ public:
 	* @param YAxis The input basis' YAxis, and upon return the orthonormal basis' YAxis.
 	* @param ZAxis The input basis' ZAxis, and upon return the orthonormal basis' ZAxis.
 	*/
-	static CORE_API void		CreateOrthonormalBasis(YVector& XAxis, YVector& YAxis, YVector& ZAxis);
+	static CORE_API void CreateOrthonormalBasis(YVector& XAxis, YVector& YAxis, YVector& ZAxis);
 
 	/**
 	* Compare two points and see if they're the same, using a threshold.
@@ -742,7 +770,7 @@ public:
 	* @param Q Second vector.
 	* @return Whether points are the same within a threshold. Uses fast distance approximation (linear per-component distance).
 	*/
-	static bool					PointsAreSame(const YVector &P, const YVector &Q);
+	static bool PointsAreSame(const YVector &P, const YVector &Q);
 
 	/**
 	* Compare two points and see if they're within specified distance.
@@ -752,7 +780,7 @@ public:
 	* @param Dist Specified distance.
 	* @return Whether two points are within the specified distance. Uses fast distance approximation (linear per-component distance).
 	*/
-	static bool					PointsAreNear(const YVector &Point1, const YVector &Point2, float Dist);
+	static bool PointsAreNear(const YVector &Point1, const YVector &Point2, float Dist);
 
 	/**
 	* Calculate the signed distance (in the direction of the normal) between a point and a plane.
@@ -762,7 +790,7 @@ public:
 	* @param PlaneNormal The Normal of the plane (assumed to be unit length).
 	* @return Signed distance between point and plane.
 	*/
-	static float				PointPlaneDist(const YVector &Point, const YVector &PlaneBase, const YVector &PlaneNormal);
+	static float PointPlaneDist(const YVector &Point, const YVector &PlaneBase, const YVector &PlaneNormal);
 
 	/**
 	* Calculate the projection of a point on the given plane.
@@ -771,7 +799,7 @@ public:
 	* @param Plane The plane
 	* @return Projection of Point onto Plane
 	*/
-	static YVector				PointPlaneProject(const YVector& Point, const YPlane& Plane);
+	static YVector PointPlaneProject(const YVector& Point, const YPlane& Plane);
 
 	/**
 	* Calculate the projection of a point on the plane defined by counter-clockwise (CCW) points A,B,C.
@@ -782,7 +810,7 @@ public:
 	* @param C 3rd of three points in CCW order defining the plane
 	* @return Projection of Point onto plane ABC
 	*/
-	static YVector				PointPlaneProject(const YVector& Point, const YVector& A, const YVector& B, const YVector& C);
+	static YVector PointPlaneProject(const YVector& Point, const YVector& A, const YVector& B, const YVector& C);
 
 	/**
 	* Calculate the projection of a point on the plane defined by PlaneBase and PlaneNormal.
@@ -792,7 +820,7 @@ public:
 	* @param PlaneNorm Normal of the plane (assumed to be unit length).
 	* @return Projection of Point onto plane
 	*/
-	static YVector				PointPlaneProject(const YVector& Point, const YVector& PlaneBase, const YVector& PlaneNormal);
+	static YVector PointPlaneProject(const YVector& Point, const YVector& PlaneBase, const YVector& PlaneNormal);
 
 	/**
 	* Calculate the projection of a vector on the plane defined by PlaneNormal.
@@ -801,7 +829,7 @@ public:
 	* @param  PlaneNormal Normal of the plane (assumed to be unit length).
 	* @return Projection of V onto plane.
 	*/
-	static YVector				VectorPlaneProject(const YVector& V, const YVector& PlaneNormal);
+	static YVector VectorPlaneProject(const YVector& V, const YVector& PlaneNormal);
 
 	/**
 	* Euclidean distance between two points.
@@ -811,6 +839,17 @@ public:
 	* @return The distance between two points.
 	*/
 	static FORCEINLINE float Dist(const YVector &V1, const YVector &V2);
+	static FORCEINLINE float Distance(const YVector &V1, const YVector &V2) { return Dist(V1, V2); }
+
+	/**
+	* Euclidean distance between two points in the XY plane (ignoring Z).
+	*
+	* @param V1 The first point.
+	* @param V2 The second point.
+	* @return The distance between two points in the XY plane.
+	*/
+	static FORCEINLINE float DistXY(const YVector &V1, const YVector &V2);
+	static FORCEINLINE float Dist2D(const YVector &V1, const YVector &V2) { return DistXY(V1, V2); }
 
 	/**
 	* Squared distance between two points.
@@ -819,7 +858,7 @@ public:
 	* @param V2 The second point.
 	* @return The squared distance between two points.
 	*/
-	static FORCEINLINE float	DistSquared(const YVector &V1, const YVector &V2);
+	static FORCEINLINE float DistSquared(const YVector &V1, const YVector &V2);
 
 	/**
 	* Squared distance between two points in the XY plane only.
@@ -828,7 +867,8 @@ public:
 	* @param V2 The second point.
 	* @return The squared distance between two points in the XY plane
 	*/
-	static FORCEINLINE float	DistSquaredXY(const YVector &V1, const YVector &V2);
+	static FORCEINLINE float DistSquaredXY(const YVector &V1, const YVector &V2);
+	static FORCEINLINE float DistSquared2D(const YVector &V1, const YVector &V2) { return DistSquaredXY(V1, V2); }
 
 	/**
 	* Compute pushout of a box from a plane.
@@ -837,7 +877,7 @@ public:
 	* @param Size The size of the box.
 	* @return Pushout required.
 	*/
-	static FORCEINLINE float	BoxPushOut(const YVector& Normal, const YVector& Size);
+	static FORCEINLINE float BoxPushOut(const YVector& Normal, const YVector& Size);
 
 	/**
 	* See if two normal vectors are nearly parallel, meaning the angle between them is close to 0 degrees.
@@ -847,7 +887,7 @@ public:
 	* @param  ParallelCosineThreshold Normals are parallel if absolute value of dot product (cosine of angle between them) is greater than or equal to this. For example: cos(1.0 degrees).
 	* @return true if vectors are nearly parallel, false otherwise.
 	*/
-	static bool					Parallel(const YVector& Normal1, const YVector& Normal2, float ParallelCosineThreshold = THRESH_NORMALS_ARE_PARALLEL);
+	static bool Parallel(const YVector& Normal1, const YVector& Normal2, float ParallelCosineThreshold = THRESH_NORMALS_ARE_PARALLEL);
 
 	/**
 	* See if two normal vectors are coincident (nearly parallel and point in the same direction).
@@ -857,7 +897,7 @@ public:
 	* @param  ParallelCosineThreshold Normals are coincident if dot product (cosine of angle between them) is greater than or equal to this. For example: cos(1.0 degrees).
 	* @return true if vectors are coincident (nearly parallel and point in the same direction), false otherwise.
 	*/
-	static bool					Coincident(const YVector& Normal1, const YVector& Normal2, float ParallelCosineThreshold = THRESH_NORMALS_ARE_PARALLEL);
+	static bool Coincident(const YVector& Normal1, const YVector& Normal2, float ParallelCosineThreshold = THRESH_NORMALS_ARE_PARALLEL);
 
 	/**
 	* See if two normal vectors are nearly orthogonal (perpendicular), meaning the angle between them is close to 90 degrees.
@@ -867,7 +907,7 @@ public:
 	* @param  OrthogonalCosineThreshold Normals are orthogonal if absolute value of dot product (cosine of angle between them) is less than or equal to this. For example: cos(89.0 degrees).
 	* @return true if vectors are orthogonal (perpendicular), false otherwise.
 	*/
-	static bool					Orthogonal(const YVector& Normal1, const YVector& Normal2, float OrthogonalCosineThreshold = THRESH_NORMALS_ARE_ORTHOGONAL);
+	static bool Orthogonal(const YVector& Normal1, const YVector& Normal2, float OrthogonalCosineThreshold = THRESH_NORMALS_ARE_ORTHOGONAL);
 
 	/**
 	* See if two planes are coplanar. They are coplanar if the normals are nearly parallel and the planes include the same set of points.
@@ -879,7 +919,7 @@ public:
 	* @param ParallelCosineThreshold Normals are parallel if absolute value of dot product is greater than or equal to this.
 	* @return true if the planes are coplanar, false otherwise.
 	*/
-	static bool					Coplanar(const YVector& Base1, const YVector& Normal1, const YVector& Base2, const YVector& Normal2, float ParallelCosineThreshold = THRESH_NORMALS_ARE_PARALLEL);
+	static bool Coplanar(const YVector& Base1, const YVector& Normal1, const YVector& Base2, const YVector& Normal2, float ParallelCosineThreshold = THRESH_NORMALS_ARE_PARALLEL);
 
 	/**
 	* Triple product of three vectors: X dot (Y cross Z).
@@ -889,18 +929,17 @@ public:
 	* @param Z The third vector.
 	* @return The triple product: X dot (Y cross Z).
 	*/
-	static float				Triple(const YVector& X, const YVector& Y, const YVector& Z);
+	static float Triple(const YVector& X, const YVector& Y, const YVector& Z);
 
 	/**
 	* Generates a list of sample points on a Bezier curve defined by 2 points.
 	*
-	* @param ControlPoints	Array of 4 YVectors (vert1, controlpoint1, controlpoint2, vert2).
+	* @param ControlPoints	Array of 4 FVectors (vert1, controlpoint1, controlpoint2, vert2).
 	* @param NumPoints Number of samples.
 	* @param OutPoints Receives the output samples.
 	* @return The path length.
 	*/
-	//!!FIXME by zyx
-	//static CORE_API float		EvaluateBezier(const YVector* ControlPoints, int32 NumPoints, TArray<YVector>& OutPoints);
+	static CORE_API float EvaluateBezier(const YVector* ControlPoints, int32 NumPoints, TArray<YVector>& OutPoints);
 
 	/**
 	* Converts a vector containing radian values to a vector containing degree values.
@@ -908,7 +947,7 @@ public:
 	* @param RadVector	Vector containing radian values
 	* @return Vector  containing degree values
 	*/
-	static YVector				RadiansToDegrees(const YVector& RadVector);
+	static YVector RadiansToDegrees(const YVector& RadVector);
 
 	/**
 	* Converts a vector containing degree values to a vector containing radian values.
@@ -916,7 +955,7 @@ public:
 	* @param DegVector	Vector containing degree values
 	* @return Vector containing radian values
 	*/
-	static YVector				DegreesToRadians(const YVector& DegVector);
+	static YVector DegreesToRadians(const YVector& DegVector);
 
 	/**
 	* Given a current set of cluster centers, a set of points, iterate N times to move clusters to be central.
@@ -927,8 +966,7 @@ public:
 	* @param NumConnectionsToBeValid Sometimes you will have long strings that come off the mass of points
 	* which happen to have been chosen as Cluster starting points.  You want to be able to disregard those.
 	*/
-	//!!FIXME by zyx
-	//static CORE_API void		GenerateClusterCenters(TArray<YVector>& Clusters, const TArray<YVector>& Points, int32 NumIterations, int32 NumConnectionsToBeValid);
+	static CORE_API void GenerateClusterCenters(TArray<YVector>& Clusters, const TArray<YVector>& Points, int32 NumIterations, int32 NumConnectionsToBeValid);
 
 	/**
 	* Serializer.
@@ -937,33 +975,30 @@ public:
 	* @param V Vector to serialize.
 	* @return Reference to Archive after serialization.
 	*/
-	//!!FIXME by zyx
-	//friend YArchive& operator<<(YArchive& Ar, YVector& V)
-	//{
-	//	// @warning BulkSerialize: YVector is serialized as memory dump
-	//	// See TArray::BulkSerialize for detailed description of implied limitations.
-	//	return Ar << V.X << V.Y << V.Z;
-	//}
+	friend YArchive& operator<<(YArchive& Ar, YVector& V)
+	{
+		// @warning BulkSerialize: FVector is serialized as memory dump
+		// See TArray::BulkSerialize for detailed description of implied limitations.
+		return Ar << V.X << V.Y << V.Z;
+	}
 
-	//!!FIXME by zyx
-	//bool Serialize(YArchive& Ar)
-	//{
-	//	Ar << *this;
-	//	return true;
-	//}
+	bool Serialize(YArchive& Ar)
+	{
+		Ar << *this;
+		return true;
+	}
 
 	/**
 	* Network serialization function.
-	* YVectors NetSerialize without quantization (ie exact values are serialized).
+	* FVectors NetSerialize without quantization (ie exact values are serialized).
 	*
-	* @see YVector_NetQuantize, YVector_NetQuantize10, YVector_NetQuantize100, YVector_NetQuantizeNormal
+	* @see FVector_NetQuantize, FVector_NetQuantize10, FVector_NetQuantize100, FVector_NetQuantizeNormal
 	*/
-	//!!FIXME by zyx
-	//CORE_API bool NetSerialize(YArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
+	CORE_API bool NetSerialize(YArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
 };
 
 
-/* YVector inline functions
+/* FVector inline functions
 *****************************************************************************/
 
 /**
@@ -980,17 +1015,16 @@ FORCEINLINE YVector operator*(float Scale, const YVector& V)
 
 
 /**
-* Creates a hash value from a YVector.
+* Creates a hash value from a FVector.
 *
 * @param Vector the vector to create a hash value for
 * @return The hash value from the components
 */
-//!!FIXME by zyx
-//FORCEINLINE uint32 GetTypeHash(const YVector& Vector)
-//{
-//	// Note: this assumes there's no padding in YVector that could contain uncompared data.
-//	return FCrc::MemCrc_DEPRECATED(&Vector, sizeof(Vector));
-//}
+FORCEINLINE uint32 GetTypeHash(const YVector& Vector)
+{
+	// Note: this assumes there's no padding in FVector that could contain uncompared data.
+	return FCrc::MemCrc_DEPRECATED(&Vector, sizeof(Vector));
+}
 
 
 #if PLATFORM_LITTLE_ENDIAN
@@ -1011,7 +1045,7 @@ static FORCEINLINE YVector INTEL_ORDER_VECTOR(YVector v)
 * @param Point 3D position of interest
 * @return the distance from the Point to the bounding box.
 */
-FORCEINLINE float				ComputeSquaredDistanceFromBoxToPoint(const YVector& Mins, const YVector& Maxs, const YVector& Point)
+FORCEINLINE float ComputeSquaredDistanceFromBoxToPoint(const YVector& Mins, const YVector& Maxs, const YVector& Point)
 {
 	// Accumulates the distance as we iterate axis
 	float DistSquared = 0.f;
@@ -1056,7 +1090,7 @@ FORCEINLINE YVector::YVector(const YVector2D V, float InZ)
 }
 
 
-inline YVector	YVector::RotateAngleAxis(const float AngleDeg, const YVector& Axis) const
+inline YVector YVector::RotateAngleAxis(const float AngleDeg, const YVector& Axis) const
 {
 	float S, C;
 	YMath::SinCos(&S, &C, YMath::DegreesToRadians(AngleDeg));
@@ -1203,12 +1237,11 @@ FORCEINLINE YVector::YVector(YIntVector InVector)
 	DiagnosticCheckNaN();
 }
 
-//!!FIXME by zyx
-//FORCEINLINE YVector::YVector(YIntPoint A)
-//	: X(A.X), Y(A.Y), Z(0.f)
-//{
-//	DiagnosticCheckNaN();
-//}
+FORCEINLINE YVector::YVector(YIntPoint A)
+	: X(A.X), Y(A.Y), Z(0.f)
+{
+	DiagnosticCheckNaN();
+}
 
 FORCEINLINE YVector::YVector(EForceInit)
 	: X(0.0f), Y(0.0f), Z(0.0f)
@@ -1367,8 +1400,7 @@ FORCEINLINE YVector YVector::operator/=(const YVector& V)
 
 FORCEINLINE float& YVector::operator[](int32 Index)
 {
-	//!!FIXME by zyx
-	//check(Index >= 0 && Index < 3);
+	check(Index >= 0 && Index < 3);
 	if (Index == 0)
 	{
 		return X;
@@ -1385,8 +1417,7 @@ FORCEINLINE float& YVector::operator[](int32 Index)
 
 FORCEINLINE float YVector::operator[](int32 Index)const
 {
-	//!!FIXME by zyx
-	//check(Index >= 0 && Index < 3);
+	check(Index >= 0 && Index < 3);
 	if (Index == 0)
 	{
 		return X;
@@ -1531,6 +1562,10 @@ FORCEINLINE YVector YVector::GetUnsafeNormal() const
 	return YVector(X*Scale, Y*Scale, Z*Scale);
 }
 
+FORCEINLINE YVector YVector::UnsafeNormal() const
+{
+	return GetUnsafeNormal();
+}
 
 FORCEINLINE YVector YVector::GridSnap(const float& GridSz) const
 {
@@ -1557,6 +1592,11 @@ FORCEINLINE YVector YVector::GetClampedToSize(float Min, float Max) const
 	return VecSize * VecDir;
 }
 
+FORCEINLINE YVector YVector::ClampSize(float Min, float Max) const
+{
+	return GetClampedToSize(Min, Max);
+}
+
 FORCEINLINE YVector YVector::GetClampedToSize2D(float Min, float Max) const
 {
 	float VecSize2D = Size2D();
@@ -1566,6 +1606,12 @@ FORCEINLINE YVector YVector::GetClampedToSize2D(float Min, float Max) const
 
 	return YVector(VecSize2D * VecDir.X, VecSize2D * VecDir.Y, Z);
 }
+
+FORCEINLINE YVector YVector::ClampSize2D(float Min, float Max) const
+{
+	return GetClampedToSize2D(Min, Max);
+}
+
 
 FORCEINLINE YVector YVector::GetClampedToMaxSize(float MaxSize) const
 {
@@ -1586,6 +1632,11 @@ FORCEINLINE YVector YVector::GetClampedToMaxSize(float MaxSize) const
 	}
 }
 
+FORCEINLINE YVector YVector::ClampMaxSize(float MaxSize) const
+{
+	return GetClampedToMaxSize(MaxSize);
+}
+
 FORCEINLINE YVector YVector::GetClampedToMaxSize2D(float MaxSize) const
 {
 	if (MaxSize < KINDA_SMALL_NUMBER)
@@ -1604,6 +1655,12 @@ FORCEINLINE YVector YVector::GetClampedToMaxSize2D(float MaxSize) const
 		return *this;
 	}
 }
+
+FORCEINLINE YVector YVector::ClampMaxSize2D(float MaxSize) const
+{
+	return GetClampedToMaxSize2D(MaxSize);
+}
+
 
 FORCEINLINE void YVector::AddBounded(const YVector& V, float Radius)
 {
@@ -1678,6 +1735,11 @@ FORCEINLINE YVector YVector::GetSafeNormal(float Tolerance) const
 	return YVector(X*Scale, Y*Scale, Z*Scale);
 }
 
+FORCEINLINE YVector YVector::SafeNormal(float Tolerance) const
+{
+	return GetSafeNormal(Tolerance);
+}
+
 FORCEINLINE YVector YVector::GetSafeNormal2D(float Tolerance) const
 {
 	const float SquareSum = X*X + Y*Y;
@@ -1701,6 +1763,11 @@ FORCEINLINE YVector YVector::GetSafeNormal2D(float Tolerance) const
 
 	const float Scale = YMath::InvSqrt(SquareSum);
 	return YVector(X*Scale, Y*Scale, 0.f);
+}
+
+FORCEINLINE YVector YVector::SafeNormal2D(float Tolerance) const
+{
+	return GetSafeNormal2D(Tolerance);
 }
 
 FORCEINLINE float YVector::CosineAngle2D(YVector B) const
@@ -1736,132 +1803,126 @@ FORCEINLINE bool YVector::IsUnit(float LengthSquaredTolerance) const
 	return YMath::Abs(1.0f - SizeSquared()) < LengthSquaredTolerance;
 }
 
-//!!FIXME by zyx
-//FORCEINLINE YString YVector::ToString() const
-//{
-//	return YString::Printf(TEXT("X=%3.3f Y=%3.3f Z=%3.3f"), X, Y, Z);
-//}
+FORCEINLINE YString YVector::ToString() const
+{
+	return YString::Printf(TEXT("X=%3.3f Y=%3.3f Z=%3.3f"), X, Y, Z);
+}
 
-//!!FIXME by zyx
-//FORCEINLINE FText YVector::ToText() const
-//{
-//	FFormatNamedArguments Args;
-//	Args.Add(TEXT("X"), X);
-//	Args.Add(TEXT("Y"), Y);
-//	Args.Add(TEXT("Z"), Z);
-//
-//	return FText::Format(NSLOCTEXT("Core", "Vector3", "X={X} Y={Y} Z={Z}"), Args);
-//}
+FORCEINLINE FText YVector::ToText() const
+{
+	FFormatNamedArguments Args;
+	Args.Add(TEXT("X"), X);
+	Args.Add(TEXT("Y"), Y);
+	Args.Add(TEXT("Z"), Z);
 
-//!!FIXME by zyx
-//FORCEINLINE FText YVector::ToCompactText() const
-//{
-//	if (IsNearlyZero())
-//	{
-//		return NSLOCTEXT("Core", "Vector3_CompactZeroVector", "V(0)");
-//	}
-//
-//	const bool XIsNotZero = !YMath::IsNearlyZero(X);
-//	const bool YIsNotZero = !YMath::IsNearlyZero(Y);
-//	const bool ZIsNotZero = !YMath::IsNearlyZero(Z);
-//
-//	FNumberFormattingOptions FormatRules;
-//	FormatRules.MinimumFractionalDigits = 2;
-//	FormatRules.MinimumIntegralDigits = 0;
-//
-//	FFormatNamedArguments Args;
-//	Args.Add(TEXT("X"), FText::AsNumber(X, &FormatRules));
-//	Args.Add(TEXT("Y"), FText::AsNumber(Y, &FormatRules));
-//	Args.Add(TEXT("Z"), FText::AsNumber(Z, &FormatRules));
-//
-//	if (XIsNotZero && YIsNotZero && ZIsNotZero)
-//	{
-//		return FText::Format(NSLOCTEXT("Core", "Vector3_CompactXYZ", "V(X={X}, Y={Y}, Z={Z})"), Args);
-//	}
-//	else if (!XIsNotZero && YIsNotZero && ZIsNotZero)
-//	{
-//		return FText::Format(NSLOCTEXT("Core", "Vector3_CompactYZ", "V(Y={Y}, Z={Z})"), Args);
-//	}
-//	else if (XIsNotZero && !YIsNotZero && ZIsNotZero)
-//	{
-//		return FText::Format(NSLOCTEXT("Core", "Vector3_CompactXZ", "V(X={X}, Z={Z})"), Args);
-//	}
-//	else if (XIsNotZero && YIsNotZero && !ZIsNotZero)
-//	{
-//		return FText::Format(NSLOCTEXT("Core", "Vector3_CompactXY", "V(X={X}, Y={Y})"), Args);
-//	}
-//	else if (!XIsNotZero && !YIsNotZero && ZIsNotZero)
-//	{
-//		return FText::Format(NSLOCTEXT("Core", "Vector3_CompactZ", "V(Z={Z})"), Args);
-//	}
-//	else if (XIsNotZero && !YIsNotZero && !ZIsNotZero)
-//	{
-//		return FText::Format(NSLOCTEXT("Core", "Vector3_CompactX", "V(X={X})"), Args);
-//	}
-//	else if (!XIsNotZero && YIsNotZero && !ZIsNotZero)
-//	{
-//		return FText::Format(NSLOCTEXT("Core", "Vector3_CompactY", "V(Y={Y})"), Args);
-//	}
-//
-//	return NSLOCTEXT("Core", "Vector3_CompactZeroVector", "V(0)");
-//}
+	return FText::Format(NSLOCTEXT("Core", "Vector3", "X={X} Y={Y} Z={Z}"), Args);
+}
 
-//!!FIXME by zyx
-//FORCEINLINE YString YVector::ToCompactString() const
-//{
-//	if (IsNearlyZero())
-//	{
-//		return YString::Printf(TEXT("V(0)"));
-//	}
-//
-//	YString ReturnString(TEXT("V("));
-//	bool bIsEmptyString = true;
-//	if (!YMath::IsNearlyZero(X))
-//	{
-//		ReturnString += YString::Printf(TEXT("X=%.2f"), X);
-//		bIsEmptyString = false;
-//	}
-//	if (!YMath::IsNearlyZero(Y))
-//	{
-//		if (!bIsEmptyString)
-//		{
-//			ReturnString += YString(TEXT(", "));
-//		}
-//		ReturnString += YString::Printf(TEXT("Y=%.2f"), Y);
-//		bIsEmptyString = false;
-//	}
-//	if (!YMath::IsNearlyZero(Z))
-//	{
-//		if (!bIsEmptyString)
-//		{
-//			ReturnString += YString(TEXT(", "));
-//		}
-//		ReturnString += YString::Printf(TEXT("Z=%.2f"), Z);
-//		bIsEmptyString = false;
-//	}
-//	ReturnString += YString(TEXT(")"));
-//	return ReturnString;
-//}
+FORCEINLINE FText YVector::ToCompactText() const
+{
+	if (IsNearlyZero())
+	{
+		return NSLOCTEXT("Core", "Vector3_CompactZeroVector", "V(0)");
+	}
 
-//!!FIXME by zyx
-//FORCEINLINE bool YVector::InitFromString(const YString& InSourceString)
-//{
-//	X = Y = Z = 0;
-//
-//	// The initialization is only successful if the X, Y, and Z values can all be parsed from the string
-//	const bool bSuccessful = FParse::Value(*InSourceString, TEXT("X="), X) && FParse::Value(*InSourceString, TEXT("Y="), Y) && FParse::Value(*InSourceString, TEXT("Z="), Z);
-//
-//	return bSuccessful;
-//}
+	const bool XIsNotZero = !YMath::IsNearlyZero(X);
+	const bool YIsNotZero = !YMath::IsNearlyZero(Y);
+	const bool ZIsNotZero = !YMath::IsNearlyZero(Z);
 
-//!!FIXME by zyx
-//FORCEINLINE YVector2D YVector::UnitCartesianToSpherical() const
-//{
-//	checkSlow(IsUnit());
-//	const float Theta = YMath::Acos(Z / Size());
-//	const float Phi = YMath::Atan2(Y, X);
-//	return YVector2D(Theta, Phi);
-//}
+	FNumberFormattingOptions FormatRules;
+	FormatRules.MinimumFractionalDigits = 2;
+	FormatRules.MinimumIntegralDigits = 0;
+
+	FFormatNamedArguments Args;
+	Args.Add(TEXT("X"), FText::AsNumber(X, &FormatRules));
+	Args.Add(TEXT("Y"), FText::AsNumber(Y, &FormatRules));
+	Args.Add(TEXT("Z"), FText::AsNumber(Z, &FormatRules));
+
+	if (XIsNotZero && YIsNotZero && ZIsNotZero)
+	{
+		return FText::Format(NSLOCTEXT("Core", "Vector3_CompactXYZ", "V(X={X}, Y={Y}, Z={Z})"), Args);
+	}
+	else if (!XIsNotZero && YIsNotZero && ZIsNotZero)
+	{
+		return FText::Format(NSLOCTEXT("Core", "Vector3_CompactYZ", "V(Y={Y}, Z={Z})"), Args);
+	}
+	else if (XIsNotZero && !YIsNotZero && ZIsNotZero)
+	{
+		return FText::Format(NSLOCTEXT("Core", "Vector3_CompactXZ", "V(X={X}, Z={Z})"), Args);
+	}
+	else if (XIsNotZero && YIsNotZero && !ZIsNotZero)
+	{
+		return FText::Format(NSLOCTEXT("Core", "Vector3_CompactXY", "V(X={X}, Y={Y})"), Args);
+	}
+	else if (!XIsNotZero && !YIsNotZero && ZIsNotZero)
+	{
+		return FText::Format(NSLOCTEXT("Core", "Vector3_CompactZ", "V(Z={Z})"), Args);
+	}
+	else if (XIsNotZero && !YIsNotZero && !ZIsNotZero)
+	{
+		return FText::Format(NSLOCTEXT("Core", "Vector3_CompactX", "V(X={X})"), Args);
+	}
+	else if (!XIsNotZero && YIsNotZero && !ZIsNotZero)
+	{
+		return FText::Format(NSLOCTEXT("Core", "Vector3_CompactY", "V(Y={Y})"), Args);
+	}
+
+	return NSLOCTEXT("Core", "Vector3_CompactZeroVector", "V(0)");
+}
+
+FORCEINLINE YString YVector::ToCompactString() const
+{
+	if (IsNearlyZero())
+	{
+		return YString::Printf(TEXT("V(0)"));
+	}
+
+	YString ReturnString(TEXT("V("));
+	bool bIsEmptyString = true;
+	if (!YMath::IsNearlyZero(X))
+	{
+		ReturnString += YString::Printf(TEXT("X=%.2f"), X);
+		bIsEmptyString = false;
+	}
+	if (!YMath::IsNearlyZero(Y))
+	{
+		if (!bIsEmptyString)
+		{
+			ReturnString += YString(TEXT(", "));
+		}
+		ReturnString += YString::Printf(TEXT("Y=%.2f"), Y);
+		bIsEmptyString = false;
+	}
+	if (!YMath::IsNearlyZero(Z))
+	{
+		if (!bIsEmptyString)
+		{
+			ReturnString += YString(TEXT(", "));
+		}
+		ReturnString += YString::Printf(TEXT("Z=%.2f"), Z);
+		bIsEmptyString = false;
+	}
+	ReturnString += YString(TEXT(")"));
+	return ReturnString;
+}
+
+FORCEINLINE bool YVector::InitFromString(const YString& InSourceString)
+{
+	X = Y = Z = 0;
+
+	// The initialization is only successful if the X, Y, and Z values can all be parsed from the string
+	const bool bSuccessful = FParse::Value(*InSourceString, TEXT("X="), X) && FParse::Value(*InSourceString, TEXT("Y="), Y) && FParse::Value(*InSourceString, TEXT("Z="), Z);
+
+	return bSuccessful;
+}
+
+FORCEINLINE YVector2D YVector::UnitCartesianToSpherical() const
+{
+	checkSlow(IsUnit());
+	const float Theta = YMath::Acos(Z / Size());
+	const float Phi = YMath::Atan2(Y, X);
+	return YVector2D(Theta, Phi);
+}
 
 FORCEINLINE float YVector::HeadingAngle() const
 {
@@ -1884,7 +1945,12 @@ FORCEINLINE float YVector::HeadingAngle() const
 
 FORCEINLINE float YVector::Dist(const YVector &V1, const YVector &V2)
 {
-	return YMath::Sqrt(YMath::Square(V2.X - V1.X) + YMath::Square(V2.Y - V1.Y) + YMath::Square(V2.Z - V1.Z));
+	return YMath::Sqrt(YVector::DistSquared(V1, V2));
+}
+
+FORCEINLINE float YVector::DistXY(const YVector &V1, const YVector &V2)
+{
+	return YMath::Sqrt(YVector::DistSquaredXY(V1, V2));
 }
 
 FORCEINLINE float YVector::DistSquared(const YVector &V1, const YVector &V2)
@@ -1902,7 +1968,7 @@ FORCEINLINE float YVector::BoxPushOut(const YVector& Normal, const YVector& Size
 	return YMath::Abs(Normal.X*Size.X) + YMath::Abs(Normal.Y*Size.Y) + YMath::Abs(Normal.Z*Size.Z);
 }
 
-/** Component-wise clamp for YVector */
+/** Component-wise clamp for FVector */
 FORCEINLINE YVector ClampVector(const YVector& V, const YVector& Min, const YVector& Max)
 {
 	return YVector(
@@ -1912,8 +1978,7 @@ FORCEINLINE YVector ClampVector(const YVector& V, const YVector& Min, const YVec
 	);
 }
 
-//!!FIXME by zyx
-//template <> struct TIsPODType<YVector> { enum { Value = true }; };
+template <> struct TIsPODType<YVector> { enum { Value = true }; };
 
 /* YMath inline functions
 *****************************************************************************/

@@ -284,7 +284,7 @@ enum EUnrealEngineObjectUE4Version
 	// Added cooking for landscape collision data
 	VER_UE4_LANDSCAPE_COLLISION_DATA_COOKING,
 	// Convert CPU tangent Z delta to vector from PackedNormal since we don't get any benefit other than memory
-	// we still convert all to FVector in CPU time whenever any calculation
+	// we still convert all to YVector in CPU time whenever any calculation
 	VER_UE4_MORPHTARGET_CPU_TANGENTZDELTA_FORMATCHANGE,
 	// Soft constraint limits will implicitly use the mass of the bodies
 	VER_UE4_SOFT_CONSTRAINTS_USE_MASS,
@@ -525,7 +525,7 @@ enum EUnrealEngineObjectUE4Version
 	VER_UE4_ASSET_IMPORT_DATA_AS_JSON,
 	// Legacy gamma support for textures.
 	VER_UE4_TEXTURE_LEGACY_GAMMA,
-	// Added WithSerializer for basic native structures like FVector, YColor etc to improve serialization performance
+	// Added WithSerializer for basic native structures like YVector, YColor etc to improve serialization performance
 	VER_UE4_ADDED_NATIVE_SERIALIZATION_FOR_IMMUTABLE_STRUCTURES,
 	// Deprecated attributes that override the style on UMG widgets
 	VER_UE4_DEPRECATE_UMG_STYLE_OVERRIDES,

@@ -1,9 +1,8 @@
-#include "Core.h"
+#include "CoreMinimal.h"
 #include <iostream>
 #include <string>
 #include <vector>
 //#include "Containers/SolidAngleString.h"
-#include "Containers/Array.h"
 
 struct TRUEValue
 {

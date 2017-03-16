@@ -15,7 +15,7 @@ class YSphere;
 struct YBox;
 struct YBox2D;
 struct YColor;
-struct YLinearColor;
+struct YMath;
 struct YMatrix;
 struct YPlane;
 struct YQuat;

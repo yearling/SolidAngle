@@ -255,7 +255,7 @@ struct YLinearColor
 
 	/**
 	* Linearly interpolates between two colors by the specified progress amount.  The interpolation is performed in HSV color space
-	* taking the shortest path to the new color's hue.  This can give better results than YMath::Lerp(), but is much more expensive.
+	* taking the shortest path to the new color's hue.  This can give better results than YLinearColor::Lerp(), but is much more expensive.
 	* The incoming colors are in RGB space, and the output color will be RGB.  The alpha value will also be interpolated.
 	*
 	* @param	From		The color and alpha to interpolate from as linear RGBA

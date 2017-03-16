@@ -10,7 +10,7 @@ class Error;
 class FConfigCacheIni;
 class FFixedUObjectArray;
 class FOutputDeviceConsole;
-class FOutputDeviceRedirector;
+class YOutputDeviceRedirector;
 class FReloadObjectArc;
 class ITransaction;
 
@@ -49,14 +49,14 @@ CORE_API DECLARE_LOG_CATEGORY_EXTERN(LogLoad, Log, All);
 // Temporary log category, generally you should not check things in that use this
 CORE_API DECLARE_LOG_CATEGORY_EXTERN(LogTemp, Log, All);
 
-CORE_API FOutputDeviceRedirector* GetGlobalLogSingleton();
+CORE_API YOutputDeviceRedirector* GetGlobalLogSingleton();
 
 #define GLog GetGlobalLogSingleton()
 extern CORE_API FConfigCacheIni* GConfig;
 extern CORE_API ITransaction* GUndo;
 extern CORE_API FOutputDeviceConsole* GLogConsole;
 CORE_API extern class FOutputDeviceError*			GError;
-CORE_API extern class FFeedbackContext*				GWarn;
+CORE_API extern class YFeedbackContext*				GWarn;
 
 
 extern CORE_API TCHAR GErrorHist[16384];
