@@ -30,7 +30,7 @@ struct YIntRect;
 
 // Misc
 struct FResourceSizeEx;
-class FConsoleVariable;
+class IConsoleVariable;
 class FRunnableThread;
 class FEvent;
 class FPlatformFile;

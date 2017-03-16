@@ -100,7 +100,7 @@ struct CORE_API FFileHelper
 	*
 	*	@param	InFilename			The text file to read, full path
 	*	@param	InFileManager		The filemanager to use - NULL will use &IFileManager::Get()
-	*	@param	OutStrings			The array of FStrings to fill in
+	*	@param	OutStrings			The array of YStrings to fill in
 	*
 	*	@return	bool				true if successful, false if not
 	*/

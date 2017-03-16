@@ -464,7 +464,7 @@ public:
 	*
 	* NOTE: The function naming is weird because you can't apparently have an overridden function differnt only by template type params
 	*/
-	virtual void Parse1ToNSectionOfStrings(const TCHAR* Section, const TCHAR* KeyOne, const TCHAR* KeyN, TMap<YString, TArray<YString> >& OutMap, const YString& Filename);
+	virtual void Parse1ToNSectionOYStrings(const TCHAR* Section, const TCHAR* KeyOne, const TCHAR* KeyN, TMap<YString, TArray<YString> >& OutMap, const YString& Filename);
 
 	/**
 	* Parses apart an ini section that contains a list of 1-to-N mappings of names in the following format
@@ -484,7 +484,7 @@ public:
 	*
 	* NOTE: The function naming is weird because you can't apparently have an overridden function differnt only by template type params
 	*/
-	virtual void Parse1ToNSectionOfNames(const TCHAR* Section, const TCHAR* KeyOne, const TCHAR* KeyN, TMap<YName, TArray<YName> >& OutMap, const YString& Filename);
+	virtual void Parse1ToNSectionOYNames(const TCHAR* Section, const TCHAR* KeyOne, const TCHAR* KeyN, TMap<YName, TArray<YName> >& OutMap, const YString& Filename);
 
 	FConfigFile* FindConfigFile(const YString& Filename);
 	FConfigFile* Find(const YString& InFilename, bool CreateIfNotFound);

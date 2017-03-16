@@ -35,7 +35,7 @@ public:
 #else
 		// If this function ever gets more complicated, we could make a PlatformMisc::Printf, and each platform can then 
 		// do the right thing. For instance, LocalPrint is OutputDebugString on Windows, which messes up a lot of stuff
-		FPlatformMisc::LocalPrint(Str);
+		YPlatformMisc::LocalPrint(Str);
 #endif
 	}
 
@@ -59,7 +59,7 @@ public:
 			{
 				Prefix = Context->GetContext() + TEXT(" : ");
 			}
-			YString Format = Prefix + FOutputDeviceHelper::FormatLogLine(Verbosity, Category, V);
+			YString Format = Prefix + YOutputDeviceHelper::FormatLogLine(Verbosity, Category, V);
 
 			// Only store off the message if running a commandlet.
 			if (IsRunningCommandlet())

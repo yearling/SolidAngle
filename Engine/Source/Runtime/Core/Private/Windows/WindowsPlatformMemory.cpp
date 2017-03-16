@@ -132,7 +132,7 @@ YMalloc* YWindowsPlatformMemory::BaseAllocator()
 		return new FMallocStomp();
 #endif
 	case EMemoryAllocatorToUse::TBB:
-		return new YMallocTBB();
+		return new TMallocTBB();
 	case EMemoryAllocatorToUse::Binned2:
 		return new YMallocBinned2();
 

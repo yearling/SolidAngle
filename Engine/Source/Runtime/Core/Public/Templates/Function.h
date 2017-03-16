@@ -351,7 +351,7 @@ namespace UE4Function_Private
 * // Something.cpp
 * void DoSomethingWithConvertingStringsToInts(TFunctionRef<int32 (const YString& Str)> Convert)
 * {
-*     for (const YString& Str : SomeBunchOfStrings)
+*     for (const YString& Str : SomeBunchOYStrings)
 *     {
 *         int32 Int = Func(Str);
 *         DoSomething(Int);

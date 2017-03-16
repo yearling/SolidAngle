@@ -342,7 +342,7 @@ enum EUnrealEngineObjectUE4Version
 	VER_UE4_DEPRECATED_MOVEMENTCOMPONENT_MODIFIED_SPEEDS,
 	// rename CanBeCharacterBase
 	VER_UE4_RENAME_CANBECHARACTERBASE,
-	// Change GameplayTagContainers to have FGameplayTags instead of FNames; Required to fix-up native serialization
+	// Change GameplayTagContainers to have FGameplayTags instead of YNames; Required to fix-up native serialization
 	VER_UE4_GAMEPLAY_TAG_CONTAINER_TAG_TYPE_CHANGE,
 	// Change from UInstancedFoliageSettings to UFoliageType, and change the api from being keyed on UStaticMesh* to UFoliageType*
 	VER_UE4_FOLIAGE_SETTINGS_TYPE,
@@ -358,7 +358,7 @@ enum EUnrealEngineObjectUE4Version
 	VER_UE4_FIX_MATERIAL_PROPERTY_OVERRIDE_SERIALIZE,
 	// Addition of linear color sampler. color sample type is changed to linear sampler if source texture !sRGB
 	VER_UE4_ADD_LINEAR_COLOR_SAMPLER,
-	// Added StringAssetReferencesMap to support renames of FStringAssetReference properties.
+	// Added StringAssetReferencesMap to support renames of YStringAssetReference properties.
 	VER_UE4_ADD_STRING_ASSET_REFERENCES_MAP,
 	// Apply scale from SCS RootComponent details in the Blueprint Editor to new actor instances at construction time
 	VER_UE4_BLUEPRINT_USE_SCS_ROOTCOMPONENT_SCALE,
@@ -392,7 +392,7 @@ enum EUnrealEngineObjectUE4Version
 	// Rename UCameraComponent::bUseControllerViewRotation to bUsePawnViewRotation (and change the default value)
 	VER_UE4_RENAME_CAMERA_COMPONENT_VIEW_ROTATION,
 	// Changed YName to be case preserving
-	VER_UE4_CASE_PRESERVING_FNAME,
+	VER_UE4_CASE_PRESERVING_YName,
 	// Rename USpringArmComponent::bUsePawnViewRotation to bUsePawnControlRotation
 	// Rename UCameraComponent::bUsePawnViewRotation to bUsePawnControlRotation
 	VER_UE4_RENAME_CAMERA_COMPONENT_CONTROL_ROTATION,
@@ -637,7 +637,7 @@ enum EUnrealEngineObjectLicenseeUE4Version
 #define VER_LATEST_ENGINE_LICENSEEUE4   PREPROCESSOR_ENUM_PROTECT(VER_LIC_AUTOMATIC_VERSION)
 
 // Minimum package version that contains legal bytecode
-#define VER_MIN_SCRIPTVM_UE4									(VER_UE4_CASE_PRESERVING_FNAME)
+#define VER_MIN_SCRIPTVM_UE4									(VER_UE4_CASE_PRESERVING_YName)
 #define VER_MIN_SCRIPTVM_LICENSEEUE4							(VER_LIC_NONE)
 
 // Version access.

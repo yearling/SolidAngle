@@ -5,11 +5,11 @@
 #include "CoreTypes.h"
 #include "Misc/OutputDeviceError.h"
 
-class FOutputDeviceAnsiError : public FOutputDeviceError
+class YOutputDeviceAnsiError : public YOutputDeviceError
 {
 public:
 	/** Constructor, initializing member variables */
-	FOutputDeviceAnsiError();
+	YOutputDeviceAnsiError();
 
 	/**
 	* Serializes the passed in data unless the current event is suppressed.

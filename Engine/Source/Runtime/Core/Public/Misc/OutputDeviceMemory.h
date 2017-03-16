@@ -11,13 +11,13 @@
 /**
 * Memory output device. Logs only into pre-allocated memory buffer.
 */
-class CORE_API FOutputDeviceMemory : public YOutputDevice
+class CORE_API YOutputDeviceMemory : public YOutputDevice
 {
-	class FOutputDeviceMemoryProxyArchive : public YArchive
+	class YOutputDeviceMemoryProxyArchive : public YArchive
 	{
-		FOutputDeviceMemory& OutputDevice;
+		YOutputDeviceMemory& OutputDevice;
 	public:
-		FOutputDeviceMemoryProxyArchive(FOutputDeviceMemory& InOutputDevice)
+		YOutputDeviceMemoryProxyArchive(YOutputDeviceMemory& InOutputDevice)
 			: OutputDevice(InOutputDevice)
 		{}
 		virtual void Serialize(void* V, int64 Length) override
@@ -33,7 +33,7 @@ public:
 	* @param InPreserveSize	Bytes of the rung buffer not to overwrite (startup info etc)
 	* @param InBufferSize		Maximum size of the memory ring buffer
 	*/
-	FOutputDeviceMemory(int32 InPreserveSize = 256 * 1024, int32 InBufferSize = 2048 * 1024);
+	YOutputDeviceMemory(int32 InPreserveSize = 256 * 1024, int32 InBufferSize = 2048 * 1024);
 
 	/** Dumps the contents of the buffer to an archive */
 	virtual void Dump(YArchive& Ar) override;

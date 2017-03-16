@@ -1060,7 +1060,7 @@ struct YMath :public YPlatformMath
 
 	// Get a bit in memory created from bitflags(uint32 Value : 1), used for EngineShowFlags,
 	// TestBitFieldFunctions() tests the implementation
-	static FORCEINLINE bool		ExtractBoolFromBitField(uint8* Ptr, uint32 Index)
+	static FORCEINLINE bool		ExtractBoolFromBitfield(uint8* Ptr, uint32 Index)
 	{
 		uint8* BytePtr = Ptr + Index / 8;
 		uint8 Mask = 1 << (Index & 0x7);

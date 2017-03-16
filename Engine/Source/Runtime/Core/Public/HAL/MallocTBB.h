@@ -9,7 +9,7 @@
 /**
 * TBB 64-bit scalable memory allocator.
 */
-class YMallocTBB
+class TMallocTBB
 	: public YMalloc
 {
 public:
@@ -17,7 +17,7 @@ public:
 	/**
 	* Default constructor.
 	*/
-	YMallocTBB() :
+	TMallocTBB() :
 		MemTime(0.0)
 	{ }
 

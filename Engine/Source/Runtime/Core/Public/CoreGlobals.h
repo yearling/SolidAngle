@@ -9,7 +9,7 @@
 class Error;
 class FConfigCacheIni;
 class FFixedUObjectArray;
-class FOutputDeviceConsole;
+class YOutputDeviceConsole;
 class YOutputDeviceRedirector;
 class FReloadObjectArc;
 class ITransaction;
@@ -54,8 +54,8 @@ CORE_API YOutputDeviceRedirector* GetGlobalLogSingleton();
 #define GLog GetGlobalLogSingleton()
 extern CORE_API FConfigCacheIni* GConfig;
 extern CORE_API ITransaction* GUndo;
-extern CORE_API FOutputDeviceConsole* GLogConsole;
-CORE_API extern class FOutputDeviceError*			GError;
+extern CORE_API YOutputDeviceConsole* GLogConsole;
+CORE_API extern class YOutputDeviceError*			GError;
 CORE_API extern class YFeedbackContext*				GWarn;
 
 

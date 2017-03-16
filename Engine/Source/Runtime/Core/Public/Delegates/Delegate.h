@@ -73,15 +73,15 @@
 *	To do this, you will first declare the delegate using one of the macros below.  For example, here
 *	is a simple delegate type:
 *
-*		DECLARE_DELEGATE_OneParam( FStringDelegate, YString );
+*		DECLARE_DELEGATE_OneParam( YStringDelegate, YString );
 *
-*	This creates a delegate type called 'FStringDelegate' that takes a single parameter of type 'YString'.
+*	This creates a delegate type called 'YStringDelegate' that takes a single parameter of type 'YString'.
 *
-*	Here's an example of how you'd use this 'FStringDelegate' in a class:
+*	Here's an example of how you'd use this 'YStringDelegate' in a class:
 *
 *		class FMyClass
 *		{
-*			FStringDelegate WriteToLogDelegate;
+*			YStringDelegate WriteToLogDelegate;
 *		};
 *
 *	This allows your class to hold a pointer to a method in an arbitrary class.  The only thing the
@@ -271,9 +271,9 @@ class DynamicMulticastDelegateName : public TBaseDynamicMulticastDelegate<TWeakP
 
 
 
-#define ENABLE_STATIC_FUNCTION_FNAMES (PLATFORM_COMPILER_CLANG && (__clang_major__ > 3 || (__clang_major__ == 3 && __clang_minor__ >= 5)))
+#define ENABLE_STATIC_FUNCTION_YNameS (PLATFORM_COMPILER_CLANG && (__clang_major__ > 3 || (__clang_major__ == 3 && __clang_minor__ >= 5)))
 
-#if ENABLE_STATIC_FUNCTION_FNAMES
+#if ENABLE_STATIC_FUNCTION_YNameS
 
 
 namespace NStrAfterLastDoubleColon_Private
@@ -320,10 +320,10 @@ namespace NStrAfterLastDoubleColon_Private
 
 
 	template <typename IntSeq>
-	struct TStaticFNameFromCharSequence;
+	struct TStaticYNameFromCharSequence;
 
 	template <typename T, T... Chars>
-	struct TStaticFNameFromCharSequence<TIntegerSequence<T, Chars...>>
+	struct TStaticYNameFromCharSequence<TIntegerSequence<T, Chars...>>
 	{
 		static YName Get()
 		{
@@ -364,29 +364,29 @@ FORCEINLINE constexpr TIntegerSequence<T, Chars...> operator""_intseq()
 	return{};
 }
 
-#define STATIC_FUNCTION_FNAME(str) NStrAfterLastDoubleColon_Private::TStaticFNameFromCharSequence<typename NStrAfterLastDoubleColon_Private::TStrAfterLastDoubleColon<decltype(PREPROCESSOR_JOIN(str, _intseq))>::Type>::Get()
+#define STATIC_FUNCTION_YName(str) NStrAfterLastDoubleColon_Private::TStaticYNameFromCharSequence<typename NStrAfterLastDoubleColon_Private::TStrAfterLastDoubleColon<decltype(PREPROCESSOR_JOIN(str, _intseq))>::Type>::Get()
 
 #else
 
-#define STATIC_FUNCTION_FNAME(str) UE4Delegates_Private::GetTrimmedMemberFunctionName(str)
+#define STATIC_FUNCTION_YName(str) UE4Delegates_Private::GetTrimmedMemberFunctionName(str)
 
 #endif
 
 
 // Helper macro for calling BindDynamic() on dynamic delegates.  Automatically generates the function name string.
-#define BindDynamic( UserObject, FuncName ) __Internal_BindDynamic( UserObject, FuncName, STATIC_FUNCTION_FNAME( TEXT( #FuncName ) ) )
+#define BindDynamic( UserObject, FuncName ) __Internal_BindDynamic( UserObject, FuncName, STATIC_FUNCTION_YName( TEXT( #FuncName ) ) )
 
 // Helper macro for calling AddDynamic() on dynamic multi-cast delegates.  Automatically generates the function name string.
-#define AddDynamic( UserObject, FuncName ) __Internal_AddDynamic( UserObject, FuncName, STATIC_FUNCTION_FNAME( TEXT( #FuncName ) ) )
+#define AddDynamic( UserObject, FuncName ) __Internal_AddDynamic( UserObject, FuncName, STATIC_FUNCTION_YName( TEXT( #FuncName ) ) )
 
 // Helper macro for calling AddUniqueDynamic() on dynamic multi-cast delegates.  Automatically generates the function name string.
-#define AddUniqueDynamic( UserObject, FuncName ) __Internal_AddUniqueDynamic( UserObject, FuncName, STATIC_FUNCTION_FNAME( TEXT( #FuncName ) ) )
+#define AddUniqueDynamic( UserObject, FuncName ) __Internal_AddUniqueDynamic( UserObject, FuncName, STATIC_FUNCTION_YName( TEXT( #FuncName ) ) )
 
 // Helper macro for calling RemoveDynamic() on dynamic multi-cast delegates.  Automatically generates the function name string.
-#define RemoveDynamic( UserObject, FuncName ) __Internal_RemoveDynamic( UserObject, FuncName, STATIC_FUNCTION_FNAME( TEXT( #FuncName ) ) )
+#define RemoveDynamic( UserObject, FuncName ) __Internal_RemoveDynamic( UserObject, FuncName, STATIC_FUNCTION_YName( TEXT( #FuncName ) ) )
 
 // Helper macro for calling IsAlreadyBound() on dynamic multi-cast delegates.  Automatically generates the function name string.
-#define IsAlreadyBound( UserObject, FuncName ) __Internal_IsAlreadyBound( UserObject, FuncName, STATIC_FUNCTION_FNAME( TEXT( #FuncName ) ) )
+#define IsAlreadyBound( UserObject, FuncName ) __Internal_IsAlreadyBound( UserObject, FuncName, STATIC_FUNCTION_YName( TEXT( #FuncName ) ) )
 
 
 namespace UE4Delegates_Private

@@ -31,7 +31,7 @@ struct CORE_API FLogCategoryBase
 	void PostTrigger(ELogVerbosity::Type VerbosityLevel);
 	FORCEINLINE YName GetCategoryName() const
 	{
-		return CategoryFName;
+		return CategoryYName;
 	}
 
 	/** Sets up the working verbosity and clamps to the compile time verbosity. **/
@@ -55,7 +55,7 @@ protected:
 	/** Holds compile time suppression **/
 	uint8 CompileTimeVerbosity;
 	/** YName for this category **/
-	YName CategoryFName;
+	YName CategoryYName;
 };
 
 /** Template for log categories that transfers the compile-time constant default and compile time verbosity to the FLogCategoryBase constructor. **/

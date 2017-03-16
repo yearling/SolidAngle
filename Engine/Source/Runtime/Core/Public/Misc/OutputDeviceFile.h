@@ -8,7 +8,7 @@
 
 class FAsyncWriter;
 
-/** Used by FOutputDeviceFile to write to a file on a separate thread */
+/** Used by YOutputDeviceFile to write to a file on a separate thread */
 class FAsyncWriter;
 
 enum class EByteOrderMark : int8
@@ -20,7 +20,7 @@ enum class EByteOrderMark : int8
 /**
 * File output device (Note: Only works if ALLOW_LOG_FILE && !NO_LOGGING is true, otherwise Serialize does nothing).
 */
-class CORE_API FOutputDeviceFile : public YOutputDevice
+class CORE_API YOutputDeviceFile : public YOutputDevice
 {
 public:
 	/**
@@ -29,13 +29,13 @@ public:
 	* @param InFilename	Filename to use, can be nullptr
 	* @param bDisableBackup If true, existing files will not be backed up
 	*/
-	FOutputDeviceFile(const TCHAR* InFilename = nullptr, bool bDisableBackup = false);
+	YOutputDeviceFile(const TCHAR* InFilename = nullptr, bool bDisableBackup = false);
 
 	/**
 	* Destructor to perform teardown
 	*
 	*/
-	~FOutputDeviceFile();
+	~YOutputDeviceFile();
 
 	/** Sets the filename that the output device writes to.  If the output device was already writing to a file, closes that file. */
 	void SetFilename(const TCHAR* InFilename);

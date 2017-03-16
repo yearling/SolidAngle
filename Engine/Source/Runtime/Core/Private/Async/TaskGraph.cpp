@@ -679,10 +679,10 @@ protected:
 };
 
 /** 
- *	FNamedTaskThread
+ *	YNamedTaskThread
  *	A class for managing a named thread. 
  */
-class FNamedTaskThread : public FTaskThreadBase
+class YNamedTaskThread : public FTaskThreadBase
 {
 public:
 
@@ -1454,7 +1454,7 @@ public:
 			}
 			else
 			{
-				WorkerThreads[ThreadIndex].TaskGraphWorker = new FNamedTaskThread;
+				WorkerThreads[ThreadIndex].TaskGraphWorker = new YNamedTaskThread;
 			}
 			WorkerThreads[ThreadIndex].TaskGraphWorker->Setup(ENamedThreads::Type(ThreadIndex), PerThreadIDTLSSlot, &WorkerThreads[ThreadIndex]);
 		}

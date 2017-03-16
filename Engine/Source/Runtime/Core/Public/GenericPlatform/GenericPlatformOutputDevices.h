@@ -5,8 +5,8 @@
 #include "CoreTypes.h"
 #include "Containers/SolidAngleString.h"
 
-class FOutputDeviceConsole;
-class FOutputDeviceError;
+class YOutputDeviceConsole;
+class YOutputDeviceError;
 
 /**
 * Generic implementation for most platforms
@@ -23,11 +23,11 @@ struct CORE_API FGenericPlatformOutputDevices
 		return nullptr; // normally only used for dedicated servers
 	}
 
-	static FOutputDeviceConsole*		GetLogConsole()
+	static YOutputDeviceConsole*		GetLogConsole()
 	{
 		return nullptr; // normally only used for PC
 	}
 
-	static FOutputDeviceError*			GetError();
+	static YOutputDeviceError*			GetError();
 	static YFeedbackContext*			GetWarn();
 };

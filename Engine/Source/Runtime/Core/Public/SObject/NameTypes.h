@@ -19,7 +19,7 @@ Definitions.
 /**
 * Do we want to support case-variants for YName?
 * This will add an extra NAME_INDEX variable to YName, but means that ToString() will return you the exact same
-* string that YName::Init was called with (which is useful if your FNames are shown to the end user)
+* string that YName::Init was called with (which is useful if your YNames are shown to the end user)
 * Currently this is enabled for the Editor and any Programs (such as UHT), but not the Runtime
 */
 #ifndef WITH_CASE_PRESERVING_NAME
@@ -53,7 +53,7 @@ zero'd memory initialization will still make NAME_None as expected */
 /** this is the character used to separate a subobject root from its subobjects in a path name, as a char */
 #define SUBOBJECT_DELIMITER_CHAR		':'
 
-/** These are the characters that cannot be used in general FNames */
+/** These are the characters that cannot be used in general YNames */
 #define INVALID_NAME_CHARACTERS			TEXT("\"' ,\n\r\t")
 
 /** These characters cannot be used in object names */
@@ -74,14 +74,14 @@ enum class ENameCase : uint8
 	IgnoreCase,
 };
 
-namespace FNameDefs
+namespace YNameDefs
 {
 #if !WITH_EDITORONLY_DATA
 	// Use a modest bucket count on consoles
 	static const uint32 NameHashBucketCount = 65536;
 #else
 	// On PC platform we use a large number of name hash buckets to accommodate the editor's
-	// use of FNames to store asset path and content tags
+	// use of YNames to store asset path and content tags
 	static const uint32 NameHashBucketCount = 65536;
 #endif
 }
@@ -93,19 +93,19 @@ enum ELinkerNameTableConstructor { ENAME_LinkerConstructor };
 enum EFindName
 {
 	/** Find a name; return 0 if it doesn't exist. */
-	FNAME_Find,
+	YName_Find,
 
 	/** Find a name or add it if it doesn't exist. */
-	FNAME_Add,
+	YName_Add,
 
 	/** Finds a name and replaces it. Adds it if missing. This is only used by UHT and is generally not safe for threading.
 	* All this really is used for is correcting the case of names. In MT conditions you might get a half-changed name.
 	*/
-	FNAME_Replace_Not_Safe_For_Threading,
+	YName_Replace_Not_Safe_For_Threading,
 };
 
 /*----------------------------------------------------------------------------
-FNameEntry.
+YNameEntry.
 ----------------------------------------------------------------------------*/
 
 /**
@@ -119,7 +119,7 @@ FNameEntry.
 /**
 * A global name, as stored in the global name table.
 */
-struct FNameEntry
+struct YNameEntry
 {
 private:
 	/** Index of name in hash. */
@@ -127,7 +127,7 @@ private:
 
 public:
 	/** Pointer to the next entry in this hash bin's linked list. */
-	FNameEntry*		HashNext;
+	YNameEntry*		HashNext;
 
 protected:
 	/** Name, variable-sized - note that AllocateNameEntry only allocates memory as needed. */
@@ -144,14 +144,14 @@ protected:
 	*
 	* Only callable from the serialization version of this class
 	*/
-	FNameEntry(enum ELinkerNameTableConstructor)
+	YNameEntry(enum ELinkerNameTableConstructor)
 	{
 		Index = NAME_WIDE_MASK;
 	}
 
 public:
 	/** Default constructor doesn't do anything. AllocateNameEntry is responsible for work. */
-	FNameEntry()
+	YNameEntry()
 	{}
 
 	/**
@@ -165,7 +165,7 @@ public:
 	}
 
 	/**
-	* Returns index of name in hash passed to FNameEntry via AllocateNameEntry. The lower bits
+	* Returns index of name in hash passed to YNameEntry via AllocateNameEntry. The lower bits
 	* are used for internal state, which is why we need to shift.
 	*
 	* @return Index of name in hash
@@ -244,47 +244,47 @@ public:
 	static CORE_API int32 GetSize(const TCHAR* Name);
 
 	/**
-	* Returns the size in bytes for FNameEntry structure. This is != sizeof(FNameEntry) as we only allocated as needed.
+	* Returns the size in bytes for YNameEntry structure. This is != sizeof(YNameEntry) as we only allocated as needed.
 	*
 	* @param	Length			Length of name
 	* @param	bIsPureAnsi		Whether name is pure ANSI or not
-	* @return	required size of FNameEntry structure to hold this string (might be wide or ansi)
+	* @return	required size of YNameEntry structure to hold this string (might be wide or ansi)
 	*/
 	static int32 GetSize(int32 Length, bool bIsPureAnsi);
 
 	// Functions.
-	friend CORE_API YArchive& operator<<(YArchive& Ar, FNameEntry& E);
-	friend CORE_API YArchive& operator<<(YArchive& Ar, FNameEntry* E)
+	friend CORE_API YArchive& operator<<(YArchive& Ar, YNameEntry& E);
+	friend CORE_API YArchive& operator<<(YArchive& Ar, YNameEntry* E)
 	{
 		return Ar << *E;
 	}
 
 	// Friend for access to Flags.
 	template<typename TCharType>
-	friend FNameEntry* AllocateNameEntry(const void* Name, NAME_INDEX Index);
+	friend YNameEntry* AllocateNameEntry(const void* Name, NAME_INDEX Index);
 };
 
 /**
 *  This struct is only used during loading/saving and is not part of the runtime costs
 */
-struct FNameEntrySerialized :
-	public FNameEntry
+struct YNameEntrySerialized :
+	public YNameEntry
 {
 	uint16 NonCasePreservingHash;
 	uint16 CasePreservingHash;
 	bool bWereHashesLoaded;
 
-	FNameEntrySerialized(const FNameEntry& NameEntry);
-	FNameEntrySerialized(enum ELinkerNameTableConstructor) :
-		FNameEntry(ENAME_LinkerConstructor),
+	YNameEntrySerialized(const YNameEntry& NameEntry);
+	YNameEntrySerialized(enum ELinkerNameTableConstructor) :
+		YNameEntry(ENAME_LinkerConstructor),
 		NonCasePreservingHash(0),
 		CasePreservingHash(0),
 		bWereHashesLoaded(false)
 	{
 	}
 
-	friend CORE_API YArchive& operator<<(YArchive& Ar, FNameEntrySerialized& E);
-	friend CORE_API YArchive& operator<<(YArchive& Ar, FNameEntrySerialized* E)
+	friend CORE_API YArchive& operator<<(YArchive& Ar, YNameEntrySerialized& E);
+	friend CORE_API YArchive& operator<<(YArchive& Ar, YNameEntrySerialized* E)
 	{
 		return Ar << *E;
 	}
@@ -292,7 +292,7 @@ struct FNameEntrySerialized :
 
 /**
 * Simple array type that can be expanded without invalidating existing entries.
-* This is critical to thread safe FNames.
+* This is critical to thread safe YNames.
 * @param ElementType Type of the pointer we are storing in the array
 * @param MaxTotalElements absolute maximum number of elements this array can ever hold
 * @param ElementsPerChunk how many elements to allocate in a chunk
@@ -445,7 +445,7 @@ public:
 
 // Typedef for the threadsafe master name table. 
 // CAUTION: If you change those constants, you probably need to update the debug visualizers.
-typedef TStaticIndirectArrayThreadSafeRead<FNameEntry, 2 * 1024 * 1024 /* 2M unique FNames */, 16384 /* allocated in 64K/128K chunks */ > TNameEntryArray;
+typedef TStaticIndirectArrayThreadSafeRead<YNameEntry, 2 * 1024 * 1024 /* 2M unique YNames */, 16384 /* allocated in 64K/128K chunks */ > TNameEntryArray;
 
 /**
 * The minimum amount of data required to reconstruct a name
@@ -570,8 +570,8 @@ public:
 		return GetDisplayNameEntry()->GetWideName();
 	}
 
-	const FNameEntry* GetComparisonNameEntry() const;
-	const FNameEntry* GetDisplayNameEntry() const;
+	const YNameEntry* GetComparisonNameEntry() const;
+	const YNameEntry* GetDisplayNameEntry() const;
 
 	/**
 	* Converts an YName to a readable format
@@ -822,35 +822,35 @@ public:
 	}
 
 	/**
-	* Create an YName. If FindType is FNAME_Find, and the string part of the name
+	* Create an YName. If FindType is YName_Find, and the string part of the name
 	* doesn't already exist, then the name will be NAME_None
 	*
 	* @param Name			Value for the string portion of the name
 	* @param FindType		Action to take (see EFindName)
 	*/
-	YName(const WIDECHAR* Name, EFindName FindType = FNAME_Add);
-	YName(const ANSICHAR* Name, EFindName FindType = FNAME_Add);
+	YName(const WIDECHAR* Name, EFindName FindType = YName_Add);
+	YName(const ANSICHAR* Name, EFindName FindType = YName_Add);
 
 	// Deprecated bUnused
 	DEPRECATED(4.12, "Removed bUnused from YName") YName(const WIDECHAR* Name, EFindName FindType, bool bUnused) : YName(Name, FindType) { }
 	DEPRECATED(4.12, "Removed bUnused from YName") YName(const ANSICHAR* Name, EFindName FindType, bool bUnused) : YName(Name, FindType) { }
 
 	/**
-	* Create an YName. If FindType is FNAME_Find, and the string part of the name
+	* Create an YName. If FindType is YName_Find, and the string part of the name
 	* doesn't already exist, then the name will be NAME_None
 	*
 	* @param Name Value for the string portion of the name
 	* @param Number Value for the number portion of the name
 	* @param FindType Action to take (see EFindName)
 	*/
-	YName(const TCHAR* Name, int32 InNumber, EFindName FindType = FNAME_Add);
+	YName(const TCHAR* Name, int32 InNumber, EFindName FindType = YName_Add);
 
 	/**
 	* Constructor used by FLinkerLoad when loading its name table; Creates an YName with an instance
 	* number of 0 that does not attempt to split the YName into string and number portions. Also,
 	* this version skips calculating the hashes of the names if possible
 	*/
-	YName(const FNameEntrySerialized& LoadedEntry);
+	YName(const YNameEntrySerialized& LoadedEntry);
 
 	/**
 	* Create an YName with a hardcoded string index.
@@ -871,7 +871,7 @@ public:
 	{
 		// Find name entry associated with this YName.
 		check(Other);
-		const FNameEntry* const Entry = GetComparisonNameEntry();
+		const YNameEntry* const Entry = GetComparisonNameEntry();
 
 		// Temporary buffer to hold split name in case passed in name is of Name_Number format.
 		WIDECHAR TempBuffer[NAME_SIZE];
@@ -948,7 +948,7 @@ public:
 	*/
 	static int32 GetNameTableMemorySize()
 	{
-		return GetNameEntryMemorySize() + (GetMaxNames() * sizeof(FNameEntry*)) + sizeof(NameHashHead) + sizeof(NameHashTail);
+		return GetNameEntryMemorySize() + (GetMaxNames() * sizeof(YNameEntry*)) + sizeof(NameHashHead) + sizeof(NameHashTail);
 	}
 
 	/**
@@ -965,7 +965,7 @@ public:
 	{
 		return NumWideNames;
 	}
-	static FNameEntry const* GetEntry(int i)
+	static YNameEntry const* GetEntry(int i)
 	{
 		return GetNames()[i];
 	}
@@ -973,7 +973,7 @@ public:
 
 	/**
 	* Helper function to split an old-style name (Class_Number, ie Rocket_17) into
-	* the component parts usable by new-style FNames. Only use results if this function
+	* the component parts usable by new-style YNames. Only use results if this function
 	* returns true.
 	*
 	* @param OldName		Old-style name
@@ -986,8 +986,8 @@ public:
 	static bool SplitNameWithCheck(const WIDECHAR* OldName, WIDECHAR* NewName, int32 NewNameLen, int32& NewNumber);
 
 	/** Singleton to retrieve a table of all names (multithreaded) for debug visualizers. */
-	static FNameEntry*** GetNameTableForDebuggerVisualizers_MT();
-	/** Run autotest on FNames. */
+	static YNameEntry*** GetNameTableForDebuggerVisualizers_MT();
+	/** Run autotest on YNames. */
 	static void AutoTest();
 
 	/**
@@ -1024,9 +1024,9 @@ private:
 	};
 
 	/** Name hash head - used to iterate the single-linked list.		*/
-	static FNameEntry*						NameHashHead[FNameDefs::NameHashBucketCount];
+	static YNameEntry*						NameHashHead[YNameDefs::NameHashBucketCount];
 	/** Name hash tail - insert new entries after this - NON ATOMIC!	*/
-	static FNameEntry*						NameHashTail[FNameDefs::NameHashBucketCount];
+	static YNameEntry*						NameHashTail[YNameDefs::NameHashBucketCount];
 	/** Size of all name entries.								*/
 	static int32							NameEntryMemorySize;
 	/** Number of ANSI names in name table.						*/
@@ -1042,11 +1042,11 @@ private:
 	*/
 	static bool& GetIsInitialized();
 
-	friend const TCHAR* DebugFName(int32);
-	friend const TCHAR* DebugFName(int32, int32);
-	friend const TCHAR* DebugFName(YName&);
+	friend const TCHAR* DebugYName(int32);
+	friend const TCHAR* DebugYName(int32, int32);
+	friend const TCHAR* DebugYName(YName&);
 	template<typename TCharType>
-	friend FNameEntry* AllocateNameEntry(const void* Name, NAME_INDEX Index);
+	friend YNameEntry* AllocateNameEntry(const void* Name, NAME_INDEX Index);
 	/** Used to increment the correct counter based upon TCharType */
 	template <typename TCharType> friend void IncrementNameCount();
 
@@ -1175,7 +1175,7 @@ inline bool operator!=(const CharType *LHS, const YName &RHS)
 	return RHS != LHS;
 }
 
-/** FNames act like PODs. */
+/** YNames act like PODs. */
 template <> struct TIsPODType<YName> { enum { Value = true }; };
 
 

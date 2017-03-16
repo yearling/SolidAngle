@@ -112,6 +112,12 @@
     <Filter Include="Source\Runtime\Core\Private\DelegateHandle">
       <UniqueIdentifier>{ec980c39-da4c-4070-a0b1-e9a112334c73}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Runtime\Core\Private\HAL">
+      <UniqueIdentifier>{d642026a-8ca6-4589-bbe6-c4c7d5e1e111}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Private\HAL\Allocators">
+      <UniqueIdentifier>{4e01f603-97e7-47c0-b9f8-6145f2d08ac7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\core\Public\HAL\Platform.h">
@@ -1047,6 +1053,72 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\ColorList.h">
       <Filter>Source\Runtime\Core\Public\Math</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\Allocators\AnsiAllocator.h">
+      <Filter>Source\Runtime\Core\Public\HAL\Allocators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\ConsoleManager.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\RemoteConfigIni.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\IPlatformFileLogWrapper.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\IPlatformFileProfilerWrapper.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\BufferedOutputDevice.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\MallocLeakDetection.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\OutputDeviceArchiveWrapper.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\ProfilingHelpers.h">
+      <Filter>Source\Runtime\Core\Public\ProfilingDebugging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\MallocVerify.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\IPlatformFileCachedWrapper.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\IPlatformFileModule.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\IPlatformFileOpenLogWrapper.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PThreadRunnableThread.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\ThreadManager.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\MallocProfiler.h">
+      <Filter>Source\Runtime\Core\Public\ProfilingDebugging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CompressedGrowableBuffer.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\MallocThreadSafeProxy.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformMallocCrash.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\MallocPoisonProxy.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\ThreadingBase.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\ThreadSafeCounter64.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\TestMain.cpp">
@@ -1151,6 +1223,66 @@
     <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformAtomics.cpp">
       <Filter>Source\Runtime\Core\Private\GenericPlatform</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\HAL\Allocators\CachedOSPageAllocator.cpp">
+      <Filter>Source\Runtime\Core\Private\HAL\Allocators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\HAL\IPlatformFileLogWrapper.cpp">
+      <Filter>Source\Runtime\Core\Private\HAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\HAL\IPlatformFileProfilerWrapper.cpp">
+      <Filter>Source\Runtime\Core\Private\HAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\HAL\MallocAnsi.cpp">
+      <Filter>Source\Runtime\Core\Private\HAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\HAL\MallocBinned.cpp">
+      <Filter>Source\Runtime\Core\Private\HAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\HAL\MallocBinned2.cpp">
+      <Filter>Source\Runtime\Core\Private\HAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\HAL\MallocJemalloc.cpp">
+      <Filter>Source\Runtime\Core\Private\HAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\HAL\MallocLeakDetection.cpp">
+      <Filter>Source\Runtime\Core\Private\HAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\HAL\MallocStomp.cpp">
+      <Filter>Source\Runtime\Core\Private\HAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\HAL\MallocTBB.cpp">
+      <Filter>Source\Runtime\Core\Private\HAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\HAL\MallocVerify.cpp">
+      <Filter>Source\Runtime\Core\Private\HAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\HAL\MemoryBase.cpp">
+      <Filter>Source\Runtime\Core\Private\HAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\HAL\PlatformFileManager.cpp">
+      <Filter>Source\Runtime\Core\Private\HAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\HAL\PThreadRunnableThread.cpp">
+      <Filter>Source\Runtime\Core\Private\HAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\HAL\ThreadHeartBeat.cpp">
+      <Filter>Source\Runtime\Core\Private\HAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\HAL\ThreadingBase.cpp">
+      <Filter>Source\Runtime\Core\Private\HAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\HAL\ConsoleManager.cpp">
+      <Filter>Source\Runtime\Core\Private\HAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\HAL\ExceptionHandling.cpp">
+      <Filter>Source\Runtime\Core\Private\HAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\HAL\FileManagerGeneric.cpp">
+      <Filter>Source\Runtime\Core\Private\HAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\HAL\SolidAngleMemory.cpp">
+      <Filter>Source\Runtime\Core\Private\HAL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
@@ -1165,6 +1297,9 @@
     </None>
     <None Include="..\Source\Runtime\Core\Public\Math\Matrix.inl">
       <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </None>
+    <None Include="..\Source\Runtime\Core\Public\HAL\YMemory.inl">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
     </None>
   </ItemGroup>
 </Project>

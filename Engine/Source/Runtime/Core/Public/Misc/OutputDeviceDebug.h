@@ -3,7 +3,7 @@
 #include "CoreTypes.h"
 #include "Misc/OutputDevice.h"
 
-class CORE_API FOutputDeviceDebug : public YOutputDevice
+class CORE_API YOutputDeviceDebug : public YOutputDevice
 {
 public:
 	/**

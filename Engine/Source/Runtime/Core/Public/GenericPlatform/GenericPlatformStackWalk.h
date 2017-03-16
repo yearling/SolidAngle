@@ -114,7 +114,7 @@ struct CORE_API FGenericPlatformStackWalk
 	*
 	* Example formatted line:
 	*
-	* UE4Editor_Core!FOutputDeviceWindowsError::Serialize() (0xddf1bae5) + 620 bytes [\engine\source\runtime\core\private\windows\windowsplatformoutputdevices.cpp:110]
+	* UE4Editor_Core!YOutputDeviceWindowsError::Serialize() (0xddf1bae5) + 620 bytes [\engine\source\runtime\core\private\windows\windowsplatformoutputdevices.cpp:110]
 	* ModuleName!FunctionName (ProgramCounter) + offset bytes [StrippedFilepath:LineNumber]
 	*
 	* @param	CurrentCallDepth		Depth of the call, if known (-1 if not - note that some platforms may not return meaningful information in the latter case)
@@ -135,7 +135,7 @@ struct CORE_API FGenericPlatformStackWalk
 	*
 	* Example formatted line:
 	*
-	* UE4Editor_Core!FOutputDeviceWindowsError::Serialize() (0xddf1bae5) + 620 bytes [\engine\source\runtime\core\private\windows\windowsplatformoutputdevices.cpp:110]
+	* UE4Editor_Core!YOutputDeviceWindowsError::Serialize() (0xddf1bae5) + 620 bytes [\engine\source\runtime\core\private\windows\windowsplatformoutputdevices.cpp:110]
 	* ModuleName!FunctionName (ProgramCounter) + offset bytes [StrippedFilepath:LineNumber]
 	*
 	* @param	SymbolInfo				Symbol information

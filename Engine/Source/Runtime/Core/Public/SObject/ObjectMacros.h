@@ -120,7 +120,7 @@ public:
 	{
 		return OuterPrivate;
 	}
-	FORCEINLINE YName GetFName() const
+	FORCEINLINE YName GetYName() const
 	{
 		return NamePrivate;
 	}
@@ -161,7 +161,7 @@ protected:
 	**/
 	FORCEINLINE void SetFlagsTo(EObjectFlags NewFlags)
 	{
-		checkfSlow((NewFlags & ~RF_AllFlags) == 0, TEXT("%s flagged as 0x%x but is trying to set flags to RF_AllFlags"), *GetFName().ToString(), (int)ObjectFlags);
+		checkfSlow((NewFlags & ~RF_AllFlags) == 0, TEXT("%s flagged as 0x%x but is trying to set flags to RF_AllFlags"), *GetYName().ToString(), (int)ObjectFlags);
 		ObjectFlags = NewFlags;
 	}
 public:
@@ -172,7 +172,7 @@ public:
 	**/
 	FORCEINLINE EObjectFlags GetFlags() const
 	{
-		checkfSlow((ObjectFlags & ~RF_AllFlags) == 0, TEXT("%s flagged as RF_AllFlags"), *GetFName().ToString());
+		checkfSlow((ObjectFlags & ~RF_AllFlags) == 0, TEXT("%s flagged as RF_AllFlags"), *GetYName().ToString());
 		return ObjectFlags;
 	}
 

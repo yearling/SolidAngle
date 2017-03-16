@@ -29,7 +29,7 @@ struct YGenericMemoryStats;
 
 
 /**
-* Inherit from FUseSystemMallocForNew if you want your objects to be placed in memory
+* Inherit from YUseSystemMallocForNew if you want your objects to be placed in memory
 * alloced by the system malloc routines, bypassing GMalloc. This is e.g. used by YMalloc
 * itself.
 */

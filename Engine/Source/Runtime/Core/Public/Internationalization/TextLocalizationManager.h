@@ -53,7 +53,7 @@ private:
 		};
 		typedef TMap<YString, FEntryArray, FDefaultSetAllocator, FKeyTableKeyFuncs> FKeysTable;
 
-		struct FNamespaceTableKeyFuncs : BaseKeyFuncs<FKeysTable, YString, false>
+		struct YNamespaceTableKeyFuncs : BaseKeyFuncs<FKeysTable, YString, false>
 		{
 			static FORCEINLINE const YString& GetSetKey(const TPair<YString, FKeysTable>& Element)
 			{
@@ -68,9 +68,9 @@ private:
 				return FCrc::StrCrc32<TCHAR>(*Key);
 			}
 		};
-		typedef TMap<YString, FKeysTable, FDefaultSetAllocator, FNamespaceTableKeyFuncs> FNamespacesTable;
+		typedef TMap<YString, FKeysTable, FDefaultSetAllocator, YNamespaceTableKeyFuncs> YNamespacesTable;
 
-		FNamespacesTable Namespaces;
+		YNamespacesTable Namespaces;
 
 	public:
 		/** Loads all text localizations from all localization resource files in the specified directory. */
@@ -122,7 +122,7 @@ private:
 		};
 		typedef TMap<YString, FDisplayStringEntry, FDefaultSetAllocator, FKeyTableKeyFuncs> FKeysTable;
 
-		struct FNamespaceTableKeyFuncs : BaseKeyFuncs<FKeysTable, YString, false>
+		struct YNamespaceTableKeyFuncs : BaseKeyFuncs<FKeysTable, YString, false>
 		{
 			static FORCEINLINE const YString& GetSetKey(const TPair<YString, FKeysTable>& Element)
 			{
@@ -137,9 +137,9 @@ private:
 				return FCrc::StrCrc32<TCHAR>(*Key);
 			}
 		};
-		typedef TMap<YString, FKeysTable, FDefaultSetAllocator, FNamespaceTableKeyFuncs> FNamespacesTable;
+		typedef TMap<YString, FKeysTable, FDefaultSetAllocator, YNamespaceTableKeyFuncs> YNamespacesTable;
 
-		FNamespacesTable NamespacesTable;
+		YNamespacesTable NamespacesTable;
 
 	public:
 		/** Finds the keys table for the specified namespace and the display string entry for the specified namespace and key combination. If not found, the out parameters are set to null. */
@@ -149,24 +149,24 @@ private:
 	};
 
 	/** Simple data structure containing the name of the namespace and key associated with a display string, for use in looking up namespace and key from a display string. */
-	struct FNamespaceKeyEntry
+	struct YNamespaceKeyEntry
 	{
 		YString Namespace;
 		YString Key;
 
-		FNamespaceKeyEntry(const YString& InNamespace, const YString& InKey)
+		YNamespaceKeyEntry(const YString& InNamespace, const YString& InKey)
 			: Namespace(InNamespace)
 			, Key(InKey)
 		{}
 	};
-	typedef TMap<FTextDisplayStringRef, FNamespaceKeyEntry> FNamespaceKeyLookupTable;
+	typedef TMap<FTextDisplayStringRef, YNamespaceKeyEntry> YNamespaceKeyLookupTable;
 
 private:
 	bool bIsInitialized;
 
 	FCriticalSection SynchronizationObject;
 	FDisplayStringLookupTable DisplayStringLookupTable;
-	FNamespaceKeyLookupTable NamespaceKeyLookupTable;
+	YNamespaceKeyLookupTable NamespaceKeyLookupTable;
 	TMap<FTextDisplayStringRef, uint16> LocalTextRevisions;
 	uint16 TextRevisionCounter;
 

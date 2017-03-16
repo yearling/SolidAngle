@@ -35,7 +35,7 @@ void FGenericPlatformOutputDevices::SetupOutputDevices()
 		// Only need to do this if it's actually going to go to a different place than GLogConsole
 		if(!bHasConsole || YPlatformMisc::HasSeparateChannelForDebugOutput())
 		{
-			GLog->AddOutputDevice(new FOutputDeviceDebug());
+			GLog->AddOutputDevice(new YOutputDeviceDebug());
 		}
 	}
 
@@ -107,13 +107,13 @@ class YOutputDevice* FGenericPlatformOutputDevices::GetLog()
 #endif
 				 )
 			{
-				LogDevice = MakeUnique<FOutputDeviceMemory>();
+				LogDevice = MakeUnique<YOutputDeviceMemory>();
 			}
 #endif // !IS_PROGRAM && !WITH_EDITORONLY_DATA
 #endif // WITH_LOGGING_TO_MEMORY
 			if (!LogDevice)
 			{
-				LogDevice = MakeUnique<FOutputDeviceFile>();
+				LogDevice = MakeUnique<YOutputDeviceFile>();
 			}
 		}
 
@@ -123,9 +123,9 @@ class YOutputDevice* FGenericPlatformOutputDevices::GetLog()
 }
 
 
-class FOutputDeviceError* FGenericPlatformOutputDevices::GetError()
+class YOutputDeviceError* FGenericPlatformOutputDevices::GetError()
 {
-	static FOutputDeviceAnsiError Singleton;
+	static YOutputDeviceAnsiError Singleton;
 	return &Singleton;
 }
 

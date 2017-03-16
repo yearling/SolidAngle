@@ -1,12 +1,12 @@
 #pragma once
-#include "Math/MathUtility.h"
-// !!FIXME by zyx
-//#include "Misc/Parse.h"
-//#include "Serialization/Archive.h"
+#include "CoreTypes.h"
+#include "Misc/Crc.h"
+#include "Math/SolidAngleMathUtility.h"
+#include "Containers/SolidAngleString.h"
+#include "Misc/Parse.h"
 
-struct YColor;
-struct YVector;
 class YFloat16Color;
+
 
 // Enum for the different kinds of gamma spaces we expect to need to convert from / to.
 enum class EGammaSpace
@@ -51,16 +51,15 @@ struct YLinearColor
 	CORE_API explicit			YLinearColor(const YFloat16Color& C);
 
 	// Serializer.
-	// !!FIXME by zyx
-	//friend YArchive& operator<<(YArchive& Ar, YLinearColor& Color)
-	//{
-	//	return Ar << Color.R << Color.G << Color.B << Color.A;
-	//}
-	//bool Serialize(YArchive& Ar)
-	//{
-	//	Ar << *this;
-	//	return true;
-	//}
+	friend YArchive& operator<<(YArchive& Ar, YLinearColor& Color)
+	{
+		return Ar << Color.R << Color.G << Color.B << Color.A;
+	}
+	bool Serialize(YArchive& Ar)
+	{
+		Ar << *this;
+		return true;
+	}
 
 	//Conversions
 	/**

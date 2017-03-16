@@ -844,8 +844,7 @@ private: // ----------------------------------------------------
 		return ShadowedValue[GetShadowIndex(bForceGameThread)];
 	}
 
-	//!!FIXME by zyx
-	//template<class T2> friend class FConsoleVariable;
+	template<class T2> friend class FConsoleVariable;
 };
 
 

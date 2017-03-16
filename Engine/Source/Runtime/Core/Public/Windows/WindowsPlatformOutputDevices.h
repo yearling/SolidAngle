@@ -6,16 +6,16 @@
 #include "GenericPlatform/GenericPlatformOutputDevices.h"
 
 class YOutputDevice;
-class FOutputDeviceConsole;
-class FOutputDeviceError;
+class YOutputDeviceConsole;
+class YOutputDeviceError;
 class YFeedbackContext;
 
 struct CORE_API FWindowsPlatformOutputDevices
 	: public FGenericPlatformOutputDevices
 {
 	static YOutputDevice*			GetEventLog();
-	static FOutputDeviceConsole*	GetLogConsole();
-	static FOutputDeviceError*		GetError();
+	static YOutputDeviceConsole*	GetLogConsole();
+	static YOutputDeviceError*		GetError();
 	static YFeedbackContext*		GetWarn();
 };
 

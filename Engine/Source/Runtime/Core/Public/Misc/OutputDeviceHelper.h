@@ -6,7 +6,7 @@
 #include "Containers/SolidAngleString.h"
 
 /** Helper functions used by YOutputDevice derived classes **/
-struct CORE_API FOutputDeviceHelper
+struct CORE_API YOutputDeviceHelper
 {
 	/**
 	* Converts verbosity to a string
@@ -36,5 +36,5 @@ struct CORE_API FOutputDeviceHelper
 	* @param bSuppressEventTag True if the message date/time prefix should be suppressed
 	* @param bAutoEmitLineTerminator True if the message should be automatically appended with a line terminator
 	**/
-	static void FormatCastAndSerializeLine(class FArchive& Output, const TCHAR* Message, ELogVerbosity::Type Verbosity, const class YName& Category, const double Time, bool bSuppressEventTag, bool bAutoEmitLineTerminator);
+	static void FormatCastAndSerializeLine(class YArchive& Output, const TCHAR* Message, ELogVerbosity::Type Verbosity, const class YName& Category, const double Time, bool bSuppressEventTag, bool bAutoEmitLineTerminator);
 };

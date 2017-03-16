@@ -887,7 +887,7 @@ void YWindowsPlatformMisc::SubmitErrorReport(const TCHAR* InErrorHist, EErrorRep
 					const TCHAR IniDumpFilename[] = TEXT("UnrealAutoReportIniDump");
 					IniDumpPath = YPaths::CreateTempFilename(*YPaths::GameLogDir(), IniDumpFilename, TEXT(".txt"));
 					//build the ini dump
-					FOutputDeviceFile AutoReportIniFile(*IniDumpPath);
+					YOutputDeviceFile AutoReportIniFile(*IniDumpPath);
 					GConfig->Dump(AutoReportIniFile);
 					AutoReportIniFile.Flush();
 					AutoReportIniFile.TearDown();
