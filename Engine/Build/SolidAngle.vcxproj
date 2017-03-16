@@ -429,6 +429,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\RemoteConfigIni.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ScopedEvent.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ScopedSlowTask.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ScopeExit.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ScopeLock.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\SecureHash.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\SingleThreadEvent.h" />
@@ -475,6 +476,9 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\SObject\WeakObjectPtrTemplates.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Stats\Stats.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Stats\Stats2.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Stats\StatsData.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Stats\StatsFile.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Stats\StatsMallocProfilerProxy.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Stats\StatsMisc.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\AlignmentTemplates.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\AlignOf.h" />
@@ -670,6 +674,12 @@
     <ClCompile Include="..\Source\Runtime\Core\Private\Misc\Timespan.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Misc\UProjectInfo.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Misc\WildcardString.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Stats\Stats2.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Stats\StatsCommand.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Stats\StatsData.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Stats\StatsFile.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Stats\StatsMallocProfilerProxy.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Stats\StatsMisc.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformMemory.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformMisc.cpp" />
     <ClCompile Include="..\Source\Runtime\TestMain.cpp" />

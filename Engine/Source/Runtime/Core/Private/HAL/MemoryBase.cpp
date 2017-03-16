@@ -58,10 +58,10 @@ void YMalloc::InitializeStatsMetadata()
 {
 	// Initialize stats metadata here instead of UpdateStats.
 	// Mostly to avoid dead-lock when stats malloc profiler is enabled.
-	GET_STATYName(STAT_MallocCalls);
-	GET_STATYName(STAT_ReallocCalls);
-	GET_STATYName(STAT_FreeCalls);
-	GET_STATYName(STAT_TotalAllocatorCalls);
+	GET_STATYNAME(STAT_MallocCalls);
+	GET_STATYNAME(STAT_ReallocCalls);
+	GET_STATYNAME(STAT_FreeCalls);
+	GET_STATYNAME(STAT_TotalAllocatorCalls);
 }
 
 

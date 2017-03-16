@@ -725,15 +725,15 @@ void YMallocBinned::InitializeStatsMetadata()
 
 	// Initialize stats metadata here instead of UpdateStats.
 	// Mostly to avoid dead-lock when stats malloc profiler is enabled.
-	GET_STATYName(STAT_Binned_OsCurrent);
-	GET_STATYName(STAT_Binned_OsPeak);
-	GET_STATYName(STAT_Binned_WasteCurrent);
-	GET_STATYName(STAT_Binned_WastePeak);
-	GET_STATYName(STAT_Binned_UsedCurrent);
-	GET_STATYName(STAT_Binned_UsedPeak);
-	GET_STATYName(STAT_Binned_CurrentAllocs);
-	GET_STATYName(STAT_Binned_TotalAllocs);
-	GET_STATYName(STAT_Binned_SlackCurrent);
+	GET_STATYNAME(STAT_Binned_OsCurrent);
+	GET_STATYNAME(STAT_Binned_OsPeak);
+	GET_STATYNAME(STAT_Binned_WasteCurrent);
+	GET_STATYNAME(STAT_Binned_WastePeak);
+	GET_STATYNAME(STAT_Binned_UsedCurrent);
+	GET_STATYNAME(STAT_Binned_UsedPeak);
+	GET_STATYNAME(STAT_Binned_CurrentAllocs);
+	GET_STATYNAME(STAT_Binned_TotalAllocs);
+	GET_STATYNAME(STAT_Binned_SlackCurrent);
 }
 
 YMallocBinned::YMallocBinned(uint32 InPageSize, uint64 AddressLimit)

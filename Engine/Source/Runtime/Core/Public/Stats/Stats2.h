@@ -1772,7 +1772,7 @@ struct FStat_##StatName\
 };
 
 #define GET_STATID(Stat) (StatPtr_##Stat.GetStatId())
-#define GET_STATYName(Stat) (StatPtr_##Stat.GetStatYName())
+#define GET_STATYNAME(Stat) (StatPtr_##Stat.GetStatYName())
 #define GET_STATDESCRIPTION(Stat) (FStat_##Stat::GetDescription())
 
 #define STAT_GROUP_TO_FStatGroup(Group) FStatGroup_##Group
@@ -1806,7 +1806,7 @@ Local
 	static DEFINE_STAT(StatId)
 
 /** YName stat that allows sending a string based data. */
-#define DECLARE_YName_STAT(CounterName,StatId,GroupId) \
+#define DECLARE_YNAME_STAT(CounterName,StatId,GroupId) \
 	DECLARE_STAT(CounterName,StatId,GroupId,EStatDataType::ST_YName, false, false, YPlatformMemory::MCR_Invalid); \
 	static DEFINE_STAT(StatId)
 
@@ -1890,22 +1890,22 @@ Extern
 
 #define SET_CYCLE_COUNTER(Stat,Cycles) \
 {\
-	FThreadStats::AddMessage(GET_STATYName(Stat), EStatOperation::Set, int64(Cycles), true);\
+	FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::Set, int64(Cycles), true);\
 }
 
 #define INC_DWORD_STAT(Stat) \
 {\
-	FThreadStats::AddMessage(GET_STATYName(Stat), EStatOperation::Add, int64(1));\
+	FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::Add, int64(1));\
 }
 #define INC_FLOAT_STAT_BY(Stat, Amount) \
 {\
 	if (Amount != 0.0f) \
-		FThreadStats::AddMessage(GET_STATYName(Stat), EStatOperation::Add, double(Amount));\
+		FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::Add, double(Amount));\
 }
 #define INC_DWORD_STAT_BY(Stat, Amount) \
 {\
 	if (Amount != 0) \
-		FThreadStats::AddMessage(GET_STATYName(Stat), EStatOperation::Add, int64(Amount));\
+		FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::Add, int64(Amount));\
 }
 #define INC_DWORD_STAT_YName_BY(StatYName, Amount) \
 {\
@@ -1915,21 +1915,21 @@ Extern
 #define INC_MEMORY_STAT_BY(Stat, Amount) \
 {\
 	if (Amount != 0) \
-		FThreadStats::AddMessage(GET_STATYName(Stat), EStatOperation::Add, int64(Amount));\
+		FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::Add, int64(Amount));\
 }
 #define DEC_DWORD_STAT(Stat) \
 {\
-	FThreadStats::AddMessage(GET_STATYName(Stat), EStatOperation::Subtract, int64(1));\
+	FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::Subtract, int64(1));\
 }
 #define DEC_FLOAT_STAT_BY(Stat,Amount) \
 {\
 	if (Amount != 0.0f) \
-		FThreadStats::AddMessage(GET_STATYName(Stat), EStatOperation::Subtract, double(Amount));\
+		FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::Subtract, double(Amount));\
 }
 #define DEC_DWORD_STAT_BY(Stat,Amount) \
 {\
 	if (Amount != 0) \
-		FThreadStats::AddMessage(GET_STATYName(Stat), EStatOperation::Subtract, int64(Amount));\
+		FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::Subtract, int64(Amount));\
 }
 #define DEC_DWORD_STAT_YName_BY(StatYName,Amount) \
 {\
@@ -1939,27 +1939,27 @@ Extern
 #define DEC_MEMORY_STAT_BY(Stat,Amount) \
 {\
 	if (Amount != 0) \
-		FThreadStats::AddMessage(GET_STATYName(Stat), EStatOperation::Subtract, int64(Amount));\
+		FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::Subtract, int64(Amount));\
 }
 #define SET_MEMORY_STAT(Stat,Value) \
 {\
-	FThreadStats::AddMessage(GET_STATYName(Stat), EStatOperation::Set, int64(Value));\
+	FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::Set, int64(Value));\
 }
 #define SET_DWORD_STAT(Stat,Value) \
 {\
-	FThreadStats::AddMessage(GET_STATYName(Stat), EStatOperation::Set, int64(Value));\
+	FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::Set, int64(Value));\
 }
 #define SET_FLOAT_STAT(Stat,Value) \
 {\
-	FThreadStats::AddMessage(GET_STATYName(Stat), EStatOperation::Set, double(Value));\
+	FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::Set, double(Value));\
 }
 #define STAT_ADD_CUSTOMMESSAGE_NAME(Stat,Value) \
 {\
-	FThreadStats::AddMessage(GET_STATYName(Stat), EStatOperation::SpecialMessageMarker, YName(Value));\
+	FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::SpecialMessageMarker, YName(Value));\
 }
 #define STAT_ADD_CUSTOMMESSAGE_PTR(Stat,Value) \
 {\
-	FThreadStats::AddMessage(GET_STATYName(Stat), EStatOperation::SpecialMessageMarker, uint64(Value));\
+	FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::SpecialMessageMarker, uint64(Value));\
 }
 
 #define SET_CYCLE_COUNTER_YName(Stat,Cycles) \

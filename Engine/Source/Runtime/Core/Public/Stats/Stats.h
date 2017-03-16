@@ -452,7 +452,7 @@ FORCEINLINE void StatsMasterEnableSubtract(int32 Value = 1)
 #define SET_FLOAT_STAT_YName(Stat,Value)
 
 #define GET_STATID(Stat) (TStatId())
-#define GET_STATYName(Stat) (YName())
+#define GET_STATYNAME(Stat) (YName())
 #define GET_STATDESCRIPTION(Stat) (nullptr)
 
 #endif

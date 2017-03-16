@@ -124,6 +124,9 @@
     <Filter Include="Source\Runtime\Core\Public\Modules\Boilerplate">
       <UniqueIdentifier>{4b90dfd2-32cd-458b-8005-a37e05beae69}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Runtime\Core\Private\Stats">
+      <UniqueIdentifier>{011bb2bf-1fa4-4c1e-990a-017576855be3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\core\Public\HAL\Platform.h">
@@ -1255,6 +1258,18 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\MonolithicHeaderBoilerplate.h">
       <Filter>Source\Runtime\Core\Public\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Stats\StatsData.h">
+      <Filter>Source\Runtime\Core\Public\Stats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Stats\StatsMallocProfilerProxy.h">
+      <Filter>Source\Runtime\Core\Public\Stats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Stats\StatsFile.h">
+      <Filter>Source\Runtime\Core\Public\Stats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ScopeExit.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\TestMain.cpp">
@@ -1619,6 +1634,24 @@
     </ClCompile>
     <ClCompile Include="..\Source\Runtime\Core\Private\Misc\ConfigCacheIni.cpp">
       <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Stats\StatsData.cpp">
+      <Filter>Source\Runtime\Core\Private\Stats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Stats\StatsFile.cpp">
+      <Filter>Source\Runtime\Core\Private\Stats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Stats\StatsMallocProfilerProxy.cpp">
+      <Filter>Source\Runtime\Core\Private\Stats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Stats\StatsMisc.cpp">
+      <Filter>Source\Runtime\Core\Private\Stats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Stats\Stats2.cpp">
+      <Filter>Source\Runtime\Core\Private\Stats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Stats\StatsCommand.cpp">
+      <Filter>Source\Runtime\Core\Private\Stats</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
