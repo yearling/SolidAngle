@@ -1625,7 +1625,7 @@ bool FConfigCacheIni::AreFileOperationsDisabled()
 * NOTE: The function naming is weird because you can't apparently have an overridden function differnt only by template type params
 */
 
-void FConfigCacheIni::Parse1ToNSectionOfNames(const TCHAR* Section, const TCHAR* KeyOne, const TCHAR* KeyN, TMap<YName, TArray<YName> >& OutMap, const YString& Filename)
+void FConfigCacheIni::Parse1ToNSectionOYNames(const TCHAR* Section, const TCHAR* KeyOne, const TCHAR* KeyN, TMap<YName, TArray<YName> >& OutMap, const YString& Filename)
 {
 	// find the config file object
 	FConfigFile* ConfigFile = Find(Filename, 0);

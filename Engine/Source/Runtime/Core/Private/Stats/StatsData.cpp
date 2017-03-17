@@ -268,8 +268,8 @@ void FRawStatStackNode::AddNameHierarchy(int32 CurrentPrefixDepth)
 				}
 				NewName += TEXT("..");
 				FStatMessage Group(ChildArray[StartIndex]->Meta);
-				YName NewFName(*NewName);
-				Group.NameAndInfo.SetRawName(NewFName);
+				YName NewYName(*NewName);
+				Group.NameAndInfo.SetRawName(NewYName);
 				Group.Clear();
 				FRawStatStackNode* NewNode = new FRawStatStackNode(Group);
 				NewChildren.Add(NewNode);
@@ -2075,7 +2075,7 @@ YString FStatsUtils::FromEscapedFString(const TCHAR* Escaped)
 			int32 IndexEnd = Input.Find(TEXT("$"), ESearchCase::CaseSensitive);
 			if (IndexEnd == INDEX_NONE)
 			{
-				checkStats(0); // malformed escaped fname
+				checkStats(0); // malformed escaped YName
 				Result += Input;
 				break;
 			}

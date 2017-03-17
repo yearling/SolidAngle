@@ -876,8 +876,8 @@ struct FHUDGroupManager
 
 		ResizeFramesHistory( Params.MaxHistoryFrames.Get() );
 
-		const YName MaybeGroupFName = YName(*(YString(TEXT("STATGROUP_")) + Params.Group.Get().GetPlainNameString()));
-		const bool bResults = HandleToggleCommandBroadcast( MaybeGroupFName, bCurrentEnabled, bOthersEnabled );
+		const YName MaybeGroupYName = YName(*(YString(TEXT("STATGROUP_")) + Params.Group.Get().GetPlainNameString()));
+		const bool bResults = HandleToggleCommandBroadcast( MaybeGroupYName, bCurrentEnabled, bOthersEnabled );
 		if (!bResults)
 		{
 			// Remove all groups.
@@ -886,11 +886,11 @@ struct FHUDGroupManager
 		else
 		{
 			// Is this a group stat (as opposed to a simple stat?)
-			const bool bGroupStat = Stats.Groups.Contains(MaybeGroupFName);
+			const bool bGroupStat = Stats.Groups.Contains(MaybeGroupYName);
 			if (bGroupStat)
 			{
 				// Is this group stat currently enabled?
-				if (FInternalGroup* InternalGroup = EnabledGroups.Find(MaybeGroupFName))
+				if (FInternalGroup* InternalGroup = EnabledGroups.Find(MaybeGroupYName))
 				{
 					// If this was only being used by the current viewport, remove it
 					if (bCurrentEnabled && !bOthersEnabled)
@@ -905,7 +905,7 @@ struct FHUDGroupManager
 						}
 						else
 						{
-							EnabledGroups.Remove(MaybeGroupFName);
+							EnabledGroups.Remove(MaybeGroupYName);
 							NumTotalStackFrames = 0;
 						}
 					}
@@ -914,27 +914,27 @@ struct FHUDGroupManager
 				{
 					// If InternalGroup is null, it shouldn't be being used by any viewports					
 					TSet<YName> EnabledItems;
-					GetStatsForGroup(EnabledItems, MaybeGroupFName);
+					GetStatsForGroup(EnabledItems, MaybeGroupYName);
 
-					const FStatMessage& Group = Stats.ShortNameToLongName.FindChecked(MaybeGroupFName);
+					const FStatMessage& Group = Stats.ShortNameToLongName.FindChecked(MaybeGroupYName);
 					const YName GroupCategory = Group.NameAndInfo.GetGroupCategory();
 					const YString GroupDescription = Group.NameAndInfo.GetDescription();
 
-					EnabledGroups.Add(MaybeGroupFName, FInternalGroup(MaybeGroupFName, GroupCategory, bHierarchy ? EStatDisplayMode::Hierarchical : EStatDisplayMode::Flat, EnabledItems, GroupDescription));
+					EnabledGroups.Add(MaybeGroupYName, FInternalGroup(MaybeGroupYName, GroupCategory, bHierarchy ? EStatDisplayMode::Hierarchical : EStatDisplayMode::Flat, EnabledItems, GroupDescription));
 				}
 			}
 			else if (Params.bSlowMode)
 			{
-				const bool bEnabledSlowMode = EnabledGroups.Contains( MaybeGroupFName );
+				const bool bEnabledSlowMode = EnabledGroups.Contains( MaybeGroupYName );
 				if (bEnabledSlowMode)
 				{
-					EnabledGroups.Remove( MaybeGroupFName );
+					EnabledGroups.Remove( MaybeGroupYName );
 					NumTotalStackFrames = 0;
 				}
 				else
 				{
 					TSet<YName> EmptySet = TSet<YName>();
-					EnabledGroups.Add( MaybeGroupFName, FInternalGroup( MaybeGroupFName, NAME_None, EStatDisplayMode::Hierarchical, EmptySet, TEXT( "Hierarchy for game and render" ) ) );
+					EnabledGroups.Add( MaybeGroupYName, FInternalGroup( MaybeGroupYName, NAME_None, EStatDisplayMode::Hierarchical, EmptySet, TEXT( "Hierarchy for game and render" ) ) );
 				}			
 			}
 			else if(!Params.BudgetSection.IsEmpty())
@@ -1975,16 +1975,16 @@ static void StatCmd(YString InCmd, bool bStatCommand, YOutputDevice* Ar /*= null
 					MaybeGroup.RemoveAt(PlusPos, 1, false);
 				}
 
-				const YName MaybeGroupFName = YName(*MaybeGroup);
+				const YName MaybeGroupYName = YName(*MaybeGroup);
 #if STATS
 				// Try to parse.
 				FStatParams Params(Cmd);
-				Params.Group.Set(MaybeGroupFName);
+				Params.Group.Set(MaybeGroupYName);
 				FHUDGroupManager::Get(Stats).HandleCommand(Params, bHierarchy);
 #else
 				// If stats aren't enabled, broadcast so engine stats can still be triggered
 				bool bCurrentEnabled, bOthersEnabled;
-				HandleToggleCommandBroadcast(MaybeGroupFName, bCurrentEnabled, bOthersEnabled);
+				HandleToggleCommandBroadcast(MaybeGroupYName, bCurrentEnabled, bOthersEnabled);
 #endif
 			}
 			else
@@ -2144,8 +2144,8 @@ bool DirectStatsCommand(const TCHAR* Cmd, bool bBlockForCompletion /*= false*/, 
 						MaybeGroup.RemoveAt(PlusPos, 1, false);
 					}
 
-					const YName MaybeGroupFName = YName(*(YString(TEXT("STATGROUP_")) + MaybeGroup));
-					bResult = FStatGroupGameThreadNotifier::Get().StatGroupNames.Contains(MaybeGroupFName);
+					const YName MaybeGroupYName = YName(*(YString(TEXT("STATGROUP_")) + MaybeGroup));
+					bResult = FStatGroupGameThreadNotifier::Get().StatGroupNames.Contains(MaybeGroupYName);
 				}
 			}
 		}

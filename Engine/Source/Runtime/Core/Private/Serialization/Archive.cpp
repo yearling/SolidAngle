@@ -391,7 +391,7 @@ YString FArchiveProxy::GetLocalizationNamespace() const
 /**
  * Serialize the given YName as an YString
  */
-YArchive& FNameAsStringProxyArchive::operator<<( class YName& N )
+YArchive& YNameAsStringProxyArchive::operator<<( class YName& N )
 {
 	if (IsLoading())
 	{

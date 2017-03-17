@@ -640,19 +640,19 @@ public:
 		YString MaybeGroup;
 		FParse::Token(Cmd, MaybeGroup, false);
 		MaybeGroup = YString(TEXT("STATGROUP_")) + MaybeGroup;
-		YName MaybeGroupFName(*MaybeGroup);
+		YName MaybeGroupYName(*MaybeGroup);
 
-		FGroupEnable* Found = HighPerformanceEnable.Find(MaybeGroupFName);
+		FGroupEnable* Found = HighPerformanceEnable.Find(MaybeGroupYName);
 		if (!Found)
 		{
-			EnableForNewGroup.Add(MaybeGroupFName, Enable);
+			EnableForNewGroup.Add(MaybeGroupYName, Enable);
 			ListGroups();
-			UE_LOG(LogStatGroupEnableManager, Display, TEXT("Group Not Found %s"), *MaybeGroupFName.ToString());
+			UE_LOG(LogStatGroupEnableManager, Display, TEXT("Group Not Found %s"), *MaybeGroupYName.ToString());
 			return NAME_None;
 		}
-		SetHighPerformanceEnableForGroup(MaybeGroupFName, Enable);
-		ListGroup(MaybeGroupFName);
-		return MaybeGroupFName;
+		SetHighPerformanceEnableForGroup(MaybeGroupYName, Enable);
+		ListGroup(MaybeGroupYName);
+		return MaybeGroupYName;
 	}
 
 	void StatGroupEnableManagerCommand(YString const& InCmd) override

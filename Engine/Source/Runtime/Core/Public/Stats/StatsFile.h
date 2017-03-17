@@ -228,8 +228,8 @@ struct FStatsStreamHeader
 	FStatsStreamHeader()
 		: Version( 0 )
 		, FrameTableOffset( 0 )
-		, FNameTableOffset( 0 )
-		, NumFNames( 0 )
+		, YNameTableOffset( 0 )
+		, NumYNames( 0 )
 		, MetadataMessagesOffset( 0 )
 		, NumMetadataMessages( 0 )
 		, bRawStatsFile( false )
@@ -249,11 +249,11 @@ struct FStatsStreamHeader
 	 *  For raw stats contains only one element which indicates the begin of the data. */
 	uint64	FrameTableOffset;
 
-	/** Offset in the file for the YName table. Serialized with WriteFName/ReadFName. */
-	uint64	FNameTableOffset;
+	/** Offset in the file for the YName table. Serialized with WriteYName/ReadYName. */
+	uint64	YNameTableOffset;
 
-	/** Number of the FNames. */
-	uint64	NumFNames;
+	/** Number of the YNames. */
+	uint64	NumYNames;
 
 	/** Offset in the file for the metadata messages. Serialized with WriteMessage/ReadMessage. */
 	uint64	MetadataMessagesOffset;
@@ -292,8 +292,8 @@ struct FStatsStreamHeader
 
 		Ar << Header.FrameTableOffset;
 
-		Ar << Header.FNameTableOffset
-			<< Header.NumFNames;
+		Ar << Header.YNameTableOffset
+			<< Header.NumYNames;
 
 		Ar << Header.MetadataMessagesOffset
 			<< Header.NumMetadataMessages;
@@ -362,17 +362,17 @@ protected:
 	FORCEINLINE_STATS void WriteYName( YArchive& Ar, FStatNameAndInfo NameAndInfo )
 	{
 		YName RawName = NameAndInfo.GetRawName();
-		bool bSendFName = !FNamesSent.Contains( RawName.GetComparisonIndex() );
+		bool bSendYName = !YNamesSent.Contains( RawName.GetComparisonIndex() );
 		int32 Index = RawName.GetComparisonIndex();
 		Ar << Index;
 		int32 Number = NameAndInfo.GetRawNumber();
-		if (bSendFName)
+		if (bSendYName)
 		{
-			FNamesSent.Add( RawName.GetComparisonIndex() );
+			YNamesSent.Add( RawName.GetComparisonIndex() );
 			Number |= EStatMetaFlags::SendingYName << (EStatMetaFlags::Shift + EStatAllFields::StartShift);
 		}
 		Ar << Number;
-		if (bSendFName)
+		if (bSendYName)
 		{
 			YString Name = RawName.ToString();
 			Ar << Name;
@@ -415,7 +415,7 @@ protected:
 	}
 
 	/** Set of names already sent. */
-	TSet<int32> FNamesSent;
+	TSet<int32> YNamesSent;
 
 	/** Data to write. */
 	TArray<uint8> OutData;
@@ -608,8 +608,8 @@ public:
 	/** Stats stream header. */
 	FStatsStreamHeader Header;
 
-	/** FNames have a different index on each machine, so we translate via this map. **/
-	TMap<int32, int32> FNamesIndexMap;
+	/** YNames have a different index on each machine, so we translate via this map. **/
+	TMap<int32, int32> YNamesIndexMap;
 
 	/** Array of stats frame info. Empty for the raw stats. */
 	TArray<FStatsFrameInfo> FramesInfo;
@@ -673,38 +673,38 @@ public:
 	}
 
 	/** Read and translate or create an YName. **/
-	FORCEINLINE_STATS FStatNameAndInfo ReadFName( YArchive& Ar, bool bHasFNameMap )
+	FORCEINLINE_STATS FStatNameAndInfo ReadYName( YArchive& Ar, bool bHasYNameMap )
 	{
-		// If we read the whole FNames translation map, we don't want to add the YName again.
+		// If we read the whole YNames translation map, we don't want to add the YName again.
 		// This is a bit tricky, even if we have the YName translation map, we still need to read the YString.
 		// CAUTION!! This is considered to be thread safe in this case.
 		int32 Index = 0;
 		Ar << Index;
 		int32 Number = 0;
 		Ar << Number;
-		YName TheFName;
+		YName TheYName;
 		
-		if( !bHasFNameMap )
+		if( !bHasYNameMap )
 		{
 			if( Number & (EStatMetaFlags::SendingYName << (EStatMetaFlags::Shift + EStatAllFields::StartShift)) )
 			{
 				YString Name;
 				Ar << Name;
 
-				TheFName = YName( *Name );
-				FNamesIndexMap.Add( Index, TheFName.GetComparisonIndex() );
+				TheYName = YName( *Name );
+				YNamesIndexMap.Add( Index, TheYName.GetComparisonIndex() );
 				Number &= ~(EStatMetaFlags::SendingYName << (EStatMetaFlags::Shift + EStatAllFields::StartShift));
 			}
 			else
 			{
-				if( FNamesIndexMap.Contains( Index ) )
+				if( YNamesIndexMap.Contains( Index ) )
 				{
-					const int32 MyIndex = FNamesIndexMap.FindChecked( Index );
-					TheFName = YName( MyIndex, MyIndex, 0 );
+					const int32 MyIndex = YNamesIndexMap.FindChecked( Index );
+					TheYName = YName( MyIndex, MyIndex, 0 );
 				}
 				else
 				{
-					TheFName = YName( TEXT( "Unknown YName" ) );
+					TheYName = YName( TEXT( "Unknown YName" ) );
 					Number = 0;
 					UE_LOG( LogTemp, Warning, TEXT( "Missing YName Indexed: %d, %d" ), Index, Number );
 				}
@@ -718,28 +718,28 @@ public:
 				Ar << Name;
 				Number &= ~(EStatMetaFlags::SendingYName << (EStatMetaFlags::Shift + EStatAllFields::StartShift));
 			}
-			if( FNamesIndexMap.Contains( Index ) )
+			if( YNamesIndexMap.Contains( Index ) )
 			{
-				const int32 MyIndex = FNamesIndexMap.FindChecked( Index );
-				TheFName = YName( MyIndex, MyIndex, 0 );
+				const int32 MyIndex = YNamesIndexMap.FindChecked( Index );
+				TheYName = YName( MyIndex, MyIndex, 0 );
 			}
 			else
 			{
-				TheFName = YName( TEXT( "Unknown YName" ) );
+				TheYName = YName( TEXT( "Unknown YName" ) );
 				Number = 0;
 				UE_LOG( LogTemp, Warning, TEXT( "Missing YName Indexed: %d, %d" ), Index, Number );
 			}
 		}
 
-		FStatNameAndInfo Result( TheFName, false );
+		FStatNameAndInfo Result( TheYName, false );
 		Result.SetNumberDirect( Number );
 		return Result;
 	}
 
 	/** Read a stat message. **/
-	FORCEINLINE_STATS FStatMessage ReadMessage( YArchive& Ar, bool bHasFNameMap = false )
+	FORCEINLINE_STATS FStatMessage ReadMessage( YArchive& Ar, bool bHasYNameMap = false )
 	{
-		FStatMessage Result( ReadFName( Ar, bHasFNameMap ) );
+		FStatMessage Result( ReadYName( Ar, bHasYNameMap ) );
 		Result.Clear();
 		switch( Result.NameAndInfo.GetField<EStatDataType>() )
 		{
@@ -761,7 +761,7 @@ public:
 				
 			case EStatDataType::ST_YName:
 			{
-				FStatNameAndInfo Payload( ReadFName( Ar, bHasFNameMap ) );
+				FStatNameAndInfo Payload( ReadYName( Ar, bHasYNameMap ) );
 				Result.GetValue_FMinimalName() = NameToMinimalName( Payload.GetRawName() );
 				break;
 			}
@@ -788,17 +788,17 @@ public:
 	}
 
 	/**
-	 *	Reads FNames and metadata messages from the specified archive, only valid for finalized stats files.
+	 *	Reads YNames and metadata messages from the specified archive, only valid for finalized stats files.
 	 *	Allow unordered file access.
 	 */
-	void ReadFNamesAndMetadataMessages( YArchive& Ar, TArray<FStatMessage>& out_MetadataMessages )
+	void ReadYNamesAndMetadataMessages( YArchive& Ar, TArray<FStatMessage>& out_MetadataMessages )
 	{
-		// Read FNames.
-		Ar.Seek( Header.FNameTableOffset );
-		out_MetadataMessages.Reserve( Header.NumFNames );
-		for( int32 Index = 0; Index < Header.NumFNames; Index++ )
+		// Read YNames.
+		Ar.Seek( Header.YNameTableOffset );
+		out_MetadataMessages.Reserve( Header.NumYNames );
+		for( int32 Index = 0; Index < Header.NumYNames; Index++ )
 		{
-			ReadFName( Ar, false );
+			ReadYName( Ar, false );
 		}
 
 		// Read metadata messages.

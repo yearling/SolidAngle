@@ -487,7 +487,7 @@ public:
 	* NOTE: The function naming is weird because you can't apparently have an overridden function differnt only by template type params
 	*/
 	//virtual void Parse1ToNSectionOYNames(const TCHAR* Section, const TCHAR* KeyOne, const TCHAR* KeyN, TMap<YName, TArray<YName> >& OutMap, const YString& Filename);
-	virtual void Parse1ToNSectionOfNames(const TCHAR * Section, const TCHAR * KeyOne, const TCHAR * KeyN, TMap<YName, TArray<YName>>& OutMap, const YString & Filename);
+	virtual void Parse1ToNSectionOYNames(const TCHAR * Section, const TCHAR * KeyOne, const TCHAR * KeyN, TMap<YName, TArray<YName>>& OutMap, const YString & Filename);
 	FConfigFile* FindConfigFile(const YString& Filename);
 	FConfigFile* Find(const YString& InFilename, bool CreateIfNotFound);
 	void Flush(bool Read, const YString& Filename = TEXT(""));

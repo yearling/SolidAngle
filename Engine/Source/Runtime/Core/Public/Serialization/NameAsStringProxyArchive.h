@@ -6,16 +6,16 @@
 #include "Serialization/ArchiveProxy.h"
 
 /**
- * Implements a proxy archive that serializes FNames as string data.
+ * Implements a proxy archive that serializes YNames as string data.
  */
-struct FNameAsStringProxyArchive : public FArchiveProxy
+struct YNameAsStringProxyArchive : public FArchiveProxy
 {
 	/**
 	 * Creates and initializes a new instance.
 	 *
 	 * @param InInnerArchive The inner archive to proxy.
 	 */
-	 FNameAsStringProxyArchive(YArchive& InInnerArchive)
+	 YNameAsStringProxyArchive(YArchive& InInnerArchive)
 		 :	FArchiveProxy(InInnerArchive)
 	 { }
 

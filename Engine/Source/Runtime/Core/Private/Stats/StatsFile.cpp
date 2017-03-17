@@ -316,21 +316,21 @@ void IStatsWriteFile::Finalize()
 
 	const FStatsThreadState& Stats = FStatsThreadState::GetLocalState();
 
-	// Add FNames from the stats metadata.
+	// Add YNames from the stats metadata.
 	for (const auto& It : Stats.ShortNameToLongName)
 	{
 		const FStatMessage& StatMessage = It.Value;
-		FNamesSent.Add( StatMessage.NameAndInfo.GetRawName().GetComparisonIndex() );
+		YNamesSent.Add( StatMessage.NameAndInfo.GetRawName().GetComparisonIndex() );
 	}
 
 	// Create a copy of names.
-	TSet<int32> FNamesToSent = FNamesSent;
-	FNamesSent.Empty( FNamesSent.Num() );
+	TSet<int32> YNamesToSent = YNamesSent;
+	YNamesSent.Empty( YNamesSent.Num() );
 
-	// Serialize FNames.
-	Header.FNameTableOffset = Ar.Tell();
-	Header.NumFNames = FNamesToSent.Num();
-	for (const int32 It : FNamesToSent)
+	// Serialize YNames.
+	Header.YNameTableOffset = Ar.Tell();
+	Header.NumYNames = YNamesToSent.Num();
+	for (const int32 It : YNamesToSent)
 	{
 		WriteYName( Ar, FStatNameAndInfo( YName( It, It, 0 ), false ) );
 	}
@@ -341,10 +341,10 @@ void IStatsWriteFile::Finalize()
 	WriteMetadata( Ar );
 
 	// Verify data.
-	TSet<int32> BMinA = FNamesSent.Difference( FNamesToSent );
+	TSet<int32> BMinA = YNamesSent.Difference( YNamesToSent );
 	struct FLocal
 	{
-		static TArray<YName> GetFNameArray( const TSet<int32>& NameIndices )
+		static TArray<YName> GetYNameArray( const TSet<int32>& NameIndices )
 		{
 			TArray<YName> Result;
 			for (const int32 NameIndex : NameIndices)
@@ -354,7 +354,7 @@ void IStatsWriteFile::Finalize()
 			return Result;
 		}
 	};
-	TArray<YName> BMinANames = FLocal::GetFNameArray( BMinA );
+	TArray<YName> BMinANames = FLocal::GetYNameArray( BMinA );
 
 	// Seek to the position just after a magic value of the file and write out proper header.
 	Ar.Seek( sizeof( uint32 ) );
@@ -615,7 +615,7 @@ bool FStatsReadFile::PrepareLoading()
 
 	// Read metadata.
 	TArray<FStatMessage> MetadataMessages;
-	Stream.ReadFNamesAndMetadataMessages( *Reader, MetadataMessages );
+	Stream.ReadYNamesAndMetadataMessages( *Reader, MetadataMessages );
 	State.ProcessMetaDataOnly( MetadataMessages );
 
 	// Find all SObject metadata messages.
@@ -876,14 +876,14 @@ void FStatsReadFile::ProcessStats()
 				for (int32 PacketIndex = 0; PacketIndex < Frame.Packets.Num(); PacketIndex++)
 				{
 					const FStatPacket& StatPacket = *Frame.Packets[PacketIndex];
-					const YName& ThreadFName = State.Threads.FindChecked( StatPacket.ThreadId );
+					const YName& ThreadYName = State.Threads.FindChecked( StatPacket.ThreadId );
 
-					FStackState* StackState = StackStates.Find( ThreadFName );
+					FStackState* StackState = StackStates.Find( ThreadYName );
 					if (!StackState)
 					{
-						StackState = &StackStates.Add( ThreadFName );
-						StackState->Stack.Add( ThreadFName );
-						StackState->Current = ThreadFName;
+						StackState = &StackStates.Add( ThreadYName );
+						StackState->Stack.Add( ThreadYName );
+						StackState->Current = ThreadYName;
 					}
 
 					const FStatMessagesArray& Data = StatPacket.StatMessages;
@@ -992,7 +992,7 @@ void FStatsReadFile::ProcessStats()
 									const YName ShortName = Message.NameAndInfo.GetShortName();
 
 									UE_LOG( LogStats, Warning, TEXT( "Broken cycle scope end %s/%s, current %s" ),
-											*ThreadFName.ToString(),
+											*ThreadYName.ToString(),
 											*ShortName.ToString(),
 											*StackState->Current.ToString() );
 
@@ -1000,8 +1000,8 @@ void FStatsReadFile::ProcessStats()
 									// Rollback to the thread node.
 									StackState->bIsBrokenCallstack = true;
 									StackState->Stack.Empty();
-									StackState->Stack.Add( ThreadFName );
-									StackState->Current = ThreadFName;
+									StackState->Stack.Add( ThreadYName );
+									StackState->Current = ThreadYName;
 
 									//?ProcessCycleScopeEndOperation( Message, *StackState );
 								}

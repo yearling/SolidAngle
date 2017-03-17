@@ -6,6 +6,7 @@
 #include "HAL/PlatformMemory.h"
 #include "HAL/MemoryBase.h"
 
+#if PLATFORM_SUPPORTS_TBB && TBB_ALLOCATOR_ALLOWED
 /**
 * TBB 64-bit scalable memory allocator.
 */
@@ -52,3 +53,4 @@ private:
 
 	double MemTime;
 };
+#endif

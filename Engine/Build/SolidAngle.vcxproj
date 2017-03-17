@@ -108,6 +108,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>setupapi.lib;Dwmapi.lib;Dbghelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -127,6 +128,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Netapi32.lib;setupapi.lib;Dwmapi.lib;Dbghelp.lib;Imm32.lib;Iphlpapi.lib;Xinput.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
@@ -150,6 +152,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>setupapi.lib;Dwmapi.lib;Dbghelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -171,14 +174,17 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Netapi32.lib;setupapi.lib;Dwmapi.lib;Dbghelp.lib;Imm32.lib;Iphlpapi.lib;Xinput.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\Core\Private\Features\ModularFeatures.h" />
     <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\ICUCulture.h" />
     <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\ICUUtilities.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\InvariantCulture.h" />
     <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\LegacyCulture.h" />
     <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\LegacyInternationalization.h" />
     <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\TextCache.h" />
@@ -511,6 +517,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Modules\ModuleBoilerplate\ModuleBoilerplate.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Modules\ModuleInterface.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Modules\ModuleManager.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Modules\ModuleVersion.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\MallocProfiler.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\ProfilingHelpers.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\SMemoryDefines.h" />
@@ -528,6 +535,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\NameAsStringProxyArchive.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\SObject\AutoPointer.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\SObject\DebugSerializationFlags.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\DevObjectVersion.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\SObject\EditorObjectVersion.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\SObject\NameTypes.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\SObject\ObjectMacros.h" />
@@ -638,6 +646,7 @@
     <ClCompile Include="..\Source\Runtime\Core\Private\Containers\Ticker.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Containers\Union.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Delegates\DelegateHandle.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Features\ModularFeatures.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericApplication.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformAtomics.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformChunkInstall.cpp" />
@@ -680,15 +689,20 @@
     <ClCompile Include="..\Source\Runtime\Core\Private\HAL\ThreadingBase.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\HAL\SolidAngleMemory.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\Culture.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\FastDecimalFormat.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\ICUCulture.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\ICUUtilities.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\Internationalization.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\LegacyCulture.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\LegacyInternationalization.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\LegacyText.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\Text.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\TextCache.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\TextFormatArgumentModifier.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\TextFormatter.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\TextHistory.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\TextLocalizationManager.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\TextNamespaceUtil.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Logging\LogCategory.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Logging\LogMacros.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Logging\LogScopedCategoryAndVerbosityOverride.cpp" />
@@ -771,7 +785,15 @@
     <ClCompile Include="..\Source\Runtime\Core\Private\Misc\Timespan.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Misc\UProjectInfo.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Misc\WildcardString.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Modules\ModuleManager.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\ProfilingDebugging\ProfilingHelpers.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\Archive.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\ArchiveLoadCompressedProxy.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\ArchiveSaveCompressedProxy.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\CompressedChunkInfo.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\CustomVersion.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\SObject\DevObjectVersion.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\SObject\ObjectVersion.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\SObject\SolidAngleNames.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Stats\Stats2.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Stats\StatsCommand.cpp" />
@@ -782,6 +804,7 @@
     <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Async\AsyncTest.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Async\TaskGraphTest.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Tests\HAL\PlatformTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Misc\PathsTest.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Windows\MinimalWindowsApi.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Windows\TextStoreACP.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsApplication.cpp" />

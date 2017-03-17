@@ -44,12 +44,12 @@ template<typename TCharType>
 YNameEntry* AllocateNameEntry( const void* Name, NAME_INDEX Index);
 
 /**
-* Helper function that can be used inside the debuggers watch window. E.g. "DebugFName(Class->Name.Index)". 
+* Helper function that can be used inside the debuggers watch window. E.g. "DebugYName(Class->Name.Index)". 
 *
 * @param	Index	Name index to look up string for
 * @return			Associated name
 */
-const TCHAR* DebugFName(int32 Index)
+const TCHAR* DebugYName(int32 Index)
 {
 	// Hardcoded static array. This function is only used inside the debugger so it should be fine to return it.
 	static TCHAR TempName[256];
@@ -58,13 +58,13 @@ const TCHAR* DebugFName(int32 Index)
 }
 
 /**
-* Helper function that can be used inside the debuggers watch window. E.g. "DebugFName(Class->Name.Index, Class->Name.Number)". 
+* Helper function that can be used inside the debuggers watch window. E.g. "DebugYName(Class->Name.Index, Class->Name.Number)". 
 *
 * @param	Index	Name index to look up string for
 * @param	Number	Internal instance number of the YName to print (which is 1 more than the printed number)
 * @return			Associated name
 */
-const TCHAR* DebugFName(int32 Index, int32 Number)
+const TCHAR* DebugYName(int32 Index, int32 Number)
 {
 	// Hardcoded static array. This function is only used inside the debugger so it should be fine to return it.
 	static TCHAR TempName[256];
@@ -73,12 +73,12 @@ const TCHAR* DebugFName(int32 Index, int32 Number)
 }
 
 /**
- * Helper function that can be used inside the debuggers watch window. E.g. "DebugFName(Class->Name)". 
+ * Helper function that can be used inside the debuggers watch window. E.g. "DebugYName(Class->Name)". 
  *
  * @param	Name	Name to look up string for
  * @return			Associated name
  */
-const TCHAR* DebugFName(YName& Name)
+const TCHAR* DebugYName(YName& Name)
 {
 	// Hardcoded static array. This function is only used inside the debugger so it should be fine to return it.
 	static TCHAR TempName[256];
@@ -413,7 +413,7 @@ int32		YName::NumWideNames;
 -----------------------------------------------------------------------------*/
 
 /**
- * Create an YName. If FindType is FNAME_Find, and the string part of the name 
+ * Create an YName. If FindType is YName_Find, and the string part of the name 
  * doesn't already exist, then the name will be NAME_None
  *
  * @param Name Value for the string portion of the name
@@ -444,7 +444,7 @@ YName::YName(const ANSICHAR* Name, EFindName FindType)
 }
 
 /**
- * Create an YName. If FindType is FNAME_Find, and the string part of the name 
+ * Create an YName. If FindType is YName_Find, and the string part of the name 
  * doesn't already exist, then the name will be NAME_None
  *
  * @param Name Value for the string portion of the name
@@ -668,12 +668,12 @@ template <> void IncrementNameCount<WIDECHAR>()
 }
 
 template <typename TCharType>
-struct FNameInitHelper
+struct YNameInitHelper
 {
 };
 
 template <>
-struct FNameInitHelper<ANSICHAR>
+struct YNameInitHelper<ANSICHAR>
 {
 	static const bool IsAnsi = true;
 
@@ -710,7 +710,7 @@ struct FNameInitHelper<ANSICHAR>
 };
 
 template <>
-struct FNameInitHelper<WIDECHAR>
+struct YNameInitHelper<WIDECHAR>
 {
 	static const bool IsAnsi = false;
 
@@ -758,7 +758,7 @@ bool YName::InitInternal_FindOrAdd(const TCharType* InName, const EFindName Find
 		const YNameEntry* const NameEntry = Names[OutComparisonIndex];
 
 		// If the string we got back doesn't match the case of the string we provided, also add a case variant version for display purposes
-		if(TCString<TCharType>::Strcmp(InName, FNameInitHelper<TCharType>::GetNameString(NameEntry)) != 0)
+		if(TCString<TCharType>::Strcmp(InName, YNameInitHelper<TCharType>::GetNameString(NameEntry)) != 0)
 		{
 			if(!InitInternal_FindOrAddNameEntry<TCharType>(InName, FindType, ENameCase::CaseSensitive, CasePreservingHash, OutDisplayIndex))
 			{
@@ -808,7 +808,7 @@ bool YName::InitInternal_FindOrAddNameEntry(const TCharType* InName, const EFind
 					// copy happens if it is longer
 					check(TCString<TCharType>::Strlen(InName) == Hash->GetNameLength());
 
-					FNameInitHelper<TCharType>::SetNameString(Hash, InName);
+					YNameInitHelper<TCharType>::SetNameString(Hash, InName);
 				}
 				check(OutIndex >= 0);
 				return true;
@@ -931,7 +931,7 @@ void YName::StaticInit()
 	check(IsInGameThread());
 	/** Global instance used to initialize the GCRCTable. It used to be initialized in appInit() */
 	//@todo: Massive workaround for static init order without needing to use a function call for every use of GCRCTable
-	// This ASSUMES that fname::StaticINit is going to be called BEFORE ANY use of GCRCTable
+	// This ASSUMES that YName::StaticINit is going to be called BEFORE ANY use of GCRCTable
 	FCrc::Init();
 
 	check(GetIsInitialized() == false);
@@ -1340,12 +1340,12 @@ template<typename TCharType>
 YNameEntry* AllocateNameEntry(const void* Name, NAME_INDEX Index)
 {
 	const SIZE_T NameLen  = TCString<TCharType>::Strlen((TCharType*)Name);
-	int32 NameEntrySize	  = FNameInitHelper<TCharType>::GetSize( NameLen );
+	int32 NameEntrySize	  = YNameInitHelper<TCharType>::GetSize( NameLen );
 	YNameEntry* NameEntry = GNameEntryPoolAllocator.Allocate( NameEntrySize );
 	YName::NameEntryMemorySize += NameEntrySize;
-	NameEntry->Index      = (Index << NAME_INDEX_SHIFT) | (FNameInitHelper<TCharType>::GetIndexShiftValue());
+	NameEntry->Index      = (Index << NAME_INDEX_SHIFT) | (YNameInitHelper<TCharType>::GetIndexShiftValue());
 	NameEntry->HashNext   = nullptr;
-	FNameInitHelper<TCharType>::SetNameString(NameEntry, (TCharType*)Name, NameLen);
+	YNameInitHelper<TCharType>::SetNameString(NameEntry, (TCharType*)Name, NameLen);
 	IncrementNameCount<TCharType>();
 	return NameEntry;
 }
@@ -1354,50 +1354,50 @@ YNameEntry* AllocateNameEntry(const void* Name, NAME_INDEX Index)
 #if !UE_BUILD_SHIPPING && !UE_BUILD_TEST
 
 #include "Containers/StackTracker.h"
-static TAutoConsoleVariable<int32> CVarLogGameThreadFNameChurn(
-	TEXT("LogGameThreadFNameChurn.Enable"),
+static TAutoConsoleVariable<int32> CVarLogGameThreadYNameChurn(
+	TEXT("LogGameThreadYNameChurn.Enable"),
 	0,
-	TEXT("If > 0, then collect sample game thread fname create, periodically print a report of the worst offenders."));
+	TEXT("If > 0, then collect sample game thread YName create, periodically print a report of the worst offenders."));
 
-static TAutoConsoleVariable<int32> CVarLogGameThreadFNameChurn_PrintFrequency(
-	TEXT("LogGameThreadFNameChurn.PrintFrequency"),
+static TAutoConsoleVariable<int32> CVarLogGameThreadYNameChurn_PrintFrequency(
+	TEXT("LogGameThreadYNameChurn.PrintFrequency"),
 	300,
 	TEXT("Number of frames between churn reports."));
 
-static TAutoConsoleVariable<int32> CVarLogGameThreadFNameChurn_Threshhold(
-	TEXT("LogGameThreadFNameChurn.Threshhold"),
+static TAutoConsoleVariable<int32> CVarLogGameThreadYNameChurn_Threshhold(
+	TEXT("LogGameThreadYNameChurn.Threshhold"),
 	10,
-	TEXT("Minimum average number of fname creations per frame to include in the report."));
+	TEXT("Minimum average number of YName creations per frame to include in the report."));
 
-static TAutoConsoleVariable<int32> CVarLogGameThreadFNameChurn_SampleFrequency(
-	TEXT("LogGameThreadFNameChurn.SampleFrequency"),
+static TAutoConsoleVariable<int32> CVarLogGameThreadYNameChurn_SampleFrequency(
+	TEXT("LogGameThreadYNameChurn.SampleFrequency"),
 	1,
-	TEXT("Number of fname creates per sample. This is used to prevent churn sampling from slowing the game down too much."));
+	TEXT("Number of YName creates per sample. This is used to prevent churn sampling from slowing the game down too much."));
 
-static TAutoConsoleVariable<int32> CVarLogGameThreadFNameChurn_StackIgnore(
-	TEXT("LogGameThreadFNameChurn.StackIgnore"),
+static TAutoConsoleVariable<int32> CVarLogGameThreadYNameChurn_StackIgnore(
+	TEXT("LogGameThreadYNameChurn.StackIgnore"),
 	4,
 	TEXT("Number of items to discard from the top of a stack frame."));
 
-static TAutoConsoleVariable<int32> CVarLogGameThreadFNameChurn_RemoveAliases(
-	TEXT("LogGameThreadFNameChurn.RemoveAliases"),
+static TAutoConsoleVariable<int32> CVarLogGameThreadYNameChurn_RemoveAliases(
+	TEXT("LogGameThreadYNameChurn.RemoveAliases"),
 	1,
 	TEXT("If > 0 then remove aliases from the counting process. This essentialy merges addresses that have the same human readable string. It is slower."));
 
-static TAutoConsoleVariable<int32> CVarLogGameThreadFNameChurn_StackLen(
-	TEXT("LogGameThreadFNameChurn.StackLen"),
+static TAutoConsoleVariable<int32> CVarLogGameThreadYNameChurn_StackLen(
+	TEXT("LogGameThreadYNameChurn.StackLen"),
 	3,
 	TEXT("Maximum number of stack frame items to keep. This improves aggregation because calls that originate from multiple places but end up in the same place will be accounted together."));
 
 
-struct FSampleFNameChurn
+struct FSampleYNameChurn
 {
-	FStackTracker GGameThreadFNameChurnTracker;
+	FStackTracker GGameThreadYNameChurnTracker;
 	bool bEnabled;
 	int32 CountDown;
 	uint64 DumpFrame;
 
-	FSampleFNameChurn()
+	FSampleYNameChurn()
 		: bEnabled(false)
 		, CountDown(MAX_int32)
 		, DumpFrame(0)
@@ -1406,23 +1406,23 @@ struct FSampleFNameChurn
 
 	void NameCreationHook()
 	{
-		bool bNewEnabled = CVarLogGameThreadFNameChurn.GetValueOnGameThread() > 0;
+		bool bNewEnabled = CVarLogGameThreadYNameChurn.GetValueOnGameThread() > 0;
 		if (bNewEnabled != bEnabled)
 		{
 			check(IsInGameThread());
 			bEnabled = bNewEnabled;
 			if (bEnabled)
 			{
-				CountDown = CVarLogGameThreadFNameChurn_SampleFrequency.GetValueOnGameThread();
-				DumpFrame = GFrameCounter + CVarLogGameThreadFNameChurn_PrintFrequency.GetValueOnGameThread();
-				GGameThreadFNameChurnTracker.ResetTracking();
-				GGameThreadFNameChurnTracker.ToggleTracking(true, true);
+				CountDown = CVarLogGameThreadYNameChurn_SampleFrequency.GetValueOnGameThread();
+				DumpFrame = GFrameCounter + CVarLogGameThreadYNameChurn_PrintFrequency.GetValueOnGameThread();
+				GGameThreadYNameChurnTracker.ResetTracking();
+				GGameThreadYNameChurnTracker.ToggleTracking(true, true);
 			}
 			else
 			{
-				GGameThreadFNameChurnTracker.ToggleTracking(false, true);
+				GGameThreadYNameChurnTracker.ToggleTracking(false, true);
 				DumpFrame = 0;
-				GGameThreadFNameChurnTracker.ResetTracking();
+				GGameThreadYNameChurnTracker.ResetTracking();
 			}
 		}
 		else if (bEnabled)
@@ -1431,7 +1431,7 @@ struct FSampleFNameChurn
 			check(DumpFrame);
 			if (--CountDown <= 0)
 			{
-				CountDown = CVarLogGameThreadFNameChurn_SampleFrequency.GetValueOnGameThread();
+				CountDown = CVarLogGameThreadYNameChurn_SampleFrequency.GetValueOnGameThread();
 				CollectSample();
 				if (GFrameCounter > DumpFrame)
 				{
@@ -1444,25 +1444,25 @@ struct FSampleFNameChurn
 	void CollectSample()
 	{
 		check(IsInGameThread());
-		GGameThreadFNameChurnTracker.CaptureStackTrace(CVarLogGameThreadFNameChurn_StackIgnore.GetValueOnGameThread(), nullptr, CVarLogGameThreadFNameChurn_StackLen.GetValueOnGameThread(), CVarLogGameThreadFNameChurn_RemoveAliases.GetValueOnGameThread() > 0);
+		GGameThreadYNameChurnTracker.CaptureStackTrace(CVarLogGameThreadYNameChurn_StackIgnore.GetValueOnGameThread(), nullptr, CVarLogGameThreadYNameChurn_StackLen.GetValueOnGameThread(), CVarLogGameThreadYNameChurn_RemoveAliases.GetValueOnGameThread() > 0);
 	}
 	void PrintResultsAndReset()
 	{
-		DumpFrame = GFrameCounter + CVarLogGameThreadFNameChurn_PrintFrequency.GetValueOnGameThread();
+		DumpFrame = GFrameCounter + CVarLogGameThreadYNameChurn_PrintFrequency.GetValueOnGameThread();
 		YOutputDeviceRedirector* Log = YOutputDeviceRedirector::Get();
-		float SampleAndFrameCorrection = float(CVarLogGameThreadFNameChurn_SampleFrequency.GetValueOnGameThread()) / float(CVarLogGameThreadFNameChurn_PrintFrequency.GetValueOnGameThread());
-		GGameThreadFNameChurnTracker.DumpStackTraces(CVarLogGameThreadFNameChurn_Threshhold.GetValueOnGameThread(), *Log, SampleAndFrameCorrection);
-		GGameThreadFNameChurnTracker.ResetTracking();
+		float SampleAndFrameCorrection = float(CVarLogGameThreadYNameChurn_SampleFrequency.GetValueOnGameThread()) / float(CVarLogGameThreadYNameChurn_PrintFrequency.GetValueOnGameThread());
+		GGameThreadYNameChurnTracker.DumpStackTraces(CVarLogGameThreadYNameChurn_Threshhold.GetValueOnGameThread(), *Log, SampleAndFrameCorrection);
+		GGameThreadYNameChurnTracker.ResetTracking();
 	}
 };
 
-FSampleFNameChurn GGameThreadFNameChurnTracker;
+FSampleYNameChurn GGameThreadYNameChurnTracker;
 
 void CallNameCreationHook()
 {
 	if (GIsRunning && IsInGameThread())
 	{
-		GGameThreadFNameChurnTracker.NameCreationHook();
+		GGameThreadYNameChurnTracker.NameCreationHook();
 	}
 }
 

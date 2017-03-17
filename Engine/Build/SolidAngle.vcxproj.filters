@@ -157,6 +157,18 @@
     <Filter Include="Source\Runtime\Core\Private\Math">
       <UniqueIdentifier>{f75cd48a-fc7b-4136-b88c-ca9b986abe98}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Runtime\Core\Private\Modules">
+      <UniqueIdentifier>{f43dc1aa-ac48-43ca-88ba-dcbdac374ea3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Private\ProfilingDebugging">
+      <UniqueIdentifier>{eba27f74-d2fa-45bf-ab6c-62aa540dea92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Private\Tests\Misc">
+      <UniqueIdentifier>{6113d3a6-e3ae-434a-a979-7357873eac74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Private\Features">
+      <UniqueIdentifier>{840bee3c-763b-46e9-a4a9-979522b5521a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\core\Public\HAL\Platform.h">
@@ -1501,6 +1513,18 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Exec.h">
       <Filter>Source\Runtime\Core\Public\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Modules\ModuleVersion.h">
+      <Filter>Source\Runtime\Core\Public\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\InvariantCulture.h">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\DevObjectVersion.h">
+      <Filter>Source\Runtime\Core\Public\SObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Private\Features\ModularFeatures.h">
+      <Filter>Source\Runtime\Core\Private\Features</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\TestMain.cpp">
@@ -2027,6 +2051,51 @@
     </ClCompile>
     <ClCompile Include="..\Source\Runtime\Core\Private\Math\Sphere.cpp">
       <Filter>Source\Runtime\Core\Private\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\ArchiveLoadCompressedProxy.cpp">
+      <Filter>Source\Runtime\Core\Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\ArchiveSaveCompressedProxy.cpp">
+      <Filter>Source\Runtime\Core\Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Modules\ModuleManager.cpp">
+      <Filter>Source\Runtime\Core\Private\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\LegacyInternationalization.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\FastDecimalFormat.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\TextLocalizationManager.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\LegacyText.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\TextNamespaceUtil.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\SObject\DevObjectVersion.cpp">
+      <Filter>Source\Runtime\Core\Private\SObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\CustomVersion.cpp">
+      <Filter>Source\Runtime\Core\Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\ProfilingDebugging\ProfilingHelpers.cpp">
+      <Filter>Source\Runtime\Core\Private\ProfilingDebugging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Misc\PathsTest.cpp">
+      <Filter>Source\Runtime\Core\Private\Tests\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\CompressedChunkInfo.cpp">
+      <Filter>Source\Runtime\Core\Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\SObject\ObjectVersion.cpp">
+      <Filter>Source\Runtime\Core\Private\SObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Features\ModularFeatures.cpp">
+      <Filter>Source\Runtime\Core\Private\Features</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
