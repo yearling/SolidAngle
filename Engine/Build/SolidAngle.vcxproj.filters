@@ -1375,6 +1375,24 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\ITextFormatArgumentModifier.h">
       <Filter>Source\Runtime\Core\Public\Internationalization</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\ICUCulture.h">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\ICUUtilities.h">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\LegacyCulture.h">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\LegacyInternationalization.h">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\TextCache.h">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\TextFormatArgumentModifier.h">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\TestMain.cpp">
@@ -1822,6 +1840,33 @@
       <Filter>Source\Runtime\Core\Private\SObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\Text.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\Culture.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\ICUCulture.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\ICUUtilities.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\LegacyCulture.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\Internationalization.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\TextCache.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\TextFormatter.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\TextFormatArgumentModifier.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\TextHistory.cpp">
       <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
     </ClCompile>
   </ItemGroup>
