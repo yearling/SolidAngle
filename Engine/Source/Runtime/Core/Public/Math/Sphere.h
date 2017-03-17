@@ -1,7 +1,8 @@
 #pragma once
 
+#include "CoreTypes.h"
 #include "SolidAngleMathUtility.h"
-
+#include "Math/Vector.h"
 /**
 * Implements a basic sphere.
 */
@@ -165,7 +166,7 @@ public:
 	* @return The archive.
 	*/
 	//!!FIXME by zyx
-	//friend YArchive& operator<<(YArchive& Ar, FSphere& Sphere)
+	//friend YArchive& operator<<(YArchive& Ar, YSphere& Sphere)
 	//{
 	//	Ar << Sphere.Center << Sphere.W;
 

@@ -145,6 +145,18 @@
     <Filter Include="Source\Runtime\Core\Private\Internationalization">
       <UniqueIdentifier>{4c70b918-c860-4e36-a937-e219a24884f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Runtime\Core\Private\Tests">
+      <UniqueIdentifier>{818f14bc-7935-47a2-b7ce-3a6f827279ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Private\Tests\HAL">
+      <UniqueIdentifier>{e05fac31-8327-4f26-b8b7-143d40747153}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Private\Tests\Async">
+      <UniqueIdentifier>{57c533c5-5f33-4a18-ab0e-5b117ac97b64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Private\Math">
+      <UniqueIdentifier>{f75cd48a-fc7b-4136-b88c-ca9b986abe98}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\core\Public\HAL\Platform.h">
@@ -172,9 +184,6 @@
       <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Color.h">
-      <Filter>Source\Runtime\Core\Public\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\Math\MathUtility.h">
       <Filter>Source\Runtime\Core\Public\Math</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAngleMathUtility.h">
@@ -479,9 +488,6 @@
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\MemoryBase.h">
       <Filter>Source\Runtime\Core\Public\HAL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Exec.h">
-      <Filter>Source\Runtime\Core\Public\Math</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\StringConv.h">
       <Filter>Source\Runtime\Core\Public\Containers</Filter>
@@ -1393,6 +1399,108 @@
     <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\TextFormatArgumentModifier.h">
       <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Float16Color.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Float16.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Float32.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\RotationAboutPointMatrix.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\RangeSet.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\UnitConversion.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Vector2DHalf.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\AlphaBlendType.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Box.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Box2D.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\BoxSphereBounds.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\ClipProjectionMatrix.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\ConvexHull2d.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\CurveEdInterface.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\DualQuat.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\FloatPacker.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\InterpCurve.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\InterpCurvePoint.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Interval.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\InverseRotationMatrix.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\MathFwd.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\MirrorMatrix.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\OrientedBox.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\OrthoMatrix.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\PerspectiveMatrix.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\QuatRotationTranslationMatrix.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\ScaleMatrix.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\ScaleRotationTranslationMatrix.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\SHMath.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\TransformCalculus.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\TransformCalculus2D.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\TransformCalculus3D.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\TranslationMatrix.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Exec.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\TestMain.cpp">
@@ -1869,6 +1977,57 @@
     <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\TextHistory.cpp">
       <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\HAL\PlatformTest.cpp">
+      <Filter>Source\Runtime\Core\Private\Tests\HAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Async\AsyncTest.cpp">
+      <Filter>Source\Runtime\Core\Private\Tests\Async</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Async\TaskGraphTest.cpp">
+      <Filter>Source\Runtime\Core\Private\Tests\Async</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\Color.cpp">
+      <Filter>Source\Runtime\Core\Private\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\SolidAngleMath.cpp">
+      <Filter>Source\Runtime\Core\Private\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\Transform.cpp">
+      <Filter>Source\Runtime\Core\Private\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\TransformVectorized.cpp">
+      <Filter>Source\Runtime\Core\Private\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\UnitConversion.cpp">
+      <Filter>Source\Runtime\Core\Private\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\BasicMathExpressionEvaluator.cpp">
+      <Filter>Source\Runtime\Core\Private\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\Box.cpp">
+      <Filter>Source\Runtime\Core\Private\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\Box2D.cpp">
+      <Filter>Source\Runtime\Core\Private\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\BoxSphereBounds.cpp">
+      <Filter>Source\Runtime\Core\Private\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\ColorList.cpp">
+      <Filter>Source\Runtime\Core\Private\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\FloatPacker.cpp">
+      <Filter>Source\Runtime\Core\Private\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\Matrix.cpp">
+      <Filter>Source\Runtime\Core\Private\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\SHMath.cpp">
+      <Filter>Source\Runtime\Core\Private\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\Sphere.cpp">
+      <Filter>Source\Runtime\Core\Private\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
@@ -1898,6 +2057,9 @@
     </None>
     <None Include="..\Source\Runtime\Core\Public\Misc\ExpressionParserTypes.inl">
       <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </None>
+    <None Include="..\Source\Runtime\Core\Public\Math\UnitConversion.inl">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
     </None>
   </ItemGroup>
 </Project>

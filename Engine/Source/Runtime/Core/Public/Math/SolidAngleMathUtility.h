@@ -388,7 +388,7 @@ struct YMath :public YPlatformMath
 	}
 
 	// Given a heading which may be outside of the +/- 180 degree,'unwind'it back into that range
-	static FORCEINLINE float	UnwindDegree(float A)
+	static FORCEINLINE float	UnwindDegrees(float A)
 	{
 		while (A > 180.0f)
 		{
@@ -424,7 +424,7 @@ struct YMath :public YPlatformMath
 	}
 
 	// Converts given Cartesian coordinate pair to Polar coordinate system.
-	static FORCEINLINE void		CartesianToPolar(const YVector2D InCart, const YVector2D& OutPolar);
+	static FORCEINLINE void		CartesianToPolar(const YVector2D InCart, YVector2D& OutPolar);
 	 
 	// Converts given Polar coordinate pair to Cartesian coordinate system
 	static FORCEINLINE void		PolarToCartesion(const float Rad, const float Ang, float& OutX, float& OutY)
@@ -454,7 +454,7 @@ struct YMath :public YPlatformMath
 	*
 	* @return	true if 'Direction' is facing AxisX (Direction dot AxisX >= 0.f)
 	*/
-	static CORE_API bool		GetDotDistance(YVector& outDotDist, const YVector& Direction, const YVector& AxisX, const YVector& AxisY, const YVector& AxisZ);
+	static CORE_API bool		GetDotDistance(YVector2D &OutDotDist, const YVector& Direction, const YVector& AxisX, const YVector& AxisY, const YVector& AxisZ);
 
 	/**
 	* Returns Azimuth and Elevation of vector 'Direction' in coordinate system O(AxisX,AxisY,AxisZ).
@@ -529,11 +529,12 @@ struct YMath :public YPlatformMath
 	// P :end Points
 	// T :tangent directions at end points
 	// A : distance along spline
-	template< class T, class U>
-	static FORCEINLINE T		CubicInterp(const T& P0, const T& T0, const T& P1, const T& T1, const U& Alpha)
+	template< class T, class U >
+	static FORCEINLINE_DEBUGGABLE T CubicInterp(const T& P0, const T& T0, const T& P1, const T& T1, const U& A)
 	{
-		const float A2 = Alpha*Alpha;
-		const float A3 = A2*Alpha;
+		const float A2 = A  * A;
+		const float A3 = A2 * A;
+
 		return (T)(((2 * A3) - (3 * A2) + 1) * P0) + ((A3 - (2 * A2) + A) * T0) + ((A3 - A2) * T1) + (((-2 * A3) + (3 * A2)) * P1);
 	}
 
@@ -580,7 +581,7 @@ struct YMath :public YPlatformMath
 
 	//Interpolate between A and B, applying an ease in function. Exp controls the degree of the curve.
 	template< class T>
-	static FORCEINLINE T		InterEaseIn(const T& A, const T& B, float Alpha, float Exp)
+	static FORCEINLINE T		InterpEaseIn(const T& A, const T& B, float Alpha, float Exp)
 	{
 		float const ModifiedAlpha = Pow(Alpha, Exp);
 		return Lerp<T>(A, B, ModifiedAlpha);
@@ -722,21 +723,57 @@ struct YMath :public YPlatformMath
 	*	T0-3 - The interpolation parameters for the corresponding control points.
 	*	T - The interpolation factor in the range 0 to 1. 0 returns P1. 1 returns P2.
 	*/
-	template< class U > 
-	static U					CubicCRSplineInterp(const U& P0, const U& P1, const U& P2, const U& P3, const float T0, const float T1, const float T2, const float T3, const float T);
+	template< class U >
+	static FORCEINLINE_DEBUGGABLE U CubicCRSplineInterp(const U& P0, const U& P1, const U& P2, const U& P3, const float T0, const float T1, const float T2, const float T3, const float T)
+	{
+		//Based on http://www.cemyuksel.com/research/catmullrom_param/catmullrom.pdf 
+		float InvT1MinusT0 = 1.0f / (T1 - T0);
+		U L01 = (P0 * ((T1 - T) * InvT1MinusT0)) + (P1 * ((T - T0) * InvT1MinusT0));
+		float InvT2MinusT1 = 1.0f / (T2 - T1);
+		U L12 = (P1 * ((T2 - T) * InvT2MinusT1)) + (P2 * ((T - T1) * InvT2MinusT1));
+		float InvT3MinusT2 = 1.0f / (T3 - T2);
+		U L23 = (P2 * ((T3 - T) * InvT3MinusT2)) + (P3 * ((T - T2) * InvT3MinusT2));
+
+		float InvT2MinusT0 = 1.0f / (T2 - T0);
+		U L012 = (L01 * ((T2 - T) * InvT2MinusT0)) + (L12 * ((T - T0) * InvT2MinusT0));
+		float InvT3MinusT1 = 1.0f / (T3 - T1);
+		U L123 = (L12 * ((T3 - T) * InvT3MinusT1)) + (L23 * ((T - T1) * InvT3MinusT1));
+
+		return  ((L012 * ((T2 - T) * InvT2MinusT1)) + (L123 * ((T - T1) * InvT2MinusT1)));
+	}
 
 	/* Same as CubicCRSplineInterp but with additional saftey checks. If the checks fail P1 is returned. **/
-	template< class U > 
-	static U					CubicCRSplineInterpSafe(const U& P0, const U& P1, const U& P2, const U& P3, const float T0, const float T1, const float T2, const float T3, const float T);
+	template< class U >
+	static FORCEINLINE_DEBUGGABLE U CubicCRSplineInterpSafe(const U& P0, const U& P1, const U& P2, const U& P3, const float T0, const float T1, const float T2, const float T3, const float T)
+	{
+		//Based on http://www.cemyuksel.com/research/catmullrom_param/catmullrom.pdf 
+		float T1MinusT0 = (T1 - T0);
+		float T2MinusT1 = (T2 - T1);
+		float T3MinusT2 = (T3 - T2);
+		float T2MinusT0 = (T2 - T0);
+		float T3MinusT1 = (T3 - T1);
+		if (YMath::IsNearlyZero(T1MinusT0) || YMath::IsNearlyZero(T2MinusT1) || YMath::IsNearlyZero(T3MinusT2) || YMath::IsNearlyZero(T2MinusT0) || YMath::IsNearlyZero(T3MinusT1))
+		{
+			//There's going to be a divide by zero here so just bail out and return P1
+			return P1;
+		}
+
+		float InvT1MinusT0 = 1.0f / T1MinusT0;
+		U L01 = (P0 * ((T1 - T) * InvT1MinusT0)) + (P1 * ((T - T0) * InvT1MinusT0));
+		float InvT2MinusT1 = 1.0f / T2MinusT1;
+		U L12 = (P1 * ((T2 - T) * InvT2MinusT1)) + (P2 * ((T - T1) * InvT2MinusT1));
+		float InvT3MinusT2 = 1.0f / T3MinusT2;
+		U L23 = (P2 * ((T3 - T) * InvT3MinusT2)) + (P3 * ((T - T2) * InvT3MinusT2));
+
+		float InvT2MinusT0 = 1.0f / T2MinusT0;
+		U L012 = (L01 * ((T2 - T) * InvT2MinusT0)) + (L12 * ((T - T0) * InvT2MinusT0));
+		float InvT3MinusT1 = 1.0f / T3MinusT1;
+		U L123 = (L12 * ((T3 - T) * InvT3MinusT1)) + (L23 * ((T - T1) * InvT3MinusT1));
+
+		return  ((L012 * ((T2 - T) * InvT2MinusT1)) + (L123 * ((T - T1) * InvT2MinusT1)));
+	}
 
 	//Special-case interpolation
-
-	// Interpolate float from Current to Target with constant step
-	static CORE_API float		VInterpConstantTo(const float& Current, const float& Target, float DeltaTime, float InterpSpeed);
-
-	// Interpolate float from Current to Target. Scaled by distance to Target, so it has a strong start speed and ease out.
-	static CORE_API float		VInterpTo(const float& Current, const float& Target, float DeltaTime, float InterpSpeed);
-
 
 	// Interpolate a normal vector Current to Target, by interpolating the angle between those vectors with constant step
 	static CORE_API YVector		VInterpNormalRotationTo(const YVector& Current, const YVector& Target, float DeltaTime, float RotationSpeedDegrees);
@@ -750,25 +787,33 @@ struct YMath :public YPlatformMath
 	// Interpolate vector2D from Current to Target with constant step
 	static CORE_API YVector2D	Vector2DInterpConstantTo(const YVector2D& Current, const YVector2D& Target, float DeltaTime, float InterpSpeed);
 
-	// Interpolate vector2D from Current to Target. Scaled by distance to Target, so it has a strong start speed and ease out.
-	static CORE_API YVector2D	VInterpTo(const YVector2D& Current, const YVector2D& Target, float DeltaTime, float InterpSpeed);
+	/** Interpolate vector2D from Current to Target. Scaled by distance to Target, so it has a strong start speed and ease out. */
+	static CORE_API YVector2D	Vector2DInterpTo(const YVector2D& Current, const YVector2D& Target, float DeltaTime, float InterpSpeed);
 
-	// Interpolate rotator from Current to Target with constant step
-	static CORE_API YRotator	VInterpConstantTo(const YRotator& Current, const YRotator& Target, float DeltaTime, float InterpSpeed);
+	/** Interpolate rotator from Current to Target with constant step */
+	static CORE_API YRotator	RInterpConstantTo(const YRotator& Current, const YRotator& Target, float DeltaTime, float InterpSpeed);
 
-	// Interpolate rotator from Current to Target. Scaled by distance to Target, so it has a strong start speed and ease out.
-	static CORE_API YRotator	VInterpTo(const YRotator& Current, const YRotator& Target, float DeltaTime, float InterpSpeed);
+	/** Interpolate rotator from Current to Target. Scaled by distance to Target, so it has a strong start speed and ease out. */
+	static CORE_API YRotator	RInterpTo(const YRotator& Current, const YRotator& Target, float DeltaTime, float InterpSpeed);
+
+	/** Interpolate float from Current to Target with constant step */
+	static CORE_API float		FInterpConstantTo(float Current, float Target, float DeltaTime, float InterpSpeed);
+
+	/** Interpolate float from Current to Target. Scaled by distance to Target, so it has a strong start speed and ease out. */
+	static CORE_API float		FInterpTo(float Current, float Target, float DeltaTime, float InterpSpeed);
 
 	// Interpolate Linear Color from Current to Target. Scaled by distance to Target, so it has a strong start speed and ease out.
-	static CORE_API YMath	CInterpTo(const YRotator& Current, const YRotator& Target, float DeltaTime, float InterpSpeed);
+	static CORE_API YLinearColor CInterpTo(const YLinearColor& Current, const YLinearColor& Target, float DeltaTime, float InterpSpeed);
 
 	// Simple function to creat a pulsating scalar value
 	// InCurrentTime:			Current absolute time
 	// InPulsesPerSecond :		How Many full pules per second?
 	// InPhase:					Optional Phase amount, between 0.0 and 1.0 (to sychronize pulses)
 	// Return:					Pulsating Value (0.0~1.0)
-	static FORCEINLINE float	MakePulsatingValue(const double InCurrentTime, const float InPulsesPerSecond, const float InPhase = 0.0f);
-
+	static float MakePulsatingValue(const double InCurrentTime, const float InPulsesPerSecond, const float InPhase = 0.0f)
+	{
+		return 0.5f + 0.5f * YMath::Sin(((0.25f + InPhase) * PI * 2.0) + (InCurrentTime * PI * 2.0) * InPulsesPerSecond);
+	}
 		// Geomerty intersection
 
 		//b Find the intersection of an infinite line(defined by two point) and a plane.
@@ -782,7 +827,7 @@ struct YMath :public YPlatformMath
 	// return 0: light is not visible,
 	// return 1: use scissor rect,
 	// return 2: no scissor rect needed.
-	static CORE_API uint32		ComputeProjectedSphereSissoreRect(struct YIntRect& InOutSissorRect, YVector SphereOrigin, float Radius, YVector ViewOrigin, const YMatrix& ViewMatrix, const YMatrix& ProjMatrix);
+	static CORE_API uint32		ComputeProjectedSphereScissorRect(struct YIntRect& InOutSissorRect, YVector SphereOrigin, float Radius, YVector ViewOrigin, const YMatrix& ViewMatrix, const YMatrix& ProjMatrix);
 
 	// Determine if a plane and an AABB intersect
 	// p:						the plane to test
@@ -817,7 +862,10 @@ struct YMath :public YPlatformMath
 	static CORE_API bool		SphereConeIntersection(const YVector& SphereCenter, float SphereRadius, const YVector& ConeAxis, float ConeAngleSin, float ConeAngleCos);
 
 	// Find the point on line segment form LineStart to LineEnd which is closet to Point
-	static CORE_API YVector		ClosetPointOnLine(const YVector& LineStart, const YVector& LineEnd, const YVector& Point);
+	static CORE_API YVector		ClosestPointOnLine(const YVector& LineStart, const YVector& LineEnd, const YVector& Point);
+
+	/** Find the point on the infinite line between two points (LineStart, LineEnd) which is closest to Point */
+	static CORE_API YVector		ClosestPointOnInfiniteLine(const YVector& LineStart, const YVector& LineEnd, const YVector& Point);
 
 	// Compute intersection point of three planes. Return 1 if Valid, 0 if infinite.
 	static bool					IntersectPlanes3(YVector& I, const YPlane& P1, const YPlane& P2, const YPlane& P3);
@@ -853,7 +901,7 @@ struct YMath :public YPlatformMath
 	// StartPoint:				StartPoint of Segment.
 	// EndPoint:				EndPoint of Segment.
 	// Return:					point on the segment defined by (StartPoint, EndPoint) that is closest to Point.
-	static CORE_API YVector2D	ClosestPointOnSegment(const YVector2D& Point, const YVector2D & StartPint, const YVector2D &EndPoint);
+	static CORE_API YVector2D	ClosestPointOnSegment2D(const YVector2D& Point, const YVector2D & StartPint, const YVector2D &EndPoint);
 
 	// Return distance from a point to the closet point on a segment.
 	// Point:					point to check distance for
@@ -887,7 +935,18 @@ struct YMath :public YPlatformMath
 	// StartPoint:				Start point of segment
 	// EndPoint:				End point of segment
 	// Plane:					plane to intersect with
-	static CORE_API float		GetTForSegmentPlaneIntersect(const YVector& StartPoint, const YVector& EndPoint, const YVector& Plane);
+	static CORE_API float		GetTForSegmentPlaneIntersect(const YVector& StartPoint, const YVector& EndPoint, const YPlane& Plane);
+
+	/**
+	* Returns true if there is an intersection between the segment specified by StartPoint and Endpoint, and
+	* the plane on which polygon Plane lies. If there is an intersection, the point is placed in out_IntersectionPoint
+	* @param StartPoint - start point of segment
+	* @param EndPoint   - end point of segment
+	* @param Plane		- plane to intersect with
+	* @param out_IntersectionPoint - out var for the point on the segment that intersects the mesh (if any)
+	* @return true if intersection occurred
+	*/
+	static CORE_API bool		SegmentPlaneIntersection(const YVector& StartPoint, const YVector& EndPoint, const YPlane& Plane, YVector& out_IntersectionPoint);
 
 	// Returns true if this is an intersection between the segment specified by StartPoint, and EndPoint
 	// And the Plane on which polygon Plane lies. If there is an intersection, the point is placed in out_IntersectionPoint
@@ -896,7 +955,7 @@ struct YMath :public YPlatformMath
 	// Plane:					plane to intersect with
 	// OutIntersectionPoint:	out var for the point on the segment that intersects the mesh(if any)
 	// Return true:				if intersection occured.
-	static CORE_API float		SegmentIntersection2D(const YVector& SegmentStartA, const YVector& SegmentEndA, const YVector& SegmentStartB, const YVector& SegmentEndB, YVector& outIntersectionPoint);
+	static CORE_API bool		SegmentIntersection2D(const YVector& SegmentStartA, const YVector& SegmentEndA, const YVector& SegmentStartB, const YVector& SegmentEndB, YVector& outIntersectionPoint);
 
 	// Return closest point on a triangle to a point
 	// The idea is to identify the halfplanes that the point is
@@ -905,6 +964,18 @@ struct YMath :public YPlatformMath
 	// A,B,C					counter clockwise ordering of points defining a triangle
 	static CORE_API YVector		ClosestPointOnTriangleToPoint(const YVector& Point, const YVector& A, const YVector& B, const YVector& C);
 
+	/**
+	* Returns closest point on a tetrahedron to a point.
+	* The idea is to identify the halfplanes that the point is
+	* in relative to each face of the tetrahedron
+	*
+	* @param	Point			point to check distance for
+	* @param	A,B,C,D			four points defining a tetrahedron
+	*
+	* @return	Point on tetrahedron ABCD closest to given point
+	*/
+	static CORE_API YVector		ClosestPointOnTetrahedronToPoint(const YVector& Point, const YVector& A, const YVector& B, const YVector& C, const YVector& D);
+
 	// Find closest point on a Sphere to a Line.
 	// When line intersects Sphere, then closest point to LineOrigin is returned.
 	// SphereOrigin				Origin of Sphere
@@ -912,7 +983,7 @@ struct YMath :public YPlatformMath
 	// LineOrigin				Origin of line
 	// LineDir					Direction of line. Needs to be normalized!!
 	// OutClosestPoint			Closest point on sphere to given line.
-	static CORE_API void		SphereDistToLine(YVector SphereOrigin, float SphereRaius, YVector LineDirNormalized, YVector& OutClosestPoint);
+	static CORE_API void		SphereDistToLine(YVector SphereOrigin, float SphereRadius, YVector LineOrigin, YVector NormalizedLineDir, YVector& OutClosestPoint);
 
 	// Calculates whether a Point is within a cone segment, and also what percentage within the cone(100 % is along the center line, whereas 0 % is along the edge)
 	// Point:					The Point in question
@@ -922,20 +993,36 @@ struct YMath :public YPlatformMath
 	// radiusAtEnd:				the largest radius of the cone
 	// percentageOut:			output variable the holds how much within the cone the point is(1 = on center line, 0 = on exact edge or outside cone).
 	// return true:				if the point is within the cone, false otherwise.
-	static CORE_API void		GetDistanceWithinConeSegment(YVector Point, YVector ConeStartPoint, YVector ConeLine, float RadiusAtStart, float RadiusAtEnd, float & PercentageOut);
+	static CORE_API bool		GetDistanceWithinConeSegment(YVector Point, YVector ConeStartPoint, YVector ConeLine, float RadiusAtStart, float RadiusAtEnd, float &PercentageOut);
 	
 	// Determines whether a given set of points are coplanar, with a tolerance.Any three points or less are always coplanar.
 	// Points:					The set of points to determine coplanarity for.
 	// Tolerance:				Larger numbers means more variance is allowed.
 	// return:					Whether the points are relatively coplanar, based on the tolerance
 	// !!FIXME by zyx, do not have containers now
-	//static CORE_API void		PointsAreCoplanner(const YArray<YVector> &Points, const float Tolerance = 0.1f);
+	static CORE_API bool		PointsAreCoplanar(const TArray<YVector> &Points, const float Tolerance = 0.1f);
 
 	// Converts a floating point number to the nearest integer, equidistant ties go to the value which is closest to an even value : 1.5 becomes 2, 0.5 becomes 0
 	// F:						Floating point value to convert
 	// return:					The rounded integer
-	static CORE_API float		RoundHalfToEvent(float F);
-	static CORE_API double		RoundHalfToEvent(double F);
+	static CORE_API float		RoundHalfToEven(float F);
+	static CORE_API double		RoundHalfToEven(double F);
+
+	/**
+	* Converts a floating point number to the nearest integer, equidistant ties go to the value which is further from zero: -0.5 becomes -1.0, 0.5 becomes 1.0
+	* @param F		Floating point value to convert
+	* @return		The rounded integer
+	*/
+	static CORE_API float		RoundHalfFromZero(float F);
+	static CORE_API double		RoundHalfFromZero(double F);
+
+	/**
+	* Converts a floating point number to the nearest integer, equidistant ties go to the value which is closer to zero: -0.5 becomes 0, 0.5 becomes 0
+	* @param F		Floating point value to convert
+	* @return		The rounded integer
+	*/
+	static CORE_API float		RoundHalfToZero(float F);
+	static CORE_API double		RoundHalfToZero(double F);
 
 	// Converts a floating point number to an integer which is further from zero, "larger" in absolute value : 0.1 becomes 1, -0.1 becomes - 1
 	// F:						Floating point value to convert
@@ -994,8 +1081,7 @@ struct YMath :public YPlatformMath
 	// Formats an integer value into a human readable string(i.e. 12345 becomes "12,345")
 	// Val:						The value to use
 	// return: YString			The human readable string 
-	// !!FIXME by zyx, do not have YString types
-	//static CORE_API YString		FormatIntToHumanReadable(int32 Val);
+	static CORE_API YString		FormatIntToHumanReadable(int32 Val);
 
 	// Utilities
 	// Tests a memory region to see that it's working properly.
@@ -1012,8 +1098,7 @@ struct YMath :public YPlatformMath
 	// Str:						String containing the equation.
 	// OutValue:				Pointer to storage for the result.
 	// return					1 if successful, 0 if equation fails.
-	// !!FIXME by zyx, do not have YString types
-	//static CORE_API bool		Eval(YString Str, float& OutValue);
+	static CORE_API bool		Eval(YString Str, float& OutValue);
 
 	// Computes the barycentric coordinates for a given point in a triangle - simpler version
 	// Point:					point to convert to barycentric coordinates(in plane of ABC)

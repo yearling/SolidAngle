@@ -241,7 +241,7 @@ static struct FChaosMode
 	FChaosMode()
 		: Enabled(0)
 	{
-		FRandomStream Stream((int32)FPlatformTime::Cycles());
+		YRandomStream Stream((int32)FPlatformTime::Cycles());
 		for (int32 Index = 0; Index < NumSamples; Index++)
 		{
 			DelayTimes[Index] = Stream.GetFraction();

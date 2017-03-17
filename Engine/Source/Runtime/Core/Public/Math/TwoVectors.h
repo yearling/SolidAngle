@@ -229,7 +229,7 @@ public:
 };
 
 
-/* FTwoVectors inline functions
+/* YTwoVectors inline functions
 *****************************************************************************/
 
 FORCEINLINE YTwoVectors operator*(float Scale, const YTwoVectors& V)

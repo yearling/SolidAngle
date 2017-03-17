@@ -1,6 +1,8 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
-#include "Math/SolidAngleMathUtility.h"
+#include "Math/UnrealMathUtility.h"
 #include "Math/Color.h"
 #include "Math/ColorList.h"
 #include "Math/NumericLimits.h"

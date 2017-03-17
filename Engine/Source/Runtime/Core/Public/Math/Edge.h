@@ -2,7 +2,7 @@
 /**
 * Implements an edge consisting of two vertices.
 */
-struct FEdge
+struct YEdge
 {
 	/** Holds the edge vertices. */
 	YVector Vertex[2];
@@ -13,7 +13,7 @@ struct FEdge
 public:
 
 	/** Default constructor (no initialization). */
-	FEdge() { }
+	YEdge() { }
 
 	/**
 	* Creates and initializes a new edge from two vertices.
@@ -21,7 +21,7 @@ public:
 	* @param V1 The first vertex.
 	* @param V2 The second vertex.
 	*/
-	FEdge(YVector V1, YVector V2)
+	YEdge(YVector V1, YVector V2)
 	{
 		Vertex[0] = V1;
 		Vertex[1] = V2;
@@ -36,7 +36,7 @@ public:
 	* @param E The other edge.
 	* @return true if the two edges are identical, false otherwise.
 	*/
-	bool operator== (const FEdge& E) const
+	bool operator== (const YEdge& E) const
 	{
 		return (((E.Vertex[0] == Vertex[0]) && (E.Vertex[1] == Vertex[1])) || ((E.Vertex[0] == Vertex[1]) && (E.Vertex[1] == Vertex[0])));
 	}

@@ -7,8 +7,8 @@
 #include "Math/RotationTranslationMatrix.h"
 
 /** Rotation matrix no translation */
-class FRotationMatrix
-	: public FRotationTranslationMatrix
+class YRotationMatrix
+	: public YRotationTranslationMatrix
 {
 public:
 
@@ -17,14 +17,14 @@ public:
 	*
 	* @param Rot rotation
 	*/
-	FRotationMatrix(const YRotator& Rot)
-		: FRotationTranslationMatrix(Rot, YVector::ZeroVector)
+	YRotationMatrix(const YRotator& Rot)
+		: YRotationTranslationMatrix(Rot, YVector::ZeroVector)
 	{ }
 
 	/** Matrix factory. Return an YMatrix so we don't have type conversion issues in expressions. */
 	static YMatrix Make(YRotator const& Rot)
 	{
-		return FRotationMatrix(Rot);
+		return YRotationMatrix(Rot);
 	}
 
 	/** Matrix factory. Return an YMatrix so we don't have type conversion issues in expressions. */

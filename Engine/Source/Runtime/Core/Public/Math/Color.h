@@ -1,4 +1,7 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
+
 #include "CoreTypes.h"
 #include "Misc/Crc.h"
 #include "Math/SolidAngleMathUtility.h"
@@ -7,8 +10,9 @@
 
 class YFloat16Color;
 
-
-// Enum for the different kinds of gamma spaces we expect to need to convert from / to.
+/**
+* Enum for the different kinds of gamma spaces we expect to need to convert from/to.
+*/
 enum class EGammaSpace
 {
 	/** No gamma correction is applied to this space, the incoming colors are assumed to already be in linear space. */
@@ -19,72 +23,80 @@ enum class EGammaSpace
 	sRGB,
 };
 
+
 /**
 * A linear, 32-bit/component floating point RGBA color.
 */
 struct YLinearColor
 {
-	float	
-		R,
+	float	R,
 		G,
 		B,
 		A;
 
-	/** Static lookup table used for YColor -> YLinearColor conversion. Pow(2.2) */
+	/** Static lookup table used for FColor -> FLinearColor conversion. Pow(2.2) */
 	static float Pow22OneOver255Table[256];
 
-	/** Static lookup table used for YColor -> YLinearColor conversion. sRGB */
+	/** Static lookup table used for FColor -> FLinearColor conversion. sRGB */
 	static float sRGBToLinearTable[256];
 
-	FORCEINLINE					YLinearColor() {}
-	FORCEINLINE explicit		YLinearColor(EForceInit)
-		:R(0), G(0), B(0), A(0) {}
-	FORCEINLINE					YLinearColor(float InR, float InG, float InB, float InA = 1.0f)
-		: R(InR), G(InG), B(InB), A(InA) {}
+	FORCEINLINE YLinearColor() {}
+	FORCEINLINE explicit YLinearColor(EForceInit)
+		: R(0), G(0), B(0), A(0)
+	{}
+	FORCEINLINE YLinearColor(float InR, float InG, float InB, float InA = 1.0f) : R(InR), G(InG), B(InB), A(InA) {}
 
 	/**
-	* Converts an YColor which is assumed to be in sRGB space, into linear color space.
+	* Converts an FColor which is assumed to be in sRGB space, into linear color space.
 	* @param Color The sRGB color that needs to be converted into linear space.
 	*/
-	CORE_API					YLinearColor(const YColor& Color);
-	CORE_API					YLinearColor(const YVector& Vector);
-	CORE_API explicit			YLinearColor(const YFloat16Color& C);
+	CORE_API YLinearColor(const YColor& Color);
+
+	CORE_API YLinearColor(const YVector& Vector);
+
+	CORE_API explicit YLinearColor(const YFloat16Color& C);
 
 	// Serializer.
+
 	friend YArchive& operator<<(YArchive& Ar, YLinearColor& Color)
 	{
 		return Ar << Color.R << Color.G << Color.B << Color.A;
 	}
+
 	bool Serialize(YArchive& Ar)
 	{
 		Ar << *this;
 		return true;
 	}
 
-	//Conversions
+	// Conversions.
+	CORE_API YColor ToRGBE() const;
+
 	/**
-	* Converts an YColor coming from an observed sRGB output, into a linear color.
+	* Converts an FColor coming from an observed sRGB output, into a linear color.
 	* @param Color The sRGB color that needs to be converted into linear space.
 	*/
 	CORE_API static YLinearColor FromSRGBColor(const YColor& Color);
 
 	/**
-	* Converts an YColor coming from an observed Pow(1/2.2) output, into a linear color.
+	* Converts an FColor coming from an observed Pow(1/2.2) output, into a linear color.
 	* @param Color The Pow(1/2.2) color that needs to be converted into linear space.
 	*/
 	CORE_API static YLinearColor FromPow22Color(const YColor& Color);
 
-	FORCEINLINE float&			Component(int32 Index)
+	// Operators.
+
+	FORCEINLINE float& Component(int32 Index)
 	{
 		return (&R)[Index];
 	}
 
-	FORCEINLINE const float&	Component(int32 Index) const
+	FORCEINLINE const float& Component(int32 Index) const
 	{
 		return (&R)[Index];
 	}
 
-	FORCEINLINE YLinearColor	operator+(const YLinearColor& ColorB) const
+	FORCEINLINE YLinearColor operator+(const YLinearColor& ColorB) const
 	{
 		return YLinearColor(
 			this->R + ColorB.R,
@@ -93,8 +105,7 @@ struct YLinearColor
 			this->A + ColorB.A
 		);
 	}
-
-	FORCEINLINE YLinearColor&	operator+=(const YLinearColor& ColorB)
+	FORCEINLINE YLinearColor& operator+=(const YLinearColor& ColorB)
 	{
 		R += ColorB.R;
 		G += ColorB.G;
@@ -103,7 +114,7 @@ struct YLinearColor
 		return *this;
 	}
 
-	FORCEINLINE YLinearColor	operator-(const YLinearColor& ColorB) const
+	FORCEINLINE YLinearColor operator-(const YLinearColor& ColorB) const
 	{
 		return YLinearColor(
 			this->R - ColorB.R,
@@ -112,8 +123,7 @@ struct YLinearColor
 			this->A - ColorB.A
 		);
 	}
-
-	FORCEINLINE YLinearColor&	operator-=(const YLinearColor& ColorB)
+	FORCEINLINE YLinearColor& operator-=(const YLinearColor& ColorB)
 	{
 		R -= ColorB.R;
 		G -= ColorB.G;
@@ -122,7 +132,7 @@ struct YLinearColor
 		return *this;
 	}
 
-	FORCEINLINE YLinearColor	operator*(const YLinearColor& ColorB) const
+	FORCEINLINE YLinearColor operator*(const YLinearColor& ColorB) const
 	{
 		return YLinearColor(
 			this->R * ColorB.R,
@@ -131,8 +141,7 @@ struct YLinearColor
 			this->A * ColorB.A
 		);
 	}
-
-	FORCEINLINE YLinearColor&	operator*=(const YLinearColor& ColorB)
+	FORCEINLINE YLinearColor& operator*=(const YLinearColor& ColorB)
 	{
 		R *= ColorB.R;
 		G *= ColorB.G;
@@ -141,7 +150,7 @@ struct YLinearColor
 		return *this;
 	}
 
-	FORCEINLINE YLinearColor	operator*(float Scalar) const
+	FORCEINLINE YLinearColor operator*(float Scalar) const
 	{
 		return YLinearColor(
 			this->R * Scalar,
@@ -150,8 +159,8 @@ struct YLinearColor
 			this->A * Scalar
 		);
 	}
-	
-	FORCEINLINE YLinearColor&	operator*=(float Scalar)
+
+	FORCEINLINE YLinearColor& operator*=(float Scalar)
 	{
 		R *= Scalar;
 		G *= Scalar;
@@ -160,7 +169,7 @@ struct YLinearColor
 		return *this;
 	}
 
-	FORCEINLINE YLinearColor	operator/(const YLinearColor& ColorB) const
+	FORCEINLINE YLinearColor operator/(const YLinearColor& ColorB) const
 	{
 		return YLinearColor(
 			this->R / ColorB.R,
@@ -169,8 +178,7 @@ struct YLinearColor
 			this->A / ColorB.A
 		);
 	}
-
-	FORCEINLINE YLinearColor&	operator/=(const YLinearColor& ColorB)
+	FORCEINLINE YLinearColor& operator/=(const YLinearColor& ColorB)
 	{
 		R /= ColorB.R;
 		G /= ColorB.G;
@@ -179,7 +187,28 @@ struct YLinearColor
 		return *this;
 	}
 
-	FORCEINLINE YLinearColor	GetClamped(float InMin = 0.0f, float InMax = 1.0f) const
+	FORCEINLINE YLinearColor operator/(float Scalar) const
+	{
+		const float	InvScalar = 1.0f / Scalar;
+		return YLinearColor(
+			this->R * InvScalar,
+			this->G * InvScalar,
+			this->B * InvScalar,
+			this->A * InvScalar
+		);
+	}
+	FORCEINLINE YLinearColor& operator/=(float Scalar)
+	{
+		const float	InvScalar = 1.0f / Scalar;
+		R *= InvScalar;
+		G *= InvScalar;
+		B *= InvScalar;
+		A *= InvScalar;
+		return *this;
+	}
+
+	// clamped in 0..1 range
+	FORCEINLINE YLinearColor GetClamped(float InMin = 0.0f, float InMax = 1.0f) const
 	{
 		YLinearColor Ret;
 
@@ -191,6 +220,7 @@ struct YLinearColor
 		return Ret;
 	}
 
+	/** Comparison operators */
 	FORCEINLINE bool operator==(const YLinearColor& ColorB) const
 	{
 		return this->R == ColorB.R && this->G == ColorB.G && this->B == ColorB.B && this->A == ColorB.A;
@@ -200,12 +230,13 @@ struct YLinearColor
 		return this->R != Other.R || this->G != Other.G || this->B != Other.B || this->A != Other.A;
 	}
 
-	FORCEINLINE bool			Equals(const YLinearColor& ColorB, float Tolerance = KINDA_SMALL_NUMBER) const
+	// Error-tolerant comparison.
+	FORCEINLINE bool Equals(const YLinearColor& ColorB, float Tolerance = KINDA_SMALL_NUMBER) const
 	{
 		return YMath::Abs(this->R - ColorB.R) < Tolerance && YMath::Abs(this->G - ColorB.G) < Tolerance && YMath::Abs(this->B - ColorB.B) < Tolerance && YMath::Abs(this->A - ColorB.A) < Tolerance;
 	}
 
-	CORE_API YLinearColor		CopyWithNewOpacity(float NewOpacicty) const
+	CORE_API YLinearColor CopyWithNewOpacity(float NewOpacicty) const
 	{
 		YLinearColor NewCopy = *this;
 		NewCopy.A = NewOpacicty;
@@ -243,18 +274,17 @@ struct YLinearColor
 	* @param	OutPoints		Receives the output samples.
 	* @return					Path length.
 	*/
-	//!!FIXME by zyx
-	//static CORE_API float		EvaluateBezier(const YLinearColor* ControlPoints, int32 NumPoints, TArray<YLinearColor>& OutPoints);
+	static CORE_API float EvaluateBezier(const YLinearColor* ControlPoints, int32 NumPoints, TArray<YLinearColor>& OutPoints);
 
 	/** Converts a linear space RGB color to an HSV color */
-	CORE_API YLinearColor		LinearRGBToHSV() const;
+	CORE_API YLinearColor LinearRGBToHSV() const;
 
 	/** Converts an HSV color to a linear space RGB color */
-	CORE_API YLinearColor		HSVToLinearRGB() const;
+	CORE_API YLinearColor HSVToLinearRGB() const;
 
 	/**
 	* Linearly interpolates between two colors by the specified progress amount.  The interpolation is performed in HSV color space
-	* taking the shortest path to the new color's hue.  This can give better results than YLinearColor::Lerp(), but is much more expensive.
+	* taking the shortest path to the new color's hue.  This can give better results than YMath::Lerp(), but is much more expensive.
 	* The incoming colors are in RGB space, and the output color will be RGB.  The alpha value will also be interpolated.
 	*
 	* @param	From		The color and alpha to interpolate from as linear RGBA
@@ -264,11 +294,11 @@ struct YLinearColor
 	*/
 	static CORE_API YLinearColor LerpUsingHSV(const YLinearColor& From, const YLinearColor& To, const float Progress);
 
-	/** Quantizes the linear color and returns the result as a YColor.  This bypasses the SRGB conversion. */
-	CORE_API YColor				Quantize() const;
+	/** Quantizes the linear color and returns the result as a FColor.  This bypasses the SRGB conversion. */
+	CORE_API YColor Quantize() const;
 
-	/** Quantizes the linear color and returns the result as a YColor with optional sRGB conversion and quality as goal. */
-	CORE_API YColor				ToYColor(const bool bSRGB) const;
+	/** Quantizes the linear color and returns the result as a FColor with optional sRGB conversion and quality as goal. */
+	CORE_API YColor ToYColor(const bool bSRGB) const;
 
 	/**
 	* Returns a desaturated color, with 0 meaning no desaturation and 1 == full desaturation
@@ -276,17 +306,17 @@ struct YLinearColor
 	* @param	Desaturation	Desaturation factor in range [0..1]
 	* @return	Desaturated color
 	*/
-	CORE_API YLinearColor		Desaturate(float Desaturation) const;
+	CORE_API YLinearColor Desaturate(float Desaturation) const;
 
 	/** Computes the perceptually weighted luminance value of a color. */
-	CORE_API float				ComputeLuminance() const;
+	CORE_API float ComputeLuminance() const;
 
 	/**
 	* Returns the maximum value in this color structure
 	*
 	* @return The maximum color channel value
 	*/
-	FORCEINLINE float			GetMax() const
+	FORCEINLINE float GetMax() const
 	{
 		return YMath::Max(YMath::Max(YMath::Max(R, G), B), A);
 	}
@@ -312,34 +342,31 @@ struct YLinearColor
 		return R * 0.3f + G * 0.59f + B * 0.11f;
 	}
 
-	//!!FIXME by zyx
-	//YString ToString() const
-	//{
-	//	return YString::Printf(TEXT("(R=%f,G=%f,B=%f,A=%f)"), R, G, B, A);
-	//}
+	YString ToString() const
+	{
+		return YString::Printf(TEXT("(R=%f,G=%f,B=%f,A=%f)"), R, G, B, A);
+	}
 
 	/**
 	* Initialize this Color based on an YString. The String is expected to contain R=, G=, B=, A=.
-	* The YLinearColor will be bogus when InitFromString returns false.
+	* The FLinearColor will be bogus when InitFromString returns false.
 	*
 	* @param InSourceString YString containing the color values.
 	* @return true if the R,G,B values were read successfully; false otherwise.
 	*/
+	bool InitFromString(const YString& InSourceString)
+	{
+		R = G = B = 0.f;
+		A = 1.f;
 
-	//!!FIXME by zyx
-	//bool						InitFromString(const YString& InSourceString)
-	//{
-	//	R = G = B = 0.f;
-	//	A = 1.f;
+		// The initialization is only successful if the R, G, and B values can all be parsed from the string
+		const bool bSuccessful = FParse::Value(*InSourceString, TEXT("R="), R) && FParse::Value(*InSourceString, TEXT("G="), G) && FParse::Value(*InSourceString, TEXT("B="), B);
 
-	//	// The initialization is only successful if the R, G, and B values can all be parsed from the string
-	//	const bool bSuccessful = FParse::Value(*InSourceString, TEXT("R="), R) && FParse::Value(*InSourceString, TEXT("G="), G) && FParse::Value(*InSourceString, TEXT("B="), B);
+		// Alpha is optional, so don't factor in its presence (or lack thereof) in determining initialization success
+		FParse::Value(*InSourceString, TEXT("A="), A);
 
-	//	// Alpha is optional, so don't factor in its presence (or lack thereof) in determining initialization success
-	//	FParse::Value(*InSourceString, TEXT("A="), A);
-
-	//	return bSuccessful;
-	//}
+		return bSuccessful;
+	}
 
 	// Common colors.	
 	static CORE_API const YLinearColor White;
@@ -357,12 +384,16 @@ FORCEINLINE YLinearColor operator*(float Scalar, const YLinearColor& Color)
 	return Color.operator*(Scalar);
 }
 
+//
+//	FColor
+//
+
 struct YColor
 {
 public:
 	// Variables.
 #if PLATFORM_LITTLE_ENDIAN
-#if _MSC_VER
+#ifdef _MSC_VER
 	// Win32 x86
 	union { struct { uint8 B, G, R, A; }; uint32 AlignmentDummy; };
 #else
@@ -374,26 +405,27 @@ public:
 	union { struct { uint8 A, R, G, B; }; uint32 AlignmentDummy; };
 #endif
 
-	uint32&						DWColor(void) { return *((uint32*)this); }
-	const uint32&				DWColor(void) const { return *((uint32*)this); }
+	uint32& DWColor(void) { return *((uint32*)this); }
+	const uint32& DWColor(void) const { return *((uint32*)this); }
 
 	// Constructors.
-	FORCEINLINE					YColor() {}
-	FORCEINLINE explicit		YColor(EForceInit)
+	FORCEINLINE YColor() {}
+	FORCEINLINE explicit YColor(EForceInit)
 	{
 		// put these into the body for proper ordering with INTEL vs non-INTEL_BYTE_ORDER
 		R = G = B = A = 0;
 	}
-	FORCEINLINE					YColor(uint8 InR, uint8 InG, uint8 InB, uint8 InA = 255)
+	FORCEINLINE YColor(uint8 InR, uint8 InG, uint8 InB, uint8 InA = 255)
 	{
 		// put these into the body for proper ordering with INTEL vs non-INTEL_BYTE_ORDER
 		R = InR;
 		G = InG;
 		B = InB;
 		A = InA;
+
 	}
 
-	FORCEINLINE explicit		YColor(uint32 InColor)
+	FORCEINLINE explicit YColor(uint32 InColor)
 	{
 		DWColor() = InColor;
 	}
@@ -429,7 +461,7 @@ public:
 		A = (uint8)YMath::Min((int32)A + (int32)C.A, 255);
 	}
 
-	CORE_API YLinearColor		FromRGBE() const;
+	CORE_API YLinearColor FromRGBE() const;
 
 	/**
 	* Creates a color value from the given hexadecimal string.
@@ -440,29 +472,28 @@ public:
 	* @return The corresponding color value.
 	* @see ToHex
 	*/
-	//!!FIXME by zyx
-	//static CORE_API YColor		FromHex(const YString& HexString);
+	static CORE_API YColor FromHex(const YString& HexString);
 
 	/**
 	* Makes a random but quite nice color.
 	*/
-	static CORE_API YColor		MakeRandomColor();
+	static CORE_API YColor MakeRandomColor();
 
 	/**
 	* Makes a color red->green with the passed in scalar (e.g. 0 is red, 1 is green)
 	*/
-	static CORE_API YColor		MakeRedToGreenColorFromScalar(float Scalar);
+	static CORE_API YColor MakeRedToGreenColorFromScalar(float Scalar);
 
 	/**
 	* Converts temperature in Kelvins of a black body radiator to RGB chromaticity.
 	*/
-	static CORE_API YColor		MakeFromColorTemperature(float Temp);
+	static CORE_API YColor MakeFromColorTemperature(float Temp);
 
 	/**
-	*	@return a new YColor based of this color with the new alpha value.
-	*	Usage: const YColor& MyColor = FColorList::Green.WithAlpha(128);
+	*	@return a new FColor based of this color with the new alpha value.
+	*	Usage: const FColor& MyColor = FColorList::Green.WithAlpha(128);
 	*/
-	YColor						WithAlpha(uint8 Alpha) const
+	YColor WithAlpha(uint8 Alpha) const
 	{
 		return YColor(R, G, B, Alpha);
 	}
@@ -472,7 +503,7 @@ public:
 	*
 	* @return The linear color representation.
 	*/
-	FORCEINLINE YLinearColor	ReinterpretAsLinear() const
+	FORCEINLINE YLinearColor ReinterpretAsLinear() const
 	{
 		return YLinearColor(R / 255.f, G / 255.f, B / 255.f, A / 255.f);
 	}
@@ -485,11 +516,10 @@ public:
 	* @return Hexadecimal string.
 	* @see FromHex, ToString
 	*/
-	//!!FIXME by zyx
-	//FORCEINLINE YString ToHex() const
-	//{
-	//	return YString::Printf(TEXT("%02X%02X%02X%02X"), R, G, B, A);
-	//}
+	FORCEINLINE YString ToHex() const
+	{
+		return YString::Printf(TEXT("%02X%02X%02X%02X"), R, G, B, A);
+	}
 
 	/**
 	* Converts this color value to a string.
@@ -504,7 +534,7 @@ public:
 
 	/**
 	* Initialize this Color based on an YString. The String is expected to contain R=, G=, B=, A=.
-	* The YColor will be bogus when InitFromString returns false.
+	* The FColor will be bogus when InitFromString returns false.
 	*
 	* @param	InSourceString	YString containing the color values.
 	* @return true if the R,G,B values were read successfully; false otherwise.
@@ -526,7 +556,7 @@ public:
 	/**
 	* Gets the color in a packed uint32 format packed in the order ARGB.
 	*/
-	FORCEINLINE uint32			ToPackedARGB() const
+	FORCEINLINE uint32 ToPackedARGB() const
 	{
 		return (A << 24) | (R << 16) | (G << 8) | (B << 0);
 	}
@@ -534,7 +564,7 @@ public:
 	/**
 	* Gets the color in a packed uint32 format packed in the order ABGR.
 	*/
-	FORCEINLINE uint32			ToPackedABGR() const
+	FORCEINLINE uint32 ToPackedABGR() const
 	{
 		return (A << 24) | (B << 16) | (G << 8) | (R << 0);
 	}
@@ -542,7 +572,7 @@ public:
 	/**
 	* Gets the color in a packed uint32 format packed in the order RGBA.
 	*/
-	FORCEINLINE uint32			ToPackedRGBA() const
+	FORCEINLINE uint32 ToPackedRGBA() const
 	{
 		return (R << 24) | (G << 16) | (B << 8) | (A << 0);
 	}
@@ -550,7 +580,7 @@ public:
 	/**
 	* Gets the color in a packed uint32 format packed in the order BGRA.
 	*/
-	FORCEINLINE uint32			ToPackedBGRA() const
+	FORCEINLINE uint32 ToPackedBGRA() const
 	{
 		return (B << 24) | (G << 16) | (R << 8) | (A << 0);
 	}
@@ -573,35 +603,36 @@ public:
 
 private:
 	/**
-	* Please use .ToYColor(true) on YLinearColor if you wish to convert from YLinearColor to YColor,
+	* Please use .ToFColor(true) on FLinearColor if you wish to convert from FLinearColor to FColor,
 	* with proper sRGB conversion applied.
 	*
 	* Note: Do not implement or make public.  We don't want people needlessly and implicitly converting between
-	* YLinearColor and YColor.  It's not a free conversion.
+	* FLinearColor and FColor.  It's not a free conversion.
 	*/
 	explicit YColor(const YLinearColor& LinearColor);
 };
 
-FORCEINLINE uint32				GetTypeHash(const YColor& Color)
+
+FORCEINLINE uint32 GetTypeHash(const YColor& Color)
 {
 	return Color.DWColor();
 }
 
-//!!FIXME by zyx
-//FORCEINLINE uint32 GetTypeHash(const YLinearColor& LinearColor)
-//{
-//	// Note: this assumes there's no padding in YLinearColor that could contain uncompared data.
-//	return FCrc::MemCrc_DEPRECATED(&LinearColor, sizeof(YLinearColor));
-//}
-//
+
+FORCEINLINE uint32 GetTypeHash(const YLinearColor& LinearColor)
+{
+	// Note: this assumes there's no padding in FLinearColor that could contain uncompared data.
+	return FCrc::MemCrc_DEPRECATED(&LinearColor, sizeof(YLinearColor));
+}
+
 
 /** Computes a brightness and a fixed point color from a floating point color. */
-extern CORE_API void			ComputeAndFixedColorAndIntensity(const YLinearColor& InLinearColor, YColor& OutColor, float& OutIntensity);
+extern CORE_API void ComputeAndFixedColorAndIntensity(const YLinearColor& InLinearColor, YColor& OutColor, float& OutIntensity);
 
 // These act like a POD
-//!!FIXME by zyx
-//template <> struct TIsPODType<YColor> { enum { Value = true }; };
-//template <> struct TIsPODType<YLinearColor> { enum { Value = true }; };
+template <> struct TIsPODType<YColor> { enum { Value = true }; };
+template <> struct TIsPODType<YLinearColor> { enum { Value = true }; };
+
 
 /**
 * Helper struct for a 16 bit 565 color of a DXT1/3/5 block.
@@ -663,8 +694,7 @@ struct FDXT5
 
 
 // Make DXT helpers act like PODs
-//!!FIXME by zyx
-//template <> struct TIsPODType<FDXT1> { enum { Value = true }; };
-//template <> struct TIsPODType<FDXT5> { enum { Value = true }; };
-//template <> struct TIsPODType<FDXTColor16> { enum { Value = true }; };
-//template <> struct TIsPODType<FDXTColor565> { enum { Value = true }; };
+template <> struct TIsPODType<FDXT1> { enum { Value = true }; };
+template <> struct TIsPODType<FDXT5> { enum { Value = true }; };
+template <> struct TIsPODType<FDXTColor16> { enum { Value = true }; };
+template <> struct TIsPODType<FDXTColor565> { enum { Value = true }; };

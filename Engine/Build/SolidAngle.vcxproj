@@ -99,7 +99,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WIN32;PLATFORM_WINDOWS;CORE_API=;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;WIN32;PLATFORM_WINDOWS;CORE_API=;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Source\Runtime\Core\Private\;..\Source\;..\Source\Runtime\Core\Public\;..\Source\Runtime\InputDevice\Public\;..\Source\ThirdParty\ICU\icu4c-53_1\include\;</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -116,7 +116,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;PLATFORM_WINDOWS;CORE_API=;_DEBUG;_CONSOLE;WITH_DEV_AUTOMATION_TESTS=1;UE_IS_ENGINE_MODULE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;CORE_API=;_DEBUG;_CONSOLE;WITH_DEV_AUTOMATION_TESTS=1;UE_IS_ENGINE_MODULE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Source\Runtime\Core\Private\;..\Source\;..\Source\Runtime\Core\Public\;..\Source\Runtime\InputDevice\Public\;..\Source\ThirdParty\ICU\icu4c-53_1\include\;..\Source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FloatingPointModel>Fast</FloatingPointModel>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
@@ -140,7 +140,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WIN32;PLATFORM_WINDOWS;CORE_API=;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;WIN32;PLATFORM_WINDOWS;CORE_API=;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Source\Runtime\Core\Private\;..\Source\;..\Source\Runtime\Core\Public\;..\Source\Runtime\InputDevice\Public\;..\Source\ThirdParty\ICU\icu4c-53_1\include\;</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -160,7 +160,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;PLATFORM_WINDOWS;CORE_API=;WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;CORE_API=;WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Source\Runtime\Core\Private\;..\Source\;..\Source\Runtime\Core\Public\;..\Source\Runtime\InputDevice\Public\;..\Source\ThirdParty\ICU\icu4c-53_1\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <BrowseInformation>true</BrowseInformation>
@@ -351,28 +351,54 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Logging\LogVerbosity.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Logging\MessageLog.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Logging\TokenizedMessage.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\AlphaBlendType.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Axis.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\BasicMathExpressionEvaluator.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\BigInt.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Box.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Box2D.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\BoxSphereBounds.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\CapsuleShape.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\ClipProjectionMatrix.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Color.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\ColorList.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\ConvexHull2d.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\CurveEdInterface.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\DualQuat.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Edge.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Float16.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Float16Color.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Float32.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\FloatPacker.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\InterpCurve.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\InterpCurvePoint.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Interval.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\IntPoint.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\IntRect.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\IntVector.h" />
-    <ClInclude Include="..\Source\Runtime\Core\Public\Math\MathUtility.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\InverseRotationMatrix.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\MathFwd.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Matrix.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\MirrorMatrix.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\NumericLimits.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\OrientedBox.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\OrthoMatrix.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\PerspectiveMatrix.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Plane.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Quat.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\QuatRotationTranslationMatrix.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\RandomStream.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Range.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\RangeBound.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\RangeSet.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\RotationAboutPointMatrix.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\RotationMatrix.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\RotationTranslationMatrix.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Rotator.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\ScalarRegister.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\ScaleMatrix.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\ScaleRotationTranslationMatrix.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\SHMath.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAngleMath.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAngleMathSSE.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAngleMathUtility.h" />
@@ -381,11 +407,17 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAngleVectorConstant.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Sphere.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Transform.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\TransformCalculus.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\TransformCalculus2D.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\TransformCalculus3D.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\TransformNonVectorized.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\TransformVectorized.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\TranslationMatrix.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\TwoVectors.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\UnitConversion.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Vector.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Vector2D.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Vector2DHalf.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Vector4.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\VectorRegister.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\AES.h" />
@@ -664,6 +696,20 @@
     <ClCompile Include="..\Source\Runtime\Core\Private\Logging\LogSuppressionInterface.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Logging\MessageLog.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Logging\TokenizedMessage.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\BasicMathExpressionEvaluator.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\Box.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\Box2D.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\BoxSphereBounds.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\Color.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\ColorList.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\FloatPacker.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\Matrix.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\SHMath.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\SolidAngleMath.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\Sphere.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\Transform.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\TransformVectorized.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\UnitConversion.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Misc\AES.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Misc\App.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Misc\AssertionMacros.cpp" />
@@ -733,6 +779,9 @@
     <ClCompile Include="..\Source\Runtime\Core\Private\Stats\StatsFile.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Stats\StatsMallocProfilerProxy.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Stats\StatsMisc.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Async\AsyncTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Async\TaskGraphTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\HAL\PlatformTest.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Windows\MinimalWindowsApi.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Windows\TextStoreACP.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsApplication.cpp" />
@@ -763,6 +812,7 @@
     <None Include="..\Source\Runtime\Core\Public\Delegates\DelegateSignatureImpl.inl" />
     <None Include="..\Source\Runtime\Core\Public\HAL\YMemory.inl" />
     <None Include="..\Source\Runtime\Core\Public\Math\Matrix.inl" />
+    <None Include="..\Source\Runtime\Core\Public\Math\UnitConversion.inl" />
     <None Include="..\Source\Runtime\Core\Public\Misc\ExpressionParserTypes.inl" />
     <None Include="..\Source\Runtime\Core\Public\SObject\SolidAngleNames.inl" />
     <None Include="..\Source\Runtime\Core\Public\Templates\SharedPointerTesting.inl" />

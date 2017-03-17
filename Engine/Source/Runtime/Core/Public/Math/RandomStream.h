@@ -14,7 +14,7 @@
 *
 * Very bad quality in the lower bits. Don't use the modulus (%) operator.
 */
-struct FRandomStream
+struct YRandomStream
 {
 #ifdef COREUOBJECT_API
 	friend COREUOBJECT_API class UScriptStruct* Z_Construct_UScriptStruct_FRandomStream();
@@ -29,7 +29,7 @@ public:
 	*
 	* The seed should be set prior to use.
 	*/
-	FRandomStream()
+	YRandomStream()
 		: InitialSeed(0)
 		, Seed(0)
 	{ }
@@ -39,7 +39,7 @@ public:
 	*
 	* @param InSeed The seed value.
 	*/
-	FRandomStream(int32 InSeed)
+	YRandomStream(int32 InSeed)
 		: InitialSeed(InSeed)
 		, Seed(InSeed)
 	{ }
@@ -217,7 +217,7 @@ public:
 			Phi = YMath::Fmod(Phi, ConeHalfAngleRad);
 
 			// get axes we need to rotate around
-			YMatrix const DirMat = FRotationMatrix(Dir.Rotation());
+			YMatrix const DirMat = YRotationMatrix(Dir.Rotation());
 			// note the axis translation, since we want the variation to be around X
 			YVector const DirZ = DirMat.GetUnitAxis(EAxis::X);
 			YVector const DirY = DirMat.GetUnitAxis(EAxis::Y);
@@ -267,7 +267,7 @@ public:
 			Phi = YMath::Fmod(Phi, ConeHalfAngleRad);
 
 			// get axes we need to rotate around
-			YMatrix const DirMat = FRotationMatrix(Dir.Rotation());
+			YMatrix const DirMat = YRotationMatrix(Dir.Rotation());
 			// note the axis translation, since we want the variation to be around X
 			YVector const DirZ = DirMat.GetUnitAxis(EAxis::X);
 			YVector const DirY = DirMat.GetUnitAxis(EAxis::Y);
@@ -297,7 +297,7 @@ public:
 	* @return true on success, false otherwise.
 	* @see ImportTextItem
 	*/
-	CORE_API bool ExportTextItem(YString& ValueStr, FRandomStream const& DefaultValue, class SObject* Parent, int32 PortFlags, class SObject* ExportRootScope) const;
+	CORE_API bool ExportTextItem(YString& ValueStr, YRandomStream const& DefaultValue, class SObject* Parent, int32 PortFlags, class SObject* ExportRootScope) const;
 
 protected:
 
