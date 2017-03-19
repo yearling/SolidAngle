@@ -1287,10 +1287,6 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Modules\ModuleBoilerplate\ModuleBoilerplate.h">
       <Filter>Source\Runtime\Core\Public\Modules\Boilerplate</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\BitReader.h" />
-    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\BitWriter.h" />
-    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\MemoryReader.h" />
-    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\MemoryWriter.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\MonolithicHeaderBoilerplate.h">
       <Filter>Source\Runtime\Core\Public\Misc</Filter>
     </ClInclude>
@@ -1524,6 +1520,18 @@
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Private\Features\ModularFeatures.h">
       <Filter>Source\Runtime\Core\Private\Features</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\MemoryReader.h">
+      <Filter>Source\Runtime\Core\Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\MemoryWriter.h">
+      <Filter>Source\Runtime\Core\Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\BitReader.h">
+      <Filter>Source\Runtime\Core\Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\BitWriter.h">
+      <Filter>Source\Runtime\Core\Public\Serialization</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

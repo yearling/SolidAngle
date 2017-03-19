@@ -49,8 +49,8 @@ typedef YWindowsPlatformTypes YPlatformTypes;
 #define PLATFORM_MAX_FILEPATH_LENGTH						WINDOWS_MAX_PATH
 #define PLATFORM_HAS_BSD_SOCKET_FEATURE_WINSOCKETS			1
 #define PLATFORM_USES_MICROSOFT_LIBC_FUNCTIONS				1
-//!!FIXME by zyx 目前还没有加TBB的第三方库
-#define PLATFORM_SUPPORTS_TBB								0
+
+#define PLATFORM_SUPPORTS_TBB								1
 #define PLATFORM_SUPPORTS_NAMED_PIPES						1
 
 #if defined(_MSC_VER) && _MSC_VER < 1900

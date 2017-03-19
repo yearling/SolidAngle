@@ -100,7 +100,7 @@ struct YPlatformMemoryStats;
 #else
 #define __FMemory_Alloca_Func alloca
 #endif
-
+// Ä¬ÈÏ16byte¶ÔÆë
 #define YMemory_Alloca(Size )((Size==0) ? 0 : (void*)(((PTRINT)__YMemory_Alloca_Func(Size + 15) + 15) & ~15))
 
 /** Generic implementation for most platforms, these tend to be unused and unimplemented. */

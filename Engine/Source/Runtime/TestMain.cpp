@@ -191,8 +191,16 @@ int main()
 	static_assert(TIsEnum<TestEnum>::Value, "should be true");
 	static_assert(TIsEnumClass<TestClassEnum>::Value, "should be true");
 
+	std::cout << "\n---------------TChar----------" << std::endl;
+	TCHAR test_Chinese[] = TEXT("我是中国人，hello world\n");
+	std::cout << test_Chinese << std::endl;
+	std::wcout << test_Chinese << std::endl;
 
-	std::cout << "\n--------------YString----------" << std::endl;
-	TArray<int> arr;
+	std::cout << "\n---------------PlatformMemoryTest----------" << std::endl;
+	YPlatformMemory::Init();
+	auto StateReport = YPlatformMemory::GetStats();
+	//YPlatformMemory::OnOutOfMemory(3000, 16);
+	//std::cout << StateReport.TotalPhysicalGB << std::endl;
+
 	return 0;
 }
