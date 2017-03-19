@@ -169,6 +169,9 @@
     <Filter Include="Source\Runtime\Core\Private\Features">
       <UniqueIdentifier>{840bee3c-763b-46e9-a4a9-979522b5521a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\ThirdParty\IntelTBB">
+      <UniqueIdentifier>{ab1c5488-4848-46d1-a0ec-499549590231}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\core\Public\HAL\Platform.h">
