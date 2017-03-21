@@ -518,7 +518,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\VarArgs.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\VarargsHelper.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\WildcardString.h" />
-    <ClInclude Include="..\Source\Runtime\Core\Public\Modules\ModuleBoilerplate\ModuleBoilerplate.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Modules\Boilerplate\ModuleBoilerplate.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Modules\ModuleInterface.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Modules\ModuleManager.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Modules\ModuleVersion.h" />
@@ -833,6 +833,7 @@
     <ClCompile Include="..\Source\Runtime\TestMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Source\Runtime\ClassDiagram\MemoryClassDiagram.cd" />
     <None Include="..\Source\Runtime\Core\Private\Misc\AES.tps" />
     <None Include="..\Source\Runtime\Core\Private\Misc\Crc.tps" />
     <None Include="..\Source\Runtime\Core\Private\Misc\GuidGenerator.tps" />
@@ -843,7 +844,6 @@
     <None Include="..\Source\Runtime\Core\Public\Misc\ExpressionParserTypes.inl" />
     <None Include="..\Source\Runtime\Core\Public\SObject\SolidAngleNames.inl" />
     <None Include="..\Source\Runtime\Core\Public\Templates\SharedPointerTesting.inl" />
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

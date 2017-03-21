@@ -172,6 +172,9 @@
     <Filter Include="Source\ThirdParty\IntelTBB">
       <UniqueIdentifier>{ab1c5488-4848-46d1-a0ec-499549590231}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Runtime\ClassDiagram">
+      <UniqueIdentifier>{1df29f73-afba-4e6b-b30a-72c0f92bfe48}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\core\Public\HAL\Platform.h">
@@ -1287,9 +1290,6 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\IFilter.h">
       <Filter>Source\Runtime\Core\Public\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\Modules\ModuleBoilerplate\ModuleBoilerplate.h">
-      <Filter>Source\Runtime\Core\Public\Modules\Boilerplate</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\MonolithicHeaderBoilerplate.h">
       <Filter>Source\Runtime\Core\Public\Misc</Filter>
     </ClInclude>
@@ -1535,6 +1535,9 @@
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\BitWriter.h">
       <Filter>Source\Runtime\Core\Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Modules\Boilerplate\ModuleBoilerplate.h">
+      <Filter>Source\Runtime\Core\Public\Modules\Boilerplate</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2110,7 +2113,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram.cd" />
     <None Include="..\Source\Runtime\Core\Public\SObject\SolidAngleNames.inl">
       <Filter>Source\Runtime\Core\Public\SObject</Filter>
     </None>
@@ -2140,6 +2142,9 @@
     </None>
     <None Include="..\Source\Runtime\Core\Public\Math\UnitConversion.inl">
       <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </None>
+    <None Include="..\Source\Runtime\ClassDiagram\MemoryClassDiagram.cd">
+      <Filter>Source\Runtime\ClassDiagram</Filter>
     </None>
   </ItemGroup>
 </Project>

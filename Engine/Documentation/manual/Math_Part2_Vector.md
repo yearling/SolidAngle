@@ -1,6 +1,6 @@
-#数学库
-##向量运算
-###定义
+# 数学库
+## 向量运算
+### 定义
 	typedef __m128	VectorRegister  //Windows
 	typedef float32x4_t __attribute((aligned(16))) VectorRegister;    // Arm 
 
@@ -9,7 +9,7 @@
 ###Mask 掩码
 **SHUFFLEMASK**：用来选择相应的Scalar  
 
-###Set
+### Set
 **MakeVectorRegister**  
 **MakeVectorRegisterInt**  
 **VectorZero**  
@@ -20,10 +20,10 @@
 **VectorSet_W0**  
 **VectorSet_W1** 
 
-###Get
+### Get
 **VectorGetComponent**  
 
-###Load(Memory To Register)
+### Load(Memory To Register)
 **注意： 没有表明是Align的都是不对齐的**  
 **VectorLoadFloat3**  
 **VectorLoadFloat3_W0**  
@@ -35,7 +35,7 @@
 **VectorStoreURGB10A2N**  
 **VectorLoadURGBA16N**  
 
-###Store(Register to Memory)  
+### Store(Register to Memory)  
 **注意： 没有表明是Align的都是不对齐的**  
 **VectorStoreAligned**  
 **VectorStoreAlignedStreamed**  
@@ -46,15 +46,15 @@
 **VectorLoadURGB10A2N**  
 **VectorStoreURGBA16N**  
 
-###Replicate
+### Replicate
 **VectorReplicate**
 
-###Sign
+### Sign
 **VectorAbs**  
 **VectorNegate** 
 **VectorSign**   
 
-###Add Subtract Mutiply Dot Cross
+### Add Subtract Mutiply Dot Cross
 **VectorAdd**  
 **VectorSubtract**  
 **VectorMultiply**  
@@ -63,7 +63,7 @@
 **VectorDot3**  
 **VectorDot4**  
 **VectorCross**  
-###Compare
+### Compare
 **VectorCompareEQ**  
 **VectorCompareNE**  
 **VectorCompareGT**  
@@ -71,7 +71,7 @@
 **VectorMask_LT**
 **VectorAnyGreaterThan**  
 
-###Select
+### Select
 **VectorSelect**
 **VectorSwizzle** 
 **VectorShuffle**  
@@ -84,12 +84,12 @@
 **VectorMergeVecXYZ_VecW**
 
 
-###Bit Operation 位操作
+### Bit Operation 位操作
 **VectorBitwiseOr**  
 **VectorBitwiseAnd**  
 **VectorBitwiseXor**  
 
-###Pow 指/对数操作
+### Pow 指/对数操作
 **VectorPow**  
 **VectorReciprocalSqrt**  
 **VectorReciprocal**  
@@ -101,15 +101,15 @@
 **VectorLog**  
 **VectorLog2** 
  
-###Normalize 归一化
+### Normalize 归一化
 **VectorNormalize**  
 
-###Matrix
+### Matrix
 **VectorMatrixMultiply**  
 **VectorMatrixInverse**  
 **VectorTransformVector**  
 
-###Quaternion
+### Quaternion
 **VectorQuaternionMultiply2**  
 **VectorQuaternionMultiply**  
 
@@ -117,15 +117,15 @@
 **VectorMin**  
 **VectorMax**  
 
-###Control Register
+### Control Register
 **VectorGetControlRegister**  
 **VectorSetControlRegister**  
 **VECTOR_ROUND_TOWARD_ZERO**
 
-###NaN Infinit
+### NaN Infinit
 **VectorContainsNaNOrInfinite**  
 
-###Trunc Ceil Floor
+### Trunc Ceil Floor
 **VectorTruncate**  
 **VectorFractional**  
 **VectorCeil**  
@@ -133,7 +133,7 @@
 **VectorMod**  
 **VectorStep**  
 
-###三角函数
+### 三角函数
 **VectorSin**
 **VectorCos**  
 **VectorSinCos**
@@ -143,4 +143,4 @@
 **VectorATan**  
 **VectorATan2**  
 
-###Constant 常数
+### Constant 常数

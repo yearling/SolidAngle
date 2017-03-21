@@ -122,6 +122,11 @@ typename TEnableIf<!TIsArithmetic<T>::Value, int>::Type GetEnableValue(T a)
 {
 	return -1;
 }
+
+//void* operator new(SIZE_T MallocByte)
+//{
+//	return YMemory::SystemMalloc(MallocByte);
+//}
 int main()
 {
 
@@ -201,6 +206,11 @@ int main()
 	auto StateReport = YPlatformMemory::GetStats();
 	//YPlatformMemory::OnOutOfMemory(3000, 16);
 	//std::cout << StateReport.TotalPhysicalGB << std::endl;
+	//while (1)
+	{
+		YMemory::TestMemory();
+	}
 
+	YMemory* pMem = new YMemory();
 	return 0;
 }

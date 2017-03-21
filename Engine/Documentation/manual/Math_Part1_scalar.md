@@ -1,18 +1,18 @@
-#数学库
+# 数学库
 分2部分：  
 1.	标量运算,黑体是平台相关优化过的  
 2.	向量运算
-##类型转换 
-###Trunc
+## 类型转换 
+### Trunc
 对负数来说是ceil,对正数来说是floor,也就是说往数轴的0轴取值  
 **TruncToInt**  
 **TruncToFloat**
-###Floor  
+### Floor  
 往数轴的左端取值  
 **FloorToInt**
 **FloorToFloat**  
 **FloorToDouble**  
-###Round 
+### Round 
 其实就是 floor(+0.5)  
 **RoundToInt**  
 **RoundToFloat**  
@@ -24,17 +24,17 @@ RoundFromZero
 RoundToZero  
 RoundToNegativeInfinity  
 RoundToPositiveInfinity 
-###Ceil
+### Ceil
 往数轴的左端取值  
 **CeilToInt**  
 **CeilToFloat**  
 **CeilToDouble**
-###Frac
+### Frac
 **Fractional**  ：返回的是带符号的  
 **Frac**        ：返回的都是正的，负数会MOD
-###MOD
+### MOD
 **Modf**        ：拆成整数和小数部分
-###Exponent
+### Exponent
 **Exp**  
 **Exp2**  
 **Loge**  
@@ -45,9 +45,9 @@ RoundToPositiveInfinity
 **InvSqrt**  
 **InvSqrtEst**  
 Square
-###FMOD
+### FMOD
 **Fmod**       ：浮点%
-###三角函数
+### 三角函数
 **Sin**  
 **Asin**  
 **Cos**  
@@ -58,13 +58,13 @@ Square
 SinCos  
 FastAsin  
 
-###浮点操作
+### 浮点操作
 **IsNaN**   
 **IsFinite**    
 **IsNegativeFloat**  
 **IsNegativeDouble**
 
-###随机数
+### 随机数
 **Rand**  
 **RandInit**  
 **FRand**  
@@ -77,7 +77,7 @@ RandBool
 VRand
 VRandCone
 RandPointInBox
-###位操作
+### 位操作
 **FloorLog2**  
 **CountLeadingZeros**    
 **CountTrailingZeros**  
@@ -87,34 +87,34 @@ IsPowerOfTwo
 ExtractBoolFromBitfield  
 Quantize8UnsignedByte  
 Quantize8SignedByte  
-###Morton
+### Morton
 **MortonCode2**  
 **ReverseMortonCode2**  
 **MortonCode3**  
 **ReverseMortonCode3**  
 
-###Select
+### Select
 **FloatSelect**
 
-###符号
+### 符号
 **Abs**  
 **Sign**
 
-###Max,Min
+### Max,Min
 **Max**  
 **Min**  
 Max3 
 Min3
-###反射
+### 反射
 GetReflectionVector
 
-###集合
+### 集合
 IsWithin  
 IsWithinInclusive  
 IsNearlyEqual  
 IsNearlyZero  
 
-###Clamp
+### Clamp
 Clamp  
 GridSnap  
 DivideAndRoundUp  
@@ -123,7 +123,7 @@ GetMappedRangeValueClamped
 GetRangePct  
 GetRangeValue  
 
-###Degree,Radian,角度弧度 
+### Degree,Radian,角度弧度 
 RadiansToDegrees  
 DegreesToRadians  
 ClampAngle  
@@ -134,13 +134,13 @@ UnwindDegrees
 WindRelativeAnglesDegrees  
 FixedTurn
 
-###笛卡尔坐标 极坐标 
+### 笛卡尔坐标 极坐标 
 CartesianToPolar  
 PolarToCartesian
 GetDotDistance  
 GetAzimuthAndElevation
 
-###Lerp 插值
+### Lerp 插值
 Lerp  
 LerpStable  
 BiLerp  
@@ -211,16 +211,16 @@ GetDistanceWithinConeSegment
 PointsAreCoplanar
 
 
-###格式化Format
+### 格式化Format
 FormatIntToHumanReadable
 
-###MemoryTest
+### MemoryTest
 MemoryTest
 
-###公式求值
+### 公式求值
 Eval
 
-###质心公式
+### 质心公式
 GetBaryCentric2D  
 ComputeBaryCentric2D  
 ComputeBaryCentric3D  

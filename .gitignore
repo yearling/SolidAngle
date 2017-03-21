@@ -110,7 +110,7 @@
 !*.jpg
 !*.png
 !*.gif
-
+!*.cd
 # Ignore Unix backup files
 *~
 
