@@ -1,8 +1,8 @@
-#UE Runtime Core 结构设计
+# UE Runtime Core 结构设计
 
-##数学库
+## 数学库
 UE的数学库为了保证跨平台和性能，分为PlatformMath和VectorMath两个部分
-###数学库的工作文件组织方式
+### 数学库的工作文件组织方式
 在Engine/runtime/core/中：
 
 1.	Private/CorePrivatePCH.h 与Core.h 基本上是一样的，前者用来做PCH。在这个文件中，数学库的包含关系如下

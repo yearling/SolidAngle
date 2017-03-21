@@ -1,0 +1,201 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="MemBase.h">
+    <Position X="1.458" Y="5.365" Height="0.323" Width="1.085" />
+  </Comment>
+  <Comment CommentText="typdef YPlatfromMemory">
+    <Position X="7.698" Y="7.031" Height="0.323" Width="1.94" />
+  </Comment>
+  <Comment CommentText="YMemory::malloc/free调的是YMalloc::malloc/free">
+    <Position X="2.073" Y="7.438" Height="0.917" Width="1.846" />
+  </Comment>
+  <Comment CommentText="YMemory::Memcmp调的是YPlatformMemory::Memcmp&#xD;&#xA;">
+    <Position X="5.052" Y="7.406" Height="0.917" Width="1.846" />
+  </Comment>
+  <Class Name="YMalloc">
+    <Position X="0.75" Y="5.25" Width="2" />
+    <Members>
+      <Method Name="ClearAndDisableTLSCachesOnCurrentThread" Hidden="true" />
+      <Method Name="DumpAllocatorStats" Hidden="true" />
+      <Method Name="Exec" Hidden="true" />
+      <Method Name="GetAllocationSize" Hidden="true" />
+      <Method Name="GetAllocatorStats" Hidden="true" />
+      <Method Name="GetDescriptiveName" Hidden="true" />
+      <Method Name="IncrementTotalFreeCalls" Hidden="true" />
+      <Method Name="IncrementTotalMallocCalls" Hidden="true" />
+      <Method Name="IncrementTotalReallocCalls" Hidden="true" />
+      <Method Name="InitializeStatsMetadata" Hidden="true" />
+      <Method Name="IsInternallyThreadSafe" Hidden="true" />
+      <Method Name="QuantizeSize" Hidden="true" />
+      <Method Name="SetupTLSCachesOnCurrentThread" Hidden="true" />
+      <Method Name="Trim" Hidden="true" />
+      <Method Name="UpdateStats" Hidden="true" />
+      <Method Name="ValidateHeap" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAgAAQAAAACQBAABAEEJGgAEABIIQAAQo=</HashCode>
+      <FileName>C:\Users\yy\Desktop\solidangle\SolidAngle\Engine\Source\Runtime\Core\Public\HAL\MemoryBase.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TMallocTBB" Collapsed="true">
+    <Position X="1.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAAAACAAAAAAAEAAgAAAAEIAAEAY=</HashCode>
+      <FileName>C:\Users\yy\Desktop\solidangle\SolidAngle\Engine\Source\Runtime\Core\Public\HAL\MallocTBB.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FMallocAnsi" Collapsed="true">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAAAACAAAAAAAEACgAAAACIAAAAI=</HashCode>
+      <FileName>C:\Users\yy\Desktop\solidangle\SolidAngle\Engine\Source\Runtime\Core\Public\HAL\MallocAnsi.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="YMallocBinned" Collapsed="true">
+    <Position X="4" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>MAQMAAAIFhAAEIAQRAkACggIwhgUEgCjZCABEOAAQCY=</HashCode>
+      <FileName>C:\Users\yy\Desktop\solidangle\SolidAngle\Engine\Source\Runtime\Core\Public\HAL\MallocBinned.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="YMallocBinned2" Collapsed="true">
+    <Position X="6" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAABAFAgEAgkA+AAAACAAAQAAAMIGpAEAgEJAAAaI=</HashCode>
+      <FileName>C:\Users\yy\Desktop\solidangle\SolidAngle\Engine\Source\Runtime\Core\Public\HAL\MallocBinned2.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FMallocJemalloc" Collapsed="true">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAAAACAAACAAAEAAgAAABEIAAAAY=</HashCode>
+      <FileName>C:\Users\yy\Desktop\solidangle\SolidAngle\Engine\Source\Runtime\Core\Public\HAL\MallocJemalloc.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FMallocStomp" Collapsed="true">
+    <Position X="2" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQBAAACAIAAAAAEBDAAAABEIAAAAo=</HashCode>
+      <FileName>C:\Users\yy\Desktop\solidangle\SolidAngle\Engine\Source\Runtime\Core\Public\HAL\MallocStomp.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FMallocThreadSafeProxy" Collapsed="true">
+    <Position X="8" Y="2" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAQAEAACAAAABAEEBCAAAABAIAACAI=</HashCode>
+      <FileName>C:\Users\yy\Desktop\solidangle\SolidAngle\Engine\Source\Runtime\Core\Public\HAL\MallocThreadSafeProxy.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FMallocVerifyProxy" Collapsed="true">
+    <Position X="7.25" Y="3.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgQAQAEAACAAAABAEEBGAAkABAIAAAQI=</HashCode>
+      <FileName>C:\Users\yy\Desktop\solidangle\SolidAngle\Engine\Source\Runtime\Core\Public\HAL\MallocVerify.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FMallocLeakDetectionProxy" Collapsed="true">
+    <Position X="2.25" Y="3.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>gAAQAAAAAAAAgQBSIEAACAAAABAEEBGAAEABAIAAAQI=</HashCode>
+      <FileName>C:\Users\yy\Desktop\solidangle\SolidAngle\Engine\Source\Runtime\Core\Public\HAL\MallocLeakDetection.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FMallocPoisonProxy" Collapsed="true">
+    <Position X="5" Y="3.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAQAMAACAAAABAEEBCAAAABAIAAAAI=</HashCode>
+      <FileName>C:\Users\yy\Desktop\solidangle\SolidAngle\Engine\Source\Runtime\Core\Public\HAL\MallocPoisonProxy.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="YMemory">
+    <Position X="3.75" Y="5.25" Width="1.5" />
+    <Members>
+      <Method Name="BigBlockMemcpy" Hidden="true" />
+      <Method Name="ClearAndDisableTLSCachesOnCurrentThread" Hidden="true" />
+      <Method Name="EnablePoisonTests" Hidden="true" />
+      <Method Name="EnablePurgatoryTests" Hidden="true" />
+      <Method Name="FreeExternal" Hidden="true" />
+      <Method Name="GetAllocSize" Hidden="true" />
+      <Method Name="GetAllocSizeExternal" Hidden="true" />
+      <Method Name="GPUFree" Hidden="true" />
+      <Method Name="GPUMalloc" Hidden="true" />
+      <Method Name="GPURealloc" Hidden="true" />
+      <Method Name="MallocExternal" Hidden="true" />
+      <Method Name="MemCopy" Hidden="true" />
+      <Method Name="Memcpy" Hidden="true" />
+      <Method Name="Memmove" Hidden="true" />
+      <Method Name="Memset" Hidden="true" />
+      <Method Name="Memswap" Hidden="true" />
+      <Method Name="Memzero" Hidden="true" />
+      <Method Name="MemZero" Hidden="true" />
+      <Method Name="QuantizeSize" Hidden="true" />
+      <Method Name="QuantizeSizeExternal" Hidden="true" />
+      <Method Name="Realloc" Hidden="true" />
+      <Method Name="ReallocExternal" Hidden="true" />
+      <Method Name="SetupTLSCachesOnCurrentThread" Hidden="true" />
+      <Method Name="StreamingMemcpy" Hidden="true" />
+      <Method Name="SystemFree" Hidden="true" />
+      <Method Name="SystemMalloc" Hidden="true" />
+      <Method Name="TestMemory" Hidden="true" />
+      <Method Name="Trim" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAACAAAQCIEzEAUAAUgKAAAKAAAEFEAAFBQAAAAASo=</HashCode>
+      <FileName>C:\Users\yy\Desktop\solidangle\SolidAngle\Engine\Source\Runtime\Core\Public\HAL\SolidAngleMemory.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="YGenericPlatformMemory" Collapsed="true">
+    <Position X="6.25" Y="5.5" Width="2.25" />
+    <NestedTypes>
+      <Enum Name="YGenericPlatformMemory::EMemoryCounterRegion" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>C:\Users\yy\Desktop\solidangle\SolidAngle\Engine\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformMemory.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="YGenericPlatformMemory::EMemoryAllocatorToUse" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>C:\Users\yy\Desktop\solidangle\SolidAngle\Engine\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformMemory.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="YGenericPlatformMemory::ESharedMemoryAccess" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>C:\Users\yy\Desktop\solidangle\SolidAngle\Engine\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformMemory.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Struct Name="YGenericPlatformMemory::YSharedMemoryRegion" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>C:\Users\yy\Desktop\solidangle\SolidAngle\Engine\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformMemory.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAQAAASJAESAAQAMBmIAEAICAAAJAAABZDDKABEAg=</HashCode>
+      <FileName>C:\Users\yy\Desktop\solidangle\SolidAngle\Engine\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformMemory.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="YWindowsPlatformMemory" Collapsed="true">
+    <Position X="6.25" Y="6.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACBAAQAAAAEACAAEAAAAAAAAAAAQDAIABEAA=</HashCode>
+      <FileName>C:\Users\yy\Desktop\solidangle\SolidAngle\Engine\Source\Runtime\Core\Public\Windows\WindowsPlatformMemory.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="YGenericPlatformMemoryConstants" Collapsed="true">
+    <Position X="9" Y="4.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAgAAEAAAAAAAAAAAQAAAAAAKAAAAAAEAAAAAA=</HashCode>
+      <FileName>C:\Users\yy\Desktop\solidangle\SolidAngle\Engine\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformMemory.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="YGenericPlatformMemoryStats" Collapsed="true">
+    <Position X="9" Y="5.25" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAUAgAAAAAIAAAAAAAAAIAAAAQAAAAAAA=</HashCode>
+      <FileName>C:\Users\yy\Desktop\solidangle\SolidAngle\Engine\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformMemory.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Microsoft YaHei UI" Size="9" />
+</ClassDiagram>
