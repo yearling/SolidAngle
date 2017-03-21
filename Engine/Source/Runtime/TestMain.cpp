@@ -130,6 +130,7 @@ typename TEnableIf<!TIsArithmetic<T>::Value, int>::Type GetEnableValue(T a)
 int main()
 {
 
+#if 0
 	std::cout << "---------------TEnableIf-----------" << std::endl;
 	std::cout << GetEnableValue(12.0f) << std::endl;
 	DirivedTest EnableDrived;
@@ -201,6 +202,7 @@ int main()
 	std::cout << test_Chinese << std::endl;
 	std::wcout << test_Chinese << std::endl;
 
+#endif 
 	std::cout << "\n---------------PlatformMemoryTest----------" << std::endl;
 	YPlatformMemory::Init();
 	auto StateReport = YPlatformMemory::GetStats();
@@ -211,6 +213,6 @@ int main()
 		YMemory::TestMemory();
 	}
 
-	YMemory* pMem = new YMemory();
+	PODTypeWithStdString* pMemLeak = new PODTypeWithStdString();
 	return 0;
 }

@@ -1,11 +1,7 @@
-#IEEE754标准浮点
+# IEEE754标准浮点
 
 单精度
-
-|-----|------|
-|Sign（高位）|Exponent|Mantissa（低位）|
-|1|8|23|
-
+<table style="border-collapse:collapse;"><thead><tr><th>Sign（高位）</th><th>Exponent</th><th>Mantissa（低位）</th></tr></thead><tbody><tr><td>1</td><td>8</td><td>23</td></tr></tbody></table>
 
 双精度
 

@@ -1,4 +1,4 @@
-###[__64是MSVC扩展的](https://msdn.microsoft.com/en-us/library/29dh1w7z.aspx#)
+### [__64是MSVC扩展的](https://msdn.microsoft.com/en-us/library/29dh1w7z.aspx#)
 Microsoft C/C++ features support for sized integer types. You can declare 8-, 16-, 32-, or 64-bit integer variables by using the __intn type specifier, where n is 8, 16, 32, or 64.
 
 The following example declares one variable for each of these types of sized integers:
