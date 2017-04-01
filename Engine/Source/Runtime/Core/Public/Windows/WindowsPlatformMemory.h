@@ -66,8 +66,8 @@ struct CORE_API YWindowsPlatformMemory
 	};
 
 	//~ Begin YGenericPlatformMemory Interface
-	static void Init();
-	static uint32 GetBackMemoryPoolSize()
+	static void					Init();
+	static uint32				GetBackMemoryPoolSize()
 	{
 		/**
 		* Value determined by series of tests on Fortnite with limited process memory.
@@ -79,15 +79,15 @@ struct CORE_API YWindowsPlatformMemory
 		return 32 * 1024 * 1024;
 	}
 
-	static class YMalloc* BaseAllocator();
+	static class YMalloc*		BaseAllocator();
 	static YPlatformMemoryStats GetStats();
-	static void GetStatsForMallocProfiler(YGenericMemoryStats& out_Stats);
+	static void					GetStatsForMallocProfiler(YGenericMemoryStats& out_Stats);
 	static const YPlatformMemoryConstants& GetConstants();
-	static bool PageProtect(void* const Ptr, const SIZE_T Size, const bool bCanRead, const bool bCanWrite);
-	static void* BinnedAllocFromOS(SIZE_T Size);
-	static void BinnedFreeToOS(void* Ptr, SIZE_T Size);
+	static bool					PageProtect(void* const Ptr, const SIZE_T Size, const bool bCanRead, const bool bCanWrite);
+	static void*				BinnedAllocFromOS(SIZE_T Size);
+	static void					BinnedFreeToOS(void* Ptr, SIZE_T Size);
 	static YSharedMemoryRegion* MapNamedSharedMemoryRegion(const YString& InName, bool bCreate, uint32 AccessMode, SIZE_T Size);
-	static bool UnmapNamedSharedMemoryRegion(YSharedMemoryRegion * MemoryRegion);
+	static bool					UnmapNamedSharedMemoryRegion(YSharedMemoryRegion * MemoryRegion);
 protected:
 	friend struct FGenericStatsUpdater;
 
