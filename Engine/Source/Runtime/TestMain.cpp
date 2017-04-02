@@ -213,6 +213,15 @@ int main()
 		YMemory::TestMemory();
 	}
 
-	PODTypeWithStdString* pMemLeak = new PODTypeWithStdString();
+	//PODTypeWithStdString* pMemLeak = new PODTypeWithStdString();
+
+	FHeapAllocator::ForElementType<int> IntAllocator;
+	IntAllocator.ResizeAllocation(0, 5, sizeof(int));
+	FHeapAllocator::ForElementType<int> IntAllocator2;
+	std::cout << (int)0-(!(int)0) << std::endl;
+	std::string s;
+	std::cout << sizeof(s) << std::endl;
+	YString ys;
+	std::cout << sizeof(ys) << std::endl;
 	return 0;
 }

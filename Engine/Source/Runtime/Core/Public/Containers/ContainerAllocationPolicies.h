@@ -24,6 +24,7 @@ ReferencedType* IfAThenAElseB(ReferencedType* A, ReferencedType* B);
 template<typename PredicateType, typename ReferencedType>
 ReferencedType* IfPThenAElseB(PredicateType Predicate, ReferencedType* A, ReferencedType* B);
 
+
 FORCEINLINE int32 DefaultCalculateSlackShrink(int32 NumElements, int32 NumAllocatedElements, SIZE_T BytesPerElement, bool bAllowQuantize, uint32 Alignment = DEFAULT_ALIGNMENT)
 {
 	int32 Retval;

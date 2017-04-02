@@ -103,6 +103,11 @@
 	这样子做的原因是，需要根据参数动态创建YMalloc，开始时全局GAlloc为null, 在第一次创建FMalloc时，如`GAlloc = new FTBBMalloc`，这时会调YMemory::Malloc，因为GMalloc还没有初始化（这时候还没有到Main函数，肯定是单线程），继续调`GAlloc = new FTBBMalloc`，导致无限递归，所以要自定义operator new来打破这种递归。  
 ![Add](Picture/RuntimeCore/Recursive.png)
 
+## Malloc(0) / Realloc(0)
+### [Malloc(0)](https://msdn.microsoft.com/en-us/library/6ewkz86d.aspx)  
+>If size is 0, malloc allocates a __zero-length__ item in the heap and returns a valid pointer to that item.   
+### [Realloc(0)](https://msdn.microsoft.com/en-us/library/xbebcx7d.aspx)  
+>If size is zero, then the block pointed to by memblock is __freed__; the return value is NULL, and memblock is left pointing at a freed block.
 # TODO
 - [ ] 统计信息
 - [ ] 不同的YMemory类的功能

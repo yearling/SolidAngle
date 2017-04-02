@@ -206,18 +206,18 @@ struct CORE_API YGenericPlatformMemory
 	};
 
 	/** Initializes platform memory specific constants. */
-	static void Init();
+	static void					Init();
 
-	static CA_NO_RETURN void OnOutOfMemory(uint64 Size, uint32 Alignment);
+	static CA_NO_RETURN void	OnOutOfMemory(uint64 Size, uint32 Alignment);
 
 	/** Initializes the memory pools, should be called by the init function. */
-	static void SetupMemoryPools();
+	static void					SetupMemoryPools();
 
 
 	/**
 	* @return how much memory the platform should pre-allocate for crash handling (this will be allocated ahead of time, and freed when system runs out of memory).
 	*/
-	static uint32 GetBackMemoryPoolSize()
+	static uint32				GetBackMemoryPoolSize()
 	{
 		// by default, don't create a backup memory buffer
 		return 0;
@@ -226,7 +226,7 @@ struct CORE_API YGenericPlatformMemory
 	/**
 	* @return the default allocator.
 	*/
-	static YMalloc* BaseAllocator();
+	static YMalloc*				BaseAllocator();
 
 	/**
 	* @return platform specific current memory statistics.
@@ -236,7 +236,7 @@ struct CORE_API YGenericPlatformMemory
 	/**
 	* Writes all platform specific current memory statistics in the format usable by the malloc profiler.
 	*/
-	static void GetStatsForMallocProfiler(YGenericMemoryStats& out_Stats);
+	static void					GetStatsForMallocProfiler(YGenericMemoryStats& out_Stats);
 
 	/**
 	* @return platform specific memory constants.
@@ -246,7 +246,7 @@ struct CORE_API YGenericPlatformMemory
 	/**
 	* @return approximate physical RAM in GB.
 	*/
-	static uint32 GetPhysicalGBRam();
+	static uint32				GetPhysicalGBRam();
 
 	/**
 	* Changes the protection on a region of committed pages in the virtual address space.
@@ -257,7 +257,7 @@ struct CORE_API YGenericPlatformMemory
 	* @param bCanWrite Can the memory be written to.
 	* @return True if the specified pages' protection mode was changed.
 	*/
-	static bool PageProtect(void* const Ptr, const SIZE_T Size, const bool bCanRead, const bool bCanWrite);
+	static bool					PageProtect(void* const Ptr, const SIZE_T Size, const bool bCanRead, const bool bCanWrite);
 
 	/**
 	* Allocates pages from the OS.
@@ -266,7 +266,7 @@ struct CORE_API YGenericPlatformMemory
 	*
 	* @return OS allocated pointer for use by binned allocator
 	*/
-	static void* BinnedAllocFromOS(SIZE_T Size);
+	static void*				BinnedAllocFromOS(SIZE_T Size);
 
 	/**
 	* Returns pages allocated by BinnedAllocFromOS to the OS.
@@ -274,19 +274,19 @@ struct CORE_API YGenericPlatformMemory
 	* @param A pointer previously returned from BinnedAllocFromOS
 	* @param Size size of the allocation previously passed to BinnedAllocFromOS
 	*/
-	static void BinnedFreeToOS(void* Ptr, SIZE_T Size);
+	static void					BinnedFreeToOS(void* Ptr, SIZE_T Size);
 
 	// These alloc/free memory that is mapped to the GPU
 	// Only for platforms with UMA (XB1/PS4/etc)
-	static void* GPUMalloc(SIZE_T Count, uint32 Alignment = 0) { return nullptr; };
-	static void* GPURealloc(void* Original, SIZE_T Count, uint32 Alignment = 0) { return nullptr; };
-	static void GPUFree(void* Original) { };
+	static void*				GPUMalloc(SIZE_T Count, uint32 Alignment = 0) { return nullptr; };
+	static void*				GPURealloc(void* Original, SIZE_T Count, uint32 Alignment = 0) { return nullptr; };
+	static void					GPUFree(void* Original) { };
 
 	/** Dumps basic platform memory statistics into the specified output device. */
-	static void DumpStats(YOutputDevice& Ar);
+	static void					DumpStats(YOutputDevice& Ar);
 
 	/** Dumps basic platform memory statistics and allocator specific statistics into the specified output device. */
-	static void DumpPlatformAndAllocatorStats(YOutputDevice& Ar);
+	static void					DumpPlatformAndAllocatorStats(YOutputDevice& Ar);
 
 	/** @name Memory functions */
 
@@ -295,46 +295,46 @@ struct CORE_API YGenericPlatformMemory
 	* in the overlapping region are copied before being overwritten.  NOTE: make sure
 	* that the destination buffer is the same size or larger than the source buffer!
 	*/
-	static FORCEINLINE void* Memmove(void* Dest, const void* Src, SIZE_T Count)
+	static FORCEINLINE void*	Memmove(void* Dest, const void* Src, SIZE_T Count)
 	{
 		return memmove(Dest, Src, Count);
 	}
 
-	static FORCEINLINE int32 Memcmp(const void* Buf1, const void* Buf2, SIZE_T Count)
+	static FORCEINLINE int32	Memcmp(const void* Buf1, const void* Buf2, SIZE_T Count)
 	{
 		return memcmp(Buf1, Buf2, Count);
 	}
 
-	static FORCEINLINE void* Memset(void* Dest, uint8 Char, SIZE_T Count)
+	static FORCEINLINE void*	Memset(void* Dest, uint8 Char, SIZE_T Count)
 	{
 		return memset(Dest, Char, Count);
 	}
 
-	static FORCEINLINE void* Memzero(void* Dest, SIZE_T Count)
+	static FORCEINLINE void*	Memzero(void* Dest, SIZE_T Count)
 	{
 		return memset(Dest, 0, Count);
 	}
 
-	static FORCEINLINE void* Memcpy(void* Dest, const void* Src, SIZE_T Count)
+	static FORCEINLINE void*	Memcpy(void* Dest, const void* Src, SIZE_T Count)
 	{
 		return memcpy(Dest, Src, Count);
 	}
 
 	/** Memcpy optimized for big blocks. */
-	static FORCEINLINE void* BigBlockMemcpy(void* Dest, const void* Src, SIZE_T Count)
+	static FORCEINLINE void*	BigBlockMemcpy(void* Dest, const void* Src, SIZE_T Count)
 	{
 		return memcpy(Dest, Src, Count);
 	}
 
 	/** NOTE by zyx, Stream 系列一直没看懂 On some platforms memcpy optimized for big blocks that avoid L2 cache pollution are available */
-	static FORCEINLINE void* StreamingMemcpy(void* Dest, const void* Src, SIZE_T Count)
+	static FORCEINLINE void*	StreamingMemcpy(void* Dest, const void* Src, SIZE_T Count)
 	{
 		return memcpy(Dest, Src, Count);
 	}
 
 private:
 	template <typename T>
-	static FORCEINLINE void Valswap(T& A, T& B)
+	static FORCEINLINE void		Valswap(T& A, T& B)
 	{
 		// Usually such an implementation would use move semantics, but
 		// we're only ever going to call it on fundamental types and MoveTemp
@@ -345,10 +345,10 @@ private:
 		B = Tmp;
 	}
 
-	static void MemswapGreaterThan8(void* Ptr1, void* Ptr2, SIZE_T Size);
+	static void					MemswapGreaterThan8(void* Ptr1, void* Ptr2, SIZE_T Size);
 
 public:
-	static inline void Memswap(void* Ptr1, void* Ptr2, SIZE_T Size)
+	static inline void			Memswap(void* Ptr1, void* Ptr2, SIZE_T Size)
 	{
 		switch (Size)
 		{
@@ -422,12 +422,12 @@ public:
 	*
 	* @return true if successful
 	*/
-	static bool UnmapNamedSharedMemoryRegion(YSharedMemoryRegion * MemoryRegion);
+	static bool					UnmapNamedSharedMemoryRegion(YSharedMemoryRegion * MemoryRegion);
 
 protected:
 	friend struct FGenericStatsUpdater;
 
 	/** Updates platform specific stats. This method is called through FGenericStatsUpdater from the task graph thread. */
-	static void InternalUpdateStats(const YPlatformMemoryStats& MemoryStats);
+	static void					InternalUpdateStats(const YPlatformMemoryStats& MemoryStats);
 
 };
