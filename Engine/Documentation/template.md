@@ -1,7 +1,7 @@
-#Template
+# Template
 UE为了防止引用std namespace,将C++11里引进的[type_traits](http://en.cppreference.com/w/cpp/header/type_traits)简单实现了一遍。
 
-##TEnableIf  
+## TEnableIf  
 对应c++11 的std::enable_if通过使用 SFINAE,  根据第一个模板参数来确定返回值Type的类型，如果为false，就没有实现，模板实例化时会失败。   
 用来通过对类型的判断来执行是值传还是引传等。
 
@@ -19,140 +19,144 @@ UE为了防止引用std namespace,将C++11里引进的[type_traits](http://en.cp
 		class TEnableIf<false,Result>
 		{}
 
-##TAnd TAndValue
+## TAnd TAndValue
 对应c++17的 std::conjunction  
 TAnd实现对类型的::Value来执行And操作，有false短路操作。
 TAndValue实现对<bool,Type::Value>的And操作。
 
-##TOr TOrValue
+## TOr TOrValue
 对应c++17的std::disjunction  
 TOr实现对类型的::Value来执行And操作，有true短路操作。
 TOrValue实现对<bool,Type::Value>的Or操作。
 
-##TNot
+## TNot
 对应c++17的std::negation  
 TNot实现对类型的Value的否操作
 
-##TAreTypesEqual
+## TAreTypesEqual
 对应c++11的std::is_same  
 来判断两类型是否一致
 
-##TRemoveCV
+## TRemoveCV
 对应c++11的std::remove_cv  
 
-##TIsArithmetic
+## TIsArithmetic
 对应c++11的std::arithmetic  
 如果是数值类型（包括CV)，value为true，如果是数值类型的指针，为false
  
-##TIsFloatingPoint
+## TIsFloatingPoint
 对应c++11的std::floating_point  
 对于flaot,double,long double（包括CV）为true
 
-##TIsIntegral
+## TIsIntegral
 对应c++11的std::is_integral  
 对于int,shot,bool,char(包括CV）为true
 
-##TIsPointer
+## TIsPointer
 对应c++11的std::is_pointer
 
-##TIsPOD
+## TIsPOD
 对应c++11的std::is_pod
 [POD](http://en.cppreference.com/w/cpp/concept/PODType)  
 POD,plain old data,标量，array，或者是不带static,private，virtual的struct,class,union  
 可以用malloc分配空间，使用std::memmove，与C类型完全兼容
 
-##TIsSigned 
+## TIsSigned 
 对应c++11的std::is_signed
 
-##TIsTriviallyCopyAssignable
+## TIsTriviallyCopyAssignable
 对应c++11的is_trivially_copy_assignable
 **注意** ：判断是否能在=左边
 
-##IsTriviallyCopyConstructible
+## IsTriviallyCopyConstructible
 对应c++11的std::is_trivially_copy_assignable
 **注意** ：包含scalar types，trivial copyable class(指的是，没有虚函数，没有拷贝构造函数）
 
-##TPointerIsConvertibleFromTo
+## TPointerIsConvertibleFromTo
 测试用来看pointer能不能从from转为to
 
-##TTypeWrapper
+## TTypeWrapper
 没来防止模版递归的
 
-##Align
+## Align
 头文件使用AlignmentTemplates.h，有函数Align,AlignDown,IsAligned,AlignArbitrary
 
-##TRemoveReference
+## TRemoveReference
 对应c++11的std::remove_reference
 
-##TChooseClass
+## TChooseClass
 对应c++11的std::conditional
 根据条件来判断返回哪个类 Predicate?TrueClass:falseClass
 
-##TIntegralConstant
+## TIntegralConstant
 对应c++11的std::integral_constant
 帮助类
 
-##TIsClass
+## TIsClass
 对应c++11的std::is_class
 **注意** enum class不是class
 	
-##TElementAlignmentCalculator
+## TElementAlignmentCalculator
 对应c++11的std::alignment_of
 用来计算对齐值。
 
-##TTypeCompatibleBytes
+## TTypeCompatibleBytes
 对应c++11的std::aligned_storage
 用来计算对象对应的byte数
 
-##TIsContiguousContainer
+## TIsContiguousContainer
 用来判断是否是连续内存
 
-##TIsTriviallyDestructible
+## TIsTriviallyDestructible
 对应c++11的std::is_trivially_destructible
 
-##TIsEnum
+## TIsEnum
 对应c++11的std::is_enum
 
-##TIsEnumClass
+## TIsEnumClass
 判断是不是enum class
 
-##TLess
+## TLess
 对应c++14的std::less
 
-##TGreater
+## TGreater
 对应c++14的std::greater
 
-##TIsDerivedFrom
+## TIsDerivedFrom
 对应c++11的std::is_base_of
 
-##TIsReferenceType
+## TIsReferenceType
 对应c++11的std::reference
 
-##TIsLValueReferenceType
+## TIsLValueReferenceType
 对应c++11的std::is_lvalue_reference
 
-##TIsRValueReferenceType
+## TIsRValueReferenceType
 对应c++11的std::is_rvalue_reference
 
-##TIsVoidType
+## TIsVoidType
 对应c++11的std::is_void
 
-##TIsFundamentalType
+## TIsFundamentalType
 对应c++11的std::is_fundamental
 
-##TIsFunction
+## TIsFunction
 对应c++11的std::is_function
 
-##TIsZeroConstructType
+## TIsZeroConstructType
 
-##Call
+## Call
 1.	TCallTraitsParamTypeHelper
 2.	TCallTraitsBase
 3.	TCallTraits
 
-##Type
+## Type
 1.	TTypeTraitsBase
 2.	TTypeTraits
 3.	TContainerTraitsBase
 4.	TMoveSupportTraits
 5.	GENERATE_MEMBER_FUNCTION_CHECK
+
+## TDecay
+对应std::decay，Applies lvalue-to-rvalue, array-to-pointer, and function-to-pointer implicit conversions to the type T, removes cv-qualifiers,降级的转换
+
