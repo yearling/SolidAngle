@@ -3,7 +3,8 @@
 #include <string>
 #include <vector>
 //#include "Containers/SolidAngleString.h"
-
+#include <vector>
+#include <memory>
 struct TRUEValue
 {
 	enum 
@@ -127,6 +128,47 @@ typename TEnableIf<!TIsArithmetic<T>::Value, int>::Type GetEnableValue(T a)
 //{
 //	return YMemory::SystemMalloc(MallocByte);
 //}
+class TestContainerMoveCopy
+{
+public:
+	TestContainerMoveCopy()
+	{
+		std::cout << "call default construct!!" << std::endl;
+		pData = new ANSICHAR(50);
+	}
+	TestContainerMoveCopy(const TestContainerMoveCopy& RHS)
+	{
+		std::cout << "call copy construct!!" << std::endl;
+	}
+	TestContainerMoveCopy& operator= (const TestContainerMoveCopy& RHS)
+	{
+		if (this != &RHS)
+		{
+			std::cout << "call operator construct!!" << std::endl;
+		}
+	}
+	TestContainerMoveCopy(TestContainerMoveCopy&& RHS)
+	{
+		std::cout << "call right value construct!!" << std::endl;
+		pData = RHS.pData;
+		delete RHS.pData;
+		RHS.pData = nullptr;
+	}
+	TestContainerMoveCopy& operator= (TestContainerMoveCopy&& RHS)
+	{
+		std::cout << "call right value opeartor constructor!!" << std::endl;
+		pData = RHS.pData;
+		delete RHS.pData;
+		RHS.pData = nullptr;
+	}
+	void foo()
+	{
+		std::cout << pData << std::endl;
+	}
+private:
+	ANSICHAR* pData=nullptr;
+};
+
 int main()
 {
 
@@ -223,5 +265,21 @@ int main()
 	std::cout << sizeof(s) << std::endl;
 	YString ys;
 	std::cout << sizeof(ys) << std::endl;
+
+	TArray<TestContainerMoveCopy> vecUnique;
+	TestContainerMoveCopy *pTest = new TestContainerMoveCopy();
+	vecUnique.Emplace(MoveTemp(*pTest));
+	TArray<TestContainerMoveCopy> vecMoveUniuqe;
+	vecMoveUniuqe.Insert(vecUnique, 0);
+    //new vecMoveUniuqe;
+	new (vecMoveUniuqe)TestContainerMoveCopy();
+	std::cout << sizeof(TArray<TestContainerMoveCopy>) << std::endl;
+	std::cout << sizeof(FHeapAllocator::ForAnyElementType) << std::endl;
+
+	std::vector<TestContainerMoveCopy> vecTest;
+	std::cout << sizeof(vecTest) << std::endl;
+	std::cout << sizeof(std::vector<int>::allocator_type) << std::endl;
+	TArray<int> DifferentTypeConstruct = { 1,2,3,4,5,6 };
+	TArray<TestContainerMoveCopy> tt(DifferentTypeConstruct);
 	return 0;
 }

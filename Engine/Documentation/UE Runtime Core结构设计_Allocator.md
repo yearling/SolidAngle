@@ -32,3 +32,20 @@ FContainerAllocatorInterface
 2. TAllocatorTraits<FHeapAllocator>中定义SupportsMove= true, IsZeroConstruct= true  
 
 ### TInlineAllocator
+1. 其模版声明为 
+		template <uint32 NumInlineElements, typename SecondaryAllocator = FDefaultAllocator>  
+		class TInlineAllocator 
+   其NumInlineElements是指固定的内存分配大小，SecondaryAllocator当内存分配量大于固定内存时，动态分配内存；
+2. __注意__:在Resize时，有可能要把在内存上分配的对象拷贝到堆上（或者反过来），这个时候牵涉到一个优化：
+	1. 如果是可以直接位拷贝的`TCanBitwiseRelocate`,就有FMemory::Memmove;  
+		TCanBitwiseRelocate<SourceType,DesType>::value为true:
+	        TOr<
+				TAreTypesEqual<DestinationElementType, SourceElementType>,
+				TAnd<
+				TIsBitwiseConstructible<DestinationElementType, SourceElementType>,
+				TIsTriviallyDestructible<SourceElementType>  
+		这其中有个`TIsBitwiseConstructible<T,U>`，用来判断U这个类型能不能通过memcpy产生一个新的T，
+	2. 如果不可以直接位拷贝，要执行place new 
+
+### TFixedAllocator
+固定大小的Allocator
