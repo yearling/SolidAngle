@@ -1,7 +1,7 @@
 # UE Runtime Core 结构设计
 
 ## 类图如下：
-![Add](Picture/RuntimeCore/MemoryClassDiagram.png)
+![Add](Picture/MemoryClassDiagram.png)
 ## PlatformMemory
 1.	PlatformMemory.h为主要头文件，其中包含GenericPlatformMemory和WindowsPlatformMemory(WIN平台）。
 2.	GenericPlatformMemory实现基础Memory的相关功能：SyetemMalloc,Memcopy等
@@ -81,12 +81,12 @@
 	1.	获取统计信息:`GetStatsForMallocProfiler`
 	2.	NamedShareMemory:`MapNamedSharedMemoryRegion`
 ## 设计原理
-###FGenericPlatformMemory
+### FGenericPlatformMemory
 1.	FGenericPlatformMemory定义基本操作，相当于接口，带默认实现
 2.	FWindowPlatformMemory实现平台特定的操作，相当于实现
 3.	**注意**：实现用的只是简单的继承，没有使用虚函数使用重载来减少开销。最后typedef FWindowsPlatformMemory FPlatformMemory，对外只使用FPlatformMemory。对于ISO平台来说，使用typdef FIosPlatformMemory FPlatformMemory来实现,对调用者来说是透明的。**目的**是编译期的跨平台。
 
-###YMalloc
+### YMalloc
 1.	YMalloc继承于YUseSystemMallocForNew,其定义了类的operator new
 
 		class CORE_API YUseSystemMallocForNew
@@ -101,7 +101,7 @@
 			void operator delete[](void* Ptr);
 		};
 	这样子做的原因是，需要根据参数动态创建YMalloc，开始时全局GAlloc为null, 在第一次创建FMalloc时，如`GAlloc = new FTBBMalloc`，这时会调YMemory::Malloc，因为GMalloc还没有初始化（这时候还没有到Main函数，肯定是单线程），继续调`GAlloc = new FTBBMalloc`，导致无限递归，所以要自定义operator new来打破这种递归。  
-![Add](Picture/RuntimeCore/Recursive.png)
+![Add](Picture/Recursive.png)
 
 ## Malloc(0) / Realloc(0)
 ### [Malloc(0)](https://msdn.microsoft.com/en-us/library/6ewkz86d.aspx)  

@@ -24,7 +24,7 @@ UE的数学库为了保证跨平台和性能，分为PlatformMath和VectorMath�
 		5.	**注意**：之所以这样子设计，很大情况下在于float to int在某些编译器下比较慢，比如x86下，设编译器不使用SSE，就默认用FPU实现，比较慢。
 	4.	定义FMath继承于FPlatformMath,在特化指令的基础上实现Rand,Round,Truc,Lerp，Sect等函数。  
 		UnrealMathUtility里的继承链如下 
-		![Add](Picture/RuntimeCore/PlatformMathClassDiagram.png)
+		![Add](Picture/PlatformMathClassDiagram.png)
 
 2.	UnrealMath
 	1.	包含向量的相关实现
