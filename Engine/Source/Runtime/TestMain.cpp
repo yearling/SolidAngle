@@ -135,6 +135,11 @@ public:
 	{
 		std::cout << "call default construct!!" << std::endl;
 		pData = new ANSICHAR(50);
+		Vec0 = { 1,2,4,5 };
+	}
+	virtual ~TestContainerMoveCopy()
+	{
+		delete pData;
 	}
 	TestContainerMoveCopy(const TestContainerMoveCopy& RHS)
 	{
@@ -167,6 +172,7 @@ public:
 	}
 private:
 	ANSICHAR* pData=nullptr;
+	std::vector<int>  Vec0;
 };
 
 int main()
@@ -257,29 +263,19 @@ int main()
 
 	//PODTypeWithStdString* pMemLeak = new PODTypeWithStdString();
 
-	FHeapAllocator::ForElementType<int> IntAllocator;
-	IntAllocator.ResizeAllocation(0, 5, sizeof(int));
-	FHeapAllocator::ForElementType<int> IntAllocator2;
-	std::cout << (int)0-(!(int)0) << std::endl;
-	std::string s;
-	std::cout << sizeof(s) << std::endl;
-	YString ys;
-	std::cout << sizeof(ys) << std::endl;
 
-	TArray<TestContainerMoveCopy> vecUnique;
-	TestContainerMoveCopy *pTest = new TestContainerMoveCopy();
-	vecUnique.Emplace(MoveTemp(*pTest));
 	TArray<TestContainerMoveCopy> vecMoveUniuqe;
-	vecMoveUniuqe.Insert(vecUnique, 0);
-    //new vecMoveUniuqe;
 	new (vecMoveUniuqe)TestContainerMoveCopy();
-	std::cout << sizeof(TArray<TestContainerMoveCopy>) << std::endl;
-	std::cout << sizeof(FHeapAllocator::ForAnyElementType) << std::endl;
+	new (vecMoveUniuqe)TestContainerMoveCopy();
 
-	std::vector<TestContainerMoveCopy> vecTest;
-	std::cout << sizeof(vecTest) << std::endl;
-	std::cout << sizeof(std::vector<int>::allocator_type) << std::endl;
-	TArray<int> DifferentTypeConstruct = { 1,2,3,4,5,6 };
-	TArray<TestContainerMoveCopy> tt(DifferentTypeConstruct);
+	TArray<int> ArrayInt = { 1,2,3,4,5,6,7,8 };
+	Algo::Reverse(ArrayInt);
+
+	TArrayView<int> ViewTest(ArrayInt);
+	ViewTest.Sort();
+
+	int buffer[] = { 1,2,3,4,5,6,7,8,9,10,11,12,13 };
+	TArrayView<int>  ViewBuffer(buffer);
+	ViewBuffer.CheckInvariants();
 	return 0;
 }

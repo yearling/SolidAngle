@@ -31,6 +31,11 @@ FContainerAllocatorInterface
 1. 实现了上述Allocator的基本接口，
 2. TAllocatorTraits<FHeapAllocator>中定义SupportsMove= true, IsZeroConstruct= true  
 
+
+FHeapAllocator为FDefualtAllocator,其成员变量只有FScriptContainerElement* Data，也就是void* Data，对应的大小在64bit的平台下为8字节。
+FHeapAllocator只保存连续分配空间的地址，不保存有多少个元素等。保存多少个元素等信息存放在TArray等容器中，这个设计的原因有可能是为了减少冗余的数据。如果Allocator自己保存了有多少个元素，最大元素有多少，这样在container中也要存放这些信息，会造成数据冗余及一致性的问题。故FHeapAllocator只存指针。
+
+
 ### TInlineAllocator
 1. 其模版声明为 
 		template <uint32 NumInlineElements, typename SecondaryAllocator = FDefaultAllocator>  

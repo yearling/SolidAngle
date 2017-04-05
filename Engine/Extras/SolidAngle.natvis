@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+  <!-- Epic Games, Inc. UE4 Visualizers -->
+  <!-- Copy this into c:\Users\<Your user folder>\My Documents\Visual Studio 2012\Visualizers -->
+
+  <!-- FString visualizer -->
+  <Type Name="YString">
+    <DisplayString Condition="Data.ArrayNum == 0">Empty</DisplayString>
+    <DisplayString Condition="Data.ArrayNum &lt; 0">Invalid</DisplayString>
+    <DisplayString Condition="Data.ArrayMax &lt; Data.ArrayNum">Invalid</DisplayString>
+    <DisplayString Condition="Data.ArrayMax &gt;= Data.ArrayNum">{Data.AllocatorInstance.Data,su}</DisplayString>
+    <StringView Condition="Data.ArrayMax &gt;= Data.ArrayNum">Data.AllocatorInstance.Data,su</StringView>
+  </Type>
+
+  <!-- FText visualizer -->
+  <Type Name="FText">
+    <DisplayString>{*TextData.Object}</DisplayString>
+  </Type>
+  <Type Name="TLocalizedTextData&lt;*&gt;">
+    <DisplayString>{*LocalizedString.Object}</DisplayString>
+  </Type>
+  <Type Name="TGeneratedTextData&lt;*&gt;">
+    <DisplayString Condition="LocalizedString.Object">{*LocalizedString.Object}</DisplayString>
+    <DisplayString Condition="!LocalizedString.Object">{DisplayString}</DisplayString>
+  </Type>
+
+  <!-- FName visualizer -->
+  <Type Name="YName">
+    <DisplayString Condition="ComparisonIndex &gt;= 2097152">Invalid</DisplayString>
+    <DisplayString Condition="ComparisonIndex &lt; 0">Invalid</DisplayString>
+    <!-- BEGIN: WideName support -->
+    <DisplayString Condition="ComparisonIndex &lt; 2097152 &amp;&amp; Number &gt; 0 &amp;&amp; (((FNameEntry*)(((FNameEntry***)GFNameTableForDebuggerVisualizers_MT)[ComparisonIndex / 16384][ComparisonIndex % 16384]))->Index &amp; 1) == 1">{((FNameEntry*)(((FNameEntry***)GFNameTableForDebuggerVisualizers_MT)[ComparisonIndex / 16384][ComparisonIndex % 16384]))->WideName}_{Number-1}</DisplayString>
+    <DisplayString Condition="ComparisonIndex &lt; 2097152 &amp;&amp; (((FNameEntry*)(((FNameEntry***)GFNameTableForDebuggerVisualizers_MT)[ComparisonIndex / 16384][ComparisonIndex % 16384]))->Index &amp; 1) == 1">{((FNameEntry*)(((FNameEntry***)GFNameTableForDebuggerVisualizers_MT)[ComparisonIndex / 16384][ComparisonIndex % 16384]))->WideName}</DisplayString>
+    <!-- END: WideName support -->
+    <DisplayString Condition="ComparisonIndex &lt; 2097152 &amp;&amp; Number &gt; 0">{((FNameEntry*)(((FNameEntry***)GFNameTableForDebuggerVisualizers_MT)[ComparisonIndex / 16384][ComparisonIndex % 16384]))->AnsiName}_{Number-1}</DisplayString>
+    <DisplayString Condition="ComparisonIndex &lt; 2097152">{((FNameEntry*)(((FNameEntry***)GFNameTableForDebuggerVisualizers_MT)[ComparisonIndex / 16384][ComparisonIndex % 16384]))->AnsiName}</DisplayString>
+    <!-- BEGIN: WideName support -->
+    <StringView Condition="ComparisonIndex &lt; 2097152 &amp;&amp; (((FNameEntry*)(((FNameEntry***)GFNameTableForDebuggerVisualizers_MT)[ComparisonIndex / 16384][ComparisonIndex % 16384]))->Index &amp; 1) == 1">((FNameEntry*)(((FNameEntry***)GFNameTableForDebuggerVisualizers_MT)[ComparisonIndex / 16384][ComparisonIndex % 16384]))->WideName</StringView>
+    <!-- END: WideName support -->
+    <StringView Condition="ComparisonIndex &lt; 2097152">((FNameEntry*)(((FNameEntry***)GFNameTableForDebuggerVisualizers_MT)[ComparisonIndex / 16384][ComparisonIndex % 16384]))->AnsiName</StringView>
+  </Type>
+  <Type Name="YName">
+    <DisplayString Condition="DisplayIndex &gt;= 2097152">Invalid</DisplayString>
+    <DisplayString Condition="DisplayIndex &lt; 0">Invalid</DisplayString>
+    <!-- BEGIN: WideName support -->
+    <DisplayString Condition="DisplayIndex &lt; 2097152 &amp;&amp; Number &gt; 0 &amp;&amp; (((FNameEntry*)(((FNameEntry***)GFNameTableForDebuggerVisualizers_MT)[DisplayIndex / 16384][DisplayIndex % 16384]))->Index &amp; 1) == 1">{((FNameEntry*)(((FNameEntry***)GFNameTableForDebuggerVisualizers_MT)[DisplayIndex / 16384][DisplayIndex % 16384]))->WideName}_{Number-1}</DisplayString>
+    <DisplayString Condition="DisplayIndex &lt; 2097152 &amp;&amp; (((FNameEntry*)(((FNameEntry***)GFNameTableForDebuggerVisualizers_MT)[DisplayIndex / 16384][DisplayIndex % 16384]))->Index &amp; 1) == 1">{((FNameEntry*)(((FNameEntry***)GFNameTableForDebuggerVisualizers_MT)[DisplayIndex / 16384][DisplayIndex % 16384]))->WideName}</DisplayString>
+    <!-- END: WideName support -->
+    <DisplayString Condition="DisplayIndex &lt; 2097152 &amp;&amp; Number &gt; 0">{((FNameEntry*)(((FNameEntry***)GFNameTableForDebuggerVisualizers_MT)[DisplayIndex / 16384][DisplayIndex % 16384]))->AnsiName}_{Number-1}</DisplayString>
+    <DisplayString Condition="DisplayIndex &lt; 2097152">{((FNameEntry*)(((FNameEntry***)GFNameTableForDebuggerVisualizers_MT)[DisplayIndex / 16384][DisplayIndex % 16384]))->AnsiName}</DisplayString>
+    <!-- BEGIN: WideName support -->
+    <StringView Condition="DisplayIndex &lt; 2097152 &amp;&amp; (((FNameEntry*)(((FNameEntry***)GFNameTableForDebuggerVisualizers_MT)[DisplayIndex / 16384][DisplayIndex % 16384]))->Index &amp; 1) == 1">((FNameEntry*)(((FNameEntry***)GFNameTableForDebuggerVisualizers_MT)[DisplayIndex / 16384][DisplayIndex % 16384]))->WideName</StringView>
+    <!-- END: WideName support -->
+    <StringView Condition="DisplayIndex &lt; 2097152">((FNameEntry*)(((FNameEntry***)GFNameTableForDebuggerVisualizers_MT)[DisplayIndex / 16384][DisplayIndex % 16384]))->AnsiName</StringView>
+  </Type>
+
+  <Type Name="FMinimalName">
+    <DisplayString Condition="Index &gt;= 2097152">Invalid</DisplayString>
+    <DisplayString Condition="Index &lt; 0">Invalid</DisplayString>
+    <DisplayString Condition="Index &lt; 2097152 &amp;&amp; Number &gt; 0">{((FNameEntry*)(((FNameEntry***)GFNameTableForDebuggerVisualizers_MT)[Index / 16384][Index % 16384]))->AnsiName}_{Number-1}</DisplayString>
+    <DisplayString Condition="Index &lt; 2097152">{((FNameEntry*)(((FNameEntry***)GFNameTableForDebuggerVisualizers_MT)[Index / 16384][Index % 16384]))->AnsiName}</DisplayString>
+    <StringView Condition="Index &lt; 2097152">((FNameEntry*)(((FNameEntry***)GFNameTableForDebuggerVisualizers_MT)[Index / 16384][Index % 16384]))->AnsiName</StringView>
+  </Type>
+
+  <!-- FStatMessage visualizer @see Stats2.h -->
+  <!--
+		IsCycle							= 0x04,
+		/** if true, then this message contains a memory stat. */
+		IsMemory						= 0x08,
+		/** if true, then this is actually two uint32s, the cycle count and the call count, see FromPackedCallCountDuration_Duration. */
+		IsPackedCCAndDuration			= 0x10,
+		/** if true, then this stat is cleared every frame. */
+		ShouldClearEveryFrame			= 0x20,
+	-->
+  <Type Name="FStatMessage">
+    <!--ST_None		= 1 -->
+    <DisplayString Condition="((NameAndInfo.NameAndInfo.Number >> 9)&amp;7) == 1" >{{NoneType NameAndInfo={NameAndInfo.NameAndInfo}}}</DisplayString>
+
+    <!--ST_int64	= 2 && !IsPackedCCAndDuration && !IsCycle -->
+    <DisplayString Condition="((NameAndInfo.NameAndInfo.Number >> 9)&amp;7) == 2 &amp;&amp; ((NameAndInfo.NameAndInfo.Number >> 9+3+4)&amp;0x10) != 0x10 &amp;&amp; ((NameAndInfo.NameAndInfo.Number >> 9+3+4)&amp;0x10) != 0x10" >
+      {{Int64={DebugStatData.Cycles} NameAndInfo={NameAndInfo.NameAndInfo}}}
+    </DisplayString>
+
+    <!--ST_int64	= 2 && !IsPackedCCAndDuration && IsCycle -->
+    <DisplayString Condition="((NameAndInfo.NameAndInfo.Number >> 9)&amp;7) == 2 &amp;&amp; ((NameAndInfo.NameAndInfo.Number >> 9+3+4)&amp;0x10) != 0x10 &amp;&amp; ((NameAndInfo.NameAndInfo.Number >> 9+3+4)&amp;0x10) == 0x10" >
+      {{Cycles={DebugStatData.Cycles} NameAndInfo={NameAndInfo.NameAndInfo}}}
+    </DisplayString>
+
+    <!--ST_int64	= 2 && IsPackedCCAndDuration && IsCycle -->
+    <DisplayString Condition="((NameAndInfo.NameAndInfo.Number >> 9)&amp;7) == 2 &amp;&amp; ((NameAndInfo.NameAndInfo.Number >> 9+3+4)&amp;0x10) == 0x10 &amp;&amp; ((NameAndInfo.NameAndInfo.Number >> 9+3+4)&amp;0x04) == 0x04" >
+      {{Count={DebugStatData.CCAndDuration[0]},Cycles={DebugStatData.CCAndDuration[1]} NameAndInfo={NameAndInfo.NameAndInfo}}}
+    </DisplayString>
+
+    <!--ST_double	= 3 -->
+    <DisplayString Condition="((NameAndInfo.NameAndInfo.Number >> 9)&amp;7) == 3" >{{Float={DebugStatData.Float} NameAndInfo={NameAndInfo.NameAndInfo}}}</DisplayString>
+
+    <!--ST_FName	= 4 -->
+    <DisplayString Condition="((NameAndInfo.NameAndInfo.Number >> 9)&amp;7) == 4" >{{Name={((FNameEntry*)(((FNameEntry***)GFNameTableForDebuggerVisualizers_MT)[DebugStatData.Cycles / 16384][DebugStatData.Cycles % 16384]))->AnsiName} NameAndInfo={NameAndInfo.NameAndInfo}}}</DisplayString>
+
+    <!--ST_Ptr		= 5 -->
+    <DisplayString Condition="((NameAndInfo.NameAndInfo.Number >> 9)&amp;7) == 5" >{{Ptr={DebugStatData.Ptr} NameAndInfo={NameAndInfo.NameAndInfo}}}</DisplayString>
+  </Type>
+
+  <!-- FAllocationInfo -->
+  <!--
+		uint64 OldPtr;
+		uint64 Ptr;
+		int64 Size;
+		FName EncodedCallstack;
+		uint32 SequenceTag;
+		EMemoryOperation Op; Alloc=1, Free=2, Realloc=3
+		bool bHasBrokenCallstack;
+	-->
+  <Type Name="FAllocationInfo">
+    <!-- Alloc -->
+    <DisplayString Condition="Op == 1" >
+      {{A SeqTag={SequenceTag} Ptr={Ptr} Size={Size} Callstack={EncodedCallstack} bHasBrokenCallstack={bHasBrokenCallstack}}}
+    </DisplayString>
+
+    <!-- Free -->
+    <DisplayString Condition="Op == 2" >
+      {{F SeqTag={SequenceTag} Ptr={Ptr} bHasBrokenCallstack={bHasBrokenCallstack}}}
+    </DisplayString>
+
+    <!-- Realloc -->
+    <DisplayString Condition="Op == 3" >
+      {{R SeqTag={SequenceTag} OldPtr={OldPtr} Ptr={Ptr} NewSize={Size} Callstack={EncodedCallstack} bHasBrokenCallstack={bHasBrokenCallstack}}}
+    </DisplayString>
+  </Type>
+
+  <Type Name="FThreadSafeCounter">
+    <DisplayString>{Counter}</DisplayString>
+  </Type>
+
+  <Type Name="FThreadSafeBool">
+    <DisplayString Condition="Counter==0">False</DisplayString>
+    <DisplayString Condition="Counter==1">True</DisplayString>
+  </Type>
+
+  <Type Name="FVector_NetQuantize">
+    <DisplayString>{{X={X} Y={Y} Z={Z}}</DisplayString>
+  </Type>
+
+  <Type Name="FVector_NetQuantize10">
+    <DisplayString>{{X={X} Y={Y} Z={Z}}</DisplayString>
+  </Type>
+
+  <Type Name="FVector_NetQuantize100">
+    <DisplayString>{{X={X} Y={Y} Z={Z}}</DisplayString>
+  </Type>
+
+  <Type Name="FVector_NetQuantizeNormal">
+    <DisplayString>{{X={X} Y={Y} Z={Z}}</DisplayString>
+  </Type>
+
+  <!-- TEnumAsByte visualizer -->
+  <Type Name="TEnumAsByte&lt;*&gt;">
+    <DisplayString>{($T1)Value}</DisplayString>
+  </Type>
+
+  <!-- UObjectBase visualizer -->
+  <Type Name="UObjectBase">
+    <DisplayString>(Name={NamePrivate})</DisplayString>
+  </Type>
+
+  <!-- TArray<*,TFixedAllocator<*> > visualizer -->
+  <Type Name="TArray&lt;*,TFixedAllocator&lt;*&gt;&gt;">
+    <DisplayString Condition="ArrayNum == 0">Empty</DisplayString>
+    <DisplayString Condition="ArrayNum &lt; 0">Invalid</DisplayString>
+    <DisplayString Condition="ArrayMax &lt; ArrayNum">Invalid</DisplayString>
+    <DisplayString Condition="ArrayMax &gt;= ArrayNum">Num={ArrayNum}</DisplayString>
+    <Expand>
+      <ArrayItems Condition="ArrayNum &lt;= ArrayMax">
+        <Size>ArrayNum</Size>
+        <ValuePointer>($T1*)AllocatorInstance.InlineData</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+
+  <!-- TArray<*,TInlineAllocator<*,*> > visualizer -->
+  <Type Name="TArray&lt;*,TInlineAllocator&lt;*,*&gt;&gt;">
+    <DisplayString Condition="ArrayNum == 0">Empty</DisplayString>
+    <DisplayString Condition="ArrayNum &lt; 0">Invalid</DisplayString>
+    <DisplayString Condition="ArrayMax &lt; ArrayNum">Invalid</DisplayString>
+    <DisplayString Condition="ArrayMax &gt;= ArrayNum">Num={ArrayNum}</DisplayString>
+    <Expand>
+      <ArrayItems Condition="ArrayNum &lt;= ArrayMax">
+        <Size>ArrayNum</Size>
+        <ValuePointer Condition="AllocatorInstance.SecondaryData.Data == 0">($T1*)AllocatorInstance.InlineData</ValuePointer>
+        <ValuePointer Condition="AllocatorInstance.SecondaryData.Data != 0">($T1*)AllocatorInstance.SecondaryData.Data</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+
+  <!-- TArray visualizer -->
+  <Type Name="TArray&lt;*,*&gt;">
+    <DisplayString Condition="ArrayNum == 0">Empty</DisplayString>
+    <DisplayString Condition="ArrayNum &lt; 0">Invalid</DisplayString>
+    <DisplayString Condition="ArrayMax &lt; ArrayNum">Invalid</DisplayString>
+    <DisplayString Condition="ArrayMax &gt;= ArrayNum">Num={ArrayNum}</DisplayString>
+    <Expand>
+      <ArrayItems Condition="ArrayNum &lt;= ArrayMax">
+        <Size>ArrayNum</Size>
+        <ValuePointer>($T1*)AllocatorInstance.Data</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+
+  <!-- TArrayView visualizer -->
+  <Type Name="TArrayView&lt;*&gt;">
+    <DisplayString Condition="ArrayNum == 0">Empty</DisplayString>
+    <DisplayString Condition="ArrayNum &lt; 0">Invalid</DisplayString>
+    <DisplayString Condition="ArrayNum &gt; 0">Num={ArrayNum}</DisplayString>
+    <Expand>
+      <ArrayItems Condition="ArrayNum &gt; 0">
+        <Size>ArrayNum</Size>
+        <ValuePointer>($T1*)DataPtr</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+
+  <!-- TIndirectArray visualizer -->
+  <Type Name="TIndirectArray&lt;*,*&gt;">
+    <DisplayString Condition="Array.ArrayNum == 0">Empty</DisplayString>
+    <DisplayString Condition="Array.ArrayNum &lt; 0">Invalid</DisplayString>
+    <DisplayString Condition="Array.ArrayMax &lt; Array.ArrayNum">Invalid</DisplayString>
+    <DisplayString Condition="Array.ArrayMax &gt;= Array.ArrayNum">Num={Array.ArrayNum}</DisplayString>
+    <Expand>
+      <IndexListItems Condition="Array.ArrayNum &lt;= Array.ArrayMax">
+        <Size>Array.ArrayNum</Size>
+        <ValueNode>*(($T1**)Array.AllocatorInstance.Data)[$i]</ValueNode>
+      </IndexListItems>
+    </Expand>
+  </Type>
+
+  <!-- TChunkedArray visualizer -->
+  <Type Name="TChunkedArray&lt;*,*&gt;">
+    <DisplayString Condition="NumElements == 0">Empty</DisplayString>
+    <DisplayString Condition="NumElements &lt; 0">Invalid</DisplayString>
+    <DisplayString Condition="NumElements &gt; 0">NumElements={NumElements}, NumChunks={Chunks.Array.ArrayNum}, {NumElementsPerChunk}</DisplayString>
+
+    <Expand>
+      <IndexListItems Condition="NumElements &gt; 0">
+        <Size>NumElements</Size>
+        <ValueNode>
+          *(
+          *(
+          ($T1**)Chunks.Array.AllocatorInstance.Data + ($i / NumElementsPerChunk)
+          ) + ($i % NumElementsPerChunk)
+          )
+        </ValueNode>
+      </IndexListItems>
+    </Expand>
+  </Type>
+
+
+  <!-- TSparseArray visualizer -->
+  <Type Name="TSparseArray&lt;*,*&gt;">
+    <DisplayString Condition="(Data.ArrayNum - NumFreeIndices) &lt;= 0">Empty</DisplayString>
+    <DisplayString Condition="Data.ArrayNum &lt;= Data.ArrayMax">Num={Data.ArrayNum - NumFreeIndices}</DisplayString>
+    <Expand>
+      <IndexListItems Condition="Data.ArrayNum &gt; 0 &amp;&amp; Data.ArrayNum &lt;= Data.ArrayMax">
+        <Size>Data.ArrayNum</Size>
+        <ValueNode Condition="(AllocationFlags.AllocatorInstance.SecondaryData.Data != 0) &amp;&amp; (reinterpret_cast&lt;uint32*&gt;(AllocationFlags.AllocatorInstance.SecondaryData.Data)[$i/32]&gt;&gt;$i &amp; 1) != 0">($T1*)((TSparseArray&lt;$T1,$T2&gt;::FElementOrFreeListLink*)Data.AllocatorInstance.Data + $i)</ValueNode>
+        <ValueNode Condition="(AllocationFlags.AllocatorInstance.SecondaryData.Data == 0) &amp;&amp; (reinterpret_cast&lt;uint32*&gt;(AllocationFlags.AllocatorInstance.InlineData        )[$i/32]&gt;&gt;$i &amp; 1) != 0">($T1*)((TSparseArray&lt;$T1,$T2&gt;::FElementOrFreeListLink*)Data.AllocatorInstance.Data + $i)</ValueNode>
+        <ValueNode Condition="(AllocationFlags.AllocatorInstance.SecondaryData.Data != 0) &amp;&amp; (reinterpret_cast&lt;uint32*&gt;(AllocationFlags.AllocatorInstance.SecondaryData.Data)[$i/32]&gt;&gt;$i &amp; 1) == 0">"Invalid",sb</ValueNode>
+        <ValueNode Condition="(AllocationFlags.AllocatorInstance.SecondaryData.Data == 0) &amp;&amp; (reinterpret_cast&lt;uint32*&gt;(AllocationFlags.AllocatorInstance.InlineData        )[$i/32]&gt;&gt;$i &amp; 1) == 0">"Invalid",sb</ValueNode>
+      </IndexListItems>
+    </Expand>
+  </Type>
+
+  <!-- TBitArray visualizer -->
+  <Type Name="TBitArray&lt;*&gt;">
+    <DisplayString Condition="NumBits == 0">Empty</DisplayString>
+    <DisplayString Condition="NumBits &lt; 0">Invalid</DisplayString>
+    <DisplayString Condition="NumBits &gt; 0">NumBits={NumBits}, MaxBits={MaxBits}</DisplayString>
+    <Expand>
+      <IndexListItems Condition="NumBits &gt; 0">
+        <Size>NumBits</Size>
+        <ValueNode Condition="(AllocatorInstance.SecondaryData.Data != 0) &amp;&amp; (reinterpret_cast&lt;uint32*&gt;(AllocatorInstance.SecondaryData.Data	)[$i/32]&gt;&gt;$i &amp; 1) != 0">1</ValueNode>
+        <ValueNode Condition="(AllocatorInstance.SecondaryData.Data == 0) &amp;&amp; (reinterpret_cast&lt;uint32*&gt;(AllocatorInstance.InlineData			)[$i/32]&gt;&gt;$i &amp; 1) != 0">1</ValueNode>
+        <ValueNode Condition="(AllocatorInstance.SecondaryData.Data != 0) &amp;&amp; (reinterpret_cast&lt;uint32*&gt;(AllocatorInstance.SecondaryData.Data	)[$i/32]&gt;&gt;$i &amp; 1) == 0">0</ValueNode>
+        <ValueNode Condition="(AllocatorInstance.SecondaryData.Data == 0) &amp;&amp; (reinterpret_cast&lt;uint32*&gt;(AllocatorInstance.InlineData			)[$i/32]&gt;&gt;$i &amp; 1) == 0">0</ValueNode>
+      </IndexListItems>
+    </Expand>
+  </Type>
+
+  <!-- TPair visualizer -->
+  <Type Name="TPair&lt;*,*&gt;">
+    <DisplayString>({Key}, {Value})</DisplayString>
+  </Type>
+
+  <!-- TSharedPtr visualizer -->
+  <Type Name="TSharedPtr&lt;*,*&gt;">
+    <DisplayString Condition="Object == 0">Null</DisplayString>
+    <DisplayString Condition="Object != 0">Ptr={(void*)Object}, SharedRefs={SharedReferenceCount.ReferenceController->SharedReferenceCount}, WeakRefs={SharedReferenceCount.ReferenceController->WeakReferenceCount}, Object={*Object}</DisplayString>
+    <Expand>
+      <Item Condition="Object != 0" Name="[SharedReferenceCount]">SharedReferenceCount.ReferenceController->SharedReferenceCount</Item>
+      <Item Condition="Object != 0" Name="[WeakReferenceCount]">SharedReferenceCount.ReferenceController->WeakReferenceCount</Item>
+      <Item Condition="Object != 0" Name="[Ptr]">(void*)Object</Item>
+      <ExpandedItem Condition="Object != 0">*Object</ExpandedItem>
+    </Expand>
+  </Type>
+
+  <!-- TSharedRef visualizer -->
+  <Type Name="TSharedRef&lt;*,*&gt;">
+    <DisplayString Condition="Object != 0">Ptr={(void*)Object}, SharedRefs={SharedReferenceCount.ReferenceController->SharedReferenceCount}, WeakRefs={SharedReferenceCount.ReferenceController->WeakReferenceCount}, Object={*Object}</DisplayString>
+    <Expand>
+      <Item Condition="Object != 0" Name="[SharedReferenceCount]">SharedReferenceCount.ReferenceController->SharedReferenceCount</Item>
+      <Item Condition="Object != 0" Name="[WeakReferenceCount]">SharedReferenceCount.ReferenceController->WeakReferenceCount</Item>
+      <Item Condition="Object != 0" Name="[Ptr]">(void*)Object</Item>
+      <ExpandedItem Condition="Object != 0">*Object</ExpandedItem>
+    </Expand>
+  </Type>
+
+  <!-- TWeakPtr visualizer -->
+  <Type Name="TWeakPtr&lt;*,*&gt;">
+    <DisplayString Condition="Object == 0">Null</DisplayString>
+    <DisplayString Condition="WeakReferenceCount.ReferenceController->SharedReferenceCount == 0">Object has been destroyed</DisplayString>
+    <DisplayString Condition="Object != 0">Ptr={(void*)Object}, SharedRefs={WeakReferenceCount.ReferenceController->SharedReferenceCount}, WeakRefs={WeakReferenceCount.ReferenceController->WeakReferenceCount}, Object={*Object}</DisplayString>
+    <Expand>
+      <Item Condition="Object != 0" Name="[SharedReferenceCount]">WeakReferenceCount.ReferenceController->SharedReferenceCount</Item>
+      <Item Condition="Object != 0" Name="[WeakReferenceCount]">WeakReferenceCount.ReferenceController->WeakReferenceCount</Item>
+      <Item Condition="Object != 0 &amp;&amp; WeakReferenceCount.ReferenceController->SharedReferenceCount > 0" Name="[Ptr]">(void*)Object</Item>
+      <ExpandedItem Condition="Object != 0 &amp;&amp; WeakReferenceCount.ReferenceController->SharedReferenceCount > 0">*Object</ExpandedItem>
+    </Expand>
+  </Type>
+
+
+  <!-- TMapBase visualizer -->
+  <Type Name="TMapBase&lt;*,*,*,*&gt;">
+    <DisplayString Condition="Pairs.Elements.Data.ArrayNum - Pairs.Elements.NumFreeIndices &lt;= 0">Empty</DisplayString>
+    <DisplayString Condition="Pairs.Elements.Data.ArrayNum &lt;= Pairs.Elements.Data.ArrayMax" >Num={Pairs.Elements.Data.ArrayNum - Pairs.Elements.NumFreeIndices}</DisplayString>
+    <Expand>
+      <IndexListItems Condition="Pairs.Elements.Data.ArrayNum - Pairs.Elements.NumFreeIndices &gt; 0 &amp;&amp; Pairs.Elements.Data.ArrayNum &lt;= Pairs.Elements.Data.ArrayMax">
+        <Size>Pairs.Elements.Data.ArrayNum</Size>
+        <ValueNode Condition="(Pairs.Elements.AllocationFlags.AllocatorInstance.SecondaryData.Data != 0) &amp;&amp; (reinterpret_cast&lt;uint32*&gt;(Pairs.Elements.AllocationFlags.AllocatorInstance.SecondaryData.Data)[$i/32]&gt;&gt;$i &amp; 1) != 0">((TSetElement&lt;TPair&lt;$T1,$T2&gt; &gt; *)Pairs.Elements.Data.AllocatorInstance.Data)[$i].Value</ValueNode>
+        <ValueNode Condition="(Pairs.Elements.AllocationFlags.AllocatorInstance.SecondaryData.Data == 0) &amp;&amp; (reinterpret_cast&lt;uint32*&gt;(Pairs.Elements.AllocationFlags.AllocatorInstance.InlineData        )[$i/32]&gt;&gt;$i &amp; 1) != 0">((TSetElement&lt;TPair&lt;$T1,$T2&gt; &gt; *)Pairs.Elements.Data.AllocatorInstance.Data)[$i].Value</ValueNode>
+        <ValueNode Condition="(Pairs.Elements.AllocationFlags.AllocatorInstance.SecondaryData.Data != 0) &amp;&amp; (reinterpret_cast&lt;uint32*&gt;(Pairs.Elements.AllocationFlags.AllocatorInstance.SecondaryData.Data)[$i/32]&gt;&gt;$i &amp; 1) == 0">"Invalid",sb</ValueNode>
+        <ValueNode Condition="(Pairs.Elements.AllocationFlags.AllocatorInstance.SecondaryData.Data == 0) &amp;&amp; (reinterpret_cast&lt;uint32*&gt;(Pairs.Elements.AllocationFlags.AllocatorInstance.InlineData        )[$i/32]&gt;&gt;$i &amp; 1) == 0">"Invalid",sb</ValueNode>
+      </IndexListItems>
+    </Expand>
+  </Type>
+
+  <!-- TSet visualizer -->
+  <Type Name="TSet&lt;*,*,*&gt;">
+    <DisplayString Condition="Elements.Data.ArrayNum - Elements.NumFreeIndices &lt;= 0">Empty</DisplayString>
+    <DisplayString Condition="Elements.Data.ArrayNum &lt;= Elements.Data.ArrayMax">Num={Elements.Data.ArrayNum - Elements.NumFreeIndices}</DisplayString>
+    <Expand>
+      <IndexListItems Condition="Elements.Data.ArrayNum - Elements.NumFreeIndices &gt; 0 &amp;&amp; Elements.Data.ArrayNum &lt;= Elements.Data.ArrayMax">
+        <Size>Elements.Data.ArrayNum</Size>
+        <ValueNode Condition="(Elements.AllocationFlags.AllocatorInstance.SecondaryData.Data != 0) &amp;&amp; (reinterpret_cast&lt;uint32*&gt;(Elements.AllocationFlags.AllocatorInstance.SecondaryData.Data)[$i/32]&gt;&gt;$i &amp; 1) != 0">((TSetElement &lt;$T1&gt; *)Elements.Data.AllocatorInstance.Data)[$i].Value</ValueNode>
+        <ValueNode Condition="(Elements.AllocationFlags.AllocatorInstance.SecondaryData.Data == 0) &amp;&amp; (reinterpret_cast&lt;uint32*&gt;(Elements.AllocationFlags.AllocatorInstance.InlineData        )[$i/32]&gt;&gt;$i &amp; 1) != 0">((TSetElement &lt;$T1&gt; *)Elements.Data.AllocatorInstance.Data)[$i].Value</ValueNode>
+        <ValueNode Condition="(Elements.AllocationFlags.AllocatorInstance.SecondaryData.Data != 0) &amp;&amp; (reinterpret_cast&lt;uint32*&gt;(Elements.AllocationFlags.AllocatorInstance.SecondaryData.Data)[$i/32]&gt;&gt;$i &amp; 1) == 0">"Invalid",sb</ValueNode>
+        <ValueNode Condition="(Elements.AllocationFlags.AllocatorInstance.SecondaryData.Data == 0) &amp;&amp; (reinterpret_cast&lt;uint32*&gt;(Elements.AllocationFlags.AllocatorInstance.InlineData        )[$i/32]&gt;&gt;$i &amp; 1) == 0">"Invalid",sb</ValueNode>
+      </IndexListItems>
+    </Expand>
+  </Type>
+
+  <!-- FWeakObjectPtr visualizer -->
+  <Type Name="FWeakObjectPtr">
+    <DisplayString Condition="ObjectSerialNumber &lt; 1">nullptr</DisplayString>
+    <DisplayString Condition="GObjectArrayForDebugVisualizers->Objects[ObjectIndex].SerialNumber != ObjectSerialNumber">STALE</DisplayString>
+    <DisplayString>{GObjectArrayForDebugVisualizers->Objects[ObjectIndex].Object}</DisplayString>
+    <Expand>
+      <ExpandedItem>GObjectArrayForDebugVisualizers->Objects[ObjectIndex].Object</ExpandedItem>
+    </Expand>
+  </Type>
+
+  <!-- TWeakObjectPtr<*>|TAutoWeakObjectPtr<*> visualizer -->
+  <Type Name="TWeakObjectPtr&lt;*&gt;|TAutoWeakObjectPtr&lt;*&gt;">
+    <DisplayString Condition="ObjectSerialNumber &lt; 1">nullptr</DisplayString>
+    <DisplayString Condition="GObjectArrayForDebugVisualizers->Objects[ObjectIndex].SerialNumber != ObjectSerialNumber">STALE</DisplayString>
+    <DisplayString>{($T1*)GObjectArrayForDebugVisualizers->Objects[ObjectIndex].Object}</DisplayString>
+    <Expand>
+      <ExpandedItem>($T1*)GObjectArrayForDebugVisualizers->Objects[ObjectIndex].Object</ExpandedItem>
+    </Expand>
+  </Type>
+
+  <!-- FSubobjectPtr|TSubobjectPtr visualizer -->
+  <Type Name="FSubobjectPtr|TSubobjectPtr&lt;*&gt;">
+    <DisplayString>{Object}</DisplayString>
+  </Type>
+
+  <!-- TOptional visualizer -->
+  <Type Name="TOptional&lt;*&gt;">
+    <DisplayString Condition="!bIsSet">Unset</DisplayString>
+    <DisplayString Condition="bIsSet">Set: {{{*($T1*)&amp;Value}}}</DisplayString>
+    <Expand>
+      <ExpandedItem Condition="bIsSet">*($T1*)&amp;Value</ExpandedItem>
+    </Expand>
+  </Type>
+
+  <!-- TInlineValue visualizer -->
+  <Type Name="TInlineValue&lt;*&gt;">
+    <DisplayString Condition="!bIsValid">Null</DisplayString>
+    <DisplayString Condition="bIsValid &amp;&amp; bInline">{{{*($T1*)&amp;Data}}}</DisplayString>
+    <DisplayString Condition="bIsValid &amp;&amp; !bInline">{{{**(($T1**)&amp;Data)}}}</DisplayString>
+    <Expand>
+      <ExpandedItem Condition="bIsValid &amp;&amp; bInline">*($T1*)&amp;Data</ExpandedItem>
+      <ExpandedItem Condition="bIsValid &amp;&amp; !bInline">**(($T1**)&amp;Data)</ExpandedItem>
+    </Expand>
+  </Type>
+
+  <!-- TFunction visualizer -->
+  <Type Name="UE4Function_Private::TDebugHelper&lt;*&gt;">
+    <DisplayString>{*Ptr}</DisplayString>
+    <Expand>
+      <ExpandedItem>*Ptr</ExpandedItem>
+    </Expand>
+  </Type>
+  <Type Name="TFunctionRef&lt;*&gt;">
+    <DisplayString Condition="Ptr">{DebugPtrStorage}</DisplayString>
+    <DisplayString Condition="!Ptr">Unset</DisplayString>
+    <Expand>
+      <ExpandedItem Condition="Ptr">DebugPtrStorage</ExpandedItem>
+    </Expand>
+  </Type>
+  <Type Name="TFunction&lt;*&gt;">
+    <DisplayString Condition="Storage.AllocatedSize != 0">{DebugPtrStorage}</DisplayString>
+    <DisplayString Condition="Storage.AllocatedSize == 0">Unset</DisplayString>
+    <Expand>
+      <ExpandedItem Condition="Storage.AllocatedSize != 0">DebugPtrStorage</ExpandedItem>
+    </Expand>
+  </Type>
+
+  <!-- FGameplayTagContainer visualizer -->
+  <Type Name="FGameplayTagContainer">
+    <DisplayString Condition="GameplayTags.ArrayNum == 0">Empty</DisplayString>
+    <DisplayString Condition="GameplayTags.ArrayNum == 1">Tag={*((FName*)(GameplayTags.AllocatorInstance.Data))}</DisplayString>
+    <DisplayString Condition="GameplayTags.ArrayNum > 1">Num={GameplayTags.ArrayNum}</DisplayString>
+    <Expand>
+      <ArrayItems Condition="GameplayTags.ArrayNum &lt;= GameplayTags.ArrayMax">
+        <Size>GameplayTags.ArrayNum</Size>
+        <ValuePointer>((FName*)(GameplayTags.AllocatorInstance.Data))</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+
+  <!-- TTuple visualizer -->
+  <Type Name="TTuple&lt;&gt;">
+    <DisplayString>{{}}</DisplayString>
+    <Expand>
+    </Expand>
+  </Type>
+  <Type Name="TTuple&lt;*&gt;">
+    <DisplayString>{{{(*(TTupleElement&lt;$T1,0&gt;*)this).Value}}}</DisplayString>
+    <Expand>
+      <Item Name="[0]">((TTupleElement&lt;$T1,0&gt;*)this)->Value</Item>
+    </Expand>
+  </Type>
+  <Type Name="TTuple&lt;*,*&gt;">
+    <DisplayString>{{{(*(TTupleElement&lt;$T1,0&gt;*)this).Value},{(*(TTupleElement&lt;$T2,1&gt;*)this).Value}}}</DisplayString>
+    <Expand>
+      <Item Name="[0]">((TTupleElement&lt;$T1,0&gt;*)this)->Value</Item>
+      <Item Name="[1]">((TTupleElement&lt;$T2,1&gt;*)this)->Value</Item>
+    </Expand>
+  </Type>
+  <Type Name="TTuple&lt;*,*,*&gt;">
+    <DisplayString>{{{(*(TTupleElement&lt;$T1,0&gt;*)this).Value},{(*(TTupleElement&lt;$T2,1&gt;*)this).Value},{(*(TTupleElement&lt;$T3,2&gt;*)this).Value}}}</DisplayString>
+    <Expand>
+      <Item Name="[0]">((TTupleElement&lt;$T1,0&gt;*)this)->Value</Item>
+      <Item Name="[1]">((TTupleElement&lt;$T2,1&gt;*)this)->Value</Item>
+      <Item Name="[2]">((TTupleElement&lt;$T3,2&gt;*)this)->Value</Item>
+    </Expand>
+  </Type>
+  <Type Name="TTuple&lt;*,*,*,*&gt;">
+    <DisplayString>{{{(*(TTupleElement&lt;$T1,0&gt;*)this).Value},{(*(TTupleElement&lt;$T2,1&gt;*)this).Value},{(*(TTupleElement&lt;$T3,2&gt;*)this).Value},{(*(TTupleElement&lt;$T4,3&gt;*)this).Value}}}</DisplayString>
+    <Expand>
+      <Item Name="[0]">((TTupleElement&lt;$T1,0&gt;*)this)->Value</Item>
+      <Item Name="[1]">((TTupleElement&lt;$T2,1&gt;*)this)->Value</Item>
+      <Item Name="[2]">((TTupleElement&lt;$T3,2&gt;*)this)->Value</Item>
+      <Item Name="[3]">((TTupleElement&lt;$T4,3&gt;*)this)->Value</Item>
+    </Expand>
+  </Type>
+  <Type Name="TTuple&lt;*,*,*,*,*&gt;">
+    <DisplayString>{{{(*(TTupleElement&lt;$T1,0&gt;*)this).Value},{(*(TTupleElement&lt;$T2,1&gt;*)this).Value},{(*(TTupleElement&lt;$T3,2&gt;*)this).Value},{(*(TTupleElement&lt;$T4,3&gt;*)this).Value},{(*(TTupleElement&lt;$T5,4&gt;*)this).Value}}}</DisplayString>
+    <Expand>
+      <Item Name="[0]">((TTupleElement&lt;$T1,0&gt;*)this)->Value</Item>
+      <Item Name="[1]">((TTupleElement&lt;$T2,1&gt;*)this)->Value</Item>
+      <Item Name="[2]">((TTupleElement&lt;$T3,2&gt;*)this)->Value</Item>
+      <Item Name="[3]">((TTupleElement&lt;$T4,3&gt;*)this)->Value</Item>
+      <Item Name="[4]">((TTupleElement&lt;$T5,4&gt;*)this)->Value</Item>
+    </Expand>
+  </Type>
+  <Type Name="TTuple&lt;*,*,*,*,*,*&gt;">
+    <DisplayString>{{{(*(TTupleElement&lt;$T1,0&gt;*)this).Value},{(*(TTupleElement&lt;$T2,1&gt;*)this).Value},{(*(TTupleElement&lt;$T3,2&gt;*)this).Value},{(*(TTupleElement&lt;$T4,3&gt;*)this).Value},{(*(TTupleElement&lt;$T5,4&gt;*)this).Value},{(*(TTupleElement&lt;$T6,5&gt;*)this).Value}}}</DisplayString>
+    <Expand>
+      <Item Name="[0]">((TTupleElement&lt;$T1,0&gt;*)this)->Value</Item>
+      <Item Name="[1]">((TTupleElement&lt;$T2,1&gt;*)this)->Value</Item>
+      <Item Name="[2]">((TTupleElement&lt;$T3,2&gt;*)this)->Value</Item>
+      <Item Name="[3]">((TTupleElement&lt;$T4,3&gt;*)this)->Value</Item>
+      <Item Name="[4]">((TTupleElement&lt;$T5,4&gt;*)this)->Value</Item>
+      <Item Name="[5]">((TTupleElement&lt;$T6,5&gt;*)this)->Value</Item>
+    </Expand>
+  </Type>
+
+  <!-- FDelegateBase visualizer -->
+  <Type Name="TBaseStaticDelegateInstance&lt;*&gt;">
+    <DisplayString>{StaticFuncPtr}</DisplayString>
+    <Expand>
+      <Item Name="[StaticFuncPtr]">StaticFuncPtr</Item>
+      <Item Name="[Payload]">Payload</Item>
+      <Item Name="[Handle]">Handle</Item>
+    </Expand>
+  </Type>
+  <Type Name="TBaseFunctorDelegateInstance&lt;*&gt;">
+    <DisplayString>{Functor}</DisplayString>
+    <Expand>
+      <Item Name="[Functor]">Functor</Item>
+      <Item Name="[Payload]">Payload</Item>
+      <Item Name="[Handle]">Handle</Item>
+    </Expand>
+  </Type>
+  <Type Name="TBaseRawMethodDelegateInstance&lt;*,*,*&gt;">
+    <DisplayString>{UserObject}</DisplayString>
+    <Expand>
+      <Item Name="[UserObject]">UserObject</Item>
+      <Item Name="[MethodPtr]">MethodPtr</Item>
+      <Item Name="[Payload]">Payload</Item>
+      <Item Name="[Handle]">Handle</Item>
+    </Expand>
+  </Type>
+  <Type Name="TBaseSPMethodDelegateInstance&lt;*,*,*&gt;">
+    <DisplayString>{UserObject}</DisplayString>
+    <Expand>
+      <Item Name="[UserObject]">UserObject</Item>
+      <Item Name="[MethodPtr]">MethodPtr</Item>
+      <Item Name="[Payload]">Payload</Item>
+      <Item Name="[Handle]">Handle</Item>
+    </Expand>
+  </Type>
+  <Type Name="TBaseUObjectMethodDelegateInstance&lt;*,*,*&gt;">
+    <DisplayString>{UserObject}</DisplayString>
+    <Expand>
+      <Item Name="[UserObject]">UserObject</Item>
+      <Item Name="[MethodPtr]">MethodPtr</Item>
+      <Item Name="[Payload]">Payload</Item>
+      <Item Name="[Handle]">Handle</Item>
+    </Expand>
+  </Type>
+  <Type Name="TBaseUFunctionDelegateInstance&lt;*,*&gt;">
+    <DisplayString>{UserObjectPtr}</DisplayString>
+    <Expand>
+      <Item Name="[UserObject]">UserObjectPtr</Item>
+      <Item Name="[FunctionName]">FunctionName</Item>
+      <Item Name="[Payload]">Payload</Item>
+      <Item Name="[Handle]">Handle</Item>
+    </Expand>
+  </Type>
+  <Type Name="FDelegateBase">
+    <DisplayString Condition="DelegateSize == 0">Unbound</DisplayString>
+    <DisplayString Condition="DelegateSize &lt;= 2">{*((IDelegateInstance*)(DelegateAllocator.InlineData))}</DisplayString>
+    <DisplayString Condition="DelegateSize &gt; 2">{*((IDelegateInstance*)(DelegateAllocator.SecondaryData.Data))}</DisplayString>
+    <Expand>
+      <ExpandedItem Condition="DelegateSize == 0">DelegateAllocator</ExpandedItem>
+      <ExpandedItem Condition="DelegateSize &lt;= 2">*((IDelegateInstance*)(DelegateAllocator.InlineData))</ExpandedItem>
+      <ExpandedItem Condition="DelegateSize &gt; 2">*((IDelegateInstance*)(DelegateAllocator.SecondaryData.Data))</ExpandedItem>
+    </Expand>
+  </Type>
+
+</AutoVisualizer>
