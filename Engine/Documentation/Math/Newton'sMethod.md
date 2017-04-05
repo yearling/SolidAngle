@@ -1,11 +1,11 @@
-#[Newton's method牛顿迭代法](https://en.wikipedia.org/wiki/Newton%27s_method)
+# [Newton's method牛顿迭代法](https://en.wikipedia.org/wiki/Newton%27s_method)
 
-##基本公式
+## 基本公式
 <center>
 <img src="Picture/Newton'smethod/basefunc.svg" width="200" height="50" />
 </center>
 
-##推导原理
+## 推导原理
 泰勒展开
 ![Add](Picture/Newton'smethod/8601a18b87d6277f7dd7363a2a381f30e824fcef.jpg)
 
