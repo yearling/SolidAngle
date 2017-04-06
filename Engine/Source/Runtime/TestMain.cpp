@@ -1,10 +1,11 @@
-#include "Core.h"
+ï»¿#include "Core.h"
 #include <iostream>
 #include <string>
 #include <vector>
 //#include "Containers/SolidAngleString.h"
 #include <vector>
 #include <memory>
+#include "Containers\StringConv.h"
 struct TRUEValue
 {
 	enum 
@@ -246,7 +247,7 @@ int main()
 	static_assert(TIsEnumClass<TestClassEnum>::Value, "should be true");
 
 	std::cout << "\n---------------TChar----------" << std::endl;
-	TCHAR test_Chinese[] = TEXT("ÎÒÊÇÖÐ¹úÈË£¬hello world\n");
+	TCHAR test_Chinese[] = TEXT("ello world\n");
 	std::cout << test_Chinese << std::endl;
 	std::wcout << test_Chinese << std::endl;
 
@@ -277,5 +278,8 @@ int main()
 	int buffer[] = { 1,2,3,4,5,6,7,8,9,10,11,12,13 };
 	TArrayView<int>  ViewBuffer(buffer);
 	ViewBuffer.CheckInvariants();
+	YString YStringTest = TEXT("Helloä¸­å›½");
+	YString FirstStringConsturct(YStringTest,2 );
+	FChar wc = TEXT('ðªš¥');
 	return 0;
 }
