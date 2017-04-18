@@ -47,7 +47,7 @@ TCString就是对FPlatformString的一个封装，使用时只用使用FCstring:
 
 
 # FString
-主要成员是TArray<TCHAR> DataType.
+主要成员是`TArray<TCHAR> DataType`.
 在Windows平台下TCHAR是WIDECHAR
 
 ## 构造函数

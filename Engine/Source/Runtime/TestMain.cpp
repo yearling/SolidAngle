@@ -280,6 +280,5 @@ int main()
 	ViewBuffer.CheckInvariants();
 	YString YStringTest = TEXT("Hello中国");
 	YString FirstStringConsturct(YStringTest,2 );
-	FChar wc = TEXT('𪚥');
 	return 0;
 }
