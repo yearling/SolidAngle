@@ -54,4 +54,160 @@ TCString就是对FPlatformString的一个封装，使用时只用使用FCstring:
 1. 基本的5种构造函数
 2. 带ExtraSlack的拷贝/转移构造函数
 3. 参数为C风格字符串的构造函数，注意：UE默认的如果类型为ASCII的字符串中有非ASCII的字符，会赋值为？？
-4. 
+4. 带长度的C风格字符串
+5. TChar的拷贝构造
+
+
+## Get
+opeartor[]  
+opeartor*()  
+GetCharArray()  
+
+## Iterator
+CreateIterator  
+CreateConsterator  
+
+## Size 
+GetAllocatedSize() 获取分配的内存大小
+Empty(int32 Slack) 清空并分配默认大小
+IsEmpty()    看TChar数量是不是<=1
+Reset()      清空内存不销毁
+Shrink()
+Reserve()  
+
+## Check
+CheckInvariants  
+IsValidIndex
+## TCHAR*
+operator *  
+
+## Add
+AppendChar  
+AppendChars   
+operator+=   
+Append  
+InsertAt  
+PathAppend 添加一个`/`
+operator/= 调用PathAppend
+opeartor/  添加一个`/`  
+operator+   __注意__:右值的特殊处理  
+
+## Remove
+RemoveAt
+RemoveFromStart
+RemoveFromEnd
+
+## compare
+operator<= :case **IN**sensitive  
+operator<  :case **IN**sensitive 
+operator>= :case **IN**sensitive
+operator>  :case **IN**sensitive
+operator== :case **IN**sensitive
+operator!_ :case **IN**sensitive 
+Equals(是否大小写敏感)  
+Compare(是否大小写敏感)  
+## length 
+Len() : 返回字符串的长度，不包含最后的'\n'
+
+## part
+Left 
+LeftChop : return the left most characters form the string chopping the given number of charactors from the end.
+Right:
+RightChop:
+Mid:
+Split:  
+Trim： Remove the whitespace characters from the front of this string 
+TrimTrailing : Removes trailing whitespace characters  
+TrimToNullTerminator:　
+TrimQuotes：　　
+ParseIntoArray：　　
+ParseIntoArray：　使用" ","\t","\r","\n","" 为分割符  
+ParseIntoArrayLines： 使用"\r","\r\n","\n" 为分割符
+CullArray： 传进去一个TArray<YString>,将为空的string移去  
+
+## find
+Find(匹配字符串，大小写敏感，查找方向，开始查找位置)  
+Contains(匹配字符串，大小写敏感，查找方向)  
+FindChar  
+FindLastChar  
+FindLastCharByPredicate
+StartsWith
+EndsWith  
+MatchesWildcard : 通配符
+
+
+## 大小写  
+ToUpper()：返回一个大写的copy
+ToUpperInline():将本身的字符转为大写
+ToLower():
+ToLowerInline():  
+
+## Pad 
+LeftPad 
+RightPad  
+
+## Numeric
+IsNumeric() 
+FormatAsNumber: 
+
+## format
+Format  
+FromInt  
+AppendInt  
+ToBool  
+SanitizeFloat: 去掉float后的0 
+FromBlob  
+ToBlob  
+FromHexBlob
+ToHexBlob  
+Join(TArray,TChar* Seperator): 
+BytesToString  
+StringToBytes  
+NibbleToTChar  
+ByteToHex  
+BytesToHex
+CheckTCharIsHex  
+TCharToNibble
+HexToBytes  
+
+## Chr
+Chr():'char'+'\n'
+ChrN(): 'char'*N+ '\n'  
+
+## 反转
+Reverse(): 返回一个Reverse的copy  
+ReverseString();
+
+## 替换
+Replace(): 返回替换关键词的copy
+ReplaceInline():  
+ReplaceQuotesWithEscapedQuotes(): 引号变为转义引号
+ReplaceCharWithEscapedChar():转义字符变为转义字符串,比如\n变为\\\n,支持 { \n, \r, \t, \', \", \\ }. 
+ReplaceEscapedCharWithChar： 反过来，\\\n转为\n  
+ConvertTabsToSpaces: 
+
+## Serialize
+Serialize  
+SerializeAsANSICharArray
+
+## Traits 
+TIsContiguousContainer<YString>::Value = true;
+TIsZeroConstructType<YString>::value = true; 
+TContainerTraits<YString> ::MoveWillEmptyContainer  
+
+## 全局函数
+GetData  
+GetNum  
+__GetTypeHash__:
+
+## 字符类型转换
+TCHAR_TO_ANSI(str)
+ANSI_TO_TCHAR(str)
+TCHAR_TO_UTF8(str)
+UTF8_TO_TCHAR(str)
+__注意__:这些对象的生命周期很短，一般用来函数参数的转化，不能在函数作用域外使用这些转化后的对象  
+__注意__:只能传入指针，不能是char类型  
+
+		SomeApi(TCHAR_TO_ANSI(SomeUnicodeString));
+		
+		const char* SomePointer = TCHAR_TO_ANSI(SomeUnicodeString); <--- Bad!!!
