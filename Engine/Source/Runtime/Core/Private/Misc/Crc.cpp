@@ -327,6 +327,7 @@ uint32 FCrc::CRCTablesSB8[8][256] =
 void FCrc::Init()
 {
 #if !UE_BUILD_SHIPPING
+//Note by ZYX, this just check the CRCTable_DEPRECATED is correct, We should note that when defined UE_BUILD_SHIPPING,Init() do nothing.
 	for( uint32 iCRC=0; iCRC < 256; iCRC++ )
 	{
 		uint32 CrcCheck = 0;

@@ -43,12 +43,13 @@
 					       3.   FName::NameHashHead[65536]为空; FName::NameHashTail[65536]为空
 					       4.   之后进入CriticalSection
 					            1.    获取`TNameEntryArray`  
-					            2.   
+					            2.    给静态的FName分配空间
+					            3.    创建静态的FName.
 					            
 
 
 ### FNameEntry
-FNameEntry主要保存每个FName的HashCode和内容。其基本成员如下  
+FNameEntry主要保存每个FName的HashCode和内容，为变长类型。其基本成员如下  
 
 	NAME_INDEX		Index;  
 	YNameEntry*		HashNext;  
@@ -64,7 +65,23 @@ __为什么不用FString?__ 因为FString的开销很大，除了本身在64位�
 __为什么存Hash?__ 保证对比与查找的速度，比字符串比较快多了。
 __为什么有宽窄两个版本?__  为了减少不必要的内存浪费，在构造函数的时候，会检查字符串能不能全部转化为ASCII，如果能就保存为ASCII。 
 
+### FNameEntryPoolAllocator 
+FNameEntry的内存分配器，非线程安全，就是FNameEntry的内存池，不过该内存池只负责创建不负责销毁，最主要的原因是没必要销毁，FNameEntry没有一个合适的销毁时间。FNameEntryPoolAllocator一次申请一个Page的大小内存，也就是64k。  
+分配给一个FNameEntry的大小与FNameEntry中AnsiName的长度有关。
 ### TNameEntryArray
-为FNameEntry的线程安全版本的内存池。  
-内存实现为`TStaticIndirectArrayThreadSafeRead<YNameEntry, 2 * 1024 * 1024 /* 2M unique YNames */, 16384 /* allocated in 64K/128K chunks */ > TNameEntryArray;`
+为FNameEntry*，（__注                                                                                             意__是FNameEntry的指针）的线程安全版本的一个二维数组管理器，与其名子不一样，FNameEntry的内存由FNameEntryPoolAllocator分配。                                                                                                                                                                                                              
+TNameEntryArray的实现为  
+
+		TStaticIndirectArrayThreadSafeRead<YNameEntry, 2 * 1024 * 1024 /* 2M unique YNames */, 16384 /* allocated in 64K/128K chunks */ > TNameEntryArray;
+其中MaxTotalElements为2M个, ElementsPerChunk为16k个。也就是说TNameEntryArray是一个128维的，每个维有64k个元素。（为什么是64K,因为每个元素是指针，也就是说一个维度就是一个page的大小）。  
+如何定位到一个元素 
+
+	int32 ChunkIndex = Index / ElementsPerChunk;
+	int32 WithinChunkIndex = Index % ElementsPerChunk;
+如何分配内存  
+先判断Chucks是否给当前Index分配内存，如果没有，就分配。见ExpandChuncksToIndex(),注意，这里使用了原子操作来保证多线程安全。  
+
+如何释放内存
+和FNameEntryPoolAllocator一样，不释放内存。原因如FNameEntryPoolAllocator不释放内存的原因一样。 
+
 
