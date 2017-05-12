@@ -63,8 +63,8 @@
 - [ ] MallocLeakDetection
 - [ ] MallocPoisonProxy
 - [ ] MallocStomp
-- [ ] MallocTBB
-- [ ] MallocThreadSafeProxy
+- [X] MallocTBB(TBB's wrapper)
+- [X] MallocThreadSafeProxy
 - [ ] MallocVerify
 - [ ] Runable
 - [ ] RunableThread
