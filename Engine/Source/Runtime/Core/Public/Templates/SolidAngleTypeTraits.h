@@ -9,8 +9,7 @@ We require VC8 so a lot of potential version checks are omitted.
 
 #include "CoreTypes.h"
 #include "Templates/IsPointer.h"
-//!!FIXME by zyx
-//#include "Misc/AssertionMacros.h"
+#include "Misc/AssertionMacros.h"
 #include "Templates/AndOrNot.h"
 #include "Templates/AreTypesEqual.h"
 #include "Templates/IsArithmetic.h"

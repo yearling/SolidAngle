@@ -999,7 +999,6 @@ struct YMath :public YPlatformMath
 	// Points:					The set of points to determine coplanarity for.
 	// Tolerance:				Larger numbers means more variance is allowed.
 	// return:					Whether the points are relatively coplanar, based on the tolerance
-	// !!FIXME by zyx, do not have containers now
 	static CORE_API bool		PointsAreCoplanar(const TArray<YVector> &Points, const float Tolerance = 0.1f);
 
 	// Converts a floating point number to the nearest integer, equidistant ties go to the value which is closest to an even value : 1.5 becomes 2, 0.5 becomes 0

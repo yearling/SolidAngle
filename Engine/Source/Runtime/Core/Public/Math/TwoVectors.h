@@ -202,8 +202,7 @@ public:
 	*
 	* @return A string describing the two-vector.
 	*/
-	//!!FIXME by zyx
-	//YString ToString() const;
+	YString ToString() const;
 
 public:
 
@@ -214,18 +213,16 @@ public:
 	* @param TwoVectors The two-vector to serialize.
 	* @return Reference to the Archive after serialization.
 	*/
-	//!!FIXME by zyx
-	//friend YArchive& operator<<(YArchive& Ar, YTwoVectors& TwoVectors)
-	//{
-	//	return Ar << TwoVectors.v1 << TwoVectors.v2;
-	//}
+	friend YArchive& operator<<(YArchive& Ar, YTwoVectors& TwoVectors)
+	{
+		return Ar << TwoVectors.v1 << TwoVectors.v2;
+	}
 
-	//!!FIXME by zyx
-	//bool Serialize(YArchive& Ar)
-	//{
-	//	Ar << *this;
-	//	return true;
-	//}
+	bool Serialize(YArchive& Ar)
+	{
+		Ar << *this;
+		return true;
+	}
 };
 
 
@@ -414,9 +411,8 @@ FORCEINLINE float YTwoVectors::GetMin() const
 
 FORCEINLINE float& YTwoVectors::operator[](int32 i)
 {
-	//!!FIXME by zyx
-	//check(i > -1);
-	//check(i < 6);
+	check(i > -1);
+	check(i < 6);
 
 	switch (i)
 	{
@@ -429,10 +425,8 @@ FORCEINLINE float& YTwoVectors::operator[](int32 i)
 	}
 }
 
-//!!FIXME by zyx
-//FORCEINLINE YString YTwoVectors::ToString() const
-//{
-//	return YString::Printf(TEXT("V1=(%s) V2=(%s)"), *v1.ToString(), *v2.ToString());
-//}
-//!!FIXME by zyx
-//template <> struct TIsPODType<YTwoVectors> { enum { Value = true }; };
+FORCEINLINE YString YTwoVectors::ToString() const
+{
+	return YString::Printf(TEXT("V1=(%s) V2=(%s)"), *v1.ToString(), *v2.ToString());
+}
+template <> struct TIsPODType<YTwoVectors> { enum { Value = true }; };

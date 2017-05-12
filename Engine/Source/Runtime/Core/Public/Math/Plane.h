@@ -1,6 +1,10 @@
 #pragma once
 
-#include "Vector.h"
+#include "CoreTypes.h"
+#include "Math/SolidAngleMathUtility.h"
+#include "Math/Vector.h"
+#include "Math/Vector4.h"
+#include "SObject/ObjectVersion.h"
 
 /**
 * Structure for three dimensional planes.
@@ -234,22 +238,20 @@ public:
 	* @param P Plane to serialize.
 	* @return Reference to Archive after serialization.
 	*/
-	//!!FIXME by zyx
-	//friend YArchive& operator<<(YArchive& Ar, YPlane &P)
-	//{
-	//	return Ar << (YVector&)P << P.W;
-	//}
+	friend YArchive& operator<<(YArchive& Ar, YPlane &P)
+	{
+		return Ar << (YVector&)P << P.W;
+	}
 
-	//!!FIXME by zyx
-	//bool Serialize(YArchive& Ar)
-	//{
-	//	if (Ar.UE4Ver() >= VER_UE4_ADDED_NATIVE_SERIALIZATION_FOR_IMMUTABLE_STRUCTURES)
-	//	{
-	//		Ar << *this;
-	//		return true;
-	//	}
-	//	return false;
-	//}
+	bool Serialize(YArchive& Ar)
+	{
+		if (Ar.UE4Ver() >= VER_UE4_ADDED_NATIVE_SERIALIZATION_FOR_IMMUTABLE_STRUCTURES)
+		{
+			Ar << *this;
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	* Serializes the vector compressed for e.g. network transmission.
@@ -257,26 +259,25 @@ public:
 	* @return false to allow the ordinary struct code to run (this never happens).
 	*/
 
-	//!!FIXME by zyx
-//	bool NetSerialize(YArchive& Ar, class UPackageMap*, bool& bOutSuccess)
-//	{
-//		if (Ar.IsLoading())
-//		{
-//			int16 iX, iY, iZ, iW;
-//			Ar << iX << iY << iZ << iW;
-//			*this = YPlane(iX, iY, iZ, iW);
-//		}
-//		else
-//		{
-//			int16 iX(YLinearColor::RoundToInt(X));
-//			int16 iY(YLinearColor::RoundToInt(Y));
-//			int16 iZ(YLinearColor::RoundToInt(Z));
-//			int16 iW(YLinearColor::RoundToInt(W));
-//			Ar << iX << iY << iZ << iW;
-//		}
-//		bOutSuccess = true;
-//		return true;
-//	}
+	bool NetSerialize(YArchive& Ar, class UPackageMap*, bool& bOutSuccess)
+	{
+		if (Ar.IsLoading())
+		{
+			int16 iX, iY, iZ, iW;
+			Ar << iX << iY << iZ << iW;
+			*this = YPlane(iX, iY, iZ, iW);
+		}
+		else
+		{
+			int16 iX(YMath::RoundToInt(X));
+			int16 iY(YMath::RoundToInt(Y));
+			int16 iZ(YMath::RoundToInt(Z));
+			int16 iW(YMath::RoundToInt(W));
+			Ar << iX << iY << iZ << iW;
+		}
+		bOutSuccess = true;
+		return true;
+	}
 } GCC_ALIGN(16);
 /* YLinearColor inline functions
 *****************************************************************************/
@@ -506,5 +507,4 @@ FORCEINLINE YPlane YPlane::operator/=(float V)
 	return *this;
 }
 
-//!!FIXME by zyx
-//template <> struct TIsPODType<YPlane> { enum { Value = true }; };
+template <> struct TIsPODType<YPlane> { enum { Value = true }; };

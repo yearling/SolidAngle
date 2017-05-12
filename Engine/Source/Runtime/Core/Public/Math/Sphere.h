@@ -165,13 +165,12 @@ public:
 	* @param Sphere The sphere to serialize.
 	* @return The archive.
 	*/
-	//!!FIXME by zyx
-	//friend YArchive& operator<<(YArchive& Ar, YSphere& Sphere)
-	//{
-	//	Ar << Sphere.Center << Sphere.W;
+	friend YArchive& operator<<(YArchive& Ar, YSphere& Sphere)
+	{
+		Ar << Sphere.Center << Sphere.W;
 
-	//	return Ar;
-	//}
+		return Ar;
+	}
 };
 
 /* YLinearColor inline functions

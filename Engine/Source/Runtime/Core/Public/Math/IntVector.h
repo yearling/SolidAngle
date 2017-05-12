@@ -208,8 +208,7 @@ public:
 	*
 	* @return A string describing the vector.
 	*/
-	//!!FIXME by zyx
-	//YString ToString() const;
+	YString ToString() const;
 
 public:
 
@@ -238,18 +237,16 @@ public:
 	* @param Vector The vector to serialize.
 	* @return Reference to the Archive after serialization.
 	*/
-	//!!FIXME by zyx
-	//friend YArchive& operator<<(YArchive& Ar, YIntVector& Vector)
-	//{
-	//	return Ar << Vector.X << Vector.Y << Vector.Z;
-	//}
+	friend YArchive& operator<<(YArchive& Ar, YIntVector& Vector)
+	{
+		return Ar << Vector.X << Vector.Y << Vector.Z;
+	}
 
-	//!!FIXME by zyx
-	//bool Serialize(YArchive& Ar)
-	//{
-	//	Ar << *this;
-	//	return true;
-	//}
+	bool Serialize(YArchive& Ar)
+	{
+		Ar << *this;
+		return true;
+	}
 };
 
 
@@ -427,17 +424,15 @@ FORCEINLINE bool YIntVector::IsZero() const
 }
 
 
-//!!FIXME by zyx
-//FORCEINLINE YString YIntVector::ToString() const
-//{
-//	return YString::Printf(TEXT("X=%d Y=%d Z=%d"), X, Y, Z);
-//}
+FORCEINLINE YString YIntVector::ToString() const
+{
+	return YString::Printf(TEXT("X=%d Y=%d Z=%d"), X, Y, Z);
+}
 
-//!!FIXME by zyx
-//FORCEINLINE uint32 GetTypeHash(const YIntVector& Vector)
-//{
-//	return FCrc::MemCrc_DEPRECATED(&Vector, sizeof(YIntVector));
-//}
+FORCEINLINE uint32 GetTypeHash(const YIntVector& Vector)
+{
+	return FCrc::MemCrc_DEPRECATED(&Vector, sizeof(YIntVector));
+}
 
 struct YIntVector4
 {
@@ -549,7 +544,6 @@ struct FUintVector4
 	}
 };
 
-//!!FIXME by zyx
-//template <> struct TIsPODType<YIntVector> { enum { Value = true }; };
-//template <> struct TIsPODType<YIntVector4> { enum { Value = true }; };
-//template <> struct TIsPODType<FUintVector4> { enum { Value = true }; };
+template <> struct TIsPODType<YIntVector> { enum { Value = true }; };
+template <> struct TIsPODType<YIntVector4> { enum { Value = true }; };
+template <> struct TIsPODType<FUintVector4> { enum { Value = true }; };
