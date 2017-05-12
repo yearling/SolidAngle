@@ -30,7 +30,7 @@ __utf-8,utf-16,utf-32__： 都属于UNICODE字符集.
  
 
 
-#### char wchart_t c++11 USL
+#### char wchart_t c++11 WCSL
 在C++11之前C++中有个wchar_t的类型用于存储宽字符,以L开头的字符字面量为WCSL(Wide-Character String Literals)，由于标准没有规定这个实现，wchart_t及其字面量与实现相关，
 1. Windows平台下sizeof(wchar_t)为2，使用UCS2编码；
 2. Linux平台下sizeof(wchar_t)为4，使用utf-32编码；
@@ -64,7 +64,9 @@ __只有当编译的机器是gb2312编码，并且运行的机器也是gb2312才
 1. 保存成不带BOM的UTF-8
 2. 保存成带BOM的UTF-8
 3. 保存成GB2312  
-运行结果
+
+运行结果  
+
 1. 寮犲紶
 2. 张张
 3. 张张

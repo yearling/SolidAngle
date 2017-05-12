@@ -1,11 +1,89 @@
 # UE Runtime Core结构设计 Allocator
-## Allocator种类
+## Allocator要解决什么问题
+对于容器来说，主要是负责基本数据结构的操作，对于C++来说对内存使用的要求是比较严格的：
+1. 内存分配的位置，栈还是堆？
+2. 内存分配是否连续，再分配是否之后的引用与指针会失效
+3. 内存增长的策略
+4. 内存释放
+5. 对齐问题
+这些功能放到比较TArray,Set,Map中去维护是比较困难的，能否抽象出来一种通用的内存管理模块，就是Allocator的作用。
+
+## 为什么要作为模板参数传进容器内
+Allocator基本上是使用设计模式中的组合的思想，实现容器的内存管理，对外暴露统一的接口；既然是组合的思想，完全可以这样子写  
+
+### 写法１　
+
+	template<typename T>
+	class TArray
+	{
+	    FDefaultAllocator<T>  Allocator; 
+	}; 
+
+	template<typename T>
+	class TArrayWithInlineAllocator
+	{
+	    FInlineAllocator<T>  Allocator; 
+	}; 
+问题：没法在编译器的指定Allocator，对于一种容器只能使用一种Allocator
+
+### 写法2
+
+	template<typename T>
+	class IAllocator{};
+	
+	template<typename T>
+	class FDefaultAllocator:IAllocator<T>{};
+	
+	template<typename T>
+	class TArray
+	{
+		IAllocator::FDefaultAllocator* pAllocator;
+	public:
+		TArray( IAllocator* pAllocator);
+	or : 
+	    static MakeTarrayWithDefulatAllocator();
+	}; 
+
+问题： FDefaultAllocator的生命管理是个问题，并且与容器分离开了，造成逻辑和管理上的混乱。
+并且，如果需要Allocator的组和就更复杂了，比如
+
+	template<typename ElementAllocator= FDefaultAllocator,typename HashAllocator = FInlineAllocator>
+	class THashArray
+	{
+	} 
+如果用这种写法的话就问题很多。  
+
+
+### 写法3 
+template<typename T, typename TAllocator= FDefaultAllocator>
+class TArray
+{
+  TAllocator Allocator;
+}
+
+和标准库与UE都采用这种实现，好处  
+1. 在编译期实现Allocator的定制；
+2. Allocator可以相互组合；
+3. 没有运行期的开销；
+
+
+##  UE中 Allocator种类
 1.	TAlignedHeapAllocator
 2.	FHeapAllocator
 3.	TInlineAllocator
 4.	TFixedAllocator
 5.	TSparseArrayAllocator
 6.	TInlineSetAllocator
+
+## Allocator基本接口
+FContainerAllocatorInterface 
+1.	MoveToEmpty： 对应Allocator的move语义
+2.	GetAllocation
+3.	ResizeAllocation
+4.	CalculateSlack
+5.	CalculateSlackShrink
+6.	CalculateSlackGrow
+7.	GetAllocatedSize
 
 ## 结构分析
 主要代码见Conatiners/ContainerAllocationPolicies.h
@@ -17,15 +95,7 @@
 ### Traits
 TAllocatorTraits： 里面只有SupportsMove 和 IsZeroConstruct两个标记
 
-### Allocator基本接口
-FContainerAllocatorInterface 
-1.	MoveToEmpty： 对应Allocator的move语义
-2.	GetAllocation
-3.	ResizeAllocation
-4.	CalculateSlack
-5.	CalculateSlackShrink
-6.	CalculateSlackGrow
-7.	GetAllocatedSize
+
 
 ### FHeapAllocator
 1. 实现了上述Allocator的基本接口，
