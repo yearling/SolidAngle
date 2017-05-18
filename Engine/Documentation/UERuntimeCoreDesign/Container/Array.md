@@ -67,8 +67,8 @@ ArrayNum,4字节，ArrayMax，4字节， FDefalutAllocator::ForAnyElemntType中�
 `CheckInvariants`,检查(ArrayNum >= 0) & (ArrayMax >= ArrayNum  
 `RangeCheck(int32 Index)`,检查Index是否非法。不知道在Build下是不是有损耗  
 `IsValidIndex`:检查Index是否非法  
-`Num`:容器元素数量  
-`Max`:最大数量  
+`Num`: **容器元素数量**  
+`Max`:**最大数量**  
 `operator[]`:
 `Pop`:  
 `Push`:  
@@ -94,11 +94,11 @@ ArrayNum,4字节，ArrayMax，4字节， FDefalutAllocator::ForAnyElemntType中�
 ## Add
 `Add` 
 `AddZero`
-`AddDefault`
+`AddDefault` **注意**:调用defaultconstruct，对于基本类型会进行memzero操作
 `Emplace`
 `EmplaceAt`
 `AddUnititialized`  
-`InsertUninitialized`  
+`InsertUninitialized` **注意**：insert[0,num],在此范围外会崩溃  
 `InsertZeroed`
 `InsertDefaulted`  
 `Insert`
