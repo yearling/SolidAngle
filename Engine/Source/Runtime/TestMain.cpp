@@ -176,6 +176,15 @@ private:
 	std::vector<int>  Vec0;
 };
 
+void foo(TestContainerMoveCopy&& RRef)
+{
+	RRef.foo();
+}
+
+void foo(TestContainerMoveCopy RRef)
+{
+	RRef.foo();
+}
 int main()
 {
 
@@ -280,5 +289,40 @@ int main()
 	ViewBuffer.CheckInvariants();
 	YString YStringTest = TEXT("Hello中国");
 	YString FirstStringConsturct(YStringTest,2 );
+
+	TSparseArray<int>  SparseArray;
+	SparseArray.Add(6);
+	SparseArray.Add(7);
+	SparseArray.Insert(5, 10);
+	SparseArray.Add(8);
+	SparseArray.RemoveAt(5);
+	SparseArray.Insert(100, 10);
+	SparseArray.Add(11);
+	SparseArray.Add(12);
+	SparseArray.Add(13);
+	SparseArray.Add(14);
+	SparseArray.Reserve(1000);
+	SparseArray.Shrink();
+
+	for ( auto i = SparseArray.CreateConstIterator(); i; ++i)
+	{
+		std::cout << *i <<  "    "<< i.GetIndex()<< std::endl;
+	}
+
+	//foo(TestContainerMoveCopy());
+	//std::vector<int> vecAdd;
+	//vecAdd.push_back(1);
+	TSet<int> Set;
+	Set.Add(5);
+	Set.Add(6);
+	Set.Add(7);
+	Set.Add(7);
+	Set.Add(8);
+	Set.Add(9);
+	Set.Add(10);
+	Set.Add(11);
+	Set.Contains(9);
+	Set.Relax();
+	Set.Remove(9);
 	return 0;
 }

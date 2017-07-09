@@ -6,9 +6,9 @@ UE的数学库为了保证跨平台和性能，分为PlatformMath和VectorMath�
 在Engine/runtime/core/中：
 
 1.	Private/CorePrivatePCH.h 与Core.h 基本上是一样的，前者用来做PCH。在这个文件中，数学库的包含关系如下
+			#include "UnrealMathUtility.h"	// FMat.
+			#include "UnrealMath.h"			// Vector math functions.
 
-		#include "UnrealMathUtility.h"	// FMat.
-		#include "UnrealMath.h"			// Vector math functions.
 	通过注释可以看出:
 	1.	`UnrealMathUitlity.h`主要负责FMat类的相关数学函数；
 	2.	`unreal Math.h`主要负责VectorMath相关的代码。
