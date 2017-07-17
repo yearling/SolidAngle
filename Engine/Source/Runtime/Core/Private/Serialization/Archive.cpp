@@ -53,7 +53,7 @@ YArchive::YArchive(const YArchive& ArchiveToCopy)
 	LocalizationNamespacePtr = nullptr;
 #endif // USE_STABLE_LOCALIZATION_KEYS
 
-	CopyTrivialFArchiveStatusMembers(ArchiveToCopy);
+	CopyTrivialYArchiveStatusMembers(ArchiveToCopy);
 
 	// Don't know why this is set to false, but this is what the original copying code did
 	ArIsFilterEditorOnly  = false;
@@ -68,7 +68,7 @@ YArchive& YArchive::operator=(const YArchive& ArchiveToCopy)
 	ActiveFPLB = &InlineFPLB;
 	ActiveFPLB->Reset();
 #endif
-	CopyTrivialFArchiveStatusMembers(ArchiveToCopy);
+	CopyTrivialYArchiveStatusMembers(ArchiveToCopy);
 
 	// Don't know why this is set to false, but this is what the original copying code did
 	ArIsFilterEditorOnly  = false;
@@ -142,7 +142,7 @@ void YArchive::Reset()
 	ResetCustomVersions();
 }
 
-void YArchive::CopyTrivialFArchiveStatusMembers(const YArchive& ArchiveToCopy)
+void YArchive::CopyTrivialYArchiveStatusMembers(const YArchive& ArchiveToCopy)
 {
 	ArUE4Ver                             = ArchiveToCopy.ArUE4Ver;
 	ArLicenseeUE4Ver                     = ArchiveToCopy.ArLicenseeUE4Ver;
@@ -249,29 +249,29 @@ YArchive& YArchive::operator<<( FText& Value )
 
 YArchive& YArchive::operator<<( class FLazyObjectPtr& LazyObjectPtr )
 {
-	// The base YArchive does not implement this method. Use FArchiveUOBject instead.
-	UE_LOG(LogSerialization, Fatal, TEXT("YArchive does not support FLazyObjectPtr serialization. Use FArchiveUObject instead."));
+	// The base YArchive does not implement this method. Use YArchiveUOBject instead.
+	UE_LOG(LogSerialization, Fatal, TEXT("YArchive does not support FLazyObjectPtr serialization. Use YArchiveUObject instead."));
 	return *this;
 }
 
 YArchive& YArchive::operator<<( class FAssetPtr& AssetPtr )
 {
-	// The base YArchive does not implement this method. Use FArchiveUOBject instead.
-	UE_LOG(LogSerialization, Fatal, TEXT("YArchive does not support FAssetPtr serialization. Use FArchiveUObject instead."));
+	// The base YArchive does not implement this method. Use YArchiveUOBject instead.
+	UE_LOG(LogSerialization, Fatal, TEXT("YArchive does not support FAssetPtr serialization. Use YArchiveUObject instead."));
 	return *this;
 }
 
 YArchive& YArchive::operator<<(struct FStringAssetReference& Value)
 {
-	// The base YArchive does not implement this method. Use FArchiveUOBject instead.
-	UE_LOG(LogSerialization, Fatal, TEXT("YArchive does not support FAssetPtr serialization. Use FArchiveUObject instead."));
+	// The base YArchive does not implement this method. Use YArchiveUOBject instead.
+	UE_LOG(LogSerialization, Fatal, TEXT("YArchive does not support FAssetPtr serialization. Use YArchiveUObject instead."));
 	return *this;
 }
 
 YArchive& YArchive::operator<<(struct FWeakObjectPtr& Value)
 {
-	// The base YArchive does not implement this method. Use FArchiveUOBject instead.
-	UE_LOG(LogSerialization, Fatal, TEXT("YArchive does not support FWeakObjectPtr serialization. Use FArchiveUObject instead."));
+	// The base YArchive does not implement this method. Use YArchiveUOBject instead.
+	UE_LOG(LogSerialization, Fatal, TEXT("YArchive does not support FWeakObjectPtr serialization. Use YArchiveUObject instead."));
 	return *this;
 }
 
@@ -372,17 +372,17 @@ void YArchive::SetCustomVersion(const YGuid& Key, int32 Version, YName FriendlyN
 	const_cast<FCustomVersionContainer&>(GetCustomVersions()).SetVersion(Key, Version, FriendlyName);
 }
 
-YString FArchiveProxy::GetArchiveName() const
+YString YArchiveProxy::GetArchiveName() const
 {
 	return InnerArchive.GetArchiveName();
 }
 
 #if USE_STABLE_LOCALIZATION_KEYS
-void FArchiveProxy::SetLocalizationNamespace(const YString& InLocalizationNamespace)
+void YArchiveProxy::SetLocalizationNamespace(const YString& InLocalizationNamespace)
 {
 	InnerArchive.SetLocalizationNamespace(InLocalizationNamespace);
 }
-YString FArchiveProxy::GetLocalizationNamespace() const
+YString YArchiveProxy::GetLocalizationNamespace() const
 {
 	return InnerArchive.GetLocalizationNamespace();
 }

@@ -277,15 +277,15 @@ public:
 	/**
 	 * Serializer.
 	 */
-	friend FArchive& operator<<(FArchive& Ar, TStaticBitArray& BitArray)
+	friend YArchive& operator<<(YArchive& Ar, TStaticBitArray& BitArray)
 	{
 		uint32 ArchivedNumWords = BitArray.NumWords;
 		Ar << ArchivedNumWords;
 
 		if(Ar.IsLoading())
 		{
-			FMemory::Memset(BitArray.Words, 0, sizeof(BitArray.Words));
-			ArchivedNumWords = FMath::Min(BitArray.NumWords, ArchivedNumWords);
+			YMemory::Memset(BitArray.Words, 0, sizeof(BitArray.Words));
+			ArchivedNumWords = YMath::Min(BitArray.NumWords, ArchivedNumWords);
 		}
 
 		Ar.Serialize(BitArray.Words, ArchivedNumWords * sizeof(BitArray.Words[0]));

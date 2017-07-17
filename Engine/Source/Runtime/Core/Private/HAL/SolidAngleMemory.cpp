@@ -473,7 +473,7 @@ void YMemory::Trim()
 		GCreateMalloc();
 		CA_ASSUME(GMalloc != NULL);	// Don't want to assert, but suppress static analysis warnings about potentially NULL GMalloc
 	}
-	QUICK_SCOPE_CYCLE_COUNTER(STAT_FMemory_Trim);
+	QUICK_SCOPE_CYCLE_COUNTER(STAT_YMemory_Trim);
 	GMalloc->Trim();
 }
 
@@ -578,6 +578,6 @@ void YUseSystemMallocForNew::operator delete[](void* Ptr)
 	YMemory::SystemFree(Ptr);
 }
 
-#if !INLINE_FMEMORY_OPERATION && !PLATFORM_USES_FIXED_GMalloc_CLASS
+#if !INLINE_YMemory_OPERATION && !PLATFORM_USES_FIXED_GMalloc_CLASS
 #include "HAL/YMemory.inl"
 #endif

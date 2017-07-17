@@ -136,7 +136,7 @@ public:
 	int32 AddZeroed( int32 n=1 )
 	{
 		const int32 Index = AddUninitialized(n);
-		FMemory::Memzero(this->GetData() + Index, n*sizeof(T));
+		YMemory::Memzero(this->GetData() + Index, n*sizeof(T));
 		return Index;
 	}
 
@@ -194,7 +194,7 @@ public:
 		}
 	}
 
-	friend FArchive& operator<<( FArchive& Ar, TTransArray& A )
+	friend YArchive& operator<<( YArchive& Ar, TTransArray& A )
 	{
 		Ar << A.Owner;
 		Ar << (Super&)A;
@@ -207,7 +207,7 @@ protected:
 	{
 		new (TPtr) T;
 	}
-	static void SerializeItem( FArchive& Ar, void* TPtr )
+	static void SerializeItem( YArchive& Ar, void* TPtr )
 	{
 		Ar << *(T*)TPtr;
 	}

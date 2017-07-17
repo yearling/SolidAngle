@@ -251,14 +251,14 @@ private:
 	static SIZE_T QuantizeSizeExternal(SIZE_T Count, uint32 Alignment = DEFAULT_ALIGNMENT);
 };
 
-#define INLINE_FMEMORY_OPERATION (0) // untested, but should work. Inlines YMemory::Malloc, etc
+#define INLINE_YMemory_OPERATION (0) // untested, but should work. Inlines YMemory::Malloc, etc
 
-#if INLINE_FMEMORY_OPERATION
+#if INLINE_YMemory_OPERATION
 #if PLATFORM_USES_FIXED_GMalloc_CLASS
-#error "PLATFORM_USES_FIXED_GMalloc_CLASS and INLINE_FMEMORY_OPERATION are not compatible. PLATFORM_USES_FIXED_GMalloc_CLASS is inlined below."
+#error "PLATFORM_USES_FIXED_GMalloc_CLASS and INLINE_YMemory_OPERATION are not compatible. PLATFORM_USES_FIXED_GMalloc_CLASS is inlined below."
 #endif
 
-#define FMEMORY_INLINE_FUNCTION_DECORATOR FORCEINLINE
+#define YMemory_INLINE_FUNCTION_DECORATOR FORCEINLINE
 #include "YMemory.inl"
 #endif
 

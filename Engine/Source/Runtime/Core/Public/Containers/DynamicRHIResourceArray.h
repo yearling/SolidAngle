@@ -145,9 +145,9 @@ public:
 	* IMPORTANT:
 	*   - This is Overridden from UnrealTemplate.h TArray::BulkSerialize  Please make certain changes are propogated accordingly
 	*
-	* @param Ar	FArchive to bulk serialize this TArray to/from
+	* @param Ar	YArchive to bulk serialize this TArray to/from
 	*/
-	void BulkSerialize(FArchive& Ar)
+	void BulkSerialize(YArchive& Ar)
 	{
 		Super::BulkSerialize(Ar);
 	}
@@ -157,7 +157,7 @@ public:
 	* @param Ar - archive to serialize to
 	* @param ResourceArray - resource array data to serialize
 	*/
-	friend FArchive& operator<<(FArchive& Ar,TResourceArray<ElementType,Alignment>& ResourceArray)
+	friend YArchive& operator<<(YArchive& Ar,TResourceArray<ElementType,Alignment>& ResourceArray)
 	{
 		return Ar << *(Super*)&ResourceArray;
 	}	

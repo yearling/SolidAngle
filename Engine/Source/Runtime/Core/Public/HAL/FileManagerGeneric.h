@@ -194,14 +194,14 @@ private:
 
 
 /*-----------------------------------------------------------------------------
-FArchiveFileReaderGeneric
+YArchiveFileReaderGeneric
 -----------------------------------------------------------------------------*/
 
-class CORE_API FArchiveFileReaderGeneric : public YArchive
+class CORE_API YArchiveFileReaderGeneric : public YArchive
 {
 public:
-	FArchiveFileReaderGeneric(IFileHandle* InHandle, const TCHAR* InFilename, int64 InSize);
-	~FArchiveFileReaderGeneric();
+	YArchiveFileReaderGeneric(IFileHandle* InHandle, const TCHAR* InFilename, int64 InSize);
+	~YArchiveFileReaderGeneric();
 
 	virtual void Seek(int64 InPos) final;
 	virtual int64 Tell() final
@@ -249,14 +249,14 @@ protected:
 
 
 /*-----------------------------------------------------------------------------
-FArchiveFileWriterGeneric
+YArchiveFileWriterGeneric
 -----------------------------------------------------------------------------*/
 
-class FArchiveFileWriterGeneric : public YArchive
+class YArchiveFileWriterGeneric : public YArchive
 {
 public:
-	FArchiveFileWriterGeneric(IFileHandle* InHandle, const TCHAR* InFilename, int64 InPos);
-	~FArchiveFileWriterGeneric();
+	YArchiveFileWriterGeneric(IFileHandle* InHandle, const TCHAR* InFilename, int64 InPos);
+	~YArchiveFileWriterGeneric();
 
 	virtual void Seek(int64 InPos) final;
 	virtual int64 Tell() final

@@ -13,7 +13,7 @@ DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("Texture Memory Pool [Texture]"), MCR_Textu
 DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("Streaming Texture Pool [Streaming]"), MCR_StreamingPool, STATGROUP_Memory, YPlatformMemory::MCR_StreamingPool, CORE_API);
 DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("Used Streaming Pool [Wanted]"), MCR_UsedStreamingPool, STATGROUP_Memory, YPlatformMemory::MCR_UsedStreamingPool, CORE_API);
 
-// Must match values in the MemoryProfiler2.FMemoryAllocationStatsV4
+// Must match values in the MemoryProfiler2.YMemoryAllocationStatsV4
 DECLARE_MEMORY_STAT_EXTERN(TEXT("Total Physical"), STAT_TotalPhysical, STATGROUP_MemoryPlatform, CORE_API);
 DECLARE_MEMORY_STAT_EXTERN(TEXT("Total Virtual"), STAT_TotalVirtual, STATGROUP_MemoryPlatform, CORE_API);
 DECLARE_MEMORY_STAT_EXTERN(TEXT("Page Size"), STAT_PageSize, STATGROUP_MemoryPlatform, CORE_API);

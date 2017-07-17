@@ -115,7 +115,7 @@ public:
 		check(AllocationSize*NumElements >= sizeof(FreeListNode));
 
 		// allocate a block of memory
-		uint8* RawMem = (uint8*)FMemory::Malloc(AllocationSize * NumElements);
+		uint8* RawMem = (uint8*)YMemory::Malloc(AllocationSize * NumElements);
 		FreeListNode* NewFreeList = (FreeListNode*)RawMem;
 		
 		// Chain the block into a list of free list nodes

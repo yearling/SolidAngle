@@ -7,7 +7,7 @@
 #include "CoreGlobals.h"
 
 /*----------------------------------------------------------------------------
-	FArchiveSaveCompressedProxy
+	YArchiveSaveCompressedProxy
 ----------------------------------------------------------------------------*/
 
 /** 
@@ -16,7 +16,7 @@
  * @param	InCompressedData [ref]	Array of bytes that is going to hold compressed data
  * @param	InCompressionFlags		Compression flags to use for compressing data
  */
-FArchiveSaveCompressedProxy::FArchiveSaveCompressedProxy( TArray<uint8>& InCompressedData, ECompressionFlags InCompressionFlags )
+YArchiveSaveCompressedProxy::YArchiveSaveCompressedProxy( TArray<uint8>& InCompressedData, ECompressionFlags InCompressionFlags )
 :	CompressedData(InCompressedData)
 ,	CompressionFlags(InCompressionFlags)
 {
@@ -34,7 +34,7 @@ FArchiveSaveCompressedProxy::FArchiveSaveCompressedProxy( TArray<uint8>& InCompr
 }
 
 /** Destructor, flushing array if needed. Also frees temporary memory. */
-FArchiveSaveCompressedProxy::~FArchiveSaveCompressedProxy()
+YArchiveSaveCompressedProxy::~YArchiveSaveCompressedProxy()
 {
 	// Flush is required to write out remaining tmp data to array.
 	Flush();
@@ -48,7 +48,7 @@ FArchiveSaveCompressedProxy::~FArchiveSaveCompressedProxy()
 /**
  * Flushes tmp data to array.
  */
-void FArchiveSaveCompressedProxy::Flush()
+void YArchiveSaveCompressedProxy::Flush()
 {
 	if( TmpData - TmpDataStart > 0 )
 	{
@@ -68,7 +68,7 @@ void FArchiveSaveCompressedProxy::Flush()
  * @param	Data	Pointer to serialize to
  * @param	Count	Number of bytes to read
  */
-void FArchiveSaveCompressedProxy::Serialize( void* InData, int64 Count )
+void YArchiveSaveCompressedProxy::Serialize( void* InData, int64 Count )
 {
 	uint8* SrcData = (uint8*) InData;
 	// If counter > 1 it means we're calling recursively and therefore need to write to compressed data.
@@ -115,7 +115,7 @@ void FArchiveSaveCompressedProxy::Serialize( void* InData, int64 Count )
  * 
  * @param	InPos	Position to seek to
  */
-void FArchiveSaveCompressedProxy::Seek( int64 InPos )
+void YArchiveSaveCompressedProxy::Seek( int64 InPos )
 {
 	// Support setting position in array.
 	if( bShouldSerializeToArray )
@@ -124,14 +124,14 @@ void FArchiveSaveCompressedProxy::Seek( int64 InPos )
 	}
 	else
 	{
-		UE_LOG(LogSerialization, Fatal,TEXT("Seeking not supported with FArchiveSaveCompressedProxy"));
+		UE_LOG(LogSerialization, Fatal,TEXT("Seeking not supported with YArchiveSaveCompressedProxy"));
 	}
 }
 
 /**
  * @return current position in uncompressed stream in bytes
  */
-int64 FArchiveSaveCompressedProxy::Tell()
+int64 YArchiveSaveCompressedProxy::Tell()
 {
 	// If we're serializing to array, return position in array.
 	if( bShouldSerializeToArray )

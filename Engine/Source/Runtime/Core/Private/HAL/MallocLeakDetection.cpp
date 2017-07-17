@@ -265,8 +265,8 @@ void FMallocLeakDetection::CheckpointLinearFit()
 		Callstack.NumCheckPoints++;
 		Callstack.SumOfFramesNumbers += FrameNum;
 		Callstack.SumOfFramesNumbersSquared += FrameNum2;
-		Callstack.SumOfMemory += float(Callstack.Size);
-		Callstack.SumOfMemoryTimesFrameNumber += float(Callstack.Size) * FrameNum;
+		Callstack.SumOYMemory += float(Callstack.Size);
+		Callstack.SumOYMemoryTimesFrameNumber += float(Callstack.Size) * FrameNum;
 		Callstack.GetLinearFit();
 	}
 }
@@ -289,8 +289,8 @@ void FMallocLeakDetection::FCallstackTrack::GetLinearFit()
 	AtAInv[1][0] = -Det * SumOfFramesNumbers;
 	AtAInv[1][1] = Det * float(NumCheckPoints);
 
-	Baseline = AtAInv[0][0] * SumOfMemory + AtAInv[0][1] * SumOfMemoryTimesFrameNumber;
-	BytesPerFrame = AtAInv[1][0] * SumOfMemory + AtAInv[1][1] * SumOfMemoryTimesFrameNumber;
+	Baseline = AtAInv[0][0] * SumOYMemory + AtAInv[0][1] * SumOYMemoryTimesFrameNumber;
+	BytesPerFrame = AtAInv[1][0] * SumOYMemory + AtAInv[1][1] * SumOYMemoryTimesFrameNumber;
 }
 
 #define LOG_OUTPUT(Format, ...) \

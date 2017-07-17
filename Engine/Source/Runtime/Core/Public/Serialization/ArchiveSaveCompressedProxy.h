@@ -6,13 +6,13 @@
 #include "Serialization/Archive.h"
 
 /*----------------------------------------------------------------------------
-FArchiveSaveCompressedProxy.
+YArchiveSaveCompressedProxy.
 ----------------------------------------------------------------------------*/
 
 /**
 * YArchive Proxy to transparently write out compressed data to an array.
 */
-class CORE_API FArchiveSaveCompressedProxy : public YArchive
+class CORE_API YArchiveSaveCompressedProxy : public YArchive
 {
 public:
 	/**
@@ -21,10 +21,10 @@ public:
 	* @param	InCompressedData [ref]	Array of bytes that is going to hold compressed data
 	* @param	InCompressionFlags		Compression flags to use for compressing data
 	*/
-	FArchiveSaveCompressedProxy(TArray<uint8>& InCompressedData, ECompressionFlags InCompressionFlags);
+	YArchiveSaveCompressedProxy(TArray<uint8>& InCompressedData, ECompressionFlags InCompressionFlags);
 
 	/** Destructor, flushing array if needed. Also frees temporary memory. */
-	virtual ~FArchiveSaveCompressedProxy();
+	virtual ~YArchiveSaveCompressedProxy();
 
 	/**
 	* Flushes tmp data to array.

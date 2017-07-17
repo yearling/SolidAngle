@@ -283,7 +283,7 @@ FText IStatsWriteFile::GetFileMetaDesc() const
 
 void IStatsWriteFile::WriteHeader()
 {
-	FMemoryWriter MemoryWriter( OutData, false, true );
+	YMemoryWriter MemoryWriter( OutData, false, true );
 	YArchive& Ar = File ? *File : MemoryWriter;
 
 	uint32 Magic = EStatMagicWithHeader::MAGIC;
@@ -403,7 +403,7 @@ void FStatsWriteFile::WriteFrame( int64 TargetFrame )
 
 	SCOPE_CYCLE_COUNTER( STAT_StreamFile );
 
-	FMemoryWriter Ar( OutData, false, true );
+	YMemoryWriter Ar( OutData, false, true );
 
 	WriteCondensedMessages( Ar, TargetFrame );
 
@@ -449,7 +449,7 @@ void FRawStatsWriteFile::SetDataDelegate( bool bSet )
 
 void FRawStatsWriteFile::WriteRawStatPacket( const FStatPacket* StatPacket )
 {
-	FMemoryWriter Ar( OutData, false, true );
+	YMemoryWriter Ar( OutData, false, true );
 
 	// Write stat packet.
 	WriteStatPacket( Ar, (FStatPacket&)*StatPacket );
@@ -732,7 +732,7 @@ void FStatsReadFile::ReadRawStats()
 			break;
 		}
 
-		FMemoryReader MemoryReader( DestArray, true );
+		YMemoryReader MemoryReader( DestArray, true );
 
 		FStatPacket* StatPacket = new FStatPacket();
 		Stream.ReadStatPacket( MemoryReader, *StatPacket );
@@ -809,7 +809,7 @@ void FStatsReadFile::ReadRegularStats()
 		*Reader << UncompressedData;
 
 		// Read all messages from the uncompressed buffer.
-		FMemoryReader MemoryReader( DestArray, true );
+		YMemoryReader MemoryReader( DestArray, true );
 		while (MemoryReader.Tell() < MemoryReader.TotalSize())
 		{
 			// Read the message.

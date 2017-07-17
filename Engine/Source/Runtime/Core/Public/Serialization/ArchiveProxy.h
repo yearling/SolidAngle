@@ -14,7 +14,7 @@ struct FUntypedBulkData;
  *
  * Archive proxies are archive types that modify the behavior of another archive type.
  */
-class FArchiveProxy : public YArchive
+class YArchiveProxy : public YArchive
 {
 public:
 	/**
@@ -22,7 +22,7 @@ public:
 	 *
 	 * @param InInnerArchive The inner archive to proxy.
 	 */
-	CORE_API FArchiveProxy(YArchive& InInnerArchive);
+	CORE_API YArchiveProxy(YArchive& InInnerArchive);
 
 	virtual YArchive& operator<<(class YName& Value) override
 	{

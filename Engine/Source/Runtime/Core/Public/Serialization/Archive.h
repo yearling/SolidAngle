@@ -1332,7 +1332,7 @@ public:
 private:
 
 	/** Copies all of the members except CustomVersionContainer */
-	void CopyTrivialFArchiveStatusMembers(const YArchive& ArchiveStatusToCopy);
+	void CopyTrivialYArchiveStatusMembers(const YArchive& ArchiveStatusToCopy);
 
 public:
 

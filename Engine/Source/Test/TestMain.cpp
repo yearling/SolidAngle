@@ -187,7 +187,6 @@ void foo(TestContainerMoveCopy RRef)
 }
 int main()
 {
-
 #if 0
 	std::cout << "---------------TEnableIf-----------" << std::endl;
 	std::cout << GetEnableValue(12.0f) << std::endl;
@@ -265,8 +264,8 @@ int main()
 	YPlatformMemory::Init();
 	auto StateReport = YPlatformMemory::GetStats();
 	//YPlatformMemory::OnOutOfMemory(3000, 16);
-	//std::cout << StateReport.TotalPhysicalGB << std::endl;
-	//while (1)
+	std::cout << StateReport.TotalPhysicalGB << std::endl;
+	while (1)
 	{
 		YMemory::TestMemory();
 	}
@@ -274,55 +273,55 @@ int main()
 	//PODTypeWithStdString* pMemLeak = new PODTypeWithStdString();
 
 
-	TArray<TestContainerMoveCopy> vecMoveUniuqe;
-	new (vecMoveUniuqe)TestContainerMoveCopy();
-	new (vecMoveUniuqe)TestContainerMoveCopy();
+	//TArray<TestContainerMoveCopy> vecMoveUniuqe;
+	//new (vecMoveUniuqe)TestContainerMoveCopy();
+	//new (vecMoveUniuqe)TestContainerMoveCopy();
 
-	TArray<int> ArrayInt = { 1,2,3,4,5,6,7,8 };
-	Algo::Reverse(ArrayInt);
+	//TArray<int> ArrayInt = { 1,2,3,4,5,6,7,8 };
+	//Algo::Reverse(ArrayInt);
 
-	TArrayView<int> ViewTest(ArrayInt);
-	ViewTest.Sort();
+	//TArrayView<int> ViewTest(ArrayInt);
+	//ViewTest.Sort();
 
-	int buffer[] = { 1,2,3,4,5,6,7,8,9,10,11,12,13 };
-	TArrayView<int>  ViewBuffer(buffer);
-	ViewBuffer.CheckInvariants();
-	YString YStringTest = TEXT("Hello中国");
-	YString FirstStringConsturct(YStringTest,2 );
+	//int buffer[] = { 1,2,3,4,5,6,7,8,9,10,11,12,13 };
+	//TArrayView<int>  ViewBuffer(buffer);
+	//ViewBuffer.CheckInvariants();
+	//YString YStringTest = TEXT("Hello中国");
+	//YString FirstStringConsturct(YStringTest,2 );
 
-	TSparseArray<int>  SparseArray;
-	SparseArray.Add(6);
-	SparseArray.Add(7);
-	SparseArray.Insert(5, 10);
-	SparseArray.Add(8);
-	SparseArray.RemoveAt(5);
-	SparseArray.Insert(100, 10);
-	SparseArray.Add(11);
-	SparseArray.Add(12);
-	SparseArray.Add(13);
-	SparseArray.Add(14);
-	SparseArray.Reserve(1000);
-	SparseArray.Shrink();
+	//TSparseArray<int>  SparseArray;
+	//SparseArray.Add(6);
+	//SparseArray.Add(7);
+	//SparseArray.Insert(5, 10);
+	//SparseArray.Add(8);
+	//SparseArray.RemoveAt(5);
+	//SparseArray.Insert(100, 10);
+	//SparseArray.Add(11);
+	//SparseArray.Add(12);
+	//SparseArray.Add(13);
+	//SparseArray.Add(14);
+	//SparseArray.Reserve(1000);
+	//SparseArray.Shrink();
 
-	for ( auto i = SparseArray.CreateConstIterator(); i; ++i)
-	{
-		std::cout << *i <<  "    "<< i.GetIndex()<< std::endl;
-	}
+	//for ( auto i = SparseArray.CreateConstIterator(); i; ++i)
+	//{
+	//	std::cout << *i <<  "    "<< i.GetIndex()<< std::endl;
+	//}
 
-	//foo(TestContainerMoveCopy());
-	//std::vector<int> vecAdd;
-	//vecAdd.push_back(1);
-	TSet<int> Set;
-	Set.Add(5);
-	Set.Add(6);
-	Set.Add(7);
-	Set.Add(7);
-	Set.Add(8);
-	Set.Add(9);
-	Set.Add(10);
-	Set.Add(11);
-	Set.Contains(9);
-	Set.Relax();
-	Set.Remove(9);
+	////foo(TestContainerMoveCopy());
+	////std::vector<int> vecAdd;
+	////vecAdd.push_back(1);
+	//TSet<int> Set;
+	//Set.Add(5);
+	//Set.Add(6);
+	//Set.Add(7);
+	//Set.Add(7);
+	//Set.Add(8);
+	//Set.Add(9);
+	//Set.Add(10);
+	//Set.Add(11);
+	//Set.Contains(9);
+	//Set.Relax();
+	//Set.Remove(9);
 	return 0;
 }

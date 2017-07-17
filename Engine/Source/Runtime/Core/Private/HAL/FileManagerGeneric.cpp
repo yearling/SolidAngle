@@ -53,22 +53,22 @@ YArchive* FFileManagerGeneric::CreateFileReader( const TCHAR* InFilename, uint32
 		}
 		return NULL;
 	}
-	return new FArchiveFileReaderGeneric( Handle, InFilename, Handle->Size() );
+	return new YArchiveFileReaderGeneric( Handle, InFilename, Handle->Size() );
 }
 
 /**
 * Dummy archive that doesn't actually write anything
 * it just updates the file pos when seeking
 */
-class FArchiveFileWriterDummy : public YArchive
+class YArchiveFileWriterDummy : public YArchive
 {
 public:
-	FArchiveFileWriterDummy()
+	YArchiveFileWriterDummy()
 		:	Pos( 0 )
 	{
 		ArIsSaving = ArIsPersistent = true;
 	}
-	virtual ~FArchiveFileWriterDummy()
+	virtual ~YArchiveFileWriterDummy()
 	{
 		Close();
 	}
@@ -84,7 +84,7 @@ public:
 	{
 		Pos += Length;
 	}
-	virtual YString GetArchiveName() const override { return TEXT( "FArchiveFileWriterDummy" ); }
+	virtual YString GetArchiveName() const override { return TEXT( "YArchiveFileWriterDummy" ); }
 protected:
 	int64             Pos;
 };
@@ -96,7 +96,7 @@ YArchive* FFileManagerGeneric::CreateFileWriter( const TCHAR* Filename, uint32 F
 	if( FSHA1::GetFileSHAHash( Filename, NULL ) && FileSize( Filename ) != -1 )
 	{
 		UE_LOG( LogFileManager, Log, TEXT( "Can't write to signed game file: %s" ),Filename );
-		return new FArchiveFileWriterDummy();
+		return new YArchiveFileWriterDummy();
 	}
 	MakeDirectory( *YPaths::GetPath(Filename), true );
 
@@ -114,7 +114,7 @@ YArchive* FFileManagerGeneric::CreateFileWriter( const TCHAR* Filename, uint32 F
 		}
 		return NULL;
 	}
-	return new FArchiveFileWriterGeneric( Handle, Filename, Handle->Tell() );
+	return new YArchiveFileWriterGeneric( Handle, Filename, Handle->Tell() );
 }
 
 
@@ -605,7 +605,7 @@ void FFileManagerGeneric::FindFilesRecursiveInternal( TArray<YString>& FileNames
 	}
 }
 
-FArchiveFileReaderGeneric::FArchiveFileReaderGeneric( IFileHandle* InHandle, const TCHAR* InFilename, int64 InSize )
+YArchiveFileReaderGeneric::YArchiveFileReaderGeneric( IFileHandle* InHandle, const TCHAR* InFilename, int64 InSize )
 	: Filename( InFilename )
 	, Size( InSize )
 	, Pos( 0 )
@@ -617,7 +617,7 @@ FArchiveFileReaderGeneric::FArchiveFileReaderGeneric( IFileHandle* InHandle, con
 }
 
 
-void FArchiveFileReaderGeneric::Seek( int64 InPos )
+void YArchiveFileReaderGeneric::Seek( int64 InPos )
 {
 	checkf(InPos >= 0, TEXT("Attempted to seek to a negative location (%lld/%lld), file: %s. The file is most likely corrupt."), InPos, Size, *Filename);
 	checkf(InPos <= Size, TEXT("Attempted to seek past the end of file (%lld/%lld), file: %s. The file is most likely corrupt."), InPos, Size, *Filename);
@@ -632,12 +632,12 @@ void FArchiveFileReaderGeneric::Seek( int64 InPos )
 	BufferCount = 0;
 }
 
-FArchiveFileReaderGeneric::~FArchiveFileReaderGeneric()
+YArchiveFileReaderGeneric::~YArchiveFileReaderGeneric()
 {
 	Close();
 }
 
-void FArchiveFileReaderGeneric::ReadLowLevel( uint8* Dest, int64 CountToRead, int64& OutBytesRead )
+void YArchiveFileReaderGeneric::ReadLowLevel( uint8* Dest, int64 CountToRead, int64& OutBytesRead )
 {
 	if( Handle->Read( Dest, CountToRead ) )
 	{
@@ -649,23 +649,23 @@ void FArchiveFileReaderGeneric::ReadLowLevel( uint8* Dest, int64 CountToRead, in
 	}
 }
 
-bool FArchiveFileReaderGeneric::SeekLowLevel( int64 InPos )
+bool YArchiveFileReaderGeneric::SeekLowLevel( int64 InPos )
 {
 	return Handle->Seek( InPos );
 }
 
-void FArchiveFileReaderGeneric::CloseLowLevel()
+void YArchiveFileReaderGeneric::CloseLowLevel()
 {
 	Handle.Reset();
 }
 
-bool FArchiveFileReaderGeneric::Close()
+bool YArchiveFileReaderGeneric::Close()
 {
 	CloseLowLevel();
 	return !ArIsError;
 }
 
-bool FArchiveFileReaderGeneric::InternalPrecache( int64 PrecacheOffset, int64 PrecacheSize )
+bool YArchiveFileReaderGeneric::InternalPrecache( int64 PrecacheOffset, int64 PrecacheSize )
 {
 	// Only precache at current position and avoid work if precaching same offset twice.
 	if( Pos == PrecacheOffset &&( !BufferBase || !BufferCount || BufferBase != Pos ) )
@@ -697,7 +697,7 @@ bool FArchiveFileReaderGeneric::InternalPrecache( int64 PrecacheOffset, int64 Pr
 	return true;
 }
 
-void FArchiveFileReaderGeneric::Serialize( void* V, int64 Length )
+void YArchiveFileReaderGeneric::Serialize( void* V, int64 Length )
 {
 	while( Length>0 )
 	{
@@ -745,7 +745,7 @@ void FArchiveFileReaderGeneric::Serialize( void* V, int64 Length )
 	}
 }
 
-FArchiveFileWriterGeneric::FArchiveFileWriterGeneric( IFileHandle* InHandle, const TCHAR* InFilename, int64 InPos )
+YArchiveFileWriterGeneric::YArchiveFileWriterGeneric( IFileHandle* InHandle, const TCHAR* InFilename, int64 InPos )
 	: Filename( InFilename )
 	, Pos( InPos )
 	, BufferCount( 0 )
@@ -755,35 +755,35 @@ FArchiveFileWriterGeneric::FArchiveFileWriterGeneric( IFileHandle* InHandle, con
 	ArIsSaving = ArIsPersistent = true;
 }
 
-FArchiveFileWriterGeneric::~FArchiveFileWriterGeneric()
+YArchiveFileWriterGeneric::~YArchiveFileWriterGeneric()
 {
 	Close();
 }
 
-bool FArchiveFileWriterGeneric::CloseLowLevel()
+bool YArchiveFileWriterGeneric::CloseLowLevel()
 {
 	Handle.Reset();
 	return true;
 }
 
-bool FArchiveFileWriterGeneric::SeekLowLevel( int64 InPos )
+bool YArchiveFileWriterGeneric::SeekLowLevel( int64 InPos )
 {
 	return Handle->Seek( InPos );
 }
 
-int64 FArchiveFileWriterGeneric::TotalSize()
+int64 YArchiveFileWriterGeneric::TotalSize()
 {
 	// Make sure that all data is written before looking at file size.
 	Flush();
 	return Handle->Size();
 }
 
-bool FArchiveFileWriterGeneric::WriteLowLevel( const uint8* Src, int64 CountToWrite )
+bool YArchiveFileWriterGeneric::WriteLowLevel( const uint8* Src, int64 CountToWrite )
 {
 	return Handle->Write( Src, CountToWrite );
 }
 
-void FArchiveFileWriterGeneric::Seek( int64 InPos )
+void YArchiveFileWriterGeneric::Seek( int64 InPos )
 {
 	Flush();
 	if( !SeekLowLevel( InPos ) )
@@ -794,7 +794,7 @@ void FArchiveFileWriterGeneric::Seek( int64 InPos )
 	Pos = InPos;
 }
 
-bool FArchiveFileWriterGeneric::Close()
+bool YArchiveFileWriterGeneric::Close()
 {
 	Flush();
 	if( !CloseLowLevel() )
@@ -805,7 +805,7 @@ bool FArchiveFileWriterGeneric::Close()
 	return !ArIsError;
 }
 
-void FArchiveFileWriterGeneric::Serialize( void* V, int64 Length )
+void YArchiveFileWriterGeneric::Serialize( void* V, int64 Length )
 {
 	Pos += Length;
 	if ( Length >= ARRAY_COUNT(Buffer) )
@@ -838,7 +838,7 @@ void FArchiveFileWriterGeneric::Serialize( void* V, int64 Length )
 	}
 }
 
-void FArchiveFileWriterGeneric::Flush()
+void YArchiveFileWriterGeneric::Flush()
 {
 	if( BufferCount )
 	{
@@ -852,7 +852,7 @@ void FArchiveFileWriterGeneric::Flush()
 	}
 }
 
-void FArchiveFileWriterGeneric::LogWriteError(const TCHAR* Message)
+void YArchiveFileWriterGeneric::LogWriteError(const TCHAR* Message)
 {
 	// Prevent re-entry if logging causes another log error leading to a stack overflow
 	if (!bLoggingError)

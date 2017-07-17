@@ -152,21 +152,21 @@ public:
 	/**
 	 * Calculates the memory usage of this FObjectThumbnail.
 	 *
-	 * @param	Ar	the FArchiveCountMem (or similar) archive that will store the results of the memory usage calculation.
+	 * @param	Ar	the YArchiveCountMem (or similar) archive that will store the results of the memory usage calculation.
 	 */
 	void CountBytes( YArchive& Ar ) const;
 
 	/**
 	 * Calculates the amount of memory used by the compressed bytes array.
 	 *
-	 * @param	Ar	the FArchiveCountMem (or similar) archive that will store the results of the memory usage calculation.
+	 * @param	Ar	the YArchiveCountMem (or similar) archive that will store the results of the memory usage calculation.
 	 */
 	void CountImageBytes_Compressed( YArchive& Ar ) const;
 
 	/**
 	 * Calculates the amount of memory used by the uncompressed bytes array.
 	 *
-	 * @param	Ar	the FArchiveCountMem (or similar) archive that will store the results of the memory usage calculation.
+	 * @param	Ar	the YArchiveCountMem (or similar) archive that will store the results of the memory usage calculation.
 	 */
 	void CountImageBytes_Uncompressed( YArchive& Ar ) const;
 
@@ -265,7 +265,7 @@ struct CORE_API FObjectFullNameAndThumbnail
 	/**
 	 * Calculates the memory usage of this FObjectFullNameAndThumbnail.
 	 *
-	 * @param	Ar	the FArchiveCountMem (or similar) archive that will store the results of the memory usage calculation.
+	 * @param	Ar	the YArchiveCountMem (or similar) archive that will store the results of the memory usage calculation.
 	 */
 	void CountBytes( YArchive& Ar ) const;
 

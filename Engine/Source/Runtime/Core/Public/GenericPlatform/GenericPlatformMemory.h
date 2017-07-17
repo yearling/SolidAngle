@@ -98,7 +98,7 @@ struct YPlatformMemoryStats;
 #if PLATFORM_USES_MICROSOFT_LIBC_FUNCTIONS
 #define __YMemory_Alloca_Func _alloca
 #else
-#define __FMemory_Alloca_Func alloca
+#define __YMemory_Alloca_Func alloca
 #endif
 // Ä¬ÈÏ16byte¶ÔÆë
 #define YMemory_Alloca(Size )((Size==0) ? 0 : (void*)(((PTRINT)__YMemory_Alloca_Func(Size + 15) + 15) & ~15))

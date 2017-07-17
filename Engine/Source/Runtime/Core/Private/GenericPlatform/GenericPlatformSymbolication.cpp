@@ -22,7 +22,7 @@ bool FGenericPlatformSymbolication::LoadSymbolDatabaseForBinary(YString SourceFo
 		TArray<uint8> DataBuffer;
 		if(FFileHelper::LoadFileToArray(DataBuffer, *InputFile))
 		{
-			FArchiveLoadCompressedProxy DataArchive(DataBuffer, (ECompressionFlags)(COMPRESS_Default));
+			YArchiveLoadCompressedProxy DataArchive(DataBuffer, (ECompressionFlags)(COMPRESS_Default));
 			DataArchive << OutDatabase;
 			if(!DataArchive.GetError())
 			{
@@ -45,7 +45,7 @@ bool FGenericPlatformSymbolication::SaveSymbolDatabaseForBinary(YString TargetFo
 	YString OutputFile = (TargetFolder / ModuleName) + TEXT(".udebugsymbols");
 
 	TArray<uint8> DataBuffer;
-	FArchiveSaveCompressedProxy DataArchive(DataBuffer, (ECompressionFlags)(COMPRESS_ZLIB|COMPRESS_BiasSpeed));
+	YArchiveSaveCompressedProxy DataArchive(DataBuffer, (ECompressionFlags)(COMPRESS_ZLIB|COMPRESS_BiasSpeed));
 	DataArchive << Database;
 	DataArchive.Flush();
 	if(!DataArchive.GetError())

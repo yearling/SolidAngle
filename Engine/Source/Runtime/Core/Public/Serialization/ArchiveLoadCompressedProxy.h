@@ -6,13 +6,13 @@
 #include "Serialization/Archive.h"
 
 /*----------------------------------------------------------------------------
-FArchiveLoadCompressedProxy.
+YArchiveLoadCompressedProxy.
 ----------------------------------------------------------------------------*/
 
 /**
 * YArchive Proxy to transparently load compressed data from an array.
 */
-class CORE_API FArchiveLoadCompressedProxy : public YArchive
+class CORE_API YArchiveLoadCompressedProxy : public YArchive
 {
 public:
 	/**
@@ -21,10 +21,10 @@ public:
 	* @param	InCompressedData	Array of bytes that is holding compressed data
 	* @param	InCompressionFlags	Compression flags that were used to compress data
 	*/
-	FArchiveLoadCompressedProxy(const TArray<uint8>& InCompressedData, ECompressionFlags InCompressionFlags);
+	YArchiveLoadCompressedProxy(const TArray<uint8>& InCompressedData, ECompressionFlags InCompressionFlags);
 
 	/** Destructor, freeing temporary memory. */
-	virtual ~FArchiveLoadCompressedProxy();
+	virtual ~YArchiveLoadCompressedProxy();
 
 	/**
 	* Serializes data from archive. This function is called recursively and determines where to serialize

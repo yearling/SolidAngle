@@ -115,7 +115,7 @@ FCoreDelegates::FApplicationReceivedOnScreenOrientationChangedNotificationDelega
 
 FCoreDelegates::FConfigReadyForUse FCoreDelegates::ConfigReadyForUse;
 
-FSimpleMulticastDelegate FCoreDelegates::OnOutOfMemory;
+FSimpleMulticastDelegate FCoreDelegates::OnOutOYMemory;
 FCoreDelegates::FGetOnScreenMessagesDelegate FCoreDelegates::OnGetOnScreenMessages;
 
 void RegisterEncryptionKey(const char* InEncryptionKey)

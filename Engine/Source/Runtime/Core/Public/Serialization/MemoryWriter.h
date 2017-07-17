@@ -15,11 +15,11 @@
 /**
  * Archive for storing arbitrary data to the specified memory location
  */
-class FMemoryWriter : public FMemoryArchive
+class YMemoryWriter : public YMemoryArchive
 {
 public:
-	FMemoryWriter( TArray<uint8>& InBytes, bool bIsPersistent = false, bool bSetOffset = false, const YName InArchiveName = NAME_None )
-	: FMemoryArchive()
+	YMemoryWriter( TArray<uint8>& InBytes, bool bIsPersistent = false, bool bSetOffset = false, const YName InArchiveName = NAME_None )
+	: YMemoryArchive()
 	, Bytes(InBytes)
 	, ArchiveName(InArchiveName)
 	{
@@ -39,7 +39,7 @@ public:
 			const int64 NewArrayCount = Bytes.Num() + NumBytesToAdd;
 			if( NewArrayCount >= MAX_int32 )
 			{
-				UE_LOG( LogSerialization, Fatal, TEXT( "FMemoryWriter does not support data larger than 2GB. Archive name: %s." ), *ArchiveName.ToString() );
+				UE_LOG( LogSerialization, Fatal, TEXT( "YMemoryWriter does not support data larger than 2GB. Archive name: %s." ), *ArchiveName.ToString() );
 			}
 
 			Bytes.AddUninitialized( (int32)NumBytesToAdd );
@@ -59,7 +59,7 @@ public:
 	 *
 	 * This is overridden for the specific Archive Types
 	 **/
-	virtual YString GetArchiveName() const override { return TEXT("FMemoryWriter"); }
+	virtual YString GetArchiveName() const override { return TEXT("YMemoryWriter"); }
 
 	int64 TotalSize() override
 	{

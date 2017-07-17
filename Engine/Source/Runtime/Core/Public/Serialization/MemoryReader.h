@@ -11,7 +11,7 @@
 /**
  * Archive for reading arbitrary data from the specified memory location
  */
-class FMemoryReader final : public FMemoryArchive
+class YMemoryReader final : public YMemoryArchive
 {
 public:
 	/**
@@ -20,7 +20,7 @@ public:
 	 *
 	 * This is overridden for the specific Archive Types
 	 **/
-	virtual YString GetArchiveName() const { return TEXT("FMemoryReader"); }
+	virtual YString GetArchiveName() const { return TEXT("YMemoryReader"); }
 
 	int64 TotalSize()
 	{
@@ -44,8 +44,8 @@ public:
 		}
 	}
 
-	FMemoryReader( const TArray<uint8>& InBytes, bool bIsPersistent = false )
-	: FMemoryArchive()
+	YMemoryReader( const TArray<uint8>& InBytes, bool bIsPersistent = false )
+	: YMemoryArchive()
 	, Bytes(InBytes)
 	, LimitSize(INT64_MAX)
 	{

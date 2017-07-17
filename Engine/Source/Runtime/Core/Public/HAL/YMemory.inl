@@ -1,39 +1,39 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
-#if !defined(FMEMORY_INLINE_FUNCTION_DECORATOR)
-#define FMEMORY_INLINE_FUNCTION_DECORATOR 
+#if !defined(YMemory_INLINE_FUNCTION_DECORATOR)
+#define YMemory_INLINE_FUNCTION_DECORATOR 
 #endif
 
-#if !defined(FMEMORY_INLINE_GMalloc)
-#define FMEMORY_INLINE_GMalloc GMalloc
+#if !defined(YMemory_INLINE_GMalloc)
+#define YMemory_INLINE_GMalloc GMalloc
 #endif
 
 struct YMemory;
 struct FScopedMallocTimer;
 
-FMEMORY_INLINE_FUNCTION_DECORATOR void* YMemory::Malloc(SIZE_T Count, uint32 Alignment)
+YMemory_INLINE_FUNCTION_DECORATOR void* YMemory::Malloc(SIZE_T Count, uint32 Alignment)
 {
-	if (!FMEMORY_INLINE_GMalloc)
+	if (!YMemory_INLINE_GMalloc)
 	{
 		return MallocExternal(Count, Alignment);
 	}
 	DoGamethreadHook(0);
 	FScopedMallocTimer Timer(0);
-	return FMEMORY_INLINE_GMalloc->Malloc(Count, Alignment);
+	return YMemory_INLINE_GMalloc->Malloc(Count, Alignment);
 }
 
-FMEMORY_INLINE_FUNCTION_DECORATOR void* YMemory::Realloc(void* Original, SIZE_T Count, uint32 Alignment)
+YMemory_INLINE_FUNCTION_DECORATOR void* YMemory::Realloc(void* Original, SIZE_T Count, uint32 Alignment)
 {
-	if (!FMEMORY_INLINE_GMalloc)
+	if (!YMemory_INLINE_GMalloc)
 	{
 		return ReallocExternal(Original, Count, Alignment);
 	}
 	DoGamethreadHook(1);
 	FScopedMallocTimer Timer(1);
-	return FMEMORY_INLINE_GMalloc->Realloc(Original, Count, Alignment);
+	return YMemory_INLINE_GMalloc->Realloc(Original, Count, Alignment);
 }
 
-FMEMORY_INLINE_FUNCTION_DECORATOR void YMemory::Free(void* Original)
+YMemory_INLINE_FUNCTION_DECORATOR void YMemory::Free(void* Original)
 {
 	if (!Original)
 	{
@@ -41,33 +41,33 @@ FMEMORY_INLINE_FUNCTION_DECORATOR void YMemory::Free(void* Original)
 		return;
 	}
 
-	if (!FMEMORY_INLINE_GMalloc)
+	if (!YMemory_INLINE_GMalloc)
 	{
 		FreeExternal(Original);
 		return;
 	}
 	DoGamethreadHook(2);
 	FScopedMallocTimer Timer(2);
-	FMEMORY_INLINE_GMalloc->Free(Original);
+	YMemory_INLINE_GMalloc->Free(Original);
 }
 
-FMEMORY_INLINE_FUNCTION_DECORATOR SIZE_T YMemory::GetAllocSize(void* Original)
+YMemory_INLINE_FUNCTION_DECORATOR SIZE_T YMemory::GetAllocSize(void* Original)
 {
-	if (!FMEMORY_INLINE_GMalloc)
+	if (!YMemory_INLINE_GMalloc)
 	{
 		return GetAllocSizeExternal(Original);
 	}
 
 	SIZE_T Size = 0;
-	return FMEMORY_INLINE_GMalloc->GetAllocationSize(Original, Size) ? Size : 0;
+	return YMemory_INLINE_GMalloc->GetAllocationSize(Original, Size) ? Size : 0;
 }
 
-FMEMORY_INLINE_FUNCTION_DECORATOR SIZE_T YMemory::QuantizeSize(SIZE_T Count, uint32 Alignment)
+YMemory_INLINE_FUNCTION_DECORATOR SIZE_T YMemory::QuantizeSize(SIZE_T Count, uint32 Alignment)
 {
-	if (!FMEMORY_INLINE_GMalloc)
+	if (!YMemory_INLINE_GMalloc)
 	{
 		return Count;
 	}
-	return FMEMORY_INLINE_GMalloc->QuantizeSize(Count, Alignment);
+	return YMemory_INLINE_GMalloc->QuantizeSize(Count, Alignment);
 }
 

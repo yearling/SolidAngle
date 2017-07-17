@@ -2524,10 +2524,10 @@ void FConfigCacheIni::SetRotator
 /**
 * Archive for counting config file memory usage.
 */
-class FArchiveCountConfigMem : public YArchive
+class YArchiveCountConfigMem : public YArchive
 {
 public:
-	FArchiveCountConfigMem()
+	YArchiveCountConfigMem()
 		: Num(0)
 		, Max(0)
 	{
@@ -2580,7 +2580,7 @@ struct FConfigMemoryData
 		: NameIndent(0), SizeIndent(0), MaxSizeIndent(0)
 	{}
 
-	void AddConfigFile(const YString& ConfigFilename, FArchiveCountConfigMem& MemAr)
+	void AddConfigFile(const YString& ConfigFilename, YArchiveCountConfigMem& MemAr)
 	{
 		SIZE_T TotalMem = MemAr.GetNum();
 		SIZE_T MaxMem = MemAr.GetMax();
@@ -2619,7 +2619,7 @@ void FConfigCacheIni::ShowMemoryUsage(YOutputDevice& Ar)
 		YString Filename = FileIt.Key();
 		FConfigFile& ConfigFile = FileIt.Value();
 
-		FArchiveCountConfigMem MemAr;
+		YArchiveCountConfigMem MemAr;
 
 		// count the bytes used for storing the filename
 		MemAr << Filename;
@@ -2635,7 +2635,7 @@ void FConfigCacheIni::ShowMemoryUsage(YOutputDevice& Ar)
 	ConfigCacheMemoryData.MaxSizeIndent += 10;
 
 	// record the memory used by the FConfigCacheIni's TMap
-	FArchiveCountConfigMem MemAr;
+	YArchiveCountConfigMem MemAr;
 	CountBytes(MemAr);
 
 	SIZE_T TotalMemoryUsage = MemAr.GetNum();
@@ -2669,7 +2669,7 @@ void FConfigCacheIni::ShowMemoryUsage(YOutputDevice& Ar)
 SIZE_T FConfigCacheIni::GetMaxMemoryUsage()
 {
 	// record the memory used by the FConfigCacheIni's TMap
-	FArchiveCountConfigMem MemAr;
+	YArchiveCountConfigMem MemAr;
 	CountBytes(MemAr);
 
 	SIZE_T TotalMemoryUsage = MemAr.GetNum();
@@ -2683,7 +2683,7 @@ SIZE_T FConfigCacheIni::GetMaxMemoryUsage()
 		YString Filename = FileIt.Key();
 		FConfigFile& ConfigFile = FileIt.Value();
 
-		FArchiveCountConfigMem FileMemAr;
+		YArchiveCountConfigMem FileMemAr;
 
 		// count the bytes used for storing the filename
 		FileMemAr << Filename;

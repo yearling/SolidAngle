@@ -1583,9 +1583,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Source\Runtime\TestMain.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformMath.cpp">
       <Filter>Source\Runtime\Core\Private\GenericPlatform</Filter>
     </ClCompile>
@@ -2152,6 +2149,12 @@
     </ClCompile>
     <ClCompile Include="..\Source\Runtime\Core\Private\Features\ModularFeatures.cpp">
       <Filter>Source\Runtime\Core\Private\Features</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\BitReader.cpp">
+      <Filter>Source\Runtime\Core\Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\BitWriter.cpp">
+      <Filter>Source\Runtime\Core\Private\Serialization</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

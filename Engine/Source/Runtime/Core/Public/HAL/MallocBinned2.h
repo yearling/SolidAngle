@@ -518,8 +518,8 @@ public:
 #define BINNED2_INLINE (1)
 #if BINNED2_INLINE // during development, it helps with iteration time to not include these here, but rather in the .cpp
 #if PLATFORM_USES_FIXED_GMalloc_CLASS && !FORCE_ANSI_ALLOCATOR && USE_MALLOC_BINNED2
-#define FMEMORY_INLINE_FUNCTION_DECORATOR  FORCEINLINE
-#define FMEMORY_INLINE_GMalloc (YMallocBinned2::MallocBinned2)
+#define YMemory_INLINE_FUNCTION_DECORATOR  FORCEINLINE
+#define YMemory_INLINE_GMalloc (YMallocBinned2::MallocBinned2)
 #include "YMemory.inl"
 #endif
 #endif

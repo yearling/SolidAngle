@@ -11,7 +11,7 @@
 /**
  * Base class for serializing arbitrary data in memory.
  */
-class FMemoryArchive : public YArchive
+class YMemoryArchive : public YArchive
 {
 public:
 	/**
@@ -20,7 +20,7 @@ public:
 	 *
 	 * This is overridden for the specific Archive Types
 	 **/
-	virtual YString GetArchiveName() const { return TEXT("FMemoryArchive"); }
+	virtual YString GetArchiveName() const { return TEXT("YMemoryArchive"); }
 
 	void Seek( int64 InPos ) final
 	{
@@ -60,7 +60,7 @@ public:
 protected:
 
 	/** Marked as protected to avoid instantiating this class directly */
-	FMemoryArchive()
+	YMemoryArchive()
 		: YArchive(), Offset(0)
 	{
 	}

@@ -38,7 +38,7 @@
   
 		AMyActor* CreateCloneOfMyActor(AMyActor* ExistingActor, FVector SpawnLocation, FRotator SpawnRotation)
 		{
-		    UWorld* World = ExistingActor->GetWorld();
+		    UWorld* const World = GetWorld(); 
 		    FActorSpawnParameters SpawnParams;
 		    SpawnParams.Template = ExistingActor;
 		    World->SpawnActor<AMyActor>(ExistingActor->GetClass(), SpawnLocation, SpawnRotation, SpawnParams);

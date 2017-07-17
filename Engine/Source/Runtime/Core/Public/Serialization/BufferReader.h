@@ -9,7 +9,7 @@
 #include "Containers/SolidAngleString.h"
 
 /**
-* Similar to FMemoryReader, but able to internally
+* Similar to YMemoryReader, but able to internally
 * manage the memory for the buffer.
 */
 class FBufferReaderBase : public YArchive
@@ -87,7 +87,7 @@ protected:
 };
 
 /**
-* Similar to FMemoryReader, but able to internally
+* Similar to YMemoryReader, but able to internally
 * manage the memory for the buffer.
 */
 class FBufferReader final : public FBufferReaderBase

@@ -325,7 +325,7 @@ public:
 	static FImageIntegrityChanged OnImageIntegrityChanged;
 
 	// Called when OOM event occurs, after backup memory has been freed, so there's some hope of being effective
-	static FSimpleMulticastDelegate OnOutOfMemory;
+	static FSimpleMulticastDelegate OnOutOYMemory;
 
 	enum class EOnScreenMessageSeverity : uint8
 	{
