@@ -871,6 +871,7 @@
     <None Include="..\Source\Runtime\Core\Public\Misc\ExpressionParserTypes.inl" />
     <None Include="..\Source\Runtime\Core\Public\SObject\SolidAngleNames.inl" />
     <None Include="..\Source\Runtime\Core\Public\Templates\SharedPointerTesting.inl" />
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

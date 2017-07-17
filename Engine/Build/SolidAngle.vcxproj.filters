@@ -2191,5 +2191,6 @@
     <None Include="..\Source\Runtime\ClassDiagram\MemoryClassDiagram.cd">
       <Filter>Source\Runtime\ClassDiagram</Filter>
     </None>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>
