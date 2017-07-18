@@ -40,7 +40,9 @@ struct FMallocLeakReportOptions
 /**
 * Maintains a list of all pointers to currently allocated memory.
 */
-class FMallocLeakDetection
+// !!NOTE by zyx, to used in other model
+//class FMallocLeakDetection
+class CORE_API FMallocLeakDetection
 {
 
 	struct FCallstackTrack

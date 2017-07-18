@@ -64,7 +64,7 @@
   		4.	mallc/realloc/free的记数器   
   		
 **GAlloc**是一种分配器（全局），在程序初始化时设定，可以在develop下通过命令行更改，可配置，在进入Main函数之前就被调用，在第一次调用时设置
-## FMemory （HAL/UnrealMemory.h)
+## FMemory （HAL/UnrealMemory.h, Pure Static Class)
    1.   使用代理的方式，将GMalloc根据配置设为指定的Malloc,`YMemory::GCreateMalloc()`,然后在FMemory::Malloc时调用GMalloc->Malloc来实现；  
    2.   使用代理的方式，对外有MemCmp/copy/move等函数：在FMemory::MemCopy时调用FPlatformMemory::Memcopy来实现；
    3.   SystemMallc/Free等函数；

@@ -11,7 +11,7 @@ HAL(Hardware Abstruct Interface),用来统一操作系统的抽象层
 	3. TLS
 4. Misc
 
-## 内存
+## 内存(Memory)
 相关的文件有 14个
 
 	|- MallocAnsi.h
@@ -32,7 +32,7 @@ HAL(Hardware Abstruct Interface),用来统一操作系统的抽象层
 	|- UnrealMemory.h
 
 ## IO
-### 文件相相
+### 文件相关(FILE)
 相关文件有 9 个  
 
 	|- FileManager.h  
@@ -51,8 +51,8 @@ HAL(Hardware Abstruct Interface),用来统一操作系统的抽象层
     |- OutputDevice.h  
 	|- PlatformOutputDevices.h
 
-## 线程
-### 线程管理
+## 线程(THREAD)
+### 线程管理(THREAD MANAGEMENT)
 
 	|- PlatformAffinity.h 
 	|- PlatformAtomics.h 
@@ -63,7 +63,7 @@ HAL(Hardware Abstruct Interface),用来统一操作系统的抽象层
 	|- ThreadingBase.h 
 	|- ThreadManager.h 
 
-### 同步原语
+### 同步原语(SYC)
 
 	|- CriticalSection.h 
 	|- Event.h

@@ -6,6 +6,8 @@
 #include <vector>
 #include <memory>
 #include "Containers\StringConv.h"
+#include "Modules\ModuleManager.h"
+#include "HAL\MallocLeakDetection.h"
 struct TRUEValue
 {
 	enum 
@@ -185,6 +187,28 @@ void foo(TestContainerMoveCopy RRef)
 {
 	RRef.foo();
 }
+
+class YTestModel : public FDefaultModuleImpl
+{
+public:
+	virtual bool SupportsDynamicReloading() override
+	{
+		// Core cannot be unloaded or reloaded
+		return false;
+	}
+};
+
+
+IMPLEMENT_MODULE(YTestModel, TestModel);
+
+ /*void* operator new  (size_t Size)  { return YMemory::Malloc(Size); } 
+ void* operator new[](size_t Size) { return YMemory::Malloc(Size); } 
+ void* operator new  (size_t Size, const std::nothrow_t&) throw() { return YMemory::Malloc(Size); } 
+ void* operator new[](size_t Size, const std::nothrow_t&) throw(){ return YMemory::Malloc(Size); } 
+void operator delete  (void* Ptr)                                                  { YMemory::Free(Ptr); } 
+void operator delete[](void* Ptr)                                                 { YMemory::Free(Ptr); } 
+void operator delete  (void* Ptr, const std::nothrow_t&)                          throw() { YMemory::Free(Ptr); } 
+void operator delete[](void* Ptr, const std::nothrow_t&)                          throw() { YMemory::Free(Ptr); }*/
 int main()
 {
 #if 0
@@ -264,13 +288,19 @@ int main()
 	YPlatformMemory::Init();
 	const YPlatformMemoryStats& StateReport = YPlatformMemory::GetStats();
 	std::cout << "MemoryTotalPhysical: " << StateReport.TotalPhysicalGB << " GB"<<std::endl;
-	std::cout << "MemoryTotalVirtual: " << (StateReport.TotalVirtual/1024/1024)<<" GB" << std::endl;
+	std::cout << "MemoryTotalVirtual: " << (StateReport.TotalVirtual/1024/1024/1024)<<" GB" << std::endl;
+	std::cout << "MemoryPage: " << StateReport.PageSize / 1024 << " KB" << std::endl;
 	//while (1)
 	std::cout << "Do memory testing..." << std::endl;
 	{
 		YMemory::TestMemory();
 	}
-
+	FMallocLeakDetection::Get().SetAllocationCollection(true);
+	//int *pTestAllocMemory = (int*)YMemory::Malloc(sizeof(int));
+	int* pIntLeak = new int(5);
+	FMallocLeakDetection::Get().SetAllocationCollection(false);
+	FMallocLeakDetection::Get().DumpPotentialLeakers();
+	FMallocLeakDetection::Get().DumpOpenCallstacks();
 	//PODTypeWithStdString* pMemLeak = new PODTypeWithStdString();
 
 
@@ -326,3 +356,4 @@ int main()
 	//Set.Remove(9);
 	return 0;
 }
+
