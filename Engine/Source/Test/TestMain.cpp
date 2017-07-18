@@ -262,10 +262,11 @@ int main()
 #endif 
 	std::cout << "\n---------------PlatformMemoryTest----------" << std::endl;
 	YPlatformMemory::Init();
-	auto StateReport = YPlatformMemory::GetStats();
-	//YPlatformMemory::OnOutOfMemory(3000, 16);
-	std::cout << StateReport.TotalPhysicalGB << std::endl;
-	while (1)
+	const YPlatformMemoryStats& StateReport = YPlatformMemory::GetStats();
+	std::cout << "MemoryTotalPhysical: " << StateReport.TotalPhysicalGB << " GB"<<std::endl;
+	std::cout << "MemoryTotalVirtual: " << (StateReport.TotalVirtual/1024/1024)<<" GB" << std::endl;
+	//while (1)
+	std::cout << "Do memory testing..." << std::endl;
 	{
 		YMemory::TestMemory();
 	}

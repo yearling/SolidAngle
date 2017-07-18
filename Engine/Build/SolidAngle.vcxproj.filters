@@ -1581,6 +1581,42 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ITransaction.h">
       <Filter>Source\Runtime\Core\Public\Misc</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\IOBase.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\MallocDebug.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\OutputDevices.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformCodeAnalysis.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformCodeAnalysis.h">
+      <Filter>Source\Runtime\Core\Public\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformFile.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformFramePacer.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformFramePacer.h">
+      <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformSurvey.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PThreadCriticalSection.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PThreadEvent.h">
+      <Filter>Source\Runtime\Core\Public\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Private\HAL\PThreadRunnableThread.h">
+      <Filter>Source\Runtime\Core\Private\HAL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformMath.cpp">

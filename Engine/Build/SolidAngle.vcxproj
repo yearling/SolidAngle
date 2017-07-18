@@ -198,6 +198,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\Core\Private\Features\ModularFeatures.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Private\HAL\PThreadRunnableThread.h" />
     <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\ICUCulture.h" />
     <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\ICUUtilities.h" />
     <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\InvariantCulture.h" />
@@ -285,6 +286,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformCriticalSection.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformDriver.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformFile.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformFramePacer.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformMallocCrash.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformMath.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformMemory.h" />
@@ -320,6 +322,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\FileManager.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\FileManagerGeneric.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\IConsoleManager.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\IOBase.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\IPlatformFileCachedWrapper.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\IPlatformFileLogWrapper.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\IPlatformFileModule.h" />
@@ -327,6 +330,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\IPlatformFileProfilerWrapper.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\MallocAnsi.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\MallocBinned.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\MallocDebug.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\MallocJemalloc.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\MallocBinned2.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\MallocLeakDetection.h" />
@@ -337,11 +341,15 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\MallocVerify.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\MemoryBase.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\MemoryMisc.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\OutputDevices.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\Platform.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformAffinity.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformAtomics.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformCodeAnalysis.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformCrt.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformFile.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformFilemanager.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformFramePacer.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformIncludes.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformMallocCrash.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformMath.h" />
@@ -352,8 +360,11 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformProperties.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformStackWalk.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformString.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformSurvey.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformTime.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformTLS.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PThreadCriticalSection.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PThreadEvent.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PThreadRunnableThread.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\Runnable.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\RunnableThread.h" />
@@ -640,6 +651,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsHWrapper.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WIndowsPlatform.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformAtomics.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformCodeAnalysis.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformCompilerPreSetup.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformCompilerSetup.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformCrashContext.h" />

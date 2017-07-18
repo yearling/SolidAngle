@@ -60,7 +60,7 @@ protected:
 	virtual void SetThreadPriority(pthread_t InThread, EThreadPriority NewPriority)
 	{
 		struct sched_param Sched;
-		YMemory::Memzero(&Sched, sizeof(struct sched_param));
+		FMemory::Memzero(&Sched, sizeof(struct sched_param));
 		int32 Policy = SCHED_RR;
 
 		// Read the current policy
@@ -165,7 +165,7 @@ protected:
 		FRunnableThreadPThread* ThisThread = (FRunnableThreadPThread*)pThis;
 
 		// cache the thread ID for this thread (defined by the platform)
-		ThisThread->ThreadID = YPlatformTLS::GetCurrentThreadId();
+		ThisThread->ThreadID = FPlatformTLS::GetCurrentThreadId();
 
 		FThreadManager::Get().AddThread(ThisThread->ThreadID, ThisThread);
 
