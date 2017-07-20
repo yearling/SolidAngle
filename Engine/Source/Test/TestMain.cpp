@@ -8,53 +8,10 @@
 #include "Containers\StringConv.h"
 #include "Modules\ModuleManager.h"
 #include "HAL\MallocLeakDetection.h"
-struct TRUEValue
-{
-	enum 
-	{
-		Value = true
-	};
-};
-
-struct FALSEValue
-{
-	enum 
-	{
-		Value = false
-	};
-};
-
-template< int64 N>
-struct Fib
-{
-	enum { Value = Fib<N-2>::Value +Fib<N-1>::Value};
-};
-
-template<>
-struct Fib<0>
-{
-	enum { Value = 0 };
-};
-
-template<>
-struct Fib<1>
-{
-	enum { Value = 1 };
-};
-
-template<int M, int N>
-struct Mul
-{
-enum { Value = Mul<M, N - 1>::Value + M };
-};
-
-template<int M>
-struct Mul<M, 1>
-{
-	enum {
-		Value = M
-	};
-};
+#include "Templates\AlignmentTemplates.h"
+#include "Templates\AlignOf.h"
+#include "Templates\Decay.h"
+#include "Templates\AreTypesEqual.h"
 
 struct TrueValue
 {
@@ -72,33 +29,6 @@ public:
 	virtual bool NonTrivial() { return true; };
 };
 
-struct PODType
-{
-	int a;
-	int b;
-	char c[0x7fffffff];
-};
-struct PODAlign8
-{
-	int64 a;
-};
-
-MS_ALIGN(128) struct PODAlign16
-{
-	int64 a;
-	__m128 b;
-};
-struct PODTypeWithStdString
-{
-	int a;
-	std::string name;
-};
-
-struct PODTypeWithStdVector
-{
-	int a;
-	std::vector<int> name;
-};
 
 class DirivedTest :public BaseTest
 {
@@ -188,6 +118,74 @@ void foo(TestContainerMoveCopy RRef)
 	RRef.foo();
 }
 
+
+
+void TestMemory()
+{
+	std::cout << "\n---------------PlatformMemoryTest----------" << std::endl;
+	YPlatformMemory::Init();
+	const YPlatformMemoryStats& StateReport = YPlatformMemory::GetStats();
+	std::cout << "MemoryTotalPhysical: " << StateReport.TotalPhysicalGB << " GB"<<std::endl;
+	std::cout << "MemoryTotalVirtual: " << (StateReport.TotalVirtual/1024/1024/1024)<<" GB" << std::endl;
+	std::cout << "MemoryPage: " << StateReport.PageSize / 1024 << " KB" << std::endl;
+	//while (1)
+	std::cout << "Do memory testing..." << std::endl;
+	{
+		YMemory::TestMemory();
+	}
+	FMallocLeakDetection::Get().SetAllocationCollection(true);
+	//int *pTestAllocMemory = (int*)YMemory::Malloc(sizeof(int));
+	int* pIntLeak = new int(5);
+	FMallocLeakDetection::Get().SetAllocationCollection(false);
+	FMallocLeakDetection::Get().DumpPotentialLeakers();
+	FMallocLeakDetection::Get().DumpOpenCallstacks();
+}
+void TestAlign()
+{
+	std::cout << "\n---------------AlignmentTest----------" << std::endl;
+	std::cout << "Align 7 of 8: " << Align(7, 8) << std::endl;
+	std::cout << "Align 17 of 16: " << Align(17, 16) << std::endl;
+	std::cout << "AlignDown 7 of 8: " << AlignDown(7, 8) << std::endl;
+	std::cout << "AlignDown 17 of 16: " << AlignDown(17, 16) << std::endl;
+	std::cout << "IsAligned(14,8): " << std::boolalpha <<  IsAligned((void*)14, 8) << std::endl;
+	std::cout << "IsAligned(16,8): " <<  IsAligned((void*)16, 8) << std::endl;
+	std::cout << "AlignArbitary(13,7): " << AlignArbitrary(13,7) << std::endl;
+	std::cout << "AlignArbitary(-5,7): " << AlignArbitrary(-5,7) << std::endl;
+}
+
+MS_ALIGN(256) struct PODAlign256
+{
+	int32 a;
+	char b;
+};
+struct PODAlign256Add :PODAlign256
+{
+	uint8 a;
+};
+struct PODAlign256Compose
+{
+	uint8 MisalignmentPadding;
+	PODAlign256 a;
+};
+void TestAlignOf()
+{
+	std::cout << "\n---------------AlignmentOfTest----------" << std::endl;
+	std::cout << "Align of int32 :" << ALIGNOF(int32) << std::endl;
+	std::cout << "Align of int64 :" << ALIGNOF(int64) << std::endl;
+	std::cout << "Align of PODAlign256 :" << ALIGNOF(PODAlign256) << std::endl;
+	std::cout << "sizeo of PODAlign256 :" << sizeof(PODAlign256) << "   sizeof(PODAlign356Add) :" << sizeof(PODAlign256Add) << std::endl;
+	std::cout << "sizeo of PODAlign256 :" << sizeof(PODAlign256) << "   sizeof(PODAlign356Composize) :" << sizeof(PODAlign256Compose) << std::endl;
+}
+
+void TestDecay()
+{
+	std::cout << "\n---------------DecayTest----------" << std::endl;
+	using INT10 = int32[10];
+	typedef void(*pFunc)();
+	static_assert(TAreTypesEqual<int*, TDecay<INT10>::Type>::Value,"Types are not equal");
+	static_assert(TAreTypesEqual<pFunc, TDecay<void()>::Type>::Value,"Types are not equal");
+}
+
 class YTestModel : public FDefaultModuleImpl
 {
 public:
@@ -197,8 +195,6 @@ public:
 		return false;
 	}
 };
-
-
 IMPLEMENT_MODULE(YTestModel, TestModel);
 
  /*void* operator new  (size_t Size)  { return YMemory::Malloc(Size); } 
@@ -283,25 +279,12 @@ int main()
 	std::cout << test_Chinese << std::endl;
 	std::wcout << test_Chinese << std::endl;
 
-#endif 
-	std::cout << "\n---------------PlatformMemoryTest----------" << std::endl;
-	YPlatformMemory::Init();
-	const YPlatformMemoryStats& StateReport = YPlatformMemory::GetStats();
-	std::cout << "MemoryTotalPhysical: " << StateReport.TotalPhysicalGB << " GB"<<std::endl;
-	std::cout << "MemoryTotalVirtual: " << (StateReport.TotalVirtual/1024/1024/1024)<<" GB" << std::endl;
-	std::cout << "MemoryPage: " << StateReport.PageSize / 1024 << " KB" << std::endl;
-	//while (1)
-	std::cout << "Do memory testing..." << std::endl;
-	{
-		YMemory::TestMemory();
-	}
-	FMallocLeakDetection::Get().SetAllocationCollection(true);
-	//int *pTestAllocMemory = (int*)YMemory::Malloc(sizeof(int));
-	int* pIntLeak = new int(5);
-	FMallocLeakDetection::Get().SetAllocationCollection(false);
-	FMallocLeakDetection::Get().DumpPotentialLeakers();
-	FMallocLeakDetection::Get().DumpOpenCallstacks();
-	//PODTypeWithStdString* pMemLeak = new PODTypeWithStdString();
+#endif  
+	TestMemory();
+	TestAlign();
+	TestAlignOf();
+	TestDecay();
+//PODTypeWithStdString* pMemLeak = new PODTypeWithStdString();
 
 
 	//TArray<TestContainerMoveCopy> vecMoveUniuqe;

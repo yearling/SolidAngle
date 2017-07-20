@@ -19,6 +19,22 @@ UE为了防止引用std namespace,将C++11里引进的[type_traits](http://en.cp
 		class TEnableIf<false,Result>
 		{}
 
+使用方式如下：
+
+		/**
+		* Includes a function in an overload set if the predicate is true.  It should be used similarly to this:
+		*
+		* // This function will only be instantiated if SomeTrait<T>::Value is true for a particular T
+		* template <typename T>
+		* typename TEnableIf<SomeTrait<T>::Value, ReturnType>::Type Function(const T& Obj)
+		* {
+		*     ...
+		* }
+		*
+		* ReturnType is the real return type of the function.
+		*/
+
+
 ## TAnd TAndValue
 对应c++17的 std::conjunction  
 TAnd实现对类型的::Value来执行And操作，有false短路操作。
@@ -79,7 +95,21 @@ POD,plain old data,标量，array，或者是不带static,private，virtual的st
 没来防止模版递归的
 
 ## Align
-头文件使用AlignmentTemplates.h，有函数Align,AlignDown,IsAligned,AlignArbitrary
+头文件使用AlignmentTemplates.h，有函数Align,AlignDown,IsAligned,AlignArbitrary 
+
+Align:针对power of two的特化版,往上取，(Value+N-1)&~(N-1) 
+AlignDown: 针对Power of two的特化版，向下取，(Value)&~(N-1) 
+IsAligned: 检测是不是对齐， !((Value)&(T-1))
+AlignArbitrary: 任意对齐  
+
+## ALIGNOF 
+用来计算一个类型的大小`#define ALIGNOF(T) (TElementAlignmentCalculator<T>::Value)` 
+原理如下：
+1. 如果是类类型
+   sizeof(Drived(T))- sizeof(T),如果不为0，就是这个值。如果为0，见2
+2. 如果是非类类型
+   sizeof(Composed(T))-sizeof(T)
+构造一个破坏原来对齐结构的一个新的类型，与原类型相减就能获得类型的对齐值 
 
 ## TRemoveReference
 对应c++11的std::remove_reference
@@ -158,5 +188,8 @@ POD,plain old data,标量，array，或者是不带static,private，virtual的st
 5.	GENERATE_MEMBER_FUNCTION_CHECK
 
 ## TDecay
-对应std::decay，Applies lvalue-to-rvalue, array-to-pointer, and function-to-pointer implicit conversions to the type T, removes cv-qualifiers,降级的转换
+对应std::decay，Applies lvalue-to-rvalue, array-to-pointer, and function-to-pointer implicit conversions to the type T, removes cv-qualifiers,降级的转换 
+
+## TAreTypesEqual
+用来判断两个类型是否一致。用宏来包裹 `#define ARE_TYPES_EQUAL(A,B) TAreTypesEqual<A,B>::Value`
 
