@@ -7,16 +7,21 @@
 2.	GenericPlatformMemory实现基础Memory的相关功能：SyetemMalloc,Memcopy等
 3.	WindowPlatformMemory实现平台特化，最终通过typedef为UPlatformMemory.  
 ## 头文件包含关系 
+	|- UnrealMemory.h
+			|- PlatformMemroy.h
+					|- CoreTypes.h  见\Documentation\UERuntimeCoreDesign\HeadInclude  
+					|- GenericPlatform/GenericPlatformMemory.h 
+							|- 定义struct :FGenericPlatformMemoryConstants  
+							|- 定义struct：FGenericPlatformMemoryStats
+							|- 定义并曝露FGenericPlatformMemory类，用来管理以上两个结构体，以及MemoryCpy等操作 
+					|- Windows/WindowsPlatformMemory.h  
+							|- struct FWindowsPlatformMemory->FGenericPlatformMemory
+							|- typedef FWindowsPlatformMemory FPlatformMemory;最终曝露在外面的是FPlatformMemory
+			|- MemoryBase.h 
+					定义了FMalloc的接口
 
-	|- PlatformMemroy.h
-			|- CoreTypes.h  见\Documentation\UERuntimeCoreDesign\HeadInclude  
-			|- GenericPlatform/GenericPlatformMemory.h 
-					|- 定义struct :FGenericPlatformMemoryConstants  
-					|- 定义struct：FGenericPlatformMemoryStats
-					|- 定义并曝露FGenericPlatformMemory类，用来管理以上两个结构体，以及MemoryCpy等操作 
-			|- Windows/WindowsPlatformMemory.h  
-					|- struct FWindowsPlatformMemory->FGenericPlatformMemory
-					|- typedef FWindowsPlatformMemory FPlatformMemory;最终曝露在外面的是FPlatformMemory
+可见UnrealMemory通过对PlatformMemory.h 和MemoryBase.h的组合，实现了Malloc与MemoryCpy的功能的组合。
+
 ### 相关细节
 1.	FGenericPlatformMemoryConstants  
     1.TotalPhysical  
@@ -56,7 +61,7 @@
 ## MemoryBase
 ### FMalloc  （HAL/MemoryBase.h）
    1.	提供内存分配的基类，实现有MallocAnsic,MallocBinned,MallocBinned2,MallocStomp,MallocTBB等。
-   2.	全局内存分配器GMalloc
+   2.	全局内存分配器GMalloc,跨DLL的全局
    3.	FMalloc 主要有
   		1.	Malloc, Realloc,Free,QuantizeSize, Trim    
   		2.	SetupTLSCachesOnCurrentThread  	  
@@ -96,10 +101,10 @@
 2.	FWindowPlatformMemory实现平台特定的操作，相当于实现
 3.	**注意**：实现用的只是简单的继承，没有使用虚函数使用重载来减少开销。最后typedef FWindowsPlatformMemory FPlatformMemory，对外只使用FPlatformMemory。对于ISO平台来说，使用typdef FIosPlatformMemory FPlatformMemory来实现,对调用者来说是透明的。**目的**是编译期的跨平台。
 
-### YMalloc
-1.	YMalloc继承于YUseSystemMallocForNew,其定义了类的operator new
+### FMalloc
+1.	FMalloc继承于FUseSystemMallocForNew,其定义了类的operator new
 
-		class CORE_API YUseSystemMallocForNew
+		class CORE_API FUseSystemMallocForNew
 		{
 		public:
 			/**
@@ -110,7 +115,7 @@
 			void* operator new[](size_t Size);
 			void operator delete[](void* Ptr);
 		};
-	这样子做的原因是，需要根据参数动态创建YMalloc，开始时全局GAlloc为null, 在第一次创建FMalloc时，如`GAlloc = new FTBBMalloc`，这时会调YMemory::Malloc，因为GMalloc还没有初始化（这时候还没有到Main函数，肯定是单线程），继续调`GAlloc = new FTBBMalloc`，导致无限递归，所以要自定义operator new来打破这种递归。  
+	这样子做的原因是，需要根据参数动态创建FMalloc，开始时全局GAlloc为null, 在第一次创建FMalloc时，如`GAlloc = new FTBBMalloc`，这时会调FMemory::Malloc，因为GMalloc还没有初始化（这时候还没有到Main函数，肯定是单线程），继续调`GAlloc = new FTBBMalloc`，导致无限递归，所以要自定义operator new来打破这种递归。  
 ![Add](Picture/Recursive.png)
 
 ## Malloc(0) / Realloc(0)
@@ -118,7 +123,23 @@
 >If size is 0, malloc allocates a __zero-length__ item in the heap and returns a valid pointer to that item.   
 ### [Realloc(0)](https://msdn.microsoft.com/en-us/library/xbebcx7d.aspx)  
 >If size is zero, then the block pointed to by memblock is __freed__; the return value is NULL, and memblock is left pointing at a freed block.
+
+## 特殊FMalloc的用法
+1. FMallocProfiler   
+   用来做时间测试，由USE_MALLOC_PROFILER宏打开
+2. FMallocVerifyProxy
+   用来对传入的指针进行验证
+3. FMallocLeakDetectionProxy
+   用来检测内存泄露
+   使用方法：
+    1. 在要检测的模块编译使添加 `MALLOC_LEAKDETECTION=1`的宏；
+    2. 检测开始前设置：` FMallocLeakDetection::Get().SetAllocationCollection(true)`
+    3. 检测开始后设置：`FMallocLeakDetection::Get().SetAllocationCollection(false);`
+    4. 输出检测结果`FMallocLeakDetection::Get().DumpPotentialLeakers();
+	FMallocLeakDetection::Get().DumpOpenCallstacks();`
+4. FMallocPoisonProxy
+   给未初始化的内存赋值0xCD
+
 # TODO
 - [ ] 统计信息
-- [ ] 不同的YMemory类的功能
 - [ ] 为什么默认用TBBMalloc
