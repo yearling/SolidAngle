@@ -182,6 +182,8 @@ void TestDecay()
 	std::cout << "\n---------------DecayTest----------" << std::endl;
 	using INT10 = int32[10];
 	typedef void(*pFunc)();
+	using FuncType = void();
+	static_assert(TAreTypesEqual<pFunc, FuncType*>::Value,"Types are not equal");
 	static_assert(TAreTypesEqual<int*, TDecay<INT10>::Type>::Value,"Types are not equal");
 	static_assert(TAreTypesEqual<pFunc, TDecay<void()>::Type>::Value,"Types are not equal");
 }
@@ -284,6 +286,10 @@ int main()
 	TestAlign();
 	TestAlignOf();
 	TestDecay();
+	typedef void (*pFUnc)();
+	//using FuncPointerType = decltype(pFUnc);
+	pFUnc c=nullptr;
+	static_assert(TIsFunction<void()>::Value, "Is true");
 //PODTypeWithStdString* pMemLeak = new PODTypeWithStdString();
 
 
