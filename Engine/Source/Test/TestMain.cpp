@@ -229,6 +229,7 @@ void TestUniquePtr()
 		std::cout << "*(TUniquePtr<int>()): " << *TestIntUniquePtr << std::endl;
 
 		TUniquePtr<int> TestIntUniqueMove = MoveTemp(TestIntUniquePtr);
+		std::cout << "size of TUniquePtr<int>: " << sizeof(TestIntUniqueMove) << std::endl;
 		check(TestIntUniquePtr.Get() == nullptr);
 		check(*TestIntUniqueMove == 5);
 		check(!TestIntUniquePtr.IsValid());
@@ -238,10 +239,16 @@ void TestUniquePtr()
 		delete pLeakInt;
 		TUniquePtr<int[]> TestIntArrayPtr = MakeUnique<int[]>(5);
 		TUniquePtr<int, InspectorCopyMoveConstructor> UniquePtrWithDeleter = TUniquePtr<int, InspectorCopyMoveConstructor>(new int(5), InspectorCopyMoveConstructor());
+		TUniquePtr<int, InspectorCopyMoveConstructor> UniquePtrWithDeleterCpy = MoveTemp(UniquePtrWithDeleter);
 	}
 	FMallocLeakDetection::Get().SetAllocationCollection(false);
 	FMallocLeakDetection::Get().DumpPotentialLeakers();
 	FMallocLeakDetection::Get().DumpOpenCallstacks();
+}
+
+void TestSharedPtr()
+{
+	std::shared_ptr<int> StdSharedPtr = std::make_shared<int>(5);
 }
 class YTestModel : public FDefaultModuleImpl
 {
