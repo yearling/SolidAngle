@@ -190,52 +190,5 @@ AlignArbitrary: 任意对齐
 ## TDecay
 对应std::decay，Applies lvalue-to-rvalue, array-to-pointer, and function-to-pointer implicit conversions to the type T, removes cv-qualifiers,降级的转换 
 
-## TAreTypesEqual
-用来判断两个类型是否一致。用宏来包裹 `#define ARE_TYPES_EQUAL(A,B) TAreTypesEqual<A,B>::Value`  
-
-## TIsDerivedFrom<typename DerivedType, typename BaseType>
-用来判断是不是继承关系  
-
-## TIsCharType
-用来判断是不是Char类型
-
-## TFormatSpecifier<>::GetFormatSpecifier
-用来获取数值类型的输出符，比如int是 "%d"
-
-## TIsReferenceType 
-判断是不是引用类型
-
-## TIsLValueReferenceType
-判断是不是左值引用 
-
-## TIsRValueReferenceType
-判断是不是右值引用  
-
-## TIsVoidType
-判断是不是void类型  
-
-## TIsFundamentalType 
-判断是不是基本类型（数值+void)  
-
-## TIsFunction
-判断是不是函数类型 
-
-## TIsZeroConstructType
-判断是不是没有来构造函数 
-
-## TIsWeakPointerType
-判断是不是weakptr 
-
-## TNameOf<>::GetName()
-获取类型名  
-
-## TCallTraitsParamTypeHelper
-传参形参优化
-1. 如果是小类型： typdef const T ParamType;
-2. 如果是小类型指针，typdef T* ParamType;
-3. 其它： typedef const T& ParamType
-
-
-
 
 

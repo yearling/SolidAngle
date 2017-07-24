@@ -207,6 +207,12 @@ void operator delete  (void* Ptr)                                               
 void operator delete[](void* Ptr)                                                 { YMemory::Free(Ptr); } 
 void operator delete  (void* Ptr, const std::nothrow_t&)                          throw() { YMemory::Free(Ptr); } 
 void operator delete[](void* Ptr, const std::nothrow_t&)                          throw() { YMemory::Free(Ptr); }*/
+struct TestStructDefaultConstruct
+{
+	int a;
+	int b;
+	int c;
+};
 int main()
 {
 #if 0
