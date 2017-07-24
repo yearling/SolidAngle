@@ -187,6 +187,21 @@ public:
 		return *this;
 	}
 
+	FORCEINLINE TUniquePtr(T* Data, typename TChooseClass<TIsReferenceType<Deleter>::Value, Deleter,
+		const typename TRemoveReference<Deleter>::Type&>::Result InDeleter)
+		:Deleter(InDeleter)
+		, Ptr(Data)
+	{
+
+	}
+
+	FORCEINLINE TUniquePtr(T* Data, typename TRemoveReference<Deleter>::Type&& InDeleter)
+		:Deleter(MoveTemp(InDeleter))
+		, Ptr(Data)
+	{
+
+	}
+
 	/**
 	* Destructor
 	*/

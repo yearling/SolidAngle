@@ -188,6 +188,61 @@ void TestDecay()
 	static_assert(TAreTypesEqual<pFunc, TDecay<void()>::Type>::Value,"Types are not equal");
 }
 
+class InspectorCopyMoveConstructor
+{
+public:
+	InspectorCopyMoveConstructor()
+	{
+		std::cout << "[InspectorCopyMoveConstructor]:Default Constructor" << std::endl;
+	}
+
+	InspectorCopyMoveConstructor(const InspectorCopyMoveConstructor&)
+	{
+		std::cout << "[InspectorCopyMoveConstructor]:Default Copy Constructor" << std::endl;
+	}
+
+	InspectorCopyMoveConstructor& operator=(const InspectorCopyMoveConstructor&)
+	{
+		std::cout << "[InspectorCopyMoveConstructor]:Default Assignment" << std::endl;
+	}
+
+	InspectorCopyMoveConstructor( InspectorCopyMoveConstructor&&)
+	{
+		std::cout << "[InspectorCopyMoveConstructor]:Default Move Constructor" << std::endl;
+	}
+	InspectorCopyMoveConstructor& operator=(const InspectorCopyMoveConstructor&&)
+	{
+		std::cout << "[InspectorCopyMoveConstructor]:Default Move Assignment" << std::endl;
+	}
+	void operator()(int *p)
+	{
+		delete p;
+	}
+}; 
+
+void TestUniquePtr()
+{
+	std::cout << "\n---------------UniqueTest----------" << std::endl;
+	FMallocLeakDetection::Get().SetAllocationCollection(true);
+	{
+		TUniquePtr<int> TestIntUniquePtr = MakeUnique<int>(5);
+		std::cout << "*(TUniquePtr<int>()): " << *TestIntUniquePtr << std::endl;
+
+		TUniquePtr<int> TestIntUniqueMove = MoveTemp(TestIntUniquePtr);
+		check(TestIntUniquePtr.Get() == nullptr);
+		check(*TestIntUniqueMove == 5);
+		check(!TestIntUniquePtr.IsValid());
+		check(!TestIntUniquePtr);
+		int *pLeakInt = TestIntUniqueMove.Release();
+		check(!TestIntUniqueMove);
+		delete pLeakInt;
+		TUniquePtr<int[]> TestIntArrayPtr = MakeUnique<int[]>(5);
+		TUniquePtr<int, InspectorCopyMoveConstructor> UniquePtrWithDeleter = TUniquePtr<int, InspectorCopyMoveConstructor>(new int(5), InspectorCopyMoveConstructor());
+	}
+	FMallocLeakDetection::Get().SetAllocationCollection(false);
+	FMallocLeakDetection::Get().DumpPotentialLeakers();
+	FMallocLeakDetection::Get().DumpOpenCallstacks();
+}
 class YTestModel : public FDefaultModuleImpl
 {
 public:
@@ -296,6 +351,8 @@ int main()
 	//using FuncPointerType = decltype(pFUnc);
 	pFUnc c=nullptr;
 	static_assert(TIsFunction<void()>::Value, "Is true");
+
+	TestUniquePtr();
 //PODTypeWithStdString* pMemLeak = new PODTypeWithStdString();
 
 
