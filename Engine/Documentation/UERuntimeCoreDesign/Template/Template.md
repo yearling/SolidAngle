@@ -235,7 +235,9 @@ AlignArbitrary: 任意对齐
 2. 如果是小类型指针，typdef T* ParamType;
 3. 其它： typedef const T& ParamType
 
+## TTypeCompatibleBytes
+struct TTypedCompatibleBytest<T> 与T内存一样大小的bytes.
 
-
-
+## TypeHash
+GetTypeHash 常用类型的hash
 
