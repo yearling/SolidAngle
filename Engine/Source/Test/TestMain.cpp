@@ -248,7 +248,8 @@ void TestUniquePtr()
 
 void TestSharedPtr()
 {
-	std::shared_ptr<int> StdSharedPtr = std::make_shared<int>(5);
+	std::cout << "\n---------------SharedPtrTest----------" << std::endl;
+	SharedPointerTesting::TestSharedPointer<ESPMode::Fast>();
 }
 class YTestModel : public FDefaultModuleImpl
 {
@@ -360,6 +361,7 @@ int main()
 	static_assert(TIsFunction<void()>::Value, "Is true");
 
 	TestUniquePtr();
+	TestSharedPtr();
 //PODTypeWithStdString* pMemLeak = new PODTypeWithStdString();
 
 

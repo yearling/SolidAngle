@@ -2,7 +2,8 @@
 
 
 /** Toggle this define to enable shared pointer testing features */
-#define WITH_SHARED_POINTER_TESTS 0 && !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
+//#define WITH_SHARED_POINTER_TESTS 0 && !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
+#define WITH_SHARED_POINTER_TESTS  !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
 
 enum class ESPMode;
 
