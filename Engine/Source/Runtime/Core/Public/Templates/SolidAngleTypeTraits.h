@@ -172,7 +172,9 @@ struct TIsFunction<RetType(Params...)>
 template<typename T>
 struct TIsZeroConstructType
 {
-	enum { Value = TOr<TIsEnum<T>, TIsArithmetic<T>, TIsPointer<T>>::Value };
+	//enum { Value = TOr<TIsEnum<T>, TIsArithmetic<T>, TIsPointer<T>>::Value };
+	// !!NOTE by zyx, pod should belong zeroconstructtype
+	enum { Value = TOr<TIsEnum<T>, TIsArithmetic<T>, TIsPointer<T>, TIsPODType<T> >::Value };
 };
 
 /**

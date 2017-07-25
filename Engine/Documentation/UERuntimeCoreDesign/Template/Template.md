@@ -190,11 +190,7 @@ AlignArbitrary: 任意对齐
 ## TDecay
 对应std::decay，Applies lvalue-to-rvalue, array-to-pointer, and function-to-pointer implicit conversions to the type T, removes cv-qualifiers,降级的转换 
 
-## TAreTypesEqual
-用来判断两个类型是否一致。用宏来包裹 `#define ARE_TYPES_EQUAL(A,B) TAreTypesEqual<A,B>::Value`  
 
-## TIsDerivedFrom<typename DerivedType, typename BaseType>
-用来判断是不是继承关系  
 
 ## TIsCharType
 用来判断是不是Char类型
