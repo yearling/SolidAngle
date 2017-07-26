@@ -93,3 +93,7 @@ Deprecated in UE4.15
 7. 在对性能要求高的地方优化：We wanted more control over performance (inlining, memory, use of virtuals, etc.
 8. 更好debug:(liberal code comments, etc.)
 9. 最好不引用第三方库
+
+# 注意
+UE的默认不是线程安全版的就是一个特化版的，单线程下使用；
+UE的线程安全版的，跟std::shared_ptr的线程安全程度一样，是多线程不安全的！！！！多线程不安全！！！
