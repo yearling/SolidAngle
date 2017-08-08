@@ -12,6 +12,7 @@
 #include "Templates\AlignOf.h"
 #include "Templates\Decay.h"
 #include "Templates\AreTypesEqual.h"
+#include "Containers\BitArray.h"
 
 struct TrueValue
 {
@@ -260,6 +261,16 @@ public:
 		return false;
 	}
 };
+
+void TestBitArray()
+{
+	std::cout << "\n---------------TBitArrayTest----------" << std::endl;
+	TBitArray<> TestBitArray;
+	TBitArray<> TestAllTrue(true, 31);
+
+
+
+}
 IMPLEMENT_MODULE(YTestModel, TestModel);
 
  /*void* operator new  (size_t Size)  { return YMemory::Malloc(Size); } 
@@ -362,6 +373,7 @@ int main()
 
 	TestUniquePtr();
 	TestSharedPtr();
+	TestBitArray();
 //PODTypeWithStdString* pMemLeak = new PODTypeWithStdString();
 
 
