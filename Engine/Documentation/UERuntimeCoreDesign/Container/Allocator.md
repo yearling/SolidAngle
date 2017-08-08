@@ -76,13 +76,32 @@ class TArray
 6.	TInlineSetAllocator
 
 ## Allocator基本接口
-FContainerAllocatorInterface 
-1.	MoveToEmpty： 对应Allocator的move语义
+FContainerAllocatorInterface  
+
+1.	MoveToEmpty： 对应Allocator的move语义，释放自己持有的内存，转移别的容器的内存
 2.	GetAllocation
 3.	ResizeAllocation
 4.	CalculateSlack
+
+		默认调用DefaultCalculateSlackReserve
+		|- 调用GMalloc->QuantizeSize
+			|— TBBMalloc调用YMalloc::QuatizeSize，返回传入值 ；
+			QuantizeSize目的：For some allocators this will return the actual size that should be requested to eliminate internal fragmentation. The return value will always be >= Count. This can be used to grow and shrink containers to optimal sizes.
+
 5.	CalculateSlackShrink
+ 
+	内存减缩 
+
+		|- 默认调用 int32 DefaultCalculateSlackShrink(int32 NumElements, int32 NumAllocatedElements, SIZE_T BytesPerElement, bool bAllowQuantize, uint32 Alignment = DEFAULT_ALIGNMENT) 
+			|- 1. 如果剩余的内存大于16384（16KB)
+			|- 2. 如果当前元素小于2/3分配的元素
+
 6.	CalculateSlackGrow
+
+	内存增加
+		
+		|- 默认调用DefaultCalculateSlackGrow()
+			|- Grow = NumElements +　3/8*NumElements +16
 7.	GetAllocatedSize
 
 ## 结构分析
@@ -113,12 +132,13 @@ FHeapAllocator只保存连续分配空间的地址，不保存有多少个元素
    其NumInlineElements是指固定的内存分配大小，SecondaryAllocator当内存分配量大于固定内存时，动态分配内存；
 2. __注意__:在Resize时，有可能要把在内存上分配的对象拷贝到堆上（或者反过来），这个时候牵涉到一个优化：
 	1. 如果是可以直接位拷贝的`TCanBitwiseRelocate`,就有FMemory::Memmove;  
-		TCanBitwiseRelocate<SourceType,DesType>::value为true:
-	        TOr<
-				TAreTypesEqual<DestinationElementType, SourceElementType>,
-				TAnd<
-				TIsBitwiseConstructible<DestinationElementType, SourceElementType>,
-				TIsTriviallyDestructible<SourceElementType>  
+	 
+			TCanBitwiseRelocate<SourceType,DesType>::value为true:
+		        TOr<
+					TAreTypesEqual<DestinationElementType, SourceElementType>,
+					TAnd<
+					TIsBitwiseConstructible<DestinationElementType, SourceElementType>,
+					TIsTriviallyDestructible<SourceElementType>  
 		这其中有个`TIsBitwiseConstructible<T,U>`，用来判断U这个类型能不能通过memcpy产生一个新的T，
 	2. 如果不可以直接位拷贝，要执行place new 
 
