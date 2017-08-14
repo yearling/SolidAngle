@@ -267,9 +267,19 @@ void TestBitArray()
 	std::cout << "\n---------------TBitArrayTest----------" << std::endl;
 	TBitArray<> TestBitArray;
 	TBitArray<> TestAllTrue(true, 31);
-
-
-
+	//TestAllTrue.Add(false);
+	TestAllTrue.Add(true);
+	TestAllTrue.Add(true);
+	check(!TestAllTrue.Contains(false));
+	check(TestAllTrue.Find(false) == INDEX_NONE);
+	check(TestAllTrue.FindAndSetFirstZeroBit() == INDEX_NONE);
+	FBitReference BooleanBit = TestAllTrue[0];
+	BooleanBit = TestAllTrue[32];
+	for (TBitArray<>::FIterator It(TestAllTrue); (bool)It; ++It)
+	{
+		std::cout << "TBitArray[" << It.GetIndex() << "]'s Value is " << It.GetValue() << std::endl;
+	}
+	std::cout << "1<<31:" << (1 << 1) << std::endl;
 }
 IMPLEMENT_MODULE(YTestModel, TestModel);
 
