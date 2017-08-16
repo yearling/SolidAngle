@@ -70,7 +70,7 @@ ArrayNum,4字节，ArrayMax，4字节， FDefalutAllocator::ForAnyElemntType中�
 `Num`: **容器元素数量**  
 `Max`:**最大数量**  
 `operator[]`:
-`Pop`:  
+`Pop`:  从最后面删除
 `Push`:  
 `Top`: 返回最后一个元素
 `Last`:
@@ -125,7 +125,7 @@ ArrayNum,4字节，ArrayMax，4字节， FDefalutAllocator::ForAnyElemntType中�
 
 ## Swap
 `SwapMemory` :
-`Swap`:
+`Swap`:紧紧是内存级别的swap，没有析构与创建
 
 ## UObject
 `FindItemByClass`:

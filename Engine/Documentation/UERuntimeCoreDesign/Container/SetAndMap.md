@@ -3,7 +3,7 @@
 TMap是哈希Map，此容器是一个关联式容器，意味着每个键均拥有一个关联值，可通过键高效地查找值对象。
 存在两种映射类型：TMap 和 TMultiMap。TMap 的键为唯一。键已存在时插入一个新的键值对将导致现有的对被替代。TMultiMap 的键不为唯一，因此新添加的对不会替代现有的对。
 
-TSet 类似于 TMap 和 TMultiMap，但具有一个重要区别：TSet 不会以单独提供的键来关联元素，而是通过评估元素的可覆盖函数将元素本身作为键使用。TSets 添加、查找和移除元素非常快速（恒时）。默认情况下，TSets 不允许重复的键，但如果需要，也可以支持这一行为。
+TSet 类似于 TMap 和 TMultiMap，但具有一个重要区别：TSet 不会以单独提供的键来关联元素，而是将元素本身作为键使用。TSets 添加、查找和移除元素非常快速（恒时）。默认情况下，TSets 不允许重复的键，但如果需要，也可以支持这一行为。
 
 本文主要介绍
 1. TSet,TMap的引擎需求
@@ -17,6 +17,8 @@ TSet 类似于 TMap 和 TMultiMap，但具有一个重要区别：TSet 不会以
 
 ## TSet的使用方法
 
+## GetTypeHash
+元素要有`inline uint32 GetTypeHash()`的hash函数
 ### 添加
 	TSet<FString> FruitSet;
 	FruitSet.Add(TEXT("Banana"));
@@ -129,112 +131,79 @@ TSet 类似于 TMap 和 TMultiMap，但具有一个重要区别：TSet 不会以
 	template<typename ElementType, typename InKeyType, bool bInAllowDuplicateKeys = false>
 	struct BaseKeyFuncs 
 
+## Set实现细节
+### Set的声明
 
-## TCallTraitsParamTypeHelper
+		template<
+		typename InElementType,
+		typename KeyFuncs = DefaultKeyFuncs<InElementType>,
+		typename Allocator = FDefaultSetAllocator>
+		class TSet;
 
-	template <typename T, bool TypeIsSmall>
-	struct TCallTraitsParamTypeHelper
-	{
-		typedef const T& ParamType;
-		typedef const T& ConstParamType;
-	};
-	// 可直接复制的类型优化
-	template <typename T>
-	struct TCallTraitsParamTypeHelper<T, true>
-	{
-		typedef const T ParamType;
-		typedef const T ConstParamType;
-	};
-    // 指针类型优化
-	template <typename T>
-	struct TCallTraitsParamTypeHelper<T*, true>
-	{
-		typedef T* ParamType;
-		typedef const T* ConstParamType;
-	}
+		class FDefaultSetAllocator : public TSetAllocator<> { public: typedef TSetAllocator<>         Typedef; };
 
-主要由TCallTraitsBase来实现  
+		template<
+		typename InSparseArrayAllocator = TSparseArrayAllocator<>,
+		typename InHashAllocator = TInlineAllocator<1, FDefaultAllocator>,
+		uint32   AverageNumberOfElementsPerHashBucket = DEFAULT_NUMBER_OF_ELEMENTS_PER_HASH_BUCKET（2）,
+		uint32   BaseNumberOfHashBuckets = DEFAULT_BASE_NUMBER_OF_HASH_BUCKETS（8）,
+		uint32   MinNumberOfHashedElements = DEFAULT_MIN_NUMBER_OF_HASHED_ELEMENTS （4）
+		>
+		class TSetAllocator
+		
+可见，TSet保存元素使用TSparseArray, 平均hash每个bucket中有2个元素，默认有8个bucket，最小有4个元素；
+### 主要成员变量
+1. Elements
 
-	template <typename T>
-	struct TCallTraitsBase
-	{
-	private:
-		enum { PassByValue = TOr<TAndValue<(sizeof(T) <= sizeof(void*)), TIsPODType<T>>, TIsArithmetic<T>, TIsPointer<T>>::Value };
-	public:
-		typedef T ValueType;
-		typedef T& Reference;
-		typedef const T& ConstReference;
-		typedef typename TCallTraitsParamTypeHelper<T, PassByValue>::ParamType ParamType;
-		typedef typename TCallTraitsParamTypeHelper<T, PassByValue>::ConstParamType ConstPointerType;
-	};
-之后有T&,T[N],const T[N]类型的特化
-
-TTypeTraits的实现  
-
-	template<typename T>
-	struct TTypeTraitsBase
-	{
-		typedef typename TCallTraits<T>::ParamType ConstInitType;
-		typedef typename TCallTraits<T>::ConstPointerType ConstPointerType;
+		ElementArrayType   Elements; 
+		
+		typedef TSparseArray<SetElementType, typename Allocator::SparseArrayAllocator>     ElementArrayType;
+		
+		typedef TSetElement<InElementType> SetElementType;
+		
+		template <typename InElementType>
+		class TSetElement
+		{
+			typedef InElementType ElementType;
 	
-		// There's no good way of detecting this so we'll just assume it to be true for certain known types and expect
-		// users to customize it for their custom types.
-		enum { IsBytewiseComparable = TOr<TIsEnum<T>, TIsArithmetic<T>, TIsPointer<T>>::Value };
-	};
-
-也就是说
-1. 如果是复杂的值类型（非指针，非引用，非基本类型，比一个指针大）T，
-TCallTraits<T>::ValueType       T
-TCallTraits<T>::Referece        T&
-TCallTraits<T>::ConstReference  const T &
-TCallTraits<T>::ParamType       const T &
-TCallTraits<T>::ConstPointerType   const T &
-
-2. 如果是简单类型，非指针
-TCallTraits<T>::ValueType       T
-TCallTraits<T>::Referece        T&
-TCallTraits<T>::ConstReference  const T &
-TCallTraits<T>::ParamType       const T 
-TCallTraits<T>::ConstPointerType   const T 
-
-3. 指针 T*
-TCallTraits<T>::ValueType       T
-TCallTraits<T>::Referece        T&
-TCallTraits<T>::ConstReference  const T &
-TCallTraits<T>::ParamType       T* 
-TCallTraits<T>::ConstPointerType   const T* 
-
-4. 引用 T&
-TCallTraits<T>::ValueType       T&
-TCallTraits<T>::Referece        T&
-TCallTraits<T>::ConstReference  const T &
-TCallTraits<T>::ParamType       T& 
-TCallTraits<T>::ConstPointerType   T& 
-
-5. 数组T<N>
-typedef T ArrayType[N];
-TCallTraits<T>::ValueType       const T*
-TCallTraits<T>::Referece        ArrayType&
-TCallTraits<T>::ConstReference  const ArrayType&
-TCallTraits<T>::ParamType       const T* const
-TCallTraits<T>::ConstPointerType   const T* const
-
-6. const 数组 const T<N>
-typedef T ArrayType[N];
-TCallTraits<T>::ValueType       T*
-TCallTraits<T>::Referece        ArrayType&
-TCallTraits<T>::ConstReference  const ArrayType&
-TCallTraits<T>::ParamType       const T* const
-TCallTraits<T>::ConstPointerType   const T* const
-
-### TTypeTraitsBase
-
-	struct TTypeTraitsBase
-	{
-		typedef typename TCallTraits<T>::ParamType ConstInitType;
-		typedef typename TCallTraits<T>::ConstPointerType ConstPointerType;
+			/** The element's value. */
+			ElementType Value;
 	
-		// There's no good way of detecting this so we'll just assume it to be true for certain known types and expect
-		// users to customize it for their custom types.
-		enum { IsBytewiseComparable = TOr<TIsEnum<T>, TIsArithmetic<T>, TIsPointer<T>>::Value };
-	};
+			/** The id of the next element in the same hash bucket. */
+			mutable FSetElementId HashNextId;
+	
+			/** The hash bucket that the element is currently linked to. */
+			mutable int32 HashIndex;
+		}	
+也就是说TSparseArray中放的是{当前元素值，下一个bucket的ID（当前这个TSparseArray的索引），当前元素的hashID（在hashArray中的索引）}；
+
+2. Hash
+	
+		mutable HashType   Hash;
+		mutable int32      HashSize;
+	
+		typedef typename Allocator::HashAllocator::template ForElementType<FSetElementId> HashType;
+HashType中存的是TSParseArray中的索引。
+
+### 实现方式
+简单来说，TSparseArray中存元素和自己的hash值及冲突哈希值；
+HashArray中保存每个bucket的第一个元素的在TSparseArray中的索引。
+__注意__：
+
+		KeyFuncs::GetSetKey(): 通过元素的值找到key的值，对于set来说，key,value一致；对于Map来说，就不一样了
+		
+		KeyFuncs::GetKeyHash()：得到Hash值 
+		
+		GetTypedHash():从HashArray中读取值,值就是SparseArray的索引 
+1. 添加
+	1. 在Elements中分配一个SetElementType，把SetElementType.Value构造为元素的值；
+	2. hash该元素，赋值为SetElementType.HashIndex;
+	3. 以SetElementType.HashIndex值为地址在Hash中查找是否存在
+	   1. 存在，hash冲突，链式hash,把SetElementType.HashIndex设为头，之前的设为SetElementType.HashNextID;
+	   2. 不存在，设为头，SetElementType.HashNextID设为NONE_INDEX;
+2. 查找
+	1. 根据元素值获取hash值，再通过hash值获取在TSparseArray中的SetElementType,
+	2. 对比SetElementType中的元素值与被查元素值是否一样，
+	   1. 一样，查找到；
+	   2. 不一样，取SetElementType.NextHashID来继续查找。
+	
