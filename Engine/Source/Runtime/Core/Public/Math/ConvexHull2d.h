@@ -225,13 +225,13 @@ namespace ConvexHull2D
 	static Test()
 	{
 		{
-			TArray<YVector, TInlineAllocator<8> > In;
+			TArray<FVector, TInlineAllocator<8> > In;
 			In.Empty(8);
 
-			In.Add(YVector(2, 0, 0));
-			In.Add(YVector(0, 0, 0));
-			In.Add(YVector(1, 0, 0));
-			In.Add(YVector(3, 0, 0));
+			In.Add(FVector(2, 0, 0));
+			In.Add(FVector(0, 0, 0));
+			In.Add(FVector(1, 0, 0));
+			In.Add(FVector(3, 0, 0));
 
 			TArray<int32, TInlineAllocator<8>> Out;
 			Out.Empty(8);
@@ -244,10 +244,10 @@ namespace ConvexHull2D
 		}
 
 		{
-			TArray<YVector, TInlineAllocator<8> > In;
+			TArray<FVector, TInlineAllocator<8> > In;
 			In.Empty(8);
 
-			In.Add(YVector(2, 1, 0));
+			In.Add(FVector(2, 1, 0));
 
 			TArray<int32, TInlineAllocator<8>> Out;
 			Out.Empty(8);
@@ -259,13 +259,13 @@ namespace ConvexHull2D
 		}
 
 		{
-			TArray<YVector, TInlineAllocator<8> > In;
+			TArray<FVector, TInlineAllocator<8> > In;
 			In.Empty(8);
 
-			In.Add(YVector(0, 0, 0));
-			In.Add(YVector(1, 0, 0));
-			In.Add(YVector(0, 1, 0));
-			In.Add(YVector(1, 1, 0));
+			In.Add(FVector(0, 0, 0));
+			In.Add(FVector(1, 0, 0));
+			In.Add(FVector(0, 1, 0));
+			In.Add(FVector(1, 1, 0));
 
 			TArray<int32, TInlineAllocator<8>> Out;
 			Out.Empty(8);
@@ -280,17 +280,17 @@ namespace ConvexHull2D
 		}
 
 		{
-			TArray<YVector, TInlineAllocator<8> > In;
+			TArray<FVector, TInlineAllocator<8> > In;
 			In.Empty(8);
 
-			In.Add(YVector(0, 0, 0));
-			In.Add(YVector(1, 0, 0));
-			In.Add(YVector(2, 0, 0));
-			In.Add(YVector(0, 1, 0));
-			In.Add(YVector(1, 1, 0));
-			In.Add(YVector(0, 2, 0));
-			In.Add(YVector(2, 2, 0));
-			In.Add(YVector(2, 2, 0));
+			In.Add(FVector(0, 0, 0));
+			In.Add(FVector(1, 0, 0));
+			In.Add(FVector(2, 0, 0));
+			In.Add(FVector(0, 1, 0));
+			In.Add(FVector(1, 1, 0));
+			In.Add(FVector(0, 2, 0));
+			In.Add(FVector(2, 2, 0));
+			In.Add(FVector(2, 2, 0));
 
 			TArray<int32, TInlineAllocator<8>> Out;
 			Out.Empty(8);
@@ -305,17 +305,17 @@ namespace ConvexHull2D
 		}
 
 		{
-			TArray<YVector, TInlineAllocator<8> > In;
+			TArray<FVector, TInlineAllocator<8> > In;
 			In.Empty(8);
 
-			In.Add(YVector(2, 0, 0));
-			In.Add(YVector(3, 1, 0));
-			In.Add(YVector(4, 2, 0));
-			In.Add(YVector(0, 2, 0));
-			In.Add(YVector(1, 3, 0));
-			In.Add(YVector(2, 4, 0));
-			In.Add(YVector(1, 1, 0));
-			In.Add(YVector(3, 3, 0));
+			In.Add(FVector(2, 0, 0));
+			In.Add(FVector(3, 1, 0));
+			In.Add(FVector(4, 2, 0));
+			In.Add(FVector(0, 2, 0));
+			In.Add(FVector(1, 3, 0));
+			In.Add(FVector(2, 4, 0));
+			In.Add(FVector(1, 1, 0));
+			In.Add(FVector(3, 3, 0));
 
 			TArray<int32, TInlineAllocator<8>> Out;
 			Out.Empty(8);

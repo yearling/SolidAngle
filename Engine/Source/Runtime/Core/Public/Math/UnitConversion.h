@@ -68,11 +68,11 @@ enum class EUnitType
 template<typename NumericType> struct FNumericUnit;
 
 /** Unit settings accessed globally through FUnitConversion::Settings() */
-class CORE_API YUnitSettings
+class CORE_API FUnitSettings
 {
 public:
 
-	YUnitSettings();
+	FUnitSettings();
 
 	/** Check whether unit display is globally enabled or disabled */
 	bool ShouldDisplayUnits() const;
@@ -84,7 +84,7 @@ public:
 	void SetDisplayUnits(EUnitType InType, EUnit Units);
 
 	/** Returns an event delegate that is executed when a display setting has changed. (GlobalUnitDisplay or DefaultInputUnits) */
-	DECLARE_EVENT(YUnitSettings, FDisplaySettingChanged);
+	DECLARE_EVENT(FUnitSettings, FDisplaySettingChanged);
 	FDisplaySettingChanged& OnDisplaySettingsChanged() { return SettingChangedEvent; }
 
 private:
@@ -99,10 +99,10 @@ private:
 	FDisplaySettingChanged SettingChangedEvent;
 };
 
-struct CORE_API YUnitConversion
+struct CORE_API FUnitConversion
 {
 	/** Get the global settings for unit conversion/display */
-	static YUnitSettings& Settings();
+	static FUnitSettings& Settings();
 
 	/** Check whether it is possible to convert a number between the two specified units */
 	static bool AreUnitsCompatible(EUnit From, EUnit To);

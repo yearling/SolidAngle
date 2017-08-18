@@ -34,11 +34,11 @@ const FColor FColor::Silver(189, 195, 199);
 const FColor FColor::Emerald(46, 204, 113);
 
 /**
-* Helper used by YColor -> YLinearColor conversion. We don't use a lookup table as unlike pow, multiplication is fast.
+* Helper used by FColor -> FLinearColor conversion. We don't use a lookup table as unlike pow, multiplication is fast.
 */
 static const float OneOver255 = 1.0f / 255.0f;
 
-//	YColor->YLinearColor conversion.
+//	FColor->FLinearColor conversion.
 FLinearColor::FLinearColor(const FColor& Color)
 {
 	R = sRGBToLinearTable[Color.R];
@@ -109,8 +109,8 @@ FColor FLinearColor::ToRGBE() const
 }
 
 
-/** Quantizes the linear color and returns the result as a YColor with optional sRGB conversion and quality as goal. */
-FColor FLinearColor::ToYColor(const bool bSRGB) const
+/** Quantizes the linear color and returns the result as a FColor with optional sRGB conversion and quality as goal. */
+FColor FLinearColor::ToFColor(const bool bSRGB) const
 {
 	float FloatR = FMath::Clamp(R, 0.0f, 1.0f);
 	float FloatG = FMath::Clamp(G, 0.0f, 1.0f);
@@ -337,7 +337,7 @@ FLinearColor FLinearColor::MakeRandomColor()
 
 FColor FColor::MakeRandomColor()
 {
-	return FLinearColor::MakeRandomColor().ToYColor(true);
+	return FLinearColor::MakeRandomColor().ToFColor(true);
 }
 
 FLinearColor FLinearColor::MakeFromColorTemperature( float Temp )
@@ -366,7 +366,7 @@ FLinearColor FLinearColor::MakeFromColorTemperature( float Temp )
 
 FColor FColor::MakeFromColorTemperature( float Temp )
 {
-	return FLinearColor::MakeFromColorTemperature( Temp ).ToYColor( true );
+	return FLinearColor::MakeFromColorTemperature( Temp ).ToFColor( true );
 }
 
 FColor FColor::MakeRedToGreenColorFromScalar(float Scalar)
@@ -382,13 +382,13 @@ FColor FColor::MakeRedToGreenColorFromScalar(float Scalar)
 void ComputeAndFixedColorAndIntensity(const FLinearColor& InLinearColor,FColor& OutColor,float& OutIntensity)
 {
 	float MaxComponent = FMath::Max(DELTA,FMath::Max(InLinearColor.R,FMath::Max(InLinearColor.G,InLinearColor.B)));
-	OutColor = ( InLinearColor / MaxComponent ).ToYColor(true);
+	OutColor = ( InLinearColor / MaxComponent ).ToFColor(true);
 	OutIntensity = MaxComponent;
 }
 
 
 /**
- * Pow table for fast YColor -> YLinearColor conversion.
+ * Pow table for fast FColor -> FLinearColor conversion.
  *
  * FMath::Pow( i / 255.f, 2.2f )
  */
@@ -427,7 +427,7 @@ float FLinearColor::Pow22OneOver255Table[256] =
 
 
 /**
-* Table for fast YColor -> YLinearColor conversion.
+* Table for fast FColor -> FLinearColor conversion.
 *
 * Color > 0.04045 ? pow( Color * (1.0 / 1.055) + 0.0521327, 2.4 ) : Color * (1.0 / 12.92);
 */

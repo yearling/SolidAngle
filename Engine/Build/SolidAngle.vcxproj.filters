@@ -1655,6 +1655,33 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\UnrealMathVectorConstants.h">
       <Filter>Source\Runtime\Core\Public\Math</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\Regex.h">
+      <Filter>Source\Runtime\Core\Public\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\BreakIterator.h">
+      <Filter>Source\Runtime\Core\Public\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\CamelCaseBreakIterator.h">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\GatherableTextData.h">
+      <Filter>Source\Runtime\Core\Public\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\IBreakIterator.h">
+      <Filter>Source\Runtime\Core\Public\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\InternationalizationManifest.h">
+      <Filter>Source\Runtime\Core\Public\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\InternationalizationMetadata.h">
+      <Filter>Source\Runtime\Core\Public\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\InternationalizationArchive.h">
+      <Filter>Source\Runtime\Core\Public\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\TextLocalizationManagerGlobals.h">
+      <Filter>Source\Runtime\Core\Public\Internationalization</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformMath.cpp">
@@ -2137,9 +2164,6 @@
     <ClCompile Include="..\Source\Runtime\Core\Private\Math\Color.cpp">
       <Filter>Source\Runtime\Core\Private\Math</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Runtime\Core\Private\Math\SolidAngleMath.cpp">
-      <Filter>Source\Runtime\Core\Private\Math</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\Runtime\Core\Private\Math\Transform.cpp">
       <Filter>Source\Runtime\Core\Private\Math</Filter>
     </ClCompile>
@@ -2238,6 +2262,39 @@
     </ClCompile>
     <ClCompile Include="..\Source\Runtime\SynthBenchmark\Private\FractalBenchmark.cpp">
       <Filter>Source\Runtime\SynthBenchmark\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Math\UnrealMath.cpp">
+      <Filter>Source\Runtime\Core\Private\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\LegacyRegex.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\LegacyCamelCaseBreakIterator.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\LegacyCharacterBoundaryIterator.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\LegacyLineBreakIterator.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\CamelCaseBreakIterator.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\GatherableTextData.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\InternationalizationManifest.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\InternationalizationMetadata.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\InternationalizationArchive.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\LegacyWordBreakIterator.cpp">
+      <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

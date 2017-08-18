@@ -18,7 +18,7 @@ struct FPrivateTextFormatArguments;
 
 /**
  * Type used as a string literal by the text formatter.
- * It is a case sensitive string that can hold onto a string either by pointer (in which case the data being pointed to must outlive this object), or by taking a copy (stored as an YString internally).
+ * It is a case sensitive string that can hold onto a string either by pointer (in which case the data being pointed to must outlive this object), or by taking a copy (stored as an FString internally).
  * @note The buffer is *not* guaranteed to be null terminated, so always test the length!
  */
 class FTextFormatString

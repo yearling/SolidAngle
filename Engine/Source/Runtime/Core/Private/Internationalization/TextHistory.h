@@ -40,7 +40,7 @@ public:
 	/** Rebuilds the FText from the hierarchical history, the result should be in the current locale */
 	virtual FText ToText(bool bInAsSource) const = 0;
 	
-	/** Serializes the history to/from an YArchive */
+	/** Serializes the history to/from an FArchive */
 	virtual void Serialize(FArchive& Ar) = 0;
 
 	/** Serializes data needed to get the FText's DisplayString */

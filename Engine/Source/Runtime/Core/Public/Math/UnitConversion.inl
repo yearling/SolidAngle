@@ -7,7 +7,7 @@
 #include "CoreFwd.h"
 
 struct FMath;
-struct YUnitConversion;
+struct FUnitConversion;
 enum class EUnit : uint8;
 enum class EUnitType;
 template<typename NumericType> struct FNumericUnit;
@@ -57,7 +57,7 @@ namespace UnitConversion
 
 /** Convert the specified number from one unit to another. Does nothing if the units are incompatible. */
 template<typename T>
-T YUnitConversion::Convert(T InValue, EUnit From, EUnit To)
+T FUnitConversion::Convert(T InValue, EUnit From, EUnit To)
 {
 	using namespace UnitConversion;
 
@@ -70,7 +70,7 @@ T YUnitConversion::Convert(T InValue, EUnit From, EUnit To)
 		return InValue;
 	}
 
-	switch(YUnitConversion::GetUnitType(From))
+	switch(FUnitConversion::GetUnitType(From))
 	{
 		case EUnitType::Distance:			return InValue * DistanceUnificationFactor(From)		* (1.0 / DistanceUnificationFactor(To));
 		case EUnitType::Angle:				return InValue * AngleUnificationFactor(From) 			* (1.0 / AngleUnificationFactor(To));
@@ -106,7 +106,7 @@ T YUnitConversion::Convert(T InValue, EUnit From, EUnit To)
 }
 
 template<typename T>
-FNumericUnit<T> YUnitConversion::QuantizeUnitsToBestFit(T Value, EUnit Units)
+FNumericUnit<T> FUnitConversion::QuantizeUnitsToBestFit(T Value, EUnit Units)
 {
 	auto OptionalBounds = UnitConversion::GetQuantizationBounds(Units);
 	if (!OptionalBounds.IsSet())
@@ -161,7 +161,7 @@ FNumericUnit<T> YUnitConversion::QuantizeUnitsToBestFit(T Value, EUnit Units)
 }
 
 template<typename T>
-EUnit YUnitConversion::CalculateDisplayUnit(T Value, EUnit InUnits)
+EUnit FUnitConversion::CalculateDisplayUnit(T Value, EUnit InUnits)
 {
 	if (InUnits == EUnit::Unspecified)
 	{
@@ -249,9 +249,9 @@ TOptional<FNumericUnit<NumericType>> FNumericUnit<NumericType>::ConvertTo(EUnit 
 	{
 		return FNumericUnit(Value, ToUnits);
 	}
-	else if (YUnitConversion::AreUnitsCompatible(Units, ToUnits))
+	else if (FUnitConversion::AreUnitsCompatible(Units, ToUnits))
 	{
-		return FNumericUnit<NumericType>(YUnitConversion::Convert(Value, Units, ToUnits), ToUnits);
+		return FNumericUnit<NumericType>(FUnitConversion::Convert(Value, Units, ToUnits), ToUnits);
 	}
 
 	return TOptional<FNumericUnit<NumericType>>();
@@ -260,7 +260,7 @@ TOptional<FNumericUnit<NumericType>> FNumericUnit<NumericType>::ConvertTo(EUnit 
 template<typename NumericType>
 FNumericUnit<NumericType> FNumericUnit<NumericType>::QuantizeUnitsToBestFit() const
 {
-	return YUnitConversion::QuantizeUnitsToBestFit(Value, Units);
+	return FUnitConversion::QuantizeUnitsToBestFit(Value, Units);
 }
 
 template<typename NumericType>
@@ -305,7 +305,7 @@ TOptional<FNumericUnit<NumericType>> FNumericUnit<NumericType>::TryParseString(c
 	else
 	{
 		// If the string specifies units, they must map to something that exists for this function to succeed
-		auto NewUnits = YUnitConversion::UnitFromString(NumberEnd);
+		auto NewUnits = FUnitConversion::UnitFromString(NumberEnd);
 		if (NewUnits)
 		{
 			Result.Emplace(NewValue, NewUnits.GetValue());
@@ -325,9 +325,9 @@ void FNumericUnit<NumericType>::CopyValueWithConversion(const FNumericUnit<Other
 		{
 			Value = Other.Value;
 		}
-		else if (YUnitConversion::AreUnitsCompatible(Units, Other.Units))
+		else if (FUnitConversion::AreUnitsCompatible(Units, Other.Units))
 		{
-			Value = YUnitConversion::Convert(Other.Value, Other.Units, Units);
+			Value = FUnitConversion::Convert(Other.Value, Other.Units, Units);
 		}
 		else
 		{
@@ -385,9 +385,9 @@ bool operator==(const FNumericUnit<NumericType>& LHS, const FNumericUnit<OtherTy
 		{
 			return LHS.Value == RHS.Value;
 		}
-		else if (YUnitConversion::AreUnitsCompatible(LHS.Units, RHS.Units))
+		else if (FUnitConversion::AreUnitsCompatible(LHS.Units, RHS.Units))
 		{
-			return LHS.Value == YUnitConversion::Convert(RHS.Value, RHS.Units, LHS.Units);
+			return LHS.Value == FUnitConversion::Convert(RHS.Value, RHS.Units, LHS.Units);
 		}
 		else
 		{
@@ -419,7 +419,7 @@ namespace Lex
 	{
 		FString String = ToString(NumericUnit.Value);
 		String += TEXT(" ");
-		String += YUnitConversion::GetUnitDisplayString(NumericUnit.Units);
+		String += FUnitConversion::GetUnitDisplayString(NumericUnit.Units);
 
 		return String;
 	}
@@ -429,7 +429,7 @@ namespace Lex
 	{
 		FString String = ToSanitizedString(NumericUnit.Value);
 		String += TEXT(" ");
-		String += YUnitConversion::GetUnitDisplayString(NumericUnit.Units);
+		String += FUnitConversion::GetUnitDisplayString(NumericUnit.Units);
 
 		return String;
 	}

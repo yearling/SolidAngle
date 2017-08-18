@@ -374,7 +374,7 @@ public:
 	explicit FTextFormatData(FText&& InText);
 
 	/**
-	 * Construct an instance from an YString.
+	 * Construct an instance from an FString.
 	 * The string will be immediately compiled. 
 	 */
 	explicit FTextFormatData(FString&& InString);
@@ -471,7 +471,7 @@ private:
 	};
 
 	/**
-	 * Type of source we're using (FText or YString).
+	 * Type of source we're using (FText or FString).
 	 */
 	ESourceType SourceType;
 
@@ -488,7 +488,7 @@ private:
 	/**
 	 * Copy of the string that was last compiled.
 	 * This allows the text to update via a culture change without immediately invalidating our compiled tokens.
-	 * If the data was constructed from an YString rather than an FText, then this is the string we were given and shouldn't be updated once the initial construction has happened.
+	 * If the data was constructed from an FString rather than an FText, then this is the string we were given and shouldn't be updated once the initial construction has happened.
 	 * Concurrent access protected by CompiledDataCS.
 	 */
 	FString SourceExpression;

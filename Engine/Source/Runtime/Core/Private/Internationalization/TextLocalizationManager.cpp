@@ -13,7 +13,7 @@
 #include "Stats/Stats.h"
 #include "Misc/ConfigCacheIni.h"
 #include "Misc/App.h"
-#include "Templates/UniquePtr.h"
+#include "UniquePtr.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogTextLocalizationManager, Log, All);
 
@@ -215,7 +215,7 @@ void FTextLocalizationManager::FLocalizationEntryTracker::DetectAndLogConflicts(
 		const FKeysTable& KeyTable = NamespaceEntry.Value;
 		for (const auto& KeyEntry : KeyTable)
 		{
-			const FString& KeFName = KeyEntry.Key;
+			const FString& KeyName = KeyEntry.Key;
 			const FEntryArray& EntryArray = KeyEntry.Value;
 
 			bool WasConflictDetected = false;
@@ -246,7 +246,7 @@ void FTextLocalizationManager::FLocalizationEntryTracker::DetectAndLogConflicts(
 					CollidingEntryListString += FString::Printf( TEXT("Localization Resource: (%s) Source String Hash: (%d) Localized String: (%s)"), *(Entry.LocResID), Entry.SourceStringHash, *(Entry.LocalizedString) );
 				}
 
-				UE_LOG(LogTextLocalizationManager, Warning, TEXT("Loaded localization resources contain conflicting entries for (Namespace:%s, Key:%s):\n%s"), *NamespaceName, *KeFName, *CollidingEntryListString);
+				UE_LOG(LogTextLocalizationManager, Warning, TEXT("Loaded localization resources contain conflicting entries for (Namespace:%s, Key:%s):\n%s"), *NamespaceName, *KeyName, *CollidingEntryListString);
 			}
 		}
 	}
@@ -617,14 +617,14 @@ void FTextLocalizationManager::LoadLocalizationResourcesForCulture(const FString
 		EditorLocalizationPaths += FPaths::GetEditorLocalizationPaths();
 		EditorLocalizationPaths += FPaths::GetToolTipLocalizationPaths();
 
-		bool bShouldLoadLocalizedPropertFNames = true;
-		if( !GConfig->GetBool( TEXT("Internationalization"), TEXT("ShouldLoadLocalizedPropertFNames"), bShouldLoadLocalizedPropertFNames, GEditorSettingsIni ) )
+		bool bShouldLoadLocalizedPropertyNames = true;
+		if( !GConfig->GetBool( TEXT("Internationalization"), TEXT("ShouldLoadLocalizedPropertyNames"), bShouldLoadLocalizedPropertyNames, GEditorSettingsIni ) )
 		{
-			GConfig->GetBool( TEXT("Internationalization"), TEXT("ShouldLoadLocalizedPropertFNames"), bShouldLoadLocalizedPropertFNames, GEngineIni );
+			GConfig->GetBool( TEXT("Internationalization"), TEXT("ShouldLoadLocalizedPropertyNames"), bShouldLoadLocalizedPropertyNames, GEngineIni );
 		}
-		if(bShouldLoadLocalizedPropertFNames)
+		if(bShouldLoadLocalizedPropertyNames)
 		{
-			EditorLocalizationPaths += FPaths::GetPropertFNameLocalizationPaths();
+			EditorLocalizationPaths += FPaths::GetPropertyNameLocalizationPaths();
 		}
 	}
 	TArray<FString> EngineLocalizationPaths;
@@ -755,7 +755,7 @@ void FTextLocalizationManager::UpdateFromLocalizations(const TArray<FLocalizatio
 		FDisplayStringLookupTable::FKeysTable& LiveKeyTable = Namespace.Value;
 		for(auto& Key : LiveKeyTable)
 		{
-			const FString& KeFName = Key.Key;
+			const FString& KeyName = Key.Key;
 			FDisplayStringLookupTable::FDisplayStringEntry& LiveStringEntry = Key.Value;
 
 			const FLocalizationEntryTracker::FEntry* SourceEntryForUpdate = nullptr;
@@ -764,7 +764,7 @@ void FTextLocalizationManager::UpdateFromLocalizations(const TArray<FLocalizatio
 			for(const FLocalizationEntryTracker& Tracker : LocalizationEntryTrackers)
 			{
 				const FLocalizationEntryTracker::FKeysTable* const UpdateKeyTable = Tracker.Namespaces.Find(NamespaceName);
-				const FLocalizationEntryTracker::FEntryArray* const UpdateEntryArray = UpdateKeyTable ? UpdateKeyTable->Find(KeFName) : nullptr;
+				const FLocalizationEntryTracker::FEntryArray* const UpdateEntryArray = UpdateKeyTable ? UpdateKeyTable->Find(KeyName) : nullptr;
 				const FLocalizationEntryTracker::FEntry* Entry = UpdateEntryArray && UpdateEntryArray->Num() ? &((*UpdateEntryArray)[0]) : nullptr;
 				if(Entry)
 				{
@@ -809,12 +809,12 @@ void FTextLocalizationManager::UpdateFromLocalizations(const TArray<FLocalizatio
 			const FLocalizationEntryTracker::FKeysTable& NewKeyTable = Namespace.Value;
 			for(const auto& Key : NewKeyTable)
 			{
-				const FString& KeFName = Key.Key;
+				const FString& KeyName = Key.Key;
 				const FLocalizationEntryTracker::FEntryArray& NewEntryArray = Key.Value;
 				const FLocalizationEntryTracker::FEntry& NewEntry = NewEntryArray[0];
 
 				FDisplayStringLookupTable::FKeysTable& LiveKeyTable = DisplayStringLookupTable.NamespacesTable.FindOrAdd(NamespaceName);
-				FDisplayStringLookupTable::FDisplayStringEntry* const LiveStringEntry = LiveKeyTable.Find(KeFName);
+				FDisplayStringLookupTable::FDisplayStringEntry* const LiveStringEntry = LiveKeyTable.Find(KeyName);
 				// Note: Anything we find in the table has already been updated above.
 				if( !LiveStringEntry )
 				{
@@ -824,9 +824,9 @@ void FTextLocalizationManager::UpdateFromLocalizations(const TArray<FLocalizatio
 						NewEntry.SourceStringHash,								/*SourceStringHash*/
 						MakeShareable( new FString(NewEntry.LocalizedString) )	/*String*/
 						);
-					LiveKeyTable.Add( KeFName, NewLiveEntry );
+					LiveKeyTable.Add( KeyName, NewLiveEntry );
 
-					NamespaceKeyLookupTable.Add(NewLiveEntry.DisplayString, FNamespaceKeyEntry(NamespaceName, KeFName));
+					NamespaceKeyLookupTable.Add(NewLiveEntry.DisplayString, FNamespaceKeyEntry(NamespaceName, KeyName));
 				}
 			}
 		}

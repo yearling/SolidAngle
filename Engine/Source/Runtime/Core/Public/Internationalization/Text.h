@@ -1,4 +1,4 @@
-// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+﻿// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 #pragma once
 
 #include "CoreTypes.h"
@@ -25,7 +25,7 @@ class FTextFormatData;
 class FHistoricTextFormatData;
 class FHistoricTextNumericData;
 
-template<typename KeyType, typename ValueType, typename SetAllocator, typename KeyFuncs > class TMap;
+template<typename KeyType,typename ValueType,typename SetAllocator ,typename KeyFuncs > class TMap;
 
 #define ENABLE_TEXT_ERROR_CHECKING_RESULTS (UE_BUILD_DEBUG | UE_BUILD_DEVELOPMENT | UE_BUILD_TEST )
 
@@ -40,7 +40,7 @@ namespace ETextFlag
 		CultureInvariant = (1 << 1),
 		ConvertedProperty = (1 << 2),
 		Immutable = (1 << 3),
-		InitializedFromString = (1 << 4),  // this ftext was initialized using FromString
+		InitializedFromString = (1<<4),  // this ftext was initialized using FromString
 	};
 }
 
@@ -142,30 +142,30 @@ struct CORE_API FNumberFormattingOptions
 	FNumberFormattingOptions();
 
 	bool UseGrouping;
-	FNumberFormattingOptions& SetUseGrouping(bool InValue) { UseGrouping = InValue; return *this; }
+	FNumberFormattingOptions& SetUseGrouping( bool InValue ){ UseGrouping = InValue; return *this; }
 
 	ERoundingMode RoundingMode;
-	FNumberFormattingOptions& SetRoundingMode(ERoundingMode InValue) { RoundingMode = InValue; return *this; }
+	FNumberFormattingOptions& SetRoundingMode( ERoundingMode InValue ){ RoundingMode = InValue; return *this; }
 
 	int32 MinimumIntegralDigits;
-	FNumberFormattingOptions& SetMinimumIntegralDigits(int32 InValue) { MinimumIntegralDigits = InValue; return *this; }
+	FNumberFormattingOptions& SetMinimumIntegralDigits( int32 InValue ){ MinimumIntegralDigits = InValue; return *this; }
 
 	int32 MaximumIntegralDigits;
-	FNumberFormattingOptions& SetMaximumIntegralDigits(int32 InValue) { MaximumIntegralDigits = InValue; return *this; }
+	FNumberFormattingOptions& SetMaximumIntegralDigits( int32 InValue ){ MaximumIntegralDigits = InValue; return *this; }
 
 	int32 MinimumFractionalDigits;
-	FNumberFormattingOptions& SetMinimumFractionalDigits(int32 InValue) { MinimumFractionalDigits = InValue; return *this; }
+	FNumberFormattingOptions& SetMinimumFractionalDigits( int32 InValue ){ MinimumFractionalDigits = InValue; return *this; }
 
 	int32 MaximumFractionalDigits;
-	FNumberFormattingOptions& SetMaximumFractionalDigits(int32 InValue) { MaximumFractionalDigits = InValue; return *this; }
+	FNumberFormattingOptions& SetMaximumFractionalDigits( int32 InValue ){ MaximumFractionalDigits = InValue; return *this; }
 
 	friend FArchive& operator<<(FArchive& Ar, FNumberFormattingOptions& Value);
 
 	/** Get the hash code to use for the given formatting options */
-	friend uint32 GetTypeHash(const FNumberFormattingOptions& Key);
+	friend uint32 GetTypeHash( const FNumberFormattingOptions& Key );
 
 	/** Check to see if our formatting options match the other formatting options */
-	bool IsIdentical(const FNumberFormattingOptions& Other) const;
+	bool IsIdentical( const FNumberFormattingOptions& Other ) const;
 
 	/** Get the default number formatting options with grouping enabled */
 	static const FNumberFormattingOptions& DefaultWithGrouping();
@@ -175,10 +175,10 @@ struct CORE_API FNumberFormattingOptions
 };
 
 /**
-* Cached compiled expression used by the text formatter.
-* The compiled expression will automatically update if the display string is changed.
-* See TextFormatter.cpp for the definition.
-*/
+ * Cached compiled expression used by the text formatter.
+ * The compiled expression will automatically update if the display string is changed.
+ * See TextFormatter.cpp for the definition.
+ */
 class CORE_API FTextFormat
 {
 	friend class FTextFormatter;
@@ -195,55 +195,55 @@ public:
 	};
 
 	/**
-	* Construct an instance using an empty FText.
-	*/
+	 * Construct an instance using an empty FText.
+	 */
 	FTextFormat();
 
 	/**
-	* Construct an instance from an FText.
-	* The text will be immediately compiled.
-	*/
+	 * Construct an instance from an FText.
+	 * The text will be immediately compiled. 
+	 */
 	FTextFormat(const FText& InText);
 
 	/**
-	* Construct an instance from an YString.
-	* The string will be immediately compiled.
-	*/
+	 * Construct an instance from an FString.
+	 * The string will be immediately compiled.
+	 */
 	static FTextFormat FromString(const FString& InString);
 	static FTextFormat FromString(FString&& InString);
 
 	/**
-	* Test to see whether this instance contains valid compiled data.
-	*/
+	 * Test to see whether this instance contains valid compiled data.
+	 */
 	bool IsValid() const;
 
 	/**
-	* Get the source text that we're holding.
-	* If we're holding a string then we'll construct a new text.
-	*/
+	 * Get the source text that we're holding.
+	 * If we're holding a string then we'll construct a new text.
+	 */
 	FText GetSourceText() const;
 
 	/**
-	* Get the source string that we're holding.
-	* If we're holding a text then we'll return its internal string.
-	*/
+	 * Get the source string that we're holding.
+	 * If we're holding a text then we'll return its internal string.
+	 */
 	const FString& GetSourceString() const;
 
 	/**
-	* Get the type of expression currently compiled.
-	*/
+	 * Get the type of expression currently compiled.
+	 */
 	EExpressionType GetExpressionType() const;
 
 	/**
-	* Append the names of any arguments to the given array.
-	*/
+	 * Append the names of any arguments to the given array.
+	 */
 	void GetFormatArgumentNames(TArray<FString>& OutArgumentNames) const;
 
 private:
 	/**
-	* Construct an instance from an YString.
-	* The string will be immediately compiled.
-	*/
+	 * Construct an instance from an FString.
+	 * The string will be immediately compiled.
+	 */
 	FTextFormat(FString&& InString);
 
 	/** Cached compiled expression data */
@@ -271,99 +271,99 @@ public:
 public:
 
 	FText();
-	FText(const FText& Source);
+	FText( const FText& Source );
 	FText(FText&& Source);
 
 	FText& operator=(const FText& Source);
 	FText& operator=(FText&& Source);
 
 	/**
-	* Generate an FText that represents the passed number in the current culture
-	*/
-	static FText AsNumber(float Val, const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsNumber(double Val, const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsNumber(int8 Val, const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsNumber(int16 Val, const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsNumber(int32 Val, const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsNumber(int64 Val, const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsNumber(uint8 Val, const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsNumber(uint16 Val, const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsNumber(uint32 Val, const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsNumber(uint64 Val, const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsNumber(long Val, const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	 * Generate an FText that represents the passed number in the current culture
+	 */
+	static FText AsNumber(float Val,	const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsNumber(double Val,	const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsNumber(int8 Val,		const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsNumber(int16 Val,	const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsNumber(int32 Val,	const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsNumber(int64 Val,	const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsNumber(uint8 Val,	const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsNumber(uint16 Val,	const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsNumber(uint32 Val,	const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsNumber(uint64 Val,	const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsNumber(long Val,		const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
 
 
-	static FText AsCurrency(float Val, const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsCurrency(float Val,  const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
 	static FText AsCurrency(double Val, const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsCurrency(int8 Val, const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsCurrency(int16 Val, const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsCurrency(int32 Val, const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsCurrency(int64 Val, const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsCurrency(uint8 Val, const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsCurrency(int8 Val,   const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsCurrency(int16 Val,  const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsCurrency(int32 Val,  const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsCurrency(int64 Val,  const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsCurrency(uint8 Val,  const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
 	static FText AsCurrency(uint16 Val, const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
 	static FText AsCurrency(uint32 Val, const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
 	static FText AsCurrency(uint64 Val, const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsCurrency(long Val, const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsCurrency(long Val,   const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
 
 	/**
-	* Generate an FText that represents the passed number as currency in the current culture.
-	* BaseVal is specified in the smallest fractional value of the currency and will be converted for formatting according to the selected culture.
-	* Keep in mind the CurrencyCode is completely independent of the culture it's displayed in (and they do not imply one another).
-	* For example: FText::AsCurrencyBase(650, TEXT("EUR")); would return an FText of "<EUR>6.50" in most English cultures (en_US/en_UK) and "6,50<EUR>" in Spanish (es_ES) (where <EUR> is U+20AC)
-	*/
+	 * Generate an FText that represents the passed number as currency in the current culture.
+	 * BaseVal is specified in the smallest fractional value of the currency and will be converted for formatting according to the selected culture.
+	 * Keep in mind the CurrencyCode is completely independent of the culture it's displayed in (and they do not imply one another).
+	 * For example: FText::AsCurrencyBase(650, TEXT("EUR")); would return an FText of "<EUR>6.50" in most English cultures (en_US/en_UK) and "6,50<EUR>" in Spanish (es_ES) (where <EUR> is U+20AC)
+	 */
 	static FText AsCurrencyBase(int64 BaseVal, const FString& CurrencyCode, const FCulturePtr& TargetCulture = NULL);
 
 	/**
-	* Generate an FText that represents the passed number as a percentage in the current culture
-	*/
-	static FText AsPercent(float Val, const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsPercent(double Val, const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	 * Generate an FText that represents the passed number as a percentage in the current culture
+	 */
+	static FText AsPercent(float Val,	const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsPercent(double Val,	const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
 
 	/**
-	* Generate an FText that represents the passed number as a date and/or time in the current culture
-	*/
+	 * Generate an FText that represents the passed number as a date and/or time in the current culture
+	 */
 	static FText AsDate(const FDateTime& DateTime, const EDateTimeStyle::Type DateStyle = EDateTimeStyle::Default, const FString& TimeZone = TEXT(""), const FCulturePtr& TargetCulture = NULL);
 	static FText AsDateTime(const FDateTime& DateTime, const EDateTimeStyle::Type DateStyle = EDateTimeStyle::Default, const EDateTimeStyle::Type TimeStyle = EDateTimeStyle::Default, const FString& TimeZone = TEXT(""), const FCulturePtr& TargetCulture = NULL);
 	static FText AsTime(const FDateTime& DateTime, const EDateTimeStyle::Type TimeStyle = EDateTimeStyle::Default, const FString& TimeZone = TEXT(""), const FCulturePtr& TargetCulture = NULL);
 	static FText AsTimespan(const FTimespan& Timespan, const FCulturePtr& TargetCulture = NULL);
 
 	/**
-	* Gets the time zone string that represents a non-specific, zero offset, culture invariant time zone.
-	*/
+	 * Gets the time zone string that represents a non-specific, zero offset, culture invariant time zone.
+	 */
 	static FString GetInvariantTimeZone();
 
 	/**
-	* Generate an FText that represents the passed number as a memory size in the current culture
-	*/
+	 * Generate an FText that represents the passed number as a memory size in the current culture
+	 */
 	static FText AsMemory(uint64 NumBytes, const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
 
 	/**
-	* Attempts to find an existing FText using the representation found in the loc tables for the specified namespace and key
-	* @return true if OutText was properly set; otherwise false and OutText will be untouched
-	*/
-	static bool FindText(const FString& Namespace, const FString& Key, FText& OutText, const FString* const SourceString = nullptr);
+	 * Attempts to find an existing FText using the representation found in the loc tables for the specified namespace and key
+	 * @return true if OutText was properly set; otherwise false and OutText will be untouched
+	 */
+	static bool FindText( const FString& Namespace, const FString& Key, FText& OutText, const FString* const SourceString = nullptr );
 
 	/**
-	* Generate an FText representing the pass name
-	*/
-	static FText FromName(const FName& Val);
+	 * Generate an FText representing the pass name
+	 */
+	static FText FromName( const FName& Val);
+	
+	/**
+	 * Generate an FText representing the passed in string
+	 */
+	static FText FromString( const FString& String );
+	static FText FromString( FString&& String );
 
 	/**
-	* Generate an FText representing the passed in string
-	*/
-	static FText FromString(const FString& String);
-	static FText FromString(FString&& String);
+	 * Generate a culture invariant FText representing the passed in string
+	 */
+	static FText AsCultureInvariant( const FString& String );
+	static FText AsCultureInvariant( FString&& String );
 
 	/**
-	* Generate a culture invariant FText representing the passed in string
-	*/
-	static FText AsCultureInvariant(const FString& String);
-	static FText AsCultureInvariant(FString&& String);
-
-	/**
-	* Generate a culture invariant FText representing the passed in FText
-	*/
-	static FText AsCultureInvariant(FText Text);
+	 * Generate a culture invariant FText representing the passed in FText
+	 */
+	static FText AsCultureInvariant( FText Text );
 
 	const FString& ToString() const;
 
@@ -372,19 +372,19 @@ public:
 
 	bool IsNumeric() const;
 
-	int32 CompareTo(const FText& Other, const ETextComparisonLevel::Type ComparisonLevel = ETextComparisonLevel::Default) const;
-	int32 CompareToCaseIgnored(const FText& Other) const;
+	int32 CompareTo( const FText& Other, const ETextComparisonLevel::Type ComparisonLevel = ETextComparisonLevel::Default ) const;
+	int32 CompareToCaseIgnored( const FText& Other ) const;
 
-	bool EqualTo(const FText& Other, const ETextComparisonLevel::Type ComparisonLevel = ETextComparisonLevel::Default) const;
-	bool EqualToCaseIgnored(const FText& Other) const;
+	bool EqualTo( const FText& Other, const ETextComparisonLevel::Type ComparisonLevel = ETextComparisonLevel::Default ) const;
+	bool EqualToCaseIgnored( const FText& Other ) const;
 
 	/**
-	* Check to see if this FText is identical to the other FText
-	*
-	* Note:	This doesn't compare the text, but only checks that the internal string pointers have the same target (which makes it very fast!)
-	*			If you actually want to perform a lexical comparison, then you need to use EqualTo instead
-	*/
-	bool IdenticalTo(const FText& Other) const;
+	 * Check to see if this FText is identical to the other FText
+	 * 
+	 * Note:	This doesn't compare the text, but only checks that the internal string pointers have the same target (which makes it very fast!)
+	 *			If you actually want to perform a lexical comparison, then you need to use EqualTo instead
+	 */
+	bool IdenticalTo( const FText& Other ) const;
 
 	class CORE_API FSortPredicate
 	{
@@ -405,24 +405,24 @@ public:
 	bool IsEmptyOrWhitespace() const;
 
 	/**
-	* Removes whitespace characters from the front of the string.
-	*/
-	static FText TrimPreceding(const FText&);
+	 * Removes whitespace characters from the front of the string.
+	 */
+	static FText TrimPreceding( const FText& );
 
 	/**
-	* Removes trailing whitespace characters
-	*/
-	static FText TrimTrailing(const FText&);
+	 * Removes trailing whitespace characters
+	 */
+	static FText TrimTrailing( const FText& );
 
 	/**
-	* Does both of the above without needing to create an additional FText in the interim.
-	*/
-	static FText TrimPrecedingAndTrailing(const FText&);
+	 * Does both of the above without needing to create an additional FText in the interim.
+	 */
+	static FText TrimPrecedingAndTrailing( const FText& );
 
 	/**
-	* Check to see if the given character is considered whitespace by the current culture
-	*/
-	static bool IsWhitespace(const TCHAR Char);
+	 * Check to see if the given character is considered whitespace by the current culture
+	 */
+	static bool IsWhitespace( const TCHAR Char );
 
 	static void GetFormatPatternParameters(const FTextFormat& Fmt, TArray<FString>& ParameterNames);
 
@@ -430,7 +430,7 @@ public:
 	static FText Format(FTextFormat Fmt, FFormatOrderedArguments InArguments);
 
 	DEPRECATED(4.13, "The version of FText::Format taking FFormatArgumentData was internal to Blueprints and has been deprecated for C++ usage. Please use one of the other FText::Format(...) functions.")
-		static FText Format(FTextFormat Fmt, TArray< struct FFormatArgumentData > InArguments);
+	static FText Format(FTextFormat Fmt, TArray< struct FFormatArgumentData > InArguments);
 
 	static FText Format(FTextFormat Fmt, FFormatArgumentValue v1);
 	static FText Format(FTextFormat Fmt, FFormatArgumentValue v1, FFormatArgumentValue v2);
@@ -438,32 +438,32 @@ public:
 	static FText Format(FTextFormat Fmt, FFormatArgumentValue v1, FFormatArgumentValue v2, FFormatArgumentValue v3, FFormatArgumentValue v4);
 
 	/**
-	* FormatNamed allows you to pass name <-> value pairs to the function to format automatically
-	*
-	* @usage FText::FormatNamed( FText::FromString( TEXT( "{PlayerName} is really cool" ) ), TEXT( "PlayerName" ), FText::FromString( TEXT( "Awesomegirl" ) ) );
-	*
-	* @param Fmt the format to create from
-	* @param Args a variadic list of YString to Value (must be even numbered)
-	* @return a formatted FText
-	*/
+	 * FormatNamed allows you to pass name <-> value pairs to the function to format automatically
+	 *
+	 * @usage FText::FormatNamed( FText::FromString( TEXT( "{PlayerName} is really cool" ) ), TEXT( "PlayerName" ), FText::FromString( TEXT( "Awesomegirl" ) ) );
+	 *
+	 * @param Fmt the format to create from
+	 * @param Args a variadic list of FString to Value (must be even numbered)
+	 * @return a formatted FText
+	 */
 	template < typename... TArguments >
-	static FText FormatNamed(FTextFormat Fmt, TArguments&&... Args);
+	static FText FormatNamed( FTextFormat Fmt, TArguments&&... Args );
 
 	/**
-	* FormatOrdered allows you to pass a variadic list of types to use for formatting in order desired
-	*
-	* @param Fmt the format to create from
-	* @param Args a variadic list of values in order of desired formatting
-	* @return a formatted FText
-	*/
+	 * FormatOrdered allows you to pass a variadic list of types to use for formatting in order desired
+	 *
+	 * @param Fmt the format to create from
+	 * @param Args a variadic list of values in order of desired formatting
+	 * @return a formatted FText
+	 */
 	template < typename... TArguments >
-	static FText FormatOrdered(FTextFormat Fmt, TArguments&&... Args);
+	static FText FormatOrdered( FTextFormat Fmt, TArguments&&... Args );
 
-	static void SetEnableErrorCheckingResults(bool bEnable) { bEnableErrorCheckingResults = bEnable; }
-	static bool GetEnableErrorCheckingResults() { return bEnableErrorCheckingResults; }
+	static void SetEnableErrorCheckingResults(bool bEnable){bEnableErrorCheckingResults=bEnable;}
+	static bool GetEnableErrorCheckingResults(){return bEnableErrorCheckingResults;}
 
-	static void SetSuppressWarnings(bool bSuppress) { bSuppressWarnings = bSuppress; }
-	static bool GetSuppressWarnings() { return bSuppressWarnings; }
+	static void SetSuppressWarnings(bool bSuppress){ bSuppressWarnings = bSuppress; }
+	static bool GetSuppressWarnings(){ return bSuppressWarnings; }
 
 	bool IsTransient() const;
 	bool IsCultureInvariant() const;
@@ -472,35 +472,35 @@ public:
 
 #if WITH_EDITOR
 	/**
-	* Constructs a new FText with the SourceString of the specified text but with the specified namespace and key
-	*/
-	static FText ChangeKey(const FString& Namespace, const FString& Key, const FText& Text);
+	 * Constructs a new FText with the SourceString of the specified text but with the specified namespace and key
+	 */
+	static FText ChangeKey( const FString& Namespace, const FString& Key, const FText& Text );
 #endif
 
 private:
 
 	/** Special constructor used to create StaticEmptyText without also allocating a history object */
 	enum class EInitToEmptyString : uint8 { Value };
-	explicit FText(EInitToEmptyString);
+	explicit FText( EInitToEmptyString );
 
-	explicit FText(TSharedRef<ITextData, ESPMode::ThreadSafe> InTextData);
+	explicit FText( TSharedRef<ITextData, ESPMode::ThreadSafe> InTextData );
 
-	explicit FText(FString&& InSourceString);
+	explicit FText( FString&& InSourceString );
 
-	FText(FString&& InSourceString, FTextDisplayStringRef InDisplayString);
+	FText( FString&& InSourceString, FTextDisplayStringRef InDisplayString );
 
-	FText(FString&& InSourceString, const FString& InNamespace, const FString& InKey, uint32 InFlags = 0);
+	FText( FString&& InSourceString, const FString& InNamespace, const FString& InKey, uint32 InFlags=0 );
 
-	static void SerializeText(FArchive& Ar, FText& Value);
+	static void SerializeText( FArchive& Ar, FText& Value );
 
 	/**
-	* Generate an FText for a string formatted numerically.
-	*/
+	 * Generate an FText for a string formatted numerically.
+	 */
 	static FText CreateNumericalText(TSharedRef<ITextData, ESPMode::ThreadSafe> InTextData);
 
 	/**
-	* Generate an FText for a string formatted from a date/time.
-	*/
+	 * Generate an FText for a string formatted from a date/time.
+	 */
 	static FText CreateChronologicalText(TSharedRef<ITextData, ESPMode::ThreadSafe> InTextData);
 
 	/** Returns the source string of the FText */
@@ -668,10 +668,10 @@ private:
 };
 
 /**
-* Used to pass argument/value pairs into FText::Format via UKismetTextLibrary::Format.
-* @note The primary consumer of this type is Blueprints (via a UHT mirror node). It is *not* expected that this be used in general C++ as FFormatArgumentValue is a much better type.
-* The UHT struct is located here: Engine\Source\Runtime\Engine\Classes\Kismet\KismetTextLibrary.h
-*/
+ * Used to pass argument/value pairs into FText::Format via UKismetTextLibrary::Format.
+ * @note The primary consumer of this type is Blueprints (via a UHT mirror node). It is *not* expected that this be used in general C++ as FFormatArgumentValue is a much better type.
+ * The UHT struct is located here: Engine\Source\Runtime\Engine\Classes\Kismet\KismetTextLibrary.h
+ */
 struct CORE_API FFormatArgumentData
 {
 	FFormatArgumentData()
@@ -698,51 +698,51 @@ namespace TextFormatUtil
 {
 
 	template < typename TName, typename TValue >
-	void FormatNamed(OUT FFormatNamedArguments& Result, TName&& Name, TValue&& Value)
+	void FormatNamed( OUT FFormatNamedArguments& Result, TName&& Name, TValue&& Value )
 	{
-		Result.Emplace(Forward< TName >(Name), Forward< TValue >(Value));
+		Result.Emplace( Forward< TName >( Name ), Forward< TValue >( Value ) );
 	}
-
+	
 	template < typename TName, typename TValue, typename... TArguments >
-	void FormatNamed(OUT FFormatNamedArguments& Result, TName&& Name, TValue&& Value, TArguments&&... Args)
+	void FormatNamed( OUT FFormatNamedArguments& Result, TName&& Name, TValue&& Value, TArguments&&... Args )
 	{
-		FormatNamed(Result, Forward< TName >(Name), Forward< TValue >(Value));
-		FormatNamed(Result, Forward< TArguments >(Args)...);
+		FormatNamed( Result, Forward< TName >( Name ), Forward< TValue >( Value ) );
+		FormatNamed( Result, Forward< TArguments >( Args )... );
 	}
-
+	
 	template < typename TValue >
-	void FormatOrdered(OUT FFormatOrderedArguments& Result, TValue&& Value)
+	void FormatOrdered( OUT FFormatOrderedArguments& Result, TValue&& Value )
 	{
-		Result.Emplace(Forward< TValue >(Value));
+		Result.Emplace( Forward< TValue >( Value ) );
 	}
-
+	
 	template < typename TValue, typename... TArguments >
-	void FormatOrdered(OUT FFormatOrderedArguments& Result, TValue&& Value, TArguments&&... Args)
+	void FormatOrdered( OUT FFormatOrderedArguments& Result, TValue&& Value, TArguments&&... Args )
 	{
-		FormatOrdered(Result, Forward< TValue >(Value));
-		FormatOrdered(Result, Forward< TArguments >(Args)...);
+		FormatOrdered( Result, Forward< TValue >( Value ) );
+		FormatOrdered( Result, Forward< TArguments >( Args )... );
 	}
 
 } // namespace TextFormatUtil
 
 template < typename... TArguments >
-FText FText::FormatNamed(FTextFormat Fmt, TArguments&&... Args)
+FText FText::FormatNamed( FTextFormat Fmt, TArguments&&... Args )
 {
-	static_assert(sizeof...(TArguments) % 2 == 0, "FormatNamed requires an even number of Name <-> Value pairs");
+	static_assert( sizeof...( TArguments ) % 2 == 0, "FormatNamed requires an even number of Name <-> Value pairs" );
 
 	FFormatNamedArguments FormatArguments;
-	FormatArguments.Reserve(sizeof...(TArguments) / 2);
-	TextFormatUtil::FormatNamed(FormatArguments, Forward< TArguments >(Args)...);
-	return FormatNamedImpl(MoveTemp(Fmt), MoveTemp(FormatArguments));
+	FormatArguments.Reserve( sizeof...( TArguments ) / 2 );
+	TextFormatUtil::FormatNamed( FormatArguments, Forward< TArguments >( Args )... );
+	return FormatNamedImpl( MoveTemp( Fmt ), MoveTemp( FormatArguments ) );
 }
 
 template < typename... TArguments >
-FText FText::FormatOrdered(FTextFormat Fmt, TArguments&&... Args)
+FText FText::FormatOrdered( FTextFormat Fmt, TArguments&&... Args )
 {
 	FFormatOrderedArguments FormatArguments;
-	FormatArguments.Reserve(sizeof...(TArguments));
-	TextFormatUtil::FormatOrdered(FormatArguments, Forward< TArguments >(Args)...);
-	return FormatOrderedImpl(MoveTemp(Fmt), MoveTemp(FormatArguments));
+	FormatArguments.Reserve( sizeof...( TArguments ) );
+	TextFormatUtil::FormatOrdered( FormatArguments, Forward< TArguments >( Args )... );
+	return FormatOrderedImpl( MoveTemp( Fmt ), MoveTemp( FormatArguments ) );
 }
 
 /** Used to gather information about a historic text format operation */
@@ -852,35 +852,35 @@ class CORE_API FTextStringHelper
 {
 public:
 	/**
-	* Attempt to extract an FText instance from the given stream of text.
-	*
-	* @param Buffer			The buffer of text to read from.
-	* @param OutValue			The text value to fill with the read text.
-	* @param TextNamespace		An optional namespace to use when parsing texts that use LOCTEXT (default is an empty namespace).
-	* @param PackageNamespace	The package namespace of the containing object (if loading for a property - see TextNamespaceUtil::GetPackageNamespace).
-	* @param OutNumCharsRead	An optional output parameter to fill with the number of characters we read from the given buffer.
-	* @param bRequiresQuotes	True if the read text literal must be surrounded by quotes (eg, when loading from a delimited list).
-	*
-	* @return True if we read a valid FText instance into OutValue, false otherwise
-	*/
+	 * Attempt to extract an FText instance from the given stream of text.
+	 *
+	 * @param Buffer			The buffer of text to read from.
+	 * @param OutValue			The text value to fill with the read text.
+	 * @param TextNamespace		An optional namespace to use when parsing texts that use LOCTEXT (default is an empty namespace).
+	 * @param PackageNamespace	The package namespace of the containing object (if loading for a property - see TextNamespaceUtil::GetPackageNamespace).
+	 * @param OutNumCharsRead	An optional output parameter to fill with the number of characters we read from the given buffer.
+	 * @param bRequiresQuotes	True if the read text literal must be surrounded by quotes (eg, when loading from a delimited list).
+	 *
+	 * @return True if we read a valid FText instance into OutValue, false otherwise
+	 */
 	static bool ReadFromString(const TCHAR* Buffer, FText& OutValue, const TCHAR* TextNamespace = nullptr, const TCHAR* PackageNamespace = nullptr, int32* OutNumCharsRead = nullptr, const bool bRequiresQuotes = false);
 
 	/**
-	* Write the given FText instance to a stream of text
-	*
-	* @param Buffer			The buffer of text to write to.
-	* @param Value				The text value to write into the buffer.
-	* @param bRequiresQuotes	True if the written text literal must be surrounded by quotes (eg, when saving as a delimited list)
-	*
-	* @return True if we wrote a valid FText instance into Buffer, false otherwise
-	*/
+	 * Write the given FText instance to a stream of text
+	 *
+	 * @param Buffer			The buffer of text to write to.
+	 * @param Value				The text value to write into the buffer.
+	 * @param bRequiresQuotes	True if the written text literal must be surrounded by quotes (eg, when saving as a delimited list)
+	 *
+	 * @return True if we wrote a valid FText instance into Buffer, false otherwise
+	 */
 	static bool WriteToString(FString& Buffer, const FText& Value, const bool bRequiresQuotes = false);
 
 	/**
-	* Test to see whether a given buffer contains complex text.
-	*
-	* @return True if it does, false otherwise
-	*/
+	 * Test to see whether a given buffer contains complex text.
+	 *
+	 * @return True if it does, false otherwise
+	 */
 	static bool IsComplexText(const TCHAR* Buffer);
 
 private:
@@ -1013,9 +1013,9 @@ struct CORE_API FUnicodeChar
 };
 
 /**
-* Unicode Bidirectional text support
-* http://www.unicode.org/reports/tr9/
-*/
+ * Unicode Bidirectional text support 
+ * http://www.unicode.org/reports/tr9/
+ */
 namespace TextBiDi
 {
 	/** Lists the potential reading directions for text */
@@ -1060,41 +1060,41 @@ namespace TextBiDi
 	};
 
 	/**
-	* Create a re-usable BiDi object.
-	* This may yield better performance than the utility functions if you're performing a lot of BiDi requests, as this object can re-use allocated data between requests.
-	*/
+	 * Create a re-usable BiDi object.
+	 * This may yield better performance than the utility functions if you're performing a lot of BiDi requests, as this object can re-use allocated data between requests.
+	 */
 	CORE_API TUniquePtr<ITextBiDi> CreateTextBiDi();
 
 	/**
-	* Utility function which will compute the reading direction of the given text.
-	* @note You may want to use the version that returns you the advanced layout data in the Mixed case.
-	* @return LeftToRight if all of the text is LTR, RightToLeft if all of the text is RTL, or Mixed if the text contains both LTR and RTL text.
-	*/
+	 * Utility function which will compute the reading direction of the given text.
+	 * @note You may want to use the version that returns you the advanced layout data in the Mixed case.
+	 * @return LeftToRight if all of the text is LTR, RightToLeft if all of the text is RTL, or Mixed if the text contains both LTR and RTL text.
+	 */
 	CORE_API ETextDirection ComputeTextDirection(const FText& InText);
 	CORE_API ETextDirection ComputeTextDirection(const FString& InString);
 	CORE_API ETextDirection ComputeTextDirection(const TCHAR* InString, const int32 InStringStartIndex, const int32 InStringLen);
 
 	/**
-	* Utility function which will compute the reading direction of the given text, as well as populate any advanced layout data for the text.
-	* The base direction is the overall reading direction of the text (see ComputeBaseDirection). This will affect where some characters (such as brackets and quotes) are placed within the resultant FTextDirectionInfo data.
-	* @return LeftToRight if all of the text is LTR, RightToLeft if all of the text is RTL, or Mixed if the text contains both LTR and RTL text.
-	*/
+	 * Utility function which will compute the reading direction of the given text, as well as populate any advanced layout data for the text.
+	 * The base direction is the overall reading direction of the text (see ComputeBaseDirection). This will affect where some characters (such as brackets and quotes) are placed within the resultant FTextDirectionInfo data.
+	 * @return LeftToRight if all of the text is LTR, RightToLeft if all of the text is RTL, or Mixed if the text contains both LTR and RTL text.
+	 */
 	CORE_API ETextDirection ComputeTextDirection(const FText& InText, const ETextDirection InBaseDirection, TArray<FTextDirectionInfo>& OutTextDirectionInfo);
 	CORE_API ETextDirection ComputeTextDirection(const FString& InString, const ETextDirection InBaseDirection, TArray<FTextDirectionInfo>& OutTextDirectionInfo);
 	CORE_API ETextDirection ComputeTextDirection(const TCHAR* InString, const int32 InStringStartIndex, const int32 InStringLen, const ETextDirection InBaseDirection, TArray<FTextDirectionInfo>& OutTextDirectionInfo);
 
 	/**
-	* Utility function which will compute the base direction of the given text.
-	* This provides the text flow direction that should be used when combining bidirectional text runs together.
-	* @return RightToLeft if the first character in the string has a bidirectional character type of R or AL, otherwise LeftToRight.
-	*/
+	 * Utility function which will compute the base direction of the given text.
+	 * This provides the text flow direction that should be used when combining bidirectional text runs together.
+	 * @return RightToLeft if the first character in the string has a bidirectional character type of R or AL, otherwise LeftToRight.
+	 */
 	CORE_API ETextDirection ComputeBaseDirection(const FText& InText);
 	CORE_API ETextDirection ComputeBaseDirection(const FString& InString);
 	CORE_API ETextDirection ComputeBaseDirection(const TCHAR* InString, const int32 InStringStartIndex, const int32 InStringLen);
 
 	/**
-	* Utility function which tests to see whether the given character is a bidirectional control character.
-	*/
+	 * Utility function which tests to see whether the given character is a bidirectional control character.
+	 */
 	CORE_API bool IsControlCharacter(const TCHAR InChar);
 } // namespace TextBiDi
 

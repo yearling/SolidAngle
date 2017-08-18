@@ -177,21 +177,21 @@
 // {
 // public:
 //     explicit FTransformST(float InScale);                        // 1. Used by: TransformConverter
-//     explicit FTransformST(const YVector& InTranslation);         // 1. Used by: TransformConverter
+//     explicit FTransformST(const FVector& InTranslation);         // 1. Used by: TransformConverter
 //     FMatrix ToMatrix() const;                                    // 2. (OPTIONAL) Used by: TransformConverter<FMatrix>
-//     YVector TransformPoint(const YVector& Point) const;         // 3. Used by: TransformPoint
-//     YVector TransformVector(const YVector& Vector) const;        // 4. Used by: TransformVector
+//     FVector TransformPoint(const FVector& Point) const;         // 3. Used by: TransformPoint
+//     FVector TransformVector(const FVector& Vector) const;        // 4. Used by: TransformVector
 //     FTransformST Concatenate(const FTransformST& RHS) const;     // 5. Used by: Concatenate
 //     FTransformST Inverse() const;                                // 6. Used by: Inverse
 // };
 //
-// inline FTransformST Concatenate(float LHS, const YVector& RHS);  // 7. (OPTIONAL) Used by: Concatenate
-// inline FTransformST Concatenate(const YVector& LHS, float RHS);  // 7. (OPTIONAL) Used by: Concatenate
+// inline FTransformST Concatenate(float LHS, const FVector& RHS);  // 7. (OPTIONAL) Used by: Concatenate
+// inline FTransformST Concatenate(const FVector& LHS, float RHS);  // 7. (OPTIONAL) Used by: Concatenate
 // 
 // template<> struct ConcatenateRules<FTransformST, float       > { typedef FTransformST ResultType; };  // 8. (OPTIONAL) Used by: Concatenate
 // template<> struct ConcatenateRules<float       , FTransformST> { typedef FTransformST ResultType; };  // 8. (OPTIONAL) Used by: Concatenate
-// template<> struct ConcatenateRules<FTransformST, YVector     > { typedef FTransformST ResultType; };  // 8. (OPTIONAL) Used by: Concatenate
-// template<> struct ConcatenateRules<YVector     , FTransformST> { typedef FTransformST ResultType; };  // 8. (OPTIONAL) Used by: Concatenate
+// template<> struct ConcatenateRules<FTransformST, FVector     > { typedef FTransformST ResultType; };  // 8. (OPTIONAL) Used by: Concatenate
+// template<> struct ConcatenateRules<FVector     , FTransformST> { typedef FTransformST ResultType; };  // 8. (OPTIONAL) Used by: Concatenate
 // 
 // template<> struct ConcatenateRules<FTransformST, FMatrix     > { typedef FMatrix ResultType; };  // 9. (OPTIONAL) Used by: Concatenate
 // template<> struct ConcatenateRules<FMatrix     , FTransformST> { typedef FMatrix ResultType; };  // 9. (OPTIONAL) Used by: Concatenate
@@ -206,11 +206,11 @@
 // 
 // 3. Provide a TransformPoint method (and perhaps a 2D version) which will be used by the default template
 //    implementation of TransformPoint. If you choose not to provide a member function, you can instead provide
-//    a non-template overload of TransformPoint(FTransformTS, YVector).
+//    a non-template overload of TransformPoint(FTransformTS, FVector).
 // 
 // 4. Provide a TransformVector method (and perhaps a 2D version) which will be used by the default template
 //    implementation of TransformPoint. If you choose not to provide a member function, you can instead provide
-//    a non-template overload of TransformVector(FTransformTS, YVector).
+//    a non-template overload of TransformVector(FTransformTS, FVector).
 // 
 // 5. Provide a Concatenate method which will be used by the default template
 //    implementation of Concatenate. If you choose not to provide a member function, you can instead provide

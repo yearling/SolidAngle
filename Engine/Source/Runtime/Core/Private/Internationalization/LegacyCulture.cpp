@@ -6,7 +6,7 @@
 #if !UE_ENABLE_ICU
 
 FCulture::FLegacyCultureImplementation::FLegacyCultureImplementation(
-	const FText& InDisplaFName, 
+	const FText& InDisplayName, 
 	const FString& InEnglishName, 
 	const int InKeyboardLayoutId, 
 	const int InLCID, 
@@ -19,7 +19,7 @@ FCulture::FLegacyCultureImplementation::FLegacyCultureImplementation(
 	const FDecimalNumberFormattingRules& InPercentFormattingRules,
 	const FDecimalNumberFormattingRules& InBaseCurrencyFormattingRules
 	)
-	: DisplaFName(InDisplaFName)
+	: DisplayName(InDisplayName)
 	, EnglishName(InEnglishName)
 	, KeyboardLayoutId(InKeyboardLayoutId)
 	, LCID(InLCID)
@@ -34,9 +34,9 @@ FCulture::FLegacyCultureImplementation::FLegacyCultureImplementation(
 { 
 }
 
-FString FCulture::FLegacyCultureImplementation::GetDisplaFName() const
+FString FCulture::FLegacyCultureImplementation::GetDisplayName() const
 {
-	return DisplaFName.ToString();
+	return DisplayName.ToString();
 }
 
 FString FCulture::FLegacyCultureImplementation::GetEnglishName() const

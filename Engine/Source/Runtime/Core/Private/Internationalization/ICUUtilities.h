@@ -14,7 +14,7 @@ THIRD_PARTY_INCLUDES_END
 namespace ICUUtilities
 {
 	/** 
-	 * An object that can convert between YString and icu::UnicodeString
+	 * An object that can convert between FString and icu::UnicodeString
 	 * Note: This object is not thread-safe.
 	 */
 	class FStringConverter
@@ -23,13 +23,13 @@ namespace ICUUtilities
 		FStringConverter();
 		~FStringConverter();
 
-		/** Convert YString -> icu::UnicodeString */
+		/** Convert FString -> icu::UnicodeString */
 		void ConvertString(const FString& Source, icu::UnicodeString& Destination, const bool ShouldNullTerminate = true);
 		void ConvertString(const TCHAR* Source, const int32 SourceStartIndex, const int32 SourceLen, icu::UnicodeString& Destination, const bool ShouldNullTerminate = true);
 		icu::UnicodeString ConvertString(const FString& Source, const bool ShouldNullTerminate = true);
 		icu::UnicodeString ConvertString(const TCHAR* Source, const int32 SourceStartIndex, const int32 SourceLen, const bool ShouldNullTerminate = true);
 
-		/** Convert icu::UnicodeString -> YString */
+		/** Convert icu::UnicodeString -> FString */
 		void ConvertString(const icu::UnicodeString& Source, FString& Destination);
 		void ConvertString(const icu::UnicodeString& Source, const int32 SourceStartIndex, const int32 SourceLen, FString& Destination);
 		FString ConvertString(const icu::UnicodeString& Source);
@@ -43,23 +43,23 @@ namespace ICUUtilities
 		UConverter* ICUConverter;
 	};
 
-	/** Convert YString -> icu::UnicodeString */
+	/** Convert FString -> icu::UnicodeString */
 	void ConvertString(const FString& Source, icu::UnicodeString& Destination, const bool ShouldNullTerminate = true);
 	void ConvertString(const TCHAR* Source, const int32 SourceStartIndex, const int32 SourceLen, icu::UnicodeString& Destination, const bool ShouldNullTerminate = true);
 	icu::UnicodeString ConvertString(const FString& Source, const bool ShouldNullTerminate = true);
 	icu::UnicodeString ConvertString(const TCHAR* Source, const int32 SourceStartIndex, const int32 SourceLen, const bool ShouldNullTerminate = true);
 
-	/** Convert icu::UnicodeString -> YString */
+	/** Convert icu::UnicodeString -> FString */
 	void ConvertString(const icu::UnicodeString& Source, FString& Destination);
 	void ConvertString(const icu::UnicodeString& Source, const int32 SourceStartIndex, const int32 SourceLen, FString& Destination);
 	FString ConvertString(const icu::UnicodeString& Source);
 	FString ConvertString(const icu::UnicodeString& Source, const int32 SourceStartIndex, const int32 SourceLen);
 
-	/** Given an icu::UnicodeString, count how many characters it would be if converted into an YString (as YString may not always be UTF-16) */
+	/** Given an icu::UnicodeString, count how many characters it would be if converted into an FString (as FString may not always be UTF-16) */
 	int32 GetNativeStringLength(const icu::UnicodeString& Source);
 	int32 GetNativeStringLength(const icu::UnicodeString& Source, const int32 InSourceStartIndex, const int32 InSourceLength);
 
-	/** Given an YString, count how many characters it would be if converted to an icu::UnicodeString (as YString may not always be UTF-16) */
+	/** Given an FString, count how many characters it would be if converted to an icu::UnicodeString (as FString may not always be UTF-16) */
 	int32 GetUnicodeStringLength(const FString& Source);
 	int32 GetUnicodeStringLength(const TCHAR* Source, const int32 InSourceStartIndex, const int32 InSourceLength);
 }

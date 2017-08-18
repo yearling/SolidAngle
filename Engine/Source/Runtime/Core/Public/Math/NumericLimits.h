@@ -1,6 +1,11 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
+
+#include "CoreTypes.h"
+
 /* Numeric constants
-*****************************************************************************/
+ *****************************************************************************/
 
 #define MIN_uint8		((uint8)	0x00)
 #define	MIN_uint16		((uint16)	0x0000)
@@ -27,47 +32,47 @@
 
 
 /* Numeric type traits
-*****************************************************************************/
+ *****************************************************************************/
 
 /**
-* Helper class to map a numeric type to its limits
-*/
+ * Helper class to map a numeric type to its limits
+ */
 template <typename NumericType>
 struct TNumericLimits;
 
 
 /**
-* Numeric limits for const types
-*/
+ * Numeric limits for const types
+ */
 template <typename NumericType>
-struct TNumericLimits<const NumericType>
+struct TNumericLimits<const NumericType> 
 	: public TNumericLimits<NumericType>
 { };
 
 
 /**
-* Numeric limits for volatile types
-*/
+ * Numeric limits for volatile types
+ */
 template <typename NumericType>
-struct TNumericLimits<volatile NumericType>
+struct TNumericLimits<volatile NumericType> 
 	: public TNumericLimits<NumericType>
 { };
 
 
 /**
-* Numeric limits for const volatile types
-*/
+ * Numeric limits for const volatile types
+ */
 template <typename NumericType>
-struct TNumericLimits<const volatile NumericType>
+struct TNumericLimits<const volatile NumericType> 
 	: public TNumericLimits<NumericType>
 { };
 
 
 template<>
-struct TNumericLimits<uint8>
+struct TNumericLimits<uint8> 
 {
 	typedef uint8 NumericType;
-
+	
 	static NumericType Min()
 	{
 		return MIN_uint8;
@@ -86,10 +91,10 @@ struct TNumericLimits<uint8>
 
 
 template<>
-struct TNumericLimits<uint16>
+struct TNumericLimits<uint16> 
 {
 	typedef uint16 NumericType;
-
+	
 	static NumericType Min()
 	{
 		return MIN_uint16;
@@ -108,10 +113,10 @@ struct TNumericLimits<uint16>
 
 
 template<>
-struct TNumericLimits<uint32>
+struct TNumericLimits<uint32> 
 {
 	typedef uint32 NumericType;
-
+	
 	static NumericType Min()
 	{
 		return MIN_uint32;
@@ -121,7 +126,7 @@ struct TNumericLimits<uint32>
 	{
 		return MAX_uint32;
 	}
-
+	
 	static NumericType Lowest()
 	{
 		return Min();
@@ -130,10 +135,10 @@ struct TNumericLimits<uint32>
 
 
 template<>
-struct TNumericLimits<uint64>
+struct TNumericLimits<uint64> 
 {
 	typedef uint64 NumericType;
-
+	
 	static NumericType Min()
 	{
 		return MIN_uint64;
@@ -152,10 +157,10 @@ struct TNumericLimits<uint64>
 
 
 template<>
-struct TNumericLimits<int8>
+struct TNumericLimits<int8> 
 {
 	typedef int8 NumericType;
-
+	
 	static NumericType Min()
 	{
 		return MIN_int8;
@@ -174,7 +179,7 @@ struct TNumericLimits<int8>
 
 
 template<>
-struct TNumericLimits<int16>
+struct TNumericLimits<int16> 
 {
 	typedef int16 NumericType;
 
@@ -196,7 +201,7 @@ struct TNumericLimits<int16>
 
 
 template<>
-struct TNumericLimits<int32>
+struct TNumericLimits<int32> 
 {
 	typedef int32 NumericType;
 
@@ -218,10 +223,10 @@ struct TNumericLimits<int32>
 
 
 template<>
-struct TNumericLimits<int64>
+struct TNumericLimits<int64> 
 {
 	typedef int64 NumericType;
-
+	
 	static NumericType Min()
 	{
 		return MIN_int64;
@@ -240,7 +245,7 @@ struct TNumericLimits<int64>
 
 
 template<>
-struct TNumericLimits<float>
+struct TNumericLimits<float> 
 {
 	typedef float NumericType;
 
@@ -262,7 +267,7 @@ struct TNumericLimits<float>
 
 
 template<>
-struct TNumericLimits<double>
+struct TNumericLimits<double> 
 {
 	typedef double NumericType;
 

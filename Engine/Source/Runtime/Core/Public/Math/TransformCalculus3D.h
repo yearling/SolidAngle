@@ -21,7 +21,7 @@
 // The following types are adapted.
 // * float           -> represents a uniform scale.
 // * FScale          -> represents a 3D non-uniform scale.
-// * YVector         -> represents a 3D translation.
+// * FVector         -> represents a 3D translation.
 // * FRotator        -> represents a pure rotation.
 // * FQuat           -> represents a pure rotation.
 // * FMatrix         -> represents a general 3D homogeneous transform.
@@ -29,7 +29,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 /**
- * Represents a 3D non-uniform scale (to disambiguate from an YVector, which is used for translation).
+ * Represents a 3D non-uniform scale (to disambiguate from an FVector, which is used for translation).
  * 
  * Serves as a good base example of how to write a class that supports the basic transform calculus
  * operations.
@@ -41,9 +41,9 @@ public:
 	FScale() :Scale(1.0f) {}
 	/** Ctor. initialize from a uniform scale. */
 	explicit FScale(float InScale) :Scale(InScale) {}
-	/** Ctor. initialize from an YVector defining the 3D scale. */
+	/** Ctor. initialize from an FVector defining the 3D scale. */
 	explicit FScale(const FVector& InScale) :Scale(InScale) {}
-	/** Access to the underlying YVector that stores the scale. */
+	/** Access to the underlying FVector that stores the scale. */
 	const FVector& GetVector() const { return Scale; }
 	/** Concatenate two scales. */
 	const FScale Concatenate(const FScale& RHS) const
@@ -360,7 +360,7 @@ inline FVector TransformVector(const FRotator& Transform, const FVector& Vector)
 }
 
 /**
- * Specialization for YVector Translation.
+ * Specialization for FVector Translation.
  */
 inline FVector TransformPoint(const FVector& Transform, const FVector& Point)
 {
@@ -368,7 +368,7 @@ inline FVector TransformPoint(const FVector& Transform, const FVector& Point)
 }
 
 /**
- * Specialization for YVector Translation (does nothing).
+ * Specialization for FVector Translation (does nothing).
  */
 inline const FVector& TransformVector(const FVector& Transform, const FVector& Vector)
 {

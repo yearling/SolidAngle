@@ -358,7 +358,7 @@ const TArray<FString>& FPaths::GetEditorLocalizationPaths()
 	return Results;
 }
 
-const TArray<FString>& FPaths::GetPropertFNameLocalizationPaths()
+const TArray<FString>& FPaths::GetPropertyNameLocalizationPaths()
 {
 	static TArray<FString> Results;
 	static bool HasInitialized = false;
@@ -367,7 +367,7 @@ const TArray<FString>& FPaths::GetPropertFNameLocalizationPaths()
 	{
 		if(GConfig && GConfig->IsReadyForUse())
 		{
-			GConfig->GetArray( TEXT("Internationalization"), TEXT("PropertFNameLocalizationPaths"), Results, GEditorIni );
+			GConfig->GetArray( TEXT("Internationalization"), TEXT("PropertyNameLocalizationPaths"), Results, GEditorIni );
 			if(!Results.Num())
 			{
 				UE_LOG(LogInit, Warning, TEXT("No paths for property name localization data were specifed in the editor configuration."));
@@ -376,7 +376,7 @@ const TArray<FString>& FPaths::GetPropertFNameLocalizationPaths()
 		}
 		else
 		{
-			Results.AddUnique(TEXT("../../../Engine/Content/Localization/PropertFNames")); // Hardcoded convention.
+			Results.AddUnique(TEXT("../../../Engine/Content/Localization/PropertyNames")); // Hardcoded convention.
 		}
 	}
 

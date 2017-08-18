@@ -14,7 +14,7 @@ class FCulture::FLegacyCultureImplementation
 	friend FCulture;
 
 	FLegacyCultureImplementation(
-		const FText& InDisplaFName, 
+		const FText& InDisplayName, 
 		const FString& InEnglishName, 
 		const int InKeyboardLayoutId, 
 		const int InLCID, 
@@ -28,7 +28,7 @@ class FCulture::FLegacyCultureImplementation
 		const FDecimalNumberFormattingRules& InBaseCurrencyFormattingRules
 		);
 
-	FString GetDisplaFName() const;
+	FString GetDisplayName() const;
 
 	FString GetEnglishName() const;
 
@@ -63,7 +63,7 @@ class FCulture::FLegacyCultureImplementation
 	ETextPluralForm GetPluralForm(double Val, const ETextPluralType PluralType);
 
 	// Full localized culture name
-	const FText DisplaFName;
+	const FText DisplayName;
 
 	// The English name of the culture in format languagefull [country/regionfull]
 	const FString EnglishName;

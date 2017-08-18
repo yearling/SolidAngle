@@ -280,7 +280,7 @@ inline void ComputeCurveTangent( float PrevTime, const float& PrevPoint,
 }
 
 
-/** Computes a tangent for the specified control point.  Special case for YVector types; supports clamping. */
+/** Computes a tangent for the specified control point.  Special case for FVector types; supports clamping. */
 inline void ComputeCurveTangent( float PrevTime, const FVector& PrevPoint,
 									float CurTime, const FVector& CurPoint,
 									float NextTime, const FVector& NextPoint,
@@ -296,7 +296,7 @@ inline void ComputeCurveTangent( float PrevTime, const FVector& PrevPoint,
 }
 
 
-/** Computes a tangent for the specified control point.  Special case for YVector2D types; supports clamping. */
+/** Computes a tangent for the specified control point.  Special case for FVector2D types; supports clamping. */
 inline void ComputeCurveTangent( float PrevTime, const FVector2D& PrevPoint,
 									float CurTime, const FVector2D& CurPoint,
 									float NextTime, const FVector2D& NextPoint,
@@ -312,7 +312,7 @@ inline void ComputeCurveTangent( float PrevTime, const FVector2D& PrevPoint,
 }
 
 
-/** Computes a tangent for the specified control point.  Special case for YTwoVectors types; supports clamping. */
+/** Computes a tangent for the specified control point.  Special case for FTwoVectors types; supports clamping. */
 inline void ComputeCurveTangent( float PrevTime, const FTwoVectors& PrevPoint,
 									float CurTime, const FTwoVectors& CurPoint,
 									float NextTime, const FTwoVectors& NextPoint,

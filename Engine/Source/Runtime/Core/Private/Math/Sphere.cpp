@@ -1,7 +1,7 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 /*=============================================================================
-	Sphere.cpp: Implements the YSphere class.
+	Sphere.cpp: Implements the FSphere class.
 =============================================================================*/
 
 #include "Math/Sphere.h"
@@ -9,7 +9,7 @@
 #include "Math/Transform.h"
 
 
-/* YSphere structors
+/* FSphere structors
  *****************************************************************************/
 
 FSphere::FSphere(const FVector* Pts, int32 Count)
@@ -37,7 +37,7 @@ FSphere::FSphere(const FVector* Pts, int32 Count)
 }
 
 
-/* YSphere interface
+/* FSphere interface
  *****************************************************************************/
 
 FSphere FSphere::TransformBy(const FMatrix& M) const

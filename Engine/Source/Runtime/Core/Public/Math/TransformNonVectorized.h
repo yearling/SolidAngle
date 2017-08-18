@@ -20,7 +20,7 @@
 * Transformation of direction vectors is applied in the order: Scale -> Rotate.
 *
 * Order matters when composing transforms: C = A * B will yield a transform C that logically
-* first applies A then B to any subsequent transformation. Note that this is the opposite order of quaternion (YQuat) multiplication.
+* first applies A then B to any subsequent transformation. Note that this is the opposite order of quaternion (FQuat) multiplication.
 *
 * Example: LocalToWorld = (DeltaRotation * LocalToWorld) will change rotation in local space by DeltaRotation.
 * Example: LocalToWorld = (LocalToWorld * DeltaRotation) will change rotation in world space by DeltaRotation.
@@ -42,7 +42,7 @@ protected:
 	FVector	Scale3D;
 public:
 	/**
-	* The identity transformation (Rotation = YQuat::Identity, Translation = YVector::ZeroVector, Scale3D = (1,1,1)).
+	* The identity transformation (Rotation = FQuat::Identity, Translation = FVector::ZeroVector, Scale3D = (1,1,1)).
 	*/
 	static CORE_API const FTransform Identity;
 
@@ -177,7 +177,7 @@ public:
 	}
 
 	/**
-	* Constructor with all components initialized, taking a YRotator as the rotation component
+	* Constructor with all components initialized, taking a FRotator as the rotation component
 	*
 	* @param InRotation The value to use for rotation component (after being converted to a quaternion)
 	* @param InTranslation The value to use for the translation component
@@ -1359,7 +1359,7 @@ FORCEINLINE FTransform FTransform::GetScaled(FVector InScale) const
 }
 
 
-/** Transform homogenous YVector4, ignoring the scaling part of this transform **/
+/** Transform homogenous FVector4, ignoring the scaling part of this transform **/
 FORCEINLINE FVector4 FTransform::TransformFVector4NoScale(const FVector4& V) const
 {
 	DiagnosticCheckNaN_All();
@@ -1379,7 +1379,7 @@ FORCEINLINE FVector4 FTransform::TransformFVector4NoScale(const FVector4& V) con
 }
 
 
-/** Transform YVector4 **/
+/** Transform FVector4 **/
 FORCEINLINE FVector4 FTransform::TransformFVector4(const FVector4& V) const
 {
 	DiagnosticCheckNaN_All();
@@ -1530,7 +1530,7 @@ FORCEINLINE void FTransform::Mirror(EAxis::Type MirrorAxis, EAxis::Type FlipAxis
 }
 
 
-/** same version of YMatrix::GetMaximumAxisScale function **/
+/** same version of FMatrix::GetMaximumAxisScale function **/
 /** @return the maximum magnitude of all components of the 3D scale. */
 inline float FTransform::GetMaximumAxisScale() const
 {

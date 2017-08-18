@@ -9,7 +9,7 @@
 #include "Math/Vector2D.h"
 #include "Math/TransformCalculus.h"
 
-class YMatrix2x2;
+class FMatrix2x2;
 
 //////////////////////////////////////////////////////////////////////////
 // Transform calculus for 2D types. UE4 already has a 2D Vector class that we
@@ -19,17 +19,17 @@ class YMatrix2x2;
 // The following types are supported
 // * float           -> represents a uniform scale.
 // * FScale2D        -> represents a 2D non-uniform scale.
-// * YVector2D       -> represents a 2D translation.
+// * FVector2D       -> represents a 2D translation.
 // * FShear2D        -> represents a "2D shear", interpreted as a shear parallel to the X axis followed by a shear parallel to the Y axis.
 // * FQuat2D         -> represents a pure 2D rotation.
 // * FMatrix2x2      -> represents a general 2D transform.
 //
 //////////////////////////////////////////////////////////////////////////
 
-class YMatrix2x2;
+class FMatrix2x2;
 
 //////////////////////////////////////////////////////////////////////////
-// Adapters for YVector2D. 
+// Adapters for FVector2D. 
 // 
 // Since it is an existing UE4 types, we cannot rely on the default
 // template that calls member functions. Instead, we provide direct overloads.
@@ -47,13 +47,13 @@ inline FVector2D Inverse(const FVector2D& Transform)
 	return -Transform;
 }
 
-/** Specialization for YVector2D Translation. */
+/** Specialization for FVector2D Translation. */
 inline FVector2D TransformPoint(const FVector2D& Transform, const FVector2D& Point)
 {
 	return Transform + Point;
 }
 
-/** Specialization for YVector2D Translation (does nothing). */
+/** Specialization for FVector2D Translation (does nothing). */
 inline const FVector2D& TransformVector(const FVector2D& Transform, const FVector2D& Vector)
 {
 	return Vector;
@@ -82,18 +82,18 @@ inline FVector2D TransformVector(float Transform, const FVector2D& Vector)
 	return Transform * Vector;
 }
 
-/** Represents a 2D non-uniform scale (to disambiguate from an YVector2D, which is used for translation) */
-class YScale2D
+/** Represents a 2D non-uniform scale (to disambiguate from an FVector2D, which is used for translation) */
+class FScale2D
 {
 public:
 	/** Ctor. initialize to an identity scale, 1.0. */
-	YScale2D() :Scale(1.0f, 1.0f) {}
+	FScale2D() :Scale(1.0f, 1.0f) {}
 	/** Ctor. initialize from a uniform scale. */
-	explicit YScale2D(float InScale) :Scale(InScale, InScale) {}
+	explicit FScale2D(float InScale) :Scale(InScale, InScale) {}
 	/** Ctor. initialize from a non-uniform scale. */
-	explicit YScale2D(float InScaleX, float InScaleY) :Scale(InScaleX, InScaleY) {}
-	/** Ctor. initialize from an YVector defining the 3D scale. */
-	explicit YScale2D(const FVector2D& InScale) :Scale(InScale) {}
+	explicit FScale2D(float InScaleX, float InScaleY) :Scale(InScaleX, InScaleY) {}
+	/** Ctor. initialize from an FVector defining the 3D scale. */
+	explicit FScale2D(const FVector2D& InScale) :Scale(InScale) {}
 	
 	/** Transform 2D Point */
 	FVector2D TransformPoint(const FVector2D& Point) const
@@ -107,29 +107,29 @@ public:
 	}
 
 	/** Concatenate two scales. */
-	YScale2D Concatenate(const YScale2D& RHS) const
+	FScale2D Concatenate(const FScale2D& RHS) const
 	{
-		return YScale2D(Scale * RHS.Scale);
+		return FScale2D(Scale * RHS.Scale);
 	}
 	/** Invert the scale. */
-	YScale2D Inverse() const
+	FScale2D Inverse() const
 	{
-		return YScale2D(FVector2D(1.0f / Scale.X, 1.0f / Scale.Y));
+		return FScale2D(FVector2D(1.0f / Scale.X, 1.0f / Scale.Y));
 	}
 
 	/** Equality. */
-	bool operator==(const YScale2D& Other) const
+	bool operator==(const FScale2D& Other) const
 	{
 		return Scale == Other.Scale;
 	}
 	
 	/** Inequality. */
-	bool operator!=(const YScale2D& Other) const
+	bool operator!=(const FScale2D& Other) const
 	{
 		return !operator==(Other);
 	}
 
-	/** Access to the underlying YVector2D that stores the scale. */
+	/** Access to the underlying FVector2D that stores the scale. */
 	const FVector2D& GetVector() const { return Scale; }
 private:
 	/** Underlying storage of the 2D scale. */
@@ -137,9 +137,9 @@ private:
 };
 
 /** concatenation rules for 2D scales. */
-template<> struct ConcatenateRules<float          , YScale2D  > { typedef YScale2D ResultType; };
+template<> struct ConcatenateRules<float          , FScale2D  > { typedef FScale2D ResultType; };
 /** concatenation rules for 2D scales. */
-template<> struct ConcatenateRules<YScale2D  , float          > { typedef YScale2D ResultType; };
+template<> struct ConcatenateRules<FScale2D  , float          > { typedef FScale2D ResultType; };
 
 /** 
  * Represents a 2D shear:
@@ -194,7 +194,7 @@ public:
 	 * [1 YYA] * [1 YYB] == [1+YYA*XXB YYB*YYA]
 	 * [XXA 1]   [XXB 1]    [XXA+XXB XXA*XXB+1]
 	 */
-	inline YMatrix2x2 Concatenate(const FShear2D& RHS) const;
+	inline FMatrix2x2 Concatenate(const FShear2D& RHS) const;
 
 	/**
 	 * Invert the shear. The result is NOT a shear, but must be represented by a generalized 2x2 transform.
@@ -202,7 +202,7 @@ public:
 	 * [1 YY]^-1  == 1/(1-YY*XX) * [1 -YY]
 	 * [XX 1]                      [-XX 1]
 	 */
-	YMatrix2x2 Inverse() const;
+	FMatrix2x2 Inverse() const;
 
 
 	/** Equality. */
@@ -217,7 +217,7 @@ public:
 		return !operator==(Other);
 	}
 
-	/** Access to the underlying YVector2D that stores the scale. */
+	/** Access to the underlying FVector2D that stores the scale. */
 	const FVector2D& GetVector() const { return Shear; }
 private:
 	/** Underlying storage of the 2D shear. */
@@ -238,7 +238,7 @@ public:
 	FQuat2D() :Rot(1.0f, 0.0f) {}
 	/** Ctor. initialize from a rotation in radians. */
 	explicit FQuat2D(float RotRadians) :Rot(FMath::Cos(RotRadians), FMath::Sin(RotRadians)) {}
-	/** Ctor. initialize from an YVector2D, representing a complex number. */
+	/** Ctor. initialize from an FVector2D, representing a complex number. */
 	explicit FQuat2D(const FVector2D& InRot) :Rot(InRot) {}
 
 	/**
@@ -305,7 +305,7 @@ public:
 		return !operator==(Other);
 	}
 
-	/** Access to the underlying YVector2D that stores the complex number. */
+	/** Access to the underlying FVector2D that stores the complex number. */
 	const FVector2D& GetVector() const { return Rot; }
 private:
 	/** Underlying storage of the rotation (X = cos(theta), Y = sin(theta). */
@@ -317,17 +317,17 @@ private:
  *    [X Y] * [m00 m01]
  *            [m10 m11]
  */
-class YMatrix2x2
+class FMatrix2x2
 {
 public:
 	/** Ctor. initialize to an identity. */
-	YMatrix2x2()
+	FMatrix2x2()
 	{
 		M[0][0] = 1; M[0][1] = 0;
 		M[1][0] = 0; M[1][1] = 1;
 	}
 
-	YMatrix2x2(float m00, float m01, float m10, float m11)
+	FMatrix2x2(float m00, float m01, float m10, float m11)
 	{
 		M[0][0] = m00; M[0][1] = m01;
 		M[1][0] = m10; M[1][1] = m11;
@@ -335,14 +335,14 @@ public:
 
 
 	/** Ctor. initialize from a scale. */
-	explicit YMatrix2x2(float UniformScale)
+	explicit FMatrix2x2(float UniformScale)
 	{
 		M[0][0] = UniformScale; M[0][1] = 0;
 		M[1][0] = 0; M[1][1] = UniformScale;
 	}
 
 	/** Ctor. initialize from a scale. */
-	explicit YMatrix2x2(const YScale2D& Scale)
+	explicit FMatrix2x2(const FScale2D& Scale)
 	{
 		float ScaleX = Scale.GetVector().X;
 		float ScaleY = Scale.GetVector().Y;
@@ -351,7 +351,7 @@ public:
 	}
 
 	/** Factory function. initialize from a 2D shear. */
-	explicit YMatrix2x2(const FShear2D& Shear)
+	explicit FMatrix2x2(const FShear2D& Shear)
 	{
 		float XX = Shear.GetVector().X;
 		float YY = Shear.GetVector().Y;
@@ -360,7 +360,7 @@ public:
 	}
 
 	/** Ctor. initialize from a rotation. */
-	explicit YMatrix2x2(const FQuat2D& Rotation)
+	explicit FMatrix2x2(const FQuat2D& Rotation)
 	{
 		float CosAngle = Rotation.GetVector().X;
 		float SinAngle = Rotation.GetVector().Y;
@@ -391,31 +391,31 @@ public:
 	 * [A B] * [E F] == [AE+BG AF+BH]
 	 * [C D]   [G H]    [CE+DG CF+DH]
 	 */
-	YMatrix2x2 Concatenate(const YMatrix2x2& RHS) const
+	FMatrix2x2 Concatenate(const FMatrix2x2& RHS) const
 	{
 		float A, B, C, D;
 		GetMatrix(A, B, C, D);
 		float E, F, G, H;
 		RHS.GetMatrix(E, F, G, H);
-		return YMatrix2x2(
+		return FMatrix2x2(
 			A*E + B*G, A*F + B*H,
 			C*E + D*G, C*F + D*H);
 	}
 	/**
 	 * Invert the transform.
 	 */
-	YMatrix2x2 Inverse() const
+	FMatrix2x2 Inverse() const
 	{
 		float A, B, C, D;
 		GetMatrix(A, B, C, D);
 		float InvDet = InverseDeterminant();
-		return YMatrix2x2(
+		return FMatrix2x2(
 			 D*InvDet, -B*InvDet,
 			-C*InvDet,  A*InvDet);
 	}
 
 	/** Equality. */
-	bool operator==(const YMatrix2x2& RHS) const
+	bool operator==(const FMatrix2x2& RHS) const
 	{
 		float A, B, C, D;
 		GetMatrix(A, B, C, D);
@@ -429,7 +429,7 @@ public:
 	}
 
 	/** Inequality. */
-	bool operator!=(const YMatrix2x2& Other) const
+	bool operator!=(const FMatrix2x2& Other) const
 	{
 		return !operator==(Other);
 	}
@@ -455,18 +455,18 @@ public:
 	}
 
 	/** Extracts the squared scale from the matrix (avoids sqrt). */
-	YScale2D GetScaleSquared() const
+	FScale2D GetScaleSquared() const
 	{
 		float A, B, C, D;
 		GetMatrix(A, B, C, D);
-		return YScale2D(A*A + B*B, C*C + D*D);
+		return FScale2D(A*A + B*B, C*C + D*D);
 	}
 
 	/** Gets the squared scale from the matrix (avoids sqrt). */
-	YScale2D GetScale() const
+	FScale2D GetScale() const
 	{
-		YScale2D ScaleSquared = GetScaleSquared();
-		return YScale2D(FMath::Sqrt(ScaleSquared.GetVector().X), FMath::Sqrt(ScaleSquared.GetVector().Y));
+		FScale2D ScaleSquared = GetScaleSquared();
+		return FScale2D(FMath::Sqrt(ScaleSquared.GetVector().X), FMath::Sqrt(ScaleSquared.GetVector().Y));
 	}
 
 	/** Determines if the matrix is identity or not. Uses exact float comparison, so rounding error is not considered. */
@@ -480,37 +480,37 @@ private:
 	float M[2][2];
 };
 
-inline YMatrix2x2 FShear2D::Concatenate(const FShear2D& RHS) const
+inline FMatrix2x2 FShear2D::Concatenate(const FShear2D& RHS) const
 {
 	float XXA = Shear.X;
 	float YYA = Shear.Y;
 	float XXB = RHS.Shear.X;
 	float YYB = RHS.Shear.Y;
-	return YMatrix2x2(
+	return FMatrix2x2(
 		1+YYA*XXB, YYB*YYA,
 		XXA+XXB, XXA*XXB+1);
 }
 
-inline YMatrix2x2 FShear2D::Inverse() const
+inline FMatrix2x2 FShear2D::Inverse() const
 {
 	float InvDet = 1.0f / (1.0f - Shear.X*Shear.Y);
-	return YMatrix2x2(
+	return FMatrix2x2(
 		InvDet, -Shear.Y * InvDet,
 		-Shear.X * InvDet, InvDet);
 }
 
 /** Partial specialization of ConcatenateRules for 2x2 and any other type via Upcast to 2x2 first. Requires a conversion ctor on FMatrix2x2. Funky template logic so we don't hide the default rule for NULL conversions. */
-template<typename TransformType> struct ConcatenateRules<typename TEnableIf<!TAreTypesEqual<YMatrix2x2, TransformType>::Value, YMatrix2x2>::Type, TransformType  > { typedef YMatrix2x2 ResultType; };
+template<typename TransformType> struct ConcatenateRules<typename TEnableIf<!TAreTypesEqual<FMatrix2x2, TransformType>::Value, FMatrix2x2>::Type, TransformType  > { typedef FMatrix2x2 ResultType; };
 /** Partial specialization of ConcatenateRules for 2x2 and any other type via Upcast to 2x2 first. Requires a conversion ctor on FMatrix2x2. Funky template logic so we don't hide the default rule for NULL conversions. */
-template<typename TransformType> struct ConcatenateRules<TransformType  , typename TEnableIf<!TAreTypesEqual<YMatrix2x2, TransformType>::Value, YMatrix2x2>::Type> { typedef YMatrix2x2 ResultType; };
+template<typename TransformType> struct ConcatenateRules<TransformType  , typename TEnableIf<!TAreTypesEqual<FMatrix2x2, TransformType>::Value, FMatrix2x2>::Type> { typedef FMatrix2x2 ResultType; };
 
 /** concatenation rules for 2x2 transform types. Convert to 2x2 matrix as the fully decomposed math is not that perf critical right now. */
-template<> struct ConcatenateRules<YScale2D  , FShear2D  > { typedef YMatrix2x2 ResultType; };
-template<> struct ConcatenateRules<YScale2D  , FQuat2D   > { typedef YMatrix2x2 ResultType; };
-template<> struct ConcatenateRules<FShear2D  , YScale2D  > { typedef YMatrix2x2 ResultType; };
-template<> struct ConcatenateRules<FQuat2D   , YScale2D  > { typedef YMatrix2x2 ResultType; };
-template<> struct ConcatenateRules<FShear2D  , FQuat2D   > { typedef YMatrix2x2 ResultType; };
-template<> struct ConcatenateRules<FQuat2D   , FShear2D  > { typedef YMatrix2x2 ResultType; };
+template<> struct ConcatenateRules<FScale2D  , FShear2D  > { typedef FMatrix2x2 ResultType; };
+template<> struct ConcatenateRules<FScale2D  , FQuat2D   > { typedef FMatrix2x2 ResultType; };
+template<> struct ConcatenateRules<FShear2D  , FScale2D  > { typedef FMatrix2x2 ResultType; };
+template<> struct ConcatenateRules<FQuat2D   , FScale2D  > { typedef FMatrix2x2 ResultType; };
+template<> struct ConcatenateRules<FShear2D  , FQuat2D   > { typedef FMatrix2x2 ResultType; };
+template<> struct ConcatenateRules<FQuat2D   , FShear2D  > { typedef FMatrix2x2 ResultType; };
 
  /**
  * Support for generalized 2D affine transforms. 
@@ -519,41 +519,41 @@ template<> struct ConcatenateRules<FQuat2D   , FShear2D  > { typedef YMatrix2x2 
  *   [C D 0]
  *   [X Y 1]
  */
-class YTransform2D
+class FTransform2D
 {
 public:
 	/** Initialize the transform using an identity matrix and a translation. */
-	YTransform2D(const FVector2D& Translation = FVector2D(0.f,0.f))
+	FTransform2D(const FVector2D& Translation = FVector2D(0.f,0.f))
 		: Trans(Translation)
 	{
 	}
 
 	/** Initialize the transform using a uniform scale and a translation. */
-	explicit YTransform2D(float UniformScale, const FVector2D& Translation = FVector2D(0.f,0.f))
-		: M(YScale2D(UniformScale)), Trans(Translation)
+	explicit FTransform2D(float UniformScale, const FVector2D& Translation = FVector2D(0.f,0.f))
+		: M(FScale2D(UniformScale)), Trans(Translation)
 	{
 	}
 
 	/** Initialize the transform using a 2D scale and a translation. */
-	explicit YTransform2D(const YScale2D& Scale, const FVector2D& Translation = FVector2D(0.f,0.f))
+	explicit FTransform2D(const FScale2D& Scale, const FVector2D& Translation = FVector2D(0.f,0.f))
 		: M(Scale), Trans(Translation)
 	{
 	}
 
 	/** Initialize the transform using a 2D shear and a translation. */
-	explicit YTransform2D(const FShear2D& Shear, const FVector2D& Translation = FVector2D(0.f,0.f))
+	explicit FTransform2D(const FShear2D& Shear, const FVector2D& Translation = FVector2D(0.f,0.f))
 		: M(Shear), Trans(Translation)
 	{
 	}
 
 	/** Initialize the transform using a 2D rotation and a translation. */
-	explicit YTransform2D(const FQuat2D& Rot, const FVector2D& Translation = FVector2D(0.f,0.f))
+	explicit FTransform2D(const FQuat2D& Rot, const FVector2D& Translation = FVector2D(0.f,0.f))
 		: M(Rot), Trans(Translation)
 	{
 	}
 
 	/** Initialize the transform using a general 2x2 transform and a translation. */
-	explicit YTransform2D(const YMatrix2x2& Transform, const FVector2D& Translation = FVector2D(0.f,0.f))
+	explicit FTransform2D(const FMatrix2x2& Transform, const FVector2D& Translation = FVector2D(0.f,0.f))
 		: M(Transform), Trans(Translation)
 	{
 	}
@@ -577,9 +577,9 @@ public:
 	 *  NewM == MA * MB
 	 *  NewT == TA * MB + TB
 	 */
-	YTransform2D Concatenate(const YTransform2D& RHS) const
+	FTransform2D Concatenate(const FTransform2D& RHS) const
 	{
-		return YTransform2D(
+		return FTransform2D(
 			::Concatenate(M, RHS.M),
 			::Concatenate(::TransformPoint(RHS.M, Trans), RHS.Trans));
 	}
@@ -612,27 +612,27 @@ public:
 	 *   M' == Inverse(M)
 	 *   T' == Inverse(Translate) * Inverse(M)
 	 */
-	YTransform2D Inverse() const
+	FTransform2D Inverse() const
 	{
-		YMatrix2x2 InvM = ::Inverse(M);
+		FMatrix2x2 InvM = ::Inverse(M);
 		FVector2D InvTrans = ::TransformPoint(InvM, ::Inverse(Trans));
-		return YTransform2D(InvM, InvTrans);
+		return FTransform2D(InvM, InvTrans);
 	}
 	
 	/** Equality. */
-	bool operator==(const YTransform2D& Other) const
+	bool operator==(const FTransform2D& Other) const
 	{
 		return M == Other.M && Trans == Other.Trans;
 	}
 	
 	/** Inequality. */
-	bool operator!=(const YTransform2D& Other) const
+	bool operator!=(const FTransform2D& Other) const
 	{
 		return !operator==(Other);
 	}
 
 	/** Access to the 2x2 transform */
-	const YMatrix2x2& GetMatrix() const { return M; }
+	const FMatrix2x2& GetMatrix() const { return M; }
 	/** Access to the translation */
 	const FVector2D& GetTranslation() const { return Trans; }
 
@@ -645,11 +645,11 @@ public:
 	}
 
 private:
-	YMatrix2x2 M;
+	FMatrix2x2 M;
 	FVector2D Trans;
 };
 
-template<> struct TIsPODType<YTransform2D> { enum { Value = true }; };
+template<> struct TIsPODType<FTransform2D> { enum { Value = true }; };
 
 //////////////////////////////////////////////////////////////////////////
 // Concatenate overloads. 
@@ -659,70 +659,70 @@ template<> struct TIsPODType<YTransform2D> { enum { Value = true }; };
 //////////////////////////////////////////////////////////////////////////
 
 /** Specialization for concatenating a 2D scale and 2D Translation. */
-inline YTransform2D Concatenate(const YScale2D& Scale, const FVector2D& Translation)
+inline FTransform2D Concatenate(const FScale2D& Scale, const FVector2D& Translation)
 {
-	return YTransform2D(Scale, Translation);
+	return FTransform2D(Scale, Translation);
 }
 
 /** Specialization for concatenating a 2D shear and 2D Translation. */
-inline YTransform2D Concatenate(const FShear2D& Shear, const FVector2D& Translation)
+inline FTransform2D Concatenate(const FShear2D& Shear, const FVector2D& Translation)
 {
-	return YTransform2D(Shear, Translation);
+	return FTransform2D(Shear, Translation);
 }
 
 /** Specialization for concatenating 2D Rotation and 2D Translation. */
-inline YTransform2D Concatenate(const FQuat2D& Rot, const FVector2D& Translation)
+inline FTransform2D Concatenate(const FQuat2D& Rot, const FVector2D& Translation)
 {
-	return YTransform2D(Rot, Translation);
+	return FTransform2D(Rot, Translation);
 }
 
 /** Specialization for concatenating 2D generalized transform and 2D Translation. */
-inline YTransform2D Concatenate(const YMatrix2x2& Transform, const FVector2D& Translation)
+inline FTransform2D Concatenate(const FMatrix2x2& Transform, const FVector2D& Translation)
 {
-	return YTransform2D(Transform, Translation);
+	return FTransform2D(Transform, Translation);
 }
 
 /** Specialization for concatenating transform and 2D Translation. */
-inline YTransform2D Concatenate(const YTransform2D& Transform, const FVector2D& Translation)
+inline FTransform2D Concatenate(const FTransform2D& Transform, const FVector2D& Translation)
 {
-	return YTransform2D(Transform.GetMatrix(), Concatenate(Transform.GetTranslation(), Translation));
+	return FTransform2D(Transform.GetMatrix(), Concatenate(Transform.GetTranslation(), Translation));
 }
 
 /** Specialization for concatenating a 2D Translation and 2D scale. */
-inline YTransform2D Concatenate(const FVector2D& Translation, const YScale2D& Scale)
+inline FTransform2D Concatenate(const FVector2D& Translation, const FScale2D& Scale)
 {
-	return YTransform2D(Scale, ::TransformPoint(Scale, Translation));
+	return FTransform2D(Scale, ::TransformPoint(Scale, Translation));
 }
 
 /** Specialization for concatenating a 2D Translation and 2D shear. */
-inline YTransform2D Concatenate(const FVector2D& Translation, const FShear2D& Shear)
+inline FTransform2D Concatenate(const FVector2D& Translation, const FShear2D& Shear)
 {
-	return YTransform2D(Shear, ::TransformPoint(Shear, Translation));
+	return FTransform2D(Shear, ::TransformPoint(Shear, Translation));
 }
 
 /** Specialization for concatenating 2D Translation and 2D Rotation. */
-inline YTransform2D Concatenate(const FVector2D& Translation, const FQuat2D& Rot)
+inline FTransform2D Concatenate(const FVector2D& Translation, const FQuat2D& Rot)
 {
-	return YTransform2D(Rot, ::TransformPoint(Rot, Translation));
+	return FTransform2D(Rot, ::TransformPoint(Rot, Translation));
 }
 
 /** Specialization for concatenating 2D Translation and 2D generalized transform. See docs for FTransform2D::Inverse for details on how this math is derived. */
-inline YTransform2D Concatenate(const FVector2D& Translation, const YMatrix2x2& Transform)
+inline FTransform2D Concatenate(const FVector2D& Translation, const FMatrix2x2& Transform)
 {
-	return YTransform2D(Transform, ::TransformPoint(Transform, Translation));
+	return FTransform2D(Transform, ::TransformPoint(Transform, Translation));
 }
 
 /** Specialization for concatenating 2D Translation and transform. See docs for FTransform2D::Inverse for details on how this math is derived. */
-inline YTransform2D Concatenate(const FVector2D& Translation, const YTransform2D& Transform)
+inline FTransform2D Concatenate(const FVector2D& Translation, const FTransform2D& Transform)
 {
-	return YTransform2D(Transform.GetMatrix(), Concatenate(::TransformPoint(Transform.GetMatrix(), Translation), Transform.GetTranslation()));
+	return FTransform2D(Transform.GetMatrix(), Concatenate(::TransformPoint(Transform.GetMatrix(), Translation), Transform.GetTranslation()));
 }
 
 /** Partial specialization of ConcatenateRules for FTransform2D and any other type via Upcast to FTransform2D first. Requires a conversion ctor on FTransform2D. Funky template logic so we don't hide the default rule for NULL conversions. */
-template<typename TransformType> struct ConcatenateRules<typename TEnableIf<!TAreTypesEqual<YTransform2D, TransformType>::Value, YTransform2D>::Type, TransformType  > { typedef YTransform2D ResultType; };
+template<typename TransformType> struct ConcatenateRules<typename TEnableIf<!TAreTypesEqual<FTransform2D, TransformType>::Value, FTransform2D>::Type, TransformType  > { typedef FTransform2D ResultType; };
 /** Partial specialization of ConcatenateRules for FTransform2D and any other type via Upcast to FTransform2D first. Requires a conversion ctor on FTransform2D. Funky template logic so we don't hide the default rule for NULL conversions. */
-template<typename TransformType> struct ConcatenateRules<TransformType  , typename TEnableIf<!TAreTypesEqual<YTransform2D, TransformType>::Value, YTransform2D>::Type> { typedef YTransform2D ResultType; };
+template<typename TransformType> struct ConcatenateRules<TransformType  , typename TEnableIf<!TAreTypesEqual<FTransform2D, TransformType>::Value, FTransform2D>::Type> { typedef FTransform2D ResultType; };
 
 /** Provide a disambiguating overload for 2x2 and FTransform2D, since both try to provide a generic set of ConcatenateRules for all types. */
-template<> struct ConcatenateRules<YMatrix2x2, YTransform2D> { typedef YTransform2D ResultType; };
-template<> struct ConcatenateRules<YTransform2D, YMatrix2x2> { typedef YTransform2D ResultType; };
+template<> struct ConcatenateRules<FMatrix2x2, FTransform2D> { typedef FTransform2D ResultType; };
+template<> struct ConcatenateRules<FTransform2D, FMatrix2x2> { typedef FTransform2D ResultType; };

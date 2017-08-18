@@ -171,7 +171,7 @@ private:
 	uint16 TextRevisionCounter;
 
 private:
-	FTextLocalizationManager()
+	FTextLocalizationManager() 
 		: bIsInitialized(false)
 		, SynchronizationObject()
 		, TextRevisionCounter(0)
@@ -182,14 +182,14 @@ public:
 	static FTextLocalizationManager& Get();
 
 	/**	Finds and returns the display string with the given namespace and key, if it exists.
-	*	Additionally, if a source string is specified and the found localized display string was not localized from that source string, null will be returned. */
+	 *	Additionally, if a source string is specified and the found localized display string was not localized from that source string, null will be returned. */
 	FTextDisplayStringPtr FindDisplayString(const FString& Namespace, const FString& Key, const FString* const SourceString = nullptr);
 
 	/**	Returns a display string with the given namespace and key.
-	*	If no display string exists, it will be created using the source string or an empty string if no source string is provided.
-	*	If a display string exists ...
-	*		... but it was not localized from the specified source string, the display string will be set to the specified source and returned.
-	*		... and it was localized from the specified source string (or none was provided), the display string will be returned.
+	 *	If no display string exists, it will be created using the source string or an empty string if no source string is provided.
+	 *	If a display string exists ...
+	 *		... but it was not localized from the specified source string, the display string will be set to the specified source and returned.
+	 *		... and it was localized from the specified source string (or none was provided), the display string will be returned.
 	*/
 	FTextDisplayStringRef GetDisplayString(const FString& Namespace, const FString& Key, const FString* const SourceString);
 
@@ -197,27 +197,27 @@ public:
 	bool GetLocResID(const FString& Namespace, const FString& Key, FString& OutLocResId);
 
 	/**	Finds the namespace and key associated with the specified display string.
-	*	Returns true if found and sets the out parameters. Otherwise, returns false.
-	*/
+	 *	Returns true if found and sets the out parameters. Otherwise, returns false.
+	 */
 	bool FindNamespaceAndKeyFromDisplayString(const FTextDisplayStringRef& InDisplayString, FString& OutNamespace, FString& OutKey);
-
+	
 	/**
-	* Attempts to find a local revision history for the given display string.
-	* This will only be set if the display string has been changed since the localization manager version has been changed (eg, if it has been edited while keeping the same key).
-	* @return The local revision, or 0 if there have been no changes since a global history change.
-	*/
+	 * Attempts to find a local revision history for the given display string.
+	 * This will only be set if the display string has been changed since the localization manager version has been changed (eg, if it has been edited while keeping the same key).
+	 * @return The local revision, or 0 if there have been no changes since a global history change.
+	 */
 	uint16 GetLocalRevisionForDisplayString(const FTextDisplayStringRef& InDisplayString);
 
 	/**	Attempts to register the specified display string, associating it with the specified namespace and key.
-	*	Returns true if the display string has been or was already associated with the namespace and key.
-	*	Returns false if the display string was already associated with another namespace and key or the namespace and key are already in use by another display string.
-	*/
+	 *	Returns true if the display string has been or was already associated with the namespace and key.
+	 *	Returns false if the display string was already associated with another namespace and key or the namespace and key are already in use by another display string.
+	 */
 	bool AddDisplayString(const FTextDisplayStringRef& DisplayString, const FString& Namespace, const FString& Key);
 
 	/**
-	* Updates the underlying value of a display string and associates it with a specified namespace and key, then returns true.
-	* If the namespace and key are already in use by another display string, no changes occur and false is returned.
-	*/
+	 * Updates the underlying value of a display string and associates it with a specified namespace and key, then returns true.
+	 * If the namespace and key are already in use by another display string, no changes occur and false is returned.
+	 */
 	bool UpdateDisplayString(const FTextDisplayStringRef& DisplayString, const FString& Value, const FString& Namespace, const FString& Key);
 
 	/** Updates display string entries and adds new display string entries based on localizations found in a specified localization resource. */
@@ -230,7 +230,7 @@ public:
 	void RefreshResources();
 
 	/**	Returns the current text revision number. This value can be cached when caching information from the text localization manager.
-	*	If the revision does not match, cached information may be invalid and should be recached. */
+	 *	If the revision does not match, cached information may be invalid and should be recached. */
 	uint16 GetTextRevision() const { return TextRevisionCounter; }
 
 	/** Event type for immediately reacting to changes in display strings for text. */

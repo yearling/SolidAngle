@@ -18,22 +18,22 @@ public:
 	static FCulturePtr Create(const FString& LocaleName);
 #else
 	static FCulturePtr Create(
-		const FText& InDisplaFName,
-		const FString& InEnglishName,
-		const int InKeyboardLayoutId,
-		const int InLCID,
-		const FString& InName,
-		const FString& InNativeName,
-		const FString& InUnrealLegacyThreeLetterISOLanguageName,
-		const FString& InThreeLetterISOLanguageName,
+		const FText& InDisplayName, 
+		const FString& InEnglishName, 
+		const int InKeyboardLayoutId, 
+		const int InLCID, 
+		const FString& InName, 
+		const FString& InNativeName, 
+		const FString& InUnrealLegacyThreeLetterISOLanguageName, 
+		const FString& InThreeLetterISOLanguageName, 
 		const FString& InTwoLetterISOLanguageName,
 		const FDecimalNumberFormattingRules& InDecimalNumberFormattingRules,
 		const FDecimalNumberFormattingRules& InPercentFormattingRules,
 		const FDecimalNumberFormattingRules& InBaseCurrencyFormattingRules
-	);
+		);
 #endif
 
-	const FString& GetDisplaFName() const;
+	const FString& GetDisplayName() const;
 
 	const FString& GetEnglishName() const;
 
@@ -48,7 +48,7 @@ public:
 	static FString GetCanonicalName(const FString& Name);
 
 	const FString& GetName() const;
-
+	
 	const FString& GetNativeName() const;
 
 	const FString& GetUnrealLegacyThreeLetterISOLanguageName() const;
@@ -74,20 +74,20 @@ public:
 	const FDecimalNumberFormattingRules& GetCurrencyFormattingRules(const FString& InCurrencyCode) const;
 
 	/**
-	* Get the correct plural form to use for the given number
-	* @param PluralType The type of plural form to get (cardinal or ordinal)
-	*/
-	ETextPluralForm GetPluralForm(float Val, const ETextPluralType PluralType) const;
-	ETextPluralForm GetPluralForm(double Val, const ETextPluralType PluralType) const;
-	ETextPluralForm GetPluralForm(int8 Val, const ETextPluralType PluralType) const;
-	ETextPluralForm GetPluralForm(int16 Val, const ETextPluralType PluralType) const;
-	ETextPluralForm GetPluralForm(int32 Val, const ETextPluralType PluralType) const;
-	ETextPluralForm GetPluralForm(int64 Val, const ETextPluralType PluralType) const;
-	ETextPluralForm GetPluralForm(uint8 Val, const ETextPluralType PluralType) const;
-	ETextPluralForm GetPluralForm(uint16 Val, const ETextPluralType PluralType) const;
-	ETextPluralForm GetPluralForm(uint32 Val, const ETextPluralType PluralType) const;
-	ETextPluralForm GetPluralForm(uint64 Val, const ETextPluralType PluralType) const;
-	ETextPluralForm GetPluralForm(long Val, const ETextPluralType PluralType) const;
+	 * Get the correct plural form to use for the given number
+	 * @param PluralType The type of plural form to get (cardinal or ordinal)
+	 */
+	ETextPluralForm GetPluralForm(float Val,	const ETextPluralType PluralType) const;
+	ETextPluralForm GetPluralForm(double Val,	const ETextPluralType PluralType) const;
+	ETextPluralForm GetPluralForm(int8 Val,		const ETextPluralType PluralType) const;
+	ETextPluralForm GetPluralForm(int16 Val,	const ETextPluralType PluralType) const;
+	ETextPluralForm GetPluralForm(int32 Val,	const ETextPluralType PluralType) const;
+	ETextPluralForm GetPluralForm(int64 Val,	const ETextPluralType PluralType) const;
+	ETextPluralForm GetPluralForm(uint8 Val,	const ETextPluralType PluralType) const;
+	ETextPluralForm GetPluralForm(uint16 Val,	const ETextPluralType PluralType) const;
+	ETextPluralForm GetPluralForm(uint32 Val,	const ETextPluralType PluralType) const;
+	ETextPluralForm GetPluralForm(uint64 Val,	const ETextPluralType PluralType) const;
+	ETextPluralForm GetPluralForm(long Val,		const ETextPluralType PluralType) const;
 
 	void HandleCultureChanged();
 
@@ -107,19 +107,19 @@ protected:
 	FCulture(const FString& LocaleName);
 #else
 	FCulture(
-		const FText& InDisplaFName,
-		const FString& InEnglishName,
-		const int InKeyboardLayoutId,
-		const int InLCID,
-		const FString& InName,
-		const FString& InNativeName,
-		const FString& InUnrealLegacyThreeLetterISOLanguageName,
-		const FString& InThreeLetterISOLanguageName,
+		const FText& InDisplayName, 
+		const FString& InEnglishName, 
+		const int InKeyboardLayoutId, 
+		const int InLCID, 
+		const FString& InName, 
+		const FString& InNativeName, 
+		const FString& InUnrealLegacyThreeLetterISOLanguageName, 
+		const FString& InThreeLetterISOLanguageName, 
 		const FString& InTwoLetterISOLanguageName,
 		const FDecimalNumberFormattingRules& InDecimalNumberFormattingRules,
 		const FDecimalNumberFormattingRules& InPercentFormattingRules,
 		const FDecimalNumberFormattingRules& InBaseCurrencyFormattingRules
-	);
+		);
 #endif
 
 private:
@@ -127,7 +127,7 @@ private:
 	friend class FText;
 #endif
 
-	FString CachedDisplaFName;
+	FString CachedDisplayName;
 	FString CachedEnglishName;
 	FString CachedName;
 	FString CachedNativeName;

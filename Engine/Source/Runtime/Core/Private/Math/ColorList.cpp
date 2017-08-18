@@ -12,7 +12,7 @@ DEFINE_LOG_CATEGORY_STATIC(LogColorList, Log, All);
 /** Global instance of color list helper class. */
 FColorList GColorList;
 
-const FColor& FColorList::GetFColorBFName( const TCHAR* ColorName ) const
+const FColor& FColorList::GetFColorByName( const TCHAR* ColorName ) const
 {
 	const FColor* Color = ColorsMap.FindRef( ColorName );
 
@@ -34,7 +34,7 @@ const FColor& FColorList::GetFColorByIndex( int32 ColorIndex ) const
 	return White;
 }
 
-const FLinearColor FColorList::GetFLinearColorBFName( const TCHAR* ColorName ) const
+const FLinearColor FColorList::GetFLinearColorByName( const TCHAR* ColorName ) const
 {
 	const FColor* Color = ColorsMap.FindRef( ColorName );
 
@@ -55,7 +55,7 @@ bool FColorList::IsValidColorName( const TCHAR* ColorName ) const
 
 int32 FColorList::GetColorIndex( const TCHAR* ColorName ) const
 {
-	const FColor& Color = GetFColorBFName( ColorName );
+	const FColor& Color = GetFColorByName( ColorName );
 	int32 ColorIndex = 0;
 	ColorsLookup.Find( &Color, ColorIndex );
 	return ColorIndex;

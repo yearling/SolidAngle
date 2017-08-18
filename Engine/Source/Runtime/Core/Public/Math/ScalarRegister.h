@@ -1,3 +1,5 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
@@ -36,72 +38,72 @@ public:
 	explicit FORCEINLINE ScalarRegister(const float& ScalarValue);
 
 	/** Constructor
-	*
-	* @param VectorRegister float4 vector register type
-	*/
+	 *
+	 * @param VectorRegister float4 vector register type
+	 */
 	explicit FORCEINLINE ScalarRegister(VectorRegister VectorValue);
 
 	/**
-	* Gets the result of multiplying a scalar register to this.
-	*
-	* @param RHS The scalar register to multiply this by.
-	*
-	* @return The result of multiplication.
-	*/
+	 * Gets the result of multiplying a scalar register to this.
+	 *
+	 * @param RHS The scalar register to multiply this by.
+	 *
+	 * @return The result of multiplication.
+	 */
 	FORCEINLINE ScalarRegister operator*(const ScalarRegister& RHS) const;
 
 	/**
-	* Gets the result of adding a scalar register to this.
-	*
-	* @param RHS The scalar register to add.
-	*
-	* @return The result of addition.
-	*/
+	 * Gets the result of adding a scalar register to this.
+	 *
+	 * @param RHS The scalar register to add.
+	 *
+	 * @return The result of addition.
+	 */
 	FORCEINLINE ScalarRegister operator+(const ScalarRegister& RHS) const;
 
 	/**
-	* Adds to this scalar register.
-	*
-	* @param RHS The scalar register to add to this.
-	*
-	* @return Reference to this after addition.
-	*/
+	 * Adds to this scalar register.
+	 *
+	 * @param RHS The scalar register to add to this.
+	 *
+	 * @return Reference to this after addition.
+	 */
 	FORCEINLINE ScalarRegister& operator+=(const ScalarRegister& RHS);
 
 	/**
-	* Subtracts another scalar register from this.
-	*
-	* @param RHS The other scalar register.
-	*
-	* @return reference to this after subtraction.
-	*/
+	 * Subtracts another scalar register from this.
+	 *
+	 * @param RHS The other scalar register.
+	 *
+	 * @return reference to this after subtraction.
+	 */
 	FORCEINLINE ScalarRegister& operator-=(const ScalarRegister& RHS);
 
 	/**
-	* Gets the result of subtracting a scalar register to this.
-	*
-	* @param RHS The scalar register to subtract.
-	*
-	* @return The result of subtraction.
-	*/
+	 * Gets the result of subtracting a scalar register to this.
+	 *
+	 * @param RHS The scalar register to subtract.
+	 *
+	 * @return The result of subtraction.
+	 */
 	FORCEINLINE ScalarRegister operator-(const ScalarRegister& RHS) const;
 
-
+	
 	/** assignment operator
-	*
-	* @param RHS a ScalarRegister
-	*/
+	 *
+	 * @param RHS a ScalarRegister
+	 */
 	FORCEINLINE ScalarRegister& operator=(const ScalarRegister& RHS);
 
 	/** assignment operator
-	*
-	* @param RHS a VectorRegister
-	*/
+	 *
+	 * @param RHS a VectorRegister
+	 */
 	FORCEINLINE ScalarRegister& operator=(const VectorRegister& RHS);
 
 	/**
-	* ScalarRegister to VectorRegister conversion operator.
-	*/
+	 * ScalarRegister to VectorRegister conversion operator.
+	 */
 	FORCEINLINE operator VectorRegister() const;
 };
 
@@ -151,7 +153,7 @@ FORCEINLINE ScalarRegister ScalarRegister::operator-(const ScalarRegister& RHS) 
 	return ScalarRegister(VectorSubtract(Value, RHS.Value));
 }
 
-
+	
 FORCEINLINE ScalarRegister& ScalarRegister::operator=(const ScalarRegister& RHS)
 {
 	Value = RHS.Value;
@@ -173,7 +175,7 @@ FORCEINLINE ScalarRegister::operator VectorRegister() const
 #define ScalarZero (ScalarRegister)ScalarRegister(VectorZero())
 
 /*----------------------------------------------------------------------------
-ScalarRegister specialization of templates.
+	ScalarRegister specialization of templates.
 ----------------------------------------------------------------------------*/
 
 /** Returns the smaller of the two values */
@@ -197,31 +199,31 @@ template<> FORCEINLINE ScalarRegister FMath::Lerp(const ScalarRegister& A, const
 
 
 /**
-* Computes the reciprocal of the scalar register (component-wise) and returns the result.
-*
-* @param A	1st scalar
-* @return		ScalarRegister( 1.0f / A.x, 1.0f / A.y, 1.0f / A.z, 1.0f / A.w )
-*/
+ * Computes the reciprocal of the scalar register (component-wise) and returns the result.
+ *
+ * @param A	1st scalar
+ * @return		ScalarRegister( 1.0f / A.x, 1.0f / A.y, 1.0f / A.z, 1.0f / A.w )
+ */
 FORCEINLINE ScalarRegister ScalarReciprocal(const ScalarRegister& A)
 {
 	return ScalarRegister(VectorReciprocalAccurate(A.Value));
 }
 
 /**
-* Returns zero if any element in A is greater than the corresponding element in the global AnimWeightThreshold.
-*
-* @param A 1st source vector
-* @return zero integer if (A.x > AnimWeightThreshold.x) || (A.y > AnimWeightThreshold.y) || (A.z > AnimWeightThreshold.z) || (A.w > AnimWeightThreshold.w), non-zero Otherwise
-*/
+ * Returns zero if any element in A is greater than the corresponding element in the global AnimWeightThreshold.
+ *
+ * @param A 1st source vector
+ * @return zero integer if (A.x > AnimWeightThreshold.x) || (A.y > AnimWeightThreshold.y) || (A.z > AnimWeightThreshold.z) || (A.w > AnimWeightThreshold.w), non-zero Otherwise
+ */
 #define NonZeroAnimWeight(A) VectorAnyGreaterThan(A.Value, GlobalVectorConstants::AnimWeightThreshold)
 
 
 /**
-* Returns non-zero if any element in A is greater than the corresponding element in the global AnimWeightThreshold.
-*
-* @param A 1st source vector
-* @return Non-zero integer if (A.x > AnimWeightThreshold.x) || (A.y > AnimWeightThreshold.y) || (A.z > AnimWeightThreshold.z) || (A.w > AnimWeightThreshold.w)
-*/
+ * Returns non-zero if any element in A is greater than the corresponding element in the global AnimWeightThreshold.
+ *
+ * @param A 1st source vector
+ * @return Non-zero integer if (A.x > AnimWeightThreshold.x) || (A.y > AnimWeightThreshold.y) || (A.z > AnimWeightThreshold.z) || (A.w > AnimWeightThreshold.w)
+ */
 #define NonOneAnimWeight(A) !VectorAnyGreaterThan(A.Value, VectorSubtract(VectorOne(), GlobalVectorConstants::AnimWeightThreshold))
 
 #else

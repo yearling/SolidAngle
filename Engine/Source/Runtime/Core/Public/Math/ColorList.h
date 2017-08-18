@@ -121,22 +121,22 @@ public:
 	void CreateColorMap();
 
 	/** Returns a color based on ColorName if not found returs White. */
-	const FColor& GetFColorBFName(const TCHAR* ColorName) const;
+	const FColor& GetFColorByName( const TCHAR* ColorName ) const;
 
 	/** Returns a linear color based on ColorName if not found returs White. */
-	const FLinearColor GetFLinearColorBFName(const TCHAR* ColorName) const;
+	const FLinearColor GetFLinearColorByName( const TCHAR* ColorName ) const;
 
 	/** Returns true if color is valid common colors, returns false otherwise. */
-	bool IsValidColorName(const TCHAR* ColorName) const;
+	bool IsValidColorName( const TCHAR* ColorName ) const;
 
 	/** Returns index of color. */
-	int32 GetColorIndex(const TCHAR* ColorName) const;
+	int32 GetColorIndex( const TCHAR* ColorName ) const;
 
 	/** Returns a color based on index. If index is invalid, returns White. */
-	const FColor& GetFColorByIndex(int32 ColorIndex) const;
+	const FColor& GetFColorByIndex( int32 ColorIndex ) const;
 
 	/** Resturn color's name based on index. If index is invalid, returns BadIndex. */
-	const FString& GetColorNameByIndex(int32 ColorIndex) const;
+	const FString& GetColorNameByIndex( int32 ColorIndex ) const;
 
 	/** Returns the number of colors. */
 	int32 GetColorsNum() const
@@ -148,7 +148,7 @@ public:
 	void LogColors();
 
 protected:
-	void InitializeColor(const TCHAR* ColorName, const FColor* ColorPtr, int32& CurrentIndex);
+	void InitializeColor( const TCHAR* ColorName, const FColor* ColorPtr, int32& CurrentIndex );
 
 	/** List of common colors. */
 	TColorsMap ColorsMap;

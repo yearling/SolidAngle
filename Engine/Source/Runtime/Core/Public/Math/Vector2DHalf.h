@@ -53,7 +53,7 @@ public:
 	 */
  	FVector2DHalf& operator=( const FVector2D& Vector2D );
 
-	/** Implicit conversion operator for conversion to YVector2D. */
+	/** Implicit conversion operator for conversion to FVector2D. */
 	operator FVector2D() const;
 
 public:

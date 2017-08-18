@@ -182,7 +182,7 @@ FRotator FVector::ToOrientationRotator() const
 #if ENABLE_NAN_DIAGNOSTIC
 	if (R.ContainsNaN())
 	{
-		logOrEnsureNanError(TEXT("YVector::Rotation(): Rotator result %s contains NaN! Input YVector = %s"), *R.ToString(), *this->ToString());
+		logOrEnsureNanError(TEXT("FVector::Rotation(): Rotator result %s contains NaN! Input FVector = %s"), *R.ToString(), *this->ToString());
 		R = FRotator::ZeroRotator;
 	}
 #endif
@@ -211,7 +211,7 @@ FRotator FVector4::ToOrientationRotator() const
 #if ENABLE_NAN_DIAGNOSTIC
 	if (R.ContainsNaN())
 	{
-		logOrEnsureNanError(TEXT("YVector4::Rotation(): Rotator result %s contains NaN! Input YVector4 = %s"), *R.ToString(), *this->ToString());
+		logOrEnsureNanError(TEXT("FVector4::Rotation(): Rotator result %s contains NaN! Input FVector4 = %s"), *R.ToString(), *this->ToString());
 		R = FRotator::ZeroRotator;
 	}
 #endif
@@ -531,7 +531,7 @@ uint32 FMatrix::ComputeHash() const
 }
 
 //////////////////////////////////////////////////////////////////////////
-// YQuat
+// FQuat
 
 FRotator FQuat::Rotator() const
 {
@@ -575,7 +575,7 @@ FRotator FQuat::Rotator() const
 #if ENABLE_NAN_DIAGNOSTIC
 	if (RotatorFromQuat.ContainsNaN())
 	{
-		logOrEnsureNanError(TEXT("YQuat::Rotator(): Rotator result %s contains NaN! Quat = %s, YawY = %.9f, YawX = %.9f"), *RotatorFromQuat.ToString(), *this->ToString(), YawY, YawX);
+		logOrEnsureNanError(TEXT("FQuat::Rotator(): Rotator result %s contains NaN! Quat = %s, YawY = %.9f, YawX = %.9f"), *RotatorFromQuat.ToString(), *this->ToString(), YawY, YawX);
 		RotatorFromQuat = FRotator::ZeroRotator;
 	}
 #endif
@@ -837,7 +837,7 @@ FORCEINLINE_DEBUGGABLE FQuat FindBetween_Helper(const FVector& A, const FVector&
 
 	if (W >= 1e-6f * NormAB)
 	{
-		//Axis = YVector::CrossProduct(A, B);
+		//Axis = FVector::CrossProduct(A, B);
 		Result = FQuat(A.Y * B.Z - A.Z * B.Y,
 					   A.Z * B.X - A.X * B.Z,
 					   A.X * B.Y - A.Y * B.X,
@@ -1796,11 +1796,11 @@ bool FMath::PlaneAABBIntersection(const FPlane& P, const FBox& AABB)
 	// find diagonal most closely aligned with normal of plane
 	FVector Vmin, Vmax;
 
-	// Bypass the slow YVector[] operator. Not RESTRICT because it won't update Vmin, Vmax
+	// Bypass the slow FVector[] operator. Not RESTRICT because it won't update Vmin, Vmax
 	float* VminPtr = (float*)&Vmin;
 	float* VmaxPtr = (float*)&Vmax;
 
-	// Use restrict to get better instruction scheduling and to bypass the slow YVector[] operator
+	// Use restrict to get better instruction scheduling and to bypass the slow FVector[] operator
 	const float* RESTRICT AABBMinPtr = (const float*)&AABB.Min;
 	const float* RESTRICT AABBMaxPtr = (const float*)&AABB.Max;
 	const float* RESTRICT PlanePtr = (const float*)&P;
@@ -2207,7 +2207,7 @@ CORE_API FVector FMath::VInterpNormalRotationTo(const FVector& Current, const FV
 	return Target;
 }
 
-CORE_API FVector FMath::VInterpConstantTo(const FVector& Current, const FVector& Target, float DeltaTime, float InterpSpeed)
+CORE_API FVector FMath::VInterpConstantTo(const FVector Current, const FVector& Target, float DeltaTime, float InterpSpeed)
 {
 	const FVector Delta = Target - Current;
 	const float DeltaM = Delta.Size();
@@ -3200,7 +3200,7 @@ void FMath::CartesianToPolar(const FVector2D InCart, FVector2D& OutPolar)
 	OutPolar.Y = Atan2(InCart.Y, InCart.X);
 }
 
-void FMath::PolarToCartesion(const FVector2D InPolar, FVector2D& OutCart)
+void FMath::PolarToCartesian(const FVector2D InPolar, FVector2D& OutCart)
 {
 	OutCart.X = InPolar.X * Cos(InPolar.Y);
 	OutCart.Y = InPolar.X * Sin(InPolar.Y);

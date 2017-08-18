@@ -229,8 +229,8 @@ FText::FText( FString&& InSourceString )
 	TextData->SetTextHistory(FTextHistory_Base(MoveTemp(InSourceString)));
 }
 
-FText::FText( FString&& InSourceString, FTextDisplayStringRef InDisplaFString )
-	: TextData(new TLocalizedTextData<FTextHistory_Base>(MoveTemp(InDisplaFString)))
+FText::FText( FString&& InSourceString, FTextDisplayStringRef InDisplayString )
+	: TextData(new TLocalizedTextData<FTextHistory_Base>(MoveTemp(InDisplayString)))
 	, Flags(0)
 {
 	TextData->SetTextHistory(FTextHistory_Base(MoveTemp(InSourceString)));
@@ -250,13 +250,13 @@ bool FText::IsEmpty() const
 
 bool FText::IsEmptyOrWhitespace() const
 {
-	const FString& DisplaFString = TextData->GetDisplayString();
-	if (DisplaFString.IsEmpty())
+	const FString& DisplayString = TextData->GetDisplayString();
+	if (DisplayString.IsEmpty())
 	{
 		return true;
 	}
 
-	for( const TCHAR Character : DisplaFString )
+	for( const TCHAR Character : DisplayString )
 	{
 		if (!IsWhitespace(Character))
 		{
@@ -615,7 +615,7 @@ void FText::SerializeText(FArchive& Ar, FText& Value)
 		FString SourceStringToImplantIntoHistory;
 		Ar << SourceStringToImplantIntoHistory;
 
-		FTextDisplayStringPtr DisplaFString;
+		FTextDisplayStringPtr DisplayString;
 
 		// Namespaces and keys are no longer stored in the FText, we need to read them in and discard
 		if (Ar.UE4Ver() >= VER_UE4_ADDED_NAMESPACE_AND_KEY_DATA_TO_FTEXT)
@@ -626,16 +626,16 @@ void FText::SerializeText(FArchive& Ar, FText& Value)
 			Ar << Namespace;
 			Ar << Key;
 
-			// Get the DisplaFString using the namespace, key, and source string.
-			DisplaFString = FTextLocalizationManager::Get().GetDisplayString(Namespace, Key, &SourceStringToImplantIntoHistory);
+			// Get the DisplayString using the namespace, key, and source string.
+			DisplayString = FTextLocalizationManager::Get().GetDisplayString(Namespace, Key, &SourceStringToImplantIntoHistory);
 		}
 		else
 		{
-			DisplaFString = MakeShareable(new FString());
+			DisplayString = MakeShareable(new FString());
 		}
 
-		check(DisplaFString.IsValid());
-		Value.TextData = MakeShareable(new TLocalizedTextData<FTextHistory_Base>(DisplaFString.ToSharedRef(), FTextHistory_Base(MoveTemp(SourceStringToImplantIntoHistory))));
+		check(DisplayString.IsValid());
+		Value.TextData = MakeShareable(new TLocalizedTextData<FTextHistory_Base>(DisplayString.ToSharedRef(), FTextHistory_Base(MoveTemp(SourceStringToImplantIntoHistory))));
 	}
 
 #if WITH_EDITOR
@@ -1188,10 +1188,10 @@ FScopedTextIdentityPreserver::~FScopedTextIdentityPreserver()
 		check(SourceString);
 
 		// Create/update the display string instance for this identity in the text localization manager...
-		const FTextDisplayStringRef DisplaFString = FTextLocalizationManager::Get().GetDisplayString(Namespace, Key, SourceString);
+		const FTextDisplayStringRef DisplayString = FTextLocalizationManager::Get().GetDisplayString(Namespace, Key, SourceString);
 
 		// ... and update the data on the text instance
-		TextToPersist.TextData = MakeShareable(new TLocalizedTextData<FTextHistory_Base>(MoveTemp(DisplaFString), FTextHistory_Base(FString(*SourceString))));
+		TextToPersist.TextData = MakeShareable(new TLocalizedTextData<FTextHistory_Base>(MoveTemp(DisplayString), FTextHistory_Base(FString(*SourceString))));
 	}
 }
 
@@ -1303,9 +1303,9 @@ bool FTextStringHelper::ReadFromString_ComplexText(const TCHAR* Buffer, FText& O
 		EXTRACT_QUOTED_STRING(NamespaceString);
 
 		// Walk to the opening quote, and then parse out the quoted key
-		FString KeFString;
+		FString KeyString;
 		WALK_TO_CHARACTER('"');
-		EXTRACT_QUOTED_STRING(KeFString);
+		EXTRACT_QUOTED_STRING(KeyString);
 
 		// Walk to the opening quote, and then parse out the quoted source string
 		FString SourceString;
@@ -1316,7 +1316,7 @@ bool FTextStringHelper::ReadFromString_ComplexText(const TCHAR* Buffer, FText& O
 		WALK_TO_CHARACTER(')');
 		++Buffer;
 
-		if (KeFString.IsEmpty())
+		if (KeyString.IsEmpty())
 		{
 			OutValue = FText::AsCultureInvariant(MoveTemp(SourceString));
 		}
@@ -1331,11 +1331,11 @@ bool FTextStringHelper::ReadFromString_ComplexText(const TCHAR* Buffer, FText& O
 					// We may assign a new key when importing if we don't have the correct package namespace in order to avoid identity conflicts when instancing (which duplicates without any special flags)
 					// This can happen if an asset was duplicated (and keeps the same keys) but later both assets are instanced into the same world (causing them to both take the worlds package id, and conflict with each other)
 					NamespaceString = FullNamespace;
-					KeFString = FGuid::NewGuid().ToString();
+					KeyString = FGuid::NewGuid().ToString();
 				}
 			}
 #endif // USE_STABLE_LOCALIZATION_KEYS
-			OutValue = FInternationalization::ForUseOnlyByLocMacroAndGraphNodeTextLiterals_CreateText(*SourceString, *NamespaceString, *KeFString);
+			OutValue = FInternationalization::ForUseOnlyByLocMacroAndGraphNodeTextLiterals_CreateText(*SourceString, *NamespaceString, *KeyString);
 		}
 
 		if (OutNumCharsRead)
@@ -1355,9 +1355,9 @@ bool FTextStringHelper::ReadFromString_ComplexText(const TCHAR* Buffer, FText& O
 		WALK_TO_CHARACTER('(');
 
 		// Walk to the opening quote, and then parse out the quoted key
-		FString KeFString;
+		FString KeyString;
 		WALK_TO_CHARACTER('"');
-		EXTRACT_QUOTED_STRING(KeFString);
+		EXTRACT_QUOTED_STRING(KeyString);
 
 		// Walk to the opening quote, and then parse out the quoted source string
 		FString SourceString;
@@ -1368,7 +1368,7 @@ bool FTextStringHelper::ReadFromString_ComplexText(const TCHAR* Buffer, FText& O
 		WALK_TO_CHARACTER(')');
 		++Buffer;
 
-		if (KeFString.IsEmpty())
+		if (KeyString.IsEmpty())
 		{
 			OutValue = FText::AsCultureInvariant(MoveTemp(SourceString));
 		}
@@ -1385,15 +1385,15 @@ bool FTextStringHelper::ReadFromString_ComplexText(const TCHAR* Buffer, FText& O
 					// We may assign a new key when importing if we don't have the correct package namespace in order to avoid identity conflicts when instancing (which duplicates without any special flags)
 					// This can happen if an asset was duplicated (and keeps the same keys) but later both assets are instanced into the same world (causing them to both take the worlds package id, and conflict with each other)
 					NamespaceString = FullNamespace;
-					KeFString = FGuid::NewGuid().ToString();
+					KeyString = FGuid::NewGuid().ToString();
 				}
 
-				OutValue = FInternationalization::ForUseOnlyByLocMacroAndGraphNodeTextLiterals_CreateText(*SourceString, *NamespaceString, *KeFString);
+				OutValue = FInternationalization::ForUseOnlyByLocMacroAndGraphNodeTextLiterals_CreateText(*SourceString, *NamespaceString, *KeyString);
 			}
 			else
 #endif // USE_STABLE_LOCALIZATION_KEYS
 			{
-				OutValue = FInternationalization::ForUseOnlyByLocMacroAndGraphNodeTextLiterals_CreateText(*SourceString, (TextNamespace) ? TextNamespace : TEXT(""), *KeFString);
+				OutValue = FInternationalization::ForUseOnlyByLocMacroAndGraphNodeTextLiterals_CreateText(*SourceString, (TextNamespace) ? TextNamespace : TEXT(""), *KeyString);
 			}
 		}
 

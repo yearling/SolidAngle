@@ -30,7 +30,7 @@ public:
 
 
 /** Rotation matrix using quaternion rotation */
-class YQuatRotationMatrix
+class FQuatRotationMatrix
 	: public FQuatRotationTranslationMatrix
 {
 public:
@@ -39,7 +39,7 @@ public:
 	*
 	* @param Q rotation
 	*/
-	YQuatRotationMatrix(const FQuat& Q)
+	FQuatRotationMatrix(const FQuat& Q)
 		: FQuatRotationTranslationMatrix(Q, FVector::ZeroVector)
 	{
 	}
@@ -47,7 +47,7 @@ public:
 	/** Matrix factory. Return an FMatrix so we don't have type conversion issues in expressions. */
 	static FMatrix Make(const FQuat& Q)
 	{
-		return YQuatRotationMatrix(Q);
+		return FQuatRotationMatrix(Q);
 	}
 };
 

@@ -56,7 +56,7 @@ public:
 		return InvariantCulture.ToSharedRef();
 	}
 
-	CORE_API bool IsInitialized() const { return bIsInitialized; }
+	CORE_API bool IsInitialized() const {return bIsInitialized;}
 
 	// Load and cache the data needed for every culture we know about (this is usually done per-culture as required)
 	CORE_API void LoadAllCultureData();
@@ -108,14 +108,14 @@ private:
 #undef LOCTEXT_NAMESPACE
 
 /**
-* Creates an FText. All parameters must be string literals. All literals will be passed through the localization system.
-* The global LOCTEXT_NAMESPACE macro must be first set to a string literal to specify this localization key's namespace.
-*/
+ * Creates an FText. All parameters must be string literals. All literals will be passed through the localization system.
+ * The global LOCTEXT_NAMESPACE macro must be first set to a string literal to specify this localization key's namespace.
+ */
 #define LOCTEXT( InKey, InTextLiteral ) FInternationalization::ForUseOnlyByLocMacroAndGraphNodeTextLiterals_CreateText( TEXT( InTextLiteral ), TEXT(LOCTEXT_NAMESPACE), TEXT( InKey ) )
 
 /**
-* Creates an FText. All parameters must be string literals. All literals will be passed through the localization system.
-*/
+ * Creates an FText. All parameters must be string literals. All literals will be passed through the localization system.
+ */
 #define NSLOCTEXT( InNamespace, InKey, InTextLiteral ) FInternationalization::ForUseOnlyByLocMacroAndGraphNodeTextLiterals_CreateText( TEXT( InTextLiteral ), TEXT( InNamespace ), TEXT( InKey ) )
 
 #undef LOC_DEFINE_REGION

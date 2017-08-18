@@ -95,7 +95,7 @@ namespace ICUUtilities
 			const int32 DestinationCapacityTCHARs = DestinationCapacityBytes / sizeof(TCHAR);
 			InternalStringBuffer.SetNumUninitialized(DestinationCapacityTCHARs);
 
-			// Perform the conversion into the string buffer, and then null terminate the YString and size it back down to the correct size
+			// Perform the conversion into the string buffer, and then null terminate the FString and size it back down to the correct size
 			const int32_t DestinationSizeBytes = ucnv_fromUChars(ICUConverter, reinterpret_cast<char*>(InternalStringBuffer.GetData()), DestinationCapacityBytes, Source.getBuffer() + SourceStartIndex, SourceLen, &ICUStatus);
 			const int32 DestinationSizeTCHARs = DestinationSizeBytes / sizeof(TCHAR);
 			InternalStringBuffer[DestinationSizeTCHARs] = 0;

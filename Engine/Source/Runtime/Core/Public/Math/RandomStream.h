@@ -10,10 +10,10 @@
 #include "Math/Transform.h"
 
 /**
-* Implements a thread-safe SRand based RNG.
-*
-* Very bad quality in the lower bits. Don't use the modulus (%) operator.
-*/
+ * Implements a thread-safe SRand based RNG.
+ *
+ * Very bad quality in the lower bits. Don't use the modulus (%) operator.
+ */
 struct FRandomStream
 {
 #ifdef COREUOBJECT_API
@@ -21,25 +21,25 @@ struct FRandomStream
 #else
 	friend class UScriptStruct* Z_Construct_UScriptStruct_FRandomStream();
 #endif
-
+	
 public:
 
 	/**
-	* Default constructor.
-	*
-	* The seed should be set prior to use.
-	*/
+	 * Default constructor.
+	 *
+	 * The seed should be set prior to use.
+	 */
 	FRandomStream()
 		: InitialSeed(0)
 		, Seed(0)
 	{ }
 
 	/**
-	* Creates and initializes a new random stream from the specified seed value.
-	*
-	* @param InSeed The seed value.
-	*/
-	FRandomStream(int32 InSeed)
+	 * Creates and initializes a new random stream from the specified seed value.
+	 *
+	 * @param InSeed The seed value.
+	 */
+	FRandomStream( int32 InSeed )
 		: InitialSeed(InSeed)
 		, Seed(InSeed)
 	{ }
@@ -47,19 +47,19 @@ public:
 public:
 
 	/**
-	* Initializes this random stream with the specified seed value.
-	*
-	* @param InSeed The seed value.
-	*/
-	void Initialize(int32 InSeed)
+	 * Initializes this random stream with the specified seed value.
+	 *
+	 * @param InSeed The seed value.
+	 */
+	void Initialize( int32 InSeed )
 	{
 		InitialSeed = InSeed;
 		Seed = InSeed;
 	}
 
 	/**
-	* Resets this random stream to the initial seed value.
-	*/
+	 * Resets this random stream to the initial seed value.
+	 */
 	void Reset() const
 	{
 		Seed = InitialSeed;
@@ -71,18 +71,18 @@ public:
 	}
 
 	/**
-	* Generates a new random seed.
-	*/
+	 * Generates a new random seed.
+	 */
 	void GenerateNewSeed()
 	{
 		Initialize(FMath::Rand());
 	}
 
 	/**
-	* Returns a random number between 0 and 1.
-	*
-	* @return Random number.
-	*/
+	 * Returns a random number between 0 and 1.
+	 *
+	 * @return Random number.
+	 */
 	float GetFraction() const
 	{
 		MutateSeed();
@@ -92,14 +92,14 @@ public:
 
 		*(int32*)&Result = (*(int32*)&SRandTemp & 0xff800000) | (Seed & 0x007fffff);
 
-		return FMath::Fractional(Result);
+		return FMath::Fractional(Result); 
 	}
 
 	/**
-	* Returns a random number between 0 and MAXUINT.
-	*
-	* @return Random number.
-	*/
+	 * Returns a random number between 0 and MAXUINT.
+	 *
+	 * @return Random number.
+	 */
 	uint32 GetUnsignedInt() const
 	{
 		MutateSeed();
@@ -108,10 +108,10 @@ public:
 	}
 
 	/**
-	* Returns a random vector of unit size.
-	*
-	* @return Random unit vector.
-	*/
+	 * Returns a random vector of unit size.
+	 *
+	 * @return Random unit vector.
+	 */
 	FVector GetUnitVector() const
 	{
 		FVector Result;
@@ -124,48 +124,49 @@ public:
 			Result.Y = GetFraction() * 2.f - 1.f;
 			Result.Z = GetFraction() * 2.f - 1.f;
 			L = Result.SizeSquared();
-		} while (L > 1.f || L < KINDA_SMALL_NUMBER);
+		}
+		while(L > 1.f || L < KINDA_SMALL_NUMBER);
 
 		return Result.GetUnsafeNormal();
 	}
 
 	/**
-	* Gets the current seed.
-	*
-	* @return Current seed.
-	*/
+	 * Gets the current seed.
+	 *
+	 * @return Current seed.
+	 */
 	int32 GetCurrentSeed() const
 	{
 		return Seed;
 	}
 
 	/**
-	* Mirrors the random number API in FMath
-	*
-	* @return Random number.
-	*/
+	 * Mirrors the random number API in FMath
+	 *
+	 * @return Random number.
+	 */
 	FORCEINLINE float FRand() const
 	{
 		return GetFraction();
 	}
 
 	/**
-	* Helper function for rand implementations.
-	*
-	* @return A random number in [0..A)
-	*/
-	FORCEINLINE int32 RandHelper(int32 A) const
+	 * Helper function for rand implementations.
+	 *
+	 * @return A random number in [0..A)
+	 */
+	FORCEINLINE int32 RandHelper( int32 A ) const
 	{
 		// Can't just multiply GetFraction by A, as GetFraction could be == 1.0f
 		return ((A > 0) ? FMath::TruncToInt(GetFraction() * ((float)A - DELTA)) : 0);
 	}
 
 	/**
-	* Helper function for rand implementations.
-	*
-	* @return A random number >= Min and <= Max
-	*/
-	FORCEINLINE int32 RandRange(int32 Min, int32 Max) const
+	 * Helper function for rand implementations.
+	 *
+	 * @return A random number >= Min and <= Max
+	 */
+	FORCEINLINE int32 RandRange( int32 Min, int32 Max ) const
 	{
 		const int32 Range = (Max - Min) + 1;
 
@@ -173,33 +174,33 @@ public:
 	}
 
 	/**
-	* Helper function for rand implementations.
-	*
-	* @return A random number >= Min and <= Max
-	*/
-	FORCEINLINE float FRandRange(float InMin, float InMax) const
+	 * Helper function for rand implementations.
+	 *
+	 * @return A random number >= Min and <= Max
+	 */
+	FORCEINLINE float FRandRange( float InMin, float InMax ) const
 	{
 		return InMin + (InMax - InMin) * FRand();
 	}
 
 	/**
-	* Returns a random vector of unit size.
-	*
-	* @return Random unit vector.
-	*/
+	 * Returns a random vector of unit size.
+	 *
+	 * @return Random unit vector.
+	 */
 	FORCEINLINE FVector VRand() const
 	{
 		return GetUnitVector();
 	}
 
 	/**
-	* Returns a random unit vector, uniformly distributed, within the specified cone.
-	*
-	* @param Dir The center direction of the cone
-	* @param ConeHalfAngleRad Half-angle of cone, in radians.
-	* @return Normalized vector within the specified cone.
-	*/
-	FORCEINLINE FVector VRandCone(FVector const& Dir, float ConeHalfAngleRad)
+	 * Returns a random unit vector, uniformly distributed, within the specified cone.
+	 *
+	 * @param Dir The center direction of the cone
+	 * @param ConeHalfAngleRad Half-angle of cone, in radians.
+	 * @return Normalized vector within the specified cone.
+	 */
+	FORCEINLINE FVector VRandCone( FVector const& Dir, float ConeHalfAngleRad )
 	{
 		if (ConeHalfAngleRad > 0.f)
 		{
@@ -219,15 +220,15 @@ public:
 			// get axes we need to rotate around
 			FMatrix const DirMat = FRotationMatrix(Dir.Rotation());
 			// note the axis translation, since we want the variation to be around X
-			FVector const DirZ = DirMat.GetUnitAxis(EAxis::X);
-			FVector const DirY = DirMat.GetUnitAxis(EAxis::Y);
+			FVector const DirZ = DirMat.GetUnitAxis( EAxis::X );		
+			FVector const DirY = DirMat.GetUnitAxis( EAxis::Y );
 
 			FVector Result = Dir.RotateAngleAxis(Phi * 180.f / PI, DirY);
 			Result = Result.RotateAngleAxis(Theta * 180.f / PI, DirZ);
 
 			// ensure it's a unit vector (might not have been passed in that way)
 			Result = Result.GetSafeNormal();
-
+		
 			return Result;
 		}
 		else
@@ -237,16 +238,16 @@ public:
 	}
 
 	/**
-	* Returns a random unit vector, uniformly distributed, within the specified cone.
-	*
-	* @param Dir The center direction of the cone
-	* @param HorizontalConeHalfAngleRad Horizontal half-angle of cone, in radians.
-	* @param VerticalConeHalfAngleRad Vertical half-angle of cone, in radians.
-	* @return Normalized vector within the specified cone.
-	*/
-	FORCEINLINE FVector VRandCone(FVector const& Dir, float HorizontalConeHalfAngleRad, float VerticalConeHalfAngleRad)
+	 * Returns a random unit vector, uniformly distributed, within the specified cone.
+	 *
+	 * @param Dir The center direction of the cone
+	 * @param HorizontalConeHalfAngleRad Horizontal half-angle of cone, in radians.
+	 * @param VerticalConeHalfAngleRad Vertical half-angle of cone, in radians.
+	 * @return Normalized vector within the specified cone.
+	 */
+	FORCEINLINE FVector VRandCone( FVector const& Dir, float HorizontalConeHalfAngleRad, float VerticalConeHalfAngleRad )
 	{
-		if ((VerticalConeHalfAngleRad > 0.f) && (HorizontalConeHalfAngleRad > 0.f))
+		if ( (VerticalConeHalfAngleRad > 0.f) && (HorizontalConeHalfAngleRad > 0.f) )
 		{
 			float const RandU = FRand();
 			float const RandV = FRand();
@@ -269,8 +270,8 @@ public:
 			// get axes we need to rotate around
 			FMatrix const DirMat = FRotationMatrix(Dir.Rotation());
 			// note the axis translation, since we want the variation to be around X
-			FVector const DirZ = DirMat.GetUnitAxis(EAxis::X);
-			FVector const DirY = DirMat.GetUnitAxis(EAxis::Y);
+			FVector const DirZ = DirMat.GetUnitAxis( EAxis::X );		
+			FVector const DirY = DirMat.GetUnitAxis( EAxis::Y );
 
 			FVector Result = Dir.RotateAngleAxis(Phi * 180.f / PI, DirY);
 			Result = Result.RotateAngleAxis(Theta * 180.f / PI, DirZ);
@@ -287,26 +288,26 @@ public:
 	}
 
 	/**
-	* Exports the RandomStreams value to a string.
-	*
-	* @param ValueStr Will hold the string value.
-	* @param DefaultValue The default value.
-	* @param Parent Not used.
-	* @param PortFlags Not used.
-	* @param ExportRootScope Not used.
-	* @return true on success, false otherwise.
-	* @see ImportTextItem
-	*/
+	 * Exports the RandomStreams value to a string.
+	 *
+	 * @param ValueStr Will hold the string value.
+	 * @param DefaultValue The default value.
+	 * @param Parent Not used.
+	 * @param PortFlags Not used.
+	 * @param ExportRootScope Not used.
+	 * @return true on success, false otherwise.
+	 * @see ImportTextItem
+	 */
 	CORE_API bool ExportTextItem(FString& ValueStr, FRandomStream const& DefaultValue, class UObject* Parent, int32 PortFlags, class UObject* ExportRootScope) const;
 
 protected:
 
 	/**
-	* Mutates the current seed into the next seed.
-	*/
+	 * Mutates the current seed into the next seed.
+	 */
 	void MutateSeed() const
 	{
-		Seed = (Seed * 196314165) + 907633515;
+		Seed = (Seed * 196314165) + 907633515; 
 	}
 
 private:

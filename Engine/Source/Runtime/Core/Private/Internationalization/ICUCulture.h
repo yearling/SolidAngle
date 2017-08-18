@@ -376,7 +376,7 @@ class FCulture::FICUCultureImplementation
 
 	FICUCultureImplementation(const FString& LocaleName);
 
-	FString GetDisplaFName() const;
+	FString GetDisplayName() const;
 
 	FString GetEnglishName() const;
 

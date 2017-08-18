@@ -5,7 +5,7 @@
 #if UE_ENABLE_ICU
 #include "Internationalization/ICUCulture.h"
 #else
-#include "Internationalization/LegacyCulture.h"
+#include "LegacyCulture.h"
 #endif
 
 #if UE_ENABLE_ICU
@@ -15,7 +15,7 @@ FCulturePtr FCulture::Create(const FString& LocaleName)
 }
 #else
 FCulturePtr FCulture::Create(
-	const FText& InDisplaFName, 
+	const FText& InDisplayName, 
 	const FString& InEnglishName, 
 	const int InKeyboardLayoutId, 
 	const int InLCID, 
@@ -29,7 +29,7 @@ FCulturePtr FCulture::Create(
 	const FDecimalNumberFormattingRules& InBaseCurrencyFormattingRules
 	)
 {
-	return MakeShareable(new FCulture(InDisplaFName, InEnglishName, InKeyboardLayoutId, InLCID, InName, InNativeName, InUnrealLegacyThreeLetterISOLanguageName, InThreeLetterISOLanguageName, InTwoLetterISOLanguageName, InDecimalNumberFormattingRules, InPercentFormattingRules, InBaseCurrencyFormattingRules));
+	return MakeShareable(new FCulture(InDisplayName, InEnglishName, InKeyboardLayoutId, InLCID, InName, InNativeName, InUnrealLegacyThreeLetterISOLanguageName, InThreeLetterISOLanguageName, InTwoLetterISOLanguageName, InDecimalNumberFormattingRules, InPercentFormattingRules, InBaseCurrencyFormattingRules));
 }
 #endif
 
@@ -38,7 +38,7 @@ FCulture::FCulture(const FString& LocaleName)
 	: Implementation( new FICUCultureImplementation( LocaleName ) )
 #else
 FCulture::FCulture(
-	const FText& InDisplaFName, 
+	const FText& InDisplayName, 
 	const FString& InEnglishName, 
 	const int InKeyboardLayoutId, 
 	const int InLCID, 
@@ -51,9 +51,9 @@ FCulture::FCulture(
 	const FDecimalNumberFormattingRules& InPercentFormattingRules,
 	const FDecimalNumberFormattingRules& InBaseCurrencyFormattingRules
 	) 
-	: Implementation( new FLegacyCultureImplementation(InDisplaFName, InEnglishName, InKeyboardLayoutId, InLCID, InName, InNativeName, InUnrealLegacyThreeLetterISOLanguageName, InThreeLetterISOLanguageName, InTwoLetterISOLanguageName, InDecimalNumberFormattingRules, InPercentFormattingRules, InBaseCurrencyFormattingRules) )
+	: Implementation( new FLegacyCultureImplementation(InDisplayName, InEnglishName, InKeyboardLayoutId, InLCID, InName, InNativeName, InUnrealLegacyThreeLetterISOLanguageName, InThreeLetterISOLanguageName, InTwoLetterISOLanguageName, InDecimalNumberFormattingRules, InPercentFormattingRules, InBaseCurrencyFormattingRules) )
 #endif
-	, CachedDisplaFName(Implementation->GetDisplaFName())
+	, CachedDisplayName(Implementation->GetDisplayName())
 	, CachedEnglishName(Implementation->GetEnglishName())
 	, CachedName(Implementation->GetName())
 	, CachedNativeName(Implementation->GetNativeName())
@@ -72,9 +72,9 @@ FCulture::FCulture(
 { 
 }
 
-const FString& FCulture::GetDisplaFName() const
+const FString& FCulture::GetDisplayName() const
 {
-	return CachedDisplaFName;
+	return CachedDisplayName;
 }
 
 const FString& FCulture::GetEnglishName() const
@@ -225,6 +225,6 @@ ETextPluralForm FCulture::GetPluralForm(double Val, const ETextPluralType Plural
 
 void FCulture::HandleCultureChanged()
 {
-	// Re-cache the DisplaFName, as this may change when the active culture is changed
-	CachedDisplaFName = Implementation->GetDisplaFName();
+	// Re-cache the DisplayName, as this may change when the active culture is changed
+	CachedDisplayName = Implementation->GetDisplayName();
 }

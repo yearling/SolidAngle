@@ -7,8 +7,8 @@
 #include "Internationalization/Internationalization.h"
 
 #if !UE_ENABLE_ICU
-#include "Internationalization/Text.h"
-#include "Internationalization/TextData.h"
+#include "Text.h"
+#include "TextData.h"
 
 bool FText::IsWhitespace( const TCHAR Char )
 {

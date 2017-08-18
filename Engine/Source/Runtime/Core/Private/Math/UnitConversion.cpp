@@ -188,21 +188,21 @@ struct FUnitExpressionParser
 				UnitsRHS = InDefaultUnit;
 			}
 
-			if (YUnitConversion::AreUnitsCompatible(UnitsLHS, UnitsRHS))
+			if (FUnitConversion::AreUnitsCompatible(UnitsLHS, UnitsRHS))
 			{
 				if (UnitsLHS != EUnit::Unspecified)
 				{
-					return MakeValue(FNumericUnit<double>(A.Value + YUnitConversion::Convert(B.Value, UnitsRHS, UnitsLHS), UnitsLHS));
+					return MakeValue(FNumericUnit<double>(A.Value + FUnitConversion::Convert(B.Value, UnitsRHS, UnitsLHS), UnitsLHS));
 				}
 				else
 				{
-					return MakeValue(FNumericUnit<double>(YUnitConversion::Convert(A.Value, UnitsLHS, UnitsRHS) + B.Value, UnitsRHS));
+					return MakeValue(FNumericUnit<double>(FUnitConversion::Convert(A.Value, UnitsLHS, UnitsRHS) + B.Value, UnitsRHS));
 				}
 			}
 
 			FFormatOrderedArguments Args;
-			Args.Add(FText::FromString(YUnitConversion::GetUnitDisplayString(B.Units)));
-			Args.Add(FText::FromString(YUnitConversion::GetUnitDisplayString(A.Units)));
+			Args.Add(FText::FromString(FUnitConversion::GetUnitDisplayString(B.Units)));
+			Args.Add(FText::FromString(FUnitConversion::GetUnitDisplayString(A.Units)));
 			return MakeError(FText::Format(LOCTEXT("CannotAddErr", "Cannot add {0} to {1}"), Args));
 		});
 
@@ -222,21 +222,21 @@ struct FUnitExpressionParser
 				UnitsRHS = InDefaultUnit;
 			}
 
-			if (YUnitConversion::AreUnitsCompatible(UnitsLHS, UnitsRHS))
+			if (FUnitConversion::AreUnitsCompatible(UnitsLHS, UnitsRHS))
 			{
 				if (UnitsLHS != EUnit::Unspecified)
 				{
-					return MakeValue(FNumericUnit<double>(A.Value - YUnitConversion::Convert(B.Value, UnitsRHS, UnitsLHS), UnitsLHS));
+					return MakeValue(FNumericUnit<double>(A.Value - FUnitConversion::Convert(B.Value, UnitsRHS, UnitsLHS), UnitsLHS));
 				}
 				else
 				{
-					return MakeValue(FNumericUnit<double>(YUnitConversion::Convert(A.Value, UnitsLHS, UnitsRHS) - B.Value, UnitsRHS));
+					return MakeValue(FNumericUnit<double>(FUnitConversion::Convert(A.Value, UnitsLHS, UnitsRHS) - B.Value, UnitsRHS));
 				}
 			}
 
 			FFormatOrderedArguments Args;
-			Args.Add(FText::FromString(YUnitConversion::GetUnitDisplayString(B.Units)));
-			Args.Add(FText::FromString(YUnitConversion::GetUnitDisplayString(A.Units)));
+			Args.Add(FText::FromString(FUnitConversion::GetUnitDisplayString(B.Units)));
+			Args.Add(FText::FromString(FUnitConversion::GetUnitDisplayString(A.Units)));
 			return MakeError(FText::Format(LOCTEXT("CannotSubtractErr", "Cannot subtract {1} from {0}"), Args));
 		});
 
@@ -386,7 +386,7 @@ private:
 	FOperatorJumpTable JumpTable;
 };
 
-YUnitSettings::YUnitSettings()
+FUnitSettings::FUnitSettings()
 	: bGlobalUnitDisplay(true)
 {
 	DisplayUnits[(uint8)EUnitType::Distance].Add(EUnit::Centimeters);
@@ -401,28 +401,28 @@ YUnitSettings::YUnitSettings()
 	DisplayUnits[(uint8)EUnitType::Time].Add(EUnit::Seconds);
 }
 
-bool YUnitSettings::ShouldDisplayUnits() const
+bool FUnitSettings::ShouldDisplayUnits() const
 {
 	return bGlobalUnitDisplay;
 }
 
-void YUnitSettings::SetShouldDisplayUnits(bool bInGlobalUnitDisplay)
+void FUnitSettings::SetShouldDisplayUnits(bool bInGlobalUnitDisplay)
 {
 	bGlobalUnitDisplay = bInGlobalUnitDisplay;
 	SettingChangedEvent.Broadcast();
 }
 
-const TArray<EUnit>& YUnitSettings::GetDisplayUnits(EUnitType InType) const
+const TArray<EUnit>& FUnitSettings::GetDisplayUnits(EUnitType InType) const
 {
 	return DisplayUnits[(uint8)InType];
 }
 
-void YUnitSettings::SetDisplayUnits(EUnitType InType, EUnit Unit)
+void FUnitSettings::SetDisplayUnits(EUnitType InType, EUnit Unit)
 {
 	if (InType != EUnitType::NumberOf)
 	{
 		DisplayUnits[(uint8)InType].Empty();
-		if (YUnitConversion::IsUnitOfType(Unit, InType))
+		if (FUnitConversion::IsUnitOfType(Unit, InType))
 		{
 			DisplayUnits[(uint8)InType].Add(Unit);
 		}
@@ -431,14 +431,14 @@ void YUnitSettings::SetDisplayUnits(EUnitType InType, EUnit Unit)
 	}	
 }
 
-void YUnitSettings::SetDisplayUnits(EUnitType InType, const TArray<EUnit>& Units)
+void FUnitSettings::SetDisplayUnits(EUnitType InType, const TArray<EUnit>& Units)
 {
 	if (InType != EUnitType::NumberOf)
 	{
 		DisplayUnits[(uint8)InType].Reset();
 		for (EUnit Unit : Units)
 		{
-			if (YUnitConversion::IsUnitOfType(Unit, InType))
+			if (FUnitConversion::IsUnitOfType(Unit, InType))
 			{
 				DisplayUnits[(uint8)InType].Add(Unit);
 			}
@@ -449,26 +449,26 @@ void YUnitSettings::SetDisplayUnits(EUnitType InType, const TArray<EUnit>& Units
 }
 
 /** Get the global settings for unit conversion/display */
-YUnitSettings& YUnitConversion::Settings()
+FUnitSettings& FUnitConversion::Settings()
 {
-	static TUniquePtr<YUnitSettings> Settings(new YUnitSettings);
+	static TUniquePtr<FUnitSettings> Settings(new FUnitSettings);
 	return *Settings;
 }
 
 /** Check whether it is possible to convert a number between the two specified units */
-bool YUnitConversion::AreUnitsCompatible(EUnit From, EUnit To)
+bool FUnitConversion::AreUnitsCompatible(EUnit From, EUnit To)
 {
 	return From == EUnit::Unspecified || To == EUnit::Unspecified || GetUnitType(From) == GetUnitType(To);
 }
 
 /** Check whether a unit is of the specified type */
-bool YUnitConversion::IsUnitOfType(EUnit Unit, EUnitType Type)
+bool FUnitConversion::IsUnitOfType(EUnit Unit, EUnitType Type)
 {
 	return Unit != EUnit::Unspecified && GetUnitType(Unit) == Type;
 }
 
 /** Get the type of the specified unit */
-EUnitType YUnitConversion::GetUnitType(EUnit InUnit)
+EUnitType FUnitConversion::GetUnitType(EUnit InUnit)
 {
 	if (ensure(InUnit != EUnit::Unspecified))
 	{
@@ -478,7 +478,7 @@ EUnitType YUnitConversion::GetUnitType(EUnit InUnit)
 }
 
 /** Get the unit abbreviation the specified unit type */
-const TCHAR* YUnitConversion::GetUnitDisplayString(EUnit Unit)
+const TCHAR* FUnitConversion::GetUnitDisplayString(EUnit Unit)
 {
 	static_assert(ARRAY_COUNT(UnitTypes) == (uint8)EUnit::Unspecified, "Type array does not match size of unit enum");
 	static_assert(ARRAY_COUNT(DisplayStrings) == (uint8)EUnit::Unspecified, "Display String array does not match size of unit enum");
@@ -491,7 +491,7 @@ const TCHAR* YUnitConversion::GetUnitDisplayString(EUnit Unit)
 }
 
 /** Helper function to find a unit from a string (name or abbreviation) */
-TOptional<EUnit> YUnitConversion::UnitFromString(const TCHAR* UnitString)
+TOptional<EUnit> FUnitConversion::UnitFromString(const TCHAR* UnitString)
 {
 	if (!UnitString || *UnitString == '\0')
 	{

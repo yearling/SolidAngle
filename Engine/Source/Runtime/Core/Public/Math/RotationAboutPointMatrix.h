@@ -21,13 +21,13 @@ public:
 	 */
 	FRotationAboutPointMatrix(const FRotator& Rot, const FVector& Origin);
 
-	/** Matrix factory. Return an YMatrix so we don't have type conversion issues in expressions. */
+	/** Matrix factory. Return an FMatrix so we don't have type conversion issues in expressions. */
 	static FMatrix Make(const FRotator& Rot, const FVector& Origin)
 	{
 		return FRotationAboutPointMatrix(Rot, Origin);
 	}
 
-	/** Matrix factory. Return an YMatrix so we don't have type conversion issues in expressions. */
+	/** Matrix factory. Return an FMatrix so we don't have type conversion issues in expressions. */
 	static CORE_API FMatrix Make(const FQuat& Rot, const FVector& Origin);
 };
 

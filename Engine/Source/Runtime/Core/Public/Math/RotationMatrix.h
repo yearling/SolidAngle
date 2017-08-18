@@ -1,3 +1,5 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
@@ -13,21 +15,21 @@ class FRotationMatrix
 public:
 
 	/**
-	* Constructor.
-	*
-	* @param Rot rotation
-	*/
+	 * Constructor.
+	 *
+	 * @param Rot rotation
+	 */
 	FRotationMatrix(const FRotator& Rot)
 		: FRotationTranslationMatrix(Rot, FVector::ZeroVector)
 	{ }
 
-	/** Matrix factory. Return an YMatrix so we don't have type conversion issues in expressions. */
+	/** Matrix factory. Return an FMatrix so we don't have type conversion issues in expressions. */
 	static FMatrix Make(FRotator const& Rot)
 	{
 		return FRotationMatrix(Rot);
 	}
 
-	/** Matrix factory. Return an YMatrix so we don't have type conversion issues in expressions. */
+	/** Matrix factory. Return an FMatrix so we don't have type conversion issues in expressions. */
 	static CORE_API FMatrix Make(FQuat const& Rot);
 
 	/** Builds a rotation matrix given only a XAxis. Y and Z are unspecified but will be orthonormal. XAxis need not be normalized. */
