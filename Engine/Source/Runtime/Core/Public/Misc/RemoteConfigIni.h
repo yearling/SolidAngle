@@ -1,3 +1,5 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
@@ -10,8 +12,8 @@
 template<typename TTask> class FAsyncTask;
 
 /**
-* Stores info relating to remote config files
-*/
+ * Stores info relating to remote config files
+ */
 struct FRemoteConfigAsyncIOInfo
 {
 	/** Constructors */
@@ -45,8 +47,8 @@ struct FRemoteConfigAsyncIOInfo
 
 
 /**
-* Async task that handles the IO of a remote config file
-*/
+ * Async task that handles the IO of a remote config file
+ */
 class FRemoteConfigAsyncWorker
 {
 public:
@@ -91,8 +93,8 @@ private:
 
 
 /**
-* Info for cached write tasks
-*/
+ * Info for cached write tasks
+ */
 class FRemoteConfigAsyncCachedWriteTask
 {
 public:
@@ -108,8 +110,8 @@ public:
 
 
 /**
-* Manages async IO tasks for remote config files
-*/
+ * Manages async IO tasks for remote config files
+ */
 class FRemoteConfigAsyncTaskManager
 {
 public:
@@ -149,8 +151,8 @@ private:
 
 
 /**
-* Manages remote config files.
-*/
+ * Manages remote config files.
+ */
 class FRemoteConfig
 {
 public:
@@ -190,7 +192,7 @@ public:
 
 	/* Replaces "special chars" that have been inserted to avoid problems with the ini parser with equivalent regular chars. */
 	CORE_API static FString ReplaceIniSpecialCharWithChar(const FString& Str);
-
+	
 private:
 
 	/** Creates the remote path string for the specified file. */

@@ -1,3 +1,5 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
@@ -6,14 +8,14 @@
 #include "Containers/Map.h"
 
 /**
-* Dictionary of all the non-foreign projects for an engine installation, found by parsing .uprojectdirs files for source directories.
-*/
+ * Dictionary of all the non-foreign projects for an engine installation, found by parsing .uprojectdirs files for source directories.
+ */
 class CORE_API FUProjectDictionary
 {
 public:
 	/** Scans the engine root directory for all the known projects. */
 	FUProjectDictionary(const FString& InRootDir);
-
+	
 	/** Refreshes the list of known projects */
 	void Refresh();
 

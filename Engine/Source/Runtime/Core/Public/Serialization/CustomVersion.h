@@ -48,11 +48,11 @@ struct CORE_API FCustomVersion
 	}
 
 	/** Helper constructor. */
-	FORCEINLINE FCustomVersion(FGuid InKey, int32 InVersion, FName InFriendlFName)
+	FORCEINLINE FCustomVersion(FGuid InKey, int32 InVersion, FName InFriendlyName)
 	: Key           (InKey)
 	, Version       (InVersion)
 	, ReferenceCount(1)
-	, FriendlFName  (InFriendlFName)
+	, FriendlyName  (InFriendlyName)
 	{
 	}
 
@@ -71,12 +71,12 @@ struct CORE_API FCustomVersion
 	CORE_API friend FArchive& operator<<(FArchive& Ar, FCustomVersion& Version);
 
 	/** Gets the friendly name for error messages or whatever */
-	const FName GetFriendlFName() const;
+	const FName GetFriendlyName() const;
 
 private:
 
 	/** Friendly name for error messages or whatever. Lazy initialized for serialized versions */
-	mutable FName FriendlFName;
+	mutable FName FriendlyName;
 };
 
 struct FCustomVersionKeyFuncs : BaseKeyFuncs<FCustomVersion, FGuid, false>
@@ -128,16 +128,16 @@ public:
 	* @param CustomKey Custom key for which to retrieve the version.
 	* @return The friendly name for the specified custom key, or NAME_None if the key doesn't exist in the container.
 	*/
-	const FName GetFriendlFName(FGuid CustomKey) const;
+	const FName GetFriendlyName(FGuid CustomKey) const;
 
 	/**
 	 * Sets a specific custom version in the container.
 	 *
 	 * @param CustomKey Custom key for which to retrieve the version.
 	 * @param Version The version number for the specified custom key
-	 * @param FriendlFName A friendly name to assign to this version
+	 * @param FriendlyName A friendly name to assign to this version
 	 */
-	void SetVersion(FGuid CustomKey, int32 Version, FName FriendlFName);
+	void SetVersion(FGuid CustomKey, int32 Version, FName FriendlyName);
 
 	/** Serialization. */
 	void Serialize(FArchive& Ar, ECustomVersionSerializationFormat::Type Format = ECustomVersionSerializationFormat::Latest);
@@ -176,7 +176,7 @@ class FCustomVersionRegistration : FNoncopyable
 {
 public:
 
-	FCustomVersionRegistration(FGuid InKey, int32 Version, FName InFriendlFName);
+	FCustomVersionRegistration(FGuid InKey, int32 Version, FName InFriendlyName);
 	~FCustomVersionRegistration();
 
 private:

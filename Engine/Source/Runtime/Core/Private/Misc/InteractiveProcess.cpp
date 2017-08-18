@@ -4,7 +4,7 @@
 #include "HAL/RunnableThread.h"
 
 #if PLATFORM_WINDOWS
-#include "Windows/WindowsHWrapper.h"
+#include "WindowsHWrapper.h"
 #endif
 
 static FORCEINLINE bool CreatePipeWrite(void*& ReadPipe, void*& WritePipe)

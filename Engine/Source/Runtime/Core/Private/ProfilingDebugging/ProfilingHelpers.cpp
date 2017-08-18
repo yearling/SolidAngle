@@ -121,9 +121,9 @@ void SendDataToPCViaUnrealConsole( const FString& NotifyType, const FString& Ful
 }
 
 
-FString CreateProfileFilename(const FString& InFileExtension, bool bIncludeDateForDirectorFName)
+FString CreateProfileFilename(const FString& InFileExtension, bool bIncludeDateForDirectoryName)
 {
-	return CreateProfileFilename(TEXT(""), InFileExtension, bIncludeDateForDirectorFName);
+	return CreateProfileFilename(TEXT(""), InFileExtension, bIncludeDateForDirectoryName);
 }
 
 /** 
@@ -133,7 +133,7 @@ FString CreateProfileFilename(const FString& InFileExtension, bool bIncludeDateF
  * @param ProfilingType this is the type of profiling file this is
  * 
  **/
-FString CreateProfileFilename( const FString& InFilename, const FString& InFileExtension, bool bIncludeDateForDirectorFName )
+FString CreateProfileFilename( const FString& InFilename, const FString& InFileExtension, bool bIncludeDateForDirectoryName )
 {
 	FString Retval;
 
@@ -194,7 +194,7 @@ FString CreateProfileFilename( const FString& InFilename, const FString& InFileE
 	FileNameWithExtension = FileNameWithExtension.Right(MaxFilenameLen);
 
 	FString Filename;
-	if( bIncludeDateForDirectorFName == true )
+	if( bIncludeDateForDirectoryName == true )
 	{
 		Filename = FolderName / FileNameWithExtension;
 	}
@@ -211,7 +211,7 @@ FString CreateProfileFilename( const FString& InFilename, const FString& InFileE
 
 
 
-FString CreateProfileDirectoryAndFilename( const FString& InSubDirectorFName, const FString& InFileExtension )
+FString CreateProfileDirectoryAndFilename( const FString& InSubDirectoryName, const FString& InFileExtension )
 {
 	FString MapNameStr;
 #if WITH_ENGINE
@@ -222,7 +222,7 @@ FString CreateProfileDirectoryAndFilename( const FString& InSubDirectorFName, co
 
 
 	// create Profiling dir and sub dir
-	const FString PathName = (FPaths::ProfilingDir() + InSubDirectorFName + TEXT("/"));
+	const FString PathName = (FPaths::ProfilingDir() + InSubDirectoryName + TEXT("/"));
 	IFileManager::Get().MakeDirectory( *PathName );
 	//UE_LOG(LogProfilingDebugging, Warning, TEXT( "CreateProfileDirectoryAndFilename: %s"), *PathName );
 

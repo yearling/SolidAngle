@@ -9,8 +9,8 @@
 #include "HAL/PlatformTime.h"
 
 #ifndef DO_TIMEGUARD
-// By default we are enabled based on STATS, but DO_TIMEGUARD can be set in XXX.Target.cs if so desired%
-#define DO_TIMEGUARD STATS
+	// By default we are enabled based on STATS, but DO_TIMEGUARD can be set in XXX.Target.cs if so desired%
+	#define DO_TIMEGUARD STATS
 #endif
 
 #if DO_TIMEGUARD

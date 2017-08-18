@@ -167,7 +167,7 @@ bool FAutomationTestFramework::RunSmokeTests()
 					FAutomationTestExecutionInfo& CurExecutionInfo = OutExecutionInfoMap.Add( TestCommand, FAutomationTestExecutionInfo() );
 
 					int32 RoleIndex = 0;  //always default to "local" role index.  Only used for multi-participant tests
-					StartTestBFName( TestCommand, RoleIndex );
+					StartTestByName( TestCommand, RoleIndex );
 					const bool CurTestSuccessful = StopTest(CurExecutionInfo);
 
 					bAllSuccessful = bAllSuccessful && CurTestSuccessful;
@@ -209,7 +209,7 @@ void FAutomationTestFramework::ResetTests()
 	IFileManager::Get().DeleteDirectory(*FPaths::AutomationTransientDir(), bEnsureExists, bDeleteEntireTree);
 }
 
-void FAutomationTestFramework::StartTestBFName( const FString& InTestToRun, const int32 InRoleIndex )
+void FAutomationTestFramework::StartTestByName( const FString& InTestToRun, const int32 InRoleIndex )
 {
 	if (GIsAutomationTesting)
 	{
@@ -561,7 +561,7 @@ void FAutomationTestFramework::DumpAutomationTestExecutionInfo( const TMap<FStri
 
 		if ( CurExecutionInfo.LogItems.Num() > 0 )
 		{
-			//InContext->Logf( *YString::Printf( TEXT("%s"), *NSLOCTEXT("UnrealEd", "AutomationTest_LogItems", "Log Items").ToString() ) );
+			//InContext->Logf( *FString::Printf( TEXT("%s"), *NSLOCTEXT("UnrealEd", "AutomationTest_LogItems", "Log Items").ToString() ) );
 			for ( TArray<FString>::TConstIterator LogItemIter( CurExecutionInfo.LogItems ); LogItemIter; ++LogItemIter )
 			{
 				UE_LOG(LogAutomationTest, Log, TEXT("%s"), **LogItemIter );

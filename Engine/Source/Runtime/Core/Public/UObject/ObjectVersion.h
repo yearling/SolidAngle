@@ -1,3 +1,5 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
@@ -90,7 +92,7 @@ enum EUnrealEngineObjectUE4Version
 	// Remove LevelBodySetup from ULevel
 	VER_UE4_REMOVE_LEVELBODYSETUP,
 	// Refactor character crouching
-	VER_UE4_REFACTOR_CHARACTER_CROUCH,
+	VER_UE4_REFACTOR_CHARACTER_CROUCH,	
 	// Trimmed down material shader debug information.
 	VER_UE4_SMALLER_DEBUG_MATERIALSHADER_UNIFORM_EXPRESSIONS,
 	// APEX Clothing
@@ -176,7 +178,7 @@ enum EUnrealEngineObjectUE4Version
 	// Remove native component nodes from the blueprint SimpleConstructionScript
 	VER_UE4_REMOVE_NATIVE_COMPONENTS_FROM_BLUEPRINT_SCS,
 	// Removal of Single Node Instance
-	VER_UE4_REMOVE_SINGLENODEINSTANCE,
+	VER_UE4_REMOVE_SINGLENODEINSTANCE, 
 	// Character movement braking changes
 	VER_UE4_CHARACTER_BRAKING_REFACTOR,
 	// Supported low quality lightmaps in volume samples
@@ -204,9 +206,9 @@ enum EUnrealEngineObjectUE4Version
 	// Allow overriding of parent class input bindings
 	VER_UE4_BLUEPRINT_INPUT_BINDING_OVERRIDES,
 	// Fix up convex invalid transform
-	VER_UE4_FIXUP_BODYSETUP_INVALID_CONVEX_TRANSFORM,
+	VER_UE4_FIXUP_BODYSETUP_INVALID_CONVEX_TRANSFORM, 
 	// Fix up scale of physics stiffness and damping value
-	VER_UE4_FIXUP_STIFFNESS_AND_DAMPING_SCALE,
+	VER_UE4_FIXUP_STIFFNESS_AND_DAMPING_SCALE, 
 	// Convert USkeleton and FBoneContrainer to using FReferenceSkeleton.
 	VER_UE4_REFERENCE_SKELETON_REFACTOR,
 	// Adding references to variable, function, and macro nodes to be able to update to renamed values
@@ -284,7 +286,7 @@ enum EUnrealEngineObjectUE4Version
 	// Added cooking for landscape collision data
 	VER_UE4_LANDSCAPE_COLLISION_DATA_COOKING,
 	// Convert CPU tangent Z delta to vector from PackedNormal since we don't get any benefit other than memory
-	// we still convert all to YVector in CPU time whenever any calculation
+	// we still convert all to FVector in CPU time whenever any calculation
 	VER_UE4_MORPHTARGET_CPU_TANGENTZDELTA_FORMATCHANGE,
 	// Soft constraint limits will implicitly use the mass of the bodies
 	VER_UE4_SOFT_CONSTRAINTS_USE_MASS,
@@ -295,7 +297,7 @@ enum EUnrealEngineObjectUE4Version
 	// Undo BreakMaterialAttributes changes as it broke old content
 	VER_UE4_UNDO_BREAK_MATERIALATTRIBUTES_CHANGE,
 	// Now Default custom profile name isn't NONE anymore due to copy/paste not working properly with it
-	VER_UE4_ADD_CUSTOMPROFILENAME_CHANGE,
+	VER_UE4_ADD_CUSTOMPROFILENAME_CHANGE, 
 	// Permanently flip and scale material expression coordinates
 	VER_UE4_FLIP_MATERIAL_COORDS,
 	// PinSubCategoryMemberReference added to FEdGraphPinType
@@ -358,7 +360,7 @@ enum EUnrealEngineObjectUE4Version
 	VER_UE4_FIX_MATERIAL_PROPERTY_OVERRIDE_SERIALIZE,
 	// Addition of linear color sampler. color sample type is changed to linear sampler if source texture !sRGB
 	VER_UE4_ADD_LINEAR_COLOR_SAMPLER,
-	// Added StringAssetReferencesMap to support renames of YStringAssetReference properties.
+	// Added StringAssetReferencesMap to support renames of FStringAssetReference properties.
 	VER_UE4_ADD_STRING_ASSET_REFERENCES_MAP,
 	// Apply scale from SCS RootComponent details in the Blueprint Editor to new actor instances at construction time
 	VER_UE4_BLUEPRINT_USE_SCS_ROOTCOMPONENT_SCALE,
@@ -392,7 +394,7 @@ enum EUnrealEngineObjectUE4Version
 	// Rename UCameraComponent::bUseControllerViewRotation to bUsePawnViewRotation (and change the default value)
 	VER_UE4_RENAME_CAMERA_COMPONENT_VIEW_ROTATION,
 	// Changed FName to be case preserving
-	VER_UE4_CASE_PRESERVING_FName,
+	VER_UE4_CASE_PRESERVING_FNAME,
 	// Rename USpringArmComponent::bUsePawnViewRotation to bUsePawnControlRotation
 	// Rename UCameraComponent::bUsePawnViewRotation to bUsePawnControlRotation
 	VER_UE4_RENAME_CAMERA_COMPONENT_CONTROL_ROTATION,
@@ -525,7 +527,7 @@ enum EUnrealEngineObjectUE4Version
 	VER_UE4_ASSET_IMPORT_DATA_AS_JSON,
 	// Legacy gamma support for textures.
 	VER_UE4_TEXTURE_LEGACY_GAMMA,
-	// Added WithSerializer for basic native structures like YVector, YColor etc to improve serialization performance
+	// Added WithSerializer for basic native structures like FVector, FColor etc to improve serialization performance
 	VER_UE4_ADDED_NATIVE_SERIALIZATION_FOR_IMMUTABLE_STRUCTURES,
 	// Deprecated attributes that override the style on UMG widgets
 	VER_UE4_DEPRECATE_UMG_STYLE_OVERRIDES,
@@ -590,7 +592,7 @@ enum EUnrealEngineObjectUE4Version
 	// Updating custom material expression nodes for instanced stereo implementation
 	VER_UE4_INSTANCED_STEREO_UNIFORM_UPDATE,
 	// Texture streaming min and max distance to handle HLOD
-	VER_UE4_STREAMABLE_TEXTURE_MIN_MAX_DISTANCE,
+	VER_UE4_STREAMABLE_TEXTURE_MIN_MAX_DISTANCE,	
 	// Fixing up invalid struct-to-struct pin connections by injecting available conversion nodes
 	VER_UE4_INJECT_BLUEPRINT_STRUCT_PIN_CONVERSION_NODES,
 	// Saving tag data for Array Property's inner property
@@ -622,7 +624,7 @@ enum EUnrealEngineObjectUE4Version
 	VER_UE4_AUTOMATIC_VERSION = VER_UE4_AUTOMATIC_VERSION_PLUS_ONE - 1
 };
 
-//#include "PendingVersions.h"
+#include "PendingVersions.h"
 
 enum EUnrealEngineObjectLicenseeUE4Version
 {
@@ -637,7 +639,7 @@ enum EUnrealEngineObjectLicenseeUE4Version
 #define VER_LATEST_ENGINE_LICENSEEUE4   PREPROCESSOR_ENUM_PROTECT(VER_LIC_AUTOMATIC_VERSION)
 
 // Minimum package version that contains legal bytecode
-#define VER_MIN_SCRIPTVM_UE4									(VER_UE4_CASE_PRESERVING_FName)
+#define VER_MIN_SCRIPTVM_UE4									(VER_UE4_CASE_PRESERVING_FNAME)
 #define VER_MIN_SCRIPTVM_LICENSEEUE4							(VER_LIC_NONE)
 
 // Version access.

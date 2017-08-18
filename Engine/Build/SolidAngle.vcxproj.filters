@@ -136,9 +136,6 @@
     <Filter Include="Source\Runtime\Core\Private\Serialization">
       <UniqueIdentifier>{cc1a96b3-5bbc-4b34-b558-108bc137cbaf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Runtime\Core\Private\SObject">
-      <UniqueIdentifier>{f11d0a82-456b-46d1-a6c4-c102a8c1690e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Runtime\Core\Private\Internationalization">
       <UniqueIdentifier>{4c70b918-c860-4e36-a937-e219a24884f0}</UniqueIdentifier>
     </Filter>
@@ -189,6 +186,24 @@
     </Filter>
     <Filter Include="Source\Runtime\SynthBenchmark\Private">
       <UniqueIdentifier>{18e18ed6-bdd7-4476-aacd-4fabd2f096ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Private\ProfilingDebugging\Windows">
+      <UniqueIdentifier>{17eaf6ed-bbf9-44a5-91c3-a1053bc773d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Public\Serialization\Csv">
+      <UniqueIdentifier>{4461afcc-8f76-450f-8093-04209ad85889}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Private\Serialization\Csv">
+      <UniqueIdentifier>{dbc76610-9946-496b-86f9-830ae848cb82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Private\UObject">
+      <UniqueIdentifier>{f11d0a82-456b-46d1-a6c4-c102a8c1690e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Private\Tests\Internationalization">
+      <UniqueIdentifier>{7894824f-4f4b-45a5-8058-8474a36a6641}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Private\Tests\Math">
+      <UniqueIdentifier>{1854445b-bdc6-48b2-9a86-6643bbc49a52}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1173,9 +1188,6 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\DefaultValueHelper.h">
       <Filter>Source\Runtime\Core\Public\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ConfigManifest.h">
-      <Filter>Source\Runtime\Core\Public\Misc</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\DataCodec.h">
       <Filter>Source\Runtime\Core\Public\Misc</Filter>
     </ClInclude>
@@ -1682,6 +1694,150 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\TextLocalizationManagerGlobals.h">
       <Filter>Source\Runtime\Core\Public\Internationalization</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\ExternalProfiler.h">
+      <Filter>Source\Runtime\Core\Public\ProfilingDebugging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\Histogram.h">
+      <Filter>Source\Runtime\Core\Public\ProfilingDebugging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\LoadTimeTracker.h">
+      <Filter>Source\Runtime\Core\Public\ProfilingDebugging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\ResourceSize.h">
+      <Filter>Source\Runtime\Core\Public\ProfilingDebugging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\ScopedDebugInfo.h">
+      <Filter>Source\Runtime\Core\Public\ProfilingDebugging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\ScopedTimers.h">
+      <Filter>Source\Runtime\Core\Public\ProfilingDebugging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\ABTesting.h">
+      <Filter>Source\Runtime\Core\Public\ProfilingDebugging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\CookStats.h">
+      <Filter>Source\Runtime\Core\Public\ProfilingDebugging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\DebuggingDefines.h">
+      <Filter>Source\Runtime\Core\Public\ProfilingDebugging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\DiagnosticTable.h">
+      <Filter>Source\Runtime\Core\Public\ProfilingDebugging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\ArrayWriter.h">
+      <Filter>Source\Runtime\Core\Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\ArrayReader.h">
+      <Filter>Source\Runtime\Core\Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\BufferArchive.h">
+      <Filter>Source\Runtime\Core\Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\BufferWriter.h">
+      <Filter>Source\Runtime\Core\Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\LargeMemoryReader.h">
+      <Filter>Source\Runtime\Core\Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\LargeMemoryWriter.h">
+      <Filter>Source\Runtime\Core\Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\Csv\CsvParser.h">
+      <Filter>Source\Runtime\Core\Public\Serialization\Csv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Private\Serialization\AsyncIOSystemBase.h">
+      <Filter>Source\Runtime\Core\Private\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Traits\ElementType.h">
+      <Filter>Source\Runtime\Core\Public\Traits</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\BlueprintsObjectVersion.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\BuildObjectVersion.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\CoreObjectVersion.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\LoadTimesObjectVersion.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\MobileObjectVersion.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\FrameworkObjectVersion.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\NetworkingObjectVersion.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\PendingVersions.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\PhysicsObjectVersion.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\PlatformObjectVersion.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\OnlineObjectVersion.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\RenderingObjectVersion.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\SequencerObjectVersion.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\VRObjectVersion.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Attribute.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CallbackDevice.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CompilationResult.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\DelegateFilter.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\DisableOldUETypes.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\EnumRange.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\GenericGrowableAllocator.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\FilterCollection.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ILifeCycle.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\InlineValue.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\TypeContainer.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Variant.h">
+      <Filter>Source\Runtime\Core\Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Private\Misc\ConfigManifest.h">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Private\Misc\EventPool.h">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Private\Misc\VarargsHelper.h">
+      <Filter>Source\Runtime\Core\Private\Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformMath.cpp">
@@ -2119,9 +2275,6 @@
     <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\Archive.cpp">
       <Filter>Source\Runtime\Core\Private\Serialization</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Runtime\Core\Private\SObject\SolidAngleNames.cpp">
-      <Filter>Source\Runtime\Core\Private\SObject</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\Text.cpp">
       <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
     </ClCompile>
@@ -2224,9 +2377,6 @@
     <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\TextNamespaceUtil.cpp">
       <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Runtime\Core\Private\SObject\DevObjectVersion.cpp">
-      <Filter>Source\Runtime\Core\Private\SObject</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\CustomVersion.cpp">
       <Filter>Source\Runtime\Core\Private\Serialization</Filter>
     </ClCompile>
@@ -2238,9 +2388,6 @@
     </ClCompile>
     <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\CompressedChunkInfo.cpp">
       <Filter>Source\Runtime\Core\Private\Serialization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Runtime\Core\Private\SObject\ObjectVersion.cpp">
-      <Filter>Source\Runtime\Core\Private\SObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Runtime\Core\Private\Features\ModularFeatures.cpp">
       <Filter>Source\Runtime\Core\Private\Features</Filter>
@@ -2295,6 +2442,123 @@
     </ClCompile>
     <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\LegacyWordBreakIterator.cpp">
       <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\ProfilingDebugging\Histogram.cpp">
+      <Filter>Source\Runtime\Core\Private\ProfilingDebugging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\ProfilingDebugging\LoadTimeTracker.cpp">
+      <Filter>Source\Runtime\Core\Private\ProfilingDebugging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\ProfilingDebugging\MallocProfiler.cpp">
+      <Filter>Source\Runtime\Core\Private\ProfilingDebugging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\ProfilingDebugging\ScopedDebugInfo.cpp">
+      <Filter>Source\Runtime\Core\Private\ProfilingDebugging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\ProfilingDebugging\ABTesting.cpp">
+      <Filter>Source\Runtime\Core\Private\ProfilingDebugging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\ProfilingDebugging\CookStats.cpp">
+      <Filter>Source\Runtime\Core\Private\ProfilingDebugging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\ProfilingDebugging\ExternalProfiler.cpp">
+      <Filter>Source\Runtime\Core\Private\ProfilingDebugging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\ProfilingDebugging\Windows\AQtimeExternalProfiler.cpp">
+      <Filter>Source\Runtime\Core\Private\ProfilingDebugging\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\ProfilingDebugging\Windows\VSPerfExternalProfiler.cpp">
+      <Filter>Source\Runtime\Core\Private\ProfilingDebugging\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\ProfilingDebugging\Windows\VTuneExternalProfiler.cpp">
+      <Filter>Source\Runtime\Core\Private\ProfilingDebugging\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\ArchiveProxy.cpp">
+      <Filter>Source\Runtime\Core\Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\AsyncIOSystemBase.cpp">
+      <Filter>Source\Runtime\Core\Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\LargeMemoryReader.cpp">
+      <Filter>Source\Runtime\Core\Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\LargeMemoryWriter.cpp">
+      <Filter>Source\Runtime\Core\Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\Csv\CsvParser.cpp">
+      <Filter>Source\Runtime\Core\Private\Serialization\Csv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\Csv\CsvParserTests.cpp">
+      <Filter>Source\Runtime\Core\Private\Serialization\Csv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\UObject\ObjectVersion.cpp">
+      <Filter>Source\Runtime\Core\Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\UObject\UnrealNames.cpp">
+      <Filter>Source\Runtime\Core\Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\UObject\DevObjectVersion.cpp">
+      <Filter>Source\Runtime\Core\Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Misc\TripleBufferTest.cpp">
+      <Filter>Source\Runtime\Core\Private\Tests\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Misc\TypeContainerTest.cpp">
+      <Filter>Source\Runtime\Core\Private\Tests\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Misc\QueueTest.cpp">
+      <Filter>Source\Runtime\Core\Private\Tests\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Misc\TimespanTest.cpp">
+      <Filter>Source\Runtime\Core\Private\Tests\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Misc\CircularQueueTest.cpp">
+      <Filter>Source\Runtime\Core\Private\Tests\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Misc\DateTimeTest.cpp">
+      <Filter>Source\Runtime\Core\Private\Tests\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Misc\FileTest.cpp">
+      <Filter>Source\Runtime\Core\Private\Tests\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Misc\GuidTest.cpp">
+      <Filter>Source\Runtime\Core\Private\Tests\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Misc\CircularBufferTest.cpp">
+      <Filter>Source\Runtime\Core\Private\Tests\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Internationalization\DateTimeFormattingRulesTest.cpp">
+      <Filter>Source\Runtime\Core\Private\Tests\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Internationalization\ManifestTest.cpp">
+      <Filter>Source\Runtime\Core\Private\Tests\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Internationalization\MetadataTest.cpp">
+      <Filter>Source\Runtime\Core\Private\Tests\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Internationalization\NumberFormatingRulesTest.cpp">
+      <Filter>Source\Runtime\Core\Private\Tests\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Internationalization\TextTest.cpp">
+      <Filter>Source\Runtime\Core\Private\Tests\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Internationalization\ArchiveTest.cpp">
+      <Filter>Source\Runtime\Core\Private\Tests\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Math\RangeSetTest.cpp">
+      <Filter>Source\Runtime\Core\Private\Tests\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Math\RangeTest.cpp">
+      <Filter>Source\Runtime\Core\Private\Tests\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Math\UnitConversionTests.cpp">
+      <Filter>Source\Runtime\Core\Private\Tests\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Math\UnrealMathTest.cpp">
+      <Filter>Source\Runtime\Core\Private\Tests\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Math\RangeBoundTest.cpp">
+      <Filter>Source\Runtime\Core\Private\Tests\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -128,7 +128,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;_DEBUG;_CONSOLE;UE_IS_ENGINE_MODULE=1;CORE_API=__declspec(dllexport);MALLOC_LEAKDETECTION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Source\;..\Source\Runtime\Core\Public\;..\Source\Runtime\Core\Private\;..\Source\Runtime\InputDevice\Public\;..\Source\ThirdParty\IntelTBB\tbb-2017_U5\include;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\Core\Public\Windows;..\Source\Runtime\Core\Public\HAL;..\Source\Runtime\Core\Public\Misc;..\Source\Runtime\Core\Public\Async;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\Core\Public\GenericPlatform;..\Source\Runtime\Core\Public\Math;..\Source\Runtime\Core\Private\Internationalization;..\Source\Runtime\Core\Public\Internationalization;..\Source\Runtime\SynthBenchmark\Public;..\Source\;%(AdditionalIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Source\;..\Source\Runtime\Core\Public\;..\Source\Runtime\Core\Private\;..\Source\Runtime\InputDevice\Public\;..\Source\ThirdParty\IntelTBB\tbb-2017_U5\include;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\Core\Public\Windows;..\Source\Runtime\Core\Public\HAL;..\Source\Runtime\Core\Public\Misc;..\Source\Runtime\Core\Public\Async;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\Core\Public\GenericPlatform;..\Source\Runtime\Core\Public\Math;..\Source\Runtime\Core\Private\Internationalization;..\Source\Runtime\Core\Public\Internationalization;..\Source\Runtime\SynthBenchmark\Public;..\Source\Runtime\Core\Private\Serialization;..\Source\Runtime\Core\Private\Misc;..\Source\;%(AdditionalIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FloatingPointModel>Fast</FloatingPointModel>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <BrowseInformation>true</BrowseInformation>
@@ -139,8 +139,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>tbbmalloc_debug.lib;Netapi32.lib;setupapi.lib;Dwmapi.lib;Dbghelp.lib;Imm32.lib;Iphlpapi.lib;Xinput.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Source\ThirdParty\IntelTBB\tbb-2017_U5\lib\$(Platform)\$(PlatformToolset)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>tbbmalloc_debug.lib;Netapi32.lib;setupapi.lib;Dwmapi.lib;Dbghelp.lib;Imm32.lib;Iphlpapi.lib;Xinput.lib;Winmm.lib;zlibd_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Source\ThirdParty\IntelTBB\tbb-2017_U5\lib\$(Platform)\$(PlatformToolset)\;..\Source\ThirdParty\zlib\zlib-1.2.5\Lib\Win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Bscmake>
       <PreserveSbr>false</PreserveSbr>
@@ -178,7 +178,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;CORE_API=__declspec(dllexport);WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Source\;..\Source\Runtime\Core\Public\;..\Source\Runtime\Core\Private\;..\Source\Runtime\InputDevice\Public\;..\Source\ThirdParty\IntelTBB\tbb-2017_U5\include;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\Core\Public\Windows;..\Source\Runtime\Core\Public\HAL;..\Source\Runtime\Core\Public\Misc;..\Source\Runtime\Core\Public\Async;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\Core\Public\GenericPlatform;..\Source\Runtime\Core\Public\Math;..\Source\Runtime\Core\Private\Internationalization;..\Source\Runtime\Core\Public\Internationalization;..\Source\Runtime\SynthBenchmark\Public;..\Source\ThirdParty\IntelTBB\tbb-2017_U5\include;%(AdditionalIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Source\;..\Source\Runtime\Core\Public\;..\Source\Runtime\Core\Private\;..\Source\Runtime\InputDevice\Public\;..\Source\ThirdParty\IntelTBB\tbb-2017_U5\include;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\Core\Public\Windows;..\Source\Runtime\Core\Public\HAL;..\Source\Runtime\Core\Public\Misc;..\Source\Runtime\Core\Public\Async;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\Core\Public\GenericPlatform;..\Source\Runtime\Core\Public\Math;..\Source\Runtime\Core\Private\Internationalization;..\Source\Runtime\Core\Public\Internationalization;..\Source\Runtime\SynthBenchmark\Public;..\Source\Runtime\Core\Private\Serialization;..\Source\Runtime\Core\Private\Misc;..\Source\ThirdParty\IntelTBB\tbb-2017_U5\include;%(AdditionalIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <BrowseInformation>true</BrowseInformation>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -189,8 +189,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>tbbmalloc.lib;Netapi32.lib;setupapi.lib;Dwmapi.lib;Dbghelp.lib;Imm32.lib;Iphlpapi.lib;Xinput.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Source\ThirdParty\IntelTBB\tbb-2017_U5\lib\$(Platform)\$(PlatformToolset)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>tbbmalloc.lib;Netapi32.lib;setupapi.lib;Dwmapi.lib;Dbghelp.lib;Imm32.lib;Iphlpapi.lib;Xinput.lib;Winmm.lib;zlib_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Source\ThirdParty\IntelTBB\tbb-2017_U5\lib\$(Platform)\$(PlatformToolset)\;..\Source\ThirdParty\zlib\zlib-1.2.5\Lib\Win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
@@ -209,6 +209,10 @@
     <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\TextData.h" />
     <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\TextFormatArgumentModifier.h" />
     <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\TextHistory.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Private\Misc\ConfigManifest.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Private\Misc\EventPool.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Private\Misc\VarargsHelper.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Private\Serialization\AsyncIOSystemBase.h" />
     <ClInclude Include="..\Source\Runtime\Core\Private\Windows\WindowsEvent.h" />
     <ClInclude Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformFeedbackContextPrivate.h" />
     <ClInclude Include="..\Source\Runtime\Core\Private\Windows\WindowsPlatformOutputDevicesPrivate.h" />
@@ -482,17 +486,19 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\AES.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\App.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\AssertionMacros.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Attribute.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\AutomationTest.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Base64.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\BufferedOutputDevice.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Build.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ByteSwap.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CallbackDevice.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Char.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CommandLine.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CompilationResult.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CompressedGrowableBuffer.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Compression.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ConfigCacheIni.h" />
-    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ConfigManifest.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CoreDefines.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CoreDelegates.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CoreMisc.h" />
@@ -503,10 +509,13 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\DataCodec.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\DateTime.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\DefaultValueHelper.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\DelegateFilter.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\DisableOldUETypes.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\EngineBuildSettings.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\EngineVersion.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\EngineVersionBase.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\EnumClassFlags.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\EnumRange.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\EventPool.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Exec.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ExpressionParser.h" />
@@ -515,8 +524,12 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\FeedbackContext.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\FeedbackContextMarkup.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\FileHelper.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\FilterCollection.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\GenericGrowableAllocator.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Guid.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\IFilter.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ILifeCycle.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\InlineValue.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\InteractiveProcess.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\IQueuedWork.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\ITransaction.h" />
@@ -564,26 +577,45 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\TextFilterUtils.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\TimeGuard.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Timespan.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\TypeContainer.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\UProjectInfo.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\VarArgs.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\VarargsHelper.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Misc\Variant.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\WildcardString.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Modules\Boilerplate\ModuleBoilerplate.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Modules\ModuleInterface.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Modules\ModuleManager.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Modules\ModuleVersion.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\ABTesting.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\CookStats.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\DebuggingDefines.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\DiagnosticTable.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\ExternalProfiler.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\Histogram.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\LoadTimeTracker.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\MallocProfiler.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\ProfilingHelpers.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\ResourceSize.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\ScopedDebugInfo.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\ScopedTimers.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\UMemoryDefines.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\Archive.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\ArchiveLoadCompressedProxy.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\ArchiveProxy.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\ArchiveSaveCompressedProxy.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\ArrayReader.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\ArrayWriter.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\BitReader.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\BitWriter.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\BufferArchive.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\BufferReader.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\BufferWriter.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\CompressedChunkInfo.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\Csv\CsvParser.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\CustomVersion.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\LargeMemoryReader.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\LargeMemoryWriter.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\MemoryArchive.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\MemoryReader.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\MemoryWriter.h" />
@@ -639,19 +671,34 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\UnrealTemplate.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\UnrealTypeTraits.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\ValueOrError.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Traits\ElementType.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Traits\IsContiguousContainer.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\UObject\AutoPointer.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\BlueprintsObjectVersion.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\BuildObjectVersion.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\CoreObjectVersion.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\UObject\DebugSerializationFlags.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\UObject\DevObjectVersion.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\UObject\EditorObjectVersion.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\FrameworkObjectVersion.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\LoadTimesObjectVersion.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\MobileObjectVersion.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\UObject\NameTypes.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\NetworkingObjectVersion.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\UObject\ObjectMacros.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\UObject\ObjectVersion.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\OnlineObjectVersion.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\PendingVersions.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\PhysicsObjectVersion.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\PlatformObjectVersion.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\UObject\PropertyPortFlags.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\UObject\ReleaseObjectVersion.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\RenderingObjectVersion.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\UObject\ScriptDelegates.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\SequencerObjectVersion.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\UObject\UnrealNames.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\UObject\UObjectHierarchyFwd.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\VRObjectVersion.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\UObject\WeakObjectPtrTemplates.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\AllowWindowsPlatformTypes.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\COMPointer.h" />
@@ -856,17 +903,30 @@
     <ClCompile Include="..\Source\Runtime\Core\Private\Misc\UProjectInfo.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Misc\WildcardString.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Modules\ModuleManager.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\ProfilingDebugging\ABTesting.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\ProfilingDebugging\CookStats.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\ProfilingDebugging\ExternalProfiler.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\ProfilingDebugging\Histogram.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\ProfilingDebugging\LoadTimeTracker.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\ProfilingDebugging\MallocProfiler.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\ProfilingDebugging\ProfilingHelpers.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\ProfilingDebugging\ScopedDebugInfo.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\ProfilingDebugging\Windows\AQtimeExternalProfiler.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\ProfilingDebugging\Windows\VSPerfExternalProfiler.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\ProfilingDebugging\Windows\VTuneExternalProfiler.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\Archive.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\ArchiveLoadCompressedProxy.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\ArchiveProxy.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\ArchiveSaveCompressedProxy.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\AsyncIOSystemBase.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\BitReader.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\BitWriter.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\CompressedChunkInfo.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\Csv\CsvParser.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\Csv\CsvParserTests.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\CustomVersion.cpp" />
-    <ClCompile Include="..\Source\Runtime\Core\Private\SObject\DevObjectVersion.cpp" />
-    <ClCompile Include="..\Source\Runtime\Core\Private\SObject\ObjectVersion.cpp" />
-    <ClCompile Include="..\Source\Runtime\Core\Private\SObject\SolidAngleNames.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\LargeMemoryReader.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\LargeMemoryWriter.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Stats\Stats2.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Stats\StatsCommand.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Stats\StatsData.cpp" />
@@ -876,7 +936,30 @@
     <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Async\AsyncTest.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Async\TaskGraphTest.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Tests\HAL\PlatformTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Internationalization\ArchiveTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Internationalization\DateTimeFormattingRulesTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Internationalization\ManifestTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Internationalization\MetadataTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Internationalization\NumberFormatingRulesTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Internationalization\TextTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Math\RangeBoundTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Math\RangeSetTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Math\RangeTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Math\UnitConversionTests.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Math\UnrealMathTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Misc\CircularBufferTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Misc\CircularQueueTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Misc\DateTimeTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Misc\FileTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Misc\GuidTest.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Misc\PathsTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Misc\QueueTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Misc\TimespanTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Misc\TripleBufferTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\Tests\Misc\TypeContainerTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\UObject\DevObjectVersion.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\UObject\ObjectVersion.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\UObject\UnrealNames.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Windows\MinimalWindowsApi.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Windows\TextStoreACP.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsApplication.cpp" />

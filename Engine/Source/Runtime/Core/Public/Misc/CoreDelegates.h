@@ -122,7 +122,7 @@ public:
 	// Called after the editor dismisses a modal window, allowing other windows the opportunity to disable themselves to avoid reentrant calls
 	static FSimpleMulticastDelegate PostModal;
 #endif	//WITH_EDITOR
-
+	
 	// Called when an error occurred.
 	static FSimpleMulticastDelegate OnShutdownAfterError;
 
@@ -160,7 +160,7 @@ public:
 	// This is called when the application is about to be deactivated (e.g., due to a phone call or SMS or the sleep button).
 	// The game should be paused if possible, etc...
 	static FApplicationLifetimeDelegate ApplicationWillDeactivateDelegate;
-
+	
 	// Called when the application has been reactivated (reverse any processing done in the Deactivate delegate)
 	static FApplicationLifetimeDelegate ApplicationHasReactivatedDelegate;
 
@@ -170,7 +170,7 @@ public:
 	// terminated from the background state without any further warning.
 	static FApplicationLifetimeDelegate ApplicationWillEnterBackgroundDelegate; // for instance, hitting the home button
 
-																				// Called when the application is returning to the foreground (reverse any processing done in the EnterBackground delegate)
+	// Called when the application is returning to the foreground (reverse any processing done in the EnterBackground delegate)
 	static FApplicationLifetimeDelegate ApplicationHasEnteredForegroundDelegate;
 
 	// This *may* be called when the application is getting terminated by the OS.
@@ -193,7 +193,7 @@ public:
 	static FOnFConfigFileDeleted OnFConfigDeleted;
 #if WITH_EDITOR
 	// called when a target platform changes it's return value of supported formats.  This is so anything caching those results can reset (like cached shaders for cooking)
-	DECLARE_MULTICAST_DELEGATE_OneParam(FOnTargetPlatformChangedSupportedFormats, const ITargetPlatform*);
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnTargetPlatformChangedSupportedFormats, const ITargetPlatform*); 
 	static FOnTargetPlatformChangedSupportedFormats OnTargetPlatformChangedSupportedFormats;
 #endif
 	// called when the user grants permission to register for remote notifications
@@ -243,8 +243,8 @@ public:
 	DECLARE_DELEGATE_RetVal_OneParam(bool, FLoadStringAssetReferenceInCook, const FString&);
 	static FLoadStringAssetReferenceInCook LoadStringAssetReferenceInCook;
 
-	DECLARE_DELEGATE_RetVal_OneParam(bool, YStringAssetReferenceLoaded, const FName&);
-	static YStringAssetReferenceLoaded StringAssetReferenceLoaded;
+	DECLARE_DELEGATE_RetVal_OneParam(bool, FStringAssetReferenceLoaded, const FName&);
+	static FStringAssetReferenceLoaded StringAssetReferenceLoaded;
 
 	/** Sent when the platform needs the user to fix headset tracking on startup (PS4 Morpheus only) */
 	DECLARE_MULTICAST_DELEGATE(FVRHeadsetTrackingInitializingAndNeedsHMDToBeTrackedDelegate);
@@ -289,7 +289,7 @@ public:
 	/** Sent by application code to set params that customize crash reporting behavior */
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnCrashOverrideParamsChanged, const FCrashOverrideParameters&);
 	static FOnCrashOverrideParamsChanged CrashOverrideParamsChanged;
-
+	
 	/** Sent by engine code when the "vanilla" status of the engine changes */
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnIsVanillaProductChanged, bool);
 	static FOnIsVanillaProductChanged IsVanillaProductChanged;
@@ -297,7 +297,7 @@ public:
 	// Callback for platform specific very early init code.
 	DECLARE_MULTICAST_DELEGATE(FOnPreMainInit);
 	static FOnPreMainInit& GetPreMainInitDelegate();
-
+	
 	/** Sent when GConfig is finished initializing */
 	DECLARE_MULTICAST_DELEGATE(FConfigReadyForUse);
 	static FConfigReadyForUse ConfigReadyForUse;

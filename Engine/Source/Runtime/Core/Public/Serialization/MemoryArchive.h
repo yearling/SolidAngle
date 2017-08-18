@@ -20,7 +20,7 @@ public:
 	 *
 	 * This is overridden for the specific Archive Types
 	 **/
-	virtual FString GetArchiveName() const { return TEXT("YMemoryArchive"); }
+	virtual FString GetArchiveName() const { return TEXT("FMemoryArchive"); }
 
 	void Seek( int64 InPos ) final
 	{

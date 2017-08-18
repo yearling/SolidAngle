@@ -12,8 +12,7 @@
 #include "GenericPlatform/GenericPlatformCompression.h"
 // #include "TargetPlatformBase.h"
 THIRD_PARTY_INCLUDES_START
-//!FIXME by zyx 先不引进第三方库
-//#include "ThirdParty/zlib/zlib-1.2.5/Inc/zlib.h"
+#include "ThirdParty/zlib/zlib-1.2.5/Inc/zlib.h"
 THIRD_PARTY_INCLUDES_END
 
 DECLARE_LOG_CATEGORY_EXTERN(LogCompression, Log, All);
@@ -52,8 +51,6 @@ static bool appCompressMemoryZLIB( void* CompressedBuffer, int32& CompressedSize
 	unsigned long ZUncompressedSize	= UncompressedSize;
 	bool bOperationSucceeded = false;
 
-	//!FIXME by zyx 先不引进第三方库
-#if 0
 	// Compress data
 	// If using the default Zlib bit window, use the zlib routines, otherwise go manual with deflate2
 	if (BitWindow == DEFAULT_ZLIB_BIT_WINDOW)
@@ -91,7 +88,6 @@ static bool appCompressMemoryZLIB( void* CompressedBuffer, int32& CompressedSize
 
 	// Propagate compressed size from intermediate variable back into out variable.
 	CompressedSize = ZCompressedSize;
-#endif
 	return bOperationSucceeded;
 }
 
@@ -99,8 +95,6 @@ static bool appCompressMemoryGZIP(void* CompressedBuffer, int32& CompressedSize,
 {
 	DECLARE_SCOPE_CYCLE_COUNTER( TEXT( "Compress Memory GZIP" ), STAT_appCompressMemoryGZIP, STATGROUP_Compression );
 
-	//!FIXME by zyx 先不引进第三方库
-#if 0
 	z_stream gzipstream;
 	gzipstream.zalloc = &zalloc;
 	gzipstream.zfree = &zfree;
@@ -140,8 +134,6 @@ static bool appCompressMemoryGZIP(void* CompressedBuffer, int32& CompressedSize,
 	// Propagate compressed size from intermediate variable back into out variable.
 	CompressedSize = gzipstream.total_out;
 	return bOperationSucceeded;
-#endif 
-	return true;
 }
 
 /**
@@ -157,8 +149,7 @@ static bool appCompressMemoryGZIP(void* CompressedBuffer, int32& CompressedSize,
 bool appUncompressMemoryZLIB( void* UncompressedBuffer, int32 UncompressedSize, const void* CompressedBuffer, int32 CompressedSize, int32 BitWindow )
 {
 	DECLARE_SCOPE_CYCLE_COUNTER( TEXT( "Uncompress Memory ZLIB" ), STAT_appUncompressMemoryZLIB, STATGROUP_Compression );
-	//!FIXME by zyx 先不引进第三方库
-#if 0
+
 	// Zlib wants to use unsigned long.
 	unsigned long ZCompressedSize	= CompressedSize;
 	unsigned long ZUncompressedSize	= UncompressedSize;
@@ -197,8 +188,6 @@ bool appUncompressMemoryZLIB( void* UncompressedBuffer, int32 UncompressedSize, 
 	// Sanity check to make sure we uncompressed as much data as we expected to.
 	check( UncompressedSize == ZUncompressedSize );
 	return bOperationSucceeded;
-#endif
-	return true;
 }
 
 /** Time spent compressing data in seconds. */
@@ -245,8 +234,6 @@ static ECompressionFlags CheckGlobalCompressionFlags(ECompressionFlags Flags)
 int32 FCompression::CompressMemoryBound( ECompressionFlags Flags, int32 UncompressedSize, int32 BitWindow ) 
 {
 	int32 CompressionBound = UncompressedSize;
-	//!FIXME by zyx 先不引进第三方库
-#if 0
 	// make sure a valid compression scheme was provided
 	check(Flags & COMPRESS_ZLIB);
 
@@ -285,7 +272,6 @@ int32 FCompression::CompressMemoryBound( ECompressionFlags Flags, int32 Uncompre
 	}
 #endif
 
-#endif
 
 	return CompressionBound;
 }

@@ -20,7 +20,7 @@ public:
 	 *
 	 * This is overridden for the specific Archive Types
 	 **/
-	virtual FString GetArchiveName() const { return TEXT("YMemoryReader"); }
+	virtual FString GetArchiveName() const { return TEXT("FMemoryReader"); }
 
 	int64 TotalSize()
 	{

@@ -39,7 +39,7 @@ public:
 			const int64 NewArrayCount = Bytes.Num() + NumBytesToAdd;
 			if( NewArrayCount >= MAX_int32 )
 			{
-				UE_LOG( LogSerialization, Fatal, TEXT( "YMemoryWriter does not support data larger than 2GB. Archive name: %s." ), *ArchiveName.ToString() );
+				UE_LOG( LogSerialization, Fatal, TEXT( "FMemoryWriter does not support data larger than 2GB. Archive name: %s." ), *ArchiveName.ToString() );
 			}
 
 			Bytes.AddUninitialized( (int32)NumBytesToAdd );
@@ -59,7 +59,7 @@ public:
 	 *
 	 * This is overridden for the specific Archive Types
 	 **/
-	virtual FString GetArchiveName() const override { return TEXT("YMemoryWriter"); }
+	virtual FString GetArchiveName() const override { return TEXT("FMemoryWriter"); }
 
 	int64 TotalSize() override
 	{

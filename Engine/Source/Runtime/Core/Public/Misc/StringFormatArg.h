@@ -1,7 +1,10 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
+
 #include "Containers/ContainersFwd.h"
 
-/** An argument supplied to YString::Format */
+/** An argument supplied to FString::Format */
 struct CORE_API FStringFormatArg
 {
 	enum EType { Int, UInt, Double, String, StringLiteral };
@@ -22,21 +25,21 @@ struct CORE_API FStringFormatArg
 		const TCHAR* StringLiteralValue;
 	};
 
-	/** Value as an YString */
+	/** Value as an FString */
 	FString StringValue;
 
-	FStringFormatArg(const int32 Value);
-	FStringFormatArg(const uint32 Value);
-	FStringFormatArg(const int64 Value);
-	FStringFormatArg(const uint64 Value);
-	FStringFormatArg(const float Value);
-	FStringFormatArg(const double Value);
-	FStringFormatArg(FString Value);
-	FStringFormatArg(const TCHAR* Value);
+	FStringFormatArg( const int32 Value );
+	FStringFormatArg( const uint32 Value );
+	FStringFormatArg( const int64 Value );
+	FStringFormatArg( const uint64 Value );
+	FStringFormatArg( const float Value );
+	FStringFormatArg( const double Value );
+	FStringFormatArg( FString Value );
+	FStringFormatArg( const TCHAR* Value );
 
 	/** Copyable */
-	FStringFormatArg(const FStringFormatArg& RHS);
-
+	FStringFormatArg( const FStringFormatArg& RHS );
+	
 private:
 
 	/** Not default constructible */

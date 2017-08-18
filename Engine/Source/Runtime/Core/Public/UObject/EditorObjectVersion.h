@@ -36,7 +36,7 @@ struct CORE_API FEditorObjectVersion
 		// Added a specialized content slot to the background blur widget
 		AddedBackgroundBlurContentSlot,
 		// Updated UserDefinedEnums to have stable keyed display names
-		StableUserDefinedEnumDisplaFNames,
+		StableUserDefinedEnumDisplayNames,
 		// Added "Inline" option to UFontFace assets
 		AddedInlineFontFaceAssets,
 		// -----<new versions can be added above this line>-------------------------------------------------

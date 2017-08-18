@@ -6,61 +6,61 @@
 #include "Containers/Array.h"
 
 /**
-* Growable compressed buffer. Usage is to append frequently but only request and therefore decompress
-* very infrequently. The prime usage case is the memory profiler keeping track of full call stacks.
-*/
+ * Growable compressed buffer. Usage is to append frequently but only request and therefore decompress
+ * very infrequently. The prime usage case is the memory profiler keeping track of full call stacks.
+ */
 struct CORE_API FCompressedGrowableBuffer
 {
 	/**
-	* Constructor
-	*
-	* @param	MaxPendingBufferSize	Max chunk size to compress in uncompressed bytes
-	* @param	CompressionFlags		Compression flags to compress memory with
-	*/
-	FCompressedGrowableBuffer(int32 MaxPendingBufferSize, ECompressionFlags CompressionFlags);
+	 * Constructor
+	 *
+	 * @param	MaxPendingBufferSize	Max chunk size to compress in uncompressed bytes
+	 * @param	CompressionFlags		Compression flags to compress memory with
+	 */
+	FCompressedGrowableBuffer( int32 MaxPendingBufferSize, ECompressionFlags CompressionFlags );
 
 	/**
-	* Locks the buffer for reading. Needs to be called before calls to Access and needs
-	* to be matched up with Unlock call.
-	*/
+	 * Locks the buffer for reading. Needs to be called before calls to Access and needs
+	 * to be matched up with Unlock call.
+	 */
 	void Lock();
 	/**
-	* Unlocks the buffer and frees temporary resources used for accessing.
-	*/
+	 * Unlocks the buffer and frees temporary resources used for accessing.
+	 */
 	void Unlock();
 
 	/**
-	* Appends passed in data to the buffer. The data needs to be less than the max
-	* pending buffer size. The code will assert on this assumption.
-	*
-	* @param	Data	Data to append
-	* @param	Size	Size of data in bytes.
-	* @return	Offset of data, used for retrieval later on
-	*/
-	int32 Append(void* Data, int32 Size);
+	 * Appends passed in data to the buffer. The data needs to be less than the max
+	 * pending buffer size. The code will assert on this assumption.	 
+	 *
+	 * @param	Data	Data to append
+	 * @param	Size	Size of data in bytes.
+	 * @return	Offset of data, used for retrieval later on
+	 */
+	int32 Append( void* Data, int32 Size );
 
 	/**
-	* Accesses the data at passed in offset and returns it. The memory is read-only and
-	* memory will be freed in call to unlock. The lifetime of the data is till the next
-	* call to Unlock, Append or Access
-	*
-	* @param	Offset	Offset to return corresponding data for
-	*/
-	void* Access(int32 Offset);
+	 * Accesses the data at passed in offset and returns it. The memory is read-only and
+	 * memory will be freed in call to unlock. The lifetime of the data is till the next
+	 * call to Unlock, Append or Access
+	 *
+	 * @param	Offset	Offset to return corresponding data for
+	 */
+	void* Access( int32 Offset );
 
 	/**
-	* @return	Number of entries appended.
-	*/
+	 * @return	Number of entries appended.
+	 */
 	int32 Num() const
 	{
 		return NumEntries;
 	}
 
-	/**
-	* Helper function to return the amount of memory allocated by this buffer
-	*
-	* @return number of bytes allocated by this buffer
-	*/
+	/** 
+	 * Helper function to return the amount of memory allocated by this buffer 
+	 *
+	 * @return number of bytes allocated by this buffer
+	 */
 	uint32 GetAllocatedSize() const
 	{
 		return CompressedBuffer.GetAllocatedSize()

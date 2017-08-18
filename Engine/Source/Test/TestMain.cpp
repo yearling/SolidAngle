@@ -124,8 +124,8 @@ void foo(TestContainerMoveCopy RRef)
 void TestMemory()
 {
 	std::cout << "\n---------------PlatformMemoryTest----------" << std::endl;
-	YPlatformMemory::Init();
-	const YPlatformMemoryStats& StateReport = YPlatformMemory::GetStats();
+	FPlatformMemory::Init();
+	const FPlatformMemoryStats& StateReport = FPlatformMemory::GetStats();
 	std::cout << "MemoryTotalPhysical: " << StateReport.TotalPhysicalGB << " GB"<<std::endl;
 	std::cout << "MemoryTotalVirtual: " << (StateReport.TotalVirtual/1024/1024/1024)<<" GB" << std::endl;
 	std::cout << "MemoryPage: " << StateReport.PageSize / 1024 << " KB" << std::endl;

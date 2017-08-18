@@ -22,11 +22,11 @@ class CORE_API FFeedbackContext
 public:
 
 	/** Ask the user a binary question, returning their answer */
-	virtual bool YesNof(const FText& Question) { return false; }
-
+	virtual bool YesNof( const FText& Question ) { return false; }
+	
 	/** Return whether the user has requested to cancel the current slow task */
 	virtual bool ReceivedUserCancel() { return false; };
-
+	
 	/** Public const access to the current state of the scope stack */
 	FORCEINLINE const FSlowTaskStack& GetScopeStack() const
 	{
@@ -34,47 +34,47 @@ public:
 	}
 
 	/**** Legacy API - not deprecated as it's still in heavy use, but superceded by FScopedSlowTask ****/
-	void BeginSlowTask(const FText& Task, bool ShowProgressDialog, bool bShowCancelButton = false);
-	void UpdateProgress(int32 Numerator, int32 Denominator);
-	void StatusUpdate(int32 Numerator, int32 Denominator, const FText& StatusText);
-	void StatusForceUpdate(int32 Numerator, int32 Denominator, const FText& StatusText);
+	void BeginSlowTask( const FText& Task, bool ShowProgressDialog, bool bShowCancelButton=false );
+	void UpdateProgress( int32 Numerator, int32 Denominator );
+	void StatusUpdate( int32 Numerator, int32 Denominator, const FText& StatusText );
+	void StatusForceUpdate( int32 Numerator, int32 Denominator, const FText& StatusText );
 	void EndSlowTask();
 	/**** end legacy API ****/
 
 protected:
 
 	/**
-	* Called to create a slow task
-	*/
-	virtual void StartSlowTask(const FText& Task, bool bShowCancelButton = false)
+	 * Called to create a slow task
+	 */
+	virtual void StartSlowTask( const FText& Task, bool bShowCancelButton=false )
 	{
 		GIsSlowTask = true;
 	}
 
 	/**
-	* Called to destroy a slow task
-	*/
-	virtual void FinalizeSlowTask()
+	 * Called to destroy a slow task
+	 */
+	virtual void FinalizeSlowTask( )
 	{
 		GIsSlowTask = false;
 	}
 
 	/**
-	* Called when some progress has occurred
-	* @param	TotalProgressInterp		[0..1] Value indicating the total progress of the slow task
-	* @param	DisplayMessage			The message to display on the slow task
-	*/
-	virtual void ProgressReported(const float TotalProgressInterp, FText DisplayMessage) {}
+	 * Called when some progress has occurred
+	 * @param	TotalProgressInterp		[0..1] Value indicating the total progress of the slow task
+	 * @param	DisplayMessage			The message to display on the slow task
+	 */
+	virtual void ProgressReported( const float TotalProgressInterp, FText DisplayMessage ) {}
 
 	/** Called to check whether we are playing in editor when starting a slow task */
 	virtual bool IsPlayingInEditor() const;
 
 public:
 	virtual FContextSupplier* GetContext() const { return NULL; }
-	virtual void SetContext(FContextSupplier* InSupplier) {}
+	virtual void SetContext( FContextSupplier* InSupplier ) {}
 
 	/** Shows/Closes Special Build Progress dialogs */
-	virtual TWeakPtr<class SBuildProgressWidget> ShowBuildProgressWindow() { return TWeakPtr<class SBuildProgressWidget>(); }
+	virtual TWeakPtr<class SBuildProgressWidget> ShowBuildProgressWindow() {return TWeakPtr<class SBuildProgressWidget>();}
 	virtual void CloseBuildProgressWindow() {}
 
 	bool	TreatWarningsAsErrors;
@@ -132,7 +132,7 @@ private:
 	mutable FCriticalSection WarningsAndErrorsCritical;
 
 protected:
-
+	
 	friend FSlowTask;
 
 	/** Stack of pointers to feedback scopes that are currently open */
@@ -146,9 +146,9 @@ protected:
 	void UpdateUI();
 
 	/**
-	* Adds a new warning message to warnings history.
-	* @param InWarning Warning message
-	*/
+	 * Adds a new warning message to warnings history.
+	 * @param InWarning Warning message
+	 */
 	void AddWarning(const FString& InWarning)
 	{
 		FScopeLock WarningsAndErrorsLock(&WarningsAndErrorsCritical);

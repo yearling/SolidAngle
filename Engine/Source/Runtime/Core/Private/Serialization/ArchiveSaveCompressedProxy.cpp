@@ -7,7 +7,7 @@
 #include "CoreGlobals.h"
 
 /*----------------------------------------------------------------------------
-	YArchiveSaveCompressedProxy
+	FArchiveSaveCompressedProxy
 ----------------------------------------------------------------------------*/
 
 /** 
@@ -124,7 +124,7 @@ void FArchiveSaveCompressedProxy::Seek( int64 InPos )
 	}
 	else
 	{
-		UE_LOG(LogSerialization, Fatal,TEXT("Seeking not supported with YArchiveSaveCompressedProxy"));
+		UE_LOG(LogSerialization, Fatal,TEXT("Seeking not supported with FArchiveSaveCompressedProxy"));
 	}
 }
 

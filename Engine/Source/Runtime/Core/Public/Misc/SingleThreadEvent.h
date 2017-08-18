@@ -7,8 +7,8 @@
 #include "HAL/Event.h"
 
 /**
-* Fake event object used when running with only one thread.
-*/
+ * Fake event object used when running with only one thread.
+ */
 class FSingleThreadEvent
 	: public FEvent
 {
@@ -30,10 +30,10 @@ public:
 
 	// FEvent Interface
 
-	virtual bool Create(bool bIsManualReset = false) override
-	{
+	virtual bool Create( bool bIsManualReset = false ) override
+	{ 
 		bManualReset = bIsManualReset;
-		return true;
+		return true; 
 	}
 
 	virtual bool IsManualReset() override
@@ -51,12 +51,12 @@ public:
 		bTriggered = false;
 	}
 
-	virtual bool Wait(uint32 WaitTime, const bool bIgnoreThreadIdleStats = false) override
-	{
+	virtual bool Wait( uint32 WaitTime, const bool bIgnoreThreadIdleStats = false ) override
+	{ 
 		// With only one thread it's assumed the event has been triggered
 		// before Wait is called, otherwise it would end up waiting forever or always fail.
 		check(bTriggered);
 		bTriggered = bManualReset;
-		return true;
+		return true; 
 	}
 };

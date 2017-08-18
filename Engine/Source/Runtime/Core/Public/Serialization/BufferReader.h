@@ -9,7 +9,7 @@
 #include "Containers/UnrealString.h"
 
 /**
-* Similar to YMemoryReader, but able to internally
+* Similar to FMemoryReader, but able to internally
 * manage the memory for the buffer.
 */
 class FBufferReaderBase : public FArchive
@@ -62,13 +62,13 @@ public:
 	{
 		return ReaderSize;
 	}
-	void Seek(int64 InPos) final
+	void Seek(int64 InPos) final 
 	{
 		check(InPos >= 0);
 		check(InPos <= ReaderSize);
 		ReaderPos = InPos;
 	}
-	bool AtEnd() final
+	bool AtEnd() final 
 	{
 		return ReaderPos >= ReaderSize;
 	}
@@ -87,22 +87,22 @@ protected:
 };
 
 /**
-* Similar to YMemoryReader, but able to internally
-* manage the memory for the buffer.
-*/
+ * Similar to FMemoryReader, but able to internally
+ * manage the memory for the buffer.
+ */
 class FBufferReader final : public FBufferReaderBase
 {
 public:
 	/**
-	* Constructor
-	*
-	* @param Data Buffer to use as the source data to read from
-	* @param Size Size of Data
-	* @param bInFreeOnClose If true, Data will be FMemory::Free'd when this archive is closed
-	* @param bIsPersistent Uses this value for ArIsPersistent
-	* @param bInSHAVerifyOnClose It true, an async SHA verification will be done on the Data buffer (bInFreeOnClose will be passed on to the async task)
-	*/
-	FBufferReader(void* Data, int64 Size, bool bInFreeOnClose, bool bIsPersistent = false)
+	 * Constructor
+	 * 
+	 * @param Data Buffer to use as the source data to read from
+	 * @param Size Size of Data
+	 * @param bInFreeOnClose If true, Data will be FMemory::Free'd when this archive is closed
+	 * @param bIsPersistent Uses this value for ArIsPersistent
+	 * @param bInSHAVerifyOnClose It true, an async SHA verification will be done on the Data buffer (bInFreeOnClose will be passed on to the async task)
+	 */
+	FBufferReader( void* Data, int64 Size, bool bInFreeOnClose, bool bIsPersistent = false )
 		: FBufferReaderBase(Data, Size, bInFreeOnClose, bIsPersistent)
 	{
 	}

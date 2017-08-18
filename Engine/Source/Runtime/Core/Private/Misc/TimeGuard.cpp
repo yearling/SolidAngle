@@ -10,7 +10,7 @@ DEFINE_LOG_CATEGORY_STATIC(LogTimeGuard, Log, All);
 TMap<const TCHAR*, FLightweightTimeGuard::FGuardInfo>  FLightweightTimeGuard::HitchData;
 bool FLightweightTimeGuard::bEnabled;
 double FLightweightTimeGuard::LastHitchTime;
-float FLightweightTimeGuard::FrameTimeThresholdMS = (float)(1000.0 / 30.0);
+float FLightweightTimeGuard::FrameTimeThresholdMS = 1000.0 / 30.0;
 FCriticalSection FLightweightTimeGuard::ReportMutex;
 
 void FLightweightTimeGuard::SetEnabled(bool InEnable)

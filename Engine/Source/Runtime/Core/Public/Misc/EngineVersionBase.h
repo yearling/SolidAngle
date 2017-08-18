@@ -1,3 +1,5 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
@@ -34,7 +36,7 @@ public:
 	FEngineVersionBase(uint16 InMajor, uint16 InMinor, uint16 InPatch = 0, uint32 InChangelist = 0);
 
 	/** Returns the changelist number corresponding to this version. */
-	uint32 GetChangelist() const;
+	uint32 GetChangelist() const;	
 
 	/** Returns the Major version number corresponding to this version. */
 	FORCEINLINE uint16 GetMajor() const
@@ -61,7 +63,7 @@ public:
 	bool IsEmpty() const;
 
 	/** Returns whether the engine version has a changelist component. */
-	bool HasChangelist() const;
+	bool HasChangelist() const; 
 
 	/** Returns the newest of two versions, and the component at which they differ */
 	static EVersionComparison GetNewest(const FEngineVersionBase &First, const FEngineVersionBase &Second, EVersionComponent *OutComponent);

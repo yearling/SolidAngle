@@ -5,14 +5,14 @@
 #include "Templates/TypeHash.h"
 #include "UObject/PropertyPortFlags.h"
 
-/* YDateTime constants
+/* FDateTime constants
  *****************************************************************************/
 
 const int32 FDateTime::DaysPerMonth[] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 const int32 FDateTime::DaysToMonth[] = { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 };
 
 
-/* YDateTime structors
+/* FDateTime structors
  *****************************************************************************/
 
 FDateTime::FDateTime( int32 Year, int32 Month, int32 Day, int32 Hour, int32 Minute, int32 Second, int32 Millisecond )
@@ -44,14 +44,14 @@ FDateTime::FDateTime( int32 Year, int32 Month, int32 Day, int32 Hour, int32 Minu
 }
 
 
-/* YDateTime interface
+/* FDateTime interface
  *****************************************************************************/
 
 bool FDateTime::ExportTextItem( FString& ValueStr, FDateTime const& DefaultValue, UObject* Parent, int32 PortFlags, UObject* ExportRootScope ) const
 {
 	if (0 != (PortFlags & EPropertyPortFlags::PPF_ExportCpp))
 	{
-		ValueStr += FString::Printf(TEXT("YDateTime(0x%016X)"), Ticks);
+		ValueStr += FString::Printf(TEXT("FDateTime(0x%016X)"), Ticks);
 		return true;
 	}
 
@@ -265,7 +265,7 @@ FString FDateTime::ToString( const TCHAR* Format ) const
 }
 
 
-/* YDateTime static interface
+/* FDateTime static interface
  *****************************************************************************/
 
 int32 FDateTime::DaysInMonth( int32 Year, int32 Month )
@@ -811,7 +811,7 @@ bool FDateTime::Validate( int32 Year, int32 Month, int32 Day, int32 Hour, int32 
 }
 
 
-/* YDateTime friend functions
+/* FDateTime friend functions
  *****************************************************************************/
 
 FArchive& operator<<( FArchive& Ar, FDateTime& DateTime )

@@ -40,11 +40,11 @@ void FUProjectDictionary::Refresh()
 				FString Entry = FString(Line).Trim();
 				if(!Entry.IsEmpty() && !Entry.StartsWith(";"))
 				{
-					FString DirectorFName = FPaths::ConvertRelativePathToFull(RootDir, Entry);
-					FPaths::NormalizeDirectoryName(DirectorFName);
-					if (DirectorFName.StartsWith(NormalizedRootDirPrefix) || DirectorFName == NormalizedRootDir)
+					FString DirectoryName = FPaths::ConvertRelativePathToFull(RootDir, Entry);
+					FPaths::NormalizeDirectoryName(DirectoryName);
+					if (DirectoryName.StartsWith(NormalizedRootDirPrefix) || DirectoryName == NormalizedRootDir)
 					{
-						ProjectRootDirs.AddUnique(DirectorFName);
+						ProjectRootDirs.AddUnique(DirectoryName);
 					}
 					else
 					{

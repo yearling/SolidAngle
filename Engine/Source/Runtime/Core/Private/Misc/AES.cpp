@@ -19,7 +19,7 @@
 
 // The approach used in CryptoPP is better, but much more complicated.
 
-// It may be useful to integrate this into a class derived from YArchive to allow streaming encryption/decryption - but that's a mission for another day.
+// It may be useful to integrate this into a class derived from FArchive to allow streaming encryption/decryption - but that's a mission for another day.
 
 #define TEST_ENCRYPTION			0
 #define AES_KEYBITS				256

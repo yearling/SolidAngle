@@ -6,7 +6,7 @@
 #include "Containers/Array.h"
 
 /*----------------------------------------------------------------------------
-	YArchiveLoadCompressedProxy
+	FArchiveLoadCompressedProxy
 ----------------------------------------------------------------------------*/
 
 /** 

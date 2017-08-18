@@ -41,7 +41,7 @@ bool FFileHelper::LoadFileToArray( TArray<uint8>& Result, const TCHAR* Filename,
 }
 
 /**
- * Converts an arbitrary text buffer to an YString.
+ * Converts an arbitrary text buffer to an FString.
  * Supports all combination of ANSI/Unicode files and platforms.
  */
 void FFileHelper::BufferToString( FString& Result, const uint8* Buffer, int32 Size )
@@ -95,7 +95,7 @@ void FFileHelper::BufferToString( FString& Result, const uint8* Buffer, int32 Si
 }
 
 /**
- * Load a text file to an YString.
+ * Load a text file to an FString.
  * Supports all combination of ANSI/Unicode files and platforms.
  * @param Result string representation of the loaded file
  * @param Filename name of the file to load
@@ -153,7 +153,7 @@ bool FFileHelper::SaveArrayToFile(TArrayView<const uint8> Array, const TCHAR* Fi
 }
 
 /**
- * Write the YString to a file.
+ * Write the FString to a file.
  * Supports all combination of ANSI/Unicode files and platforms.
  */
 bool FFileHelper::SaveStringToFile( const FString& String, const TCHAR* Filename,  EEncodingOptions::Type EncodingOptions, IFileManager* FileManager /*= &IFileManager::Get()*/, uint32 WriteFlags )
@@ -204,7 +204,7 @@ bool FFileHelper::SaveStringToFile( const FString& String, const TCHAR* Filename
  * 
  * @param Pattern		Filename with path, but without extension.
  * @oaran Extension		File extension to be appended
- * @param OutFilename	Reference to an YString where the newly generated filename will be placed
+ * @param OutFilename	Reference to an FString where the newly generated filename will be placed
  * @param FileManager	Reference to a IFileManager (or the global instance by default)
  *
  * @return true if success
@@ -411,7 +411,7 @@ bool FFileHelper::CreateBitmap( const TCHAR* Pattern, int32 SourceWidth, int32 S
 }
 
 /**
- *	Load the given ANSI text file to an array of strings - one YString per line of the file.
+ *	Load the given ANSI text file to an array of strings - one FString per line of the file.
  *	Intended for use in simple text parsing actions
  *
  *	@param	InFilename			The text file to read, full path

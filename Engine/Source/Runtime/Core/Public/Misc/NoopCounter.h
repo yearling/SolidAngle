@@ -10,15 +10,15 @@ class FNoopCounter
 public:
 
 	FNoopCounter() { }
-	FNoopCounter(const FNoopCounter& Other) { }
-	FNoopCounter(int32 Value) { }
+	FNoopCounter( const FNoopCounter& Other ) { }
+	FNoopCounter( int32 Value ) { }
 
 	int32 Increment()
 	{
 		return 0;
 	}
 
-	int32 Add(int32 Amount)
+	int32 Add( int32 Amount )
 	{
 		return 0;
 	}
@@ -28,12 +28,12 @@ public:
 		return 0;
 	}
 
-	int32 Subtract(int32 Amount)
+	int32 Subtract( int32 Amount )
 	{
 		return 0;
 	}
 
-	int32 Set(int32 Value)
+	int32 Set( int32 Value )
 	{
 		return 0;
 	}

@@ -20,7 +20,7 @@ public:
 	*
 	* @return	true if command was handled, false otherwise
 	*/
-	virtual bool Exec(class UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar) PURE_VIRTUAL(FExec::Exec, return false;)
+	virtual bool Exec( class UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar ) PURE_VIRTUAL(FExec::Exec,return false;)
 };
 
 

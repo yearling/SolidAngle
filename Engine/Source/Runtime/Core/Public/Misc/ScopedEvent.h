@@ -6,15 +6,15 @@
 #include "HAL/Event.h"
 
 /**
-* This class is allows a simple one-shot scoped event.
-*
-* Usage:
-* {
-*		FScopedEvent MyEvent;
-*		SendReferenceOrPointerToSomeOtherThread(&MyEvent); // Other thread calls MyEvent->Trigger();
-*		// MyEvent destructor is here, we wait here.
-* }
-*/
+ * This class is allows a simple one-shot scoped event.
+ *
+ * Usage:
+ * {
+ *		FScopedEvent MyEvent;
+ *		SendReferenceOrPointerToSomeOtherThread(&MyEvent); // Other thread calls MyEvent->Trigger();
+ *		// MyEvent destructor is here, we wait here.
+ * }
+ */
 class FScopedEvent
 {
 public:
@@ -32,10 +32,10 @@ public:
 	}
 
 	/**
-	* Retrieve the event, usually for passing around.
-	*
-	* @return The event.
-	*/
+	 * Retrieve the event, usually for passing around.
+	 *
+	 * @return The event.
+	 */
 	FEvent* Get()
 	{
 		return Event;

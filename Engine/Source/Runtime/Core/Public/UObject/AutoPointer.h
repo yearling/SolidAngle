@@ -14,32 +14,32 @@ class TAutoPointer : public TBASE
 {
 public:
 	/** NULL constructor **/
-	DEPRECATED(4.15, "TAutoPointer has been deprecated - please remove its usage from your project")
-		FORCEINLINE TAutoPointer()
+	DEPRECATED(4.15, "TAutoPointer has been deprecated - please remove its usage from your project") 
+	FORCEINLINE TAutoPointer()
 	{
 	}
 	/** Construct from a single argument (I'd use inheriting constructors if all our compilers supported it) **/
 	template<typename X>
-	DEPRECATED(4.15, "TAutoPointer has been deprecated - please remove its usage from your project")
-		FORCEINLINE TAutoPointer(X&& Target)
+	DEPRECATED(4.15, "TAutoPointer has been deprecated - please remove its usage from your project") 
+	FORCEINLINE TAutoPointer(X&& Target)
 		: TBASE(Forward<X>(Target))
 	{
 	}
 
-	DEPRECATED(4.15, "TAutoPointer has been deprecated - please remove its usage from your project")
-		FORCEINLINE operator T* () const
+	DEPRECATED(4.15, "TAutoPointer has been deprecated - please remove its usage from your project") 
+	FORCEINLINE operator T* () const
 	{
 		return TBASE::Get();
 	}
 
-	DEPRECATED(4.15, "TAutoPointer has been deprecated - please remove its usage from your project")
-		FORCEINLINE operator const T* () const
+	DEPRECATED(4.15, "TAutoPointer has been deprecated - please remove its usage from your project") 
+	FORCEINLINE operator const T* () const
 	{
 		return (const T*)TBASE::Get();
 	}
 
-	DEPRECATED(4.15, "TAutoPointer has been deprecated - please remove its usage from your project")
-		FORCEINLINE explicit operator bool() const
+	DEPRECATED(4.15, "TAutoPointer has been deprecated - please remove its usage from your project") 
+	FORCEINLINE explicit operator bool() const
 	{
 		return TBASE::Get() != nullptr;
 	}

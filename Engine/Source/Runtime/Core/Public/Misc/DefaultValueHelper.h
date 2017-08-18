@@ -124,7 +124,7 @@ public:
 	static bool ParseDouble(const FString& Source, double& OutVal);
 
 	/**
-	 * Converts a string into a YVector. Accepted form: " %f, %f, %f "
+	 * Converts a string into a FVector. Accepted form: " %f, %f, %f "
 	 *
 	 * @param Source the input string to try to convert
 	 * @param OutVal the output vector
@@ -134,7 +134,7 @@ public:
 	static bool ParseVector(const FString& Source, FVector& OutVal);
 
 	/**
-	 * Converts a string into a YVector. Accepted form: " %f, %f "
+	 * Converts a string into a FVector. Accepted form: " %f, %f "
 	 *
 	 * @param Source the input string to try to convert
 	 * @param OutVal the output vector2D
@@ -144,7 +144,7 @@ public:
 	static bool ParseVector2D(const FString& Source, FVector2D& OutVal);
 
 	/**
-	 * Converts a string into a YRotator. Accepted form: " %f, %f, %f "
+	 * Converts a string into a FRotator. Accepted form: " %f, %f, %f "
 	 *
 	 * @param Source the input string to try to convert
 	 * @param OutVal the output rotator
@@ -154,7 +154,7 @@ public:
 	static bool ParseRotator(const FString& Source, FRotator& OutVal);
 
 	/**
-	 * Converts a string into a YLinearColor. 
+	 * Converts a string into a FLinearColor. 
 	 * Accepted forms: " %f, %f, %f " or " %f, %f, %f, %f " (alpha is optional).
 	 *
 	 * @param Source the input string to try to convert
@@ -165,7 +165,7 @@ public:
 	static bool ParseLinearColor(const FString& Source, FLinearColor& OutVal);
 
 	/**
-	 * Converts a string into a YLinearColor. 
+	 * Converts a string into a FLinearColor. 
 	 * Accepted forms: " %d, %d, %d " or " %d, %d, %d, %d " (alpha is optional).
 	 *
 	 * @param Source the input string to try to convert

@@ -13,7 +13,6 @@
 #include "Misc/ConfigCacheIni.h"
 
 #include "Modules/ModuleManager.h"
-//!!FIXME by zyx 会扩展到Develop文件夹
 //#include "DerivedDataCacheInterface.h"
 //#include "Interfaces/ITargetPlatformManagerModule.h"
 
@@ -87,21 +86,20 @@ bool FStaticSelfRegisteringExec::Exec( UWorld* InWorld, const TCHAR* Cmd, FOutpu
 class FDerivedDataCacheInterface* GetDerivedDataCache()
 {
 	static class FDerivedDataCacheInterface* SingletonInterface = NULL;
-	//!!FIXME by zyx 会扩展到Develop文件夹
-	/*if (!FPlatformProperties::RequiresCookedData())
+	if (!FPlatformProperties::RequiresCookedData())
 	{
 		static bool bInitialized = false;
 		if (!bInitialized)
 		{
 			check(IsInGameThread());
 			bInitialized = true;
-			class IDerivedDataCacheModule* Module = FModuleManager::LoadModulePtr<IDerivedDataCacheModule>("DerivedDataCache");
-			if (Module)
-			{
-				SingletonInterface = &Module->GetDDC();
-			}
+			//class IDerivedDataCacheModule* Module = FModuleManager::LoadModulePtr<IDerivedDataCacheModule>("DerivedDataCache");
+			//if (Module)
+			//{
+				//SingletonInterface = &Module->GetDDC();
+			//}
 		}
-	}*/
+	}
 	return SingletonInterface;
 }
 
@@ -119,17 +117,16 @@ class FDerivedDataCacheInterface& GetDerivedDataCacheRef()
 class ITargetPlatformManagerModule* GetTargetPlatformManager()
 {
 	static class ITargetPlatformManagerModule* SingletonInterface = NULL;
-	//!!FIXME by zyx 会扩展到Develop文件夹
-	/*if (!FPlatformProperties::RequiresCookedData())
+	if (!FPlatformProperties::RequiresCookedData())
 	{
 		static bool bInitialized = false;
 		if (!bInitialized)
 		{
 			check(IsInGameThread());
 			bInitialized = true;
-			SingletonInterface = FModuleManager::LoadModulePtr<ITargetPlatformManagerModule>("TargetPlatform");
+			//SingletonInterface = FModuleManager::LoadModulePtr<ITargetPlatformManagerModule>("TargetPlatform");
 		}
-	}*/
+	}
 	return SingletonInterface;
 }
 

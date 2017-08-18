@@ -5,6 +5,7 @@
 =============================================================================*/
 
 #include "Serialization/CustomVersion.h"
+
 namespace
 {
 	FCustomVersion UnusedCustomVersion(FGuid(0, 0, 0, 0xF99D40C1), 0, TEXT("Unused custom version"));
@@ -34,12 +35,12 @@ namespace
 	{
 		FGuid Key;
 		int32 Version;
-		FString FriendlFName;
+		FString FriendlyName;
 
 		FCustomVersion ToCustomVersion() const
 		{
 			// We'll invent a GUID from three zeroes and the original tag
-			return FCustomVersion(Key, Version, *FriendlFName);
+			return FCustomVersion(Key, Version, *FriendlyName);
 		}
 	};
 
@@ -47,18 +48,18 @@ namespace
 	{
 		Ar << Version.Key;
 		Ar << Version.Version;
-		Ar << Version.FriendlFName;
+		Ar << Version.FriendlyName;
 		return Ar;
 	}
 }
 
-const FName FCustomVersion::GetFriendlFName() const
+const FName FCustomVersion::GetFriendlyName() const
 {
-	if (FriendlFName == NAME_None)
+	if (FriendlyName == NAME_None)
 	{
-		FriendlFName = FCustomVersionContainer::GetRegistered().GetFriendlFName(Key);
+		FriendlyName = FCustomVersionContainer::GetRegistered().GetFriendlyName(Key);
 	}
-	return FriendlFName;
+	return FriendlyName;
 }
 
 const FCustomVersionContainer& FCustomVersionContainer::GetRegistered()
@@ -77,7 +78,7 @@ FString FCustomVersionContainer::ToString(const FString& Indent) const
 	for (const FCustomVersion& SomeVersion : Versions)
 	{
 		VersionsAsString += Indent;
-		VersionsAsString += FString::Printf(TEXT("Key=%s  Version=%d  Friendly Name=%s \n"), *SomeVersion.Key.ToString(), SomeVersion.Version, *SomeVersion.GetFriendlFName().ToString() );
+		VersionsAsString += FString::Printf(TEXT("Key=%s  Version=%d  Friendly Name=%s \n"), *SomeVersion.Key.ToString(), SomeVersion.Version, *SomeVersion.GetFriendlyName().ToString() );
 	}
 
 	return VersionsAsString;
@@ -154,18 +155,18 @@ const FCustomVersion* FCustomVersionContainer::GetVersion(FGuid Key) const
 	return Versions.Find(Key);
 }
 
-const FName FCustomVersionContainer::GetFriendlFName(FGuid Key) const
+const FName FCustomVersionContainer::GetFriendlyName(FGuid Key) const
 {
-	FName FriendlFName = NAME_Name;
+	FName FriendlyName = NAME_Name;
 	const FCustomVersion* CustomVersion = GetVersion(Key);
 	if (CustomVersion)
 	{
-		FriendlFName = CustomVersion->FriendlFName;
+		FriendlyName = CustomVersion->FriendlyName;
 	}
-	return FriendlFName;
+	return FriendlyName;
 }
 
-void FCustomVersionContainer::SetVersion(FGuid CustomKey, int32 Version, FName FriendlFName)
+void FCustomVersionContainer::SetVersion(FGuid CustomKey, int32 Version, FName FriendlyName)
 {
 	if (CustomKey == UnusedCustomVersion.Key)
 		return;
@@ -173,15 +174,15 @@ void FCustomVersionContainer::SetVersion(FGuid CustomKey, int32 Version, FName F
 	if (FCustomVersion* Found = Versions.Find(CustomKey))
 	{
 		Found->Version      = Version;
-		Found->FriendlFName = FriendlFName;
+		Found->FriendlyName = FriendlyName;
 	}
 	else
 	{
-		Versions.Add(FCustomVersion(CustomKey, Version, FriendlFName));
+		Versions.Add(FCustomVersion(CustomKey, Version, FriendlyName));
 	}
 }
 
-FCustomVersionRegistration::FCustomVersionRegistration(FGuid InKey, int32 InVersion, FName InFriendlFName)
+FCustomVersionRegistration::FCustomVersionRegistration(FGuid InKey, int32 InVersion, FName InFriendlyName)
 {
 	FCustomVersionSet& Versions = FCustomVersionContainer::GetInstance().Versions;
 
@@ -194,11 +195,11 @@ FCustomVersionRegistration::FCustomVersionRegistration(FGuid InKey, int32 InVers
 		// * Changed registration details during hotreload.
 		// * Accidentally copy-and-pasted an FCustomVersionRegistration object.
 		ensureMsgf(
-			ExistingRegistration->Version == InVersion && ExistingRegistration->GetFriendlFName() == InFriendlFName,
+			ExistingRegistration->Version == InVersion && ExistingRegistration->GetFriendlyName() == InFriendlyName,
 			TEXT("Custom version registrations cannot change between hotreloads - \"%s\" version %d is being reregistered as \"%s\" version %d"),
-			*ExistingRegistration->GetFriendlFName().ToString(),
+			*ExistingRegistration->GetFriendlyName().ToString(),
 			ExistingRegistration->Version,
-			InFriendlFName,
+			InFriendlyName,
 			InVersion
 		);
 
@@ -206,7 +207,7 @@ FCustomVersionRegistration::FCustomVersionRegistration(FGuid InKey, int32 InVers
 	}
 	else
 	{
-		Versions.Add(FCustomVersion(InKey, InVersion, InFriendlFName));
+		Versions.Add(FCustomVersion(InKey, InVersion, InFriendlyName));
 	}
 
 	Key = InKey;

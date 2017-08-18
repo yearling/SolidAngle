@@ -66,7 +66,7 @@ public:
 	static bool Decode(const FString& Source, TArray<uint8>& Dest);
 
 	/**
-	 * Encodes a YString into a Base64 string
+	 * Encodes a FString into a Base64 string
 	 *
 	 * @param Source the string data to convert
 	 *
@@ -75,7 +75,7 @@ public:
 	static FString Encode(const FString& Source);
 
 	/**
-	 * Decodes a Base64 string into a YString
+	 * Decodes a Base64 string into a FString
 	 *
 	 * @param Source the stringified data to convert
 	 * @param Dest the out buffer that will be filled with the decoded data

@@ -12,24 +12,24 @@
 struct FWeakObjectPtr;
 
 /***
-*
-* FWeakObjectPtr is a weak pointer to a UObject.
-* It can return nullptr later if the object is garbage collected.
-* It has no impact on if the object is garbage collected or not.
-* It can't be directly used across a network.
-*
-* Most often it is used when you explicitly do NOT want to prevent something from being garbage collected.
-**/
+ * 
+ * FWeakObjectPtr is a weak pointer to a UObject. 
+ * It can return nullptr later if the object is garbage collected.
+ * It has no impact on if the object is garbage collected or not.
+ * It can't be directly used across a network.
+ *
+ * Most often it is used when you explicitly do NOT want to prevent something from being garbage collected.
+ **/
 struct FWeakObjectPtr;
 
-template<class T = UObject, class TWeakObjectPtrBase = FWeakObjectPtr>
+template<class T=UObject, class TWeakObjectPtrBase=FWeakObjectPtr>
 struct TWeakObjectPtr;
 
 
 /***
-*
+* 
 * TWeakObjectPtr is templatized version of the generic FWeakObjectPtr
-*
+* 
 **/
 template<class T, class TWeakObjectPtrBase>
 struct TWeakObjectPtr : private TWeakObjectPtrBase
@@ -43,9 +43,9 @@ public:
 	/** Default constructor (no initialization). **/
 	FORCEINLINE TWeakObjectPtr() { }
 
-	/**
-	* Construct from an object pointer
-	* @param Object object to create a weak pointer to
+	/**  
+	 * Construct from an object pointer
+	 * @param Object object to create a weak pointer to
 	**/
 	FORCEINLINE TWeakObjectPtr(const T* Object) :
 		TWeakObjectPtrBase((UObject*)Object)
@@ -55,17 +55,17 @@ public:
 		static_assert(TPointerIsConvertibleFromTo<T, const volatile UObject>::Value, "TWeakObjectPtr can only be constructed with UObject types");
 	}
 
-	/**
-	* Construct from another weak pointer
-	* @param Other weak pointer to copy from
+	/**  
+	 * Construct from another weak pointer
+	 * @param Other weak pointer to copy from
 	**/
 	FORCEINLINE TWeakObjectPtr(const TWeakObjectPtr& Other) :
 		TWeakObjectPtrBase(Other)
 	{ }
 
-	/**
-	* Construct from another weak pointer of another type, intended for derived-to-base conversions
-	* @param Other weak pointer to copy from
+	/**  
+	 * Construct from another weak pointer of another type, intended for derived-to-base conversions
+	 * @param Other weak pointer to copy from
 	**/
 	template <typename OtherT>
 	FORCEINLINE TWeakObjectPtr(const TWeakObjectPtr<OtherT, TWeakObjectPtrBase>& Other) :
@@ -77,16 +77,16 @@ public:
 	}
 
 	/**
-	* Reset the weak pointer back to the NULL state
-	*/
+	 * Reset the weak pointer back to the NULL state
+	 */
 	FORCEINLINE void Reset()
 	{
 		TWeakObjectPtrBase::Reset();
 	}
 
-	/**
-	* Copy from an object pointer
-	* @param Object object to create a weak pointer to
+	/**  
+	 * Copy from an object pointer
+	 * @param Object object to create a weak pointer to
 	**/
 	template<class U>
 	FORCEINLINE void operator=(const U* Object)
@@ -95,18 +95,18 @@ public:
 		TWeakObjectPtrBase::operator=(TempObject);
 	}
 
-	/**
-	* Construct from another weak pointer
-	* @param Other weak pointer to copy from
+	/**  
+	 * Construct from another weak pointer
+	 * @param Other weak pointer to copy from
 	**/
 	FORCEINLINE void operator=(const TWeakObjectPtr& Other)
 	{
 		TWeakObjectPtrBase::operator=(Other);
 	}
 
-	/**
-	* Assign from another weak pointer, intended for derived-to-base conversions
-	* @param Other weak pointer to copy from
+	/**  
+	 * Assign from another weak pointer, intended for derived-to-base conversions
+	 * @param Other weak pointer to copy from
 	**/
 	template <typename OtherT>
 	FORCEINLINE void operator=(const TWeakObjectPtr<OtherT, TWeakObjectPtrBase>& Other)
@@ -118,19 +118,19 @@ public:
 		*(TWeakObjectPtrBase*)this = *(TWeakObjectPtrBase*)&Other; // we do a C-style cast to private base here to avoid clang 3.6.0 compilation problems with friend declarations
 	}
 
-	/**
-	* Dereference the weak pointer
-	* @param bEvenIfPendingKill, if this is true, pendingkill objects are considered valid
-	* @return NULL if this object is gone or the weak pointer was NULL, otherwise a valid uobject pointer
+	/**  
+	 * Dereference the weak pointer
+	 * @param bEvenIfPendingKill, if this is true, pendingkill objects are considered valid	
+	 * @return NULL if this object is gone or the weak pointer was NULL, otherwise a valid uobject pointer
 	**/
 	FORCEINLINE T* Get(bool bEvenIfPendingKill) const
 	{
 		return (T*)TWeakObjectPtrBase::Get(bEvenIfPendingKill);
 	}
 
-	/**
-	* Dereference the weak pointer. This is an optimized version implying bEvenIfPendingKill=false.
-	*/
+	/**  
+	 * Dereference the weak pointer. This is an optimized version implying bEvenIfPendingKill=false.
+	 */
 	FORCEINLINE T* Get(/*bool bEvenIfPendingKill = false*/) const
 	{
 		return (T*)TWeakObjectPtrBase::Get();
@@ -142,28 +142,28 @@ public:
 		return (T*)TWeakObjectPtrBase::GetEvenIfUnreachable();
 	}
 
-	/**
-	* Dereference the weak pointer
+	/**  
+	 * Dereference the weak pointer
 	**/
 	FORCEINLINE T & operator*() const
 	{
 		return *Get();
 	}
 
-	/**
-	* Dereference the weak pointer
+	/**  
+	 * Dereference the weak pointer
 	**/
 	FORCEINLINE T * operator->() const
 	{
 		return Get();
 	}
 
-	/**
-	* Test if this points to a live UObject
-	* @param bEvenIfPendingKill, if this is true, pendingkill objects are considered valid
-	* @param bThreadsafeTest, if true then function will just give you information whether referenced
-	*							UObject is gone forever (@return false) or if it is still there (@return true, no object flags checked).
-	* @return true if Get() would return a valid non-null pointer
+	/**  
+	 * Test if this points to a live UObject
+	 * @param bEvenIfPendingKill, if this is true, pendingkill objects are considered valid
+	 * @param bThreadsafeTest, if true then function will just give you information whether referenced 
+	 *							UObject is gone forever (@return false) or if it is still there (@return true, no object flags checked).
+	 * @return true if Get() would return a valid non-null pointer
 	**/
 	FORCEINLINE bool IsValid(bool bEvenIfPendingKill, bool bThreadsafeTest = false) const
 	{
@@ -171,19 +171,19 @@ public:
 	}
 
 	/**
-	* Test if this points to a live UObject. This is an optimized version implying bEvenIfPendingKill=false, bThreadsafeTest=false.
-	* @return true if Get() would return a valid non-null pointer
-	*/
+	 * Test if this points to a live UObject. This is an optimized version implying bEvenIfPendingKill=false, bThreadsafeTest=false.
+	 * @return true if Get() would return a valid non-null pointer
+	 */
 	FORCEINLINE bool IsValid(/*bool bEvenIfPendingKill = false, bool bThreadsafeTest = false*/) const
 	{
 		return TWeakObjectPtrBase::IsValid();
 	}
 
-	/**
-	* Slightly different than !IsValid(), returns true if this used to point to a UObject, but doesn't any more and has not been assigned or reset in the mean time.
-	* @param bIncludingIfPendingKill, if this is true, pendingkill objects are considered stale
-	* @param bThreadsafeTest, set it to true when testing outside of Game Thread. Results in false if WeakObjPtr point to an existing object (no flags checked)
-	* @return true if this used to point at a real object but no longer does.
+	/**  
+	 * Slightly different than !IsValid(), returns true if this used to point to a UObject, but doesn't any more and has not been assigned or reset in the mean time.
+	 * @param bIncludingIfPendingKill, if this is true, pendingkill objects are considered stale
+	 * @param bThreadsafeTest, set it to true when testing outside of Game Thread. Results in false if WeakObjPtr point to an existing object (no flags checked) 
+	 * @return true if this used to point at a real object but no longer does.
 	**/
 	FORCEINLINE bool IsStale(bool bIncludingIfPendingKill = false, bool bThreadsafeTest = false) const
 	{
@@ -201,7 +201,7 @@ public:
 		return GetTypeHash(static_cast<const TWeakObjectPtrBase&>(WeakObjectPtr));
 	}
 
-	friend FArchive& operator<<(FArchive& Ar, TWeakObjectPtr& WeakObjectPtr)
+	friend FArchive& operator<<( FArchive& Ar, TWeakObjectPtr& WeakObjectPtr )
 	{
 		Ar << static_cast<TWeakObjectPtrBase&>(WeakObjectPtr);
 		return Ar;
@@ -307,8 +307,8 @@ template<class T> struct TIsWeakPointerType<TWeakObjectPtr<T> > { enum { Value =
 
 
 /**
-* MapKeyFuncs for TWeakObjectPtrs which allow the key to become stale without invalidating the map.
-*/
+ * MapKeyFuncs for TWeakObjectPtrs which allow the key to become stale without invalidating the map.
+ */
 template <typename KeyType, typename ValueType, bool bInAllowDuplicateKeys = false>
 struct TWeakObjectPtrMapKeyFuncs : public TDefaultMapKeyFuncs<KeyType, ValueType, bInAllowDuplicateKeys>
 {
@@ -326,42 +326,42 @@ struct TWeakObjectPtrMapKeyFuncs : public TDefaultMapKeyFuncs<KeyType, ValueType
 };
 
 /**
-* Automatic version of the weak object pointer
-*/
-template<class T>
+ * Automatic version of the weak object pointer
+ */
+template<class T> 
 class TAutoWeakObjectPtr : public TWeakObjectPtr<T>
 {
 public:
 	/** NULL constructor **/
 	DEPRECATED(4.15, "TAutoWeakObjectPtr has been deprecated - use TWeakObjectPtr instead")
-		FORCEINLINE TAutoWeakObjectPtr()
+	FORCEINLINE TAutoWeakObjectPtr()
 	{
 	}
 	/** Construct from a raw pointer **/
 	DEPRECATED(4.15, "TAutoWeakObjectPtr has been deprecated - use TWeakObjectPtr instead")
-		FORCEINLINE TAutoWeakObjectPtr(const T* Target)
+	FORCEINLINE TAutoWeakObjectPtr(const T* Target)
 		: TWeakObjectPtr<T>(Target)
 	{
 	}
 	/**  Construct from the base type **/
 	DEPRECATED(4.15, "TAutoWeakObjectPtr has been deprecated - use TWeakObjectPtr instead")
-		FORCEINLINE TAutoWeakObjectPtr(const TWeakObjectPtr<T>& Other)
+	FORCEINLINE TAutoWeakObjectPtr(const TWeakObjectPtr<T>& Other) 
 		: TWeakObjectPtr<T>(Other)
 	{
 	}
 	DEPRECATED(4.15, "Implicit conversion from TAutoWeakObjectPtr to the pointer type has been deprecated - use Get() instead")
-		FORCEINLINE operator T* () const
+	FORCEINLINE operator T* () const
 	{
 		return this->Get();
 	}
 	DEPRECATED(4.15, "Implicit conversion from TAutoWeakObjectPtr to the pointer type has been deprecated - use Get() instead")
-		FORCEINLINE operator const T* () const
+	FORCEINLINE operator const T* () const
 	{
 		return (const T*)this->Get();
 	}
 
 	DEPRECATED(4.15, "Implicit conversion from TAutoWeakObjectPtr to the pointer type has been deprecated - use Get() instead")
-		FORCEINLINE explicit operator bool() const
+	FORCEINLINE explicit operator bool() const
 	{
 		return this->Get() != nullptr;
 	}

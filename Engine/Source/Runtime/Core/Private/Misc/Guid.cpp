@@ -4,7 +4,7 @@
 #include "Misc/Parse.h"
 #include "UObject/PropertyPortFlags.h"
 
-/* YGuid interface
+/* FGuid interface
  *****************************************************************************/
 
 bool FGuid::ExportTextItem( FString& ValueStr, FGuid const& DefaultValue, UObject* Parent, int32 PortFlags, class UObject* ExportRootScope ) const
@@ -63,7 +63,7 @@ FString FGuid::ToString( EGuidFormats Format ) const
 }
 
 
-/* YGuid static interface
+/* FGuid static interface
  *****************************************************************************/
 
 FGuid FGuid::NewGuid()

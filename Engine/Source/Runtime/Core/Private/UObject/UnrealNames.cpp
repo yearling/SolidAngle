@@ -104,7 +104,7 @@ static uint16 GetRawNonCasePreservingHash(const TCharType* Source)
 
 
 /**
- * @return YString of name portion minus number.
+ * @return FString of name portion minus number.
  */
 FString FNameEntry::GetPlainNameString() const
 {
@@ -280,18 +280,18 @@ FCriticalSection* FName::GetCriticalSection()
 	return CriticalSection;
 }
 
-FString FName::NameToDisplayString( const FString& InDisplaFName, const bool bIsBool )
+FString FName::NameToDisplayString( const FString& InDisplayName, const bool bIsBool )
 {
 	// Copy the characters out so that we can modify the string in place
-	const TArray< TCHAR >& Chars = InDisplaFName.GetCharArray();
+	const TArray< TCHAR >& Chars = InDisplayName.GetCharArray();
 
 	// This is used to indicate that we are in a run of uppercase letter and/or digits.  The code attempts to keep
 	// these characters together as breaking them up often looks silly (i.e. "Draw Scale 3 D" as opposed to "Draw Scale 3D"
 	bool bInARun = false;
 	bool bWasSpace = false;
 	bool bWasOpenParen = false;
-	FString OutDisplaFName;
-	OutDisplaFName.GetCharArray().Reserve(Chars.Num());
+	FString OutDisplayName;
+	OutDisplayName.GetCharArray().Reserve(Chars.Num());
 	for( int32 CharIndex = 0 ; CharIndex < Chars.Num() ; ++CharIndex )
 	{
 		TCHAR ch = Chars[CharIndex];
@@ -314,9 +314,9 @@ FString FName::NameToDisplayString( const FString& InDisplaFName, const bool bIs
 		// If the current character is upper case or a digit, and the previous character wasn't, then we need to insert a space if there wasn't one previously
 		if( (bUpperCase || bIsDigit) && !bInARun && !bWasOpenParen)
 		{
-			if( !bWasSpace && OutDisplaFName.Len() > 0 )
+			if( !bWasSpace && OutDisplayName.Len() > 0 )
 			{
-				OutDisplaFName += TEXT( ' ' );
+				OutDisplayName += TEXT( ' ' );
 				bWasSpace = true;
 			}
 			bInARun = true;
@@ -336,7 +336,7 @@ FString FName::NameToDisplayString( const FString& InDisplaFName, const bool bIs
 		}
 
 		// If this is the first character in the string, then it will always be upper-case
-		if( OutDisplaFName.Len() == 0 )
+		if( OutDisplayName.Len() == 0 )
 		{
 			ch = FChar::ToUpper( ch );
 		}
@@ -393,10 +393,10 @@ FString FName::NameToDisplayString( const FString& InDisplaFName, const bool bIs
 		bWasSpace = ( ch == TEXT( ' ' ) ? true : false );
 		bWasOpenParen = ( ch == TEXT( '(' ) ? true : false );
 
-		OutDisplaFName += ch;
+		OutDisplayName += ch;
 	}
 
-	return OutDisplaFName;
+	return OutDisplayName;
 }
 
 
@@ -413,7 +413,7 @@ int32		FName::NumWideNames;
 -----------------------------------------------------------------------------*/
 
 /**
- * Create an FName. If FindType is FName_Find, and the string part of the name 
+ * Create an FName. If FindType is FNAME_Find, and the string part of the name 
  * doesn't already exist, then the name will be NAME_None
  *
  * @param Name Value for the string portion of the name
@@ -444,7 +444,7 @@ FName::FName(const ANSICHAR* Name, EFindName FindType)
 }
 
 /**
- * Create an FName. If FindType is FName_Find, and the string part of the name 
+ * Create an FName. If FindType is FNAME_Find, and the string part of the name 
  * doesn't already exist, then the name will be NAME_None
  *
  * @param Name Value for the string portion of the name
@@ -465,22 +465,22 @@ FName::FName(const FNameEntrySerialized& LoadedEntry)
 		const uint16 CasePreservingHash = LoadedEntry.CasePreservingHash & (FNameDefs::NameHashBucketCount - 1);
 		if (LoadedEntry.IsWide())
 		{
-			Init(LoadedEntry.GetWideName(), NAME_NO_NUMBER_INTERNAL, FName_Add, NonCasePreservingHash, CasePreservingHash);
+			Init(LoadedEntry.GetWideName(), NAME_NO_NUMBER_INTERNAL, FNAME_Add, NonCasePreservingHash, CasePreservingHash);
 		}
 		else
 		{
-			Init(LoadedEntry.GetAnsiName(), NAME_NO_NUMBER_INTERNAL, FName_Add, NonCasePreservingHash, CasePreservingHash);
+			Init(LoadedEntry.GetAnsiName(), NAME_NO_NUMBER_INTERNAL, FNAME_Add, NonCasePreservingHash, CasePreservingHash);
 		}
 	}
 	else
 	{
 		if (LoadedEntry.IsWide())
 		{
-			Init(LoadedEntry.GetWideName(), NAME_NO_NUMBER_INTERNAL, FName_Add, false);
+			Init(LoadedEntry.GetWideName(), NAME_NO_NUMBER_INTERNAL, FNAME_Add, false);
 		}
 		else
 		{
-			Init(LoadedEntry.GetAnsiName(), NAME_NO_NUMBER_INTERNAL, FName_Add, false);
+			Init(LoadedEntry.GetAnsiName(), NAME_NO_NUMBER_INTERNAL, FNAME_Add, false);
 		}
 	}
 }
@@ -488,7 +488,7 @@ FName::FName(const FNameEntrySerialized& LoadedEntry)
 FName::FName( EName HardcodedIndex, const TCHAR* Name )
 {
 	check(HardcodedIndex >= 0);
-	Init(Name, NAME_NO_NUMBER_INTERNAL, FName_Add, false, HardcodedIndex);
+	Init(Name, NAME_NO_NUMBER_INTERNAL, FNAME_Add, false, HardcodedIndex);
 }
 
 /**
@@ -800,7 +800,7 @@ bool FName::InitInternal_FindOrAddNameEntry(const TCharType* InName, const EFind
 				// FName with the specified value. This is useful for compiling
 				// script classes where the file name is lower case but the class
 				// was intended to be uppercase.
-				if (FindType == FName_Replace_Not_Safe_For_Threading)
+				if (FindType == FNAME_Replace_Not_Safe_For_Threading)
 				{
 					check(IsInGameThread());
 
@@ -816,7 +816,7 @@ bool FName::InitInternal_FindOrAddNameEntry(const TCharType* InName, const EFind
 		}
 
 		// Didn't find name.
-		if( FindType==FName_Find )
+		if( FindType==FNAME_Find )
 		{
 			// Not found.
 			return false;
@@ -834,7 +834,7 @@ bool FName::InitInternal_FindOrAddNameEntry(const TCharType* InName, const EFind
 			{
 				// Found it in the hash.
 				OutIndex = Hash->GetIndex();
-				check(FindType == FName_Add);  // if this was a replace, well it isn't safe for threading. Find should have already been handled
+				check(FindType == FNAME_Add);  // if this was a replace, well it isn't safe for threading. Find should have already been handled
 				return true;
 			}
 		}
@@ -888,7 +888,7 @@ const FNameEntry* FName::GetComparisonNameEntry() const
 	return Names[Index];
 }
 
-const FNameEntry* FName::GetDisplaFNameEntry() const
+const FNameEntry* FName::GetDisplayNameEntry() const
 {
 	TNameEntryArray& Names = GetNames();
 	const NAME_INDEX Index = GetDisplayIndex();
@@ -905,14 +905,14 @@ FString FName::ToString() const
 void FName::ToString(FString& Out) const
 {
 	// a version of ToString that saves at least one string copy
-	const FNameEntry* const NameEntry = GetDisplaFNameEntry();
+	const FNameEntry* const NameEntry = GetDisplayNameEntry();
 	Out.Empty( NameEntry->GetNameLength() + 6);
 	AppendString(Out);
 }
 
 void FName::AppendString(FString& Out) const
 {
-	const FNameEntry* const NameEntry = GetDisplaFNameEntry();
+	const FNameEntry* const NameEntry = GetDisplayNameEntry();
 	NameEntry->AppendNameToString( Out );
 	if (GetNumber() != NAME_NO_NUMBER_INTERNAL)
 	{
@@ -931,7 +931,7 @@ void FName::StaticInit()
 	check(IsInGameThread());
 	/** Global instance used to initialize the GCRCTable. It used to be initialized in appInit() */
 	//@todo: Massive workaround for static init order without needing to use a function call for every use of GCRCTable
-	// This ASSUMES that FName::StaticINit is going to be called BEFORE ANY use of GCRCTable
+	// This ASSUMES that fname::StaticINit is going to be called BEFORE ANY use of GCRCTable
 	FCrc::Init();
 
 	check(GetIsInitialized() == false);
@@ -1119,7 +1119,7 @@ void FName::AutoTest()
 	const FName AutoTest_1("AutoTest_1");
 	const FName autoTest_1("autoTest_1");
 	const FName autoTeSt_1("autoTeSt_1");
-	const FName AutoTest1Find("autoTEST_1", EFindName::FName_Find);
+	const FName AutoTest1Find("autoTEST_1", EFindName::FNAME_Find);
 	const FName AutoTest_2(TEXT("AutoTest_2"));
 	const FName AutoTestB_2(TEXT("AutoTestB_2"));
 	const FName NullName(static_cast<ANSICHAR*>(nullptr));
@@ -1357,7 +1357,7 @@ FNameEntry* AllocateNameEntry(const void* Name, NAME_INDEX Index)
 static TAutoConsoleVariable<int32> CVarLogGameThreadFNameChurn(
 	TEXT("LogGameThreadFNameChurn.Enable"),
 	0,
-	TEXT("If > 0, then collect sample game thread FName create, periodically print a report of the worst offenders."));
+	TEXT("If > 0, then collect sample game thread fname create, periodically print a report of the worst offenders."));
 
 static TAutoConsoleVariable<int32> CVarLogGameThreadFNameChurn_PrintFrequency(
 	TEXT("LogGameThreadFNameChurn.PrintFrequency"),
@@ -1367,12 +1367,12 @@ static TAutoConsoleVariable<int32> CVarLogGameThreadFNameChurn_PrintFrequency(
 static TAutoConsoleVariable<int32> CVarLogGameThreadFNameChurn_Threshhold(
 	TEXT("LogGameThreadFNameChurn.Threshhold"),
 	10,
-	TEXT("Minimum average number of FName creations per frame to include in the report."));
+	TEXT("Minimum average number of fname creations per frame to include in the report."));
 
 static TAutoConsoleVariable<int32> CVarLogGameThreadFNameChurn_SampleFrequency(
 	TEXT("LogGameThreadFNameChurn.SampleFrequency"),
 	1,
-	TEXT("Number of FName creates per sample. This is used to prevent churn sampling from slowing the game down too much."));
+	TEXT("Number of fname creates per sample. This is used to prevent churn sampling from slowing the game down too much."));
 
 static TAutoConsoleVariable<int32> CVarLogGameThreadFNameChurn_StackIgnore(
 	TEXT("LogGameThreadFNameChurn.StackIgnore"),

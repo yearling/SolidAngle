@@ -27,7 +27,7 @@
 #include "Misc/ByteSwap.h"
 
 /*-----------------------------------------------------------------------------
-	YArchive implementation.
+	FArchive implementation.
 -----------------------------------------------------------------------------*/
 
 FArchive::FArchive()
@@ -53,7 +53,7 @@ FArchive::FArchive(const FArchive& ArchiveToCopy)
 	LocalizationNamespacePtr = nullptr;
 #endif // USE_STABLE_LOCALIZATION_KEYS
 
-	CopyTrivialYArchiveStatusMembers(ArchiveToCopy);
+	CopyTrivialFArchiveStatusMembers(ArchiveToCopy);
 
 	// Don't know why this is set to false, but this is what the original copying code did
 	ArIsFilterEditorOnly  = false;
@@ -68,7 +68,7 @@ FArchive& FArchive::operator=(const FArchive& ArchiveToCopy)
 	ActiveFPLB = &InlineFPLB;
 	ActiveFPLB->Reset();
 #endif
-	CopyTrivialYArchiveStatusMembers(ArchiveToCopy);
+	CopyTrivialFArchiveStatusMembers(ArchiveToCopy);
 
 	// Don't know why this is set to false, but this is what the original copying code did
 	ArIsFilterEditorOnly  = false;
@@ -117,7 +117,7 @@ void FArchive::Reset()
 	ArIgnoreClassGeneratedByRef			= false;
 	ArIgnoreClassRef					= false;
 	ArAllowLazyLoading					= false;
-	ArIUObjectReferenceCollector		= false;
+	ArIsObjectReferenceCollector		= false;
 	ArIsModifyingWeakAndStrongReferences= false;
 	ArIsCountingMemory					= false;
 	ArPortFlags							= 0;
@@ -142,7 +142,7 @@ void FArchive::Reset()
 	ResetCustomVersions();
 }
 
-void FArchive::CopyTrivialYArchiveStatusMembers(const FArchive& ArchiveToCopy)
+void FArchive::CopyTrivialFArchiveStatusMembers(const FArchive& ArchiveToCopy)
 {
 	ArUE4Ver                             = ArchiveToCopy.ArUE4Ver;
 	ArLicenseeUE4Ver                     = ArchiveToCopy.ArLicenseeUE4Ver;
@@ -168,7 +168,7 @@ void FArchive::CopyTrivialYArchiveStatusMembers(const FArchive& ArchiveToCopy)
 	ArIgnoreClassGeneratedByRef			 = ArchiveToCopy.ArIgnoreClassGeneratedByRef;
 	ArIgnoreClassRef                     = ArchiveToCopy.ArIgnoreClassRef;
 	ArAllowLazyLoading                   = ArchiveToCopy.ArAllowLazyLoading;
-	ArIUObjectReferenceCollector         = ArchiveToCopy.ArIUObjectReferenceCollector;
+	ArIsObjectReferenceCollector         = ArchiveToCopy.ArIsObjectReferenceCollector;
 	ArIsModifyingWeakAndStrongReferences = ArchiveToCopy.ArIsModifyingWeakAndStrongReferences;
 	ArIsCountingMemory                   = ArchiveToCopy.ArIsCountingMemory;
 	ArPortFlags                          = ArchiveToCopy.ArPortFlags;
@@ -196,7 +196,7 @@ void FArchive::CopyTrivialYArchiveStatusMembers(const FArchive& ArchiveToCopy)
  **/
 FString FArchive::GetArchiveName() const
 {
-	return TEXT("YArchive");
+	return TEXT("FArchive");
 }
 
 #if USE_STABLE_LOCALIZATION_KEYS
@@ -249,29 +249,29 @@ FArchive& FArchive::operator<<( FText& Value )
 
 FArchive& FArchive::operator<<( class FLazyObjectPtr& LazyObjectPtr )
 {
-	// The base YArchive does not implement this method. Use YArchiveUOBject instead.
-	UE_LOG(LogSerialization, Fatal, TEXT("YArchive does not support FLazyObjectPtr serialization. Use YArchiveUObject instead."));
+	// The base FArchive does not implement this method. Use FArchiveUOBject instead.
+	UE_LOG(LogSerialization, Fatal, TEXT("FArchive does not support FLazyObjectPtr serialization. Use FArchiveUObject instead."));
 	return *this;
 }
 
 FArchive& FArchive::operator<<( class FAssetPtr& AssetPtr )
 {
-	// The base YArchive does not implement this method. Use YArchiveUOBject instead.
-	UE_LOG(LogSerialization, Fatal, TEXT("YArchive does not support FAssetPtr serialization. Use YArchiveUObject instead."));
+	// The base FArchive does not implement this method. Use FArchiveUOBject instead.
+	UE_LOG(LogSerialization, Fatal, TEXT("FArchive does not support FAssetPtr serialization. Use FArchiveUObject instead."));
 	return *this;
 }
 
 FArchive& FArchive::operator<<(struct FStringAssetReference& Value)
 {
-	// The base YArchive does not implement this method. Use YArchiveUOBject instead.
-	UE_LOG(LogSerialization, Fatal, TEXT("YArchive does not support FAssetPtr serialization. Use YArchiveUObject instead."));
+	// The base FArchive does not implement this method. Use FArchiveUOBject instead.
+	UE_LOG(LogSerialization, Fatal, TEXT("FArchive does not support FAssetPtr serialization. Use FArchiveUObject instead."));
 	return *this;
 }
 
 FArchive& FArchive::operator<<(struct FWeakObjectPtr& Value)
 {
-	// The base YArchive does not implement this method. Use YArchiveUOBject instead.
-	UE_LOG(LogSerialization, Fatal, TEXT("YArchive does not support FWeakObjectPtr serialization. Use YArchiveUObject instead."));
+	// The base FArchive does not implement this method. Use FArchiveUOBject instead.
+	UE_LOG(LogSerialization, Fatal, TEXT("FArchive does not support FWeakObjectPtr serialization. Use FArchiveUObject instead."));
 	return *this;
 }
 
@@ -353,7 +353,7 @@ void FArchive::UsingCustomVersion(const FGuid& Key)
 	// If this fails, you probably don't have an FCustomVersionRegistration variable defined for this GUID.
 	check(RegisteredVersion);
 
-	const_cast<FCustomVersionContainer&>(GetCustomVersions()).SetVersion(Key, RegisteredVersion->Version, RegisteredVersion->GetFriendlFName());
+	const_cast<FCustomVersionContainer&>(GetCustomVersions()).SetVersion(Key, RegisteredVersion->Version, RegisteredVersion->GetFriendlyName());
 }
 
 int32 FArchive::CustomVer(const FGuid& Key) const
@@ -367,9 +367,9 @@ int32 FArchive::CustomVer(const FGuid& Key) const
 	return CustomVersion ? CustomVersion->Version : -1;
 }
 
-void FArchive::SetCustomVersion(const FGuid& Key, int32 Version, FName FriendlFName)
+void FArchive::SetCustomVersion(const FGuid& Key, int32 Version, FName FriendlyName)
 {
-	const_cast<FCustomVersionContainer&>(GetCustomVersions()).SetVersion(Key, Version, FriendlFName);
+	const_cast<FCustomVersionContainer&>(GetCustomVersions()).SetVersion(Key, Version, FriendlyName);
 }
 
 FString FArchiveProxy::GetArchiveName() const
@@ -389,7 +389,7 @@ FString FArchiveProxy::GetLocalizationNamespace() const
 #endif // USE_STABLE_LOCALIZATION_KEYS
 
 /**
- * Serialize the given FName as an YString
+ * Serialize the given FName as an FString
  */
 FArchive& FNameAsStringProxyArchive::operator<<( class FName& N )
 {
@@ -470,7 +470,7 @@ public:
  * @param	V		Data pointer to serialize data from/to, or a FileReader if bTreatBufferAsFileReader is true
  * @param	Length	Length of source data if we're saving, unused otherwise
  * @param	Flags	Flags to control what method to use for [de]compression and optionally control memory vs speed when compressing
- * @param	bTreatBufferAsFileReader true if V is actually an YArchive, which is used when saving to read data - helps to avoid single huge allocations of source data
+ * @param	bTreatBufferAsFileReader true if V is actually an FArchive, which is used when saving to read data - helps to avoid single huge allocations of source data
  * @param	bUsePlatformBitWindow use a platform specific bitwindow setting
  */
 void FArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Flags, bool bTreatBufferAsFileReader, bool bUsePlatformBitWindow )
@@ -632,7 +632,7 @@ void FArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Fla
 	
 		// Number of bytes remaining to kick off compression for.
 		int64 BytesRemainingToKickOff	= Length;
-		// Pointer to src data if buffer is memory pointer, NULL if it's a YArchive.
+		// Pointer to src data if buffer is memory pointer, NULL if it's a FArchive.
 		uint8* SrcBuffer = bTreatBufferAsFileReader ? NULL : (uint8*)V;
 
 		check(!bTreatBufferAsFileReader || ((FArchive*)V)->IsLoading());
@@ -677,7 +677,7 @@ void FArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Fla
 					NewChunk.UncompressedSize	= FMath::Min( BytesRemainingToKickOff, (int64)GSavingCompressionChunkSize );
 					check(NewChunk.UncompressedSize>0);
 
-					// Need to serialize source data if passed in pointer is an YArchive.
+					// Need to serialize source data if passed in pointer is an FArchive.
 					if( bTreatBufferAsFileReader )
 					{
 						// Allocate memory on first use. We allocate the maximum amount to allow reuse.

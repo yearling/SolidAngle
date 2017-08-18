@@ -13,9 +13,9 @@
 #include "HAL/ThreadSingleton.h"
 
 /**
-* Exec handler that registers itself and is being routed via StaticExec.
-* Note: Not intended for use with UObjects!
-*/
+ * Exec handler that registers itself and is being routed via StaticExec.
+ * Note: Not intended for use with UObjects!
+ */
 class CORE_API FSelfRegisteringExec : public FExec
 {
 public:
@@ -25,10 +25,10 @@ public:
 	virtual ~FSelfRegisteringExec();
 
 	/** Routes a command to the self-registered execs. */
-	static bool StaticExec(UWorld* Inworld, const TCHAR* Cmd, FOutputDevice& Ar);
+	static bool StaticExec( UWorld* Inworld, const TCHAR* Cmd, FOutputDevice& Ar );
 
 private:
-
+	
 	/** Array of registered exec's routed via StaticExec. */
 	static TArray<FSelfRegisteringExec*>& GetRegisteredExecs();
 };
@@ -39,22 +39,22 @@ class CORE_API FStaticSelfRegisteringExec : public FSelfRegisteringExec
 public:
 
 	/** Initialization constructor. */
-	FStaticSelfRegisteringExec(bool(*InStaticExecFunc)(UWorld* Inworld, const TCHAR* Cmd, FOutputDevice& Ar));
+	FStaticSelfRegisteringExec(bool (*InStaticExecFunc)(UWorld* Inworld, const TCHAR* Cmd,FOutputDevice& Ar));
 
 	//~ Begin Exec Interface
-	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar);
+	virtual bool Exec( UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar );
 	//~ End Exec Interface
 
 private:
 
-	bool(*StaticExecFunc)(UWorld* Inworld, const TCHAR* Cmd, FOutputDevice& Ar);
+	bool (*StaticExecFunc)(UWorld* Inworld, const TCHAR* Cmd,FOutputDevice& Ar);
 };
 
 // Interface for returning a context string.
 class FContextSupplier
 {
 public:
-	virtual FString GetContext() = 0;
+	virtual FString GetContext()=0;
 };
 
 
@@ -65,7 +65,7 @@ struct CORE_API FMaintenance
 };
 
 /*-----------------------------------------------------------------------------
-Module singletons.
+	Module singletons.
 -----------------------------------------------------------------------------*/
 
 /** Return the DDC interface, if it is available, otherwise return NULL **/
@@ -81,13 +81,13 @@ CORE_API class ITargetPlatformManagerModule* GetTargetPlatformManager();
 CORE_API class ITargetPlatformManagerModule& GetTargetPlatformManagerRef();
 
 /*-----------------------------------------------------------------------------
-Runtime.
+	Runtime.
 -----------------------------------------------------------------------------*/
 
 /**
-* Check to see if this executable is running as dedicated server
-* Editor can run as dedicated with -server
-*/
+ * Check to see if this executable is running as dedicated server
+ * Editor can run as dedicated with -server
+ */
 FORCEINLINE bool IsRunningDedicatedServer()
 {
 	if (FPlatformProperties::IsServerOnly())
@@ -109,10 +109,10 @@ FORCEINLINE bool IsRunningDedicatedServer()
 }
 
 /**
-* Check to see if this executable is running as "the game"
-* - contains all net code (WITH_SERVER_CODE=1)
-* Editor can run as a game with -game
-*/
+ * Check to see if this executable is running as "the game"
+ * - contains all net code (WITH_SERVER_CODE=1)
+ * Editor can run as a game with -game
+ */
 FORCEINLINE bool IsRunningGame()
 {
 	if (FPlatformProperties::IsGameOnly())
@@ -134,10 +134,10 @@ FORCEINLINE bool IsRunningGame()
 }
 
 /**
-* Check to see if this executable is running as "the client"
-* - removes all net code (WITH_SERVER_CODE=0)
-* Editor can run as a game with -clientonly
-*/
+ * Check to see if this executable is running as "the client"
+ * - removes all net code (WITH_SERVER_CODE=0)
+ * Editor can run as a game with -clientonly
+ */
 FORCEINLINE bool IsRunningClientOnly()
 {
 	if (FPlatformProperties::IsClientOnly())
@@ -154,8 +154,8 @@ FORCEINLINE bool IsRunningClientOnly()
 }
 
 /**
-* Helper for obtaining the default Url configuration
-*/
+ * Helper for obtaining the default Url configuration
+ */
 struct CORE_API FUrlConfig
 {
 	FString DefaultProtocol;
@@ -166,13 +166,13 @@ struct CORE_API FUrlConfig
 	int32 DefaultPort;
 
 	/**
-	* Initialize with defaults from ini
-	*/
+	 * Initialize with defaults from ini
+	 */
 	void Init();
 
 	/**
-	* Reset state
-	*/
+	 * Reset state
+	 */
 	void Reset();
 };
 
@@ -182,8 +182,8 @@ bool CORE_API StringHasBadDashes(const TCHAR* Str);
 void CORE_API GenerateConvenientWindowedResolutions(const struct FDisplayMetrics& InDisplayMetrics, TArray<FIntPoint>& OutResolutions);
 
 /**
-* Helper for script stack traces
-*/
+ * Helper for script stack traces
+ */
 struct FScriptTraceStackNode
 {
 	FName	Scope;
@@ -219,17 +219,17 @@ public:
 };
 
 #ifndef DO_BLUEPRINT_GUARD
-#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
-#define DO_BLUEPRINT_GUARD 1
-#else
-#define DO_BLUEPRINT_GUARD 0
-#endif
+	#if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
+		#define DO_BLUEPRINT_GUARD 1
+	#else
+		#define DO_BLUEPRINT_GUARD 0
+	#endif
 #endif
 
 #if DO_BLUEPRINT_GUARD
-/**
-* Helper struct for dealing with Blueprint exceptions
-*/
+/** 
+ * Helper struct for dealing with Blueprint exceptions 
+ */
 struct CORE_API FBlueprintExceptionTracker : TThreadSingleton<FBlueprintExceptionTracker>
 {
 	FBlueprintExceptionTracker()

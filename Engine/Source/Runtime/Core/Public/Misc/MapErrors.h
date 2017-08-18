@@ -108,7 +108,7 @@ struct CORE_API FMapErrors
 	/** Fixed up shared weightmap texture for layer {Layer} in component {Component} (shares with {Name}): **TODO** */
     static FName FixedUpSharedLayerWeightmap;
 
-	/** Landscape ({ProxFName}) has overlapping render components at location ({X, Y}): **TODO** */
+	/** Landscape ({ProxyName}) has overlapping render components at location ({X, Y}): **TODO** */
 	static FName LandscapeComponentPostLoad_Warning;
 
 
