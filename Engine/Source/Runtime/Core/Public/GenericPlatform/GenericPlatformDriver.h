@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
 #include "Containers/Array.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "Math/UnrealMathUtility.h"
 #include "Containers/SolidAngleString.h"
 #include "Misc/Parse.h"
 #include "Misc/ConfigCacheIni.h"

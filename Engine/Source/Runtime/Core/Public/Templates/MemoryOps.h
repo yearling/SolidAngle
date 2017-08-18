@@ -1,11 +1,11 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 #include "Templates/EnableIf.h"
 #include "Templates/AreTypesEqual.h"
 #include "Templates/IsTriviallyCopyConstructible.h"
-#include "Templates/SolidAngleTypeTraits.h"
+#include "Templates/UnrealTypeTraits.h"
 #include <new>
 
 #include "Templates/IsTriviallyCopyAssignable.h"
@@ -53,7 +53,7 @@ FORCEINLINE typename TEnableIf<!TIsZeroConstructType<ElementType>::Value>::Type 
 template <typename ElementType>
 FORCEINLINE typename TEnableIf<TIsZeroConstructType<ElementType>::Value>::Type DefaultConstructItems(void* Elements, int32 Count)
 {
-	YMemory::Memset(Elements, 0, sizeof(ElementType) * Count);
+	FMemory::Memset(Elements, 0, sizeof(ElementType) * Count);
 }
 
 
@@ -128,7 +128,7 @@ FORCEINLINE typename TEnableIf<!TIsBitwiseConstructible<DestinationElementType, 
 template <typename DestinationElementType, typename SourceElementType>
 FORCEINLINE typename TEnableIf<TIsBitwiseConstructible<DestinationElementType, SourceElementType>::Value>::Type ConstructItems(void* Dest, const SourceElementType* Source, int32 Count)
 {
-	YMemory::Memcpy(Dest, Source, sizeof(SourceElementType) * Count);
+	FMemory::Memcpy(Dest, Source, sizeof(SourceElementType) * Count);
 }
 
 
@@ -163,7 +163,7 @@ FORCEINLINE typename TEnableIf<!TIsTriviallyCopyAssignable<ElementType>::Value>:
 template <typename ElementType>
 FORCEINLINE typename TEnableIf<TIsTriviallyCopyAssignable<ElementType>::Value>::Type CopyAssignItems(ElementType* Dest, const ElementType* Source, int32 Count)
 {
-	YMemory::Memcpy(Dest, Source, sizeof(ElementType) * Count);
+	FMemory::Memcpy(Dest, Source, sizeof(ElementType) * Count);
 }
 
 
@@ -201,7 +201,7 @@ FORCEINLINE typename TEnableIf<UE4MemoryOps_Private::TCanBitwiseRelocate<Destina
 	* However, it is not yet possible to automatically infer this at compile time, so we can't enable
 	* different (i.e. safer) implementations anyway. */
 
-	YMemory::Memmove(Dest, Source, sizeof(SourceElementType) * Count);
+	FMemory::Memmove(Dest, Source, sizeof(SourceElementType) * Count);
 }
 
 template <typename ElementType>
@@ -234,7 +234,7 @@ FORCEINLINE typename TEnableIf<!TIsTriviallyCopyConstructible<ElementType>::Valu
 template <typename ElementType>
 FORCEINLINE typename TEnableIf<TIsTriviallyCopyConstructible<ElementType>::Value>::Type MoveConstructItems(void* Dest, const ElementType* Source, int32 Count)
 {
-	YMemory::Memmove(Dest, Source, sizeof(ElementType) * Count);
+	FMemory::Memmove(Dest, Source, sizeof(ElementType) * Count);
 }
 
 /**
@@ -259,13 +259,13 @@ FORCEINLINE typename TEnableIf<!TIsTriviallyCopyAssignable<ElementType>::Value>:
 template <typename ElementType>
 FORCEINLINE typename TEnableIf<TIsTriviallyCopyAssignable<ElementType>::Value>::Type MoveAssignItems(ElementType* Dest, const ElementType* Source, int32 Count)
 {
-	YMemory::Memmove(Dest, Source, sizeof(ElementType) * Count);
+	FMemory::Memmove(Dest, Source, sizeof(ElementType) * Count);
 }
 
 template <typename ElementType>
 FORCEINLINE typename TEnableIf<TTypeTraits<ElementType>::IsBytewiseComparable, bool>::Type CompareItems(const ElementType* A, const ElementType* B, int32 Count)
 {
-	return !YMemory::Memcmp(A, B, sizeof(ElementType) * Count);
+	return !FMemory::Memcmp(A, B, sizeof(ElementType) * Count);
 }
 
 

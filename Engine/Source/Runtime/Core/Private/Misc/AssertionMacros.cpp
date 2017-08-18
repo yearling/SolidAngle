@@ -2,8 +2,8 @@
 
 #include "Misc/AssertionMacros.h"
 #include "Misc/VarArgs.h"
-#include "HAL/SolidAngleMemory.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "HAL/UnrealMemory.h"
+#include "Templates/UnrealTemplate.h"
 #include "Misc/CString.h"
 #include "Misc/Crc.h"
 #include "Containers/SolidAngleString.h"
@@ -215,7 +215,7 @@ void YDebug::EnsureFailed(const ANSICHAR* Expr, const ANSICHAR* File, int32 Line
 	// No debugger attached, so generate a call stack and submit a crash report
 	// Walk the stack and dump it to the allocated memory.
 	const SIZE_T StackTraceSize = 65535;
-	ANSICHAR* StackTrace = (ANSICHAR*)YMemory::SystemMalloc(StackTraceSize);
+	ANSICHAR* StackTrace = (ANSICHAR*)FMemory::SystemMalloc(StackTraceSize);
 	if (StackTrace != NULL)
 	{
 		// Stop checking heartbeat for this thread. Ensure can take a lot of time (when stackwalking)
@@ -239,7 +239,7 @@ void YDebug::EnsureFailed(const ANSICHAR* Expr, const ANSICHAR* File, int32 Line
 
 		// Also append the stack trace
 		FCString::Strncat(ErrorMsg, ANSI_TO_TCHAR(StackTrace), ARRAY_COUNT(ErrorMsg) - 1);
-		YMemory::SystemFree(StackTrace);
+		FMemory::SystemFree(StackTrace);
 
 		// Dump the error and flush the log.
 #if !NO_LOGGING

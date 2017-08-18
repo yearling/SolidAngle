@@ -2,7 +2,7 @@
 
 #include "Logging/LogSuppressionInterface.h"
 #include "Misc/AssertionMacros.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "Math/UnrealMathUtility.h"
 #include "Containers/Array.h"
 #include "Containers/SolidAngleString.h"
 #include "UObject/NameTypes.h"

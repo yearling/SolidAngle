@@ -5,8 +5,8 @@
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
 #include "HAL/MemoryBase.h"
-#include "HAL/SolidAngleMemory.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "HAL/UnrealMemory.h"
+#include "Math/UnrealMathUtility.h"
 #include "Templates/AlignmentTemplates.h"
 
 #if defined(_MSC_VER) || PLATFORM_MAC
@@ -84,7 +84,7 @@ public:
 			Result = Malloc(NewSize, Alignment);
 			SIZE_T PtrSize = 0;
 			GetAllocationSize(Ptr, PtrSize);
-			YMemory::Memcpy(Result, Ptr, YMath::Min(NewSize, PtrSize));
+			FMemory::Memcpy(Result, Ptr, YMath::Min(NewSize, PtrSize));
 			Free(Ptr);
 		}
 		else if (Ptr == nullptr)

@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 #include "CoreGlobals.h"
 
 /**
@@ -115,7 +115,7 @@ public:
 		check(AllocationSize*NumElements >= sizeof(FreeListNode));
 
 		// allocate a block of memory
-		uint8* RawMem = (uint8*)YMemory::Malloc(AllocationSize * NumElements);
+		uint8* RawMem = (uint8*)FMemory::Malloc(AllocationSize * NumElements);
 		FreeListNode* NewFreeList = (FreeListNode*)RawMem;
 		
 		// Chain the block into a list of free list nodes

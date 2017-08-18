@@ -126,7 +126,7 @@ struct FMallocCrashPool
 			MaxNumUsed = YMath::Max(MaxNumUsed,NumUsed);
 			PtrInfo->Size = InAllocationSize;
 
-			YMemory::Memset( (void*)PtrInfo->Ptr, FGenericPlatformMallocCrash::MEM_TAG, PtrInfo->Size );
+			FMemory::Memset( (void*)PtrInfo->Ptr, FGenericPlatformMallocCrash::MEM_TAG, PtrInfo->Size );
 			DebugVerify();
 
 			//YPlatformMisc::LowLevelOutputDebugStringf( TEXT( "Malloc Size=%u, PooledPtr=0x%016llx \n" ), AllocationSize, (uint64)PtrInfo->Ptr );
@@ -155,7 +155,7 @@ struct FMallocCrashPool
 			FPtrInfo* PtrIt = Allocations[Index];
 			if( PtrIt->Ptr == Ptr )
 			{
-				YMemory::Memset( (void*)PtrIt->Ptr, FGenericPlatformMallocCrash::MEM_WIPETAG, PtrIt->Size );
+				FMemory::Memset( (void*)PtrIt->Ptr, FGenericPlatformMallocCrash::MEM_WIPETAG, PtrIt->Size );
 
 				PtrIt->Size = 0;
 				bRemoved = true;
@@ -319,7 +319,7 @@ void* FGenericPlatformMallocCrash::Realloc( void* Ptr, SIZE_T NewSize, uint32 Al
 			}
 			
 			Result = Malloc( NewSize, REQUIRED_ALIGNMENT );
-			YMemory::Memcpy( Result, Ptr, YMath::Min(NewSize,PtrSize) );
+			FMemory::Memcpy( Result, Ptr, YMath::Min(NewSize,PtrSize) );
 			
 			if( PtrSize > 32768 )
 			{
@@ -507,7 +507,7 @@ uint32 FGenericPlatformMallocCrash::SafePageSize()
 
 FGenericStackBasedMallocCrash::FGenericStackBasedMallocCrash(FMalloc* MainMalloc)
 {
-	CurrentFreeMemPtr = (uint8*)YMemory::Malloc(MEMORYPOOL_SIZE);
+	CurrentFreeMemPtr = (uint8*)FMemory::Malloc(MEMORYPOOL_SIZE);
 	FreeMemoryEndPtr = CurrentFreeMemPtr + MEMORYPOOL_SIZE;
 }
 
@@ -559,7 +559,7 @@ void* FGenericStackBasedMallocCrash::Realloc(void* Ptr, SIZE_T NewSize, uint32 A
 			return Ptr;
 		}
 		void* Result = Malloc(NewSize, Alignment);
-		YMemory::Memcpy(Result, Ptr, YMath::Min(NewSize, PtrSize));
+		FMemory::Memcpy(Result, Ptr, YMath::Min(NewSize, PtrSize));
 		return Result;
 	}
 	else

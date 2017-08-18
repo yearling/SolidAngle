@@ -5,8 +5,8 @@
 #include "Misc/AssertionMacros.h"
 #include "Logging/LogMacros.h"
 #include "HAL/PlatformAffinity.h"
-#include "HAL/SolidAngleMemory.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "HAL/UnrealMemory.h"
+#include "Templates/UnrealTemplate.h"
 #include "CoreGlobals.h"
 #include "HAL/FileManager.h"
 #include "Misc/Parse.h"
@@ -940,8 +940,8 @@ const TCHAR* FWindowsPlatformProcess::ExecutableName(bool bRemoveExtension)
 		// If the call failed, zero out the memory to be safe
 		else
 		{
-			YMemory::Memzero( Result, sizeof( Result ) );
-			YMemory::Memzero( ResultWithExt, sizeof( ResultWithExt ) );
+			FMemory::Memzero( Result, sizeof( Result ) );
+			FMemory::Memzero( ResultWithExt, sizeof( ResultWithExt ) );
 		}
 	}
 

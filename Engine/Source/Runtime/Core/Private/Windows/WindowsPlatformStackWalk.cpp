@@ -4,8 +4,8 @@
 #include "HAL/PlatformMemory.h"
 #include "HAL/PlatformMisc.h"
 #include "Logging/LogMacros.h"
-#include "Math/SolidAngleMathUtility.h"
-#include "HAL/SolidAngleMemory.h"
+#include "Math/UnrealMathUtility.h"
+#include "HAL/UnrealMemory.h"
 #include "Containers/StringConv.h"
 #include "Containers/SolidAngleString.h"
 #include "UObject/NameTypes.h"
@@ -92,7 +92,7 @@ static int32 CaptureStackTraceHelper( uint64 *BackTrace, uint32 MaxDepth, CONTEX
 		ThreadHandle	= GetCurrentThread();
 
 		// Zero out stack frame.
-		YMemory::Memzero( StackFrame64 );
+		FMemory::Memzero( StackFrame64 );
 
 		// Initialize the STACKFRAME structure.
 		StackFrame64.AddrPC.Mode         = AddrModeFlat;
@@ -383,19 +383,19 @@ void FWindowsPlatformStackWalk::ProgramCounterToSymbolInfo( uint64 ProgramCounte
  * Get process module handle NULL-terminated list.
  * On error this method returns NULL.
  *
- * IMPORTANT: Returned value must be deallocated by YMemory::Free().
+ * IMPORTANT: Returned value must be deallocated by FMemory::Free().
  */
 static HMODULE* GetProcessModules(HANDLE ProcessHandle)
 {
 	const int32 NumModules = FWindowsPlatformStackWalk::GetProcessModuleCount();
 	// Allocate start size (last element reserved for NULL value)
 	uint32   ResultBytes = NumModules * sizeof( HMODULE );
-	HMODULE* ResultData = (HMODULE*)YMemory::Malloc( ResultBytes + sizeof( HMODULE ) );
+	HMODULE* ResultData = (HMODULE*)FMemory::Malloc( ResultBytes + sizeof( HMODULE ) );
 	
 	uint32 BytesRequired = 0;
 	if (!FEnumProcessModules( ProcessHandle, ResultData, ResultBytes, (::DWORD *)&BytesRequired ))
 	{
-		YMemory::Free( ResultData );
+		FMemory::Free( ResultData );
 		// Can't get process module list
 		return nullptr;
 	}
@@ -601,7 +601,7 @@ static void LoadProcessModules(const YString &RemoteStorage)
 	} 
 
 	// Free the module handle pointer allocated in case the static array was insufficient.
-	YMemory::Free(ModuleHandlePointer);
+	FMemory::Free(ModuleHandlePointer);
 }
 
 int32 FWindowsPlatformStackWalk::GetProcessModuleCount()
@@ -673,7 +673,7 @@ int32 FWindowsPlatformStackWalk::GetProcessModuleSignatures(FStackWalkModuleInfo
 			FCString::Strcpy(Info.ModuleName, Img.ModuleName);
 			Info.PdbAge = Img.PdbAge;
 			Info.PdbSig = Img.PdbSig;
-			YMemory::Memcpy(&Info.PdbSig70, &Img.PdbSig70, sizeof(GUID));
+			FMemory::Memcpy(&Info.PdbSig70, &Img.PdbSig70, sizeof(GUID));
 			Info.TimeDateStamp = Img.TimeDateStamp;
 
 			ModuleSignatures[SignatureIndex] = Info;
@@ -682,7 +682,7 @@ int32 FWindowsPlatformStackWalk::GetProcessModuleSignatures(FStackWalkModuleInfo
 	}
 
 	// Free the module handle pointer allocated in case the static array was insufficient.
-	YMemory::Free(ModuleHandlePointer);
+	FMemory::Free(ModuleHandlePointer);
 
 	return SignatureIndex;
 }

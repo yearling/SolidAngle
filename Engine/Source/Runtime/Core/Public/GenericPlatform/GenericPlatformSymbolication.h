@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Templates/SolidAngleTypeTraits.h"
+#include "Templates/UnrealTypeTraits.h"
 #include "Containers/Array.h"
 #include "Containers/SolidAngleString.h"
 #include "Containers/Set.h"

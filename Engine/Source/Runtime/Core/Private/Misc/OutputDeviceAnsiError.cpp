@@ -1,7 +1,7 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #include "Misc/OutputDeviceAnsiError.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "Templates/UnrealTemplate.h"
 #include "Logging/LogMacros.h"
 #include "CoreGlobals.h"
 #include "Misc/OutputDeviceRedirector.h"

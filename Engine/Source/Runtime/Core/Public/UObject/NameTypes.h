@@ -4,13 +4,13 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "HAL/SolidAngleMemory.h"
-#include "Templates/SolidAngleTypeTraits.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "HAL/UnrealMemory.h"
+#include "Templates/UnrealTypeTraits.h"
+#include "Templates/UnrealTemplate.h"
 #include "Containers/SolidAngleString.h"
 #include "HAL/CriticalSection.h"
 #include "Containers/StringConv.h"
-#include "UObject/SolidAngleNames.h"
+#include "UObject/UnrealNames.h"
 
 /*----------------------------------------------------------------------------
 Definitions.
@@ -328,8 +328,8 @@ class TStaticIndirectArrayThreadSafeRead
 			}
 			// add a chunk, and make sure nobody else tries
 			ElementType*** Chunk = &Chunks[ChunkIndex];
-			ElementType** NewChunk = (ElementType**)YMemory::Malloc(sizeof(ElementType*) * ElementsPerChunk);
-			YMemory::Memzero(NewChunk, sizeof(ElementType*) * ElementsPerChunk);
+			ElementType** NewChunk = (ElementType**)FMemory::Malloc(sizeof(ElementType*) * ElementsPerChunk);
+			FMemory::Memzero(NewChunk, sizeof(ElementType*) * ElementsPerChunk);
 			if (FPlatformAtomics::InterlockedCompareExchangePointer((void**)Chunk, NewChunk, nullptr))
 			{
 				// someone else beat us to the add, we don't support multiple concurrent adds
@@ -363,7 +363,7 @@ public:
 		: NumElements(0)
 		, NumChunks(0)
 	{
-		YMemory::Memzero(Chunks);
+		FMemory::Memzero(Chunks);
 	}
 	/**
 	* Return the number of elements in the array

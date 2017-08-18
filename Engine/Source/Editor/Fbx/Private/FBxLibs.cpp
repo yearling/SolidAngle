@@ -9,23 +9,23 @@
 //-------------------------------------------------------------------------
 void* MyMalloc(size_t pSize)       
 {
-	return YMemory::Malloc(pSize);
+	return FMemory::Malloc(pSize);
 }
 
 void* MyCalloc(size_t pCount,size_t pSize)
 {
-	void* Alloc = YMemory::Malloc(pCount*pSize);
-	return YMemory::Memzero(Alloc, pCount*pSize);
+	void* Alloc = FMemory::Malloc(pCount*pSize);
+	return FMemory::Memzero(Alloc, pCount*pSize);
 }
 
 void* MyRealloc(void* pData, size_t pSize)
 {
-	return YMemory::Realloc(pData, pSize);
+	return FMemory::Realloc(pData, pSize);
 }
 
 void  MyFree(void* pData)
 {
-	YMemory::Free(pData);
+	FMemory::Free(pData);
 }
 
 

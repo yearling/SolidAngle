@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 #include "Containers/SolidAngleString.h"
 
 /**
@@ -87,7 +87,7 @@ public:
 	/** Sets this integer to 0. */
 	FORCEINLINE void Zero()
 	{
-		YMemory::Memset(Bits, 0, sizeof(Bits));
+		FMemory::Memset(Bits, 0, sizeof(Bits));
 	}
 
 	/**
@@ -123,7 +123,7 @@ public:
 	*/
 	explicit TBigInt(const uint32* InBits)
 	{
-		YMemory::Memcpy(Bits, InBits, sizeof(Bits));
+		FMemory::Memcpy(Bits, InBits, sizeof(Bits));
 	}
 
 	/**

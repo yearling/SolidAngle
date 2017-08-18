@@ -5,8 +5,8 @@
 #include "Misc/OutputDevice.h"
 #include "HAL/PlatformStackWalk.h"
 #include "HAL/PlatformProcess.h"
-#include "HAL/SolidAngleMemory.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "HAL/UnrealMemory.h"
+#include "Templates/UnrealTemplate.h"
 #include "CoreGlobals.h"
 #include "HAL/FileManager.h"
 #include "Misc/CString.h"
@@ -516,7 +516,7 @@ static void SetProcessMemoryLimit(SIZE_T ProcessMemoryLimitMB)
 	HANDLE JobObject = ::CreateJobObject(nullptr, TEXT("UE4-JobObject"));
 	check(JobObject);
 	JOBOBJECT_EXTENDED_LIMIT_INFORMATION JobLimitInfo;
-	YMemory::Memzero(JobLimitInfo);
+	FMemory::Memzero(JobLimitInfo);
 	JobLimitInfo.ProcessMemoryLimit = 1024 * 1024 * ProcessMemoryLimitMB;
 	JobLimitInfo.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_PROCESS_MEMORY;
 	const BOOL bSetJob = ::SetInformationJobObject(JobObject, JobObjectExtendedLimitInformation, &JobLimitInfo, sizeof(JobLimitInfo));
@@ -734,7 +734,7 @@ TArray<uint8> YWindowsPlatformMisc::GetMacAddress()
 			{
 				// Copy the data and say we did
 				Result.AddZeroed(AdapterList->AddressLength);
-				YMemory::Memcpy(Result.GetData(), AdapterList->Address, AdapterList->AddressLength);
+				FMemory::Memcpy(Result.GetData(), AdapterList->Address, AdapterList->AddressLength);
 				break;
 			}
 			AdapterList = AdapterList->Next;
@@ -1937,7 +1937,7 @@ int32 YWindowsPlatformMisc::NumberOfCores()
 			check(BufferSize > 0);
 
 			// Allocate the buffer to hold the processor info.
-			InfoBuffer = (PSYSTEM_LOGICAL_PROCESSOR_INFORMATION)YMemory::Malloc(BufferSize);
+			InfoBuffer = (PSYSTEM_LOGICAL_PROCESSOR_INFORMATION)FMemory::Malloc(BufferSize);
 			check(InfoBuffer);
 
 			// Get the actual information.
@@ -1954,7 +1954,7 @@ int32 YWindowsPlatformMisc::NumberOfCores()
 					CoreCount++;
 				}
 			}
-			YMemory::Free(InfoBuffer);
+			FMemory::Free(InfoBuffer);
 		}
 	}
 	return CoreCount;
@@ -2488,7 +2488,7 @@ YString YWindowsPlatformMisc::GetPrimaryGPUBrand()
 				break;
 			}
 
-			YMemory::Memzero(DisplayDevice);
+			FMemory::Memzero(DisplayDevice);
 			DisplayDevice.cb = sizeof(DisplayDevice);
 			DeviceIndex++;
 		}

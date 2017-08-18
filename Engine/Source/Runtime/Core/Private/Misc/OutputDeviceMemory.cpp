@@ -99,7 +99,7 @@ void YOutputDeviceMemory::SerializeToBuffer(ANSICHAR* Data, int32 Length)
 			BufferLength = YMath::Min(BufferLength + WriteLength, BufferCapacity);
 		}
 
-		YMemory::Memcpy(Buffer.GetData() + WritePos, Data, WriteLength * sizeof(ANSICHAR));
+		FMemory::Memcpy(Buffer.GetData() + WritePos, Data, WriteLength * sizeof(ANSICHAR));
 		Length -= WriteLength;
 	}
 }

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "Math/UnrealMathUtility.h"
 #include "Containers/SolidAngleString.h"
 #include "Logging/LogMacros.h"
 #include "Math/Vector.h"

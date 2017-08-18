@@ -179,7 +179,7 @@ struct YMallocBinned::Private
 		{
 			OutOfMemory(IndirectPoolBlockSizeBytes);
 		}
-		YMemory::Memset(Indirect, 0, IndirectPoolBlockSizeBytes);
+		FMemory::Memset(Indirect, 0, IndirectPoolBlockSizeBytes);
 
 		BINNED_PEAK_STATCOUNTER(Allocator.OsPeak,    BINNED_ADD_STATCOUNTER(Allocator.OsCurrent,    (int64)(Align(IndirectPoolBlockSizeBytes, Allocator.PageSize))));
 		BINNED_PEAK_STATCOUNTER(Allocator.WastePeak, BINNED_ADD_STATCOUNTER(Allocator.WasteCurrent, (int64)(Align(IndirectPoolBlockSizeBytes, Allocator.PageSize))));
@@ -564,7 +564,7 @@ struct YMallocBinned::Private
 			Allocator.FreedPageBlocksNum--;
 			if (Allocator.FreedPageBlocksNum)
 			{
-				YMemory::Memmove(&Allocator.FreedPageBlocks[0], &Allocator.FreedPageBlocks[1], sizeof(FFreePageBlock) * Allocator.FreedPageBlocksNum);
+				FMemory::Memmove(&Allocator.FreedPageBlocks[0], &Allocator.FreedPageBlocks[1], sizeof(FFreePageBlock) * Allocator.FreedPageBlocksNum);
 			}
 			YPlatformMemory::BinnedFreeToOS(FreePtr, FreeSize);
 		}
@@ -597,7 +597,7 @@ struct YMallocBinned::Private
 					Allocator.CachedTotal -= Allocator.FreedPageBlocks[i].ByteSize;
 					if (i < Allocator.FreedPageBlocksNum - 1)
 					{
-						YMemory::Memmove(&Allocator.FreedPageBlocks[i], &Allocator.FreedPageBlocks[i + 1], sizeof(FFreePageBlock) * (Allocator.FreedPageBlocksNum - i - 1));
+						FMemory::Memmove(&Allocator.FreedPageBlocks[i], &Allocator.FreedPageBlocks[i + 1], sizeof(FFreePageBlock) * (Allocator.FreedPageBlocksNum - i - 1));
 					}
 					Allocator.FreedPageBlocksNum--;
 					return Ret;
@@ -614,7 +614,7 @@ struct YMallocBinned::Private
 					Allocator.CachedTotal -= Allocator.FreedPageBlocks[i].ByteSize;
 					if (i < Allocator.FreedPageBlocksNum - 1)
 					{
-						YMemory::Memmove(&Allocator.FreedPageBlocks[i], &Allocator.FreedPageBlocks[i + 1], sizeof(FFreePageBlock) * (Allocator.FreedPageBlocksNum - i - 1));
+						FMemory::Memmove(&Allocator.FreedPageBlocks[i], &Allocator.FreedPageBlocks[i + 1], sizeof(FFreePageBlock) * (Allocator.FreedPageBlocksNum - i - 1));
 					}
 					Allocator.FreedPageBlocksNum--;
 					return Ret;
@@ -992,13 +992,13 @@ void* YMallocBinned::Realloc( void* Ptr, SIZE_T NewSize, uint32 Alignment )
 			if (NewSizeUnmodified > MemSizeToPoolTable[Pool->TableIndex]->BlockSize || NewSizeUnmodified <= MemSizeToPoolTable[Pool->TableIndex - 1]->BlockSize)
 			{
 				NewPtr = Malloc(NewSizeUnmodified, Alignment);
-				YMemory::Memcpy(NewPtr, Ptr, YMath::Min<SIZE_T>(NewSizeUnmodified, MemSizeToPoolTable[Pool->TableIndex]->BlockSize - (Alignment - SpareBytesCount)));
+				FMemory::Memcpy(NewPtr, Ptr, YMath::Min<SIZE_T>(NewSizeUnmodified, MemSizeToPoolTable[Pool->TableIndex]->BlockSize - (Alignment - SpareBytesCount)));
 				Free( Ptr );
 			}
 			else if (((UPTRINT)Ptr & (UPTRINT)(Alignment - 1)) != 0)
 			{
 				NewPtr = Align(Ptr, Alignment);
-				YMemory::Memmove(NewPtr, Ptr, NewSize);
+				FMemory::Memmove(NewPtr, Ptr, NewSize);
 			}
 		}
 		else
@@ -1008,7 +1008,7 @@ void* YMallocBinned::Realloc( void* Ptr, SIZE_T NewSize, uint32 Alignment )
 			{
 				// Grow or shrink.
 				NewPtr = Malloc(NewSizeUnmodified, Alignment);
-				YMemory::Memcpy(NewPtr, Ptr, YMath::Min<SIZE_T>(NewSizeUnmodified, Pool->GetBytes()));
+				FMemory::Memcpy(NewPtr, Ptr, YMath::Min<SIZE_T>(NewSizeUnmodified, Pool->GetBytes()));
 				Free( Ptr );
 			}
 			else

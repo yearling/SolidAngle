@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
 #include "Serialization/Archive.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "Math/UnrealMathUtility.h"
 
 /** Various ways to interpolate TAlphaBlend. */
 enum EAlphaBlendType

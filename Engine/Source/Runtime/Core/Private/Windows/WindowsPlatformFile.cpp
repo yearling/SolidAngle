@@ -5,8 +5,8 @@
 #include "Misc/DateTime.h"
 #include "Misc/AssertionMacros.h"
 #include "Logging/LogMacros.h"
-#include "Math/SolidAngleMathUtility.h"
-#include "HAL/SolidAngleMemory.h"
+#include "Math/UnrealMathUtility.h"
+#include "HAL/UnrealMemory.h"
 #include "GenericPlatform/GenericPlatformFile.h"
 #include "Containers/SolidAngleString.h"
 #include "Templates/Function.h"
@@ -267,11 +267,11 @@ public:
 		GetFileSizeEx(Handle, &LI);
 		FileSize = LI.QuadPart;
 		// Allocate our two buffers
-		Buffers[0] = (int8*)YMemory::Malloc(BufferSize);
-		Buffers[1] = (int8*)YMemory::Malloc(BufferSize);
+		Buffers[0] = (int8*)FMemory::Malloc(BufferSize);
+		Buffers[1] = (int8*)FMemory::Malloc(BufferSize);
 
 		// Zero the overlapped structure
-		YMemory::Memzero(&OverlappedIO, sizeof(OVERLAPPED));
+		FMemory::Memzero(&OverlappedIO, sizeof(OVERLAPPED));
 
 		// Kick off the first async read
 		StartSerializeBufferRead();
@@ -282,8 +282,8 @@ public:
 		// Can't free the buffers or close the file if a read is outstanding
 		WaitForAsyncRead();
 		Close();
-		YMemory::Free(Buffers[0]);
-		YMemory::Free(Buffers[1]);
+		FMemory::Free(Buffers[0]);
+		FMemory::Free(Buffers[1]);
 	}
 
 	virtual bool Seek(int64 InPos) override
@@ -384,7 +384,7 @@ public:
 			// See if we are at the end of the serialize buffer or not
 			if (NumToCopy > 0)
 			{
-				YMemory::Memcpy(Dest, &Buffers[SerializeBuffer][SerializePos], NumToCopy);
+				FMemory::Memcpy(Dest, &Buffers[SerializeBuffer][SerializePos], NumToCopy);
 
 				// Update the internal positions
 				SerializePos += NumToCopy;

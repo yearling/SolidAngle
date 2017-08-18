@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 #include "Serialization/Archive.h"
 #include "Containers/SolidAngleString.h"
 
@@ -20,7 +20,7 @@ public:
 	*
 	* @param Data Buffer to use as the source data to read from
 	* @param Size Size of Data
-	* @param bInFreeOnClose If true, Data will be YMemory::Free'd when this archive is closed
+	* @param bInFreeOnClose If true, Data will be FMemory::Free'd when this archive is closed
 	* @param bIsPersistent Uses this value for ArIsPersistent
 	* @param bInSHAVerifyOnClose It true, an async SHA verification will be done on the Data buffer (bInFreeOnClose will be passed on to the async task)
 	*/
@@ -42,7 +42,7 @@ public:
 	{
 		if (bFreeOnClose)
 		{
-			YMemory::Free(ReaderData);
+			FMemory::Free(ReaderData);
 			ReaderData = nullptr;
 		}
 		return !ArIsError;
@@ -51,7 +51,7 @@ public:
 	{
 		check(ReaderPos >= 0);
 		check(ReaderPos + Num <= ReaderSize);
-		YMemory::Memcpy(Data, (uint8*)ReaderData + ReaderPos, Num);
+		FMemory::Memcpy(Data, (uint8*)ReaderData + ReaderPos, Num);
 		ReaderPos += Num;
 	}
 	int64 Tell() final
@@ -98,7 +98,7 @@ public:
 	*
 	* @param Data Buffer to use as the source data to read from
 	* @param Size Size of Data
-	* @param bInFreeOnClose If true, Data will be YMemory::Free'd when this archive is closed
+	* @param bInFreeOnClose If true, Data will be FMemory::Free'd when this archive is closed
 	* @param bIsPersistent Uses this value for ArIsPersistent
 	* @param bInSHAVerifyOnClose It true, an async SHA verification will be done on the Data buffer (bInFreeOnClose will be passed on to the async task)
 	*/

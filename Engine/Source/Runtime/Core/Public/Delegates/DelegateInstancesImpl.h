@@ -12,7 +12,7 @@ The types declared in this file are for internal use only.
 #include "Templates/PointerConvertibleFromTo.h"
 #include "Templates/TypeWrapper.h"
 #include "Templates/AreTypesEqual.h"
-#include "Templates/SolidAngleTypeTraits.h"
+#include "Templates/UnrealTypeTraits.h"
 #include "Templates/RemoveReference.h"
 #include "Delegates/Tuple.h"
 #include "Delegates/DelegateInstanceInterface.h"

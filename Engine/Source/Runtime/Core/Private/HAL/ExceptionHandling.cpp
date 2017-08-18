@@ -5,7 +5,7 @@
 =============================================================================*/
 
 #include "HAL/ExceptionHandling.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "Templates/UnrealTemplate.h"
 #include "Containers/SolidAngleString.h"
 #include "Logging/LogMacros.h"
 #include "CoreGlobals.h"

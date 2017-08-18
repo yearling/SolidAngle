@@ -4,10 +4,10 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "Templates/UnrealTemplate.h"
 #include "Math/NumericLimits.h"
 #include "Containers/Array.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "Math/UnrealMathUtility.h"
 #include "Containers/SolidAngleString.h"
 #include "Containers/Set.h"
 #include "Containers/Map.h"

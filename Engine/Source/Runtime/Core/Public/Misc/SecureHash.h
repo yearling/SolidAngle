@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 #include "Containers/SolidAngleString.h"
 #include "Containers/Map.h"
 #include "Containers/StringConv.h"
@@ -124,13 +124,13 @@ struct FMD5Hash
 	/** Compare one hash with another */
 	friend bool operator==(const FMD5Hash& LHS, const FMD5Hash& RHS)
 	{
-		return LHS.bIsValid == RHS.bIsValid && (!LHS.bIsValid || YMemory::Memcmp(LHS.Bytes, RHS.Bytes, 16) == 0);
+		return LHS.bIsValid == RHS.bIsValid && (!LHS.bIsValid || FMemory::Memcmp(LHS.Bytes, RHS.Bytes, 16) == 0);
 	}
 
 	/** Compare one hash with another */
 	friend bool operator!=(const FMD5Hash& LHS, const FMD5Hash& RHS)
 	{
-		return LHS.bIsValid != RHS.bIsValid || (LHS.bIsValid && YMemory::Memcmp(LHS.Bytes, RHS.Bytes, 16) != 0);
+		return LHS.bIsValid != RHS.bIsValid || (LHS.bIsValid && FMemory::Memcmp(LHS.Bytes, RHS.Bytes, 16) != 0);
 	}
 
 	/** Serialise this hash */
@@ -192,7 +192,7 @@ public:
 
 	FSHAHash()
 	{
-		YMemory::Memset(Hash, 0, sizeof(Hash));
+		FMemory::Memset(Hash, 0, sizeof(Hash));
 	}
 
 	inline YString ToString() const
@@ -202,12 +202,12 @@ public:
 
 	friend bool operator==(const FSHAHash& X, const FSHAHash& Y)
 	{
-		return YMemory::Memcmp(&X.Hash, &Y.Hash, sizeof(X.Hash)) == 0;
+		return FMemory::Memcmp(&X.Hash, &Y.Hash, sizeof(X.Hash)) == 0;
 	}
 
 	friend bool operator!=(const FSHAHash& X, const FSHAHash& Y)
 	{
-		return YMemory::Memcmp(&X.Hash, &Y.Hash, sizeof(X.Hash)) != 0;
+		return FMemory::Memcmp(&X.Hash, &Y.Hash, sizeof(X.Hash)) != 0;
 	}
 
 	friend CORE_API FArchive& operator<<(FArchive& Ar, FSHAHash& G);
@@ -333,7 +333,7 @@ public:
 	*
 	* @param	InBuffer				Buffer of data to calculate has on. MUST be valid until this task completes (use Counter or pass ownership via bInShouldDeleteBuffer)
 	* @param	InBufferSize			Size of InBuffer
-	* @param	bInShouldDeleteBuffer	true if this task should YMemory::Free InBuffer on completion of the verification. Useful for a fire & forget verification
+	* @param	bInShouldDeleteBuffer	true if this task should FMemory::Free InBuffer on completion of the verification. Useful for a fire & forget verification
 	*									NOTE: If you pass ownership to the task MAKE SURE you are done using the buffer as it could go away at ANY TIME
 	* @param	Pathname				Pathname to use to have the platform lookup the hash value
 	* @param	bInIsUnfoundHashAnError true if failing to lookup the hash value results in a fail (only for Shipping PC)
@@ -372,7 +372,7 @@ public:
 	{
 		if (bShouldDeleteBuffer)
 		{
-			YMemory::Free(Buffer);
+			FMemory::Free(Buffer);
 			Buffer = 0;
 		}
 	}
@@ -406,7 +406,7 @@ public:
 	*
 	* @param Data Buffer to use as the source data to read from
 	* @param Size Size of Data
-	* @param bInFreeOnClose If true, Data will be YMemory::Free'd when this archive is closed
+	* @param bInFreeOnClose If true, Data will be FMemory::Free'd when this archive is closed
 	* @param SHASourcePathname Path to the file to use to lookup the SHA hash value
 	* @param bIsPersistent Uses this value for ArIsPersistent
 	* @param bInIsUnfoundHashAnError true if failing to lookup the hash should trigger an error (only in ShippingPC)

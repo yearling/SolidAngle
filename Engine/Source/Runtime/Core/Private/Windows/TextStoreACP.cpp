@@ -1,7 +1,7 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #include "Windows/TextStoreACP.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "Math/UnrealMathUtility.h"
 #include "Containers/SolidAngleString.h"
 #include "Math/Vector2D.h"
 #include "Logging/LogCategory.h"

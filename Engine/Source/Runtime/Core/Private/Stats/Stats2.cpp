@@ -2,8 +2,8 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "HAL/SolidAngleMemory.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "HAL/UnrealMemory.h"
+#include "Templates/UnrealTemplate.h"
 #include "Containers/Array.h"
 #include "Misc/CString.h"
 #include "Containers/SolidAngleString.h"
@@ -566,7 +566,7 @@ public:
 		if (PendingCount < 1)
 		{
 			PendingStatIds = new TStatIdData[NUM_PER_BLOCK];
-			YMemory::Memzero( PendingStatIds, NUM_PER_BLOCK * sizeof( TStatIdData ) );
+			FMemory::Memzero( PendingStatIds, NUM_PER_BLOCK * sizeof( TStatIdData ) );
 			PendingCount = NUM_PER_BLOCK;
 		}
 		--PendingCount;
@@ -857,10 +857,10 @@ public:
 	/** Attaches to the task graph stats thread, all processing will be handled by the task graph. */
 	virtual uint32 Run() override
 	{
-		YMemory::SetupTLSCachesOnCurrentThread();
+		FMemory::SetupTLSCachesOnCurrentThread();
 		FTaskGraphInterface::Get().AttachToThread(ENamedThreads::StatsThread);
 		FTaskGraphInterface::Get().ProcessThreadUntilRequestReturn(ENamedThreads::StatsThread);
-		YMemory::ClearAndDisableTLSCachesOnCurrentThread();
+		FMemory::ClearAndDisableTLSCachesOnCurrentThread();
 		return 0;
 	}
 

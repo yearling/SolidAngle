@@ -5,9 +5,9 @@
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
 #include "Templates/AreTypesEqual.h"
-#include "Templates/SolidAngleTypeTraits.h"
+#include "Templates/UnrealTypeTraits.h"
 #include "Templates/TypeCompatibleBytes.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "Templates/UnrealTemplate.h"
 #include "Logging/LogMacros.h"
 
 

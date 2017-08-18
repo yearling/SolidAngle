@@ -4,8 +4,8 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "HAL/SolidAngleMemory.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "HAL/UnrealMemory.h"
+#include "Math/UnrealMathUtility.h"
 #include "Containers/SolidAngleString.h"
 
 /** Used to read/write a bit in the static array as a bool. */
@@ -284,7 +284,7 @@ public:
 
 		if(Ar.IsLoading())
 		{
-			YMemory::Memset(BitArray.Words, 0, sizeof(BitArray.Words));
+			FMemory::Memset(BitArray.Words, 0, sizeof(BitArray.Words));
 			ArchivedNumWords = YMath::Min(BitArray.NumWords, ArchivedNumWords);
 		}
 

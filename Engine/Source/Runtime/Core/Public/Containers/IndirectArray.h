@@ -4,8 +4,8 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "HAL/SolidAngleMemory.h"
-#include "Templates/SolidAngleTypeTraits.h"
+#include "HAL/UnrealMemory.h"
+#include "Templates/UnrealTypeTraits.h"
 #include "Containers/ContainerAllocationPolicies.h"
 #include "Containers/Array.h"
 
@@ -287,7 +287,7 @@ public:
 			typedef T IndirectArrayDestructElementType;
 
 			(*Element)->IndirectArrayDestructElementType::~IndirectArrayDestructElementType();
-			YMemory::Free(*Element);
+			FMemory::Free(*Element);
 			++Element;
 		}
 		Array.RemoveAt(Index, Count, bAllowShrinking);
@@ -317,7 +317,7 @@ public:
 			typedef T IndirectArrayDestructElementType;
 
 			(*Element)->IndirectArrayDestructElementType::~IndirectArrayDestructElementType();
-			YMemory::Free(*Element);
+			FMemory::Free(*Element);
 			++Element;
 		}
 		Array.RemoveAtSwap(Index, Count, bAllowShrinking);
@@ -442,7 +442,7 @@ private:
 			typedef T IndirectArrayDestructElementType;
 
 			(*Element)->IndirectArrayDestructElementType::~IndirectArrayDestructElementType();
-			YMemory::Free(*Element);
+			FMemory::Free(*Element);
 			++Element;
 		}
 	}
@@ -471,7 +471,7 @@ struct TContainerTraits<TIndirectArray<T, Allocator> >
 template <typename T, typename Allocator> void* operator new(size_t Size, TIndirectArray<T, Allocator>& Array)
 {
 	check(Size == sizeof(T));
-	const int32 Index = Array.Add((T*)YMemory::Malloc(Size));
+	const int32 Index = Array.Add((T*)FMemory::Malloc(Size));
 	return &Array[Index];
 }
 
@@ -479,6 +479,6 @@ template <typename T, typename Allocator> void* operator new(size_t Size, TIndir
 template <typename T, typename Allocator> void* operator new(size_t Size, TIndirectArray<T, Allocator>& Array, int32 Index)
 {
 	check(Size == sizeof(T));
-	Array.Insert((T*)YMemory::Malloc(Size), Index);
+	Array.Insert((T*)FMemory::Malloc(Size), Index);
 	return &Array[Index];
 }

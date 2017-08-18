@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Templates/PointerConvertibleFromTo.h"
 #include "Misc/AssertionMacros.h"
-#include "Templates/SolidAngleTypeTraits.h"
+#include "Templates/UnrealTypeTraits.h"
 #include "Math/NumericLimits.h"
 #include "Containers/Array.h"
 

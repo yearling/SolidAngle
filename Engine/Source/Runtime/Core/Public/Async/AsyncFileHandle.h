@@ -114,7 +114,7 @@ public:
 
 	/**
 	* Return the bytes of a completed read request. Not legal to call unless the request is complete.
-	* @return Returned memory block which if non-null contains the bytes read. Caller owns the memory block and must call YMemory::Free on it when done. Can be null if the file was not found or could not be read or the request was cancelled, or the request priority was AIOP_Precache.
+	* @return Returned memory block which if non-null contains the bytes read. Caller owns the memory block and must call FMemory::Free on it when done. Can be null if the file was not found or could not be read or the request was cancelled, or the request priority was AIOP_Precache.
 	**/
 	FORCEINLINE uint8* GetReadResults()
 	{

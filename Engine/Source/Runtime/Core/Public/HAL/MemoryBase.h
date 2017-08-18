@@ -33,7 +33,7 @@ struct FGenericMemoryStats;
 * alloced by the system malloc routines, bypassing GMalloc. This is e.g. used by YMalloc
 * itself.
 */
-class CORE_API YUseSystemMallocForNew
+class CORE_API FUseSystemMallocForNew
 {
 public:
 	/**
@@ -69,7 +69,7 @@ public:
 
 /** The global memory allocator's interface. */
 class CORE_API FMalloc :
-	public YUseSystemMallocForNew,
+	public FUseSystemMallocForNew,
 	public FExec
 {
 public:

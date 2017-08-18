@@ -2,7 +2,7 @@
 
 #include "GenericPlatform/GenericPlatformMath.h"
 #include "Misc/AssertionMacros.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "Math/UnrealMathUtility.h"
 #include "Math/BigInt.h"
 
 static int32 GSRandSeed;

@@ -115,7 +115,7 @@ void FMD5::Update( const uint8* input, int32 inputLen )
 	// Transform as many times as possible.
 	if (inputLen >= partLen) 
 	{
-		YMemory::Memcpy( &Context.buffer[index], input, partLen );
+		FMemory::Memcpy( &Context.buffer[index], input, partLen );
 		Transform( Context.state, Context.buffer );
 		for (i = partLen; i + 63 < inputLen; i += 64)
 		{
@@ -129,7 +129,7 @@ void FMD5::Update( const uint8* input, int32 inputLen )
 	}
 
 	// Buffer remaining input.
-	YMemory::Memcpy( &Context.buffer[index], &input[i], inputLen-i );
+	FMemory::Memcpy( &Context.buffer[index], &input[i], inputLen-i );
 }
 
 void FMD5::Final( uint8* digest )
@@ -152,7 +152,7 @@ void FMD5::Final( uint8* digest )
 	Encode( digest, Context.state, 16 );
 
 	// Zeroize sensitive information.
-	YMemory::Memset( &Context, 0, sizeof(Context) );
+	FMemory::Memset( &Context, 0, sizeof(Context) );
 }
 
 void FMD5::Transform( uint32* state, const uint8* block )
@@ -239,7 +239,7 @@ void FMD5::Transform( uint32* state, const uint8* block )
 	state[3] += d;
 
 	// Zeroize sensitive information.
-	YMemory::Memset( x, 0, sizeof(x) );
+	FMemory::Memset( x, 0, sizeof(x) );
 }
 
 void FMD5::Encode( uint8* output, const uint32* input, int32 len )
@@ -299,7 +299,7 @@ void FMD5::Decode( uint32* output, const uint8* input, int32 len )
 // 
 // 	// Transform as many times as possible.
 // 	if (inputLen >= partLen) {
-// 		YMemory::Memcpy( &context->buffer[index], input, partLen );
+// 		FMemory::Memcpy( &context->buffer[index], input, partLen );
 // 		appMD5Transform( context->state, context->buffer );
 // 		for (i = partLen; i + 63 < inputLen; i += 64)
 // 			appMD5Transform( context->state, &input[i] );
@@ -308,7 +308,7 @@ void FMD5::Decode( uint32* output, const uint8* input, int32 len )
 // 		i = 0;
 // 
 // 	// Buffer remaining input.
-// 	YMemory::Memcpy( &context->buffer[index], &input[i], inputLen-i );
+// 	FMemory::Memcpy( &context->buffer[index], &input[i], inputLen-i );
 // }
 
 //
@@ -336,7 +336,7 @@ void FMD5::Decode( uint32* output, const uint8* input, int32 len )
 // 	appMD5Encode( digest, context->state, 16 );
 // 
 // 	// Zeroize sensitive information.
-// 	YMemory::Memset( context, 0, sizeof(*context) );
+// 	FMemory::Memset( context, 0, sizeof(*context) );
 // }
 
 //
@@ -426,7 +426,7 @@ void FMD5::Decode( uint32* output, const uint8* input, int32 len )
 // 	state[3] += d;
 // 
 // 	// Zeroize sensitive information.
-// 	YMemory::Memset( x, 0, sizeof(x) );
+// 	FMemory::Memset( x, 0, sizeof(x) );
 // }
 
 //
@@ -521,7 +521,7 @@ namespace Lex
 			Bytes[ByteIndex] = (FirstCharVal << 4) + SecondCharVal;
 		}
 
-		YMemory::Memcpy(Hash.Bytes, Bytes, 16);
+		FMemory::Memcpy(Hash.Bytes, Bytes, 16);
 		Hash.bIsValid = true;
 	}
 }
@@ -637,7 +637,7 @@ void FSHA1::Transform(uint32 *state, const uint8 *buffer)
 	// Copy state[] to working vars
 	uint32 a = state[0], b = state[1], c = state[2], d = state[3], e = state[4];
 
-	YMemory::Memcpy(m_block, buffer, 64);
+	FMemory::Memcpy(m_block, buffer, 64);
 
 	// 4 rounds of 20 operations each. Loop unrolled.
 	_R0(a,b,c,d,e, 0); _R0(e,a,b,c,d, 1); _R0(d,e,a,b,c, 2); _R0(c,d,e,a,b, 3);
@@ -683,7 +683,7 @@ void FSHA1::Update(const uint8 *data, uint32 len)
 	if((j + len) > 63)
 	{
 		i = 64 - j;
-		YMemory::Memcpy(&m_buffer[j], data, i);
+		FMemory::Memcpy(&m_buffer[j], data, i);
 		Transform(m_state, m_buffer);
 
 		for( ; i + 63 < len; i += 64) Transform(m_state, &data[i]);
@@ -692,7 +692,7 @@ void FSHA1::Update(const uint8 *data, uint32 len)
 	}
 	else i = 0;
 
-	YMemory::Memcpy(&m_buffer[j], &data[i], len - i);
+	FMemory::Memcpy(&m_buffer[j], &data[i], len - i);
 }
 
 // Use this function to hash in strings
@@ -729,7 +729,7 @@ void FSHA1::Final()
 // Get the raw message digest
 void FSHA1::GetHash(uint8 *puDest)
 {
-	YMemory::Memcpy(puDest, m_digest, 20);
+	FMemory::Memcpy(puDest, m_digest, 20);
 }
 
 /**
@@ -759,16 +759,16 @@ void FSHA1::HMACBuffer(const void* Key, uint32 KeySize, const void* Data, uint32
 	{
 		HashBuffer(Key, KeySize, FinalKey);
 
-		YMemory::Memzero(FinalKey + HashSize, BlockSize - HashSize);
+		FMemory::Memzero(FinalKey + HashSize, BlockSize - HashSize);
 	}
 	else if (KeySize < BlockSize)
 	{
-		YMemory::Memcpy(FinalKey, Key, KeySize);
-		YMemory::Memzero(FinalKey + KeySize, BlockSize - KeySize);
+		FMemory::Memcpy(FinalKey, Key, KeySize);
+		FMemory::Memzero(FinalKey + KeySize, BlockSize - KeySize);
 	}
 	else
 	{
-		YMemory::Memcpy(FinalKey, Key, KeySize);
+		FMemory::Memcpy(FinalKey, Key, KeySize);
 	}
 
 
@@ -785,8 +785,8 @@ void FSHA1::HMACBuffer(const void* Key, uint32 KeySize, const void* Data, uint32
 	// Start concatenating/hashing the pads/data etc: Hash(OKeyPad + Hash(IKeyPad + Data))
 	uint8* IKeyPad_Data = new uint8[ARRAY_COUNT(IKeyPad) + DataSize];
 
-	YMemory::Memcpy(IKeyPad_Data, IKeyPad, ARRAY_COUNT(IKeyPad));
-	YMemory::Memcpy(IKeyPad_Data + ARRAY_COUNT(IKeyPad), Data, DataSize);
+	FMemory::Memcpy(IKeyPad_Data, IKeyPad, ARRAY_COUNT(IKeyPad));
+	FMemory::Memcpy(IKeyPad_Data + ARRAY_COUNT(IKeyPad), Data, DataSize);
 
 
 	uint8 IKeyPad_Data_Hash[HashSize];
@@ -798,8 +798,8 @@ void FSHA1::HMACBuffer(const void* Key, uint32 KeySize, const void* Data, uint32
 
 	uint8 OKeyPad_IHash[ARRAY_COUNT(OKeyPad) + HashSize];
 
-	YMemory::Memcpy(OKeyPad_IHash, OKeyPad, ARRAY_COUNT(OKeyPad));
-	YMemory::Memcpy(OKeyPad_IHash + ARRAY_COUNT(OKeyPad), IKeyPad_Data_Hash, HashSize);
+	FMemory::Memcpy(OKeyPad_IHash, OKeyPad, ARRAY_COUNT(OKeyPad));
+	FMemory::Memcpy(OKeyPad_IHash + ARRAY_COUNT(OKeyPad), IKeyPad_Data_Hash, HashSize);
 
 
 	// Output the final hash
@@ -843,8 +843,8 @@ void FSHA1::InitializeFileHashesFromBuffer(uint8* Buffer, int32 BufferSize, bool
 			uint8* Hash;
 			if (bDuplicateKeyMemory)
 			{
-				Hash = (uint8*)YMemory::Malloc(20);
-				YMemory::Memcpy(Hash, Buffer + Offset, 20);
+				Hash = (uint8*)FMemory::Malloc(20);
+				FMemory::Memcpy(Hash, Buffer + Offset, 20);
 			}
 			else
 			{
@@ -884,7 +884,7 @@ bool FSHA1::GetFileSHAHash(const TCHAR* Pathname, uint8 Hash[20], bool bIsFullPa
 	if (HashData && Hash)
 	{
 		// return it
-		YMemory::Memcpy(Hash, *HashData, 20);
+		FMemory::Memcpy(Hash, *HashData, 20);
 	}
 
 	// return true if we found the hash
@@ -928,7 +928,7 @@ void FAsyncSHAVerify::DoWork()
 		FSHA1::HashBuffer(Buffer, BufferSize, CompareHash);
 		
 		// make sure it matches
-		bFailed = YMemory::Memcmp(Hash, CompareHash, sizeof(Hash)) != 0;
+		bFailed = FMemory::Memcmp(Hash, CompareHash, sizeof(Hash)) != 0;
 	}
 	else
 	{
@@ -943,7 +943,7 @@ void FAsyncSHAVerify::DoWork()
 	// delete the buffer if we should, now that we are done it
 	if (bShouldDeleteBuffer)
 	{
-		YMemory::Free(Buffer);
+		FMemory::Free(Buffer);
 	}
 
 	// if we failed, then call the failure callback

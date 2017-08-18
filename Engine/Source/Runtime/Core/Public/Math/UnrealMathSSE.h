@@ -54,7 +54,7 @@ FORCEINLINE VectorRegisterInt		MakeVectorRegisterInt(int32 X, int32 Y, int32 Z, 
 }
 
 // Constants:
-#include "SolidAngleVectorConstant.h"
+#include "UnrealVectorConstant.h"
 
 //Instinsics
 

@@ -166,7 +166,7 @@ public:
 				if (!bUserSuppliedMemory)
 				{
 					check(!Memory);
-					Memory = (uint8*)YMemory::Malloc(BytesToRead);
+					Memory = (uint8*)FMemory::Malloc(BytesToRead);
 					INC_MEMORY_STAT_BY(STAT_AsyncFileMemory, BytesToRead);
 				}
 				check(Memory);
@@ -185,10 +185,10 @@ public:
 			check(Memory);
 			if (!UserSuppliedMemory)
 			{
-				UserSuppliedMemory = (uint8*)YMemory::Malloc(InBytesToRead);
+				UserSuppliedMemory = (uint8*)FMemory::Malloc(InBytesToRead);
 				INC_MEMORY_STAT_BY(STAT_AsyncFileMemory, InBytesToRead);
 			}
-			YMemory::Memcpy(UserSuppliedMemory, Memory + InOffset - Offset, InBytesToRead);
+			FMemory::Memcpy(UserSuppliedMemory, Memory + InOffset - Offset, InBytesToRead);
 			return UserSuppliedMemory;
 		}
 		return nullptr;
@@ -263,7 +263,7 @@ FGenericReadRequest::~FGenericReadRequest()
 		if (!bUserSuppliedMemory)
 		{
 			DEC_MEMORY_STAT_BY(STAT_AsyncFileMemory, BytesToRead);
-			YMemory::Free(Memory);
+			FMemory::Free(Memory);
 		}
 		Memory = nullptr;
 	}
@@ -432,7 +432,7 @@ bool IPlatformFile::CopyFile(const TCHAR* To, const TCHAR* From, EPlatformFileRe
 	}
 	int64 AllocSize = YMath::Min<int64>(MaxBufferSize, Size);
 	check(AllocSize);
-	uint8* Buffer = (uint8*)YMemory::Malloc(int32(AllocSize));
+	uint8* Buffer = (uint8*)FMemory::Malloc(int32(AllocSize));
 	check(Buffer);
 	while (Size)
 	{
@@ -442,7 +442,7 @@ bool IPlatformFile::CopyFile(const TCHAR* To, const TCHAR* From, EPlatformFileRe
 		Size -= ThisSize;
 		check(Size >= 0);
 	}
-	YMemory::Free(Buffer);
+	FMemory::Free(Buffer);
 	return true;
 }
 

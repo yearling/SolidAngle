@@ -1,13 +1,13 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
-#include "UObject/SolidAngleNames.h"
+#include "UObject/UnrealNames.h"
 #include "Misc/AssertionMacros.h"
 #include "Misc/MessageDialog.h"
 #include "Math/NumericLimits.h"
-#include "Math/SolidAngleMathUtility.h"
-#include "HAL/SolidAngleMemory.h"
+#include "Math/UnrealMathUtility.h"
+#include "HAL/UnrealMemory.h"
 #include "Templates/AlignOf.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "Templates/UnrealTemplate.h"
 #include "Misc/CString.h"
 #include "Misc/Crc.h"
 #include "Containers/SolidAngleString.h"
@@ -955,7 +955,7 @@ void FName::StaticInit()
 	{
 		// Register all hardcoded names.
 		#define REGISTER_NAME(num,namestr) FName Temp_##namestr(EName(num), TEXT(#namestr));
-		#include "UObject/SolidAngleNames.inl"
+		#include "UObject/UnrealNames.inl"
 		#undef REGISTER_NAME
 	}
 
@@ -1319,7 +1319,7 @@ private:
 	void AllocateNewPool()
 	{
 		TotalAllocatedPages++;
-		CurrentPoolStart = (uint8*) YMemory::Malloc(PoolSize());
+		CurrentPoolStart = (uint8*) FMemory::Malloc(PoolSize());
 		CurrentPoolEnd = CurrentPoolStart + PoolSize();
 	}
 

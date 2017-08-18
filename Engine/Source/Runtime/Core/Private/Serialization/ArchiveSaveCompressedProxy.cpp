@@ -1,8 +1,8 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #include "Serialization/ArchiveSaveCompressedProxy.h"
-#include "Math/SolidAngleMathUtility.h"
-#include "HAL/SolidAngleMemory.h"
+#include "Math/UnrealMathUtility.h"
+#include "HAL/UnrealMemory.h"
 #include "Logging/LogMacros.h"
 #include "CoreGlobals.h"
 
@@ -28,7 +28,7 @@ YArchiveSaveCompressedProxy::YArchiveSaveCompressedProxy( TArray<uint8>& InCompr
 	CurrentIndex						= 0;
 
 	// Allocate temporary memory.
-	TmpDataStart	= (uint8*) YMemory::Malloc(LOADING_COMPRESSION_CHUNK_SIZE);
+	TmpDataStart	= (uint8*) FMemory::Malloc(LOADING_COMPRESSION_CHUNK_SIZE);
 	TmpDataEnd		= TmpDataStart + LOADING_COMPRESSION_CHUNK_SIZE;
 	TmpData			= TmpDataStart;
 }
@@ -39,7 +39,7 @@ YArchiveSaveCompressedProxy::~YArchiveSaveCompressedProxy()
 	// Flush is required to write out remaining tmp data to array.
 	Flush();
 	// Free temporary memory allocated.
-	YMemory::Free( TmpDataStart );
+	FMemory::Free( TmpDataStart );
 	TmpDataStart	= NULL;
 	TmpDataEnd		= NULL;
 	TmpData			= NULL;
@@ -81,7 +81,7 @@ void YArchiveSaveCompressedProxy::Serialize( void* InData, int64 Count )
 			CompressedData.AddUninitialized(BytesToAdd);
 		}
 		// Copy memory to array.
-		YMemory::Memcpy( &CompressedData[CurrentIndex], SrcData, Count );
+		FMemory::Memcpy( &CompressedData[CurrentIndex], SrcData, Count );
 		CurrentIndex += Count;
 	}
 	// Regular call to serialize, queue for compression.
@@ -93,7 +93,7 @@ void YArchiveSaveCompressedProxy::Serialize( void* InData, int64 Count )
 			// Enough room in buffer to copy some data.
 			if( BytesToCopy )
 			{
-				YMemory::Memcpy( TmpData, SrcData, BytesToCopy );
+				FMemory::Memcpy( TmpData, SrcData, BytesToCopy );
 				Count -= BytesToCopy;
 				TmpData += BytesToCopy;
 				SrcData += BytesToCopy;

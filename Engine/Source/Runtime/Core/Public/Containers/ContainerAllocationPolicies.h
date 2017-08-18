@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 #include "Templates/TypeCompatibleBytes.h"
 #include "HAL/PlatformMath.h"
 #include "Templates/MemoryOps.h"
@@ -42,7 +42,7 @@ FORCEINLINE int32 DefaultCalculateSlackShrink(int32 NumElements, int32 NumAlloca
 		{
 			if (bAllowQuantize)
 			{
-				Retval = YMemory::QuantizeSize(Retval * BytesPerElement, Alignment) / BytesPerElement;
+				Retval = FMemory::QuantizeSize(Retval * BytesPerElement, Alignment) / BytesPerElement;
 			}
 		}
 	}
@@ -67,7 +67,7 @@ FORCEINLINE int32 DefaultCalculateSlackGrow(int32 NumElements, int32 NumAllocate
 	}
 	if (bAllowQuantize)
 	{
-		Retval = YMemory::QuantizeSize(Grow * BytesPerElement, Alignment) / BytesPerElement;
+		Retval = FMemory::QuantizeSize(Grow * BytesPerElement, Alignment) / BytesPerElement;
 	}
 	else
 	{
@@ -88,7 +88,7 @@ FORCEINLINE int32 DefaultCalculateSlackReserve(int32 NumElements, SIZE_T BytesPe
 	checkSlow(NumElements > 0);
 	if (bAllowQuantize)
 	{
-		Retval = YMemory::QuantizeSize(SIZE_T(Retval) * SIZE_T(BytesPerElement), Alignment) / BytesPerElement;
+		Retval = FMemory::QuantizeSize(SIZE_T(Retval) * SIZE_T(BytesPerElement), Alignment) / BytesPerElement;
 		// NumElements and MaxElements are stored in 32 bit signed integers so we must be careful not to overflow here.
 		if (NumElements > Retval)
 		{
@@ -230,9 +230,9 @@ public:
 			if (Data)
 			{
 #if PLATFORM_HAS_UMA
-				YMemory::GPUFree(Data);
+				FMemory::GPUFree(Data);
 #else
-				YMemory::Free(Data);
+				FMemory::Free(Data);
 #endif
 			}
 
@@ -248,7 +248,7 @@ public:
 #if PLATFORM_HAS_UMA
 				// The RHI should have taken ownership of this memory, so we don't free it here
 #else
-				YMemory::Free(Data);
+				FMemory::Free(Data);
 #endif
 			}
 		}
@@ -264,14 +264,14 @@ public:
 			SIZE_T NumBytesPerElement
 		)
 		{
-			// Avoid calling YMemory::Realloc( nullptr, 0 ) as ANSI C mandates returning a valid pointer which is not what we want.
+			// Avoid calling FMemory::Realloc( nullptr, 0 ) as ANSI C mandates returning a valid pointer which is not what we want.
 			if (Data || NumElements)
 			{
 #if PLATFORM_HAS_UMA
-				Data = (FScriptContainerElement*)YMemory::GPURealloc(Data, NumElements*NumBytesPerElement, Alignment);
+				Data = (FScriptContainerElement*)FMemory::GPURealloc(Data, NumElements*NumBytesPerElement, Alignment);
 #else
 				//checkSlow(((uint64)NumElements*(uint64)ElementTypeInfo.GetSize() < (uint64)INT_MAX));
-				Data = (FScriptContainerElement*)YMemory::Realloc(Data, NumElements*NumBytesPerElement, Alignment);
+				Data = (FScriptContainerElement*)FMemory::Realloc(Data, NumElements*NumBytesPerElement, Alignment);
 #endif
 			}
 		}
@@ -356,7 +356,7 @@ public:
 
 			if (Data)
 			{
-				YMemory::Free(Data);
+				FMemory::Free(Data);
 			}
 
 			Data = Other.Data;
@@ -368,7 +368,7 @@ public:
 		{
 			if (Data)
 			{
-				YMemory::Free(Data);
+				FMemory::Free(Data);
 			}
 		}
 
@@ -379,11 +379,11 @@ public:
 		}
 		FORCEINLINE void ResizeAllocation(int32 PreviousNumElements, int32 NumElements, SIZE_T NumBytesPerElement)
 		{
-			// Avoid calling YMemory::Realloc( nullptr, 0 ) as ANSI C mandates returning a valid pointer which is not what we want.
+			// Avoid calling FMemory::Realloc( nullptr, 0 ) as ANSI C mandates returning a valid pointer which is not what we want.
 			if (Data || NumElements)
 			{
 				//checkSlow(((uint64)NumElements*(uint64)ElementTypeInfo.GetSize() < (uint64)INT_MAX));
-				Data = (FScriptContainerElement*)YMemory::Realloc(Data, NumElements*NumBytesPerElement);
+				Data = (FScriptContainerElement*)FMemory::Realloc(Data, NumElements*NumBytesPerElement);
 			}
 		}
 		FORCEINLINE int32 CalculateSlackReserve(int32 NumElements, int32 NumBytesPerElement) const

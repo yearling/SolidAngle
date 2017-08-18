@@ -4,7 +4,7 @@
 	UnMath.cpp: Unreal math routines
 =============================================================================*/
 
-#include "Math/SolidAngleMath.h"
+#include "Math/UnrealMath.h"
 #include "Stats/Stats.h"
 #include "Math/RandomStream.h"
 #include "UObject/PropertyPortFlags.h"

@@ -726,7 +726,7 @@ void* YMallocBinned2::ReallocExternal(void* Ptr, SIZE_T NewSize, uint32 Alignmen
 
 		// Reallocate and copy the data across
 		void* Result = YMallocBinned2::MallocExternal(NewSize, Alignment);
-		YMemory::Memcpy(Result, Ptr, YMath::Min<SIZE_T>(NewSize, BlockSize));
+		FMemory::Memcpy(Result, Ptr, YMath::Min<SIZE_T>(NewSize, BlockSize));
 		YMallocBinned2::FreeExternal(Ptr);
 		return Result;
 	}
@@ -753,7 +753,7 @@ void* YMallocBinned2::ReallocExternal(void* Ptr, SIZE_T NewSize, uint32 Alignmen
 	{
 		// Grow or shrink.
 		void* Result = YMallocBinned2::MallocExternal(NewSize, Alignment);
-		YMemory::Memcpy(Result, Ptr, YMath::Min<SIZE_T>(NewSize, PoolOSRequestedBytes));
+		FMemory::Memcpy(Result, Ptr, YMath::Min<SIZE_T>(NewSize, PoolOSRequestedBytes));
 		YMallocBinned2::FreeExternal(Ptr);
 		return Result;
 	}
@@ -1031,6 +1031,6 @@ void YMallocBinned2::FFreeBlock::CanaryFail() const
 	#if PLATFORM_USES_FIXED_GMalloc_CLASS && !FORCE_ANSI_ALLOCATOR && USE_MALLOC_BINNED2
 		//#define YMemory_INLINE_FUNCTION_DECORATOR  FORCEINLINE
 		#define YMemory_INLINE_GMalloc (YMallocBinned2::MallocBinned2)
-		#include "YMemory.inl"
+		#include "FMemory.inl"
 	#endif
 #endif

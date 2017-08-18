@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "HAL/SolidAngleMemory.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "HAL/UnrealMemory.h"
+#include "Math/UnrealMathUtility.h"
 #include "Math/Color.h"
 #include "Math/Vector.h"
 #include "Math/Vector4.h"
@@ -42,12 +42,12 @@ public:
 	/** Default constructor. */
 	TSHVector()
 	{
-		YMemory::Memzero(V,sizeof(V));
+		FMemory::Memzero(V,sizeof(V));
 	}
 
 	TSHVector(float V0, float V1, float V2, float V3)
 	{
-		YMemory::Memzero(V,sizeof(V));
+		FMemory::Memzero(V,sizeof(V));
 
 		V[0] = V0;
 		V[1] = V1;
@@ -57,7 +57,7 @@ public:
 
 	explicit TSHVector(const FVector4& Vector)
 	{
-		YMemory::Memzero(V,sizeof(V));
+		FMemory::Memzero(V,sizeof(V));
 
 		V[0] = Vector.X;
 		V[1] = Vector.Y;
@@ -71,12 +71,12 @@ public:
 	{
 		if (Order <= OtherOrder)
 		{
-			YMemory::Memcpy(V, Other.V, sizeof(V));
+			FMemory::Memcpy(V, Other.V, sizeof(V));
 		}
 		else
 		{
-			YMemory::Memzero(V);
-			YMemory::Memcpy(V, Other.V, sizeof(V));
+			FMemory::Memzero(V);
+			FMemory::Memcpy(V, Other.V, sizeof(V));
 		}
 	}	
 

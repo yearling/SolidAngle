@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
 #include "Containers/Array.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "Math/UnrealMathUtility.h"
 #include "Logging/LogMacros.h"
 #include "Serialization/BitReader.h"
 #include "Serialization/BitWriter.h"

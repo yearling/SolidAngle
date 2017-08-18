@@ -72,7 +72,7 @@ public:
 		*Ptr->PreTag = MEM_PreTag;
 		*((FMemDebug**)(AlignedPtr - sizeof(int32) - sizeof(FMemDebug*)))	= Ptr;
 		*(int32*)(AlignedPtr+Size) = MEM_PostTag;
-		YMemory::Memset( AlignedPtr, MEM_Tag, Size );
+		FMemory::Memset( AlignedPtr, MEM_Tag, Size );
 		if( GFirstDebug )
 		{
 			check(GIsCriticalError||GFirstDebug->PrevLink==&GFirstDebug);
@@ -95,7 +95,7 @@ public:
 			FMemDebug* Ptr = *((FMemDebug**)((uint8*)InPtr - sizeof(int32) - sizeof(FMemDebug*)));
 			check(GIsCriticalError||(Ptr->RefCount==1));
 			void* Result = Malloc( NewSize, Alignment );
-			YMemory::Memcpy( Result, InPtr, YMath::Min<SIZE_T>(Ptr->Size,NewSize) );
+			FMemory::Memcpy( Result, InPtr, YMath::Min<SIZE_T>(Ptr->Size,NewSize) );
 			Free( InPtr );
 			return Result;
 		}
@@ -129,7 +129,7 @@ public:
 		TotalAllocationSize -= Ptr->Size;
 		TotalWasteSize -= AllocatorOverhead;
 
-		YMemory::Memset( InPtr, MEM_WipeTag, Ptr->Size );	
+		FMemory::Memset( InPtr, MEM_WipeTag, Ptr->Size );	
 		Ptr->Size = 0;
 		Ptr->RefCount = 0;
 

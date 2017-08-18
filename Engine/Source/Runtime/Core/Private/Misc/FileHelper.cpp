@@ -116,7 +116,7 @@ bool FFileHelper::LoadFileToString( YString& Result, const TCHAR* Filename, uint
 		return true;
 	}
 
-	uint8* Ch = (uint8*)YMemory::Malloc(Size);
+	uint8* Ch = (uint8*)FMemory::Malloc(Size);
 	Reader->Serialize( Ch, Size );
 	bool Success = Reader->Close();
 	Reader = nullptr;
@@ -131,7 +131,7 @@ bool FFileHelper::LoadFileToString( YString& Result, const TCHAR* Filename, uint
 	else
 	{
 		// free manually since not running SHA task
-		YMemory::Free(Ch);
+		FMemory::Free(Ch);
 	}
 
 	return Success;

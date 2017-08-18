@@ -9,7 +9,7 @@
 
 class FNoncopyable;
 class FNoopCounter;
-struct YMemory;
+struct FMemory;
 
 /**
 * Base class for a lock free list of pointers
@@ -768,7 +768,7 @@ private:
 /**
 * Thread safe, lock free pooling allocator of fixed size blocks that
 * never returns free space, even at shutdown
-* alignment isn't handled, assumes YMemory::Malloc will work
+* alignment isn't handled, assumes FMemory::Malloc will work
 */
 
 #define USE_NIEVE_TLockFreeFixedSizeAllocator_TLSCacheBase (0) // this is useful for find who really leaked
@@ -804,7 +804,7 @@ public:
 	FORCEINLINE void* Allocate()
 	{
 #if USE_NIEVE_TLockFreeFixedSizeAllocator_TLSCacheBase
-		return YMemory::Malloc(SIZE);
+		return FMemory::Malloc(SIZE);
 #else
 		FThreadLocalCache& TLS = GetTLS();
 
@@ -820,7 +820,7 @@ public:
 				TLS.PartialBundle = GlobalFreeListBundles.Pop();
 				if (!TLS.PartialBundle)
 				{
-					TLS.PartialBundle = (void**)YMemory::Malloc(SIZE * NUM_PER_BUNDLE);
+					TLS.PartialBundle = (void**)FMemory::Malloc(SIZE * NUM_PER_BUNDLE);
 					void **Next = TLS.PartialBundle;
 					for (int32 Index = 0; Index < NUM_PER_BUNDLE - 1; Index++)
 					{
@@ -853,7 +853,7 @@ public:
 	FORCEINLINE void Free(void *Item)
 	{
 #if USE_NIEVE_TLockFreeFixedSizeAllocator_TLSCacheBase
-		return YMemory::Free(Item);
+		return FMemory::Free(Item);
 #else
 		NumUsed.Decrement();
 		NumFree.Increment();
@@ -2232,7 +2232,7 @@ public:
 		: NumPopped(0)
 		, NumPushed(0)
 	{
-		YMemory::Memzero(&Available[0], sizeof(void*) * DequeueCacheSize);
+		FMemory::Memzero(&Available[0], sizeof(void*) * DequeueCacheSize);
 	}
 
 	FORCEINLINE void* Pop()

@@ -5,8 +5,8 @@
 #if !PLATFORM_USE_SYSTEM_VSWPRINTF
 
 #include "GenericPlatform/StandardPlatformString.h"
-#include "HAL/SolidAngleMemory.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "HAL/UnrealMemory.h"
+#include "Templates/UnrealTemplate.h"
 #include "Logging/LogCategory.h"
 #include "Logging/LogMacros.h"
 
@@ -86,7 +86,7 @@ static int32 GetFormattingInfo(const WIDECHAR* Format, FFormatInfo& OutInfo)
 
 	const int32 FormatLength = Format - FormatStart;
 
-	YMemory::Memcpy(OutInfo.Format, FormatStart, FormatLength * sizeof(WIDECHAR));
+	FMemory::Memcpy(OutInfo.Format, FormatStart, FormatLength * sizeof(WIDECHAR));
 	int32 OutInfoFormatLength = FormatLength;
 	if (OutInfo.HasDynamicWidth && FChar::ToLower(OutInfo.Type) == LITERAL(WIDECHAR, 's'))
 	{
@@ -216,7 +216,7 @@ int32 FStandardPlatformString::GetVarArgs( WIDECHAR* Dest, SIZE_T DestSize, int3
 			{
 				if (Length < Count)
 				{
-					YMemory::Memcpy(Dest, FormattedArg, Length * sizeof(WIDECHAR));
+					FMemory::Memcpy(Dest, FormattedArg, Length * sizeof(WIDECHAR));
 					Dest += Length;
 				}
 				Count -= Length;

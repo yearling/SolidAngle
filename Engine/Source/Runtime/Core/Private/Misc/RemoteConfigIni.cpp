@@ -34,7 +34,7 @@ FRemoteConfigAsyncIOInfo& FRemoteConfigAsyncIOInfo::operator=(const FRemoteConfi
 	StartWriteTime = Other.StartWriteTime;
 	bReadIOFailed = Other.bReadIOFailed;
 	bWasProcessed = Other.bWasProcessed;
-	YMemory::Memcpy(DefaultIniFile, Other.DefaultIniFile, 1024);
+	FMemory::Memcpy(DefaultIniFile, Other.DefaultIniFile, 1024);
 
 	return *this;
 }

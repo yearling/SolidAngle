@@ -8,10 +8,10 @@
 #define YMemory_INLINE_GMalloc GMalloc
 #endif
 
-struct YMemory;
+struct FMemory;
 struct FScopedMallocTimer;
 
-YMemory_INLINE_FUNCTION_DECORATOR void* YMemory::Malloc(SIZE_T Count, uint32 Alignment)
+YMemory_INLINE_FUNCTION_DECORATOR void* FMemory::Malloc(SIZE_T Count, uint32 Alignment)
 {
 	if (!YMemory_INLINE_GMalloc)
 	{
@@ -22,7 +22,7 @@ YMemory_INLINE_FUNCTION_DECORATOR void* YMemory::Malloc(SIZE_T Count, uint32 Ali
 	return YMemory_INLINE_GMalloc->Malloc(Count, Alignment);
 }
 
-YMemory_INLINE_FUNCTION_DECORATOR void* YMemory::Realloc(void* Original, SIZE_T Count, uint32 Alignment)
+YMemory_INLINE_FUNCTION_DECORATOR void* FMemory::Realloc(void* Original, SIZE_T Count, uint32 Alignment)
 {
 	if (!YMemory_INLINE_GMalloc)
 	{
@@ -33,7 +33,7 @@ YMemory_INLINE_FUNCTION_DECORATOR void* YMemory::Realloc(void* Original, SIZE_T 
 	return YMemory_INLINE_GMalloc->Realloc(Original, Count, Alignment);
 }
 
-YMemory_INLINE_FUNCTION_DECORATOR void YMemory::Free(void* Original)
+YMemory_INLINE_FUNCTION_DECORATOR void FMemory::Free(void* Original)
 {
 	if (!Original)
 	{
@@ -51,7 +51,7 @@ YMemory_INLINE_FUNCTION_DECORATOR void YMemory::Free(void* Original)
 	YMemory_INLINE_GMalloc->Free(Original);
 }
 
-YMemory_INLINE_FUNCTION_DECORATOR SIZE_T YMemory::GetAllocSize(void* Original)
+YMemory_INLINE_FUNCTION_DECORATOR SIZE_T FMemory::GetAllocSize(void* Original)
 {
 	if (!YMemory_INLINE_GMalloc)
 	{
@@ -62,7 +62,7 @@ YMemory_INLINE_FUNCTION_DECORATOR SIZE_T YMemory::GetAllocSize(void* Original)
 	return YMemory_INLINE_GMalloc->GetAllocationSize(Original, Size) ? Size : 0;
 }
 
-YMemory_INLINE_FUNCTION_DECORATOR SIZE_T YMemory::QuantizeSize(SIZE_T Count, uint32 Alignment)
+YMemory_INLINE_FUNCTION_DECORATOR SIZE_T FMemory::QuantizeSize(SIZE_T Count, uint32 Alignment)
 {
 	if (!YMemory_INLINE_GMalloc)
 	{

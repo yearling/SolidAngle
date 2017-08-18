@@ -2,7 +2,7 @@
 // Code including this header is responsible for including the correct platform-specific header for SSE intrinsics.
 
 
-namespace SolidAnglePlatformMathSSE
+namespace UnrealPlatformMathSSE
 {
 	static FORCEINLINE float InvSqrt(float F)
 	{

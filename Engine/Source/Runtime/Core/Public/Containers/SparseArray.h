@@ -2,16 +2,16 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 #include "Templates/IsTriviallyCopyConstructible.h"
-#include "Templates/SolidAngleTypeTraits.h"
+#include "Templates/UnrealTypeTraits.h"
 #include "Templates/AlignOf.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "Templates/UnrealTemplate.h"
 #include "Templates/IsTriviallyDestructible.h"
 #include "Containers/ContainerAllocationPolicies.h"
 #include "Templates/Less.h"
 #include "Containers/Array.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "Math/UnrealMathUtility.h"
 #include "Containers/ScriptArray.h"
 #include "Containers/BitArray.h"
 
@@ -587,7 +587,7 @@ public:
 			else
 			{
 				// Use the much faster path for types that allow it
-				YMemory::Memcpy(Data.GetData(), InCopy.Data.GetData(), sizeof(FElementOrFreeListLink) * InCopy.GetMaxIndex());
+				FMemory::Memcpy(Data.GetData(), InCopy.Data.GetData(), sizeof(FElementOrFreeListLink) * InCopy.GetMaxIndex());
 			}
 		}
 		return *this;

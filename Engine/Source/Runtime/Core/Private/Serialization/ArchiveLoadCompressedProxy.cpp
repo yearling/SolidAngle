@@ -1,8 +1,8 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #include "Serialization/ArchiveLoadCompressedProxy.h"
-#include "Math/SolidAngleMathUtility.h"
-#include "HAL/SolidAngleMemory.h"
+#include "Math/UnrealMathUtility.h"
+#include "HAL/UnrealMemory.h"
 #include "Containers/Array.h"
 
 /*----------------------------------------------------------------------------
@@ -27,7 +27,7 @@ YArchiveLoadCompressedProxy::YArchiveLoadCompressedProxy( const TArray<uint8>& I
 	CurrentIndex						= 0;
 
 	// Allocate temporary memory.
-	TmpDataStart	= (uint8*) YMemory::Malloc(LOADING_COMPRESSION_CHUNK_SIZE);
+	TmpDataStart	= (uint8*) FMemory::Malloc(LOADING_COMPRESSION_CHUNK_SIZE);
 	TmpDataEnd		= TmpDataStart + LOADING_COMPRESSION_CHUNK_SIZE;
 	TmpData			= TmpDataEnd;
 }
@@ -36,7 +36,7 @@ YArchiveLoadCompressedProxy::YArchiveLoadCompressedProxy( const TArray<uint8>& I
 YArchiveLoadCompressedProxy::~YArchiveLoadCompressedProxy()
 {
 	// Free temporary memory allocated.
-	YMemory::Free( TmpDataStart );
+	FMemory::Free( TmpDataStart );
 	TmpDataStart	= NULL;
 	TmpDataEnd		= NULL;
 	TmpData			= NULL;
@@ -70,7 +70,7 @@ void YArchiveLoadCompressedProxy::Serialize( void* InData, int64 Count )
 	{
 		// Add space in array and copy data there.
 		check(CurrentIndex+Count<=CompressedData.Num());
-		YMemory::Memcpy( DstData, &CompressedData[CurrentIndex], Count );
+		FMemory::Memcpy( DstData, &CompressedData[CurrentIndex], Count );
 		CurrentIndex += Count;
 	}
 	// Regular call to serialize, read from temp buffer
@@ -86,7 +86,7 @@ void YArchiveLoadCompressedProxy::Serialize( void* InData, int64 Count )
 				// to copy the data but only care about pointing to the proper spot.
 				if( DstData )
 				{
-					YMemory::Memcpy( DstData, TmpData, BytesToCopy );
+					FMemory::Memcpy( DstData, TmpData, BytesToCopy );
 					DstData += BytesToCopy;
 				}
 				Count -= BytesToCopy;

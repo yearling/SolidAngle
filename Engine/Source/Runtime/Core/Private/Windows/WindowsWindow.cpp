@@ -1,8 +1,8 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #include "Windows/WindowsWindow.h"
-#include "Math/SolidAngleMathUtility.h"
-#include "HAL/SolidAngleMemory.h"
+#include "Math/UnrealMathUtility.h"
+#include "HAL/UnrealMemory.h"
 #include "Containers/SolidAngleString.h"
 #include "CoreGlobals.h"
 #include "Math/Vector2D.h"
@@ -275,9 +275,9 @@ FWindowsWindow::FWindowsWindow()
 	, DPIScaleFactor(1.0f)
 {
 	// PreFullscreenWindowPlacement.length will be set when we save the window placement and then used to check if the structure is valid
-	YMemory::Memzero(PreFullscreenWindowPlacement);
+	FMemory::Memzero(PreFullscreenWindowPlacement);
 
-	YMemory::Memzero(PreParentMinimizedWindowPlacement);
+	FMemory::Memzero(PreParentMinimizedWindowPlacement);
 	PreParentMinimizedWindowPlacement.length = sizeof(WINDOWPLACEMENT);
 }
 
@@ -325,7 +325,7 @@ HRGN FWindowsWindow::MakeWindowRegionObject(bool bIncludeBorderWhenMaximized) co
 				// and sizing windows. When maximized this means that our window position will be offset from the screen origin by (-cxWindowBorders,-cxWindowBorders). We want to
 				// display only the region within the maximized screen area, so offset our upper left and lower right by cxWindowBorders.
 				WINDOWINFO WindowInfo;
-				YMemory::Memzero(WindowInfo);
+				FMemory::Memzero(WindowInfo);
 				WindowInfo.cbSize = sizeof(WindowInfo);
 				::GetWindowInfo(HWnd, &WindowInfo);
 
@@ -387,7 +387,7 @@ void FWindowsWindow::AdjustWindowRegion( int32 Width, int32 Height )
 void FWindowsWindow::ReshapeWindow( int32 NewX, int32 NewY, int32 NewWidth, int32 NewHeight )
 {
 	WINDOWINFO WindowInfo;
-	YMemory::Memzero( WindowInfo );
+	FMemory::Memzero( WindowInfo );
 	WindowInfo.cbSize = sizeof( WindowInfo );
 	::GetWindowInfo( HWnd, &WindowInfo );
 
@@ -840,7 +840,7 @@ int32 FWindowsWindow::GetWindowBorderSize() const
 	}
 
 	WINDOWINFO WindowInfo;
-	YMemory::Memzero( WindowInfo );
+	FMemory::Memzero( WindowInfo );
 	WindowInfo.cbSize = sizeof( WindowInfo );
 	::GetWindowInfo( HWnd, &WindowInfo );
 

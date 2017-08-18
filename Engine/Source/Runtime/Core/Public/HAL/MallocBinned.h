@@ -3,7 +3,7 @@
 #include "CoreTypes.h"
 #include "HAL/MemoryBase.h"
 #include "Containers/Array.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "Math/UnrealMathUtility.h"
 #include "Stats/Stats.h"
 #include "HAL/MallocJemalloc.h"
 

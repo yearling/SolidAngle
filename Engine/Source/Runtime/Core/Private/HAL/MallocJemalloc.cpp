@@ -62,7 +62,7 @@ void* FMallocJemalloc::Realloc( void* Ptr, SIZE_T NewSize, uint32 Alignment )
 		NewPtr = Malloc(NewSize, Alignment);
 		if (Ptr)
 		{
-			YMemory::Memcpy(NewPtr, Ptr, OldSize);
+			FMemory::Memcpy(NewPtr, Ptr, OldSize);
 			Free(Ptr);
 		}
 	}

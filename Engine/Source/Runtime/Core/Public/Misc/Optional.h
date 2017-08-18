@@ -3,7 +3,7 @@
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
 #include "Templates/TypeCompatibleBytes.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "Templates/UnrealTemplate.h"
 
 /**
 * When we have an optional value IsSet() returns true, and GetValue() is meaningful.

@@ -3,7 +3,7 @@
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
 #include "Math/NumericLimits.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "Math/UnrealMathUtility.h"
 #include "Templates/Less.h"
 #include "Templates/Greater.h"
 #include "Containers/Array.h"

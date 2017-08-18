@@ -3,15 +3,15 @@
 #define SIMD_ALIGMENT (16)
 #elif PLATFORM_ENABLE_VECTORINTRINSICS
 #define SIMD_ALIGMENT (16)
-#include "SolidAngleMathSSE.h"
+#include "UnrealMathSSE.h"
 #elif PLATFORM_ENABLE_VECTORINTRINSICS_NEON
 #define SIME_ALIGNMENT (16)
-#include "SolidAngleMathNeon"
+#include "UnrealMathNeon"
 #else
 #define SIME_ALIGNMENT (4)
 #endif
 
-#include "SolidAngleMathVectorCommon.h"
+#include "UnrealMathVectorCommon.h"
 
 extern CORE_API  const VectorRegister VECTOR_INV_255;
 

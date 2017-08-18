@@ -2,7 +2,7 @@
 
 #include "Windows/WindowsCriticalSection.h"
 #include "Misc/AssertionMacros.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "Math/UnrealMathUtility.h"
 #include "Containers/SolidAngleString.h"
 #include "Windows/WindowsHWrapper.h"
 #include "Windows/AllowWindowsPlatformTypes.h"

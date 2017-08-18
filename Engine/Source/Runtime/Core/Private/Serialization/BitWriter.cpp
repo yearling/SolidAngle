@@ -28,7 +28,7 @@ FBitWriter::FBitWriter( int64 InMaxBits, bool InAllowResize /*=false*/ )
 	Buffer.AddUninitialized( (InMaxBits+7)>>3 );
 
 	AllowResize = InAllowResize;
-	YMemory::Memzero(Buffer.GetData(), Buffer.Num());
+	FMemory::Memzero(Buffer.GetData(), Buffer.Num());
 	ArIsPersistent = ArIsSaving = 1;
 }
 
@@ -50,7 +50,7 @@ void FBitWriter::Reset(void)
 {
 	FArchive::Reset();
 	Num = 0;
-	YMemory::Memzero(Buffer.GetData(), Buffer.Num());
+	FMemory::Memzero(Buffer.GetData(), Buffer.Num());
 	ArIsPersistent = ArIsSaving = 1;
 }
 
@@ -200,7 +200,7 @@ void FBitWriterMark::Pop( FBitWriter& Writer )
 	{
 		checkSlow(Start<Writer.Buffer.Num());
 		checkSlow(End<=Writer.Buffer.Num());
-		YMemory::Memzero( &Writer.Buffer[Start], End-Start );
+		FMemory::Memzero( &Writer.Buffer[Start], End-Start );
 	}
 	Writer.ArIsError = Overflowed;
 	Writer.Num       = Num;

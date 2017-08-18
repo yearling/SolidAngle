@@ -1,8 +1,8 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #include "HAL/MallocStomp.h"
-#include "Math/SolidAngleMathUtility.h"
-#include "HAL/SolidAngleMemory.h"
+#include "Math/UnrealMathUtility.h"
+#include "HAL/UnrealMemory.h"
 #include "HAL/IConsoleManager.h"
 
 
@@ -85,7 +85,7 @@ void* FMallocStomp::Realloc(void* InPtr, SIZE_T NewSize, uint32 Alignment)
 		ReturnPtr = Malloc(NewSize, Alignment);
 
 		FAllocationData *AllocDataPtr = reinterpret_cast<FAllocationData*>(reinterpret_cast<uint8*>(InPtr) - sizeof(FAllocationData));
-		YMemory::Memcpy(ReturnPtr, InPtr, YMath::Min(AllocDataPtr->Size, NewSize));
+		FMemory::Memcpy(ReturnPtr, InPtr, YMath::Min(AllocDataPtr->Size, NewSize));
 		Free(InPtr);
 	}
 	else

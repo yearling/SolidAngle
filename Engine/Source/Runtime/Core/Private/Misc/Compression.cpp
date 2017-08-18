@@ -2,7 +2,7 @@
 
 #include "Misc/Compression.h"
 #include "Misc/AssertionMacros.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 #include "Logging/LogMacros.h"
 #include "Misc/Parse.h"
 #include "Misc/CommandLine.h"
@@ -24,12 +24,12 @@ DECLARE_STATS_GROUP( TEXT( "Compression" ), STATGROUP_Compression, STATCAT_Advan
 
 static void *zalloc(void *opaque, unsigned int size, unsigned int num)
 {
-	return YMemory::Malloc(size * num);
+	return FMemory::Malloc(size * num);
 }
 
 static void zfree(void *opaque, void *p)
 {
-	YMemory::Free(p);
+	FMemory::Free(p);
 }
 
 /**
@@ -500,15 +500,15 @@ int32 FCompressedGrowableBuffer::Append( void* Data, int32 Size )
 		// we simply assert if it doesn't fit. For all practical purposes this works out fine and is what
 		// other code in the engine does as well.
 		int32 CompressedSize = MaxPendingBufferSize * 4 / 3;
-		void* TempBuffer = YMemory::Malloc( CompressedSize );
+		void* TempBuffer = FMemory::Malloc( CompressedSize );
 
 		// Compress the memory. CompressedSize is [in/out]
 		verify( YCompression::CompressMemory( CompressionFlags, TempBuffer, CompressedSize, PendingCompressionBuffer.GetData(), PendingCompressionBuffer.Num() ) );
 
 		// Append the compressed data to the compressed buffer and delete temporary data.
 		int32 StartIndex = CompressedBuffer.AddUninitialized( CompressedSize );
-		YMemory::Memcpy( &CompressedBuffer[StartIndex], TempBuffer, CompressedSize );
-		YMemory::Free( TempBuffer );
+		FMemory::Memcpy( &CompressedBuffer[StartIndex], TempBuffer, CompressedSize );
+		FMemory::Free( TempBuffer );
 
 		// Keep track of book keeping info for later access to data.
 		FBufferBookKeeping Info;
@@ -525,7 +525,7 @@ int32 FCompressedGrowableBuffer::Append( void* Data, int32 Size )
 	// Appends the data to the pending buffer. The pending buffer is compressed
 	// as needed above.
 	int32 StartIndex = PendingCompressionBuffer.AddUninitialized( Size );
-	YMemory::Memcpy( &PendingCompressionBuffer[StartIndex], Data, Size );
+	FMemory::Memcpy( &PendingCompressionBuffer[StartIndex], Data, Size );
 
 	// Return start offset in uncompressed memory.
 	int32 StartOffset = CurrentOffset;

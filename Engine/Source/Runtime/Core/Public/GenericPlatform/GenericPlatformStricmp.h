@@ -2,7 +2,7 @@
 
 #include "CoreTypes.h"
 #include "Templates/EnableIf.h"
-#include "Templates/SolidAngleTypeTraits.h"
+#include "Templates/UnrealTypeTraits.h"
 #include "Misc/Char.h"
 
 

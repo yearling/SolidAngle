@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Misc/AssertionMacros.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 #include "Misc/NoopCounter.h"
 #include "Containers/LockFreeList.h"
 
@@ -11,7 +11,7 @@
 /**
 * Thread safe, lock free pooling allocator of fixed size blocks that
 * never returns free space until program shutdown.
-* alignment isn't handled, assumes YMemory::Malloc will work
+* alignment isn't handled, assumes FMemory::Malloc will work
 */
 template<int32 SIZE, int TPaddingForCacheContention, typename TTrackingCounter = FNoopCounter>
 class TLockFreeFixedSizeAllocator
@@ -26,13 +26,13 @@ class TLockFreeFixedSizeAllocator
 
 public:
 
-	/** Destructor, returns all memory via YMemory::Free **/
+	/** Destructor, returns all memory via FMemory::Free **/
 	~TLockFreeFixedSizeAllocator()
 	{
 		check(!NumUsed.GetValue());
 		while (void* Mem = FreeList.Pop())
 		{
-			YMemory::Free(Mem);
+			FMemory::Free(Mem);
 			NumFree.Decrement();
 		}
 		check(!NumFree.GetValue());
@@ -55,7 +55,7 @@ public:
 		}
 		else
 		{
-			Memory = YMemory::Malloc(SIZE);
+			Memory = FMemory::Malloc(SIZE);
 		}
 		return Memory;
 	}
@@ -111,20 +111,20 @@ private:
 /**
 * Thread safe, lock free pooling allocator of fixed size blocks that
 * never returns free space until program shutdown.
-* alignment isn't handled, assumes YMemory::Malloc will work
+* alignment isn't handled, assumes FMemory::Malloc will work
 */
 template<int32 SIZE, int TPaddingForCacheContention, typename TTrackingCounter = FNoopCounter>
 class TLockFreeFixedSizeAllocator
 {
 public:
 
-	/** Destructor, returns all memory via YMemory::Free **/
+	/** Destructor, returns all memory via FMemory::Free **/
 	~TLockFreeFixedSizeAllocator()
 	{
 		check(!NumUsed.GetValue());
 		while (void* Mem = FreeList.Pop())
 		{
-			YMemory::Free(Mem);
+			FMemory::Free(Mem);
 			NumFree.Decrement();
 		}
 		check(!NumFree.GetValue());
@@ -146,7 +146,7 @@ public:
 		}
 		else
 		{
-			Memory = YMemory::Malloc(SIZE);
+			Memory = FMemory::Malloc(SIZE);
 		}
 		return Memory;
 	}
@@ -202,7 +202,7 @@ private:
 /**
 * Thread safe, lock free pooling allocator of fixed size blocks that
 * never returns free space, even at shutdown
-* alignment isn't handled, assumes YMemory::Malloc will work
+* alignment isn't handled, assumes FMemory::Malloc will work
 */
 template<int32 SIZE, int TPaddingForCacheContention, typename TTrackingCounter = FNoopCounter>
 class TLockFreeFixedSizeAllocator_TLSCache : public TLockFreeFixedSizeAllocator_TLSCacheBase<SIZE, TLockFreePointerListUnordered<void*, TPaddingForCacheContention>, TTrackingCounter>

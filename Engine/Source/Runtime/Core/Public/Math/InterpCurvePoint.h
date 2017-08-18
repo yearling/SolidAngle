@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "HAL/SolidAngleMemory.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "HAL/UnrealMemory.h"
+#include "Math/UnrealMathUtility.h"
 #include "Math/Color.h"
 #include "Math/Vector2D.h"
 #include "Containers/EnumAsByte.h"
@@ -146,8 +146,8 @@ FORCEINLINE FInterpCurvePoint<T>::FInterpCurvePoint( const float In, const T &Ou
 	: InVal(In)
 	, OutVal(Out)
 {
-	YMemory::Memset( &ArriveTangent, 0, sizeof(T) );	
-	YMemory::Memset( &LeaveTangent, 0, sizeof(T) );
+	FMemory::Memset( &ArriveTangent, 0, sizeof(T) );	
+	FMemory::Memset( &LeaveTangent, 0, sizeof(T) );
 
 	InterpMode = CIM_Linear;
 }

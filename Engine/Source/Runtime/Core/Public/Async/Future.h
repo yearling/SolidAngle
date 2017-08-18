@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "Templates/UnrealTemplate.h"
 #include "Templates/Function.h"
 #include "Misc/Timespan.h"
 #include "Templates/SharedPointer.h"

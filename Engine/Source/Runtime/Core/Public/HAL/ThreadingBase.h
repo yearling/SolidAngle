@@ -8,7 +8,7 @@
 #include "HAL/MemoryBase.h"
 #include "HAL/PlatformMisc.h"
 #include "HAL/PlatformMemory.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 #include "Templates/Function.h"
 
 #include "HAL/PlatformProperties.h"

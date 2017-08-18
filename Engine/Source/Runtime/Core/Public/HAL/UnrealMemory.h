@@ -78,10 +78,10 @@ struct FScopedMallocTimer
 
 
 /*-----------------------------------------------------------------------------
-YMemory.
+FMemory.
 -----------------------------------------------------------------------------*/
 
-struct CORE_API YMemory
+struct CORE_API FMemory
 {
 	/** @name Memory functions (wrapper for YPlatformMemory) */
 
@@ -151,7 +151,7 @@ struct CORE_API YMemory
 		static FORCEINLINE void MemSet(T& Src, uint8 ValueToSet)
 	{
 		static_assert(!TIsPointer<T>::Value, "For pointers use the three parameters function");
-		YMemory::Memset(&Src, ValueToSet, sizeof(T));
+		FMemory::Memset(&Src, ValueToSet, sizeof(T));
 	}
 
 	template< class T >
@@ -159,7 +159,7 @@ struct CORE_API YMemory
 		static FORCEINLINE void MemZero(T& Src)
 	{
 		static_assert(!TIsPointer<T>::Value, "For pointers use the two parameters function");
-		YMemory::Memset(&Src, 0, sizeof(T));
+		FMemory::Memset(&Src, 0, sizeof(T));
 	}
 
 	template< class T >
@@ -167,7 +167,7 @@ struct CORE_API YMemory
 		static FORCEINLINE void MemCopy(T& Dest, const T& Src)
 	{
 		static_assert(!TIsPointer<T>::Value, "For pointers use the three parameters function");
-		YMemory::Memcpy(&Dest, &Src, sizeof(T));
+		FMemory::Memcpy(&Dest, &Src, sizeof(T));
 	}
 
 	//
@@ -251,7 +251,7 @@ private:
 	static SIZE_T QuantizeSizeExternal(SIZE_T Count, uint32 Alignment = DEFAULT_ALIGNMENT);
 };
 
-#define INLINE_YMemory_OPERATION (0) // untested, but should work. Inlines YMemory::Malloc, etc
+#define INLINE_YMemory_OPERATION (0) // untested, but should work. Inlines FMemory::Malloc, etc
 
 #if INLINE_YMemory_OPERATION
 #if PLATFORM_USES_FIXED_GMalloc_CLASS
@@ -259,7 +259,7 @@ private:
 #endif
 
 #define YMemory_INLINE_FUNCTION_DECORATOR FORCEINLINE
-#include "YMemory.inl"
+#include "FMemory.inl"
 #endif
 
 #if PLATFORM_USES_FIXED_GMalloc_CLASS && !FORCE_ANSI_ALLOCATOR && USE_MALLOC_BINNED2

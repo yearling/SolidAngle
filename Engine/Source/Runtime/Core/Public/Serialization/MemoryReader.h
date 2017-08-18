@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "HAL/SolidAngleMemory.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "HAL/UnrealMemory.h"
+#include "Math/UnrealMathUtility.h"
 #include "Containers/SolidAngleString.h"
 #include "Serialization/MemoryArchive.h"
 
@@ -34,7 +34,7 @@ public:
 			// Only serialize if we have the requested amount of data
 			if (Offset + Num <= TotalSize())
 			{
-				YMemory::Memcpy( Data, &Bytes[Offset], Num );
+				FMemory::Memcpy( Data, &Bytes[Offset], Num );
 				Offset += Num;
 			}
 			else

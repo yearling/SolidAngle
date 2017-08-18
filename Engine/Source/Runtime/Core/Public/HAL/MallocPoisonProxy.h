@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
 #include "HAL/MemoryBase.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 
 /** Governs when malloc that poisons the allocations is enabled. */
 #if !defined(UE_USE_MALLOC_FILL_BYTES)
@@ -47,7 +47,7 @@ public:
 		void* Result = UsedMalloc->Malloc(Size, Alignment);
 		if (LIKELY(Result != nullptr && Size > 0))
 		{
-			YMemory::Memset(Result, UE_DEBUG_FILL_NEW, Size);
+			FMemory::Memset(Result, UE_DEBUG_FILL_NEW, Size);
 		}
 		return Result;
 	}
@@ -61,14 +61,14 @@ public:
 		SIZE_T OldSize = 0;
 		if (Ptr != nullptr && GetAllocationSize(Ptr, OldSize) && OldSize > 0 && OldSize > NewSize)
 		{
-			YMemory::Memset(static_cast<uint8*>(Ptr) + NewSize, UE_DEBUG_FILL_FREED, OldSize - NewSize);
+			FMemory::Memset(static_cast<uint8*>(Ptr) + NewSize, UE_DEBUG_FILL_FREED, OldSize - NewSize);
 		}
 
 		void* Result = UsedMalloc->Realloc(Ptr, NewSize, Alignment);
 
 		if (Result != nullptr && OldSize > 0 && OldSize < NewSize)
 		{
-			YMemory::Memset(static_cast<uint8*>(Result) + OldSize, UE_DEBUG_FILL_NEW, NewSize - OldSize);
+			FMemory::Memset(static_cast<uint8*>(Result) + OldSize, UE_DEBUG_FILL_NEW, NewSize - OldSize);
 		}
 
 		return Result;
@@ -82,7 +82,7 @@ public:
 			SIZE_T AllocSize;
 			if (LIKELY(GetAllocationSize(Ptr, AllocSize) && AllocSize > 0))
 			{
-				YMemory::Memset(Ptr, UE_DEBUG_FILL_FREED, AllocSize);
+				FMemory::Memset(Ptr, UE_DEBUG_FILL_FREED, AllocSize);
 			}
 			UsedMalloc->Free(Ptr);
 		}

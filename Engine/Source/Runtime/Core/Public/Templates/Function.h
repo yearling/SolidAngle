@@ -2,14 +2,14 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 #include "Templates/AreTypesEqual.h"
-#include "Templates/SolidAngleTypeTraits.h"
+#include "Templates/UnrealTypeTraits.h"
 #include "Templates/RemoveReference.h"
 #include "Templates/Decay.h"
 #include "Templates/Invoke.h"
 #include "Containers/ContainerAllocationPolicies.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "Math/UnrealMathUtility.h"
 #include <new>
 
 
@@ -304,7 +304,7 @@ namespace UE4Function_Private
 #if ENABLE_TFUNCTIONREF_VISUALIZATION
 			// Use Memcpy to copy the other DebugPtrStorage, including vptr (because we don't know the bound type
 			// here), and then reseat the underlying pointer.  Possibly even more evil than the Set code.
-			YMemory::Memcpy(&DebugPtrStorage, &Other.DebugPtrStorage, sizeof(DebugPtrStorage));
+			FMemory::Memcpy(&DebugPtrStorage, &Other.DebugPtrStorage, sizeof(DebugPtrStorage));
 			DebugPtrStorage.Ptr = Functor;
 #endif
 		}
@@ -616,7 +616,7 @@ public:
 	*/
 	TFunction& operator=(TFunction Other)
 	{
-		YMemory::Memswap(&Other, this, sizeof(TFunction));
+		FMemory::Memswap(&Other, this, sizeof(TFunction));
 		return *this;
 	}
 

@@ -5,8 +5,8 @@
 =============================================================================*/
 
 #include "HAL/MallocTBB.h"
-#include "Math/SolidAngleMathUtility.h"
-#include "HAL/SolidAngleMemory.h"
+#include "Math/UnrealMathUtility.h"
+#include "HAL/UnrealMemory.h"
 
 // Only use for supported platforms
 #if PLATFORM_SUPPORTS_TBB && TBB_ALLOCATOR_ALLOWED
@@ -54,7 +54,7 @@ void* TMallocTBB::Malloc( SIZE_T Size, uint32 Alignment )
 #if UE_BUILD_DEBUG || UE_BUILD_DEVELOPMENT
 	else if (Size)
 	{
-		YMemory::Memset(NewPtr, DEBUG_FILL_NEW, Size); 
+		FMemory::Memset(NewPtr, DEBUG_FILL_NEW, Size); 
 	}
 #endif
 	MEM_TIME(MemTime += FPlatformTime::Seconds());
@@ -73,7 +73,7 @@ void* TMallocTBB::Realloc( void* Ptr, SIZE_T NewSize, uint32 Alignment )
 		OldSize = scalable_msize(Ptr);
 		if (NewSize < OldSize)
 		{
-			YMemory::Memset((uint8*)Ptr + NewSize, DEBUG_FILL_FREED, OldSize - NewSize); 
+			FMemory::Memset((uint8*)Ptr + NewSize, DEBUG_FILL_FREED, OldSize - NewSize); 
 		}
 	}
 #endif
@@ -90,7 +90,7 @@ void* TMallocTBB::Realloc( void* Ptr, SIZE_T NewSize, uint32 Alignment )
 #if UE_BUILD_DEBUG || UE_BUILD_DEVELOPMENT
 	if (NewPtr && NewSize > OldSize )
 	{
-		YMemory::Memset((uint8*)NewPtr + OldSize, DEBUG_FILL_NEW, NewSize - OldSize); 
+		FMemory::Memset((uint8*)NewPtr + OldSize, DEBUG_FILL_NEW, NewSize - OldSize); 
 	}
 #endif
 	if( !NewPtr && NewSize )
@@ -109,7 +109,7 @@ void TMallocTBB::Free( void* Ptr )
 	}
 	MEM_TIME(MemTime -= FPlatformTime::Seconds())
 #if UE_BUILD_DEBUG || UE_BUILD_DEVELOPMENT
-	YMemory::Memset(Ptr, DEBUG_FILL_FREED, scalable_msize(Ptr)); 
+	FMemory::Memset(Ptr, DEBUG_FILL_FREED, scalable_msize(Ptr)); 
 #endif
 	IncrementTotalFreeCalls();
 	scalable_free(Ptr);

@@ -4,12 +4,12 @@
 
 #include "CoreTypes.h"
 #include "Templates/IsPointer.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 #include "Templates/EnableIf.h"
 #include "Templates/AndOrNot.h"
 #include "Templates/AreTypesEqual.h"
 #include "Templates/IsArithmetic.h"
-#include "Templates/SolidAngleTypeTraits.h"
+#include "Templates/UnrealTypeTraits.h"
 #include "Templates/RemoveReference.h"
 #include "Templates/TypeCompatibleBytes.h"
 #include "Traits/IsContiguousContainer.h"
@@ -417,9 +417,9 @@ template <typename T>
 inline typename TEnableIf<TUseBitwiseSwap<T>::Value>::Type Swap(T& A, T& B)
 {
 	TTypeCompatibleBytes<T> Temp;
-	YMemory::Memcpy(&Temp, &A, sizeof(T));
-	YMemory::Memcpy(&A, &B, sizeof(T));
-	YMemory::Memcpy(&B, &Temp, sizeof(T));
+	FMemory::Memcpy(&Temp, &A, sizeof(T));
+	FMemory::Memcpy(&A, &B, sizeof(T));
+	FMemory::Memcpy(&B, &Temp, sizeof(T));
 }
 
 template <typename T>

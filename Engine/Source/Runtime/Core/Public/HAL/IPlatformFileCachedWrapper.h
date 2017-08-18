@@ -4,9 +4,9 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "HAL/SolidAngleMemory.h"
-#include "Templates/SolidAngleTemplate.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "HAL/UnrealMemory.h"
+#include "Templates/UnrealTemplate.h"
+#include "Math/UnrealMathUtility.h"
 #include "Serialization/Archive.h"
 #include "Containers/SolidAngleString.h"
 #include "Misc/Parse.h"
@@ -78,7 +78,7 @@ public:
 			if (CacheIndex < CacheCount)
 			{
 				int64 CopyBytes = CacheEnd[CacheIndex] - FilePos;
-				YMemory::Memcpy(Destination, BufferCache[CacheIndex] + (FilePos - CacheStart[CacheIndex]), CopyBytes);
+				FMemory::Memcpy(Destination, BufferCache[CacheIndex] + (FilePos - CacheStart[CacheIndex]), CopyBytes);
 				FilePos += CopyBytes;
 				BytesToRead -= CopyBytes;
 				Destination += CopyBytes;
@@ -125,7 +125,7 @@ public:
 					// Analyzer doesn't see this - if this code ever changes make sure there are no buffer overruns!
 					CA_ASSUME(CacheIndex < CacheCount);
 					uint64 CorrectedBytesToRead = YMath::Min<uint64>(BytesToRead, CacheEnd[CacheIndex] - FilePos);
-					YMemory::Memcpy(Destination, BufferCache[CacheIndex] + (FilePos - CacheStart[CacheIndex]), CorrectedBytesToRead);
+					FMemory::Memcpy(Destination, BufferCache[CacheIndex] + (FilePos - CacheStart[CacheIndex]), CorrectedBytesToRead);
 					FilePos += CorrectedBytesToRead;
 					Destination += CorrectedBytesToRead;
 					BytesToRead -= CorrectedBytesToRead;

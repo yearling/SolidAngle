@@ -5,7 +5,7 @@
 #include "HAL/PlatformMath.h"
 #include "HAL/MemoryBase.h"
 #include "HAL/PlatformMisc.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 #include "HAL/PlatformString.h"
 #include "HAL/PlatformProperties.h"
 #include "HAL/PlatformProcess.h"

@@ -1,7 +1,7 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #include "GenericPlatform/GenericPlatformString.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 #include "Misc/Char.h"
 #include "Containers/SolidAngleString.h"
 #include "Logging/LogMacros.h"
@@ -16,7 +16,7 @@ template <> const TCHAR* YGenericPlatformString::GetEncodingTypeName<UCS2CHAR>()
 
 void* YGenericPlatformString::Memcpy(void* Dest, const void* Src, SIZE_T Count)
 {
-	return YMemory::Memcpy(Dest, Src, Count);
+	return FMemory::Memcpy(Dest, Src, Count);
 }
 
 namespace

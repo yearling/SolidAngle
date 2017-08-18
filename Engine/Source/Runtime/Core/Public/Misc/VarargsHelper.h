@@ -2,8 +2,8 @@
 
 #include "CoreTypes.h"
 #include "Misc/VarArgs.h"
-#include "HAL/SolidAngleMemory.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "HAL/UnrealMemory.h"
+#include "Templates/UnrealTemplate.h"
 
 // Pulled the two YOutputDevice::Logf functions into shared code. Needs to be a #define
 // since it uses GET_VARARGS_RESULT which uses the va_list stuff which operates on the
@@ -23,9 +23,9 @@
 	/* if that fails, then use heap allocation to make enough space */ \
 	while(Result == -1) \
 	{ \
-		YMemory::SystemFree(AllocatedBuffer); \
+		FMemory::SystemFree(AllocatedBuffer); \
 		/* We need to use malloc here directly as GMalloc might not be safe. */ \
-		Buffer = AllocatedBuffer = (TCHAR*) YMemory::SystemMalloc( BufferSize * sizeof(TCHAR) ); \
+		Buffer = AllocatedBuffer = (TCHAR*) FMemory::SystemMalloc( BufferSize * sizeof(TCHAR) ); \
 		GET_VARARGS_RESULT( Buffer, BufferSize, BufferSize-1, Fmt, Fmt, Result ); \
 		BufferSize *= 2; \
 	}; \
@@ -33,5 +33,5 @@
 	; \
 \
 	SerializeFunc; \
-	YMemory::SystemFree(AllocatedBuffer);
+	FMemory::SystemFree(AllocatedBuffer);
 

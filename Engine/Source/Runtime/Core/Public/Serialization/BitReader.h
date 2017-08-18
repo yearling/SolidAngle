@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 #include "Serialization/Archive.h"
 #include "Containers/Array.h"
 
@@ -34,7 +34,7 @@ public:
 				SetOverflowed(LengthBits);
 				//UE_LOG( LogNetSerialization, Error, TEXT( "FBitReader::SerializeBits: Pos + LengthBits > Num" ) );
 			}
-			YMemory::Memzero( Dest, (LengthBits+7)>>3 );
+			FMemory::Memzero( Dest, (LengthBits+7)>>3 );
 			return;
 		}
 		//for( int32 i=0; i<LengthBits; i++,Pos++ )

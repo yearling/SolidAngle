@@ -4,7 +4,7 @@
 #include "CoreTypes.h"
 #include "HAL/PlatformAtomics.h"
 #include "Misc/AssertionMacros.h"
-#include "Templates/SolidAngleTypeTraits.h"
+#include "Templates/UnrealTypeTraits.h"
 #include "Containers/Array.h"
 #include "Containers/SolidAngleString.h"
 #include "Containers/Map.h"

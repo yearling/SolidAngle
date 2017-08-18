@@ -46,7 +46,7 @@ public:
 	/**
 	* Captures the current stack and updates stack tracking information.
 	* optionally stores a user data pointer that the tracker will take ownership of and delete upon reset
-	* you must allocate the memory with YMemory::Malloc()
+	* you must allocate the memory with FMemory::Malloc()
 	* EntriesToIgnore are removed from the top of then stack, then we keep at most StackLen of the remaining entries.
 	*/
 	CORE_API void CaptureStackTrace(int32 EntriesToIgnore = 2, void* UserData = nullptr, int32 StackLen = MAX_int32, bool bLookupStringsForAliasRemoval = false);

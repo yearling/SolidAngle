@@ -7,15 +7,15 @@
 #include "Misc/VarArgs.h"
 #include "Misc/OutputDevice.h"
 #include "Misc/AssertionMacros.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 #include "Templates/IsArithmetic.h"
-#include "Templates/SolidAngleTypeTraits.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "Templates/UnrealTypeTraits.h"
+#include "Templates/UnrealTemplate.h"
 #include "Math/NumericLimits.h"
 #include "Containers/Array.h"
 #include "Misc/CString.h"
 #include "Misc/Crc.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "Math/UnrealMathUtility.h"
 
 struct YStringFormatArg;
 template<typename KeyType, typename ValueType, typename SetAllocator, typename KeyFuncs > class TMap;
@@ -198,7 +198,7 @@ public:
 
 			if (Len)
 			{
-				YMemory::Memcpy(Data.GetData(), Other, Len * sizeof(TCHAR));
+				FMemory::Memcpy(Data.GetData(), Other, Len * sizeof(TCHAR));
 			}
 		}
 		return *this;

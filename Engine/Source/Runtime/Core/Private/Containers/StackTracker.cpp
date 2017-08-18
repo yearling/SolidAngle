@@ -12,7 +12,7 @@ DEFINE_LOG_CATEGORY_STATIC(LogStackTracker, Log, All);
 /**
  * Captures the current stack and updates stack tracking information.
  * optionally stores a user data pointer that the tracker will take ownership of and delete upon reset
- * you must allocate the memory with YMemory::Malloc()
+ * you must allocate the memory with FMemory::Malloc()
  */
 void FStackTracker::CaptureStackTrace(int32 EntriesToIgnore, void* UserData, int32 StackLen, bool bLookupStringsForAliasRemoval)
 {
@@ -26,7 +26,7 @@ void FStackTracker::CaptureStackTrace(int32 EntriesToIgnore, void* UserData, int
 		int32 Size = (MAX_BACKTRACE_DEPTH + EntriesToIgnore) * sizeof(uint64);
 		uint64* FullBackTrace = static_cast<uint64*>(YMemory_Alloca(Size));
 
-		YMemory::Memzero(FullBackTrace, Size);
+		FMemory::Memzero(FullBackTrace, Size);
 
 		FPlatformStackWalk::CaptureStackBackTrace( FullBackTrace, MAX_BACKTRACE_DEPTH + EntriesToIgnore );
 		CA_ASSUME(FullBackTrace);
@@ -35,7 +35,7 @@ void FStackTracker::CaptureStackTrace(int32 EntriesToIgnore, void* UserData, int
 		uint64* BackTrace = &FullBackTrace[EntriesToIgnore];
 		if (StackLen < MAX_BACKTRACE_DEPTH)
 		{
-			YMemory::Memzero(BackTrace + StackLen, sizeof(uint64) * (MAX_BACKTRACE_DEPTH - StackLen));
+			FMemory::Memzero(BackTrace + StackLen, sizeof(uint64) * (MAX_BACKTRACE_DEPTH - StackLen));
 		}
 		if (bLookupStringsForAliasRemoval)
 		{
@@ -92,7 +92,7 @@ void FStackTracker::CaptureStackTrace(int32 EntriesToIgnore, void* UserData, int
 			//and had a chance to update their data inside the above callback
 			if (UserData)
 			{
-				YMemory::Free(UserData);
+				FMemory::Free(UserData);
 			}
 		}
 		// Encountered new call stack, add to array and set index mapping.
@@ -104,7 +104,7 @@ void FStackTracker::CaptureStackTrace(int32 EntriesToIgnore, void* UserData, int
 
 			// Fill in callstack and count.
 			FCallStack& CallStack = CallStacks[Index];
-			YMemory::Memcpy( CallStack.Addresses, BackTrace, sizeof(uint64) * MAX_BACKTRACE_DEPTH );
+			FMemory::Memcpy( CallStack.Addresses, BackTrace, sizeof(uint64) * MAX_BACKTRACE_DEPTH );
 			CallStack.StackCount = 1;
 			CallStack.UserData = UserData;
 		}
@@ -231,7 +231,7 @@ void FStackTracker::ResetTracking()
 	{
 		if (CallStacks[i].UserData)
 		{
-			YMemory::Free(CallStacks[i].UserData);
+			FMemory::Free(CallStacks[i].UserData);
 		}
 	}
 

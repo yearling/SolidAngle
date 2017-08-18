@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Templates/IsPODType.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "Templates/UnrealTemplate.h"
 
 // TAutoPointer wraps a smart-pointer and adds an implicit conversion to raw pointer
 // Its main use is for converting a variable from raw pointer to a smart pointer without breaking existing code

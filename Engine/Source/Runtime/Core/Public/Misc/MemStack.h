@@ -4,10 +4,10 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 #include "Templates/AlignOf.h"
 #include "Containers/ContainerAllocationPolicies.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "Math/UnrealMathUtility.h"
 #include "Templates/AlignmentTemplates.h"
 #include "HAL/ThreadSingleton.h"
 #include "HAL/ThreadSafeCounter.h"
@@ -211,13 +211,13 @@ template <class T> inline T* New(FMemStackBase& Mem, int32 Count = 1, int32 Alig
 template <class T> inline T* NewZeroed(FMemStackBase& Mem, int32 Count = 1, int32 Align = DEFAULT_ALIGNMENT)
 {
 	uint8* Result = Mem.PushBytes(Count * sizeof(T), Align);
-	YMemory::Memzero(Result, Count * sizeof(T));
+	FMemory::Memzero(Result, Count * sizeof(T));
 	return (T*)Result;
 }
 template <class T> inline T* NewOned(FMemStackBase& Mem, int32 Count = 1, int32 Align = DEFAULT_ALIGNMENT)
 {
 	uint8* Result = Mem.PushBytes(Count * sizeof(T), Align);
-	YMemory::Memset(Result, 0xff, Count * sizeof(T));
+	FMemory::Memset(Result, 0xff, Count * sizeof(T));
 	return (T*)Result;
 }
 
@@ -236,14 +236,14 @@ inline void* operator new(size_t Size, FMemStackBase& Mem, EMemZeroed Tag, int32
 {
 	// Get zero-filled memory.
 	uint8* Result = Mem.PushBytes(Size*Count, Align);
-	YMemory::Memzero(Result, Size*Count);
+	FMemory::Memzero(Result, Size*Count);
 	return Result;
 }
 inline void* operator new(size_t Size, FMemStackBase& Mem, EMemOned Tag, int32 Count = 1, int32 Align = DEFAULT_ALIGNMENT)
 {
 	// Get one-filled memory.
 	uint8* Result = Mem.PushBytes(Size*Count, Align);
-	YMemory::Memset(Result, 0xff, Size*Count);
+	FMemory::Memset(Result, 0xff, Size*Count);
 	return Result;
 }
 inline void* operator new[](size_t Size, FMemStackBase& Mem, int32 Count = 1, int32 Align = DEFAULT_ALIGNMENT)
@@ -255,14 +255,14 @@ inline void* operator new[](size_t Size, FMemStackBase& Mem, EMemZeroed Tag, int
 {
 	// Get zero-filled memory.
 	uint8* Result = Mem.PushBytes(Size*Count, Align);
-	YMemory::Memzero(Result, Size*Count);
+	FMemory::Memzero(Result, Size*Count);
 	return Result;
 }
 inline void* operator new[](size_t Size, FMemStackBase& Mem, EMemOned Tag, int32 Count = 1, int32 Align = DEFAULT_ALIGNMENT)
 {
 	// Get one-filled memory.
 	uint8* Result = Mem.PushBytes(Size*Count, Align);
-	YMemory::Memset(Result, 0xff, Size*Count);
+	FMemory::Memset(Result, 0xff, Size*Count);
 	return Result;
 }
 
@@ -306,7 +306,7 @@ public:
 				if (OldData && PreviousNumElements)
 				{
 					const int32 NumCopiedElements = YMath::Min(NumElements, PreviousNumElements);
-					YMemory::Memcpy(Data, OldData, NumCopiedElements * NumBytesPerElement);
+					FMemory::Memcpy(Data, OldData, NumCopiedElements * NumBytesPerElement);
 				}
 			}
 		}

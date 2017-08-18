@@ -4,8 +4,8 @@
 #include "HAL/PlatformMemory.h"
 #include "HAL/PlatformMisc.h"
 #include "Misc/AssertionMacros.h"
-#include "Math/SolidAngleMathUtility.h"
-#include "HAL/SolidAngleMemory.h"
+#include "Math/UnrealMathUtility.h"
+#include "HAL/UnrealMemory.h"
 #include "CoreGlobals.h"
 #include "Misc/Parse.h"
 #include "Misc/EngineVersionBase.h"
@@ -453,7 +453,7 @@ uint32 WINAPI StartSplashScreenThread( LPVOID unused )
 			// Create small font
 			{
 				LOGFONT MyFont;
-				YMemory::Memzero( &MyFont, sizeof( MyFont ) );
+				FMemory::Memzero( &MyFont, sizeof( MyFont ) );
 				GetObjectW( SystemFontHandle, sizeof( MyFont ), &MyFont );
 				MyFont.lfHeight = 10;
 				// MyFont.lfQuality = ANTIALIASED_QUALITY;
@@ -468,7 +468,7 @@ uint32 WINAPI StartSplashScreenThread( LPVOID unused )
 			// Create normal font
 			{
 				LOGFONT MyFont;
-				YMemory::Memzero( &MyFont, sizeof( MyFont ) );
+				FMemory::Memzero( &MyFont, sizeof( MyFont ) );
 				GetObjectW( SystemFontHandle, sizeof( MyFont ), &MyFont );
 				MyFont.lfHeight = 12;
 				// MyFont.lfQuality = ANTIALIASED_QUALITY;
@@ -483,7 +483,7 @@ uint32 WINAPI StartSplashScreenThread( LPVOID unused )
 			// Create title font
 			{
 				LOGFONT MyFont;
-				YMemory::Memzero(&MyFont, sizeof( MyFont ));
+				FMemory::Memzero(&MyFont, sizeof( MyFont ));
 				GetObjectW(SystemFontHandle, sizeof( MyFont ), &MyFont);
 				MyFont.lfHeight = 40;
 				MyFont.lfWeight = FW_BOLD;

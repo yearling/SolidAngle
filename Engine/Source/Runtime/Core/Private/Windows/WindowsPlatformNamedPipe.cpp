@@ -6,7 +6,7 @@
 #include "HAL/PlatformProcess.h"
 #include "Misc/AssertionMacros.h"
 #include "Logging/LogMacros.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 #include "Misc/CString.h"
 #include "Containers/SolidAngleString.h"
 #include "CoreGlobals.h"
@@ -34,7 +34,7 @@ FWindowsPlatformNamedPipe::FWindowsPlatformNamedPipe() :
 	bIsServer(false),
 	State(FPlatformNamedPipe::State_Uninitialized)
 {
-	YMemory::Memzero(Overlapped);
+	FMemory::Memzero(Overlapped);
 }
 
 FWindowsPlatformNamedPipe::~FWindowsPlatformNamedPipe()
@@ -81,7 +81,7 @@ bool FWindowsPlatformNamedPipe::Create(const YString& PipeName, bool bAsServer, 
 		return false;
 	}
 
-	YMemory::Memzero(Overlapped);
+	FMemory::Memzero(Overlapped);
 
 	State = bAsServer ? State_Created : State_ReadyForRW;
 

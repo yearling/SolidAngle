@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Templates/PointerConvertibleFromTo.h"
 #include "Misc/AssertionMacros.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 #include "Containers/Array.h"
 #include "Containers/Map.h"
 #include "CoreGlobals.h"
@@ -314,7 +314,7 @@ public:
 
 	FORCEINLINE TSharedRef& operator=(TSharedRef&& InSharedRef)
 	{
-		YMemory::Memswap(this, &InSharedRef, sizeof(TSharedRef));
+		FMemory::Memswap(this, &InSharedRef, sizeof(TSharedRef));
 		return *this;
 	}
 

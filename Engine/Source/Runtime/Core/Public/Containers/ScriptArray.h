@@ -2,7 +2,7 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 #include "Containers/ContainerAllocationPolicies.h"
 #include "Containers/Array.h"
 #include <initializer_list>
@@ -38,7 +38,7 @@ public:
 	void InsertZeroed(int32 Index, int32 Count, int32 NumBytesPerElement)
 	{
 		Insert(Index, Count, NumBytesPerElement);
-		YMemory::Memzero((uint8*)this->GetAllocation() + Index*NumBytesPerElement, Count*NumBytesPerElement);
+		FMemory::Memzero((uint8*)this->GetAllocation() + Index*NumBytesPerElement, Count*NumBytesPerElement);
 	}
 	void Insert(int32 Index, int32 Count, int32 NumBytesPerElement)
 	{
@@ -53,7 +53,7 @@ public:
 		{
 			ResizeGrow(OldNum, NumBytesPerElement);
 		}
-		YMemory::Memmove
+		FMemory::Memmove
 		(
 			(uint8*)this->GetAllocation() + (Index + Count)*NumBytesPerElement,
 			(uint8*)this->GetAllocation() + (Index)*NumBytesPerElement,
@@ -77,7 +77,7 @@ public:
 	int32 AddZeroed(int32 Count, int32 NumBytesPerElement)
 	{
 		const int32 Index = Add(Count, NumBytesPerElement);
-		YMemory::Memzero((uint8*)this->GetAllocation() + Index*NumBytesPerElement, Count*NumBytesPerElement);
+		FMemory::Memzero((uint8*)this->GetAllocation() + Index*NumBytesPerElement, Count*NumBytesPerElement);
 		return Index;
 	}
 	void Shrink(int32 NumBytesPerElement)
@@ -100,7 +100,7 @@ public:
 	}
 	void SwapMemory(int32 A, int32 B, int32 NumBytesPerElement)
 	{
-		YMemory::Memswap(
+		FMemory::Memswap(
 			(uint8*)this->GetAllocation() + (NumBytesPerElement*A),
 			(uint8*)this->GetAllocation() + (NumBytesPerElement*B),
 			NumBytesPerElement
@@ -136,7 +136,7 @@ public:
 			int32 NumToMove = ArrayNum - Index - Count;
 			if (NumToMove)
 			{
-				YMemory::Memmove
+				FMemory::Memmove
 				(
 					(uint8*)this->GetAllocation() + (Index)* NumBytesPerElement,
 					(uint8*)this->GetAllocation() + (Index + Count) * NumBytesPerElement,

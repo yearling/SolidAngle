@@ -2,7 +2,7 @@
 
 #include "CoreTypes.h"
 #include "Templates/AlignOf.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "Templates/UnrealTemplate.h"
 #include "HAL/ThreadSafeCounter.h"
 #include "Math/NumericLimits.h"
 #include "HAL/ThreadSingleton.h"

@@ -5,9 +5,9 @@
 #include "HAL/PlatformProcess.h"
 #include "Logging/LogMacros.h"
 #include "HAL/PlatformTime.h"
-#include "Math/SolidAngleMathUtility.h"
-#include "HAL/SolidAngleMemory.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "Math/UnrealMathUtility.h"
+#include "HAL/UnrealMemory.h"
+#include "Templates/UnrealTemplate.h"
 #include "HAL/FileManager.h"
 #include "Containers/SolidAngleString.h"
 #include "Misc/FileHelper.h"
@@ -191,7 +191,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 	// Check that we're running on Vista or newer (version 6.0+).
 	bool bIsVistaOrNewer = YWindowsPlatformMisc::VerifyWindowsVersion(6, 0);
 
-	YMemory::Memset(&OutResults, 0, sizeof(FHardwareSurveyResults));
+	FMemory::Memset(&OutResults, 0, sizeof(FHardwareSurveyResults));
 
 	bSurveyPending = false;
 
@@ -414,7 +414,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 		if(PowerInfo != NULL)
 		{
 			uint32 PowerInfoSize = sizeof(PROCESSOR_POWER_INFORMATION) * OutResults.CPUCount;
-			YMemory::Memset(PowerInfo, 0, PowerInfoSize);
+			FMemory::Memset(PowerInfo, 0, PowerInfoSize);
 
 			NTSTATUS NTStatus = CallNtPowerInformation(ProcessorInformation, NULL, 0L, (PVOID)PowerInfo, PowerInfoSize);
 			if (NT_SUCCESS(NTStatus))
@@ -750,7 +750,7 @@ bool FWindowsPlatformSurvey::GetLineFollowing(const YString& Token, const TArray
 
 void WriteFStringToResults(TCHAR* OutBuffer, const YString& InString)
 {
-	YMemory::Memset( OutBuffer, 0, sizeof(TCHAR) * FHardwareSurveyResults::MaxStringLength );
+	FMemory::Memset( OutBuffer, 0, sizeof(TCHAR) * FHardwareSurveyResults::MaxStringLength );
 	TCHAR* Cursor = OutBuffer;
 	for (int32 i = 0; i < YMath::Min(InString.Len(), FHardwareSurveyResults::MaxStringLength - 1); i++)
 	{

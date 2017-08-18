@@ -3,8 +3,8 @@
 #include "GenericPlatform/GenericPlatformMisc.h"
 #include "Misc/AssertionMacros.h"
 #include "HAL/PlatformFilemanager.h"
-#include "Math/SolidAngleMathUtility.h"
-#include "HAL/SolidAngleMemory.h"
+#include "Math/UnrealMathUtility.h"
+#include "HAL/UnrealMemory.h"
 #include "Containers/Array.h"
 #include "Containers/SolidAngleString.h"
 #include "Logging/LogMacros.h"
@@ -966,7 +966,7 @@ const TCHAR* YGenericPlatformMisc::GetDefaultPathSeparator()
 bool YGenericPlatformMisc::GetSHA256Signature(const void* Data, uint32 ByteSize, FSHA256Signature& OutSignature)
 {
 	checkf(false, TEXT("No SHA256 Platform implementation"));
-	YMemory::Memzero(OutSignature.Signature);
+	FMemory::Memzero(OutSignature.Signature);
 	return false;
 }
 

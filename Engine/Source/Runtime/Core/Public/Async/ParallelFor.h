@@ -8,7 +8,7 @@ ParllelFor.h: TaskGraph library
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "Math/UnrealMathUtility.h"
 #include "Templates/Function.h"
 #include "Templates/SharedPointer.h"
 #include "HAL/ThreadSafeCounter.h"

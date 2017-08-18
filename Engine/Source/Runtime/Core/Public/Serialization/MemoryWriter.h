@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 #include "Math/NumericLimits.h"
 #include "Containers/SolidAngleString.h"
 #include "UObject/NameTypes.h"
@@ -49,7 +49,7 @@ public:
 		
 		if( Num )
 		{
-			YMemory::Memcpy( &Bytes[Offset], Data, Num );
+			FMemory::Memcpy( &Bytes[Offset], Data, Num );
 			Offset+=Num;
 		}
 	}

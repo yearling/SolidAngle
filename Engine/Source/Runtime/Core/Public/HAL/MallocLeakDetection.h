@@ -8,7 +8,7 @@ MallocLeakDetection.h: Helper class to track memory allocations
 
 #include "CoreTypes.h"
 #include "HAL/MemoryBase.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 #include "Containers/Array.h"
 #include "Misc/Crc.h"
 #include "Containers/SolidAngleString.h"
@@ -27,7 +27,7 @@ struct FMallocLeakReportOptions
 {
 	FMallocLeakReportOptions()
 	{
-		YMemory::Memzero(this, sizeof(FMallocLeakReportOptions));
+		FMemory::Memzero(this, sizeof(FMallocLeakReportOptions));
 	}
 	uint32			FilterSize;
 	float			LeakRate;
@@ -49,7 +49,7 @@ class CORE_API FMallocLeakDetection
 	{
 		FCallstackTrack()
 		{
-			YMemory::Memzero(this, sizeof(FCallstackTrack));
+			FMemory::Memzero(this, sizeof(FCallstackTrack));
 		}
 		static const int32 Depth = 32;
 		uint64 CallStack[Depth];

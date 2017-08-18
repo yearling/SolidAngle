@@ -195,7 +195,7 @@ void FCommandLine::BuildWhitelistCommandLine(TCHAR* CommandLine, uint32 ArrayCou
 {
 	check(ArrayCount > 0);
 	// Zero the whole string
-	YMemory::Memzero(CommandLine, sizeof(TCHAR) * ArrayCount);
+	FMemory::Memzero(CommandLine, sizeof(TCHAR) * ArrayCount);
 
 	uint32 StartIndex = 0;
 	for (auto Arg : FilteredArgs)

@@ -4,8 +4,8 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "HAL/SolidAngleMemory.h"
-#include "Templates/SolidAngleTypeTraits.h"
+#include "HAL/UnrealMemory.h"
+#include "Templates/UnrealTypeTraits.h"
 #include "Containers/Array.h"
 #include "Misc/ITransaction.h"
 
@@ -136,7 +136,7 @@ public:
 	int32 AddZeroed( int32 n=1 )
 	{
 		const int32 Index = AddUninitialized(n);
-		YMemory::Memzero(this->GetData() + Index, n*sizeof(T));
+		FMemory::Memzero(this->GetData() + Index, n*sizeof(T));
 		return Index;
 	}
 

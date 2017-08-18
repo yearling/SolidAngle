@@ -1,7 +1,7 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #include "Serialization/BitReader.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "Math/UnrealMathUtility.h"
 #include "Logging/LogMacros.h"
 #include "CoreGlobals.h"
 
@@ -125,7 +125,7 @@ FBitReader::FBitReader(uint8* Src, int64 CountBits)
 
 	if (Src != nullptr)
 	{
-		YMemory::Memcpy(Buffer.GetData(), Src, (CountBits + 7) >> 3);
+		FMemory::Memcpy(Buffer.GetData(), Src, (CountBits + 7) >> 3);
 
 		if (Num & 7)
 		{
@@ -164,7 +164,7 @@ void FBitReader::AppendDataFromChecked( uint8* Src, uint32 NumBits )
 	uint32 NumBytes = (NumBits+7) >> 3;
 
 	Buffer.AddUninitialized(NumBytes);
-	YMemory::Memcpy( &Buffer[Num >> 3], Src, NumBytes );
+	FMemory::Memcpy( &Buffer[Num >> 3], Src, NumBytes );
 
 	Num += NumBits;
 

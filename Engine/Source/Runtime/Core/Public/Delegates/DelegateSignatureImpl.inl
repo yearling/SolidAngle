@@ -8,7 +8,7 @@
 #include "Misc/AssertionMacros.h"
 #include "Templates/TypeWrapper.h"
 #include "Templates/RemoveReference.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "Templates/UnrealTemplate.h"
 #include "Misc/Crc.h"
 #include "UObject/NameTypes.h"
 #include "UObject/WeakObjectPtrTemplates.h"

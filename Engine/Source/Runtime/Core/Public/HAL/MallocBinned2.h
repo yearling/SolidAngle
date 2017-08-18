@@ -3,7 +3,7 @@
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
 #include "HAL/MemoryBase.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 #include "Math/NumericLimits.h"
 #include "Templates/AlignmentTemplates.h"
 #include "HAL/CriticalSection.h"
@@ -415,7 +415,7 @@ public:
 					{
 						if (Result && Ptr)
 						{
-							YMemory::Memcpy(Result, Ptr, YPlatformMath::Min<SIZE_T>(NewSize, BlockSize));
+							FMemory::Memcpy(Result, Ptr, YPlatformMath::Min<SIZE_T>(NewSize, BlockSize));
 						}
 						if (Ptr)
 						{
@@ -520,6 +520,6 @@ public:
 #if PLATFORM_USES_FIXED_GMalloc_CLASS && !FORCE_ANSI_ALLOCATOR && USE_MALLOC_BINNED2
 #define YMemory_INLINE_FUNCTION_DECORATOR  FORCEINLINE
 #define YMemory_INLINE_GMalloc (YMallocBinned2::MallocBinned2)
-#include "YMemory.inl"
+#include "FMemory.inl"
 #endif
 #endif

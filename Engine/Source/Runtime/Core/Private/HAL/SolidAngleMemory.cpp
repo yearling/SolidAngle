@@ -1,7 +1,7 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
-#include "HAL/SolidAngleMemory.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "HAL/UnrealMemory.h"
+#include "Math/UnrealMathUtility.h"
 #include "Containers/Array.h"
 #include "Logging/LogMacros.h"
 #include "HAL/ThreadSafeCounter.h"
@@ -115,7 +115,7 @@ public:
 		{
 			SIZE_T Size = 0;
 			verify(GetAllocationSize(Ptr, Size) && Size);
-			YMemory::Memset(Ptr, uint8(PURGATORY_STOMP_CHECKS_CANARYBYTE), Size);
+			FMemory::Memset(Ptr, uint8(PURGATORY_STOMP_CHECKS_CANARYBYTE), Size);
 			Purgatory[GFrameNumber % PURGATORY_STOMP_CHECKS_FRAMES].Push(Ptr);
 			OutstandingSizeInKB.Add((Size + 1023) / 1024);
 		}
@@ -214,7 +214,7 @@ public:
 	}
 };
 
-void YMemory::EnablePurgatoryTests()
+void FMemory::EnablePurgatoryTests()
 {
 	if (PLATFORM_USES_FIXED_GMalloc_CLASS)
 	{
@@ -241,7 +241,7 @@ void YMemory::EnablePurgatoryTests()
 	}
 }
 
-void YMemory::EnablePoisonTests()
+void FMemory::EnablePoisonTests()
 {
 	if (PLATFORM_USES_FIXED_GMalloc_CLASS)
 	{
@@ -296,21 +296,21 @@ FAutoConsoleCommand FMallocUsePurgatoryCommand
 (
 TEXT("Memory.UsePurgatory"),
 TEXT("Uses the purgatory malloc proxy to check if things are writing to stale pointers."),
-FConsoleCommandDelegate::CreateStatic(&YMemory::EnablePurgatoryTests)
+FConsoleCommandDelegate::CreateStatic(&FMemory::EnablePurgatoryTests)
 );
 
 FAutoConsoleCommand FMallocUsePoisonCommand
 (
 TEXT("Memory.UsePoison"),
 TEXT("Uses the poison malloc proxy to check if things are relying on uninitialized or free'd memory."),
-FConsoleCommandDelegate::CreateStatic(&YMemory::EnablePoisonTests)
+FConsoleCommandDelegate::CreateStatic(&FMemory::EnablePoisonTests)
 );
 #endif
 
 
 
 /** Helper function called on first allocation to create and initialize GMalloc */
-void YMemory::GCreateMalloc()
+void FMemory::GCreateMalloc()
 {
 	GMalloc = YPlatformMemory::BaseAllocator();
 	// Setup malloc crash as soon as possible.
@@ -393,7 +393,7 @@ void FScopedMallocTimer::Spew()
 		{
 			if (TotalCount[InIndex])
 			{
-				UE_LOG(LogMemory, Display, TEXT("YMemory %8s  %5d count/frame   %6.2fms / frame (all threads)  %6.2fns / op    inline miss rate %5.2f%%"),
+				UE_LOG(LogMemory, Display, TEXT("FMemory %8s  %5d count/frame   %6.2fms / frame (all threads)  %6.2fns / op    inline miss rate %5.2f%%"),
 					Op,
 					int32(TotalCount[InIndex] / Frames),
 					1000.0f * float(FPlatformTime::GetSecondsPerCycle64()) * float(TotalCycles[InIndex]) / float(Frames),
@@ -411,7 +411,7 @@ void FScopedMallocTimer::Spew()
 
 #endif
 
-void* YMemory::MallocExternal(SIZE_T Count, uint32 Alignment)
+void* FMemory::MallocExternal(SIZE_T Count, uint32 Alignment)
 {
 	if (!GMalloc)
 	{
@@ -421,7 +421,7 @@ void* YMemory::MallocExternal(SIZE_T Count, uint32 Alignment)
 	return GMalloc->Malloc(Count, Alignment);
 }
 
-void* YMemory::ReallocExternal(void* Original, SIZE_T Count, uint32 Alignment)
+void* FMemory::ReallocExternal(void* Original, SIZE_T Count, uint32 Alignment)
 {
 	if (!GMalloc)
 	{
@@ -431,7 +431,7 @@ void* YMemory::ReallocExternal(void* Original, SIZE_T Count, uint32 Alignment)
 	return GMalloc->Realloc(Original, Count, Alignment);
 }
 
-void YMemory::FreeExternal(void* Original)
+void FMemory::FreeExternal(void* Original)
 {
 	if (!GMalloc)
 	{
@@ -444,7 +444,7 @@ void YMemory::FreeExternal(void* Original)
 	}
 }
 
-SIZE_T YMemory::GetAllocSizeExternal(void* Original)
+SIZE_T FMemory::GetAllocSizeExternal(void* Original)
 { 
 	if (!GMalloc)
 	{
@@ -455,7 +455,7 @@ SIZE_T YMemory::GetAllocSizeExternal(void* Original)
 	return GMalloc->GetAllocationSize(Original, Size) ? Size : 0;
 }
 
-SIZE_T YMemory::QuantizeSizeExternal(SIZE_T Count, uint32 Alignment)
+SIZE_T FMemory::QuantizeSizeExternal(SIZE_T Count, uint32 Alignment)
 { 
 	if (!GMalloc)
 	{
@@ -466,7 +466,7 @@ SIZE_T YMemory::QuantizeSizeExternal(SIZE_T Count, uint32 Alignment)
 }	
 
 
-void YMemory::Trim()
+void FMemory::Trim()
 {
 	if (!GMalloc)
 	{
@@ -477,7 +477,7 @@ void YMemory::Trim()
 	GMalloc->Trim();
 }
 
-void YMemory::SetupTLSCachesOnCurrentThread()
+void FMemory::SetupTLSCachesOnCurrentThread()
 {
 	if (!GMalloc)
 	{
@@ -487,7 +487,7 @@ void YMemory::SetupTLSCachesOnCurrentThread()
 	GMalloc->SetupTLSCachesOnCurrentThread();
 }
 	
-void YMemory::ClearAndDisableTLSCachesOnCurrentThread()
+void FMemory::ClearAndDisableTLSCachesOnCurrentThread()
 {
 	if (GMalloc)
 	{
@@ -495,22 +495,22 @@ void YMemory::ClearAndDisableTLSCachesOnCurrentThread()
 	}
 }
 
-void* YMemory::GPUMalloc(SIZE_T Count, uint32 Alignment /* = DEFAULT_ALIGNMENT */)
+void* FMemory::GPUMalloc(SIZE_T Count, uint32 Alignment /* = DEFAULT_ALIGNMENT */)
 {
 	return YPlatformMemory::GPUMalloc(Count, Alignment);
 }
 
-void* YMemory::GPURealloc(void* Original, SIZE_T Count, uint32 Alignment /* = DEFAULT_ALIGNMENT */)
+void* FMemory::GPURealloc(void* Original, SIZE_T Count, uint32 Alignment /* = DEFAULT_ALIGNMENT */)
 {
 	return YPlatformMemory::GPURealloc(Original, Count, Alignment);
 }
 
-void YMemory::GPUFree(void* Original)
+void FMemory::GPUFree(void* Original)
 {
 	return YPlatformMemory::GPUFree(Original);
 }
 
-void YMemory::TestMemory()
+void FMemory::TestMemory()
 {
 #if !UE_BUILD_SHIPPING
 	if( !GMalloc )
@@ -533,7 +533,7 @@ void YMemory::TestMemory()
 	// allocate pointers that will be freed later
 	for (int32 Index = 0; Index < NumFreedAllocations; Index++)
 	{
-		FreedPointers.Add(YMemory::Malloc(YMath::RandHelper(MaxAllocationSize)));
+		FreedPointers.Add(FMemory::Malloc(YMath::RandHelper(MaxAllocationSize)));
 	}
 
 
@@ -541,43 +541,43 @@ void YMemory::TestMemory()
 	LeakedPointers.Empty();
 	for (int32 Index = 0; Index < NumLeakedAllocations; Index++)
 	{
-		LeakedPointers.Add(YMemory::Malloc(YMath::RandHelper(MaxAllocationSize)));
+		LeakedPointers.Add(FMemory::Malloc(YMath::RandHelper(MaxAllocationSize)));
 	}
 
 	// free the leaked pointers from _last_ call to this function
 	for (int32 Index = 0; Index < SavedLeakedPointers.Num(); Index++)
 	{
-		YMemory::Free(SavedLeakedPointers[Index]);
+		FMemory::Free(SavedLeakedPointers[Index]);
 	}
 
 	// free the non-leaked pointers from this call to this function
 	for (int32 Index = 0; Index < FreedPointers.Num(); Index++)
 	{
-		YMemory::Free(FreedPointers[Index]);
+		FMemory::Free(FreedPointers[Index]);
 	}
 #endif
 }
 
-void* YUseSystemMallocForNew::operator new(size_t Size)
+void* FUseSystemMallocForNew::operator new(size_t Size)
 {
-	return YMemory::SystemMalloc(Size);
+	return FMemory::SystemMalloc(Size);
 }
 
-void YUseSystemMallocForNew::operator delete(void* Ptr)
+void FUseSystemMallocForNew::operator delete(void* Ptr)
 {
-	YMemory::SystemFree(Ptr);
+	FMemory::SystemFree(Ptr);
 }
 
-void* YUseSystemMallocForNew::operator new[](size_t Size)
+void* FUseSystemMallocForNew::operator new[](size_t Size)
 {
-	return YMemory::SystemMalloc(Size);
+	return FMemory::SystemMalloc(Size);
 }
 
-void YUseSystemMallocForNew::operator delete[](void* Ptr)
+void FUseSystemMallocForNew::operator delete[](void* Ptr)
 {
-	YMemory::SystemFree(Ptr);
+	FMemory::SystemFree(Ptr);
 }
 
 #if !INLINE_YMemory_OPERATION && !PLATFORM_USES_FIXED_GMalloc_CLASS
-#include "HAL/YMemory.inl"
+#include "HAL/FMemory.inl"
 #endif

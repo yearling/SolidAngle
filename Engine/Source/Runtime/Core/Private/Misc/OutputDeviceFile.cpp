@@ -2,8 +2,8 @@
 
 #include "Misc/OutputDeviceFile.h"
 #include "Misc/AssertionMacros.h"
-#include "HAL/SolidAngleMemory.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "HAL/UnrealMemory.h"
+#include "Templates/UnrealTemplate.h"
 #include "Serialization/Archive.h"
 #include "Containers/Array.h"
 #include "Containers/SolidAngleString.h"
@@ -192,14 +192,14 @@ public:
 		if ((WritePos + Length) <= Buffer.Num())
 		{
 			// Copy straight into the ring buffer
-			YMemory::Memcpy(Buffer.GetData() + WritePos, Data, Length);
+			FMemory::Memcpy(Buffer.GetData() + WritePos, Data, Length);
 		}
 		else
 		{
 			// Wrap around the ring buffer
 			int32 BufferSizeToEnd = Buffer.Num() - WritePos;
-			YMemory::Memcpy(Buffer.GetData() + WritePos, Data, BufferSizeToEnd);
-			YMemory::Memcpy(Buffer.GetData(), Data + BufferSizeToEnd, Length - BufferSizeToEnd);
+			FMemory::Memcpy(Buffer.GetData() + WritePos, Data, BufferSizeToEnd);
+			FMemory::Memcpy(Buffer.GetData(), Data + BufferSizeToEnd, Length - BufferSizeToEnd);
 		}
 
 		// Update the end position and let the async thread know we need to write to disk

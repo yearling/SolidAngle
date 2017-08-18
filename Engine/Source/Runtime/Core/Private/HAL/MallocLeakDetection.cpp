@@ -309,7 +309,7 @@ int32 FMallocLeakDetection::DumpPotentialLeakers(const FMallocLeakReportOptions&
 	const int32 MaxCallstackLineChars = 2048;
 	char CallstackString[MaxCallstackLineChars];
 	TCHAR CallstackStringWide[MaxCallstackLineChars];
-	YMemory::Memzero(CallstackString);
+	FMemory::Memzero(CallstackString);
 
 	TArray<uint32> CallstackHashes;
 
@@ -445,7 +445,7 @@ int32 FMallocLeakDetection::DumpPotentialLeakers(const FMallocLeakReportOptions&
 
 					LOG_OUTPUT(TEXT("%s"), CallstackStringWide);
 				}
-				YMemory::Memzero(CallstackString);
+				FMemory::Memzero(CallstackString);
 			}
 
 			{
@@ -496,7 +496,7 @@ int32 FMallocLeakDetection::DumpOpenCallstacks(const FMallocLeakReportOptions& O
 	const int32 MaxCallstackLineChars = 2048;
 	char CallstackString[MaxCallstackLineChars];
 	TCHAR CallstackStringWide[MaxCallstackLineChars];
-	YMemory::Memzero(CallstackString);
+	FMemory::Memzero(CallstackString);
 
 	SIZE_T ReportedSize = 0;
 	SIZE_T TotalSize = 0;
@@ -597,7 +597,7 @@ int32 FMallocLeakDetection::DumpOpenCallstacks(const FMallocLeakReportOptions& O
 
 				LOG_OUTPUT(TEXT("%s"), CallstackStringWide);
 			}
-			YMemory::Memzero(CallstackString);
+			FMemory::Memzero(CallstackString);
 		}
 
 		TArray<YString> SortedContexts;

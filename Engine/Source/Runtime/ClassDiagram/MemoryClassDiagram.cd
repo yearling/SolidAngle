@@ -6,10 +6,10 @@
   <Comment CommentText="typdef YPlatfromMemory">
     <Position X="7.698" Y="7.031" Height="0.323" Width="1.94" />
   </Comment>
-  <Comment CommentText="YMemory::malloc/free调的是YMalloc::malloc/free">
+  <Comment CommentText="FMemory::malloc/free调的是YMalloc::malloc/free">
     <Position X="2.073" Y="7.438" Height="0.917" Width="1.846" />
   </Comment>
-  <Comment CommentText="YMemory::Memcmp调的是YPlatformMemory::Memcmp&#xD;&#xA;">
+  <Comment CommentText="FMemory::Memcmp调的是YPlatformMemory::Memcmp&#xD;&#xA;">
     <Position X="5.052" Y="7.406" Height="0.917" Width="1.846" />
   </Comment>
   <Class Name="YMalloc">
@@ -110,7 +110,7 @@
       <FileName>C:\Users\yy\Desktop\solidangle\SolidAngle\Engine\Source\Runtime\Core\Public\HAL\MallocPoisonProxy.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Struct Name="YMemory">
+  <Struct Name="FMemory">
     <Position X="3.75" Y="5.25" Width="1.5" />
     <Members>
       <Method Name="BigBlockMemcpy" Hidden="true" />
@@ -144,7 +144,7 @@
     </Members>
     <TypeIdentifier>
       <HashCode>AAAACAAAQCIEzEAUAAUgKAAAKAAAEFEAAFBQAAAAASo=</HashCode>
-      <FileName>C:\Users\yy\Desktop\solidangle\SolidAngle\Engine\Source\Runtime\Core\Public\HAL\SolidAngleMemory.h</FileName>
+      <FileName>C:\Users\yy\Desktop\solidangle\SolidAngle\Engine\Source\Runtime\Core\Public\HAL\UnrealMemory.h</FileName>
     </TypeIdentifier>
   </Struct>
   <Struct Name="YGenericPlatformMemory" Collapsed="true">

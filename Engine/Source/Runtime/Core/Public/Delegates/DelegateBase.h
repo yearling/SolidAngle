@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Containers/ContainerAllocationPolicies.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "Math/UnrealMathUtility.h"
 #include "UObject/NameTypes.h"
 #include "Delegates/DelegateSettings.h"
 #include "Delegates/IDelegateInstance.h"

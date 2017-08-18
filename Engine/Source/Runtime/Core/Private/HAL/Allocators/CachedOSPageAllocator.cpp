@@ -1,5 +1,5 @@
 #include "HAL/Allocators/CachedOSPageAllocator.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 #include "Logging/LogMacros.h"
 #include "CoreGlobals.h"
 
@@ -42,7 +42,7 @@ void* YCachedOSPageAllocator::AllocateImpl(SIZE_T Size, FFreePageBlock* First, F
 			CachedTotal -= Found->ByteSize;
 			if (Found + 1 != Last)
 			{
-				YMemory::Memmove(Found, Found + 1, sizeof(FFreePageBlock) * ((Last - Found) - 1));
+				FMemory::Memmove(Found, Found + 1, sizeof(FFreePageBlock) * ((Last - Found) - 1));
 			}
 			--FreedPageBlocksNum;
 			return Result;
@@ -84,7 +84,7 @@ void YCachedOSPageAllocator::FreeImpl(void* Ptr, SIZE_T Size, uint32 NumCacheBlo
 		FreedPageBlocksNum--;
 		if (FreedPageBlocksNum)
 		{
-			YMemory::Memmove(First, First + 1, sizeof(FFreePageBlock) * FreedPageBlocksNum);
+			FMemory::Memmove(First, First + 1, sizeof(FFreePageBlock) * FreedPageBlocksNum);
 		}
 		YPlatformMemory::BinnedFreeToOS(FreePtr, FreeSize);
 	}
@@ -107,7 +107,7 @@ void YCachedOSPageAllocator::FreeAllImpl(FFreePageBlock* First, uint32& FreedPag
 		FreedPageBlocksNum--;
 		if (FreedPageBlocksNum)
 		{
-			YMemory::Memmove(First, First + 1, sizeof(FFreePageBlock)* FreedPageBlocksNum);
+			FMemory::Memmove(First, First + 1, sizeof(FFreePageBlock)* FreedPageBlocksNum);
 		}
 		YPlatformMemory::BinnedFreeToOS(FreePtr, FreeSize);
 	}

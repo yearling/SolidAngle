@@ -284,7 +284,7 @@ void FractionalToString(const double InVal, const FDecimalNumberFormattingRules&
 			const int32 LeadingZerosToAdd = YMath::Min(InFormattingOptions.MaximumFractionalDigits - FractionalPartLen, MaxFractionalPrintPrecision - FractionalPartLen);
 			if (LeadingZerosToAdd > 0)
 			{
-				YMemory::Memmove(FractionalPartBuffer + LeadingZerosToAdd, FractionalPartBuffer, FractionalPartLen * sizeof(TCHAR));
+				FMemory::Memmove(FractionalPartBuffer + LeadingZerosToAdd, FractionalPartBuffer, FractionalPartLen * sizeof(TCHAR));
 
 				for (int32 Index = 0; Index < LeadingZerosToAdd; ++Index)
 				{

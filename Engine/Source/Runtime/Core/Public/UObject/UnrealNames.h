@@ -25,7 +25,7 @@
 enum EName
 {
 	// Include all the hard-coded names
-#include "SolidAngleNames.inl"
+#include "UnrealNames.inl"
 
 	// Special constant for the last hard-coded name index
 	NAME_MaxHardcodedNameIndex,

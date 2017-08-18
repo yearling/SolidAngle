@@ -6,7 +6,7 @@
 
 #include "Math/TransformVectorized.h"
 #include "Misc/AssertionMacros.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "Math/UnrealMathUtility.h"
 #include "Containers/Array.h"
 #include "Containers/SolidAngleString.h"
 #include "Logging/LogMacros.h"

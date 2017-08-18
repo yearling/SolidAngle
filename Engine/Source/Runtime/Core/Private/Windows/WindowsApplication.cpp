@@ -78,7 +78,7 @@ FWindowsApplication::FWindowsApplication( const HINSTANCE HInstance, const HICON
 	, bInModalSizeLoop( false )
 
 {
-	YMemory::Memzero(ModifierKeyState, EModifierKey::Count);
+	FMemory::Memzero(ModifierKeyState, EModifierKey::Count);
 
 	// Disable the process from being showing "ghosted" not responding messages during slow tasks
 	// This is a hack.  A more permanent solution is to make our slow tasks not block the editor for so long
@@ -108,9 +108,9 @@ FWindowsApplication::FWindowsApplication( const HINSTANCE HInstance, const HICON
 	// Save the current sticky/toggle/filter key settings so they can be restored them later
 	// If there are .ini settings, use them instead of the current system settings.
 	// NOTE: Whenever we exit and restore these settings gracefully, the .ini settings are removed.
-	YMemory::Memzero(StartupStickyKeys);
-	YMemory::Memzero(StartupToggleKeys);
-	YMemory::Memzero(StartupFilterKeys);
+	FMemory::Memzero(StartupStickyKeys);
+	FMemory::Memzero(StartupToggleKeys);
+	FMemory::Memzero(StartupFilterKeys);
 	
 	StartupStickyKeys.cbSize = sizeof(StartupStickyKeys);
 	StartupToggleKeys.cbSize = sizeof(StartupToggleKeys);
@@ -225,7 +225,7 @@ void FWindowsApplication::ShutDownAfterError()
 bool FWindowsApplication::RegisterClass( const HINSTANCE HInstance, const HICON HIcon )
 {
 	WNDCLASS wc;
-	YMemory::Memzero( &wc, sizeof(wc) );
+	FMemory::Memzero( &wc, sizeof(wc) );
 	wc.style = CS_DBLCLKS; // We want to receive double clicks
 	wc.lpfnWndProc = AppWndProc;
 	wc.cbClsExtra = 0;
@@ -675,7 +675,7 @@ void FWindowsApplication::GetInitialDisplayMetrics( FDisplayMetrics& OutDisplayM
 EWindowTitleAlignment::Type FWindowsApplication::GetWindowTitleAlignment() const
 {
 	OSVERSIONINFOEX VersionInfo;
-	YMemory::Memzero(VersionInfo);
+	FMemory::Memzero(VersionInfo);
 	VersionInfo.dwMajorVersion = 6;
 	VersionInfo.dwMinorVersion = 2;
 	VersionInfo.dwOSVersionInfoSize = sizeof(VersionInfo);
@@ -936,7 +936,7 @@ int32 FWindowsApplication::ProcessMessage( HWND hwnd, uint32 msg, WPARAM wParam,
 						// of our desired space. The value returned by CurrentNativeEventWindow will be incorrect for our usage here as it
 						// refers to the border of the window that Slate should consider.
 						WINDOWINFO WindowInfo;
-						YMemory::Memzero(WindowInfo);
+						FMemory::Memzero(WindowInfo);
 						WindowInfo.cbSize = sizeof(WindowInfo);
 						::GetWindowInfo(hwnd, &WindowInfo);
 
@@ -1005,7 +1005,7 @@ int32 FWindowsApplication::ProcessMessage( HWND hwnd, uint32 msg, WPARAM wParam,
 					// The rect we get in lParam is window rect, but we need to preserve client's aspect ratio,
 					// so we need to find what the border and title bar sizes are, if window has them and adjust the rect.
 					WINDOWINFO WindowInfo;
-					YMemory::Memzero(WindowInfo);
+					FMemory::Memzero(WindowInfo);
 					WindowInfo.cbSize = sizeof(WindowInfo);
 					::GetWindowInfo(hwnd, &WindowInfo);
 

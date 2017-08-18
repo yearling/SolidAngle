@@ -3,7 +3,7 @@
 #include "Windows/WindowsPlatformAtomics.h"
 #include "Misc/AssertionMacros.h"
 #include "Logging/LogMacros.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "Templates/UnrealTemplate.h"
 #include "CoreGlobals.h"
 
 

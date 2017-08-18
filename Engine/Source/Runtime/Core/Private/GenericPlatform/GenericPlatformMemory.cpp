@@ -3,7 +3,7 @@
 #include "GenericPlatform/GenericPlatformMemory.h"
 #include "HAL/PlatformMemory.h"
 #include "Misc/AssertionMacros.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "Math/UnrealMathUtility.h"
 #include "Containers/StringConv.h"
 #include "UObject/NameTypes.h"
 #include "Logging/LogMacros.h"

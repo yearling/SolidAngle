@@ -6,7 +6,7 @@
 #include "Windows/WindowsSystemIncludes.h"
 #endif
 
-#include "Math/SolidAnglePlatformMathSSE.h"
+#include "Math/UnrealPlatformMathSSE.h"
 
 /**
 * Windows implementation of the Math OS functions
@@ -62,12 +62,12 @@ struct YWindowsPlatformMath : public YGenericPlatformMath
 
 	static FORCEINLINE float InvSqrt(float F)
 	{
-		return SolidAnglePlatformMathSSE::InvSqrt(F);
+		return UnrealPlatformMathSSE::InvSqrt(F);
 	}
 
 	static FORCEINLINE float InvSqrtEst(float F)
 	{
-		return SolidAnglePlatformMathSSE::InvSqrtEst(F);
+		return UnrealPlatformMathSSE::InvSqrtEst(F);
 	}
 
 

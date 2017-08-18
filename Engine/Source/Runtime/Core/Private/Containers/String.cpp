@@ -4,9 +4,9 @@
 #include "Misc/AssertionMacros.h"
 #include "Misc/VarArgs.h"
 #include "Math/NumericLimits.h"
-#include "Math/SolidAngleMathUtility.h"
-#include "HAL/SolidAngleMemory.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "Math/UnrealMathUtility.h"
+#include "HAL/UnrealMemory.h"
+#include "Templates/UnrealTemplate.h"
 #include "Containers/SolidAngleString.h"
 #include "Logging/LogMacros.h"
 #include "CoreGlobals.h"
@@ -1187,7 +1187,7 @@ VARARG_BODY( YString, YString::Printf, const TCHAR*, VARARG_NONE )
 		while(Result == -1)
 		{
 			BufferSize *= 2;
-			Buffer = (TCHAR*) YMemory::Realloc( Buffer, BufferSize * sizeof(TCHAR) );
+			Buffer = (TCHAR*) FMemory::Realloc( Buffer, BufferSize * sizeof(TCHAR) );
 			GET_VARARGS_RESULT( Buffer, BufferSize, BufferSize-1, Fmt, Fmt, Result );
 		};
 	}
@@ -1198,7 +1198,7 @@ VARARG_BODY( YString, YString::Printf, const TCHAR*, VARARG_NONE )
 
 	if( BufferSize != STARTING_BUFFER_SIZE )
 	{
-		YMemory::Free( Buffer );
+		FMemory::Free( Buffer );
 	}
 
 	return ResultString;

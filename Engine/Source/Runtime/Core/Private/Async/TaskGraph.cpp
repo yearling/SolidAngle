@@ -1,8 +1,8 @@
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
 #include "Math/NumericLimits.h"
-#include "Math/SolidAngleMathUtility.h"
-#include "HAL/SolidAngleMemory.h"
+#include "Math/UnrealMathUtility.h"
+#include "HAL/UnrealMemory.h"
 #include "Containers/Array.h"
 #include "Containers/SolidAngleString.h"
 #include "Logging/LogMacros.h"
@@ -444,9 +444,9 @@ public:
 			{
 				checkThreadGraph(Tasks[StartIndex - 1]==NULL);
 				checkThreadGraph(Tasks[0]==NULL);
-				YMemory::Memmove(Tasks.GetData(), &Tasks[StartIndex], (EndIndex - StartIndex) * sizeof(FBaseGraphTask*));
+				FMemory::Memmove(Tasks.GetData(), &Tasks[StartIndex], (EndIndex - StartIndex) * sizeof(FBaseGraphTask*));
 				EndIndex -= StartIndex;
-				YMemory::Memzero(&Tasks[EndIndex],StartIndex * sizeof(FBaseGraphTask*)); // not needed in final
+				FMemory::Memzero(&Tasks[EndIndex],StartIndex * sizeof(FBaseGraphTask*)); // not needed in final
 				StartIndex = 0;
 			}
 			else
@@ -637,7 +637,7 @@ public:
 	{
 		check(OwnerWorker); // make sure we are started up
 		ProcessTasksUntilQuit(0);
-		YMemory::ClearAndDisableTLSCachesOnCurrentThread();
+		FMemory::ClearAndDisableTLSCachesOnCurrentThread();
 		return 0;
 	}
 
@@ -1157,7 +1157,7 @@ public:
 	{
 		if (PriorityIndex != (ENamedThreads::BackgroundThreadPriority >> ENamedThreads::ThreadPriorityShift))
 		{
-			YMemory::SetupTLSCachesOnCurrentThread();
+			FMemory::SetupTLSCachesOnCurrentThread();
 		}
 		check(!QueueIndex);
 		Queue.QuitWhenIdle.Reset();
@@ -2487,7 +2487,7 @@ FGraphEvent* FGraphEvent::GetBundle(int32 NumBundle)
 {
 	GraphEventsAllocated.Add(NumBundle);
 	FGraphEvent* Root = nullptr;
-	uint8* Block = (uint8*)YMemory::Malloc(NumBundle * sizeof(FGraphEvent));
+	uint8* Block = (uint8*)FMemory::Malloc(NumBundle * sizeof(FGraphEvent));
 	for (int32 Index = 0; Index < NumBundle; Index++)
 	{
 		FGraphEvent* Event = new ((void*)Block) FGraphEvent(false);
@@ -2502,7 +2502,7 @@ FGraphEventAndSmallTaskStorage* FGraphEventAndSmallTaskStorage::GetBundle(int32 
 {
 	GraphEventsWithInlineStorageAllocated.Add(NumBundle);
 	FGraphEventAndSmallTaskStorage* Root = nullptr;
-	uint8* Block = (uint8*)YMemory::Malloc(NumBundle * sizeof(FGraphEventAndSmallTaskStorage));
+	uint8* Block = (uint8*)FMemory::Malloc(NumBundle * sizeof(FGraphEventAndSmallTaskStorage));
 	for (int32 Index = 0; Index < NumBundle; Index++)
 	{
 		FGraphEventAndSmallTaskStorage* Event = new ((void*)Block) FGraphEventAndSmallTaskStorage();

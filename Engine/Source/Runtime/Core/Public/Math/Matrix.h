@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "HAL/SolidAngleMemory.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "HAL/UnrealMemory.h"
+#include "Math/UnrealMathUtility.h"
 #include "Containers/SolidAngleString.h"
 #include "Math/Vector.h"
 #include "Math/Vector4.h"
@@ -41,7 +41,7 @@ public:
 	*/
 	explicit FORCEINLINE FMatrix(EForceInit)
 	{
-		YMemory::Memzero(this, sizeof(*this));
+		FMemory::Memzero(this, sizeof(*this));
 	}
 
 	/**

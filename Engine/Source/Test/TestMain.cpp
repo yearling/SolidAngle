@@ -60,7 +60,7 @@ typename TEnableIf<!TIsArithmetic<T>::Value, int>::Type GetEnableValue(T a)
 
 //void* operator new(SIZE_T MallocByte)
 //{
-//	return YMemory::SystemMalloc(MallocByte);
+//	return FMemory::SystemMalloc(MallocByte);
 //}
 class TestContainerMoveCopy
 {
@@ -132,10 +132,10 @@ void TestMemory()
 	//while (1)
 	std::cout << "Do memory testing..." << std::endl;
 	{
-		YMemory::TestMemory();
+		FMemory::TestMemory();
 	}
 	FMallocLeakDetection::Get().SetAllocationCollection(true);
-	//int *pTestAllocMemory = (int*)YMemory::Malloc(sizeof(int));
+	//int *pTestAllocMemory = (int*)FMemory::Malloc(sizeof(int));
 	int* pIntLeak = new int(5);
 	FMallocLeakDetection::Get().SetAllocationCollection(false);
 	FMallocLeakDetection::Get().DumpPotentialLeakers();
@@ -420,14 +420,14 @@ void TestSet()
 }
 IMPLEMENT_MODULE(YTestModel, TestModel);
 
- /*void* operator new  (size_t Size)  { return YMemory::Malloc(Size); } 
- void* operator new[](size_t Size) { return YMemory::Malloc(Size); } 
- void* operator new  (size_t Size, const std::nothrow_t&) throw() { return YMemory::Malloc(Size); } 
- void* operator new[](size_t Size, const std::nothrow_t&) throw(){ return YMemory::Malloc(Size); } 
-void operator delete  (void* Ptr)                                                  { YMemory::Free(Ptr); } 
-void operator delete[](void* Ptr)                                                 { YMemory::Free(Ptr); } 
-void operator delete  (void* Ptr, const std::nothrow_t&)                          throw() { YMemory::Free(Ptr); } 
-void operator delete[](void* Ptr, const std::nothrow_t&)                          throw() { YMemory::Free(Ptr); }*/
+ /*void* operator new  (size_t Size)  { return FMemory::Malloc(Size); } 
+ void* operator new[](size_t Size) { return FMemory::Malloc(Size); } 
+ void* operator new  (size_t Size, const std::nothrow_t&) throw() { return FMemory::Malloc(Size); } 
+ void* operator new[](size_t Size, const std::nothrow_t&) throw(){ return FMemory::Malloc(Size); } 
+void operator delete  (void* Ptr)                                                  { FMemory::Free(Ptr); } 
+void operator delete[](void* Ptr)                                                 { FMemory::Free(Ptr); } 
+void operator delete  (void* Ptr, const std::nothrow_t&)                          throw() { FMemory::Free(Ptr); } 
+void operator delete[](void* Ptr, const std::nothrow_t&)                          throw() { FMemory::Free(Ptr); }*/
 struct TestStructDefaultConstruct
 {
 	int a;

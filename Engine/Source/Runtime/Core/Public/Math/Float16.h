@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Serialization/Archive.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "Math/UnrealMathUtility.h"
 #include "Math/Float32.h"
 
 /**

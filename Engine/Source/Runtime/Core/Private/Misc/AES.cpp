@@ -3,7 +3,7 @@
 #include "Misc/AES.h"
 #include "Misc/AssertionMacros.h"
 #include "Misc/CString.h"
-#include "HAL/SolidAngleMemory.h"
+#include "HAL/UnrealMemory.h"
 
 
 // Uncomment this line to skip encryption
@@ -1159,7 +1159,7 @@ void FAES::EncryptData( uint8 *Contents, uint32 NumBytes, ANSICHAR* Key )
 #if TEST_ENCRYPTION
 	TArray<uint8> OriginalBlob;
 	OriginalBlob.AddUninitialized( NumBytes );
-	YMemory::Memcpy( OriginalBlob.GetData(), Contents, NumBytes );
+	FMemory::Memcpy( OriginalBlob.GetData(), Contents, NumBytes );
 #endif
 
 	// Set up the rk buffer
@@ -1174,7 +1174,7 @@ void FAES::EncryptData( uint8 *Contents, uint32 NumBytes, ANSICHAR* Key )
 #if TEST_ENCRYPTION
 	TArray<uint8> DecryptedBlob;
 	DecryptedBlob.AddUninitialized( NumBytes );
-	YMemory::Memcpy( DecryptedBlob.GetData(), Contents, NumBytes );
+	FMemory::Memcpy( DecryptedBlob.GetData(), Contents, NumBytes );
 
 	DecryptData( DecryptedBlob.GetData(), DecryptedBlob.Num() );
 	checkf( DecryptedBlob == OriginalBlob, TEXT( "Decrypted data different from original data - this is bad" ) );

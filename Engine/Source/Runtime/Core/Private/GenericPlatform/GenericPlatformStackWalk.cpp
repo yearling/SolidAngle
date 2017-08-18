@@ -147,7 +147,7 @@ void FGenericPlatformStackWalk::StackWalkAndDump( ANSICHAR* HumanReadableString,
 	// Temporary memory holding the stack trace.
 	static const int MAX_DEPTH = 100;
 	uint64 StackTrace[MAX_DEPTH];
-	YMemory::Memzero( StackTrace );
+	FMemory::Memzero( StackTrace );
 
 	// Capture stack backtrace.
 	FPlatformStackWalk::CaptureStackBackTrace( StackTrace, MAX_DEPTH, Context );
@@ -177,7 +177,7 @@ TArray<FProgramCounterSymbolInfo> FGenericPlatformStackWalk::GetStack(int32 Igno
 	// Temporary memory holding the stack trace.
 	static const int MAX_DEPTH = 100;
 	uint64 StackTrace[MAX_DEPTH];
-	YMemory::Memzero(StackTrace);
+	FMemory::Memzero(StackTrace);
 
 	// Add 2 to account for CaptureStackBackTrace and GetStack.
 	IgnoreCount += 2;

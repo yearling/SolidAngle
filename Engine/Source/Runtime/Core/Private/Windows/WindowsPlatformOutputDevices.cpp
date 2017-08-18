@@ -4,9 +4,9 @@
 #include "Logging/LogMacros.h"
 #include "Misc/OutputDevice.h"
 #include "HAL/PlatformTime.h"
-#include "Math/SolidAngleMathUtility.h"
-#include "HAL/SolidAngleMemory.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "Math/UnrealMathUtility.h"
+#include "HAL/UnrealMemory.h"
+#include "Templates/UnrealTemplate.h"
 #include "CoreGlobals.h"
 #include "Misc/CString.h"
 #include "Misc/Parse.h"
@@ -383,7 +383,7 @@ void YOutputDeviceConsoleWindows::SetColor( const TCHAR* Color )
 	{
 		// turn the string into a bunch of 0's and 1's
 		TCHAR String[9];
-		YMemory::Memset(String, 0, sizeof(TCHAR) * ARRAY_COUNT(String));
+		FMemory::Memset(String, 0, sizeof(TCHAR) * ARRAY_COUNT(String));
 		FCString::Strncpy(String, Color, ARRAY_COUNT(String));
 		for (TCHAR* S = String; *S; S++)
 		{

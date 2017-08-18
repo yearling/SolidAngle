@@ -153,7 +153,7 @@ void *FPageAllocator::AllocSmall()
 	}
 	else
 	{
-		Result = YMemory::Malloc(SmallPageSize);
+		Result = FMemory::Malloc(SmallPageSize);
 	}
 	STAT(UpdateStats());
 	return Result;
@@ -180,7 +180,7 @@ void FPageAllocator::FreeSmall(void *Mem)
 	}
 	else
 	{
-		YMemory::Free(Mem);
+		FMemory::Free(Mem);
 	}
 	STAT(UpdateStats());
 }
@@ -218,12 +218,12 @@ void FPageAllocator::Free(void *Mem)
 
 void *FPageAllocator::AllocSmall()
 {
-	return YMemory::Malloc(SmallPageSize);
+	return FMemory::Malloc(SmallPageSize);
 }
 
 void FPageAllocator::FreeSmall(void *Mem)
 {
-	YMemory::Free(Mem);
+	FMemory::Free(Mem);
 }
 
 uint64 FPageAllocator::BytesUsed()
@@ -297,7 +297,7 @@ void FMemStackBase::AllocateNewChunk(int32 MinSize)
 		}
 		else
 		{
-			Chunk = (FTaggedMemory*)YMemory::Malloc(AllocSize);
+			Chunk = (FTaggedMemory*)FMemory::Malloc(AllocSize);
 			INC_MEMORY_STAT_BY(STAT_MemStackLargeBLock, AllocSize);
 		}
 		check(AllocSize != FPageAllocator::SmallPageSize);
@@ -332,7 +332,7 @@ void FMemStackBase::FreeChunks(FTaggedMemory* NewTopChunk)
 		else
 		{
 			DEC_MEMORY_STAT_BY(STAT_MemStackLargeBLock, RemoveChunk->DataSize + sizeof(FTaggedMemory));
-			YMemory::Free(RemoveChunk);
+			FMemory::Free(RemoveChunk);
 		}
 	}
 	Top = nullptr;

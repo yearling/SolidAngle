@@ -738,7 +738,7 @@ void YArchiveFileReaderGeneric::Serialize( void* V, int64 Length )
 				return;
 			}
 		}
-		YMemory::Memcpy( V, Buffer+Pos-BufferBase, Copy );
+		FMemory::Memcpy( V, Buffer+Pos-BufferBase, Copy );
 		Pos       += Copy;
 		Length    -= Copy;
 		V          =( uint8* )V + Copy;
@@ -822,7 +822,7 @@ void YArchiveFileWriterGeneric::Serialize( void* V, int64 Length )
 		int64 Copy;
 		while( Length >( Copy=ARRAY_COUNT( Buffer )-BufferCount ) )
 		{
-			YMemory::Memcpy( Buffer+BufferCount, V, Copy );
+			FMemory::Memcpy( Buffer+BufferCount, V, Copy );
 			BufferCount += Copy;
 			check( BufferCount <= ARRAY_COUNT( Buffer ) && BufferCount >= 0 );
 			Length      -= Copy;
@@ -831,7 +831,7 @@ void YArchiveFileWriterGeneric::Serialize( void* V, int64 Length )
 		}
 		if( Length )
 		{
-			YMemory::Memcpy( Buffer+BufferCount, V, Length );
+			FMemory::Memcpy( Buffer+BufferCount, V, Length );
 			BufferCount += Length;
 			check( BufferCount <= ARRAY_COUNT( Buffer ) && BufferCount >= 0 );
 		}

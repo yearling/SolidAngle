@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "Templates/SolidAngleTypeTraits.h"
+#include "Templates/UnrealTypeTraits.h"
 #include "Templates/AlignOf.h"
 #include "Templates/TypeCompatibleBytes.h"
 #include "Templates/MemoryOps.h"

@@ -6,7 +6,7 @@
 #include "Misc/AssertionMacros.h"
 #include "Serialization/Archive.h"
 #include "Containers/Array.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "Math/UnrealMathUtility.h"
 
 /*-----------------------------------------------------------------------------
 	FBitWriter.

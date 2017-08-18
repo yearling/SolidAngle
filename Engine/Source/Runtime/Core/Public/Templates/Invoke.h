@@ -2,7 +2,7 @@
 
 #include "CoreTypes.h"
 #include "Templates/PointerConvertibleFromTo.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "Templates/UnrealTemplate.h"
 #include "Templates/Decay.h"
 
 

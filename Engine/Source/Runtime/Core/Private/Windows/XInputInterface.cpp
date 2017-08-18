@@ -25,7 +25,7 @@ XInputInterface::XInputInterface( const TSharedRef< FGenericApplicationMessageHa
 	for ( int32 ControllerIndex=0; ControllerIndex < MAX_NUM_XINPUT_CONTROLLERS; ++ControllerIndex )
 	{
 		FControllerState& ControllerState = ControllerStates[ControllerIndex];
-		YMemory::Memzero( &ControllerState, sizeof(FControllerState) );
+		FMemory::Memzero( &ControllerState, sizeof(FControllerState) );
 
 		ControllerState.ControllerId = ControllerIndex;
 	}
@@ -111,7 +111,7 @@ void XInputInterface::SendControllerEvents()
 		if( ControllerState.bIsConnected || bNeedsControllerStateUpdate )
 		{
 			XINPUT_STATE& XInputState = XInputStates[ControllerIndex];
-			YMemory::Memzero( &XInputState, sizeof(XINPUT_STATE) );
+			FMemory::Memzero( &XInputState, sizeof(XINPUT_STATE) );
 
 			ControllerState.bIsConnected = ( XInputGetState( ControllerIndex, &XInputState ) == ERROR_SUCCESS ) ? true : false;
 

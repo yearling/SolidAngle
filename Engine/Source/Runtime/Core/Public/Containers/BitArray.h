@@ -2,13 +2,13 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "HAL/SolidAngleMemory.h"
-#include "Templates/SolidAngleTypeTraits.h"
+#include "HAL/UnrealMemory.h"
+#include "Templates/UnrealTypeTraits.h"
 #include "Templates/AlignOf.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "Templates/UnrealTemplate.h"
 #include "Containers/ContainerAllocationPolicies.h"
 #include "Serialization/Archive.h"
-#include "Math/SolidAngleMathUtility.h"
+#include "Math/UnrealMathUtility.h"
 
 template<typename Allocator > class TBitArray;
 
@@ -230,7 +230,7 @@ public:
 		{
 			const int32 NumDWORDs = YMath::DivideAndRoundUp(MaxBits, NumBitsPerDWORD);
 			Realloc(0);
-			YMemory::Memcpy(GetData(), Copy.GetData(), NumDWORDs * sizeof(uint32));
+			FMemory::Memcpy(GetData(), Copy.GetData(), NumDWORDs * sizeof(uint32));
 		}
 		return *this;
 	}
@@ -331,7 +331,7 @@ public:
 	void Reset()
 	{
 		// We need this because iterators often use whole DWORDs when masking, which includes off-the-end elements
-		YMemory::Memset(GetData(), 0, YMath::DivideAndRoundUp(NumBits, NumBitsPerDWORD) * sizeof(uint32));
+		FMemory::Memset(GetData(), 0, YMath::DivideAndRoundUp(NumBits, NumBitsPerDWORD) * sizeof(uint32));
 
 		NumBits = 0;
 	}
@@ -347,7 +347,7 @@ public:
 		if (InNumBits)
 		{
 			NumBits = InNumBits;
-			YMemory::Memset(GetData(), Value ? 0xff : 0, YMath::DivideAndRoundUp(NumBits, NumBitsPerDWORD) * sizeof(uint32));
+			FMemory::Memset(GetData(), Value ? 0xff : 0, YMath::DivideAndRoundUp(NumBits, NumBitsPerDWORD) * sizeof(uint32));
 		}
 	}
 
@@ -754,7 +754,7 @@ private:
 		if (MaxDWORDs)
 		{
 			// Reset the newly allocated slack DWORDs.
-			YMemory::Memzero((uint32*)AllocatorInstance.GetAllocation() + PreviousNumDWORDs, (MaxDWORDs - PreviousNumDWORDs) * sizeof(uint32));
+			FMemory::Memzero((uint32*)AllocatorInstance.GetAllocation() + PreviousNumDWORDs, (MaxDWORDs - PreviousNumDWORDs) * sizeof(uint32));
 		}
 	}
 };
@@ -1098,7 +1098,7 @@ private:
 		if (MaxDWORDs && MaxDWORDs - PreviousNumDWORDs > 0)
 		{
 			// Reset the newly allocated slack DWORDs.
-			YMemory::Memzero((uint32*)AllocatorInstance.GetAllocation() + PreviousNumDWORDs, (MaxDWORDs - PreviousNumDWORDs) * sizeof(uint32));
+			FMemory::Memzero((uint32*)AllocatorInstance.GetAllocation() + PreviousNumDWORDs, (MaxDWORDs - PreviousNumDWORDs) * sizeof(uint32));
 		}
 	}
 	FORCENOINLINE void ReallocGrow(int32 PreviousNumBits)
@@ -1115,7 +1115,7 @@ private:
 		if (MaxDWORDs && MaxDWORDs - PreviousNumDWORDs > 0)
 		{
 			// Reset the newly allocated slack DWORDs.
-			YMemory::Memzero((uint32*)AllocatorInstance.GetAllocation() + PreviousNumDWORDs, (MaxDWORDs - PreviousNumDWORDs) * sizeof(uint32));
+			FMemory::Memzero((uint32*)AllocatorInstance.GetAllocation() + PreviousNumDWORDs, (MaxDWORDs - PreviousNumDWORDs) * sizeof(uint32));
 		}
 	}
 

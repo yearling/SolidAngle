@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "SolidAngleMathUtility.h"
+#include "UnrealMathUtility.h"
 #include "Math/Vector.h"
 /**
 * Implements a basic sphere.

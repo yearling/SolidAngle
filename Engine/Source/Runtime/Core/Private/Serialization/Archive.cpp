@@ -4,8 +4,8 @@
 	UnArchive.cpp: Core archive classes.
 =============================================================================*/
 #include "Serialization/Archive.h"
-#include "Math/SolidAngleMathUtility.h"
-#include "HAL/SolidAngleMemory.h"
+#include "Math/UnrealMathUtility.h"
+#include "HAL/UnrealMemory.h"
 #include "Containers/Array.h"
 #include "Containers/SolidAngleString.h"
 #include "UObject/NameTypes.h"
@@ -544,7 +544,7 @@ void FArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Fla
 
 		// Set up destination pointer and allocate memory for compressed chunk[s] (one at a time).
 		uint8*	Dest				= (uint8*) V;
-		void*	CompressedBuffer	= YMemory::Malloc( MaxCompressedSize + Padding );
+		void*	CompressedBuffer	= FMemory::Malloc( MaxCompressedSize + Padding );
 
 		// Iterate over all chunks, serialize them into memory and decompress them directly into the destination pointer
 		for( int64 ChunkIndex=0; ChunkIndex<TotalChunkCount; ChunkIndex++ )
@@ -559,7 +559,7 @@ void FArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Fla
 		}
 
 		// Free up allocated memory.
-		YMemory::Free( CompressedBuffer );
+		FMemory::Free( CompressedBuffer );
 		delete [] CompressionChunks;
 	}
 	else if( IsSaving() )
@@ -670,7 +670,7 @@ void FArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Fla
 					// Allocate compressed buffer placeholder on first use.
 					if( NewChunk.CompressedBuffer == NULL )
 					{
-						NewChunk.CompressedBuffer = YMemory::Malloc( NewChunk.CompressedSize	);
+						NewChunk.CompressedBuffer = FMemory::Malloc( NewChunk.CompressedSize	);
 					}
 
 					// By default everything is chunked up into GSavingCompressionChunkSize chunks.
@@ -683,7 +683,7 @@ void FArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Fla
 						// Allocate memory on first use. We allocate the maximum amount to allow reuse.
 						if( !NewChunk.UncompressedBuffer )
 						{
-							NewChunk.UncompressedBuffer = YMemory::Malloc(GSavingCompressionChunkSize);
+							NewChunk.UncompressedBuffer = FMemory::Malloc(GSavingCompressionChunkSize);
 						}
 						((FArchive*)V)->Serialize(NewChunk.UncompressedBuffer, NewChunk.UncompressedSize);
 					}
@@ -779,12 +779,12 @@ void FArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Fla
 		for( int32 i=0; i<MaxConcurrentAsyncChunks; i++ )
 		{
 			// Free temporary compressed buffer storage.
-			YMemory::Free( AsyncChunks[i].GetTask().CompressedBuffer );
+			FMemory::Free( AsyncChunks[i].GetTask().CompressedBuffer );
 			AsyncChunks[i].GetTask().CompressedBuffer = NULL;
 			// Free temporary uncompressed buffer storage if data was serialized in.
 			if( bTreatBufferAsFileReader )
 			{
-				YMemory::Free( AsyncChunks[i].GetTask().UncompressedBuffer );
+				FMemory::Free( AsyncChunks[i].GetTask().UncompressedBuffer );
 				AsyncChunks[i].GetTask().UncompressedBuffer = NULL;
 			}
 		}
@@ -795,7 +795,7 @@ void FArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Fla
 		// allocate memory to read into
 		if (bTreatBufferAsFileReader)
 		{
-			Src = (uint8*)YMemory::Malloc(GSavingCompressionChunkSize);
+			Src = (uint8*)FMemory::Malloc(GSavingCompressionChunkSize);
 			check(((FArchive*)V)->IsLoading());
 		}
 		else
@@ -807,7 +807,7 @@ void FArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Fla
 		int32		CurrentChunkIndex		= 1;
 		// 2 times the uncompressed size should be more than enough; the compressed data shouldn't be that much larger
 		int64		CompressedBufferSize	= 2 * GSavingCompressionChunkSize;
-		void*	CompressedBuffer		= YMemory::Malloc( CompressedBufferSize );
+		void*	CompressedBuffer		= FMemory::Malloc( CompressedBufferSize );
 
 		while( BytesRemaining > 0 )
 		{
@@ -862,11 +862,11 @@ void FArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Fla
 		// free the buffer we read into
 		if (bTreatBufferAsFileReader)
 		{
-			YMemory::Free(Src);
+			FMemory::Free(Src);
 		}
 
 		// Free allocated memory.
-		YMemory::Free( CompressedBuffer );
+		FMemory::Free( CompressedBuffer );
 #endif
 
 		// Overrwrite chunk infos by seeking to the beginning, serializing the data and then
@@ -948,8 +948,8 @@ VARARG_BODY( void, FArchive::Logf, const TCHAR*, VARARG_NONE )
 
 	while(Result == -1)
 	{
-		YMemory::SystemFree(Buffer);
-		Buffer = (TCHAR*) YMemory::SystemMalloc( BufferSize * sizeof(TCHAR) );
+		FMemory::SystemFree(Buffer);
+		Buffer = (TCHAR*) FMemory::SystemMalloc( BufferSize * sizeof(TCHAR) );
 		GET_VARARGS_RESULT( Buffer, BufferSize, BufferSize-1, Fmt, Fmt, Result );
 		BufferSize *= 2;
 	};
@@ -970,7 +970,7 @@ VARARG_BODY( void, FArchive::Logf, const TCHAR*, VARARG_NONE )
 	}
 
 	// Free temporary buffers.
-	YMemory::SystemFree( Buffer );
+	FMemory::SystemFree( Buffer );
 }
 
 

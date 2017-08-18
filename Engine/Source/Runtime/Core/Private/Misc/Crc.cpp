@@ -2,7 +2,7 @@
 
 #include "Misc/Crc.h"
 #include "Templates/AlignmentTemplates.h"
-#include "Templates/SolidAngleTemplate.h"
+#include "Templates/UnrealTemplate.h"
 #include "Misc/ByteSwap.h"
 
 /** CRC 32 polynomial */

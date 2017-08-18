@@ -61,9 +61,6 @@
     <Filter Include="Source\Runtime\Core\Public\Internationalization">
       <UniqueIdentifier>{434fdbb7-ed1e-4e87-a391-9b9c550b3b09}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Runtime\Core\Public\SObject">
-      <UniqueIdentifier>{378fe5c9-d9bc-4c5c-a20d-bafb0419b3a1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Runtime\Core\Public\Stats">
       <UniqueIdentifier>{49ef63be-5a49-4171-bb4f-0679ba6b73ad}</UniqueIdentifier>
     </Filter>
@@ -175,6 +172,9 @@
     <Filter Include="Source\Runtime\ClassDiagram">
       <UniqueIdentifier>{1df29f73-afba-4e6b-b30a-72c0f92bfe48}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Runtime\Core\Public\UObject">
+      <UniqueIdentifier>{378fe5c9-d9bc-4c5c-a20d-bafb0419b3a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\core\Public\HAL\Platform.h">
@@ -189,9 +189,6 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Vector.h">
       <Filter>Source\Runtime\Core\Public\Math</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAngleMath.h">
-      <Filter>Source\Runtime\Core\Public\Math</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformMath.h">
       <Filter>Source\Runtime\Core\Public\HAL</Filter>
     </ClInclude>
@@ -202,9 +199,6 @@
       <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Color.h">
-      <Filter>Source\Runtime\Core\Public\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAngleMathUtility.h">
       <Filter>Source\Runtime\Core\Public\Math</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\MinWindows.h">
@@ -225,23 +219,11 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsSystemIncludes.h">
       <Filter>Source\Runtime\Core\Public\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAnglePlatformMathSSE.h">
-      <Filter>Source\Runtime\Core\Public\Math</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformCrt.h">
       <Filter>Source\Runtime\Core\Public\HAL</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\PlatformIncludes.h">
       <Filter>Source\Runtime\Core\Public\HAL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAngleMathSSE.h">
-      <Filter>Source\Runtime\Core\Public\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAngleVectorConstant.h">
-      <Filter>Source\Runtime\Core\Public\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\Math\SolidAngleMathVectorCommon.h">
-      <Filter>Source\Runtime\Core\Public\Math</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\VectorRegister.h">
       <Filter>Source\Runtime\Core\Public\Math</Filter>
@@ -516,17 +498,11 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Logging\LogCategory.h">
       <Filter>Source\Runtime\Core\Public\Logging</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\NameTypes.h">
-      <Filter>Source\Runtime\Core\Public\SObject</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\HAL\CriticalSection.h">
       <Filter>Source\Runtime\Core\Public\HAL</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsCriticalSection.h">
       <Filter>Source\Runtime\Core\Public\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\SolidAngleNames.h">
-      <Filter>Source\Runtime\Core\Public\SObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Stats\Stats.h">
       <Filter>Source\Runtime\Core\Public\Stats</Filter>
@@ -735,20 +711,11 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\IndirectArray.h">
       <Filter>Source\Runtime\Core\Public\Containers</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\WeakObjectPtrTemplates.h">
-      <Filter>Source\Runtime\Core\Public\SObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\AutoPointer.h">
-      <Filter>Source\Runtime\Core\Public\SObject</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Delegates\DelegateBase.h">
       <Filter>Source\Runtime\Core\Public\Delegates</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Delegates\MulticastDelegateBase.h">
       <Filter>Source\Runtime\Core\Public\Delegates</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\ScriptDelegates.h">
-      <Filter>Source\Runtime\Core\Public\SObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Delegates\IntegerSequence.h">
       <Filter>Source\Runtime\Core\Public\Delegates</Filter>
@@ -765,20 +732,11 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\SharedPointerInternals.h">
       <Filter>Source\Runtime\Core\Public\Templates</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\SObjectHierarchyFwd.h">
-      <Filter>Source\Runtime\Core\Public\SObject</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\UniqueObj.h">
       <Filter>Source\Runtime\Core\Public\Templates</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\Internationalization.h">
       <Filter>Source\Runtime\Core\Public\Internationalization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\ObjectVersion.h">
-      <Filter>Source\Runtime\Core\Public\SObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\ObjectMacros.h">
-      <Filter>Source\Runtime\Core\Public\SObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformMemory.h">
       <Filter>Source\Runtime\Core\Public\Windows</Filter>
@@ -1215,12 +1173,6 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\DataCodec.h">
       <Filter>Source\Runtime\Core\Public\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\PropertyPortFlags.h">
-      <Filter>Source\Runtime\Core\Public\SObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\ReleaseObjectVersion.h">
-      <Filter>Source\Runtime\Core\Public\SObject</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\CustomVersion.h">
       <Filter>Source\Runtime\Core\Public\Serialization</Filter>
     </ClInclude>
@@ -1365,9 +1317,6 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\CompressedChunkInfo.h">
       <Filter>Source\Runtime\Core\Public\Serialization</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\DebugSerializationFlags.h">
-      <Filter>Source\Runtime\Core\Public\SObject</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\ITextData.h">
       <Filter>Source\Runtime\Core\Public\Internationalization</Filter>
     </ClInclude>
@@ -1379,9 +1328,6 @@
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Internationalization\TextNamespaceUtil.h">
       <Filter>Source\Runtime\Core\Public\Internationalization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\EditorObjectVersion.h">
-      <Filter>Source\Runtime\Core\Public\SObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\TextHistory.h">
       <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
@@ -1518,9 +1464,6 @@
     <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\InvariantCulture.h">
       <Filter>Source\Runtime\Core\Private\Internationalization</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\SObject\DevObjectVersion.h">
-      <Filter>Source\Runtime\Core\Public\SObject</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Private\Features\ModularFeatures.h">
       <Filter>Source\Runtime\Core\Private\Features</Filter>
     </ClInclude>
@@ -1619,6 +1562,62 @@
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\MemoryArchive.h">
       <Filter>Source\Runtime\Core\Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\UnrealPlatformMathSSE.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\UnrealVectorConstant.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\UnrealMathUtility.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\UnrealMathVectorCommon.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\Unrealmathsse.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\UnrealTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\UnrealTypeTraits.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\DevObjectVersion.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\EditorObjectVersion.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\NameTypes.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\ObjectMacros.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\ObjectVersion.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\PropertyPortFlags.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\ReleaseObjectVersion.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\ScriptDelegates.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\UObjectHierarchyFwd.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\WeakObjectPtrTemplates.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\AutoPointer.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\DebugSerializationFlags.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\UnrealNames.h">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2197,9 +2196,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Source\Runtime\Core\Public\SObject\SolidAngleNames.inl">
-      <Filter>Source\Runtime\Core\Public\SObject</Filter>
-    </None>
     <None Include="..\Source\Runtime\Core\Public\Delegates\DelegateSignatureImpl.inl">
       <Filter>Source\Runtime\Core\Public\Delegates</Filter>
     </None>
@@ -2231,5 +2227,8 @@
       <Filter>Source\Runtime\ClassDiagram</Filter>
     </None>
     <None Include="ClassDiagram.cd" />
+    <None Include="..\Source\Runtime\Core\Public\UObject\UnrealNames.inl">
+      <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </None>
   </ItemGroup>
 </Project>
