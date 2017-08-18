@@ -203,7 +203,7 @@ void FGenericReadRequestWorker::DoWork()
 class FGenericAsyncReadFileHandle final : public IAsyncReadFileHandle
 {
 	IPlatformFile* LowerLevel;
-	YString Filename;
+	FString Filename;
 	TArray<FGenericReadRequest*> LiveRequests; // linear searches could be improved
 	FThreadSafeCounter LiveRequestsNonConcurrent; // This file handle should not be used concurrently; we test that with this.
 public:
@@ -451,10 +451,10 @@ bool IPlatformFile::CopyDirectoryTree(const TCHAR* DestinationDirectory, const T
 	check(DestinationDirectory);
 	check(Source);
 
-	YString DestDir(DestinationDirectory);
+	FString DestDir(DestinationDirectory);
 	YPaths::NormalizeDirectorFName(DestDir);
 
-	YString SourceDir(Source);
+	FString SourceDir(Source);
 	YPaths::NormalizeDirectorFName(SourceDir);
 
 	// Does Source dir exist?
@@ -488,7 +488,7 @@ bool IPlatformFile::CopyDirectoryTree(const TCHAR* DestinationDirectory, const T
 
 		virtual bool Visit(const TCHAR* FilenameOrDirectory, bool bIsDirectory)
 		{
-			YString NewName(FilenameOrDirectory);
+			FString NewName(FilenameOrDirectory);
 			// change the root
 			NewName = NewName.Replace(SourceRoot, DestRoot);
 
@@ -526,19 +526,19 @@ bool IPlatformFile::CopyDirectoryTree(const TCHAR* DestinationDirectory, const T
 	return IterateDirectoryRecursively(*SourceDir, CopyFilesAndDirs);
 }
 
-YString IPlatformFile::ConvertToAbsolutePathForExternalAppForRead( const TCHAR* Filename )
+FString IPlatformFile::ConvertToAbsolutePathForExternalAppForRead( const TCHAR* Filename )
 {
 	return YPaths::ConvertRelativePathToFull(Filename);
 }
 
-YString IPlatformFile::ConvertToAbsolutePathForExternalAppForWrite( const TCHAR* Filename )
+FString IPlatformFile::ConvertToAbsolutePathForExternalAppForWrite( const TCHAR* Filename )
 {
 	return YPaths::ConvertRelativePathToFull(Filename);
 }
 
 bool IPlatformFile::CreateDirectoryTree(const TCHAR* Directory)
 {
-	YString LocalFilename(Directory);
+	FString LocalFilename(Directory);
 	YPaths::NormalizeDirectorFName(LocalFilename);
 	const TCHAR* LocalPath = *LocalFilename;
 	int32 CreateCount = 0;

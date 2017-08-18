@@ -3,7 +3,7 @@
 
 #include "CoreTypes.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Templates/SharedPointer.h"
 #include "Internationalization/CulturePointer.h"
 
@@ -15,63 +15,63 @@ class CORE_API FCulture
 {
 public:
 #if UE_ENABLE_ICU
-	static FCulturePtr Create(const YString& LocaleName);
+	static FCulturePtr Create(const FString& LocaleName);
 #else
 	static FCulturePtr Create(
 		const FText& InDisplaFName,
-		const YString& InEnglishName,
+		const FString& InEnglishName,
 		const int InKeyboardLayoutId,
 		const int InLCID,
-		const YString& InName,
-		const YString& InNativeName,
-		const YString& InUnrealLegacyThreeLetterISOLanguageName,
-		const YString& InThreeLetterISOLanguageName,
-		const YString& InTwoLetterISOLanguageName,
+		const FString& InName,
+		const FString& InNativeName,
+		const FString& InUnrealLegacyThreeLetterISOLanguageName,
+		const FString& InThreeLetterISOLanguageName,
+		const FString& InTwoLetterISOLanguageName,
 		const FDecimalNumberFormattingRules& InDecimalNumberFormattingRules,
 		const FDecimalNumberFormattingRules& InPercentFormattingRules,
 		const FDecimalNumberFormattingRules& InBaseCurrencyFormattingRules
 	);
 #endif
 
-	const YString& GetDisplaFName() const;
+	const FString& GetDisplaFName() const;
 
-	const YString& GetEnglishName() const;
+	const FString& GetEnglishName() const;
 
 	int GetKeyboardLayoutId() const;
 
 	int GetLCID() const;
 
-	TArray<YString> GetPrioritizedParentCultureNames() const;
+	TArray<FString> GetPrioritizedParentCultureNames() const;
 
-	static TArray<YString> GetPrioritizedParentCultureNames(const YString& LanguageCode, const YString& ScriptCode, const YString& RegionCode);
+	static TArray<FString> GetPrioritizedParentCultureNames(const FString& LanguageCode, const FString& ScriptCode, const FString& RegionCode);
 
-	static YString GetCanonicalName(const YString& Name);
+	static FString GetCanonicalName(const FString& Name);
 
-	const YString& GetName() const;
+	const FString& GetName() const;
 
-	const YString& GetNativeName() const;
+	const FString& GetNativeName() const;
 
-	const YString& GetUnrealLegacyThreeLetterISOLanguageName() const;
+	const FString& GetUnrealLegacyThreeLetterISOLanguageName() const;
 
-	const YString& GetThreeLetterISOLanguageName() const;
+	const FString& GetThreeLetterISOLanguageName() const;
 
-	const YString& GetTwoLetterISOLanguageName() const;
+	const FString& GetTwoLetterISOLanguageName() const;
 
-	const YString& GetNativeLanguage() const;
+	const FString& GetNativeLanguage() const;
 
-	const YString& GetRegion() const;
+	const FString& GetRegion() const;
 
-	const YString& GetNativeRegion() const;
+	const FString& GetNativeRegion() const;
 
-	const YString& GetScript() const;
+	const FString& GetScript() const;
 
-	const YString& GetVariant() const;
+	const FString& GetVariant() const;
 
 	const FDecimalNumberFormattingRules& GetDecimalNumberFormattingRules() const;
 
 	const FDecimalNumberFormattingRules& GetPercentFormattingRules() const;
 
-	const FDecimalNumberFormattingRules& GetCurrencyFormattingRules(const YString& InCurrencyCode) const;
+	const FDecimalNumberFormattingRules& GetCurrencyFormattingRules(const FString& InCurrencyCode) const;
 
 	/**
 	* Get the correct plural form to use for the given number
@@ -104,18 +104,18 @@ public:
 
 protected:
 #if UE_ENABLE_ICU
-	FCulture(const YString& LocaleName);
+	FCulture(const FString& LocaleName);
 #else
 	FCulture(
 		const FText& InDisplaFName,
-		const YString& InEnglishName,
+		const FString& InEnglishName,
 		const int InKeyboardLayoutId,
 		const int InLCID,
-		const YString& InName,
-		const YString& InNativeName,
-		const YString& InUnrealLegacyThreeLetterISOLanguageName,
-		const YString& InThreeLetterISOLanguageName,
-		const YString& InTwoLetterISOLanguageName,
+		const FString& InName,
+		const FString& InNativeName,
+		const FString& InUnrealLegacyThreeLetterISOLanguageName,
+		const FString& InThreeLetterISOLanguageName,
+		const FString& InTwoLetterISOLanguageName,
 		const FDecimalNumberFormattingRules& InDecimalNumberFormattingRules,
 		const FDecimalNumberFormattingRules& InPercentFormattingRules,
 		const FDecimalNumberFormattingRules& InBaseCurrencyFormattingRules
@@ -127,16 +127,16 @@ private:
 	friend class FText;
 #endif
 
-	YString CachedDisplaFName;
-	YString CachedEnglishName;
-	YString CachedName;
-	YString CachedNativeName;
-	YString CachedUnrealLegacyThreeLetterISOLanguageName;
-	YString CachedThreeLetterISOLanguageName;
-	YString CachedTwoLetterISOLanguageName;
-	YString CachedNativeLanguage;
-	YString CachedRegion;
-	YString CachedNativeRegion;
-	YString CachedScript;
-	YString CachedVariant;
+	FString CachedDisplaFName;
+	FString CachedEnglishName;
+	FString CachedName;
+	FString CachedNativeName;
+	FString CachedUnrealLegacyThreeLetterISOLanguageName;
+	FString CachedThreeLetterISOLanguageName;
+	FString CachedTwoLetterISOLanguageName;
+	FString CachedNativeLanguage;
+	FString CachedRegion;
+	FString CachedNativeRegion;
+	FString CachedScript;
+	FString CachedVariant;
 };

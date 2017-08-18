@@ -8,7 +8,7 @@ Config cache.
 
 #include "CoreTypes.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Map.h"
 #include "Math/Color.h"
 #include "UObject/NameTypes.h"
@@ -38,7 +38,7 @@ public:
 		ExpandValueInternal();
 	}
 
-	FConfigValue(YString InValue)
+	FConfigValue(FString InValue)
 		: SavedValue(MoveTemp(InValue))
 #if WITH_EDITOR
 		, bRead(false)
@@ -58,7 +58,7 @@ public:
 	}
 
 	// Returns the ini setting with any macros expanded out
-	const YString& GetValue() const
+	const FString& GetValue() const
 	{
 #if WITH_EDITOR
 		bRead = true;
@@ -67,7 +67,7 @@ public:
 	}
 
 	// Returns the original ini setting without macro expansion
-	const YString& GetSavedValue() const
+	const FString& GetSavedValue() const
 	{
 #if WITH_EDITOR
 		bRead = true;
@@ -85,7 +85,7 @@ public:
 	}
 #endif
 	DEPRECATED(4.12, "Please switch to explicitly doing a GetValue() or GetSavedValue()")
-		operator const YString& () const { return GetValue(); }
+		operator const FString& () const { return GetValue(); }
 
 	DEPRECATED(4.12, "Please switch to explicitly doing a GetValue() or GetSavedValue()")
 		const TCHAR* operator*() const { return *GetValue(); }
@@ -113,7 +113,7 @@ public:
 	*
 	* @return true if expansion occurred, false if the collapsed and expanded values are equal.
 	*/
-	CORE_API static bool ExpandValue(const YString& InCollapsedValue, YString& OutExpandedValue);
+	CORE_API static bool ExpandValue(const FString& InCollapsedValue, FString& OutExpandedValue);
 
 	/**
 	* Given a collapsed config value, try and produce an expanded version of it (removing any placeholder tokens).
@@ -122,7 +122,7 @@ public:
 	*
 	* @return The expanded version of the config value.
 	*/
-	CORE_API static YString ExpandValue(const YString& InCollapsedValue);
+	CORE_API static FString ExpandValue(const FString& InCollapsedValue);
 
 	/**
 	* Given an expanded config value, try and produce a collapsed version of it (adding any placeholder tokens).
@@ -132,7 +132,7 @@ public:
 	*
 	* @return true if collapsing occurred, false if the collapsed and expanded values are equal.
 	*/
-	CORE_API static bool CollapseValue(const YString& InExpandedValue, YString& OutCollapsedValue);
+	CORE_API static bool CollapseValue(const FString& InExpandedValue, FString& OutCollapsedValue);
 
 	/**
 	* Given an expanded config value, try and produce a collapsed version of it (adding any placeholder tokens).
@@ -141,7 +141,7 @@ public:
 	*
 	* @return The collapsed version of the config value.
 	*/
-	CORE_API static YString CollapseValue(const YString& InExpandedValue);
+	CORE_API static FString CollapseValue(const FString& InExpandedValue);
 
 private:
 	/** Internal version of ExpandValue that expands SavedValue into ExpandedValue, or produces an empty ExpandedValue if no expansion occurred. */
@@ -153,8 +153,8 @@ private:
 		}
 	}
 
-	YString SavedValue;
-	YString ExpandedValue;
+	FString SavedValue;
+	FString ExpandedValue;
 #if WITH_EDITOR
 	mutable bool bRead; // has this value been read since the config system started
 #endif
@@ -166,12 +166,12 @@ typedef TMultiMap<FName, FConfigValue> FConfigSectionMap;
 class FConfigSection : public FConfigSectionMap
 {
 public:
-	static bool HasQuotes(const YString& Test);
+	static bool HasQuotes(const FString& Test);
 	bool operator==(const FConfigSection& Other) const;
 	bool operator!=(const FConfigSection& Other) const;
 
 	// process the '+' and '.' commands, takingf into account ArrayOfStruct unique keys
-	void HandleAddCommand(FName Key, const YString& Value, bool bAppendValueIfNotArrayOfStructsKeyUsed);
+	void HandleAddCommand(FName Key, const FString& Value, bool bAppendValueIfNotArrayOfStructsKeyUsed);
 
 	template<typename Allocator>
 	void MultiFind(const FName Key, TArray<FConfigValue, Allocator>& OutValues, const bool bMaintainOrder = false) const
@@ -180,7 +180,7 @@ public:
 	}
 
 	template<typename Allocator>
-	void MultiFind(const FName Key, TArray<YString, Allocator>& OutValues, const bool bMaintainOrder = false) const
+	void MultiFind(const FName Key, TArray<FString, Allocator>& OutValues, const bool bMaintainOrder = false) const
 	{
 		for (const TPair<FName, FConfigValue>& Pair : Pairs)
 		{
@@ -197,7 +197,7 @@ public:
 	}
 
 	// look for "array of struct" keys for overwriting single entries of an array
-	TMap<FName, YString> ArrayOfStructKeys;
+	TMap<FName, FString> ArrayOfStructKeys;
 };
 
 /**
@@ -208,13 +208,13 @@ public:
 struct FIniFilename
 {
 	/** Ini filename */
-	YString Filename;
+	FString Filename;
 	/** If true this ini file is required to generate the output ini. */
 	bool bRequired;
 	/** Used as ID for looking up an INI Hierarchy */
-	YString CacheKey;
+	FString CacheKey;
 
-	FIniFilename(const YString& InFilename, bool InIsRequired, YString InCacheKey = YString(TEXT("")))
+	FIniFilename(const FString& InFilename, bool InIsRequired, FString InCacheKey = FString(TEXT("")))
 		: Filename(InFilename)
 		, bRequired(InIsRequired)
 		, CacheKey(InCacheKey)
@@ -226,7 +226,7 @@ struct FIniFilename
 // Options which stemmed from the commandline
 struct FConfigCommandlineOverride
 {
-	YString BaseFileName, Section, PropertyKey, PropertyValue;
+	FString BaseFileName, Section, PropertyKey, PropertyValue;
 };
 #endif // ALLOW_INI_OVERRIDE_FROM_COMMANDLINE
 
@@ -282,7 +282,7 @@ typedef TMap<EConfigFileHierarchy, FIniFilename> FConfigFileHierarchy;
 
 // One config file.
 
-class FConfigFile : public TMap<YString, FConfigSection>
+class FConfigFile : public TMap<FString, FConfigSection>
 {
 public:
 	bool Dirty, NoSave;
@@ -297,7 +297,7 @@ public:
 	FConfigFile* SourceConfigFile;
 
 	/** Key to the cache to speed up ini parsing */
-	YString CacheKey;
+	FString CacheKey;
 
 #if ALLOW_INI_OVERRIDE_FROM_COMMANDLINE
 	/** The collection of overrides which stemmed from the commandline */
@@ -309,18 +309,18 @@ public:
 	CORE_API ~FConfigFile();
 
 	// looks for a section by name, and creates an empty one if it can't be found
-	FConfigSection* FindOrAddSection(const YString& Name);
+	FConfigSection* FindOrAddSection(const FString& Name);
 
 	bool operator==(const FConfigFile& Other) const;
 	bool operator!=(const FConfigFile& Other) const;
 
-	CORE_API bool Combine(const YString& Filename);
-	CORE_API void CombineFromBuffer(const YString& Buffer);
-	CORE_API void Read(const YString& Filename);
-	CORE_API bool Write(const YString& Filename, bool bDoRemoteWrite = true, const YString& InitialText = YString());
+	CORE_API bool Combine(const FString& Filename);
+	CORE_API void CombineFromBuffer(const FString& Buffer);
+	CORE_API void Read(const FString& Filename);
+	CORE_API bool Write(const FString& Filename, bool bDoRemoteWrite = true, const FString& InitialText = FString());
 	CORE_API void Dump(FOutputDevice& Ar);
 
-	CORE_API bool GetString(const TCHAR* Section, const TCHAR* Key, YString& Value) const;
+	CORE_API bool GetString(const TCHAR* Section, const TCHAR* Key, FString& Value) const;
 	CORE_API bool GetText(const TCHAR* Section, const TCHAR* Key, FText& Value) const;
 	CORE_API bool GetInt64(const TCHAR* Section, const TCHAR* Key, int64& Value) const;
 	CORE_API bool GetBool(const TCHAR* Section, const TCHAR* Key, bool& Value) const;
@@ -335,7 +335,7 @@ public:
 	* @param Filename Name of the .ini file the contents came from
 	* @param Contents Contents of the .ini file
 	*/
-	CORE_API void ProcessInputFileContents(const YString& Contents);
+	CORE_API void ProcessInputFileContents(const FString& Contents);
 
 
 	/** Adds any properties that exist in InSourceFile that this config file is missing */
@@ -369,16 +369,16 @@ public:
 	void ProcessSourceAndCheckAgainstBackup();
 
 	/** Checks if the PropertyValue should be exported in quotes when writing the ini to disk. */
-	static bool ShouldExportQuotedString(const YString& PropertyValue);
+	static bool ShouldExportQuotedString(const FString& PropertyValue);
 
 	/** Generate a correctly escaped line to add to the config file for the given property */
-	static YString GenerateExportedPropertyLine(const YString& PropertFName, const YString& PropertyValue);
+	static FString GenerateExportedPropertyLine(const FString& PropertFName, const FString& PropertyValue);
 
 private:
 
 	// This holds per-object config class names, with their ArrayOfStructKeys. Since the POC sections are all unique,
 	// we can't track it just in that section. This is expected to be empty/small
-	TMap<YString, TMap<FName, YString> > PerObjectConfigArrayOfStructKeys;
+	TMap<FString, TMap<FName, FString> > PerObjectConfigArrayOfStructKeys;
 
 	/**
 	* Save the source hierarchy which was loaded out to a backup file so we can check future changes in the base/default configs
@@ -394,7 +394,7 @@ private:
 	* @param SectionName - The section name the array property is being written to
 	* @param PropertFName - The property name of the array
 	*/
-	void ProcessPropertyAndWriteForDefaults(const TArray<FConfigValue>& InCompletePropertyToProcess, YString& OutText, const YString& SectionName, const YString& PropertFName);
+	void ProcessPropertyAndWriteForDefaults(const TArray<FConfigValue>& InCompletePropertyToProcess, FString& OutText, const FString& SectionName, const FString& PropertFName);
 
 };
 
@@ -412,7 +412,7 @@ enum class EConfigCacheType : uint8
 };
 
 // Set of all cached config files.
-class CORE_API FConfigCacheIni : public TMap<YString, FConfigFile>
+class CORE_API FConfigCacheIni : public TMap<FString, FConfigFile>
 {
 public:
 	// Basic functions.
@@ -466,7 +466,7 @@ public:
 	*
 	* NOTE: The function naming is weird because you can't apparently have an overridden function differnt only by template type params
 	*/
-	virtual void Parse1ToNSectionOYStrings(const TCHAR* Section, const TCHAR* KeyOne, const TCHAR* KeyN, TMap<YString, TArray<YString> >& OutMap, const YString& Filename);
+	virtual void Parse1ToNSectionOYStrings(const TCHAR* Section, const TCHAR* KeyOne, const TCHAR* KeyN, TMap<FString, TArray<FString> >& OutMap, const FString& Filename);
 
 	/**
 	* Parses apart an ini section that contains a list of 1-to-N mappings of names in the following format
@@ -487,33 +487,33 @@ public:
 	* NOTE: The function naming is weird because you can't apparently have an overridden function differnt only by template type params
 	*/
 	//virtual void Parse1ToNSectionOFNames(const TCHAR* Section, const TCHAR* KeyOne, const TCHAR* KeyN, TMap<FName, TArray<FName> >& OutMap, const YString& Filename);
-	virtual void Parse1ToNSectionOFNames(const TCHAR * Section, const TCHAR * KeyOne, const TCHAR * KeyN, TMap<FName, TArray<FName>>& OutMap, const YString & Filename);
-	FConfigFile* FindConfigFile(const YString& Filename);
-	FConfigFile* Find(const YString& InFilename, bool CreateIfNotFound);
-	void Flush(bool Read, const YString& Filename = TEXT(""));
+	virtual void Parse1ToNSectionOFNames(const TCHAR * Section, const TCHAR * KeyOne, const TCHAR * KeyN, TMap<FName, TArray<FName>>& OutMap, const FString & Filename);
+	FConfigFile* FindConfigFile(const FString& Filename);
+	FConfigFile* Find(const FString& InFilename, bool CreateIfNotFound);
+	void Flush(bool Read, const FString& Filename = TEXT(""));
 
-	void LoadFile(const YString& InFilename, const FConfigFile* Fallback = NULL, const TCHAR* PlatformString = NULL);
-	void SetFile(const YString& InFilename, const FConfigFile* NewConfigFile);
-	void UnloadFile(const YString& Filename);
-	void Detach(const YString& Filename);
+	void LoadFile(const FString& InFilename, const FConfigFile* Fallback = NULL, const TCHAR* PlatformString = NULL);
+	void SetFile(const FString& InFilename, const FConfigFile* NewConfigFile);
+	void UnloadFile(const FString& Filename);
+	void Detach(const FString& Filename);
 
-	bool GetString(const TCHAR* Section, const TCHAR* Key, YString& Value, const YString& Filename);
-	bool GetText(const TCHAR* Section, const TCHAR* Key, FText& Value, const YString& Filename);
-	bool GetSection(const TCHAR* Section, TArray<YString>& Result, const YString& Filename);
-	bool DoesSectionExist(const TCHAR* Section, const YString& Filename);
-	FConfigSection* GetSectionPrivate(const TCHAR* Section, bool Force, bool Const, const YString& Filename);
-	void SetString(const TCHAR* Section, const TCHAR* Key, const TCHAR* Value, const YString& Filename);
-	void SetText(const TCHAR* Section, const TCHAR* Key, const FText& Value, const YString& Filename);
-	bool RemoveKey(const TCHAR* Section, const TCHAR* Key, const YString& Filename);
-	bool EmptySection(const TCHAR* Section, const YString& Filename);
-	bool EmptySectionsMatchingString(const TCHAR* SectionString, const YString& Filename);
+	bool GetString(const TCHAR* Section, const TCHAR* Key, FString& Value, const FString& Filename);
+	bool GetText(const TCHAR* Section, const TCHAR* Key, FText& Value, const FString& Filename);
+	bool GetSection(const TCHAR* Section, TArray<FString>& Result, const FString& Filename);
+	bool DoesSectionExist(const TCHAR* Section, const FString& Filename);
+	FConfigSection* GetSectionPrivate(const TCHAR* Section, bool Force, bool Const, const FString& Filename);
+	void SetString(const TCHAR* Section, const TCHAR* Key, const TCHAR* Value, const FString& Filename);
+	void SetText(const TCHAR* Section, const TCHAR* Key, const FText& Value, const FString& Filename);
+	bool RemoveKey(const TCHAR* Section, const TCHAR* Key, const FString& Filename);
+	bool EmptySection(const TCHAR* Section, const FString& Filename);
+	bool EmptySectionsMatchingString(const TCHAR* SectionString, const FString& Filename);
 
 	/**
 	* Retrieve a list of all of the config files stored in the cache
 	*
 	* @param ConfigFilenames Out array to receive the list of filenames
 	*/
-	void GetConfigFilenames(TArray<YString>& ConfigFilenames);
+	void GetConfigFilenames(TArray<FString>& ConfigFilenames);
 
 	/**
 	* Retrieve the names for all sections contained in the file specified by Filename
@@ -523,7 +523,7 @@ public:
 	*
 	* @return	true if the file specified was successfully found;
 	*/
-	bool GetSectionNames(const YString& Filename, TArray<YString>& out_SectionNames);
+	bool GetSectionNames(const FString& Filename, TArray<FString>& out_SectionNames);
 
 	/**
 	* Retrieve the names of sections which contain data for the specified PerObjectConfig class.
@@ -535,7 +535,7 @@ public:
 	*
 	* @return	true if the file specified was found and it contained at least 1 section for the specified class
 	*/
-	bool GetPerObjectConfigSections(const YString& Filename, const YString& SearchClass, TArray<YString>& out_SectionNames, int32 MaxResults = 1024);
+	bool GetPerObjectConfigSections(const FString& Filename, const FString& SearchClass, TArray<FString>& out_SectionNames, int32 MaxResults = 1024);
 
 	void Exit();
 
@@ -565,49 +565,49 @@ public:
 	* allows to iterate through all key value pairs
 	* @return false:error e.g. Section or Filename not found
 	*/
-	virtual bool ForEachEntry(const FKeyValueSink& Visitor, const TCHAR* Section, const YString& Filename);
+	virtual bool ForEachEntry(const FKeyValueSink& Visitor, const TCHAR* Section, const FString& Filename);
 
 	// Derived functions.
-	YString GetStr
+	FString GetStr
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
-		const YString&	Filename
+		const FString&	Filename
 	);
 	bool GetInt
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
 		int32&				Value,
-		const YString&	Filename
+		const FString&	Filename
 	);
 	bool GetFloat
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
 		float&				Value,
-		const YString&	Filename
+		const FString&	Filename
 	);
 	bool GetDouble
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
 		double&				Value,
-		const YString&	Filename
+		const FString&	Filename
 	);
 	bool GetBool
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
 		bool&				Value,
-		const YString&	Filename
+		const FString&	Filename
 	);
 	int32 GetArray
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
-		TArray<YString>&	out_Arr,
-		const YString&	Filename
+		TArray<FString>&	out_Arr,
+		const FString&	Filename
 	);
 	/** Loads a "delimited" list of strings
 	* @param Section - Section of the ini file to load from
@@ -619,41 +619,41 @@ public:
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
-		TArray<YString>&	out_Arr,
-		const YString&	Filename
+		TArray<FString>&	out_Arr,
+		const FString&	Filename
 	);
 	bool GetColor
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
 		FColor&				Value,
-		const YString&	Filename
+		const FString&	Filename
 	);
 	bool GetVector2D(
 		const TCHAR*   Section,
 		const TCHAR*   Key,
 		YVector2D&     Value,
-		const YString& Filename);
+		const FString& Filename);
 	bool GetVector
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
 		FVector&			Value,
-		const YString&	Filename
+		const FString&	Filename
 	);
 	bool GetVector4
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
 		FVector4&			Value,
-		const YString&	Filename
+		const FString&	Filename
 	);
 	bool GetRotator
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
 		FRotator&			Value,
-		const YString&	Filename
+		const FString&	Filename
 	);
 
 	void SetInt
@@ -661,35 +661,35 @@ public:
 		const TCHAR*		Section,
 		const TCHAR*		Key,
 		int32					Value,
-		const YString&	Filename
+		const FString&	Filename
 	);
 	void SetFloat
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
 		float				Value,
-		const YString&	Filename
+		const FString&	Filename
 	);
 	void SetDouble
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
 		double				Value,
-		const YString&	Filename
+		const FString&	Filename
 	);
 	void SetBool
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
 		bool				Value,
-		const YString&	Filename
+		const FString&	Filename
 	);
 	void SetArray
 	(
 		const TCHAR*			Section,
 		const TCHAR*			Key,
-		const TArray<YString>&	Value,
-		const YString&		Filename
+		const TArray<FString>&	Value,
+		const FString&		Filename
 	);
 	/** Saves a "delimited" list of strings
 	* @param Section - Section of the ini file to save to
@@ -701,41 +701,41 @@ public:
 	(
 		const TCHAR*			Section,
 		const TCHAR*			Key,
-		const TArray<YString>&	In_Arr,
-		const YString&		Filename
+		const TArray<FString>&	In_Arr,
+		const FString&		Filename
 	);
 	void SetColor
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
 		FColor				Value,
-		const YString&	Filename
+		const FString&	Filename
 	);
 	void SetVector2D(
 		const TCHAR*   Section,
 		const TCHAR*   Key,
 		YVector2D      Value,
-		const YString& Filename);
+		const FString& Filename);
 	void SetVector
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
 		FVector				Value,
-		const YString&	Filename
+		const FString&	Filename
 	);
 	void SetVector4
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
 		const FVector4&		Value,
-		const YString&	Filename
+		const FString&	Filename
 	);
 	void SetRotator
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
 		FRotator			Value,
-		const YString&	Filename
+		const FString&	Filename
 	);
 
 	// Static allocator.
@@ -767,7 +767,7 @@ public:
 	* @param GeneratedConfigDir The location where generated config files are made.
 	* @return true if the final ini was created successfully.
 	*/
-	static bool LoadGlobalIniFile(YString& FinalIniFilename, const TCHAR* BaseIniName, const TCHAR* Platform = NULL, bool bForceReload = false, bool bRequireDefaultIni = false, bool bAllowGeneratedIniWhenCooked = true, const TCHAR* GeneratedConfigDir = *YPaths::GeneratedConfigDir());
+	static bool LoadGlobalIniFile(FString& FinalIniFilename, const TCHAR* BaseIniName, const TCHAR* Platform = NULL, bool bForceReload = false, bool bRequireDefaultIni = false, bool bAllowGeneratedIniWhenCooked = true, const TCHAR* GeneratedConfigDir = *YPaths::GeneratedConfigDir());
 
 	/**
 	* Load an ini file directly into an FConfigFile, and nothing is written to GConfig or disk.

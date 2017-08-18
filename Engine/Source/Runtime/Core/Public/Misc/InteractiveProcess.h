@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Misc/Timespan.h"
 #include "Logging/LogMacros.h"
 #include "Delegates/Delegate.h"
@@ -26,7 +26,7 @@ DECLARE_DELEGATE_TwoParams(FOnInteractiveProcessCompleted, int32, bool);
 *
 * The first parameter is the produced output.
 */
-DECLARE_DELEGATE_OneParam(FOnInteractiveProcessOutput, const YString&);
+DECLARE_DELEGATE_OneParam(FOnInteractiveProcessOutput, const FString&);
 
 /**
 * Implements an external process that can be interacted.
@@ -43,7 +43,7 @@ public:
 	* @param InParams The command line parameters.
 	* @param InHidden Whether the window of the process should be hidden.
 	*/
-	FInteractiveProcess(const YString& InURL, const YString& InParams, bool InHidden, bool LongTime = false);
+	FInteractiveProcess(const FString& InURL, const FString& InParams, bool InHidden, bool LongTime = false);
 
 	/** Destructor. */
 	~FInteractiveProcess();
@@ -108,7 +108,7 @@ public:
 	*
 	* @param Message to be sent
 	*/
-	void SendWhenReady(const YString &Message);
+	void SendWhenReady(const FString &Message);
 
 	/**
 	* Returns the return code from the exited process
@@ -154,7 +154,7 @@ protected:
 	*
 	* @param Output The output string to process.
 	*/
-	void ProcessOutput(const YString& Output);
+	void ProcessOutput(const FString& Output);
 
 	/**
 	 * Takes the first message to be sent from MessagesToProcess, if there is one, and sends it to process
@@ -175,10 +175,10 @@ private:
 	float SleepTime;
 
 	// Holds the URL of the executable to launch. */
-	YString URL;
+	FString URL;
 
 	// Holds the command line parameters. */
-	YString Params;
+	FString Params;
 
 	// Holds the handle to the process. */
 	FProcHandle ProcessHandle;
@@ -199,7 +199,7 @@ private:
 	FRunnableThread* Thread;
 
 	// Holds the name of thread */
-	YString ThreadName;
+	FString ThreadName;
 
 	// Holds the return code. */
 	int ReturnCode;
@@ -211,7 +211,7 @@ private:
 	FDateTime EndTime;
 
 	// Holds messages to be written to pipe when ready */
-	TQueue<YString> MessagesToProcess;
+	TQueue<FString> MessagesToProcess;
 
 	// Holds a delegate that is executed when the process has been canceled. */
 	FSimpleDelegate CanceledDelegate;

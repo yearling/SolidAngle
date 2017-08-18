@@ -9,7 +9,7 @@
 #include "CoreGlobals.h"
 #include "Misc/Parse.h"
 #include "Misc/EngineVersionBase.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "UObject/NameTypes.h"
 #include "Misc/ScopeLock.h"
 #include "Misc/CommandLine.h"
@@ -37,7 +37,7 @@ static HANDLE GSplashScreenThread = NULL;
 static HBITMAP GSplashScreenBitmap = NULL;
 static HWND GSplashScreenWnd = NULL; 
 static HWND GSplashScreenGuard = NULL; 
-static YString GSplashScreenFileName;
+static FString GSplashScreenFileName;
 static FText GSplashScreenAppName;
 static FText GSplashScreenText[ SplashTextType::NumTextTypes ];
 static RECT GSplashScreenTextRects[ SplashTextType::NumTextTypes ];
@@ -609,7 +609,7 @@ void FWindowsPlatformSplash::Show()
 		const TCHAR* SplashImage = GIsEditor ? ( GameName.IsEmpty() ? TEXT("EdSplashDefault") : TEXT("EdSplash") ) : ( GameName.IsEmpty() ? TEXT("SplashDefault") : TEXT("Splash") );
 
 		// make sure a splash was found
-		YString SplashPath;
+		FString SplashPath;
 		bool IsCustom;
 		if ( GetSplashPath(SplashImage, SplashPath, IsCustom ) == true )
 		{
@@ -653,7 +653,7 @@ void FWindowsPlatformSplash::Show()
 
 				// Display copyright information in editor splash screen
 				{
-					const YString CopyrightInfo = NSLOCTEXT( "UnrealEd", "SplashScreen_CopyrightInfo", "Copyright \x00a9 1998-2017   Epic Games, Inc.   All rights reserved." ).ToString();
+					const FString CopyrightInfo = NSLOCTEXT( "UnrealEd", "SplashScreen_CopyrightInfo", "Copyright \x00a9 1998-2017   Epic Games, Inc.   All rights reserved." ).ToString();
 					StartSetSplashText( SplashTextType::CopyrightInfo, *CopyrightInfo );
 				}
 			}

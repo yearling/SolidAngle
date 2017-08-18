@@ -7,7 +7,7 @@
 #include "Math/NumericLimits.h"
 #include "HAL/ThreadSingleton.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "HAL/PlatformTime.h"
 #include "UObject/NameTypes.h"
 #include "Containers/LockFreeList.h"
@@ -523,7 +523,7 @@ public:
 	/**
 	* Expensive! Extracts the description if this is a long name or just returns the empty string
 	*/
-	FORCEINLINE_STATS YString GetDescription() const
+	FORCEINLINE_STATS FString GetDescription() const
 	{
 		CheckInvariants();
 		return GetDescriptionFrom(GetRawName());
@@ -615,7 +615,7 @@ public:
 	CORE_API static FName GetShortNameFrom(FName InLongName);
 	CORE_API static FName GetGroupNameFrom(FName InLongName);
 	CORE_API static FName GetGroupCategoryFrom(FName InLongName);
-	CORE_API static YString GetDescriptionFrom(FName InLongName);
+	CORE_API static FString GetDescriptionFrom(FName InLongName);
 };
 
 
@@ -632,7 +632,7 @@ private:
 	/** ST_int64 and IsPackedCCAndDuration. */
 	uint32	CCAndDuration[2];
 	/** For FName. */
-	CORE_API const YString GetName() const
+	CORE_API const FString GetName() const
 	{
 		return FName::SafeString((int32)Cycles);
 	}
@@ -1033,7 +1033,7 @@ struct TStatMessage
 		return NameAndInfo.GetShortName();
 	}
 
-	FORCEINLINE_STATS YString GetDescription() const
+	FORCEINLINE_STATS FString GetDescription() const
 	{
 		return NameAndInfo.GetDescription();
 	}
@@ -1119,7 +1119,7 @@ struct FStatPacket
 	/** Initializes thread related properties for the stats packet. */
 	void SetThreadProperties()
 	{
-		ThreadId = YPlatformTLS::GetCurrentThreadId();
+		ThreadId = FPlatformTLS::GetCurrentThreadId();
 		if (ThreadId == GGameThreadId)
 		{
 			ThreadType = EThreadType::Game;
@@ -1260,7 +1260,7 @@ public:
 	/** Checks the TLS for a thread packet and if it isn't found, it makes a new one. **/
 	static FORCEINLINE_STATS FThreadStats* GetThreadStats()
 	{
-		FThreadStats* Stats = (FThreadStats*)YPlatformTLS::GetTlsValue(TlsSlot);
+		FThreadStats* Stats = (FThreadStats*)FPlatformTLS::GetTlsValue(TlsSlot);
 		if (!Stats)
 		{
 			Stats = FThreadStatsPool::Get().GetFromPool();
@@ -1326,12 +1326,12 @@ public:
 	/** This should be called when a thread exits, this deletes FThreadStats from the heap and TLS. **/
 	static void Shutdown()
 	{
-		FThreadStats* Stats = IsThreadingReady() ? (FThreadStats*)YPlatformTLS::GetTlsValue(TlsSlot) : nullptr;
+		FThreadStats* Stats = IsThreadingReady() ? (FThreadStats*)FPlatformTLS::GetTlsValue(TlsSlot) : nullptr;
 		if (Stats)
 		{
 			// Send all remaining messages.
 			Stats->Flush(false, true);
-			YPlatformTLS::SetTlsValue(TlsSlot, nullptr);
+			FPlatformTLS::SetTlsValue(TlsSlot, nullptr);
 			FThreadStatsPool::Get().ReturnToPool(Stats);
 		}
 	}
@@ -1658,7 +1658,7 @@ public:
 	* Runs a group command
 	* @param Cmd, Command to run
 	*/
-	virtual void StatGroupEnableManagerCommand(YString const& Cmd) = 0;
+	virtual void StatGroupEnableManagerCommand(FString const& Cmd) = 0;
 
 	/** Updates memory usage. */
 	virtual void UpdateMemoryUsage() = 0;

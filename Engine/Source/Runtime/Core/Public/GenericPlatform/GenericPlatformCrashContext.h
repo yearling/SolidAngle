@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "HAL/PlatformMemory.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 
 /**
 * Symbol information associated with a program counter.
@@ -14,13 +14,13 @@
 struct CORE_API FProgramCounterSymbolInfoEx
 {
 	/** Module name. */
-	YString	ModuleName;
+	FString	ModuleName;
 
 	/** Function name. */
-	YString	FunctionName;
+	FString	FunctionName;
 
 	/** Filename. */
-	YString	Filename;
+	FString	Filename;
 
 	/** Line number in file. */
 	uint32	LineNumber;
@@ -35,7 +35,7 @@ struct CORE_API FProgramCounterSymbolInfoEx
 	uint64	ProgramCounter;
 
 	/** Default constructor. */
-	FProgramCounterSymbolInfoEx(YString InModuleName, YString InFunctionName, YString InFilename, uint32 InLineNumber, uint64 InSymbolDisplacement, uint64 InOffsetInModule, uint64 InProgramCounter);
+	FProgramCounterSymbolInfoEx(FString InModuleName, FString InFunctionName, FString InFilename, uint32 InLineNumber, uint64 InSymbolDisplacement, uint64 InOffsetInModule, uint64 InProgramCounter);
 };
 
 
@@ -84,23 +84,23 @@ public:
 
 	static const ANSICHAR* CrashConfigFileNameA;
 	static const TCHAR* CrashConfigFileNameW;
-	static const YString CrashConfigExtension;
-	static const YString ConfigSectionName;
+	static const FString CrashConfigExtension;
+	static const FString ConfigSectionName;
 
-	static const YString CrashContextExtension;
-	static const YString RuntimePropertiesTag;
-	static const YString PlatformPropertiesTag;
-	static const YString UE4MinidumpName;
-	static const YString NewLineTag;
+	static const FString CrashContextExtension;
+	static const FString RuntimePropertiesTag;
+	static const FString PlatformPropertiesTag;
+	static const FString UE4MinidumpName;
+	static const FString NewLineTag;
 	static const int32 CrashGUIDLength = 128;
 
-	static const YString CrashTypeCrash;
-	static const YString CrashTypeAssert;
-	static const YString CrashTypeEnsure;
+	static const FString CrashTypeCrash;
+	static const FString CrashTypeAssert;
+	static const FString CrashTypeEnsure;
 
-	static const YString EngineModeExUnknown;
-	static const YString EngineModeExDirty;
-	static const YString EngineModeExVanilla;
+	static const FString EngineModeExUnknown;
+	static const FString EngineModeExDirty;
+	static const FString EngineModeExVanilla;
 
 	/** Initializes crash context related platform specific data that can be impossible to obtain after a crash. */
 	static void Initialize();
@@ -122,7 +122,7 @@ public:
 	/**
 	* @return the buffer containing serialized data.
 	*/
-	const YString& GetBuffer() const
+	const FString& GetBuffer() const
 	{
 		return CommonBuffer;
 	}
@@ -156,10 +156,10 @@ public:
 	}
 
 	/** Escapes a specified XML string, naive implementation. */
-	static YString EscapeXMLString(const YString& Text);
+	static FString EscapeXMLString(const FString& Text);
 
 	/** Unescapes a specified XML string, naive implementation. */
-	static YString UnescapeXMLString(const YString& Text);
+	static FString UnescapeXMLString(const FString& Text);
 
 	/** Helper to get the standard string for the crash type based on crash event bool values. */
 	static const TCHAR* GetCrashTypeString(bool InIsEnsure, bool InIsAssert);
@@ -201,7 +201,7 @@ private:
 	static int32 StaticCrashContextIndex;
 
 	/** The buffer used to store the crash's properties. */
-	YString CommonBuffer;
+	FString CommonBuffer;
 
 	/**	Records which crash context we were using the StaticCrashContextIndex counter */
 	int32 CrashContextIndex;

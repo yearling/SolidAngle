@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Misc/Crc.h"
 #include "Math/UnrealMathUtility.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Misc/Parse.h"
 
 class YFloat16Color;
@@ -342,9 +342,9 @@ struct FLinearColor
 		return R * 0.3f + G * 0.59f + B * 0.11f;
 	}
 
-	YString ToString() const
+	FString ToString() const
 	{
-		return YString::Printf(TEXT("(R=%f,G=%f,B=%f,A=%f)"), R, G, B, A);
+		return FString::Printf(TEXT("(R=%f,G=%f,B=%f,A=%f)"), R, G, B, A);
 	}
 
 	/**
@@ -354,7 +354,7 @@ struct FLinearColor
 	* @param InSourceString YString containing the color values.
 	* @return true if the R,G,B values were read successfully; false otherwise.
 	*/
-	bool InitFromString(const YString& InSourceString)
+	bool InitFromString(const FString& InSourceString)
 	{
 		R = G = B = 0.f;
 		A = 1.f;
@@ -472,7 +472,7 @@ public:
 	* @return The corresponding color value.
 	* @see ToHex
 	*/
-	static CORE_API FColor FromHex(const YString& HexString);
+	static CORE_API FColor FromHex(const FString& HexString);
 
 	/**
 	* Makes a random but quite nice color.
@@ -516,9 +516,9 @@ public:
 	* @return Hexadecimal string.
 	* @see FromHex, ToString
 	*/
-	FORCEINLINE YString ToHex() const
+	FORCEINLINE FString ToHex() const
 	{
-		return YString::Printf(TEXT("%02X%02X%02X%02X"), R, G, B, A);
+		return FString::Printf(TEXT("%02X%02X%02X%02X"), R, G, B, A);
 	}
 
 	/**
@@ -527,9 +527,9 @@ public:
 	* @return The string representation.
 	* @see ToHex
 	*/
-	FORCEINLINE YString ToString() const
+	FORCEINLINE FString ToString() const
 	{
-		return YString::Printf(TEXT("(R=%i,G=%i,B=%i,A=%i)"), R, G, B, A);
+		return FString::Printf(TEXT("(R=%i,G=%i,B=%i,A=%i)"), R, G, B, A);
 	}
 
 	/**
@@ -539,7 +539,7 @@ public:
 	* @param	InSourceString	YString containing the color values.
 	* @return true if the R,G,B values were read successfully; false otherwise.
 	*/
-	bool InitFromString(const YString& InSourceString)
+	bool InitFromString(const FString& InSourceString)
 	{
 		R = G = B = 0;
 		A = 255;

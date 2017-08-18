@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Misc/OutputDeviceError.h"
 
-class YOutputDeviceAnsiError : public YOutputDeviceError
+class YOutputDeviceAnsiError : public FOutputDeviceError
 {
 public:
 	/** Constructor, initializing member variables */

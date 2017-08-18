@@ -7,7 +7,7 @@
 /* FMonitoredProcess structors
  *****************************************************************************/
 
-FMonitoredProcess::FMonitoredProcess( const YString& InURL, const YString& InParams, bool InHidden, bool InCreatePipes )
+FMonitoredProcess::FMonitoredProcess( const FString& InURL, const FString& InParams, bool InHidden, bool InCreatePipes )
 	: Canceling(false)
 	, EndTime(0)
 	, Hidden(InHidden)
@@ -76,7 +76,7 @@ bool FMonitoredProcess::Launch()
 	}
 
 	static int32 MonitoredProcessIndex = 0;
-	const YString MonitoredProcessName = YString::Printf( TEXT( "FMonitoredProcess %d" ), MonitoredProcessIndex );
+	const FString MonitoredProcessName = FString::Printf( TEXT( "FMonitoredProcess %d" ), MonitoredProcessIndex );
 	MonitoredProcessIndex++;
 
 	bIsRunning = true;
@@ -93,7 +93,7 @@ bool FMonitoredProcess::Launch()
 /* FMonitoredProcess implementation
  *****************************************************************************/
 
-void FMonitoredProcess::ProcessOutput( const YString& Output )
+void FMonitoredProcess::ProcessOutput( const FString& Output )
 {
 	// Append this output to the output buffer
 	OutputBuffer += Output;

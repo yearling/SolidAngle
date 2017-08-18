@@ -53,7 +53,7 @@ void FStackTracker::CaptureStackTrace(int32 EntriesToIgnore, void* UserData, int
 						ANSICHAR AddressInformation[512];
 						AddressInformation[0] = 0;
 						FPlatformStackWalk::ProgramCounterToHumanReadableString( 1, BackTrace[Index], AddressInformation, ARRAY_COUNT(AddressInformation)-1 );
-						YString Symbol(AddressInformation);
+						FString Symbol(AddressInformation);
 						int32 Spot = Symbol.Find(TEXT(" - "));
 						if (Spot != INDEX_NONE)
 						{
@@ -177,18 +177,18 @@ void FStackTracker::DumpStackTraces(int32 StackThreshold, FOutputDevice& Ar, flo
 		// Avoid log spam by only logging above threshold.
 		if( CallStack.StackCount > StackThreshold )
 		{
-			YString CallStackString;
+			FString CallStackString;
 			if (SampleCountCorrectionFactor != 1.0f)
 			{
 				// First row is stack count.
-				CallStackString = YString::FromInt((int32)(float(CallStack.StackCount) * SampleCountCorrectionFactor));
-				CallStackString += YString::Printf( TEXT(",%5.2f"), float(CallStack.StackCount) * SampleCountCorrectionFactor);
+				CallStackString = FString::FromInt((int32)(float(CallStack.StackCount) * SampleCountCorrectionFactor));
+				CallStackString += FString::Printf( TEXT(",%5.2f"), float(CallStack.StackCount) * SampleCountCorrectionFactor);
 			}
 			else
 			{
 				// First row is stack count.
-				CallStackString = YString::FromInt((int32)CallStack.StackCount);
-				CallStackString += YString::Printf( TEXT(",%5.2f"), static_cast<float>(CallStack.StackCount)/static_cast<float>(FramesCaptured) );
+				CallStackString = FString::FromInt((int32)CallStack.StackCount);
+				CallStackString += FString::Printf( TEXT(",%5.2f"), static_cast<float>(CallStack.StackCount)/static_cast<float>(FramesCaptured) );
 			}
 			
 
@@ -198,7 +198,7 @@ void FStackTracker::DumpStackTraces(int32 StackThreshold, FOutputDevice& Ar, flo
 				ANSICHAR AddressInformation[512];
 				AddressInformation[0] = 0;
 				FPlatformStackWalk::ProgramCounterToHumanReadableString( AddressIndex, CallStack.Addresses[AddressIndex], AddressInformation, ARRAY_COUNT(AddressInformation)-1 );
-				CallStackString = CallStackString + LINE_TERMINATOR TEXT(",,,") + YString(AddressInformation);
+				CallStackString = CallStackString + LINE_TERMINATOR TEXT(",,,") + FString(AddressInformation);
 			}
 
 			// Finally log with ',' prefix so "Log:" can easily be discarded as row in Excel.

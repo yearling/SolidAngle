@@ -2,7 +2,7 @@
 
 #include "Windows/WindowsCursor.h"
 #include "Misc/AssertionMacros.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Misc/Paths.h"
 #include "Misc/CoreMisc.h"
 #include "Math/Vector2D.h"
@@ -67,7 +67,7 @@ FWindowsCursor::FWindowsCursor()
 			break;
 
 		case EMouseCursor::GrabHand:
-			CursorHandle = LoadCursorFromFile((LPCTSTR)*(YString( FPlatformProcess::BaseDir() ) / YString::Printf( TEXT("%sEditor/Slate/Cursor/grabhand.cur"), *YPaths::EngineContentDir() )));
+			CursorHandle = LoadCursorFromFile((LPCTSTR)*(FString( FPlatformProcess::BaseDir() ) / FString::Printf( TEXT("%sEditor/Slate/Cursor/grabhand.cur"), *YPaths::EngineContentDir() )));
 			if (CursorHandle == NULL)
 			{
 				// Failed to load file, fall back
@@ -76,7 +76,7 @@ FWindowsCursor::FWindowsCursor()
 			break;
 
 		case EMouseCursor::GrabHandClosed:
-			CursorHandle = LoadCursorFromFile((LPCTSTR)*(YString( FPlatformProcess::BaseDir() ) / YString::Printf( TEXT("%sEditor/Slate/Cursor/grabhand_closed.cur"), *YPaths::EngineContentDir() )));
+			CursorHandle = LoadCursorFromFile((LPCTSTR)*(FString( FPlatformProcess::BaseDir() ) / FString::Printf( TEXT("%sEditor/Slate/Cursor/grabhand_closed.cur"), *YPaths::EngineContentDir() )));
 			if (CursorHandle == NULL)
 			{
 				// Failed to load file, fall back
@@ -89,7 +89,7 @@ FWindowsCursor::FWindowsCursor()
 			break;
 
 		case EMouseCursor::EyeDropper:
-			CursorHandle = LoadCursorFromFile((LPCTSTR)*(YString( FPlatformProcess::BaseDir() ) / YString::Printf( TEXT("%sEditor/Slate/Icons/eyedropper.cur"), *YPaths::EngineContentDir() )));
+			CursorHandle = LoadCursorFromFile((LPCTSTR)*(FString( FPlatformProcess::BaseDir() ) / FString::Printf( TEXT("%sEditor/Slate/Icons/eyedropper.cur"), *YPaths::EngineContentDir() )));
 			break;
 
 			// NOTE: For custom app cursors, use:

@@ -15,13 +15,13 @@ bool FText::IsWhitespace( const TCHAR Char )
 	return FChar::IsWhitespace(Char);
 }
 
-FText FText::AsDate( const FDateTime& DateTime, const EDateTimeStyle::Type DateStyle, const YString& TimeZone, const FCulturePtr& TargetCulture )
+FText FText::AsDate( const FDateTime& DateTime, const EDateTimeStyle::Type DateStyle, const FString& TimeZone, const FCulturePtr& TargetCulture )
 {
 	checkf(FInternationalization::Get().IsInitialized() == true, TEXT("FInternationalization is not initialized. An FText formatting method was likely used in static object initialization - this is not supported."));
 	return FText::FromString( DateTime.ToString( TEXT("%Y.%m.%d") ) );
 }
 
-FText FText::AsTime( const FDateTime& DateTime, const EDateTimeStyle::Type TimeStyle, const YString& TimeZone, const FCulturePtr& TargetCulture )
+FText FText::AsTime( const FDateTime& DateTime, const EDateTimeStyle::Type TimeStyle, const FString& TimeZone, const FCulturePtr& TargetCulture )
 {
 	checkf(FInternationalization::Get().IsInitialized() == true, TEXT("FInternationalization is not initialized. An FText formatting method was likely used in static object initialization - this is not supported."));
 	return FText::FromString( DateTime.ToString( TEXT("%H.%M.%S") ) );
@@ -34,7 +34,7 @@ FText FText::AsTimespan( const YTimespan& Timespan, const FCulturePtr& TargetCul
 	return FText::FromString( DateTime.ToString( TEXT("%H.%M.%S") ) );
 }
 
-FText FText::AsDateTime( const FDateTime& DateTime, const EDateTimeStyle::Type DateStyle, const EDateTimeStyle::Type TimeStyle, const YString& TimeZone, const FCulturePtr& TargetCulture )
+FText FText::AsDateTime( const FDateTime& DateTime, const EDateTimeStyle::Type DateStyle, const EDateTimeStyle::Type TimeStyle, const FString& TimeZone, const FCulturePtr& TargetCulture )
 {
 	checkf(FInternationalization::Get().IsInitialized() == true, TEXT("FInternationalization is not initialized. An FText formatting method was likely used in static object initialization - this is not supported."));
 	return FText::FromString(DateTime.ToString(TEXT("%Y.%m.%d-%H.%M.%S")));
@@ -70,7 +70,7 @@ bool FText::FSortPredicate::operator()(const FText& A, const FText& B) const
 	return A.ToString() < B.ToString();
 }
 
-bool FUnicodeChar::CodepointToString(const uint32 InCodepoint, YString& OutString)
+bool FUnicodeChar::CodepointToString(const uint32 InCodepoint, FString& OutString)
 {
 	return false;
 }
@@ -89,7 +89,7 @@ public:
 		return FLegacyTextBiDi::ComputeTextDirection(InText.ToString());
 	}
 
-	virtual ETextDirection ComputeTextDirection(const YString& InString) override
+	virtual ETextDirection ComputeTextDirection(const FString& InString) override
 	{
 		return FLegacyTextBiDi::ComputeTextDirection(*InString, 0, InString.Len());
 	}
@@ -104,7 +104,7 @@ public:
 		return FLegacyTextBiDi::ComputeTextDirection(InText.ToString(), InBaseDirection, OutTextDirectionInfo);
 	}
 
-	virtual ETextDirection ComputeTextDirection(const YString& InString, const ETextDirection InBaseDirection, TArray<FTextDirectionInfo>& OutTextDirectionInfo) override
+	virtual ETextDirection ComputeTextDirection(const FString& InString, const ETextDirection InBaseDirection, TArray<FTextDirectionInfo>& OutTextDirectionInfo) override
 	{
 		return FLegacyTextBiDi::ComputeTextDirection(*InString, 0, InString.Len(), InBaseDirection, OutTextDirectionInfo);
 	}
@@ -130,7 +130,7 @@ public:
 		return FLegacyTextBiDi::ComputeBaseDirection(InText.ToString());
 	}
 
-	virtual ETextDirection ComputeBaseDirection(const YString& InString) override
+	virtual ETextDirection ComputeBaseDirection(const FString& InString) override
 	{
 		return FLegacyTextBiDi::ComputeBaseDirection(*InString, 0, InString.Len());
 	}
@@ -153,7 +153,7 @@ ETextDirection ComputeTextDirection(const FText& InText)
 	return ComputeTextDirection(InText.ToString());
 }
 
-ETextDirection ComputeTextDirection(const YString& InString)
+ETextDirection ComputeTextDirection(const FString& InString)
 {
 	return ComputeTextDirection(*InString, 0, InString.Len());
 }
@@ -168,7 +168,7 @@ ETextDirection ComputeTextDirection(const FText& InText, const ETextDirection In
 	return ComputeTextDirection(InText.ToString(), InBaseDirection, OutTextDirectionInfo);
 }
 
-ETextDirection ComputeTextDirection(const YString& InString, const ETextDirection InBaseDirection, TArray<FTextDirectionInfo>& OutTextDirectionInfo)
+ETextDirection ComputeTextDirection(const FString& InString, const ETextDirection InBaseDirection, TArray<FTextDirectionInfo>& OutTextDirectionInfo)
 {
 	return ComputeTextDirection(*InString, 0, InString.Len(), InBaseDirection, OutTextDirectionInfo);
 }
@@ -194,7 +194,7 @@ ETextDirection ComputeBaseDirection(const FText& InText)
 	return ComputeBaseDirection(InText.ToString());
 }
 
-ETextDirection ComputeBaseDirection(const YString& InString)
+ETextDirection ComputeBaseDirection(const FString& InString)
 {
 	return ComputeBaseDirection(*InString, 0, InString.Len());
 }

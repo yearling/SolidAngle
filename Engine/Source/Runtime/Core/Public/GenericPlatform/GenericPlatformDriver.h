@@ -6,7 +6,7 @@
 #include "Misc/AssertionMacros.h"
 #include "Containers/Array.h"
 #include "Math/UnrealMathUtility.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Misc/Parse.h"
 #include "Misc/ConfigCacheIni.h"
 
@@ -252,19 +252,19 @@ struct FGPUDriverInfo
 	// DirectX VendorId, 0 if not set, use functions below to set/get
 	uint32 VendorId;
 	// e.g. "NVIDIA GeForce GTX 680" or "AMD Radeon R9 200 / HD 7900 Series"
-	YString DeviceDescription;
+	FString DeviceDescription;
 	// e.g. "NVIDIA" or "Advanced Micro Devices, Inc."
-	YString ProviderName;
+	FString ProviderName;
 	// e.g. "15.200.1062.1004"(AMD)
 	// e.g. "9.18.13.4788"(NVIDIA) first number is Windows version (e.g. 7:Vista, 6:XP, 4:Me, 9:Win8(1), 10:Win7), last 5 have the UserDriver version encoded
 	// also called technical version number (https://wiki.mozilla.org/Blocklisting/Blocked_Graphics_Drivers)
 	// TEXT("Unknown") if driver detection failed
-	YString InternalDriverVersion;
+	FString InternalDriverVersion;
 	// e.g. "Catalyst 15.7.1"(AMD) or "Crimson 15.7.1"(AMD) or "347.88"(NVIDIA)
 	// also called commercial version number (https://wiki.mozilla.org/Blocklisting/Blocked_Graphics_Drivers)
-	YString UserDriverVersion;
+	FString UserDriverVersion;
 	// e.g. 3-13-2015
-	YString DriverDate;
+	FString DriverDate;
 
 	bool IsValid() const
 	{
@@ -287,10 +287,10 @@ struct FGPUDriverInfo
 	// get VendorId
 	bool IsNVIDIA() const { return VendorId == 0x10DE; }
 
-	YString GetUnifiedDriverVersion() const
+	FString GetUnifiedDriverVersion() const
 	{
 		// we use the internal version, not the user version to avoid problem where the name was altered 
-		const YString& FullVersion = InternalDriverVersion;
+		const FString& FullVersion = InternalDriverVersion;
 
 		if (IsNVIDIA())
 		{
@@ -303,7 +303,7 @@ struct FGPUDriverInfo
 
 			// we don't care about the windows version so we don't look at the front part of the driver version
 			// e.g. 36.143
-			YString RightPart = FullVersion.Right(6);
+			FString RightPart = FullVersion.Right(6);
 
 			// move the dot
 			RightPart = RightPart.Replace(TEXT("."), TEXT(""));
@@ -325,9 +325,9 @@ struct FGPUDriverInfo
 struct FBlackListEntry
 {
 	// required, e.g. "<=223.112.21.1", might includes comparison operators, later even things multiple ">12.22 <=12.44"
-	YString DriverVersionString;
+	FString DriverVersionString;
 	// required
-	YString Reason;
+	FString Reason;
 
 	// @param e.g. "DriverVersion=\"361.43\", Reason=\"UE-25096 Viewport flashes black and white when moving in the scene on latest Nvidia drivers\""
 	void LoadFromINIString(const TCHAR* In)
@@ -465,11 +465,11 @@ struct FGPUHardware
 	}
 
 	// @return a driver version intended to be shown to the user e.g. "15.30.1025.1001 12/17/2015 (Crimson Edition 15.12)"
-	YString GetSuggestedDriverVersion() const
+	FString GetSuggestedDriverVersion() const
 	{
 		const TCHAR* Section = GetVendorSectionName();
 
-		YString Ret;
+		FString Ret;
 
 		if (Section)
 		{
@@ -486,7 +486,7 @@ struct FGPUHardware
 
 		if (Section)
 		{
-			TArray<YString> BlacklistStrings;
+			TArray<FString> BlacklistStrings;
 			GConfig->GetArray(GetVendorSectionName(), TEXT("Blacklist"), BlacklistStrings, GHardwareIni);
 
 			for (int32 i = 0; i < BlacklistStrings.Num(); ++i)
@@ -519,7 +519,7 @@ struct FGPUHardware
 
 		if (Section)
 		{
-			TArray<YString> BlacklistStrings;
+			TArray<FString> BlacklistStrings;
 			GConfig->GetArray(GetVendorSectionName(), TEXT("Blacklist"), BlacklistStrings, GHardwareIni);
 
 			for (int32 i = 0; !bLatestBlacklisted && i < BlacklistStrings.Num(); ++i)

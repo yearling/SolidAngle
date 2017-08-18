@@ -2,7 +2,7 @@
 
 #include "CoreTypes.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "UObject/NameTypes.h"
 #include "Containers/Map.h"
 #include "Internationalization/Text.h"
@@ -36,7 +36,7 @@ namespace TextFilterTests
 		// ITextFilterExpressionContext API - used for testing FTextFilterExpressionEvaluator
 		virtual bool TestBasicStringExpression(const FTextFilterString& InValue, const ETextFilterTextComparisonMode InTextComparisonMode) const override
 		{
-			for (const YString& BasicString : BasicStrings)
+			for (const FString& BasicString : BasicStrings)
 			{
 				if (TextFilterUtils::TestBasicStringExpression(BasicString, InValue, InTextComparisonMode))
 				{
@@ -47,7 +47,7 @@ namespace TextFilterTests
 		}
 		virtual bool TestComplexExpression(const FName& InKey, const FTextFilterString& InValue, const ETextFilterComparisonOperation InComparisonOperation, const ETextFilterTextComparisonMode InTextComparisonMode) const override
 		{
-			const YString* ItemValue = KeyValuePairs.Find(InKey);
+			const FString* ItemValue = KeyValuePairs.Find(InKey);
 			if (ItemValue)
 			{
 				return TextFilterUtils::TestComplexExpression(*ItemValue, InValue, InComparisonOperation, InTextComparisonMode);
@@ -56,7 +56,7 @@ namespace TextFilterTests
 		}
 
 		// TTextFilter API - used for testing TTextFilter
-		static void ExtractItemStrings(const FTestFilterItem* InItem, TArray<YString>& OutStrings)
+		static void ExtractItemStrings(const FTestFilterItem* InItem, TArray<FString>& OutStrings)
 		{
 			OutStrings = InItem->BasicStrings;
 		}
@@ -65,8 +65,8 @@ namespace TextFilterTests
 			return InItem->TestComplexExpression(InKey, InValue, InComparisonOperation, InTextComparisonMode);
 		}
 
-		TArray<YString> BasicStrings;
-		TMap<FName, YString> KeyValuePairs;
+		TArray<FString> BasicStrings;
+		TMap<FName, FString> KeyValuePairs;
 	};
 
 	struct ITestFilterExpression
@@ -92,13 +92,13 @@ namespace TextFilterTests
 
 			if (!FilterErrorText.IsEmpty())
 			{
-				Test->AddError(YString::Printf(TEXT("Filter expression '%s' reported an error: %s"), InFilterExpression, *FilterErrorText.ToString()));
+				Test->AddError(FString::Printf(TEXT("Filter expression '%s' reported an error: %s"), InFilterExpression, *FilterErrorText.ToString()));
 				bResult = false;
 			}
 
 			if (bActual != bExpected)
 			{
-				Test->AddError(YString::Printf(TEXT("Filter expression '%s' evaluated incorrectly: Expected: %s, Actual: %s"), 
+				Test->AddError(FString::Printf(TEXT("Filter expression '%s' evaluated incorrectly: Expected: %s, Actual: %s"), 
 					InFilterExpression, 
 					(bExpected) ? TEXT("true") : TEXT("false"), 
 					(bActual) ? TEXT("true") : TEXT("false"))
@@ -223,7 +223,7 @@ namespace TextFilterTests
 };
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FTextFilterTests_TextFilterExpressionEvaluator, "System.Core.Text.TextFilterExpressionEvaluator", EAutomationTestFlags::ApplicationContextMask | EAutomationTestFlags::EngineFilter)
-bool FTextFilterTests_TextFilterExpressionEvaluator::RunTest(const YString& Parameters)
+bool FTextFilterTests_TextFilterExpressionEvaluator::RunTest(const FString& Parameters)
 {
 	using namespace TextFilterTests;
 
@@ -249,7 +249,7 @@ bool FTextFilterTests_TextFilterExpressionEvaluator::RunTest(const YString& Para
 }
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FTextFilterTests_TextFilter, "System.Core.Text.TextFilter", EAutomationTestFlags::ApplicationContextMask | EAutomationTestFlags::EngineFilter)
-bool FTextFilterTests_TextFilter::RunTest(const YString& Parameters)
+bool FTextFilterTests_TextFilter::RunTest(const FString& Parameters)
 {
 	using namespace TextFilterTests;
 

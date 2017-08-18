@@ -183,7 +183,7 @@ struct CORE_API YGenericPlatformMemory
 		SIZE_T			GetSize() const { return Size; }
 
 
-		YSharedMemoryRegion(const YString& InName, uint32 InAccessMode, void* InAddress, SIZE_T InSize);
+		YSharedMemoryRegion(const FString& InName, uint32 InAccessMode, void* InAddress, SIZE_T InSize);
 
 	protected:
 
@@ -413,7 +413,7 @@ public:
 	*
 	* @return pointer to YSharedMemoryRegion (or its descendants) if successful, NULL if not.
 	*/
-	static YSharedMemoryRegion* MapNamedSharedMemoryRegion(const YString& Name, bool bCreate, uint32 AccessMode, SIZE_T Size);
+	static YSharedMemoryRegion* MapNamedSharedMemoryRegion(const FString& Name, bool bCreate, uint32 AccessMode, SIZE_T Size);
 
 	/**
 	* Unmaps a name shared memory region

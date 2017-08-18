@@ -59,7 +59,7 @@ FName FMapErrors::LODActorMissingActor(TEXT("LODActorMissingActor"));
 FName FMapErrors::LODActorNoActorFound(TEXT("LODActorNoActor"));
 FName FMapErrors::HLODSystemNotEnabled(TEXT("HLODSystemNotEnabled"));
 
-static const YString MapErrorsPath = TEXT("Shared/Editor/MapErrors");
+static const FString MapErrorsPath = TEXT("Shared/Editor/MapErrors");
 
 FMapErrorToken::FMapErrorToken(const FName& InErrorName)
 	: FDocumentationToken(MapErrorsPath, MapErrorsPath, InErrorName.ToString())

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Internationalization/Text.h"
 #include "Internationalization/ITextFormatArgumentModifier.h"
 
@@ -22,9 +22,9 @@ class FTextFormatArgumentModifier_PluralForm : public ITextFormatArgumentModifie
 public:
 	static TSharedPtr<ITextFormatArgumentModifier> Create(const ETextPluralType InPluralType, const FTextFormatString& InArgsString);
 
-	virtual void Evaluate(const FFormatArgumentValue& InValue, const FPrivateTextFormatArguments& InFormatArgs, YString& OutResult) const override;
+	virtual void Evaluate(const FFormatArgumentValue& InValue, const FPrivateTextFormatArguments& InFormatArgs, FString& OutResult) const override;
 
-	virtual void GetFormatArgumentNames(TArray<YString>& OutArgumentNames) const override;
+	virtual void GetFormatArgumentNames(TArray<FString>& OutArgumentNames) const override;
 
 	virtual void EstimateLength(int32& OutLength, bool& OutUsesFormatArgs) const override;
 
@@ -47,9 +47,9 @@ class FTextFormatArgumentModifier_GenderForm : public ITextFormatArgumentModifie
 public:
 	static TSharedPtr<ITextFormatArgumentModifier> Create(const FTextFormatString& InArgsString);
 
-	virtual void Evaluate(const FFormatArgumentValue& InValue, const FPrivateTextFormatArguments& InFormatArgs, YString& OutResult) const override;
+	virtual void Evaluate(const FFormatArgumentValue& InValue, const FPrivateTextFormatArguments& InFormatArgs, FString& OutResult) const override;
 
-	virtual void GetFormatArgumentNames(TArray<YString>& OutArgumentNames) const override;
+	virtual void GetFormatArgumentNames(TArray<FString>& OutArgumentNames) const override;
 
 	virtual void EstimateLength(int32& OutLength, bool& OutUsesFormatArgs) const override;
 
@@ -72,9 +72,9 @@ class FTextFormatArgumentModifier_HangulPostPositions : public ITextFormatArgume
 public:
 	static TSharedPtr<ITextFormatArgumentModifier> Create(const FTextFormatString& InArgsString);
 
-	virtual void Evaluate(const FFormatArgumentValue& InValue, const FPrivateTextFormatArguments& InFormatArgs, YString& OutResult) const override;
+	virtual void Evaluate(const FFormatArgumentValue& InValue, const FPrivateTextFormatArguments& InFormatArgs, FString& OutResult) const override;
 
-	virtual void GetFormatArgumentNames(TArray<YString>& OutArgumentNames) const override;
+	virtual void GetFormatArgumentNames(TArray<FString>& OutArgumentNames) const override;
 
 	virtual void EstimateLength(int32& OutLength, bool& OutUsesFormatArgs) const override;
 

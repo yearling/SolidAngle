@@ -2,17 +2,17 @@
 
 #include "Misc/Timespan.h"
 #include "Templates/TypeHash.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "UObject/PropertyPortFlags.h"
 
 /* YTimespan interface
  *****************************************************************************/
 
-bool YTimespan::ExportTextItem(YString& ValueStr, YTimespan const& DefaultValue, UObject* Parent, int32 PortFlags, UObject* ExportRootScope) const
+bool YTimespan::ExportTextItem(FString& ValueStr, YTimespan const& DefaultValue, UObject* Parent, int32 PortFlags, UObject* ExportRootScope) const
 {
 	if (0 != (PortFlags & EPropertyPortFlags::PPF_ExportCpp))
 	{
-		ValueStr += YString::Printf(TEXT("YTimespan(0x%016X)"), Ticks);
+		ValueStr += FString::Printf(TEXT("YTimespan(0x%016X)"), Ticks);
 		return true;
 	}
 
@@ -37,7 +37,7 @@ bool YTimespan::Serialize(FArchive& Ar)
 }
 
 
-YString YTimespan::ToString() const
+FString YTimespan::ToString() const
 {
 	if (GetDays() == 0)
 	{
@@ -48,9 +48,9 @@ YString YTimespan::ToString() const
 }
 
 
-YString YTimespan::ToString(const TCHAR* Format) const
+FString YTimespan::ToString(const TCHAR* Format) const
 {
-	YString Result;
+	FString Result;
 
 	while (*Format != TCHAR('\0'))
 	{
@@ -60,16 +60,16 @@ YString YTimespan::ToString(const TCHAR* Format) const
 			{
 			case TCHAR('n'): if (Ticks < 0) Result += TCHAR('-'); break;
 			case TCHAR('N'): Result += (Ticks < 0) ? TCHAR('-') : TCHAR('+'); break;
-			case TCHAR('d'): Result += YString::Printf(TEXT("%i"), YMath::Abs(GetDays())); break;
-			case TCHAR('h'): Result += YString::Printf(TEXT("%02i"), YMath::Abs(GetHours())); break;
-			case TCHAR('m'): Result += YString::Printf(TEXT("%02i"), YMath::Abs(GetMinutes())); break;
-			case TCHAR('s'): Result += YString::Printf(TEXT("%02i"), YMath::Abs(GetSeconds())); break;
-			case TCHAR('f'): Result += YString::Printf(TEXT("%03i"), YMath::Abs(GetMilliseconds())); break;
-			case TCHAR('D'): Result += YString::Printf(TEXT("%f"), YMath::Abs(GetTotalDays())); break;
-			case TCHAR('H'): Result += YString::Printf(TEXT("%f"), YMath::Abs(GetTotalHours())); break;
-			case TCHAR('M'): Result += YString::Printf(TEXT("%f"), YMath::Abs(GetTotalMinutes())); break;
-			case TCHAR('S'): Result += YString::Printf(TEXT("%f"), YMath::Abs(GetTotalSeconds())); break;
-			case TCHAR('F'): Result += YString::Printf(TEXT("%f"), YMath::Abs(GetTotalMilliseconds())); break;
+			case TCHAR('d'): Result += FString::Printf(TEXT("%i"), YMath::Abs(GetDays())); break;
+			case TCHAR('h'): Result += FString::Printf(TEXT("%02i"), YMath::Abs(GetHours())); break;
+			case TCHAR('m'): Result += FString::Printf(TEXT("%02i"), YMath::Abs(GetMinutes())); break;
+			case TCHAR('s'): Result += FString::Printf(TEXT("%02i"), YMath::Abs(GetSeconds())); break;
+			case TCHAR('f'): Result += FString::Printf(TEXT("%03i"), YMath::Abs(GetMilliseconds())); break;
+			case TCHAR('D'): Result += FString::Printf(TEXT("%f"), YMath::Abs(GetTotalDays())); break;
+			case TCHAR('H'): Result += FString::Printf(TEXT("%f"), YMath::Abs(GetTotalHours())); break;
+			case TCHAR('M'): Result += FString::Printf(TEXT("%f"), YMath::Abs(GetTotalMinutes())); break;
+			case TCHAR('S'): Result += FString::Printf(TEXT("%f"), YMath::Abs(GetTotalSeconds())); break;
+			case TCHAR('F'): Result += FString::Printf(TEXT("%f"), YMath::Abs(GetTotalMilliseconds())); break;
 
 			default:
 
@@ -139,16 +139,16 @@ YTimespan YTimespan::FromSeconds(double Seconds)
 }
 
 
-bool YTimespan::Parse(const YString& TimespanString, YTimespan& OutTimespan)
+bool YTimespan::Parse(const FString& TimespanString, YTimespan& OutTimespan)
 {
 	// @todo gmp: implement stricter YTimespan parsing; this implementation is too forgiving.
-	YString TokenString = TimespanString.Replace(TEXT("."), TEXT(":"));
+	FString TokenString = TimespanString.Replace(TEXT("."), TEXT(":"));
 	TokenString.ReplaceInline(TEXT(","), TEXT(":"));
 
 	bool Negative = TokenString.StartsWith(TEXT("-"));
 	TokenString.ReplaceInline(TEXT("-"), TEXT(":"), ESearchCase::CaseSensitive);
 
-	TArray<YString> Tokens;
+	TArray<FString> Tokens;
 	TokenString.ParseIntoArray(Tokens, TEXT(":"), true);
 
 	if (Tokens.Num() == 4)

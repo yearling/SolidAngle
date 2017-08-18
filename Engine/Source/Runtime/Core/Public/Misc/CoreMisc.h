@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Misc/Exec.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Map.h"
 #include "Math/IntPoint.h"
 #include "UObject/NameTypes.h"
@@ -54,7 +54,7 @@ private:
 class FContextSupplier
 {
 public:
-	virtual YString GetContext() = 0;
+	virtual FString GetContext() = 0;
 };
 
 
@@ -158,11 +158,11 @@ FORCEINLINE bool IsRunningClientOnly()
 */
 struct CORE_API FUrlConfig
 {
-	YString DefaultProtocol;
-	YString DefaultName;
-	YString DefaultHost;
-	YString DefaultPortal;
-	YString DefaultSaveExt;
+	FString DefaultProtocol;
+	FString DefaultName;
+	FString DefaultHost;
+	FString DefaultPortal;
+	FString DefaultSaveExt;
 	int32 DefaultPort;
 
 	/**
@@ -195,7 +195,7 @@ struct FScriptTraceStackNode
 	{
 	}
 
-	YString GetStackDescription() const
+	FString GetStackDescription() const
 	{
 		return Scope.ToString() + TEXT(".") + FunctionName.ToString();
 	}
@@ -210,7 +210,7 @@ struct CORE_API FBoolConfigValueHelper
 private:
 	bool bValue;
 public:
-	FBoolConfigValueHelper(const TCHAR* Section, const TCHAR* Key, const YString& Filename = GEditorIni);
+	FBoolConfigValueHelper(const TCHAR* Section, const TCHAR* Key, const FString& Filename = GEditorIni);
 
 	operator bool() const
 	{

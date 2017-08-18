@@ -8,7 +8,7 @@
 #include "Templates/UnrealTypeTraits.h"
 #include "Containers/ContainerAllocationPolicies.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "UObject/NameTypes.h"
 #include "Templates/SharedPointer.h"
 
@@ -125,7 +125,7 @@ public:
 	* @return	Delegate in string format
 	*/
 	template <class UObjectTemplate>
-	inline YString ToString() const
+	inline FString ToString() const
 	{
 		if (IsBound())
 		{
@@ -401,11 +401,11 @@ public:
 	* @return	Delegate in string format
 	*/
 	template <typename UObjectTemplate>
-	inline YString ToString() const
+	inline FString ToString() const
 	{
 		if (IsBound())
 		{
-			YString AllDelegatesString = TEXT("[");
+			FString AllDelegatesString = TEXT("[");
 			for (typename FInvocationList::TConstIterator CurDelegate(InvocationList); CurDelegate; ++CurDelegate)
 			{
 				if (!AllDelegatesString.IsEmpty())

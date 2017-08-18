@@ -315,9 +315,6 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsTriviallyCopyConstructible.h">
       <Filter>Source\Runtime\Core\Public\Templates</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\PointerConvertibleFromTo.h">
-      <Filter>Source\Runtime\Core\Public\Templates</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\TypeWrapper.h">
       <Filter>Source\Runtime\Core\Public\Templates</Filter>
     </ClInclude>
@@ -378,9 +375,6 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\GenericPlatform\GenericPlatformCompilerPreSetup.h">
       <Filter>Source\Runtime\Core\Public\GenericPlatform</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\SMemoryDefines.h">
-      <Filter>Source\Runtime\Core\Public\ProfilingDebugging</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\CoreDefines.h">
       <Filter>Source\Runtime\Core\Public\Misc</Filter>
     </ClInclude>
@@ -389,9 +383,6 @@
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\DateTime.h">
       <Filter>Source\Runtime\Core\Public\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\SolidAngleString.h">
-      <Filter>Source\Runtime\Core\Public\Containers</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\VarArgs.h">
       <Filter>Source\Runtime\Core\Public\Misc</Filter>
@@ -1618,6 +1609,15 @@
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\UObject\UnrealNames.h">
       <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\UMemoryDefines.h">
+      <Filter>Source\Runtime\Core\Public\ProfilingDebugging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\UnrealString.h">
+      <Filter>Source\Runtime\Core\Public\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\PointerIsConvertibleFromTo.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

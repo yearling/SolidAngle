@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Delegates/Delegate.h"
 #include "Misc/Optional.h"
 #include "Internationalization/Text.h"
@@ -196,10 +196,10 @@ bool operator!=(const YNumericUnit<NumericType>& LHS, const YNumericUnit<OtherTy
 namespace Lex
 {
 	template<typename T>
-	YString ToString(const YNumericUnit<T>& NumericUnit);
+	FString ToString(const YNumericUnit<T>& NumericUnit);
 
 	template<typename T>
-	YString ToSanitizedString(const YNumericUnit<T>& NumericUnit);
+	FString ToSanitizedString(const YNumericUnit<T>& NumericUnit);
 
 	template<typename T>
 	void FromString(YNumericUnit<T>& OutValue, const TCHAR* String);

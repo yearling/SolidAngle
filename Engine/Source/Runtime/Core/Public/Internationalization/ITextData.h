@@ -22,7 +22,7 @@ public:
 	 * Get the string to use for display purposes.
 	 * This may have come from the localization manager, or may been generated at runtime (eg, via FText::AsNumber).
 	 */
-	virtual const YString& GetDisplayString() const = 0;
+	virtual const FString& GetDisplayString() const = 0;
 
 	/** 
 	 * Get the string pointer that was retrieved from the text localization manager.

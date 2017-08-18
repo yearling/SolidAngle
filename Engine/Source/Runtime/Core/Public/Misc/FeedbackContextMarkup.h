@@ -23,10 +23,10 @@ class CORE_API FFeedbackContextMarkup
 public:
 
 	/** Markup stack manipulation. */
-	static bool ParseCommand(const YString& Line, FFeedbackContext* Warn);
+	static bool ParseCommand(const FString& Line, FFeedbackContext* Warn);
 
 	/** Utility functions for dealing with external processes. */
-	static bool PipeProcessOutput(const FText& Description, const YString& URL, const YString& Params, FFeedbackContext* Warn, int32* OutExitCode);
+	static bool PipeProcessOutput(const FText& Description, const FString& URL, const FString& Params, FFeedbackContext* Warn, int32* OutExitCode);
 
 private:
 
@@ -40,7 +40,7 @@ private:
 	static bool ReadInteger(const TCHAR *&Text, uint32 &OutInteger);
 
 	/** Read a string from the input stream */
-	static bool ReadString(const TCHAR *&Text, YString &OutString);
+	static bool ReadString(const TCHAR *&Text, FString &OutString);
 
 	/** Skip over a sequence of whitespace characters in the input stream and returns a pointer to the next character */
 	static const TCHAR *SkipWhitespace(const TCHAR *Text);

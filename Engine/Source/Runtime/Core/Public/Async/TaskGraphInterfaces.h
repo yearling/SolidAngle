@@ -9,7 +9,7 @@ TaskGraphInterfaces.h: TaskGraph library
 #include "Templates/AlignOf.h"
 #include "Containers/ContainerAllocationPolicies.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Templates/Function.h"
 #include "Delegates/Delegate.h"
 #include "HAL/ThreadSafeCounter.h"
@@ -175,11 +175,11 @@ namespace ENamedThreads
 class CORE_API FAutoConsoleTaskPriority
 {
 	FAutoConsoleCommand Command;
-	YString CommandName;
+	FString CommandName;
 	ENamedThreads::Type ThreadPriority;
 	ENamedThreads::Type TaskPriority;
 	ENamedThreads::Type TaskPriorityIfForcedToNormalThreadPriority;
-	void CommandExecute(const TArray<YString>& Args);
+	void CommandExecute(const TArray<FString>& Args);
 public:
 	FAutoConsoleTaskPriority(const TCHAR* Name, const TCHAR* Help, ENamedThreads::Type DefaultThreadPriority, ENamedThreads::Type DefaultTaskPriority, ENamedThreads::Type DefaultTaskPriorityIfForcedToNormalThreadPriority = ENamedThreads::UnusedAnchor)
 		: Command(Name, Help, FConsoleCommandWithArgsDelegate::CreateRaw(this, &FAutoConsoleTaskPriority::CommandExecute))

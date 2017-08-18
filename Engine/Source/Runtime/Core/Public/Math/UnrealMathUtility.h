@@ -1080,7 +1080,7 @@ struct YMath :public YPlatformMath
 	// Formats an integer value into a human readable string(i.e. 12345 becomes "12,345")
 	// Val:						The value to use
 	// return: YString			The human readable string 
-	static CORE_API YString		FormatIntToHumanReadable(int32 Val);
+	static CORE_API FString		FormatIntToHumanReadable(int32 Val);
 
 	// Utilities
 	// Tests a memory region to see that it's working properly.
@@ -1097,7 +1097,7 @@ struct YMath :public YPlatformMath
 	// Str:						String containing the equation.
 	// OutValue:				Pointer to storage for the result.
 	// return					1 if successful, 0 if equation fails.
-	static CORE_API bool		Eval(YString Str, float& OutValue);
+	static CORE_API bool		Eval(FString Str, float& OutValue);
 
 	// Computes the barycentric coordinates for a given point in a triangle - simpler version
 	// Point:					point to convert to barycentric coordinates(in plane of ABC)

@@ -499,14 +499,14 @@ const FMatrix FMatrix::Identity(FPlane(1,0,0,0),FPlane(0,1,0,0),FPlane(0,0,1,0),
 
 CORE_API const FQuat FQuat::Identity(0,0,0,1);
 
-YString FMatrix::ToString() const
+FString FMatrix::ToString() const
 {
-	YString Output;
+	FString Output;
 
-	Output += YString::Printf(TEXT("[%g %g %g %g] "), M[0][0], M[0][1], M[0][2], M[0][3]);
-	Output += YString::Printf(TEXT("[%g %g %g %g] "), M[1][0], M[1][1], M[1][2], M[1][3]);
-	Output += YString::Printf(TEXT("[%g %g %g %g] "), M[2][0], M[2][1], M[2][2], M[2][3]);
-	Output += YString::Printf(TEXT("[%g %g %g %g] "), M[3][0], M[3][1], M[3][2], M[3][3]);
+	Output += FString::Printf(TEXT("[%g %g %g %g] "), M[0][0], M[0][1], M[0][2], M[0][3]);
+	Output += FString::Printf(TEXT("[%g %g %g %g] "), M[1][0], M[1][1], M[1][2], M[1][3]);
+	Output += FString::Printf(TEXT("[%g %g %g %g] "), M[2][0], M[2][1], M[2][2], M[2][3]);
+	Output += FString::Printf(TEXT("[%g %g %g %g] "), M[3][0], M[3][1], M[3][2], M[3][3]);
 
 	return Output;
 }
@@ -2740,21 +2740,21 @@ double YMath::RoundHalfToZero(double F)
 	return (F < 0.0) ? FloorToDouble(F + 0.5) : CeilToDouble(F - 0.5);
 }
 
-YString YMath::FormatIntToHumanReadable(int32 Val)
+FString YMath::FormatIntToHumanReadable(int32 Val)
 {
-	YString Src = *YString::Printf(TEXT("%i"), Val);
-	YString Dst;
+	FString Src = *FString::Printf(TEXT("%i"), Val);
+	FString Dst;
 
 	if (Val > 999)
 	{
-		Dst = YString::Printf(TEXT(",%s"), *Src.Mid(Src.Len() - 3, 3));
+		Dst = FString::Printf(TEXT(",%s"), *Src.Mid(Src.Len() - 3, 3));
 		Src = Src.Left(Src.Len() - 3);
 
 	}
 
 	if (Val > 999999)
 	{
-		Dst = YString::Printf(TEXT(",%s%s"), *Src.Mid(Src.Len() - 3, 3), *Dst);
+		Dst = FString::Printf(TEXT(",%s%s"), *Src.Mid(Src.Len() - 3, 3), *Dst);
 		Src = Src.Left(Src.Len() - 3);
 	}
 
@@ -2817,13 +2817,13 @@ bool YMath::MemoryTest( void* BaseAddress, uint32 NumBytes )
  * @param	Value	The string to convert.
  * @return			The converted value.
  */
-float Val(const YString& Value)
+float Val(const FString& Value)
 {
 	float RetValue = 0;
 
 	for( int32 x = 0 ; x < Value.Len() ; x++ )
 	{
-		YString Char = Value.Mid(x, 1);
+		FString Char = Value.Mid(x, 1);
 
 		if( Char >= TEXT("0") && Char <= TEXT("9") )
 		{
@@ -2842,9 +2842,9 @@ float Val(const YString& Value)
 	return RetValue;
 }
 
-YString GrabChar( YString* pStr )
+FString GrabChar( FString* pStr )
 {
-	YString GrabChar;
+	FString GrabChar;
 	if( pStr->Len() )
 	{
 		do
@@ -2861,9 +2861,9 @@ YString GrabChar( YString* pStr )
 	return GrabChar;
 }
 
-bool SubEval( YString* pStr, float* pResult, int32 Prec )
+bool SubEval( FString* pStr, float* pResult, int32 Prec )
 {
-	YString c;
+	FString c;
 	float V, W, N;
 
 	V = W = N = 0.0f;
@@ -2949,7 +2949,7 @@ PrecLoop:
 	}
 	else if( c == TEXT(")") )
 	{
-		*pStr = YString(TEXT(")")) + *pStr;
+		*pStr = FString(TEXT(")")) + *pStr;
 		*pResult = V;
 		return 1;
 	}
@@ -3088,7 +3088,7 @@ PrecLoop:
 	return 1;
 }
 
-bool YMath::Eval( YString Str, float& OutValue )
+bool YMath::Eval( FString Str, float& OutValue )
 {
 	bool bResult = true;
 
@@ -3206,11 +3206,11 @@ void YMath::PolarToCartesion(const YVector2D InPolar, YVector2D& OutCart)
 	OutCart.Y = InPolar.X * Sin(InPolar.Y);
 }
 
-bool YRandomStream::ExportTextItem(YString& ValueStr, YRandomStream const& DefaultValue, class UObject* Parent, int32 PortFlags, class UObject* ExportRootScope) const
+bool YRandomStream::ExportTextItem(FString& ValueStr, YRandomStream const& DefaultValue, class UObject* Parent, int32 PortFlags, class UObject* ExportRootScope) const
 {
 	if (0 != (PortFlags & EPropertyPortFlags::PPF_ExportCpp))
 	{
-		ValueStr += YString::Printf(TEXT("FRandomStream(%i)"), DefaultValue.GetInitialSeed());
+		ValueStr += FString::Printf(TEXT("FRandomStream(%i)"), DefaultValue.GetInitialSeed());
 		return true;
 	}
 	return false;

@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Misc/Exec.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Map.h"
 #include "Math/Color.h"
 
@@ -13,7 +13,7 @@ class CORE_API YColorList
 	: public FExec
 {
 public:
-	typedef TMap< YString, const FColor* > TColorsMap;
+	typedef TMap< FString, const FColor* > TColorsMap;
 	typedef TArray< const FColor* > TColorsLookup;
 
 	// Common colors.	
@@ -136,7 +136,7 @@ public:
 	const FColor& GetFColorByIndex(int32 ColorIndex) const;
 
 	/** Resturn color's name based on index. If index is invalid, returns BadIndex. */
-	const YString& GetColorNameByIndex(int32 ColorIndex) const;
+	const FString& GetColorNameByIndex(int32 ColorIndex) const;
 
 	/** Returns the number of colors. */
 	int32 GetColorsNum() const

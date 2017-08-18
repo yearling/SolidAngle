@@ -7,7 +7,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Delegates/Delegate.h"
 
 enum EStreamingStatus
@@ -37,7 +37,7 @@ CORE_API int32 GetChangeListNumberForPerfTesting();
 *   the name specified with -BuildName=SomeName (needs to be a valid c++ name a-z A-Z _ 0-9 so we don't run into issues when we pass it around) or if not specified
 *   "CL%d" where %d is coming from GetChangeListNumberForPerfTesting()
 **/
-CORE_API YString GetBuildNameForPerfTesting();
+CORE_API FString GetBuildNameForPerfTesting();
 
 /**
 * This makes it so UnrealConsole will open up the memory profiler for us
@@ -45,7 +45,7 @@ CORE_API YString GetBuildNameForPerfTesting();
 * @param NotifyType has the <namespace>:<type> (e.g. UE_PROFILER!UE3STATS:)
 * @param FullFileName the File name to copy from the console
 **/
-CORE_API void SendDataToPCViaUnrealConsole(const YString& NotifyType, const YString& FullFileName);
+CORE_API void SendDataToPCViaUnrealConsole(const FString& NotifyType, const FString& FullFileName);
 
 
 /**
@@ -55,7 +55,7 @@ CORE_API void SendDataToPCViaUnrealConsole(const YString& NotifyType, const YStr
 * @param ProfilingType this is the type of profiling file this is
 *
 **/
-CORE_API YString CreateProfileFilename(const YString& InFileExtension, bool bIncludeDateForDirectorFName);
+CORE_API FString CreateProfileFilename(const FString& InFileExtension, bool bIncludeDateForDirectorFName);
 
 /**
 * This will generate the profiling file name that will work with limited filename sizes on consoles.
@@ -63,16 +63,16 @@ CORE_API YString CreateProfileFilename(const YString& InFileExtension, bool bInc
 *
 *
 **/
-CORE_API YString CreateProfileFilename(const YString& InFilename, const YString& InFileExtension, bool bIncludeDateForDirectorFName);
+CORE_API FString CreateProfileFilename(const FString& InFilename, const FString& InFileExtension, bool bIncludeDateForDirectorFName);
 
 /**
 * This will create the directories and the file name all in one function
 **/
-CORE_API YString CreateProfileDirectoryAndFilename(const YString& InSubDirectorFName, const YString& InFileExtension);
+CORE_API FString CreateProfileDirectoryAndFilename(const FString& InSubDirectorFName, const FString& InFileExtension);
 
 #if WITH_ENGINE
 /** Delegate type for getting current map name */
-DECLARE_DELEGATE_RetVal(const YString, FGetMapNameDelegate);
+DECLARE_DELEGATE_RetVal(const FString, FGetMapNameDelegate);
 
 /** Delegate used by CreateProfileFilename() and CreateProfileDirectoryAndFilename() to get current map name */
 extern CORE_API FGetMapNameDelegate GGetMapNameDelegate;

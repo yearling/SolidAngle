@@ -22,7 +22,7 @@ namespace ICUUtilities
 		ucnv_close(ICUConverter);
 	}
 
-	void FStringConverter::ConvertString(const YString& Source, icu::UnicodeString& Destination, const bool ShouldNullTerminate)
+	void FStringConverter::ConvertString(const FString& Source, icu::UnicodeString& Destination, const bool ShouldNullTerminate)
 	{
 		ConvertString(*Source, 0, Source.Len(), Destination, ShouldNullTerminate);
 	}
@@ -60,7 +60,7 @@ namespace ICUUtilities
 		}
 	}
 
-	icu::UnicodeString FStringConverter::ConvertString(const YString& Source, const bool ShouldNullTerminate)
+	icu::UnicodeString FStringConverter::ConvertString(const FString& Source, const bool ShouldNullTerminate)
 	{
 		icu::UnicodeString Destination;
 		ConvertString(Source, Destination, ShouldNullTerminate);
@@ -74,12 +74,12 @@ namespace ICUUtilities
 		return Destination;
 	}
 
-	void FStringConverter::ConvertString(const icu::UnicodeString& Source, YString& Destination)
+	void FStringConverter::ConvertString(const icu::UnicodeString& Source, FString& Destination)
 	{
 		return ConvertString(Source, 0, Source.length(), Destination);
 	}
 
-	void FStringConverter::ConvertString(const icu::UnicodeString& Source, const int32 SourceStartIndex, const int32 SourceLen, YString& Destination)
+	void FStringConverter::ConvertString(const icu::UnicodeString& Source, const int32 SourceStartIndex, const int32 SourceLen, FString& Destination)
 	{
 		if (Source.length() > 0)
 		{
@@ -109,21 +109,21 @@ namespace ICUUtilities
 		}
 	}
 
-	YString FStringConverter::ConvertString(const icu::UnicodeString& Source)
+	FString FStringConverter::ConvertString(const icu::UnicodeString& Source)
 	{
-		YString Destination;
+		FString Destination;
 		ConvertString(Source, Destination);
 		return Destination;
 	}
 
-	YString FStringConverter::ConvertString(const icu::UnicodeString& Source, const int32 SourceStartIndex, const int32 SourceLen)
+	FString FStringConverter::ConvertString(const icu::UnicodeString& Source, const int32 SourceStartIndex, const int32 SourceLen)
 	{
-		YString Destination;
+		FString Destination;
 		ConvertString(Source, SourceStartIndex, SourceLen, Destination);
 		return Destination;
 	}
 
-	void ConvertString(const YString& Source, icu::UnicodeString& Destination, const bool ShouldNullTerminate)
+	void ConvertString(const FString& Source, icu::UnicodeString& Destination, const bool ShouldNullTerminate)
 	{
 		if (Source.Len() > 0)
 		{
@@ -149,7 +149,7 @@ namespace ICUUtilities
 		}
 	}
 
-	icu::UnicodeString ConvertString(const YString& Source, const bool ShouldNullTerminate)
+	icu::UnicodeString ConvertString(const FString& Source, const bool ShouldNullTerminate)
 	{
 		icu::UnicodeString Destination;
 		ConvertString(Source, Destination, ShouldNullTerminate);
@@ -163,12 +163,12 @@ namespace ICUUtilities
 		return Destination;
 	}
 
-	void ConvertString(const icu::UnicodeString& Source, YString& Destination)
+	void ConvertString(const icu::UnicodeString& Source, FString& Destination)
 	{
 		return ConvertString(Source, 0, Source.length(), Destination);
 	}
 
-	void ConvertString(const icu::UnicodeString& Source, const int32 SourceStartIndex, const int32 SourceLen, YString& Destination)
+	void ConvertString(const icu::UnicodeString& Source, const int32 SourceStartIndex, const int32 SourceLen, FString& Destination)
 	{
 		if (SourceLen)
 		{
@@ -181,16 +181,16 @@ namespace ICUUtilities
 		}
 	}
 
-	YString ConvertString(const icu::UnicodeString& Source)
+	FString ConvertString(const icu::UnicodeString& Source)
 	{
-		YString Destination;
+		FString Destination;
 		ConvertString(Source, Destination);
 		return Destination;
 	}
 
-	YString ConvertString(const icu::UnicodeString& Source, const int32 SourceStartIndex, const int32 SourceLen)
+	FString ConvertString(const icu::UnicodeString& Source, const int32 SourceStartIndex, const int32 SourceLen)
 	{
-		YString Destination;
+		FString Destination;
 		ConvertString(Source, SourceStartIndex, SourceLen, Destination);
 		return Destination;
 	}
@@ -200,7 +200,7 @@ namespace ICUUtilities
 	{
 		if (InSourceLength > 0)
 		{
-			const YString TmpStr = ConvertString(Source, InSourceStartIndex, InSourceLength);
+			const FString TmpStr = ConvertString(Source, InSourceStartIndex, InSourceLength);
 			return TmpStr.Len();
 		}
 		return 0;
@@ -267,7 +267,7 @@ namespace ICUUtilities
 		return Len;
 	}
 
-	int32 GetUnicodeStringLength(const YString& Source)
+	int32 GetUnicodeStringLength(const FString& Source)
 	{
 		return GetUnicodeStringLength(*Source, 0, Source.Len());
 	}

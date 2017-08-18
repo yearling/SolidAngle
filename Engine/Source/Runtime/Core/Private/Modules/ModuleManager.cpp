@@ -64,10 +64,10 @@ FModuleManager& FModuleManager::Get()
 #if PLATFORM_DESKTOP
 		// Ensure that dependency dlls can be found in restricted sub directories
 			const TCHAR* RestrictedFolderNames[] = { TEXT("NoRedist"), TEXT("NotForLicensees"), TEXT("CarefullyRedist") };
-			YString ModuleDir = FPlatformProcess::GetModulesDirectory();
+			FString ModuleDir = FPlatformProcess::GetModulesDirectory();
 			for (const TCHAR* RestrictedFolderName : RestrictedFolderNames)
 			{
-				YString RestrictedFolder = ModuleDir / RestrictedFolderName;
+				FString RestrictedFolder = ModuleDir / RestrictedFolderName;
 				if (YPaths::DirectoryExists(RestrictedFolder))
 				{
 					ModuleManager->AddBinariesDirectory(*RestrictedFolder, false);
@@ -93,10 +93,10 @@ void FModuleManager::FindModules(const TCHAR* WildcardWithoutExtension, TArray<F
 	// @todo plugins: Try to convert existing use cases to use plugins, and get rid of this function
 #if !IS_MONOLITHIC
 
-	TMap<FName, YString> ModulePaths;
+	TMap<FName, FString> ModulePaths;
 	FindModulePaths(WildcardWithoutExtension, ModulePaths);
 
-	for(TMap<FName, YString>::TConstIterator Iter(ModulePaths); Iter; ++Iter)
+	for(TMap<FName, FString>::TConstIterator Iter(ModulePaths); Iter; ++Iter)
 	{
 		if(CheckModuleCompatibility(*Iter.Value()))
 		{
@@ -105,7 +105,7 @@ void FModuleManager::FindModules(const TCHAR* WildcardWithoutExtension, TArray<F
 	}
 
 #else
-	YString Wildcard(WildcardWithoutExtension);
+	FString Wildcard(WildcardWithoutExtension);
 	for (FStaticallyLinkedModuleInitializerMap::TConstIterator It(StaticallyLinkedModuleInitializers); It; ++It)
 	{
 		if (It.Key().ToString().MatchesWildcard(Wildcard))
@@ -146,7 +146,7 @@ bool FModuleManager::IsModuleLoaded( const FName InModuleName ) const
 
 bool FModuleManager::IsModuleUpToDate(const FName InModuleName) const
 {
-	TMap<FName, YString> ModulePathMap;
+	TMap<FName, FString> ModulePathMap;
 	FindModulePaths(*InModuleName.ToString(), ModulePathMap);
 
 	if (ModulePathMap.Num() != 1)
@@ -154,10 +154,10 @@ bool FModuleManager::IsModuleUpToDate(const FName InModuleName) const
 		return false;
 	}
 
-	return CheckModuleCompatibility(*TMap<FName, YString>::TConstIterator(ModulePathMap).Value());
+	return CheckModuleCompatibility(*TMap<FName, FString>::TConstIterator(ModulePathMap).Value());
 }
 
-bool FindNewestModuleFile(TArray<YString>& FilesToSearch, const FDateTime& NewerThan, const YString& ModuleFileSearchDirectory, const YString& Prefix, const YString& Suffix, YString& OutFilename)
+bool FindNewestModuleFile(TArray<FString>& FilesToSearch, const FDateTime& NewerThan, const FString& ModuleFileSearchDirectory, const FString& Prefix, const FString& Suffix, FString& OutFilename)
 {
 	// Figure out what the newest module file is
 	bool bFound = false;
@@ -167,11 +167,11 @@ bool FindNewestModuleFile(TArray<YString>& FilesToSearch, const FDateTime& Newer
 	{
 		// FoundFiles contains file names with no directory information, but we need the full path up
 		// to the file, so we'll prefix it back on if we have a path.
-		const YString FoundFilePath = ModuleFileSearchDirectory.IsEmpty() ? FoundFile : (ModuleFileSearchDirectory / FoundFile);
+		const FString FoundFilePath = ModuleFileSearchDirectory.IsEmpty() ? FoundFile : (ModuleFileSearchDirectory / FoundFile);
 
 		// need to reject some files here that are not numbered...release executables, do have a suffix, so we need to make sure we don't find the debug version
 		check(FoundFilePath.Len() > Prefix.Len() + Suffix.Len());
-		YString Center = FoundFilePath.Mid(Prefix.Len(), FoundFilePath.Len() - Prefix.Len() - Suffix.Len());
+		FString Center = FoundFilePath.Mid(Prefix.Len(), FoundFilePath.Len() - Prefix.Len() - Suffix.Len());
 		check(Center.StartsWith(TEXT("-"))); // a minus sign is still considered numeric, so we can leave it.
 		if (!Center.IsNumeric())
 		{
@@ -231,9 +231,9 @@ void FModuleManager::AddModule(const FName InModuleName)
 	};
 
 #if !IS_MONOLITHIC
-	YString ModuleNameString = InModuleName.ToString();
+	FString ModuleNameString = InModuleName.ToString();
 
-	TMap<FName, YString> ModulePathMap;
+	TMap<FName, FString> ModulePathMap;
 	FindModulePaths(*ModuleNameString, ModulePathMap);
 
 	if (ModulePathMap.Num() != 1)
@@ -241,7 +241,7 @@ void FModuleManager::AddModule(const FName InModuleName)
 		return;
 	}
 
-	YString ModuleFilename = MoveTemp(TMap<FName, YString>::TConstIterator(ModulePathMap).Value());
+	FString ModuleFilename = MoveTemp(TMap<FName, FString>::TConstIterator(ModulePathMap).Value());
 
 	const int32 MatchPos = ModuleFilename.Find(ModuleNameString, ESearchCase::IgnoreCase, ESearchDir::FromEnd);
 	if (!ensureMsgf(MatchPos != INDEX_NONE, TEXT("Could not find module name '%s' in module filename '%s'"), InModuleName, *ModuleFilename))
@@ -267,8 +267,8 @@ void FModuleManager::AddModule(const FName InModuleName)
 		}
 	}
 
-	const YString Prefix = ModuleFilename.Left(SuffixStart);
-	const YString Suffix = ModuleFilename.Right(ModuleFilename.Len() - SuffixEnd);
+	const FString Prefix = ModuleFilename.Left(SuffixStart);
+	const FString Suffix = ModuleFilename.Right(ModuleFilename.Len() - SuffixEnd);
 
 	// Add this module to the set of modules that we know about
 	ModuleInfo->OriginalFilename = Prefix + Suffix;
@@ -290,19 +290,19 @@ void FModuleManager::AddModule(const FName InModuleName)
 		return;
 	}
 
-	const YString ModuleFileSearchString = YString::Printf(TEXT("%s-*%s"), *Prefix, *Suffix);
+	const FString ModuleFileSearchString = FString::Printf(TEXT("%s-*%s"), *Prefix, *Suffix);
 
 	// Search for module files
-	TArray<YString> FoundFiles;
+	TArray<FString> FoundFiles;
 	IFileManager::Get().FindFiles(FoundFiles, *ModuleFileSearchString, true, false);
 	if (FoundFiles.Num() == 0)
 	{
 		return;
 	}
 
-	const YString ModuleFileSearchDirectory = YPaths::GetPath(ModuleFileSearchString);
+	const FString ModuleFileSearchDirectory = YPaths::GetPath(ModuleFileSearchString);
 
-	YString NewestModuleFilename;
+	FString NewestModuleFilename;
 	bool bFoundNewestFile = FindNewestModuleFile(FoundFiles, OriginalModuleFileTime, ModuleFileSearchDirectory, Prefix, Suffix, NewestModuleFilename);
 
 	// Did we find a variant of the module file that is newer than our original file?
@@ -314,7 +314,7 @@ void FModuleManager::AddModule(const FName InModuleName)
 	}
 
 	// Update the module working file name to the most recently-modified copy of that module
-	const YString NewestModuleFilePath = ModuleFileSearchDirectory.IsEmpty() ? NewestModuleFilename : (ModuleFileSearchDirectory / NewestModuleFilename);
+	const FString NewestModuleFilePath = ModuleFileSearchDirectory.IsEmpty() ? NewestModuleFilename : (ModuleFileSearchDirectory / NewestModuleFilename);
 	ModuleInfo->Filename = NewestModuleFilePath;
 #endif	// !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
 #endif	// !IS_MONOLITHIC
@@ -351,8 +351,8 @@ TSharedPtr<IModuleInterface> FModuleManager::LoadModuleWithFailureReason(const F
 
 #if	STATS
 	// This is fine here, we only load a handful of modules.
-	static YString Module = TEXT( "Module" );
-	const YString LongName = Module / InModuleName.GetPlainNameString();
+	static FString Module = TEXT( "Module" );
+	const FString LongName = Module / InModuleName.GetPlainNameString();
 	const TStatId StatId = FDynamicStats::CreateStatId<FStatGroup_STATGROUP_UObjects>( LongName );
 	FScopeCycleCounter CycleCounter( StatId );
 #endif // STATS
@@ -439,7 +439,7 @@ TSharedPtr<IModuleInterface> FModuleManager::LoadModuleWithFailureReason(const F
 			}
 
 			// Determine which file to load for this module.
-			const YString ModuleFileToLoad = YPaths::ConvertRelativePathToFull(ModuleInfo->Filename);
+			const FString ModuleFileToLoad = YPaths::ConvertRelativePathToFull(ModuleInfo->Filename);
 
 			// Clear the handle and set it again below if the module is successfully loaded
 			ModuleInfo->Handle = NULL;
@@ -709,11 +709,11 @@ bool FModuleManager::Exec( UWorld* Inworld, const TCHAR* Cmd, FOutputDevice& Ar 
 			{
 				Ar.Logf( TEXT( "Listing all %i known modules:\n" ), Modules.Num() );
 
-				TArray< YString > StringsToDisplay;
+				TArray< FString > StringsToDisplay;
 				for( FModuleMap::TConstIterator ModuleIt( Modules ); ModuleIt; ++ModuleIt )
 				{
 					StringsToDisplay.Add(
-						YString::Printf( TEXT( "    %s [File: %s] [Loaded: %s]" ),
+						FString::Printf( TEXT( "    %s [File: %s] [Loaded: %s]" ),
 							*ModuleIt.Key().ToString(),
 							*ModuleIt.Value()->Filename,
 							ModuleIt.Value()->Module.IsValid() != false? TEXT( "Yes" ) : TEXT( "No" ) ) );
@@ -723,7 +723,7 @@ bool FModuleManager::Exec( UWorld* Inworld, const TCHAR* Cmd, FOutputDevice& Ar 
 				StringsToDisplay.Sort();
 
 				// Display content
-				for( TArray< YString >::TConstIterator StringIt( StringsToDisplay ); StringIt; ++StringIt )
+				for( TArray< FString >::TConstIterator StringIt( StringsToDisplay ); StringIt; ++StringIt )
 				{
 					Ar.Log( *StringIt );
 				}
@@ -740,7 +740,7 @@ bool FModuleManager::Exec( UWorld* Inworld, const TCHAR* Cmd, FOutputDevice& Ar 
 		// Load <ModuleName>
 		else if( FParse::Command( &Cmd, TEXT( "Load" ) ) )
 		{
-			const YString ModuleNameStr = FParse::Token( Cmd, 0 );
+			const FString ModuleNameStr = FParse::Token( Cmd, 0 );
 			if( !ModuleNameStr.IsEmpty() )
 			{
 				const FName ModuleName( *ModuleNameStr );
@@ -766,7 +766,7 @@ bool FModuleManager::Exec( UWorld* Inworld, const TCHAR* Cmd, FOutputDevice& Ar 
 		// Unload <ModuleName>
 		else if( FParse::Command( &Cmd, TEXT( "Unload" ) ) )
 		{
-			const YString ModuleNameStr = FParse::Token( Cmd, 0 );
+			const FString ModuleNameStr = FParse::Token( Cmd, 0 );
 			if( !ModuleNameStr.IsEmpty() )
 			{
 				const FName ModuleName( *ModuleNameStr );
@@ -793,7 +793,7 @@ bool FModuleManager::Exec( UWorld* Inworld, const TCHAR* Cmd, FOutputDevice& Ar 
 		// Reload <ModuleName>
 		else if( FParse::Command( &Cmd, TEXT( "Reload" ) ) )
 		{
-			const YString ModuleNameStr = FParse::Token( Cmd, 0 );
+			const FString ModuleNameStr = FParse::Token( Cmd, 0 );
 			if( !ModuleNameStr.IsEmpty() )
 			{
 				const FName ModuleName( *ModuleNameStr );
@@ -872,13 +872,13 @@ void FModuleManager::QueryModules( TArray< FModuleStatus >& OutModuleStatuses ) 
 }
 
 
-YString FModuleManager::GetModuleFilename(FName ModuleName) const
+FString FModuleManager::GetModuleFilename(FName ModuleName) const
 {
 	return FindModuleChecked(ModuleName)->Filename;
 }
 
 
-void FModuleManager::SetModuleFilename(FName ModuleName, const YString& Filename)
+void FModuleManager::SetModuleFilename(FName ModuleName, const FString& Filename)
 {
 	auto Module = FindModuleChecked(ModuleName);
 	Module->Filename = Filename;
@@ -890,15 +890,15 @@ void FModuleManager::SetModuleFilename(FName ModuleName, const YString& Filename
 }
 
 
-YString FModuleManager::GetCleanModuleFilename(FName ModuleName, bool bGameModule)
+FString FModuleManager::GetCleanModuleFilename(FName ModuleName, bool bGameModule)
 {
-	YString Prefix, Suffix;
+	FString Prefix, Suffix;
 	GetModuleFilenameFormat(bGameModule, Prefix, Suffix);
 	return Prefix + ModuleName.ToString() + Suffix;
 }
 
 
-void FModuleManager::GetModuleFilenameFormat(bool bGameModule, YString& OutPrefix, YString& OutSuffix)
+void FModuleManager::GetModuleFilenameFormat(bool bGameModule, FString& OutPrefix, FString& OutSuffix)
 {
 	// Get the module configuration for this directory type
 	const TCHAR* ConfigSuffix = NULL;
@@ -952,7 +952,7 @@ void FModuleManager::ResetModulePathsCache()
 	ModulePathsCache.Reset();
 }
 
-void FModuleManager::FindModulePaths(const TCHAR* NamePattern, TMap<FName, YString> &OutModulePaths, bool bCanUseCache /*= true*/) const
+void FModuleManager::FindModulePaths(const TCHAR* NamePattern, TMap<FName, FString> &OutModulePaths, bool bCanUseCache /*= true*/) const
 {
 	if (!ModulePathsCache)
 	{
@@ -964,7 +964,7 @@ void FModuleManager::FindModulePaths(const TCHAR* NamePattern, TMap<FName, YStri
 	if (bCanUseCache)
 	{
 		// Try to use cache first
-		if (const YString* ModulePathPtr = ModulePathsCache->Find(NamePattern))
+		if (const FString* ModulePathPtr = ModulePathsCache->Find(NamePattern))
 		{
 			OutModulePaths.Add(FName(NamePattern), *ModulePathPtr);
 			return;
@@ -988,24 +988,24 @@ void FModuleManager::FindModulePaths(const TCHAR* NamePattern, TMap<FName, YStri
 }
 
 
-void FModuleManager::FindModulePathsInDirectory(const YString& InDirectorFName, bool bIsGameDirectory, const TCHAR* NamePattern, TMap<FName, YString> &OutModulePaths) const
+void FModuleManager::FindModulePathsInDirectory(const FString& InDirectorFName, bool bIsGameDirectory, const TCHAR* NamePattern, TMap<FName, FString> &OutModulePaths) const
 {
 	if(QueryModulesDelegate.IsBound())
 	{
 		// Find all the directories to search through, including the base directory
-		TArray<YString> SearchDirectorFNames;
+		TArray<FString> SearchDirectorFNames;
 		IFileManager::Get().FindFilesRecursive(SearchDirectorFNames, *InDirectorFName, TEXT("*"), false, true);
 		SearchDirectorFNames.Insert(InDirectorFName, 0);
 
 		// Find the modules in each directory
-		for(const YString& SearchDirectorFName: SearchDirectorFNames)
+		for(const FString& SearchDirectorFName: SearchDirectorFNames)
 		{
 			// Use the delegate to query all the modules in this directory
-			TMap<YString, YString> ValidModules;
+			TMap<FString, FString> ValidModules;
 			QueryModulesDelegate.Execute(SearchDirectorFName, bIsGameDirectory, ValidModules);
 
 			// Fill the output map with modules that match the wildcard
-			for(const TPair<YString, YString>& Pair: ValidModules)
+			for(const TPair<FString, FString>& Pair: ValidModules)
 			{
 				if(Pair.Key.MatchesWildcard(NamePattern))
 				{
@@ -1017,17 +1017,17 @@ void FModuleManager::FindModulePathsInDirectory(const YString& InDirectorFName, 
 	else
 	{
 		// Get the prefix and suffix for module filenames
-		YString ModulePrefix, ModuleSuffix;
+		FString ModulePrefix, ModuleSuffix;
 		GetModuleFilenameFormat(bIsGameDirectory, ModulePrefix, ModuleSuffix);
 
 		// Find all the files
-		TArray<YString> FullFileNames;
+		TArray<FString> FullFileNames;
 		IFileManager::Get().FindFilesRecursive(FullFileNames, *InDirectorFName, *(ModulePrefix + NamePattern + ModuleSuffix), true, false);
 
 		// Parse all the matching module names
 		for (int32 Idx = 0; Idx < FullFileNames.Num(); Idx++)
 		{
-			const YString &FullFileName = FullFileNames[Idx];
+			const FString &FullFileName = FullFileNames[Idx];
 	
 			// On Mac OS X the separate debug symbol format is the dSYM bundle, which is a bundle folder hierarchy containing a .dylib full of Mach-O formatted DWARF debug symbols, these are not loadable modules, so we mustn't ever try and use them. If we don't eliminate this here then it will appear in the module paths & cause errors later on which cannot be recovered from.
 		#if PLATFORM_MAC
@@ -1037,10 +1037,10 @@ void FModuleManager::FindModulePathsInDirectory(const YString& InDirectorFName, 
 			}
 		#endif
 		
-			YString FileName = YPaths::GetCleanFilename(FullFileName);
+			FString FileName = YPaths::GetCleanFilename(FullFileName);
 			if (FileName.StartsWith(ModulePrefix) && FileName.EndsWith(ModuleSuffix))
 			{
-				YString ModuleName = FileName.Mid(ModulePrefix.Len(), FileName.Len() - ModulePrefix.Len() - ModuleSuffix.Len());
+				FString ModuleName = FileName.Mid(ModulePrefix.Len(), FileName.Len() - ModulePrefix.Len() - ModuleSuffix.Len());
 				if (!ModuleName.EndsWith("-Debug") && !ModuleName.EndsWith("-Shipping") && !ModuleName.EndsWith("-Test") && !ModuleName.EndsWith("-DebugGame"))
 				{
 					OutModulePaths.Add(FName(*ModuleName), FullFileName);
@@ -1108,7 +1108,7 @@ bool FModuleManager::LoadModuleWithCallback( const FName InModuleName, FOutputDe
 }
 
 
-void FModuleManager::MakeUniqueModuleFilename( const FName InModuleName, YString& UniqueSuffix, YString& UniqueModuleFileName ) const
+void FModuleManager::MakeUniqueModuleFilename( const FName InModuleName, FString& UniqueSuffix, FString& UniqueModuleFileName ) const
 {
 	auto Module = FindModuleChecked(InModuleName);
 
@@ -1117,15 +1117,15 @@ void FModuleManager::MakeUniqueModuleFilename( const FName InModuleName, YString
 	do
 	{
 		// Use a random number as the unique file suffix, but mod it to keep it of reasonable length
-		UniqueSuffix = YString::FromInt( YMath::Rand() % 10000 );
+		UniqueSuffix = FString::FromInt( YMath::Rand() % 10000 );
 
-		const YString ModuleName = *InModuleName.ToString();
+		const FString ModuleName = *InModuleName.ToString();
 		const int32 MatchPos = Module->OriginalFilename.Find(ModuleName, ESearchCase::IgnoreCase, ESearchDir::FromEnd);
 
 		if (ensure(MatchPos != INDEX_NONE))
 		{
 			const int32 SuffixPos = MatchPos + ModuleName.Len();
-			UniqueModuleFileName = YString::Printf( TEXT( "%s-%s%s" ),
+			UniqueModuleFileName = FString::Printf( TEXT( "%s-%s%s" ),
 				*Module->OriginalFilename.Left( SuffixPos ),
 				*UniqueSuffix,
 				*Module->OriginalFilename.Right( Module->OriginalFilename.Len() - SuffixPos ) );
@@ -1181,7 +1181,7 @@ void FModuleManager::AddBinariesDirectory(const TCHAR *InDirectory, bool bIsGame
 	const TCHAR* RestrictedFolderNames[] = { TEXT("NoRedist"), TEXT("NotForLicensees"), TEXT("CarefullyRedist") };
 	for (const TCHAR* RestrictedFolderName : RestrictedFolderNames)
 	{
-		YString RestrictedFolder = YPaths::Combine(InDirectory, RestrictedFolderName);
+		FString RestrictedFolder = YPaths::Combine(InDirectory, RestrictedFolderName);
 		if (YPaths::DirectoryExists(RestrictedFolder))
 		{
 			AddBinariesDirectory(*RestrictedFolder, bIsGameDirectory);
@@ -1203,20 +1203,20 @@ void FModuleManager::SetGameBinariesDirectory(const TCHAR* InDirectory)
 #endif
 }
 
-YString FModuleManager::GetGameBinariesDirectory() const
+FString FModuleManager::GetGameBinariesDirectory() const
 {
 	if (GameBinariesDirectories.Num())
 	{
 		return GameBinariesDirectories[0];
 	}
-	return YString();
+	return FString();
 }
 
 bool FModuleManager::DoesLoadedModuleHaveUObjects( const FName ModuleName ) const
 {
 	if (IsModuleLoaded(ModuleName) && IsPackageLoaded.IsBound())
 	{
-		return IsPackageLoaded.Execute(*YString(YString(TEXT("/Script/")) + ModuleName.ToString()));
+		return IsPackageLoaded.Execute(*FString(FString(TEXT("/Script/")) + ModuleName.ToString()));
 	}
 
 	return false;
@@ -1236,9 +1236,9 @@ FModuleManager::ModuleInfoRef FModuleManager::GetOrCreateModule(FName InModuleNa
 	ModuleInfoRef ModuleInfo(new FModuleInfo());
 
 #if !IS_MONOLITHIC
-	YString ModuleNameString = InModuleName.ToString();
+	FString ModuleNameString = InModuleName.ToString();
 
-	TMap<FName, YString> ModulePathMap;
+	TMap<FName, FString> ModulePathMap;
 	FindModulePaths(*ModuleNameString, ModulePathMap);
 
 	if (ModulePathMap.Num() != 1)
@@ -1247,7 +1247,7 @@ FModuleManager::ModuleInfoRef FModuleManager::GetOrCreateModule(FName InModuleNa
 	}
 
 	// Add this module to the set of modules that we know about
-	ModuleInfo->OriginalFilename = TMap<FName, YString>::TConstIterator(ModulePathMap).Value();
+	ModuleInfo->OriginalFilename = TMap<FName, FString>::TConstIterator(ModulePathMap).Value();
 	ModuleInfo->Filename = ModuleInfo->OriginalFilename;
 
 	// When iterating on code during development, it's possible there are multiple rolling versions of this
@@ -1266,7 +1266,7 @@ FModuleManager::ModuleInfoRef FModuleManager::GetOrCreateModule(FName InModuleNa
 		return ModuleInfo;
 	}
 
-	const YString ModuleName = *InModuleName.ToString();
+	const FString ModuleName = *InModuleName.ToString();
 	const int32 MatchPos = ModuleInfo->OriginalFilename.Find(ModuleName, ESearchCase::IgnoreCase, ESearchDir::FromEnd);
 	if (!ensureMsgf(MatchPos != INDEX_NONE, TEXT("Could not find module name '%s' in module filename '%s'"), *ModuleName, *ModuleInfo->OriginalFilename))
 	{
@@ -1275,14 +1275,14 @@ FModuleManager::ModuleInfoRef FModuleManager::GetOrCreateModule(FName InModuleNa
 
 	const int32 SuffixPos = MatchPos + ModuleName.Len();
 
-	const YString Prefix = ModuleInfo->OriginalFilename.Left(SuffixPos);
-	const YString Suffix = ModuleInfo->OriginalFilename.Right(ModuleInfo->OriginalFilename.Len() - SuffixPos);
+	const FString Prefix = ModuleInfo->OriginalFilename.Left(SuffixPos);
+	const FString Suffix = ModuleInfo->OriginalFilename.Right(ModuleInfo->OriginalFilename.Len() - SuffixPos);
 
-	const YString ModuleFileSearchString = YString::Printf(TEXT("%s-*%s"), *Prefix, *Suffix);
-	const YString ModuleFileSearchDirectory = YPaths::GetPath(ModuleFileSearchString);
+	const FString ModuleFileSearchString = FString::Printf(TEXT("%s-*%s"), *Prefix, *Suffix);
+	const FString ModuleFileSearchDirectory = YPaths::GetPath(ModuleFileSearchString);
 
 	// Search for module files
-	TArray<YString> FoundFiles;
+	TArray<FString> FoundFiles;
 	IFileManager::Get().FindFiles(FoundFiles, *ModuleFileSearchString, true, false);
 
 	if (FoundFiles.Num() == 0)
@@ -1298,12 +1298,12 @@ FModuleManager::ModuleInfoRef FModuleManager::GetOrCreateModule(FName InModuleNa
 	{
 		// FoundFiles contains file names with no directory information, but we need the full path up
 		// to the file, so we'll prefix it back on if we have a path.
-		const YString& FoundFile = FoundFiles[CurFileIndex];
-		const YString FoundFilePath = ModuleFileSearchDirectory.IsEmpty() ? FoundFile : (ModuleFileSearchDirectory / FoundFile);
+		const FString& FoundFile = FoundFiles[CurFileIndex];
+		const FString FoundFilePath = ModuleFileSearchDirectory.IsEmpty() ? FoundFile : (ModuleFileSearchDirectory / FoundFile);
 
 		// need to reject some files here that are not numbered...release executables, do have a suffix, so we need to make sure we don't find the debug version
 		check(FoundFilePath.Len() > Prefix.Len() + Suffix.Len());
-		YString Center = FoundFilePath.Mid(Prefix.Len(), FoundFilePath.Len() - Prefix.Len() - Suffix.Len());
+		FString Center = FoundFilePath.Mid(Prefix.Len(), FoundFilePath.Len() - Prefix.Len() - Suffix.Len());
 		check(Center.StartsWith(TEXT("-"), ESearchCase::CaseSensitive)); // a minus sign is still considered numeric, so we can leave it.
 		if (!Center.IsNumeric())
 		{
@@ -1334,8 +1334,8 @@ FModuleManager::ModuleInfoRef FModuleManager::GetOrCreateModule(FName InModuleNa
 	if (NewestFoundFileIndex != INDEX_NONE)
 	{
 		// Update the module working file name to the most recently-modified copy of that module
-		const YString& NewestModuleFilename = FoundFiles[NewestFoundFileIndex];
-		const YString NewestModuleFilePath = ModuleFileSearchDirectory.IsEmpty() ? NewestModuleFilename : (ModuleFileSearchDirectory / NewestModuleFilename);
+		const FString& NewestModuleFilename = FoundFiles[NewestFoundFileIndex];
+		const FString NewestModuleFilePath = ModuleFileSearchDirectory.IsEmpty() ? NewestModuleFilename : (ModuleFileSearchDirectory / NewestModuleFilename);
 		ModuleInfo->Filename = NewestModuleFilePath;
 	}
 	else

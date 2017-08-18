@@ -3,7 +3,7 @@
 #include "GenericPlatform/GenericPlatformString.h"
 #include "HAL/UnrealMemory.h"
 #include "Misc/Char.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Logging/LogMacros.h"
 
 
@@ -21,7 +21,7 @@ void* YGenericPlatformString::Memcpy(void* Dest, const void* Src, SIZE_T Count)
 
 namespace
 {
-	void TrimStringAndLogBogusCharsError(YString& SrcStr, const TCHAR* SourceCharName, const TCHAR* DestCharName)
+	void TrimStringAndLogBogusCharsError(FString& SrcStr, const TCHAR* SourceCharName, const TCHAR* DestCharName)
 	{
 		SrcStr.Trim();
 		// @todo: Put this back in once GLog becomes a #define, or is replaced with GLog::GetLog()
@@ -32,14 +32,14 @@ namespace
 template <typename DestEncoding, typename SourceEncoding>
 void YGenericPlatformString::LogBogusChars(const SourceEncoding* Src, int32 SrcSize)
 {
-	YString SrcStr;
+	FString SrcStr;
 	bool    bFoundBogusChars = false;
 	for (; SrcSize; --SrcSize)
 	{
 		SourceEncoding SrcCh = *Src++;
 		if (!CanConvertChar<DestEncoding>(SrcCh))
 		{
-			SrcStr += YString::Printf(TEXT("[0x%X]"), (int32)SrcCh);
+			SrcStr += FString::Printf(TEXT("[0x%X]"), (int32)SrcCh);
 			bFoundBogusChars = true;
 		}
 		else if (CanConvertChar<TCHAR>(SrcCh))

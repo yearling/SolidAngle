@@ -5,7 +5,7 @@
 #include "Logging/LogMacros.h"
 #include "Misc/OutputDevice.h"
 #include "Math/NumericLimits.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "CoreGlobals.h"
 #include "Misc/OutputDeviceRedirector.h"
 #include "Stats/Stats.h"
@@ -263,9 +263,9 @@ void YWindowsPlatformMemory::BinnedFreeToOS(void* Ptr, SIZE_T Size)
 		verify(VirtualFree(Ptr, 0, MEM_RELEASE) != 0);
 }
 
-YPlatformMemory::YSharedMemoryRegion* YWindowsPlatformMemory::MapNamedSharedMemoryRegion(const YString& InName, bool bCreate, uint32 AccessMode, SIZE_T Size)
+YPlatformMemory::YSharedMemoryRegion* YWindowsPlatformMemory::MapNamedSharedMemoryRegion(const FString& InName, bool bCreate, uint32 AccessMode, SIZE_T Size)
 {
-	YString Name(TEXT("Global\\"));
+	FString Name(TEXT("Global\\"));
 	Name += InName;
 
 	DWORD OpenMappingAccess = FILE_MAP_READ;

@@ -6,7 +6,7 @@
 #include "Misc/AssertionMacros.h"
 #include "Templates/UnrealTypeTraits.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Map.h"
 #include "Containers/EnumAsByte.h"
 #include "Templates/SharedPointer.h"
@@ -112,7 +112,7 @@ namespace EFormatArgumentType
 }
 
 class FFormatArgumentValue;
-typedef TMap<YString, FFormatArgumentValue> FFormatNamedArguments;
+typedef TMap<FString, FFormatArgumentValue> FFormatNamedArguments;
 typedef TArray<FFormatArgumentValue> FFormatOrderedArguments;
 
 /** Redeclared in KismetTextLibrary for meta-data extraction purposes, be sure to update there as well */
@@ -209,8 +209,8 @@ public:
 	* Construct an instance from an YString.
 	* The string will be immediately compiled.
 	*/
-	static FTextFormat FromString(const YString& InString);
-	static FTextFormat FromString(YString&& InString);
+	static FTextFormat FromString(const FString& InString);
+	static FTextFormat FromString(FString&& InString);
 
 	/**
 	* Test to see whether this instance contains valid compiled data.
@@ -227,7 +227,7 @@ public:
 	* Get the source string that we're holding.
 	* If we're holding a text then we'll return its internal string.
 	*/
-	const YString& GetSourceString() const;
+	const FString& GetSourceString() const;
 
 	/**
 	* Get the type of expression currently compiled.
@@ -237,14 +237,14 @@ public:
 	/**
 	* Append the names of any arguments to the given array.
 	*/
-	void GetFormatArgumentNames(TArray<YString>& OutArgumentNames) const;
+	void GetFormatArgumentNames(TArray<FString>& OutArgumentNames) const;
 
 private:
 	/**
 	* Construct an instance from an YString.
 	* The string will be immediately compiled.
 	*/
-	FTextFormat(YString&& InString);
+	FTextFormat(FString&& InString);
 
 	/** Cached compiled expression data */
 	TSharedRef<FTextFormatData, ESPMode::ThreadSafe> TextFormatData;
@@ -293,17 +293,17 @@ public:
 	static FText AsNumber(long Val, const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
 
 
-	static FText AsCurrency(float Val, const YString& CurrencyCode = YString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsCurrency(double Val, const YString& CurrencyCode = YString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsCurrency(int8 Val, const YString& CurrencyCode = YString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsCurrency(int16 Val, const YString& CurrencyCode = YString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsCurrency(int32 Val, const YString& CurrencyCode = YString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsCurrency(int64 Val, const YString& CurrencyCode = YString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsCurrency(uint8 Val, const YString& CurrencyCode = YString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsCurrency(uint16 Val, const YString& CurrencyCode = YString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsCurrency(uint32 Val, const YString& CurrencyCode = YString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsCurrency(uint64 Val, const YString& CurrencyCode = YString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
-	static FText AsCurrency(long Val, const YString& CurrencyCode = YString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsCurrency(float Val, const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsCurrency(double Val, const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsCurrency(int8 Val, const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsCurrency(int16 Val, const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsCurrency(int32 Val, const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsCurrency(int64 Val, const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsCurrency(uint8 Val, const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsCurrency(uint16 Val, const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsCurrency(uint32 Val, const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsCurrency(uint64 Val, const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
+	static FText AsCurrency(long Val, const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL, const FCulturePtr& TargetCulture = NULL);
 
 	/**
 	* Generate an FText that represents the passed number as currency in the current culture.
@@ -311,7 +311,7 @@ public:
 	* Keep in mind the CurrencyCode is completely independent of the culture it's displayed in (and they do not imply one another).
 	* For example: FText::AsCurrencyBase(650, TEXT("EUR")); would return an FText of "<EUR>6.50" in most English cultures (en_US/en_UK) and "6,50<EUR>" in Spanish (es_ES) (where <EUR> is U+20AC)
 	*/
-	static FText AsCurrencyBase(int64 BaseVal, const YString& CurrencyCode, const FCulturePtr& TargetCulture = NULL);
+	static FText AsCurrencyBase(int64 BaseVal, const FString& CurrencyCode, const FCulturePtr& TargetCulture = NULL);
 
 	/**
 	* Generate an FText that represents the passed number as a percentage in the current culture
@@ -322,15 +322,15 @@ public:
 	/**
 	* Generate an FText that represents the passed number as a date and/or time in the current culture
 	*/
-	static FText AsDate(const FDateTime& DateTime, const EDateTimeStyle::Type DateStyle = EDateTimeStyle::Default, const YString& TimeZone = TEXT(""), const FCulturePtr& TargetCulture = NULL);
-	static FText AsDateTime(const FDateTime& DateTime, const EDateTimeStyle::Type DateStyle = EDateTimeStyle::Default, const EDateTimeStyle::Type TimeStyle = EDateTimeStyle::Default, const YString& TimeZone = TEXT(""), const FCulturePtr& TargetCulture = NULL);
-	static FText AsTime(const FDateTime& DateTime, const EDateTimeStyle::Type TimeStyle = EDateTimeStyle::Default, const YString& TimeZone = TEXT(""), const FCulturePtr& TargetCulture = NULL);
+	static FText AsDate(const FDateTime& DateTime, const EDateTimeStyle::Type DateStyle = EDateTimeStyle::Default, const FString& TimeZone = TEXT(""), const FCulturePtr& TargetCulture = NULL);
+	static FText AsDateTime(const FDateTime& DateTime, const EDateTimeStyle::Type DateStyle = EDateTimeStyle::Default, const EDateTimeStyle::Type TimeStyle = EDateTimeStyle::Default, const FString& TimeZone = TEXT(""), const FCulturePtr& TargetCulture = NULL);
+	static FText AsTime(const FDateTime& DateTime, const EDateTimeStyle::Type TimeStyle = EDateTimeStyle::Default, const FString& TimeZone = TEXT(""), const FCulturePtr& TargetCulture = NULL);
 	static FText AsTimespan(const YTimespan& Timespan, const FCulturePtr& TargetCulture = NULL);
 
 	/**
 	* Gets the time zone string that represents a non-specific, zero offset, culture invariant time zone.
 	*/
-	static YString GetInvariantTimeZone();
+	static FString GetInvariantTimeZone();
 
 	/**
 	* Generate an FText that represents the passed number as a memory size in the current culture
@@ -341,7 +341,7 @@ public:
 	* Attempts to find an existing FText using the representation found in the loc tables for the specified namespace and key
 	* @return true if OutText was properly set; otherwise false and OutText will be untouched
 	*/
-	static bool FindText(const YString& Namespace, const YString& Key, FText& OutText, const YString* const SourceString = nullptr);
+	static bool FindText(const FString& Namespace, const FString& Key, FText& OutText, const FString* const SourceString = nullptr);
 
 	/**
 	* Generate an FText representing the pass name
@@ -351,24 +351,24 @@ public:
 	/**
 	* Generate an FText representing the passed in string
 	*/
-	static FText FromString(const YString& String);
-	static FText FromString(YString&& String);
+	static FText FromString(const FString& String);
+	static FText FromString(FString&& String);
 
 	/**
 	* Generate a culture invariant FText representing the passed in string
 	*/
-	static FText AsCultureInvariant(const YString& String);
-	static FText AsCultureInvariant(YString&& String);
+	static FText AsCultureInvariant(const FString& String);
+	static FText AsCultureInvariant(FString&& String);
 
 	/**
 	* Generate a culture invariant FText representing the passed in FText
 	*/
 	static FText AsCultureInvariant(FText Text);
 
-	const YString& ToString() const;
+	const FString& ToString() const;
 
 	/** Deep build of the source string for this FText, climbing the history hierarchy */
-	YString BuildSourceString() const;
+	FString BuildSourceString() const;
 
 	bool IsNumeric() const;
 
@@ -424,7 +424,7 @@ public:
 	*/
 	static bool IsWhitespace(const TCHAR Char);
 
-	static void GetFormatPatternParameters(const FTextFormat& Fmt, TArray<YString>& ParameterNames);
+	static void GetFormatPatternParameters(const FTextFormat& Fmt, TArray<FString>& ParameterNames);
 
 	static FText Format(FTextFormat Fmt, FFormatNamedArguments InArguments);
 	static FText Format(FTextFormat Fmt, FFormatOrderedArguments InArguments);
@@ -474,7 +474,7 @@ public:
 	/**
 	* Constructs a new FText with the SourceString of the specified text but with the specified namespace and key
 	*/
-	static FText ChangeKey(const YString& Namespace, const YString& Key, const FText& Text);
+	static FText ChangeKey(const FString& Namespace, const FString& Key, const FText& Text);
 #endif
 
 private:
@@ -485,11 +485,11 @@ private:
 
 	explicit FText(TSharedRef<ITextData, ESPMode::ThreadSafe> InTextData);
 
-	explicit FText(YString&& InSourceString);
+	explicit FText(FString&& InSourceString);
 
-	FText(YString&& InSourceString, FTextDisplayStringRef InDisplayString);
+	FText(FString&& InSourceString, FTextDisplayStringRef InDisplayString);
 
-	FText(YString&& InSourceString, const YString& InNamespace, const YString& InKey, uint32 InFlags = 0);
+	FText(FString&& InSourceString, const FString& InNamespace, const FString& InKey, uint32 InFlags = 0);
 
 	static void SerializeText(FArchive& Ar, FText& Value);
 
@@ -504,7 +504,7 @@ private:
 	static FText CreateChronologicalText(TSharedRef<ITextData, ESPMode::ThreadSafe> InTextData);
 
 	/** Returns the source string of the FText */
-	const YString& GetSourceString() const;
+	const FString& GetSourceString() const;
 
 	/** Get any historic text format data from the history used by this FText */
 	void GetHistoricFormatData(TArray<FHistoricTextFormatData>& OutHistoricFormatData) const;
@@ -522,7 +522,7 @@ private:
 	template<typename T1, typename T2>
 	static FText AsNumberTemplate(T1 Val, const FNumberFormattingOptions* const Options, const FCulturePtr& TargetCulture);
 	template<typename T1, typename T2>
-	static FText AsCurrencyTemplate(T1 Val, const YString& CurrencyCode, const FNumberFormattingOptions* const Options, const FCulturePtr& TargetCulture);
+	static FText AsCurrencyTemplate(T1 Val, const FString& CurrencyCode, const FNumberFormattingOptions* const Options, const FCulturePtr& TargetCulture);
 	template<typename T1, typename T2>
 	static FText AsPercentTemplate(T1 Val, const FNumberFormattingOptions* const Options, const FCulturePtr& TargetCulture);
 
@@ -611,8 +611,8 @@ public:
 
 	friend FArchive& operator<<(FArchive& Ar, FFormatArgumentValue& Value);
 
-	YString ToFormattedString(const bool bInRebuildText, const bool bInRebuildAsSource) const;
-	void ToFormattedString(const bool bInRebuildText, const bool bInRebuildAsSource, YString& OutResult) const;
+	FString ToFormattedString(const bool bInRebuildText, const bool bInRebuildAsSource) const;
+	void ToFormattedString(const bool bInRebuildText, const bool bInRebuildAsSource, FString& OutResult) const;
 
 	FORCEINLINE EFormatArgumentType::Type GetType() const
 	{
@@ -683,7 +683,7 @@ struct CORE_API FFormatArgumentData
 
 	friend FArchive& operator<<(FArchive& Ar, FFormatArgumentData& Value);
 
-	YString ArgumentName;
+	FString ArgumentName;
 
 	// This is a non-unioned version of FFormatArgumentValue that only accepts the types needed by Blueprints
 	// It's used as a marshaller to create a real FFormatArgumentValue when performing a format
@@ -838,10 +838,10 @@ private:
 
 public:
 	static bool ShouldGatherForLocalization(const FText& Text);
-	static TOptional<YString> GetNamespace(const FText& Text);
-	static TOptional<YString> GetKey(const FText& Text);
-	static const YString* GetSourceString(const FText& Text);
-	static const YString& GetDisplayString(const FText& Text);
+	static TOptional<FString> GetNamespace(const FText& Text);
+	static TOptional<FString> GetKey(const FText& Text);
+	static const FString* GetSourceString(const FText& Text);
+	static const FString& GetDisplayString(const FText& Text);
 	static const FTextDisplayStringRef GetSharedDisplayString(const FText& Text);
 	static uint32 GetFlags(const FText& Text);
 	static void GetHistoricFormatData(const FText& Text, TArray<FHistoricTextFormatData>& OutHistoricFormatData);
@@ -874,7 +874,7 @@ public:
 	*
 	* @return True if we wrote a valid FText instance into Buffer, false otherwise
 	*/
-	static bool WriteToString(YString& Buffer, const FText& Value, const bool bRequiresQuotes = false);
+	static bool WriteToString(FString& Buffer, const FText& Value, const bool bRequiresQuotes = false);
 
 	/**
 	* Test to see whether a given buffer contains complex text.
@@ -887,9 +887,9 @@ private:
 	static bool ReadFromString_ComplexText(const TCHAR* Buffer, FText& OutValue, const TCHAR* TextNamespace, const TCHAR* PackageNamespace, int32* OutNumCharsRead);
 
 #define LOC_DEFINE_REGION
-	static const YString InvTextMarker;
-	static const YString NsLocTextMarker;
-	static const YString LocTextMarker;
+	static const FString InvTextMarker;
+	static const FString NsLocTextMarker;
+	static const FString LocTextMarker;
 #undef LOC_DEFINE_REGION
 };
 
@@ -930,7 +930,7 @@ public:
 		Report += Text.ToString();
 	}
 
-	void AppendLine(const YString& String)
+	void AppendLine(const FString& String)
 	{
 		AppendLine();
 		Report += String;
@@ -988,7 +988,7 @@ public:
 	}
 
 private:
-	YString Report;
+	FString Report;
 	int32 IndentCount;
 };
 
@@ -1001,15 +1001,15 @@ public:
 private:
 	FText& TextToPersist;
 	bool HadFoundNamespaceAndKey;
-	YString Namespace;
-	YString Key;
+	FString Namespace;
+	FString Key;
 	uint32 Flags;
 };
 
 /** Unicode character helper functions */
 struct CORE_API FUnicodeChar
 {
-	static bool CodepointToString(const uint32 InCodepoint, YString& OutString);
+	static bool CodepointToString(const uint32 InCodepoint, FString& OutString);
 };
 
 /**
@@ -1045,17 +1045,17 @@ namespace TextBiDi
 
 		/** See TextBiDi::ComputeTextDirection */
 		virtual ETextDirection ComputeTextDirection(const FText& InText) = 0;
-		virtual ETextDirection ComputeTextDirection(const YString& InString) = 0;
+		virtual ETextDirection ComputeTextDirection(const FString& InString) = 0;
 		virtual ETextDirection ComputeTextDirection(const TCHAR* InString, const int32 InStringStartIndex, const int32 InStringLen) = 0;
 
 		/** See TextBiDi::ComputeTextDirection */
 		virtual ETextDirection ComputeTextDirection(const FText& InText, const ETextDirection InBaseDirection, TArray<FTextDirectionInfo>& OutTextDirectionInfo) = 0;
-		virtual ETextDirection ComputeTextDirection(const YString& InString, const ETextDirection InBaseDirection, TArray<FTextDirectionInfo>& OutTextDirectionInfo) = 0;
+		virtual ETextDirection ComputeTextDirection(const FString& InString, const ETextDirection InBaseDirection, TArray<FTextDirectionInfo>& OutTextDirectionInfo) = 0;
 		virtual ETextDirection ComputeTextDirection(const TCHAR* InString, const int32 InStringStartIndex, const int32 InStringLen, const ETextDirection InBaseDirection, TArray<FTextDirectionInfo>& OutTextDirectionInfo) = 0;
 
 		/** See TextBiDi::ComputeBaseDirection */
 		virtual ETextDirection ComputeBaseDirection(const FText& InText) = 0;
-		virtual ETextDirection ComputeBaseDirection(const YString& InString) = 0;
+		virtual ETextDirection ComputeBaseDirection(const FString& InString) = 0;
 		virtual ETextDirection ComputeBaseDirection(const TCHAR* InString, const int32 InStringStartIndex, const int32 InStringLen) = 0;
 	};
 
@@ -1071,7 +1071,7 @@ namespace TextBiDi
 	* @return LeftToRight if all of the text is LTR, RightToLeft if all of the text is RTL, or Mixed if the text contains both LTR and RTL text.
 	*/
 	CORE_API ETextDirection ComputeTextDirection(const FText& InText);
-	CORE_API ETextDirection ComputeTextDirection(const YString& InString);
+	CORE_API ETextDirection ComputeTextDirection(const FString& InString);
 	CORE_API ETextDirection ComputeTextDirection(const TCHAR* InString, const int32 InStringStartIndex, const int32 InStringLen);
 
 	/**
@@ -1080,7 +1080,7 @@ namespace TextBiDi
 	* @return LeftToRight if all of the text is LTR, RightToLeft if all of the text is RTL, or Mixed if the text contains both LTR and RTL text.
 	*/
 	CORE_API ETextDirection ComputeTextDirection(const FText& InText, const ETextDirection InBaseDirection, TArray<FTextDirectionInfo>& OutTextDirectionInfo);
-	CORE_API ETextDirection ComputeTextDirection(const YString& InString, const ETextDirection InBaseDirection, TArray<FTextDirectionInfo>& OutTextDirectionInfo);
+	CORE_API ETextDirection ComputeTextDirection(const FString& InString, const ETextDirection InBaseDirection, TArray<FTextDirectionInfo>& OutTextDirectionInfo);
 	CORE_API ETextDirection ComputeTextDirection(const TCHAR* InString, const int32 InStringStartIndex, const int32 InStringLen, const ETextDirection InBaseDirection, TArray<FTextDirectionInfo>& OutTextDirectionInfo);
 
 	/**
@@ -1089,7 +1089,7 @@ namespace TextBiDi
 	* @return RightToLeft if the first character in the string has a bidirectional character type of R or AL, otherwise LeftToRight.
 	*/
 	CORE_API ETextDirection ComputeBaseDirection(const FText& InText);
-	CORE_API ETextDirection ComputeBaseDirection(const YString& InString);
+	CORE_API ETextDirection ComputeBaseDirection(const FString& InString);
 	CORE_API ETextDirection ComputeBaseDirection(const TCHAR* InString, const int32 InStringStartIndex, const int32 InStringLen);
 
 	/**

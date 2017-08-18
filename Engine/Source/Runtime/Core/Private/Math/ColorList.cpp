@@ -61,14 +61,14 @@ int32 YColorList::GetColorIndex( const TCHAR* ColorName ) const
 	return ColorIndex;
 }
 
-const YString& YColorList::GetColorNameByIndex( int32 ColorIndex ) const
+const FString& YColorList::GetColorNameByIndex( int32 ColorIndex ) const
 {
-	static const YString BadIndex( TEXT( "BadIndex" ) );
+	static const FString BadIndex( TEXT( "BadIndex" ) );
 
 	if( ColorsLookup.IsValidIndex( ColorIndex ) == true )
 	{
 		const FColor& Color = *ColorsLookup[ ColorIndex ];
-		const YString& ColorName = *ColorsMap.FindKey( &Color );
+		const FString& ColorName = *ColorsMap.FindKey( &Color );
 		return ColorName;
 	}
 
@@ -195,7 +195,7 @@ void YColorList::LogColors()
 	for( TColorsMap::TIterator It(ColorsMap); It; ++It )
 	{
 		const FColor* ColorPtr = It.Value();
-		const YString& ColorName = It.Key();
+		const FString& ColorName = It.Key();
 
 		int32 ColorIndex = 0;
 		ColorsLookup.Find( ColorPtr, ColorIndex );

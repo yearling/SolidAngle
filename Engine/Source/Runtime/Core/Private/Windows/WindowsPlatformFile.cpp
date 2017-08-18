@@ -8,7 +8,7 @@
 #include "Math/UnrealMathUtility.h"
 #include "HAL/UnrealMemory.h"
 #include "GenericPlatform/GenericPlatformFile.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Templates/Function.h"
 #include "Misc/Paths.h"
 #include "CoreGlobals.h"
@@ -514,23 +514,23 @@ public:
 class CORE_API FWindowsPlatformFile : public IPhysicalPlatformFile
 {
 protected:
-	virtual YString NormalizeFilename(const TCHAR* Filename)
+	virtual FString NormalizeFilename(const TCHAR* Filename)
 	{
-		YString Result(Filename);
+		FString Result(Filename);
 		YPaths::NormalizeFilename(Result);
 		if (Result.StartsWith(TEXT("//")))
 		{
-			Result = YString(TEXT("\\\\")) + Result.RightChop(2);
+			Result = FString(TEXT("\\\\")) + Result.RightChop(2);
 		}
 		return YPaths::ConvertRelativePathToFull(Result);
 	}
-	virtual YString NormalizeDirectory(const TCHAR* Directory)
+	virtual FString NormalizeDirectory(const TCHAR* Directory)
 	{
-		YString Result(Directory);
+		FString Result(Directory);
 		YPaths::NormalizeDirectorFName(Result);
 		if (Result.StartsWith(TEXT("//")))
 		{
-			Result = YString(TEXT("\\\\")) + Result.RightChop(2);
+			Result = FString(TEXT("\\\\")) + Result.RightChop(2);
 		}
 		return YPaths::ConvertRelativePathToFull(Result);
 	}
@@ -561,7 +561,7 @@ public:
 	}
 	virtual bool DeleteFile(const TCHAR* Filename) override
 	{
-		const YString NormalizedFilename = NormalizeFilename(Filename);
+		const FString NormalizedFilename = NormalizeFilename(Filename);
 		return !!DeleteFileW(*NormalizedFilename);
 	}
 	virtual bool IsReadOnly(const TCHAR* Filename) override
@@ -622,11 +622,11 @@ public:
 		return FDateTime::MinValue();
 	}
 
-	virtual YString GetFilenameOnDisk(const TCHAR* Filename) override
+	virtual FString GetFilenameOnDisk(const TCHAR* Filename) override
 	{
-		YString Result;
+		FString Result;
 		WIN32_FIND_DATAW Data;
-		YString NormalizedFilename = NormalizeFilename(Filename);
+		FString NormalizedFilename = NormalizeFilename(Filename);
 		while (NormalizedFilename.Len())
 		{
 			HANDLE Handle = FindFirstFileW(*NormalizedFilename, &Data);
@@ -634,7 +634,7 @@ public:
 			{
 				if (Result.Len())
 				{
-					Result = YString(Data.cFileName) / Result;
+					Result = FString(Data.cFileName) / Result;
 				}
 				else
 				{
@@ -735,7 +735,7 @@ public:
 	}
 	virtual bool IterateDirectory(const TCHAR* Directory, FDirectoryVisitor& Visitor) override
 	{
-		const YString DirectoryStr = Directory;
+		const FString DirectoryStr = Directory;
 		return IterateDirectoryCommon(Directory, [&](const WIN32_FIND_DATAW& InData) -> bool
 		{
 			const bool bIsDirectory = !!(InData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY);
@@ -744,7 +744,7 @@ public:
 	}
 	virtual bool IterateDirectoryStat(const TCHAR* Directory, FDirectoryStatVisitor& Visitor) override
 	{
-		const YString DirectoryStr = Directory;
+		const FString DirectoryStr = Directory;
 		return IterateDirectoryCommon(Directory, [&](const WIN32_FIND_DATAW& InData) -> bool
 		{
 			const bool bIsDirectory = !!(InData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY);

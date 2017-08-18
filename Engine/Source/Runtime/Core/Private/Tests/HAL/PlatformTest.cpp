@@ -6,7 +6,7 @@
 #include "Math/UnrealMathUtility.h"
 #include "Templates/AlignOf.h"
 #include "Templates/UnrealTemplate.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "UObject/NameTypes.h"
 #include "Misc/AutomationTest.h"
 
@@ -44,7 +44,7 @@ struct TestC : public TestA, TestB
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FPlatformVerificationTest, "System.Core.HAL.Platform Verification", EAutomationTestFlags::EditorContext | EAutomationTestFlags::ClientContext | EAutomationTestFlags::SmokeFilter)
 
-bool FPlatformVerificationTest::RunTest (const YString& Parameters)
+bool FPlatformVerificationTest::RunTest (const FString& Parameters)
 {
 	PTRINT Offset1 = VTABLE_OFFSET(TestC, TestB);
 	PTRINT Offset2 = VTABLE_OFFSET(TestC, TestA);
@@ -93,7 +93,7 @@ bool FPlatformVerificationTest::RunTest (const YString& Parameters)
 #endif
 	check(FPlatformProperties::PlatformName());
 
-	check(YString(FPlatformProperties::PlatformName()).Len() > 0); 
+	check(FString(FPlatformProperties::PlatformName()).Len() > 0); 
 
 	static_assert(ALIGNOF(int32) == 4, "Align of int32 is not 4."); //Hmmm, this would be very strange, ok maybe, but strange
 

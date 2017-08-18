@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Misc/Timespan.h"
 
 /**
@@ -33,7 +33,7 @@ class CORE_API FBase64
 	 *
 	 * @return the stringified form of the binary data
 	 */
-	static YString Encode(uint8* Source, uint32 Length);
+	static FString Encode(uint8* Source, uint32 Length);
 
 	/**
 	 * Decodes a Base64 string into an array of bytes
@@ -55,7 +55,7 @@ public:
 	 *
 	 * @return a string that encodes the binary data in a way that can be safely transmitted via various Internet protocols
 	 */
-	static YString Encode(const TArray<uint8>& Source);
+	static FString Encode(const TArray<uint8>& Source);
 
 	/**
 	 * Decodes a Base64 string into an array of bytes
@@ -63,7 +63,7 @@ public:
 	 * @param Source the stringified data to convert
 	 * @param Dest the out buffer that will be filled with the decoded data
 	 */
-	static bool Decode(const YString& Source, TArray<uint8>& Dest);
+	static bool Decode(const FString& Source, TArray<uint8>& Dest);
 
 	/**
 	 * Encodes a YString into a Base64 string
@@ -72,7 +72,7 @@ public:
 	 *
 	 * @return a string that encodes the binary data in a way that can be safely transmitted via various Internet protocols
 	 */
-	static YString Encode(const YString& Source);
+	static FString Encode(const FString& Source);
 
 	/**
 	 * Decodes a Base64 string into a YString
@@ -80,5 +80,5 @@ public:
 	 * @param Source the stringified data to convert
 	 * @param Dest the out buffer that will be filled with the decoded data
 	 */
-	static bool Decode(const YString& Source, YString& Dest);
+	static bool Decode(const FString& Source, FString& Dest);
 };

@@ -1,7 +1,8 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "UObject/NameTypes.h"
 #include "Logging/LogMacros.h"
 #include "HAL/PlatformTLS.h"
@@ -9,8 +10,8 @@
 class Error;
 class FConfigCacheIni;
 class FFixedUObjectArray;
-class YOutputDeviceConsole;
-class YOutputDeviceRedirector;
+class FOutputDeviceConsole;
+class FOutputDeviceRedirector;
 class FReloadObjectArc;
 class ITransaction;
 
@@ -49,13 +50,13 @@ CORE_API DECLARE_LOG_CATEGORY_EXTERN(LogLoad, Log, All);
 // Temporary log category, generally you should not check things in that use this
 CORE_API DECLARE_LOG_CATEGORY_EXTERN(LogTemp, Log, All);
 
-CORE_API YOutputDeviceRedirector* GetGlobalLogSingleton();
+CORE_API FOutputDeviceRedirector* GetGlobalLogSingleton();
 
 #define GLog GetGlobalLogSingleton()
 extern CORE_API FConfigCacheIni* GConfig;
 extern CORE_API ITransaction* GUndo;
-extern CORE_API YOutputDeviceConsole* GLogConsole;
-CORE_API extern class YOutputDeviceError*			GError;
+extern CORE_API FOutputDeviceConsole* GLogConsole;
+CORE_API extern class FOutputDeviceError*			GError;
 CORE_API extern class FFeedbackContext*				GWarn;
 
 
@@ -156,8 +157,8 @@ FORCEINLINE bool IsRunningCommandlet()
 }
 
 /**
-* Check to see if we should initialise RHI and set up scene for rendering even when running a commandlet.
-*/
+ * Check to see if we should initialise RHI and set up scene for rendering even when running a commandlet.
+ */
 FORCEINLINE bool IsAllowCommandletRendering()
 {
 #if WITH_ENGINE
@@ -221,24 +222,24 @@ extern CORE_API uint32 GScreenshotResolutionX;
 extern CORE_API uint32 GScreenshotResolutionY;
 extern CORE_API uint64 GMakeCacheIDIndex;
 
-extern CORE_API YString GEngineIni;
+extern CORE_API FString GEngineIni;
 
 /** Editor ini file locations - stored per engine version (shared across all projects). Migrated between versions on first run. */
-extern CORE_API YString GEditorLayoutIni;
-extern CORE_API YString GEditorKeyBindingsIni;
-extern CORE_API YString GEditorSettingsIni;
+extern CORE_API FString GEditorLayoutIni;
+extern CORE_API FString GEditorKeyBindingsIni;
+extern CORE_API FString GEditorSettingsIni;
 
 /** Editor per-project ini files - stored per project. */
-extern CORE_API YString GEditorIni;
-extern CORE_API YString GEditorPerProjectIni;
+extern CORE_API FString GEditorIni;
+extern CORE_API FString GEditorPerProjectIni;
 
-extern CORE_API YString GCompatIni;
-extern CORE_API YString GLightmassIni;
-extern CORE_API YString GScalabilityIni;
-extern CORE_API YString GHardwareIni;
-extern CORE_API YString GInputIni;
-extern CORE_API YString GGameIni;
-extern CORE_API YString GGameUserSettingsIni;
+extern CORE_API FString GCompatIni;
+extern CORE_API FString GLightmassIni;
+extern CORE_API FString GScalabilityIni;
+extern CORE_API FString GHardwareIni;
+extern CORE_API FString GInputIni;
+extern CORE_API FString GGameIni;
+extern CORE_API FString GGameUserSettingsIni;
 
 extern CORE_API float GNearClippingPlane;
 
@@ -253,10 +254,10 @@ extern CORE_API FExec* GDebugToolExec;
 extern CORE_API bool(*IsAsyncLoading)();
 
 /** Suspends async package loading. */
-extern CORE_API void(*SuspendAsyncLoading)();
+extern CORE_API void (*SuspendAsyncLoading)();
 
 /** Resumes async package loading. */
-extern CORE_API void(*ResumeAsyncLoading)();
+extern CORE_API void (*ResumeAsyncLoading)();
 
 /** Returns true if async loading is using the async loading thread */
 extern CORE_API bool(*IsAsyncLoadingMultithreaded)();
@@ -282,7 +283,7 @@ extern CORE_API bool GPlatformNeedsPowerOfTwoTextures;
 extern CORE_API double GStartTime;
 
 /** System time at engine init. */
-extern CORE_API YString GSystemStartTime;
+extern CORE_API FString GSystemStartTime;
 
 /** Whether we are still in the initial loading process. */
 extern CORE_API bool GIsInitialLoad;
@@ -389,21 +390,21 @@ extern CORE_API bool GEnableVREditorHacks;
 
 #if WITH_HOT_RELOAD_CTORS
 /**
-* Ensures that current thread is during retrieval of vtable ptr of some
-* UClass.
-*
-* @param CtorSignature The signature of the ctor currently running to
-*		construct proper error message.
-*/
+ * Ensures that current thread is during retrieval of vtable ptr of some
+ * UClass.
+ *
+ * @param CtorSignature The signature of the ctor currently running to
+ *		construct proper error message.
+ */
 CORE_API void EnsureRetrievingVTablePtrDuringCtor(const TCHAR* CtorSignature);
 #endif // WITH_HOT_RELOAD_CTORS
 
 /** @return True if called from the game thread. */
 FORCEINLINE bool IsInGameThread()
 {
-	if (GIsGameThreadIdInitialized)
+	if(GIsGameThreadIdInitialized)
 	{
-		const uint32 CurrentThreadId = YPlatformTLS::GetCurrentThreadId();
+		const uint32 CurrentThreadId = FPlatformTLS::GetCurrentThreadId();
 		return CurrentThreadId == GGameThreadId || CurrentThreadId == GSlateLoadingThreadId;
 	}
 
@@ -430,7 +431,7 @@ extern CORE_API bool IsInParallelRenderingThread();
 extern CORE_API bool IsInActualRenderingThread();
 
 /** @return True if called from the async loading thread if it's enabled, otherwise if called from game thread while is async loading code. */
-extern CORE_API bool(*IsInAsyncLoadingThread)();
+extern CORE_API bool (*IsInAsyncLoadingThread)();
 
 /** Thread used for rendering */
 extern CORE_API FRunnableThread* GRenderingThread;

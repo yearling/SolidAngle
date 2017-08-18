@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Map.h"
 #include "Misc/DateTime.h"
 #include "GenericPlatform/GenericPlatformFile.h"
@@ -18,7 +18,7 @@ class CORE_API FLocalTimestampDirectoryVisitor
 public:
 
 	/** Relative paths to local files and their timestamps. */
-	TMap<YString, FDateTime> FileTimes;
+	TMap<FString, FDateTime> FileTimes;
 
 	/**
 	 * Creates and initializes a new instance.
@@ -28,7 +28,7 @@ public:
 	 * @param InDirectoriesToNotRecurse - The list of directories to not visit recursively.
 	 * @param bInCacheDirectories - Whether to cache the directories.
 	 */
-	FLocalTimestampDirectoryVisitor( IPlatformFile& InFileInterface, const TArray<YString>& InDirectoriesToIgnore, const TArray<YString>& InDirectoriesToNotRecurse, bool bInCacheDirectories = false );
+	FLocalTimestampDirectoryVisitor( IPlatformFile& InFileInterface, const TArray<FString>& InDirectoriesToIgnore, const TArray<FString>& InDirectoriesToNotRecurse, bool bInCacheDirectories = false );
 
 public:
 
@@ -42,10 +42,10 @@ private:
 	bool bCacheDirectories;
 
 	// Holds a list of directories that we should not traverse into. */
-	TArray<YString> DirectoriesToIgnore;
+	TArray<FString> DirectoriesToIgnore;
 
 	// Holds a list of directories that we should only go one level into. */
-	TArray<YString> DirectoriesToNotRecurse;
+	TArray<FString> DirectoriesToNotRecurse;
 
 	// Holds the file interface to use for any file operations. */
 	IPlatformFile& FileInterface;

@@ -20,7 +20,7 @@ FText FTextCache::FindOrCache(const TCHAR* InTextLiteral, const TCHAR* InNamespa
 		const FText* FoundText = CachedText.Find(CacheKey);
 		if (FoundText)
 		{
-			const YString* FoundTextLiteral = FTextInspector::GetSourceString(*FoundText);
+			const FString* FoundTextLiteral = FTextInspector::GetSourceString(*FoundText);
 			if (FoundTextLiteral && FCString::Strcmp(**FoundTextLiteral, InTextLiteral) == 0)
 			{
 				return *FoundText;

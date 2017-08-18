@@ -7,14 +7,14 @@
 
 FCulture::FLegacyCultureImplementation::FLegacyCultureImplementation(
 	const FText& InDisplaFName, 
-	const YString& InEnglishName, 
+	const FString& InEnglishName, 
 	const int InKeyboardLayoutId, 
 	const int InLCID, 
-	const YString& InName, 
-	const YString& InNativeName, 
-	const YString& InUnrealLegacyThreeLetterISOLanguageName, 
-	const YString& InThreeLetterISOLanguageName, 
-	const YString& InTwoLetterISOLanguageName,
+	const FString& InName, 
+	const FString& InNativeName, 
+	const FString& InUnrealLegacyThreeLetterISOLanguageName, 
+	const FString& InThreeLetterISOLanguageName, 
+	const FString& InTwoLetterISOLanguageName,
 	const FDecimalNumberFormattingRules& InDecimalNumberFormattingRules,
 	const FDecimalNumberFormattingRules& InPercentFormattingRules,
 	const FDecimalNumberFormattingRules& InBaseCurrencyFormattingRules
@@ -34,12 +34,12 @@ FCulture::FLegacyCultureImplementation::FLegacyCultureImplementation(
 { 
 }
 
-YString FCulture::FLegacyCultureImplementation::GetDisplaFName() const
+FString FCulture::FLegacyCultureImplementation::GetDisplaFName() const
 {
 	return DisplaFName.ToString();
 }
 
-YString FCulture::FLegacyCultureImplementation::GetEnglishName() const
+FString FCulture::FLegacyCultureImplementation::GetEnglishName() const
 {
 	return EnglishName;
 }
@@ -54,22 +54,22 @@ int FCulture::FLegacyCultureImplementation::GetLCID() const
 	return LCID;
 }
 
-YString FCulture::FLegacyCultureImplementation::GetName() const
+FString FCulture::FLegacyCultureImplementation::GetName() const
 {
 	return Name;
 }
 
-YString FCulture::FLegacyCultureImplementation::GetCanonicalName(const YString& Name)
+FString FCulture::FLegacyCultureImplementation::GetCanonicalName(const FString& Name)
 {
 	return Name;
 }
 
-YString FCulture::FLegacyCultureImplementation::GetNativeName() const
+FString FCulture::FLegacyCultureImplementation::GetNativeName() const
 {
 	return NativeName;
 }
 
-YString FCulture::FLegacyCultureImplementation::GetNativeLanguage() const
+FString FCulture::FLegacyCultureImplementation::GetNativeLanguage() const
 {
 	int32 LastBracket = INDEX_NONE;
 	int32 FirstBracket = INDEX_NONE;
@@ -80,7 +80,7 @@ YString FCulture::FLegacyCultureImplementation::GetNativeLanguage() const
 	return NativeName;
 }
 
-YString FCulture::FLegacyCultureImplementation::GetNativeRegion() const
+FString FCulture::FLegacyCultureImplementation::GetNativeRegion() const
 {
 	int32 LastBracket = INDEX_NONE;
 	int32 FirstBracket = INDEX_NONE;
@@ -91,17 +91,17 @@ YString FCulture::FLegacyCultureImplementation::GetNativeRegion() const
 	return NativeName;
 }
 
-YString FCulture::FLegacyCultureImplementation::GetUnrealLegacyThreeLetterISOLanguageName() const
+FString FCulture::FLegacyCultureImplementation::GetUnrealLegacyThreeLetterISOLanguageName() const
 {
 	return UnrealLegacyThreeLetterISOLanguageName;
 }
 
-YString FCulture::FLegacyCultureImplementation::GetThreeLetterISOLanguageName() const
+FString FCulture::FLegacyCultureImplementation::GetThreeLetterISOLanguageName() const
 {
 	return ThreeLetterISOLanguageName;
 }
 
-YString FCulture::FLegacyCultureImplementation::GetTwoLetterISOLanguageName() const
+FString FCulture::FLegacyCultureImplementation::GetTwoLetterISOLanguageName() const
 {
 	return TwoLetterISOLanguageName;
 }
@@ -116,7 +116,7 @@ const FDecimalNumberFormattingRules& FCulture::FLegacyCultureImplementation::Get
 	return PercentFormattingRules;
 }
 
-const FDecimalNumberFormattingRules& FCulture::FLegacyCultureImplementation::GetCurrencyFormattingRules(const YString& InCurrencyCode)
+const FDecimalNumberFormattingRules& FCulture::FLegacyCultureImplementation::GetCurrencyFormattingRules(const FString& InCurrencyCode)
 {
 	const bool bUseDefaultFormattingRules = InCurrencyCode.IsEmpty();
 

@@ -2,21 +2,21 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Misc/Paths.h"
 #include "Misc/AutomationTest.h"
 
-YString YPaths::GameProjectFilePath;
+FString YPaths::GameProjectFilePath;
 
 #if WITH_DEV_AUTOMATION_TESTS
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FPathTests, "System.Core.Misc.Paths", EAutomationTestFlags::ApplicationContextMask | EAutomationTestFlags::SmokeFilter)
 
-bool FPathTests::RunTest( const YString& Parameters )
+bool FPathTests::RunTest( const FString& Parameters )
 {
 	struct FCollapseRelativeDirectoriesTest
 	{
-		static void Run(YString Path, const TCHAR* Result)
+		static void Run(FString Path, const TCHAR* Result)
 		{
 			// Run test
 			bool bValid = YPaths::CollapseRelativeDirectories(Path);

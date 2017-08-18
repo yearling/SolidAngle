@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 
 /**
  * Implements a globally unique identifier for network related use.
@@ -99,9 +99,9 @@ public:
 		Value = 0;
 	}
 
-	YString ToString() const
+	FString ToString() const
 	{
-		return YString::Printf(TEXT("%d"), Value);
+		return FString::Printf(TEXT("%d"), Value);
 	}
 
 public:

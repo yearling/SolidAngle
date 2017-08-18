@@ -311,7 +311,7 @@ void YGenericPlatformMemory::MemswapGreaterThan8(void* RESTRICT Ptr1, void* REST
 	}
 }
 
-YGenericPlatformMemory::YSharedMemoryRegion::YSharedMemoryRegion(const YString& InName, uint32 InAccessMode, void* InAddress, SIZE_T InSize)
+YGenericPlatformMemory::YSharedMemoryRegion::YSharedMemoryRegion(const FString& InName, uint32 InAccessMode, void* InAddress, SIZE_T InSize)
 	: AccessMode(InAccessMode)
 	, Address(InAddress)
 	, Size(InSize)
@@ -319,7 +319,7 @@ YGenericPlatformMemory::YSharedMemoryRegion::YSharedMemoryRegion(const YString& 
 	FCString::Strcpy(Name, sizeof(Name) - 1, *InName);
 }
 
-YGenericPlatformMemory::YSharedMemoryRegion * YGenericPlatformMemory::MapNamedSharedMemoryRegion(const YString& Name, bool bCreate, uint32 AccessMode, SIZE_T Size)
+YGenericPlatformMemory::YSharedMemoryRegion * YGenericPlatformMemory::MapNamedSharedMemoryRegion(const FString& Name, bool bCreate, uint32 AccessMode, SIZE_T Size)
 {
 	UE_LOG(LogHAL, Error, TEXT("YGenericPlatformMemory::MapNamedSharedMemoryRegion not implemented on this platform"));
 	return NULL;

@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Templates/UnrealTemplate.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Misc/Parse.h"
 #include "UObject/NameTypes.h"
 #include "CoreGlobals.h"
@@ -31,7 +31,7 @@ public:
 	*
 	* @return The branch name.
 	*/
-	static YString GetBranchName();
+	static FString GetBranchName();
 
 	/**
 	* Gets the application's build configuration, i.e. Debug or Shipping.
@@ -61,7 +61,7 @@ public:
 	*
 	* @return Build date string.
 	*/
-	static YString GetBuildDate();
+	static FString GetBuildDate();
 
 	/**
 	* Gets the value of ENGINE_IS_PROMOTED_BUILD.
@@ -71,7 +71,7 @@ public:
 	/**
 	* Gets the identifier for the unreal engine
 	*/
-	static YString GetEpicProductIdentifier();
+	static FString GetEpicProductIdentifier();
 
 	/**
 	* Gets the name of the currently running game.
@@ -89,9 +89,9 @@ public:
 	* @todo need better application name discovery. this is quite horrible and may not work on future platforms.
 	* @return Application name string.
 	*/
-	static YString GetName()
+	static FString GetName()
 	{
-		YString ExecutableName = FPlatformProcess::ExecutableName();
+		FString ExecutableName = FPlatformProcess::ExecutableName();
 
 		int32 ChopIndex = ExecutableName.Find(TEXT("-"));
 
@@ -167,7 +167,7 @@ public:
 	* @param UserName The name of the user to add.
 	* @see DenyUser, DenyAllUsers, IsAuthorizedUser
 	*/
-	FORCEINLINE static void AuthorizeUser(const YString& UserName)
+	FORCEINLINE static void AuthorizeUser(const FString& UserName)
 	{
 		SessionUsers.AddUnique(UserName);
 	}
@@ -188,7 +188,7 @@ public:
 	* @param UserName The name of the user to remove.
 	* @see AuthorizeUser, DenyAllUsers, IsAuthorizedUser
 	*/
-	FORCEINLINE static void DenyUser(const YString& UserName)
+	FORCEINLINE static void DenyUser(const FString& UserName)
 	{
 		SessionUsers.Remove(UserName);
 	}
@@ -214,9 +214,9 @@ public:
 	*
 	* @return Instance name string.
 	*/
-	static YString GetInstanceName()
+	static FString GetInstanceName()
 	{
-		return YString::Printf(TEXT("%s-%i"), FPlatformProcess::ComputerName(), FPlatformProcess::GetCurrentProcessId());
+		return FString::Printf(TEXT("%s-%i"), FPlatformProcess::ComputerName(), FPlatformProcess::GetCurrentProcessId());
 	}
 
 	/**
@@ -240,7 +240,7 @@ public:
 	*
 	* @return Session name string.
 	*/
-	FORCEINLINE static YString GetSessionName()
+	FORCEINLINE static FString GetSessionName()
 	{
 		return SessionName;
 	}
@@ -255,7 +255,7 @@ public:
 	*
 	* @return Name of session owner.
 	*/
-	FORCEINLINE static YString GetSessionOwner()
+	FORCEINLINE static FString GetSessionOwner()
 	{
 		return SessionOwner;
 	}
@@ -272,7 +272,7 @@ public:
 	* @return true if the user is authorized, false otherwise.
 	* @see AuthorizeUser, DenyUser, DenyAllUsers
 	*/
-	FORCEINLINE static bool IsAuthorizedUser(const YString& UserName)
+	FORCEINLINE static bool IsAuthorizedUser(const FString& UserName)
 	{
 		return ((FPlatformProcess::UserName(false) == UserName) || (SessionOwner == UserName) || SessionUsers.Contains(UserName));
 	}
@@ -307,7 +307,7 @@ public:
 	* @param NewName The new session name.
 	* @see SetSessionOwner
 	*/
-	FORCEINLINE static void SetSessionName(const YString& NewName)
+	FORCEINLINE static void SetSessionName(const FString& NewName)
 	{
 		SessionName = NewName;
 	}
@@ -318,7 +318,7 @@ public:
 	* @param NewOwner The name of the new owner.
 	* @see SetSessionName
 	*/
-	FORCEINLINE static void SetSessionOwner(const YString& NewOwner)
+	FORCEINLINE static void SetSessionOwner(const FString& NewOwner)
 	{
 		SessionOwner = NewOwner;
 	}
@@ -622,13 +622,13 @@ private:
 	static FGuid SessionId;
 
 	/** Holds the session name. */
-	static YString SessionName;
+	static FString SessionName;
 
 	/** Holds the name of the user that launched session. */
-	static YString SessionOwner;
+	static FString SessionOwner;
 
 	/** List of authorized session users. */
-	static TArray<YString> SessionUsers;
+	static TArray<FString> SessionUsers;
 
 	/** Holds a flag indicating whether this is a standalone session. */
 	static bool Standalone;

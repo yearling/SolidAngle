@@ -60,7 +60,7 @@ namespace TextFilterExpressionParser
 	}
 
 	/** Transform the given string to remove any escape character sequences found in a quoted string */
-	void UnescapeQuotedString(YString& Str, const TCHAR InQuoteChar)
+	void UnescapeQuotedString(FString& Str, const TCHAR InQuoteChar)
 	{
 		const TCHAR EscapedQuote[] = { '\\', InQuoteChar, 0 };
 		const TCHAR UnescapedQuote[] = { InQuoteChar, 0 };
@@ -71,7 +71,7 @@ namespace TextFilterExpressionParser
 	}
 
 	/** Given a potential string, we produce a final FTextToken for it using the correct comparison mode (as inferred from the given string) */
-	FTextToken CreateTextTokenFromUnquotedString(YString InString)
+	FTextToken CreateTextTokenFromUnquotedString(FString InString)
 	{
 		ETextFilterTextComparisonMode TextComparisonMode = ETextFilterTextComparisonMode::Partial;
 
@@ -124,8 +124,8 @@ namespace TextFilterExpressionParser
 	{
 		auto& Stream = Consumer.GetStream();
 
-		YString FinalString;
-		YString CurrentQuotedString;
+		FString FinalString;
+		FString CurrentQuotedString;
 
 		TCHAR QuoteChar = 0;
 		int32 NumConsecutiveSlashes = 0;
@@ -464,7 +464,7 @@ bool FTextFilterExpressionEvaluator::TestTextFilter(const ITextFilterExpressionC
 	return false;
 }
 
-void FTextFilterExpressionEvaluator::AddFunctionTokenCallback(YString InFunctionName, FTokenFunctionHandler InCallback)
+void FTextFilterExpressionEvaluator::AddFunctionTokenCallback(FString InFunctionName, FTokenFunctionHandler InCallback)
 {
 	TokenFunctionHandlers.Add(InFunctionName, InCallback);
 }

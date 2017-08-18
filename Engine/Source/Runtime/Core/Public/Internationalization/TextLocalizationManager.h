@@ -6,14 +6,14 @@
 #include "Containers/ContainerAllocationPolicies.h"
 #include "Containers/Array.h"
 #include "Misc/Crc.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Set.h"
 #include "Containers/Map.h"
 #include "Templates/SharedPointer.h"
 #include "Delegates/Delegate.h"
 
-typedef TSharedRef<YString, ESPMode::ThreadSafe> FTextDisplayStringRef;
-typedef TSharedPtr<YString, ESPMode::ThreadSafe> FTextDisplayStringPtr;
+typedef TSharedRef<FString, ESPMode::ThreadSafe> FTextDisplayStringRef;
+typedef TSharedPtr<FString, ESPMode::ThreadSafe> FTextDisplayStringPtr;
 
 /** Singleton class that manages display strings for FText. */
 class CORE_API FTextLocalizationManager
@@ -29,56 +29,56 @@ private:
 		/** Data struct for tracking a localization entry from a localization resource. */
 		struct FEntry
 		{
-			YString LocResID;
+			FString LocResID;
 			uint32 SourceStringHash;
-			YString LocalizedString;
+			FString LocalizedString;
 		};
 
 		typedef TArray<FEntry> FEntryArray;
 
-		struct FKeyTableKeyFuncs : BaseKeyFuncs<FEntryArray, YString, false>
+		struct FKeyTableKeyFuncs : BaseKeyFuncs<FEntryArray, FString, false>
 		{
-			static FORCEINLINE const YString& GetSetKey(const TPair<YString, FEntryArray>& Element)
+			static FORCEINLINE const FString& GetSetKey(const TPair<FString, FEntryArray>& Element)
 			{
 				return Element.Key;
 			}
-			static FORCEINLINE bool Matches(const YString& A, const YString& B)
+			static FORCEINLINE bool Matches(const FString& A, const FString& B)
 			{
 				return A.Equals(B, ESearchCase::CaseSensitive);
 			}
-			static FORCEINLINE uint32 GetKeyHash(const YString& Key)
+			static FORCEINLINE uint32 GetKeyHash(const FString& Key)
 			{
 				return FCrc::StrCrc32<TCHAR>(*Key);
 			}
 		};
-		typedef TMap<YString, FEntryArray, FDefaultSetAllocator, FKeyTableKeyFuncs> FKeysTable;
+		typedef TMap<FString, FEntryArray, FDefaultSetAllocator, FKeyTableKeyFuncs> FKeysTable;
 
-		struct FNamespaceTableKeyFuncs : BaseKeyFuncs<FKeysTable, YString, false>
+		struct FNamespaceTableKeyFuncs : BaseKeyFuncs<FKeysTable, FString, false>
 		{
-			static FORCEINLINE const YString& GetSetKey(const TPair<YString, FKeysTable>& Element)
+			static FORCEINLINE const FString& GetSetKey(const TPair<FString, FKeysTable>& Element)
 			{
 				return Element.Key;
 			}
-			static FORCEINLINE bool Matches(const YString& A, const YString& B)
+			static FORCEINLINE bool Matches(const FString& A, const FString& B)
 			{
 				return A.Equals(B, ESearchCase::CaseSensitive);
 			}
-			static FORCEINLINE uint32 GetKeyHash(const YString& Key)
+			static FORCEINLINE uint32 GetKeyHash(const FString& Key)
 			{
 				return FCrc::StrCrc32<TCHAR>(*Key);
 			}
 		};
-		typedef TMap<YString, FKeysTable, FDefaultSetAllocator, FNamespaceTableKeyFuncs> FNamespacesTable;
+		typedef TMap<FString, FKeysTable, FDefaultSetAllocator, FNamespaceTableKeyFuncs> FNamespacesTable;
 
 		FNamespacesTable Namespaces;
 
 	public:
 		/** Loads all text localizations from all localization resource files in the specified directory. */
-		void LoadFromDirectory(const YString& DirectoryPath);
+		void LoadFromDirectory(const FString& DirectoryPath);
 		/** Loads all text localizations from the specified localization resource file. */
-		bool LoadFromFile(const YString& FilePath);
+		bool LoadFromFile(const FString& FilePath);
 		/** Loads all text localizations from the specified localization resource archive, associating the entries with the specified identifier. */
-		void LoadFromLocalizationResource(FArchive& Archive, const YString& LocResID);
+		void LoadFromLocalizationResource(FArchive& Archive, const FString& LocResID);
 
 		/** Detects conflicts between loaded localization resources and logs them as warnings. */
 		void DetectAndLogConflicts() const;
@@ -92,11 +92,11 @@ private:
 		struct FDisplayStringEntry
 		{
 			bool bIsLocalized;
-			YString LocResID;
+			FString LocResID;
 			uint32 SourceStringHash;
 			FTextDisplayStringRef DisplayString;
 
-			FDisplayStringEntry(const bool InIsLocalized, const YString& InLocResID, const uint32 InSourceStringHash, const FTextDisplayStringRef& InDisplayString)
+			FDisplayStringEntry(const bool InIsLocalized, const FString& InLocResID, const uint32 InSourceStringHash, const FTextDisplayStringRef& InDisplayString)
 				: bIsLocalized(InIsLocalized)
 				, LocResID(InLocResID)
 				, SourceStringHash(InSourceStringHash)
@@ -105,56 +105,56 @@ private:
 			}
 		};
 
-		struct FKeyTableKeyFuncs : BaseKeyFuncs<FDisplayStringEntry, YString, false>
+		struct FKeyTableKeyFuncs : BaseKeyFuncs<FDisplayStringEntry, FString, false>
 		{
-			static FORCEINLINE const YString& GetSetKey(const TPair<YString, FDisplayStringEntry>& Element)
+			static FORCEINLINE const FString& GetSetKey(const TPair<FString, FDisplayStringEntry>& Element)
 			{
 				return Element.Key;
 			}
-			static FORCEINLINE bool Matches(const YString& A, const YString& B)
+			static FORCEINLINE bool Matches(const FString& A, const FString& B)
 			{
 				return A.Equals(B, ESearchCase::CaseSensitive);
 			}
-			static FORCEINLINE uint32 GetKeyHash(const YString& Key)
+			static FORCEINLINE uint32 GetKeyHash(const FString& Key)
 			{
 				return FCrc::StrCrc32<TCHAR>(*Key);
 			}
 		};
-		typedef TMap<YString, FDisplayStringEntry, FDefaultSetAllocator, FKeyTableKeyFuncs> FKeysTable;
+		typedef TMap<FString, FDisplayStringEntry, FDefaultSetAllocator, FKeyTableKeyFuncs> FKeysTable;
 
-		struct FNamespaceTableKeyFuncs : BaseKeyFuncs<FKeysTable, YString, false>
+		struct FNamespaceTableKeyFuncs : BaseKeyFuncs<FKeysTable, FString, false>
 		{
-			static FORCEINLINE const YString& GetSetKey(const TPair<YString, FKeysTable>& Element)
+			static FORCEINLINE const FString& GetSetKey(const TPair<FString, FKeysTable>& Element)
 			{
 				return Element.Key;
 			}
-			static FORCEINLINE bool Matches(const YString& A, const YString& B)
+			static FORCEINLINE bool Matches(const FString& A, const FString& B)
 			{
 				return A.Equals(B, ESearchCase::CaseSensitive);
 			}
-			static FORCEINLINE uint32 GetKeyHash(const YString& Key)
+			static FORCEINLINE uint32 GetKeyHash(const FString& Key)
 			{
 				return FCrc::StrCrc32<TCHAR>(*Key);
 			}
 		};
-		typedef TMap<YString, FKeysTable, FDefaultSetAllocator, FNamespaceTableKeyFuncs> FNamespacesTable;
+		typedef TMap<FString, FKeysTable, FDefaultSetAllocator, FNamespaceTableKeyFuncs> FNamespacesTable;
 
 		FNamespacesTable NamespacesTable;
 
 	public:
 		/** Finds the keys table for the specified namespace and the display string entry for the specified namespace and key combination. If not found, the out parameters are set to null. */
-		void Find(const YString& InNamespace, FKeysTable*& OutKeysTableForNamespace, const YString& InKey, FDisplayStringEntry*& OutDisplayStringEntry);
+		void Find(const FString& InNamespace, FKeysTable*& OutKeysTableForNamespace, const FString& InKey, FDisplayStringEntry*& OutDisplayStringEntry);
 		/** Finds the keys table for the specified namespace and the display string entry for the specified namespace and key combination. If not found, the out parameters are set to null. */
-		void Find(const YString& InNamespace, const FKeysTable*& OutKeysTableForNamespace, const YString& InKey, const FDisplayStringEntry*& OutDisplayStringEntry) const;
+		void Find(const FString& InNamespace, const FKeysTable*& OutKeysTableForNamespace, const FString& InKey, const FDisplayStringEntry*& OutDisplayStringEntry) const;
 	};
 
 	/** Simple data structure containing the name of the namespace and key associated with a display string, for use in looking up namespace and key from a display string. */
 	struct FNamespaceKeyEntry
 	{
-		YString Namespace;
-		YString Key;
+		FString Namespace;
+		FString Key;
 
-		FNamespaceKeyEntry(const YString& InNamespace, const YString& InKey)
+		FNamespaceKeyEntry(const FString& InNamespace, const FString& InKey)
 			: Namespace(InNamespace)
 			, Key(InKey)
 		{}
@@ -183,7 +183,7 @@ public:
 
 	/**	Finds and returns the display string with the given namespace and key, if it exists.
 	*	Additionally, if a source string is specified and the found localized display string was not localized from that source string, null will be returned. */
-	FTextDisplayStringPtr FindDisplayString(const YString& Namespace, const YString& Key, const YString* const SourceString = nullptr);
+	FTextDisplayStringPtr FindDisplayString(const FString& Namespace, const FString& Key, const FString* const SourceString = nullptr);
 
 	/**	Returns a display string with the given namespace and key.
 	*	If no display string exists, it will be created using the source string or an empty string if no source string is provided.
@@ -191,15 +191,15 @@ public:
 	*		... but it was not localized from the specified source string, the display string will be set to the specified source and returned.
 	*		... and it was localized from the specified source string (or none was provided), the display string will be returned.
 	*/
-	FTextDisplayStringRef GetDisplayString(const YString& Namespace, const YString& Key, const YString* const SourceString);
+	FTextDisplayStringRef GetDisplayString(const FString& Namespace, const FString& Key, const FString* const SourceString);
 
 	/** If an entry exists for the specified namespace and key, returns true and provides the localization resource identifier from which it was loaded. Otherwise, returns false. */
-	bool GetLocResID(const YString& Namespace, const YString& Key, YString& OutLocResId);
+	bool GetLocResID(const FString& Namespace, const FString& Key, FString& OutLocResId);
 
 	/**	Finds the namespace and key associated with the specified display string.
 	*	Returns true if found and sets the out parameters. Otherwise, returns false.
 	*/
-	bool FindNamespaceAndKeyFromDisplayString(const FTextDisplayStringRef& InDisplayString, YString& OutNamespace, YString& OutKey);
+	bool FindNamespaceAndKeyFromDisplayString(const FTextDisplayStringRef& InDisplayString, FString& OutNamespace, FString& OutKey);
 
 	/**
 	* Attempts to find a local revision history for the given display string.
@@ -212,19 +212,19 @@ public:
 	*	Returns true if the display string has been or was already associated with the namespace and key.
 	*	Returns false if the display string was already associated with another namespace and key or the namespace and key are already in use by another display string.
 	*/
-	bool AddDisplayString(const FTextDisplayStringRef& DisplayString, const YString& Namespace, const YString& Key);
+	bool AddDisplayString(const FTextDisplayStringRef& DisplayString, const FString& Namespace, const FString& Key);
 
 	/**
 	* Updates the underlying value of a display string and associates it with a specified namespace and key, then returns true.
 	* If the namespace and key are already in use by another display string, no changes occur and false is returned.
 	*/
-	bool UpdateDisplayString(const FTextDisplayStringRef& DisplayString, const YString& Value, const YString& Namespace, const YString& Key);
+	bool UpdateDisplayString(const FTextDisplayStringRef& DisplayString, const FString& Value, const FString& Namespace, const FString& Key);
 
 	/** Updates display string entries and adds new display string entries based on localizations found in a specified localization resource. */
-	void UpdateFromLocalizationResource(const YString& LocalizationResourceFilePath);
+	void UpdateFromLocalizationResource(const FString& LocalizationResourceFilePath);
 
 	/** Updates display string entries and adds new display string entries based on localizations found in a specified localization resource. */
-	void UpdateFromLocalizationResource(FArchive& LocResArchive, const YString& LocResID);
+	void UpdateFromLocalizationResource(FArchive& LocResArchive, const FString& LocResID);
 
 	/** Reloads resources for the current culture. */
 	void RefreshResources();
@@ -238,7 +238,7 @@ public:
 	FTextRevisionChangedEvent OnTextRevisionChangedEvent;
 
 	/** Delegate for gathering up additional localization paths that are unknown to the UE4 core (such as plugins) */
-	DECLARE_MULTICAST_DELEGATE_OneParam(FGatherAdditionalLocResPathsDelegate, TArray<YString>&);
+	DECLARE_MULTICAST_DELEGATE_OneParam(FGatherAdditionalLocResPathsDelegate, TArray<FString>&);
 	FGatherAdditionalLocResPathsDelegate GatherAdditionalLocResPathsCallback;
 
 private:
@@ -246,7 +246,7 @@ private:
 	void OnCultureChanged();
 
 	/** Loads localization resources for the specified culture, optionally loading localization resources that are editor-specific or game-specific. */
-	void LoadLocalizationResourcesForCulture(const YString& CultureName, const bool ShouldLoadEditor, const bool ShouldLoadGame);
+	void LoadLocalizationResourcesForCulture(const FString& CultureName, const bool ShouldLoadEditor, const bool ShouldLoadGame);
 
 	/** Updates display string entries and adds new display string entries based on provided localizations. */
 	void UpdateFromLocalizations(const TArray<FLocalizationEntryTracker>& LocalizationEntryTrackers);

@@ -3,19 +3,19 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 
 /**
  * Implements a string with wild card pattern matching abilities.
  */
 class FWildcardString
-	: public YString
+	: public FString
 {
 public:
 
 	/** Default constructor. */
 	FWildcardString( )
-		: YString()
+		: FString()
 	{ }
 
 	/**
@@ -23,8 +23,8 @@ public:
 	 *
 	 * @param Pattern The pattern string.
 	 */
-	FWildcardString( const YString& Pattern )
-		: YString(Pattern)
+	FWildcardString( const FString& Pattern )
+		: FString(Pattern)
 	{ }
 
 	/**
@@ -33,7 +33,7 @@ public:
 	 * @param Pattern The pattern string.
 	 */
 	FWildcardString( const TCHAR* Pattern )
-		: YString(Pattern)
+		: FString(Pattern)
 	{ }
 
 public:
@@ -65,7 +65,7 @@ public:
 	 * @param Input The string to match.
 	 * @return true if the input string matches this pattern, false otherwise.
 	 */
-	bool IsMatch( const YString& Input ) const
+	bool IsMatch( const FString& Input ) const
 	{
 		return IsMatch(**this, *Input);
 	}

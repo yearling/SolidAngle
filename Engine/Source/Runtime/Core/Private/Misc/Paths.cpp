@@ -27,11 +27,11 @@ namespace UE4Paths_Private
 	auto IsSlashOrBackslash    = [](TCHAR C) { return C == TEXT('/') || C == TEXT('\\'); };
 	auto IsNotSlashOrBackslash = [](TCHAR C) { return C != TEXT('/') && C != TEXT('\\'); };
 
-	YString GameSavedDir()
+	FString GameSavedDir()
 	{
-		YString Result = YPaths::GameUserDir();
+		FString Result = YPaths::GameUserDir();
 
-		YString NonDefaultSavedDirSuffix;
+		FString NonDefaultSavedDirSuffix;
 		if (FParse::Value(FCommandLine::Get(), TEXT("-saveddirsuffix="), NonDefaultSavedDirSuffix))
 		{
 			for (int32 CharIdx = 0; CharIdx < NonDefaultSavedDirSuffix.Len(); ++CharIdx)
@@ -56,9 +56,9 @@ namespace UE4Paths_Private
 		return Result;
 	}
 
-	YString ConvertRelativePathToFullInternal(YString&& BasePath, YString&& InPath)
+	FString ConvertRelativePathToFullInternal(FString&& BasePath, FString&& InPath)
 	{
-		YString FullyPathed;
+		FString FullyPathed;
 		if ( YPaths::IsRelative(InPath) )
 		{
 			FullyPathed  = MoveTemp(BasePath);
@@ -90,17 +90,17 @@ bool YPaths::ShouldSaveToUserDir()
 	return bShouldSaveToUserDir;
 }
 
-YString YPaths::LaunchDir()
+FString YPaths::LaunchDir()
 {
-	return YString(YPlatformMisc::LaunchDir());
+	return FString(YPlatformMisc::LaunchDir());
 }
 
-YString YPaths::EngineDir()
+FString YPaths::EngineDir()
 {
-	return YString(YPlatformMisc::EngineDir());
+	return FString(YPlatformMisc::EngineDir());
 }
 
-YString YPaths::EngineUserDir()
+FString YPaths::EngineUserDir()
 {
 	if (ShouldSaveToUserDir() || FApp::IsEngineInstalled())
 	{
@@ -112,7 +112,7 @@ YString YPaths::EngineUserDir()
 	}
 }
 
-YString YPaths::EngineVersionAgnosticUserDir()
+FString YPaths::EngineVersionAgnosticUserDir()
 {
 	if (ShouldSaveToUserDir() || FApp::IsEngineInstalled())
 	{
@@ -124,42 +124,42 @@ YString YPaths::EngineVersionAgnosticUserDir()
 	}
 }
 
-YString YPaths::EngineContentDir()
+FString YPaths::EngineContentDir()
 {
 	return YPaths::EngineDir() + TEXT("Content/");
 }
 
-YString YPaths::EngineConfigDir()
+FString YPaths::EngineConfigDir()
 {
 	return YPaths::EngineDir() + TEXT("Config/");
 }
 
-YString YPaths::EngineIntermediateDir()
+FString YPaths::EngineIntermediateDir()
 {
 	return YPaths::EngineDir() + TEXT("Intermediate/");
 }
 
-YString YPaths::EngineSavedDir()
+FString YPaths::EngineSavedDir()
 {
 	return EngineUserDir() + TEXT("Saved/");
 }
 
-YString YPaths::EnginePluginsDir()
+FString YPaths::EnginePluginsDir()
 {
 	return YPaths::EngineDir() + TEXT("Plugins/");
 }
 
-YString YPaths::RootDir()
+FString YPaths::RootDir()
 {
-	return YString(YPlatformMisc::RootDir());
+	return FString(YPlatformMisc::RootDir());
 }
 
-YString YPaths::GameDir()
+FString YPaths::GameDir()
 {
-	return YString(YPlatformMisc::GameDir());
+	return FString(YPlatformMisc::GameDir());
 }
 
-YString YPaths::GameUserDir()
+FString YPaths::GameUserDir()
 {
 	if (ShouldSaveToUserDir())
 	{
@@ -167,7 +167,7 @@ YString YPaths::GameUserDir()
 	}
 	else
 	{
-		YString UserDir;
+		FString UserDir;
 		if (FParse::Value(FCommandLine::Get(), TEXT("UserDir="), UserDir))
 		{
 			return YPaths::Combine(*YPaths::GameDir(), *UserDir) + TEXT("/");
@@ -177,43 +177,43 @@ YString YPaths::GameUserDir()
 	}
 }
 
-YString YPaths::GameContentDir()
+FString YPaths::GameContentDir()
 {
 	return YPaths::GameDir() + TEXT("Content/");
 }
 
-YString YPaths::GameConfigDir()
+FString YPaths::GameConfigDir()
 {
 	return YPaths::GameDir() + TEXT("Config/");
 }
 
-YString YPaths::GameSavedDir()
+FString YPaths::GameSavedDir()
 {
-	static YString Result = UE4Paths_Private::GameSavedDir();
+	static FString Result = UE4Paths_Private::GameSavedDir();
 	return Result;
 }
 
-YString YPaths::GameIntermediateDir()
+FString YPaths::GameIntermediateDir()
 {
 	return GameUserDir() + TEXT("Intermediate/");
 }
 
-YString YPaths::GamePluginsDir()
+FString YPaths::GamePluginsDir()
 {
 	return YPaths::GameDir() + TEXT("Plugins/");
 }
 
-YString YPaths::GamePersistentDownloadDir()
+FString YPaths::GamePersistentDownloadDir()
 {
 	return YPlatformMisc::GamePersistentDownloadDir();
 }
 
-YString YPaths::SourceConfigDir()
+FString YPaths::SourceConfigDir()
 {
 	return YPaths::GameDir() + TEXT("Config/");
 }
 
-YString YPaths::GeneratedConfigDir()
+FString YPaths::GeneratedConfigDir()
 {
 #if PLATFORM_MAC
 	return FPlatformProcess::UserPreferencesDir();
@@ -222,32 +222,32 @@ YString YPaths::GeneratedConfigDir()
 #endif
 }
 
-YString YPaths::SandboxesDir()
+FString YPaths::SandboxesDir()
 {
 	return YPaths::GameDir() + TEXT("Saved/Sandboxes");
 }
 
-YString YPaths::ProfilingDir()
+FString YPaths::ProfilingDir()
 {
 	return YPaths::GameSavedDir() + TEXT("Profiling/");
 }
 
-YString YPaths::ScreenShotDir()
+FString YPaths::ScreenShotDir()
 {
 	return YPaths::GameSavedDir() + TEXT("Screenshots/") + FPlatformProperties::PlatformName() + TEXT("/");
 }
 
-YString YPaths::BugItDir()
+FString YPaths::BugItDir()
 {
 	return YPaths::GameSavedDir() + TEXT("BugIt/") + FPlatformProperties::PlatformName() + TEXT("/");
 }
 
-YString YPaths::VideoCaptureDir()
+FString YPaths::VideoCaptureDir()
 {
 	return YPaths::GameSavedDir() + TEXT("VideoCaptures/");
 }
 
-YString YPaths::GameLogDir()
+FString YPaths::GameLogDir()
 {
 #if PLATFORM_MAC || PLATFORM_XBOXONE
 	return FPlatformProcess::UserLogsDir();
@@ -256,46 +256,46 @@ YString YPaths::GameLogDir()
 #endif
 }
 
-YString YPaths::AutomationDir()
+FString YPaths::AutomationDir()
 {
 	return YPaths::GameSavedDir() + TEXT("Automation/");
 }
 
-YString YPaths::AutomationTransientDir()
+FString YPaths::AutomationTransientDir()
 {
 	return YPaths::AutomationDir() + TEXT("Transient/");
 }
 
-YString YPaths::AutomationLogDir()
+FString YPaths::AutomationLogDir()
 {
 	return YPaths::AutomationDir() + TEXT("Logs/");
 }
 
-YString YPaths::CloudDir()
+FString YPaths::CloudDir()
 {
 	return YPlatformMisc::CloudDir();
 }
 
-YString YPaths::GameDevelopersDir()
+FString YPaths::GameDevelopersDir()
 {
 	return YPaths::GameContentDir() + TEXT("Developers/");
 }
 
-YString YPaths::GameUserDeveloperDir()
+FString YPaths::GameUserDeveloperDir()
 {
-	static YString UserFolder;
+	static FString UserFolder;
 
 	if ( UserFolder.Len() == 0 )
 	{
 		// The user folder is the user name without any invalid characters
-		const YString InvalidChars = INVALID_LONGPACKAGE_CHARACTERS;
-		const YString& UserName = FPlatformProcess::UserName();
+		const FString InvalidChars = INVALID_LONGPACKAGE_CHARACTERS;
+		const FString& UserName = FPlatformProcess::UserName();
 		
 		UserFolder = UserName;
 		
 		for (int32 CharIdx = 0; CharIdx < InvalidChars.Len(); ++CharIdx)
 		{
-			const YString Char = InvalidChars.Mid(CharIdx, 1);
+			const FString Char = InvalidChars.Mid(CharIdx, 1);
 			UserFolder = UserFolder.Replace(*Char, TEXT("_"), ESearchCase::CaseSensitive);
 		}
 	}
@@ -303,14 +303,14 @@ YString YPaths::GameUserDeveloperDir()
 	return YPaths::GameDevelopersDir() + UserFolder + TEXT("/");
 }
 
-YString YPaths::DiffDir()
+FString YPaths::DiffDir()
 {
 	return YPaths::GameSavedDir() + TEXT("Diff/");
 }
 
-const TArray<YString>& YPaths::GetEngineLocalizationPaths()
+const TArray<FString>& YPaths::GetEngineLocalizationPaths()
 {
-	static TArray<YString> Results;
+	static TArray<FString> Results;
 	static bool HasInitialized = false;
 
 	if(!HasInitialized)
@@ -333,9 +333,9 @@ const TArray<YString>& YPaths::GetEngineLocalizationPaths()
 	return Results;
 }
 
-const TArray<YString>& YPaths::GetEditorLocalizationPaths()
+const TArray<FString>& YPaths::GetEditorLocalizationPaths()
 {
-	static TArray<YString> Results;
+	static TArray<FString> Results;
 	static bool HasInitialized = false;
 
 	if(!HasInitialized)
@@ -358,9 +358,9 @@ const TArray<YString>& YPaths::GetEditorLocalizationPaths()
 	return Results;
 }
 
-const TArray<YString>& YPaths::GetPropertFNameLocalizationPaths()
+const TArray<FString>& YPaths::GetPropertFNameLocalizationPaths()
 {
-	static TArray<YString> Results;
+	static TArray<FString> Results;
 	static bool HasInitialized = false;
 
 	if(!HasInitialized)
@@ -383,9 +383,9 @@ const TArray<YString>& YPaths::GetPropertFNameLocalizationPaths()
 	return Results;
 }
 
-const TArray<YString>& YPaths::GetToolTipLocalizationPaths() 
+const TArray<FString>& YPaths::GetToolTipLocalizationPaths() 
 {
-	static TArray<YString> Results;
+	static TArray<FString> Results;
 	static bool HasInitialized = false;
 
 	if(!HasInitialized)
@@ -408,9 +408,9 @@ const TArray<YString>& YPaths::GetToolTipLocalizationPaths()
 	return Results;
 }
 
-const TArray<YString>& YPaths::GetGameLocalizationPaths()
+const TArray<FString>& YPaths::GetGameLocalizationPaths()
 {
-	static TArray<YString> Results;
+	static TArray<FString> Results;
 	static bool HasInitialized = false;
 
 	if(!HasInitialized)
@@ -430,22 +430,22 @@ const TArray<YString>& YPaths::GetGameLocalizationPaths()
 	return Results;
 }
 
-YString YPaths::GameAgnosticSavedDir()
+FString YPaths::GameAgnosticSavedDir()
 {
 	return EngineSavedDir();
 }
 
-YString YPaths::EngineSourceDir()
+FString YPaths::EngineSourceDir()
 {
 	return YPaths::EngineDir() + TEXT("Source/");
 }
 
-YString YPaths::GameSourceDir()
+FString YPaths::GameSourceDir()
 {
 	return YPaths::GameDir() + TEXT("Source/");
 }
 
-YString YPaths::FeaturePackDir()
+FString YPaths::FeaturePackDir()
 {
 	return YPaths::RootDir() + TEXT("FeaturePacks/");
 }
@@ -456,22 +456,22 @@ bool YPaths::IsProjectFilePathSet()
 	return !GameProjectFilePath.IsEmpty();
 }
 
-const YString& YPaths::GetProjectFilePath()
+const FString& YPaths::GetProjectFilePath()
 {
 	FScopeLock Lock(GameProjectFilePathLock());
 	return GameProjectFilePath;
 }
 
-void YPaths::SetProjectFilePath( const YString& NewGameProjectFilePath )
+void YPaths::SetProjectFilePath( const FString& NewGameProjectFilePath )
 {
 	FScopeLock Lock(GameProjectFilePathLock());
 	GameProjectFilePath = NewGameProjectFilePath;
 	YPaths::NormalizeFilename(GameProjectFilePath);
 }
 
-YString YPaths::GetExtension( const YString& InPath, bool bIncludeDot )
+FString YPaths::GetExtension( const FString& InPath, bool bIncludeDot )
 {
-	const YString Filename = GetCleanFilename(InPath);
+	const FString Filename = GetCleanFilename(InPath);
 	int32 DotPos = Filename.Find(TEXT("."), ESearchCase::CaseSensitive, ESearchDir::FromEnd);
 	if (DotPos != INDEX_NONE)
 	{
@@ -481,18 +481,18 @@ YString YPaths::GetExtension( const YString& InPath, bool bIncludeDot )
 	return TEXT("");
 }
 
-YString YPaths::GetCleanFilename(const YString& InPath)
+FString YPaths::GetCleanFilename(const FString& InPath)
 {
 	static_assert(INDEX_NONE == -1, "INDEX_NONE assumed to be -1");
 
 	int32 EndPos   = InPath.FindLastCharByPredicate(UE4Paths_Private::IsNotSlashOrBackslash) + 1;
 	int32 StartPos = InPath.FindLastCharByPredicate(UE4Paths_Private::IsSlashOrBackslash, EndPos) + 1;
 
-	YString Result = InPath.Mid(StartPos, EndPos - StartPos);
+	FString Result = InPath.Mid(StartPos, EndPos - StartPos);
 	return Result;
 }
 
-YString YPaths::GetCleanFilename(YString&& InPath)
+FString YPaths::GetCleanFilename(FString&& InPath)
 {
 	static_assert(INDEX_NONE == -1, "INDEX_NONE assumed to be -1");
 
@@ -505,9 +505,9 @@ YString YPaths::GetCleanFilename(YString&& InPath)
 	return MoveTemp(InPath);
 }
 
-YString YPaths::GetBaseFilename( const YString& InPath, bool bRemovePath )
+FString YPaths::GetBaseFilename( const FString& InPath, bool bRemovePath )
 {
-	YString Wk = bRemovePath ? GetCleanFilename(InPath) : InPath;
+	FString Wk = bRemovePath ? GetCleanFilename(InPath) : InPath;
 
 	// remove the extension
 	int32 ExtPos = Wk.Find(TEXT("."), ESearchCase::CaseSensitive, ESearchDir::FromEnd);
@@ -527,11 +527,11 @@ YString YPaths::GetBaseFilename( const YString& InPath, bool bRemovePath )
 	return Wk;
 }
 
-YString YPaths::GetPath(const YString& InPath)
+FString YPaths::GetPath(const FString& InPath)
 {
 	int32 Pos = InPath.FindLastCharByPredicate(UE4Paths_Private::IsSlashOrBackslash);
 
-	YString Result;
+	FString Result;
 	if (Pos != INDEX_NONE)
 	{
 		Result = InPath.Left(Pos);
@@ -540,11 +540,11 @@ YString YPaths::GetPath(const YString& InPath)
 	return Result;
 }
 
-YString YPaths::GetPath(YString&& InPath)
+FString YPaths::GetPath(FString&& InPath)
 {
 	int32 Pos = InPath.FindLastCharByPredicate(UE4Paths_Private::IsSlashOrBackslash);
 
-	YString Result;
+	FString Result;
 	if (Pos != INDEX_NONE)
 	{
 		InPath.RemoveAt(Pos, InPath.Len() - Pos, false);
@@ -554,12 +554,12 @@ YString YPaths::GetPath(YString&& InPath)
 	return Result;
 }
 
-YString YPaths::ChangeExtension(const YString& InPath, const YString& InNewExtension)
+FString YPaths::ChangeExtension(const FString& InPath, const FString& InNewExtension)
 {
 	int32 Pos = INDEX_NONE;
 	if (InPath.FindLastChar('.', Pos))
 	{
-		YString Result = InPath.Left(Pos);
+		FString Result = InPath.Left(Pos);
 
 		if (InNewExtension.Len() && InNewExtension[0] != '.')
 		{
@@ -574,19 +574,19 @@ YString YPaths::ChangeExtension(const YString& InPath, const YString& InNewExten
 	return InPath;
 }
 
-bool YPaths::FileExists(const YString& InPath)
+bool YPaths::FileExists(const FString& InPath)
 {
 	return IFileManager::Get().FileExists(*InPath);
 }
 
-bool YPaths::DirectoryExists(const YString& InPath)
+bool YPaths::DirectoryExists(const FString& InPath)
 {
 	return IFileManager::Get().DirectoryExists(*InPath);
 }
 
-bool YPaths::IsDrive(const YString& InPath)
+bool YPaths::IsDrive(const FString& InPath)
 {
-	YString ConvertedPathString = InPath;
+	FString ConvertedPathString = InPath;
 
 	ConvertedPathString = ConvertedPathString.Replace(TEXT("/"), TEXT("\\"), ESearchCase::CaseSensitive);
 	const TCHAR* ConvertedPath= *ConvertedPathString;
@@ -616,14 +616,14 @@ bool YPaths::IsDrive(const YString& InPath)
 	{
 		// Need to handle cases such as X:\A\B\..\..\C\..
 		// This assumes there is no actual filename in the path (ie, not c:\DIR\File.ext)!
-		YString TempPath(ConvertedPath);
+		FString TempPath(ConvertedPath);
 		// Make sure there is a '\' at the end of the path
 		if (TempPath.Find(TEXT("\\"), ESearchCase::CaseSensitive, ESearchDir::FromEnd) != (TempPath.Len() - 1))
 		{
 			TempPath += TEXT("\\");
 		}
 
-		YString CheckPath = TEXT("");
+		FString CheckPath = TEXT("");
 		int32 ColonSlashIndex = TempPath.Find(TEXT(":\\"), ESearchCase::CaseSensitive);
 		if (ColonSlashIndex != INDEX_NONE)
 		{
@@ -658,7 +658,7 @@ bool YPaths::IsDrive(const YString& InPath)
 			int32 SlashIndex = CheckPath.Find(TEXT("\\"), ESearchCase::CaseSensitive);
 			while (SlashIndex != INDEX_NONE)
 			{
-				YString FolderName = CheckPath.Left(SlashIndex);
+				FString FolderName = CheckPath.Left(SlashIndex);
 				if (FolderName == TEXT(".."))
 				{
 					// It's a relative path, so subtract one from the count
@@ -685,7 +685,7 @@ bool YPaths::IsDrive(const YString& InPath)
 	return false;
 }
 
-bool YPaths::IsRelative(const YString& InPath)
+bool YPaths::IsRelative(const FString& InPath)
 {
 	// The previous implementation of this function seemed to handle normalized and unnormalized paths, so this one does too for legacy reasons.
 
@@ -697,14 +697,14 @@ bool YPaths::IsRelative(const YString& InPath)
 	return !IsRooted;
 }
 
-void YPaths::NormalizeFilename(YString& InPath)
+void YPaths::NormalizeFilename(FString& InPath)
 {
 	InPath.ReplaceInline(TEXT("\\"), TEXT("/"), ESearchCase::CaseSensitive);
 
 	YPlatformMisc::NormalizePath(InPath);
 }
 
-void YPaths::NormalizeDirectorFName(YString& InPath)
+void YPaths::NormalizeDirectorFName(FString& InPath)
 {
 	InPath.ReplaceInline(TEXT("\\"), TEXT("/"), ESearchCase::CaseSensitive);
 	if (InPath.EndsWith(TEXT("/"), ESearchCase::CaseSensitive) && !InPath.EndsWith(TEXT("//"), ESearchCase::CaseSensitive) && !InPath.EndsWith(TEXT(":/"), ESearchCase::CaseSensitive))
@@ -718,7 +718,7 @@ void YPaths::NormalizeDirectorFName(YString& InPath)
 	YPlatformMisc::NormalizePath(InPath);
 }
 
-bool YPaths::CollapseRelativeDirectories(YString& InPath)
+bool YPaths::CollapseRelativeDirectories(FString& InPath)
 {
 	const TCHAR ParentDir[] = TEXT("/..");
 	const int32 ParentDirLength = ARRAY_COUNT( ParentDir ) - 1; // To avoid hardcoded values
@@ -768,7 +768,7 @@ bool YPaths::CollapseRelativeDirectories(YString& InPath)
 	return true;
 }
 
-void YPaths::RemoveDuplicateSlashes(YString& InPath)
+void YPaths::RemoveDuplicateSlashes(FString& InPath)
 {
 	while (InPath.Contains(TEXT("//"), ESearchCase::CaseSensitive))
 	{
@@ -776,7 +776,7 @@ void YPaths::RemoveDuplicateSlashes(YString& InPath)
 	}
 }
 
-void YPaths::MakeStandardFilename(YString& InPath)
+void YPaths::MakeStandardFilename(FString& InPath)
 {
 	// if this is an empty path, use the relative base dir
 	if (InPath.Len() == 0)
@@ -791,9 +791,9 @@ void YPaths::MakeStandardFilename(YString& InPath)
 		return;
 	}
 
-	YString WithSlashes = InPath.Replace(TEXT("\\"), TEXT("/"), ESearchCase::CaseSensitive);
+	FString WithSlashes = InPath.Replace(TEXT("\\"), TEXT("/"), ESearchCase::CaseSensitive);
 
-	YString RootDirectory = YPaths::ConvertRelativePathToFull(YPaths::RootDir());
+	FString RootDirectory = YPaths::ConvertRelativePathToFull(YPaths::RootDir());
 
 	// look for paths that cannot be made relative, and are therefore left alone
 	// UNC (windows) network path
@@ -811,7 +811,7 @@ void YPaths::MakeStandardFilename(YString& InPath)
 
 	// make an absolute path
 	
-	YString Standardized = YPaths::ConvertRelativePathToFull(InPath);
+	FString Standardized = YPaths::ConvertRelativePathToFull(InPath);
 
 	// remove duplicate slashes
 	YPaths::RemoveDuplicateSlashes(Standardized);
@@ -820,24 +820,24 @@ void YPaths::MakeStandardFilename(YString& InPath)
 	InPath = Standardized.Replace(*RootDirectory, *YPaths::GetRelativePathToRoot());
 }
 
-void YPaths::MakePlatformFilename( YString& InPath )
+void YPaths::MakePlatformFilename( FString& InPath )
 {
 	InPath.ReplaceInline(TEXT( "\\" ), YPlatformMisc::GetDefaultPathSeparator(), ESearchCase::CaseSensitive);
 	InPath.ReplaceInline(TEXT( "/" ), YPlatformMisc::GetDefaultPathSeparator(), ESearchCase::CaseSensitive);
 }
 
-bool YPaths::MakePathRelativeTo( YString& InPath, const TCHAR* InRelativeTo )
+bool YPaths::MakePathRelativeTo( FString& InPath, const TCHAR* InRelativeTo )
 {
-	YString Target = YPaths::ConvertRelativePathToFull(InPath);
-	YString Source = YPaths::ConvertRelativePathToFull(InRelativeTo);
+	FString Target = YPaths::ConvertRelativePathToFull(InPath);
+	FString Source = YPaths::ConvertRelativePathToFull(InRelativeTo);
 	
 	Source = YPaths::GetPath(Source);
 	Source.ReplaceInline(TEXT("\\"), TEXT("/"), ESearchCase::CaseSensitive);
 	Target.ReplaceInline(TEXT("\\"), TEXT("/"), ESearchCase::CaseSensitive);
 
-	TArray<YString> TargetArray;
+	TArray<FString> TargetArray;
 	Target.ParseIntoArray(TargetArray, TEXT("/"), true);
-	TArray<YString> SourceArray;
+	TArray<FString> SourceArray;
 	Source.ParseIntoArray(SourceArray, TEXT("/"), true);
 
 	if (TargetArray.Num() && SourceArray.Num())
@@ -858,7 +858,7 @@ bool YPaths::MakePathRelativeTo( YString& InPath, const TCHAR* InRelativeTo )
 		TargetArray.RemoveAt(0);
 		SourceArray.RemoveAt(0);
 	}
-	YString Result;
+	FString Result;
 	for (int32 Index = 0; Index < SourceArray.Num(); Index++)
 	{
 		Result += TEXT("../");
@@ -876,46 +876,46 @@ bool YPaths::MakePathRelativeTo( YString& InPath, const TCHAR* InRelativeTo )
 	return true;
 }
 
-YString YPaths::ConvertRelativePathToFull(const YString& InPath)
+FString YPaths::ConvertRelativePathToFull(const FString& InPath)
 {
-	return UE4Paths_Private::ConvertRelativePathToFullInternal(YString(FPlatformProcess::BaseDir()), YString(InPath));
+	return UE4Paths_Private::ConvertRelativePathToFullInternal(FString(FPlatformProcess::BaseDir()), FString(InPath));
 }
 
-YString YPaths::ConvertRelativePathToFull(YString&& InPath)
+FString YPaths::ConvertRelativePathToFull(FString&& InPath)
 {
-	return UE4Paths_Private::ConvertRelativePathToFullInternal(YString(FPlatformProcess::BaseDir()), MoveTemp(InPath));
+	return UE4Paths_Private::ConvertRelativePathToFullInternal(FString(FPlatformProcess::BaseDir()), MoveTemp(InPath));
 }
 
-YString YPaths::ConvertRelativePathToFull(const YString& BasePath, const YString& InPath)
+FString YPaths::ConvertRelativePathToFull(const FString& BasePath, const FString& InPath)
 {
 	return UE4Paths_Private::ConvertRelativePathToFullInternal(CopyTemp(BasePath), CopyTemp(InPath));
 }
 
-YString YPaths::ConvertRelativePathToFull(const YString& BasePath, YString&& InPath)
+FString YPaths::ConvertRelativePathToFull(const FString& BasePath, FString&& InPath)
 {
 	return UE4Paths_Private::ConvertRelativePathToFullInternal(CopyTemp(BasePath), MoveTemp(InPath));
 }
 
-YString YPaths::ConvertRelativePathToFull(YString&& BasePath, const YString& InPath)
+FString YPaths::ConvertRelativePathToFull(FString&& BasePath, const FString& InPath)
 {
 	return UE4Paths_Private::ConvertRelativePathToFullInternal(MoveTemp(BasePath), CopyTemp(InPath));
 }
 
-YString YPaths::ConvertRelativePathToFull(YString&& BasePath, YString&& InPath)
+FString YPaths::ConvertRelativePathToFull(FString&& BasePath, FString&& InPath)
 {
 	return UE4Paths_Private::ConvertRelativePathToFullInternal(MoveTemp(BasePath), MoveTemp(InPath));
 }
 
-YString YPaths::ConvertToSandboxPath( const YString& InPath, const TCHAR* InSandboxName )
+FString YPaths::ConvertToSandboxPath( const FString& InPath, const TCHAR* InSandboxName )
 {
-	YString SandboxDirectory = YPaths::SandboxesDir() / InSandboxName;
+	FString SandboxDirectory = YPaths::SandboxesDir() / InSandboxName;
 	YPaths::NormalizeFilename(SandboxDirectory);
 	
-	YString RootDirectory = YPaths::RootDir();
+	FString RootDirectory = YPaths::RootDir();
 	YPaths::CollapseRelativeDirectories(RootDirectory);
 	YPaths::NormalizeFilename(RootDirectory);
 
-	YString SandboxPath = YPaths::ConvertRelativePathToFull(InPath);
+	FString SandboxPath = YPaths::ConvertRelativePathToFull(InPath);
 	if (!SandboxPath.StartsWith(RootDirectory))
 	{
 		UE_LOG(LogInit, Fatal, TEXT("%s does not start with %s so this is not a valid sandbox path."), *SandboxPath, *RootDirectory);
@@ -926,42 +926,42 @@ YString YPaths::ConvertToSandboxPath( const YString& InPath, const TCHAR* InSand
 	return SandboxPath;
 }
 
-YString YPaths::ConvertFromSandboxPath( const YString& InPath, const TCHAR* InSandboxName )
+FString YPaths::ConvertFromSandboxPath( const FString& InPath, const TCHAR* InSandboxName )
 {
-	YString SandboxDirectory =  YPaths::SandboxesDir() / InSandboxName;
+	FString SandboxDirectory =  YPaths::SandboxesDir() / InSandboxName;
 	YPaths::NormalizeFilename(SandboxDirectory);
-	YString RootDirectory = YPaths::RootDir();
+	FString RootDirectory = YPaths::RootDir();
 	
-	YString SandboxPath(InPath);
+	FString SandboxPath(InPath);
 	check(SandboxPath.StartsWith(SandboxDirectory));
 	SandboxPath.ReplaceInline(*SandboxDirectory, *RootDirectory);
 	return SandboxPath;
 }
 
-YString YPaths::CreateTempFilename( const TCHAR* Path, const TCHAR* Prefix, const TCHAR* Extension )
+FString YPaths::CreateTempFilename( const TCHAR* Path, const TCHAR* Prefix, const TCHAR* Extension )
 {
-	YString UniqueFilename;
+	FString UniqueFilename;
 	do
 	{
-		UniqueFilename = YPaths::Combine(Path, *YString::Printf(TEXT("%s%s%s"), Prefix, *FGuid::NewGuid().ToString(), Extension));
+		UniqueFilename = YPaths::Combine(Path, *FString::Printf(TEXT("%s%s%s"), Prefix, *FGuid::NewGuid().ToString(), Extension));
 	}
 	while (IFileManager::Get().FileSize(*UniqueFilename) >= 0);
 	
 	return UniqueFilename;
 }
 
-bool YPaths::ValidatePath( const YString& InPath, FText* OutReason )
+bool YPaths::ValidatePath( const FString& InPath, FText* OutReason )
 {
 	// Windows has the most restricted file system, and since we're cross platform, we have to respect the limitations of the lowest common denominator
 	// # isn't legal. Used for revision specifiers in P4/SVN, and also not allowed on Windows anyway
 	// @ isn't legal. Used for revision/label specifiers in P4/SVN
 	// ^ isn't legal. While the file-system won't complain about this character, Visual Studio will				
-	static const YString RestrictedChars = "/?:&\\*\"<>|%#@^";
-	static const YString RestrictedNames[] = {	"CON", "PRN", "AUX", "CLOCK$", "NUL", 
+	static const FString RestrictedChars = "/?:&\\*\"<>|%#@^";
+	static const FString RestrictedNames[] = {	"CON", "PRN", "AUX", "CLOCK$", "NUL", 
 												"COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", 
 												"LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9" };
 
-	YString Standardized = InPath;
+	FString Standardized = InPath;
 	NormalizeFilename(Standardized);
 	CollapseRelativeDirectories(Standardized);
 	RemoveDuplicateSlashes(Standardized);
@@ -978,7 +978,7 @@ bool YPaths::ValidatePath( const YString& InPath, FText* OutReason )
 		)
 	{
 		const bool bIsLastPart = EndPos == INDEX_NONE;
-		const YString PathPart = Standardized.Mid(StartPos, (bIsLastPart) ? MAX_int32 : EndPos - StartPos);
+		const FString PathPart = Standardized.Mid(StartPos, (bIsLastPart) ? MAX_int32 : EndPos - StartPos);
 
 		// If this is the first part of the path, it's possible for it to be a drive name and is allowed to contain a colon
 		if(StartPos == 0 && IsDrive(PathPart))
@@ -992,7 +992,7 @@ bool YPaths::ValidatePath( const YString& InPath, FText* OutReason )
 
 		// Check for invalid characters
 		TCHAR CharString[] = { '\0', '\0' };
-		YString MatchedInvalidChars;
+		FString MatchedInvalidChars;
 		for(const TCHAR* InvalidCharacters = *RestrictedChars; *InvalidCharacters; ++InvalidCharacters)
 		{
 			CharString[0] = *InvalidCharacters;
@@ -1013,7 +1013,7 @@ bool YPaths::ValidatePath( const YString& InPath, FText* OutReason )
 		}
 
 		// Check for reserved names
-		for(const YString& RestrictedName : RestrictedNames)
+		for(const FString& RestrictedName : RestrictedNames)
 		{
 			if(PathPart.Equals(RestrictedName, ESearchCase::IgnoreCase))
 			{
@@ -1036,23 +1036,23 @@ bool YPaths::ValidatePath( const YString& InPath, FText* OutReason )
 	return true;
 }
 
-void YPaths::Split( const YString& InPath, YString& PathPart, YString& FilenamePart, YString& ExtensionPart )
+void YPaths::Split( const FString& InPath, FString& PathPart, FString& FilenamePart, FString& ExtensionPart )
 {
 	PathPart = GetPath(InPath);
 	FilenamePart = GetBaseFilename(InPath);
 	ExtensionPart = GetExtension(InPath);
 }
 
-const YString& YPaths::GetRelativePathToRoot()
+const FString& YPaths::GetRelativePathToRoot()
 {
 	struct FRelativePathInitializer
 	{
-		YString RelativePathToRoot;
+		FString RelativePathToRoot;
 
 		FRelativePathInitializer()
 		{
-			YString RootDirectory = YPaths::RootDir();
-			YString BaseDirectory = FPlatformProcess::BaseDir();
+			FString RootDirectory = YPaths::RootDir();
+			FString BaseDirectory = FPlatformProcess::BaseDir();
 
 			// this is how to go from the base dir back to the root
 			RelativePathToRoot = RootDirectory;
@@ -1070,7 +1070,7 @@ const YString& YPaths::GetRelativePathToRoot()
 	return StaticInstance.RelativePathToRoot;
 }
 
-void YPaths::CombineInternal(YString& OutPath, const TCHAR** Pathes, int32 NumPathes)
+void YPaths::CombineInternal(FString& OutPath, const TCHAR** Pathes, int32 NumPathes)
 {
 	check(Pathes != NULL && NumPathes > 0);
 
@@ -1090,10 +1090,10 @@ void YPaths::CombineInternal(YString& OutPath, const TCHAR** Pathes, int32 NumPa
 	}
 }
 
-bool YPaths::IsSamePath(const YString& PathA, const YString& PathB)
+bool YPaths::IsSamePath(const FString& PathA, const FString& PathB)
 {
-	YString TmpA = PathA;
-	YString TmpB = PathB;
+	FString TmpA = PathA;
+	FString TmpB = PathB;
 
 	MakeStandardFilename(TmpA);
 	MakeStandardFilename(TmpB);

@@ -8,7 +8,7 @@
 #include "Logging/LogMacros.h"
 #include "HAL/UnrealMemory.h"
 #include "Misc/CString.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "CoreGlobals.h"
 #include "Windows/WindowsHWrapper.h"
 
@@ -19,7 +19,7 @@ static void VerifyWinResult(BOOL bResult, const TCHAR* InMessage)
 		TCHAR ErrorBuffer[ MAX_SPRINTF ];
 		uint32 Error = GetLastError();
 		const TCHAR* Buffer = YWindowsPlatformMisc::GetSystemErrorMessage(ErrorBuffer, MAX_SPRINTF, Error);
-		YString Message = YString::Printf(TEXT("FAILED (%s) with GetLastError() %d: %s!\n"), InMessage, Error, ErrorBuffer);
+		FString Message = FString::Printf(TEXT("FAILED (%s) with GetLastError() %d: %s!\n"), InMessage, Error, ErrorBuffer);
 		YPlatformMisc::LowLevelOutputDebugStringf(*Message);
 		UE_LOG(LogWindows, Fatal, TEXT("%s"), *Message);
 	}
@@ -41,10 +41,10 @@ FWindowsPlatformNamedPipe::~FWindowsPlatformNamedPipe()
 {
 }
 
-bool FWindowsPlatformNamedPipe::Create(const YString& PipeName, bool bAsServer, bool bAsync)
+bool FWindowsPlatformNamedPipe::Create(const FString& PipeName, bool bAsServer, bool bAsync)
 {
 	check(State == State_Uninitialized);
-	YString& Name = *NamePtr;
+	FString& Name = *NamePtr;
 
 	Name = PipeName;
 	bIsServer = bAsServer;
@@ -91,7 +91,7 @@ bool FWindowsPlatformNamedPipe::Create(const YString& PipeName, bool bAsServer, 
 
 bool FWindowsPlatformNamedPipe::Destroy()
 {
-	YString& Name = *NamePtr;
+	FString& Name = *NamePtr;
 
 	bool bFlushBuffers = false;
 	bool bDisconnect = true;

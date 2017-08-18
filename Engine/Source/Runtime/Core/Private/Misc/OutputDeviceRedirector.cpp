@@ -6,19 +6,19 @@
 #include "Misc/CoreStats.h"
 
 /*-----------------------------------------------------------------------------
-	YOutputDeviceRedirector.
+	FOutputDeviceRedirector.
 -----------------------------------------------------------------------------*/
 
 /** Initialization constructor. */
-YOutputDeviceRedirector::YOutputDeviceRedirector()
-:	MasterThreadID(YPlatformTLS::GetCurrentThreadId())
+FOutputDeviceRedirector::FOutputDeviceRedirector()
+:	MasterThreadID(FPlatformTLS::GetCurrentThreadId())
 ,	bEnableBacklog(false)
 {
 }
 
-YOutputDeviceRedirector* YOutputDeviceRedirector::Get()
+FOutputDeviceRedirector* FOutputDeviceRedirector::Get()
 {
-	static YOutputDeviceRedirector Singleton;
+	static FOutputDeviceRedirector Singleton;
 	return &Singleton;
 }
 
@@ -27,7 +27,7 @@ YOutputDeviceRedirector* YOutputDeviceRedirector::Get()
  *
  * @param OutputDevice	output device to add
  */
-void YOutputDeviceRedirector::AddOutputDevice( FOutputDevice* OutputDevice )
+void FOutputDeviceRedirector::AddOutputDevice( FOutputDevice* OutputDevice )
 {
 	FScopeLock ScopeLock( &SynchronizationObject );
 
@@ -42,7 +42,7 @@ void YOutputDeviceRedirector::AddOutputDevice( FOutputDevice* OutputDevice )
  *
  * @param OutputDevice	output device to remove
  */
-void YOutputDeviceRedirector::RemoveOutputDevice( FOutputDevice* OutputDevice )
+void FOutputDeviceRedirector::RemoveOutputDevice( FOutputDevice* OutputDevice )
 {
 	FScopeLock ScopeLock( &SynchronizationObject );
 	OutputDevices.Remove( OutputDevice );
@@ -54,7 +54,7 @@ void YOutputDeviceRedirector::RemoveOutputDevice( FOutputDevice* OutputDevice )
  * @param	OutputDevice	output device to check the list against
  * @return	true if messages are currently redirected to the the passed in output device, false otherwise
  */
-bool YOutputDeviceRedirector::IsRedirectingTo( FOutputDevice* OutputDevice )
+bool FOutputDeviceRedirector::IsRedirectingTo( FOutputDevice* OutputDevice )
 {
 	FScopeLock ScopeLock( &SynchronizationObject );
 
@@ -65,7 +65,7 @@ bool YOutputDeviceRedirector::IsRedirectingTo( FOutputDevice* OutputDevice )
  * The unsynchronized version of FlushThreadedLogs.
  * Assumes that the caller holds a lock on SynchronizationObject.
  */
-void YOutputDeviceRedirector::UnsynchronizedFlushThreadedLogs( bool bUseAllDevices )
+void FOutputDeviceRedirector::UnsynchronizedFlushThreadedLogs( bool bUseAllDevices )
 {
 	for(int32 LineIndex = 0;LineIndex < BufferedLines.Num();LineIndex++)
 	{
@@ -87,7 +87,7 @@ void YOutputDeviceRedirector::UnsynchronizedFlushThreadedLogs( bool bUseAllDevic
 /**
  * Flushes lines buffered by secondary threads.
  */
-void YOutputDeviceRedirector::FlushThreadedLogs()
+void FOutputDeviceRedirector::FlushThreadedLogs()
 {
 	SCOPE_CYCLE_COUNTER(STAT_FlushThreadedLogs);
 	// Acquire a lock on SynchronizationObject and call the unsynchronized worker function.
@@ -96,7 +96,7 @@ void YOutputDeviceRedirector::FlushThreadedLogs()
 	UnsynchronizedFlushThreadedLogs( true );
 }
 
-void YOutputDeviceRedirector::PanicFlushThreadedLogs()
+void FOutputDeviceRedirector::PanicFlushThreadedLogs()
 {
 //	SCOPE_CYCLE_COUNTER(STAT_FlushThreadedLogs);
 	// Acquire a lock on SynchronizationObject and call the unsynchronized worker function.
@@ -122,7 +122,7 @@ void YOutputDeviceRedirector::PanicFlushThreadedLogs()
  * Serializes the current backlog to the specified output device.
  * @param OutputDevice	- Output device that will receive the current backlog
  */
-void YOutputDeviceRedirector::SerializeBacklog( FOutputDevice* OutputDevice )
+void FOutputDeviceRedirector::SerializeBacklog( FOutputDevice* OutputDevice )
 {
 	FScopeLock ScopeLock( &SynchronizationObject );
 
@@ -137,7 +137,7 @@ void YOutputDeviceRedirector::SerializeBacklog( FOutputDevice* OutputDevice )
  * Enables or disables the backlog.
  * @param bEnable	- Starts saving a backlog if true, disables and discards any backlog if false
  */
-void YOutputDeviceRedirector::EnableBacklog( bool bEnable )
+void FOutputDeviceRedirector::EnableBacklog( bool bEnable )
 {
 	FScopeLock ScopeLock( &SynchronizationObject );
 
@@ -152,7 +152,7 @@ void YOutputDeviceRedirector::EnableBacklog( bool bEnable )
  * Sets the current thread to be the master thread that prints directly
  * (isn't queued up)
  */
-void YOutputDeviceRedirector::SetCurrentThreadAsMasterThread()
+void FOutputDeviceRedirector::SetCurrentThreadAsMasterThread()
 {
 	FScopeLock ScopeLock( &SynchronizationObject );
 
@@ -160,10 +160,10 @@ void YOutputDeviceRedirector::SetCurrentThreadAsMasterThread()
 	UnsynchronizedFlushThreadedLogs( false );
 
 	// set the current thread as the master thread
-	MasterThreadID = YPlatformTLS::GetCurrentThreadId();
+	MasterThreadID = FPlatformTLS::GetCurrentThreadId();
 }
 
-void YOutputDeviceRedirector::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category, const double Time )
+void FOutputDeviceRedirector::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category, const double Time )
 {
 	const double RealTime = Time == -1.0f ? FPlatformTime::Seconds() - GStartTime : Time;
 
@@ -189,7 +189,7 @@ void YOutputDeviceRedirector::Serialize( const TCHAR* Data, ELogVerbosity::Type 
 		new(BacklogLines)FBufferedLine( Data, Category, Verbosity, RealTime );
 	}
 
-	if(YPlatformTLS::GetCurrentThreadId() != MasterThreadID || OutputDevices.Num() == 0)
+	if(FPlatformTLS::GetCurrentThreadId() != MasterThreadID || OutputDevices.Num() == 0)
 	{
 		new(BufferedLines)FBufferedLine( Data, Category, Verbosity, RealTime );
 	}
@@ -206,7 +206,7 @@ void YOutputDeviceRedirector::Serialize( const TCHAR* Data, ELogVerbosity::Type 
 	}
 }
 
-void YOutputDeviceRedirector::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category )
+void FOutputDeviceRedirector::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category )
 {
 	Serialize( Data, Verbosity, Category, -1.0 );
 }
@@ -214,9 +214,9 @@ void YOutputDeviceRedirector::Serialize( const TCHAR* Data, ELogVerbosity::Type 
 /**
  * Passes on the flush request to all current output devices.
  */
-void YOutputDeviceRedirector::Flush()
+void FOutputDeviceRedirector::Flush()
 {
-	if(YPlatformTLS::GetCurrentThreadId() == MasterThreadID)
+	if(FPlatformTLS::GetCurrentThreadId() == MasterThreadID)
 	{
 		FScopeLock ScopeLock( &SynchronizationObject );
 
@@ -236,9 +236,9 @@ void YOutputDeviceRedirector::Flush()
  * as we might have to call "delete" which cannot be done for static/ global
  * objects.
  */
-void YOutputDeviceRedirector::TearDown()
+void FOutputDeviceRedirector::TearDown()
 {
-	check(YPlatformTLS::GetCurrentThreadId() == MasterThreadID);
+	check(FPlatformTLS::GetCurrentThreadId() == MasterThreadID);
 
 	FScopeLock ScopeLock( &SynchronizationObject );
 
@@ -253,8 +253,8 @@ void YOutputDeviceRedirector::TearDown()
 	OutputDevices.Empty();
 }
 
-CORE_API YOutputDeviceRedirector* GetGlobalLogSingleton()
+CORE_API FOutputDeviceRedirector* GetGlobalLogSingleton()
 {
-	return YOutputDeviceRedirector::Get();
+	return FOutputDeviceRedirector::Get();
 }
 

@@ -4,12 +4,12 @@
 
 #include "CoreTypes.h"
 #include "Misc/OutputDevice.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 
 /**
 * This class servers as the base class for console window output.
 */
-class CORE_API YOutputDeviceConsole
+class CORE_API FOutputDeviceConsole
 	: public FOutputDevice
 {
 public:
@@ -51,5 +51,5 @@ public:
 protected:
 
 	/** Ini file name to write console settings to. */
-	YString IniFilename;
+	FString IniFilename;
 };

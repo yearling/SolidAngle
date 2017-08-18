@@ -30,7 +30,7 @@ namespace AsyncTestUtils
 
 
 /** Test that task graph tasks return correctly. */
-bool FAsyncGraphTest::RunTest(const YString& Parameters)
+bool FAsyncGraphTest::RunTest(const FString& Parameters)
 {
 	auto Future = Async(EAsyncExecution::TaskGraph, AsyncTestUtils::Task);
 	int Result = Future.Get();
@@ -42,7 +42,7 @@ bool FAsyncGraphTest::RunTest(const YString& Parameters)
 
 
 /** Test that threaded tasks return correctly. */
-bool FAsyncThreadedTaskTest::RunTest(const YString& Parameters)
+bool FAsyncThreadedTaskTest::RunTest(const FString& Parameters)
 {
 	auto Future = Async(EAsyncExecution::Thread, AsyncTestUtils::Task);
 	int Result = Future.Get();
@@ -54,7 +54,7 @@ bool FAsyncThreadedTaskTest::RunTest(const YString& Parameters)
 
 
 /** Test that threaded pool tasks return correctly. */
-bool FAsyncThreadedPoolTest::RunTest(const YString& Parameters)
+bool FAsyncThreadedPoolTest::RunTest(const FString& Parameters)
 {
 	auto Future = Async(EAsyncExecution::ThreadPool, AsyncTestUtils::Task);
 	int Result = Future.Get();
@@ -66,7 +66,7 @@ bool FAsyncThreadedPoolTest::RunTest(const YString& Parameters)
 
 
 /** Test that void tasks run without errors or warnings. */
-bool FAsyncVoidTaskTest::RunTest(const YString& Parameters)
+bool FAsyncVoidTaskTest::RunTest(const FString& Parameters)
 {
 	// Reset test variable before running
 	AsyncTestUtils::bHasVoidTaskFinished = false;
@@ -81,7 +81,7 @@ bool FAsyncVoidTaskTest::RunTest(const YString& Parameters)
 
 
 /** Test that asynchronous tasks have their completion callback called. */
-bool FAsyncCompletionCallbackTest::RunTest(const YString& Parameters)
+bool FAsyncCompletionCallbackTest::RunTest(const FString& Parameters)
 {
 	bool Completed = false;
 	auto Future = Async(EAsyncExecution::TaskGraph, AsyncTestUtils::Task, [&]() {

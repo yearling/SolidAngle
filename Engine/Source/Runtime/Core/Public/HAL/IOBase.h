@@ -40,7 +40,7 @@ struct CORE_API FIOSystem
 	 * @return Returns an index to the request that can be used for canceling or 0 if the request failed.
 	 */
 	virtual uint64 LoadData( 
-		const YString& Filename, 
+		const FString& Filename, 
 		int64 Offset, 
 		int64 Size, 
 		void* Dest, 
@@ -62,7 +62,7 @@ struct CORE_API FIOSystem
 	 * @return Returns an index to the request that can be used for canceling or 0 if the request failed.
 	 */
 	virtual uint64 LoadCompressedData( 
-		const YString& Filename, 
+		const FString& Filename, 
 		int64 Offset, 
 		int64 Size, 
 		int64 UncompressedSize, 
@@ -120,7 +120,7 @@ struct CORE_API FIOSystem
 	 *
 	 * @param Filename File that was being async loaded from, but no longer is
 	 */
-	virtual void HintDoneWithFile(const YString& Filename) = 0;
+	virtual void HintDoneWithFile(const FString& Filename) = 0;
 
 	/**
 	 * The minimum read size...used to be DVD_ECC_BLOCK_SIZE

@@ -4,7 +4,7 @@
 #include "Misc/AssertionMacros.h"
 #include "Math/UnrealMathUtility.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "UObject/NameTypes.h"
 #include "Logging/LogCategory.h"
 #include "Logging/LogMacros.h"
@@ -19,14 +19,14 @@ namespace
 {
 	struct FLogCategoryPtrs
 	{
-		explicit FLogCategoryPtrs(const YString& InName, ELogVerbosity::Type InVerbosity, bool InPostfix)
+		explicit FLogCategoryPtrs(const FString& InName, ELogVerbosity::Type InVerbosity, bool InPostfix)
 		: Name     (InName)
 		, Verbosity(InVerbosity)
 		, Postfix  (InPostfix)
 		{
 		}
 
-		YString             Name;
+		FString             Name;
 		ELogVerbosity::Type Verbosity;
 		bool                Postfix;
 
@@ -61,9 +61,9 @@ class FLogSuppressionImplementation: public FLogSuppressionInterface, private FS
 	 * @param CmdString, string to process
 	 * @return true if CmdString was a "[cat] only" string command, false otherwise
 	 */
-	bool ProcessLogOnly(const YString& CmdString, FOutputDevice& Ar)
+	bool ProcessLogOnly(const FString& CmdString, FOutputDevice& Ar)
 	{
-		TArray<YString> CommandParts;
+		TArray<FString> CommandParts;
 		CmdString.ParseIntoArrayWS(CommandParts);
 		if (CommandParts.Num() <= 1)
 		{
@@ -77,8 +77,8 @@ class FLogSuppressionImplementation: public FLogSuppressionInterface, private FS
 		}
 		
 		FName LogCategory = FName(*CommandParts[0]);
-		static const YString OfYString = YString(" off");
-		static const YString OnString = YString(" Verbose");
+		static const FString OfYString = FString(" off");
+		static const FString OnString = FString(" Verbose");
 		for (auto It : Associations)
 		{
 			FName Name = It.Value;
@@ -103,7 +103,7 @@ class FLogSuppressionImplementation: public FLogSuppressionInterface, private FS
 	 * @param CmdString, string to process
 	 * @param FromBoot, if true, this is a boot time command, and is handled differently
 	 */
-	void ProcessCmdString(const YString& CmdString, bool FromBoot = false)
+	void ProcessCmdString(const FString& CmdString, bool FromBoot = false)
 	{
 		// How to use the log command : `log <category> <verbosity>
 		// e.g., Turn off all logging : `log global none
@@ -112,20 +112,20 @@ class FLogSuppressionImplementation: public FLogSuppressionInterface, private FS
 
 		static FName NAME_BootGlobal(TEXT("BootGlobal"));
 		static FName NAME_Reset(TEXT("Reset"));
-		YString Cmds = CmdString;
+		FString Cmds = CmdString;
 		Cmds = Cmds.Trim().TrimQuotes();
 		Cmds.Trim();
-		TArray<YString> SubCmds;
+		TArray<FString> SubCmds;
 		Cmds.ParseIntoArray(SubCmds, TEXT(","), true);
 		for (int32 Index = 0; Index < SubCmds.Num(); Index++)
 		{
-			static YString LogString(TEXT("Log "));
-			YString Command = SubCmds[Index].Trim();
+			static FString LogString(TEXT("Log "));
+			FString Command = SubCmds[Index].Trim();
 			if (Command.StartsWith(*LogString))
 			{
 				Command = Command.Right(Command.Len() - LogString.Len());
 			}
-			TArray<YString> CommandParts;
+			TArray<FString> CommandParts;
 			Command.ParseIntoArrayWS(CommandParts);
 			if (CommandParts.Num() < 1)
 			{
@@ -462,16 +462,16 @@ public:
 		}
 #if !UE_BUILD_SHIPPING
 		// and the command line overrides the config values
-		YString CmdLine(FCommandLine::Get());
-		YString LogCmds(TEXT("-LogCmds="));
+		FString CmdLine(FCommandLine::Get());
+		FString LogCmds(TEXT("-LogCmds="));
 		int32 IndexOfEnv = CmdLine.Find(TEXT("-EnvAfterHere"));
 		if (IndexOfEnv != INDEX_NONE)
 		{
 			// if we have env variable stuff set on the command line, we want to process that FIRST
-			YString CmdLineEnv = CmdLine.Mid(IndexOfEnv);
+			FString CmdLineEnv = CmdLine.Mid(IndexOfEnv);
 			while (1)
 			{
-				YString Cmds;
+				FString Cmds;
 				if (!FParse::Value(*CmdLineEnv, *LogCmds, Cmds, false))
 				{
 					break;
@@ -491,7 +491,7 @@ public:
 		}
 		while (1)
 		{
-			YString Cmds;
+			FString Cmds;
 			if (!FParse::Value(*CmdLine, *LogCmds, Cmds, false))
 			{
 				break;
@@ -524,11 +524,11 @@ public:
 			{
 				TArray<FLogCategoryPtrs> Found;
 
-				YString Cat(FParse::Token(Cmd, 0));
+				FString Cat(FParse::Token(Cmd, 0));
 				for (TMap<FLogCategoryBase*, FName>::TIterator It(Associations); It; ++It)
 				{
 					FLogCategoryBase* Verb = It.Key();
-					YString Name = It.Value().ToString();
+					FString Name = It.Value().ToString();
 					if (!Cat.Len() || Name.Contains(Cat) )
 					{
 						Found.Add(FLogCategoryPtrs(Name, ELogVerbosity::Type(Verb->Verbosity), Verb->DebugBreakOnLog));
@@ -544,7 +544,7 @@ public:
 			}
 			else
 			{
-				YString Rest(Cmd);
+				FString Rest(Cmd);
 				Rest = Rest.Trim();
 				if (Rest.Len())
 				{

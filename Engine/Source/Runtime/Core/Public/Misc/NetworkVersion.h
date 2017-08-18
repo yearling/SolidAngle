@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Logging/LogMacros.h"
 #include "Delegates/Delegate.h"
 
@@ -15,11 +15,11 @@ public:
 	FNetworkReplayVersion() : NetworkVersion( 0 ), Changelist( 0 )
 	{
 	}
-	FNetworkReplayVersion( const YString& InAppString, const uint32 InNetworkVersion, const uint32 InChangelist ) : AppString( InAppString ), NetworkVersion( InNetworkVersion ), Changelist( InChangelist )
+	FNetworkReplayVersion( const FString& InAppString, const uint32 InNetworkVersion, const uint32 InChangelist ) : AppString( InAppString ), NetworkVersion( InNetworkVersion ), Changelist( InChangelist )
 	{
 	}
 
-	YString		AppString;
+	FString		AppString;
 	uint32		NetworkVersion;
 	uint32		Changelist;
 };
@@ -67,7 +67,7 @@ struct CORE_API FNetworkVersion
 	/**
 	* Used to allow BP only projects to override network versions
 	*/
-	static YString ProjectVersion;
+	static FString ProjectVersion;
 
 	static bool		bHasCachedNetworkChecksum;
 	static uint32	CachedNetworkChecksum;

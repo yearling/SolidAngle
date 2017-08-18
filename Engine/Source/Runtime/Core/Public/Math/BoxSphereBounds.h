@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Math/UnrealMathUtility.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Logging/LogMacros.h"
 #include "Math/Vector.h"
 #include "Math/Sphere.h"
@@ -229,7 +229,7 @@ public:
 	 *
 	 * @return Text describing the bounding box.
 	 */
-	YString ToString() const;
+	FString ToString() const;
 
 	/**
 	 * Constructs a bounding volume containing both A and B.
@@ -344,9 +344,9 @@ FORCEINLINE YBoxSphereBounds YBoxSphereBounds::operator+( const YBoxSphereBounds
 }
 
 
-FORCEINLINE YString YBoxSphereBounds::ToString() const
+FORCEINLINE FString YBoxSphereBounds::ToString() const
 {
-	return YString::Printf(TEXT("Origin=%s, BoxExtent=(%s), SphereRadius=(%f)"), *Origin.ToString(), *BoxExtent.ToString(), SphereRadius);
+	return FString::Printf(TEXT("Origin=%s, BoxExtent=(%s), SphereRadius=(%f)"), *Origin.ToString(), *BoxExtent.ToString(), SphereRadius);
 }
 
 template <> struct TIsPODType<YBoxSphereBounds> { enum { Value = true }; };

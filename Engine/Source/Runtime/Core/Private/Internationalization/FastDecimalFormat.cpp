@@ -205,10 +205,10 @@ void FractionalToString_SplitAndRoundNumber(const bool bIsNegative, const double
 	}
 }
 
-void BuildFinalString(const bool bIsNegative, const FDecimalNumberFormattingRules& InFormattingRules, const TCHAR* InIntegralBuffer, const int32 InIntegralLen, const TCHAR* InFractionalBuffer, const int32 InFractionalLen, YString& OutString)
+void BuildFinalString(const bool bIsNegative, const FDecimalNumberFormattingRules& InFormattingRules, const TCHAR* InIntegralBuffer, const int32 InIntegralLen, const TCHAR* InFractionalBuffer, const int32 InFractionalLen, FString& OutString)
 {
-	const YString& FinalPrefixStr = (bIsNegative) ? InFormattingRules.NegativePrefixString : InFormattingRules.PositivePrefixString;
-	const YString& FinalSuffixStr = (bIsNegative) ? InFormattingRules.NegativeSuffixString : InFormattingRules.PositiveSuffixString;
+	const FString& FinalPrefixStr = (bIsNegative) ? InFormattingRules.NegativePrefixString : InFormattingRules.PositivePrefixString;
+	const FString& FinalSuffixStr = (bIsNegative) ? InFormattingRules.NegativeSuffixString : InFormattingRules.PositiveSuffixString;
 
 	OutString.Reserve(OutString.Len() + FinalPrefixStr.Len() + InIntegralLen + 1 + InFractionalLen + FinalSuffixStr.Len());
 
@@ -222,7 +222,7 @@ void BuildFinalString(const bool bIsNegative, const FDecimalNumberFormattingRule
 	OutString.Append(FinalSuffixStr);
 }
 
-void IntegralToString(const bool bIsNegative, const uint64 InVal, const FDecimalNumberFormattingRules& InFormattingRules, FNumberFormattingOptions InFormattingOptions, YString& OutString)
+void IntegralToString(const bool bIsNegative, const uint64 InVal, const FDecimalNumberFormattingRules& InFormattingRules, FNumberFormattingOptions InFormattingOptions, FString& OutString)
 {
 	SanitizeNumberFormattingOptions(InFormattingOptions);
 
@@ -246,7 +246,7 @@ void IntegralToString(const bool bIsNegative, const uint64 InVal, const FDecimal
 	BuildFinalString(bIsNegative, InFormattingRules, IntegralPartBuffer, IntegralPartLen, FractionalPartBuffer, FractionalPartLen, OutString);
 }
 
-void FractionalToString(const double InVal, const FDecimalNumberFormattingRules& InFormattingRules, FNumberFormattingOptions InFormattingOptions, YString& OutString)
+void FractionalToString(const double InVal, const FDecimalNumberFormattingRules& InFormattingRules, FNumberFormattingOptions InFormattingOptions, FString& OutString)
 {
 	SanitizeNumberFormattingOptions(InFormattingOptions);
 

@@ -5,17 +5,17 @@
 #include "CoreTypes.h"
 #include "Misc/OutputDevice.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "UObject/NameTypes.h"
 
 /*-----------------------------------------------------------------------------
-YOutputDeviceRedirector.
+FOutputDeviceRedirector.
 -----------------------------------------------------------------------------*/
 
 /** The type of lines buffered by secondary threads. */
 struct FBufferedLine
 {
-	const YString Data;
+	const FString Data;
 	const FName Category;
 	const double Time;
 	const ELogVerbosity::Type Verbosity;
@@ -32,7 +32,7 @@ struct FBufferedLine
 /**
 * Class used for output redirection to allow logs to show
 */
-class CORE_API YOutputDeviceRedirector : public FOutputDevice
+class CORE_API FOutputDeviceRedirector : public FOutputDevice
 {
 private:
 	/** A FIFO of lines logged by non-master threads. */
@@ -63,12 +63,12 @@ private:
 public:
 
 	/** Initialization constructor. */
-	YOutputDeviceRedirector();
+	FOutputDeviceRedirector();
 
 	/**
 	* Get the GLog singleton
 	*/
-	static YOutputDeviceRedirector* Get();
+	static FOutputDeviceRedirector* Get();
 
 	/**
 	* Adds an output device to the chain of redirections.

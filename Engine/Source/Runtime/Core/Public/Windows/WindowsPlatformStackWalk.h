@@ -36,7 +36,7 @@ struct CORE_API FWindowsPlatformStackWalk
 	/**
 	* Get downstream storage with downloaded from remote symbol storage files.
 	*/
-	static YString GetDownstreamStorage();
+	static FString GetDownstreamStorage();
 };
 
 

@@ -26,7 +26,7 @@ private:
 	/**
 	 * Helper returns the dxdiag output text filepath used by the survey
 	 */
-	static class YString GetDxDiagOutputFilepath();
+	static class FString GetDxDiagOutputFilepath();
 
 	/**
 	 * Helper used by SurveyHardware to get the Windows Experience Index score for individual sub-components
@@ -38,12 +38,12 @@ private:
 	 * Find the line that contains Token and return the contents of the line after the token
 	 * @return True if the line is found and the function has written the following string to OutString
 	 */
-	static bool GetLineFollowing(const YString& Token, const TArray<YString>& Lines, YString& OutString, int32 NthHit = 0);
+	static bool GetLineFollowing(const FString& Token, const TArray<FString>& Lines, FString& OutString, int32 NthHit = 0);
 
 	/**
 	 * Look for a section of a file beginning with SectionName
 	 */
-	static bool GetNamedSection(YString SectionName, const TArray<YString>& InLines, TArray<YString>& OutSectionLines);
+	static bool GetNamedSection(FString SectionName, const TArray<FString>& InLines, TArray<FString>& OutSectionLines);
 
 	static bool bSurveyPending;
 	static bool bSurveyComplete;

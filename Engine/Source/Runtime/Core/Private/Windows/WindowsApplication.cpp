@@ -494,7 +494,7 @@ static bool GetMonitorSizeFromEDID(const HKEY hDevRegKey, int32& OutWidth, int32
  * @praam OutHeight - Reference to output variable for monitor native height
  * @returns TRUE if data was extracted successfully, FALSE otherwise
  **/
-inline bool GetSizeForDevID(const YString& TargetDevID, int32& Width, int32& Height)
+inline bool GetSizeForDevID(const FString& TargetDevID, int32& Width, int32& Height)
 {
 	static const GUID ClassMonitorGuid = {0x4d36e96e, 0xe325, 0x11ce, {0xbf, 0xc1, 0x08, 0x00, 0x2b, 0xe1, 0x03, 0x18}};
 
@@ -525,7 +525,7 @@ inline bool GetSizeForDevID(const YString& TargetDevID, int32& Width, int32& Hei
 			TCHAR Buffer[MAX_DEVICE_ID_LEN];
 			if (CM_Get_Device_ID(DevInfoData.DevInst, Buffer, MAX_DEVICE_ID_LEN, 0) == CR_SUCCESS)
 			{
-				YString DevID(Buffer);
+				FString DevID(Buffer);
 				DevID = DevID.Mid(8, DevID.Find(TEXT("\\"), ESearchCase::CaseSensitive, ESearchDir::FromStart, 9) - 8);
 				if (DevID == TargetDevID)
 				{
@@ -588,7 +588,7 @@ static void GetMonitorsInfo(TArray<FMonitorInfo>& OutMonitorInfo)
 	FMonitorInfo* PrimaryDevice = nullptr;
 	OutMonitorInfo.Empty(2); // Reserve two slots, as that will be the most common maximum
 
-	YString DeviceID;
+	FString DeviceID;
 	while (EnumDisplayDevices(0, DeviceIndex, &DisplayDevice, 0))
 	{
 		if ((DisplayDevice.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP) > 0)
@@ -608,7 +608,7 @@ static void GetMonitorsInfo(TArray<FMonitorInfo>& OutMonitorInfo)
 					Info.Name = DisplayDevice.DeviceName;
 					EnumDisplayMonitors(nullptr, nullptr, MonitorEnumProc, (LPARAM)&Info);
 
-					Info.ID = YString::Printf(TEXT("%s"), Monitor.DeviceID);
+					Info.ID = FString::Printf(TEXT("%s"), Monitor.DeviceID);
 					Info.Name = Info.ID.Mid (8, Info.ID.Find (TEXT("\\"), ESearchCase::CaseSensitive, ESearchDir::FromStart, 9) - 8);
 
 					if (GetSizeForDevID(Info.Name, Info.NativeWidth, Info.NativeHeight))
@@ -721,9 +721,9 @@ int32 FWindowsApplication::ProcessMessage( HWND hwnd, uint32 msg, WPARAM wParam,
 	{
 		TSharedRef< FWindowsWindow > CurrentNativeEventWindow = CurrentNativeEventWindowPtr.ToSharedRef();
 
-		static const TMap<uint32, YString> WindowsMessageStrings = []()
+		static const TMap<uint32, FString> WindowsMessageStrings = []()
 		{
-			TMap<uint32, YString> Result;
+			TMap<uint32, FString> Result;
 #define ADD_WINDOWS_MESSAGE_STRING(WMCode) Result.Add(WMCode, TEXT(#WMCode))
 			ADD_WINDOWS_MESSAGE_STRING(WM_INPUTLANGCHANGEREQUEST);
 			ADD_WINDOWS_MESSAGE_STRING(WM_INPUTLANGCHANGE);
@@ -738,9 +738,9 @@ int32 FWindowsApplication::ProcessMessage( HWND hwnd, uint32 msg, WPARAM wParam,
 			return Result;
 		}();
 
-		static const TMap<uint32, YString> IMNStrings = []()
+		static const TMap<uint32, FString> IMNStrings = []()
 		{
-			TMap<uint32, YString> Result;
+			TMap<uint32, FString> Result;
 #define ADD_IMN_STRING(IMNCode) Result.Add(IMNCode, TEXT(#IMNCode))
 			ADD_IMN_STRING(IMN_CLOSESTATUSWINDOW);
 			ADD_IMN_STRING(IMN_OPENSTATUSWINDOW);
@@ -760,9 +760,9 @@ int32 FWindowsApplication::ProcessMessage( HWND hwnd, uint32 msg, WPARAM wParam,
 			return Result;
 		}();
 
-		static const TMap<uint32, YString> IMRStrings = []()
+		static const TMap<uint32, FString> IMRStrings = []()
 		{
-			TMap<uint32, YString> Result;
+			TMap<uint32, FString> Result;
 #define ADD_IMR_STRING(IMRCode) Result.Add(IMRCode, TEXT(#IMRCode))
 	ADD_IMR_STRING(IMR_CANDIDATEWINDOW);
 	ADD_IMR_STRING(IMR_COMPOSITIONFONT);
@@ -2396,7 +2396,7 @@ void FWindowsApplication::QueryConnectedMice()
 			continue;
 
 		Name[NameLen] = 0;
-		YString WName = ANSI_TO_TCHAR(Name.Get());
+		FString WName = ANSI_TO_TCHAR(Name.Get());
 		WName.ReplaceInline(TEXT("#"), TEXT("\\"), ESearchCase::CaseSensitive);
 		/*
 		 * Name XP starts with \??\, vista+ starts \\?\ 

@@ -36,7 +36,7 @@ uint8 FBase64::DecodingAlphabet[256] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xF
  *
  * @return a string that encodes the binary data in a way that can be safely transmitted via various Internet protocols
  */
-YString FBase64::Encode(const TArray<uint8>& Source)
+FString FBase64::Encode(const TArray<uint8>& Source)
 {
 	return Encode((uint8*)Source.GetData(), Source.Num());
 }
@@ -49,7 +49,7 @@ YString FBase64::Encode(const TArray<uint8>& Source)
  *
  * @return true if the buffer was decoded, false if it failed to decode
  */
-bool FBase64::Decode(const YString& Source, TArray<uint8>& Dest)
+bool FBase64::Decode(const FString& Source, TArray<uint8>& Dest)
 {
 	uint32 Length = Source.Len();
 	// Size must be a multiple of 4
@@ -81,7 +81,7 @@ bool FBase64::Decode(const YString& Source, TArray<uint8>& Dest)
  *
  * @return a string that encodes the binary data in a way that can be safely transmitted via various Internet protocols
  */
-YString FBase64::Encode(const YString& Source)
+FString FBase64::Encode(const FString& Source)
 {
 	return Encode((uint8*)TCHAR_TO_ANSI(*Source), Source.Len());
 }
@@ -92,7 +92,7 @@ YString FBase64::Encode(const YString& Source)
  * @param Source the stringified data to convert
  * @param Dest the out buffer that will be filled with the decoded data
  */
-bool FBase64::Decode(const YString& Source, YString& Dest)
+bool FBase64::Decode(const FString& Source, FString& Dest)
 {
 	uint32 Length = Source.Len();
 	// Size must be a multiple of 4
@@ -131,11 +131,11 @@ bool FBase64::Decode(const YString& Source, YString& Dest)
  *
  * @return the stringified form of the binary data
  */
-YString FBase64::Encode(uint8* Source, uint32 Length)
+FString FBase64::Encode(uint8* Source, uint32 Length)
 {
 	// Each 3 uint8 set of data expands to 4 bytes and must be padded to 4 bytes
 	uint32 ExpectedLength = (Length + 2) / 3 * 4;
-	YString OutBuffer;
+	FString OutBuffer;
 	OutBuffer.Empty(ExpectedLength);
 
 	ANSICHAR EncodedBytes[5];

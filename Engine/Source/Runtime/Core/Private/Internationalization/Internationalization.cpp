@@ -49,12 +49,12 @@ FText FInternationalization::ForUseOnlyByLocMacroAndGraphNodeTextLiterals_Create
 	return FTextCache::Get().FindOrCache(InTextLiteral, InNamespace, InKey);
 }
 
-bool FInternationalization::SetCurrentCulture(const YString& Name)
+bool FInternationalization::SetCurrentCulture(const FString& Name)
 {
 	return Implementation->SetCurrentCulture(Name);
 }
 
-FCulturePtr FInternationalization::GetCulture(const YString& Name)
+FCulturePtr FInternationalization::GetCulture(const FString& Name)
 {
 	return Implementation->GetCulture(Name);
 }
@@ -90,7 +90,7 @@ void FInternationalization::Terminate()
 }
 
 #if ENABLE_LOC_TESTING
-YString& FInternationalization::Leetify(YString& SourceString)
+FString& FInternationalization::Leetify(FString& SourceString)
 {
 	static const TCHAR LeetifyTextStartMarker = TEXT('\x2021');
 	static const TCHAR LeetifyTextEndMarker = TEXT('\x2021');
@@ -133,7 +133,7 @@ YString& FInternationalization::Leetify(YString& SourceString)
 	}
 
 	// We insert a start and end marker (+2), and format strings typically have <= 8 argument blocks which we'll wrap with a start and end marker (+16), so +18 should be a reasonable slack
-	YString LeetifiedString;
+	FString LeetifiedString;
 	LeetifiedString.Reserve(SourceString.Len() + 18);
 
 	// Inject the start marker
@@ -200,21 +200,21 @@ void FInternationalization::LoadAllCultureData()
 	Implementation->LoadAllCultureData();
 }
 
-void FInternationalization::GetCultureNames(TArray<YString>& CultureNames) const
+void FInternationalization::GetCultureNames(TArray<FString>& CultureNames) const
 {
 	Implementation->GetCultureNames(CultureNames);
 }
 
-TArray<YString> FInternationalization::GetPrioritizedCultureNames(const YString& Name)
+TArray<FString> FInternationalization::GetPrioritizedCultureNames(const FString& Name)
 {
 	return Implementation->GetPrioritizedCultureNames(Name);
 }
 
-void FInternationalization::GetCulturesWithAvailableLocalization(const TArray<YString>& InLocalizationPaths, TArray< FCultureRef >& OutAvailableCultures, const bool bIncludeDerivedCultures)
+void FInternationalization::GetCulturesWithAvailableLocalization(const TArray<FString>& InLocalizationPaths, TArray< FCultureRef >& OutAvailableCultures, const bool bIncludeDerivedCultures)
 {
 	OutAvailableCultures.Reset();
 
-	TArray<YString> AllLocalizationFolders;
+	TArray<FString> AllLocalizationFolders;
 	IFileManager& FileManager = IFileManager::Get();
 	for(const auto& LocalizationPath : InLocalizationPaths)
 	{
@@ -222,7 +222,7 @@ void FInternationalization::GetCulturesWithAvailableLocalization(const TArray<YS
 		class FCultureEnumeratorVistor : public IPlatformFile::FDirectoryVisitor
 		{
 		public:
-			FCultureEnumeratorVistor( TArray<YString>& OutLocalizationFolders )
+			FCultureEnumeratorVistor( TArray<FString>& OutLocalizationFolders )
 				: LocalizationFolders(OutLocalizationFolders)
 			{
 			}
@@ -232,8 +232,8 @@ void FInternationalization::GetCulturesWithAvailableLocalization(const TArray<YS
 				if(bIsDirectory)
 				{
 					// UE localization resource folders use "en-US" style while ICU uses "en_US"
-					const YString LocalizationFolder = YPaths::GetCleanFilename(FilenameOrDirectory);
-					const YString CanonicalName = FCulture::GetCanonicalName(LocalizationFolder);
+					const FString LocalizationFolder = YPaths::GetCleanFilename(FilenameOrDirectory);
+					const FString CanonicalName = FCulture::GetCanonicalName(LocalizationFolder);
 					LocalizationFolders.AddUnique(CanonicalName);
 				}
 
@@ -241,7 +241,7 @@ void FInternationalization::GetCulturesWithAvailableLocalization(const TArray<YS
 			}
 
 			/** Array to fill with the names of the UE localization folders available at the given path */
-			TArray<YString>& LocalizationFolders;
+			TArray<FString>& LocalizationFolders;
 		};
 
 		FCultureEnumeratorVistor CultureEnumeratorVistor(AllLocalizationFolders);
@@ -251,16 +251,16 @@ void FInternationalization::GetCulturesWithAvailableLocalization(const TArray<YS
 	// Find any cultures that are a partial match for those we have translations for.
 	if(bIncludeDerivedCultures)
 	{
-		TArray<YString> CultureNames;
+		TArray<FString> CultureNames;
 		GetCultureNames(CultureNames);
-		for(const YString& CultureName : CultureNames)
+		for(const FString& CultureName : CultureNames)
 		{
 			FCulturePtr Culture = GetCulture(CultureName);
 			if (Culture.IsValid())
 			{
-				TArray<YString> PrioritizedParentCultureNames = Culture->GetPrioritizedParentCultureNames();
+				TArray<FString> PrioritizedParentCultureNames = Culture->GetPrioritizedParentCultureNames();
 
-				for (const YString& PrioritizedParentCultureName : PrioritizedParentCultureNames)
+				for (const FString& PrioritizedParentCultureName : PrioritizedParentCultureNames)
 				{
 					if(AllLocalizationFolders.Contains(PrioritizedParentCultureName))
 					{
@@ -274,7 +274,7 @@ void FInternationalization::GetCulturesWithAvailableLocalization(const TArray<YS
 	// Find any cultures that are a complete match for those we have translations for.
 	else
 	{
-		for(const YString& LocalizationFolder : AllLocalizationFolders)
+		for(const FString& LocalizationFolder : AllLocalizationFolders)
 		{
 			FCulturePtr Culture = GetCulture(LocalizationFolder);
 			if(Culture.IsValid())

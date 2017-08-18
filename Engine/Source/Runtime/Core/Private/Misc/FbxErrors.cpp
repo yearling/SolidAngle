@@ -152,7 +152,7 @@ FName FFbxErrors::Animation_InvalidData(TEXT("Animation_InvalidData"));
 
 FName FFbxErrors::Animation_TransformError(TEXT("Animation_TransformError"));
 
-static const YString FbxErrorsPath = TEXT("Shared/Editor/FbxErrors");
+static const FString FbxErrorsPath = TEXT("Shared/Editor/FbxErrors");
 
 FFbxErrorToken::FFbxErrorToken(const FName& InErrorName)
 	: FDocumentationToken(FbxErrorsPath, FbxErrorsPath, InErrorName.ToString())

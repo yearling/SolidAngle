@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Internationalization/TextLocalizationManager.h"
 #include "Internationalization/ITextData.h"
 #include "Misc/ScopeLock.h"
@@ -100,7 +100,7 @@ public:
 	{
 	}
 
-	virtual const YString& GetDisplayString() const override
+	virtual const FString& GetDisplayString() const override
 	{
 		return *this->LocalizedString;
 	}
@@ -123,13 +123,13 @@ public:
 	{
 	}
 
-	explicit TGeneratedTextData(YString&& InDisplayString)
+	explicit TGeneratedTextData(FString&& InDisplayString)
 		: TTextData<THistoryType>(nullptr)
 		, DisplayString(MoveTemp(InDisplayString))
 	{
 	}
 
-	TGeneratedTextData(YString&& InDisplayString, THistoryType&& InHistory)
+	TGeneratedTextData(FString&& InDisplayString, THistoryType&& InHistory)
 		: TTextData<THistoryType>(nullptr, MoveTemp(InHistory))
 		, DisplayString(MoveTemp(InDisplayString))
 	{
@@ -139,7 +139,7 @@ public:
 	{
 	}
 
-	virtual const YString& GetDisplayString() const override
+	virtual const FString& GetDisplayString() const override
 	{
 		return (this->LocalizedString.IsValid()) ? *this->LocalizedString : DisplayString;
 	}
@@ -154,12 +154,12 @@ public:
 			if (!this->LocalizedString.IsValid())
 			{
 				// We copy (rather than move) DisplayString here, as other threads may currently be accessing it
-				this->LocalizedString = MakeShareable(new YString(DisplayString));
+				this->LocalizedString = MakeShareable(new FString(DisplayString));
 			}
 		}
 	}
     
 protected:
-	YString DisplayString;
+	FString DisplayString;
 	FCriticalSection PersistTextCS;
 };

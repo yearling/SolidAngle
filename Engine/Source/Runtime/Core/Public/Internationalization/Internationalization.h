@@ -3,7 +3,7 @@
 
 #include "CoreTypes.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Templates/SharedPointer.h"
 #include "Delegates/Delegate.h"
 #include "Internationalization/Text.h"
@@ -33,7 +33,7 @@ public:
 	static CORE_API FText ForUseOnlyByLocMacroAndGraphNodeTextLiterals_CreateText(const TCHAR* InTextLiteral, const TCHAR* InNamespace, const TCHAR* InKey);
 
 	//Set the current culture by name
-	CORE_API bool SetCurrentCulture(const YString& Name);
+	CORE_API bool SetCurrentCulture(const FString& Name);
 
 	//@return the current culture
 	CORE_API FCultureRef GetCurrentCulture() const
@@ -42,7 +42,7 @@ public:
 	}
 
 	//@return culture object by given name, or NULL if not found
-	CORE_API FCulturePtr GetCulture(const YString& Name);
+	CORE_API FCulturePtr GetCulture(const FString& Name);
 
 	//@return the default culture
 	CORE_API TSharedRef< FCulture, ESPMode::ThreadSafe > GetDefaultCulture() const
@@ -62,15 +62,15 @@ public:
 	CORE_API void LoadAllCultureData();
 
 #if ENABLE_LOC_TESTING
-	static CORE_API YString& Leetify(YString& SourceString);
+	static CORE_API FString& Leetify(FString& SourceString);
 #endif
 
-	CORE_API void GetCultureNames(TArray<YString>& CultureNames) const;
+	CORE_API void GetCultureNames(TArray<FString>& CultureNames) const;
 
-	CORE_API TArray<YString> GetPrioritizedCultureNames(const YString& Name);
+	CORE_API TArray<FString> GetPrioritizedCultureNames(const FString& Name);
 
 	// Given some paths to look at, populate a list of cultures that we have available localization information for. If bIncludeDerivedCultures, include cultures that are derived from those we have localization data for.
-	CORE_API void GetCulturesWithAvailableLocalization(const TArray<YString>& InLocalizationPaths, TArray< FCultureRef >& OutAvailableCultures, const bool bIncludeDerivedCultures);
+	CORE_API void GetCulturesWithAvailableLocalization(const TArray<FString>& InLocalizationPaths, TArray< FCultureRef >& OutAvailableCultures, const bool bIncludeDerivedCultures);
 
 	/** Broadcasts whenever the current culture changes */
 	DECLARE_EVENT(FInternationalization, FCultureChangedEvent)

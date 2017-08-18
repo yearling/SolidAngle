@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Math/UnrealMathUtility.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Math/IntPoint.h"
 #include "Math/Vector2D.h"
 
@@ -260,7 +260,7 @@ public:
 	*
 	* @return A string describing the rectangle.
 	*/
-	YString ToString() const;
+	FString ToString() const;
 
 	/**
 	* Gets the width of the rectangle.
@@ -539,9 +539,9 @@ FORCEINLINE YIntPoint YIntRect::Size() const
 }
 
 
-FORCEINLINE YString YIntRect::ToString() const
+FORCEINLINE FString YIntRect::ToString() const
 {
-	return YString::Printf(TEXT("Min=(%s) Max=(%s)"), *Min.ToString(), *Max.ToString());
+	return FString::Printf(TEXT("Min=(%s) Max=(%s)"), *Min.ToString(), *Max.ToString());
 }
 
 

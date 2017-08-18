@@ -49,7 +49,7 @@ int32 GetChangeListNumberForPerfTesting()
 }
 
 // can be optimized or moved to a more central spot
-bool IsValidCPPIdentifier(const YString& In)
+bool IsValidCPPIdentifier(const FString& In)
 {
 	bool bFirstChar = true;
 
@@ -76,9 +76,9 @@ bool IsValidCPPIdentifier(const YString& In)
 	return true;
 }
 
-YString GetBuildNameForPerfTesting()
+FString GetBuildNameForPerfTesting()
 {
-	YString BuildName;
+	FString BuildName;
 
 	if (FParse::Value(FCommandLine::Get(), TEXT("-BuildName="), BuildName))
 	{
@@ -95,7 +95,7 @@ YString GetBuildNameForPerfTesting()
 		// we generate a build name from the change list number
 		int32 ChangeListNumber = GetChangeListNumberForPerfTesting();
 
-		BuildName = YString::Printf(TEXT("CL%d"), ChangeListNumber);
+		BuildName = FString::Printf(TEXT("CL%d"), ChangeListNumber);
 	}
 
 	return BuildName;
@@ -108,20 +108,20 @@ YString GetBuildNameForPerfTesting()
  * @param NotifyType has the <namespace>:<type> (e.g. UE_PROFILER!UE3STATS:)
  * @param FullFileName the File name to copy from the console
  **/
-void SendDataToPCViaUnrealConsole( const YString& NotifyType, const YString& FullFileName )
+void SendDataToPCViaUnrealConsole( const FString& NotifyType, const FString& FullFileName )
 {
-	const YString AbsoluteFilename = IFileManager::Get().ConvertToAbsolutePathForExternalAppForRead( *FullFileName );
+	const FString AbsoluteFilename = IFileManager::Get().ConvertToAbsolutePathForExternalAppForRead( *FullFileName );
 
 	UE_LOG( LogProfilingDebugging, Warning, TEXT( "SendDataToPCViaUnrealConsole %s%s" ), *NotifyType, *AbsoluteFilename );
 
-	const YString NotifyString = NotifyType + AbsoluteFilename + LINE_TERMINATOR;
+	const FString NotifyString = NotifyType + AbsoluteFilename + LINE_TERMINATOR;
 	
 	// send it across via UnrealConsole
 	FMsg::SendNotificationString( *NotifyString );
 }
 
 
-YString CreateProfileFilename(const YString& InFileExtension, bool bIncludeDateForDirectorFName)
+FString CreateProfileFilename(const FString& InFileExtension, bool bIncludeDateForDirectorFName)
 {
 	return CreateProfileFilename(TEXT(""), InFileExtension, bIncludeDateForDirectorFName);
 }
@@ -133,12 +133,12 @@ YString CreateProfileFilename(const YString& InFileExtension, bool bIncludeDateF
  * @param ProfilingType this is the type of profiling file this is
  * 
  **/
-YString CreateProfileFilename( const YString& InFilename, const YString& InFileExtension, bool bIncludeDateForDirectorFName )
+FString CreateProfileFilename( const FString& InFilename, const FString& InFileExtension, bool bIncludeDateForDirectorFName )
 {
-	YString Retval;
+	FString Retval;
 
 	// set up all of the parts we will use
-	YString MapNameStr;
+	FString MapNameStr;
 
 #if WITH_ENGINE
 	if(GGetMapNameDelegate.IsBound())
@@ -151,18 +151,18 @@ YString CreateProfileFilename( const YString& InFilename, const YString& InFileE
 	}
 #endif		// WITH_ENGINE
 
-	const YString PlatformStr(FPlatformProperties::PlatformName());
+	const FString PlatformStr(FPlatformProperties::PlatformName());
 
 	/** This is meant to hold the name of the "sessions" that is occurring **/
 	static bool bSetProfilingSessionFolderName = false;
-	static YString ProfilingSessionFolderName = TEXT(""); 
+	static FString ProfilingSessionFolderName = TEXT(""); 
 
 	// here we want to have just the same profiling session name so all of the files will go into that folder over the course of the run so you don't just have a ton of folders
-	YString FolderName;
+	FString FolderName;
 	if( bSetProfilingSessionFolderName == false )
 	{
 		// now create the string
-		FolderName = YString::Printf(TEXT("%s-%s-%s"), *MapNameStr, *PlatformStr, *FDateTime::Now().ToString(TEXT("%m.%d-%H.%M.%S")));
+		FolderName = FString::Printf(TEXT("%s-%s-%s"), *MapNameStr, *PlatformStr, *FDateTime::Now().ToString(TEXT("%m.%d-%H.%M.%S")));
 		FolderName = FolderName.Right(MaxFilenameLen);
 
 		ProfilingSessionFolderName = FolderName;
@@ -175,14 +175,14 @@ YString CreateProfileFilename( const YString& InFilename, const YString& InFileE
 
 	// now create the string
 	// NOTE: due to the changelist this is implicitly using the same directory
-	YString FolderNameOfProfileNoDate = YString::Printf( TEXT("%s-%s-%i"), *MapNameStr, *PlatformStr, GetChangeListNumberForPerfTesting() );
+	FString FolderNameOfProfileNoDate = FString::Printf( TEXT("%s-%s-%i"), *MapNameStr, *PlatformStr, GetChangeListNumberForPerfTesting() );
 	FolderNameOfProfileNoDate = FolderNameOfProfileNoDate.Right(MaxFilenameLen);
 
 
-	YString NameOfProfile;
+	FString NameOfProfile;
 	if (InFilename.IsEmpty())
 	{
-		NameOfProfile = YString::Printf(TEXT("%s-%s-%s"), *MapNameStr, *PlatformStr, *FDateTime::Now().ToString(TEXT("%d-%H.%M.%S")));
+		NameOfProfile = FString::Printf(TEXT("%s-%s-%s"), *MapNameStr, *PlatformStr, *FDateTime::Now().ToString(TEXT("%d-%H.%M.%S")));
 	}
 	else
 	{
@@ -190,10 +190,10 @@ YString CreateProfileFilename( const YString& InFilename, const YString& InFileE
 	}
 	NameOfProfile = NameOfProfile.Right(MaxFilenameLen);
 
-	YString FileNameWithExtension = YString::Printf( TEXT("%s%s"), *NameOfProfile, *InFileExtension );
+	FString FileNameWithExtension = FString::Printf( TEXT("%s%s"), *NameOfProfile, *InFileExtension );
 	FileNameWithExtension = FileNameWithExtension.Right(MaxFilenameLen);
 
-	YString Filename;
+	FString Filename;
 	if( bIncludeDateForDirectorFName == true )
 	{
 		Filename = FolderName / FileNameWithExtension;
@@ -211,23 +211,23 @@ YString CreateProfileFilename( const YString& InFilename, const YString& InFileE
 
 
 
-YString CreateProfileDirectoryAndFilename( const YString& InSubDirectorFName, const YString& InFileExtension )
+FString CreateProfileDirectoryAndFilename( const FString& InSubDirectorFName, const FString& InFileExtension )
 {
-	YString MapNameStr;
+	FString MapNameStr;
 #if WITH_ENGINE
 	check(GGetMapNameDelegate.IsBound());
 	MapNameStr = GGetMapNameDelegate.Execute();
 #endif		// WITH_ENGINE
-	const YString PlatformStr(FPlatformProperties::PlatformName());
+	const FString PlatformStr(FPlatformProperties::PlatformName());
 
 
 	// create Profiling dir and sub dir
-	const YString PathName = (YPaths::ProfilingDir() + InSubDirectorFName + TEXT("/"));
+	const FString PathName = (YPaths::ProfilingDir() + InSubDirectorFName + TEXT("/"));
 	IFileManager::Get().MakeDirectory( *PathName );
 	//UE_LOG(LogProfilingDebugging, Warning, TEXT( "CreateProfileDirectoryAndFilename: %s"), *PathName );
 
 	// create the directory name of this profile
-	YString NameOfProfile = YString::Printf(TEXT("%s-%s-%s"), *MapNameStr, *PlatformStr, *FDateTime::Now().ToString(TEXT("%m.%d-%H.%M")));	
+	FString NameOfProfile = FString::Printf(TEXT("%s-%s-%s"), *MapNameStr, *PlatformStr, *FDateTime::Now().ToString(TEXT("%m.%d-%H.%M")));	
 	NameOfProfile = NameOfProfile.Right(MaxFilenameLen);
 
 	IFileManager::Get().MakeDirectory( *(PathName+NameOfProfile) );
@@ -235,12 +235,12 @@ YString CreateProfileDirectoryAndFilename( const YString& InSubDirectorFName, co
 
 
 	// create the actual file name
-	YString FileNameWithExtension = YString::Printf( TEXT("%s%s"), *NameOfProfile, *InFileExtension );
+	FString FileNameWithExtension = FString::Printf( TEXT("%s%s"), *NameOfProfile, *InFileExtension );
 	FileNameWithExtension = FileNameWithExtension.Left(MaxFilenameLen);
 	//UE_LOG(LogProfilingDebugging, Warning, TEXT( "CreateProfileDirectoryAndFilename: %s"), *FileNameWithExtension );
 
 
-	YString Filename = PathName / NameOfProfile / FileNameWithExtension;
+	FString Filename = PathName / NameOfProfile / FileNameWithExtension;
 	//UE_LOG(LogProfilingDebugging, Warning, TEXT( "CreateProfileDirectoryAndFilename: %s"), *Filename );
 
 	return Filename;

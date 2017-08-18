@@ -11,12 +11,12 @@
 
 DEFINE_LOG_CATEGORY_STATIC(LogGenericPlatformSymbolication, Log, All);
 
-bool FGenericPlatformSymbolication::LoadSymbolDatabaseForBinary(YString SourceFolder, YString Binary, YString ModuleSignature, FGenericPlatformSymbolDatabase& OutDatabase)
+bool FGenericPlatformSymbolication::LoadSymbolDatabaseForBinary(FString SourceFolder, FString Binary, FString ModuleSignature, FGenericPlatformSymbolDatabase& OutDatabase)
 {
 	bool bOk = false;
 	
-	YString ModuleName = YPaths::GetBaseFilename(Binary);
-	YString InputFile = (SourceFolder / ModuleName) + TEXT(".udebugsymbols");
+	FString ModuleName = YPaths::GetBaseFilename(Binary);
+	FString InputFile = (SourceFolder / ModuleName) + TEXT(".udebugsymbols");
 	if (IFileManager::Get().FileSize(*InputFile) > 0)
 	{
 		TArray<uint8> DataBuffer;
@@ -37,12 +37,12 @@ bool FGenericPlatformSymbolication::LoadSymbolDatabaseForBinary(YString SourceFo
 	return bOk;
 }
 
-bool FGenericPlatformSymbolication::SaveSymbolDatabaseForBinary(YString TargetFolder, YString Name, FGenericPlatformSymbolDatabase& Database)
+bool FGenericPlatformSymbolication::SaveSymbolDatabaseForBinary(FString TargetFolder, FString Name, FGenericPlatformSymbolDatabase& Database)
 {
 	bool bOk = false;
 	
-	YString ModuleName = YPaths::GetBaseFilename(Name);
-	YString OutputFile = (TargetFolder / ModuleName) + TEXT(".udebugsymbols");
+	FString ModuleName = YPaths::GetBaseFilename(Name);
+	FString OutputFile = (TargetFolder / ModuleName) + TEXT(".udebugsymbols");
 
 	TArray<uint8> DataBuffer;
 	YArchiveSaveCompressedProxy DataArchive(DataBuffer, (ECompressionFlags)(COMPRESS_ZLIB|COMPRESS_BiasSpeed));
@@ -67,7 +67,7 @@ bool FGenericPlatformSymbolication::SaveSymbolDatabaseForBinary(YString TargetFo
 	return bOk;
 }
 
-bool FGenericPlatformSymbolication::SymbolInfoForStrippedSymbol(FGenericPlatformSymbolDatabase const& Database, uint64 ProgramCounter, uint64 ModuleOffset, YString ModuleSignature, FProgramCounterSymbolInfo& Info)
+bool FGenericPlatformSymbolication::SymbolInfoForStrippedSymbol(FGenericPlatformSymbolDatabase const& Database, uint64 ProgramCounter, uint64 ModuleOffset, FString ModuleSignature, FProgramCounterSymbolInfo& Info)
 {
 	bool bOk = false;
 	
@@ -79,7 +79,7 @@ bool FGenericPlatformSymbolication::SymbolInfoForStrippedSymbol(FGenericPlatform
 			{
 				FCStringAnsi::Strncpy(Info.ModuleName, TCHAR_TO_ANSI(*Database.Name), FProgramCounterSymbolInfo::MAX_NAME_LENGHT);
 				
-				YString SymbolName = Database.StringTable[Symbol.NameIdx];
+				FString SymbolName = Database.StringTable[Symbol.NameIdx];
 				FCStringAnsi::Strncpy(Info.FunctionName, TCHAR_TO_ANSI(*SymbolName), FProgramCounterSymbolInfo::MAX_NAME_LENGHT);
 				
 				Info.ProgramCounter = ProgramCounter;
@@ -91,7 +91,7 @@ bool FGenericPlatformSymbolication::SymbolInfoForStrippedSymbol(FGenericPlatform
 				{
 					if((SymbolInfo.Start <= (ProgramCounter - ModuleOffset)) && ((SymbolInfo.Start + SymbolInfo.Length) >= (ProgramCounter - ModuleOffset)))
 					{
-						YString Path = Database.StringTable[SymbolInfo.PathIdx];
+						FString Path = Database.StringTable[SymbolInfo.PathIdx];
 						FCStringAnsi::Strncpy(Info.Filename, TCHAR_TO_ANSI(*Path), FProgramCounterSymbolInfo::MAX_NAME_LENGHT);
 						Info.LineNumber = SymbolInfo.Line;
 						break;

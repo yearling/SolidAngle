@@ -3,7 +3,7 @@
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
 #include "Templates/UnrealTemplate.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Logging/LogMacros.h"
 #include "Delegates/IDelegateInstance.h"
 #include "Delegates/Delegate.h"
@@ -117,13 +117,13 @@ DECLARE_DELEGATE_OneParam(FConsoleVariableDelegate, IConsoleVariable*);
 DECLARE_DELEGATE(FConsoleCommandDelegate);
 
 /** Console command delegate type (with arguments.)  This is a void callback function that always takes a list of arguments. */
-DECLARE_DELEGATE_OneParam(FConsoleCommandWithArgsDelegate, const TArray< YString >&);
+DECLARE_DELEGATE_OneParam(FConsoleCommandWithArgsDelegate, const TArray< FString >&);
 
 /** Console command delegate type with a world argument. This is a void callback function that always takes a world. */
 DECLARE_DELEGATE_OneParam(FConsoleCommandWithWorldDelegate, UWorld*);
 
 /** Console command delegate type (with a world and arguments.)  This is a void callback function that always takes a list of arguments and a world. */
-DECLARE_DELEGATE_TwoParams(FConsoleCommandWithWorldAndArgsDelegate, const TArray< YString >&, UWorld*);
+DECLARE_DELEGATE_TwoParams(FConsoleCommandWithWorldAndArgsDelegate, const TArray< FString >&, UWorld*);
 
 /** Console command delegate type with the output device passed through. */
 DECLARE_DELEGATE_OneParam(FConsoleCommandWithOutputDeviceDelegate, FOutputDevice&);
@@ -200,7 +200,7 @@ public:
 		return 0;
 	}
 
-	virtual class TConsoleVariableData<YString>* AsVariableString()
+	virtual class TConsoleVariableData<FString>* AsVariableString()
 	{
 		return 0;
 	}
@@ -249,7 +249,7 @@ public:
 	/** Get the internal value as float (works on all types). */
 	virtual float GetFloat() const = 0;
 	/** Get the internal value as string (works on all types). */
-	virtual YString GetString() const = 0;
+	virtual FString GetString() const = 0;
 
 	/**
 	* Allows to specify a callback function that is called when the console variable value changes.
@@ -269,13 +269,13 @@ public:
 	void Set(int32 InValue, EConsoleVariableFlags SetBy = ECVF_SetByCode)
 	{
 		// inefficient but no common code path
-		Set(*YString::Printf(TEXT("%d"), InValue), SetBy);
+		Set(*FString::Printf(TEXT("%d"), InValue), SetBy);
 	}
 	/** Set the internal value from the specified float. */
 	void Set(float InValue, EConsoleVariableFlags SetBy = ECVF_SetByCode)
 	{
 		// inefficient but no common code path
-		Set(*YString::Printf(TEXT("%g"), InValue), SetBy);
+		Set(*FString::Printf(TEXT("%g"), InValue), SetBy);
 	}
 	void SetWithCurrentPriority(int32 InValue)
 	{
@@ -301,7 +301,7 @@ struct IConsoleCommand : public IConsoleObject
 	* @param	InWorld		World context for this command
 	* @return	True if the delegate for this command was executed successfully
 	*/
-	virtual bool Execute(const TArray< YString >& Args, UWorld* InWorld, class FOutputDevice& OutputDevice) = 0;
+	virtual bool Execute(const TArray< FString >& Args, UWorld* InWorld, class FOutputDevice& OutputDevice) = 0;
 };
 
 /**
@@ -312,7 +312,7 @@ struct IConsoleThreadPropagation
 	virtual void OnCVarChange(int32& Dest, int32 NewValue) = 0;
 	virtual void OnCVarChange(float& Dest, float NewValue) = 0;
 	virtual void OnCVarChange(bool& Dest, bool NewValue) = 0;
-	virtual void OnCVarChange(YString& Dest, const YString& NewValue) = 0;
+	virtual void OnCVarChange(FString& Dest, const FString& NewValue) = 0;
 };
 
 /**
@@ -382,7 +382,7 @@ struct CORE_API IConsoleManager
 	* @param Help must not be 0
 	* @param Flags bitmask combined from EConsoleVariableFlags
 	*/
-	virtual IConsoleVariable* RegisterConsoleVariable(const TCHAR* Name, const YString& DefaultValue, const TCHAR* Help, uint32 Flags = ECVF_Default) = 0;
+	virtual IConsoleVariable* RegisterConsoleVariable(const TCHAR* Name, const FString& DefaultValue, const TCHAR* Help, uint32 Flags = ECVF_Default) = 0;
 	/**
 	* Create a reference to a int console variable
 	* @param Name must not be 0
@@ -582,7 +582,7 @@ struct CORE_API IConsoleManager
 
 	/**
 	*/
-	virtual void GetConsoleHistory(TArray<YString>& Out) = 0;
+	virtual void GetConsoleHistory(TArray<FString>& Out) = 0;
 
 	/**
 	* Check if a name (command or variable) has been registered with the console manager
@@ -915,7 +915,7 @@ inline TAutoConsoleVariable<float>::TAutoConsoleVariable(const TCHAR* Name, cons
 }
 
 template <>
-inline TAutoConsoleVariable<YString>::TAutoConsoleVariable(const TCHAR* Name, const YString& DefaultValue, const TCHAR* Help, uint32 Flags)
+inline TAutoConsoleVariable<FString>::TAutoConsoleVariable(const TCHAR* Name, const FString& DefaultValue, const TCHAR* Help, uint32 Flags)
 	: FAutoConsoleObject(IConsoleManager::Get().RegisterConsoleVariable(Name, DefaultValue, Help, Flags))
 {
 	Ref = AsVariable()->AsVariableString();

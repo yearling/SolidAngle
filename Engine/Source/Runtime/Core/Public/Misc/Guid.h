@@ -3,7 +3,7 @@
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
 #include "Misc/Crc.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 
 /**
 * Enumerates known GUID formats.
@@ -196,7 +196,7 @@ public:
 	* @return true on success, false otherwise.
 	* @see ImportTextItem
 	*/
-	CORE_API bool ExportTextItem(YString& ValueStr, FGuid const& DefaultValue, UObject* Parent, int32 PortFlags, class UObject* ExportRootScope) const;
+	CORE_API bool ExportTextItem(FString& ValueStr, FGuid const& DefaultValue, UObject* Parent, int32 PortFlags, class UObject* ExportRootScope) const;
 
 	/**
 	* Imports the GUIDs value from a text buffer.
@@ -238,7 +238,7 @@ public:
 	*
 	* @return The string representation.
 	*/
-	YString ToString() const
+	FString ToString() const
 	{
 		return ToString(EGuidFormats::Digits);
 	}
@@ -249,7 +249,7 @@ public:
 	* @param Format The string format to use.
 	* @return The string representation.
 	*/
-	CORE_API YString ToString(EGuidFormats Format) const;
+	CORE_API FString ToString(EGuidFormats Format) const;
 
 public:
 
@@ -281,7 +281,7 @@ public:
 	* @return true if the string was converted successfully, false otherwise.
 	* @see ParseExact, ToString
 	*/
-	static CORE_API bool Parse(const YString& GuidString, FGuid& OutGuid);
+	static CORE_API bool Parse(const FString& GuidString, FGuid& OutGuid);
 
 	/**
 	* Converts a string with the specified format to a GUID.
@@ -292,7 +292,7 @@ public:
 	* @return true if the string was converted successfully, false otherwise.
 	* @see Parse, ToString
 	*/
-	static CORE_API bool ParseExact(const YString& GuidString, EGuidFormats Format, FGuid& OutGuid);
+	static CORE_API bool ParseExact(const FString& GuidString, EGuidFormats Format, FGuid& OutGuid);
 
 	//private:
 public:

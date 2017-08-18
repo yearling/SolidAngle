@@ -43,14 +43,14 @@ public:
 
 		FCultureRef Culture = FCulture::Create(
 			LOCTEXT("InvariantCultureDisplaFName", "Invariant Language (Invariant Country)"),	//const FText DisplaFName
-			YString(TEXT("Invariant Language (Invariant Country)")),							//const YString EnglishName
+			FString(TEXT("Invariant Language (Invariant Country)")),							//const YString EnglishName
 			1033,																				//const int KeyboardLayoutId
 			1033,																				//const int LCID
-			YString(TEXT("")),																	//const YString Name
-			YString(TEXT("Invariant Language (Invariant Country)")),							//const YString NativeName
-			YString(TEXT("INT")),																//const YString UnrealLegacyThreeLetterISOLanguageName
-			YString(TEXT("ivl")),																//const YString ThreeLetterISOLanguageName
-			YString(TEXT("iv")),																//const YString TwoLetterISOLanguageName
+			FString(TEXT("")),																	//const YString Name
+			FString(TEXT("Invariant Language (Invariant Country)")),							//const YString NativeName
+			FString(TEXT("INT")),																//const YString UnrealLegacyThreeLetterISOLanguageName
+			FString(TEXT("ivl")),																//const YString ThreeLetterISOLanguageName
+			FString(TEXT("iv")),																//const YString TwoLetterISOLanguageName
 			DecimalNumberFormattingRules,														//const FDecimalNumberFormattingRules InDecimalNumberFormattingRules
 			PercentFormattingRules,																//const FDecimalNumberFormattingRules InPercentFormattingRules
 			BaseCurrencyFormattingRules															//const FDecimalNumberFormattingRules InBaseCurrencyFormattingRules

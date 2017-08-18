@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Templates/ValueOrError.h"
 #include "Misc/ExpressionParserTypes.h"
 
@@ -23,7 +23,7 @@ public:
 	 * @param InArgs			A map of named arguments that match the tokens specified in InExpression
 	 * @return A string containing the formatted text
 	 */
-	YString Format(const TCHAR* InExpression, const TMap<YString, YStringFormatArg>& InArgs) const
+	FString Format(const TCHAR* InExpression, const TMap<FString, FStringFormatArg>& InArgs) const
 	{
 		auto Result = FormatInternal(InExpression, InArgs, false);
 		if (ensure(Result.IsValid()))
@@ -40,7 +40,7 @@ public:
 	 * @param InArgs			An array of ordered arguments that match the tokens specified in InExpression
 	 * @return A string containing the formatted text
 	 */
-	YString Format(const TCHAR* InExpression, const TArray<YStringFormatArg>& InArgs) const
+	FString Format(const TCHAR* InExpression, const TArray<FStringFormatArg>& InArgs) const
 	{
 		auto Result = FormatInternal(InExpression, InArgs, false);
 		if (ensure(Result.IsValid()))
@@ -57,7 +57,7 @@ public:
 	 * @param InArgs			A map of named arguments that match the tokens specified in InExpression
 	 * @return A string containing the formatted text, or an error where InExpression is ill-formed, or contains undefined arguments
 	*/
-	TValueOrError<YString, FExpressionError> FormatStrict(const TCHAR* InExpression, const TMap<YString, YStringFormatArg>& InArgs) const
+	TValueOrError<FString, FExpressionError> FormatStrict(const TCHAR* InExpression, const TMap<FString, FStringFormatArg>& InArgs) const
 	{
 		return FormatInternal(InExpression, InArgs, true);
 	}
@@ -68,7 +68,7 @@ public:
 	 * @param InArgs			An array of ordered arguments that match the tokens specified in InExpression
 	 * @return A string containing the formatted text, or an error where InExpression is ill-formed, or contains undefined arguments
 	 */
-	TValueOrError<YString, FExpressionError> FormatStrict(const TCHAR* InExpression, const TArray<YStringFormatArg>& InArgs) const
+	TValueOrError<FString, FExpressionError> FormatStrict(const TCHAR* InExpression, const TArray<FStringFormatArg>& InArgs) const
 	{
 		return FormatInternal(InExpression, InArgs, true);
 	}
@@ -76,8 +76,8 @@ public:
 private:
 
 	/** Internal formatting logic */
-	TValueOrError<YString, FExpressionError> FormatInternal(const TCHAR* InExpression, const TMap<YString, YStringFormatArg>& InArgs, bool bStrict) const;
-	TValueOrError<YString, FExpressionError> FormatInternal(const TCHAR* InExpression, const TArray<YStringFormatArg>& InArgs, bool bStrict) const;
+	TValueOrError<FString, FExpressionError> FormatInternal(const TCHAR* InExpression, const TMap<FString, FStringFormatArg>& InArgs, bool bStrict) const;
+	TValueOrError<FString, FExpressionError> FormatInternal(const TCHAR* InExpression, const TArray<FStringFormatArg>& InArgs, bool bStrict) const;
 
 	/** Token definitions for lenient lexers */
 	FTokenDefinitions NamedDefinitions;

@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Misc/Crc.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Map.h"
 #include "Internationalization/Text.h"
 
@@ -45,7 +45,7 @@ private:
 		 * Make a key that copies the given strings.
 		 * This key can be stored in the map and safely used again later.
 		 */
-		static FCacheKey MakePersistent(YString InNamespace, YString InKey)
+		static FCacheKey MakePersistent(FString InNamespace, FString InKey)
 		{
 			return FCacheKey(MoveTemp(InNamespace), MoveTemp(InKey));
 		}
@@ -57,7 +57,7 @@ private:
 		{
 			if (KeyType == EKeyType::Reference)
 			{
-				PersistentData = FPersistentKeyData(YString(ReferenceData.Namespace), YString(ReferenceData.Key));
+				PersistentData = FPersistentKeyData(FString(ReferenceData.Namespace), FString(ReferenceData.Key));
 				ReferenceData = FReferenceKeyData();
 				KeyType = EKeyType::Persistent;
 			}
@@ -122,14 +122,14 @@ private:
 			{
 			}
 
-			FPersistentKeyData(YString&& InNamespace, YString&& InKey)
+			FPersistentKeyData(FString&& InNamespace, FString&& InKey)
 				: Namespace(MoveTemp(InNamespace))
 				, Key(MoveTemp(InKey))
 			{
 			}
 
-			YString Namespace;
-			YString Key;
+			FString Namespace;
+			FString Key;
 		};
 
 		FCacheKey(const TCHAR* InNamespace, const TCHAR* InKey)
@@ -141,7 +141,7 @@ private:
 			HashKey();
 		}
 
-		FCacheKey(YString&& InNamespace, YString&& InKey)
+		FCacheKey(FString&& InNamespace, FString&& InKey)
 			: ReferenceData()
 			, PersistentData(MoveTemp(InNamespace), MoveTemp(InKey))
 			, KeyType(EKeyType::Persistent)

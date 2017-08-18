@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Misc/Timespan.h"
 
 //
@@ -21,13 +21,13 @@ class CORE_API FDefaultValueHelper
 	 *	advances Pos to first non-whitespace symbol
 	 *	returns if some non-Whitespace sign remains in string 
 	 */
-	static bool Trim(int32& Pos, const YString& Source);
+	static bool Trim(int32& Pos, const FString& Source);
 
 	/** returns address of the first char in the string */
-	static const TCHAR* StartOf(const YString& Source);
+	static const TCHAR* StartOf(const FString& Source);
 
 	/** returns address of the last (empty) char in the string */
-	static const TCHAR* EndOf(const YString& Source);
+	static const TCHAR* EndOf(const FString& Source);
 
 	/** 
 	 *	advances Pos to first non-whitespace symbol
@@ -47,40 +47,40 @@ class CORE_API FDefaultValueHelper
 
 public:
 
-	static YString GetUnqualifiedEnumValue(const YString& Source);
+	static FString GetUnqualifiedEnumValue(const FString& Source);
 
-	static bool HasWhitespaces(const YString& Source);
+	static bool HasWhitespaces(const FString& Source);
 
-	static YString RemoveWhitespaces(const YString& Source);
+	static FString RemoveWhitespaces(const FString& Source);
 
 	/** Shell parameters list: " TypeName ( A a, B b ) " -> "A a, B b" */
-	static bool GetParameters(const YString& Source, const YString& TypeName, YString& OutForm);
+	static bool GetParameters(const FString& Source, const FString& TypeName, FString& OutForm);
 
 	/** returns if given strings are equal, ignores initial and final white spaces in Source */
-	static bool Is(const YString& Source, const TCHAR* CompareStr);
+	static bool Is(const FString& Source, const TCHAR* CompareStr);
 
 	/**   
 	 * source forms:	TypeName( TEXT ("ABC") ), TEXT("ABC"), TypeName("ABC"), "ABC"
 	 * output form:		ABC
 	 */
-	static bool StringFromCppString(const YString& Source, const YString& TypeName, YString& OutForm);
+	static bool StringFromCppString(const FString& Source, const FString& TypeName, FString& OutForm);
 
 	/*
 	 *	Following functions accept c++ style representations of numbers.
 	 *  e.g. 13.5e-2f for float or -0x123 for int
 	 */
-	static bool IsStringValidInteger(const YString& Source);
+	static bool IsStringValidInteger(const FString& Source);
 
-	static bool IsStringValidFloat(const YString& Source);
-
-	/** accepted form: " %f, %f, %f" */
-	static bool IsStringValidVector(const YString& Source);
+	static bool IsStringValidFloat(const FString& Source);
 
 	/** accepted form: " %f, %f, %f" */
-	static bool IsStringValidRotator(const YString& Source);
+	static bool IsStringValidVector(const FString& Source);
+
+	/** accepted form: " %f, %f, %f" */
+	static bool IsStringValidRotator(const FString& Source);
 
 	/** accepted form: " %f, %f, %f " or " %f, %f, %f, %f " (alpha is optional)  */
-	static bool IsStringValidLinearColor(const YString& Source);
+	static bool IsStringValidLinearColor(const FString& Source);
 
 
 	/**
@@ -91,7 +91,7 @@ public:
 	 *
 	 * @return true if the conversion happened, false otherwise
 	 */
-	static bool ParseInt(const YString& Source, int32& OutVal);
+	static bool ParseInt(const FString& Source, int32& OutVal);
 
 	/**
 	 * Converts a string into a int64.
@@ -101,7 +101,7 @@ public:
 	 *
 	 * @return true if the conversion happened, false otherwise
 	 */
-	static bool ParseInt64(const YString& Source, int64& OutVal);
+	static bool ParseInt64(const FString& Source, int64& OutVal);
 
 	/**
 	 * Converts a string into a float.
@@ -111,7 +111,7 @@ public:
 	 *
 	 * @return true if the conversion happened, false otherwise
 	 */
-	static bool ParseFloat(const YString& Source, float& OutVal);
+	static bool ParseFloat(const FString& Source, float& OutVal);
 
 	/**
 	 * Converts a string into a double.
@@ -121,7 +121,7 @@ public:
 	 *
 	 * @return true if the conversion happened, false otherwise
 	 */
-	static bool ParseDouble(const YString& Source, double& OutVal);
+	static bool ParseDouble(const FString& Source, double& OutVal);
 
 	/**
 	 * Converts a string into a YVector. Accepted form: " %f, %f, %f "
@@ -131,7 +131,7 @@ public:
 	 *
 	 * @return true if the conversion happened, false otherwise
 	 */
-	static bool ParseVector(const YString& Source, FVector& OutVal);
+	static bool ParseVector(const FString& Source, FVector& OutVal);
 
 	/**
 	 * Converts a string into a YVector. Accepted form: " %f, %f "
@@ -141,7 +141,7 @@ public:
 	 *
 	 * @return true if the conversion happened, false otherwise
 	 */
-	static bool ParseVector2D(const YString& Source, YVector2D& OutVal);
+	static bool ParseVector2D(const FString& Source, YVector2D& OutVal);
 
 	/**
 	 * Converts a string into a YRotator. Accepted form: " %f, %f, %f "
@@ -151,7 +151,7 @@ public:
 	 *
 	 * @return true if the conversion happened, false otherwise
 	 */
-	static bool ParseRotator(const YString& Source, FRotator& OutVal);
+	static bool ParseRotator(const FString& Source, FRotator& OutVal);
 
 	/**
 	 * Converts a string into a YLinearColor. 
@@ -162,7 +162,7 @@ public:
 	 *
 	 * @return true if the conversion happened, false otherwise
 	 */
-	static bool ParseLinearColor(const YString& Source, FLinearColor& OutVal);
+	static bool ParseLinearColor(const FString& Source, FLinearColor& OutVal);
 
 	/**
 	 * Converts a string into a YLinearColor. 
@@ -173,5 +173,5 @@ public:
 	 *
 	 * @return true if the conversion happened, false otherwise
 	 */
-	static bool ParseColor(const YString& Source, FColor& OutVal);
+	static bool ParseColor(const FString& Source, FColor& OutVal);
 };

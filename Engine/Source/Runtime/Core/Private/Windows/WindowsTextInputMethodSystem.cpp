@@ -2,7 +2,7 @@
 
 #include "Windows/WindowsTextInputMethodSystem.h"
 #include "CoreGlobals.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Math/Vector2D.h"
 #include "Logging/LogCategory.h"
 #include "GenericPlatform/GenericWindow.h"
@@ -15,10 +15,10 @@ DEFINE_LOG_CATEGORY_STATIC(LogWindowsTextInputMethodSystem, Log, All);
 
 namespace
 {
-	YString GetIMMStringAsFString(HIMC IMMContext, const DWORD StringType)
+	FString GetIMMStringAsFString(HIMC IMMContext, const DWORD StringType)
 	{
 		// Get the internal buffer of the string, we're going to use it as scratch space
-		YString OutString;
+		FString OutString;
 		TArray<TCHAR>& OutStringBuffer = OutString.GetCharArray();
 				
 		// Work out the maximum size required and resize the buffer so it can hold enough data
@@ -177,7 +177,7 @@ bool FWindowsTextInputMethodSystem::Initialize()
 
 void FWindowsTextInputMethodSystem::LogActiveIMEInfo()
 {
-	YString APIString;
+	FString APIString;
 
 	switch(CurrentAPI)
 	{
@@ -915,7 +915,7 @@ int32 FWindowsTextInputMethodSystem::ProcessMessage(HWND hwnd, uint32 msg, WPARA
 					ITextInputMethodContext::ECaretPosition SelectionCaretPosition = ITextInputMethodContext::ECaretPosition::Ending;
 					ActiveContext->GetSelectionRange(SelectionBeginIndex, SelectionLength, SelectionCaretPosition);
 
-					const YString ResultString = GetIMMStringAsFString(IMMContext, GCS_RESULTSTR);
+					const FString ResultString = GetIMMStringAsFString(IMMContext, GCS_RESULTSTR);
 					UE_LOG(LogWindowsTextInputMethodSystem, Verbose, TEXT("WM_IME_COMPOSITION Result String: %s"), *ResultString);
 
 					// Update Result
@@ -938,7 +938,7 @@ int32 FWindowsTextInputMethodSystem::ProcessMessage(HWND hwnd, uint32 msg, WPARA
 				// Check Composition
 				if(bHasCompositionStringFlag)
 				{
-					const YString CompositionString = GetIMMStringAsFString(IMMContext, GCS_COMPSTR);
+					const FString CompositionString = GetIMMStringAsFString(IMMContext, GCS_COMPSTR);
 					UE_LOG(LogWindowsTextInputMethodSystem, Verbose, TEXT("WM_IME_COMPOSITION Composition String: %s"), *CompositionString);
 
 					// Not all IMEs send a cancel request when you press escape, but instead just set the string to empty

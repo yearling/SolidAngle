@@ -13,9 +13,9 @@ DEFINE_LOG_CATEGORY_STATIC(LogApp, Log, All);
 
 FGuid FApp::InstanceId = FGuid::NewGuid();
 FGuid FApp::SessionId = FGuid::NewGuid();
-YString FApp::SessionName = YString();
-YString FApp::SessionOwner = YString();
-TArray<YString> FApp::SessionUsers = TArray<YString>();
+FString FApp::SessionName = FString();
+FString FApp::SessionOwner = FString();
+TArray<FString> FApp::SessionUsers = TArray<FString>();
 bool FApp::Standalone = true;
 bool FApp::bIsBenchmarking = false;
 bool FApp::bUseFixedSeed = false;
@@ -34,9 +34,9 @@ bool FApp::bHasVRFocus = false;
 /* FApp static interface
  *****************************************************************************/
 
-YString FApp::GetBranchName()
+FString FApp::GetBranchName()
 {
-	return YString(TEXT(BRANCH_NAME));
+	return FString(TEXT(BRANCH_NAME));
 }
 
 const TCHAR* FApp::GetBuildVersion()
@@ -50,9 +50,9 @@ int32 FApp::GetEngineIsPromotedBuild()
 }
 
 
-YString FApp::GetEpicProductIdentifier()
+FString FApp::GetEpicProductIdentifier()
 {
-	return YString(TEXT(EPIC_PRODUCT_IDENTIFIER));
+	return FString(TEXT(EPIC_PRODUCT_IDENTIFIER));
 }
 
 const TCHAR * FApp::GetDeploymentName()
@@ -98,16 +98,16 @@ EBuildConfigurations::Type FApp::GetBuildConfiguration()
 }
 
 
-YString FApp::GetBuildDate()
+FString FApp::GetBuildDate()
 {
-	return YString(ANSI_TO_TCHAR(__DATE__));
+	return FString(ANSI_TO_TCHAR(__DATE__));
 }
 
 
 void FApp::InitializeSession()
 {
 	// parse session details on command line
-	YString InstanceIdString;
+	FString InstanceIdString;
 
 	if (FParse::Value(FCommandLine::Get(), TEXT("-InstanceId="), InstanceIdString))
 	{
@@ -122,7 +122,7 @@ void FApp::InitializeSession()
 		InstanceId = FGuid::NewGuid();
 	}
 
-	YString SessionIdString;
+	FString SessionIdString;
 
 	if (FParse::Value(FCommandLine::Get(), TEXT("-SessionId="), SessionIdString))
 	{
@@ -163,7 +163,7 @@ bool FApp::IsEngineInstalled()
 	if (EngineInstalledState == -1)
 	{
 		bool bIsInstalledEngine = IsInstalled();
-		YString InstalledBuildFile = YPaths::RootDir() / TEXT("Engine/Build/InstalledBuild.txt");
+		FString InstalledBuildFile = YPaths::RootDir() / TEXT("Engine/Build/InstalledBuild.txt");
 		YPaths::NormalizeFilename(InstalledBuildFile);
 		bIsInstalledEngine |= IFileManager::Get().FileExists(*InstalledBuildFile);
 		// Allow commandline options to disable/enable installed engine behavior

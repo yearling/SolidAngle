@@ -6,7 +6,7 @@
 #include "Templates/UnrealTemplate.h"
 #include "Containers/Array.h"
 #include "Misc/CString.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "UObject/NameTypes.h"
 #include "Logging/LogMacros.h"
 #include "Misc/Parse.h"
@@ -312,7 +312,7 @@ TStatIdData TStatId::TStatId_NAME_None;
 void FStartupMessages::AddThreadMetadata( const FName InThreadName, uint32 InThreadID )
 {
 	// Make unique name.
-	const YString ThreadName = FStatsUtils::BuildUniqueThreadName( InThreadID );
+	const FString ThreadName = FStatsUtils::BuildUniqueThreadName( InThreadID );
 
 	FStartupMessages::AddMetadata( InThreadName, *ThreadName, STAT_GROUP_TO_FStatGroup( STATGROUP_Threads )::GetGroupName(), STAT_GROUP_TO_FStatGroup( STATGROUP_Threads )::GetGroupCategory(), STAT_GROUP_TO_FStatGroup( STATGROUP_Threads )::GetDescription(), true, EStatDataType::ST_int64, true );
 }
@@ -572,7 +572,7 @@ public:
 		--PendingCount;
 		TStatIdData* Result = PendingStatIds;
 
-		const YString StatDescription = InDescription ? InDescription : StatShortName.GetPlainNameString();
+		const FString StatDescription = InDescription ? InDescription : StatShortName.GetPlainNameString();
 
 		// Get the wide stat description.
 		const int32 StatDescLen = StatDescription.Len() + 1;
@@ -637,9 +637,9 @@ public:
 
 	FName CheckGroup(TCHAR const *& Cmd, bool Enable)
 	{
-		YString MaybeGroup;
+		FString MaybeGroup;
 		FParse::Token(Cmd, MaybeGroup, false);
-		MaybeGroup = YString(TEXT("STATGROUP_")) + MaybeGroup;
+		MaybeGroup = FString(TEXT("STATGROUP_")) + MaybeGroup;
 		FName MaybeGroupFName(*MaybeGroup);
 
 		FGroupEnable* Found = HighPerformanceEnable.Find(MaybeGroupFName);
@@ -655,7 +655,7 @@ public:
 		return MaybeGroupFName;
 	}
 
-	void StatGroupEnableManagerCommand(YString const& InCmd) override
+	void StatGroupEnableManagerCommand(FString const& InCmd) override
 	{
 		FScopeLock ScopeLock(&SynchronizationObject);
 		const TCHAR* Cmd = *InCmd;
@@ -715,7 +715,7 @@ IStatGroupEnableManager& IStatGroupEnableManager::Get()
 
 FName FStatNameAndInfo::ToLongName(FName InStatName, char const* InGroup, char const* InCategory, TCHAR const* InDescription)
 {
-	YString LongName;
+	FString LongName;
 	LongName.Reserve(255);
 	if (InGroup)
 	{
@@ -741,7 +741,7 @@ FName FStatNameAndInfo::ToLongName(FName InStatName, char const* InGroup, char c
 
 FName FStatNameAndInfo::GetShortNameFrom(FName InLongName)
 {
-	YString Input(InLongName.ToString());
+	FString Input(InLongName.ToString());
 
 	if (Input.StartsWith(TEXT("//"), ESearchCase::CaseSensitive))
 	{
@@ -769,7 +769,7 @@ FName FStatNameAndInfo::GetShortNameFrom(FName InLongName)
 
 FName FStatNameAndInfo::GetGroupNameFrom(FName InLongName)
 {
-	YString Input(InLongName.ToString());
+	FString Input(InLongName.ToString());
 
 	if (Input.StartsWith(TEXT("//"), ESearchCase::CaseSensitive))
 	{
@@ -784,9 +784,9 @@ FName FStatNameAndInfo::GetGroupNameFrom(FName InLongName)
 	return NAME_None;
 }
 
-YString FStatNameAndInfo::GetDescriptionFrom(FName InLongName)
+FString FStatNameAndInfo::GetDescriptionFrom(FName InLongName)
 {
-	YString Input(InLongName.ToString());
+	FString Input(InLongName.ToString());
 
 	const int32 IndexStart = Input.Find(TEXT("///"), ESearchCase::CaseSensitive);
 	if (IndexStart != INDEX_NONE)
@@ -798,12 +798,12 @@ YString FStatNameAndInfo::GetDescriptionFrom(FName InLongName)
 			return FStatsUtils::FromEscapedFString(*Input.Left(IndexEnd));
 		}
 	}
-	return YString();
+	return FString();
 }
 
 FName FStatNameAndInfo::GetGroupCategoryFrom(FName InLongName)
 {
-	YString Input(InLongName.ToString());
+	FString Input(InLongName.ToString());
 
 	const int32 IndexStart = Input.Find(TEXT("####"), ESearchCase::CaseSensitive);
 	if (IndexStart != INDEX_NONE)
@@ -1047,8 +1047,8 @@ FThreadStats::FThreadStats():
 {
 	Packet.SetThreadProperties();
 
-	check(YPlatformTLS::IsValidTlsSlot(TlsSlot));
-	YPlatformTLS::SetTlsValue(TlsSlot, this);
+	check(FPlatformTLS::IsValidTlsSlot(TlsSlot));
+	FPlatformTLS::SetTlsValue(TlsSlot, this);
 }
 
 FThreadStats::FThreadStats( EConstructor ):
@@ -1199,20 +1199,20 @@ void FThreadStats::FlushRawStats( bool bHasBrokenCallstacks /*= false*/, bool bF
 
 void FThreadStats::CheckForCollectingStartupStats()
 {
-	YString CmdLine(FCommandLine::Get());
-	YString StatCmds(TEXT("-StatCmds="));
+	FString CmdLine(FCommandLine::Get());
+	FString StatCmds(TEXT("-StatCmds="));
 	while (1)
 	{
-		YString Cmds;
+		FString Cmds;
 		if (!FParse::Value(*CmdLine, *StatCmds, Cmds, false))
 		{
 			break;
 		}
-		TArray<YString> CmdsArray;
+		TArray<FString> CmdsArray;
 		Cmds.ParseIntoArray(CmdsArray, TEXT( "," ), true);
 		for (int32 Index = 0; Index < CmdsArray.Num(); Index++)
 		{
-			YString StatCmd = YString("stat ") + CmdsArray[Index].Trim();
+			FString StatCmd = FString("stat ") + CmdsArray[Index].Trim();
 			UE_LOG(LogStatGroupEnableManager, Log, TEXT("Sending Stat Command '%s'"), *StatCmd);
 			DirectStatsCommand(*StatCmd);
 		}
@@ -1290,7 +1290,7 @@ void FThreadStats::StartThread()
 
 	if (!TlsSlot)
 	{
-		TlsSlot = YPlatformTLS::AllocTlsSlot();
+		TlsSlot = FPlatformTLS::AllocTlsSlot();
 	}
 	check(IsThreadingReady());
 	CheckEnable();
@@ -1299,7 +1299,7 @@ void FThreadStats::StartThread()
 	{
 		FThreadStats::ExplicitFlush(); // flush the stats and set update the scope so we don't flush again until a frame update, this helps prevent fragmentation
 	}
-	FStartupMessages::Get().AddThreadMetadata( NAME_GameThread, YPlatformTLS::GetCurrentThreadId() );
+	FStartupMessages::Get().AddThreadMetadata( NAME_GameThread, FPlatformTLS::GetCurrentThreadId() );
 
 	CheckForCollectingStartupStats();
 

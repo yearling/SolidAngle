@@ -5,7 +5,7 @@ GenericPlatformFile.h: Generic platform file interfaces
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Misc/DateTime.h"
 #include "Misc/EnumClassFlags.h"
 
@@ -212,7 +212,7 @@ public:
 	/**
 	* Identifies any platform specific paths that are guaranteed to be local (i.e. cache, scratch space)
 	*/
-	virtual void		AddLocalDirectories(TArray<YString> &LocalDirectories)
+	virtual void		AddLocalDirectories(TArray<FString> &LocalDirectories)
 	{
 		if (GetLowerLevel())
 		{
@@ -253,7 +253,7 @@ public:
 	/** Return the last access time of a file. Returns YDateTime::MinValue() on failure **/
 	virtual FDateTime	GetAccessTimeStamp(const TCHAR* Filename) = 0;
 	/** For case insensitive filesystems, returns the full path of the file with the same case as in the filesystem */
-	virtual YString GetFilenameOnDisk(const TCHAR* Filename) = 0;
+	virtual FString GetFilenameOnDisk(const TCHAR* Filename) = 0;
 
 	/** Attempt to open a file for reading.
 	*
@@ -385,7 +385,7 @@ public:
 	*
 	* @return	filename using absolute path
 	*/
-	virtual YString ConvertToAbsolutePathForExternalAppForRead(const TCHAR* Filename);
+	virtual FString ConvertToAbsolutePathForExternalAppForRead(const TCHAR* Filename);
 
 	/**
 	* Converts passed in filename to use an absolute path (for writing)
@@ -394,7 +394,7 @@ public:
 	*
 	* @return	filename using absolute path
 	*/
-	virtual YString ConvertToAbsolutePathForExternalAppForWrite(const TCHAR* Filename);
+	virtual FString ConvertToAbsolutePathForExternalAppForWrite(const TCHAR* Filename);
 
 	/**
 	* Helper class to send/receive data to the file server function

@@ -2,7 +2,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Map.h"
 #include "Internationalization/Text.h"
 #include "Internationalization/Culture.h"
@@ -15,48 +15,48 @@ class FCulture::FLegacyCultureImplementation
 
 	FLegacyCultureImplementation(
 		const FText& InDisplaFName, 
-		const YString& InEnglishName, 
+		const FString& InEnglishName, 
 		const int InKeyboardLayoutId, 
 		const int InLCID, 
-		const YString& InName, 
-		const YString& InNativeName, 
-		const YString& InUnrealLegacyThreeLetterISOLanguageName, 
-		const YString& InThreeLetterISOLanguageName, 
-		const YString& InTwoLetterISOLanguageName,
+		const FString& InName, 
+		const FString& InNativeName, 
+		const FString& InUnrealLegacyThreeLetterISOLanguageName, 
+		const FString& InThreeLetterISOLanguageName, 
+		const FString& InTwoLetterISOLanguageName,
 		const FDecimalNumberFormattingRules& InDecimalNumberFormattingRules,
 		const FDecimalNumberFormattingRules& InPercentFormattingRules,
 		const FDecimalNumberFormattingRules& InBaseCurrencyFormattingRules
 		);
 
-	YString GetDisplaFName() const;
+	FString GetDisplaFName() const;
 
-	YString GetEnglishName() const;
+	FString GetEnglishName() const;
 
 	int GetKeyboardLayoutId() const;
 
 	int GetLCID() const;
 
-	static YString GetCanonicalName(const YString& Name);
+	static FString GetCanonicalName(const FString& Name);
 
-	YString GetName() const;
+	FString GetName() const;
 
-	YString GetNativeName() const;
+	FString GetNativeName() const;
 
-	YString GetUnrealLegacyThreeLetterISOLanguageName() const;
+	FString GetUnrealLegacyThreeLetterISOLanguageName() const;
 
-	YString GetThreeLetterISOLanguageName() const;
+	FString GetThreeLetterISOLanguageName() const;
 
-	YString GetTwoLetterISOLanguageName() const;
+	FString GetTwoLetterISOLanguageName() const;
 
-	YString GetNativeLanguage() const;
+	FString GetNativeLanguage() const;
 
-	YString GetNativeRegion() const;
+	FString GetNativeRegion() const;
 
 	const FDecimalNumberFormattingRules& GetDecimalNumberFormattingRules();
 
 	const FDecimalNumberFormattingRules& GetPercentFormattingRules();
 
-	const FDecimalNumberFormattingRules& GetCurrencyFormattingRules(const YString& InCurrencyCode);
+	const FDecimalNumberFormattingRules& GetCurrencyFormattingRules(const FString& InCurrencyCode);
 
 	ETextPluralForm GetPluralForm(int32 Val, const ETextPluralType PluralType);
 
@@ -66,7 +66,7 @@ class FCulture::FLegacyCultureImplementation
 	const FText DisplaFName;
 
 	// The English name of the culture in format languagefull [country/regionfull]
-	const YString EnglishName;
+	const FString EnglishName;
 
 	// Keyboard input locale id
 	const int KeyboardLayoutId;
@@ -75,19 +75,19 @@ class FCulture::FLegacyCultureImplementation
 	const int LCID;
 
 	// Name of the culture in languagecode2-country/regioncode2 format
-	const YString Name;
+	const FString Name;
 
 	// The culture name, consisting of the language, the country/region, and the optional script
-	const YString NativeName;
+	const FString NativeName;
 
 	// ISO 639-2 three letter code of the language - for the purpose of supporting legacy Unreal documentation.
-	const YString UnrealLegacyThreeLetterISOLanguageName;
+	const FString UnrealLegacyThreeLetterISOLanguageName;
 
 	// ISO 639-2 three letter code of the language
-	const YString ThreeLetterISOLanguageName;
+	const FString ThreeLetterISOLanguageName;
 
 	// ISO 639-1 two letter code of the language
-	const YString TwoLetterISOLanguageName;
+	const FString TwoLetterISOLanguageName;
 
 	// Rules for formatting decimal numbers in this culture
 	const FDecimalNumberFormattingRules DecimalNumberFormattingRules;
@@ -99,7 +99,7 @@ class FCulture::FLegacyCultureImplementation
 	const FDecimalNumberFormattingRules BaseCurrencyFormattingRules;
 
 	// Rules for formatting alternate currencies in this culture
-	TMap<YString, TSharedPtr<const FDecimalNumberFormattingRules>> UEAlternateCurrencyFormattingRules;
+	TMap<FString, TSharedPtr<const FDecimalNumberFormattingRules>> UEAlternateCurrencyFormattingRules;
 	FCriticalSection UEAlternateCurrencyFormattingRulesCS;
 };
 #endif

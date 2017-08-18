@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "UObject/NameTypes.h"
 #include "Math/Vector2D.h"
 #include "Templates/SharedPointer.h"
@@ -420,17 +420,17 @@ public:
 
 	}
 
-	virtual EDropEffect::Type OnDragEnterText(const TSharedRef< FGenericWindow >& Window, const YString& Text)
+	virtual EDropEffect::Type OnDragEnterText(const TSharedRef< FGenericWindow >& Window, const FString& Text)
 	{
 		return EDropEffect::None;
 	}
 
-	virtual EDropEffect::Type OnDragEnterFiles(const TSharedRef< FGenericWindow >& Window, const TArray< YString >& Files)
+	virtual EDropEffect::Type OnDragEnterFiles(const TSharedRef< FGenericWindow >& Window, const TArray< FString >& Files)
 	{
 		return EDropEffect::None;
 	}
 
-	virtual EDropEffect::Type OnDragEnterExternal(const TSharedRef< FGenericWindow >& Window, const YString& Text, const TArray< YString >& Files)
+	virtual EDropEffect::Type OnDragEnterExternal(const TSharedRef< FGenericWindow >& Window, const FString& Text, const TArray< FString >& Files)
 	{
 		return EDropEffect::None;
 	}

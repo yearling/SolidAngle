@@ -11,7 +11,7 @@ DEFINE_LOG_CATEGORY( LogNetVersion );
 FNetworkVersion::FGetLocalNetworkVersionOverride FNetworkVersion::GetLocalNetworkVersionOverride;
 FNetworkVersion::FIsNetworkCompatibleOverride FNetworkVersion::IsNetworkCompatibleOverride;
 
-YString FNetworkVersion::ProjectVersion;
+FString FNetworkVersion::ProjectVersion;
 
 enum EEngineNetworkVersionHistory
 {
@@ -78,7 +78,7 @@ uint32 FNetworkVersion::GetLocalNetworkVersion( bool AllowOverrideDelegate /*=tr
 	}
 
 	// Get the project name (NOT case sensitive)
-	const YString ProjectName( YString( FApp::GetGameName() ).ToLower() );
+	const FString ProjectName( FString( FApp::GetGameName() ).ToLower() );
 
 	// Start with project name+compatible changelist as seed
 	CachedNetworkChecksum = FCrc::StrCrc32( *ProjectName, GetNetworkCompatibleChangelist() );

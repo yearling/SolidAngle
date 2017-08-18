@@ -2,7 +2,7 @@
 
 #include "CoreTypes.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Map.h"
 
 /**
@@ -12,30 +12,30 @@ class CORE_API FUProjectDictionary
 {
 public:
 	/** Scans the engine root directory for all the known projects. */
-	FUProjectDictionary(const YString& InRootDir);
+	FUProjectDictionary(const FString& InRootDir);
 
 	/** Refreshes the list of known projects */
 	void Refresh();
 
 	/** Determines whether a project is a foreign project or not. */
-	bool IsForeignProject(const YString& ProjectFileName) const;
+	bool IsForeignProject(const FString& ProjectFileName) const;
 
 	/** Gets the project filename for the given game. Empty if not found. */
-	YString GetRelativeProjectPathForGame(const TCHAR* GameName, const YString& BaseDir) const;
+	FString GetRelativeProjectPathForGame(const TCHAR* GameName, const FString& BaseDir) const;
 
 	/** Gets a list of all the known projects. */
-	TArray<YString> GetProjectPaths() const;
+	TArray<FString> GetProjectPaths() const;
 
 	/** Gets the project dictionary for the active engine installation. */
 	static FUProjectDictionary& GetDefault();
 
 private:
 	/** The root directory for this engine installation */
-	YString RootDir;
+	FString RootDir;
 
 	/** List of project root directories */
-	TArray<YString> ProjectRootDirs;
+	TArray<FString> ProjectRootDirs;
 
 	/** Map of short game names to full project paths. */
-	TMap<YString, YString> ShortProjectNameDictionary;
+	TMap<FString, FString> ShortProjectNameDictionary;
 };

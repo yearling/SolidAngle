@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Internationalization/TextNamespaceFwd.h"
 #include "Serialization/Archive.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 
 struct FUntypedBulkData;
 
@@ -73,7 +73,7 @@ public:
 		InnerArchive.CountBytes(InNum, InMax);
 	}
 
-	CORE_API virtual YString GetArchiveName() const override;
+	CORE_API virtual FString GetArchiveName() const override;
 
 	virtual class FLinker* GetLinker() override
 	{
@@ -81,8 +81,8 @@ public:
 	}
 
 #if USE_STABLE_LOCALIZATION_KEYS
-	CORE_API virtual void SetLocalizationNamespace(const YString& InLocalizationNamespace) override;
-	CORE_API virtual YString GetLocalizationNamespace() const override;
+	CORE_API virtual void SetLocalizationNamespace(const FString& InLocalizationNamespace) override;
+	CORE_API virtual FString GetLocalizationNamespace() const override;
 #endif // USE_STABLE_LOCALIZATION_KEYS
 
 	virtual int64 Tell() override

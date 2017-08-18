@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Map.h"
 #include "Misc/Parse.h"
 #include "Containers/StringConv.h"
@@ -23,7 +23,7 @@ protected:
 	IPlatformFile*			LowerLevel;
 	FCriticalSection		CriticalSection;
 	int64					OpenOrder;
-	TMap<YString, int64>	FilenameAccessMap;
+	TMap<FString, int64>	FilenameAccessMap;
 	TArray<IFileHandle*>	LogOutput;
 
 public:
@@ -47,13 +47,13 @@ public:
 	virtual bool Initialize(IPlatformFile* Inner, const TCHAR* CommandLineParam) override
 	{
 		LowerLevel = Inner;
-		YString LogFileDirectory;
-		YString LogFilePath;
-		YString PlatformStr;
+		FString LogFileDirectory;
+		FString LogFilePath;
+		FString PlatformStr;
 
 		if (FParse::Value(CommandLineParam, TEXT("TARGETPLATFORM="), PlatformStr))
 		{
-			TArray<YString> PlatformNames;
+			TArray<FString> PlatformNames;
 			if (!(PlatformStr == TEXT("None") || PlatformStr == TEXT("All")))
 			{
 				PlatformStr.ParseIntoArray(PlatformNames, TEXT("+"), true);
@@ -144,7 +144,7 @@ public:
 	{
 		return LowerLevel->GetAccessTimeStamp(Filename);
 	}
-	virtual YString	GetFilenameOnDisk(const TCHAR* Filename) override
+	virtual FString	GetFilenameOnDisk(const TCHAR* Filename) override
 	{
 		return LowerLevel->GetFilenameOnDisk(Filename);
 	}
@@ -157,7 +157,7 @@ public:
 			if (FilenameAccessMap.Find(Filename) == nullptr)
 			{
 				FilenameAccessMap.Emplace(Filename, ++OpenOrder);
-				YString Text = YString::Printf(TEXT("\"%s\" %llu\n"), Filename, OpenOrder);
+				FString Text = FString::Printf(TEXT("\"%s\" %llu\n"), Filename, OpenOrder);
 				for (auto File = LogOutput.CreateIterator(); File; ++File)
 				{
 					(*File)->Write((uint8*)StringCast<ANSICHAR>(*Text).Get(), Text.Len());
@@ -219,11 +219,11 @@ public:
 	{
 		return LowerLevel->CopyDirectoryTree(DestinationDirectory, Source, bOverwriteAllExisting);
 	}
-	virtual YString		ConvertToAbsolutePathForExternalAppForRead(const TCHAR* Filename) override
+	virtual FString		ConvertToAbsolutePathForExternalAppForRead(const TCHAR* Filename) override
 	{
 		return LowerLevel->ConvertToAbsolutePathForExternalAppForRead(Filename);
 	}
-	virtual YString		ConvertToAbsolutePathForExternalAppForWrite(const TCHAR* Filename) override
+	virtual FString		ConvertToAbsolutePathForExternalAppForWrite(const TCHAR* Filename) override
 	{
 		return LowerLevel->ConvertToAbsolutePathForExternalAppForWrite(Filename);
 	}
@@ -240,7 +240,7 @@ public:
 			if (FilenameAccessMap.Find(Filename) == nullptr)
 			{
 				FilenameAccessMap.Emplace(Filename, ++OpenOrder);
-				YString Text = YString::Printf(TEXT("\"%s\" %llu\n"), Filename, OpenOrder);
+				FString Text = FString::Printf(TEXT("\"%s\" %llu\n"), Filename, OpenOrder);
 				for (auto File = LogOutput.CreateIterator(); File; ++File)
 				{
 					(*File)->Write((uint8*)StringCast<ANSICHAR>(*Text).Get(), Text.Len());

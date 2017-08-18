@@ -10,7 +10,7 @@ MallocProfiler.h: Memory profiling support.
 #include "HAL/MemoryBase.h"
 #include "Serialization/Archive.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Map.h"
 #include "UObject/NameTypes.h"
 #include "Misc/CompressedGrowableBuffer.h"
@@ -149,9 +149,9 @@ public:
 	/** Buffered data being serialized before GameName has been set up. */
 	TArray<uint8>	BufferedData;
 	/** Timestamped filename with path.	*/
-	YString		FullFilepath;
+	FString		FullFilepath;
 	/** Timestamped file path for the memory captures, just add extension. */
-	YString			BaseFilePath;
+	FString			BaseFilePath;
 
 	/**
 	* Constructor. Called before GMalloc is initialized!!!
@@ -230,12 +230,12 @@ protected:
 	/** Mapping from a hash to an index in the tags array.											*/
 	TMap<uint32, int32>						HashToTagTableIndexMap;
 	/** Array of unique tags.																		*/
-	TArray<YString>							TagsArray;
+	TArray<FString>							TagsArray;
 
 	/** Mapping from name to index in name array.													*/
-	TMap<YString, int32>						NameToNameTableIndexMap;
+	TMap<FString, int32>						NameToNameTableIndexMap;
 	/** Array of unique names.																		*/
-	TArray<YString>							NameArray;
+	TArray<FString>							NameArray;
 
 	/** Whether the output file has been closed. */
 	bool									bOutputFileClosed;
@@ -255,7 +255,7 @@ protected:
 	/** Returns true if malloc profiler is outside one of the tracking methods, returns false otherwise. */
 	bool IsOutsideTrackingFunction() const
 	{
-		const uint32 CurrentThreadId = YPlatformTLS::GetCurrentThreadId();
+		const uint32 CurrentThreadId = FPlatformTLS::GetCurrentThreadId();
 		return (SyncObjectLockCount == 0) || (ThreadId != CurrentThreadId);
 	}
 
@@ -287,7 +287,7 @@ protected:
 	* @param	Name	Name to find index for
 	* @return	Index of passed in name
 	*/
-	int32 GetNameTableIndex(const YString& Name);
+	int32 GetNameTableIndex(const FString& Name);
 
 	/**
 	* Returns index of passed in name into name array. If not found, adds it.
@@ -338,7 +338,7 @@ protected:
 	/**
 	* Embeds token into stream to snapshot memory at this point.
 	*/
-	void SnapshotMemory(EProfilingPayloadSubType SubType, const YString& MarkerName);
+	void SnapshotMemory(EProfilingPayloadSubType SubType, const FString& MarkerName);
 
 	/**
 	* Embeds float token into stream (e.g. delta time).
@@ -382,13 +382,13 @@ protected:
 
 public:
 	/** Snapshot taken when engine has started the cleaning process before loading a new level. */
-	static void SnapshotMemoryLoadMapStart(const YString& MapName);
+	static void SnapshotMemoryLoadMapStart(const FString& MapName);
 
 	/** Snapshot taken when a new level has started loading. */
-	static void SnapshotMemoryLoadMapMid(const YString& MapName);
+	static void SnapshotMemoryLoadMapMid(const FString& MapName);
 
 	/** Snapshot taken when a new level has been loaded. */
-	static void SnapshotMemoryLoadMapEnd(const YString& MapName);
+	static void SnapshotMemoryLoadMapEnd(const FString& MapName);
 
 	/** Snapshot taken when garbage collection has started. */
 	static void SnapshotMemoryGCStart();
@@ -397,10 +397,10 @@ public:
 	static void SnapshotMemoryGCEnd();
 
 	/** Snapshot taken when a new streaming level has been requested to load. */
-	static void SnapshotMemoryLevelStreamStart(const YString& LevelName);
+	static void SnapshotMemoryLevelStreamStart(const FString& LevelName);
 
 	/** Snapshot taken when a previously  streamed level has been made visible. */
-	static void SnapshotMemoryLevelStreamEnd(const YString& LevelName);
+	static void SnapshotMemoryLevelStreamEnd(const FString& LevelName);
 
 	/** Returns malloc we're based on. */
 	virtual FMalloc* GetInnermostMalloc()

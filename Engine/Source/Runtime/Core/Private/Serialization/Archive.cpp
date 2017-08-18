@@ -7,7 +7,7 @@
 #include "Math/UnrealMathUtility.h"
 #include "HAL/UnrealMemory.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "UObject/NameTypes.h"
 #include "Logging/LogMacros.h"
 #include "Misc/Parse.h"
@@ -133,7 +133,7 @@ void FArchive::Reset()
 	EditorOnlyPropertyStack = 0;
 #endif
 #if USE_STABLE_LOCALIZATION_KEYS
-	SetBaseLocalizationNamespace(YString());
+	SetBaseLocalizationNamespace(FString());
 #endif // USE_STABLE_LOCALIZATION_KEYS
 #if WITH_EDITOR
 	ArDebugSerializationFlags			= 0;
@@ -194,13 +194,13 @@ void FArchive::CopyTrivialYArchiveStatusMembers(const FArchive& ArchiveToCopy)
  *
  * This is overridden for the specific Archive Types
  **/
-YString FArchive::GetArchiveName() const
+FString FArchive::GetArchiveName() const
 {
 	return TEXT("YArchive");
 }
 
 #if USE_STABLE_LOCALIZATION_KEYS
-void FArchive::SetBaseLocalizationNamespace(const YString& InLocalizationNamespace)
+void FArchive::SetBaseLocalizationNamespace(const FString& InLocalizationNamespace)
 {
 	if (InLocalizationNamespace.IsEmpty())
 	{
@@ -211,20 +211,20 @@ void FArchive::SetBaseLocalizationNamespace(const YString& InLocalizationNamespa
 	{
 		if (!LocalizationNamespacePtr)
 		{
-			LocalizationNamespacePtr = new YString();
+			LocalizationNamespacePtr = new FString();
 		}
 		*LocalizationNamespacePtr = InLocalizationNamespace;
 	}
 }
-YString FArchive::GetBaseLocalizationNamespace() const
+FString FArchive::GetBaseLocalizationNamespace() const
 {
-	return LocalizationNamespacePtr ? *LocalizationNamespacePtr : YString();
+	return LocalizationNamespacePtr ? *LocalizationNamespacePtr : FString();
 }
-void FArchive::SetLocalizationNamespace(const YString& InLocalizationNamespace)
+void FArchive::SetLocalizationNamespace(const FString& InLocalizationNamespace)
 {
 	SetBaseLocalizationNamespace(InLocalizationNamespace);
 }
-YString FArchive::GetLocalizationNamespace() const
+FString FArchive::GetLocalizationNamespace() const
 {
 	return GetBaseLocalizationNamespace();
 }
@@ -372,17 +372,17 @@ void FArchive::SetCustomVersion(const FGuid& Key, int32 Version, FName FriendlFN
 	const_cast<FCustomVersionContainer&>(GetCustomVersions()).SetVersion(Key, Version, FriendlFName);
 }
 
-YString YArchiveProxy::GetArchiveName() const
+FString YArchiveProxy::GetArchiveName() const
 {
 	return InnerArchive.GetArchiveName();
 }
 
 #if USE_STABLE_LOCALIZATION_KEYS
-void YArchiveProxy::SetLocalizationNamespace(const YString& InLocalizationNamespace)
+void YArchiveProxy::SetLocalizationNamespace(const FString& InLocalizationNamespace)
 {
 	InnerArchive.SetLocalizationNamespace(InLocalizationNamespace);
 }
-YString YArchiveProxy::GetLocalizationNamespace() const
+FString YArchiveProxy::GetLocalizationNamespace() const
 {
 	return InnerArchive.GetLocalizationNamespace();
 }
@@ -395,13 +395,13 @@ FArchive& FNameAsStringProxyArchive::operator<<( class FName& N )
 {
 	if (IsLoading())
 	{
-		YString LoadedString;
+		FString LoadedString;
 		InnerArchive << LoadedString;
 		N = FName(*LoadedString);
 	}
 	else
 	{
-		YString SavedString(N.ToString());
+		FString SavedString(N.ToString());
 		InnerArchive << SavedString;
 	}
 	return *this;

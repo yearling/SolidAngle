@@ -24,7 +24,7 @@ bool FEngineBuildSettings::IsSourceDistribution()
 }
 
 
-bool FEngineBuildSettings::IsSourceDistribution(const YString& RootDir)
+bool FEngineBuildSettings::IsSourceDistribution(const FString& RootDir)
 {
 	static bool bIsSourceDistribution = YPaths::FileExists(RootDir / TEXT("Engine/Build/SourceDistribution.txt"));
 	return bIsSourceDistribution;

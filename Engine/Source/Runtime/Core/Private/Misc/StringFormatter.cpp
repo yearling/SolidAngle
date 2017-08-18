@@ -6,15 +6,15 @@
 
 #define LOCTEXT_NAMESPACE "StringFormatter"
 
-YStringFormatArg::YStringFormatArg( const int32 Value ) : Type(Int), IntValue(Value) {}
-YStringFormatArg::YStringFormatArg( const uint32 Value ) : Type(UInt), UIntValue(Value) {}
-YStringFormatArg::YStringFormatArg( const int64 Value ) : Type(Int), IntValue(Value) {}
-YStringFormatArg::YStringFormatArg( const uint64 Value ) : Type(UInt), UIntValue(Value) {}
-YStringFormatArg::YStringFormatArg( const float Value ) : Type(Double), DoubleValue(Value) {}
-YStringFormatArg::YStringFormatArg( const double Value ) : Type(Double), DoubleValue(Value) {}
-YStringFormatArg::YStringFormatArg( YString Value ) : Type(String), StringValue(MoveTemp(Value)) {}
-YStringFormatArg::YStringFormatArg( const TCHAR* Value ) : Type(StringLiteral), StringLiteralValue(Value) {}
-YStringFormatArg::YStringFormatArg( const YStringFormatArg& RHS )
+FStringFormatArg::FStringFormatArg( const int32 Value ) : Type(Int), IntValue(Value) {}
+FStringFormatArg::FStringFormatArg( const uint32 Value ) : Type(UInt), UIntValue(Value) {}
+FStringFormatArg::FStringFormatArg( const int64 Value ) : Type(Int), IntValue(Value) {}
+FStringFormatArg::FStringFormatArg( const uint64 Value ) : Type(UInt), UIntValue(Value) {}
+FStringFormatArg::FStringFormatArg( const float Value ) : Type(Double), DoubleValue(Value) {}
+FStringFormatArg::FStringFormatArg( const double Value ) : Type(Double), DoubleValue(Value) {}
+FStringFormatArg::FStringFormatArg( FString Value ) : Type(String), StringValue(MoveTemp(Value)) {}
+FStringFormatArg::FStringFormatArg( const TCHAR* Value ) : Type(StringLiteral), StringLiteralValue(Value) {}
+FStringFormatArg::FStringFormatArg( const FStringFormatArg& RHS )
 {
 	Type = RHS.Type;
 	switch (Type)
@@ -27,15 +27,15 @@ YStringFormatArg::YStringFormatArg( const YStringFormatArg& RHS )
 	}
 }
 
-void AppendToString(const YStringFormatArg& Arg, YString& StringToAppendTo)
+void AppendToString(const FStringFormatArg& Arg, FString& StringToAppendTo)
 {
 	switch(Arg.Type)
 	{
-		case YStringFormatArg::Int: 			StringToAppendTo.Append(Lex::ToString(Arg.IntValue)); break;
-		case YStringFormatArg::UInt: 			StringToAppendTo.Append(Lex::ToString(Arg.UIntValue)); break;
-		case YStringFormatArg::Double: 			StringToAppendTo.Append(Lex::ToString(Arg.DoubleValue)); break;
-		case YStringFormatArg::String: 			StringToAppendTo.AppendChars(*Arg.StringValue, Arg.StringValue.Len()); break;
-		case YStringFormatArg::StringLiteral: 	StringToAppendTo += Arg.StringLiteralValue; break;
+		case FStringFormatArg::Int: 			StringToAppendTo.Append(Lex::ToString(Arg.IntValue)); break;
+		case FStringFormatArg::UInt: 			StringToAppendTo.Append(Lex::ToString(Arg.UIntValue)); break;
+		case FStringFormatArg::Double: 			StringToAppendTo.Append(Lex::ToString(Arg.DoubleValue)); break;
+		case FStringFormatArg::String: 			StringToAppendTo.AppendChars(*Arg.StringValue, Arg.StringValue.Len()); break;
+		case FStringFormatArg::StringLiteral: 	StringToAppendTo += Arg.StringLiteralValue; break;
 	}
 }
 
@@ -90,7 +90,7 @@ DEFINE_EXPRESSION_NODE_TYPE(FEscapedCharacter, 0x48FF0754, 0x508941BB, 0x9D5447F
 FExpressionError GenerateErrorMsg(const FStringToken& Token)
 {
 	FFormatOrderedArguments Args;
-	Args.Add(FText::FromString(YString(Token.GetTokenEndPos()).Left(10) + TEXT("...")));
+	Args.Add(FText::FromString(FString(Token.GetTokenEndPos()).Left(10) + TEXT("...")));
 	return FExpressionError(FText::Format(LOCTEXT("InvalidTokenDefinition", "Invalid token definition at '{0}'"), Args));
 }
 
@@ -256,7 +256,7 @@ TOptional<FExpressionError> ParseEscapedChar(FExpressionTokenConsumer& Consumer,
 	}
 	else if (bEmitErrors)
 	{
-		YString CharStr;
+		FString CharStr;
 		CharStr += Character;
 		FFormatOrderedArguments Args;
 		Args.Add(FText::FromString(CharStr));
@@ -324,7 +324,7 @@ FStringFormatter::FStringFormatter()
 	StrictOrderedDefinitions.DefineToken([](FExpressionTokenConsumer& Consumer)	{ return ParseLiteral(Consumer, true); });
 }
 
-TValueOrError<YString, FExpressionError> FStringFormatter::FormatInternal(const TCHAR* InExpression, const TMap<YString, YStringFormatArg>& Args, bool bStrict) const
+TValueOrError<FString, FExpressionError> FStringFormatter::FormatInternal(const TCHAR* InExpression, const TMap<FString, FStringFormatArg>& Args, bool bStrict) const
 {
 	TValueOrError<TArray<FExpressionToken>, FExpressionError> Result = ExpressionParser::Lex(InExpression, bStrict ? StrictNamedDefinitions : NamedDefinitions);
 	if (!Result.IsValid())
@@ -339,7 +339,7 @@ TValueOrError<YString, FExpressionError> FStringFormatter::FormatInternal(const 
 	}
 	
 	// This code deliberately tries to reallocate as little as possible
-	YString Formatted;
+	FString Formatted;
 	Formatted.Reserve(Tokens.Last().Context.GetTokenEndPos() - InExpression);
 	for (auto& Token : Tokens)
 	{
@@ -353,7 +353,7 @@ TValueOrError<YString, FExpressionError> FStringFormatter::FormatInternal(const 
 		}
 		else if (const auto* FormatToken = Token.Node.Cast<FFormatSpecifier>())
 		{
-			const YStringFormatArg* Arg = nullptr;
+			const FStringFormatArg* Arg = nullptr;
 			for (auto& Pair : Args)
 			{
 				if (Pair.Key.Len() == FormatToken->Len && FCString::Strnicmp(FormatToken->Identifier.GetTokenStartPos(), *Pair.Key, FormatToken->Len) == 0)
@@ -383,7 +383,7 @@ TValueOrError<YString, FExpressionError> FStringFormatter::FormatInternal(const 
 	return MakeValue(Formatted);
 }
 
-TValueOrError<YString, FExpressionError> FStringFormatter::FormatInternal(const TCHAR* InExpression, const TArray<YStringFormatArg>& Args, bool bStrict) const
+TValueOrError<FString, FExpressionError> FStringFormatter::FormatInternal(const TCHAR* InExpression, const TArray<FStringFormatArg>& Args, bool bStrict) const
 {
 	TValueOrError<TArray<FExpressionToken>, FExpressionError> Result = ExpressionParser::Lex(InExpression, bStrict ? StrictOrderedDefinitions : OrderedDefinitions);
 	if (!Result.IsValid())
@@ -398,7 +398,7 @@ TValueOrError<YString, FExpressionError> FStringFormatter::FormatInternal(const 
 	}
 	
 	// This code deliberately tries to reallocate as little as possible
-	YString Formatted;
+	FString Formatted;
 	Formatted.Reserve(Tokens.Last().Context.GetTokenEndPos() - InExpression);
 	for (auto& Token : Tokens)
 	{
@@ -435,12 +435,12 @@ TValueOrError<YString, FExpressionError> FStringFormatter::FormatInternal(const 
 /** Default formatter for string formatting - thread safe since all formatting is const */
 FStringFormatter DefaultFormatter;
 
-YString YString::Format(const TCHAR* InFormatString, const TMap<YString, YStringFormatArg>& InNamedArguments)
+FString FString::Format(const TCHAR* InFormatString, const TMap<FString, FStringFormatArg>& InNamedArguments)
 {
 	return DefaultFormatter.Format(InFormatString, InNamedArguments);
 }
 
-YString YString::Format(const TCHAR* InFormatString, const TArray<YStringFormatArg>& InOrderedArguments)
+FString FString::Format(const TCHAR* InFormatString, const TArray<FStringFormatArg>& InOrderedArguments)
 {
 	return DefaultFormatter.Format(InFormatString, InOrderedArguments);
 }
@@ -448,32 +448,32 @@ YString YString::Format(const TCHAR* InFormatString, const TArray<YStringFormatA
 // Don't include this code in shipping or perf test builds
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
 
-bool TestStrings(FAutomationTestBase& Test, const TCHAR* Format, const TMap<YString, YStringFormatArg>& Arguments, const TCHAR* ExpectedResult)
+bool TestStrings(FAutomationTestBase& Test, const TCHAR* Format, const TMap<FString, FStringFormatArg>& Arguments, const TCHAR* ExpectedResult)
 {
-	YString Result = YString::Format(Format, Arguments);
+	FString Result = FString::Format(Format, Arguments);
 	if (FCString::Strcmp(*Result, ExpectedResult) != 0)
 	{
-		Test.AddError(FText::Format(LOCTEXT("TestError", "YString::Format failed. \"{0}\" != \"{1}\""), FText::FromString(Result), FText::FromString(ExpectedResult)).ToString());
+		Test.AddError(FText::Format(LOCTEXT("TestError", "FString::Format failed. \"{0}\" != \"{1}\""), FText::FromString(Result), FText::FromString(ExpectedResult)).ToString());
 		return false;
 	}
 	return true;
 }
 
-bool TestStrings(FAutomationTestBase& Test, const TCHAR* Format, const TArray<YStringFormatArg>& Arguments, const TCHAR* ExpectedResult)
+bool TestStrings(FAutomationTestBase& Test, const TCHAR* Format, const TArray<FStringFormatArg>& Arguments, const TCHAR* ExpectedResult)
 {
-	YString Result = YString::Format(Format, Arguments);
+	FString Result = FString::Format(Format, Arguments);
 	if (FCString::Strcmp(*Result, ExpectedResult) != 0)
 	{
-		Test.AddError(FText::Format(LOCTEXT("TestError", "YString::Format failed. \"{0}\" != \"{1}\""), FText::FromString(Result), FText::FromString(ExpectedResult)).ToString());
+		Test.AddError(FText::Format(LOCTEXT("TestError", "FString::Format failed. \"{0}\" != \"{1}\""), FText::FromString(Result), FText::FromString(ExpectedResult)).ToString());
 		return false;
 	}
 	return true;
 }
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FStringFormattingTestNamedSimple, "System.Core.String Formatting.Simple (Named)", EAutomationTestFlags::EditorContext | EAutomationTestFlags::SmokeFilter)
-bool FStringFormattingTestNamedSimple::RunTest( const YString& Parameters )
+bool FStringFormattingTestNamedSimple::RunTest( const FString& Parameters )
 {
-	TMap<YString, YStringFormatArg> Args;
+	TMap<FString, FStringFormatArg> Args;
 	Args.Add(TEXT("Argument1"), TEXT("Replacement 1"));
 	Args.Add(TEXT("Argument2"), TEXT("Replacement 2"));
 
@@ -484,9 +484,9 @@ bool FStringFormattingTestNamedSimple::RunTest( const YString& Parameters )
 }
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FStringFormattingTestNamedMultiple, "System.Core.String Formatting.Multiple (Named)", EAutomationTestFlags::EditorContext | EAutomationTestFlags::SmokeFilter)
-bool FStringFormattingTestNamedMultiple::RunTest( const YString& Parameters )
+bool FStringFormattingTestNamedMultiple::RunTest( const FString& Parameters )
 {
-	TMap<YString, YStringFormatArg> Args;
+	TMap<FString, FStringFormatArg> Args;
 	Args.Add(TEXT("Argument1"), TEXT("Replacement 1"));
 
 	const TCHAR* Pattern =	TEXT("This is some text containing the same argument, { Argument1 } and {Argument1}.");
@@ -496,9 +496,9 @@ bool FStringFormattingTestNamedMultiple::RunTest( const YString& Parameters )
 }
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FStringFormattingTestNamedEscaped, "System.Core.String Formatting.Escaped (Named)", EAutomationTestFlags::EditorContext | EAutomationTestFlags::SmokeFilter)
-bool FStringFormattingTestNamedEscaped::RunTest( const YString& Parameters )
+bool FStringFormattingTestNamedEscaped::RunTest( const FString& Parameters )
 {
-	TMap<YString, YStringFormatArg> Args;
+	TMap<FString, FStringFormatArg> Args;
 	Args.Add(TEXT("Argument1"), TEXT("Replacement 1"));
 
 	const TCHAR* Pattern =	TEXT("This is some text containing brace and an arg, `{ Argument1 } and {Argument1}.");
@@ -508,9 +508,9 @@ bool FStringFormattingTestNamedEscaped::RunTest( const YString& Parameters )
 }
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FStringFormattingTestNamedUnbounded, "System.Core.String Formatting.Unbounded (Named)", EAutomationTestFlags::EditorContext | EAutomationTestFlags::SmokeFilter)
-bool FStringFormattingTestNamedUnbounded::RunTest( const YString& Parameters )
+bool FStringFormattingTestNamedUnbounded::RunTest( const FString& Parameters )
 {
-	TMap<YString, YStringFormatArg> Args;
+	TMap<FString, FStringFormatArg> Args;
 	Args.Add(TEXT("Argument1"), TEXT("Replacement 1"));
 
 	const TCHAR* Pattern =	TEXT("This is some text containing an unbounded arg, { Argument1");
@@ -520,9 +520,9 @@ bool FStringFormattingTestNamedUnbounded::RunTest( const YString& Parameters )
 }
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FStringFormattingTestNamedNonExistent, "System.Core.String Formatting.Non Existent (Named)", EAutomationTestFlags::EditorContext | EAutomationTestFlags::SmokeFilter)
-bool FStringFormattingTestNamedNonExistent::RunTest( const YString& Parameters )
+bool FStringFormattingTestNamedNonExistent::RunTest( const FString& Parameters )
 {
-	TMap<YString, YStringFormatArg> Args;
+	TMap<FString, FStringFormatArg> Args;
 	Args.Add(TEXT("Argument1"), TEXT("Replacement 1"));
 
 	const TCHAR* Pattern =	TEXT("This is some text containing a non-existent arg { Argument2 }");
@@ -532,9 +532,9 @@ bool FStringFormattingTestNamedNonExistent::RunTest( const YString& Parameters )
 }
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FStringFormattingTestNamedInvalid, "System.Core.String Formatting.Invalid (Named)", EAutomationTestFlags::EditorContext | EAutomationTestFlags::SmokeFilter)
-bool FStringFormattingTestNamedInvalid::RunTest( const YString& Parameters )
+bool FStringFormattingTestNamedInvalid::RunTest( const FString& Parameters )
 {
-	TMap<YString, YStringFormatArg> Args;
+	TMap<FString, FStringFormatArg> Args;
 	Args.Add(TEXT("Argument1"), TEXT("Replacement 1"));
 
 	const TCHAR* Pattern =	TEXT("This is some text containing an invalid arg {Argument1 1}  { a8f7690-23\\ {} }");
@@ -544,9 +544,9 @@ bool FStringFormattingTestNamedInvalid::RunTest( const YString& Parameters )
 }
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FStringFormattingTestNamedEmpty, "System.Core.String Formatting.Empty (Named)", EAutomationTestFlags::EditorContext | EAutomationTestFlags::SmokeFilter)
-bool FStringFormattingTestNamedEmpty::RunTest( const YString& Parameters )
+bool FStringFormattingTestNamedEmpty::RunTest( const FString& Parameters )
 {
-	TMap<YString, YStringFormatArg> Args;
+	TMap<FString, FStringFormatArg> Args;
 	Args.Add(TEXT("Argument1"), TEXT("Replacement 1"));
 	Args.Add(TEXT("Argument2"), TEXT("Replacement 2"));
 
@@ -557,9 +557,9 @@ bool FStringFormattingTestNamedEmpty::RunTest( const YString& Parameters )
 }
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FStringFormattingTestOrderedSimple, "System.Core.String Formatting.Simple (Ordered)", EAutomationTestFlags::EditorContext | EAutomationTestFlags::SmokeFilter)
-bool FStringFormattingTestOrderedSimple::RunTest( const YString& Parameters )
+bool FStringFormattingTestOrderedSimple::RunTest( const FString& Parameters )
 {
-	TArray<YStringFormatArg> Args;
+	TArray<FStringFormatArg> Args;
 	Args.Add(TEXT("Replacement 1"));
 	Args.Add(TEXT("Replacement 2"));
 
@@ -570,9 +570,9 @@ bool FStringFormattingTestOrderedSimple::RunTest( const YString& Parameters )
 }
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FStringFormattingTestOrderedMultiple, "System.Core.String Formatting.Multiple (Ordered)", EAutomationTestFlags::EditorContext | EAutomationTestFlags::SmokeFilter)
-bool FStringFormattingTestOrderedMultiple::RunTest( const YString& Parameters )
+bool FStringFormattingTestOrderedMultiple::RunTest( const FString& Parameters )
 {
-	TArray<YStringFormatArg> Args;
+	TArray<FStringFormatArg> Args;
 	Args.Add(TEXT("Replacement 1"));
 
 	const TCHAR* Pattern =	TEXT("This is some text containing the same argument, { 0 } and {0}.");
@@ -582,9 +582,9 @@ bool FStringFormattingTestOrderedMultiple::RunTest( const YString& Parameters )
 }
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FStringFormattingTestOrderedEscaped, "System.Core.String Formatting.Escaped (Ordered)", EAutomationTestFlags::EditorContext | EAutomationTestFlags::SmokeFilter)
-bool FStringFormattingTestOrderedEscaped::RunTest( const YString& Parameters )
+bool FStringFormattingTestOrderedEscaped::RunTest( const FString& Parameters )
 {
-	TArray<YStringFormatArg> Args;
+	TArray<FStringFormatArg> Args;
 	Args.Add(TEXT("Replacement 1"));
 
 	const TCHAR* Pattern =	TEXT("This is some text containing brace and an arg, `{ 0 } and {0}.");
@@ -594,9 +594,9 @@ bool FStringFormattingTestOrderedEscaped::RunTest( const YString& Parameters )
 }
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FStringFormattingTestOrderedUnbounded, "System.Core.String Formatting.Unbounded (Ordered)", EAutomationTestFlags::EditorContext | EAutomationTestFlags::SmokeFilter)
-bool FStringFormattingTestOrderedUnbounded::RunTest( const YString& Parameters )
+bool FStringFormattingTestOrderedUnbounded::RunTest( const FString& Parameters )
 {
-	TArray<YStringFormatArg> Args;
+	TArray<FStringFormatArg> Args;
 	Args.Add(TEXT("Replacement 1"));
 
 	const TCHAR* Pattern =	TEXT("This is some text containing an unbounded arg, { 0");
@@ -606,9 +606,9 @@ bool FStringFormattingTestOrderedUnbounded::RunTest( const YString& Parameters )
 }
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FStringFormattingTestOrderedNonExistent, "System.Core.String Formatting.Non Existent (Ordered)", EAutomationTestFlags::EditorContext | EAutomationTestFlags::SmokeFilter)
-bool FStringFormattingTestOrderedNonExistent::RunTest( const YString& Parameters )
+bool FStringFormattingTestOrderedNonExistent::RunTest( const FString& Parameters )
 {
-	TArray<YStringFormatArg> Args;
+	TArray<FStringFormatArg> Args;
 	Args.Add(TEXT("Replacement 1"));
 
 	const TCHAR* Pattern =	TEXT("This is some text containing a non-existent arg { 5 }");
@@ -618,7 +618,7 @@ bool FStringFormattingTestOrderedNonExistent::RunTest( const YString& Parameters
 }
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FStringFormattingTestOrderedAllTypes, "System.Core.String Formatting.All Types (Ordered)", EAutomationTestFlags::EditorContext | EAutomationTestFlags::SmokeFilter)
-bool FStringFormattingTestOrderedAllTypes::RunTest( const YString& Parameters )
+bool FStringFormattingTestOrderedAllTypes::RunTest( const FString& Parameters )
 {
 	const int32 Value1 = 100;
 	const uint32 Value2 = 200;
@@ -626,10 +626,10 @@ bool FStringFormattingTestOrderedAllTypes::RunTest( const YString& Parameters )
 	const uint64 Value4 = 400;
 	const float Value5 = 500.0;
 	const double Value6 = 600.0;
-	const YString Value7 = TEXT("Text");
+	const FString Value7 = TEXT("Text");
 	const TCHAR* Value8 = TEXT("Text");
 
-	TArray<YStringFormatArg> Args;
+	TArray<FStringFormatArg> Args;
 	Args.Add(Value1);
 	Args.Add(Value2);
 	Args.Add(Value3);

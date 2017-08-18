@@ -6,7 +6,7 @@
 #include "Misc/AssertionMacros.h"
 #include "Templates/UnrealTemplate.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Map.h"
 #include "UObject/NameTypes.h"
 #include "Templates/SharedPointer.h"
@@ -74,10 +74,10 @@ struct FModuleStatus
 	{ }
 
 	/** Short name for this module. */
-	YString Name;
+	FString Name;
 
 	/** Full path to this module file on disk. */
-	YString FilePath;
+	FString FilePath;
 
 	/** Whether the module is currently loaded or not. */
 	bool bIsLoaded;
@@ -235,8 +235,8 @@ public:
 	void AbandonModuleWithCallback(const FName InModuleName);
 
 	/** Delegate that's used by the module manager to find all the valid modules in a directory matching a pattern */
-	typedef TMap<YString, YString> FModuleNamesMap;
-	DECLARE_DELEGATE_ThreeParams(FQueryModulesDelegate, const YString&, bool, FModuleNamesMap&);
+	typedef TMap<FString, FString> FModuleNamesMap;
+	DECLARE_DELEGATE_ThreeParams(FQueryModulesDelegate, const FString&, bool, FModuleNamesMap&);
 	FQueryModulesDelegate QueryModulesDelegate;
 
 public:
@@ -392,7 +392,7 @@ public:
 	/**
 	*	Gets the game binaries directory
 	*/
-	YString GetGameBinariesDirectory() const;
+	FString GetGameBinariesDirectory() const;
 
 	/**
 	* Checks to see if the specified module exists and is compatible with the current engine version.
@@ -419,13 +419,13 @@ public:
 	static const TCHAR *GetUBTConfiguration();
 
 	/** Gets the filename for a module. The return value is a full path of a module known to the module manager. */
-	YString GetModuleFilename(FName ModuleName) const;
+	FString GetModuleFilename(FName ModuleName) const;
 
 	/** Sets the filename for a module. The module is not reloaded immediately, but the new name will be used for subsequent unload/load events. */
-	void SetModuleFilename(FName ModuleName, const YString& Filename);
+	void SetModuleFilename(FName ModuleName, const FString& Filename);
 
 	/** Gets the clean filename for a module, without having added it to the module manager. */
-	static YString GetCleanModuleFilename(FName ModuleName, bool bIsGameModule);
+	static FString GetCleanModuleFilename(FName ModuleName, bool bIsGameModule);
 
 public:
 
@@ -501,10 +501,10 @@ protected:
 	public:
 
 		/** The original file name of the module, without any suffixes added */
-		YString OriginalFilename;
+		FString OriginalFilename;
 
 		/** File name of this module (.dll file name) */
-		YString Filename;
+		FString Filename;
 
 		/** Handle to this module (DLL handle), if it's currently loaded */
 		void* Handle;
@@ -541,7 +541,7 @@ public:
 	/**
 	* Generates a unique file name for the specified module name by adding a random suffix and checking for file collisions.
 	*/
-	void MakeUniqueModuleFilename(const FName InModuleName, YString& UniqueSuffix, YString& UniqueModuleFileName) const;
+	void MakeUniqueModuleFilename(const FName InModuleName, FString& UniqueSuffix, FString& UniqueModuleFileName) const;
 
 	void AddModuleToModulesList(const FName InModuleName, FModuleManager::ModuleInfoRef& ModuleInfo);
 
@@ -567,13 +567,13 @@ private:
 	static bool CheckModuleCompatibility(const TCHAR *Filename);
 
 	/** Gets the prefix and suffix for a module file */
-	static void GetModuleFilenameFormat(bool bGameModule, YString& OutPrefix, YString& OutSuffix);
+	static void GetModuleFilenameFormat(bool bGameModule, FString& OutPrefix, FString& OutSuffix);
 
 	/** Finds modules matching a given name wildcard. */
-	void FindModulePaths(const TCHAR *NamePattern, TMap<FName, YString> &OutModulePaths, bool bCanUseCache = true) const;
+	void FindModulePaths(const TCHAR *NamePattern, TMap<FName, FString> &OutModulePaths, bool bCanUseCache = true) const;
 
 	/** Finds modules matching a given name wildcard within a given directory. */
-	void FindModulePathsInDirectory(const YString &DirectorFName, bool bIsGameDirectory, const TCHAR *NamePattern, TMap<FName, YString> &OutModulePaths) const;
+	void FindModulePathsInDirectory(const FString &DirectorFName, bool bIsGameDirectory, const TCHAR *NamePattern, TMap<FName, FString> &OutModulePaths) const;
 
 private:
 	/** Gets module with given name from Modules or creates a new one. Doesn't modify Modules. */
@@ -590,7 +590,7 @@ private:
 	bool bCanProcessNewlyLoadedObjects;
 
 	/** Cache of known module paths. Used for performance. Can increase editor startup times by up to 30% */
-	mutable TOptional<TMap<FName, YString>> ModulePathsCache;
+	mutable TOptional<TMap<FName, FString>> ModulePathsCache;
 
 	/** Multicast delegate that will broadcast a notification when modules are loaded, unloaded, or
 	our set of known modules changes */
@@ -604,10 +604,10 @@ private:
 	FIsPackageLoadedCallback IsPackageLoaded;
 
 	/** Array of engine binaries directories. */
-	TArray<YString> EngineBinariesDirectories;
+	TArray<FString> EngineBinariesDirectories;
 
 	/** Array of game binaries directories. */
-	TArray<YString> GameBinariesDirectories;
+	TArray<FString> GameBinariesDirectories;
 
 	/** Critical section object controlling R/W access to Modules. */
 	mutable FCriticalSection ModulesCriticalSection;

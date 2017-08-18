@@ -315,7 +315,7 @@ struct FPerThreadFreeBlockLists
 {
 	FORCEINLINE static FPerThreadFreeBlockLists* Get()
 	{
-		return YMallocBinned2::Binned2TlsSlot ? (FPerThreadFreeBlockLists*)YPlatformTLS::GetTlsValue(YMallocBinned2::Binned2TlsSlot) : nullptr;
+		return YMallocBinned2::Binned2TlsSlot ? (FPerThreadFreeBlockLists*)FPlatformTLS::GetTlsValue(YMallocBinned2::Binned2TlsSlot) : nullptr;
 	}
 	static void SetTLS();
 	static void ClearTLS();

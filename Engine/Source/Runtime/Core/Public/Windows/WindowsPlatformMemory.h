@@ -3,7 +3,7 @@
 #include "GenericPlatform/GenericPlatformMemory.h"
 #include "WindowsSystemIncludes.h"
 
-class YString;
+class FString;
 class FMalloc;
 struct FGenericMemoryStats;
 
@@ -54,7 +54,7 @@ struct CORE_API YWindowsPlatformMemory
 		/** Returns the handle to file mapping object. */
 		Windows::HANDLE GetMapping() const { return Mapping; }
 
-		FWindowsSharedMemoryRegion(const YString& InName, uint32 InAccessMode, void* InAddress, SIZE_T InSize, Windows::HANDLE InMapping)
+		FWindowsSharedMemoryRegion(const FString& InName, uint32 InAccessMode, void* InAddress, SIZE_T InSize, Windows::HANDLE InMapping)
 			: YSharedMemoryRegion(InName, InAccessMode, InAddress, InSize)
 			, Mapping(InMapping)
 		{}
@@ -86,7 +86,7 @@ struct CORE_API YWindowsPlatformMemory
 	static bool					PageProtect(void* const Ptr, const SIZE_T Size, const bool bCanRead, const bool bCanWrite);
 	static void*				BinnedAllocFromOS(SIZE_T Size);
 	static void					BinnedFreeToOS(void* Ptr, SIZE_T Size);
-	static YSharedMemoryRegion* MapNamedSharedMemoryRegion(const YString& InName, bool bCreate, uint32 AccessMode, SIZE_T Size);
+	static YSharedMemoryRegion* MapNamedSharedMemoryRegion(const FString& InName, bool bCreate, uint32 AccessMode, SIZE_T Size);
 	static bool					UnmapNamedSharedMemoryRegion(YSharedMemoryRegion * MemoryRegion);
 protected:
 	friend struct FGenericStatsUpdater;

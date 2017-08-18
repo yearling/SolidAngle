@@ -6,7 +6,7 @@
 #include "Misc/AssertionMacros.h"
 #include "Containers/Array.h"
 #include "Math/UnrealMathUtility.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Templates/Function.h"
 #include "Containers/Map.h"
 #include "Math/Color.h"
@@ -68,12 +68,12 @@ namespace EAutomationTestFlags
 
 struct CORE_API FAutomationEvent
 {
-	YString Message;
-	YString Context;
-	YString Filename;
+	FString Message;
+	FString Context;
+	FString Filename;
 	int32 LineNumber;
 
-	FAutomationEvent(YString InMessage)
+	FAutomationEvent(FString InMessage)
 		: Message(InMessage)
 		, Context()
 		, Filename()
@@ -81,7 +81,7 @@ struct CORE_API FAutomationEvent
 	{
 	}
 
-	FAutomationEvent(YString InMessage, YString InContext, YString InFilename, int32 InLineNumber)
+	FAutomationEvent(FString InMessage, FString InContext, FString InFilename, int32 InLineNumber)
 		: Message(InMessage)
 		, Context(InContext)
 		, Filename(InFilename)
@@ -89,7 +89,7 @@ struct CORE_API FAutomationEvent
 	{
 	}
 
-	YString ToString() const;
+	FString ToString() const;
 };
 
 
@@ -124,18 +124,18 @@ public:
 	 * Allows tests to set the current logging context set on the events, like if we're currently
 	 * importing a specific file, you might set the file as the context.
 	 */
-	YString Context;
+	FString Context;
 
 	/** Whether the automation test completed successfully or not */
 	bool bSuccessful;
 	/** Any errors that occurred during execution */
 	TArray<FAutomationEvent> Errors;
 	/** Any warnings that occurred during execution */
-	TArray<YString> Warnings;
+	TArray<FString> Warnings;
 	/** Any log items that occurred during execution */
-	TArray<YString> LogItems;
+	TArray<FString> LogItems;
 	/** Any analytics items that occurred during execution */
-	TArray<YString> AnalyticsItems;
+	TArray<FString> AnalyticsItems;
 	/** Time to complete the task */
 	float Duration;
 };
@@ -160,7 +160,7 @@ public:
 	 * @param	InTestFlag - Test flags
 	 * @param	InParameterName - optional parameter. e.g. asset name
 	 */
-	FAutomationTestInfo(const YString& InDisplaFName, const YString& InFullTestPath, const YString& InTestName, const uint32 InTestFlags, const int32 InNumParticipantsRequired, const YString& InParameterName = YString(), const YString& InSourceFile = YString(), int32 InSourceFileLine = 0, const YString& InAssetPath = YString(), const YString& InOpenCommand = YString())
+	FAutomationTestInfo(const FString& InDisplaFName, const FString& InFullTestPath, const FString& InTestName, const uint32 InTestFlags, const int32 InNumParticipantsRequired, const FString& InParameterName = FString(), const FString& InSourceFile = FString(), int32 InSourceFileLine = 0, const FString& InAssetPath = FString(), const FString& InOpenCommand = FString())
 		: DisplaFName( InDisplaFName )
 		, FullTestPath( InFullTestPath )
 		, TestName( InTestName )
@@ -191,7 +191,7 @@ public:
 	 *
 	 * @return the display name.
 	 */
-	const YString& GetDisplaFName() const
+	const FString& GetDisplaFName() const
 	{
 		return DisplaFName;
 	}
@@ -201,7 +201,7 @@ public:
 	 *
 	 * @return the display name.
 	 */
-	const YString& GetFullTestPath() const
+	const FString& GetFullTestPath() const
 	{
 		return FullTestPath;
 	}
@@ -211,7 +211,7 @@ public:
 	 *
 	 * @return The test name.
 	 */
-	YString GetTestName() const
+	FString GetTestName() const
 	{
 		return TestName;
 	}
@@ -221,7 +221,7 @@ public:
 	 *
 	 * @return the parameter.
 	 */
-	const YString GetTestParameter() const
+	const FString GetTestParameter() const
 	{
 		return TestParameter;
 	}
@@ -231,7 +231,7 @@ public:
 	 *
 	 * @return the source file.
 	 */
-	const YString GetSourceFile() const
+	const FString GetSourceFile() const
 	{
 		return SourceFile;
 	}
@@ -251,7 +251,7 @@ public:
 	 *
 	 * @return the source line number.
 	 */
-	const YString GetAssetPath() const
+	const FString GetAssetPath() const
 	{
 		return AssetPath;
 	}
@@ -261,7 +261,7 @@ public:
 	 *
 	 * @return the source line number.
 	 */
-	const YString GetOpenCommand() const
+	const FString GetOpenCommand() const
 	{
 		return OpenCommand;
 	}
@@ -318,7 +318,7 @@ public:
 	 *
 	 * @Param InDisplaFName - the new child test name.
 	 */
-	void SetDisplaFName( const YString& InDisplaFName )
+	void SetDisplaFName( const FString& InDisplaFName )
 	{
 		DisplaFName = InDisplaFName;
 	}
@@ -335,27 +335,27 @@ public:
 
 private:
 	/** Display name used in the UI */
-	YString DisplaFName; 
+	FString DisplaFName; 
 
-	YString FullTestPath;
+	FString FullTestPath;
 
 	/** Test name used to run the test */
-	YString TestName;
+	FString TestName;
 
 	/** Parameter - e.g. an asset name or map name */
-	YString TestParameter;
+	FString TestParameter;
 
 	/** The source file this test originated in. */
-	YString SourceFile;
+	FString SourceFile;
 
 	/** The line number in the source file this test originated on. */
 	int32 SourceFileLine;
 
 	/** The asset path associated with the test. */
-	YString AssetPath;
+	FString AssetPath;
 
 	/** A custom open command for the test. */
-	YString OpenCommand;
+	FString OpenCommand;
 
 	/** The test flags. */
 	uint32 TestFlags;
@@ -463,8 +463,8 @@ public:
 
 struct FAutomationScreenshotData
 {
-	YString Name;
-	YString Context;
+	FString Name;
+	FString Context;
 
 	FGuid Id;
 
@@ -472,17 +472,17 @@ struct FAutomationScreenshotData
 	int32 Height;
 
 	// RHI Details
-	YString Platform;
-	YString Rhi;
-	YString FeatureLevel;
+	FString Platform;
+	FString Rhi;
+	FString FeatureLevel;
 	bool bIsStereo;
 
 	// Hardware Details
-	YString Vendor;
-	YString AdapterName;
-	YString AdapterInternalDriverVersion;
-	YString AdapterUserDriverVersion;
-	YString UniqueDeviceId;
+	FString Vendor;
+	FString AdapterName;
+	FString AdapterInternalDriverVersion;
+	FString AdapterUserDriverVersion;
+	FString UniqueDeviceId;
 
 	// Quality Levels
 	float ResolutionQuality;
@@ -507,7 +507,7 @@ struct FAutomationScreenshotData
 	bool bIgnoreAntiAliasing;
 	bool bIgnoreColors;
 
-	YString Path;
+	FString Path;
 
 	FAutomationScreenshotData()
 		: Width(0)
@@ -577,7 +577,7 @@ public:
 	 * to do something like generate project files, or create new projects it should use this directory, rather
 	 * than pollute other areas of the machine.
 	 */
-	YString GetUserAutomationDirectory() const;
+	FString GetUserAutomationDirectory() const;
 
 	/**
 	 * Register a automation test into the framework. The automation test may or may not be necessarily valid
@@ -590,14 +590,14 @@ public:
 	 * @return	true if the test was successfully registered; false if a test was already registered under the same
 	 *			name as before
 	 */
-	bool RegisterAutomationTest( const YString& InTestNameToRegister, class FAutomationTestBase* InTestToRegister );
+	bool RegisterAutomationTest( const FString& InTestNameToRegister, class FAutomationTestBase* InTestToRegister );
 
 	/**
 	 * Unregister a automation test with the provided name from the framework.
 	 *
 	 * @return true if the test was successfully unregistered; false if a test with that name was not found in the framework.
 	 */
-	bool UnregisterAutomationTest( const YString& InTestNameToUnregister );
+	bool UnregisterAutomationTest( const FString& InTestNameToUnregister );
 
 	/**
 	 * Enqueues a latent command for execution on a subsequent frame
@@ -620,7 +620,7 @@ public:
 	 *
 	 * @return	true if the provided test is within the framework; false otherwise
 	 */
-	bool ContainsTest( const YString& InTestName ) const;
+	bool ContainsTest( const FString& InTestName ) const;
 		
 	/**
 	 * Attempt to run all fast smoke tests that are valid for the current application configuration.
@@ -640,7 +640,7 @@ public:
 	 * @param	InTestToRun			Name of the test that should be run
 	 * @param	InRoleIndex			Identifier for which worker in this group that should execute a command
 	 */
-	void StartTestBFName( const YString& InTestToRun, const int32 InRoleIndex );
+	void StartTestBFName( const FString& InTestToRun, const int32 InRoleIndex );
 
 	/**
 	 * Stop the current test and return the results of execution
@@ -681,7 +681,7 @@ public:
 	 * @param Path - Full path to the content in question
 	 * @return - Whether this content should have tests performed on it
 	 */
-	bool ShouldTestContent(const YString& Path) const;
+	bool ShouldTestContent(const FString& Path) const;
 
 	/**
 	 * Sets whether we want to include content in developer directories in automation testing
@@ -723,7 +723,7 @@ public:
 	 *
 	 * @param	AnalyticsItem	Log item to add to the current test
 	 */
-	void AddAnalyticsItemToCurrentTest( const YString& AnalyticsItem );
+	void AddAnalyticsItemToCurrentTest( const FString& AnalyticsItem );
 
 	/**
 	 * Returns the actively executing test or null if there isn't one
@@ -795,7 +795,7 @@ private:
 	 * @param	InContext		Context to dump the execution info to
 	 * @param	InInfoToDump	Execution info that should be dumped to the provided feedback context
 	 */
-	void DumpAutomationTestExecutionInfo( const TMap<YString, FAutomationTestExecutionInfo>& InInfoToDump );
+	void DumpAutomationTestExecutionInfo( const TMap<FString, FAutomationTestExecutionInfo>& InInfoToDump );
 
 	/**
 	 * Internal helper method designed to simply start the provided test name.
@@ -803,7 +803,7 @@ private:
 	 * @param	InTestToRun			Name of the test that should be run
 	 * @param	OutExecutionInfo	Results of executing the test
 	 */
-	void InternalStartTest( const YString& InTestToRun );
+	void InternalStartTest( const FString& InTestToRun );
 
 	/**
 	 * Internal helper method designed to stop current executing test and return the results of execution.
@@ -831,7 +831,7 @@ private:
 	FAutomationTestFeedbackContext AutomationTestFeedbackContext;
 
 	/** Mapping of automation test names to their respective object instances */
-	TMap<YString, class FAutomationTestBase*> AutomationTestClassNameToInstanceMap;
+	TMap<FString, class FAutomationTestBase*> AutomationTestClassNameToInstanceMap;
 
 	/** Queue of deferred commands */
 	TQueue< TSharedPtr<IAutomationLatentCommand> > LatentCommands;
@@ -852,7 +852,7 @@ private:
 	FAutomationTestBase* CurrentTest;
 
 	/** Copy of the parameters for the active test */
-	YString Parameters;
+	FString Parameters;
 
 	/** Whether we want to run automation tests on content within the Developer Directories */
 	bool bDeveloperDirectoryIncluded;
@@ -880,7 +880,7 @@ public:
 	 *
 	 * @param	InName	Name of the test
 	 */
-	FAutomationTestBase( const YString& InName, const bool bInComplexTask )
+	FAutomationTestBase( const FString& InName, const bool bInComplexTask )
 		: bComplexTask( bInComplexTask )
 		, bSuppressLogs( false )
 		, TestName( InName )
@@ -918,7 +918,7 @@ public:
 	 *
 	 * @param	InError	Error message to add to this test
 	 */
-	virtual void AddError( const YString& InError, int32 StackOffset = 0 );
+	virtual void AddError( const FString& InError, int32 StackOffset = 0 );
 
 
 	/**
@@ -928,28 +928,28 @@ public:
 	 * @param	InFilename	The filename the error originated in
 	 * @param	InLineNumber	The line number in the file this error originated in
 	 */
-	virtual void AddError(const YString& InError, const YString& InFilename, int32 InLineNumber);
+	virtual void AddError(const FString& InError, const FString& InFilename, int32 InLineNumber);
 
 	/**
 	 * Adds a warning to this test
 	 *
 	 * @param	InWarning	Warning message to add to this test
 	 */
-	virtual void AddWarning( const YString& InWarning );
+	virtual void AddWarning( const FString& InWarning );
 
 	/**
 	 * Adds a log item to this test
 	 *
 	 * @param	InLogItem	Log item to add to this test
 	 */
-	virtual void AddLogItem( const YString& InLogItem );
+	virtual void AddLogItem( const FString& InLogItem );
 
 	/**
 	* Adds a analytics string to parse later
 	*
 	* @param	InLogItem	Log item to add to this test
 	*/
-	virtual void AddAnalyticsItem(const YString& InAnalyticsItem);
+	virtual void AddAnalyticsItem(const FString& InAnalyticsItem);
 
 	/**
 	 * Returns whether this test has any errors associated with it or not
@@ -1022,38 +1022,38 @@ public:
 	}
 
 	/** Gets the filename where this test was defined. */
-	virtual YString GetTestSourceFileName() const { return TEXT(""); }
+	virtual FString GetTestSourceFileName() const { return TEXT(""); }
 
 	/** Gets the line number where this test was defined. */
 	virtual int32 GetTestSourceFileLine() const { return 0; }
 
 	/** Gets the filename where this test was defined. */
-	virtual YString GetTestSourceFileName(const YString& InTestName) const { return GetTestSourceFileName(); }
+	virtual FString GetTestSourceFileName(const FString& InTestName) const { return GetTestSourceFileName(); }
 
 	/** Gets the line number where this test was defined. */
-	virtual int32 GetTestSourceFileLine(const YString& InTestName) const { return GetTestSourceFileLine(); }
+	virtual int32 GetTestSourceFileLine(const FString& InTestName) const { return GetTestSourceFileLine(); }
 
 	/** Allows navigation to the asset associated with the test if there is one. */
-	virtual YString GetTestAssetPath(const YString& Parameter) const { return TEXT(""); }
+	virtual FString GetTestAssetPath(const FString& Parameter) const { return TEXT(""); }
 
 	/** Return an exec command to open the test associated with this parameter. */
-	virtual YString GetTestOpenCommand(const YString& Parameter) const { return TEXT(""); }
+	virtual FString GetTestOpenCommand(const FString& Parameter) const { return TEXT(""); }
 
 public:
 
-	void TestEqual(const YString& What, const int32 Actual, const int32 Expected)
+	void TestEqual(const FString& What, const int32 Actual, const int32 Expected)
 	{
 		if ( Actual != Expected )
 		{
-			AddError(YString::Printf(TEXT("Expected '%s' to be %d, but it was %d."), *What, Expected, Actual), 1);
+			AddError(FString::Printf(TEXT("Expected '%s' to be %d, but it was %d."), *What, Expected, Actual), 1);
 		}
 	}
 
-	void TestEqual(const YString& What, const float Actual, const float Expected, float Tolerance = 1.e-4)
+	void TestEqual(const FString& What, const float Actual, const float Expected, float Tolerance = 1.e-4)
 	{
 		if ( !YMath::IsNearlyEqual(Actual, Expected, Tolerance) )
 		{
-			AddError(YString::Printf(TEXT("Expected '%s' to be %f, but it was %f within tolerance %f."), *What, Expected, Actual, Tolerance), 1);
+			AddError(FString::Printf(TEXT("Expected '%s' to be %f, but it was %f within tolerance %f."), *What, Expected, Actual, Tolerance), 1);
 		}
 	}
 
@@ -1067,35 +1067,35 @@ public:
 	 * @see TestNotEqual
 	 */
 	template<typename ValueType> 
-	void TestEqual(const YString& Description, const ValueType& A, const ValueType& B)
+	void TestEqual(const FString& Description, const ValueType& A, const ValueType& B)
 	{
 		if (A != B)
 		{
-			AddError(YString::Printf(TEXT("%s: The two values are not equal."), *Description), 1);
+			AddError(FString::Printf(TEXT("%s: The two values are not equal."), *Description), 1);
 		}
 	}
 
-	void TestEqual(const YString& Description, const YString& A, const TCHAR* B)
+	void TestEqual(const FString& Description, const FString& A, const TCHAR* B)
 	{
 		if (A != B)
 		{
-			AddError(YString::Printf(TEXT("%s: The two values are not equal.\n  Actual: '%s'\nExpected: '%s'"), *Description, *A, B), 1);
+			AddError(FString::Printf(TEXT("%s: The two values are not equal.\n  Actual: '%s'\nExpected: '%s'"), *Description, *A, B), 1);
 		}
 	}
 
-	void TestEqual(const YString& Description, const TCHAR* A, const TCHAR* B)
+	void TestEqual(const FString& Description, const TCHAR* A, const TCHAR* B)
 	{
 		if (A != B)
 		{
-			AddError(YString::Printf(TEXT("%s: The two values are not equal.\n  Actual: '%s'\nExpected: '%s'"), *Description, A, B), 1);
+			AddError(FString::Printf(TEXT("%s: The two values are not equal.\n  Actual: '%s'\nExpected: '%s'"), *Description, A, B), 1);
 		}
 	}
 
-	void TestEqual(const YString& Description, const TCHAR* A, const YString& B)
+	void TestEqual(const FString& Description, const TCHAR* A, const FString& B)
 	{
 		if (A != B)
 		{
-			AddError(YString::Printf(TEXT("%s: The two values are not equal.\n  Actual: '%s'\nExpected: '%s'"), *Description, A, *B), 1);
+			AddError(FString::Printf(TEXT("%s: The two values are not equal.\n  Actual: '%s'\nExpected: '%s'"), *Description, A, *B), 1);
 		}
 	}
 
@@ -1107,11 +1107,11 @@ public:
 	 *
 	 * @see TestFalse
 	 */
-	void TestFalse(const YString& Description, bool Value)
+	void TestFalse(const FString& Description, bool Value)
 	{
 		if (Value)
 		{
-			AddError(YString::Printf(TEXT("%s: The value is not false."), *Description), 1);
+			AddError(FString::Printf(TEXT("%s: The value is not false."), *Description), 1);
 		}
 	}
 
@@ -1123,11 +1123,11 @@ public:
 	 *
 	 * @see TestValid
 	 */
-	template<typename ValueType> void TestInvalid(const YString& Description, const TSharedPtr<ValueType>& SharedPointer)
+	template<typename ValueType> void TestInvalid(const FString& Description, const TSharedPtr<ValueType>& SharedPointer)
 	{
 		if (SharedPointer.IsValid())
 		{
-			AddError(YString::Printf(TEXT("%s: The shared pointer is valid."), *Description), 1);
+			AddError(FString::Printf(TEXT("%s: The shared pointer is valid."), *Description), 1);
 		}
 	}
 
@@ -1140,11 +1140,11 @@ public:
 	 *
 	 * @see TestEqual
 	 */
-	template<typename ValueType> void TestNotEqual(const YString& Description, const ValueType& A, const ValueType& B)
+	template<typename ValueType> void TestNotEqual(const FString& Description, const ValueType& A, const ValueType& B)
 	{
 		if (A == B)
 		{
-			AddError(YString::Printf(TEXT("%s: The two values are not equal."), *Description), 1);
+			AddError(FString::Printf(TEXT("%s: The two values are not equal."), *Description), 1);
 		}
 	}
 
@@ -1156,11 +1156,11 @@ public:
 	 *
 	 * @see TestNull
 	 */
-	template<typename ValueType> void TestNotNull(const YString& Description, ValueType* Pointer)
+	template<typename ValueType> void TestNotNull(const FString& Description, ValueType* Pointer)
 	{
 		if (Pointer == NULL)
 		{
-			AddError(YString::Printf(TEXT("%s: The pointer is NULL."), *Description), 1);
+			AddError(FString::Printf(TEXT("%s: The pointer is NULL."), *Description), 1);
 		}
 	}
 
@@ -1173,11 +1173,11 @@ public:
 	 *
 	 * @see TestSame
 	 */
-	template<typename ValueType> void TestNotSame(const YString& Description, const ValueType& A, const ValueType& B)
+	template<typename ValueType> void TestNotSame(const FString& Description, const ValueType& A, const ValueType& B)
 	{
 		if (&A == &B)
 		{
-			AddError(YString::Printf(TEXT("%s: The two values are the same."), *Description), 1);
+			AddError(FString::Printf(TEXT("%s: The two values are the same."), *Description), 1);
 		}
 	}
 
@@ -1189,11 +1189,11 @@ public:
 	 *
 	 * @see TestNotNull
 	 */
-	template<typename ValueType> void TestNull(const YString& Description, ValueType* Pointer)
+	template<typename ValueType> void TestNull(const FString& Description, ValueType* Pointer)
 	{
 		if (Pointer != NULL)
 		{
-			AddError(YString::Printf(TEXT("%s: The pointer is not NULL."), *Description), 1);
+			AddError(FString::Printf(TEXT("%s: The pointer is not NULL."), *Description), 1);
 		}
 	}
 
@@ -1206,11 +1206,11 @@ public:
 	 *
 	 * @see TestNotSame
 	 */
-	template<typename ValueType> void TestSame(const YString& Description, const ValueType& A, const ValueType& B)
+	template<typename ValueType> void TestSame(const FString& Description, const ValueType& A, const ValueType& B)
 	{
 		if (&A != &B)
 		{
-			AddError(YString::Printf(TEXT("%s: The two values are not the same."), *Description), 1);
+			AddError(FString::Printf(TEXT("%s: The two values are not the same."), *Description), 1);
 		}
 	}
 
@@ -1222,11 +1222,11 @@ public:
 	 *
 	 * @see TestFalse
 	 */
-	void TestTrue(const YString& Description, bool Value)
+	void TestTrue(const FString& Description, bool Value)
 	{
 		if (!Value)
 		{
-			AddError(YString::Printf(TEXT("%s: The value is not true."), *Description), 1);
+			AddError(FString::Printf(TEXT("%s: The value is not true."), *Description), 1);
 		}
 	}
 
@@ -1241,11 +1241,11 @@ public:
 	 *
 	 * @see TestInvalid
 	 */
-	template<typename ValueType> void TestValid(const YString& Description, const TSharedPtr<ValueType>& SharedPointer)
+	template<typename ValueType> void TestValid(const FString& Description, const TSharedPtr<ValueType>& SharedPointer)
 	{
 		if (!SharedPointer.IsValid())
 		{
-			AddError(YString::Printf(TEXT("%s: The shared pointer is not valid."), *Description), 1);
+			AddError(FString::Printf(TEXT("%s: The shared pointer is not valid."), *Description), 1);
 		}
 	}
 
@@ -1257,7 +1257,7 @@ protected:
 	 * @param OutBeautifiedNames - Name of the test that can be displayed by the UI (for load all maps, it would be the map name without any directory prefix)
 	 * @param OutTestCommands - The parameters to be specified to each call to RunTests (for load all maps, it would be the map name to load)
 	 */
-	virtual void GetTests(TArray<YString>& OutBeautifiedNames, TArray <YString>& OutTestCommands) const = 0;
+	virtual void GetTests(TArray<FString>& OutBeautifiedNames, TArray <FString>& OutTestCommands) const = 0;
 
 	/**
 	 * Virtual call to execute the automation test.  
@@ -1265,12 +1265,12 @@ protected:
 	 * @param Parameters - Parameter list for the test (but it will be empty for simple tests)
 	 * @return TRUE if the test was run successfully; FALSE otherwise
 	 */
-	virtual bool RunTest(const YString& Parameters)=0;
+	virtual bool RunTest(const FString& Parameters)=0;
 
 	/**
 	 * Returns the beautified test name
 	 */
-	virtual YString GetBeautifiedTestName() const = 0;
+	virtual FString GetBeautifiedTestName() const = 0;
 
 	//Flag to indicate if this is a complex task
 	bool bComplexTask;
@@ -1282,7 +1282,7 @@ protected:
 	bool bSuppressLogs;
 
 	/** Name of the test */
-	YString TestName;
+	FString TestName;
 
 	/** Info related to the last execution of this test */
 	FAutomationTestExecutionInfo ExecutionInfo;
@@ -1295,13 +1295,13 @@ protected:
 class CORE_API FBDDAutomationTestBase : public FAutomationTestBase
 { 
 public:
-	FBDDAutomationTestBase(const YString& InName, const bool bInComplexTask)
+	FBDDAutomationTestBase(const FString& InName, const bool bInComplexTask)
 		: FAutomationTestBase(InName, bInComplexTask) 
 		, bIsDiscoveryMode(false)
 		, bBaseRunTestRan(false)
 	{}
 
-	virtual bool RunTest(const YString& Parameters) override
+	virtual bool RunTest(const FString& Parameters) override
 	{
 		bBaseRunTestRan = true;
 		TestIdToExecute = Parameters;
@@ -1309,13 +1309,13 @@ public:
 		return true;
 	}
 
-	virtual void GetTests(TArray<YString>& OutBeautifiedNames, TArray <YString>& OutTestCommands) const override
+	virtual void GetTests(TArray<FString>& OutBeautifiedNames, TArray <FString>& OutTestCommands) const override
 	{
 		const_cast<FBDDAutomationTestBase*>(this)->BeautifiedNames.Empty();
 		const_cast<FBDDAutomationTestBase*>(this)->TestCommands.Empty();
 
 		bIsDiscoveryMode = true;
-		const_cast<FBDDAutomationTestBase*>(this)->RunTest(YString());
+		const_cast<FBDDAutomationTestBase*>(this)->RunTest(FString());
 		bIsDiscoveryMode = false;
 
 		OutBeautifiedNames.Append(BeautifiedNames);
@@ -1328,13 +1328,13 @@ public:
 		return bIsDiscoveryMode;
 	}
 
-	void xDescribe(const YString& InDescription, TFunction<void()> DoWork)
+	void xDescribe(const FString& InDescription, TFunction<void()> DoWork)
 	{
 		check(bBaseRunTestRan);
 		//disabled this suite
 	}
 
-	void Describe(const YString& InDescription, TFunction<void()> DoWork)
+	void Describe(const FString& InDescription, TFunction<void()> DoWork)
 	{
 		check(bBaseRunTestRan);
 
@@ -1360,13 +1360,13 @@ public:
 		PopDescription(InDescription);
 	}
 	
-	void xIt(const YString& InDescription, TFunction<void()> DoWork)
+	void xIt(const FString& InDescription, TFunction<void()> DoWork)
 	{
 		check(bBaseRunTestRan);
 		//disabled this spec
 	}
 
-	void It(const YString& InDescription, TFunction<void()> DoWork)
+	void It(const FString& InDescription, TFunction<void()> DoWork)
 	{
 		check(bBaseRunTestRan);
 
@@ -1410,19 +1410,19 @@ public:
 
 private:
 
-	void PushDescription(const YString& InDescription)
+	void PushDescription(const FString& InDescription)
 	{
 		Description.Add(InDescription);
 	}
 
-	void PopDescription(const YString& InDescription)
+	void PopDescription(const FString& InDescription)
 	{
 		Description.RemoveAt(Description.Num() - 1);
 	}
 
-	YString GetDescription() const
+	FString GetDescription() const
 	{
-		YString CompleteDescription;
+		FString CompleteDescription;
 		for (int32 Index = 0; Index < Description.Num(); ++Index)
 		{
 			if (Description[Index].IsEmpty())
@@ -1449,11 +1449,11 @@ private:
 			{
 				if (bIsDiscoveryMode)
 				{
-					CompleteDescription = YString::Printf(TEXT("%s.%s"), *CompleteDescription, *Description[Index]);
+					CompleteDescription = FString::Printf(TEXT("%s.%s"), *CompleteDescription, *Description[Index]);
 				}
 				else
 				{
-					CompleteDescription = YString::Printf(TEXT("%s %s"), *CompleteDescription, *Description[Index]);
+					CompleteDescription = FString::Printf(TEXT("%s %s"), *CompleteDescription, *Description[Index]);
 				}
 			}
 		}
@@ -1463,13 +1463,13 @@ private:
 
 private:
 
-	YString TestIdToExecute;
-	TArray<YString> Description;
+	FString TestIdToExecute;
+	TArray<FString> Description;
 	TArray<TFunction<void()>> BeforeEachStack;
 	TArray<TFunction<void()>> AfterEachStack;
 
-	TArray<YString> BeautifiedNames;
-	TArray<YString> TestCommands;
+	TArray<FString> BeautifiedNames;
+	TArray<FString> TestCommands;
 	mutable bool bIsDiscoveryMode;
 	mutable bool bBaseRunTestRan;
 };
@@ -1651,13 +1651,13 @@ private:
 	{
 	public:
 
-		YString Description;
-		YString Id;
-		YString Filename;
+		FString Description;
+		FString Id;
+		FString Filename;
 		int32 LineNumber;
 		TSharedRef<IAutomationLatentCommand> Command;
 
-		FSpecIt(YString InDescription, YString InId, YString InFilename, int32 InLineNumber, TSharedRef<IAutomationLatentCommand> InCommand)
+		FSpecIt(FString InDescription, FString InId, FString InFilename, int32 InLineNumber, TSharedRef<IAutomationLatentCommand> InCommand)
 			: Description(MoveTemp(InDescription))
 			, Id(MoveTemp(InId))
 			, Filename(InFilename)
@@ -1670,7 +1670,7 @@ private:
 	{
 	public:
 
-		YString Description;
+		FString Description;
 
 		TArray<TSharedRef<IAutomationLatentCommand>> BeforeEach;
 		TArray<TSharedRef<FSpecIt>> It;
@@ -1683,23 +1683,23 @@ private:
 	{
 	public:
 
-		YString Id;
-		YString Description;
-		YString Filename;
+		FString Id;
+		FString Description;
+		FString Filename;
 		int32 LineNumber;
 		TArray<TSharedRef<IAutomationLatentCommand>> Commands;
 	};
 
 public:
 
-	FAutomationSpecBase(const YString& InName, const bool bInComplexTask)
+	FAutomationSpecBase(const FString& InName, const bool bInComplexTask)
 		: FAutomationTestBase(InName, bInComplexTask)
 		, RootDefinitionScope(MakeShareable(new FSpecDefinitionScope()))
 	{
 		DefinitionScopeStack.Push(RootDefinitionScope.ToSharedRef());
 	}
 
-	virtual bool RunTest(const YString& InParameters) override
+	virtual bool RunTest(const FString& InParameters) override
 	{
 		EnsureDefinitions();
 
@@ -1741,9 +1741,9 @@ public:
 		return 1; 
 	}
 
-	virtual YString GetTestSourceFileName(const YString& InTestName) const override
+	virtual FString GetTestSourceFileName(const FString& InTestName) const override
 	{
-		YString TestId = InTestName;
+		FString TestId = InTestName;
 		if (TestId.StartsWith(TestName + TEXT(" ")))
 		{
 			TestId = InTestName.RightChop(TestName.Len() + 1);
@@ -1758,9 +1758,9 @@ public:
 		return FAutomationTestBase::GetTestSourceFileName();
 	}
 
-	virtual int32 GetTestSourceFileLine(const YString& InTestName) const override
+	virtual int32 GetTestSourceFileLine(const FString& InTestName) const override
 	{ 
-		YString TestId = InTestName;
+		FString TestId = InTestName;
 		if (TestId.StartsWith(TestName + TEXT(" ")))
 		{
 			TestId = InTestName.RightChop(TestName.Len() + 1);
@@ -1775,7 +1775,7 @@ public:
 		return FAutomationTestBase::GetTestSourceFileLine();
 	}
 
-	virtual void GetTests(TArray<YString>& OutBeautifiedNames, TArray<YString>& OutTestCommands) const override
+	virtual void GetTests(TArray<FString>& OutBeautifiedNames, TArray<FString>& OutTestCommands) const override
 	{
 		EnsureDefinitions();
 
@@ -1789,12 +1789,12 @@ public:
 		}
 	}
 
-	void xDescribe(const YString& InDescription, TFunction<void()> DoWork)
+	void xDescribe(const FString& InDescription, TFunction<void()> DoWork)
 	{
 		//disabled
 	}
 
-	void Describe(const YString& InDescription, TFunction<void()> DoWork)
+	void Describe(const FString& InDescription, TFunction<void()> DoWork)
 	{
 		const TSharedRef<FSpecDefinitionScope> ParentScope = DefinitionScopeStack.Last();
 		const TSharedRef<FSpecDefinitionScope> NewScope = MakeShareable(new FSpecDefinitionScope());
@@ -1813,27 +1813,27 @@ public:
 		}
 	}
 
-	void xIt(const YString& InDescription, TFunction<void()> DoWork)
+	void xIt(const FString& InDescription, TFunction<void()> DoWork)
 	{
 		//disabled
 	}
 
-	void xIt(const YString& InDescription, EAsyncExecution Execution, TFunction<void()> DoWork)
+	void xIt(const FString& InDescription, EAsyncExecution Execution, TFunction<void()> DoWork)
 	{
 		//disabled
 	}
 
-	void xLatentIt(const YString& InDescription, TFunction<void(const FDoneDelegate&)> DoWork)
+	void xLatentIt(const FString& InDescription, TFunction<void(const FDoneDelegate&)> DoWork)
 	{
 		//disabled
 	}
 
-	void xLatentIt(const YString& InDescription, EAsyncExecution Execution, TFunction<void(const FDoneDelegate&)> DoWork)
+	void xLatentIt(const FString& InDescription, EAsyncExecution Execution, TFunction<void(const FDoneDelegate&)> DoWork)
 	{
 		//disabled
 	}
 
-	void It(const YString& InDescription, TFunction<void()> DoWork)
+	void It(const FString& InDescription, TFunction<void()> DoWork)
 	{
 		const TSharedRef<FSpecDefinitionScope> CurrentScope = DefinitionScopeStack.Last();
 		const TArray<FProgramCounterSymbolInfo> Stack = FPlatformStackWalk::GetStack(1, 1);
@@ -1843,7 +1843,7 @@ public:
 		PopDescription(InDescription);
 	}
 
-	void It(const YString& InDescription, EAsyncExecution Execution, TFunction<void()> DoWork)
+	void It(const FString& InDescription, EAsyncExecution Execution, TFunction<void()> DoWork)
 	{
 		const TSharedRef<FSpecDefinitionScope> CurrentScope = DefinitionScopeStack.Last();
 		const TArray<FProgramCounterSymbolInfo> Stack = FPlatformStackWalk::GetStack(1, 1);
@@ -1853,7 +1853,7 @@ public:
 		PopDescription(InDescription);
 	}
 
-	void LatentIt(const YString& InDescription, TFunction<void(const FDoneDelegate&)> DoWork)
+	void LatentIt(const FString& InDescription, TFunction<void(const FDoneDelegate&)> DoWork)
 	{
 		const TSharedRef<FSpecDefinitionScope> CurrentScope = DefinitionScopeStack.Last();
 		const TArray<FProgramCounterSymbolInfo> Stack = FPlatformStackWalk::GetStack(1, 1);
@@ -1863,7 +1863,7 @@ public:
 		PopDescription(InDescription);
 	}
 
-	void LatentIt(const YString& InDescription, EAsyncExecution Execution, TFunction<void(const FDoneDelegate&)> DoWork)
+	void LatentIt(const FString& InDescription, EAsyncExecution Execution, TFunction<void(const FDoneDelegate&)> DoWork)
 	{
 		const TSharedRef<FSpecDefinitionScope> CurrentScope = DefinitionScopeStack.Last();
 		const TArray<FProgramCounterSymbolInfo> Stack = FPlatformStackWalk::GetStack(1, 1);
@@ -2051,19 +2051,19 @@ protected:
 
 private:
 
-	void PushDescription(const YString& InDescription)
+	void PushDescription(const FString& InDescription)
 	{
 		Description.Add(InDescription);
 	}
 
-	void PopDescription(const YString& InDescription)
+	void PopDescription(const FString& InDescription)
 	{
 		Description.RemoveAt(Description.Num() - 1);
 	}
 
-	YString GetDescription() const
+	FString GetDescription() const
 	{
-		YString CompleteDescription;
+		FString CompleteDescription;
 		for (int32 Index = 0; Index < Description.Num(); ++Index)
 		{
 			if (Description[Index].IsEmpty())
@@ -2081,29 +2081,29 @@ private:
 			}
 			else
 			{
-				CompleteDescription = YString::Printf(TEXT("%s.%s"), *CompleteDescription, *Description[Index]);
+				CompleteDescription = FString::Printf(TEXT("%s.%s"), *CompleteDescription, *Description[Index]);
 			}
 		}
 
 		return CompleteDescription;
 	}
 
-	YString GetId() const
+	FString GetId() const
 	{
 		if (Description.Last().EndsWith(TEXT("]")))
 		{
-			YString ItDescription = Description.Last();
+			FString ItDescription = Description.Last();
 			ItDescription.RemoveAt(ItDescription.Len() - 1);
 
 			int32 StartingBraceIndex = INDEX_NONE;
 			if (ItDescription.FindLastChar(TEXT('['), StartingBraceIndex) && StartingBraceIndex != ItDescription.Len() - 1)
 			{
-				YString CommandId = ItDescription.RightChop(StartingBraceIndex + 1);
+				FString CommandId = ItDescription.RightChop(StartingBraceIndex + 1);
 				return CommandId;
 			}
 		}
 
-		YString CompleteId;
+		FString CompleteId;
 		for (int32 Index = 0; Index < Description.Num(); ++Index)
 		{
 			if (Description[Index].IsEmpty())
@@ -2121,7 +2121,7 @@ private:
 			}
 			else
 			{
-				CompleteId = YString::Printf(TEXT("%s %s"), *CompleteId, *Description[Index]);
+				CompleteId = FString::Printf(TEXT("%s %s"), *CompleteId, *Description[Index]);
 			}
 		}
 
@@ -2130,8 +2130,8 @@ private:
 
 private:
 
-	TArray<YString> Description;
-	TMap<YString, TSharedRef<FSpec>> IdToSpecMap;
+	TArray<FString> Description;
+	TMap<FString, TSharedRef<FSpec>> IdToSpecMap;
 	TSharedPtr<FSpecDefinitionScope> RootDefinitionScope;
 	TArray<TSharedRef<FSpecDefinitionScope>> DefinitionScopeStack;
 	bool bHasBeenDefined;
@@ -2230,7 +2230,7 @@ public: \
 	class TClass : public TBaseClass \
 	{ \
 	public: \
-		TClass( const YString& InName ) \
+		TClass( const FString& InName ) \
 		:TBaseClass( InName, false ) {\
 			static_assert((TFlags)&EAutomationTestFlags::ApplicationContextMask, "AutomationTest has no application flag.  It shouldn't run.  See AutomationTest.h."); \
 			static_assert(	(((TFlags)&EAutomationTestFlags::FilterMask) == EAutomationTestFlags::SmokeFilter) || \
@@ -2243,23 +2243,23 @@ public: \
 		virtual uint32 GetTestFlags() const override { return TFlags; } \
 		virtual bool IsStressTest() const { return false; } \
 		virtual uint32 GetRequiredDeviceNum() const override { return 1; } \
-		virtual YString GetTestSourceFileName() const override { return FileName; } \
+		virtual FString GetTestSourceFileName() const override { return FileName; } \
 		virtual int32 GetTestSourceFileLine() const override { return LineNumber; } \
 	protected: \
-		virtual void GetTests(TArray<YString>& OutBeautifiedNames, TArray <YString>& OutTestCommands) const override \
+		virtual void GetTests(TArray<FString>& OutBeautifiedNames, TArray <FString>& OutTestCommands) const override \
 		{ \
 			OutBeautifiedNames.Add(PrettFName); \
-			OutTestCommands.Add(YString()); \
+			OutTestCommands.Add(FString()); \
 		} \
-		virtual bool RunTest(const YString& Parameters) override; \
-		virtual YString GetBeautifiedTestName() const override { return PrettFName; } \
+		virtual bool RunTest(const FString& Parameters) override; \
+		virtual FString GetBeautifiedTestName() const override { return PrettFName; } \
 	};
 
 #define IMPLEMENT_COMPLEX_AUTOMATION_TEST_PRIVATE( TClass, TBaseClass, PrettFName, TFlags, FileName, LineNumber ) \
 	class TClass : public TBaseClass \
 	{ \
 	public: \
-		TClass( const YString& InName ) \
+		TClass( const FString& InName ) \
 		:TBaseClass( InName, true ) { \
 			static_assert((TFlags)&EAutomationTestFlags::ApplicationContextMask, "AutomationTest has no application flag.  It shouldn't run.  See AutomationTest.h."); \
 			static_assert(	(((TFlags)&EAutomationTestFlags::FilterMask) == EAutomationTestFlags::SmokeFilter) || \
@@ -2272,19 +2272,19 @@ public: \
 		virtual uint32 GetTestFlags() const override { return ((TFlags) & ~(EAutomationTestFlags::SmokeFilter)); } \
 		virtual bool IsStressTest() const { return true; } \
 		virtual uint32 GetRequiredDeviceNum() const override { return 1; } \
-		virtual YString GetTestSourceFileName() const override { return FileName; } \
+		virtual FString GetTestSourceFileName() const override { return FileName; } \
 		virtual int32 GetTestSourceFileLine() const override { return LineNumber; } \
 	protected: \
-		virtual void GetTests(TArray<YString>& OutBeautifiedNames, TArray <YString>& OutTestCommands) const override; \
-		virtual bool RunTest(const YString& Parameters) override; \
-		virtual YString GetBeautifiedTestName() const override { return PrettFName; } \
+		virtual void GetTests(TArray<FString>& OutBeautifiedNames, TArray <FString>& OutTestCommands) const override; \
+		virtual bool RunTest(const FString& Parameters) override; \
+		virtual FString GetBeautifiedTestName() const override { return PrettFName; } \
 	};
 
 #define IMPLEMENT_NETWORKED_AUTOMATION_TEST_PRIVATE(TClass, TBaseClass, PrettFName, TFlags, NumParticipants, FileName, LineNumber) \
 	class TClass : public TBaseClass \
 	{ \
 	public: \
-		TClass( const YString& InName ) \
+		TClass( const FString& InName ) \
 		:TBaseClass( InName, false ) { \
 			static_assert((TFlags)&EAutomationTestFlags::ApplicationContextMask, "AutomationTest has no application flag.  It shouldn't run.  See AutomationTest.h."); \
 			static_assert(	(((TFlags)&EAutomationTestFlags::FilterMask) == EAutomationTestFlags::SmokeFilter) || \
@@ -2296,23 +2296,23 @@ public: \
 		} \
 		virtual uint32 GetTestFlags() const override { return ((TFlags) & ~(EAutomationTestFlags::EditorContext | EAutomationTestFlags::CommandletContext | EAutomationTestFlags::SmokeFilter)); } \
 		virtual uint32 GetRequiredDeviceNum() const override { return NumParticipants; } \
-		virtual YString GetTestSourceFileName() const override { return FileName; } \
+		virtual FString GetTestSourceFileName() const override { return FileName; } \
 		virtual int32 GetTestSourceFileLine() const override { return LineNumber; } \
 	protected: \
-		virtual void GetTests(TArray<YString>& OutBeautifiedNames, TArray <YString>& OutTestCommands) const override \
+		virtual void GetTests(TArray<FString>& OutBeautifiedNames, TArray <FString>& OutTestCommands) const override \
 		{ \
 			OutBeautifiedNames.Add(PrettFName); \
-			OutTestCommands.Add(YString()); \
+			OutTestCommands.Add(FString()); \
 		} \
-		virtual bool RunTest(const YString& Parameters) override; \
-		virtual YString GetBeautifiedTestName() const override { return PrettFName; } \
+		virtual bool RunTest(const FString& Parameters) override; \
+		virtual FString GetBeautifiedTestName() const override { return PrettFName; } \
 	};
 
 #define IMPLEMENT_BDD_AUTOMATION_TEST_PRIVATE( TClass, PrettFName, TFlags, FileName, LineNumber ) \
 	class TClass : public FBDDAutomationTestBase \
 	{ \
 	public: \
-		TClass( const YString& InName ) \
+		TClass( const FString& InName ) \
 		:FBDDAutomationTestBase( InName, false ) {\
 			static_assert((TFlags)&EAutomationTestFlags::ApplicationContextMask, "AutomationTest has no application flag.  It shouldn't run.  See AutomationTest.h."); \
 			static_assert(	(((TFlags)&EAutomationTestFlags::FilterMask) == EAutomationTestFlags::SmokeFilter) || \
@@ -2325,11 +2325,11 @@ public: \
 		virtual uint32 GetTestFlags() const override { return TFlags; } \
 		virtual bool IsStressTest() const { return false; } \
 		virtual uint32 GetRequiredDeviceNum() const override { return 1; } \
-		virtual YString GetTestSourceFileName() const override { return FileName; } \
+		virtual FString GetTestSourceFileName() const override { return FileName; } \
 		virtual int32 GetTestSourceFileLine() const override { return LineNumber; } \
 	protected: \
-		virtual bool RunTest(const YString& Parameters) override; \
-		virtual YString GetBeautifiedTestName() const override { return PrettFName; } \
+		virtual bool RunTest(const FString& Parameters) override; \
+		virtual FString GetBeautifiedTestName() const override { return PrettFName; } \
 	private: \
 		void Define(); \
 	};
@@ -2338,7 +2338,7 @@ public: \
 	class TClass : public FAutomationSpecBase \
 	{ \
 	public: \
-		TClass( const YString& InName ) \
+		TClass( const FString& InName ) \
 		: FAutomationSpecBase( InName, false ) {\
 			static_assert((TFlags)&EAutomationTestFlags::ApplicationContextMask, "AutomationTest has no application flag.  It shouldn't run.  See AutomationTest.h."); \
 			static_assert(	(((TFlags)&EAutomationTestFlags::FilterMask) == EAutomationTestFlags::SmokeFilter) || \
@@ -2349,10 +2349,10 @@ public: \
 							"All AutomationTests must have exactly 1 filter type specified.  See AutomationTest.h."); \
 		} \
 		virtual uint32 GetTestFlags() const override { return TFlags; } \
-		virtual YString GetTestSourceFileName() const override { return FileName; } \
+		virtual FString GetTestSourceFileName() const override { return FileName; } \
 		virtual int32 GetTestSourceFileLine() const override { return LineNumber; } \
 	protected: \
-		virtual YString GetBeautifiedTestName() const override { return PrettFName; } \
+		virtual FString GetBeautifiedTestName() const override { return PrettFName; } \
 		virtual void Define() override; \
 	};
 
@@ -2360,7 +2360,7 @@ public: \
 	class TClass : public FAutomationSpecBase \
 	{ \
 	public: \
-		TClass( const YString& InName ) \
+		TClass( const FString& InName ) \
 		: FAutomationSpecBase( InName, false ) {\
 			static_assert((TFlags)&EAutomationTestFlags::ApplicationContextMask, "AutomationTest has no application flag.  It shouldn't run.  See AutomationTest.h."); \
 			static_assert(	(((TFlags)&EAutomationTestFlags::FilterMask) == EAutomationTestFlags::SmokeFilter) || \
@@ -2372,11 +2372,11 @@ public: \
 		} \
 		virtual uint32 GetTestFlags() const override { return TFlags; } \
 		using FAutomationSpecBase::GetTestSourceFileName; \
-		virtual YString GetTestSourceFileName() const override { return FileName; } \
+		virtual FString GetTestSourceFileName() const override { return FileName; } \
 		using FAutomationSpecBase::GetTestSourceFileLine; \
 		virtual int32 GetTestSourceFileLine() const override { return LineNumber; } \
 	protected: \
-		virtual YString GetBeautifiedTestName() const override { return PrettFName; } \
+		virtual FString GetBeautifiedTestName() const override { return PrettFName; } \
 		virtual void Define() override;
 
 #if WITH_AUTOMATION_WORKER

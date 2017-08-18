@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Misc/VarArgs.h"
 #include "Misc/AssertionMacros.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Logging/LogCategory.h"
 
 /*----------------------------------------------------------------------------

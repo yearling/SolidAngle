@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Templates/PointerConvertibleFromTo.h"
+#include "Templates/PointerIsConvertibleFromTo.h"
 #include "Templates/UnrealTemplate.h"
 #include "Templates/Decay.h"
 

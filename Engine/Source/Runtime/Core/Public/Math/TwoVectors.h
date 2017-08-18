@@ -202,7 +202,7 @@ public:
 	*
 	* @return A string describing the two-vector.
 	*/
-	YString ToString() const;
+	FString ToString() const;
 
 public:
 
@@ -425,8 +425,8 @@ FORCEINLINE float& YTwoVectors::operator[](int32 i)
 	}
 }
 
-FORCEINLINE YString YTwoVectors::ToString() const
+FORCEINLINE FString YTwoVectors::ToString() const
 {
-	return YString::Printf(TEXT("V1=(%s) V2=(%s)"), *v1.ToString(), *v2.ToString());
+	return FString::Printf(TEXT("V1=(%s) V2=(%s)"), *v1.ToString(), *v2.ToString());
 }
 template <> struct TIsPODType<YTwoVectors> { enum { Value = true }; };

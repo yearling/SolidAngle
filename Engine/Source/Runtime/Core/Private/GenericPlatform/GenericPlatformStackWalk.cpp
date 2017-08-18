@@ -103,7 +103,7 @@ bool FGenericPlatformStackWalk::SymbolInfoToHumanReadableString( const FProgramC
 }
 
 
-bool FGenericPlatformStackWalk::SymbolInfoToHumanReadableStringEx( const FProgramCounterSymbolInfoEx& SymbolInfo, YString& out_HumanReadableString )
+bool FGenericPlatformStackWalk::SymbolInfoToHumanReadableStringEx( const FProgramCounterSymbolInfoEx& SymbolInfo, FString& out_HumanReadableString )
 {
 	// Valid callstack line 
 	// ModuleName!FunctionName [Filename:LineNumber]
@@ -115,7 +115,7 @@ bool FGenericPlatformStackWalk::SymbolInfoToHumanReadableStringEx( const FProgra
 	const TCHAR* Pos0 = FCString::Strrchr( *SymbolInfo.ModuleName, '\\' );
 	const TCHAR* Pos1 = FCString::Strrchr( *SymbolInfo.ModuleName, '/' );
 	const UPTRINT RealPos = YMath::Max( (UPTRINT)Pos0, (UPTRINT)Pos1 );
-	const YString StrippedModuleName = RealPos > 0 ? (const ANSICHAR*)(RealPos + 1) : SymbolInfo.ModuleName;
+	const FString StrippedModuleName = RealPos > 0 ? (const ANSICHAR*)(RealPos + 1) : SymbolInfo.ModuleName;
 
 	out_HumanReadableString = StrippedModuleName;
 	
@@ -129,7 +129,7 @@ bool FGenericPlatformStackWalk::SymbolInfoToHumanReadableStringEx( const FProgra
 	const bool bHasValidFilename = SymbolInfo.Filename.Len() > 0 && SymbolInfo.LineNumber > 0;
 	if( bHasValidFilename )
 	{
-		out_HumanReadableString += YString::Printf( TEXT( " [%s:%i]" ), *SymbolInfo.Filename, SymbolInfo.LineNumber );
+		out_HumanReadableString += FString::Printf( TEXT( " [%s:%i]" ), *SymbolInfo.Filename, SymbolInfo.LineNumber );
 	}
 
 	// Return true, if we have a valid function name.
@@ -201,7 +201,7 @@ TArray<FProgramCounterSymbolInfo> FGenericPlatformStackWalk::GetStack(int32 Igno
 	return Stack;
 }
 
-TMap<FName, YString> FGenericPlatformStackWalk::GetSymbolMetaData()
+TMap<FName, FString> FGenericPlatformStackWalk::GetSymbolMetaData()
 {
-	return TMap<FName, YString>();
+	return TMap<FName, FString>();
 }

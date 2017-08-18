@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Math/UnrealMathUtility.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Misc/Parse.h"
 #include "Logging/LogMacros.h"
 #include "Math/Vector.h"
@@ -306,10 +306,10 @@ public:
 	*
 	* @return Text describing the vector.
 	*/
-	YString ToString() const;
+	FString ToString() const;
 
 	/** Get a short textural representation of this vector, for compact readable logging. */
-	YString ToCompactString() const;
+	FString ToCompactString() const;
 
 	/**
 	* Initialize this Rotator based on an YString. The String is expected to contain P=, Y=, R=.
@@ -318,7 +318,7 @@ public:
 	* @param InSourceString	YString containing the rotator values.
 	* @return true if the P,Y,R values were read successfully; false otherwise.
 	*/
-	bool InitFromString(const YString& InSourceString);
+	bool InitFromString(const FString& InSourceString);
 
 	/**
 	* Utility to check if there are any non-finite values (NaN or Inf) in this Rotator.
@@ -676,50 +676,50 @@ FORCEINLINE void FRotator::Normalize()
 	DiagnosticCheckNaN();
 }
 
-FORCEINLINE YString FRotator::ToString() const
+FORCEINLINE FString FRotator::ToString() const
 {
-	return YString::Printf(TEXT("P=%f Y=%f R=%f"), Pitch, Yaw, Roll);
+	return FString::Printf(TEXT("P=%f Y=%f R=%f"), Pitch, Yaw, Roll);
 }
 
 
-FORCEINLINE YString FRotator::ToCompactString() const
+FORCEINLINE FString FRotator::ToCompactString() const
 {
 	if (IsNearlyZero())
 	{
-		return YString::Printf(TEXT("R(0)"));
+		return FString::Printf(TEXT("R(0)"));
 	}
 
-	YString ReturnString(TEXT("R("));
+	FString ReturnString(TEXT("R("));
 	bool bIsEmptyString = true;
 	if (!YMath::IsNearlyZero(Pitch))
 	{
-		ReturnString += YString::Printf(TEXT("P=%.2f"), Pitch);
+		ReturnString += FString::Printf(TEXT("P=%.2f"), Pitch);
 		bIsEmptyString = false;
 	}
 	if (!YMath::IsNearlyZero(Yaw))
 	{
 		if (!bIsEmptyString)
 		{
-			ReturnString += YString(TEXT(", "));
+			ReturnString += FString(TEXT(", "));
 		}
-		ReturnString += YString::Printf(TEXT("Y=%.2f"), Yaw);
+		ReturnString += FString::Printf(TEXT("Y=%.2f"), Yaw);
 		bIsEmptyString = false;
 	}
 	if (!YMath::IsNearlyZero(Roll))
 	{
 		if (!bIsEmptyString)
 		{
-			ReturnString += YString(TEXT(", "));
+			ReturnString += FString(TEXT(", "));
 		}
-		ReturnString += YString::Printf(TEXT("R=%.2f"), Roll);
+		ReturnString += FString::Printf(TEXT("R=%.2f"), Roll);
 		bIsEmptyString = false;
 	}
-	ReturnString += YString(TEXT(")"));
+	ReturnString += FString(TEXT(")"));
 	return ReturnString;
 }
 
 
-FORCEINLINE bool FRotator::InitFromString(const YString& InSourceString)
+FORCEINLINE bool FRotator::InitFromString(const FString& InSourceString)
 {
 	Pitch = Yaw = Roll = 0;
 

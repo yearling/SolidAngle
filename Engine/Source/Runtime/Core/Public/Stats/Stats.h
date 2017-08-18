@@ -297,7 +297,7 @@
 #error "STATS must be defined as either zero or one."
 #endif
 
-#include "ProfilingDebugging/SMemoryDefines.h"
+#include "ProfilingDebugging/UMemoryDefines.h"
 
 struct TStatId;
 
@@ -473,7 +473,7 @@ struct FDynamicStats
 	*	FDynamicStats::CreateStatId<STAT_GROUP_TO_FStatGroup( STATGROUP_UObjects )>( YString::Printf(TEXT("MyDynamicStat_%i"),Index) )
 	*/
 	template< typename TStatGroup >
-	static TStatId CreateStatId(const YString& StatNameOrDescription)
+	static TStatId CreateStatId(const FString& StatNameOrDescription)
 	{
 #if	STATS
 		return CreateStatId<TStatGroup>(FName(*StatNameOrDescription));

@@ -24,5 +24,5 @@ public:
 	/**
 	* @return True if a given engine distribution contains source (as opposed to, say, Launcher builds)
 	*/
-	static bool IsSourceDistribution(const YString& RootDir);
+	static bool IsSourceDistribution(const FString& RootDir);
 };

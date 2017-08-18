@@ -47,11 +47,11 @@ FDateTime::FDateTime( int32 Year, int32 Month, int32 Day, int32 Hour, int32 Minu
 /* YDateTime interface
  *****************************************************************************/
 
-bool FDateTime::ExportTextItem( YString& ValueStr, FDateTime const& DefaultValue, UObject* Parent, int32 PortFlags, UObject* ExportRootScope ) const
+bool FDateTime::ExportTextItem( FString& ValueStr, FDateTime const& DefaultValue, UObject* Parent, int32 PortFlags, UObject* ExportRootScope ) const
 {
 	if (0 != (PortFlags & EPropertyPortFlags::PPF_ExportCpp))
 	{
-		ValueStr += YString::Printf(TEXT("YDateTime(0x%016X)"), Ticks);
+		ValueStr += FString::Printf(TEXT("YDateTime(0x%016X)"), Ticks);
 		return true;
 	}
 
@@ -159,7 +159,7 @@ bool FDateTime::ImportTextItem( const TCHAR*& Buffer, int32 PortFlags, UObject* 
 		return false;
 	}
 
-	if (!Parse(YString(Buffer).Left(19), *this))
+	if (!Parse(FString(Buffer).Left(19), *this))
 	{
 		return false;
 	}
@@ -178,14 +178,14 @@ bool FDateTime::Serialize( FArchive& Ar )
 }
 
 
-YString FDateTime::ToIso8601() const
+FString FDateTime::ToIso8601() const
 {
 	return ToString(TEXT("%Y-%m-%dT%H:%M:%S.%sZ"));
 }
 
-YString FDateTime::ToHttpDate() const
+FString FDateTime::ToHttpDate() const
 {
-	YString DayStr;
+	FString DayStr;
 	switch (GetDayOfWeek())
 	{
 		case EDayOfWeek::Monday:	DayStr = TEXT("Mon");	break;
@@ -197,7 +197,7 @@ YString FDateTime::ToHttpDate() const
 		case EDayOfWeek::Sunday:	DayStr = TEXT("Sun");	break;
 	}
 
-	YString MonthStr;
+	FString MonthStr;
 	switch (GetMonthOfYear())
 	{
 		case EMonthOfYear::January:		MonthStr = TEXT("Jan");	break;
@@ -214,19 +214,19 @@ YString FDateTime::ToHttpDate() const
 		case EMonthOfYear::December:	MonthStr = TEXT("Dec");	break;
 	}
 
-	YString Time = YString::Printf(TEXT("%02i:%02i:%02i"), GetHour(), GetMinute(), GetSecond());
-	return YString::Printf(TEXT("%s, %02d %s %d %s GMT"), *DayStr, GetDay(), *MonthStr, GetYear(), *Time);
+	FString Time = FString::Printf(TEXT("%02i:%02i:%02i"), GetHour(), GetMinute(), GetSecond());
+	return FString::Printf(TEXT("%s, %02d %s %d %s GMT"), *DayStr, GetDay(), *MonthStr, GetYear(), *Time);
 }
 
-YString FDateTime::ToString() const
+FString FDateTime::ToString() const
 {
 	return ToString(TEXT("%Y.%m.%d-%H.%M.%S"));
 }
 
 
-YString FDateTime::ToString( const TCHAR* Format ) const
+FString FDateTime::ToString( const TCHAR* Format ) const
 {
-	YString Result;
+	FString Result;
 
 	if (Format != nullptr)
 	{
@@ -238,16 +238,16 @@ YString FDateTime::ToString( const TCHAR* Format ) const
 				{
 				case TCHAR('a'): Result += IsMorning() ? TEXT("am") : TEXT("pm"); break;
 				case TCHAR('A'): Result += IsMorning() ? TEXT("AM") : TEXT("PM"); break;
-				case TCHAR('d'): Result += YString::Printf(TEXT("%02i"), GetDay()); break;
-				case TCHAR('D'): Result += YString::Printf(TEXT("%03i"), GetDayOfYear()); break;
-				case TCHAR('m'): Result += YString::Printf(TEXT("%02i"), GetMonth()); break;
-				case TCHAR('y'): Result += YString::Printf(TEXT("%02i"), GetYear() % 100); break;
-				case TCHAR('Y'): Result += YString::Printf(TEXT("%04i"), GetYear()); break;
-				case TCHAR('h'): Result += YString::Printf(TEXT("%02i"), GetHour12()); break;
-				case TCHAR('H'): Result += YString::Printf(TEXT("%02i"), GetHour()); break;
-				case TCHAR('M'): Result += YString::Printf(TEXT("%02i"), GetMinute()); break;
-				case TCHAR('S'): Result += YString::Printf(TEXT("%02i"), GetSecond()); break;
-				case TCHAR('s'): Result += YString::Printf(TEXT("%03i"), GetMillisecond()); break;
+				case TCHAR('d'): Result += FString::Printf(TEXT("%02i"), GetDay()); break;
+				case TCHAR('D'): Result += FString::Printf(TEXT("%03i"), GetDayOfYear()); break;
+				case TCHAR('m'): Result += FString::Printf(TEXT("%02i"), GetMonth()); break;
+				case TCHAR('y'): Result += FString::Printf(TEXT("%02i"), GetYear() % 100); break;
+				case TCHAR('Y'): Result += FString::Printf(TEXT("%04i"), GetYear()); break;
+				case TCHAR('h'): Result += FString::Printf(TEXT("%02i"), GetHour12()); break;
+				case TCHAR('H'): Result += FString::Printf(TEXT("%02i"), GetHour()); break;
+				case TCHAR('M'): Result += FString::Printf(TEXT("%02i"), GetMinute()); break;
+				case TCHAR('S'): Result += FString::Printf(TEXT("%02i"), GetSecond()); break;
+				case TCHAR('s'): Result += FString::Printf(TEXT("%03i"), GetMillisecond()); break;
 				default:		 Result += *Format;
 				}
 			}
@@ -314,15 +314,15 @@ FDateTime FDateTime::Now()
 }
 
 
-bool FDateTime::Parse( const YString& DateTimeString, FDateTime& OutDateTime )
+bool FDateTime::Parse( const FString& DateTimeString, FDateTime& OutDateTime )
 {
 	// first replace -, : and . with space
-	YString FixedString = DateTimeString.Replace(TEXT("-"), TEXT(" "));
+	FString FixedString = DateTimeString.Replace(TEXT("-"), TEXT(" "));
 
 	FixedString.ReplaceInline(TEXT(":"), TEXT(" "), ESearchCase::CaseSensitive);
 	FixedString.ReplaceInline(TEXT("."), TEXT(" "), ESearchCase::CaseSensitive);
 
-	TArray<YString> Tokens;
+	TArray<FString> Tokens;
 
 	// split up on a single delimiter
 	FixedString.ParseIntoArray(Tokens, TEXT(" "), true);
@@ -507,13 +507,13 @@ bool FDateTime::ParseIso8601( const TCHAR* DateTimeString, FDateTime& OutDateTim
  *				  | "May" | "Jun" | "Jul" | "Aug"
  *				  | "Sep" | "Oct" | "Nov" | "Dec"
  */
-bool FDateTime::ParseHttpDate(const YString& HttpDate, FDateTime& OutDateTime)
+bool FDateTime::ParseHttpDate(const FString& HttpDate, FDateTime& OutDateTime)
 {
-	auto ParseTime = [](const YString& Time, int32& Hour, int32& Minute, int32& Second) -> bool
+	auto ParseTime = [](const FString& Time, int32& Hour, int32& Minute, int32& Second) -> bool
 	{
 		// 2DIGIT ":" 2DIGIT ":" 2DIGIT
 		// ; 00:00 : 00 - 23 : 59 : 59
-		TArray<YString> Tokens;
+		TArray<FString> Tokens;
 
 		// split up on a single delimiter
 		int32 NumTokens = Time.ParseIntoArray(Tokens, TEXT(":"), true);
@@ -528,7 +528,7 @@ bool FDateTime::ParseHttpDate(const YString& HttpDate, FDateTime& OutDateTime)
 		return false;
 	};
 
-	auto ParseWkday = [](const YString& WkDay) -> int32
+	auto ParseWkday = [](const FString& WkDay) -> int32
 	{
 		const int32 NumChars = WkDay.Len();
 		if (NumChars == 3)
@@ -566,7 +566,7 @@ bool FDateTime::ParseHttpDate(const YString& HttpDate, FDateTime& OutDateTime)
 		return -1;
 	};
 
-	auto ParseWeekday = [](const YString& WeekDay) -> int32
+	auto ParseWeekday = [](const FString& WeekDay) -> int32
 	{
 		const int32 NumChars = WeekDay.Len();
 		if (NumChars >= 6 && NumChars <= 9)
@@ -604,7 +604,7 @@ bool FDateTime::ParseHttpDate(const YString& HttpDate, FDateTime& OutDateTime)
 		return -1;
 	};
 
-	auto ParseMonth = [](const YString& Month) -> int32
+	auto ParseMonth = [](const FString& Month) -> int32
 	{
 		const int32 NumChars = Month.Len();
 		if (NumChars == 3)
@@ -662,7 +662,7 @@ bool FDateTime::ParseHttpDate(const YString& HttpDate, FDateTime& OutDateTime)
 		return -1;
 	};
 
-	auto ParseDate1 = [ParseMonth](const YString& DayStr, const YString& MonStr, const YString& YearStr, int32& Month, int32& Day, int32& Year) -> bool
+	auto ParseDate1 = [ParseMonth](const FString& DayStr, const FString& MonStr, const FString& YearStr, int32& Month, int32& Day, int32& Year) -> bool
 	{
 		// date1 = 2DIGIT SP month SP 4DIGIT
 		// ; day month year(e.g., 02 Jun 1982)
@@ -674,11 +674,11 @@ bool FDateTime::ParseHttpDate(const YString& HttpDate, FDateTime& OutDateTime)
 		return (Day > 0 && Day <= 31) && (Month > 0 && Month <= 12) && (Year > 0 && Year <= 9999);
 	};
 
-	auto ParseDate2 = [ParseMonth](const YString& Date2, int32& Month, int32& Day, int32& Year) -> bool
+	auto ParseDate2 = [ParseMonth](const FString& Date2, int32& Month, int32& Day, int32& Year) -> bool
 	{
 		// date2 = 2DIGIT "-" month "-" 2DIGIT
 		// ; day - month - year(e.g., 02 - Jun - 82)
-		TArray<YString> Tokens;
+		TArray<FString> Tokens;
 
 		// split up on a single delimiter
 		int32 NumTokens = Date2.ParseIntoArray(Tokens, TEXT("-"), true);
@@ -695,7 +695,7 @@ bool FDateTime::ParseHttpDate(const YString& HttpDate, FDateTime& OutDateTime)
 		return (Day > 0 && Day <= 31) && (Month > 0 && Month <= 12) && (Year > 0 && Year <= 9999);
 	};
 
-	auto ParseDate3 = [ParseMonth](const YString& MonStr, const YString& DayStr, int32& Month, int32& Day) -> bool
+	auto ParseDate3 = [ParseMonth](const FString& MonStr, const FString& DayStr, int32& Month, int32& Day) -> bool
 	{
 		// date3 = month SP(2DIGIT | (SP 1DIGIT))
 		// ; month day(e.g., Jun  2)
@@ -708,7 +708,7 @@ bool FDateTime::ParseHttpDate(const YString& HttpDate, FDateTime& OutDateTime)
 
 	if (!HttpDate.IsEmpty())
 	{
-		TArray<YString> Tokens;
+		TArray<FString> Tokens;
 
 		// split up on a single delimiter
 		int32 NumTokens = HttpDate.ParseIntoArray(Tokens, TEXT(" "), true);

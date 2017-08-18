@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Misc/DateTime.h"
 #include "GenericPlatform/GenericPlatformFile.h"
 
@@ -110,7 +110,7 @@ public:
 	virtual FFileStatData GetStatData(const TCHAR* FilenameOrDirectory) = 0;
 
 	/** Finds file or directories. */
-	virtual void FindFiles(TArray<YString>& FileNames, const TCHAR* Filename, bool Files, bool Directories) = 0;
+	virtual void FindFiles(TArray<FString>& FileNames, const TCHAR* Filename, bool Files, bool Directories) = 0;
 
 	/**
 	* Finds all the files within the given directory, with optional file extension filter.
@@ -122,10 +122,10 @@ public:
 	*
 	* @return FoundFiles, All the files that matched the optional FileExtension filter, or all files if none was specified.
 	*/
-	virtual void FindFiles(TArray<YString>& FoundFiles, const TCHAR* Directory, const TCHAR* FileExtension = nullptr) = 0;
+	virtual void FindFiles(TArray<FString>& FoundFiles, const TCHAR* Directory, const TCHAR* FileExtension = nullptr) = 0;
 
 	/** Finds file or directories recursively. */
-	virtual void FindFilesRecursive(TArray<YString>& FileNames, const TCHAR* StartDirectory, const TCHAR* Filename, bool Files, bool Directories, bool bClearFileNames = true) = 0; // utility
+	virtual void FindFilesRecursive(TArray<FString>& FileNames, const TCHAR* StartDirectory, const TCHAR* Filename, bool Files, bool Directories, bool bClearFileNames = true) = 0; // utility
 
 																																													/**
 																																													* Call the Visit function of the visitor once for each file or directory in a single directory. This function does not explore subdirectories.
@@ -189,7 +189,7 @@ public:
 	*
 	* @return	filename using relative path
 	*/
-	virtual YString ConvertToRelativePath(const TCHAR* Filename) = 0;
+	virtual FString ConvertToRelativePath(const TCHAR* Filename) = 0;
 
 	/**
 	* Converts passed in filename to use an absolute path (for reading)
@@ -198,7 +198,7 @@ public:
 	*
 	* @return	filename using absolute path
 	*/
-	virtual YString ConvertToAbsolutePathForExternalAppForRead(const TCHAR* AbsolutePath) = 0;
+	virtual FString ConvertToAbsolutePathForExternalAppForRead(const TCHAR* AbsolutePath) = 0;
 
 	/**
 	* Converts passed in filename to use an absolute path (for writing)
@@ -207,7 +207,7 @@ public:
 	*
 	* @return	filename using absolute path
 	*/
-	virtual YString ConvertToAbsolutePathForExternalAppForWrite(const TCHAR* AbsolutePath) = 0;
+	virtual FString ConvertToAbsolutePathForExternalAppForWrite(const TCHAR* AbsolutePath) = 0;
 
 	/**
 	*	Returns the size of a file. (Thread-safe)
@@ -234,5 +234,5 @@ public:
 	*
 	* @return	Filename with the same case as in the filesystem.
 	*/
-	virtual YString GetFilenameOnDisk(const TCHAR* Filename) = 0;
+	virtual FString GetFilenameOnDisk(const TCHAR* Filename) = 0;
 };

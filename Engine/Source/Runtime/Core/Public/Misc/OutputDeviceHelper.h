@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 
 /** Helper functions used by YOutputDevice derived classes **/
 struct CORE_API YOutputDeviceHelper
@@ -24,7 +24,7 @@ struct CORE_API YOutputDeviceHelper
 	* @param Time Time in seconds
 	* @returns Formatted log line
 	*/
-	static YString FormatLogLine(ELogVerbosity::Type Verbosity, const class FName& Category, const TCHAR* Message = nullptr, ELogTimes::Type LogTime = ELogTimes::None, const double Time = -1.0);
+	static FString FormatLogLine(ELogVerbosity::Type Verbosity, const class FName& Category, const TCHAR* Message = nullptr, ELogTimes::Type LogTime = ELogTimes::None, const double Time = -1.0);
 
 	/**
 	* Formats, casts to ANSI char and serializes a message to archive. Optimized for small number of allocations and Serialize calls

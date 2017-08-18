@@ -6,7 +6,7 @@
 #include "Misc/AssertionMacros.h"
 #include "Misc/Compression.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Set.h"
 #include "Containers/Map.h"
 #include "UObject/NameTypes.h"
@@ -242,7 +242,7 @@ struct FStatsStreamHeader
 	uint32	Version;
 
 	/** Platform that this file was captured on. */
-	YString	PlatformName;
+	FString	PlatformName;
 
 	/** 
 	 *  Offset in the file for the frame table. Serialized as TArray<int64>
@@ -374,7 +374,7 @@ protected:
 		Ar << Number;
 		if (bSendFName)
 		{
-			YString Name = RawName.ToString();
+			FString Name = RawName.ToString();
 			Ar << Name;
 		}
 	}
@@ -435,7 +435,7 @@ protected:
 	FArchive* File;
 
 	/** Filename of the archive that we are writing to. */
-	YString ArchiveFilename;
+	FString ArchiveFilename;
 
 	/** Stats stream header. */
 	FStatsStreamHeader Header;
@@ -472,7 +472,7 @@ public:
 	{}
 
 	/** Creates a file writer and registers for the data delegate. */
-	void Start( const YString& InFilename );
+	void Start( const FString& InFilename );
 
 	/** Finalizes writing the stats data and unregisters the data delegate. */
 	void Stop();
@@ -688,7 +688,7 @@ public:
 		{
 			if( Number & (EStatMetaFlags::SendingFName << (EStatMetaFlags::Shift + EStatAllFields::StartShift)) )
 			{
-				YString Name;
+				FString Name;
 				Ar << Name;
 
 				TheFName = FName( *Name );
@@ -714,7 +714,7 @@ public:
 		{
 			if( Number & (EStatMetaFlags::SendingFName << (EStatMetaFlags::Shift + EStatAllFields::StartShift)) )
 			{
-				YString Name;
+				FString Name;
 				Ar << Name;
 				Number &= ~(EStatMetaFlags::SendingFName << (EStatMetaFlags::Shift + EStatAllFields::StartShift));
 			}
@@ -1073,10 +1073,10 @@ public:
 	/**
 	 * @return current processing stage as string key.
 	 */
-	YString GetProcessingStageAsString() const
+	FString GetProcessingStageAsString() const
 	{
 		const EStatsProcessingStage Stage = GetProcessingStage();
-		YString Result;
+		FString Result;
 		if (Stage== EStatsProcessingStage::SPS_Started)
 		{
 			Result = TEXT( "SPS_Started" );
@@ -1190,7 +1190,7 @@ protected:
 	double LastUpdateTime;
 
 	/** Filename. */
-	const YString Filename;
+	const FString Filename;
 
 	/** Number of frames. */
 	int32 NumFrames;
@@ -1216,10 +1216,10 @@ struct FCommandStatsFile
 	{}
 
 	/** Stat StartFile. */
-	void Start( const YString& Filename );
+	void Start( const FString& Filename );
 
 	/** Stat StartFileRaw. */
-	void StartRaw( const YString& Filename );
+	void StartRaw( const FString& Filename );
 
 	/** Stat StopFile. */
 	void Stop();
@@ -1248,7 +1248,7 @@ struct FCommandStatsFile
 	}
 
 	/** Filename of the last saved stats file. */
-	YString LastFileSaved;
+	FString LastFileSaved;
 
 protected:
 	/** First frame. */

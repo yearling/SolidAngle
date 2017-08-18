@@ -6,7 +6,7 @@
 
 #include "HAL/ExceptionHandling.h"
 #include "Templates/UnrealTemplate.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Logging/LogMacros.h"
 #include "CoreGlobals.h"
 #include "Misc/CoreDelegates.h"
@@ -33,7 +33,7 @@ bool GEnsureShowsCRC = false;
 
 void ReportImageIntegrityStatus(const TCHAR* InMessage, const int32 InCode)
 {
-	YString ErrorString = YString::Printf(TEXT("%s (%d)"), InMessage, InCode);
+	FString ErrorString = FString::Printf(TEXT("%s (%d)"), InMessage, InCode);
 
 	// Check if the app has registered a delegate, and if the delegate consumes this
 	if (FCoreDelegates::OnImageIntegrityChanged.IsBound())

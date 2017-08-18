@@ -7,7 +7,7 @@
 #include "Math/UnrealMathUtility.h"
 #include "HAL/UnrealMemory.h"
 #include "Containers/StringConv.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "UObject/NameTypes.h"
 #include "Misc/ScopeLock.h"
 #include "Misc/Paths.h"
@@ -424,7 +424,7 @@ bool FWindowsPlatformStackWalk::UploadLocalSymbols()
 
 #if WINVER > 0x502
 	// Upload locally compiled files to symbol storage.
-	YString SymbolStorage;
+	FString SymbolStorage;
 	if (!GConfig->GetString( CrashReporterSettings, TEXT( "UploadSymbolsPath" ), SymbolStorage, GEditorPerProjectIni ) || SymbolStorage.IsEmpty())
 	{
 		// Nothing to do.
@@ -452,7 +452,7 @@ bool FWindowsPlatformStackWalk::UploadLocalSymbols()
 
 #if WITH_EDITOR
 	// Get Unreal Engine Editor directory for detecting non-game editor binaries.
-	YString EnginePath = YPaths::ConvertRelativePathToFull( YPaths::EngineDir() );
+	FString EnginePath = YPaths::ConvertRelativePathToFull( YPaths::EngineDir() );
 	YPaths::MakePlatformFilename( EnginePath );
 #endif
 
@@ -514,7 +514,7 @@ bool FWindowsPlatformStackWalk::UploadLocalSymbols()
 /**
  * Loads modules for current process.
  */ 
-static void LoadProcessModules(const YString &RemoteStorage)
+static void LoadProcessModules(const FString &RemoteStorage)
 {
 	int32 ErrorCode = 0;
 	HANDLE ProcessHandle = GetCurrentProcess();
@@ -558,7 +558,7 @@ static void LoadProcessModules(const YString &RemoteStorage)
 		const auto Result = GetFullPathNameA( ImageName, MAX_PATH, SearchPath, &FileName );
 #endif
 
-		YString SearchPathList;
+		FString SearchPathList;
 		if (Result != 0 && Result < MAX_PATH)
 		{
 			*FileName = 0;
@@ -695,9 +695,9 @@ static void OnModulesChanged( FName ModuleThatChanged, EModuleChangeReason Reaso
 	GNeedToRefreshSymbols = true;
 }
 
-YString FWindowsPlatformStackWalk::GetDownstreamStorage()
+FString FWindowsPlatformStackWalk::GetDownstreamStorage()
 {
-	YString DownstreamStorage;
+	FString DownstreamStorage;
 	if (GConfig->GetString(CrashReporterSettings, TEXT("DownstreamStorage"), DownstreamStorage, GEditorPerProjectIni) && !DownstreamStorage.IsEmpty())
 	{
 		DownstreamStorage = YPaths::ConvertRelativePathToFull(YPaths::RootDir(), DownstreamStorage);
@@ -714,13 +714,13 @@ YString FWindowsPlatformStackWalk::GetDownstreamStorage()
  * Create path symbol path.
  * Reference: https://msdn.microsoft.com/en-us/library/ms681416%28v=vs.85%29.aspx?f=255&MSPPError=-2147217396
  */
-static YString GetRemoteStorage(const YString& DownstreamStorage)
+static FString GetRemoteStorage(const FString& DownstreamStorage)
 {
-	TArray<YString> RemoteStorage;
+	TArray<FString> RemoteStorage;
 	GConfig->GetArray(CrashReporterSettings, TEXT("RemoteStorage"), RemoteStorage, GEditorPerProjectIni);
 	if (RemoteStorage.Num() > 0)
 	{
-		YString SymbolStorage;
+		FString SymbolStorage;
 		for (int StorageIndex = 0; StorageIndex < RemoteStorage.Num(); ++StorageIndex)
 		{
 			if (StorageIndex > 0) 
@@ -736,7 +736,7 @@ static YString GetRemoteStorage(const YString& DownstreamStorage)
 	}
 	else
 	{
-		return YString();
+		return FString();
 	}
 }
 
@@ -798,7 +798,7 @@ bool FWindowsPlatformStackWalk::InitStackWalking()
 		SymSetOptions( SymOpts );
 	
 		// Initialize the symbol engine.		
-		const YString RemoteStorage = GetRemoteStorage(GetDownstreamStorage());
+		const FString RemoteStorage = GetRemoteStorage(GetDownstreamStorage());
 #if WINVER > 0x502
 		SymInitializeW( GetCurrentProcess(), RemoteStorage.IsEmpty() ? nullptr : *RemoteStorage, true );
 #else
@@ -823,7 +823,7 @@ bool FWindowsPlatformStackWalk::InitStackWalking()
 
 		if (!FPlatformProperties::IsMonolithicBuild() && FPlatformStackWalk::WantsDetailedCallstacksInNonMonolithicBuilds())
 		{
-			const YString RemoteStorage = GetRemoteStorage( GetDownstreamStorage() );
+			const FString RemoteStorage = GetRemoteStorage( GetDownstreamStorage() );
 			LoadProcessModules( RemoteStorage );
 		}
 	}

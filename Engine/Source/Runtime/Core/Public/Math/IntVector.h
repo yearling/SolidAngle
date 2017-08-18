@@ -208,7 +208,7 @@ public:
 	*
 	* @return A string describing the vector.
 	*/
-	YString ToString() const;
+	FString ToString() const;
 
 public:
 
@@ -424,9 +424,9 @@ FORCEINLINE bool YIntVector::IsZero() const
 }
 
 
-FORCEINLINE YString YIntVector::ToString() const
+FORCEINLINE FString YIntVector::ToString() const
 {
-	return YString::Printf(TEXT("X=%d Y=%d Z=%d"), X, Y, Z);
+	return FString::Printf(TEXT("X=%d Y=%d Z=%d"), X, Y, Z);
 }
 
 FORCEINLINE uint32 GetTypeHash(const YIntVector& Vector)

@@ -24,7 +24,7 @@ FQueuedThreadPool* GLargeThreadPool = nullptr;
 CORE_API bool IsInSlateThread()
 {
 	// If this explicitly is a slate thread, not just the main thread running slate
-	return GSlateLoadingThreadId != 0 && YPlatformTLS::GetCurrentThreadId() == GSlateLoadingThreadId;
+	return GSlateLoadingThreadId != 0 && FPlatformTLS::GetCurrentThreadId() == GSlateLoadingThreadId;
 }
 
 CORE_API FRunnableThread* GAudioThread = nullptr;
@@ -32,7 +32,7 @@ CORE_API FRunnableThread* GAudioThread = nullptr;
 CORE_API bool IsInAudioThread()
 {
 	// True if this is the audio thread or if there is no audio thread, then if it is the game thread
-	return (GAudioThreadId != 0 && YPlatformTLS::GetCurrentThreadId() == GAudioThreadId) || (GAudioThreadId == 0 && YPlatformTLS::GetCurrentThreadId() == GGameThreadId);
+	return (GAudioThreadId != 0 && FPlatformTLS::GetCurrentThreadId() == GAudioThreadId) || (GAudioThreadId == 0 && FPlatformTLS::GetCurrentThreadId() == GGameThreadId);
 }
 
 CORE_API int32 GIsRenderingThreadSuspended = 0;
@@ -41,22 +41,22 @@ CORE_API FRunnableThread* GRenderingThread = nullptr;
 
 CORE_API bool IsInActualRenderingThread()
 {
-	return GRenderingThread && YPlatformTLS::GetCurrentThreadId() == GRenderingThread->GetThreadID();
+	return GRenderingThread && FPlatformTLS::GetCurrentThreadId() == GRenderingThread->GetThreadID();
 }
 
 CORE_API bool IsInRenderingThread()
 {
-	return !GRenderingThread || GIsRenderingThreadSuspended || (YPlatformTLS::GetCurrentThreadId() == GRenderingThread->GetThreadID());
+	return !GRenderingThread || GIsRenderingThreadSuspended || (FPlatformTLS::GetCurrentThreadId() == GRenderingThread->GetThreadID());
 }
 
 CORE_API bool IsInParallelRenderingThread()
 {
-	return !GRenderingThread || GIsRenderingThreadSuspended || (YPlatformTLS::GetCurrentThreadId() != GGameThreadId);
+	return !GRenderingThread || GIsRenderingThreadSuspended || (FPlatformTLS::GetCurrentThreadId() != GGameThreadId);
 }
 
 CORE_API bool IsInRHIThread()
 {
-	return GRHIThread && YPlatformTLS::GetCurrentThreadId() == GRHIThread->GetThreadID();
+	return GRHIThread && FPlatformTLS::GetCurrentThreadId() == GRHIThread->GetThreadID();
 }
 CORE_API FRunnableThread* GRHIThread = nullptr;
 // Fake threads
@@ -188,9 +188,9 @@ void FThreadManager::Tick()
 	}
 }
 
-const YString& FThreadManager::GetThreadName(uint32 ThreadId)
+const FString& FThreadManager::GetThreadName(uint32 ThreadId)
 {
-	static YString NoThreadName;
+	static FString NoThreadName;
 	FScopeLock ThreadsLock(&ThreadsCritical);
 	FRunnableThread** Thread = Threads.Find(ThreadId);
 	if (Thread)
@@ -277,8 +277,8 @@ uint32 FRunnableThread::RunnableTlsSlot = FRunnableThread::GetTlsSlot();
 uint32 FRunnableThread::GetTlsSlot()
 {
 	check( IsInGameThread() );
-	uint32 TlsSlot = YPlatformTLS::AllocTlsSlot();
-	check( YPlatformTLS::IsValidTlsSlot( TlsSlot ) );
+	uint32 TlsSlot = FPlatformTLS::AllocTlsSlot();
+	check( FPlatformTLS::IsValidTlsSlot( TlsSlot ) );
 	return TlsSlot;
 }
 
@@ -361,16 +361,16 @@ void FRunnableThread::SetTls()
 {
 	// Make sure it's called from the owning thread.
 	//check( ThreadID == YPlatformTLS::GetCurrentThreadId() );
-	check( YPlatformTLS::IsValidTlsSlot(RunnableTlsSlot) );
-	YPlatformTLS::SetTlsValue( RunnableTlsSlot, this );
+	check( FPlatformTLS::IsValidTlsSlot(RunnableTlsSlot) );
+	FPlatformTLS::SetTlsValue( RunnableTlsSlot, this );
 }
 
 void FRunnableThread::FreeTls()
 {
 	// Make sure it's called from the owning thread.
-	check( ThreadID == YPlatformTLS::GetCurrentThreadId() );
-	check( YPlatformTLS::IsValidTlsSlot(RunnableTlsSlot) );
-	YPlatformTLS::SetTlsValue( RunnableTlsSlot, nullptr );
+	check( ThreadID == FPlatformTLS::GetCurrentThreadId() );
+	check( FPlatformTLS::IsValidTlsSlot(RunnableTlsSlot) );
+	FPlatformTLS::SetTlsValue( RunnableTlsSlot, nullptr );
 
 	// Delete all FTlsAutoCleanup objects created for this thread.
 	for( auto& Instance : TlsInstances )
@@ -468,7 +468,7 @@ public:
 	virtual bool Create(class FQueuedThreadPool* InPool,uint32 InStackSize = 0,EThreadPriority ThreadPriority=TPri_Normal)
 	{
 		static int32 PoolThreadIndex = 0;
-		const YString PoolThreadName = YString::Printf( TEXT( "PoolThread %d" ), PoolThreadIndex );
+		const FString PoolThreadName = FString::Printf( TEXT( "PoolThread %d" ), PoolThreadIndex );
 		PoolThreadIndex++;
 
 		OwningThreadPool = InPool;
@@ -751,20 +751,20 @@ FTlsAutoCleanup* FThreadSingletonInitializer::Get( TFunctionRef<FTlsAutoCleanup*
 {
 	if (TlsSlot == 0xFFFFFFFF)
 	{
-		const uint32 ThisTlsSlot = YPlatformTLS::AllocTlsSlot();
-		check(YPlatformTLS::IsValidTlsSlot(ThisTlsSlot));
+		const uint32 ThisTlsSlot = FPlatformTLS::AllocTlsSlot();
+		check(FPlatformTLS::IsValidTlsSlot(ThisTlsSlot));
 		const uint32 PrevTlsSlot = FPlatformAtomics::InterlockedCompareExchange( (int32*)&TlsSlot, (int32)ThisTlsSlot, 0xFFFFFFFF );
 		if (PrevTlsSlot != 0xFFFFFFFF)
 		{
-			YPlatformTLS::FreeTlsSlot( ThisTlsSlot );
+			FPlatformTLS::FreeTlsSlot( ThisTlsSlot );
 		}
 	}
-	FTlsAutoCleanup* ThreadSingleton = (FTlsAutoCleanup*)YPlatformTLS::GetTlsValue( TlsSlot );
+	FTlsAutoCleanup* ThreadSingleton = (FTlsAutoCleanup*)FPlatformTLS::GetTlsValue( TlsSlot );
 	if( !ThreadSingleton )
 	{
 		ThreadSingleton = CreateInstance();
 		ThreadSingleton->Register();
-		YPlatformTLS::SetTlsValue( TlsSlot, ThreadSingleton );
+		FPlatformTLS::SetTlsValue( TlsSlot, ThreadSingleton );
 	}
 	return ThreadSingleton;
 }

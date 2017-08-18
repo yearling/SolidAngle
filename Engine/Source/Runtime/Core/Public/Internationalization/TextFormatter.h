@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Templates/Function.h"
 #include "Containers/Map.h"
 #include "Internationalization/Text.h"
@@ -38,10 +38,10 @@ public:
 	static FText Format(FTextFormat&& InFmt, TArray<FFormatArgumentData>&& InArguments, const bool bInRebuildText, const bool bInRebuildAsSource);
 
 	/** Incredibly low-level version of format. You should only be calling this if you're implementing a custom argument modifier type that itself needs to format using the private arguments */
-	static YString Format(const FTextFormat& InFmt, const FPrivateTextFormatArguments& InFormatArgs);
+	static FString Format(const FTextFormat& InFmt, const FPrivateTextFormatArguments& InFormatArgs);
 
 	/** Incredibly low-level version of FFormatArgumentValue::ToFormattedString. You should only be calling this if you're implementing a custom argument modifier type that itself needs to convert the argument to a string */
-	static void ArgumentValueToFormattedString(const FFormatArgumentValue& InValue, const FPrivateTextFormatArguments& InFormatArgs, YString& OutResult);
+	static void ArgumentValueToFormattedString(const FFormatArgumentValue& InValue, const FPrivateTextFormatArguments& InFormatArgs, FString& OutResult);
 
 private:
 	static int32 EstimateArgumentValueLength(const FFormatArgumentValue& ArgumentValue);

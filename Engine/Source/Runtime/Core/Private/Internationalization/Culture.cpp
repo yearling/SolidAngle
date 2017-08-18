@@ -9,21 +9,21 @@
 #endif
 
 #if UE_ENABLE_ICU
-FCulturePtr FCulture::Create(const YString& LocaleName)
+FCulturePtr FCulture::Create(const FString& LocaleName)
 {
 	return MakeShareable(new FCulture(LocaleName));
 }
 #else
 FCulturePtr FCulture::Create(
 	const FText& InDisplaFName, 
-	const YString& InEnglishName, 
+	const FString& InEnglishName, 
 	const int InKeyboardLayoutId, 
 	const int InLCID, 
-	const YString& InName, 
-	const YString& InNativeName, 
-	const YString& InUnrealLegacyThreeLetterISOLanguageName, 
-	const YString& InThreeLetterISOLanguageName, 
-	const YString& InTwoLetterISOLanguageName,
+	const FString& InName, 
+	const FString& InNativeName, 
+	const FString& InUnrealLegacyThreeLetterISOLanguageName, 
+	const FString& InThreeLetterISOLanguageName, 
+	const FString& InTwoLetterISOLanguageName,
 	const FDecimalNumberFormattingRules& InDecimalNumberFormattingRules,
 	const FDecimalNumberFormattingRules& InPercentFormattingRules,
 	const FDecimalNumberFormattingRules& InBaseCurrencyFormattingRules
@@ -34,19 +34,19 @@ FCulturePtr FCulture::Create(
 #endif
 
 #if UE_ENABLE_ICU
-FCulture::FCulture(const YString& LocaleName)
+FCulture::FCulture(const FString& LocaleName)
 	: Implementation( new FICUCultureImplementation( LocaleName ) )
 #else
 FCulture::FCulture(
 	const FText& InDisplaFName, 
-	const YString& InEnglishName, 
+	const FString& InEnglishName, 
 	const int InKeyboardLayoutId, 
 	const int InLCID, 
-	const YString& InName, 
-	const YString& InNativeName, 
-	const YString& InUnrealLegacyThreeLetterISOLanguageName, 
-	const YString& InThreeLetterISOLanguageName, 
-	const YString& InTwoLetterISOLanguageName,
+	const FString& InName, 
+	const FString& InNativeName, 
+	const FString& InUnrealLegacyThreeLetterISOLanguageName, 
+	const FString& InThreeLetterISOLanguageName, 
+	const FString& InTwoLetterISOLanguageName,
 	const FDecimalNumberFormattingRules& InDecimalNumberFormattingRules,
 	const FDecimalNumberFormattingRules& InPercentFormattingRules,
 	const FDecimalNumberFormattingRules& InBaseCurrencyFormattingRules
@@ -72,12 +72,12 @@ FCulture::FCulture(
 { 
 }
 
-const YString& FCulture::GetDisplaFName() const
+const FString& FCulture::GetDisplaFName() const
 {
 	return CachedDisplaFName;
 }
 
-const YString& FCulture::GetEnglishName() const
+const FString& FCulture::GetEnglishName() const
 {
 	return CachedEnglishName;
 }
@@ -92,14 +92,14 @@ int FCulture::GetLCID() const
 	return Implementation->GetLCID();
 }
 
-TArray<YString> FCulture::GetPrioritizedParentCultureNames() const
+TArray<FString> FCulture::GetPrioritizedParentCultureNames() const
 {
 	return GetPrioritizedParentCultureNames(GetTwoLetterISOLanguageName(), GetScript(), GetRegion());
 }
 
-TArray<YString> FCulture::GetPrioritizedParentCultureNames(const YString& LanguageCode, const YString& ScriptCode, const YString& RegionCode)
+TArray<FString> FCulture::GetPrioritizedParentCultureNames(const FString& LanguageCode, const FString& ScriptCode, const FString& RegionCode)
 {
-	TArray<YString> LocaleTagCombinations;
+	TArray<FString> LocaleTagCombinations;
 	if (!ScriptCode.IsEmpty() && !RegionCode.IsEmpty())
 	{
 		LocaleTagCombinations.Add(LanguageCode + TEXT("-") + ScriptCode + TEXT("-") + RegionCode);
@@ -117,57 +117,57 @@ TArray<YString> FCulture::GetPrioritizedParentCultureNames(const YString& Langua
 	return LocaleTagCombinations;
 }
 
-YString FCulture::GetCanonicalName(const YString& Name)
+FString FCulture::GetCanonicalName(const FString& Name)
 {
 	return FImplementation::GetCanonicalName(Name);
 }
 
-const YString& FCulture::GetName() const
+const FString& FCulture::GetName() const
 {
 	return CachedName;
 }
 
-const YString& FCulture::GetNativeName() const
+const FString& FCulture::GetNativeName() const
 {
 	return CachedNativeName;
 }
 
-const YString& FCulture::GetUnrealLegacyThreeLetterISOLanguageName() const
+const FString& FCulture::GetUnrealLegacyThreeLetterISOLanguageName() const
 {
 	return CachedUnrealLegacyThreeLetterISOLanguageName;
 }
 
-const YString& FCulture::GetThreeLetterISOLanguageName() const
+const FString& FCulture::GetThreeLetterISOLanguageName() const
 {
 	return CachedThreeLetterISOLanguageName;
 }
 
-const YString& FCulture::GetTwoLetterISOLanguageName() const
+const FString& FCulture::GetTwoLetterISOLanguageName() const
 {
 	return CachedTwoLetterISOLanguageName;
 }
 
-const YString& FCulture::GetNativeLanguage() const
+const FString& FCulture::GetNativeLanguage() const
 {
 	return CachedNativeLanguage;
 }
 
-const YString& FCulture::GetRegion() const
+const FString& FCulture::GetRegion() const
 {
 	return CachedRegion;
 }
 
-const YString& FCulture::GetNativeRegion() const
+const FString& FCulture::GetNativeRegion() const
 {
 	return CachedNativeRegion;
 }
 
-const YString& FCulture::GetScript() const
+const FString& FCulture::GetScript() const
 {
 	return CachedScript;
 }
 
-const YString& FCulture::GetVariant() const
+const FString& FCulture::GetVariant() const
 {
 	return CachedVariant;
 }
@@ -182,7 +182,7 @@ const FDecimalNumberFormattingRules& FCulture::GetPercentFormattingRules() const
 	return Implementation->GetPercentFormattingRules();
 }
 
-const FDecimalNumberFormattingRules& FCulture::GetCurrencyFormattingRules(const YString& InCurrencyCode) const
+const FDecimalNumberFormattingRules& FCulture::GetCurrencyFormattingRules(const FString& InCurrencyCode) const
 {
 	return Implementation->GetCurrencyFormattingRules(InCurrencyCode);
 }

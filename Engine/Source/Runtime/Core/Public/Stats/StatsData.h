@@ -8,7 +8,7 @@
 #include "Math/NumericLimits.h"
 #include "Containers/Array.h"
 #include "Math/UnrealMathUtility.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Set.h"
 #include "Containers/Map.h"
 #include "Misc/Parse.h"
@@ -48,13 +48,13 @@ struct CORE_API FStatConstants
 	static const FName NAME_NoCategory;
 
 	/** Extension used to save a stats file. */
-	static const YString StatsFileExtension;
+	static const FString StatsFileExtension;
 
 	/** Extension used to save a raw stats file, may be changed to the same as a regular stats file. */
-	static const YString StatsFileRawExtension;
+	static const FString StatsFileRawExtension;
 
 	/** Indicates that the item is a thread. */
-	static const YString ThreadNameMarker;
+	static const FString ThreadNameMarker;
 
 	/** A raw name for the event wait with id. */
 	static const FName RAW_EventWaitWithId;
@@ -308,7 +308,7 @@ struct CORE_API FRawStatStackNode
 	void DebugPrintLeafFilter(TCHAR const* Filter) const;
 
 	/** Print this tree to the log **/
-	void DebugPrintLeafFilterInner(TCHAR const* Filter, int32 Depth, TArray<YString>& Stack) const;
+	void DebugPrintLeafFilterInner(TCHAR const* Filter, int32 Depth, TArray<FString>& Stack) const;
 
 	/** Condense this tree into a flat list using EStatOperation::ChildrenStart, EStatOperation::ChildrenEnd, EStatOperation::Leaf **/
 	void Encode(TArray<FStatMessage>& OutStats) const;
@@ -732,7 +732,7 @@ struct CORE_API FStatsUtils
 	}
 
 	/** Spews a stat message, not all messages are supported, this is used for reports, so it focuses on numeric output, not say the operation. **/
-	static YString DebugPrint(FStatMessage const& Item);
+	static FString DebugPrint(FStatMessage const& Item);
 
 	/** Subtract a CycleScopeStart from a CycleScopeEnd to create a IsPackedCCAndDuration with the call count and inclusive cycles. **/
 	static FStatMessage ComputeCall(FStatMessage const& ScopeStart, FStatMessage const& ScopeEnd)
@@ -767,19 +767,19 @@ struct CORE_API FStatsUtils
 	}
 
 	/** Internal use, converts arbitrary string to and from an escaped notation for storage in an FName. **/
-	static YString ToEscapedFString(const TCHAR* Source);
-	static YString FromEscapedFString(const TCHAR* Escaped);
+	static FString ToEscapedFString(const TCHAR* Source);
+	static FString FromEscapedFString(const TCHAR* Escaped);
 	
-	static YString BuildUniqueThreadName( uint32 InThreadID )
+	static FString BuildUniqueThreadName( uint32 InThreadID )
 	{
 		// Make unique name.
-		return YString::Printf( TEXT( "%s%x_0" ), *FStatConstants::ThreadNameMarker, InThreadID );
+		return FString::Printf( TEXT( "%s%x_0" ), *FStatConstants::ThreadNameMarker, InThreadID );
 	}
 
-	static int32 ParseThreadID( const YString& InThreadName, YString* out_ThreadName = nullptr )
+	static int32 ParseThreadID( const FString& InThreadName, FString* out_ThreadName = nullptr )
 	{
 		// Extract the thread id.
-		const YString ThreadName = InThreadName.Replace( TEXT( "_0" ), TEXT( "" ) );
+		const FString ThreadName = InThreadName.Replace( TEXT( "_0" ), TEXT( "" ) );
 		int32 Index = 0;
 		ThreadName.FindLastChar(TEXT('_'),Index);
 
@@ -789,7 +789,7 @@ struct CORE_API FStatsUtils
 			*out_ThreadName = ThreadName.Left( Index );
 		}
 
-		const YString ThreadIDStr = ThreadName.RightChop(Index+1);
+		const FString ThreadIDStr = ThreadName.RightChop(Index+1);
 		const uint32 ThreadID = FParse::HexNumber( *ThreadIDStr );
 
 		return ThreadID;
@@ -902,10 +902,10 @@ struct FGameThreadHudData
 
 	TIndirectArray<FHudGroup> HudGroups;
 	TArray<FName> GroupNames;
-	TArray<YString> GroupDescriptions;
+	TArray<FString> GroupDescriptions;
 	TMap<YPlatformMemory::EMemoryCounterRegion, int64> PoolCapacity;
-	TMap<YPlatformMemory::EMemoryCounterRegion, YString> PoolAbbreviation;
-	YString RootFilter;
+	TMap<YPlatformMemory::EMemoryCounterRegion, FString> PoolAbbreviation;
+	FString RootFilter;
 
 	/** Whether to display minimal stats for the raw stats mode. */
 	const bool bDrawOnlyRawStats;

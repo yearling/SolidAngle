@@ -930,7 +930,7 @@ void YMallocBinned2::SetupTLSCachesOnCurrentThread()
 	}
 	if (!YMallocBinned2::Binned2TlsSlot)
 	{
-		YMallocBinned2::Binned2TlsSlot = YPlatformTLS::AllocTlsSlot();
+		YMallocBinned2::Binned2TlsSlot = FPlatformTLS::AllocTlsSlot();
 	}
 	check(YMallocBinned2::Binned2TlsSlot);
 	FPerThreadFreeBlockLists::SetTLS();
@@ -1008,18 +1008,18 @@ YMallocBinned2::FBundleNode* YMallocBinned2::FFreeBlockList::PopBundles(uint32 I
 void YMallocBinned2::FPerThreadFreeBlockLists::SetTLS()
 {
 	check(YMallocBinned2::Binned2TlsSlot);
-	FPerThreadFreeBlockLists* ThreadSingleton = (FPerThreadFreeBlockLists*)YPlatformTLS::GetTlsValue(YMallocBinned2::Binned2TlsSlot);
+	FPerThreadFreeBlockLists* ThreadSingleton = (FPerThreadFreeBlockLists*)FPlatformTLS::GetTlsValue(YMallocBinned2::Binned2TlsSlot);
 	if (!ThreadSingleton)
 	{
 		ThreadSingleton = new (YPlatformMemory::BinnedAllocFromOS(Align(sizeof(FPerThreadFreeBlockLists), YMallocBinned2::OsAllocationGranularity))) FPerThreadFreeBlockLists();
-		YPlatformTLS::SetTlsValue(YMallocBinned2::Binned2TlsSlot, ThreadSingleton);
+		FPlatformTLS::SetTlsValue(YMallocBinned2::Binned2TlsSlot, ThreadSingleton);
 	}
 }
 
 void YMallocBinned2::FPerThreadFreeBlockLists::ClearTLS()
 {
 	check(YMallocBinned2::Binned2TlsSlot);
-	YPlatformTLS::SetTlsValue(YMallocBinned2::Binned2TlsSlot, nullptr);
+	FPlatformTLS::SetTlsValue(YMallocBinned2::Binned2TlsSlot, nullptr);
 }
 
 void YMallocBinned2::FFreeBlock::CanaryFail() const

@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Misc/EngineVersionBase.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 
 /** Utility functions. */
 class CORE_API FEngineVersion : public FEngineVersionBase
@@ -15,10 +15,10 @@ public:
 	FEngineVersion();
 
 	/** Constructs a version from the given components. */
-	FEngineVersion(uint16 InMajor, uint16 InMinor, uint16 InPatch, uint32 InChangelist, const YString &InBranch);
+	FEngineVersion(uint16 InMajor, uint16 InMinor, uint16 InPatch, uint32 InChangelist, const FString &InBranch);
 
 	/** Sets the version to the given values. */
-	void Set(uint16 InMajor, uint16 InMinor, uint16 InPatch, uint32 InChangelist, const YString &InBranch);
+	void Set(uint16 InMajor, uint16 InMinor, uint16 InPatch, uint32 InChangelist, const FString &InBranch);
 
 	/** Clears the object. */
 	void Empty();
@@ -27,10 +27,10 @@ public:
 	bool IsCompatibleWith(const FEngineVersionBase &Other) const;
 
 	/** Generates a version string */
-	YString ToString(EVersionComponent LastComponent = EVersionComponent::Branch) const;
+	FString ToString(EVersionComponent LastComponent = EVersionComponent::Branch) const;
 
 	/** Parses a version object from a string. Returns true on success. */
-	static bool Parse(const YString &Text, FEngineVersion &OutVersion);
+	static bool Parse(const FString &Text, FEngineVersion &OutVersion);
 
 	/** Gets the current engine version */
 	static const FEngineVersion& Current();
@@ -45,7 +45,7 @@ public:
 	friend CORE_API void operator<<(class FArchive &Ar, FEngineVersion &Version);
 
 	/** Returns the branch name corresponding to this version. */
-	const YString GetBranch() const
+	const FString GetBranch() const
 	{
 		return Branch.Replace(TEXT("+"), TEXT("/"));
 	}
@@ -53,7 +53,7 @@ public:
 private:
 
 	/** Branch name. */
-	YString Branch;
+	FString Branch;
 
 	/** Global instance of the current engine version. */
 	static FEngineVersion CurrentVersion;

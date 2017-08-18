@@ -8,7 +8,7 @@
 #include "Templates/UnrealTemplate.h"
 #include "Math/UnrealMathUtility.h"
 #include "Serialization/Archive.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Misc/Parse.h"
 #include "Logging/LogMacros.h"
 #include "Misc/DateTime.h"
@@ -314,7 +314,7 @@ public:
 	{
 		return LowerLevel->GetAccessTimeStamp(Filename);
 	}
-	virtual YString	GetFilenameOnDisk(const TCHAR* Filename) override
+	virtual FString	GetFilenameOnDisk(const TCHAR* Filename) override
 	{
 		return LowerLevel->GetFilenameOnDisk(Filename);
 	}
@@ -384,11 +384,11 @@ public:
 	{
 		return LowerLevel->CopyDirectoryTree(DestinationDirectory, Source, bOverwriteAllExisting);
 	}
-	virtual YString		ConvertToAbsolutePathForExternalAppForRead(const TCHAR* Filename) override
+	virtual FString		ConvertToAbsolutePathForExternalAppForRead(const TCHAR* Filename) override
 	{
 		return LowerLevel->ConvertToAbsolutePathForExternalAppForRead(Filename);
 	}
-	virtual YString		ConvertToAbsolutePathForExternalAppForWrite(const TCHAR* Filename) override
+	virtual FString		ConvertToAbsolutePathForExternalAppForWrite(const TCHAR* Filename) override
 	{
 		return LowerLevel->ConvertToAbsolutePathForExternalAppForWrite(Filename);
 	}

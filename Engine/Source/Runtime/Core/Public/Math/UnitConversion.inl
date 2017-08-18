@@ -415,9 +415,9 @@ struct TNumericLimits<YNumericUnit<NumericType>> : public TNumericLimits<Numeric
 namespace Lex
 {
 	template<typename T>
-	YString ToString(const YNumericUnit<T>& NumericUnit)
+	FString ToString(const YNumericUnit<T>& NumericUnit)
 	{
-		YString String = ToString(NumericUnit.Value);
+		FString String = ToString(NumericUnit.Value);
 		String += TEXT(" ");
 		String += YUnitConversion::GetUnitDisplayString(NumericUnit.Units);
 
@@ -425,9 +425,9 @@ namespace Lex
 	}
 
 	template<typename T>
-	YString ToSanitizedString(const YNumericUnit<T>& NumericUnit)
+	FString ToSanitizedString(const YNumericUnit<T>& NumericUnit)
 	{
-		YString String = ToSanitizedString(NumericUnit.Value);
+		FString String = ToSanitizedString(NumericUnit.Value);
 		String += TEXT(" ");
 		String += YUnitConversion::GetUnitDisplayString(NumericUnit.Units);
 

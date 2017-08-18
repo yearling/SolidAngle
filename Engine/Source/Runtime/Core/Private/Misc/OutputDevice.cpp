@@ -1,7 +1,7 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #include "Misc/OutputDevice.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Logging/LogMacros.h"
 #include "Internationalization/Text.h"
 #include "Logging/LogScopedCategoryAndVerbosityOverride.h"
@@ -15,7 +15,7 @@ const TCHAR* FOutputDevice::VerbosityToString(ELogVerbosity::Type Verbosity)
 	return YOutputDeviceHelper::VerbosityToString(Verbosity);
 }
 
-YString FOutputDevice::FormatLogLine( ELogVerbosity::Type Verbosity, const class FName& Category, const TCHAR* Message /*= nullptr*/, ELogTimes::Type LogTime /*= ELogTimes::None*/, const double Time /*= -1.0*/ )
+FString FOutputDevice::FormatLogLine( ELogVerbosity::Type Verbosity, const class FName& Category, const TCHAR* Message /*= nullptr*/, ELogTimes::Type LogTime /*= ELogTimes::None*/, const double Time /*= -1.0*/ )
 {
 	return YOutputDeviceHelper::FormatLogLine(Verbosity, Category, Message, LogTime, Time);
 }
@@ -24,7 +24,7 @@ void FOutputDevice::Log( ELogVerbosity::Type Verbosity, const TCHAR* Str )
 {
 	Serialize( Str, Verbosity, NAME_None );
 }
-void FOutputDevice::Log( ELogVerbosity::Type Verbosity, const YString& S )
+void FOutputDevice::Log( ELogVerbosity::Type Verbosity, const FString& S )
 {
 	Serialize( *S, Verbosity, NAME_None );
 }
@@ -32,7 +32,7 @@ void FOutputDevice::Log( const class FName& Category, ELogVerbosity::Type Verbos
 {
 	Serialize( Str, Verbosity, Category );
 }
-void FOutputDevice::Log( const class FName& Category, ELogVerbosity::Type Verbosity, const YString& S )
+void FOutputDevice::Log( const class FName& Category, ELogVerbosity::Type Verbosity, const FString& S )
 {
 	Serialize( *S, Verbosity, Category );
 }
@@ -41,7 +41,7 @@ void FOutputDevice::Log( const TCHAR* Str )
 	FScopedCategoryAndVerbosityOverride::FOverride* TLS = FScopedCategoryAndVerbosityOverride::GetTLSCurrent();
 	Serialize( Str, TLS->Verbosity, TLS->Category );
 }
-void FOutputDevice::Log( const YString& S )
+void FOutputDevice::Log( const FString& S )
 {
 	FScopedCategoryAndVerbosityOverride::FOverride* TLS = FScopedCategoryAndVerbosityOverride::GetTLSCurrent();
 	Serialize( *S, TLS->Verbosity, TLS->Category );
@@ -73,5 +73,5 @@ VARARG_BODY( void, FOutputDevice::Logf, const TCHAR*, VARARG_NONE )
 
 
 /** Critical errors. */
-CORE_API YOutputDeviceError* GError = NULL;
+CORE_API FOutputDeviceError* GError = NULL;
 

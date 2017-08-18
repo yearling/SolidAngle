@@ -125,10 +125,10 @@ void RegisterEncryptionKey(const char* InEncryptionKey)
 
 void RegisterPakSigningKeys(const char* InExponent, const char* InModulus)
 {
-	static YString Exponent(ANSI_TO_TCHAR(InExponent));
-	static YString Modulus(ANSI_TO_TCHAR(InModulus));
+	static FString Exponent(ANSI_TO_TCHAR(InExponent));
+	static FString Modulus(ANSI_TO_TCHAR(InModulus));
 
-	FCoreDelegates::GetPakSigningKeysDelegate().BindLambda([](YString& OutExponent, YString& OutModulus)
+	FCoreDelegates::GetPakSigningKeysDelegate().BindLambda([](FString& OutExponent, FString& OutModulus)
 	{
 		OutExponent = Exponent;
 		OutModulus = Modulus;

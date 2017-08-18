@@ -3,7 +3,7 @@
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
 #include "Math/UnrealMathUtility.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Logging/LogMacros.h"
 #include "Math/Vector.h"
 #include "Math/VectorRegister.h"
@@ -277,12 +277,12 @@ public:
 	bool DebugEqualMatrix(const FMatrix& Matrix) const;
 
 	/** Convert FTransform contents to a string */
-	CORE_API YString ToHumanReadableString() const;
+	CORE_API FString ToHumanReadableString() const;
 
-	CORE_API YString ToString() const;
+	CORE_API FString ToString() const;
 
 	/** Acceptable form: "%f,%f,%f|%f,%f,%f|%f,%f,%f" */
-	CORE_API bool InitFromString(const YString& InSourceString);
+	CORE_API bool InitFromString(const FString& InSourceString);
 
 	/**
 	* Copy another Transform into this one

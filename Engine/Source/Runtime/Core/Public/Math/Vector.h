@@ -7,7 +7,7 @@
 #include "Math/NumericLimits.h"
 #include "Misc/Crc.h"
 #include "Math/UnrealMathUtility.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Misc/Parse.h"
 #include "Math/Color.h"
 #include "Math/IntPoint.h"
@@ -714,7 +714,7 @@ public:
 	*
 	* @return A string describing the vector.
 	*/
-	YString ToString() const;
+	FString ToString() const;
 
 	/**
 	* Get a locale aware textual representation of this vector.
@@ -724,7 +724,7 @@ public:
 	FText ToText() const;
 
 	/** Get a short textural representation of this vector, for compact readable logging. */
-	YString ToCompactString() const;
+	FString ToCompactString() const;
 
 	/** Get a short locale aware textural representation of this vector, for compact readable logging. */
 	FText ToCompactText() const;
@@ -736,7 +736,7 @@ public:
 	* @param	InSourceString	YString containing the vector values.
 	* @return true if the X,Y,Z values were read successfully; false otherwise.
 	*/
-	bool InitFromString(const YString& InSourceString);
+	bool InitFromString(const FString& InSourceString);
 
 	/**
 	* Converts a Cartesian unit vector into spherical coordinates on the unit sphere.
@@ -1803,9 +1803,9 @@ FORCEINLINE bool FVector::IsUnit(float LengthSquaredTolerance) const
 	return YMath::Abs(1.0f - SizeSquared()) < LengthSquaredTolerance;
 }
 
-FORCEINLINE YString FVector::ToString() const
+FORCEINLINE FString FVector::ToString() const
 {
-	return YString::Printf(TEXT("X=%3.3f Y=%3.3f Z=%3.3f"), X, Y, Z);
+	return FString::Printf(TEXT("X=%3.3f Y=%3.3f Z=%3.3f"), X, Y, Z);
 }
 
 FORCEINLINE FText FVector::ToText() const
@@ -1870,43 +1870,43 @@ FORCEINLINE FText FVector::ToCompactText() const
 	return NSLOCTEXT("Core", "Vector3_CompactZeroVector", "V(0)");
 }
 
-FORCEINLINE YString FVector::ToCompactString() const
+FORCEINLINE FString FVector::ToCompactString() const
 {
 	if (IsNearlyZero())
 	{
-		return YString::Printf(TEXT("V(0)"));
+		return FString::Printf(TEXT("V(0)"));
 	}
 
-	YString ReturnString(TEXT("V("));
+	FString ReturnString(TEXT("V("));
 	bool bIsEmptyString = true;
 	if (!YMath::IsNearlyZero(X))
 	{
-		ReturnString += YString::Printf(TEXT("X=%.2f"), X);
+		ReturnString += FString::Printf(TEXT("X=%.2f"), X);
 		bIsEmptyString = false;
 	}
 	if (!YMath::IsNearlyZero(Y))
 	{
 		if (!bIsEmptyString)
 		{
-			ReturnString += YString(TEXT(", "));
+			ReturnString += FString(TEXT(", "));
 		}
-		ReturnString += YString::Printf(TEXT("Y=%.2f"), Y);
+		ReturnString += FString::Printf(TEXT("Y=%.2f"), Y);
 		bIsEmptyString = false;
 	}
 	if (!YMath::IsNearlyZero(Z))
 	{
 		if (!bIsEmptyString)
 		{
-			ReturnString += YString(TEXT(", "));
+			ReturnString += FString(TEXT(", "));
 		}
-		ReturnString += YString::Printf(TEXT("Z=%.2f"), Z);
+		ReturnString += FString::Printf(TEXT("Z=%.2f"), Z);
 		bIsEmptyString = false;
 	}
-	ReturnString += YString(TEXT(")"));
+	ReturnString += FString(TEXT(")"));
 	return ReturnString;
 }
 
-FORCEINLINE bool FVector::InitFromString(const YString& InSourceString)
+FORCEINLINE bool FVector::InitFromString(const FString& InSourceString)
 {
 	X = Y = Z = 0;
 

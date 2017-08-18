@@ -44,7 +44,7 @@ FRemoteConfigAsyncIOInfo& FRemoteConfigAsyncIOInfo::operator=(const FRemoteConfi
    FRemoteConfigAsyncWorker
 -----------------------------------------------------------------------------*/
 
-FRemoteConfigAsyncWorker::FRemoteConfigAsyncWorker(const TCHAR* InFilename, FRemoteConfigAsyncIOInfo& InIOInfo, YString* InContents, bool bInIsRead)
+FRemoteConfigAsyncWorker::FRemoteConfigAsyncWorker(const TCHAR* InFilename, FRemoteConfigAsyncIOInfo& InIOInfo, FString* InContents, bool bInIsRead)
 {
 	check(FCString::Strlen(InFilename) < 1024);
 	FCString::Strcpy(Filename, InFilename);
@@ -141,10 +141,10 @@ bool FRemoteConfigAsyncTaskManager::FindCachedWriteTask(const TCHAR* InFilename,
 }
 
 
-bool FRemoteConfigAsyncTaskManager::StartTask(const TCHAR* InFilename, const TCHAR* RemotePath, FRemoteConfigAsyncIOInfo& InIOInfo, YString* InContents, bool bInIsRead)
+bool FRemoteConfigAsyncTaskManager::StartTask(const TCHAR* InFilename, const TCHAR* RemotePath, FRemoteConfigAsyncIOInfo& InIOInfo, FString* InContents, bool bInIsRead)
 {
 	FScopeLock ScopeLock(&SynchronizationObject);
-	FAsyncTask<FRemoteConfigAsyncWorker>* AsyncTask = PendingTasks.FindRef(YString(InFilename));
+	FAsyncTask<FRemoteConfigAsyncWorker>* AsyncTask = PendingTasks.FindRef(FString(InFilename));
 
 	// See if a task for this file already exists
 	if (AsyncTask)
@@ -154,7 +154,7 @@ bool FRemoteConfigAsyncTaskManager::StartTask(const TCHAR* InFilename, const TCH
 			if (AsyncTask->IsDone())
 			{
 				// Clear out old write tasks that have completed
-				PendingTasks.Remove(YString(InFilename));
+				PendingTasks.Remove(FString(InFilename));
 			}
 			else
 			{
@@ -174,7 +174,7 @@ bool FRemoteConfigAsyncTaskManager::StartTask(const TCHAR* InFilename, const TCH
 	}
 
 	// Add new task to the queue and start it
-	FAsyncTask<FRemoteConfigAsyncWorker>*& NewTask = PendingTasks.Add(YString(InFilename), new FAsyncTask<FRemoteConfigAsyncWorker>(RemotePath, InIOInfo, InContents, bInIsRead));
+	FAsyncTask<FRemoteConfigAsyncWorker>*& NewTask = PendingTasks.Add(FString(InFilename), new FAsyncTask<FRemoteConfigAsyncWorker>(RemotePath, InIOInfo, InContents, bInIsRead));
 	NewTask->StartBackgroundTask();
 	
 	return true;
@@ -185,7 +185,7 @@ bool FRemoteConfigAsyncTaskManager::IsFinished(const TCHAR* InFilename)
 {
 	FScopeLock ScopeLock(&SynchronizationObject);
 	FAsyncTask<FRemoteConfigAsyncWorker>* AsyncTask = NULL;
-	AsyncTask = PendingTasks.FindRef(YString(InFilename));
+	AsyncTask = PendingTasks.FindRef(FString(InFilename));
 		
 	return AsyncTask? AsyncTask->IsDone(): true;
 }
@@ -195,7 +195,7 @@ bool FRemoteConfigAsyncTaskManager::AreAllTasksFinished(bool bDoRemoval)
 {
 	FScopeLock ScopeLock(&SynchronizationObject);
 
-	for (TMap<YString, FAsyncTask<FRemoteConfigAsyncWorker>* >::TIterator It(PendingTasks); It; ++It)
+	for (TMap<FString, FAsyncTask<FRemoteConfigAsyncWorker>* >::TIterator It(PendingTasks); It; ++It)
 	{
 		// If any cached write tasks exist, tasks are clearly not finished
 		if (CachedWriteTasks.Num() > 0)
@@ -204,7 +204,7 @@ bool FRemoteConfigAsyncTaskManager::AreAllTasksFinished(bool bDoRemoval)
 		}
 
 		FAsyncTask<FRemoteConfigAsyncWorker>* AsyncTask = NULL;
-		AsyncTask = PendingTasks.FindRef(YString(It.Key()));
+		AsyncTask = PendingTasks.FindRef(FString(It.Key()));
 			
 		if (AsyncTask)
 		{
@@ -236,7 +236,7 @@ bool FRemoteConfigAsyncTaskManager::GetReadData(const TCHAR* InFilename, FRemote
 		return false;
 	}
 
-	PendingTasks.RemoveAndCopyValue(YString(InFilename), AsyncTask);
+	PendingTasks.RemoveAndCopyValue(FString(InFilename), AsyncTask);
 	check(AsyncTask);
 		
 	bool RetVal = AsyncTask->GetTask().IsReadSuccess();
@@ -265,8 +265,8 @@ FRemoteConfig* FRemoteConfig::Get()
 
 bool FRemoteConfig::IsRemoteFile(const TCHAR* Filename)
 {
-	YString IniFileName(Filename);
-	YString BaseFilename = YPaths::GetBaseFilename(IniFileName);
+	FString IniFileName(Filename);
+	FString BaseFilename = YPaths::GetBaseFilename(IniFileName);
 
 	if (!bHasCachedFilenames && GConfig->FindConfigFile(GEngineIni))
 	{
@@ -306,7 +306,7 @@ bool FRemoteConfig::ShouldReadRemoteFile(const TCHAR* Filename)
 
 FRemoteConfigAsyncIOInfo* FRemoteConfig::FindConfig(const TCHAR* Filename)
 {
-	return ConfigBuffers.Find(YString(Filename));
+	return ConfigBuffers.Find(FString(Filename));
 }
 
 
@@ -318,7 +318,7 @@ bool FRemoteConfig::IsFinished(const TCHAR* InFilename)
 
 bool FRemoteConfig::Read(const TCHAR* GeneratedIniFile, const TCHAR* DefaultIniFile)
 {
-	YString FullPath = GenerateRemotePath(GeneratedIniFile);
+	FString FullPath = GenerateRemotePath(GeneratedIniFile);
 
 	if (Timeout < 0.0f)
 	{
@@ -326,20 +326,20 @@ bool FRemoteConfig::Read(const TCHAR* GeneratedIniFile, const TCHAR* DefaultIniF
 		GConfig->GetFloat(TEXT("RemoteConfiguration"), TEXT("Timeout"), Timeout, GEngineIni);
 	}
 
-	FRemoteConfigAsyncIOInfo& IOInfo = ConfigBuffers.Add(YString(GeneratedIniFile), FRemoteConfigAsyncIOInfo(DefaultIniFile));
+	FRemoteConfigAsyncIOInfo& IOInfo = ConfigBuffers.Add(FString(GeneratedIniFile), FRemoteConfigAsyncIOInfo(DefaultIniFile));
 		
 	IOInfo.StartReadTime = FPlatformTime::Seconds();
 	return GRemoteConfigIOManager.StartTask(GeneratedIniFile, *FullPath, IOInfo, NULL, true);
 }
 
 
-bool FRemoteConfig::Write(const TCHAR* Filename, YString& Contents)
+bool FRemoteConfig::Write(const TCHAR* Filename, FString& Contents)
 {
 	FRemoteConfigAsyncIOInfo* IOInfo = FindConfig(Filename);
 	// Assuming here that if we remotely loaded an config file, we'll want to remotely save it too
 	if (IOInfo)
 	{
-		YString FullPath = GenerateRemotePath(Filename);
+		FString FullPath = GenerateRemotePath(Filename);
 
 		IOInfo->StartWriteTime = FPlatformTime::Seconds();
 		return GRemoteConfigIOManager.StartTask(Filename, *FullPath, *IOInfo, &Contents, false);
@@ -365,7 +365,7 @@ void FRemoteConfig::FinishRead(const TCHAR* Filename)
 		}
 
 		// Now, process the config file
-		YString DestFileName(Filename);
+		FString DestFileName(Filename);
 		GRemoteConfigIOManager.GetReadData(Filename, *IOInfo);
 		IOInfo->bWasProcessed = true;
 		FConfigCacheIni::LoadGlobalIniFile(DestFileName, IOInfo->DefaultIniFile);
@@ -400,9 +400,9 @@ static const TCHAR* SpecialCharMap[NUM_SPECIAL_CHARS][2] =
 };
 
 
-YString FRemoteConfig::ReplaceIniCharWithSpecialChar(const YString& Str)
+FString FRemoteConfig::ReplaceIniCharWithSpecialChar(const FString& Str)
 {
-	YString Result = Str;
+	FString Result = Str;
 	for (int32 Idx = 0; Idx < NUM_SPECIAL_CHARS; ++Idx)
 	{
 		Result = Result.Replace(SpecialCharMap[Idx][0], SpecialCharMap[Idx][1]);
@@ -411,9 +411,9 @@ YString FRemoteConfig::ReplaceIniCharWithSpecialChar(const YString& Str)
 }
 
 
-YString FRemoteConfig::ReplaceIniSpecialCharWithChar(const YString& Str)
+FString FRemoteConfig::ReplaceIniSpecialCharWithChar(const FString& Str)
 {
-	YString Result = Str;
+	FString Result = Str;
 	for (int32 Idx = 0; Idx < NUM_SPECIAL_CHARS; ++Idx)
 	{
 		Result = Result.Replace(SpecialCharMap[Idx][1], SpecialCharMap[Idx][0]);
@@ -422,15 +422,15 @@ YString FRemoteConfig::ReplaceIniSpecialCharWithChar(const YString& Str)
 }
 
 
-YString FRemoteConfig::GenerateRemotePath(const TCHAR* Filename)
+FString FRemoteConfig::GenerateRemotePath(const TCHAR* Filename)
 {
-	YString IniFileName(Filename);
-	YString BaseFilename = YPaths::GetBaseFilename(IniFileName);
-	YString PathPrefix = GConfig->GetStr(TEXT("RemoteConfiguration"), TEXT("ConfigPathPrefix"), GEngineIni);
-	YString PathSuffix = GConfig->GetStr(TEXT("RemoteConfiguration"), TEXT("ConfigPathSuffix"), GEngineIni);
-	YString UserName = FPlatformProcess::UserName(false);
+	FString IniFileName(Filename);
+	FString BaseFilename = YPaths::GetBaseFilename(IniFileName);
+	FString PathPrefix = GConfig->GetStr(TEXT("RemoteConfiguration"), TEXT("ConfigPathPrefix"), GEngineIni);
+	FString PathSuffix = GConfig->GetStr(TEXT("RemoteConfiguration"), TEXT("ConfigPathSuffix"), GEngineIni);
+	FString UserName = FPlatformProcess::UserName(false);
 		
-	return YString::Printf(TEXT("%s/%s/%s/%s/%s.ini"), *PathPrefix, *UserName, *PathSuffix, FApp::GetGameName(), *BaseFilename);
+	return FString::Printf(TEXT("%s/%s/%s/%s/%s.ini"), *PathPrefix, *UserName, *PathSuffix, FApp::GetGameName(), *BaseFilename);
 }
 
 
@@ -518,7 +518,7 @@ void MakeLocalCopy(const TCHAR* Filename)
 
 	if (IFileManager::Get().FileSize(Filename) >= 0)
 	{
-		YString FilenameStr = Filename;
+		FString FilenameStr = Filename;
 		if (FCString::Stristr(*FilenameStr, TEXT(".ini")))
 		{
 			FilenameStr = FilenameStr.LeftChop(4);

@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "UObject/NameTypes.h"
 #include "Templates/SharedPointer.h"
 #include "Delegates/Delegate.h"
@@ -328,7 +328,7 @@ class FURLToken : public IMessageToken
 {
 public:
 	/** Factory method, tokens can only be constructed as shared refs */
-	CORE_API static TSharedRef<FURLToken> Create(const YString& InURL, const FText& InMessage = FText())
+	CORE_API static TSharedRef<FURLToken> Create(const FString& InURL, const FText& InMessage = FText())
 	{
 		return MakeShareable(new FURLToken(InURL, InMessage));
 	}
@@ -341,12 +341,12 @@ public:
 	/** End IMessageToken interface */
 
 	/** Get the URL used by this token */
-	const YString& GetURL() const
+	const FString& GetURL() const
 	{
 		return URL;
 	}
 
-	DECLARE_DELEGATE_RetVal_OneParam(YString, FGenerateURL, const YString&);
+	DECLARE_DELEGATE_RetVal_OneParam(FString, FGenerateURL, const FString&);
 	CORE_API static FGenerateURL& OnGenerateURL()
 	{
 		return GenerateURL;
@@ -354,17 +354,17 @@ public:
 
 private:
 	/** Private constructor */
-	FURLToken(const YString& InURL, const FText& InMessage);
+	FURLToken(const FString& InURL, const FText& InMessage);
 
 	/**
 	* Delegate used to visit a URL
 	* @param	Token		The token that was clicked
 	* @param	InURL		The URL to visit
 	*/
-	static void VisitURL(const TSharedRef<IMessageToken>& Token, YString InURL);
+	static void VisitURL(const TSharedRef<IMessageToken>& Token, FString InURL);
 
 	/** The URL we will follow */
-	YString URL;
+	FString URL;
 
 	/** The delegate we will use to generate our URL */
 	CORE_API static FGenerateURL GenerateURL;
@@ -378,7 +378,7 @@ class FAssetNameToken : public IMessageToken
 {
 public:
 	/** Factory method, tokens can only be constructed as shared refs */
-	CORE_API static TSharedRef<FAssetNameToken> Create(const YString& InAssetName, const FText& InMessage = FText());
+	CORE_API static TSharedRef<FAssetNameToken> Create(const FString& InAssetName, const FText& InMessage = FText());
 
 	/** Begin IMessageToken interface */
 	virtual EMessageToken::Type GetType() const override
@@ -388,12 +388,12 @@ public:
 	/** End IMessageToken interface */
 
 	/** Get the filename used by this token */
-	const YString& GetAssetName() const
+	const FString& GetAssetName() const
 	{
 		return AssetName;
 	}
 
-	DECLARE_DELEGATE_OneParam(FOnGotoAsset, const YString&);
+	DECLARE_DELEGATE_OneParam(FOnGotoAsset, const FString&);
 	CORE_API static FOnGotoAsset& OnGotoAsset()
 	{
 		return GotoAsset;
@@ -401,17 +401,17 @@ public:
 
 private:
 	/** Private constructor */
-	FAssetNameToken(const YString& InAssetName, const FText& InMessage);
+	FAssetNameToken(const FString& InAssetName, const FText& InMessage);
 
 	/**
 	* Delegate used to find a file
 	* @param	Token		The token that was clicked
 	* @param	InURL		The file to find
 	*/
-	static void FindAsset(const TSharedRef<IMessageToken>& Token, YString InAssetName);
+	static void FindAsset(const TSharedRef<IMessageToken>& Token, FString InAssetName);
 
 	/** The asset name we will find */
-	YString AssetName;
+	FString AssetName;
 
 	/** The delegate we will use to go to our file */
 	CORE_API static FOnGotoAsset GotoAsset;
@@ -424,7 +424,7 @@ class FDocumentationToken : public IMessageToken
 {
 public:
 	/** Factory method, tokens can only be constructed as shared refs */
-	CORE_API static TSharedRef<FDocumentationToken> Create(const YString& InDocumentationLink, const YString& InPreviewExcerptLink = YString(), const YString& InPreviewExcerptName = YString());
+	CORE_API static TSharedRef<FDocumentationToken> Create(const FString& InDocumentationLink, const FString& InPreviewExcerptLink = FString(), const FString& InPreviewExcerptName = FString());
 
 	/** Begin IMessageToken interface */
 	virtual EMessageToken::Type GetType() const override
@@ -434,36 +434,36 @@ public:
 	/** End IMessageToken interface */
 
 	/** Get the documentation link used by this token */
-	const YString& GetDocumentationLink() const
+	const FString& GetDocumentationLink() const
 	{
 		return DocumentationLink;
 	}
 
 	/** Get the documentation excerpt link used by this token */
-	const YString& GetPreviewExcerptLink() const
+	const FString& GetPreviewExcerptLink() const
 	{
 		return PreviewExcerptLink;
 	}
 
 	/** Get the documentation excerpt name used by this token */
-	const YString& GetPreviewExcerptName() const
+	const FString& GetPreviewExcerptName() const
 	{
 		return PreviewExcerptName;
 	}
 
 protected:
 	/** Protected constructor */
-	FDocumentationToken(const YString& InDocumentationLink, const YString& InPreviewExcerptLink, const YString& InPreviewExcerptName);
+	FDocumentationToken(const FString& InDocumentationLink, const FString& InPreviewExcerptLink, const FString& InPreviewExcerptName);
 
 private:
 	/** The documentation path we link to when clicked */
-	YString DocumentationLink;
+	FString DocumentationLink;
 
 	/** The link we display an excerpt from */
-	YString PreviewExcerptLink;
+	FString PreviewExcerptLink;
 
 	/** The excerpt to display */
-	YString PreviewExcerptName;
+	FString PreviewExcerptName;
 };
 
 
@@ -544,7 +544,7 @@ class FTutorialToken
 public:
 
 	/** Factory method, tokens can only be constructed as shared refs */
-	CORE_API static TSharedRef<FTutorialToken> Create(const YString& TutorialAssetName)
+	CORE_API static TSharedRef<FTutorialToken> Create(const FString& TutorialAssetName)
 	{
 		return MakeShareable(new FTutorialToken(TutorialAssetName));
 	}
@@ -559,20 +559,20 @@ public:
 	}
 
 	/** Get the tutorial asset name stored in this token. */
-	const YString& GetTutorialAssetName() const
+	const FString& GetTutorialAssetName() const
 	{
 		return TutorialAssetName;
 	}
 
 protected:
 	/** Protected constructor */
-	FTutorialToken(const YString& InTutorialAssetName)
+	FTutorialToken(const FString& InTutorialAssetName)
 		: TutorialAssetName(InTutorialAssetName)
 	{ }
 
 private:
 
 	/** The name of the tutorial asset. */
-	YString TutorialAssetName;
+	FString TutorialAssetName;
 };
 

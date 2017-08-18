@@ -44,7 +44,7 @@ bool FFileHelper::LoadFileToArray( TArray<uint8>& Result, const TCHAR* Filename,
  * Converts an arbitrary text buffer to an YString.
  * Supports all combination of ANSI/Unicode files and platforms.
  */
-void FFileHelper::BufferToString( YString& Result, const uint8* Buffer, int32 Size )
+void FFileHelper::BufferToString( FString& Result, const uint8* Buffer, int32 Size )
 {
 	TArray<TCHAR>& ResultArray = Result.GetCharArray();
 	ResultArray.Empty();
@@ -101,7 +101,7 @@ void FFileHelper::BufferToString( YString& Result, const uint8* Buffer, int32 Si
  * @param Filename name of the file to load
  * @param VerifyFlags flags controlling the hash verification behavior ( see EHashOptions )
  */
-bool FFileHelper::LoadFileToString( YString& Result, const TCHAR* Filename, uint32 VerifyFlags )
+bool FFileHelper::LoadFileToString( FString& Result, const TCHAR* Filename, uint32 VerifyFlags )
 {
 	TUniquePtr<FArchive> Reader( IFileManager::Get().CreateFileReader( Filename ) );
 	if( !Reader )
@@ -156,7 +156,7 @@ bool FFileHelper::SaveArrayToFile(TArrayView<const uint8> Array, const TCHAR* Fi
  * Write the YString to a file.
  * Supports all combination of ANSI/Unicode files and platforms.
  */
-bool FFileHelper::SaveStringToFile( const YString& String, const TCHAR* Filename,  EEncodingOptions::Type EncodingOptions, IFileManager* FileManager /*= &IFileManager::Get()*/, uint32 WriteFlags )
+bool FFileHelper::SaveStringToFile( const FString& String, const TCHAR* Filename,  EEncodingOptions::Type EncodingOptions, IFileManager* FileManager /*= &IFileManager::Get()*/, uint32 WriteFlags )
 {
 	// max size of the string is a UCS2CHAR for each character and some UNICODE magic 
 	auto Ar = TUniquePtr<FArchive>( FileManager->CreateFileWriter( Filename, WriteFlags ) );
@@ -209,15 +209,15 @@ bool FFileHelper::SaveStringToFile( const YString& String, const TCHAR* Filename
  *
  * @return true if success
  */
-bool FFileHelper::GenerateNextBitmapFilename( const YString& Pattern, const YString& Extension, YString& OutFilename, IFileManager* FileManager /*= &IFileManager::Get()*/ )
+bool FFileHelper::GenerateNextBitmapFilename( const FString& Pattern, const FString& Extension, FString& OutFilename, IFileManager* FileManager /*= &IFileManager::Get()*/ )
 {
-	YString File;
+	FString File;
 	OutFilename = "";
 	bool bSuccess = false;
 
 	for( int32 TestBitmapIndex = GScreenshotBitmapIndex + 1; TestBitmapIndex < 100000; ++TestBitmapIndex )
 	{
-		File = YString::Printf(TEXT("%s%05i.%s"), *Pattern, TestBitmapIndex, *Extension);
+		File = FString::Printf(TEXT("%s%05i.%s"), *Pattern, TestBitmapIndex, *Extension);
 		if( FileManager->FileSize(*File) < 0 )
 		{
 			GScreenshotBitmapIndex = TestBitmapIndex;
@@ -243,7 +243,7 @@ bool FFileHelper::GenerateNextBitmapFilename( const YString& Pattern, const YStr
  *
  * @return true if success
  */
-bool FFileHelper::CreateBitmap( const TCHAR* Pattern, int32 SourceWidth, int32 SourceHeight, const FColor* Data, struct YIntRect* SubRectangle, IFileManager* FileManager /*= &IFileManager::Get()*/, YString* OutFilename /*= NULL*/, bool bInWriteAlpha /*= false*/ )
+bool FFileHelper::CreateBitmap( const TCHAR* Pattern, int32 SourceWidth, int32 SourceHeight, const FColor* Data, struct YIntRect* SubRectangle, IFileManager* FileManager /*= &IFileManager::Get()*/, FString* OutFilename /*= NULL*/, bool bInWriteAlpha /*= false*/ )
 {
 #if ALLOW_DEBUG_FILES
 	YIntRect Src(0, 0, SourceWidth, SourceHeight);
@@ -252,7 +252,7 @@ bool FFileHelper::CreateBitmap( const TCHAR* Pattern, int32 SourceWidth, int32 S
 		SubRectangle = &Src;
 	}
 
-	YString File;
+	FString File;
 	// if the Pattern already has a .bmp extension, then use that the file to write to
 	if (YPaths::GetExtension(Pattern) == TEXT("bmp"))
 	{
@@ -420,7 +420,7 @@ bool FFileHelper::CreateBitmap( const TCHAR* Pattern, int32 SourceWidth, int32 S
  *
  *	@return	bool				true if successful, false if not
  */
-bool FFileHelper::LoadANSITextFileToStrings(const TCHAR* InFilename, IFileManager* InFileManager, TArray<YString>& OutStrings)
+bool FFileHelper::LoadANSITextFileToStrings(const TCHAR* InFilename, IFileManager* InFileManager, TArray<FString>& OutStrings)
 {
 	IFileManager* FileManager = (InFileManager != NULL) ? InFileManager : &IFileManager::Get();
 	// Read and parse the file, adding the pawns and their sounds to the list
@@ -475,7 +475,7 @@ bool FFileHelper::LoadANSITextFileToStrings(const TCHAR* InFilename, IFileManage
 				*Ptr++ = 0;
 			}
 
-			YString CurrLine = ANSI_TO_TCHAR(Start);
+			FString CurrLine = ANSI_TO_TCHAR(Start);
 			OutStrings.Add(CurrLine);
 		}
 
@@ -500,16 +500,16 @@ void FMaintenance::DeleteOldLogs()
 	if (PurgeLogsDays >= 0 || MaxLogFilesOnDisk >= 0)
 	{
 		// get a list of files in the log dir
-		TArray<YString> Files;
-		IFileManager::Get().FindFiles(Files, *YString::Printf(TEXT("%s*.*"), *YPaths::GameLogDir()), true, false);
-		for (YString& Filename : Files)
+		TArray<FString> Files;
+		IFileManager::Get().FindFiles(Files, *FString::Printf(TEXT("%s*.*"), *YPaths::GameLogDir()), true, false);
+		for (FString& Filename : Files)
 		{
 			Filename = YPaths::GameLogDir() / Filename;
 		}
 
 		struct FSortByDateNewestFirst
 		{
-			bool operator()(const YString& A, const YString& B) const
+			bool operator()(const FString& A, const FString& B) const
 			{
 				const FDateTime TimestampA = IFileManager::Get().GetTimeStamp(*A);
 				const FDateTime TimestampB = IFileManager::Get().GetTimeStamp(*B);
@@ -522,7 +522,7 @@ void FMaintenance::DeleteOldLogs()
 		double MaxFileAgeSeconds = 60.0 * 60.0 * 24.0 * double(PurgeLogsDays);
 		for (int32 FileIndex = Files.Num() - 1; FileIndex >= 0; --FileIndex)
 		{
-			const YString& Filename = Files[FileIndex];
+			const FString& Filename = Files[FileIndex];
 			if (YOutputDeviceFile::IsBackupCopy(*Filename) && IFileManager::Get().GetFileAgeSeconds(*Filename) > MaxFileAgeSeconds)
 			{
 				UE_LOG(LogStreaming, Log, TEXT("Deleting old log file %s"), *Filename);
@@ -545,12 +545,12 @@ void FMaintenance::DeleteOldLogs()
 		}
 
 		// Remove old UE4 crash contexts
-		TArray<YString> Directories;
-		IFileManager::Get().FindFiles( Directories, *YString::Printf( TEXT( "%s/UE4CC*" ), *YPaths::GameLogDir() ), false, true );
+		TArray<FString> Directories;
+		IFileManager::Get().FindFiles( Directories, *FString::Printf( TEXT( "%s/UE4CC*" ), *YPaths::GameLogDir() ), false, true );
 
-		for (const YString& Dir : Directories)
+		for (const FString& Dir : Directories)
 		{
-			const YString CrashContextDirectory = YPaths::GameLogDir() / Dir;
+			const FString CrashContextDirectory = YPaths::GameLogDir() / Dir;
 			const FDateTime DirectoryAccessTime = IFileManager::Get().GetTimeStamp( *CrashContextDirectory );
 			if (FDateTime::Now() - DirectoryAccessTime > YTimespan::FromDays( PurgeLogsDays ))
 			{

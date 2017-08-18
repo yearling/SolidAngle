@@ -6,21 +6,21 @@
 /* FLocalTimestampVisitor structors
  *****************************************************************************/
 
-FLocalTimestampDirectoryVisitor::FLocalTimestampDirectoryVisitor( IPlatformFile& InFileInterface, const TArray<YString>& InDirectoriesToIgnore, const TArray<YString>& InDirectoriesToNotRecurse, bool bInCacheDirectories )
+FLocalTimestampDirectoryVisitor::FLocalTimestampDirectoryVisitor( IPlatformFile& InFileInterface, const TArray<FString>& InDirectoriesToIgnore, const TArray<FString>& InDirectoriesToNotRecurse, bool bInCacheDirectories )
 	: bCacheDirectories(bInCacheDirectories)
 	, FileInterface(InFileInterface)
 {
 	// make sure the paths are standardized, since the Visitor will assume they are standard
 	for (int32 DirIndex = 0; DirIndex < InDirectoriesToIgnore.Num(); DirIndex++)
 	{
-		YString DirToIgnore = InDirectoriesToIgnore[DirIndex];
+		FString DirToIgnore = InDirectoriesToIgnore[DirIndex];
 		YPaths::MakeStandardFilename(DirToIgnore);
 		DirectoriesToIgnore.Add(DirToIgnore);
 	}
 
 	for (int32 DirIndex = 0; DirIndex < InDirectoriesToNotRecurse.Num(); DirIndex++)
 	{
-		YString DirToNotRecurse = InDirectoriesToNotRecurse[DirIndex];
+		FString DirToNotRecurse = InDirectoriesToNotRecurse[DirIndex];
 		YPaths::MakeStandardFilename(DirToNotRecurse);
 		DirectoriesToNotRecurse.Add(DirToNotRecurse);
 	}
@@ -33,7 +33,7 @@ FLocalTimestampDirectoryVisitor::FLocalTimestampDirectoryVisitor( IPlatformFile&
 bool FLocalTimestampDirectoryVisitor::Visit(const TCHAR* FilenameOrDirectory, bool bIsDirectory)
 {
 	// make sure all paths are "standardized" so the other end can match up with it's own standardized paths
-	YString RelativeFilename = FilenameOrDirectory;
+	FString RelativeFilename = FilenameOrDirectory;
 	YPaths::MakeStandardFilename(RelativeFilename);
 
 	// cache files and optionally directories
@@ -69,7 +69,7 @@ bool FLocalTimestampDirectoryVisitor::Visit(const TCHAR* FilenameOrDirectory, bo
 				if (RelativeFilename.StartsWith(DirectoriesToNotRecurse[DirIndex]))
 				{
 					// Are we more than level deep in that directory?
-					YString CheckFilename = RelativeFilename.Right(RelativeFilename.Len() - DirectoriesToNotRecurse[DirIndex].Len());
+					FString CheckFilename = RelativeFilename.Right(RelativeFilename.Len() - DirectoriesToNotRecurse[DirIndex].Len());
 					if (CheckFilename.Len() > 1)
 					{
 						bShouldRecurse = false;

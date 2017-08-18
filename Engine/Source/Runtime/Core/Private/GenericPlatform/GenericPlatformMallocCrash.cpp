@@ -234,7 +234,7 @@ void FGenericPlatformMallocCrash::SetAsGMalloc()
 	{
 		*GFixedMallocLocationPtr = nullptr; // this disables any fast-path inline allocators
 	}
-	CrashedThreadId = YPlatformTLS::GetCurrentThreadId();
+	CrashedThreadId = FPlatformTLS::GetCurrentThreadId();
 }
 
 void* FGenericPlatformMallocCrash::Malloc( SIZE_T Size, uint32 Alignment )
@@ -393,7 +393,7 @@ bool FGenericPlatformMallocCrash::IsOnCrashedThread() const
 {
 	// Suspend threads other than the crashed one to prevent serious memory errors.
 	// Only the crashed thread can do anything meaningful from here anyway.
-	if( CrashedThreadId == YPlatformTLS::GetCurrentThreadId() )
+	if( CrashedThreadId == FPlatformTLS::GetCurrentThreadId() )
 	{
 		return true;
 	}

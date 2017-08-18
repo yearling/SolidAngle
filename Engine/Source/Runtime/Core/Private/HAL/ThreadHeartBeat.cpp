@@ -128,24 +128,24 @@ uint32 FThreadHeartBeat::Run()
 				LastHangCallstackCRC = CallstackCRC;
 				LastHungThreadId = ThreadThatHung;
 
-				YString StackTraceText(StackTrace);
-				TArray<YString> StackLines;
+				FString StackTraceText(StackTrace);
+				TArray<FString> StackLines;
 				StackTraceText.ParseIntoArrayLines(StackLines);
 
 				// Dump the callstack and the thread name to log
-				YString ThreadName(ThreadThatHung == GGameThreadId ? TEXT("GameThread") : FThreadManager::Get().GetThreadName(ThreadThatHung));
+				FString ThreadName(ThreadThatHung == GGameThreadId ? TEXT("GameThread") : FThreadManager::Get().GetThreadName(ThreadThatHung));
 				if (ThreadName.IsEmpty())
 				{
-					ThreadName = YString::Printf(TEXT("unknown thread (%u)"), ThreadThatHung);
+					ThreadName = FString::Printf(TEXT("unknown thread (%u)"), ThreadThatHung);
 				}
 				UE_LOG(LogCore, Error, TEXT("Hang detected on %s (thread hasn't sent a heartbeat for %.2llf seconds):"), *ThreadName, HangDuration);
-				for (YString& StackLine : StackLines)
+				for (FString& StackLine : StackLines)
 				{
 					UE_LOG(LogCore, Error, TEXT("  %s"), *StackLine);
 				}
 
 				// Assert (on the current thread unfortunately) with a trimmed stack.
-				YString StackTrimmed;
+				FString StackTrimmed;
 				for (int32 LineIndex = 0; LineIndex < StackLines.Num() && StackTrimmed.Len() < 512; ++LineIndex)
 				{
 					StackTrimmed += TEXT("  ");
@@ -153,7 +153,7 @@ uint32 FThreadHeartBeat::Run()
 					StackTrimmed += LINE_TERMINATOR;
 				}
 
-				const YString ErrorMessage = YString::Printf(TEXT("Hang detected on %s:%s%s%sCheck log for full callstack."), *ThreadName, LINE_TERMINATOR, *StackTrimmed, LINE_TERMINATOR);
+				const FString ErrorMessage = FString::Printf(TEXT("Hang detected on %s:%s%s%sCheck log for full callstack."), *ThreadName, LINE_TERMINATOR, *StackTrimmed, LINE_TERMINATOR);
 #if UE_ASSERT_ON_HANG
 				UE_LOG(LogCore, Fatal, TEXT("%s"), *ErrorMessage);
 #else
@@ -190,7 +190,7 @@ void FThreadHeartBeat::Start()
 
 void FThreadHeartBeat::HeartBeat()
 {
-	uint32 ThreadId = YPlatformTLS::GetCurrentThreadId();
+	uint32 ThreadId = FPlatformTLS::GetCurrentThreadId();
 	FScopeLock HeartBeatLock(&HeartBeatCritical);
 	FHeartBeatInfo& HeartBeatInfo = ThreadHeartBeat.FindOrAdd(ThreadId);
 	HeartBeatInfo.LastHeartBeatTime = FPlatformTime::Seconds();
@@ -221,14 +221,14 @@ uint32 FThreadHeartBeat::CheckHeartBeat()
 
 void FThreadHeartBeat::KillHeartBeat()
 {
-	uint32 ThreadId = YPlatformTLS::GetCurrentThreadId();
+	uint32 ThreadId = FPlatformTLS::GetCurrentThreadId();
 	FScopeLock HeartBeatLock(&HeartBeatCritical);
 	ThreadHeartBeat.Remove(ThreadId);
 }
 
 void FThreadHeartBeat::SuspendHeartBeat()
 {
-	uint32 ThreadId = YPlatformTLS::GetCurrentThreadId();
+	uint32 ThreadId = FPlatformTLS::GetCurrentThreadId();
 	FScopeLock HeartBeatLock(&HeartBeatCritical);
 	FHeartBeatInfo* HeartBeatInfo = ThreadHeartBeat.Find(ThreadId);
 	if (HeartBeatInfo)
@@ -238,7 +238,7 @@ void FThreadHeartBeat::SuspendHeartBeat()
 }
 void FThreadHeartBeat::ResumeHeartBeat()
 {
-	uint32 ThreadId = YPlatformTLS::GetCurrentThreadId();
+	uint32 ThreadId = FPlatformTLS::GetCurrentThreadId();
 	FScopeLock HeartBeatLock(&HeartBeatCritical);
 	FHeartBeatInfo* HeartBeatInfo = ThreadHeartBeat.Find(ThreadId);
 	if (HeartBeatInfo)
@@ -253,7 +253,7 @@ void FThreadHeartBeat::ResumeHeartBeat()
 
 bool FThreadHeartBeat::IsBeating()
 {
-	uint32 ThreadId = YPlatformTLS::GetCurrentThreadId();
+	uint32 ThreadId = FPlatformTLS::GetCurrentThreadId();
 	FScopeLock HeartBeatLock(&HeartBeatCritical);
 	FHeartBeatInfo* HeartBeatInfo = ThreadHeartBeat.Find(ThreadId);
 	if (HeartBeatInfo && HeartBeatInfo->SuspendedCount == 0)

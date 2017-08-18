@@ -23,10 +23,10 @@ public:
 public:
 
 	/** Create a named pipe as a server or client, using overlapped IO if bAsync=1. */
-	virtual bool Create(const YString& PipeName, bool bServer, bool bAsync) { return false; }
+	virtual bool Create(const FString& PipeName, bool bServer, bool bAsync) { return false; }
 
 	/** Get the pipe name used on Create(). */
-	virtual const YString& GetName() const
+	virtual const FString& GetName() const
 	{
 		return *NamePtr;
 	}
@@ -72,7 +72,7 @@ public:
 
 protected:
 
-	YString* NamePtr;
+	FString* NamePtr;
 };
 
 

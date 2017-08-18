@@ -98,7 +98,7 @@ namespace
 		check(Ar);
 		if (Ar)
 		{
-			YString Sanitized(ANSI_TO_TCHAR(String));
+			FString Sanitized(ANSI_TO_TCHAR(String));
 			Sanitized.ReplaceInline(TEXT("\n"), TEXT(""), ESearchCase::CaseSensitive);
 			Sanitized.ReplaceInline(TEXT("\r"), TEXT(""), ESearchCase::CaseSensitive);
 			Ar->Logf(*Sanitized);

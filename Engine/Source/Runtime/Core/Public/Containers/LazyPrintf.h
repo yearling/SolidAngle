@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 
 // to avoid limits with the Printf parameter count, for more readability and type safety
 class FLazyPrintf
@@ -18,7 +18,7 @@ public:
 		CurrentState.Empty(50 * 1024);
 	}
 
-	YString GetResultString()
+	FString GetResultString()
 	{
 		// internal error more %s than %s in MaterialTemplate.usf
 		check(!ProcessUntilPercentS());
@@ -69,5 +69,5 @@ private:
 	}
 
 	const TCHAR* CurrentInputPos;
-	YString CurrentState;
+	FString CurrentState;
 };

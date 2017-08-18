@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "HAL/UnrealMemory.h"
 #include "Math/UnrealMathUtility.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Serialization/MemoryArchive.h"
 
 /**
@@ -20,7 +20,7 @@ public:
 	 *
 	 * This is overridden for the specific Archive Types
 	 **/
-	virtual YString GetArchiveName() const { return TEXT("YMemoryReader"); }
+	virtual FString GetArchiveName() const { return TEXT("YMemoryReader"); }
 
 	int64 TotalSize()
 	{

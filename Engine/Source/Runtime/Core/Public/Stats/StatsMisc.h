@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
 #include "Templates/UnrealTemplate.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "HAL/PlatformTime.h"
 
 /**
@@ -168,11 +168,11 @@ struct FScopeLogTime
 
 protected:
 	double GetDisplayScopedTime(double InScopedTime) const;
-	YString GetDisplayUnitsString() const;
+	FString GetDisplayUnitsString() const;
 
 
 	const double StartTime;
-	const YString Name;
+	const FString Name;
 	FTotalTimeAndCount* Cumulative;
 	EScopeLogTimeUnits Units;
 };

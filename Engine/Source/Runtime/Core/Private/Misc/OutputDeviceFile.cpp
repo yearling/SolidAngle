@@ -6,7 +6,7 @@
 #include "Templates/UnrealTemplate.h"
 #include "Serialization/Archive.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Misc/DateTime.h"
 #include "HAL/PlatformTime.h"
 #include "HAL/PlatformProcess.h"
@@ -141,7 +141,7 @@ public:
 
 		if (FPlatformProcess::SupportsMultithreading())
 		{
-			YString WriterName = YString::Printf(TEXT("FAsyncWriter_%s"), *YPaths::GetBaseFilename(Ar.GetArchiveName()));
+			FString WriterName = FString::Printf(TEXT("FAsyncWriter_%s"), *YPaths::GetBaseFilename(Ar.GetArchiveName()));
 			Thread = FRunnableThread::Create(this, *WriterName, 0, TPri_BelowNormal);
 		}
 	}
@@ -333,10 +333,10 @@ void YOutputDeviceFile::CreateBackupCopy(const TCHAR* Filename)
 {
 	if (IFileManager::Get().FileSize(Filename) > 0)
 	{
-		YString SystemTime = FDateTime::Now().ToString();
-		YString Name, Extension;
-		YString(Filename).Split(TEXT("."), &Name, &Extension, ESearchCase::CaseSensitive, ESearchDir::FromEnd);
-		YString BackupFilename = YString::Printf(TEXT("%s%s%s.%s"), *Name, BACKUP_LOG_FILENAME_POSTFIX, *SystemTime, *Extension);
+		FString SystemTime = FDateTime::Now().ToString();
+		FString Name, Extension;
+		FString(Filename).Split(TEXT("."), &Name, &Extension, ESearchCase::CaseSensitive, ESearchDir::FromEnd);
+		FString BackupFilename = FString::Printf(TEXT("%s%s%s.%s"), *Name, BACKUP_LOG_FILENAME_POSTFIX, *SystemTime, *Extension);
 		IFileManager::Get().Copy(*BackupFilename, Filename, false);
 	}
 }
@@ -372,14 +372,14 @@ bool YOutputDeviceFile::CreateWriter(uint32 MaxAttempts)
 	// happens in the case of running a server and client on same computer for example.
 	if (!bDisableBackup && !Ar)
 	{
-		YString FilenamePart = YPaths::GetBaseFilename(Filename, false) + "_";
-		YString ExtensionPart = YPaths::GetExtension(Filename, true);
-		YString FinalFilename;
+		FString FilenamePart = YPaths::GetBaseFilename(Filename, false) + "_";
+		FString ExtensionPart = YPaths::GetExtension(Filename, true);
+		FString FinalFilename;
 		uint32 FileIndex = 2;
 		do
 		{
 			// Continue to increment indices until a valid filename is found
-			FinalFilename = FilenamePart + YString::FromInt(FileIndex++) + ExtensionPart;
+			FinalFilename = FilenamePart + FString::FromInt(FileIndex++) + ExtensionPart;
 			if (!Opened)
 			{
 				CreateBackupCopy(*FinalFilename);

@@ -36,8 +36,8 @@ public:
 	FOutputDeviceEventLog()
 		: EventLog(NULL)
 	{
-		YString InstanceName;
-		YString ServerName;
+		FString InstanceName;
+		FString ServerName;
 		// Build a name to uniquely identify this instance
 		if (FParse::Value(FCommandLine::Get(),TEXT("-Login="),ServerName))
 		{
@@ -47,7 +47,7 @@ public:
 		else
 		{
 			uint32 ProcID = GetCurrentProcessId();
-			InstanceName = YString::Printf(TEXT("%s-PID%d"),FApp::GetGameName(),ProcID);
+			InstanceName = FString::Printf(TEXT("%s-PID%d"),FApp::GetGameName(),ProcID);
 		}
 		// Open the event log using the name built above
 		EventLog = RegisterEventSource(NULL,*InstanceName);
@@ -121,7 +121,7 @@ public:
 };
 #endif //WANTS_WINDOWS_EVENT_LOGGING
 
-class FOutputDeviceWindowsError : public YOutputDeviceError
+class FOutputDeviceWindowsError : public FOutputDeviceError
 {
 public:
 	/** Constructor, initializing member variables */
@@ -145,7 +145,7 @@ public:
 /**
  * Windows implementation of console log window, utilizing the Win32 console API
  */
-class CORE_API YOutputDeviceConsoleWindows : public YOutputDeviceConsole
+class CORE_API YOutputDeviceConsoleWindows : public FOutputDeviceConsole
 {
 private:
 	/** Handle to the console log window */

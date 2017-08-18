@@ -9,7 +9,7 @@
 #include "HAL/UnrealMemory.h"
 #include "Templates/UnrealTemplate.h"
 #include "HAL/FileManager.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
 #include "CoreGlobals.h"
@@ -58,7 +58,7 @@ double FWindowsPlatformSurvey::SurveyStartTimeSeconds = 0.0;
 FHardwareSurveyResults FWindowsPlatformSurvey::Results;
 
 void GetOSVersionLabels(const SYSTEM_INFO& SystemInfo, FHardwareSurveyResults& OutResults);
-void WriteFStringToResults(TCHAR* OutBuffer, const YString& InString);
+void WriteFStringToResults(TCHAR* OutBuffer, const FString& InString);
 
 bool FWindowsPlatformSurvey::GetSurveyResults( FHardwareSurveyResults& OutResults, bool bWait )
 {
@@ -120,7 +120,7 @@ void FWindowsPlatformSurvey::BeginSurveyHardware()
 		return;
 	}
 
-	YString DxDiagFilepath = YString(System32Path) + TEXT("/dxdiag.exe");
+	FString DxDiagFilepath = FString(System32Path) + TEXT("/dxdiag.exe");
 	if (0 >= IFileManager::Get().FileSize(*DxDiagFilepath))
 	{
 		UE_LOG(LogWindows, Error, TEXT("FWindowsPlatformSurvey::BeginSurveyHardware() file not found %s"), *DxDiagFilepath );
@@ -129,7 +129,7 @@ void FWindowsPlatformSurvey::BeginSurveyHardware()
 	}
 
 	// Generate a temp output filepath
-	YString OutputFilepath = GetDxDiagOutputFilepath();
+	FString OutputFilepath = GetDxDiagOutputFilepath();
 
 	// Make sure the directory exists before we run dxdiag.  It won't create a directory for us (it will instead just silently do nothing.)
 	IFileManager::Get().MakeDirectory(*YPaths::GetPath(OutputFilepath), true);
@@ -142,7 +142,7 @@ void FWindowsPlatformSurvey::BeginSurveyHardware()
 	YPaths::MakePlatformFilename(OutputFilepath);
 
 	// Run dxdiag as a external process, outputting to a text file
-	YString ProcessArgs = YString::Printf(TEXT("/t %s"), *OutputFilepath);
+	FString ProcessArgs = FString::Printf(TEXT("/t %s"), *OutputFilepath);
 	if (!FPlatformProcess::CreateProc(*DxDiagFilepath, *ProcessArgs, true, false, false, NULL, 0, NULL, NULL ).IsValid())
 	{
 		UE_LOG(LogWindows, Error, TEXT("FWindowsPlatformSurvey::BeginSurveyHardware() couldn't start up the dxdiag process"));
@@ -170,7 +170,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 		return;
 	}
 
-	YString OutputFilepath = GetDxDiagOutputFilepath();
+	FString OutputFilepath = GetDxDiagOutputFilepath();
 
 	// First attempt to open the text file then if it's there read the contents into a buffer
 	// Wait for the file to appear from the process started in BeginSurveyHardware()
@@ -181,7 +181,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 	}
 
 	// Failure to read the file when present could be because it is still being written by dxdiag
-	TArray<YString> DxdiagLines;
+	TArray<FString> DxdiagLines;
 	if( !FFileHelper::LoadANSITextFileToStrings( *OutputFilepath, &IFileManager::Get(), DxdiagLines ) )
 	{
 		// output file not yet complete/unlocked
@@ -201,7 +201,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 
 	// Get memory
 	OutResults.MemoryMB = -1;
-	YString MemoryString;
+	FString MemoryString;
 	if (GetLineFollowing(TEXT("Available OS Memory: "), DxdiagLines, MemoryString))
 	{
 		int32 MBIdx = MemoryString.Find(TEXT("MB RAM"));
@@ -233,7 +233,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 	}
 
 	// Get DX version
-	YString DirectXVerString;
+	FString DirectXVerString;
 	if (GetLineFollowing(TEXT("DirectX Version: "), DxdiagLines, DirectXVerString))
 	{
 		WriteFStringToResults(OutResults.MultimediaAPI, DirectXVerString);
@@ -246,7 +246,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 	}	
 
 	// Get processor string
-	YString ProcessorString;
+	FString ProcessorString;
 	if (GetLineFollowing(TEXT("Processor: "), DxdiagLines, ProcessorString))
 	{
 		WriteFStringToResults(OutResults.CPUNameString, ProcessorString);
@@ -260,7 +260,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 
 	// Identify "Display Devices" section
 	OutResults.DisplayCount = 0;
-	TArray<YString> DisplaySectionLines;
+	TArray<FString> DisplaySectionLines;
 	if (GetNamedSection(TEXT("Display Devices"), DxdiagLines, DisplaySectionLines))
 	{
 		for (; OutResults.DisplayCount < FHardwareSurveyResults::MaxDisplayCount; OutResults.DisplayCount++)
@@ -269,7 +269,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 
 			// Get the card name
 			WriteFStringToResults(Display.GPUCardName, TEXT(""));
-			YString GPUCardString;
+			FString GPUCardString;
 			if (GetLineFollowing(TEXT("Card name: "), DisplaySectionLines, GPUCardString, OutResults.DisplayCount))
 			{
 				WriteFStringToResults(Display.GPUCardName, GPUCardString);
@@ -283,12 +283,12 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 			// Get the display mode
 			Display.CurrentModeWidth = -1;
 			Display.CurrentModeHeight = -1;
-			YString DispMode;
+			FString DispMode;
 			if (GetLineFollowing(TEXT("Current Mode: "), DisplaySectionLines, DispMode, OutResults.DisplayCount))
 			{
 				// split DispMode which should be formatted thus "<width> x <height> (details)"
-				YString WidthString;
-				YString HeightString;
+				FString WidthString;
+				FString HeightString;
 				if (DispMode.Split(TEXT(" x "), &WidthString, &HeightString))
 				{
 					int32 EndIdx;
@@ -300,27 +300,27 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 					else
 					{
 						OutResults.ErrorCount++;
-						WriteFStringToResults(OutResults.LastSurveyError, YString::Printf(TEXT("Dxdiag: can't find trailing space char in line beginning \"Current Mode:\" for display %d"), OutResults.DisplayCount));
+						WriteFStringToResults(OutResults.LastSurveyError, FString::Printf(TEXT("Dxdiag: can't find trailing space char in line beginning \"Current Mode:\" for display %d"), OutResults.DisplayCount));
 						WriteFStringToResults(OutResults.LastSurveyErrorDetail, DispMode);
 					}
 				}
 				else
 				{
 					OutResults.ErrorCount++;
-					WriteFStringToResults(OutResults.LastSurveyError, YString::Printf(TEXT("Dxdiag: can't find \" x \" in line beginning \"Current Mode:\" for display %d"), OutResults.DisplayCount));
+					WriteFStringToResults(OutResults.LastSurveyError, FString::Printf(TEXT("Dxdiag: can't find \" x \" in line beginning \"Current Mode:\" for display %d"), OutResults.DisplayCount));
 					WriteFStringToResults(OutResults.LastSurveyErrorDetail, DispMode);
 				}
 			}
 			else
 			{
 				OutResults.ErrorCount++;
-				WriteFStringToResults(OutResults.LastSurveyError, YString::Printf(TEXT("Dxdiag: can't find line beginning \"Current Mode:\" for display %d"), OutResults.DisplayCount));
+				WriteFStringToResults(OutResults.LastSurveyError, FString::Printf(TEXT("Dxdiag: can't find line beginning \"Current Mode:\" for display %d"), OutResults.DisplayCount));
 				WriteFStringToResults(OutResults.LastSurveyErrorDetail, TEXT(""));
 			}
 
 			// Get GPU memory
 			Display.GPUDedicatedMemoryMB = -1;
-			YString GPUMemoryString;
+			FString GPUMemoryString;
 			if (GetLineFollowing(TEXT("Dedicated Memory: "), DisplaySectionLines, GPUMemoryString, OutResults.DisplayCount))
 			{
 				int32 MBIdx = GPUMemoryString.Find(TEXT(" MB"));
@@ -334,27 +334,27 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 					else
 					{
 						OutResults.ErrorCount++;
-						WriteFStringToResults(OutResults.LastSurveyError, YString::Printf(TEXT("Dxdiag: can't parse integer in line beginning \"Dedicated Memory:\" for display %d"), OutResults.DisplayCount));
+						WriteFStringToResults(OutResults.LastSurveyError, FString::Printf(TEXT("Dxdiag: can't parse integer in line beginning \"Dedicated Memory:\" for display %d"), OutResults.DisplayCount));
 						WriteFStringToResults(OutResults.LastSurveyErrorDetail, GPUMemoryString);
 					}
 				}
 				else
 				{
 					OutResults.ErrorCount++;
-					WriteFStringToResults(OutResults.LastSurveyError, YString::Printf(TEXT("Dxdiag: can't find \" MB\" in line beginning \"Dedicated Memory:\" for display %d"), OutResults.DisplayCount));
+					WriteFStringToResults(OutResults.LastSurveyError, FString::Printf(TEXT("Dxdiag: can't find \" MB\" in line beginning \"Dedicated Memory:\" for display %d"), OutResults.DisplayCount));
 					WriteFStringToResults(OutResults.LastSurveyErrorDetail, GPUMemoryString);
 				}
 			}
 			else
 			{
 				OutResults.ErrorCount++;
-				WriteFStringToResults(OutResults.LastSurveyError, YString::Printf(TEXT("Dxdiag: can't find line beginning \"Dedicated Memory:\" for display %d"), OutResults.DisplayCount));
+				WriteFStringToResults(OutResults.LastSurveyError, FString::Printf(TEXT("Dxdiag: can't find line beginning \"Dedicated Memory:\" for display %d"), OutResults.DisplayCount));
 				WriteFStringToResults(OutResults.LastSurveyErrorDetail, TEXT(""));
 			}
 
 			// Get the card driver version
 			WriteFStringToResults(Display.GPUDriverVersion, TEXT(""));
-			YString GPUDriverString;
+			FString GPUDriverString;
 			if (GetLineFollowing(TEXT("Driver Version: "), DisplaySectionLines, GPUDriverString, OutResults.DisplayCount))
 			{
 				WriteFStringToResults(Display.GPUDriverVersion, GPUDriverString);
@@ -362,7 +362,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 			else
 			{
 				OutResults.ErrorCount++;
-				WriteFStringToResults(OutResults.LastSurveyError, YString::Printf(TEXT("Dxdiag: can't find line beginning \"Driver Version:\" for display %d"), OutResults.DisplayCount));
+				WriteFStringToResults(OutResults.LastSurveyError, FString::Printf(TEXT("Dxdiag: can't find line beginning \"Driver Version:\" for display %d"), OutResults.DisplayCount));
 				WriteFStringToResults(OutResults.LastSurveyErrorDetail, TEXT(""));
 			}
 		}
@@ -384,7 +384,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 	else if (OutResults.DisplayCount > 3)
 	{
 		OutResults.ErrorCount++;
-		WriteFStringToResults(OutResults.LastSurveyError, YString::Printf(TEXT("Dxdiag: display count %d"), OutResults.DisplayCount));
+		WriteFStringToResults(OutResults.LastSurveyError, FString::Printf(TEXT("Dxdiag: display count %d"), OutResults.DisplayCount));
 		WriteFStringToResults(OutResults.LastSurveyErrorDetail, TEXT(""));
 	}
 
@@ -425,7 +425,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 			{
 				OutResults.ErrorCount++;
 				WriteFStringToResults(OutResults.LastSurveyError, TEXT("CallNtPowerInformation() failed to get processor power info"));
-				WriteFStringToResults(OutResults.LastSurveyErrorDetail, YString::Printf(TEXT("NTSTATUS: 0x%0x"), NTStatus));
+				WriteFStringToResults(OutResults.LastSurveyErrorDetail, FString::Printf(TEXT("NTSTATUS: 0x%0x"), NTStatus));
 			}
 			delete [] PowerInfo;
 		}
@@ -445,7 +445,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 	}
 
 	// Get CPU brand
-	YString CPUBrand = YWindowsPlatformMisc::GetCPUVendor();
+	FString CPUBrand = YWindowsPlatformMisc::GetCPUVendor();
 	WriteFStringToResults(OutResults.CPUBrand, CPUBrand);
 	if (CPUBrand.Len() == 0)
 	{
@@ -470,7 +470,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 		UE_LOG(LogWindows, Warning, TEXT("FWindowsPlatformSurvey::TickSurveyHardware() failed to get UE4 root-folder drive size from Win32") );
 		OutResults.ErrorCount++;
 		WriteFStringToResults(OutResults.LastSurveyError, TEXT("GetDiskFreeSpaceEx() failed"));
-		WriteFStringToResults(OutResults.LastSurveyErrorDetail, YString::Printf(TEXT("ErrorCode: 0x%0x"), ErrorCode));
+		WriteFStringToResults(OutResults.LastSurveyErrorDetail, FString::Printf(TEXT("ErrorCode: 0x%0x"), ErrorCode));
 	}
 
 	// OS info
@@ -491,11 +491,11 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 		UE_LOG(LogWindows, Warning, TEXT("FWindowsPlatformSurvey::TickSurveyHardware() failed to get locale info from Win32") );
 		OutResults.ErrorCount++;
 		WriteFStringToResults(OutResults.LastSurveyError, TEXT("GetLocaleInfo() failed"));
-		WriteFStringToResults(OutResults.LastSurveyErrorDetail, YString::Printf(TEXT("ErrorCode: 0x%0x"), ErrorCode));
+		WriteFStringToResults(OutResults.LastSurveyErrorDetail, FString::Printf(TEXT("ErrorCode: 0x%0x"), ErrorCode));
 	}
 	else
 	{
-		WriteFStringToResults(OutResults.OSLanguage, YString::Printf(TEXT("%s-%s"), LangBuffer, CountryBuffer));
+		WriteFStringToResults(OutResults.OSLanguage, FString::Printf(TEXT("%s-%s"), LangBuffer, CountryBuffer));
 	}
 
 #if USING_WINSAT_API
@@ -516,7 +516,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 			UE_LOG(LogWindows, Warning, TEXT("FWindowsPlatformSurvey::TickSurveyHardware() failed to get query interface from WinSAT API") );
 			OutResults.ErrorCount++;
 			WriteFStringToResults(OutResults.LastSurveyError, TEXT("CoCreateInstance() failed to get WinSAT"));
-			WriteFStringToResults(OutResults.LastSurveyErrorDetail, YString::Printf(TEXT("HRESULT: 0x%0x"), COMResult));
+			WriteFStringToResults(OutResults.LastSurveyErrorDetail, FString::Printf(TEXT("HRESULT: 0x%0x"), COMResult));
 
 		}
 		else
@@ -529,7 +529,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 				UE_LOG(LogWindows, Error, TEXT("FWindowsPlatformSurvey::TickSurveyHardware() failed to get assessment results from WinSAT API") );
 				OutResults.ErrorCount++;
 				WriteFStringToResults(OutResults.LastSurveyError, TEXT("get_Info() failed to get WinSAT assessment results"));
-				WriteFStringToResults(OutResults.LastSurveyErrorDetail, YString::Printf(TEXT("HRESULT: 0x%0x"), COMResult));
+				WriteFStringToResults(OutResults.LastSurveyErrorDetail, FString::Printf(TEXT("HRESULT: 0x%0x"), COMResult));
 
 			}
 			else
@@ -542,7 +542,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 					UE_LOG(LogWindows, Error, TEXT("FWindowsPlatformSurvey::TickSurveyHardware() failed to get assessment state from WinSAT API") );
 					OutResults.ErrorCount++;
 					WriteFStringToResults(OutResults.LastSurveyError, TEXT("get_AssessmentState() failed to get WinSAT assessment state"));
-					WriteFStringToResults(OutResults.LastSurveyErrorDetail, YString::Printf(TEXT("HRESULT: 0x%0x"), COMResult));
+					WriteFStringToResults(OutResults.LastSurveyErrorDetail, FString::Printf(TEXT("HRESULT: 0x%0x"), COMResult));
 				}
 				else
 				{
@@ -573,7 +573,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 						UE_LOG(LogWindows, Warning, TEXT("FWindowsPlatformSurvey::TickSurveyHardware() WinSAT assessment data was invalid.") );
 						OutResults.ErrorCount++;
 						WriteFStringToResults(OutResults.LastSurveyError, TEXT("WinSAT assessment state unknown"));
-						WriteFStringToResults(OutResults.LastSurveyErrorDetail, YString::Printf(TEXT("WinSATState: %d"), (int32)WinSATState));
+						WriteFStringToResults(OutResults.LastSurveyErrorDetail, FString::Printf(TEXT("WinSATState: %d"), (int32)WinSATState));
 					}
 
 					// Get the index scores from the results
@@ -636,7 +636,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 		UE_LOG(LogWindows, Warning, TEXT("FWindowsPlatformSurvey::TickSurveyHardware() failed to get system power capabilities. Assuming desktop PC.") );
 		OutResults.ErrorCount++;
 		WriteFStringToResults(OutResults.LastSurveyError, TEXT("CallNtPowerInformation() failed to get system power capabilities"));
-		WriteFStringToResults(OutResults.LastSurveyErrorDetail, YString::Printf(TEXT("NTSTATUS: 0x%0x"), NTStatus));
+		WriteFStringToResults(OutResults.LastSurveyErrorDetail, FString::Printf(TEXT("NTSTATUS: 0x%0x"), NTStatus));
 	}
 #endif	// #if USING_POWRPROF
 
@@ -646,9 +646,9 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 	bSurveyComplete = true;
 }
 
-YString FWindowsPlatformSurvey::GetDxDiagOutputFilepath()
+FString FWindowsPlatformSurvey::GetDxDiagOutputFilepath()
 {
-	YString RelativePath = YPaths::Combine(*YPaths::GameSavedDir(), TEXT( "HardwareSurvey" ), TEXT("dxdiag.txt"));
+	FString RelativePath = YPaths::Combine(*YPaths::GameSavedDir(), TEXT( "HardwareSurvey" ), TEXT("dxdiag.txt"));
 	return YPaths::ConvertRelativePathToFull(RelativePath);
 }
 
@@ -663,8 +663,8 @@ bool FWindowsPlatformSurvey::GetSubComponentIndex( IProvideWinSATResultsInfo* Wi
 	{
 		UE_LOG(LogWindows, Log, TEXT("FWindowsPlatformSurvey::GetSubComponentIndex() failed to get assessment info for a sub-component from WinSAT API.") );
 		OutSurveyResults.ErrorCount++;
-		WriteFStringToResults(OutSurveyResults.LastPerformanceIndexError, YString::Printf(TEXT("GetAssessmentInfo() failed to get WinSAT assessment for sub-component %d"), SubComponent));
-		WriteFStringToResults(OutSurveyResults.LastPerformanceIndexErrorDetail, YString::Printf(TEXT("HRESULT: 0x%0x"), COMResult));
+		WriteFStringToResults(OutSurveyResults.LastPerformanceIndexError, FString::Printf(TEXT("GetAssessmentInfo() failed to get WinSAT assessment for sub-component %d"), SubComponent));
+		WriteFStringToResults(OutSurveyResults.LastPerformanceIndexErrorDetail, FString::Printf(TEXT("HRESULT: 0x%0x"), COMResult));
 	}
 	else
 	{
@@ -674,8 +674,8 @@ bool FWindowsPlatformSurvey::GetSubComponentIndex( IProvideWinSATResultsInfo* Wi
 		{
 			UE_LOG(LogWindows, Log, TEXT("FWindowsPlatformSurvey::GetSubComponentIndex() failed to get sub-component score from WinSAT API.") );
 			OutSurveyResults.ErrorCount++;
-			WriteFStringToResults(OutSurveyResults.LastPerformanceIndexError, YString::Printf(TEXT("get_Score() failed to get WinSAT WIE score for sub-component %d"), SubComponent));
-			WriteFStringToResults(OutSurveyResults.LastPerformanceIndexErrorDetail, YString::Printf(TEXT("HRESULT: 0x%0x"), COMResult));
+			WriteFStringToResults(OutSurveyResults.LastPerformanceIndexError, FString::Printf(TEXT("get_Score() failed to get WinSAT WIE score for sub-component %d"), SubComponent));
+			WriteFStringToResults(OutSurveyResults.LastPerformanceIndexErrorDetail, FString::Printf(TEXT("HRESULT: 0x%0x"), COMResult));
 		}
 		else
 		{
@@ -691,8 +691,8 @@ bool FWindowsPlatformSurvey::GetSubComponentIndex( IProvideWinSATResultsInfo* Wi
 
 void GetOSVersionLabels(const SYSTEM_INFO& SystemInfo, FHardwareSurveyResults& OutResults)
 {
-	YString OSVersionLabel;
-	YString OSSubVersionLabel;
+	FString OSVersionLabel;
+	FString OSSubVersionLabel;
 	const int32 ErrorCode = YWindowsOSVersionHelper::GetOSVersions( OSVersionLabel, OSSubVersionLabel );
 
 	if( ErrorCode & YWindowsOSVersionHelper::ERROR_GETPRODUCTINFO_FAILED )
@@ -715,7 +715,7 @@ void GetOSVersionLabels(const SYSTEM_INFO& SystemInfo, FHardwareSurveyResults& O
 		UE_LOG( LogWindows, Warning, TEXT( "FWindowsPlatformSurvey::GetOSVersionLabel() unknown Windows version info from GetVersionEx()" ) );
 		OutResults.ErrorCount++;
 		WriteFStringToResults( OutResults.LastSurveyError, TEXT( "GetVersionEx() returned unknown version" ) );
-		WriteFStringToResults( OutResults.LastSurveyErrorDetail, YString::Printf( TEXT( "dwMajorVersion: %d  dwMinorVersion: %d" ), OsVersionInfo.dwMajorVersion, OsVersionInfo.dwMinorVersion ) );
+		WriteFStringToResults( OutResults.LastSurveyErrorDetail, FString::Printf( TEXT( "dwMajorVersion: %d  dwMinorVersion: %d" ), OsVersionInfo.dwMajorVersion, OsVersionInfo.dwMinorVersion ) );
 	}
 
 	if( ErrorCode & YWindowsOSVersionHelper::ERROR_GETVERSIONEX_FAILED )
@@ -724,19 +724,19 @@ void GetOSVersionLabels(const SYSTEM_INFO& SystemInfo, FHardwareSurveyResults& O
 		UE_LOG( LogWindows, Warning, TEXT( "FWindowsPlatformSurvey::GetOSVersionLabel() failed to get Windows version info from GetVersionEx()" ) );
 		OutResults.ErrorCount++;
 		WriteFStringToResults( OutResults.LastSurveyError, TEXT( "GetVersionEx() failed" ) );
-		WriteFStringToResults( OutResults.LastSurveyErrorDetail, YString::Printf( TEXT( "ErrorCode: 0x%0x" ), LastError ) );
+		WriteFStringToResults( OutResults.LastSurveyErrorDetail, FString::Printf( TEXT( "ErrorCode: 0x%0x" ), LastError ) );
 	}
 
 	WriteFStringToResults( OutResults.OSVersion, OSVersionLabel );
 	WriteFStringToResults( OutResults.OSSubVersion, OSSubVersionLabel );
 }
 
-bool FWindowsPlatformSurvey::GetLineFollowing(const YString& Token, const TArray<YString>& InLines, YString& OutString, int32 NthHit)
+bool FWindowsPlatformSurvey::GetLineFollowing(const FString& Token, const TArray<FString>& InLines, FString& OutString, int32 NthHit)
 {
 	int32 HitIdx = 0;
 	for (int32 LineIdx = 0; LineIdx < InLines.Num(); LineIdx++)
 	{
-		const YString& Line = InLines[LineIdx];
+		const FString& Line = InLines[LineIdx];
 
 		int32 SubStrIdx =  Line.Find(Token);
 		if (0 <= SubStrIdx && NthHit == HitIdx++)
@@ -748,7 +748,7 @@ bool FWindowsPlatformSurvey::GetLineFollowing(const YString& Token, const TArray
 	return false;
 }
 
-void WriteFStringToResults(TCHAR* OutBuffer, const YString& InString)
+void WriteFStringToResults(TCHAR* OutBuffer, const FString& InString)
 {
 	FMemory::Memset( OutBuffer, 0, sizeof(TCHAR) * FHardwareSurveyResults::MaxStringLength );
 	TCHAR* Cursor = OutBuffer;
@@ -758,7 +758,7 @@ void WriteFStringToResults(TCHAR* OutBuffer, const YString& InString)
 	}
 }
 
-bool FWindowsPlatformSurvey::GetNamedSection(YString SectionName, const TArray<YString>& InLines, TArray<YString>& OutSectionLines)
+bool FWindowsPlatformSurvey::GetNamedSection(FString SectionName, const TArray<FString>& InLines, TArray<FString>& OutSectionLines)
 {
 	OutSectionLines.Empty();
 	int32 SectionStartLine = -1;
@@ -767,11 +767,11 @@ bool FWindowsPlatformSurvey::GetNamedSection(YString SectionName, const TArray<Y
 	{
 		if (LineIdx < InLines.Num() - 2)
 		{
-			const YString& StartLine = InLines[LineIdx];
+			const FString& StartLine = InLines[LineIdx];
 
 			if (StartLine.StartsWith(TEXT("---")))
 			{
-				const YString& EndLine = InLines[LineIdx+2];
+				const FString& EndLine = InLines[LineIdx+2];
 
 				if (EndLine.StartsWith(TEXT("---")))
 				{
@@ -781,7 +781,7 @@ bool FWindowsPlatformSurvey::GetNamedSection(YString SectionName, const TArray<Y
 					}
 					else
 					{
-						const YString& SectionLine = InLines[LineIdx+1];
+						const FString& SectionLine = InLines[LineIdx+1];
 
 						if (SectionLine.StartsWith(SectionName))
 						{

@@ -50,7 +50,7 @@ public:
 };
 
 
-bool FTaskGraphTest::RunTest(const YString& Parameters)
+bool FTaskGraphTest::RunTest(const FString& Parameters)
 {
 	using namespace TaskGraphTestTask;
 

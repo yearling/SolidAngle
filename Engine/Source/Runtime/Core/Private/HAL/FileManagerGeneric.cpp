@@ -84,7 +84,7 @@ public:
 	{
 		Pos += Length;
 	}
-	virtual YString GetArchiveName() const override { return TEXT( "YArchiveFileWriterDummy" ); }
+	virtual FString GetArchiveName() const override { return TEXT( "YArchiveFileWriterDummy" ); }
 protected:
 	int64             Pos;
 };
@@ -169,8 +169,8 @@ uint32 FFileManagerGeneric::CopyWithProgress(const TCHAR* InDestFile, const TCHA
 	// Direct file copier.
 	if( Progress->Poll( 0.0 ) )
 	{
-		YString SrcFile		= InSrcFile;
-		YString DestFile	= InDestFile;
+		FString SrcFile		= InSrcFile;
+		FString DestFile	= InDestFile;
 	
 		FArchive* Src = CreateFileReader( *SrcFile, ReadFlags );
 		if( !Src )
@@ -380,16 +380,16 @@ FFileStatData FFileManagerGeneric::GetStatData(const TCHAR* FilenameOrDirectory)
 	return GetLowLevel().GetStatData(FilenameOrDirectory);
 }
 
-void FFileManagerGeneric::FindFiles( TArray<YString>& Result, const TCHAR* InFilename, bool Files, bool Directories )
+void FFileManagerGeneric::FindFiles( TArray<FString>& Result, const TCHAR* InFilename, bool Files, bool Directories )
 {
 	class FFileMatch : public IPlatformFile::FDirectoryVisitor
 	{
 	public:
-		TArray<YString>& Result;
-		YString WildCard;
+		TArray<FString>& Result;
+		FString WildCard;
 		bool bFiles;
 		bool bDirectories;
-		FFileMatch( TArray<YString>& InResult, const YString& InWildCard, bool bInFiles, bool bInDirectories )
+		FFileMatch( TArray<FString>& InResult, const FString& InWildCard, bool bInFiles, bool bInDirectories )
 			: Result( InResult )
 			, WildCard( InWildCard )
 			, bFiles( bInFiles )
@@ -401,28 +401,28 @@ void FFileManagerGeneric::FindFiles( TArray<YString>& Result, const TCHAR* InFil
 			if (((bIsDirectory && bDirectories) || (!bIsDirectory && bFiles))
 				&& YPaths::GetCleanFilename(FilenameOrDirectory).MatchesWildcard(WildCard))
 			{
-				new( Result ) YString( YPaths::GetCleanFilename(FilenameOrDirectory) );
+				new( Result ) FString( YPaths::GetCleanFilename(FilenameOrDirectory) );
 			}
 			return true;
 		}
 	};
-	YString Filename( InFilename );
+	FString Filename( InFilename );
 	YPaths::NormalizeFilename( Filename );
-	const YString CleanFilename = YPaths::GetCleanFilename(Filename);
+	const FString CleanFilename = YPaths::GetCleanFilename(Filename);
 	const bool bFindAllFiles = CleanFilename == TEXT("*") || CleanFilename == TEXT("*.*");
 	FFileMatch FileMatch( Result, bFindAllFiles ? TEXT("*") : CleanFilename, Files, Directories );
 	GetLowLevel().IterateDirectory( *YPaths::GetPath(Filename), FileMatch );
 }
 
-void FFileManagerGeneric::FindFiles(TArray<YString>& FoundFiles, const TCHAR* Directory, const TCHAR* FileExtension)
+void FFileManagerGeneric::FindFiles(TArray<FString>& FoundFiles, const TCHAR* Directory, const TCHAR* FileExtension)
 {
 	if (!Directory)
 	{
 		return;
 	}
 
-	YString RootDir(Directory);
-	YString ExtStr = (FileExtension != nullptr) ? YString(FileExtension) : "";
+	FString RootDir(Directory);
+	FString ExtStr = (FileExtension != nullptr) ? FString(FileExtension) : "";
 
 	// No Directory?
 	if (RootDir.Len() < 1)
@@ -447,7 +447,7 @@ void FFileManagerGeneric::FindFiles(TArray<YString>& FoundFiles, const TCHAR* Di
 	}
 
 	// Create the full filter, which is "Directory/*.EXT".
-	YString FinalPath = RootDir + "/" + ExtStr;
+	FString FinalPath = RootDir + "/" + ExtStr;
 	FindFiles(FoundFiles, *FinalPath, true, false);
 }
 
@@ -512,19 +512,19 @@ FDateTime FFileManagerGeneric::GetAccessTimeStamp( const TCHAR* Filename )
 	return GetLowLevel().GetAccessTimeStamp(Filename);
 }
 
-YString FFileManagerGeneric::GetFilenameOnDisk(const TCHAR* Filename)
+FString FFileManagerGeneric::GetFilenameOnDisk(const TCHAR* Filename)
 {
 	return GetLowLevel().GetFilenameOnDisk(Filename);
 }
 
-YString FFileManagerGeneric::DefaultConvertToRelativePath( const TCHAR* Filename )
+FString FFileManagerGeneric::DefaultConvertToRelativePath( const TCHAR* Filename )
 {
 	//default to the full absolute path of this file
-	YString RelativePath( Filename );
+	FString RelativePath( Filename );
 	YPaths::NormalizeFilename(RelativePath);
 
 	// See whether it is a relative path.
-	YString RootDirectory( YPlatformMisc::RootDir() );
+	FString RootDirectory( YPlatformMisc::RootDir() );
 	YPaths::NormalizeFilename(RootDirectory);
 
 	//the default relative directory it to the app root which is 3 directories up from the starting directory
@@ -538,7 +538,7 @@ YString FFileManagerGeneric::DefaultConvertToRelativePath( const TCHAR* Filename
 	{
 		if( RelativePath.StartsWith( RootDirectory ) )
 		{
-			YString BinariesDir = YString(FPlatformProcess::BaseDir());
+			FString BinariesDir = FString(FPlatformProcess::BaseDir());
 			YPaths::MakePathRelativeTo( RelativePath, *BinariesDir );
 			break;
 		}
@@ -559,22 +559,22 @@ YString FFileManagerGeneric::DefaultConvertToRelativePath( const TCHAR* Filename
 	return RelativePath;
 }
 
-YString FFileManagerGeneric::ConvertToRelativePath( const TCHAR* Filename )
+FString FFileManagerGeneric::ConvertToRelativePath( const TCHAR* Filename )
 {
 	return DefaultConvertToRelativePath(Filename);
 }
 
-YString FFileManagerGeneric::ConvertToAbsolutePathForExternalAppForRead( const TCHAR* AbsolutePath )
+FString FFileManagerGeneric::ConvertToAbsolutePathForExternalAppForRead( const TCHAR* AbsolutePath )
 {
 	return GetLowLevel().ConvertToAbsolutePathForExternalAppForRead( AbsolutePath );
 }
 
-YString FFileManagerGeneric::ConvertToAbsolutePathForExternalAppForWrite( const TCHAR* AbsolutePath )
+FString FFileManagerGeneric::ConvertToAbsolutePathForExternalAppForWrite( const TCHAR* AbsolutePath )
 {
 	return GetLowLevel().ConvertToAbsolutePathForExternalAppForWrite( AbsolutePath );
 }
 
-void FFileManagerGeneric::FindFilesRecursive( TArray<YString>& FileNames, const TCHAR* StartDirectory, const TCHAR* Filename, bool Files, bool Directories, bool bClearFileNames)
+void FFileManagerGeneric::FindFilesRecursive( TArray<FString>& FileNames, const TCHAR* StartDirectory, const TCHAR* Filename, bool Files, bool Directories, bool bClearFileNames)
 {
 	if( bClearFileNames )
 	{
@@ -583,24 +583,24 @@ void FFileManagerGeneric::FindFilesRecursive( TArray<YString>& FileNames, const 
 	FindFilesRecursiveInternal(FileNames, StartDirectory, Filename, Files, Directories);
 }
 
-void FFileManagerGeneric::FindFilesRecursiveInternal( TArray<YString>& FileNames, const TCHAR* StartDirectory, const TCHAR* Filename, bool Files, bool Directories)
+void FFileManagerGeneric::FindFilesRecursiveInternal( TArray<FString>& FileNames, const TCHAR* StartDirectory, const TCHAR* Filename, bool Files, bool Directories)
 {
-	YString CurrentSearch = YString(StartDirectory) / Filename;
-	TArray<YString> Result;
+	FString CurrentSearch = FString(StartDirectory) / Filename;
+	TArray<FString> Result;
 	FindFiles(Result, *CurrentSearch, Files, Directories);
 
 	for (int32 i=0; i<Result.Num(); i++)
 	{
-		FileNames.Add(YString(StartDirectory) / Result[i]);
+		FileNames.Add(FString(StartDirectory) / Result[i]);
 	}
 
-	TArray<YString> SubDirs;
-	YString RecursiveDirSearch = YString(StartDirectory) / TEXT("*");
+	TArray<FString> SubDirs;
+	FString RecursiveDirSearch = FString(StartDirectory) / TEXT("*");
 	FindFiles(SubDirs, *RecursiveDirSearch, false, true);
 
 	for (int32 SubDirIdx=0; SubDirIdx<SubDirs.Num(); SubDirIdx++)
 	{
-		YString SubDir = YString(StartDirectory) / SubDirs[SubDirIdx];
+		FString SubDir = FString(StartDirectory) / SubDirs[SubDirIdx];
 		FindFilesRecursiveInternal(FileNames, *SubDir, Filename, Files, Directories);
 	}
 }

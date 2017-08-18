@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
 #include "Math/UnrealMathUtility.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Logging/LogMacros.h"
 #include "Math/Vector.h"
 #include "Math/VectorRegister.h"
@@ -420,7 +420,7 @@ public:
 	*
 	* @return Text describing the vector.
 	*/
-	YString ToString() const;
+	FString ToString() const;
 
 public:
 
@@ -701,9 +701,9 @@ FORCEINLINE FQuat::FQuat(const FQuat& Q)
 { }
 
 
-FORCEINLINE YString FQuat::ToString() const
+FORCEINLINE FString FQuat::ToString() const
 {
-	return YString::Printf(TEXT("X=%.9f Y=%.9f Z=%.9f W=%.9f"), X, Y, Z, W);
+	return FString::Printf(TEXT("X=%.9f Y=%.9f Z=%.9f W=%.9f"), X, Y, Z, W);
 }
 
 

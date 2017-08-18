@@ -100,13 +100,13 @@ void FGenericPlatformProcess::SetCurrentWorkingDirectoryToBaseDir()
 	YPlatformMisc::CacheLaunchDir();
 }
 
-YString FGenericPlatformProcess::GetCurrentWorkingDirectory()
+FString FGenericPlatformProcess::GetCurrentWorkingDirectory()
 {
 	return TEXT("");
 }
 
 
-static YString Generic_ShaderDir;
+static FString Generic_ShaderDir;
 
 const TCHAR* FGenericPlatformProcess::ShaderDir()
 {
@@ -132,7 +132,7 @@ void FGenericPlatformProcess::SetShaderDir(const TCHAR*Where)
 /**
  *	Get the shader working directory
  */
-const YString FGenericPlatformProcess::ShaderWorkingDir()
+const FString FGenericPlatformProcess::ShaderWorkingDir()
 {
 	return (YPaths::GameIntermediateDir() / TEXT("Shaders/tmp/"));
 }
@@ -143,10 +143,10 @@ const YString FGenericPlatformProcess::ShaderWorkingDir()
 void FGenericPlatformProcess::CleanShaderWorkingDir()
 {
 	// Path to the working directory where files are written for multi-threaded compilation
-	YString ShaderWorkingDirectory =  FPlatformProcess::ShaderWorkingDir();
+	FString ShaderWorkingDirectory =  FPlatformProcess::ShaderWorkingDir();
 	IFileManager::Get().DeleteDirectory(*ShaderWorkingDirectory, false, true);
 
-	YString LegacyShaderWorkingDirectory = YPaths::GameIntermediateDir() / TEXT("Shaders/WorkingDirectory/");
+	FString LegacyShaderWorkingDirectory = YPaths::GameIntermediateDir() / TEXT("Shaders/WorkingDirectory/");
 	IFileManager::Get().DeleteDirectory(*LegacyShaderWorkingDirectory, false, true);
 }
 
@@ -156,10 +156,10 @@ const TCHAR* FGenericPlatformProcess::ExecutableName(bool bRemoveExtension)
 	return NULL;
 }
 
-YString FGenericPlatformProcess::GenerateApplicationPath( const YString& AppName, EBuildConfigurations::Type BuildConfiguration)
+FString FGenericPlatformProcess::GenerateApplicationPath( const FString& AppName, EBuildConfigurations::Type BuildConfiguration)
 {
 	UE_LOG(LogHAL, Fatal, TEXT("FGenericPlatformProcess::GenerateApplicationPath not implemented on this platform"));
-	return YString();
+	return FString();
 }
 
 const TCHAR* FGenericPlatformProcess::GetModulePrefix()
@@ -178,12 +178,12 @@ const TCHAR* FGenericPlatformProcess::GetBinariesSubdirectory()
 	return TEXT("");
 }
 
-const YString FGenericPlatformProcess::GetModulesDirectory()
+const FString FGenericPlatformProcess::GetModulesDirectory()
 {
 	return YPaths::Combine(*YPaths::EngineDir(), TEXT("Binaries"), FPlatformProcess::GetBinariesSubdirectory());
 }
 
-void FGenericPlatformProcess::LaunchURL( const TCHAR* URL, const TCHAR* Parms, YString* Error )
+void FGenericPlatformProcess::LaunchURL( const TCHAR* URL, const TCHAR* Parms, FString* Error )
 {
 	UE_LOG(LogHAL, Fatal, TEXT("FGenericPlatformProcess::LaunchURL not implemented on this platform"));
 }
@@ -194,7 +194,7 @@ bool FGenericPlatformProcess::CanLaunchURL(const TCHAR* URL)
 	return false;
 }
 
-YString FGenericPlatformProcess::GetGameBundleId()
+FString FGenericPlatformProcess::GetGameBundleId()
 {
 	UE_LOG(LogHAL, Warning, TEXT("FGenericPlatformProcess::GetGameBundleId not implemented on this platform"));
 	return TEXT("");
@@ -258,10 +258,10 @@ bool FGenericPlatformProcess::IsApplicationRunning( const TCHAR* ProcName )
 	return false;
 }
 
-YString FGenericPlatformProcess::GetApplicationName( uint32 ProcessId )
+FString FGenericPlatformProcess::GetApplicationName( uint32 ProcessId )
 {
 	UE_LOG(LogHAL, Fatal, TEXT("FGenericPlatformProcess::GetApplicationName not implemented on this platform"));
-	return YString(TEXT(""));
+	return FString(TEXT(""));
 }
 
 bool FGenericPlatformProcess::IsThisApplicationForeground()
@@ -270,7 +270,7 @@ bool FGenericPlatformProcess::IsThisApplicationForeground()
 	return false;
 }
 
-bool FGenericPlatformProcess::ExecProcess( const TCHAR* URL, const TCHAR* Params, int32* OutReturnCode, YString* OutStdOut, YString* OutStdErr )
+bool FGenericPlatformProcess::ExecProcess( const TCHAR* URL, const TCHAR* Params, int32* OutReturnCode, FString* OutStdOut, FString* OutStdErr )
 {
 	UE_LOG(LogHAL, Fatal, TEXT("FGenericPlatformProcess::ExecProcess not implemented on this platform"));
 	return false;
@@ -498,10 +498,10 @@ bool FGenericPlatformProcess::CreatePipe( void*& ReadPipe, void*& WritePipe )
 	return false;
 }
 
-YString FGenericPlatformProcess::ReadPipe( void* ReadPipe )
+FString FGenericPlatformProcess::ReadPipe( void* ReadPipe )
 {
 	UE_LOG(LogHAL, Fatal, TEXT("FGenericPlatformProcess::ReadPipe not implemented on this platform"));
-	return YString();
+	return FString();
 }
 
 bool FGenericPlatformProcess::ReadPipeToArray(void* ReadPipe, TArray<uint8> & Output)
@@ -510,7 +510,7 @@ bool FGenericPlatformProcess::ReadPipeToArray(void* ReadPipe, TArray<uint8> & Ou
 	return false;
 }
 
-bool FGenericPlatformProcess::WritePipe(void* WritePipe, const YString& Message, YString* OutWritten)
+bool FGenericPlatformProcess::WritePipe(void* WritePipe, const FString& Message, FString* OutWritten)
 {
 	UE_LOG(LogHAL, Fatal, TEXT("FGenericPlatformProcess::WriteToPipe not implemented on this platform"));
 	return false;
@@ -522,12 +522,12 @@ bool FGenericPlatformProcess::SupportsMultithreading()
 	return bSupportsMultithreading;
 }
 
-FGenericPlatformProcess::FSemaphore::FSemaphore(const YString& InName)
+FGenericPlatformProcess::FSemaphore::FSemaphore(const FString& InName)
 {
 	FCString::Strcpy(Name, sizeof(Name)-1, *InName);
 }
 
-FGenericPlatformProcess::FSemaphore* FGenericPlatformProcess::NewInterprocessSynchObject(const YString& Name, bool bCreate, uint32 MaxLocks)
+FGenericPlatformProcess::FSemaphore* FGenericPlatformProcess::NewInterprocessSynchObject(const FString& Name, bool bCreate, uint32 MaxLocks)
 {
 	UE_LOG(LogHAL, Fatal, TEXT("FGenericPlatformProcess::NewInterprocessSynchObject not implemented on this platform"));
 	return NULL;
@@ -554,7 +554,7 @@ bool FGenericPlatformProcess::IsFirstInstance()
 #endif
 }
 
-FSystemWideCriticalSectionNotImplemented::FSystemWideCriticalSectionNotImplemented(const YString& Name, YTimespan Timeout)
+FSystemWideCriticalSectionNotImplemented::FSystemWideCriticalSectionNotImplemented(const FString& Name, YTimespan Timeout)
 {
 	UE_LOG(LogHAL, Fatal, TEXT("FSystemWideCriticalSection not implemented on this platform"));
 }

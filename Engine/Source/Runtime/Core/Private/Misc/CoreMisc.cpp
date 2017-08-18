@@ -185,11 +185,11 @@ int32 CORE_API StaticDedicatedServerCheck()
 	static int32 HasServerSwitch = -1;
 	if (HasServerSwitch == -1)
 	{
-		const YString CmdLine = YString(FCommandLine::Get()).Trim();
+		const FString CmdLine = FString(FCommandLine::Get()).Trim();
 		const TCHAR* TCmdLine = *CmdLine;
 
-		TArray<YString> Tokens;
-		TArray<YString> Switches;
+		TArray<FString> Tokens;
+		TArray<FString> Switches;
 		FCommandLine::Parse(TCmdLine, Tokens, Switches);
 
 		HasServerSwitch = (Switches.Contains(TEXT("SERVER")) || Switches.Contains(TEXT("RUN=SERVER"))) ? 1 : 0;
@@ -203,11 +203,11 @@ int32 CORE_API StaticGameCheck()
 	static int32 HasGameSwitch = -1;
 	if (HasGameSwitch == -1)
 	{
-		const YString CmdLine = YString(FCommandLine::Get()).Trim();
+		const FString CmdLine = FString(FCommandLine::Get()).Trim();
 		const TCHAR* TCmdLine = *CmdLine;
 
-		TArray<YString> Tokens;
-		TArray<YString> Switches;
+		TArray<FString> Tokens;
+		TArray<FString> Switches;
 		FCommandLine::Parse(TCmdLine, Tokens, Switches);
 
 		if (Switches.Contains(TEXT("GAME")))
@@ -228,11 +228,11 @@ int32 CORE_API StaticClientOnlyCheck()
 	static int32 HasClientSwitch = -1;
 	if (HasClientSwitch == -1)
 	{
-		const YString CmdLine = YString(FCommandLine::Get()).Trim();
+		const FString CmdLine = FString(FCommandLine::Get()).Trim();
 		const TCHAR* TCmdLine = *CmdLine;
 
-		TArray<YString> Tokens;
-		TArray<YString> Switches;
+		TArray<FString> Tokens;
+		TArray<FString> Switches;
 		FCommandLine::Parse(TCmdLine, Tokens, Switches);
 
 		HasClientSwitch = (StaticGameCheck() && Switches.Contains(TEXT("ClientOnly"))) ? 1 : 0;
@@ -251,7 +251,7 @@ void FUrlConfig::Init()
 	DefaultPortal = GConfig->GetStr( TEXT("URL"), TEXT("Portal"), GEngineIni );
 	DefaultSaveExt = GConfig->GetStr( TEXT("URL"), TEXT("SaveExt"), GEngineIni );
 	
-	YString Port;
+	FString Port;
 	// Allow the command line to override the default port
 	if (FParse::Value(FCommandLine::Get(),TEXT("Port="),Port) == false)
 	{
@@ -340,7 +340,7 @@ void GenerateConvenientWindowedResolutions(const FDisplayMetrics& InDisplayMetri
 /*----------------------------------------------------------------------------
 FBoolConfigValueHelper
 ----------------------------------------------------------------------------*/
-FBoolConfigValueHelper::FBoolConfigValueHelper(const TCHAR* Section, const TCHAR* Key, const YString& Filename)
+FBoolConfigValueHelper::FBoolConfigValueHelper(const TCHAR* Section, const TCHAR* Key, const FString& Filename)
 	: bValue(false)
 {
 	GConfig->GetBool(Section, Key, bValue, Filename);

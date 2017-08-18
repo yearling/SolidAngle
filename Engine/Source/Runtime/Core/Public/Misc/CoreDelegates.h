@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Map.h"
 #include "Delegates/Delegate.h"
 #include "Math/IntVector.h"
@@ -26,7 +26,7 @@ namespace EHotfixDelegates
 // this is an example of a hotfix arg and return value structure. Once we have other examples, it can be deleted.
 struct FTestHotFixPayload
 {
-	YString Message;
+	FString Message;
 	bool ValueToReturn;
 	bool Result;
 };
@@ -34,7 +34,7 @@ struct FTestHotFixPayload
 // Parameters passed to CrashOverrideParamsChanged used to customize crash report client behavior/appearance
 struct FCrashOverrideParameters
 {
-	YString CrashReportClientMessageText;
+	FString CrashReportClientMessageText;
 };
 
 
@@ -48,10 +48,10 @@ public:
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnActorLabelChanged, AActor*);
 
 	// delegate type for prompting the pak system to mount a new pak
-	DECLARE_DELEGATE_RetVal_ThreeParams(bool, FOnMountPak, const YString&, uint32, IPlatformFile::FDirectoryVisitor*);
+	DECLARE_DELEGATE_RetVal_ThreeParams(bool, FOnMountPak, const FString&, uint32, IPlatformFile::FDirectoryVisitor*);
 
 	// delegate type for prompting the pak system to mount a new pak
-	DECLARE_DELEGATE_RetVal_OneParam(bool, FOnUnmountPak, const YString&);
+	DECLARE_DELEGATE_RetVal_OneParam(bool, FOnUnmountPak, const FString&);
 
 	/** delegate type for opening a modal message box ( Params: EAppMsgType::Type MessageType, const FText& Text, const FText& Title ) */
 	DECLARE_DELEGATE_RetVal_ThreeParams(EAppReturnType::Type, FOnModalMessageBox, EAppMsgType::Type, const FText&, const FText&);
@@ -69,13 +69,13 @@ public:
 	DECLARE_MULTICAST_DELEGATE(FOnSafeFrameChangedEvent);
 
 	// Callback for handling accepting invitations - generally for engine code
-	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnInviteAccepted, const YString&, const YString&);
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnInviteAccepted, const FString&, const FString&);
 
 	// Callback for accessing pak encryption key, if it exists
 	DECLARE_DELEGATE_RetVal(const ANSICHAR*, FPakEncryptionKeyDelegate);
 
 	// Callback for gathering pak signing keys, if they exist
-	DECLARE_DELEGATE_TwoParams(FPakSigningKeysDelegate, YString&, YString&);
+	DECLARE_DELEGATE_TwoParams(FPakSigningKeysDelegate, FString&, FString&);
 
 	// Callback for handling the Controller connection / disconnection
 	// first param is true for a connection, false for a disconnection.
@@ -181,9 +181,9 @@ public:
 	/** IOS-style push notification delegates */
 	DECLARE_MULTICAST_DELEGATE_OneParam(FApplicationRegisteredForRemoteNotificationsDelegate, TArray<uint8>);
 	DECLARE_MULTICAST_DELEGATE_OneParam(FApplicationRegisteredForUserNotificationsDelegate, int);
-	DECLARE_MULTICAST_DELEGATE_OneParam(FApplicationFailedToRegisterForRemoteNotificationsDelegate, YString);
-	DECLARE_MULTICAST_DELEGATE_OneParam(FApplicationReceivedRemoteNotificationDelegate, YString);
-	DECLARE_MULTICAST_DELEGATE_TwoParams(FApplicationReceivedLocalNotificationDelegate, YString, int);
+	DECLARE_MULTICAST_DELEGATE_OneParam(FApplicationFailedToRegisterForRemoteNotificationsDelegate, FString);
+	DECLARE_MULTICAST_DELEGATE_OneParam(FApplicationReceivedRemoteNotificationDelegate, FString);
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FApplicationReceivedLocalNotificationDelegate, FString, int);
 
 
 
@@ -240,7 +240,7 @@ public:
 	DECLARE_MULTICAST_DELEGATE_OneParam(FPlatformChangedLaptopMode, EConvertibleLaptopMode);
 	static FPlatformChangedLaptopMode PlatformChangedLaptopMode;
 
-	DECLARE_DELEGATE_RetVal_OneParam(bool, FLoadStringAssetReferenceInCook, const YString&);
+	DECLARE_DELEGATE_RetVal_OneParam(bool, FLoadStringAssetReferenceInCook, const FString&);
 	static FLoadStringAssetReferenceInCook LoadStringAssetReferenceInCook;
 
 	DECLARE_DELEGATE_RetVal_OneParam(bool, YStringAssetReferenceLoaded, const FName&);
@@ -279,11 +279,11 @@ public:
 	static FVRHeadsetRemovedFromHead VRHeadsetRemovedFromHead;
 
 	/** Sent when application code changes the user activity hint string for analytics, crash reports, etc */
-	DECLARE_MULTICAST_DELEGATE_OneParam(FOnUserActivityStringChanged, const YString&);
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnUserActivityStringChanged, const FString&);
 	static FOnUserActivityStringChanged UserActivityStringChanged;
 
 	/** Sent when application code changes the currently active game session. The exact semantics of this will vary between games but it is useful for analytics, crash reports, etc  */
-	DECLARE_MULTICAST_DELEGATE_OneParam(FOnGameSessionIDChange, const YString&);
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnGameSessionIDChange, const FString&);
 	static FOnGameSessionIDChange GameSessionIDChanged;
 
 	/** Sent by application code to set params that customize crash reporting behavior */
@@ -315,7 +315,7 @@ public:
 
 	// Callback to allow custom resolution of package names. Arguments are InRequestedName, OutResolvedName.
 	// Should return True of resolution occured.
-	DECLARE_DELEGATE_RetVal_TwoParams(bool, FResolvePackageNameDelegate, const YString&, YString&);
+	DECLARE_DELEGATE_RetVal_TwoParams(bool, FResolvePackageNameDelegate, const FString&, FString&);
 	static TArray<FResolvePackageNameDelegate> PackageNameResolvers;
 
 	// Called when module integrity has been compromised. Code should do as little as

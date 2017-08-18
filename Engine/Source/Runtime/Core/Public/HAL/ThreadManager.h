@@ -38,7 +38,7 @@ public:
 	void Tick();
 
 	/** Returns the name of a thread given its TLS id */
-	const YString& GetThreadName(uint32 ThreadId);
+	const FString& GetThreadName(uint32 ThreadId);
 
 	/**
 	* Access to the singleton object.

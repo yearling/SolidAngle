@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "HAL/CriticalSection.h"
 
 /**
@@ -21,7 +21,7 @@ public:
 	/**
 	* Returns the directory the application was launched from (useful for commandline utilities)
 	*/
-	static YString LaunchDir();
+	static FString LaunchDir();
 
 	/**
 	* Returns the base directory of the "core" engine that can be shared across
@@ -30,21 +30,21 @@ public:
 	*
 	* @return engine directory
 	*/
-	static YString EngineDir();
+	static FString EngineDir();
 
 	/**
 	* Returns the root directory for user-specific engine files. Always writable.
 	*
 	* @return root user directory
 	*/
-	static YString EngineUserDir();
+	static FString EngineUserDir();
 
 	/**
 	* Returns the root directory for user-specific engine files which can be shared between versions. Always writable.
 	*
 	* @return root user directory
 	*/
-	static YString EngineVersionAgnosticUserDir();
+	static FString EngineVersionAgnosticUserDir();
 
 	/**
 	* Returns the content directory of the "core" engine that can be shared across
@@ -52,42 +52,42 @@ public:
 	*
 	* @return engine content directory
 	*/
-	static YString EngineContentDir();
+	static FString EngineContentDir();
 
 	/**
 	* Returns the directory the root configuration files are located.
 	*
 	* @return root config directory
 	*/
-	static YString EngineConfigDir();
+	static FString EngineConfigDir();
 
 	/**
 	* Returns the intermediate directory of the engine
 	*
 	* @return content directory
 	*/
-	static YString EngineIntermediateDir();
+	static FString EngineIntermediateDir();
 
 	/**
 	* Returns the saved directory of the engine
 	*
 	* @return Saved directory.
 	*/
-	static YString EngineSavedDir();
+	static FString EngineSavedDir();
 
 	/**
 	* Returns the plugins directory of the engine
 	*
 	* @return Plugins directory.
 	*/
-	static YString EnginePluginsDir();
+	static FString EnginePluginsDir();
 
 	/**
 	* Returns the root directory of the engine directory tree
 	*
 	* @return Root directory.
 	*/
-	static YString RootDir();
+	static FString RootDir();
 
 	/**
 	* Returns the base directory of the current game by looking at FApp::GetGameName().
@@ -97,54 +97,54 @@ public:
 	*
 	* @return base directory
 	*/
-	static YString GameDir();
+	static FString GameDir();
 
 	/**
 	* Returns the root directory for user-specific game files.
 	*
 	* @return game user directory
 	*/
-	static YString GameUserDir();
+	static FString GameUserDir();
 
 	/**
 	* Returns the content directory of the current game by looking at FApp::GetGameName().
 	*
 	* @return content directory
 	*/
-	static YString GameContentDir();
+	static FString GameContentDir();
 
 	/**
 	* Returns the directory the root configuration files are located.
 	*
 	* @return root config directory
 	*/
-	static YString GameConfigDir();
+	static FString GameConfigDir();
 
 	/**
 	* Returns the saved directory of the current game by looking at FApp::GetGameName().
 	*
 	* @return saved directory
 	*/
-	static YString GameSavedDir();
+	static FString GameSavedDir();
 
 	/**
 	* Returns the intermediate directory of the current game by looking at FApp::GetGameName().
 	*
 	* @return intermediate directory
 	*/
-	static YString GameIntermediateDir();
+	static FString GameIntermediateDir();
 
 	/**
 	* Returns the plugins directory of the current game by looking at FApp::GetGameName().
 	*
 	* @return plugins directory
 	*/
-	static YString GamePluginsDir();
+	static FString GamePluginsDir();
 
 	/*
 	* Returns the writable directory for downloaded data that persists across play sessions.
 	*/
-	static YString GamePersistentDownloadDir();
+	static FString GamePersistentDownloadDir();
 
 	/**
 	* Returns the directory the engine uses to look for the source leaf ini files. This
@@ -152,49 +152,49 @@ public:
 	*
 	* @return source config directory
 	*/
-	static YString SourceConfigDir();
+	static FString SourceConfigDir();
 
 	/**
 	* Returns the directory the engine saves generated config files.
 	*
 	* @return config directory
 	*/
-	static YString GeneratedConfigDir();
+	static FString GeneratedConfigDir();
 
 	/**
 	* Returns the directory the engine stores sandbox output
 	*
 	* @return sandbox directory
 	*/
-	static YString SandboxesDir();
+	static FString SandboxesDir();
 
 	/**
 	* Returns the directory the engine uses to output profiling files.
 	*
 	* @return log directory
 	*/
-	static YString ProfilingDir();
+	static FString ProfilingDir();
 
 	/**
 	* Returns the directory the engine uses to output screenshot files.
 	*
 	* @return screenshot directory
 	*/
-	static YString ScreenShotDir();
+	static FString ScreenShotDir();
 
 	/**
 	* Returns the directory the engine uses to output BugIt files.
 	*
 	* @return screenshot directory
 	*/
-	static YString BugItDir();
+	static FString BugItDir();
 
 	/**
 	* Returns the directory the engine uses to output user requested video capture files.
 	*
 	* @return Video capture directory
 	*/
-	static YString VideoCaptureDir();
+	static FString VideoCaptureDir();
 
 	/**
 	* Returns the directory the engine uses to output logs. This currently can't
@@ -203,67 +203,67 @@ public:
 	*
 	* @return log directory
 	*/
-	static YString GameLogDir();
+	static FString GameLogDir();
 
 	/**
 	* @return The directory for automation save files
 	*/
-	static YString AutomationDir();
+	static FString AutomationDir();
 
 	/**
 	* @return The directory for automation save files that are meant to be deleted every run
 	*/
-	static YString AutomationTransientDir();
+	static FString AutomationTransientDir();
 
 	/**
 	* @return The directory for automation log files.
 	*/
-	static YString AutomationLogDir();
+	static FString AutomationLogDir();
 
 	/**
 	* @return The directory for local files used in cloud emulation or support
 	*/
-	static YString CloudDir();
+	static FString CloudDir();
 
 	/**
 	* @return The directory that contains subfolders for developer-specific content
 	*/
-	static YString GameDevelopersDir();
+	static FString GameDevelopersDir();
 
 	/**
 	* @return The directory that contains developer-specific content for the current user
 	*/
-	static YString GameUserDeveloperDir();
+	static FString GameUserDeveloperDir();
 
 	/**
 	* @return The directory for temp files used for diffing
 	*/
-	static YString DiffDir();
+	static FString DiffDir();
 
 	/**
 	* Returns a list of engine-specific localization paths
 	*/
-	static const TArray<YString>& GetEngineLocalizationPaths();
+	static const TArray<FString>& GetEngineLocalizationPaths();
 
 	/**
 	* Returns a list of editor-specific localization paths
 	*/
-	static const TArray<YString>& GetEditorLocalizationPaths();
+	static const TArray<FString>& GetEditorLocalizationPaths();
 
 	/**
 	* Returns a list of property name localization paths
 	*/
-	static const TArray<YString>& GetPropertFNameLocalizationPaths();
+	static const TArray<FString>& GetPropertFNameLocalizationPaths();
 
 	/**
 	* Returns a list of tool tip localization paths
 	*/
-	static const TArray<YString>& GetToolTipLocalizationPaths();
+	static const TArray<FString>& GetToolTipLocalizationPaths();
 
 	/**
 	* Returns a list of game-specific localization paths
 	*/
-	static const TArray<YString>& GetGameLocalizationPaths();
+	static const TArray<FString>& GetGameLocalizationPaths();
 
 	/**
 	* Returns the saved directory that is not game specific. This is usually the same as
@@ -271,22 +271,22 @@ public:
 	*
 	* @return saved directory
 	*/
-	static YString GameAgnosticSavedDir();
+	static FString GameAgnosticSavedDir();
 
 	/**
 	* @return The directory where engine source code files are kept
 	*/
-	static YString EngineSourceDir();
+	static FString EngineSourceDir();
 
 	/**
 	* @return The directory where game source code files are kept
 	*/
-	static YString GameSourceDir();
+	static FString GameSourceDir();
 
 	/**
 	* @return The directory where feature packs are kept
 	*/
-	static YString FeaturePackDir();
+	static FString FeaturePackDir();
 
 	/**
 	* Checks whether the path to the project file, if any, is set.
@@ -300,14 +300,14 @@ public:
 	*
 	* @return Project file path.
 	*/
-	static const YString& GetProjectFilePath();
+	static const FString& GetProjectFilePath();
 
 	/**
 	* Sets the path to the project file.
 	*
 	* @param NewGameProjectFilePath - The project file path to set.
 	*/
-	static void SetProjectFilePath(const YString& NewGameProjectFilePath);
+	static void SetProjectFilePath(const FString& NewGameProjectFilePath);
 
 	/**
 	* Gets the extension for this filename.
@@ -316,40 +316,40 @@ public:
 	*
 	* @return	the extension of this filename, or an empty string if the filename doesn't have an extension.
 	*/
-	static YString GetExtension(const YString& InPath, bool bIncludeDot = false);
+	static FString GetExtension(const FString& InPath, bool bIncludeDot = false);
 
 	// Returns the filename (with extension), minus any path information.
-	static YString GetCleanFilename(const YString& InPath);
+	static FString GetCleanFilename(const FString& InPath);
 
 	// Returns the filename (with extension), minus any path information.
-	static YString GetCleanFilename(YString&& InPath);
+	static FString GetCleanFilename(FString&& InPath);
 
 	// Returns the same thing as GetCleanFilename, but without the extension
-	static YString GetBaseFilename(const YString& InPath, bool bRemovePath = true);
+	static FString GetBaseFilename(const FString& InPath, bool bRemovePath = true);
 
 	// Returns the path in front of the filename
-	static YString GetPath(const YString& InPath);
+	static FString GetPath(const FString& InPath);
 
 	// Returns the path in front of the filename
-	static YString GetPath(YString&& InPath);
+	static FString GetPath(FString&& InPath);
 
 	// Changes the extension of the given filename
-	static YString ChangeExtension(const YString& InPath, const YString& InNewExtension);
+	static FString ChangeExtension(const FString& InPath, const FString& InNewExtension);
 
 	/** @return true if this file was found, false otherwise */
-	static bool FileExists(const YString& InPath);
+	static bool FileExists(const FString& InPath);
 
 	/** @return true if this directory was found, false otherwise */
-	static bool DirectoryExists(const YString& InPath);
+	static bool DirectoryExists(const FString& InPath);
 
 	/** @return true if this path represents a drive */
-	static bool IsDrive(const YString& InPath);
+	static bool IsDrive(const FString& InPath);
 
 	/** @return true if this path is relative */
-	static bool IsRelative(const YString& InPath);
+	static bool IsRelative(const FString& InPath);
 
 	/** Convert all / and \ to TEXT("/") */
-	static void NormalizeFilename(YString& InPath);
+	static void NormalizeFilename(FString& InPath);
 
 	/**
 	* Checks if two paths are the same.
@@ -359,10 +359,10 @@ public:
 	*
 	* @returns True if both paths are the same. False otherwise.
 	*/
-	static bool IsSamePath(const YString& PathA, const YString& PathB);
+	static bool IsSamePath(const FString& PathA, const FString& PathB);
 
 	/** Normalize all / and \ to TEXT("/") and remove any trailing TEXT("/") if the character before that is not a TEXT("/") or a colon */
-	static void NormalizeDirectorFName(YString& InPath);
+	static void NormalizeDirectorFName(FString& InPath);
 
 	/**
 	* Takes a fully pathed string and eliminates relative pathing (eg: annihilates ".." with the adjacent directory).
@@ -372,7 +372,7 @@ public:
 	* and converts it to:
 	*	BaseDirectory/SomeOtherDirectory/Filename.ext
 	*/
-	static bool CollapseRelativeDirectories(YString& InPath);
+	static bool CollapseRelativeDirectories(FString& InPath);
 
 	/**
 	* Removes duplicate slashes in paths.
@@ -382,7 +382,7 @@ public:
 	* and converts it to:
 	*	BaseDirectory/SomeDirectory/SomeOtherDirectory/Filename.ext
 	*/
-	static void RemoveDuplicateSlashes(YString& InPath);
+	static void RemoveDuplicateSlashes(FString& InPath);
 
 	/**
 	* Make fully standard "Unreal" pathname:
@@ -391,10 +391,10 @@ public:
 	*    - Collapses internal ..'s
 	*    - Makes relative to Engine\Binaries\<Platform> (will ALWAYS start with ..\..\..)
 	*/
-	static void MakeStandardFilename(YString& InPath);
+	static void MakeStandardFilename(FString& InPath);
 
 	/** Takes an "Unreal" pathname and converts it to a platform filename. */
-	static void MakePlatformFilename(YString& InPath);
+	static void MakePlatformFilename(FString& InPath);
 
 	/**
 	* Assuming both paths (or filenames) are relative to the base dir, find the relative path to the InPath.
@@ -402,51 +402,51 @@ public:
 	* @Param InPath Path to make this path relative to.
 	* @return Path relative to InPath.
 	*/
-	static bool MakePathRelativeTo(YString& InPath, const TCHAR* InRelativeTo);
+	static bool MakePathRelativeTo(FString& InPath, const TCHAR* InRelativeTo);
 
 	/**
 	* Converts a relative path name to a fully qualified name relative to the process BaseDir().
 	*/
-	static YString ConvertRelativePathToFull(const YString& InPath);
+	static FString ConvertRelativePathToFull(const FString& InPath);
 
 	/**
 	* Converts a relative path name to a fully qualified name relative to the process BaseDir().
 	*/
-	static YString ConvertRelativePathToFull(YString&& InPath);
+	static FString ConvertRelativePathToFull(FString&& InPath);
 
 	/**
 	* Converts a relative path name to a fully qualified name relative to the specified BasePath.
 	*/
-	static YString ConvertRelativePathToFull(const YString& BasePath, const YString& InPath);
+	static FString ConvertRelativePathToFull(const FString& BasePath, const FString& InPath);
 
 	/**
 	* Converts a relative path name to a fully qualified name relative to the specified BasePath.
 	*/
-	static YString ConvertRelativePathToFull(const YString& BasePath, YString&& InPath);
+	static FString ConvertRelativePathToFull(const FString& BasePath, FString&& InPath);
 
 	/**
 	* Converts a relative path name to a fully qualified name relative to the specified BasePath.
 	*/
-	static YString ConvertRelativePathToFull(YString&& BasePath, const YString& InPath);
+	static FString ConvertRelativePathToFull(FString&& BasePath, const FString& InPath);
 
 	/**
 	* Converts a relative path name to a fully qualified name relative to the specified BasePath.
 	*/
-	static YString ConvertRelativePathToFull(YString&& BasePath, YString&& InPath);
+	static FString ConvertRelativePathToFull(FString&& BasePath, FString&& InPath);
 
 	/**
 	* Converts a normal path to a sandbox path (in Saved/Sandboxes).
 	*
 	* @param InSandboxName The name of the sandbox.
 	*/
-	static YString ConvertToSandboxPath(const YString& InPath, const TCHAR* InSandboxName);
+	static FString ConvertToSandboxPath(const FString& InPath, const TCHAR* InSandboxName);
 
 	/**
 	* Converts a sandbox (in Saved/Sandboxes) path to a normal path.
 	*
 	* @param InSandboxName The name of the sandbox.
 	*/
-	static YString ConvertFromSandboxPath(const YString& InPath, const TCHAR* InSandboxName);
+	static FString ConvertFromSandboxPath(const FString& InPath, const TCHAR* InSandboxName);
 
 	/**
 	* Creates a temporary filename with the specified prefix.
@@ -455,7 +455,7 @@ public:
 	* @param Prefix The file prefix.
 	* @param Extension File extension ('.' required).
 	*/
-	static YString CreateTempFilename(const TCHAR* Path, const TCHAR* Prefix = TEXT(""), const TCHAR* Extension = TEXT(".tmp"));
+	static FString CreateTempFilename(const TCHAR* Path, const TCHAR* Prefix = TEXT(""), const TCHAR* Extension = TEXT(".tmp"));
 
 	/**
 	* Validates that the parts that make up the path contain no invalid characters as dictated by the operating system
@@ -464,7 +464,7 @@ public:
 	* @param InPath - path to validate
 	* @param OutReason - optional parameter to fill with the failure reason
 	*/
-	static bool ValidatePath(const YString& InPath, FText* OutReason = nullptr);
+	static bool ValidatePath(const FString& InPath, FText* OutReason = nullptr);
 
 	/**
 	* Parses a fully qualified or relative filename into its components (filename, path, extension).
@@ -473,65 +473,65 @@ public:
 	* @param	Filename	[out] receives the value of the filename portion of the input string
 	* @param	Extension	[out] receives the value of the extension portion of the input string
 	*/
-	static void Split(const YString& InPath, YString& PathPart, YString& FilenamePart, YString& ExtensionPart);
+	static void Split(const FString& InPath, FString& PathPart, FString& FilenamePart, FString& ExtensionPart);
 
 	/** Gets the relative path to get from BaseDir to RootDirectory  */
-	static const YString& GetRelativePathToRoot();
+	static const FString& GetRelativePathToRoot();
 
-	FORCEINLINE static YString Combine(const TCHAR* PathA, const TCHAR* PathB)
+	FORCEINLINE static FString Combine(const TCHAR* PathA, const TCHAR* PathB)
 	{
 		const TCHAR* Pathes[] = { PathA, PathB };
-		YString Out;
+		FString Out;
 
 		CombineInternal(Out, Pathes, 2);
 		return Out;
 	}
 
-	FORCEINLINE static YString Combine(const TCHAR* PathA, const TCHAR* PathB, const TCHAR* PathC)
+	FORCEINLINE static FString Combine(const TCHAR* PathA, const TCHAR* PathB, const TCHAR* PathC)
 	{
 		const TCHAR* Pathes[] = { PathA, PathB, PathC };
-		YString Out;
+		FString Out;
 
 		CombineInternal(Out, Pathes, 3);
 		return Out;
 	}
 
-	FORCEINLINE static YString Combine(const TCHAR* PathA, const TCHAR* PathB, const TCHAR* PathC, const TCHAR* PathD)
+	FORCEINLINE static FString Combine(const TCHAR* PathA, const TCHAR* PathB, const TCHAR* PathC, const TCHAR* PathD)
 	{
 		const TCHAR* Pathes[] = { PathA, PathB, PathC, PathD };
-		YString Out;
+		FString Out;
 
 		CombineInternal(Out, Pathes, 4);
 		return Out;
 	}
 
-	FORCEINLINE static YString Combine(const TCHAR* PathA, const TCHAR* PathB, const TCHAR* PathC, const TCHAR* PathD, const TCHAR* PathE)
+	FORCEINLINE static FString Combine(const TCHAR* PathA, const TCHAR* PathB, const TCHAR* PathC, const TCHAR* PathD, const TCHAR* PathE)
 	{
 		const TCHAR* Pathes[] = { PathA, PathB, PathC, PathD, PathE };
-		YString Out;
+		FString Out;
 
 		CombineInternal(Out, Pathes, 5);
 		return Out;
 	}
 
-	FORCEINLINE static YString Combine(const YString& PathA, const YString& PathB)
+	FORCEINLINE static FString Combine(const FString& PathA, const FString& PathB)
 	{
 		return Combine(*PathA, *PathB);
 	}
 
-	FORCEINLINE static YString Combine(const YString& PathA, const YString& PathB, const YString& PathC)
+	FORCEINLINE static FString Combine(const FString& PathA, const FString& PathB, const FString& PathC)
 	{
 		return Combine(*PathA, *PathB, *PathC);
 	}
 
 protected:
 
-	static void CombineInternal(YString& OutPath, const TCHAR** Pathes, int32 NumPathes);
+	static void CombineInternal(FString& OutPath, const TCHAR** Pathes, int32 NumPathes);
 
 private:
 
 	/** Holds the path to the currently loaded game project file. */
-	static YString GameProjectFilePath;
+	static FString GameProjectFilePath;
 
 	/** Thread protection for above path */
 	FORCEINLINE static FCriticalSection* GameProjectFilePathLock()

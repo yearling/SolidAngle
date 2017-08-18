@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Templates/PointerConvertibleFromTo.h"
+#include "Templates/PointerIsConvertibleFromTo.h"
 #include "Templates/UnrealTemplate.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Templates/Function.h"
 #include "Containers/Set.h"
 #include "Containers/Map.h"
@@ -41,7 +41,7 @@ public:
 	FStringToken() : TokenStart(nullptr), TokenEnd(nullptr), LineNumber(0), CharacterIndex(0) {}
 
 	/** Get the string representation of this token */
-	YString GetString() const { return YString(TokenEnd - TokenStart, TokenStart); }
+	FString GetString() const { return FString(TokenEnd - TokenStart, TokenStart); }
 
 	/** Check if this token is valid */
 	bool IsValid() const { return TokenEnd != TokenStart; }
@@ -139,7 +139,7 @@ public:
 	const TCHAR* GetEnd() const { return End; }
 
 	/** Get the error context from the current read position */
-	YString GetErrorContext() const;
+	FString GetErrorContext() const;
 
 	/** Set the current read position to the character proceeding the specified token */
 	void SetReadPos(const FStringToken& Token);

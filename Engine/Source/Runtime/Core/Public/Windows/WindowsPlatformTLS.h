@@ -10,8 +10,8 @@
 /**
 * Windows implementation of the TLS OS functions.
 */
-struct CORE_API YWindowsPlatformTLS
-	: public YGenericPlatformTLS
+struct CORE_API FWindowsPlatformTLS
+	: public FGenericPlatformTLS
 {
 	/**
 	* Returns the currently executing thread's identifier.
@@ -67,4 +67,4 @@ struct CORE_API YWindowsPlatformTLS
 };
 
 
-typedef YWindowsPlatformTLS YPlatformTLS;
+typedef FWindowsPlatformTLS FPlatformTLS;

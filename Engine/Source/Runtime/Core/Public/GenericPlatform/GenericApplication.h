@@ -2,7 +2,7 @@
 
 #include "CoreTypes.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Math/Vector2D.h"
 #include "Templates/SharedPointer.h"
 #include "Delegates/Delegate.h"
@@ -319,8 +319,8 @@ struct FPlatformRect
 */
 struct FMonitorInfo
 {
-	YString Name;
-	YString ID;
+	FString Name;
+	FString ID;
 	int32 NativeWidth;
 	int32 NativeHeight;
 	FPlatformRect DisplayRect;
@@ -398,7 +398,7 @@ class GenericApplication
 {
 public:
 
-	DECLARE_MULTICAST_DELEGATE_OneParam(FOnConsoleCommandAdded, const YString& /*Command*/);
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnConsoleCommandAdded, const FString& /*Command*/);
 	typedef FOnConsoleCommandAdded::FDelegate FOnConsoleCommandListener;
 
 	GenericApplication(const TSharedPtr< ICursor >& InCursor)
@@ -450,7 +450,7 @@ public:
 
 	virtual void RegisterConsoleCommandListener(const FOnConsoleCommandListener& InListener) {}
 
-	virtual void AddPendingConsoleCommand(const YString& InCommand) {}
+	virtual void AddPendingConsoleCommand(const FString& InCommand) {}
 
 	virtual FPlatformRect GetWorkArea(const FPlatformRect& CurrentWindow) const
 	{

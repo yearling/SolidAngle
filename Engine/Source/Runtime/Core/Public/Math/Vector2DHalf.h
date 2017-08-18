@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Math/Vector2D.h"
 #include "Math/Float16.h"
 
@@ -63,7 +63,7 @@ public:
 	 *
 	 * @return Text describing the vector.
 	 */
-	YString ToString() const;
+	FString ToString() const;
 
 public:
 
@@ -108,9 +108,9 @@ FORCEINLINE YVector2DHalf& YVector2DHalf::operator=( const YVector2D& Vector2D )
 }
 
 
-FORCEINLINE YString YVector2DHalf::ToString() const
+FORCEINLINE FString YVector2DHalf::ToString() const
 {
-	return YString::Printf(TEXT("X=%3.3f Y=%3.3f"), (float)X, (float)Y );
+	return FString::Printf(TEXT("X=%3.3f Y=%3.3f"), (float)X, (float)Y );
 }
 
 

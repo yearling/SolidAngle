@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "CoreFwd.h"
 
-class YString;
+class FString;
 
 namespace ETimespan
 {
@@ -285,7 +285,7 @@ public:
 	* @return true on success, false otherwise.
 	* @see ImportTextItem
 	*/
-	CORE_API bool ExportTextItem(YString& ValueStr, YTimespan const& DefaultValue, UObject* Parent, int32 PortFlags, UObject* ExportRootScope) const;
+	CORE_API bool ExportTextItem(FString& ValueStr, YTimespan const& DefaultValue, UObject* Parent, int32 PortFlags, UObject* ExportRootScope) const;
 
 	/**
 	* Gets the days component of this time span.
@@ -481,7 +481,7 @@ public:
 	* @return String representation.
 	* @see Parse
 	*/
-	CORE_API YString ToString() const;
+	CORE_API FString ToString() const;
 
 	/**
 	* Converts this time span to its string representation.
@@ -504,7 +504,7 @@ public:
 	* @return String representation.
 	* @see Parse
 	*/
-	CORE_API YString ToString(const TCHAR* Format) const;
+	CORE_API FString ToString(const TCHAR* Format) const;
 
 public:
 
@@ -599,7 +599,7 @@ public:
 	* @return true if the string was converted successfully, false otherwise.
 	* @see ToString
 	*/
-	static CORE_API bool Parse(const YString& TimespanString, YTimespan& OutTimespan);
+	static CORE_API bool Parse(const FString& TimespanString, YTimespan& OutTimespan);
 
 	/**
 	* Returns the zero time span value.

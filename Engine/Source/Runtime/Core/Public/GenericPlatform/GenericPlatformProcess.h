@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Templates/Function.h"
 
 class Error;
@@ -133,7 +133,7 @@ struct CORE_API FGenericPlatformProcess
 		*
 		* @param InName name of the semaphore (all processes should use the same)
 		*/
-		FSemaphore(const YString& InName);
+		FSemaphore(const FString& InName);
 
 		/** Virtual destructor. */
 		virtual ~FSemaphore() { };
@@ -233,7 +233,7 @@ struct CORE_API FGenericPlatformProcess
 	static void SetCurrentWorkingDirectoryToBaseDir();
 
 	/** Get the current working directory (only really makes sense on desktop platforms) */
-	static YString GetCurrentWorkingDirectory();
+	static FString GetCurrentWorkingDirectory();
 
 	/**
 	* Sets the process limits.
@@ -252,7 +252,7 @@ struct CORE_API FGenericPlatformProcess
 	*
 	* @return The path to the directory.
 	*/
-	static const YString ShaderWorkingDir();
+	static const FString ShaderWorkingDir();
 
 	/**	Clean the shader working directory. */
 	static void CleanShaderWorkingDir();
@@ -276,7 +276,7 @@ struct CORE_API FGenericPlatformProcess
 	* @param BuildConfiguration The build configuration of the game.
 	* @return The generated application path.
 	*/
-	static YString GenerateApplicationPath(const YString& AppName, EBuildConfigurations::Type BuildConfiguration);
+	static FString GenerateApplicationPath(const FString& AppName, EBuildConfigurations::Type BuildConfiguration);
 
 	/**
 	* Return the prefix of dynamic library (e.g. lib)
@@ -305,14 +305,14 @@ struct CORE_API FGenericPlatformProcess
 	* @return The path to the directory.
 	* @see GetModulePrefix, GetModuleExtension
 	*/
-	static const YString GetModulesDirectory();
+	static const FString GetModulesDirectory();
 
 	/**
 	* Launch a uniform resource locator (i.e. http://www.epicgames.com/unreal).
 	* This is expected to return immediately as the URL is launched by another
 	* task.
 	*/
-	static void LaunchURL(const TCHAR* URL, const TCHAR* Parms, YString* Error);
+	static void LaunchURL(const TCHAR* URL, const TCHAR* Parms, FString* Error);
 
 	/**
 	* Checks if the platform can launch a uniform resource locator (i.e. http://www.epicgames.com/unreal).
@@ -324,7 +324,7 @@ struct CORE_API FGenericPlatformProcess
 	*
 	* @return The game's bundle identifier or package name.
 	*/
-	static YString GetGameBundleId();
+	static FString GetGameBundleId();
 
 	/**
 	* Creates a new process and its primary thread. The new process runs the
@@ -389,7 +389,7 @@ struct CORE_API FGenericPlatformProcess
 	static bool IsApplicationRunning(const TCHAR* ProcName);
 
 	/** Returns the Name of process given by the PID.  Returns Empty string "" if PID not found. */
-	static YString GetApplicationName(uint32 ProcessId);
+	static FString GetApplicationName(uint32 ProcessId);
 
 	/** Outputs the virtual memory usage, of the process with the specified PID */
 	static bool GetApplicationMemoryUsage(uint32 ProcessId, SIZE_T* OutMemoryUsage);
@@ -404,7 +404,7 @@ struct CORE_API FGenericPlatformProcess
 	* @param OutStdOut may be 0
 	* @param OutStdErr may be 0
 	*/
-	static bool ExecProcess(const TCHAR* URL, const TCHAR* Params, int32* OutReturnCode, YString* OutStdOut, YString* OutStdErr);
+	static bool ExecProcess(const TCHAR* URL, const TCHAR* Params, int32* OutReturnCode, FString* OutStdOut, FString* OutStdErr);
 
 	/**
 	* Executes a process as administrator, requesting elevation as necessary. This
@@ -512,7 +512,7 @@ struct CORE_API FGenericPlatformProcess
 	* @return A string containing the read data.
 	* @see ClosePipe, CreatePipe
 	*/
-	static YString ReadPipe(void* ReadPipe);
+	static FString ReadPipe(void* ReadPipe);
 
 	/**
 	* Reads all pending data from an anonymous pipe, such as STDOUT or STDERROR of a process.
@@ -533,7 +533,7 @@ struct CORE_API FGenericPlatformProcess
 	* @return True if all bytes written successfully.
 	* @see CreatePipe, ClosePipe, ReadPipe
 	*/
-	static bool WritePipe(void* WritePipe, const YString& Message, YString* OutWritten = nullptr);
+	static bool WritePipe(void* WritePipe, const FString& Message, FString* OutWritten = nullptr);
 
 	/**
 	* Gets whether this platform can use multiple threads.
@@ -552,7 +552,7 @@ struct CORE_API FGenericPlatformProcess
 	* @param bCreate If true, the function will try to create, otherwise will try to open existing.
 	* @param MaxLocks Maximum amount of locks that the semaphore can have (pass 1 to make it act as mutex).
 	*/
-	static FSemaphore* NewInterprocessSynchObject(const YString& Name, bool bCreate, uint32 MaxLocks = 1);
+	static FSemaphore* NewInterprocessSynchObject(const FString& Name, bool bCreate, uint32 MaxLocks = 1);
 
 	/**
 	* Deletes an interprocess synchronization object.

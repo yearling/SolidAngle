@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 
 namespace StringUtility
 {
@@ -14,6 +14,6 @@ namespace StringUtility
 	 *
 	 * @return un-escaped string (e.g. "File Name")
 	 */
-	YString CORE_API UnescapeURI(const YString& URLString);
+	FString CORE_API UnescapeURI(const FString& URLString);
 }
 

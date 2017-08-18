@@ -31,7 +31,7 @@ static FORCEINLINE bool CreatePipeWrite(void*& ReadPipe, void*& WritePipe)
 
 DEFINE_LOG_CATEGORY(LogInteractiveProcess);
 
-FInteractiveProcess::FInteractiveProcess(const YString& InURL, const YString& InParams, bool InHidden, bool LongTime)
+FInteractiveProcess::FInteractiveProcess(const FString& InURL, const FString& InParams, bool InHidden, bool LongTime)
 	: bCanceling(false)
 	, bHidden(InHidden)
 	, bKillTree(false)
@@ -108,7 +108,7 @@ bool FInteractiveProcess::Launch()
 
 	// Creating name for the process
 	static uint32 tempInteractiveProcessIndex = 0;
-	ThreadName = YString::Printf(TEXT("FInteractiveProcess %d"), tempInteractiveProcessIndex);
+	ThreadName = FString::Printf(TEXT("FInteractiveProcess %d"), tempInteractiveProcessIndex);
 	tempInteractiveProcessIndex++;
 
 	Thread = FRunnableThread::Create(this, *ThreadName);
@@ -123,9 +123,9 @@ bool FInteractiveProcess::Launch()
 	return true;
 }
 
-void FInteractiveProcess::ProcessOutput(const YString& Output)
+void FInteractiveProcess::ProcessOutput(const FString& Output)
 {
-	TArray<YString> LogLines;
+	TArray<FString> LogLines;
 
 	Output.ParseIntoArray(LogLines, TEXT("\n"), false);
 
@@ -161,7 +161,7 @@ void FInteractiveProcess::SendMessageToProcessIf()
 	}
 
 	// A string for original message and one for written message
-	YString WrittenMessage, Message;
+	FString WrittenMessage, Message;
 	MessagesToProcess.Dequeue(Message);
 
 	FPlatformProcess::WritePipe(WritePipeParent, Message, &WrittenMessage);
@@ -180,7 +180,7 @@ void FInteractiveProcess::SendMessageToProcessIf()
 	}
 }
 
-void FInteractiveProcess::SendWhenReady(const YString &Message)
+void FInteractiveProcess::SendWhenReady(const FString &Message)
 {
 	MessagesToProcess.Enqueue(Message);
 }

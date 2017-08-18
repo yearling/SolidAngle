@@ -23,7 +23,7 @@ struct YWindowsOSVersionHelper
 		ERROR_GETWINDOWSGT62VERSIONS_FAILED = 8,
 	};
 
-	static int32 GetOSVersions(YString& out_OSVersion, YString& out_OSSubVersion);
+	static int32 GetOSVersions(FString& out_OSVersion, FString& out_OSSubVersion);
 };
 
 
@@ -84,21 +84,21 @@ struct CORE_API YWindowsPlatformMisc
 	}
 
 	static void PumpMessages(bool bFromMainLoop);
-	static uint32 GetKeyMap(uint32* KeyCodes, YString* KeFNames, uint32 MaxMappings);
-	static uint32 GetCharKeyMap(uint32* KeyCodes, YString* KeFNames, uint32 MaxMappings);
+	static uint32 GetKeyMap(uint32* KeyCodes, FString* KeFNames, uint32 MaxMappings);
+	static uint32 GetCharKeyMap(uint32* KeyCodes, FString* KeFNames, uint32 MaxMappings);
 	static void SetUTF8Output();
 	static void LocalPrint(const TCHAR *Message);
 	static void RequestExit(bool Force);
 	static void RequestMinimize();
 	static const TCHAR* GetSystemErrorMessage(TCHAR* OutBuffer, int32 BufferCount, int32 Error);
 	static void ClipboardCopy(const TCHAR* Str);
-	static void ClipboardPaste(class YString& Dest);
+	static void ClipboardPaste(class FString& Dest);
 	static void CreateGuid(struct FGuid& Result);
 	static EAppReturnType::Type MessageBoxExt(EAppMsgType::Type MsgType, const TCHAR* Text, const TCHAR* Caption);
 	static void PreventScreenSaver();
 	static bool CommandLineCommands();
 	static bool Is64bitOperatingSystem();
-	static bool IsValidAbsolutePathFormat(const YString& Path);
+	static bool IsValidAbsolutePathFormat(const FString& Path);
 	static int32 NumberOfCores();
 	static int32 NumberOfCoresIncludingHyperthreads();
 	static void LoadPreInitModules();
@@ -106,9 +106,9 @@ struct CORE_API YWindowsPlatformMisc
 
 	static uint32 GetLastError();
 	static void RaiseException(uint32 ExceptionCode);
-	static bool SetStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeFName, const YString& InValue);
-	static bool GetStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeFName, YString& OutValue);
-	static bool DeleteStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeFName);
+	static bool SetStoredValue(const FString& InStoreId, const FString& InSectionName, const FString& InKeFName, const FString& InValue);
+	static bool GetStoredValue(const FString& InStoreId, const FString& InSectionName, const FString& InKeFName, FString& OutValue);
+	static bool DeleteStoredValue(const FString& InStoreId, const FString& InSectionName, const FString& InKeFName);
 
 	static bool CoInitialize();
 	static void CoUninitialize();
@@ -144,7 +144,7 @@ struct CORE_API YWindowsPlatformMisc
 	*
 	* @return whether the window was found and the text copied or not
 	*/
-	static bool GetWindowTitleMatchingText(const TCHAR* TitleStartsWith, YString& OutTitle);
+	static bool GetWindowTitleMatchingText(const TCHAR* TitleStartsWith, FString& OutTitle);
 
 	//////// Platform specific
 	static int32	GetAppIcon();
@@ -196,12 +196,12 @@ struct CORE_API YWindowsPlatformMisc
 	*/
 	static bool HasCPUIDInstruction();
 
-	static YString GetCPUVendor();
-	static YString GetCPUBrand();
-	static YString GetPrimaryGPUBrand();
-	static struct FGPUDriverInfo GetGPUDriverInfo(const YString& DeviceDescription);
-	static void GetOSVersions(YString& out_OSVersionLabel, YString& out_OSSubVersionLabel);
-	static bool GetDiskTotalAndFreeSpace(const YString& InPath, uint64& TotalNumberOfBytes, uint64& NumberOfFreeBytes);
+	static FString GetCPUVendor();
+	static FString GetCPUBrand();
+	static FString GetPrimaryGPUBrand();
+	static struct FGPUDriverInfo GetGPUDriverInfo(const FString& DeviceDescription);
+	static void GetOSVersions(FString& out_OSVersionLabel, FString& out_OSSubVersionLabel);
+	static bool GetDiskTotalAndFreeSpace(const FString& InPath, uint64& TotalNumberOfBytes, uint64& NumberOfFreeBytes);
 
 	/**
 	* Uses cpuid instruction to get the vendor string
@@ -229,7 +229,7 @@ struct CORE_API YWindowsPlatformMisc
 	*
 	* @return	true, if it successfully found the Value
 	*/
-	static bool QueryRegKey(const Windows::HKEY InKey, const TCHAR* InSubKey, const TCHAR* InValueName, YString& OutData);
+	static bool QueryRegKey(const Windows::HKEY InKey, const TCHAR* InSubKey, const TCHAR* InValueName, FString& OutData);
 
 	/**
 	* Gets Visual Studio common tools path.
@@ -239,7 +239,7 @@ struct CORE_API YWindowsPlatformMisc
 	*
 	* @return Returns if succeeded.
 	*/
-	static bool GetVSComnTools(int32 Version, YString& OutData);
+	static bool GetVSComnTools(int32 Version, FString& OutData);
 
 	/**
 	* Returns the size of the cache line in bytes.
@@ -264,7 +264,7 @@ struct CORE_API YWindowsPlatformMisc
 	/**
 	* Gets a globally unique ID the represents a particular operating system install.
 	*/
-	static YString GetOperatingSystemId();
+	static FString GetOperatingSystemId();
 
 	static EConvertibleLaptopMode GetConvertibleLaptopMode();
 

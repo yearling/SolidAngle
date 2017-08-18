@@ -7,7 +7,7 @@
 #include "HAL/UnrealMemory.h"
 #include "Templates/UnrealTypeTraits.h"
 #include "Templates/UnrealTemplate.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "HAL/CriticalSection.h"
 #include "Containers/StringConv.h"
 #include "UObject/UnrealNames.h"
@@ -186,21 +186,21 @@ public:
 	/**
 	* @return YString of name portion minus number.
 	*/
-	CORE_API YString GetPlainNameString() const;
+	CORE_API FString GetPlainNameString() const;
 
 	/**
 	* Appends this name entry to the passed in string.
 	*
 	* @param	String	String to append this name to
 	*/
-	CORE_API void AppendNameToString(YString& String) const;
+	CORE_API void AppendNameToString(FString& String) const;
 
 	/**
 	* Appends this name entry to the passed in string, adding path separator between strings (with YString operator/).
 	*
 	* @param	String	String to append this name to
 	*/
-	CORE_API void AppendNameToPathString(YString& String) const;
+	CORE_API void AppendNameToPathString(FString& String) const;
 
 	/**
 	* @return length of name
@@ -549,7 +549,7 @@ public:
 	}
 
 	/** Returns the pure name string without any trailing numbers */
-	YString GetPlainNameString() const
+	FString GetPlainNameString() const
 	{
 		return GetDisplaFNameEntry()->GetPlainNameString();
 	}
@@ -578,21 +578,21 @@ public:
 	*
 	* @return String representation of the name
 	*/
-	YString ToString() const;
+	FString ToString() const;
 
 	/**
 	* Converts an FName to a readable format, in place
 	*
 	* @param Out String to fill with the string representation of the name
 	*/
-	void ToString(YString& Out) const;
+	void ToString(FString& Out) const;
 
 	/**
 	* Converts an FName to a readable format, in place, appending to an existing string (ala GetFullName)
 	*
 	* @param Out String to append with the string representation of the name
 	*/
-	void AppendString(YString& Out) const;
+	void AppendString(FString& Out) const;
 
 	/**
 	* Check to see if this FName matches the other FName, potentially also checking for any case variations
@@ -664,7 +664,7 @@ public:
 	*
 	* @return	true if the name is valid
 	*/
-	static bool IsValidXName(const YString& InName, const YString& InInvalidChars, class FText* OutReason = nullptr, const class FText* InErrorCtx = nullptr);
+	static bool IsValidXName(const FString& InName, const FString& InInvalidChars, class FText* OutReason = nullptr, const class FText* InErrorCtx = nullptr);
 
 	/**
 	* Checks to see that a FName follows the rules that Unreal requires.
@@ -675,7 +675,7 @@ public:
 	*
 	* @return	true if the name is valid
 	*/
-	bool IsValidXName(const YString& InInvalidChars = INVALID_NAME_CHARACTERS, class FText* OutReason = nullptr, const class FText* InErrorCtx = nullptr) const
+	bool IsValidXName(const FString& InInvalidChars = INVALID_NAME_CHARACTERS, class FText* OutReason = nullptr, const class FText* InErrorCtx = nullptr) const
 	{
 		return IsValidXName(ToString(), InInvalidChars, OutReason, InErrorCtx);
 	}
@@ -688,7 +688,7 @@ public:
 	*
 	* @return	true if the name is valid
 	*/
-	bool IsValidXName(class FText& OutReason, const YString& InInvalidChars = INVALID_NAME_CHARACTERS) const
+	bool IsValidXName(class FText& OutReason, const FString& InInvalidChars = INVALID_NAME_CHARACTERS) const
 	{
 		return IsValidXName(ToString(), InInvalidChars, &OutReason);
 	}
@@ -923,14 +923,14 @@ public:
 
 	static void StaticInit();
 	static void DisplayHash(class FOutputDevice& Ar);
-	static YString SafeString(int32 InDisplayIndex, int32 InstanceNumber = NAME_NO_NUMBER_INTERNAL)
+	static FString SafeString(int32 InDisplayIndex, int32 InstanceNumber = NAME_NO_NUMBER_INTERNAL)
 	{
 		TNameEntryArray& Names = GetNames();
 		return GetIsInitialized()
 			? (Names.IsValidIndex(InDisplayIndex) && Names[InDisplayIndex])
 			? FName(InDisplayIndex, InDisplayIndex, InstanceNumber).ToString()
-			: YString(TEXT("*INVALID*"))
-			: YString(TEXT("*UNINITIALIZED*"));
+			: FString(TEXT("*INVALID*"))
+			: FString(TEXT("*UNINITIALIZED*"));
 	}
 	static int32 GetMaxNames()
 	{
@@ -999,7 +999,7 @@ public:
 	*
 	* @return	the sanitized version of the display name
 	*/
-	static YString NameToDisplayString(const YString& InDisplaFName, const bool bIsBool);
+	static FString NameToDisplayString(const FString& InDisplaFName, const bool bIsBool);
 
 private:
 

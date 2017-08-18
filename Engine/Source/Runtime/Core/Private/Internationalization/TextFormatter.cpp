@@ -377,7 +377,7 @@ public:
 	 * Construct an instance from an YString.
 	 * The string will be immediately compiled. 
 	 */
-	explicit FTextFormatData(YString&& InString);
+	explicit FTextFormatData(FString&& InString);
 
 	/**
 	 * Test to see whether this instance contains valid compiled data.
@@ -391,7 +391,7 @@ public:
 	/**
 	 * Produce a formatted string using the given argument look-up.
 	 */
-	FORCEINLINE YString Format(const FPrivateTextFormatArguments& InFormatArgs)
+	FORCEINLINE FString Format(const FPrivateTextFormatArguments& InFormatArgs)
 	{
 		FScopeLock Lock(&CompiledDataCS);
 		return Format_NoLock(InFormatArgs);
@@ -400,7 +400,7 @@ public:
 	/**
 	 * Append the names of any arguments to the given array.
 	 */
-	FORCEINLINE void GetFormatArgumentNames(TArray<YString>& OutArgumentNames)
+	FORCEINLINE void GetFormatArgumentNames(TArray<FString>& OutArgumentNames)
 	{
 		FScopeLock Lock(&CompiledDataCS);
 		return GetFormatArgumentNames_NoLock(OutArgumentNames);
@@ -419,7 +419,7 @@ public:
 	 * Get the source string that we're holding.
 	 * If we're holding a text then we'll return its internal string.
 	 */
-	FORCEINLINE const YString& GetSourceString() const
+	FORCEINLINE const FString& GetSourceString() const
 	{
 		return (SourceType == ESourceType::Text) ? SourceText.ToString() : SourceExpression;
 	}
@@ -456,13 +456,13 @@ private:
 	 * Produce a formatted string using the given argument look-up.
 	 * Internal version that doesn't lock, so the calling code must handle that!
 	 */
-	YString Format_NoLock(const FPrivateTextFormatArguments& InFormatArgs);
+	FString Format_NoLock(const FPrivateTextFormatArguments& InFormatArgs);
 
 	/**
 	 * Append the names of any arguments to the given array.
 	 * Internal version that doesn't lock, so the calling code must handle that!
 	 */
-	void GetFormatArgumentNames_NoLock(TArray<YString>& OutArgumentNames);
+	void GetFormatArgumentNames_NoLock(TArray<FString>& OutArgumentNames);
 
 	enum ESourceType : uint8
 	{
@@ -491,7 +491,7 @@ private:
 	 * If the data was constructed from an YString rather than an FText, then this is the string we were given and shouldn't be updated once the initial construction has happened.
 	 * Concurrent access protected by CompiledDataCS.
 	 */
-	YString SourceExpression;
+	FString SourceExpression;
 
 	/**
 	 * Lexed expression tokens generated from, and referencing, SourceExpression.
@@ -536,17 +536,17 @@ FTextFormat::FTextFormat(const FText& InText)
 {
 }
 
-FTextFormat::FTextFormat(YString&& InString)
+FTextFormat::FTextFormat(FString&& InString)
 	: TextFormatData(new FTextFormatData(MoveTemp(InString)))
 {
 }
 
-FTextFormat FTextFormat::FromString(const YString& InString)
+FTextFormat FTextFormat::FromString(const FString& InString)
 {
-	return FTextFormat(YString(InString));
+	return FTextFormat(FString(InString));
 }
 
-FTextFormat FTextFormat::FromString(YString&& InString)
+FTextFormat FTextFormat::FromString(FString&& InString)
 {
 	return FTextFormat(MoveTemp(InString));
 }
@@ -561,7 +561,7 @@ FText FTextFormat::GetSourceText() const
 	return TextFormatData->GetSourceText();
 }
 
-const YString& FTextFormat::GetSourceString() const
+const FString& FTextFormat::GetSourceString() const
 {
 	return TextFormatData->GetSourceString();
 }
@@ -571,7 +571,7 @@ FTextFormat::EExpressionType FTextFormat::GetExpressionType() const
 	return TextFormatData->GetExpressionType();
 }
 
-void FTextFormat::GetFormatArgumentNames(TArray<YString>& OutArgumentNames) const
+void FTextFormat::GetFormatArgumentNames(TArray<FString>& OutArgumentNames) const
 {
 	TextFormatData->GetFormatArgumentNames(OutArgumentNames);
 }
@@ -584,7 +584,7 @@ FTextFormatData::FTextFormatData(FText&& InText)
 	Compile_NoLock();
 }
 
-FTextFormatData::FTextFormatData(YString&& InString)
+FTextFormatData::FTextFormatData(FString&& InString)
 	: SourceType(ESourceType::String)
 	, SourceExpression(MoveTemp(InString))
 {
@@ -694,7 +694,7 @@ void FTextFormatData::ConditionalCompile_NoLock()
 	}
 }
 
-YString FTextFormatData::Format_NoLock(const FPrivateTextFormatArguments& InFormatArgs)
+FString FTextFormatData::Format_NoLock(const FPrivateTextFormatArguments& InFormatArgs)
 {
 	if (SourceType == ESourceType::Text && InFormatArgs.bRebuildText)
 	{
@@ -708,7 +708,7 @@ YString FTextFormatData::Format_NoLock(const FPrivateTextFormatArguments& InForm
 		return SourceExpression;
 	}
 
-	YString ResultString;
+	FString ResultString;
 	ResultString.Reserve(BaseFormatStringLength + (InFormatArgs.EstimatedArgumentValuesLength * FormatArgumentEstimateMultiplier));
 
 	int32 ArgumentIndex = 0;
@@ -763,7 +763,7 @@ YString FTextFormatData::Format_NoLock(const FPrivateTextFormatArguments& InForm
 	return ResultString;
 }
 
-void FTextFormatData::GetFormatArgumentNames_NoLock(TArray<YString>& OutArgumentNames)
+void FTextFormatData::GetFormatArgumentNames_NoLock(TArray<FString>& OutArgumentNames)
 {
 	ConditionalCompile_NoLock();
 
@@ -778,14 +778,14 @@ void FTextFormatData::GetFormatArgumentNames_NoLock(TArray<YString>& OutArgument
 		{
 			// Add the entry to the array if it doesn't already exist
 			// We can't just use AddUnique since we need the names to be case-sensitive
-			const bool bIsInArray = OutArgumentNames.ContainsByPredicate([&](const YString& InEntry) -> bool
+			const bool bIsInArray = OutArgumentNames.ContainsByPredicate([&](const FString& InEntry) -> bool
 			{
 				return ArgumentToken->ArgumentNameLen == InEntry.Len() && FCString::Strnicmp(ArgumentToken->ArgumentNameStartPos, *InEntry, ArgumentToken->ArgumentNameLen) == 0;
 			});
 
 			if (!bIsInArray)
 			{
-				OutArgumentNames.Add(YString(ArgumentToken->ArgumentNameLen, ArgumentToken->ArgumentNameStartPos));
+				OutArgumentNames.Add(FString(ArgumentToken->ArgumentNameLen, ArgumentToken->ArgumentNameStartPos));
 			}
 		}
 		else if (const auto* ArgumentModifierToken = Token.Node.Cast<TextFormatTokens::FArgumentModifierTokenSpecifier>())
@@ -860,7 +860,7 @@ FText FTextFormatter::Format(FTextFormat&& InFmt, FFormatNamedArguments&& InArgu
 		return nullptr;
 	};
 
-	YString ResultString = Format(InFmt, FPrivateTextFormatArguments(FPrivateTextFormatArguments::FGetArgumentValue(GetArgumentValue), EstimatedArgumentValuesLength, bInRebuildText, bInRebuildAsSource));
+	FString ResultString = Format(InFmt, FPrivateTextFormatArguments(FPrivateTextFormatArguments::FGetArgumentValue(GetArgumentValue), EstimatedArgumentValuesLength, bInRebuildText, bInRebuildAsSource));
 
 	FText Result = FText(MakeShareable(new TGeneratedTextData<FTextHistory_NamedFormat>(MoveTemp(ResultString), FTextHistory_NamedFormat(MoveTemp(InFmt), MoveTemp(InArguments)))));
 	if (!GIsEditor)
@@ -880,7 +880,7 @@ FText FTextFormatter::Format(FTextFormat&& InFmt, FFormatOrderedArguments&& InAr
 		EstimatedArgumentValuesLength += EstimateArgumentValueLength(Arg);
 	}
 
-	const YString& FmtPattern = InFmt.GetSourceString();
+	const FString& FmtPattern = InFmt.GetSourceString();
 	auto GetArgumentValue = [&InArguments, &FmtPattern](const TextFormatTokens::FArgumentTokenSpecifier& ArgumentToken, int32 ArgumentNumber) -> const FFormatArgumentValue*
 	{
 		int32 ArgumentIndex = ArgumentToken.ArgumentIndex;
@@ -890,13 +890,13 @@ FText FTextFormatter::Format(FTextFormat&& InFmt, FFormatOrderedArguments&& InAr
 			// We have existing code that is incorrectly using names in the format string when providing ordered arguments
 			// ICU used to fallback to treating the index of the argument within the string as if it were the index specified 
 			// by the argument name, so we need to emulate that behavior to avoid breaking some format operations
-			UE_LOG(LogTextFormatter, Warning, TEXT("Failed to parse argument \"%s\" as a number (using \"%d\" as a fallback). Please check your format string for errors: \"%s\"."), *YString(ArgumentToken.ArgumentNameLen, ArgumentToken.ArgumentNameStartPos), ArgumentNumber, *FmtPattern);
+			UE_LOG(LogTextFormatter, Warning, TEXT("Failed to parse argument \"%s\" as a number (using \"%d\" as a fallback). Please check your format string for errors: \"%s\"."), *FString(ArgumentToken.ArgumentNameLen, ArgumentToken.ArgumentNameStartPos), ArgumentNumber, *FmtPattern);
 			ArgumentIndex = ArgumentNumber;
 		}
 		return InArguments.IsValidIndex(ArgumentIndex) ? &(InArguments[ArgumentIndex]) : nullptr;
 	};
 
-	YString ResultString = Format(InFmt, FPrivateTextFormatArguments(FPrivateTextFormatArguments::FGetArgumentValue(GetArgumentValue), EstimatedArgumentValuesLength, bInRebuildText, bInRebuildAsSource));
+	FString ResultString = Format(InFmt, FPrivateTextFormatArguments(FPrivateTextFormatArguments::FGetArgumentValue(GetArgumentValue), EstimatedArgumentValuesLength, bInRebuildText, bInRebuildAsSource));
 
 	FText Result = FText(MakeShareable(new TGeneratedTextData<FTextHistory_OrderedFormat>(MoveTemp(ResultString), FTextHistory_OrderedFormat(MoveTemp(InFmt), MoveTemp(InArguments)))));
 	if (!GIsEditor)
@@ -948,7 +948,7 @@ FText FTextFormatter::Format(FTextFormat&& InFmt, TArray<FFormatArgumentData>&& 
 		return nullptr;
 	};
 
-	YString ResultString = Format(InFmt, FPrivateTextFormatArguments(FPrivateTextFormatArguments::FGetArgumentValue(GetArgumentValue), EstimatedArgumentValuesLength, bInRebuildText, bInRebuildAsSource));
+	FString ResultString = Format(InFmt, FPrivateTextFormatArguments(FPrivateTextFormatArguments::FGetArgumentValue(GetArgumentValue), EstimatedArgumentValuesLength, bInRebuildText, bInRebuildAsSource));
 
 	FText Result = FText(MakeShareable(new TGeneratedTextData<FTextHistory_ArgumentDataFormat>(MoveTemp(ResultString), FTextHistory_ArgumentDataFormat(MoveTemp(InFmt), MoveTemp(InArguments)))));
 	if (!GIsEditor)
@@ -958,7 +958,7 @@ FText FTextFormatter::Format(FTextFormat&& InFmt, TArray<FFormatArgumentData>&& 
 	return Result;
 }
 
-YString FTextFormatter::Format(const FTextFormat& InFmt, const FPrivateTextFormatArguments& InFormatArgs)
+FString FTextFormatter::Format(const FTextFormat& InFmt, const FPrivateTextFormatArguments& InFormatArgs)
 {
 	FTextFormat FmtPattern = InFmt;
 
@@ -979,7 +979,7 @@ YString FTextFormatter::Format(const FTextFormat& InFmt, const FPrivateTextForma
 	return FmtPattern.TextFormatData->Format(InFormatArgs);
 }
 
-void FTextFormatter::ArgumentValueToFormattedString(const FFormatArgumentValue& InValue, const FPrivateTextFormatArguments& InFormatArgs, YString& OutResult)
+void FTextFormatter::ArgumentValueToFormattedString(const FFormatArgumentValue& InValue, const FPrivateTextFormatArguments& InFormatArgs, FString& OutResult)
 {
 	InValue.ToFormattedString(InFormatArgs.bRebuildText, InFormatArgs.bRebuildAsSource, OutResult);
 }

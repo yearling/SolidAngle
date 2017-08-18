@@ -229,12 +229,12 @@ public:
 	bool DebugEqualMatrix(const FMatrix& Matrix) const;
 
 	/** Convert FTransform contents to a string */
-	CORE_API YString ToHumanReadableString() const;
+	CORE_API FString ToHumanReadableString() const;
 
-	CORE_API YString ToString() const;
+	CORE_API FString ToString() const;
 
 	/** Acceptable form: "%f,%f,%f|%f,%f,%f|%f,%f,%f" */
-	CORE_API bool InitFromString(const YString& InSourceString);
+	CORE_API bool InitFromString(const FString& InSourceString);
 
 #ifdef IMPLEMENT_ASSIGNMENT_OPERATOR_MANUALLY
 	/**

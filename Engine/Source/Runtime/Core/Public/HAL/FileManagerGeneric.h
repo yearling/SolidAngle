@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Serialization/Archive.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Misc/DateTime.h"
 #include "GenericPlatform/GenericPlatformFile.h"
 #include "HAL/PlatformFilemanager.h"
@@ -71,14 +71,14 @@ public:
 	bool Move(const TCHAR* Dest, const TCHAR* Src, bool Replace = 1, bool EvenIfReadOnly = 0, bool Attributes = 0, bool bDoNotRetryOrError = 0) override;
 	bool FileExists(const TCHAR* Filename) override;
 	bool DirectoryExists(const TCHAR* InDirectory) override;
-	void FindFiles(TArray<YString>& Result, const TCHAR* Filename, bool Files, bool Directories) override;
-	void FindFilesRecursive(TArray<YString>& FileNames, const TCHAR* StartDirectory, const TCHAR* Filename, bool Files, bool Directories, bool bClearFileNames = true) override;
+	void FindFiles(TArray<FString>& Result, const TCHAR* Filename, bool Files, bool Directories) override;
+	void FindFilesRecursive(TArray<FString>& FileNames, const TCHAR* StartDirectory, const TCHAR* Filename, bool Files, bool Directories, bool bClearFileNames = true) override;
 	double GetFileAgeSeconds(const TCHAR* Filename) override;
 	FDateTime GetTimeStamp(const TCHAR* Filename) override;
 	FDateTime GetAccessTimeStamp(const TCHAR* Filename) override;
 	void GetTimeStampPair(const TCHAR* PathA, const TCHAR* PathB, FDateTime& OutTimeStampA, FDateTime& OutTimeStampB);
 	bool SetTimeStamp(const TCHAR* Filename, FDateTime Timestamp) override;
-	virtual YString GetFilenameOnDisk(const TCHAR* Filename) override;
+	virtual FString GetFilenameOnDisk(const TCHAR* Filename) override;
 
 	virtual uint32	Copy(const TCHAR* Dest, const TCHAR* Src, bool Replace = 1, bool EvenIfReadOnly = 0, bool Attributes = 0, FCopyProgress* Progress = nullptr, EFileRead ReadFlags = FILEREAD_None, EFileWrite WriteFlags = FILEWRITE_None) override;
 	virtual bool	MakeDirectory(const TCHAR* Path, bool Tree = 0) override;
@@ -96,7 +96,7 @@ public:
 	*
 	* @return FoundFiles, All the files that matched the optional FileExtension filter, or all files if none was specified.
 	*/
-	virtual void FindFiles(TArray<YString>& FoundFiles, const TCHAR* Directory, const TCHAR* FileExtension = nullptr) override;
+	virtual void FindFiles(TArray<FString>& FoundFiles, const TCHAR* Directory, const TCHAR* FileExtension = nullptr) override;
 
 	/**
 	* Call the Visit function of the visitor once for each file or directory in a single directory. This function does not explore subdirectories.
@@ -136,7 +136,7 @@ public:
 	* @param	Filename	filename to convert to use a relative path
 	* @return	filename using relative path
 	*/
-	static YString DefaultConvertToRelativePath(const TCHAR* Filename);
+	static FString DefaultConvertToRelativePath(const TCHAR* Filename);
 
 	/**
 	* Converts passed in filename to use a relative path.
@@ -144,7 +144,7 @@ public:
 	* @param	Filename	filename to convert to use a relative path
 	* @return	filename using relative path
 	*/
-	YString ConvertToRelativePath(const TCHAR* Filename) override;
+	FString ConvertToRelativePath(const TCHAR* Filename) override;
 
 	/**
 	* Converts passed in filename to use an absolute path (for reading)
@@ -152,7 +152,7 @@ public:
 	* @param	Filename	filename to convert to use an absolute path, safe to pass in already using absolute path
 	* @return	filename using absolute path
 	*/
-	YString ConvertToAbsolutePathForExternalAppForRead(const TCHAR* Filename) override;
+	FString ConvertToAbsolutePathForExternalAppForRead(const TCHAR* Filename) override;
 
 	/**
 	* Converts passed in filename to use an absolute path (for writing)
@@ -160,7 +160,7 @@ public:
 	* @param	Filename	filename to convert to use an absolute path, safe to pass in already using absolute path
 	* @return	filename using absolute path
 	*/
-	YString ConvertToAbsolutePathForExternalAppForWrite(const TCHAR* Filename) override;
+	FString ConvertToAbsolutePathForExternalAppForWrite(const TCHAR* Filename) override;
 
 	/**
 	*	Returns the size of a file. (Thread-safe)
@@ -189,7 +189,7 @@ private:
 	*/
 	uint32	CopyWithProgress(const TCHAR* InDestFile, const TCHAR* InSrcFile, bool ReplaceExisting, bool EvenIfReadOnly, bool Attributes, FCopyProgress* Progress, EFileRead ReadFlags, EFileWrite WriteFlags);
 
-	void FindFilesRecursiveInternal(TArray<YString>& FileNames, const TCHAR* StartDirectory, const TCHAR* Filename, bool Files, bool Directories);
+	void FindFilesRecursiveInternal(TArray<FString>& FileNames, const TCHAR* StartDirectory, const TCHAR* Filename, bool Files, bool Directories);
 };
 
 
@@ -214,7 +214,7 @@ public:
 	}
 	virtual bool Close() final;
 	virtual void Serialize(void* V, int64 Length) final;
-	virtual YString GetArchiveName() const override
+	virtual FString GetArchiveName() const override
 	{
 		return Filename;
 	}
@@ -238,7 +238,7 @@ protected:
 	virtual void ReadLowLevel(uint8* Dest, int64 CountToRead, int64& OutBytesRead);
 
 	/** Filename for debugging purposes. */
-	YString Filename;
+	FString Filename;
 	int64 Size;
 	int64 Pos;
 	int64 BufferBase;
@@ -267,7 +267,7 @@ public:
 	virtual bool Close() final;
 	virtual void Serialize(void* V, int64 Length) final;
 	virtual void Flush() final;
-	virtual YString GetArchiveName() const override
+	virtual FString GetArchiveName() const override
 	{
 		return Filename;
 	}
@@ -302,7 +302,7 @@ protected:
 	void LogWriteError(const TCHAR* Message);
 
 	/** Filename for debugging purposes */
-	YString Filename;
+	FString Filename;
 	int64 Pos;
 	int64 BufferCount;
 	TUniquePtr<IFileHandle> Handle;

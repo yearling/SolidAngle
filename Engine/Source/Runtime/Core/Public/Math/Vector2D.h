@@ -4,7 +4,7 @@
 #include "Misc/AssertionMacros.h"
 #include "Misc/Crc.h"
 #include "Math/UnrealMathUtility.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Misc/Parse.h"
 #include "Math/IntPoint.h"
 #include "Logging/LogMacros.h"
@@ -453,7 +453,7 @@ public:
 	*
 	* @return Text describing the vector.
 	*/
-	YString ToString() const;
+	FString ToString() const;
 
 	/**
 	* Initialize this Vector based on an YString. The String is expected to contain X=, Y=.
@@ -462,7 +462,7 @@ public:
 	* @param	InSourceString	YString containing the vector values.
 	* @return true if the X,Y values were read successfully; false otherwise.
 	*/
-	bool InitFromString(const YString& InSourceString);
+	bool InitFromString(const FString& InSourceString);
 
 	/**
 	* Serialize a vector.
@@ -891,13 +891,13 @@ FORCEINLINE YVector2D YVector2D::GetAbs() const
 }
 
 
-FORCEINLINE YString YVector2D::ToString() const
+FORCEINLINE FString YVector2D::ToString() const
 {
-	return YString::Printf(TEXT("X=%3.3f Y=%3.3f"), X, Y);
+	return FString::Printf(TEXT("X=%3.3f Y=%3.3f"), X, Y);
 }
 
 
-FORCEINLINE bool YVector2D::InitFromString(const YString& InSourceString)
+FORCEINLINE bool YVector2D::InitFromString(const FString& InSourceString)
 {
 	X = Y = 0;
 

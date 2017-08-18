@@ -26,10 +26,10 @@ const FName FStatConstants::NAME_ThreadGroup = FStatConstants::ThreadGroupName;
 const FName FStatConstants::RAW_SecondsPerCycle = FStatNameAndInfo( GET_STATFName( STAT_SecondsPerCycle ), true ).GetRawName();
 const FName FStatConstants::NAME_NoCategory = FName(TEXT("STATCAT_None"));
 
-const YString FStatConstants::StatsFileExtension = TEXT( ".ue4stats" );
-const YString FStatConstants::StatsFileRawExtension = TEXT( ".ue4statsraw" );
+const FString FStatConstants::StatsFileExtension = TEXT( ".ue4stats" );
+const FString FStatConstants::StatsFileRawExtension = TEXT( ".ue4statsraw" );
 
-const YString FStatConstants::ThreadNameMarker = TEXT( "Thread_" );
+const FString FStatConstants::ThreadNameMarker = TEXT( "Thread_" );
 
 const FName FStatConstants::RAW_EventWaitWithId = FStatNameAndInfo( GET_STATFName( STAT_EventWaitWithId ), true ).GetRawName();
 const FName FStatConstants::RAW_EventTriggerWithId = FStatNameAndInfo( GET_STATFName( STAT_EventTriggerWithId ), true ).GetRawName();
@@ -193,14 +193,14 @@ void FRawStatStackNode::AddNameHierarchy(int32 CurrentPrefixDepth)
 			ChildNames.Empty(ChildArray.Num());
 			NewChildren.Empty(ChildArray.Num());
 
-			YString Name;
+			FString Name;
 			for (int32 Index = 0; Index < ChildArray.Num(); Index++)
 			{
 				FRawStatStackNode& Child = *ChildArray[Index];
 				new (ChildNames) TArray<FName>();
 				TArray<FName>& ParsedNames = ChildNames[Index];
 
-				TArray<YString> Parts;
+				TArray<FString> Parts;
 				Name = Child.Meta.NameAndInfo.GetRawName().ToString();
 				if (Name.StartsWith(TEXT("//")))
 				{
@@ -260,7 +260,7 @@ void FRawStatStackNode::AddNameHierarchy(int32 CurrentPrefixDepth)
 						MaxCommonality = TestDepth + 1;
 					}
 				}
-				YString NewName(TEXT("NameFolder//"));
+				FString NewName(TEXT("NameFolder//"));
 				for (int32 TestDepth = 0; TestDepth < MaxCommonality; TestDepth++)
 				{
 					NewName += ChildNames[StartIndex][TestDepth].ToString();
@@ -330,7 +330,7 @@ void FRawStatStackNode::DebugPrint(TCHAR const* Filter, int32 InMaxDepth, int32 
 	{
 		if (!Filter || !*Filter)
 		{
-			YString TmpDebugStr = FStatsUtils::DebugPrint(Meta);
+			FString TmpDebugStr = FStatsUtils::DebugPrint(Meta);
 			UE_LOG(LogStats, Log, TEXT("%s%s"), FCString::Spc(Depth*2), *TmpDebugStr);
 		}
 
@@ -368,14 +368,14 @@ void FRawStatStackNode::DebugPrint(TCHAR const* Filter, int32 InMaxDepth, int32 
 
 void FRawStatStackNode::DebugPrintLeafFilter(TCHAR const* Filter) const
 {
-	TArray<YString> Stack;
+	TArray<FString> Stack;
 	DebugPrintLeafFilterInner(Filter, 0, Stack);
 }
 
-void FRawStatStackNode::DebugPrintLeafFilterInner(TCHAR const* Filter, int32 Depth, TArray<YString>& Stack) const
+void FRawStatStackNode::DebugPrintLeafFilterInner(TCHAR const* Filter, int32 Depth, TArray<FString>& Stack) const
 {
 	{
-		YString TmpDebugStr = FStatsUtils::DebugPrint(Meta);
+		FString TmpDebugStr = FStatsUtils::DebugPrint(Meta);
 		Stack.Add(TmpDebugStr);
 	}
 	if (!Filter || !*Filter)
@@ -1108,9 +1108,9 @@ void FStatsThreadState::UpdateStatMessagesMemoryUsage()
 		const double InvMB = 1.0f / 1024.0f / 1024.0f;
 
 		// Format lines to be displayed on the hud.
-		const YString Current = YString::Printf( TEXT("Current: %.1f"), InvMB*CurrentNumStatMessages*sizeof(FStatMessage) );
-		const YString Max = YString::Printf( TEXT("Max: %.1f"), InvMB*(int64)MaxNumStatMessages*sizeof(FStatMessage) );
-		const YString Total = YString::Printf( TEXT("Total: %.1f") , InvMB*TotalNumStatMessages*sizeof(FStatMessage));
+		const FString Current = FString::Printf( TEXT("Current: %.1f"), InvMB*CurrentNumStatMessages*sizeof(FStatMessage) );
+		const FString Max = FString::Printf( TEXT("Max: %.1f"), InvMB*(int64)MaxNumStatMessages*sizeof(FStatMessage) );
+		const FString Total = FString::Printf( TEXT("Total: %.1f") , InvMB*TotalNumStatMessages*sizeof(FStatMessage));
 
 		UE_LOG(LogStats, Verbose, TEXT("%s, %s, %s"), *Current, *Max, *Total );
 
@@ -1380,7 +1380,7 @@ void FStatsThreadState::GetRawStackStats(int64 TargetFrame, FRawStatStackNode& R
 		FRawStatStackNode* ThreadRoot = Root.Children.FindRef(ThreadName);
 		if (!ThreadRoot)
 		{
-			YString ThreadIdName = FStatsUtils::BuildUniqueThreadName( Packet.ThreadId );
+			FString ThreadIdName = FStatsUtils::BuildUniqueThreadName( Packet.ThreadId );
 			ThreadRoot = Root.Children.Add( ThreadName, new FRawStatStackNode( FStatMessage( ThreadName, EStatDataType::ST_int64, STAT_GROUP_TO_FStatGroup( STATGROUP_Threads )::GetGroupName(), STAT_GROUP_TO_FStatGroup( STATGROUP_Threads )::GetGroupCategory(), *ThreadIdName, true, true ) ) );
 			ThreadRoot->Meta.NameAndInfo.SetFlag(EStatMetaFlags::IsPackedCCAndDuration, true);
 			ThreadRoot->Meta.Clear();
@@ -1713,7 +1713,7 @@ void FStatsThreadState::FindOrAddMetaData(FStatMessage const& Item)
 		if( bIsThread )
 		{
 			// The description of a thread group contains the thread id
-			const YString Desc = Item.NameAndInfo.GetDescription();
+			const FString Desc = Item.NameAndInfo.GetDescription();
 			Threads.Add( FStatsUtils::ParseThreadID( Desc ), ShortName );
 		}
 
@@ -1815,39 +1815,39 @@ void FStatsThreadState::FindAndDumpMemoryExtensiveStats( FStatPacketArray &Frame
 	}
 }
 
-YString FStatsUtils::DebugPrint(FStatMessage const& Item)
+FString FStatsUtils::DebugPrint(FStatMessage const& Item)
 {
-	YString Result(TEXT("Invalid"));
+	FString Result(TEXT("Invalid"));
 	switch (Item.NameAndInfo.GetField<EStatDataType>())
 	{
 	case EStatDataType::ST_int64:
 		if (Item.NameAndInfo.GetFlag(EStatMetaFlags::IsPackedCCAndDuration))
 		{
-			Result = YString::Printf(TEXT("%.3fms (%4d)"), FPlatformTime::ToMilliseconds(FromPackedCallCountDuration_Duration(Item.GetValue_int64())), FromPackedCallCountDuration_CallCount(Item.GetValue_int64()));
+			Result = FString::Printf(TEXT("%.3fms (%4d)"), FPlatformTime::ToMilliseconds(FromPackedCallCountDuration_Duration(Item.GetValue_int64())), FromPackedCallCountDuration_CallCount(Item.GetValue_int64()));
 		}
 		else if (Item.NameAndInfo.GetFlag(EStatMetaFlags::IsCycle))
 		{
-			Result = YString::Printf(TEXT("%.3fms"), FPlatformTime::ToMilliseconds(Item.GetValue_int64()));
+			Result = FString::Printf(TEXT("%.3fms"), FPlatformTime::ToMilliseconds(Item.GetValue_int64()));
 		}
 		else
 		{
-			Result = YString::Printf(GetStatFormatString<int64>(), Item.GetValue_int64());
+			Result = FString::Printf(GetStatFormatString<int64>(), Item.GetValue_int64());
 		}
 		break;
 	case EStatDataType::ST_double:
-		Result = YString::Printf(GetStatFormatString<double>(), Item.GetValue_double());
+		Result = FString::Printf(GetStatFormatString<double>(), Item.GetValue_double());
 		break;
 	case EStatDataType::ST_FName:
 		Result = Item.GetValue_FName().ToString();
 		break;
 	}
 
-	Result = YString(FCString::Spc(YMath::Max<int32>(0, 14 - Result.Len()))) + Result;
+	Result = FString(FCString::Spc(YMath::Max<int32>(0, 14 - Result.Len()))) + Result;
 
-	const YString ShortName = Item.NameAndInfo.GetShortName().ToString();
+	const FString ShortName = Item.NameAndInfo.GetShortName().ToString();
 	const FName Group = Item.NameAndInfo.GetGroupName();
 	const FName Category = Item.NameAndInfo.GetGroupCategory();
-	YString Desc = Item.NameAndInfo.GetDescription();
+	FString Desc = Item.NameAndInfo.GetDescription();
 	Desc.Trim();
 
 	if( Desc != ShortName )
@@ -1859,7 +1859,7 @@ YString FStatsUtils::DebugPrint(FStatMessage const& Item)
 		Desc += ShortName;
 	}
 
-	YString GroupAndCategoryStr;
+	FString GroupAndCategoryStr;
 	if (Group != NAME_None)
 	{
 		GroupAndCategoryStr = TEXT(" - ");
@@ -1871,7 +1871,7 @@ YString FStatsUtils::DebugPrint(FStatMessage const& Item)
 		GroupAndCategoryStr += *Category.ToString();
 	}
 
-	return YString::Printf(TEXT("  %s  -  %s%s"), *Result, *Desc, *GroupAndCategoryStr);
+	return FString::Printf(TEXT("  %s  -  %s%s"), *Result, *Desc, *GroupAndCategoryStr);
 }
 
 void FStatsUtils::AddMergeStatArray(TArray<FStatMessage>& Dest, TArray<FStatMessage> const& Src)
@@ -2054,10 +2054,10 @@ void FStatsUtils::AccumulateStat(FStatMessage& Dest, FStatMessage const& Item, E
 	}
 }
 
-YString FStatsUtils::FromEscapedFString(const TCHAR* Escaped)
+FString FStatsUtils::FromEscapedFString(const TCHAR* Escaped)
 {
-	YString Result;
-	YString Input(Escaped);
+	FString Result;
+	FString Input(Escaped);
 	while (Input.Len())
 	{
 		{
@@ -2079,7 +2079,7 @@ YString FStatsUtils::FromEscapedFString(const TCHAR* Escaped)
 				Result += Input;
 				break;
 			}
-			YString Number = Input.Left(IndexEnd);
+			FString Number = Input.Left(IndexEnd);
 			Input = Input.RightChop(IndexEnd + 1);
 			Result.AppendChar(TCHAR(uint32(FCString::Atoi64(*Number))));
 		}
@@ -2087,13 +2087,13 @@ YString FStatsUtils::FromEscapedFString(const TCHAR* Escaped)
 	return Result;
 }
 
-YString FStatsUtils::ToEscapedFString(const TCHAR* Source)
+FString FStatsUtils::ToEscapedFString(const TCHAR* Source)
 {
-	YString Invalid(INVALID_NAME_CHARACTERS);
+	FString Invalid(INVALID_NAME_CHARACTERS);
 	Invalid += TEXT("$");
 
-	YString Output;
-	YString Input(Source);
+	FString Output;
+	FString Input(Source);
 	int32 StartValid = 0;
 	int32 NumValid = 0;
 
@@ -2114,7 +2114,7 @@ YString FStatsUtils::ToEscapedFString(const TCHAR* Source)
 			NumValid = 0;
 
 			// Replace the invalid character with a special string
-			Output += YString::Printf(TEXT("$%u$"), uint32(Input[i]));
+			Output += FString::Printf(TEXT("$%u$"), uint32(Input[i]));
 		}
 	}
 

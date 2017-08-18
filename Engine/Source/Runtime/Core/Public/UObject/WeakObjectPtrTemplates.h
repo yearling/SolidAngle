@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Templates/IsPointer.h"
-#include "Templates/PointerConvertibleFromTo.h"
+#include "Templates/PointerIsConvertibleFromTo.h"
 #include "Templates/AreTypesEqual.h"
 #include "Containers/Map.h"
 #include "UObject/AutoPointer.h"

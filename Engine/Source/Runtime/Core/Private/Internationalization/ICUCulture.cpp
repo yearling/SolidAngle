@@ -136,7 +136,7 @@ ETextPluralForm ICUPluralFormToUE(const icu::UnicodeString& InICUTag)
 	return ETextPluralForm::Other;
 }
 
-FCulture::FICUCultureImplementation::FICUCultureImplementation(const YString& LocaleName)
+FCulture::FICUCultureImplementation::FICUCultureImplementation(const FString& LocaleName)
 	: ICULocale( TCHAR_TO_ANSI( *LocaleName ) )
 	, ICUDecimalFormatLRUCache( 10 )
 {
@@ -152,14 +152,14 @@ FCulture::FICUCultureImplementation::FICUCultureImplementation(const YString& Lo
 	}
 }
 
-YString FCulture::FICUCultureImplementation::GetDisplaFName() const
+FString FCulture::FICUCultureImplementation::GetDisplaFName() const
 {
 	icu::UnicodeString ICUResult;
 	ICULocale.getDisplaFName(ICUResult);
 	return ICUUtilities::ConvertString(ICUResult);
 }
 
-YString FCulture::FICUCultureImplementation::GetEnglishName() const
+FString FCulture::FICUCultureImplementation::GetEnglishName() const
 {
 	icu::UnicodeString ICUResult;
 	ICULocale.getDisplaFName(icu::Locale("en"), ICUResult);
@@ -176,7 +176,7 @@ int FCulture::FICUCultureImplementation::GetLCID() const
 	return ICULocale.getLCID();
 }
 
-YString FCulture::FICUCultureImplementation::GetCanonicalName(const YString& Name)
+FString FCulture::FICUCultureImplementation::GetCanonicalName(const FString& Name)
 {
 	static const int32 MaximumNameLength = 64;
 	const int32 NameLength = Name.Len();
@@ -185,28 +185,28 @@ YString FCulture::FICUCultureImplementation::GetCanonicalName(const YString& Nam
 
 	UErrorCode ICUStatus = U_ZERO_ERROR;
 	uloc_canonicalize(TCHAR_TO_ANSI( *Name ), CanonicalName, MaximumNameLength, &ICUStatus);
-	YString CanonicalNameString = CanonicalName;
+	FString CanonicalNameString = CanonicalName;
 	CanonicalNameString.ReplaceInline(TEXT("_"), TEXT("-"));
 	return CanonicalNameString;
 }
 
-YString FCulture::FICUCultureImplementation::GetName() const
+FString FCulture::FICUCultureImplementation::GetName() const
 {
-	YString Result = ICULocale.getName();
+	FString Result = ICULocale.getName();
 	Result.ReplaceInline(TEXT("_"), TEXT("-"), ESearchCase::IgnoreCase);
 	return Result;
 }
 
-YString FCulture::FICUCultureImplementation::GetNativeName() const
+FString FCulture::FICUCultureImplementation::GetNativeName() const
 {
 	icu::UnicodeString ICUResult;
 	ICULocale.getDisplaFName(ICULocale, ICUResult);
 	return ICUUtilities::ConvertString(ICUResult);
 }
 
-YString FCulture::FICUCultureImplementation::GetUnrealLegacyThreeLetterISOLanguageName() const
+FString FCulture::FICUCultureImplementation::GetUnrealLegacyThreeLetterISOLanguageName() const
 {
-	YString Result( ICULocale.getISO3Language() );
+	FString Result( ICULocale.getISO3Language() );
 
 	// Legacy Overrides (INT, JPN, KOR), also for new web localization (CHN)
 	// and now for any other languages (FRA, DEU...) for correct redirection of documentation web links
@@ -222,26 +222,26 @@ YString FCulture::FICUCultureImplementation::GetUnrealLegacyThreeLetterISOLangua
 	return Result;
 }
 
-YString FCulture::FICUCultureImplementation::GetThreeLetterISOLanguageName() const
+FString FCulture::FICUCultureImplementation::GetThreeLetterISOLanguageName() const
 {
 	return ICULocale.getISO3Language();
 }
 
-YString FCulture::FICUCultureImplementation::GetTwoLetterISOLanguageName() const
+FString FCulture::FICUCultureImplementation::GetTwoLetterISOLanguageName() const
 {
 	return ICULocale.getLanguage();
 }
 
-YString FCulture::FICUCultureImplementation::GetNativeLanguage() const
+FString FCulture::FICUCultureImplementation::GetNativeLanguage() const
 {
 	icu::UnicodeString ICUNativeLanguage;
 	ICULocale.getDisplayLanguage(ICULocale, ICUNativeLanguage);
-	YString NativeLanguage;
+	FString NativeLanguage;
 	ICUUtilities::ConvertString(ICUNativeLanguage, NativeLanguage);
 
 	icu::UnicodeString ICUNativeScript;
 	ICULocale.getDisplayScript(ICULocale, ICUNativeScript);
-	YString NativeScript;
+	FString NativeScript;
 	ICUUtilities::ConvertString(ICUNativeScript, NativeScript);
 
 	if ( !NativeScript.IsEmpty() )
@@ -251,21 +251,21 @@ YString FCulture::FICUCultureImplementation::GetNativeLanguage() const
 	return NativeLanguage;
 }
 
-YString FCulture::FICUCultureImplementation::GetRegion() const
+FString FCulture::FICUCultureImplementation::GetRegion() const
 {
 	return ICULocale.getCountry();
 }
 
-YString FCulture::FICUCultureImplementation::GetNativeRegion() const
+FString FCulture::FICUCultureImplementation::GetNativeRegion() const
 {
 	icu::UnicodeString ICUNativeCountry;
 	ICULocale.getDisplayCountry(ICULocale, ICUNativeCountry);
-	YString NativeCountry;
+	FString NativeCountry;
 	ICUUtilities::ConvertString(ICUNativeCountry, NativeCountry);
 
 	icu::UnicodeString ICUNativeVariant;
 	ICULocale.getDisplayVariant(ICULocale, ICUNativeVariant);
-	YString NativeVariant;
+	FString NativeVariant;
 	ICUUtilities::ConvertString(ICUNativeVariant, NativeVariant);
 
 	if ( !NativeVariant.IsEmpty() )
@@ -275,12 +275,12 @@ YString FCulture::FICUCultureImplementation::GetNativeRegion() const
 	return NativeCountry;
 }
 
-YString FCulture::FICUCultureImplementation::GetScript() const
+FString FCulture::FICUCultureImplementation::GetScript() const
 {
 	return ICULocale.getScript();
 }
 
-YString FCulture::FICUCultureImplementation::GetVariant() const
+FString FCulture::FICUCultureImplementation::GetVariant() const
 {
 	return ICULocale.getVariant();
 }
@@ -410,7 +410,7 @@ TSharedRef<const icu::DecimalFormat, ESPMode::ThreadSafe> FCulture::FICUCultureI
 	}
 }
 
-TSharedRef<const icu::DecimalFormat> FCulture::FICUCultureImplementation::GetCurrencyFormatter(const YString& CurrencyCode, const FNumberFormattingOptions* const Options)
+TSharedRef<const icu::DecimalFormat> FCulture::FICUCultureImplementation::GetCurrencyFormatter(const FString& CurrencyCode, const FNumberFormattingOptions* const Options)
 {
 	if (!ICUCurrencyFormat.IsValid())
 	{
@@ -478,7 +478,7 @@ TSharedRef<const icu::DecimalFormat> FCulture::FICUCultureImplementation::GetPer
 	}
 }
 
-TSharedRef<const icu::DateFormat> FCulture::FICUCultureImplementation::GetDateFormatter(const EDateTimeStyle::Type DateStyle, const YString& TimeZone)
+TSharedRef<const icu::DateFormat> FCulture::FICUCultureImplementation::GetDateFormatter(const EDateTimeStyle::Type DateStyle, const FString& TimeZone)
 {
 	if (!ICUDateFormat.IsValid())
 	{
@@ -523,7 +523,7 @@ TSharedRef<const icu::DateFormat> FCulture::FICUCultureImplementation::GetDateFo
 	}
 }
 
-TSharedRef<const icu::DateFormat> FCulture::FICUCultureImplementation::GetTimeFormatter(const EDateTimeStyle::Type TimeStyle, const YString& TimeZone)
+TSharedRef<const icu::DateFormat> FCulture::FICUCultureImplementation::GetTimeFormatter(const EDateTimeStyle::Type TimeStyle, const FString& TimeZone)
 {
 	if (!ICUTimeFormat.IsValid())
 	{
@@ -568,7 +568,7 @@ TSharedRef<const icu::DateFormat> FCulture::FICUCultureImplementation::GetTimeFo
 	}
 }
 
-TSharedRef<const icu::DateFormat> FCulture::FICUCultureImplementation::GetDateTimeFormatter(const EDateTimeStyle::Type DateStyle, const EDateTimeStyle::Type TimeStyle, const YString& TimeZone)
+TSharedRef<const icu::DateFormat> FCulture::FICUCultureImplementation::GetDateTimeFormatter(const EDateTimeStyle::Type DateStyle, const EDateTimeStyle::Type TimeStyle, const FString& TimeZone)
 {
 	if (!ICUDateTimeFormat.IsValid())
 	{
@@ -726,7 +726,7 @@ const FDecimalNumberFormattingRules& FCulture::FICUCultureImplementation::GetPer
 	return *UEPercentFormattingRules;
 }
 
-const FDecimalNumberFormattingRules& FCulture::FICUCultureImplementation::GetCurrencyFormattingRules(const YString& InCurrencyCode)
+const FDecimalNumberFormattingRules& FCulture::FICUCultureImplementation::GetCurrencyFormattingRules(const FString& InCurrencyCode)
 {
 	const bool bUseDefaultFormattingRules = InCurrencyCode.IsEmpty();
 

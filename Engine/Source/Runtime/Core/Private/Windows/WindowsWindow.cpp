@@ -3,7 +3,7 @@
 #include "Windows/WindowsWindow.h"
 #include "Math/UnrealMathUtility.h"
 #include "HAL/UnrealMemory.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "CoreGlobals.h"
 #include "Math/Vector2D.h"
 #include "GenericPlatform/GenericWindowDefinition.h"
@@ -968,7 +968,7 @@ FDragDropOLEData DecipherOLEData(IDataObject* DataObjectPointer)
 			TCHAR* Pos = static_cast<TCHAR*>(FileListStart);
 			while (Pos[0] != 0)
 			{
-				const YString ListElement = YString(Pos);
+				const FString ListElement = FString(Pos);
 				OLEData.OperationFilenames.Add(ListElement);
 				Pos += ListElement.Len() + 1;
 			}
@@ -980,7 +980,7 @@ FDragDropOLEData DecipherOLEData(IDataObject* DataObjectPointer)
 			ANSICHAR* Pos = static_cast<ANSICHAR*>(FileListStart);
 			while (Pos[0] != 0)
 			{
-				const YString ListElement = YString(Pos);
+				const FString ListElement = FString(Pos);
 				OLEData.OperationFilenames.Add(ListElement);
 				Pos += ListElement.Len() + 1;
 			}

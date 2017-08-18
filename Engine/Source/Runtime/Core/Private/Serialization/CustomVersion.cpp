@@ -17,7 +17,7 @@ namespace
 		FCustomVersion ToCustomVersion() const
 		{
 			// We'll invent a GUID from three zeroes and the original tag
-			return FCustomVersion(FGuid(0, 0, 0, Tag), Version, *YString::Printf(TEXT("EnumTag%u"), Tag));
+			return FCustomVersion(FGuid(0, 0, 0, Tag), Version, *FString::Printf(TEXT("EnumTag%u"), Tag));
 		}
 	};
 
@@ -34,7 +34,7 @@ namespace
 	{
 		FGuid Key;
 		int32 Version;
-		YString FriendlFName;
+		FString FriendlFName;
 
 		FCustomVersion ToCustomVersion() const
 		{
@@ -71,13 +71,13 @@ void FCustomVersionContainer::Empty()
 	Versions.Empty();
 }
 
-YString FCustomVersionContainer::ToString(const YString& Indent) const
+FString FCustomVersionContainer::ToString(const FString& Indent) const
 {
-	YString VersionsAsString;
+	FString VersionsAsString;
 	for (const FCustomVersion& SomeVersion : Versions)
 	{
 		VersionsAsString += Indent;
-		VersionsAsString += YString::Printf(TEXT("Key=%s  Version=%d  Friendly Name=%s \n"), *SomeVersion.Key.ToString(), SomeVersion.Version, *SomeVersion.GetFriendlFName().ToString() );
+		VersionsAsString += FString::Printf(TEXT("Key=%s  Version=%d  Friendly Name=%s \n"), *SomeVersion.Key.ToString(), SomeVersion.Version, *SomeVersion.GetFriendlFName().ToString() );
 	}
 
 	return VersionsAsString;

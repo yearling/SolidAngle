@@ -32,7 +32,7 @@ IMPLEMENT_MODULE( FCoreModule, Core );
 CORE_API FFeedbackContext*	GWarn						= nullptr;		/* User interaction and non critical warnings */
 FConfigCacheIni*				GConfig						= nullptr;		/* Configuration database cache */
 ITransaction*				GUndo						= nullptr;		/* Transaction tracker, non-NULL when a transaction is in progress */
-YOutputDeviceConsole*		GLogConsole					= nullptr;		/* Console log hook */
+FOutputDeviceConsole*		GLogConsole					= nullptr;		/* Console log hook */
 CORE_API FMalloc*			GMalloc						= nullptr;		/* Memory allocator */
 CORE_API FMalloc**			GFixedMallocLocationPtr = nullptr;		/* Memory allocator pointer location when PLATFORM_USES_FIXED_GMalloc_CLASS is true */
 
@@ -146,24 +146,24 @@ uint32					GScreenshotResolutionX			= 0;						/* X Resolution for high res shots
 uint32					GScreenshotResolutionY			= 0;						/* Y Resolution for high res shots */
 uint64					GMakeCacheIDIndex				= 0;						/* Cache ID */
 
-YString				GEngineIni;													/* Engine ini filename */
+FString				GEngineIni;													/* Engine ini filename */
 
 /** Editor ini file locations - stored per engine version (shared across all projects). Migrated between versions on first run. */
-YString				GEditorIni;													/* Editor ini filename */
-YString				GEditorKeyBindingsIni;										/* Editor Key Bindings ini file */
-YString				GEditorLayoutIni;											/* Editor UI Layout ini filename */
-YString				GEditorSettingsIni;											/* Editor Settings ini filename */
+FString				GEditorIni;													/* Editor ini filename */
+FString				GEditorKeyBindingsIni;										/* Editor Key Bindings ini file */
+FString				GEditorLayoutIni;											/* Editor UI Layout ini filename */
+FString				GEditorSettingsIni;											/* Editor Settings ini filename */
 
 /** Editor per-project ini files - stored per project. */
-YString				GEditorPerProjectIni;										/* Editor User Settings ini filename */
+FString				GEditorPerProjectIni;										/* Editor User Settings ini filename */
 
-YString				GCompatIni;
-YString				GLightmassIni;												/* Lightmass settings ini filename */
-YString				GScalabilityIni;											/* Scalability settings ini filename */
-YString				GHardwareIni;												/* Hardware ini filename */
-YString				GInputIni;													/* Input ini filename */
-YString				GGameIni;													/* Game ini filename */
-YString				GGameUserSettingsIni;										/* User Game Settings ini filename */
+FString				GCompatIni;
+FString				GLightmassIni;												/* Lightmass settings ini filename */
+FString				GScalabilityIni;											/* Scalability settings ini filename */
+FString				GHardwareIni;												/* Hardware ini filename */
+FString				GInputIni;													/* Input ini filename */
+FString				GGameIni;													/* Game ini filename */
+FString				GGameUserSettingsIni;										/* User Game Settings ini filename */
 
 float					GNearClippingPlane				= 10.0f;				/* Near clipping plane */
 
@@ -221,7 +221,7 @@ bool					GPlatformNeedsPowerOfTwoTextures = false;
 /** Time at which FPlatformTime::Seconds() was first initialized (before main)											*/
 double					GStartTime						= FPlatformTime::InitTiming();
 /** System time at engine init.																				*/
-YString					GSystemStartTime;
+FString					GSystemStartTime;
 /** Whether we are still in the initial loading proces.														*/
 bool					GIsInitialLoad					= true;
 /* Whether we are using the new async IO */

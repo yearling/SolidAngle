@@ -6,7 +6,7 @@
 #include "Templates/UnrealTemplate.h"
 #include "Misc/CString.h"
 #include "Misc/Crc.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/StringConv.h"
 #include "GenericPlatform/GenericPlatformStackWalk.h"
 #include "HAL/PlatformStackWalk.h"
@@ -48,7 +48,7 @@ void PrintScriptCallstack(bool bEmptyWhenDone)
 	FBlueprintExceptionTracker& BlueprintExceptionTracker = FBlueprintExceptionTracker::Get();
 	if (BlueprintExceptionTracker.ScriptStack.Num() > 0)
 	{
-		YString ScriptStack = TEXT("\n\nScript Stack:\n");
+		FString ScriptStack = TEXT("\n\nScript Stack:\n");
 		for (int32 FrameIdx = BlueprintExceptionTracker.ScriptStack.Num() - 1; FrameIdx >= 0; --FrameIdx)
 		{
 			ScriptStack += BlueprintExceptionTracker.ScriptStack[FrameIdx].GetStackDescription() + TEXT("\n");
@@ -178,7 +178,7 @@ void YDebug::EnsureFailed(const ANSICHAR* Expr, const ANSICHAR* File, int32 Line
 {
 
 #if STATS
-	YString EnsureFailedPerfMessage = YString::Printf(TEXT("YDebug::EnsureFailed"));
+	FString EnsureFailedPerfMessage = FString::Printf(TEXT("YDebug::EnsureFailed"));
 	SCOPE_LOG_TIME_IN_SECONDS(*EnsureFailedPerfMessage, nullptr)
 #endif
 
@@ -226,7 +226,7 @@ void YDebug::EnsureFailed(const ANSICHAR* Expr, const ANSICHAR* File, int32 Line
 
 		{
 #if STATS
-			YString StackWalkPerfMessage = YString::Printf(TEXT("FPlatformStackWalk::StackWalkAndDump"));
+			FString StackWalkPerfMessage = FString::Printf(TEXT("FPlatformStackWalk::StackWalkAndDump"));
 			SCOPE_LOG_TIME_IN_SECONDS(*StackWalkPerfMessage, nullptr)
 #endif
 				StackTrace[0] = 0;
@@ -282,7 +282,7 @@ void YDebug::EnsureFailed(const ANSICHAR* Expr, const ANSICHAR* File, int32 Line
 				if (!bHasErrorAlreadyBeenReported)
 				{
 #if STATS
-					YString SubmitErrorReporterfMessage = YString::Printf(TEXT("SubmitErrorReport"));
+					FString SubmitErrorReporterfMessage = FString::Printf(TEXT("SubmitErrorReport"));
 					SCOPE_LOG_TIME_IN_SECONDS(*SubmitErrorReporterfMessage, nullptr)
 #endif
 
@@ -310,7 +310,7 @@ void YDebug::EnsureFailed(const ANSICHAR* Expr, const ANSICHAR* File, int32 Line
 	if (bShouldSendNewReport)
 	{
 #if STATS
-		YString SendNewReportMessage = YString::Printf(TEXT("SendNewReport"));
+		FString SendNewReportMessage = FString::Printf(TEXT("SendNewReport"));
 		SCOPE_LOG_TIME_IN_SECONDS(*SendNewReportMessage, nullptr)
 #endif
 

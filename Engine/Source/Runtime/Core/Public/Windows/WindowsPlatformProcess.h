@@ -45,7 +45,7 @@ struct CORE_API FWindowsPlatformProcess
 		Windows::HANDLE GetSemaphore() { return Semaphore; }
 
 		/** Constructor */
-		FWindowsSemaphore(const YString& InName, Windows::HANDLE InSemaphore);
+		FWindowsSemaphore(const FString& InName, Windows::HANDLE InSemaphore);
 
 		/** Destructor */
 		virtual ~FWindowsSemaphore();
@@ -106,10 +106,10 @@ struct CORE_API FWindowsPlatformProcess
 		uint32 GetParentPID() const;
 
 		// Gets process name. I.e. exec name.
-		YString GetName() const;
+		FString GetName() const;
 
 		// Gets process full image path. I.e. full path of the exec file.
-		YString GetFullPath() const;
+		FString GetFullPath() const;
 
 	private:
 		// Private constructor.
@@ -141,13 +141,13 @@ public:
 	static const TCHAR* ComputerName();
 	static const TCHAR* UserName(bool bOnlyAlphaNumeric = true);
 	static void SetCurrentWorkingDirectoryToBaseDir();
-	static YString GetCurrentWorkingDirectory();
-	static const YString ShaderWorkingDir();
+	static FString GetCurrentWorkingDirectory();
+	static const FString ShaderWorkingDir();
 	static const TCHAR* ExecutableName(bool bRemoveExtension = true);
-	static YString GenerateApplicationPath(const YString& AppName, EBuildConfigurations::Type BuildConfiguration);
+	static FString GenerateApplicationPath(const FString& AppName, EBuildConfigurations::Type BuildConfiguration);
 	static const TCHAR* GetModuleExtension();
 	static const TCHAR* GetBinariesSubdirectory();
-	static void LaunchURL(const TCHAR* URL, const TCHAR* Parms, YString* Error);
+	static void LaunchURL(const TCHAR* URL, const TCHAR* Parms, FString* Error);
 	static FProcHandle CreateProc(const TCHAR* URL, const TCHAR* Parms, bool bLaunchDetached, bool bLaunchHidden, bool bLaunchReallyHidden, uint32* OutProcessID, int32 PriorityModifier, const TCHAR* OptionalWorkingDirectory, void* PipeWriteChild, void * PipeReadChild = nullptr);
 	static FProcHandle OpenProcess(uint32 ProcessID);
 	static bool IsProcRunning(FProcHandle & ProcessHandle);
@@ -158,13 +158,13 @@ public:
 	static bool GetApplicationMemoryUsage(uint32 ProcessId, SIZE_T* OutMemoryUsage);
 	static bool IsApplicationRunning(uint32 ProcessId);
 	static bool IsApplicationRunning(const TCHAR* ProcName);
-	static YString GetApplicationName(uint32 ProcessId);
+	static FString GetApplicationName(uint32 ProcessId);
 	static bool IsThisApplicationForeground();
-	static bool ExecProcess(const TCHAR* URL, const TCHAR* Params, int32* OutReturnCode, YString* OutStdOut, YString* OutStdErr);
+	static bool ExecProcess(const TCHAR* URL, const TCHAR* Params, int32* OutReturnCode, FString* OutStdOut, FString* OutStdErr);
 	static bool ExecElevatedProcess(const TCHAR* URL, const TCHAR* Params, int32* OutReturnCode);
 	static void LaunchFileInDefaultExternalApplication(const TCHAR* FileName, const TCHAR* Parms = NULL, ELaunchVerb::Type Verb = ELaunchVerb::Open);
 	static void ExploreFolder(const TCHAR* FilePath);
-	static bool ResolveNetworkPath(YString InUNCPath, YString& OutPath);
+	static bool ResolveNetworkPath(FString InUNCPath, FString& OutPath);
 	static void Sleep(float Seconds);
 	static void SleepNoStats(float Seconds);
 	static void SleepInfinite();
@@ -172,10 +172,10 @@ public:
 	static class FRunnableThread* CreateRunnableThread();
 	static void ClosePipe(void* ReadPipe, void* WritePipe);
 	static bool CreatePipe(void*& ReadPipe, void*& WritePipe);
-	static YString ReadPipe(void* ReadPipe);
+	static FString ReadPipe(void* ReadPipe);
 	static bool ReadPipeToArray(void* ReadPipe, TArray<uint8> & Output);
-	static bool WritePipe(void* WritePipe, const YString& Message, YString* OutWritten = nullptr);
-	static FSemaphore* NewInterprocessSynchObject(const YString& Name, bool bCreate, uint32 MaxLocks = 1);
+	static bool WritePipe(void* WritePipe, const FString& Message, FString* OutWritten = nullptr);
+	static FSemaphore* NewInterprocessSynchObject(const FString& Name, bool bCreate, uint32 MaxLocks = 1);
 	static bool DeleteInterprocessSynchObject(FSemaphore * Object);
 	static bool Daemonize();
 protected:
@@ -187,7 +187,7 @@ protected:
 	* @param InPipes The pipes to read from.
 	* @param PipeCount The number of pipes.
 	*/
-	static void ReadFromPipes(YString* OutStrings[], Windows::HANDLE InPipes[], int32 PipeCount);
+	static void ReadFromPipes(FString* OutStrings[], Windows::HANDLE InPipes[], int32 PipeCount);
 
 private:
 
@@ -195,12 +195,12 @@ private:
 	* Since Windows can only have one directory at a time,
 	* this stack is used to reset the previous DllDirectory.
 	*/
-	static TArray<YString> DllDirectoryStack;
+	static TArray<FString> DllDirectoryStack;
 
 	/**
 	* All the DLL directories we want to load from.
 	*/
-	static TArray<YString> DllDirectories;
+	static TArray<FString> DllDirectories;
 
 	/**
 	* Replacement implementation of the Win32 LoadLibrary function which searches the given list of directories for dependent imports, and attempts
@@ -209,7 +209,7 @@ private:
 	* @param FileName Path to the library to load
 	* @param SearchPaths Search directories to scan for imports
 	*/
-	static void* LoadLibraryWithSearchPaths(const YString& FileName, const TArray<YString>& SearchPaths);
+	static void* LoadLibraryWithSearchPaths(const FString& FileName, const TArray<FString>& SearchPaths);
 
 	/**
 	* Resolve all the imports for the given library, searching through a set of directories.
@@ -219,7 +219,7 @@ private:
 	* @param ImportFileNames Array which is filled with a list of the resolved imports found in the given search directories
 	* @param VisitedImportNames Array which stores a list of imports which have been checked
 	*/
-	static void ResolveImportsRecursive(const YString& FileName, const TArray<YString>& SearchPaths, TArray<YString>& ImportFileNames, TArray<YString>& VisitedImportNames);
+	static void ResolveImportsRecursive(const FString& FileName, const TArray<FString>& SearchPaths, TArray<FString>& ImportFileNames, TArray<FString>& VisitedImportNames);
 
 	/**
 	* Resolve an individual import.
@@ -229,7 +229,7 @@ private:
 	* @param OutFileName On success, receives the path to the imported file
 	* @return true if an import was found.
 	*/
-	static bool ResolveImport(const YString& ImportName, const TArray<YString>& SearchPaths, YString& OutFileName);
+	static bool ResolveImport(const FString& ImportName, const TArray<FString>& SearchPaths, FString& OutFileName);
 
 	/**
 	* Reads a list of import names from a portable executable file.
@@ -237,7 +237,7 @@ private:
 	* @param FileName Path to the library
 	* @param ImportNames Array to receive the list of imported PE file names
 	*/
-	static bool ReadLibraryImports(const TCHAR* FileName, TArray<YString>& ImportNames);
+	static bool ReadLibraryImports(const TCHAR* FileName, TArray<FString>& ImportNames);
 };
 
 

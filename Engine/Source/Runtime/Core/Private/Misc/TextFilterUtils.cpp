@@ -167,13 +167,13 @@ FTextFilterString::FTextFilterString(FTextFilterString&& Other)
 {
 }
 
-FTextFilterString::FTextFilterString(const YString& InString)
+FTextFilterString::FTextFilterString(const FString& InString)
 	: InternalString(InString)
 {
 	UppercaseInternalString();
 }
 
-FTextFilterString::FTextFilterString(YString&& InString)
+FTextFilterString::FTextFilterString(FString&& InString)
 	: InternalString(MoveTemp(InString))
 {
 	UppercaseInternalString();

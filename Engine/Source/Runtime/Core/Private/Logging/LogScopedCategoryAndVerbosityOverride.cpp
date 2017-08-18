@@ -16,14 +16,14 @@ FLogScopedCategoryAndVerbosityOverride::~FLogScopedCategoryAndVerbosityOverride(
 	*TLS = Backup;
 }
 
-static uint32 OverrrideTLSID = YPlatformTLS::AllocTlsSlot();
+static uint32 OverrrideTLSID = FPlatformTLS::AllocTlsSlot();
 FLogScopedCategoryAndVerbosityOverride::FOverride* FLogScopedCategoryAndVerbosityOverride::GetTLSCurrent()
 {
-	FOverride* TLS = (FOverride*)YPlatformTLS::GetTlsValue(OverrrideTLSID);
+	FOverride* TLS = (FOverride*)FPlatformTLS::GetTlsValue(OverrrideTLSID);
 	if (!TLS)
 	{
 		TLS = new FOverride;
-		YPlatformTLS::SetTlsValue(OverrrideTLSID, TLS);
+		FPlatformTLS::SetTlsValue(OverrrideTLSID, TLS);
 	}	
 	return TLS;
 }

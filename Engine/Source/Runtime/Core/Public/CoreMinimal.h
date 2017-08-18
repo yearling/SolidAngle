@@ -3,13 +3,13 @@
 #pragma once
 
 /*----------------------------------------------------------------------------
-Low level includes.
+	Low level includes.
 ----------------------------------------------------------------------------*/
 
 #include "CoreTypes.h"
 
 /*----------------------------------------------------------------------------
-Forward declarations
+	Forward declarations
 ----------------------------------------------------------------------------*/
 
 #include "CoreFwd.h"
@@ -17,7 +17,7 @@ Forward declarations
 #include "Containers/ContainersFwd.h"
 
 /*----------------------------------------------------------------------------
-Commonly used headers
+	Commonly used headers
 ----------------------------------------------------------------------------*/
 
 #include "Misc/VarArgs.h"
@@ -69,7 +69,7 @@ Commonly used headers
 #include "Misc/CString.h"
 #include "Misc/Crc.h"
 #include "Math/UnrealMathUtility.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Array.h"
 #include "Misc/Timespan.h"
 #include "HAL/CriticalSection.h"
@@ -81,7 +81,7 @@ Commonly used headers
 #include "Templates/AlignmentTemplates.h"
 #include "Misc/StructBuilder.h"
 #include "Templates/Decay.h"
-#include "Templates/PointerConvertibleFromTo.h"
+#include "Templates/PointerIsConvertibleFromTo.h"
 #include "Templates/Invoke.h"
 #include "Templates/Function.h"
 #include "Templates/TypeHash.h"

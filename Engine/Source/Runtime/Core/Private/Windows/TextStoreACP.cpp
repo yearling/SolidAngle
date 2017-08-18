@@ -2,7 +2,7 @@
 
 #include "Windows/TextStoreACP.h"
 #include "Math/UnrealMathUtility.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Math/Vector2D.h"
 #include "Logging/LogCategory.h"
 #include "GenericPlatform/GenericWindow.h"
@@ -538,7 +538,7 @@ STDAPI FTextStoreACP::GetText(LONG acpStart, LONG acpEnd, __RPC__out_ecount_part
 	// Write characters to buffer only if there is a buffer with allocated size.
 	if(pchPlain && cchPlainReq > 0)
 	{
-		YString StringInRange;
+		FString StringInRange;
 		TextContext->GetTextInRange(BeginIndex, Length, StringInRange);
 
 		for(uint32 i = 0; i < Length && *pcchPlainOut < cchPlainReq; ++i)
@@ -607,7 +607,7 @@ STDAPI FTextStoreACP::InsertTextAtSelection(DWORD dwFlags, __RPC__in_ecount_full
 		return E_INVALIDARG;
 	}
 
-	YString NewString(cch, pchText);
+	FString NewString(cch, pchText);
 
 	uint32 BeginIndex;
 	uint32 Length;

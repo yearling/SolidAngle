@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 
 #if PLATFORM_HAS_BSD_TIME 
 #include <sys/time.h>
@@ -109,7 +109,7 @@ struct CORE_API FGenericPlatformTime
 	* @param Seconds Time in seconds
 	* @return Time in a pretty formatted string
 	*/
-	static YString PrettyTime(double Seconds);
+	static FString PrettyTime(double Seconds);
 
 	/** Updates CPU utilization, called through a delegate from the Core ticker. */
 	static bool UpdateCPUTime(float DeltaTime)

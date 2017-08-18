@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
 #include "HAL/UnrealMemory.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 
 /**
 * n-bit integer. @todo: optimize
@@ -129,7 +129,7 @@ public:
 	/**
 	* Constructor. Initializes this big int with a string representing a hex value.
 	*/
-	explicit TBigInt(const YString& Value)
+	explicit TBigInt(const FString& Value)
 	{
 		Parse(Value);
 	}
@@ -958,9 +958,9 @@ public:
 	/**
 	* Returns this big int as a string.
 	*/
-	YString ToString() const
+	FString ToString() const
 	{
-		YString Text(TEXT("0x"));
+		FString Text(TEXT("0x"));
 		int32 WordIndex;
 		for (WordIndex = NumWords - 1; WordIndex > 0; --WordIndex)
 		{
@@ -971,7 +971,7 @@ public:
 		}
 		for (; WordIndex >= 0; --WordIndex)
 		{
-			Text += YString::Printf(TEXT("%08x"), Bits[WordIndex]);
+			Text += FString::Printf(TEXT("%08x"), Bits[WordIndex]);
 		}
 		return Text;
 	}
@@ -979,7 +979,7 @@ public:
 	/**
 	* Parses a string representing a hex value
 	*/
-	void Parse(const YString& Value)
+	void Parse(const FString& Value)
 	{
 		Zero();
 		int32 ValueStartIndex = 0;

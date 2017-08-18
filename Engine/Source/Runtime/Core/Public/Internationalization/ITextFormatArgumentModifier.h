@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Misc/Crc.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 
 class FFormatArgumentValue;
 struct FPrivateTextFormatArguments;
@@ -34,7 +34,7 @@ public:
 	}
 
 	/** Construct from the given string (steals the value) */
-	FTextFormatString(YString InStr)
+	FTextFormatString(FString InStr)
 		: StringPtr(nullptr)
 		, StringLen(0)
 		, StringHash(0)
@@ -134,7 +134,7 @@ private:
 	uint32 StringHash;
 
 	/** Internal copy if constructed from a string */
-	YString InternalString;
+	FString InternalString;
 
 	/** Construct from the given pointer and size (takes a sub-string reference, doesn't have to be null terminated) */
 	FTextFormatString(const TCHAR* InStr, const int32 InLen)
@@ -168,10 +168,10 @@ public:
 	virtual ~ITextFormatArgumentModifier() {}
 
 	/** Given the argument, evaluate the result and append it to OutResult */
-	virtual void Evaluate(const FFormatArgumentValue& InValue, const FPrivateTextFormatArguments& InFormatArgs, YString& OutResult) const = 0;
+	virtual void Evaluate(const FFormatArgumentValue& InValue, const FPrivateTextFormatArguments& InFormatArgs, FString& OutResult) const = 0;
 
 	/** Get any argument names that are used by this argument modifier (for cases where the modifier itself uses format strings) */
-	virtual void GetFormatArgumentNames(TArray<YString>& OutArgumentNames) const = 0;
+	virtual void GetFormatArgumentNames(TArray<FString>& OutArgumentNames) const = 0;
 
 	/** Quickly estimate the length of text that this argument modifier will likely inject into the string when evaluated */
 	virtual void EstimateLength(int32& OutLength, bool& OutUsesFormatArgs) const = 0;

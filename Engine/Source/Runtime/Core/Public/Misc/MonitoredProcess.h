@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Misc/Timespan.h"
 #include "Delegates/Delegate.h"
 #include "Misc/DateTime.h"
@@ -22,7 +22,7 @@ DECLARE_DELEGATE_OneParam(FOnMonitoredProcessCompleted, int32)
  *
  * The first parameter is the produced output.
  */
-DECLARE_DELEGATE_OneParam(FOnMonitoredProcessOutput, YString)
+DECLARE_DELEGATE_OneParam(FOnMonitoredProcessOutput, FString)
 
 
 /**
@@ -40,7 +40,7 @@ public:
 	 * @param InParams The command line parameters.
 	 * @param InHidden Whether the window of the process should be hidden.
 	 */
-	FMonitoredProcess( const YString& InURL, const YString& InParams, bool InHidden, bool InCreatePipes = true );
+	FMonitoredProcess( const FString& InURL, const FString& InParams, bool InHidden, bool InCreatePipes = true );
 
 	/** Destructor. */
 	~FMonitoredProcess();
@@ -155,7 +155,7 @@ protected:
 	 *
 	 * @param Output The output string to process.
 	 */
-	void ProcessOutput( const YString& Output );
+	void ProcessOutput( const FString& Output );
 
 private:
 
@@ -172,7 +172,7 @@ private:
 	bool KillTree;
 
 	// Holds the command line parameters. */
-	YString Params;
+	FString Params;
 
 	// Holds the handle to the process. */
 	FProcHandle ProcessHandle;
@@ -193,7 +193,7 @@ private:
 	bool bIsRunning;
 
 	// Holds the URL of the executable to launch. */
-	YString URL;
+	FString URL;
 
 	// Holds the write pipe. */
 	void* WritePipe;
@@ -205,7 +205,7 @@ private:
 	float SleepInterval;
 
 	// Buffered output text which does not contain a newline
-	YString OutputBuffer;
+	FString OutputBuffer;
 
 private:
 

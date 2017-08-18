@@ -1,4 +1,4 @@
-// This needed to be SolidAngleString.h to avoid conflicting with
+// This needed to be UnrealString.h to avoid conflicting with
 // the Windows platform SDK string.h
 
 #pragma once
@@ -17,7 +17,7 @@
 #include "Misc/Crc.h"
 #include "Math/UnrealMathUtility.h"
 
-struct YStringFormatArg;
+struct FStringFormatArg;
 template<typename KeyType, typename ValueType, typename SetAllocator, typename KeyFuncs > class TMap;
 
 /** Determines case sensitivity options for string comparisons. */
@@ -50,10 +50,10 @@ namespace ESearchDir
 * A dynamically sizeable string.
 * @see https://docs.unrealengine.com/latest/INT/Programming/UnrealArchitecture/StringHandling/YString/
 */
-class CORE_API YString
+class CORE_API FString
 {
 private:
-	friend struct TContainerTraits<YString>;
+	friend struct TContainerTraits<FString>;
 
 	/** Array holding the character data */
 	typedef TArray<TCHAR> DataType;
@@ -64,35 +64,35 @@ public:
 
 #if PLATFORM_COMPILER_HAS_DEFAULTED_FUNCTIONS
 
-	YString() = default;
-	YString(YString&&) = default;
-	YString(const YString&) = default;
-	YString& operator=(YString&&) = default;
-	YString& operator=(const YString&) = default;
+	FString() = default;
+	FString(FString&&) = default;
+	FString(const FString&) = default;
+	FString& operator=(FString&&) = default;
+	FString& operator=(const FString&) = default;
 
 #else
 
-	FORCEINLINE YString()
+	FORCEINLINE FString()
 	{
 	}
 
-	FORCEINLINE YString(YString&& Other)
+	FORCEINLINE FString(FString&& Other)
 		: Data(MoveTemp(Other.Data))
 	{
 	}
 
-	FORCEINLINE YString(const YString& Other)
+	FORCEINLINE FString(const FString& Other)
 		: Data(Other.Data)
 	{
 	}
 
-	FORCEINLINE YString& operator=(YString&& Other)
+	FORCEINLINE FString& operator=(FString&& Other)
 	{
 		Data = MoveTemp(Other.Data);
 		return *this;
 	}
 
-	FORCEINLINE YString& operator=(const YString& Other)
+	FORCEINLINE FString& operator=(const FString& Other)
 	{
 		Data = Other.Data;
 		return *this;
@@ -106,7 +106,7 @@ public:
 	* @param Other the other string to create a new copy from
 	* @param ExtraSlack number of extra characters to add to the end of the other string in this string
 	*/
-	FORCEINLINE YString(const YString& Other, int32 ExtraSlack)
+	FORCEINLINE FString(const FString& Other, int32 ExtraSlack)
 		: Data(Other.Data, ExtraSlack + ((Other.Data.Num() || !ExtraSlack) ? 0 : 1)) // Add 1 if the source string array is empty and we want some slack, because we'll need to include a null terminator which is currently missing
 	{
 	}
@@ -117,7 +117,7 @@ public:
 	* @param Other the other string to create a new copy from
 	* @param ExtraSlack number of extra characters to add to the end of the other string in this string
 	*/
-	FORCEINLINE YString(YString&& Other, int32 ExtraSlack)
+	FORCEINLINE FString(FString&& Other, int32 ExtraSlack)
 		: Data(MoveTemp(Other.Data), ExtraSlack + ((Other.Data.Num() || !ExtraSlack) ? 0 : 1)) // Add 1 if the source string array is empty and we want some slack, because we'll need to include a null terminator which is currently missing
 	{
 	}
@@ -128,7 +128,7 @@ public:
 	* @param In array of TCHAR
 	*/
 	template <typename CharType>
-	FORCEINLINE YString(const CharType* Src, typename TEnableIf<TIsCharType<CharType>::Value>::Type* Dummy = nullptr) // This TEnableIf is to ensure we don't instantiate this constructor for non-char types, like id* in Obj-C
+	FORCEINLINE FString(const CharType* Src, typename TEnableIf<TIsCharType<CharType>::Value>::Type* Dummy = nullptr) // This TEnableIf is to ensure we don't instantiate this constructor for non-char types, like id* in Obj-C
 	{
 		if (Src && *Src)
 		{
@@ -146,7 +146,7 @@ public:
 	* @param InCount how many characters to copy
 	* @param InSrc String to copy from
 	*/
-	FORCEINLINE explicit YString(int32 InCount, const TCHAR* InSrc)
+	FORCEINLINE explicit FString(int32 InCount, const TCHAR* InSrc)
 	{
 		Data.AddUninitialized(InCount ? InCount + 1 : 0);
 
@@ -158,7 +158,7 @@ public:
 
 #ifdef __OBJC__
 	/** Convert Objective-C NSString* to YString */
-	FORCEINLINE YString(const NSString* In)
+	FORCEINLINE FString(const NSString* In)
 	{
 		if (In &&[In length] > 0)
 		{
@@ -188,7 +188,7 @@ public:
 	*
 	* @param Other array of TCHAR
 	*/
-	FORCEINLINE YString& operator=(const TCHAR* Other)
+	FORCEINLINE FString& operator=(const TCHAR* Other)
 	{
 		if (Data.GetData() != Other)
 		{
@@ -251,10 +251,10 @@ private:
 	* DO NOT USE DIRECTLY
 	* STL-like iterators to enable range-based for loop support.
 	*/
-	FORCEINLINE friend DataType::RangedForIteratorType      begin(YString& Str) { auto Result = begin(Str.Data);                                   return Result; }
-	FORCEINLINE friend DataType::RangedForConstIteratorType begin(const YString& Str) { auto Result = begin(Str.Data);                                   return Result; }
-	FORCEINLINE friend DataType::RangedForIteratorType      end(YString& Str) { auto Result = end(Str.Data); if (Str.Data.Num()) { --Result; } return Result; }
-	FORCEINLINE friend DataType::RangedForConstIteratorType end(const YString& Str) { auto Result = end(Str.Data); if (Str.Data.Num()) { --Result; } return Result; }
+	FORCEINLINE friend DataType::RangedForIteratorType      begin(FString& Str) { auto Result = begin(Str.Data);                                   return Result; }
+	FORCEINLINE friend DataType::RangedForConstIteratorType begin(const FString& Str) { auto Result = begin(Str.Data);                                   return Result; }
+	FORCEINLINE friend DataType::RangedForIteratorType      end(FString& Str) { auto Result = end(Str.Data); if (Str.Data.Num()) { --Result; } return Result; }
+	FORCEINLINE friend DataType::RangedForConstIteratorType end(const FString& Str) { auto Result = end(Str.Data); if (Str.Data.Num()) { --Result; } return Result; }
 
 public:
 	FORCEINLINE uint32 GetAllocatedSize() const
@@ -398,7 +398,7 @@ public:
 	* @param Str array of TCHAR to be concatenated onto the end of this
 	* @return reference to this
 	*/
-	FORCEINLINE YString& operator+=(const TCHAR* Str)
+	FORCEINLINE FString& operator+=(const TCHAR* Str)
 	{
 		checkSlow(Str);
 		CheckInvariants();
@@ -415,7 +415,7 @@ public:
 	* @return reference to this
 	*/
 	template <typename CharType>
-	FORCEINLINE typename TEnableIf<TIsCharType<CharType>::Value, YString&>::Type operator+=(CharType InChar)
+	FORCEINLINE typename TEnableIf<TIsCharType<CharType>::Value, FString&>::Type operator+=(CharType InChar)
 	{
 		CheckInvariants();
 
@@ -442,19 +442,19 @@ public:
 	* @param InChar other Char to be concatenated onto the end of this string
 	* @return reference to this
 	*/
-	FORCEINLINE YString& AppendChar(const TCHAR InChar)
+	FORCEINLINE FString& AppendChar(const TCHAR InChar)
 	{
 		*this += InChar;
 		return *this;
 	}
 
-	FORCEINLINE YString& Append(const YString& Text)
+	FORCEINLINE FString& Append(const FString& Text)
 	{
 		*this += Text;
 		return *this;
 	}
 
-	YString& Append(const TCHAR* Text, int32 Count)
+	FString& Append(const TCHAR* Text, int32 Count)
 	{
 		CheckInvariants();
 
@@ -507,7 +507,7 @@ public:
 		}
 	}
 
-	FORCEINLINE void InsertAt(int32 Index, const YString& Characters)
+	FORCEINLINE void InsertAt(int32 Index, const FString& Characters)
 	{
 		if (Characters.Len())
 		{
@@ -528,7 +528,7 @@ public:
 	* @param InPrefix the prefix to search for at the start of the string to remove.
 	* @return true if the prefix was removed, otherwise false.
 	*/
-	bool RemoveFromStart(const YString& InPrefix, ESearchCase::Type SearchCase = ESearchCase::IgnoreCase);
+	bool RemoveFromStart(const FString& InPrefix, ESearchCase::Type SearchCase = ESearchCase::IgnoreCase);
 
 	/**
 	* Removes the text from the end of the string if it exists.
@@ -536,7 +536,7 @@ public:
 	* @param InSuffix the suffix to search for at the end of the string to remove.
 	* @return true if the suffix was removed, otherwise false.
 	*/
-	bool RemoveFromEnd(const YString& InSuffix, ESearchCase::Type SearchCase = ESearchCase::IgnoreCase);
+	bool RemoveFromEnd(const FString& InSuffix, ESearchCase::Type SearchCase = ESearchCase::IgnoreCase);
 
 	/**
 	* Concatenate this path with given path ensuring the / character is used between them
@@ -552,7 +552,7 @@ public:
 	* @param Str other string to be concatenated onto the end of this
 	* @return reference to this
 	*/
-	FORCEINLINE YString& operator+=(const YString& Str)
+	FORCEINLINE FString& operator+=(const FString& Str)
 	{
 		CheckInvariants();
 		Str.CheckInvariants();
@@ -571,11 +571,11 @@ public:
 	* @return The concatenated string.
 	*/
 	template <typename CharType>
-	FORCEINLINE friend typename TEnableIf<TIsCharType<CharType>::Value, YString>::Type operator+(const YString& Lhs, CharType Rhs)
+	FORCEINLINE friend typename TEnableIf<TIsCharType<CharType>::Value, FString>::Type operator+(const FString& Lhs, CharType Rhs)
 	{
 		Lhs.CheckInvariants();
 
-		YString Result(Lhs, 1);
+		FString Result(Lhs, 1);
 		Result += Rhs;
 
 		return Result;
@@ -590,11 +590,11 @@ public:
 	* @return The concatenated string.
 	*/
 	template <typename CharType>
-	FORCEINLINE friend typename TEnableIf<TIsCharType<CharType>::Value, YString>::Type operator+(YString&& Lhs, CharType Rhs)
+	FORCEINLINE friend typename TEnableIf<TIsCharType<CharType>::Value, FString>::Type operator+(FString&& Lhs, CharType Rhs)
 	{
 		Lhs.CheckInvariants();
 
-		YString Result(MoveTemp(Lhs), 1);
+		FString Result(MoveTemp(Lhs), 1);
 		Result += Rhs;
 
 		return Result;
@@ -602,7 +602,7 @@ public:
 
 private:
 	template <typename LhsType, typename RhsType>
-	FORCEINLINE static YString ConcatYStrings(typename TIdentity<LhsType>::Type Lhs, typename TIdentity<RhsType>::Type Rhs)
+	FORCEINLINE static FString ConcatYStrings(typename TIdentity<LhsType>::Type Lhs, typename TIdentity<RhsType>::Type Rhs)
 	{
 		Lhs.CheckInvariants();
 		Rhs.CheckInvariants();
@@ -612,14 +612,14 @@ private:
 
 		int32 RhsLen = Rhs.Len();
 
-		YString Result(MoveTemp(Lhs), RhsLen);
+		FString Result(MoveTemp(Lhs), RhsLen);
 		Result.AppendChars(Rhs.Data.GetData(), RhsLen);
 
 		return Result;
 	}
 
 	template <typename RhsType>
-	FORCEINLINE static YString ConcatTCHARsToYString(const TCHAR* Lhs, typename TIdentity<RhsType>::Type Rhs)
+	FORCEINLINE static FString ConcatTCHARsToYString(const TCHAR* Lhs, typename TIdentity<RhsType>::Type Rhs)
 	{
 		checkSlow(Lhs);
 		Rhs.CheckInvariants();
@@ -633,7 +633,7 @@ private:
 		// This is not entirely optimal, as if the Rhs is an rvalue and has enough slack space to hold Lhs, then
 		// the memory could be reused here without constructing a new object.  However, until there is proof otherwise,
 		// I believe this will be relatively rare and isn't worth making the code a lot more complex right now.
-		YString Result;
+		FString Result;
 		Result.Data.AddUninitialized(LhsLen + RhsLen + 1);
 
 		TCHAR* ResultData = Result.Data.GetData();
@@ -645,7 +645,7 @@ private:
 	}
 
 	template <typename LhsType>
-	FORCEINLINE static YString ConcatYStringToTCHARs(typename TIdentity<LhsType>::Type Lhs, const TCHAR* Rhs)
+	FORCEINLINE static FString ConcatYStringToTCHARs(typename TIdentity<LhsType>::Type Lhs, const TCHAR* Rhs)
 	{
 		Lhs.CheckInvariants();
 		checkSlow(Rhs);
@@ -655,7 +655,7 @@ private:
 
 		int32 RhsLen = FCString::Strlen(Rhs);
 
-		YString Result(MoveTemp(Lhs), RhsLen);
+		FString Result(MoveTemp(Lhs), RhsLen);
 		Result.AppendChars(Rhs, RhsLen);
 
 		return Result;
@@ -670,9 +670,9 @@ public:
 	*
 	* @return The concatenated string.
 	*/
-	FORCEINLINE friend YString operator+(const YString& Lhs, const YString& Rhs)
+	FORCEINLINE friend FString operator+(const FString& Lhs, const FString& Rhs)
 	{
-		return ConcatYStrings<const YString&, const YString&>(Lhs, Rhs);
+		return ConcatYStrings<const FString&, const FString&>(Lhs, Rhs);
 	}
 
 	/**
@@ -683,9 +683,9 @@ public:
 	*
 	* @return The concatenated string.
 	*/
-	FORCEINLINE friend YString operator+(YString&& Lhs, const YString& Rhs)
+	FORCEINLINE friend FString operator+(FString&& Lhs, const FString& Rhs)
 	{
-		return ConcatYStrings<YString&&, const YString&>(MoveTemp(Lhs), Rhs);
+		return ConcatYStrings<FString&&, const FString&>(MoveTemp(Lhs), Rhs);
 	}
 
 	/**
@@ -696,9 +696,9 @@ public:
 	*
 	* @return The concatenated string.
 	*/
-	FORCEINLINE friend YString operator+(const YString& Lhs, YString&& Rhs)
+	FORCEINLINE friend FString operator+(const FString& Lhs, FString&& Rhs)
 	{
-		return ConcatYStrings<const YString&, YString&&>(Lhs, MoveTemp(Rhs));
+		return ConcatYStrings<const FString&, FString&&>(Lhs, MoveTemp(Rhs));
 	}
 
 	/**
@@ -709,9 +709,9 @@ public:
 	*
 	* @return The concatenated string.
 	*/
-	FORCEINLINE friend YString operator+(YString&& Lhs, YString&& Rhs)
+	FORCEINLINE friend FString operator+(FString&& Lhs, FString&& Rhs)
 	{
-		return ConcatYStrings<YString&&, YString&&>(MoveTemp(Lhs), MoveTemp(Rhs));
+		return ConcatYStrings<FString&&, FString&&>(MoveTemp(Lhs), MoveTemp(Rhs));
 	}
 
 	/**
@@ -722,9 +722,9 @@ public:
 	*
 	* @return The concatenated string.
 	*/
-	FORCEINLINE friend YString operator+(const TCHAR* Lhs, const YString& Rhs)
+	FORCEINLINE friend FString operator+(const TCHAR* Lhs, const FString& Rhs)
 	{
-		return ConcatTCHARsToYString<const YString&>(Lhs, Rhs);
+		return ConcatTCHARsToYString<const FString&>(Lhs, Rhs);
 	}
 
 	/**
@@ -735,9 +735,9 @@ public:
 	*
 	* @return The concatenated string.
 	*/
-	FORCEINLINE friend YString operator+(const TCHAR* Lhs, YString&& Rhs)
+	FORCEINLINE friend FString operator+(const TCHAR* Lhs, FString&& Rhs)
 	{
-		return ConcatTCHARsToYString<YString&&>(Lhs, MoveTemp(Rhs));
+		return ConcatTCHARsToYString<FString&&>(Lhs, MoveTemp(Rhs));
 	}
 
 	/**
@@ -748,9 +748,9 @@ public:
 	*
 	* @return The concatenated string.
 	*/
-	FORCEINLINE friend YString operator+(const YString& Lhs, const TCHAR* Rhs)
+	FORCEINLINE friend FString operator+(const FString& Lhs, const TCHAR* Rhs)
 	{
-		return ConcatYStringToTCHARs<const YString&>(Lhs, Rhs);
+		return ConcatYStringToTCHARs<const FString&>(Lhs, Rhs);
 	}
 
 	/**
@@ -761,9 +761,9 @@ public:
 	*
 	* @return The concatenated string.
 	*/
-	FORCEINLINE friend YString operator+(YString&& Lhs, const TCHAR* Rhs)
+	FORCEINLINE friend FString operator+(FString&& Lhs, const TCHAR* Rhs)
 	{
-		return ConcatYStringToTCHARs<YString&&>(MoveTemp(Lhs), Rhs);
+		return ConcatYStringToTCHARs<FString&&>(MoveTemp(Lhs), Rhs);
 	}
 
 	/**
@@ -772,7 +772,7 @@ public:
 	* @param Str path array of TCHAR to be concatenated onto the end of this
 	* @return reference to path
 	*/
-	FORCEINLINE YString& operator/=(const TCHAR* Str)
+	FORCEINLINE FString& operator/=(const TCHAR* Str)
 	{
 		checkSlow(Str);
 
@@ -786,7 +786,7 @@ public:
 	* @param Str path YString to be concatenated onto the end of this
 	* @return reference to path
 	*/
-	FORCEINLINE YString& operator/=(const YString& Str)
+	FORCEINLINE FString& operator/=(const FString& Str)
 	{
 		PathAppend(Str.Data.GetData(), Str.Len());
 		return *this;
@@ -799,13 +799,13 @@ public:
 	* @param Rhs Path to concatenate.
 	* @return new YString of the path
 	*/
-	FORCEINLINE friend YString operator/(const YString& Lhs, const TCHAR* Rhs)
+	FORCEINLINE friend FString operator/(const FString& Lhs, const TCHAR* Rhs)
 	{
 		checkSlow(Rhs);
 
 		int32 StrLength = FCString::Strlen(Rhs);
 
-		YString Result(Lhs, StrLength + 1);
+		FString Result(Lhs, StrLength + 1);
 		Result.PathAppend(Rhs, StrLength);
 		return Result;
 	}
@@ -817,13 +817,13 @@ public:
 	* @param Rhs Path to concatenate.
 	* @return new YString of the path
 	*/
-	FORCEINLINE friend YString operator/(YString&& Lhs, const TCHAR* Rhs)
+	FORCEINLINE friend FString operator/(FString&& Lhs, const TCHAR* Rhs)
 	{
 		checkSlow(Rhs);
 
 		int32 StrLength = FCString::Strlen(Rhs);
 
-		YString Result(MoveTemp(Lhs), StrLength + 1);
+		FString Result(MoveTemp(Lhs), StrLength + 1);
 		Result.PathAppend(Rhs, StrLength);
 		return Result;
 	}
@@ -835,11 +835,11 @@ public:
 	* @param Rhs Path to concatenate.
 	* @return new YString of the path
 	*/
-	FORCEINLINE friend YString operator/(const YString& Lhs, const YString& Rhs)
+	FORCEINLINE friend FString operator/(const FString& Lhs, const FString& Rhs)
 	{
 		int32 StrLength = Rhs.Len();
 
-		YString Result(Lhs, StrLength + 1);
+		FString Result(Lhs, StrLength + 1);
 		Result.PathAppend(Rhs.Data.GetData(), StrLength);
 		return Result;
 	}
@@ -851,11 +851,11 @@ public:
 	* @param Rhs Path to concatenate.
 	* @return new YString of the path
 	*/
-	FORCEINLINE friend YString operator/(YString&& Lhs, const YString& Rhs)
+	FORCEINLINE friend FString operator/(FString&& Lhs, const FString& Rhs)
 	{
 		int32 StrLength = Rhs.Len();
 
-		YString Result(MoveTemp(Lhs), StrLength + 1);
+		FString Result(MoveTemp(Lhs), StrLength + 1);
 		Result.PathAppend(Rhs.Data.GetData(), StrLength);
 		return Result;
 	}
@@ -867,11 +867,11 @@ public:
 	* @param Rhs Path to concatenate.
 	* @return new YString of the path
 	*/
-	FORCEINLINE friend YString operator/(const TCHAR* Lhs, const YString& Rhs)
+	FORCEINLINE friend FString operator/(const TCHAR* Lhs, const FString& Rhs)
 	{
 		int32 StrLength = Rhs.Len();
 
-		YString Result(YString(Lhs), StrLength + 1);
+		FString Result(FString(Lhs), StrLength + 1);
 		Result.PathAppend(Rhs.Data.GetData(), Rhs.Len());
 		return Result;
 	}
@@ -884,7 +884,7 @@ public:
 	* @return true if the left string is lexicographically <= the right string, otherwise false
 	* @note case insensitive
 	*/
-	FORCEINLINE friend bool operator<=(const YString& Lhs, const YString& Rhs)
+	FORCEINLINE friend bool operator<=(const FString& Lhs, const FString& Rhs)
 	{
 		return FPlatformString::Stricmp(*Lhs, *Rhs) <= 0;
 	}
@@ -898,7 +898,7 @@ public:
 	* @note case insensitive
 	*/
 	template <typename CharType>
-	FORCEINLINE friend bool operator<=(const YString& Lhs, const CharType* Rhs)
+	FORCEINLINE friend bool operator<=(const FString& Lhs, const CharType* Rhs)
 	{
 		return FPlatformString::Stricmp(*Lhs, Rhs) <= 0;
 	}
@@ -912,7 +912,7 @@ public:
 	* @note case insensitive
 	*/
 	template <typename CharType>
-	FORCEINLINE friend bool operator<=(const CharType* Lhs, const YString& Rhs)
+	FORCEINLINE friend bool operator<=(const CharType* Lhs, const FString& Rhs)
 	{
 		return FPlatformString::Stricmp(Lhs, *Rhs) <= 0;
 	}
@@ -925,7 +925,7 @@ public:
 	* @return true if the left string is lexicographically < the right string, otherwise false
 	* @note case insensitive
 	*/
-	FORCEINLINE friend bool operator<(const YString& Lhs, const YString& Rhs)
+	FORCEINLINE friend bool operator<(const FString& Lhs, const FString& Rhs)
 	{
 		return FPlatformString::Stricmp(*Lhs, *Rhs) < 0;
 	}
@@ -939,7 +939,7 @@ public:
 	* @note case insensitive
 	*/
 	template <typename CharType>
-	FORCEINLINE friend bool operator<(const YString& Lhs, const CharType* Rhs)
+	FORCEINLINE friend bool operator<(const FString& Lhs, const CharType* Rhs)
 	{
 		return FPlatformString::Stricmp(*Lhs, Rhs) < 0;
 	}
@@ -953,7 +953,7 @@ public:
 	* @note case insensitive
 	*/
 	template <typename CharType>
-	FORCEINLINE friend bool operator<(const CharType* Lhs, const YString& Rhs)
+	FORCEINLINE friend bool operator<(const CharType* Lhs, const FString& Rhs)
 	{
 		return FPlatformString::Stricmp(Lhs, *Rhs) < 0;
 	}
@@ -966,7 +966,7 @@ public:
 	* @return true if the left string is lexicographically >= the right string, otherwise false
 	* @note case insensitive
 	*/
-	FORCEINLINE friend bool operator>=(const YString& Lhs, const YString& Rhs)
+	FORCEINLINE friend bool operator>=(const FString& Lhs, const FString& Rhs)
 	{
 		return FPlatformString::Stricmp(*Lhs, *Rhs) >= 0;
 	}
@@ -980,7 +980,7 @@ public:
 	* @note case insensitive
 	*/
 	template <typename CharType>
-	FORCEINLINE friend bool operator>=(const YString& Lhs, const CharType* Rhs)
+	FORCEINLINE friend bool operator>=(const FString& Lhs, const CharType* Rhs)
 	{
 		return FPlatformString::Stricmp(*Lhs, Rhs) >= 0;
 	}
@@ -994,7 +994,7 @@ public:
 	* @note case insensitive
 	*/
 	template <typename CharType>
-	FORCEINLINE friend bool operator>=(const CharType* Lhs, const YString& Rhs)
+	FORCEINLINE friend bool operator>=(const CharType* Lhs, const FString& Rhs)
 	{
 		return FPlatformString::Stricmp(Lhs, *Rhs) >= 0;
 	}
@@ -1007,7 +1007,7 @@ public:
 	* @return true if the left string is lexicographically > the right string, otherwise false
 	* @note case insensitive
 	*/
-	FORCEINLINE friend bool operator>(const YString& Lhs, const YString& Rhs)
+	FORCEINLINE friend bool operator>(const FString& Lhs, const FString& Rhs)
 	{
 		return FPlatformString::Stricmp(*Lhs, *Rhs) > 0;
 	}
@@ -1021,7 +1021,7 @@ public:
 	* @note case insensitive
 	*/
 	template <typename CharType>
-	FORCEINLINE friend bool operator>(const YString& Lhs, const CharType* Rhs)
+	FORCEINLINE friend bool operator>(const FString& Lhs, const CharType* Rhs)
 	{
 		return FPlatformString::Stricmp(*Lhs, Rhs) > 0;
 	}
@@ -1035,7 +1035,7 @@ public:
 	* @note case insensitive
 	*/
 	template <typename CharType>
-	FORCEINLINE friend bool operator>(const CharType* Lhs, const YString& Rhs)
+	FORCEINLINE friend bool operator>(const CharType* Lhs, const FString& Rhs)
 	{
 		return FPlatformString::Stricmp(Lhs, *Rhs) > 0;
 	}
@@ -1048,7 +1048,7 @@ public:
 	* @return true if the left string is lexicographically == the right string, otherwise false
 	* @note case insensitive
 	*/
-	FORCEINLINE friend bool operator==(const YString& Lhs, const YString& Rhs)
+	FORCEINLINE friend bool operator==(const FString& Lhs, const FString& Rhs)
 	{
 		return FPlatformString::Stricmp(*Lhs, *Rhs) == 0;
 	}
@@ -1062,7 +1062,7 @@ public:
 	* @note case insensitive
 	*/
 	template <typename CharType>
-	FORCEINLINE friend bool operator==(const YString& Lhs, const CharType* Rhs)
+	FORCEINLINE friend bool operator==(const FString& Lhs, const CharType* Rhs)
 	{
 		return FPlatformString::Stricmp(*Lhs, Rhs) == 0;
 	}
@@ -1076,7 +1076,7 @@ public:
 	* @note case insensitive
 	*/
 	template <typename CharType>
-	FORCEINLINE friend bool operator==(const CharType* Lhs, const YString& Rhs)
+	FORCEINLINE friend bool operator==(const CharType* Lhs, const FString& Rhs)
 	{
 		return FPlatformString::Stricmp(Lhs, *Rhs) == 0;
 	}
@@ -1089,7 +1089,7 @@ public:
 	* @return true if the left string is lexicographically != the right string, otherwise false
 	* @note case insensitive
 	*/
-	FORCEINLINE friend bool operator!=(const YString& Lhs, const YString& Rhs)
+	FORCEINLINE friend bool operator!=(const FString& Lhs, const FString& Rhs)
 	{
 		return FPlatformString::Stricmp(*Lhs, *Rhs) != 0;
 	}
@@ -1103,7 +1103,7 @@ public:
 	* @note case insensitive
 	*/
 	template <typename CharType>
-	FORCEINLINE friend bool operator!=(const YString& Lhs, const CharType* Rhs)
+	FORCEINLINE friend bool operator!=(const FString& Lhs, const CharType* Rhs)
 	{
 		return FPlatformString::Stricmp(*Lhs, Rhs) != 0;
 	}
@@ -1117,7 +1117,7 @@ public:
 	* @note case insensitive
 	*/
 	template <typename CharType>
-	FORCEINLINE friend bool operator!=(const CharType* Lhs, const YString& Rhs)
+	FORCEINLINE friend bool operator!=(const CharType* Lhs, const FString& Rhs)
 	{
 		return FPlatformString::Stricmp(Lhs, *Rhs) != 0;
 	}
@@ -1129,37 +1129,37 @@ public:
 	}
 
 	/** @return the left most given number of characters */
-	FORCEINLINE YString Left(int32 Count) const
+	FORCEINLINE FString Left(int32 Count) const
 	{
-		return YString(YMath::Clamp(Count, 0, Len()), **this);
+		return FString(YMath::Clamp(Count, 0, Len()), **this);
 	}
 
 	/** @return the left most characters from the string chopping the given number of characters from the end */
-	FORCEINLINE YString LeftChop(int32 Count) const
+	FORCEINLINE FString LeftChop(int32 Count) const
 	{
-		return YString(YMath::Clamp(Len() - Count, 0, Len()), **this);
+		return FString(YMath::Clamp(Len() - Count, 0, Len()), **this);
 	}
 
 	/** @return the string to the right of the specified location, counting back from the right (end of the word). */
-	FORCEINLINE YString Right(int32 Count) const
+	FORCEINLINE FString Right(int32 Count) const
 	{
-		return YString(**this + Len() - YMath::Clamp(Count, 0, Len()));
+		return FString(**this + Len() - YMath::Clamp(Count, 0, Len()));
 	}
 
 	/** @return the string to the right of the specified location, counting forward from the left (from the beginning of the word). */
-	FORCEINLINE YString RightChop(int32 Count) const
+	FORCEINLINE FString RightChop(int32 Count) const
 	{
-		return YString(**this + Len() - YMath::Clamp(Len() - Count, 0, Len()));
+		return FString(**this + Len() - YMath::Clamp(Len() - Count, 0, Len()));
 	}
 
 	/** @return the substring from Start position for Count characters. */
-	FORCEINLINE YString Mid(int32 Start, int32 Count = MAX_int32) const
+	FORCEINLINE FString Mid(int32 Start, int32 Count = MAX_int32) const
 	{
 		check(Count >= 0);
 		uint32 End = Start + Count;
 		Start = YMath::Clamp((uint32)Start, (uint32)0, (uint32)Len());
 		End = YMath::Clamp((uint32)End, (uint32)Start, (uint32)Len());
-		return YString(End - Start, **this + Start);
+		return FString(End - Start, **this + Start);
 	}
 
 	/**
@@ -1183,7 +1183,7 @@ public:
 	* @param SearchCase		Indicates whether the search is case sensitive or not ( defaults to ESearchCase::IgnoreCase )
 	* @param SearchDir			Indicates whether the search starts at the begining or at the end ( defaults to ESearchDir::FromStart )
 	*/
-	FORCEINLINE int32 Find(const YString& SubStr, ESearchCase::Type SearchCase = ESearchCase::IgnoreCase,
+	FORCEINLINE int32 Find(const FString& SubStr, ESearchCase::Type SearchCase = ESearchCase::IgnoreCase,
 		ESearchDir::Type SearchDir = ESearchDir::FromStart, int32 StartPosition = INDEX_NONE) const
 	{
 		return Find(*SubStr, SearchCase, SearchDir, StartPosition);
@@ -1211,7 +1211,7 @@ public:
 	* @param SearchDir			Indicates whether the search starts at the begining or at the end ( defaults to ESearchDir::FromStart )
 	* @return					Returns whether the string contains the substring
 	**/
-	FORCEINLINE bool Contains(const YString& SubStr, ESearchCase::Type SearchCase = ESearchCase::IgnoreCase,
+	FORCEINLINE bool Contains(const FString& SubStr, ESearchCase::Type SearchCase = ESearchCase::IgnoreCase,
 		ESearchDir::Type SearchDir = ESearchDir::FromStart) const
 	{
 		return Find(*SubStr, SearchCase, SearchDir) != INDEX_NONE;
@@ -1277,7 +1277,7 @@ public:
 	* @param SearchCase 	Whether or not the comparison should ignore case
 	* @return true if this string is lexicographically equivalent to the other, otherwise false
 	*/
-	FORCEINLINE bool Equals(const YString& Other, ESearchCase::Type SearchCase = ESearchCase::CaseSensitive) const
+	FORCEINLINE bool Equals(const FString& Other, ESearchCase::Type SearchCase = ESearchCase::CaseSensitive) const
 	{
 		if (SearchCase == ESearchCase::CaseSensitive)
 		{
@@ -1296,7 +1296,7 @@ public:
 	* @param SearchCase 	Whether or not the comparison should ignore case
 	* @return 0 if equal, negative if less than, positive if greater than
 	*/
-	FORCEINLINE int32 Compare(const YString& Other, ESearchCase::Type SearchCase = ESearchCase::CaseSensitive) const
+	FORCEINLINE int32 Compare(const FString& Other, ESearchCase::Type SearchCase = ESearchCase::CaseSensitive) const
 	{
 		if (SearchCase == ESearchCase::CaseSensitive)
 		{
@@ -1318,7 +1318,7 @@ public:
 	* @param SearchDir			Indicates whether the search starts at the begining or at the end ( defaults to ESearchDir::FromStart )
 	* @return true if string is split, otherwise false
 	*/
-	bool Split(const YString& InS, YString* LeftS, YString* RightS, ESearchCase::Type SearchCase = ESearchCase::IgnoreCase,
+	bool Split(const FString& InS, FString* LeftS, FString* RightS, ESearchCase::Type SearchCase = ESearchCase::IgnoreCase,
 		ESearchDir::Type SearchDir = ESearchDir::FromStart) const
 	{
 		int32 InPos = Find(InS, SearchCase, SearchDir);
@@ -1332,22 +1332,22 @@ public:
 	}
 
 	/** @return a new string with the characters of this converted to uppercase */
-	YString ToUpper() const;
+	FString ToUpper() const;
 
 	/** Converts all characters in this string to uppercase */
 	void ToUpperInline();
 
 	/** @return a new string with the characters of this converted to lowercase */
-	YString ToLower() const;
+	FString ToLower() const;
 
 	/** Converts all characters in this string to lowercase */
 	void ToLowerInline();
 
 	/** Pad the left of this string for ChCount characters */
-	YString LeftPad(int32 ChCount) const;
+	FString LeftPad(int32 ChCount) const;
 
 	/** Pad the right of this string for ChCount characters */
-	YString RightPad(int32 ChCount) const;
+	FString RightPad(int32 ChCount) const;
 
 	/** @return true if the string only contains numeric characters */
 	bool IsNumeric() const;
@@ -1360,7 +1360,7 @@ public:
 	*
 	* @returns YString object that was constructed using format and additional parameters.
 	*/
-	VARARG_DECL(static YString, static YString, return, Printf, VARARG_NONE, const TCHAR*, VARARG_NONE, VARARG_NONE);
+	VARARG_DECL(static FString, static FString, return, Printf, VARARG_NONE, const TCHAR*, VARARG_NONE, VARARG_NONE);
 
 	/**
 	* Format the specified string using the specified arguments. Replaces instances of { Argument } with keys in the map matching 'Argument'
@@ -1368,7 +1368,7 @@ public:
 	* @param InNamedArguments		A map of named arguments that match the tokens specified in InExpression
 	* @return A string containing the formatted text
 	*/
-	static YString Format(const TCHAR* InFormatString, const TMap<YString, YStringFormatArg>& InNamedArguments);
+	static FString Format(const TCHAR* InFormatString, const TMap<FString, FStringFormatArg>& InNamedArguments);
 
 	/**
 	* Format the specified string using the specified arguments. Replaces instances of {0} with indices from the given array matching the index specified in the token
@@ -1376,10 +1376,10 @@ public:
 	* @param InOrderedArguments	An array of ordered arguments that match the tokens specified in InExpression
 	* @return A string containing the formatted text
 	*/
-	static YString Format(const TCHAR* InFormatString, const TArray<YStringFormatArg>& InOrderedArguments);
+	static FString Format(const TCHAR* InFormatString, const TArray<FStringFormatArg>& InOrderedArguments);
 
 	// @return string with Ch character
-	static YString Chr(TCHAR Ch);
+	static FString Chr(TCHAR Ch);
 
 	/**
 	* Returns a string that is full of a variable number of characters
@@ -1389,7 +1389,7 @@ public:
 	*
 	* @return The string of NumCharacters characters.
 	*/
-	static YString ChrN(int32 NumCharacters, TCHAR Char);
+	static FString ChrN(int32 NumCharacters, TCHAR Char);
 
 	/**
 	* Serializes the string.
@@ -1399,7 +1399,7 @@ public:
 	*
 	* @return Reference to the Archive after serialization.
 	*/
-	friend CORE_API FArchive& operator<<(FArchive& Ar, YString& S);
+	friend CORE_API FArchive& operator<<(FArchive& Ar, FString& S);
 
 
 	/**
@@ -1416,7 +1416,7 @@ public:
 	* @param SearchCase		Indicates whether the search is case sensitive or not ( defaults to ESearchCase::IgnoreCase )
 	* @return true if this string begins with specified text, false otherwise
 	*/
-	bool StartsWith(const YString& InPrefix, ESearchCase::Type SearchCase = ESearchCase::IgnoreCase) const;
+	bool StartsWith(const FString& InPrefix, ESearchCase::Type SearchCase = ESearchCase::IgnoreCase) const;
 
 	/**
 	* Test whether this string ends with given string.
@@ -1432,7 +1432,7 @@ public:
 	* @param SearchCase		Indicates whether the search is case sensitive or not ( defaults to ESearchCase::IgnoreCase )
 	* @return true if this string ends with specified text, false otherwise
 	*/
-	bool EndsWith(const YString& InSuffix, ESearchCase::Type SearchCase = ESearchCase::IgnoreCase) const;
+	bool EndsWith(const FString& InSuffix, ESearchCase::Type SearchCase = ESearchCase::IgnoreCase) const;
 
 	/**
 	* Searches this string for a given wild card
@@ -1442,17 +1442,17 @@ public:
 	* @return true if this string matches the *?-type wildcard given.
 	* @warning This is a simple, SLOW routine. Use with caution
 	*/
-	bool MatchesWildcard(const YString& Wildcard, ESearchCase::Type SearchCase = ESearchCase::IgnoreCase) const;
+	bool MatchesWildcard(const FString& Wildcard, ESearchCase::Type SearchCase = ESearchCase::IgnoreCase) const;
 
 	/**
 	* Removes whitespace characters from the front of this string.
 	*/
-	YString Trim();
+	FString Trim();
 
 	/**
 	* Removes trailing whitespace characters
 	*/
-	YString TrimTrailing(void);
+	FString TrimTrailing(void);
 
 	/**
 	* Trims the inner array after the null terminator.
@@ -1462,7 +1462,7 @@ public:
 	/**
 	* Returns a copy of this string with wrapping quotation marks removed.
 	*/
-	YString TrimQuotes(bool* bQuotesRemoved = nullptr) const;
+	FString TrimQuotes(bool* bQuotesRemoved = nullptr) const;
 
 	/**
 	* Breaks up a delimited string into elements of a string array.
@@ -1473,7 +1473,7 @@ public:
 	*
 	* @return	The number of elements in InArray
 	*/
-	int32 ParseIntoArray(TArray<YString>& OutArray, const TCHAR* pchDelim, bool InCullEmpty = true) const;
+	int32 ParseIntoArray(TArray<FString>& OutArray, const TCHAR* pchDelim, bool InCullEmpty = true) const;
 
 	/**
 	* Breaks up a delimited string into elements of a string array, using any whitespace and an
@@ -1485,7 +1485,7 @@ public:
 	*
 	* @return	The number of elements in InArray
 	*/
-	int32 ParseIntoArrayWS(TArray<YString>& OutArray, const TCHAR* pchExtraDelim = nullptr, bool InCullEmpty = true) const;
+	int32 ParseIntoArrayWS(TArray<FString>& OutArray, const TCHAR* pchExtraDelim = nullptr, bool InCullEmpty = true) const;
 
 	/**
 	* Breaks up a delimited string into elements of a string array, using line ending characters
@@ -1495,7 +1495,7 @@ public:
 	*
 	* @return	The number of elements in InArray
 	*/
-	int32 ParseIntoArrayLines(TArray<YString>& OutArray, bool InCullEmpty = true) const;
+	int32 ParseIntoArrayLines(TArray<FString>& OutArray, bool InCullEmpty = true) const;
 
 	/**
 	* Breaks up a delimited string into elements of a string array, using the given delimiters
@@ -1507,7 +1507,7 @@ public:
 	*
 	* @return	The number of elements in InArray
 	*/
-	int32 ParseIntoArray(TArray<YString>& OutArray, const TCHAR** DelimArray, int32 NumDelims, bool InCullEmpty = true) const;
+	int32 ParseIntoArray(TArray<FString>& OutArray, const TCHAR** DelimArray, int32 NumDelims, bool InCullEmpty = true) const;
 
 	/**
 	* Takes an array of strings and removes any zero length entries.
@@ -1516,12 +1516,12 @@ public:
 	*
 	* @return	The number of elements left in InArray
 	*/
-	static int32 CullArray(TArray<YString>* InArray);
+	static int32 CullArray(TArray<FString>* InArray);
 
 	/**
 	* Returns a copy of this string, with the characters in reverse order
 	*/
-	YString Reverse() const;
+	FString Reverse() const;
 
 	/**
 	* Reverses the order of characters in this string
@@ -1536,7 +1536,7 @@ public:
 	* @param SearchCase	Indicates whether the search is case sensitive or not ( defaults to ESearchCase::IgnoreCase )
 	* @return a copy of this string with the replacement made
 	*/
-	YString Replace(const TCHAR* From, const TCHAR* To, ESearchCase::Type SearchCase = ESearchCase::IgnoreCase) const;
+	FString Replace(const TCHAR* From, const TCHAR* To, ESearchCase::Type SearchCase = ESearchCase::IgnoreCase) const;
 
 	/**
 	* Replace all occurrences of SearchText with ReplacementText in this string.
@@ -1552,7 +1552,7 @@ public:
 	/**
 	* Returns a copy of this string with all quote marks escaped (unless the quote is already escaped)
 	*/
-	YString ReplaceQuotesWithEscapedQuotes() const;
+	FString ReplaceQuotesWithEscapedQuotes() const;
 
 	/**
 	* Replaces certain characters with the "escaped" version of that character (i.e. replaces "\n" with "\\n").
@@ -1562,24 +1562,24 @@ public:
 	*
 	* @return	a string with all control characters replaced by the escaped version.
 	*/
-	YString ReplaceCharWithEscapedChar(const TArray<TCHAR>* Chars = nullptr) const;
+	FString ReplaceCharWithEscapedChar(const TArray<TCHAR>* Chars = nullptr) const;
 
 	/**
 	* Removes the escape backslash for all supported characters, replacing the escape and character with the non-escaped version.  (i.e.
 	* replaces "\\n" with "\n".  Counterpart to ReplaceCharWithEscapedChar().
 	* @return copy of this string with replacement made
 	*/
-	YString ReplaceEscapedCharWithChar(const TArray<TCHAR>* Chars = nullptr) const;
+	FString ReplaceEscapedCharWithChar(const TArray<TCHAR>* Chars = nullptr) const;
 
 	/**
 	* Replaces all instances of '\t' with TabWidth number of spaces
 	* @param InSpacesPerTab - Number of spaces that a tab represents
 	* @return copy of this string with replacement made
 	*/
-	YString ConvertTabsToSpaces(const int32 InSpacesPerTab);
+	FString ConvertTabsToSpaces(const int32 InSpacesPerTab);
 
 	// Takes the number passed in and formats the string in comma format ( 12345 becomes "12,345")
-	static YString FormatAsNumber(int32 InNumber);
+	static FString FormatAsNumber(int32 InNumber);
 
 	// To allow more efficient memory handling, automatically adds one for the string termination.
 	FORCEINLINE void Reserve(const uint32 CharacterCount)
@@ -1598,9 +1598,9 @@ public:
 
 
 	/** Converts an integer to a string. */
-	static FORCEINLINE YString FromInt(int32 Num)
+	static FORCEINLINE FString FromInt(int32 Num)
 	{
-		YString Ret;
+		FString Ret;
 		Ret.AppendInt(Num);
 		return Ret;
 	}
@@ -1625,7 +1625,7 @@ public:
 	*
 	* @return the blob in string form
 	*/
-	static YString FromBlob(const uint8* SrcBuffer, const uint32 SrcSize);
+	static FString FromBlob(const uint8* SrcBuffer, const uint32 SrcSize);
 
 	/**
 	* Converts a string into a buffer
@@ -1635,7 +1635,7 @@ public:
 	*
 	* @return true if the conversion happened, false otherwise
 	*/
-	static bool ToBlob(const YString& Source, uint8* DestBuffer, const uint32 DestSize);
+	static bool ToBlob(const FString& Source, uint8* DestBuffer, const uint32 DestSize);
 
 	/**
 	* Converts a buffer to a string by hex-ifying the elements
@@ -1645,7 +1645,7 @@ public:
 	*
 	* @return the blob in string form
 	*/
-	static YString FromHexBlob(const uint8* SrcBuffer, const uint32 SrcSize);
+	static FString FromHexBlob(const uint8* SrcBuffer, const uint32 SrcSize);
 
 	/**
 	* Converts a string into a buffer
@@ -1655,7 +1655,7 @@ public:
 	*
 	* @return true if the conversion happened, false otherwise
 	*/
-	static bool ToHexBlob(const YString& Source, uint8* DestBuffer, const uint32 DestSize);
+	static bool ToHexBlob(const FString& Source, uint8* DestBuffer, const uint32 DestSize);
 
 	/**
 	* Converts a float string with the trailing zeros stripped
@@ -1664,7 +1664,7 @@ public:
 	* @param	InFloat		The float to sanitize
 	* @returns sanitized string version of float
 	*/
-	static YString SanitizeFloat(double InFloat);
+	static FString SanitizeFloat(double InFloat);
 
 	/**
 	* Joins an array of 'something that can be concatentated to strings with +=' together into a single string with separators.
@@ -1675,9 +1675,9 @@ public:
 	* @return	The final, joined, separated string.
 	*/
 	template <typename T, typename Allocator>
-	static YString Join(const TArray<T, Allocator>& Array, const TCHAR* Separator)
+	static FString Join(const TArray<T, Allocator>& Array, const TCHAR* Separator)
 	{
-		YString Result;
+		FString Result;
 		bool    First = true;
 		for (const T& Element : Array)
 		{
@@ -1698,37 +1698,37 @@ public:
 };
 
 template<>
-struct TContainerTraits<YString> : public TContainerTraitsBase<YString>
+struct TContainerTraits<FString> : public TContainerTraitsBase<FString>
 {
-	enum { MoveWillEmptyContainer = TContainerTraits<YString::DataType>::MoveWillEmptyContainer };
+	enum { MoveWillEmptyContainer = TContainerTraits<FString::DataType>::MoveWillEmptyContainer };
 };
 
-template<> struct TIsZeroConstructType<YString> { enum { Value = true }; };
-Expose_TNameOf(YString)
+template<> struct TIsZeroConstructType<FString> { enum { Value = true }; };
+Expose_TNameOf(FString)
 
 template <>
-struct TIsContiguousContainer<YString>
+struct TIsContiguousContainer<FString>
 {
 	enum { Value = true };
 };
 
-inline TCHAR* GetData(YString& String)
+inline TCHAR* GetData(FString& String)
 {
 	return String.GetCharArray().GetData();
 }
 
-inline const TCHAR* GetData(const YString& String)
+inline const TCHAR* GetData(const FString& String)
 {
 	return String.GetCharArray().GetData();
 }
 
-inline SIZE_T GetNum(const YString& String)
+inline SIZE_T GetNum(const FString& String)
 {
 	return String.GetCharArray().Num();
 }
 
 /** Case insensitive string hash function. */
-FORCEINLINE uint32 GetTypeHash(const YString& S)
+FORCEINLINE uint32 GetTypeHash(const FString& S)
 {
 	return FCrc::Strihash_DEPRECATED(*S);
 }
@@ -1739,9 +1739,9 @@ FORCEINLINE uint32 GetTypeHash(const YString& S)
 * @param Count number of bytes to convert
 * @return Valid string representing bytes.
 */
-inline YString BytesToString(const uint8* In, int32 Count)
+inline FString BytesToString(const uint8* In, int32 Count)
 {
-	YString Result;
+	FString Result;
 	Result.Empty(Count);
 
 	while (Count)
@@ -1765,7 +1765,7 @@ inline YString BytesToString(const uint8* In, int32 Count)
 * @param MaxBufferSize	Max buffer size of the OutBytes array, to prevent overflow
 * @return	The number of bytes copied
 */
-inline int32 StringToBytes(const YString& String, uint8* OutBytes, int32 MaxBufferSize)
+inline int32 StringToBytes(const FString& String, uint8* OutBytes, int32 MaxBufferSize)
 {
 	int32 NumBytes = 0;
 	const TCHAR* CharPos = *String;
@@ -1794,7 +1794,7 @@ inline TCHAR NibbleToTChar(uint8 Num)
 * @param In byte value to convert
 * @param Result out hex value output
 */
-inline void ByteToHex(uint8 In, YString& Result)
+inline void ByteToHex(uint8 In, FString& Result)
 {
 	Result += NibbleToTChar(In >> 4);
 	Result += NibbleToTChar(In & 15);
@@ -1806,9 +1806,9 @@ inline void ByteToHex(uint8 In, YString& Result)
 * @param Count number of bytes to convert
 * @return Hex value in string.
 */
-inline YString BytesToHex(const uint8* In, int32 Count)
+inline FString BytesToHex(const uint8* In, int32 Count)
 {
-	YString Result;
+	FString Result;
 	Result.Empty(Count * 2);
 
 	while (Count)
@@ -1854,7 +1854,7 @@ inline const uint8 TCharToNibble(const TCHAR Char)
 * @param OutBytes		Ptr to memory must be preallocated large enough
 * @return	The number of bytes copied
 */
-inline int32 HexToBytes(const YString& HexString, uint8* OutBytes)
+inline int32 HexToBytes(const FString& HexString, uint8* OutBytes)
 {
 	int32 NumBytes = 0;
 	const bool bPadNibble = (HexString.Len() % 2) == 1;
@@ -1896,50 +1896,50 @@ namespace Lex
 	inline void FromString(float& OutValue, const TCHAR* Buffer) { OutValue = FCString::Atof(Buffer); }
 	inline void FromString(double& OutValue, const TCHAR* Buffer) { OutValue = FCString::Atod(Buffer); }
 	inline void FromString(bool& OutValue, const TCHAR* Buffer) { OutValue = FCString::ToBool(Buffer); }
-	inline void FromString(YString& OutValue, const TCHAR* Buffer) { OutValue = Buffer; }
+	inline void FromString(FString& OutValue, const TCHAR* Buffer) { OutValue = Buffer; }
 
 	/** Convert numeric types to a string */
 	template<typename T>
-	typename TEnableIf<TIsArithmetic<T>::Value, YString>::Type
+	typename TEnableIf<TIsArithmetic<T>::Value, FString>::Type
 		ToString(const T& Value)
 	{
-		return YString::Printf(TFormatSpecifier<T>::GetFormatSpecifier(), Value);
+		return FString::Printf(TFormatSpecifier<T>::GetFormatSpecifier(), Value);
 	}
 
 	template<typename CharType>
-	typename TEnableIf<TIsCharType<CharType>::Value, YString>::Type
+	typename TEnableIf<TIsCharType<CharType>::Value, FString>::Type
 		ToString(const CharType* Ptr)
 	{
-		return YString(Ptr);
+		return FString(Ptr);
 	}
 
-	inline YString ToString(bool Value)
+	inline FString ToString(bool Value)
 	{
 		return Value ? TEXT("true") : TEXT("false");
 	}
 
-	FORCEINLINE YString ToString(YString&& Str)
+	FORCEINLINE FString ToString(FString&& Str)
 	{
 		return MoveTemp(Str);
 	}
 
-	FORCEINLINE YString ToString(const YString& Str)
+	FORCEINLINE FString ToString(const FString& Str)
 	{
 		return Str;
 	}
 
 	/** Helper template to convert to sanitized strings */
 	template<typename T>
-	YString ToSanitizedString(const T& Value)
+	FString ToSanitizedString(const T& Value)
 	{
 		return ToString(Value);
 	}
 
 	/** Specialized for floats */
 	template<>
-	inline YString ToSanitizedString<float>(const float& Value)
+	inline FString ToSanitizedString<float>(const float& Value)
 	{
-		return YString::SanitizeFloat(Value);
+		return FString::SanitizeFloat(Value);
 	}
 
 
@@ -1973,8 +1973,8 @@ namespace LexicalConversion = Lex;
 template<typename T>
 struct TTypeToString
 {
-	static YString ToString(const T& Value) { return Lex::ToString(Value); }
-	static YString ToSanitizedString(const T& Value) { return Lex::ToSanitizedString(Value); }
+	static FString ToString(const T& Value) { return Lex::ToString(Value); }
+	static FString ToSanitizedString(const T& Value) { return Lex::ToSanitizedString(Value); }
 };
 template<typename T>
 struct TTypeFromString
@@ -1989,17 +1989,17 @@ Special archivers.
 //
 // String output device.
 //
-class YStringOutputDevice : public YString, public FOutputDevice
+class FStringOutputDevice : public FString, public FOutputDevice
 {
 public:
-	YStringOutputDevice(const TCHAR* OutputDeviceName = TEXT("")) :
-		YString(OutputDeviceName)
+	FStringOutputDevice(const TCHAR* OutputDeviceName = TEXT("")) :
+		FString(OutputDeviceName)
 	{
 		bAutoEmitLineTerminator = false;
 	}
 	virtual void Serialize(const TCHAR* InData, ELogVerbosity::Type Verbosity, const class FName& Category) override
 	{
-		YString::operator+=((TCHAR*)InData);
+		FString::operator+=((TCHAR*)InData);
 		if (bAutoEmitLineTerminator)
 		{
 			*this += LINE_TERMINATOR;
@@ -2008,57 +2008,57 @@ public:
 
 #if PLATFORM_COMPILER_HAS_DEFAULTED_FUNCTIONS
 
-	YStringOutputDevice(YStringOutputDevice&&) = default;
-	YStringOutputDevice(const YStringOutputDevice&) = default;
-	YStringOutputDevice& operator=(YStringOutputDevice&&) = default;
-	YStringOutputDevice& operator=(const YStringOutputDevice&) = default;
+	FStringOutputDevice(FStringOutputDevice&&) = default;
+	FStringOutputDevice(const FStringOutputDevice&) = default;
+	FStringOutputDevice& operator=(FStringOutputDevice&&) = default;
+	FStringOutputDevice& operator=(const FStringOutputDevice&) = default;
 
 #else
 
-	FORCEINLINE YStringOutputDevice(YStringOutputDevice&& Other)
-		: YString((YString&&)Other)
+	FORCEINLINE FStringOutputDevice(FStringOutputDevice&& Other)
+		: FString((FString&&)Other)
 		, FOutputDevice((FOutputDevice&&)Other)
 	{
 	}
 
-	FORCEINLINE YStringOutputDevice(const YStringOutputDevice& Other)
-		: YString((const YString&)Other)
+	FORCEINLINE FStringOutputDevice(const FStringOutputDevice& Other)
+		: FString((const FString&)Other)
 		, FOutputDevice((const FOutputDevice&)Other)
 	{
 	}
 
-	FORCEINLINE YStringOutputDevice& operator=(YStringOutputDevice&& Other)
+	FORCEINLINE FStringOutputDevice& operator=(FStringOutputDevice&& Other)
 	{
-		(YString&)*this = (YString&&)Other;
+		(FString&)*this = (FString&&)Other;
 		(FOutputDevice&)*this = (FOutputDevice&&)Other;
 		return *this;
 	}
 
-	FORCEINLINE YStringOutputDevice& operator=(const YStringOutputDevice& Other)
+	FORCEINLINE FStringOutputDevice& operator=(const FStringOutputDevice& Other)
 	{
-		(YString&)*this = (const YString&)Other;
+		(FString&)*this = (const FString&)Other;
 		(FOutputDevice&)*this = (const FOutputDevice&)Other;
 		return *this;
 	}
 
 #endif
 	// Make += operator virtual.
-	virtual YString& operator+=(const YString& Other)
+	virtual FString& operator+=(const FString& Other)
 	{
-		return YString::operator+=(Other);
+		return FString::operator+=(Other);
 	}
 };
 
 //
 // String output device.
 //
-class YStringOutputDeviceCountLines : public YStringOutputDevice
+class FStringOutputDeviceCountLines : public FStringOutputDevice
 {
-	typedef YStringOutputDevice Super;
+	typedef FStringOutputDevice Super;
 
 	int32 LineCount;
 public:
-	YStringOutputDeviceCountLines(const TCHAR* OutputDeviceName = TEXT(""))
+	FStringOutputDeviceCountLines(const TCHAR* OutputDeviceName = TEXT(""))
 		: Super(OutputDeviceName)
 		, LineCount(0)
 	{}
@@ -2087,9 +2087,9 @@ public:
 	/**
 	* Appends other YStringOutputDeviceCountLines object to this one.
 	*/
-	virtual YStringOutputDeviceCountLines& operator+=(const YStringOutputDeviceCountLines& Other)
+	virtual FStringOutputDeviceCountLines& operator+=(const FStringOutputDeviceCountLines& Other)
 	{
-		YString::operator+=(Other);
+		FString::operator+=(Other);
 
 		LineCount += Other.GetLineCount();
 
@@ -2100,7 +2100,7 @@ public:
 	* Appends other YString (as well as it's specializations like YStringOutputDevice)
 	* object to this.
 	*/
-	virtual YString& operator+=(const YString& Other) override
+	virtual FString& operator+=(const FString& Other) override
 	{
 		Log(Other);
 
@@ -2114,18 +2114,18 @@ public:
 
 #if PLATFORM_COMPILER_HAS_DEFAULTED_FUNCTIONS
 
-	YStringOutputDeviceCountLines(const YStringOutputDeviceCountLines&) = default;
-	YStringOutputDeviceCountLines& operator=(const YStringOutputDeviceCountLines&) = default;
+	FStringOutputDeviceCountLines(const FStringOutputDeviceCountLines&) = default;
+	FStringOutputDeviceCountLines& operator=(const FStringOutputDeviceCountLines&) = default;
 
 #else
 
-	FORCEINLINE YStringOutputDeviceCountLines(const YStringOutputDeviceCountLines& Other)
+	FORCEINLINE FStringOutputDeviceCountLines(const FStringOutputDeviceCountLines& Other)
 		: Super((const Super&)Other)
 		, LineCount(Other.LineCount)
 	{
 	}
 
-	FORCEINLINE YStringOutputDeviceCountLines& operator=(const YStringOutputDeviceCountLines& Other)
+	FORCEINLINE FStringOutputDeviceCountLines& operator=(const FStringOutputDeviceCountLines& Other)
 	{
 		(Super&)*this = (const Super&)Other;
 		LineCount = Other.LineCount;
@@ -2134,14 +2134,14 @@ public:
 
 #endif
 
-	FORCEINLINE YStringOutputDeviceCountLines(YStringOutputDeviceCountLines&& Other)
+	FORCEINLINE FStringOutputDeviceCountLines(FStringOutputDeviceCountLines&& Other)
 		: Super((Super&&)Other)
 		, LineCount(Other.LineCount)
 	{
 		Other.LineCount = 0;
 	}
 
-	FORCEINLINE YStringOutputDeviceCountLines& operator=(YStringOutputDeviceCountLines&& Other)
+	FORCEINLINE FStringOutputDeviceCountLines& operator=(FStringOutputDeviceCountLines&& Other)
 	{
 		if (this != &Other)
 		{
@@ -2162,6 +2162,6 @@ public:
 * @param StartSearch       The index to start searching at
 * @return the index in the given string of the closing parenthesis
 */
-CORE_API int32 FindMatchingClosingParenthesis(const YString& TargetString, const int32 StartSearch = 0);
+CORE_API int32 FindMatchingClosingParenthesis(const FString& TargetString, const int32 StartSearch = 0);
 
 #include "Misc/StringFormatArg.h"

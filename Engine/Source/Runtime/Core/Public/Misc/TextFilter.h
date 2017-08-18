@@ -6,7 +6,7 @@
 #include "Misc/AssertionMacros.h"
 #include "Templates/RemoveReference.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Templates/SharedPointer.h"
 #include "Delegates/Delegate.h"
 #include "Internationalization/Text.h"
@@ -22,7 +22,7 @@ class TTextFilter : public IFilter< ItemType >, public TSharedFromThis< TTextFil
 public:
 
 	/**	Defines a function signature for functions used to transform an Item into an array of FStrings */
-	DECLARE_DELEGATE_TwoParams( FItemToStringArray, ItemType, OUT TArray< YString >& );
+	DECLARE_DELEGATE_TwoParams( FItemToStringArray, ItemType, OUT TArray< FString >& );
 
 	/** Defines a function signature used to test a complex expression for an Item */
 	DECLARE_DELEGATE_RetVal_FiveParams( bool, FItemTestComplexExpression, ItemType, const FName& /*InKey*/, const FTextFilterString& /*InValue*/, ETextFilterComparisonOperation /*InComparisonOperation*/, ETextFilterTextComparisonMode /*InTextComparisonMode*/ );
@@ -118,7 +118,7 @@ private:
 
 		virtual bool TestBasicStringExpression(const FTextFilterString& InValue, const ETextFilterTextComparisonMode InTextComparisonMode) const override
 		{
-			for (const YString& BasicString : ItemBasicStrings)
+			for (const FString& BasicString : ItemBasicStrings)
 			{
 				if (TextFilterUtils::TestBasicStringExpression(BasicString, InValue, InTextComparisonMode))
 				{
@@ -148,7 +148,7 @@ private:
 		ItemTypePtr ItemPtr;
 
 		/** The strings extracted from the item we're currently filtering */
-		TArray<YString> ItemBasicStrings;
+		TArray<FString> ItemBasicStrings;
 	};
 
 	/** Transient context data, used when calling PassesFilter. Kept around to minimize re-allocations between multiple calls to PassesFilter */

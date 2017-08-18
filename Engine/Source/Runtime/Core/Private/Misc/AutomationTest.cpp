@@ -34,17 +34,17 @@ void FAutomationTestFramework::FAutomationTestFeedbackContext::Serialize( const 
 			// If warnings should be treated as errors, log the warnings as such in the current unit test
 			if ( TreatWarningsAsErrors )
 			{
-				CurTest->AddError(YString(V), 2);
+				CurTest->AddError(FString(V), 2);
 			}
 			else
 			{
-				CurTest->AddWarning( YString( V ) );
+				CurTest->AddWarning( FString( V ) );
 			}
 		}
 		// Errors
 		else if ( Verbosity == ELogVerbosity::Error )
 		{
-			CurTest->AddError(YString(V), 2);
+			CurTest->AddError(FString(V), 2);
 		}
 		// Log items
 		else
@@ -54,8 +54,8 @@ void FAutomationTestFramework::FAutomationTestFeedbackContext::Serialize( const 
 			// data capture in a Test config, you'll want to call the AddAnalyticsItemToCurrentTest() function instead of
 			// using this log interception stuff.
 
-			YString LogString = YString(V);
-			YString AnalyticsString = TEXT("AUTOMATIONANALYTICS");
+			FString LogString = FString(V);
+			FString AnalyticsString = TEXT("AUTOMATIONANALYTICS");
 			if (LogString.StartsWith(*AnalyticsString))
 			{
 				//Remove "analytics" from the string
@@ -77,13 +77,13 @@ FAutomationTestFramework& FAutomationTestFramework::Get()
 	return Framework;
 }
 
-YString FAutomationTestFramework::GetUserAutomationDirectory() const
+FString FAutomationTestFramework::GetUserAutomationDirectory() const
 {
-	const YString DefaultAutomationSubFolder = TEXT("Unreal Automation");
-	return YString(FPlatformProcess::UserDir()) + DefaultAutomationSubFolder;
+	const FString DefaultAutomationSubFolder = TEXT("Unreal Automation");
+	return FString(FPlatformProcess::UserDir()) + DefaultAutomationSubFolder;
 }
 
-bool FAutomationTestFramework::RegisterAutomationTest( const YString& InTestNameToRegister, class FAutomationTestBase* InTestToRegister )
+bool FAutomationTestFramework::RegisterAutomationTest( const FString& InTestNameToRegister, class FAutomationTestBase* InTestToRegister )
 {
 	const bool bAlreadyRegistered = AutomationTestClassNameToInstanceMap.Contains( InTestNameToRegister );
 	if ( !bAlreadyRegistered )
@@ -93,7 +93,7 @@ bool FAutomationTestFramework::RegisterAutomationTest( const YString& InTestName
 	return !bAlreadyRegistered;
 }
 
-bool FAutomationTestFramework::UnregisterAutomationTest( const YString& InTestNameToUnregister )
+bool FAutomationTestFramework::UnregisterAutomationTest( const FString& InTestNameToUnregister )
 {
 	const bool bRegistered = AutomationTestClassNameToInstanceMap.Contains( InTestNameToUnregister );
 	if ( bRegistered )
@@ -125,7 +125,7 @@ void FAutomationTestFramework::EnqueueNetworkCommand(TSharedPtr<IAutomationNetwo
 	NetworkCommands.Enqueue(NewCommand);
 }
 
-bool FAutomationTestFramework::ContainsTest( const YString& InTestName ) const
+bool FAutomationTestFramework::ContainsTest( const FString& InTestName ) const
 {
 	return AutomationTestClassNameToInstanceMap.Contains( InTestName );
 }
@@ -153,7 +153,7 @@ bool FAutomationTestFramework::RunSmokeTests()
 			double SmokeTestStartTime = FPlatformTime::Seconds();
 
 			// Output the results of running the automation tests
-			TMap<YString, FAutomationTestExecutionInfo> OutExecutionInfoMap;
+			TMap<FString, FAutomationTestExecutionInfo> OutExecutionInfoMap;
 
 			// Run each valid test
 			FScopedSlowTask SlowTask(TestInfo.Num());
@@ -163,7 +163,7 @@ bool FAutomationTestFramework::RunSmokeTests()
 				SlowTask.EnterProgressFrame(1);
 				if (TestInfo[TestIndex].GetTestFlags() & EAutomationTestFlags::SmokeFilter )
 				{
-					YString TestCommand = TestInfo[TestIndex].GetTestName();
+					FString TestCommand = TestInfo[TestIndex].GetTestName();
 					FAutomationTestExecutionInfo& CurExecutionInfo = OutExecutionInfoMap.Add( TestCommand, FAutomationTestExecutionInfo() );
 
 					int32 RoleIndex = 0;  //always default to "local" role index.  Only used for multi-participant tests
@@ -209,7 +209,7 @@ void FAutomationTestFramework::ResetTests()
 	IFileManager::Get().DeleteDirectory(*YPaths::AutomationTransientDir(), bEnsureExists, bDeleteEntireTree);
 }
 
-void FAutomationTestFramework::StartTestBFName( const YString& InTestToRun, const int32 InRoleIndex )
+void FAutomationTestFramework::StartTestBFName( const FString& InTestToRun, const int32 InRoleIndex )
 {
 	if (GIsAutomationTesting)
 	{
@@ -227,8 +227,8 @@ void FAutomationTestFramework::StartTestBFName( const YString& InTestToRun, cons
 		StopTest(TempExecutionInfo);
 	}
 
-	YString TestName;
-	YString Params;
+	FString TestName;
+	FString Params;
 	if (!InTestToRun.Split(TEXT(" "), &TestName, &Params, ESearchCase::CaseSensitive))
 	{
 		TestName = InTestToRun;
@@ -328,7 +328,7 @@ void FAutomationTestFramework::LoadTestModules( )
 	bool bRunningSmokeTests = ((RequestedTestFilter & EAutomationTestFlags::FilterMask) == EAutomationTestFlags::SmokeFilter);
 	if( !bRunningSmokeTests )
 	{
-		TArray<YString> EngineTestModules;
+		TArray<FString> EngineTestModules;
 		GConfig->GetArray( TEXT("/Script/Engine.AutomationTestSettings"), TEXT("EngineTestModules"), EngineTestModules, GEngineIni);
 		//Load any engine level modules.
 		for( int32 EngineModuleId = 0; EngineModuleId < EngineTestModules.Num(); ++EngineModuleId)
@@ -349,7 +349,7 @@ void FAutomationTestFramework::LoadTestModules( )
 		//Load any editor modules.
 		if( bRunningEditor )
 		{
-			TArray<YString> EditorTestModules;
+			TArray<FString> EditorTestModules;
 			GConfig->GetArray( TEXT("/Script/Engine.AutomationTestSettings"), TEXT("EditorTestModules"), EditorTestModules, GEngineIni);
 			for( int32 EditorModuleId = 0; EditorModuleId < EditorTestModules.Num(); ++EditorModuleId )
 			{
@@ -411,7 +411,7 @@ void FAutomationTestFramework::GetValidTestNames( TArray<FAutomationTestInfo>& T
 		FeatureSupportFlags &= (~EAutomationTestFlags::RequiresUser);
 	}
 
-	for ( TMap<YString, FAutomationTestBase*>::TConstIterator TestIter( AutomationTestClassNameToInstanceMap ); TestIter; ++TestIter )
+	for ( TMap<FString, FAutomationTestBase*>::TConstIterator TestIter( AutomationTestClassNameToInstanceMap ); TestIter; ++TestIter )
 	{
 		const FAutomationTestBase* CurTest = TestIter.Value();
 		check( CurTest );
@@ -438,18 +438,18 @@ void FAutomationTestFramework::GetValidTestNames( TArray<FAutomationTestInfo>& T
 	}
 }
 
-bool FAutomationTestFramework::ShouldTestContent(const YString& Path) const
+bool FAutomationTestFramework::ShouldTestContent(const FString& Path) const
 {
-	static TArray<YString> TestLevelFolders;
+	static TArray<FString> TestLevelFolders;
 	if ( TestLevelFolders.Num() == 0 )
 	{
 		GConfig->GetArray( TEXT("/Script/Engine.AutomationTestSettings"), TEXT("TestLevelFolders"), TestLevelFolders, GEngineIni);
 	}
 
 	bool bMatchingDirectory = false;
-	for ( const YString& Folder : TestLevelFolders )
+	for ( const FString& Folder : TestLevelFolders )
 	{
-		const YString PatternToCheck = YString::Printf(TEXT("/%s/"), *Folder);
+		const FString PatternToCheck = FString::Printf(TEXT("/%s/"), *Folder);
 		if ( Path.Contains(*PatternToCheck) )
 		{
 			bMatchingDirectory = true;
@@ -460,7 +460,7 @@ bool FAutomationTestFramework::ShouldTestContent(const YString& Path) const
 		return true;
 	}
 
-	YString DevelopersPath = YPaths::GameDevelopersDir().LeftChop(1);
+	FString DevelopersPath = YPaths::GameDevelopersDir().LeftChop(1);
 	return bDeveloperDirectoryIncluded || !Path.StartsWith(DevelopersPath);
 }
 
@@ -528,13 +528,13 @@ void FAutomationTestFramework::ConcludeAutomationTests()
  * @param	InContext		Context to dump the execution info to
  * @param	InInfoToDump	Execution info that should be dumped to the provided feedback context
  */
-void FAutomationTestFramework::DumpAutomationTestExecutionInfo( const TMap<YString, FAutomationTestExecutionInfo>& InInfoToDump )
+void FAutomationTestFramework::DumpAutomationTestExecutionInfo( const TMap<FString, FAutomationTestExecutionInfo>& InInfoToDump )
 {
-	const YString SuccessMessage = NSLOCTEXT("UnrealEd", "AutomationTest_Success", "Success").ToString();
-	const YString FailMessage = NSLOCTEXT("UnrealEd", "AutomationTest_Fail", "Fail").ToString();
-	for ( TMap<YString, FAutomationTestExecutionInfo>::TConstIterator MapIter(InInfoToDump); MapIter; ++MapIter )
+	const FString SuccessMessage = NSLOCTEXT("UnrealEd", "AutomationTest_Success", "Success").ToString();
+	const FString FailMessage = NSLOCTEXT("UnrealEd", "AutomationTest_Fail", "Fail").ToString();
+	for ( TMap<FString, FAutomationTestExecutionInfo>::TConstIterator MapIter(InInfoToDump); MapIter; ++MapIter )
 	{
-		const YString& CurTestName = MapIter.Key();
+		const FString& CurTestName = MapIter.Key();
 		const FAutomationTestExecutionInfo& CurExecutionInfo = MapIter.Value();
 
 		UE_LOG(LogAutomationTest, Log, TEXT("%s: %s"), *CurTestName, CurExecutionInfo.bSuccessful ? *SuccessMessage : *FailMessage);
@@ -553,7 +553,7 @@ void FAutomationTestFramework::DumpAutomationTestExecutionInfo( const TMap<YStri
 		{
 			SET_WARN_COLOR(COLOR_YELLOW);
 			CLEAR_WARN_COLOR();
-			for ( TArray<YString>::TConstIterator WarningIter( CurExecutionInfo.Warnings ); WarningIter; ++WarningIter )
+			for ( TArray<FString>::TConstIterator WarningIter( CurExecutionInfo.Warnings ); WarningIter; ++WarningIter )
 			{
 				UE_LOG(LogAutomationTest, Warning, TEXT("%s"), **WarningIter );
 			}
@@ -562,7 +562,7 @@ void FAutomationTestFramework::DumpAutomationTestExecutionInfo( const TMap<YStri
 		if ( CurExecutionInfo.LogItems.Num() > 0 )
 		{
 			//InContext->Logf( *YString::Printf( TEXT("%s"), *NSLOCTEXT("UnrealEd", "AutomationTest_LogItems", "Log Items").ToString() ) );
-			for ( TArray<YString>::TConstIterator LogItemIter( CurExecutionInfo.LogItems ); LogItemIter; ++LogItemIter )
+			for ( TArray<FString>::TConstIterator LogItemIter( CurExecutionInfo.LogItems ); LogItemIter; ++LogItemIter )
 			{
 				UE_LOG(LogAutomationTest, Log, TEXT("%s"), **LogItemIter );
 			}
@@ -571,9 +571,9 @@ void FAutomationTestFramework::DumpAutomationTestExecutionInfo( const TMap<YStri
 	}
 }
 
-void FAutomationTestFramework::InternalStartTest( const YString& InTestToRun )
+void FAutomationTestFramework::InternalStartTest( const FString& InTestToRun )
 {
-	YString TestName;
+	FString TestName;
 	if (!InTestToRun.Split(TEXT(" "), &TestName, &Parameters, ESearchCase::CaseSensitive))
 	{
 		TestName = InTestToRun;
@@ -640,7 +640,7 @@ bool FAutomationTestFramework::InternalStopTest(FAutomationTestExecutionInfo& Ou
 	return bTestSuccessful;
 }
 
-void FAutomationTestFramework::AddAnalyticsItemToCurrentTest( const YString& AnalyticsItem )
+void FAutomationTestFramework::AddAnalyticsItemToCurrentTest( const FString& AnalyticsItem )
 {
 	if( CurrentTest != nullptr )
 	{
@@ -690,15 +690,15 @@ FAutomationTestFramework::~FAutomationTestFramework()
 	AutomationTestClassNameToInstanceMap.Empty();
 }
 
-YString FAutomationEvent::ToString() const
+FString FAutomationEvent::ToString() const
 {
-	YString ComplexString;
+	FString ComplexString;
 
 	if ( !Filename.IsEmpty() && LineNumber > 0 )
 	{
 		ComplexString += Filename;
 		ComplexString += TEXT("(");
-		ComplexString += YString::FromInt(LineNumber);
+		ComplexString += FString::FromInt(LineNumber);
 		ComplexString += TEXT("): ");
 	}
 
@@ -718,7 +718,7 @@ void FAutomationTestBase::ClearExecutionInfo()
 	ExecutionInfo.Clear();
 }
 
-void FAutomationTestBase::AddError(const YString& InError, int32 StackOffset)
+void FAutomationTestBase::AddError(const FString& InError, int32 StackOffset)
 {
 	if( !bSuppressLogs )
 	{
@@ -728,7 +728,7 @@ void FAutomationTestBase::AddError(const YString& InError, int32 StackOffset)
 	}
 }
 
-void FAutomationTestBase::AddError(const YString& InError, const YString& InFilename, int32 InLineNumber)
+void FAutomationTestBase::AddError(const FString& InError, const FString& InFilename, int32 InLineNumber)
 {
 	if (!bSuppressLogs)
 	{
@@ -736,7 +736,7 @@ void FAutomationTestBase::AddError(const YString& InError, const YString& InFile
 	}
 }
 
-void FAutomationTestBase::AddWarning( const YString& InWarning )
+void FAutomationTestBase::AddWarning( const FString& InWarning )
 {
 	if( !bSuppressLogs )
 	{
@@ -744,7 +744,7 @@ void FAutomationTestBase::AddWarning( const YString& InWarning )
 	}
 }
 
-void FAutomationTestBase::AddLogItem( const YString& InLogItem )
+void FAutomationTestBase::AddLogItem( const FString& InLogItem )
 {
 	if( !bSuppressLogs )
 	{
@@ -752,7 +752,7 @@ void FAutomationTestBase::AddLogItem( const YString& InLogItem )
 	}
 }
 
-void FAutomationTestBase::AddAnalyticsItem(const YString& InAnalyticsItem)
+void FAutomationTestBase::AddAnalyticsItem(const FString& InAnalyticsItem)
 {
 	ExecutionInfo.AnalyticsItems.Add(InAnalyticsItem);
 }
@@ -774,21 +774,21 @@ void FAutomationTestBase::GetExecutionInfo( FAutomationTestExecutionInfo& OutInf
 
 void FAutomationTestBase::GenerateTestNames(TArray<FAutomationTestInfo>& TestInfo) const
 {
-	TArray<YString> BeautifiedNames;
-	TArray<YString> ParameterNames;
+	TArray<FString> BeautifiedNames;
+	TArray<FString> ParameterNames;
 	GetTests(BeautifiedNames, ParameterNames);
 
-	YString BeautifiedTestName = GetBeautifiedTestName();
+	FString BeautifiedTestName = GetBeautifiedTestName();
 
 	for (int32 ParameterIndex = 0; ParameterIndex < ParameterNames.Num(); ++ParameterIndex)
 	{
-		YString CompleteBeautifiedNames = BeautifiedTestName;
-		YString CompleteTestName = TestName;
+		FString CompleteBeautifiedNames = BeautifiedTestName;
+		FString CompleteTestName = TestName;
 
 		if (ParameterNames[ParameterIndex].Len())
 		{
-			CompleteBeautifiedNames = YString::Printf(TEXT("%s.%s"), *BeautifiedTestName, *BeautifiedNames[ParameterIndex]);;
-			CompleteTestName = YString::Printf(TEXT("%s %s"), *TestName, *ParameterNames[ParameterIndex]);
+			CompleteBeautifiedNames = FString::Printf(TEXT("%s.%s"), *BeautifiedTestName, *BeautifiedNames[ParameterIndex]);;
+			CompleteTestName = FString::Printf(TEXT("%s %s"), *TestName, *ParameterNames[ParameterIndex]);
 		}
 
 		// Add the test info to our collection

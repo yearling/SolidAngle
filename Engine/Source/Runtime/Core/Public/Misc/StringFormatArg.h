@@ -2,7 +2,7 @@
 #include "Containers/ContainersFwd.h"
 
 /** An argument supplied to YString::Format */
-struct CORE_API YStringFormatArg
+struct CORE_API FStringFormatArg
 {
 	enum EType { Int, UInt, Double, String, StringLiteral };
 
@@ -23,22 +23,22 @@ struct CORE_API YStringFormatArg
 	};
 
 	/** Value as an YString */
-	YString StringValue;
+	FString StringValue;
 
-	YStringFormatArg(const int32 Value);
-	YStringFormatArg(const uint32 Value);
-	YStringFormatArg(const int64 Value);
-	YStringFormatArg(const uint64 Value);
-	YStringFormatArg(const float Value);
-	YStringFormatArg(const double Value);
-	YStringFormatArg(YString Value);
-	YStringFormatArg(const TCHAR* Value);
+	FStringFormatArg(const int32 Value);
+	FStringFormatArg(const uint32 Value);
+	FStringFormatArg(const int64 Value);
+	FStringFormatArg(const uint64 Value);
+	FStringFormatArg(const float Value);
+	FStringFormatArg(const double Value);
+	FStringFormatArg(FString Value);
+	FStringFormatArg(const TCHAR* Value);
 
 	/** Copyable */
-	YStringFormatArg(const YStringFormatArg& RHS);
+	FStringFormatArg(const FStringFormatArg& RHS);
 
 private:
 
 	/** Not default constructible */
-	YStringFormatArg();
+	FStringFormatArg();
 };

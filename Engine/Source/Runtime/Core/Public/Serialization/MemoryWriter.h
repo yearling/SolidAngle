@@ -6,7 +6,7 @@
 #include "Misc/AssertionMacros.h"
 #include "HAL/UnrealMemory.h"
 #include "Math/NumericLimits.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "UObject/NameTypes.h"
 #include "Logging/LogMacros.h"
 #include "CoreGlobals.h"
@@ -59,7 +59,7 @@ public:
 	 *
 	 * This is overridden for the specific Archive Types
 	 **/
-	virtual YString GetArchiveName() const override { return TEXT("YMemoryWriter"); }
+	virtual FString GetArchiveName() const override { return TEXT("YMemoryWriter"); }
 
 	int64 TotalSize() override
 	{

@@ -9,7 +9,7 @@ The types declared in this file are for internal use only.
 #pragma once
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "Templates/PointerConvertibleFromTo.h"
+#include "Templates/PointerIsConvertibleFromTo.h"
 #include "Templates/TypeWrapper.h"
 #include "Templates/AreTypesEqual.h"
 #include "Templates/UnrealTypeTraits.h"

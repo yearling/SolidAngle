@@ -266,7 +266,7 @@ bool TestExpression(FAutomationTestBase* Test, const TCHAR* Expression, double E
 	
 	if (Result.GetValue() != Expected)
 	{
-		Test->AddError(YString::Printf(TEXT("'%s' evaluation results: %.f != %.f"), Expression, Result.GetValue(), Expected));
+		Test->AddError(FString::Printf(TEXT("'%s' evaluation results: %.f != %.f"), Expression, Result.GetValue(), Expected));
 		return false;
 	}
 
@@ -289,7 +289,7 @@ bool TestInvalidExpression(FAutomationTestBase* Test, const TCHAR* Expression)
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FBasicMathExpressionEvaluatorTest, "System.Core.Math.Evaluate.Valid Expressions", EAutomationTestFlags::ApplicationContextMask | EAutomationTestFlags::SmokeFilter)
 // Evaluates valid math expressions.
-bool FBasicMathExpressionEvaluatorTest::RunTest(const YString& Parameters)
+bool FBasicMathExpressionEvaluatorTest::RunTest(const FString& Parameters)
 {
 	TestTrue(TEXT("Valid expression, '+2', evaluated incorrectly."), TestExpression(this, TEXT("+1"), 1));
 	TestTrue(TEXT("Valid expression, '-20', evaluated incorrectly."), TestExpression(this, TEXT("-20"), -20));
@@ -310,7 +310,7 @@ bool FBasicMathExpressionEvaluatorTest::RunTest(const YString& Parameters)
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FBasicMathExpressionEvaluatorWhitespaceExpressionsTest, "System.Core.Math.Evaluate.Valid Expressions With Whitespaces", EAutomationTestFlags::ApplicationContextMask | EAutomationTestFlags::SmokeFilter)
 // Evaluates a valid math expression with leading and trailing white spaces.
-bool FBasicMathExpressionEvaluatorWhitespaceExpressionsTest::RunTest(const YString& Parameters)
+bool FBasicMathExpressionEvaluatorWhitespaceExpressionsTest::RunTest(const FString& Parameters)
 {
 	TestTrue(TEXT("Expression with leading and trailing whitespaces was not evaluated correctly."), TestExpression(this, TEXT(" 1+2 "), 1 + 2));
 
@@ -319,7 +319,7 @@ bool FBasicMathExpressionEvaluatorWhitespaceExpressionsTest::RunTest(const YStri
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FBasicMathExpressionEvaluatorGroupedExpressionsTest, "System.Core.Math.Evaluate.Valid Grouped Expressions", EAutomationTestFlags::ApplicationContextMask | EAutomationTestFlags::SmokeFilter)
 // Evaluates valid math expressions that are grouped
-bool FBasicMathExpressionEvaluatorGroupedExpressionsTest::RunTest(const YString& Parameters)
+bool FBasicMathExpressionEvaluatorGroupedExpressionsTest::RunTest(const FString& Parameters)
 {
 	TestTrue(TEXT("Valid grouped expression, '(1+2)*3*4+1', evaluated incorrectly."), TestExpression(this, TEXT("(1+2)*3*4+1"), (1 + 2) * 3 * 4 + 1));
 	TestTrue(TEXT("Valid grouped expression, '(1+2)*3*(4+1)', evaluated incorrectly."), TestExpression(this, TEXT("(1+2)*3*(4+1)"), (1 + 2) * 3 * (4 + 1)));
@@ -332,7 +332,7 @@ IMPLEMENT_SIMPLE_AUTOMATION_TEST(FBasicMathExpressionEvaluatorInvalidExpressionT
 
 // Evaluates invalid expressions.
 // Invalid expressions will report errors and not crash.
-bool FBasicMathExpressionEvaluatorInvalidExpressionTest::RunTest(const YString& Parameters)
+bool FBasicMathExpressionEvaluatorInvalidExpressionTest::RunTest(const FString& Parameters)
 {
 	TestTrue(TEXT("The invalid math expression, 'gobbledegook', did not report an error."), TestInvalidExpression(this, TEXT("gobbledegook")));
 	TestTrue(TEXT("The invalid math expression, '50**10', did not report an error."), TestInvalidExpression(this, TEXT("50**10")));

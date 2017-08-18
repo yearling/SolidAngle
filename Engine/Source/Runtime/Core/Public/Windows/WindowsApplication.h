@@ -184,8 +184,8 @@ struct FDragDropOLEData
 		: Type(None)
 	{ }
 
-	YString OperationText;
-	TArray<YString> OperationFilenames;
+	FString OperationText;
+	TArray<FString> OperationFilenames;
 	uint8 Type;
 };
 

@@ -105,12 +105,12 @@ FEngineVersion::FEngineVersion()
 	Empty();
 }
 
-FEngineVersion::FEngineVersion(uint16 InMajor, uint16 InMinor, uint16 InPatch, uint32 InChangelist, const YString &InBranch)
+FEngineVersion::FEngineVersion(uint16 InMajor, uint16 InMinor, uint16 InPatch, uint32 InChangelist, const FString &InBranch)
 {
 	Set(InMajor, InMinor, InPatch, InChangelist, InBranch);
 }
 
-void FEngineVersion::Set(uint16 InMajor, uint16 InMinor, uint16 InPatch, uint32 InChangelist, const YString &InBranch)
+void FEngineVersion::Set(uint16 InMajor, uint16 InMinor, uint16 InPatch, uint32 InChangelist, const FString &InBranch)
 {
 	Major = InMajor;
 	Minor = InMinor;
@@ -121,7 +121,7 @@ void FEngineVersion::Set(uint16 InMajor, uint16 InMinor, uint16 InPatch, uint32 
 
 void FEngineVersion::Empty()
 {
-	Set(0, 0, 0, 0, YString());
+	Set(0, 0, 0, 0, FString());
 }
 
 bool FEngineVersion::IsCompatibleWith(const FEngineVersionBase &Other) const
@@ -137,21 +137,21 @@ bool FEngineVersion::IsCompatibleWith(const FEngineVersionBase &Other) const
 	}
 }
 
-YString FEngineVersion::ToString(EVersionComponent LastComponent) const
+FString FEngineVersion::ToString(EVersionComponent LastComponent) const
 {
-	YString Result = YString::Printf(TEXT("%u"), Major);
+	FString Result = FString::Printf(TEXT("%u"), Major);
 	if(LastComponent >= EVersionComponent::Minor)
 	{
-		Result += YString::Printf(TEXT(".%u"), Minor);
+		Result += FString::Printf(TEXT(".%u"), Minor);
 		if(LastComponent >= EVersionComponent::Patch)
 		{
-			Result += YString::Printf(TEXT(".%u"), Patch);
+			Result += FString::Printf(TEXT(".%u"), Patch);
 			if(LastComponent >= EVersionComponent::Changelist)
 			{
-				Result += YString::Printf(TEXT("-%u"), GetChangelist());
+				Result += FString::Printf(TEXT("-%u"), GetChangelist());
 				if(LastComponent >= EVersionComponent::Branch && Branch.Len() > 0)
 				{
-					Result += YString::Printf(TEXT("+%s"), *Branch);
+					Result += FString::Printf(TEXT("+%s"), *Branch);
 				}
 			}
 		}
@@ -159,7 +159,7 @@ YString FEngineVersion::ToString(EVersionComponent LastComponent) const
 	return Result;
 }
 
-bool FEngineVersion::Parse(const YString &Text, FEngineVersion &OutVersion)
+bool FEngineVersion::Parse(const FString &Text, FEngineVersion &OutVersion)
 {
 	TCHAR *End;
 
@@ -183,12 +183,12 @@ bool FEngineVersion::Parse(const YString &Text, FEngineVersion &OutVersion)
 	}
 
 	// Read the optional branch name
-	YString Branch;
+	FString Branch;
 	if(*End == '+')
 	{
 		End++;
 		// read to the end of the string. There's no standard for the branch name to verify.
-		Branch = YString(End);
+		Branch = FString(End);
 	}
 
 	// Build the output version

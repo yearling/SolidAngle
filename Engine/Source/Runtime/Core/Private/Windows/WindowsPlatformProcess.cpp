@@ -11,7 +11,7 @@
 #include "HAL/FileManager.h"
 #include "Misc/Parse.h"
 #include "Containers/StringConv.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Misc/SingleThreadEvent.h"
 #include "Misc/CommandLine.h"
 #include "Misc/Paths.h"
@@ -42,18 +42,18 @@
 
 #pragma comment(lib, "psapi.lib")
 
-static bool ReadLibraryImportsFromMemory(const IMAGE_DOS_HEADER *Header, TArray<YString> &ImportNames);
+static bool ReadLibraryImportsFromMemory(const IMAGE_DOS_HEADER *Header, TArray<FString> &ImportNames);
 static const void *MapRvaToPointer(const IMAGE_DOS_HEADER *Header, const IMAGE_NT_HEADERS *NtHeader, size_t Rva);
 
 
 // static variables
-TArray<YString> FWindowsPlatformProcess::DllDirectoryStack;
-TArray<YString> FWindowsPlatformProcess::DllDirectories;
+TArray<FString> FWindowsPlatformProcess::DllDirectoryStack;
+TArray<FString> FWindowsPlatformProcess::DllDirectories;
 
 
 void FWindowsPlatformProcess::AddDllDirectory(const TCHAR* Directory)
 {
-	YString NormalizedDirectory = Directory;
+	FString NormalizedDirectory = Directory;
 	YPaths::NormalizeDirectorFName(NormalizedDirectory);
 	YPaths::MakePlatformFilename(NormalizedDirectory);
 	DllDirectories.AddUnique(NormalizedDirectory);
@@ -64,7 +64,7 @@ void* FWindowsPlatformProcess::GetDllHandle( const TCHAR* FileName )
 	check(FileName);
 
 	// Combine the explicit DLL search directories with the contents of the directory stack 
-	TArray<YString> SearchPaths;
+	TArray<FString> SearchPaths;
 	SearchPaths.Add(FPlatformProcess::GetModulesDirectory());
 	if(DllDirectoryStack.Num() > 0)
 	{
@@ -91,14 +91,14 @@ void FWindowsPlatformProcess::FreeDllHandle( void* DllHandle )
 	::FreeLibrary((HMODULE)DllHandle);
 }
 
-YString FWindowsPlatformProcess::GenerateApplicationPath( const YString& AppName, EBuildConfigurations::Type BuildConfiguration)
+FString FWindowsPlatformProcess::GenerateApplicationPath( const FString& AppName, EBuildConfigurations::Type BuildConfiguration)
 {
-	YString PlatformName = GetBinariesSubdirectory();
-	YString ExecutablePath = YString::Printf(TEXT("..\\..\\..\\Engine\\Binaries\\%s\\%s"), *PlatformName, *AppName);
+	FString PlatformName = GetBinariesSubdirectory();
+	FString ExecutablePath = FString::Printf(TEXT("..\\..\\..\\Engine\\Binaries\\%s\\%s"), *PlatformName, *AppName);
 
 	if (BuildConfiguration != EBuildConfigurations::Development && BuildConfiguration != EBuildConfigurations::DebugGame)
 	{
-		ExecutablePath += YString::Printf(TEXT("-%s-%s"), *PlatformName, EBuildConfigurations::ToString(BuildConfiguration));
+		ExecutablePath += FString::Printf(TEXT("-%s-%s"), *PlatformName, EBuildConfigurations::ToString(BuildConfiguration));
 	}
 
 	ExecutablePath += TEXT(".exe");
@@ -183,18 +183,18 @@ void FWindowsPlatformProcess::PopDllDirectory(const TCHAR* Directory)
 	}
 }
 
-static void LaunchWebURL( const YString& URLParams, YString* Error )
+static void LaunchWebURL( const FString& URLParams, FString* Error )
 {
 	UE_LOG(LogWindows, Log, TEXT("LaunchURL %s"), *URLParams);
 
-	YString BrowserOpenCommand;
+	FString BrowserOpenCommand;
 
 	// First lookup the program Id for the default browser.
-	YString ProgId;
+	FString ProgId;
 	if (YWindowsPlatformMisc::QueryRegKey(HKEY_CURRENT_USER, TEXT("Software\\Microsoft\\Windows\\Shell\\Associations\\UrlAssociations\\http\\UserChoice"), TEXT("Progid"), ProgId))
 	{
 		// If we found it, then lookup it's open shell command in the classes registry.
-		YString BrowserRegPath = ProgId + TEXT("\\shell\\open\\command");
+		FString BrowserRegPath = ProgId + TEXT("\\shell\\open\\command");
 		YWindowsPlatformMisc::QueryRegKey(HKEY_CLASSES_ROOT, *BrowserRegPath, NULL, BrowserOpenCommand);
 	}
 
@@ -208,7 +208,7 @@ static void LaunchWebURL( const YString& URLParams, YString* Error )
 	// we do this instead of shell execute due to security concerns.  By starting the browser directly we avoid most issues.
 	if (!BrowserOpenCommand.IsEmpty())
 	{
-		YString ExePath, ExeArgs;
+		FString ExePath, ExeArgs;
 
 		// If everything has gone to plan, the shell command should be something like this:
 		// "C:\Program Files (x86)\Mozilla Firefox\firefox.exe" -osint -url "%1"
@@ -265,7 +265,7 @@ static void LaunchWebURL( const YString& URLParams, YString* Error )
 	}
 }
 
-static void LaunchDefaultHandlerForURL( const TCHAR* URL, YString* Error )
+static void LaunchDefaultHandlerForURL( const TCHAR* URL, FString* Error )
 {
 	// ShellExecute will open the default handler for a URL
 	const HINSTANCE Code = ::ShellExecuteW(NULL, TEXT("open"), URL, NULL, NULL, SW_SHOWNORMAL);
@@ -275,7 +275,7 @@ static void LaunchDefaultHandlerForURL( const TCHAR* URL, YString* Error )
 	}
 }
 
-void FWindowsPlatformProcess::LaunchURL( const TCHAR* URL, const TCHAR* Parms, YString* Error )
+void FWindowsPlatformProcess::LaunchURL( const TCHAR* URL, const TCHAR* Parms, FString* Error )
 {
 	check(URL);
 
@@ -286,14 +286,14 @@ void FWindowsPlatformProcess::LaunchURL( const TCHAR* URL, const TCHAR* Parms, Y
 	}
 
 	// Use the default handler if we have a URI scheme name that doesn't look like a Windows path, and is not http: or https:
-	YString SchemeName;
+	FString SchemeName;
 	if(FParse::SchemeNameFromURI(URL, SchemeName) && SchemeName.Len() > 1 && SchemeName != TEXT("http") && SchemeName != TEXT("https"))
 	{
 		LaunchDefaultHandlerForURL(URL, Error);
 	}
 	else
 	{
-		YString URLParams = YString::Printf(TEXT("%s %s"), URL, Parms ? Parms : TEXT("")).TrimTrailing();
+		FString URLParams = FString::Printf(TEXT("%s %s"), URL, Parms ? Parms : TEXT("")).TrimTrailing();
 		LaunchWebURL( URLParams, Error );
 	}
 
@@ -361,7 +361,7 @@ FProcHandle FWindowsPlatformProcess::CreateProc( const TCHAR* URL, const TCHAR* 
 	};
 
 	// create the child process
-	YString CommandLine = YString::Printf(TEXT("\"%s\" %s"), URL, Parms);
+	FString CommandLine = FString::Printf(TEXT("\"%s\" %s"), URL, Parms);
 	PROCESS_INFORMATION ProcInfo;
 
 	if (!CreateProcess(NULL, CommandLine.GetCharArray().GetData(), &Attr, &Attr, true, (::DWORD)CreateFlags, NULL, OptionalWorkingDirectory, &StartupInfo, &ProcInfo))
@@ -515,7 +515,7 @@ bool FWindowsPlatformProcess::IsApplicationRunning( const TCHAR* ProcName )
 {
 	// append the extension
 
-	YString ProcNameWithExtension = ProcName;
+	FString ProcNameWithExtension = ProcName;
 	if( ProcNameWithExtension.Find( TEXT(".exe"), ESearchCase::IgnoreCase, ESearchDir::FromEnd ) == INDEX_NONE )
 	{
 		ProcNameWithExtension += TEXT(".exe");
@@ -544,9 +544,9 @@ bool FWindowsPlatformProcess::IsApplicationRunning( const TCHAR* ProcName )
 	return false;
 }
 
-YString FWindowsPlatformProcess::GetApplicationName( uint32 ProcessId )
+FString FWindowsPlatformProcess::GetApplicationName( uint32 ProcessId )
 {
-	YString Output = TEXT("");
+	FString Output = TEXT("");
 	HANDLE ProcessHandle = ::OpenProcess(PROCESS_QUERY_INFORMATION, false, ProcessId);
 	if (ProcessHandle != NULL)
 	{
@@ -576,7 +576,7 @@ bool FWindowsPlatformProcess::IsThisApplicationForeground()
 	return (ForegroundProcess == GetCurrentProcessId());
 }
 
-void FWindowsPlatformProcess::ReadFromPipes(YString* OutStrings[], HANDLE InPipes[], int32 PipeCount)
+void FWindowsPlatformProcess::ReadFromPipes(FString* OutStrings[], HANDLE InPipes[], int32 PipeCount)
 {
 	for (int32 PipeIndex = 0; PipeIndex < PipeCount; ++PipeIndex)
 	{
@@ -591,12 +591,12 @@ void FWindowsPlatformProcess::ReadFromPipes(YString* OutStrings[], HANDLE InPipe
  * Executes a process, returning the return code, stdout, and stderr. This
  * call blocks until the process has returned.
  */
-bool FWindowsPlatformProcess::ExecProcess( const TCHAR* URL, const TCHAR* Params, int32* OutReturnCode, YString* OutStdOut, YString* OutStdErr )
+bool FWindowsPlatformProcess::ExecProcess( const TCHAR* URL, const TCHAR* Params, int32* OutReturnCode, FString* OutStdOut, FString* OutStdErr )
 {
 	PROCESS_INFORMATION ProcInfo;
 	SECURITY_ATTRIBUTES Attr;
 
-	YString CommandLine = YString::Printf(TEXT("%s %s"), URL, Params);
+	FString CommandLine = FString::Printf(TEXT("%s %s"), URL, Params);
 
 	Attr.nLength = sizeof(SECURITY_ATTRIBUTES);
 	Attr.lpSecurityDescriptor = NULL;
@@ -633,7 +633,7 @@ bool FWindowsPlatformProcess::ExecProcess( const TCHAR* URL, const TCHAR* Params
 	{
 		if (bRedirectOutput)
 		{
-			YString* OutStrings[MaxPipeCount] = { OutStdOut, OutStdErr };
+			FString* OutStrings[MaxPipeCount] = { OutStdOut, OutStdErr };
 			FProcHandle ProcHandle(ProcInfo.hProcess);
 			do 
 			{
@@ -718,8 +718,8 @@ void FWindowsPlatformProcess::CleanFileCache()
 	if (bShouldCleanShaderWorkingDirectory && !FParse::Param( FCommandLine::Get(), TEXT("Multiprocess")))
 	{
 		// get shader path, and convert it to the userdirectory
-		YString ShaderDir = YString(FPlatformProcess::BaseDir()) / FPlatformProcess::ShaderDir();
-		YString UserShaderDir = IFileManager::Get().ConvertToAbsolutePathForExternalAppForWrite(*ShaderDir);
+		FString ShaderDir = FString(FPlatformProcess::BaseDir()) / FPlatformProcess::ShaderDir();
+		FString UserShaderDir = IFileManager::Get().ConvertToAbsolutePathForExternalAppForWrite(*ShaderDir);
 		YPaths::CollapseRelativeDirectories(ShaderDir);
 
 		// make sure we don't delete from the source directory
@@ -743,7 +743,7 @@ const TCHAR* FWindowsPlatformProcess::BaseDir()
 		// workingdir in your debugger to the <path>/Project/Binaries/Win64 of your cooked
 		// data
 		// Too early to use the FCommand line interface
-		YString BaseArg;
+		FString BaseArg;
 		FParse::Value(::GetCommandLineW(), TEXT("-basedir="), BaseArg);
 
 		if (BaseArg.Len())
@@ -756,7 +756,7 @@ const TCHAR* FWindowsPlatformProcess::BaseDir()
 		{
 			::GetCurrentDirectory(512, Result);
 
-			YString TempResult(Result);
+			FString TempResult(Result);
 			TempResult = TempResult.Replace(TEXT("\\"), TEXT("/"));
 			TempResult += TEXT('/');
 			FCString::Strcpy(Result, *TempResult);
@@ -770,7 +770,7 @@ const TCHAR* FWindowsPlatformProcess::BaseDir()
 				hCurrentModule = hInstance;
 			}
 			GetModuleFileName(hCurrentModule, Result, ARRAY_COUNT(Result));
-			YString TempResult(Result);
+			FString TempResult(Result);
 			TempResult = TempResult.Replace(TEXT("\\"), TEXT("/"));
 			FCString::Strcpy(Result, *TempResult);
 			int32 StringLength = FCString::Strlen(Result);
@@ -787,7 +787,7 @@ const TCHAR* FWindowsPlatformProcess::BaseDir()
 			}
 			Result[StringLength] = 0;
 
-			YString CollapseResult(Result);
+			FString CollapseResult(Result);
 			YPaths::CollapseRelativeDirectories(CollapseResult);
 			FCString::Strcpy(Result, *CollapseResult);
 		}
@@ -797,7 +797,7 @@ const TCHAR* FWindowsPlatformProcess::BaseDir()
 
 const TCHAR* FWindowsPlatformProcess::UserDir()
 {
-	static YString WindowsUserDir;
+	static FString WindowsUserDir;
 	if( !WindowsUserDir.Len() )
 	{
 		TCHAR UserPath[MAX_PATH];
@@ -805,14 +805,14 @@ const TCHAR* FWindowsPlatformProcess::UserDir()
 		HRESULT Ret = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, UserPath);
 
 		// make the base user dir path
-		WindowsUserDir = YString(UserPath).Replace(TEXT("\\"), TEXT("/")) + TEXT("/");
+		WindowsUserDir = FString(UserPath).Replace(TEXT("\\"), TEXT("/")) + TEXT("/");
 	}
 	return *WindowsUserDir;
 }
 
 const TCHAR* FWindowsPlatformProcess::UserTempDir()
 {
-	static YString WindowsUserTempDir;
+	static FString WindowsUserTempDir;
 	if( !WindowsUserTempDir.Len() )
 	{
 		TCHAR TempPath[MAX_PATH];
@@ -825,14 +825,14 @@ const TCHAR* FWindowsPlatformProcess::UserTempDir()
 		ZeroMemory(FullTempPath, sizeof(TCHAR) * MAX_PATH);
 		::GetLongPathName(TempPath, FullTempPath, MAX_PATH);
 
-		WindowsUserTempDir = YString(FullTempPath).Replace(TEXT("\\"), TEXT("/"));
+		WindowsUserTempDir = FString(FullTempPath).Replace(TEXT("\\"), TEXT("/"));
 	}
 	return *WindowsUserTempDir;
 }
 
 const TCHAR* FWindowsPlatformProcess::UserSettingsDir()
 {
-	static YString WindowsUserSettingsDir;
+	static FString WindowsUserSettingsDir;
 	if (!WindowsUserSettingsDir.Len())
 	{
 		TCHAR UserPath[MAX_PATH];
@@ -840,14 +840,14 @@ const TCHAR* FWindowsPlatformProcess::UserSettingsDir()
 		HRESULT Ret = SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, SHGFP_TYPE_CURRENT, UserPath);
 
 		// make the base user dir path
-		WindowsUserSettingsDir = YString(UserPath).Replace(TEXT("\\"), TEXT("/")) + TEXT("/");
+		WindowsUserSettingsDir = FString(UserPath).Replace(TEXT("\\"), TEXT("/")) + TEXT("/");
 	}
 	return *WindowsUserSettingsDir;
 }
 
 const TCHAR* FWindowsPlatformProcess::ApplicationSettingsDir()
 {
-	static YString WindowsApplicationSettingsDir;
+	static FString WindowsApplicationSettingsDir;
 	if( !WindowsApplicationSettingsDir.Len() )
 	{
 		TCHAR ApplictionSettingsPath[MAX_PATH];
@@ -856,7 +856,7 @@ const TCHAR* FWindowsPlatformProcess::ApplicationSettingsDir()
 
 		// make the base user dir path
 		// @todo rocket this folder should be based on your company name, not just be hard coded to /Epic/
-		WindowsApplicationSettingsDir = YString(ApplictionSettingsPath) + TEXT("/Epic/");
+		WindowsApplicationSettingsDir = FString(ApplictionSettingsPath) + TEXT("/Epic/");
 	}
 	return *WindowsApplicationSettingsDir;
 }
@@ -908,7 +908,7 @@ void FWindowsPlatformProcess::SetCurrentWorkingDirectoryToBaseDir()
 }
 
 /** Get the current working directory (only really makes sense on desktop platforms) */
-YString FWindowsPlatformProcess::GetCurrentWorkingDirectory()
+FString FWindowsPlatformProcess::GetCurrentWorkingDirectory()
 {
 	// get the current working directory (uncached)
 	TCHAR CurrentDirectory[MAX_PATH];
@@ -916,9 +916,9 @@ YString FWindowsPlatformProcess::GetCurrentWorkingDirectory()
 	return CurrentDirectory;
 }
 
-const YString FWindowsPlatformProcess::ShaderWorkingDir()
+const FString FWindowsPlatformProcess::ShaderWorkingDir()
 {
-	return (YString(FPlatformProcess::UserTempDir()) / TEXT("UnrealShaderWorkingDir/"));
+	return (FString(FPlatformProcess::UserTempDir()) / TEXT("UnrealShaderWorkingDir/"));
 }
 
 
@@ -932,8 +932,8 @@ const TCHAR* FWindowsPlatformProcess::ExecutableName(bool bRemoveExtension)
 		if ( GetModuleFileName( hInstance, Result, ARRAY_COUNT(Result) ) != 0 )
 		{
 			// Remove all of the path information by finding the base filename
-			YString FileName = Result;
-			YString FileNameWithExt = Result;
+			FString FileName = Result;
+			FString FileNameWithExt = Result;
 			FCString::Strncpy( Result, *( YPaths::GetBaseFilename(FileName) ), ARRAY_COUNT(Result) );
 			FCString::Strncpy( ResultWithExt, *( YPaths::GetCleanFilename(FileNameWithExt) ), ARRAY_COUNT(ResultWithExt) );
 		}
@@ -977,7 +977,7 @@ void FWindowsPlatformProcess::LaunchFileInDefaultExternalApplication( const TCHA
 	// an application to use.
 	if ( (PTRINT)Code == SE_ERR_NOASSOC || (PTRINT)Code == SE_ERR_ASSOCINCOMPLETE )
 	{
-		::ShellExecuteW( NULL, VerbString, TEXT("RUNDLL32.EXE"), *YString::Printf( TEXT("shell32.dll,OpenAs_RunDLL %s"), FileName ), TEXT(""), SW_SHOWNORMAL );
+		::ShellExecuteW( NULL, VerbString, TEXT("RUNDLL32.EXE"), *FString::Printf( TEXT("shell32.dll,OpenAs_RunDLL %s"), FileName ), TEXT(""), SW_SHOWNORMAL );
 	}
 }
 
@@ -991,8 +991,8 @@ void FWindowsPlatformProcess::ExploreFolder( const TCHAR* FilePath )
 	else
 	{
 		// Explore the file
-		YString NativeFilePath = YString(FilePath).Replace(TEXT("/"), TEXT("\\"));
-		YString Parameters = YString::Printf( TEXT("/select,%s"), *NativeFilePath);
+		FString NativeFilePath = FString(FilePath).Replace(TEXT("/"), TEXT("\\"));
+		FString Parameters = FString::Printf( TEXT("/select,%s"), *NativeFilePath);
 		::ShellExecuteW( NULL, TEXT("open"), TEXT("explorer.exe"), *Parameters, NULL, SW_SHOWNORMAL );
 	}
 }
@@ -1006,7 +1006,7 @@ void FWindowsPlatformProcess::ExploreFolder( const TCHAR* FilePath )
  *
  * @return true if the path was resolved, false otherwise
  */
-bool FWindowsPlatformProcess::ResolveNetworkPath( YString InUNCPath, YString& OutPath )
+bool FWindowsPlatformProcess::ResolveNetworkPath( FString InUNCPath, FString& OutPath )
 {
 	// Get local machine name first and check if this UNC path points to local share
 	// (if it's not UNC path it will also fail this check)
@@ -1021,7 +1021,7 @@ bool FWindowsPlatformProcess::ResolveNetworkPath( YString InUNCPath, YString& Ou
 			// Get the share name (it's the first folder after the computer name)
 			int32 ComputerNameLen = FCString::Strlen( ComputerName );
 			int32 ShareNameLen = InUNCPath.Find( TEXT( "\\" ), ESearchCase::CaseSensitive, ESearchDir::FromStart, ComputerNameLen + 1 ) - ComputerNameLen - 1;
-			YString ShareName = InUNCPath.Mid( ComputerNameLen + 1, ShareNameLen );
+			FString ShareName = InUNCPath.Mid( ComputerNameLen + 1, ShareNameLen );
 
 			// NetShareGetInfo doesn't accept const TCHAR* as the share name so copy to temp array
 			SHARE_INFO_2* BufPtr = NULL;
@@ -1033,7 +1033,7 @@ bool FWindowsPlatformProcess::ResolveNetworkPath( YString InUNCPath, YString& Ou
 			if ( ( res = NetShareGetInfo( NULL, ShareNamePtr, 2, (LPBYTE*)&BufPtr ) ) == ERROR_SUCCESS )
 			{
 				// Construct the local path
-				OutPath = YString( BufPtr->shi2_path ) + InUNCPath.Mid( ComputerNameLen + 1 + ShareNameLen );
+				OutPath = FString( BufPtr->shi2_path ) + InUNCPath.Mid( ComputerNameLen + 1 + ShareNameLen );
 
 				// Free the buffer allocated by NetShareGetInfo
 				NetApiBufferFree(BufPtr);
@@ -1159,9 +1159,9 @@ bool FWindowsPlatformProcess::CreatePipe( void*& ReadPipe, void*& WritePipe )
 	return true;
 }
 
-YString FWindowsPlatformProcess::ReadPipe( void* ReadPipe )
+FString FWindowsPlatformProcess::ReadPipe( void* ReadPipe )
 {
-	YString Output;
+	FString Output;
 
 	uint32 BytesAvailable = 0;
 	if (::PeekNamedPipe(ReadPipe, NULL, 0, NULL, (::DWORD*)&BytesAvailable, NULL) && (BytesAvailable > 0))
@@ -1207,7 +1207,7 @@ bool FWindowsPlatformProcess::ReadPipeToArray(void* ReadPipe, TArray<uint8> & Ou
 	return false;
 }
 
-bool FWindowsPlatformProcess::WritePipe(void* WritePipe, const YString& Message, YString* OutWritten)
+bool FWindowsPlatformProcess::WritePipe(void* WritePipe, const FString& Message, FString* OutWritten)
 {
 	// If there is not a message or WritePipe is null
 	if (Message.Len() == 0 || WritePipe == nullptr)
@@ -1240,7 +1240,7 @@ bool FWindowsPlatformProcess::WritePipe(void* WritePipe, const YString& Message,
 
 #include "Windows/AllowWindowsPlatformTypes.h"
 
-FWindowsPlatformProcess::FWindowsSemaphore::FWindowsSemaphore(const YString & InName, HANDLE InSemaphore)
+FWindowsPlatformProcess::FWindowsSemaphore::FWindowsSemaphore(const FString & InName, HANDLE InSemaphore)
 	:	FSemaphore(InName)
 	,	Semaphore(InSemaphore)
 {
@@ -1294,7 +1294,7 @@ void FWindowsPlatformProcess::FWindowsSemaphore::Unlock()
 	}
 }
 
-FWindowsPlatformProcess::FSemaphore * FWindowsPlatformProcess::NewInterprocessSynchObject(const YString & Name, bool bCreate, uint32 MaxLocks)
+FWindowsPlatformProcess::FSemaphore * FWindowsPlatformProcess::NewInterprocessSynchObject(const FString & Name, bool bCreate, uint32 MaxLocks)
 {
 	HANDLE Semaphore = NULL;
 	
@@ -1366,10 +1366,10 @@ bool FWindowsPlatformProcess::Daemonize()
 	return true;
 }
 
-void *FWindowsPlatformProcess::LoadLibraryWithSearchPaths(const YString& FileName, const TArray<YString>& SearchPaths)
+void *FWindowsPlatformProcess::LoadLibraryWithSearchPaths(const FString& FileName, const TArray<FString>& SearchPaths)
 {
 	// Make sure the initial module exists. If we can't find it from the path we're given, it's probably a system dll.
-	YString FullFileName = FileName;
+	FString FullFileName = FileName;
 	if (YPaths::FileExists(*FullFileName))
 	{
 		// Convert it to a full path, since LoadLibrary will try to resolve it against the executable directory (which may not be the same as the working dir)
@@ -1377,10 +1377,10 @@ void *FWindowsPlatformProcess::LoadLibraryWithSearchPaths(const YString& FileNam
 
 		// Create a list of files which we've already checked for imports. Don't add the initial file to this list to improve the resolution of dependencies for direct circular dependencies of this
 		// module; by allowing the module to be visited twice, any mutually depended on DLLs will be visited first.
-		TArray<YString> VisitedImportNames;
+		TArray<FString> VisitedImportNames;
 
 		// Find a list of all the DLLs that need to be loaded
-		TArray<YString> ImportFileNames;
+		TArray<FString> ImportFileNames;
 		ResolveImportsRecursive(*FullFileName, SearchPaths, ImportFileNames, VisitedImportNames);
 
 		// Load all the missing dependencies first
@@ -1395,23 +1395,23 @@ void *FWindowsPlatformProcess::LoadLibraryWithSearchPaths(const YString& FileNam
 	return LoadLibrary(*FullFileName);
 }
 
-void FWindowsPlatformProcess::ResolveImportsRecursive(const YString& FileName, const TArray<YString>& SearchPaths, TArray<YString>& ImportFileNames, TArray<YString>& VisitedImportNames)
+void FWindowsPlatformProcess::ResolveImportsRecursive(const FString& FileName, const TArray<FString>& SearchPaths, TArray<FString>& ImportFileNames, TArray<FString>& VisitedImportNames)
 {
 	// Read the imports for this library
-	TArray<YString> ImportNames;
+	TArray<FString> ImportNames;
 	if(ReadLibraryImports(*FileName, ImportNames))
 	{
 		// Find all the imports that haven't already been resolved
 		for(int Idx = 0; Idx < ImportNames.Num(); Idx++)
 		{
-			const YString &ImportName = ImportNames[Idx];
+			const FString &ImportName = ImportNames[Idx];
 			if(!VisitedImportNames.Contains(ImportName))
 			{
 				// Prevent checking this import again
 				VisitedImportNames.Add(ImportName);
 
 				// Try to resolve this import
-				YString ImportFileName;
+				FString ImportFileName;
 				if(ResolveImport(*ImportName, SearchPaths, ImportFileName))
 				{
 					ResolveImportsRecursive(ImportFileName, SearchPaths, ImportFileNames, VisitedImportNames);
@@ -1422,12 +1422,12 @@ void FWindowsPlatformProcess::ResolveImportsRecursive(const YString& FileName, c
 	}
 }
 
-bool FWindowsPlatformProcess::ResolveImport(const YString& Name, const TArray<YString>& SearchPaths, YString& OutFileName)
+bool FWindowsPlatformProcess::ResolveImport(const FString& Name, const TArray<FString>& SearchPaths, FString& OutFileName)
 {
 	// Look for the named DLL on any of the search paths
 	for(int Idx = 0; Idx < SearchPaths.Num(); Idx++)
 	{
-		YString FileName = SearchPaths[Idx] / Name;
+		FString FileName = SearchPaths[Idx] / Name;
 		if(YPaths::FileExists(FileName))
 		{
 			OutFileName = YPaths::ConvertRelativePathToFull(FileName);
@@ -1437,7 +1437,7 @@ bool FWindowsPlatformProcess::ResolveImport(const YString& Name, const TArray<YS
 	return false;
 }
 
-bool FWindowsPlatformProcess::ReadLibraryImports(const TCHAR* FileName, TArray<YString>& ImportNames)
+bool FWindowsPlatformProcess::ReadLibraryImports(const TCHAR* FileName, TArray<FString>& ImportNames)
 {
 	bool bResult = false;
 
@@ -1463,7 +1463,7 @@ bool FWindowsPlatformProcess::ReadLibraryImports(const TCHAR* FileName, TArray<Y
 	return bResult;
 }
 
-bool ReadLibraryImportsFromMemory(const IMAGE_DOS_HEADER *Header, TArray<YString> &ImportNames)
+bool ReadLibraryImportsFromMemory(const IMAGE_DOS_HEADER *Header, TArray<FString> &ImportNames)
 {
 	bool bResult = false;
 	if(Header->e_magic == IMAGE_DOS_SIGNATURE)
@@ -1557,12 +1557,12 @@ uint32 FWindowsPlatformProcess::FProcEnumInfo::GetParentPID() const
 	return Info->th32ParentProcessID;
 }
 
-YString FWindowsPlatformProcess::FProcEnumInfo::GetName() const
+FString FWindowsPlatformProcess::FProcEnumInfo::GetName() const
 {
 	return Info->szExeFile;
 }
 
-YString FWindowsPlatformProcess::FProcEnumInfo::GetFullPath() const
+FString FWindowsPlatformProcess::FProcEnumInfo::GetFullPath() const
 {
 	return GetApplicationName(GetPID());
 }

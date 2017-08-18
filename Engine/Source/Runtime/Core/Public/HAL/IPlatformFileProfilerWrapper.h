@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Map.h"
 #include "Misc/Parse.h"
 #include "Logging/LogMacros.h"
@@ -99,7 +99,7 @@ struct FProfiledFileStatsOp : public FProfiledFileStatsBase
 struct FProfiledFileStatsFileBase : public FProfiledFileStatsBase
 {
 	/** File name */
-	YString	Name;
+	FString	Name;
 	/** Child stats */
 	TArray< TSharedPtr< FProfiledFileStatsOp > > Children;
 	FCriticalSection SynchronizationObject;
@@ -154,7 +154,7 @@ template< typename StatType >
 class TProfiledFileHandle : public IFileHandle
 {
 	TUniquePtr<IFileHandle> FileHandle;
-	YString Filename;
+	FString Filename;
 	StatType* FileStats;
 
 public:
@@ -217,7 +217,7 @@ class CORE_API FProfiledPlatformFile : public IPlatformFile
 protected:
 
 	IPlatformFile* LowerLevel;
-	TMap< YString, TSharedPtr< FProfiledFileStatsFileBase > > Stats;
+	TMap< FString, TSharedPtr< FProfiledFileStatsFileBase > > Stats;
 	double StartTime;
 	FCriticalSection SynchronizationObject;
 
@@ -261,7 +261,7 @@ public:
 		return StartTime;
 	}
 
-	const TMap< YString, TSharedPtr< FProfiledFileStatsFileBase > >& GetStats() const
+	const TMap< FString, TSharedPtr< FProfiledFileStatsFileBase > >& GetStats() const
 	{
 		return Stats;
 	}
@@ -272,7 +272,7 @@ class TProfiledPlatformFile : public FProfiledPlatformFile
 {
 	FORCEINLINE StatsType* CreateStat(const TCHAR* Filename)
 	{
-		YString Path(Filename);
+		FString Path(Filename);
 		FScopeLock ScopeLock(&SynchronizationObject);
 
 		TSharedPtr< FProfiledFileStatsFileBase >* ExistingStat = Stats.Find(Path);
@@ -377,12 +377,12 @@ public:
 		OpStat->Duration += FPlatformTime::Seconds() * 1000 - OpStat->LastOpTime;
 		return Result;
 	}
-	virtual YString	GetFilenameOnDisk(const TCHAR* Filename) override
+	virtual FString	GetFilenameOnDisk(const TCHAR* Filename) override
 	{
 		StatsType* FileStat = CreateStat(Filename);
 		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::GetFilenameOnDisk);
 		double OpStartTime = FPlatformTime::Seconds();
-		YString Result = LowerLevel->GetFilenameOnDisk(Filename);
+		FString Result = LowerLevel->GetFilenameOnDisk(Filename);
 		OpStat->Duration += FPlatformTime::Seconds() * 1000 - OpStat->LastOpTime;
 		return Result;
 	}
@@ -510,7 +510,7 @@ inline const TCHAR* TProfiledPlatformFile<FProfiledFileStatsFileSimple>::GetType
 class FPlatformFileReadStatsHandle : public IFileHandle
 {
 	TUniquePtr<IFileHandle> FileHandle;
-	YString Filename;
+	FString Filename;
 	volatile int32* BytesPerSecCounter;
 	volatile int32* BytesReadCounter;
 	volatile int32* ReadsCounter;
@@ -638,7 +638,7 @@ public:
 	{
 		return LowerLevel->GetAccessTimeStamp(Filename);
 	}
-	virtual YString	GetFilenameOnDisk(const TCHAR* Filename) override
+	virtual FString	GetFilenameOnDisk(const TCHAR* Filename) override
 	{
 		return LowerLevel->GetFilenameOnDisk(Filename);
 	}

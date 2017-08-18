@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 
 /*-----------------------------------------------------------------------------
 Command line.
@@ -66,7 +66,7 @@ struct CORE_API FCommandLine
 	/**
 	* Returns the subprocess command line string
 	*/
-	static const YString& GetSubprocessCommandline();
+	static const FString& GetSubprocessCommandline();
 
 	/**
 	* Removes the executable name from the passed CmdLine, denoted by parentheses.
@@ -82,19 +82,19 @@ struct CORE_API FCommandLine
 	* @param	Tokens		[out] filled with all parameters found in the string
 	* @param	Switches	[out] filled with all switches found in the string
 	*/
-	static void Parse(const TCHAR* CmdLine, TArray<YString>& Tokens, TArray<YString>& Switches);
+	static void Parse(const TCHAR* CmdLine, TArray<FString>& Tokens, TArray<FString>& Switches);
 private:
 #if WANTS_COMMANDLINE_WHITELIST
 	/** Filters both the original and current command line list for approved only args */
 	static void WhitelistCommandLines();
 	/** Filters any command line args that aren't on the approved list */
-	static TArray<YString> FilterCommandLine(TCHAR* CommandLine);
+	static TArray<FString> FilterCommandLine(TCHAR* CommandLine);
 	/** Filters any command line args that are on the to-strip list */
-	static TArray<YString> FilterCommandLineForLogging(TCHAR* CommandLine);
+	static TArray<FString> FilterCommandLineForLogging(TCHAR* CommandLine);
 	/** Rebuilds the command line using the filtered args */
-	static void BuildWhitelistCommandLine(TCHAR* CommandLine, uint32 Length, const TArray<YString>& FilteredArgs);
-	static TArray<YString> ApprovedArgs;
-	static TArray<YString> FilterArgsForLogging;
+	static void BuildWhitelistCommandLine(TCHAR* CommandLine, uint32 Length, const TArray<FString>& FilteredArgs);
+	static TArray<FString> ApprovedArgs;
+	static TArray<FString> FilterArgsForLogging;
 #else
 #define WhitelistCommandLines()
 #endif
@@ -110,6 +110,6 @@ private:
 	/** character buffer containing the original command line filtered for logging purposes */
 	static TCHAR LoggingOriginalCmdLine[MaxCommandLineSize];
 	/** subprocess command line */
-	static YString SubprocessCommandLine;
+	static FString SubprocessCommandLine;
 };
 

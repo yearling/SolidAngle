@@ -30,22 +30,22 @@ const TCHAR* FGenericCrashContext::CrashContextRuntimeXMLNameW = TEXT( "CrashCon
 
 const ANSICHAR* FGenericCrashContext::CrashConfigFileNameA = "CrashReportClient.ini";
 const TCHAR* FGenericCrashContext::CrashConfigFileNameW = TEXT("CrashReportClient.ini");
-const YString FGenericCrashContext::CrashConfigExtension = TEXT(".ini");
-const YString FGenericCrashContext::ConfigSectionName = TEXT("CrashReportClient");
+const FString FGenericCrashContext::CrashConfigExtension = TEXT(".ini");
+const FString FGenericCrashContext::ConfigSectionName = TEXT("CrashReportClient");
 
-const YString FGenericCrashContext::CrashContextExtension = TEXT(".runtime-xml");
-const YString FGenericCrashContext::RuntimePropertiesTag = TEXT( "RuntimeProperties" );
-const YString FGenericCrashContext::PlatformPropertiesTag = TEXT( "PlatformProperties" );
-const YString FGenericCrashContext::UE4MinidumpName = TEXT( "UE4Minidump.dmp" );
-const YString FGenericCrashContext::NewLineTag = TEXT( "&nl;" );
+const FString FGenericCrashContext::CrashContextExtension = TEXT(".runtime-xml");
+const FString FGenericCrashContext::RuntimePropertiesTag = TEXT( "RuntimeProperties" );
+const FString FGenericCrashContext::PlatformPropertiesTag = TEXT( "PlatformProperties" );
+const FString FGenericCrashContext::UE4MinidumpName = TEXT( "UE4Minidump.dmp" );
+const FString FGenericCrashContext::NewLineTag = TEXT( "&nl;" );
 
-const YString FGenericCrashContext::CrashTypeCrash = TEXT("Crash");
-const YString FGenericCrashContext::CrashTypeAssert = TEXT("Assert");
-const YString FGenericCrashContext::CrashTypeEnsure = TEXT("Ensure");
+const FString FGenericCrashContext::CrashTypeCrash = TEXT("Crash");
+const FString FGenericCrashContext::CrashTypeAssert = TEXT("Assert");
+const FString FGenericCrashContext::CrashTypeEnsure = TEXT("Ensure");
 
-const YString FGenericCrashContext::EngineModeExUnknown = TEXT("Unset");
-const YString FGenericCrashContext::EngineModeExDirty = TEXT("Dirty");
-const YString FGenericCrashContext::EngineModeExVanilla = TEXT("Vanilla");
+const FString FGenericCrashContext::EngineModeExUnknown = TEXT("Unset");
+const FString FGenericCrashContext::EngineModeExDirty = TEXT("Dirty");
+const FString FGenericCrashContext::EngineModeExVanilla = TEXT("Vanilla");
 
 bool FGenericCrashContext::bIsInitialized = false;
 YPlatformMemoryStats FGenericCrashContext::CrashMemoryStats = YPlatformMemoryStats();
@@ -58,32 +58,32 @@ namespace NCachedCrashContextProperties
 	static bool bIsSourceDistribution;
 	static bool bIsUE4Release;
 	static TOptional<bool> bIsVanilla;
-	static YString GameName;
-	static YString ExecutableName;
-	static YString PlatformName;
-	static YString PlatformNameIni;
-	static YString DeploymentName;
-	static YString BaseDir;
-	static YString RootDir;
-	static YString EpicAccountId;
-	static YString LoginIdStr;
-	static YString OsVersion;
-	static YString OsSubVersion;
+	static FString GameName;
+	static FString ExecutableName;
+	static FString PlatformName;
+	static FString PlatformNameIni;
+	static FString DeploymentName;
+	static FString BaseDir;
+	static FString RootDir;
+	static FString EpicAccountId;
+	static FString LoginIdStr;
+	static FString OsVersion;
+	static FString OsSubVersion;
 	static int32 NumberOfCores;
 	static int32 NumberOfCoresIncludingHyperthreads;
-	static YString CPUVendor;
-	static YString CPUBrand;
-	static YString PrimaryGPUBrand;
-	static YString UserName;
-	static YString DefaultLocale;
+	static FString CPUVendor;
+	static FString CPUBrand;
+	static FString PrimaryGPUBrand;
+	static FString UserName;
+	static FString DefaultLocale;
 	static int32 CrashDumpMode;
 	static int32 SecondsSinceStart;
-	static YString CrashGUIDRoot;
-	static YString UserActivityHint;
-	static YString GameSessionID;
-	static YString CommandLine;
+	static FString CrashGUIDRoot;
+	static FString UserActivityHint;
+	static FString GameSessionID;
+	static FString CommandLine;
 	static int32 LanguageLCID;
-	static YString CrashReportClientRichText;
+	static FString CrashReportClientRichText;
 }
 
 void FGenericCrashContext::Initialize()
@@ -94,7 +94,7 @@ void FGenericCrashContext::Initialize()
 	NCachedCrashContextProperties::bIsSourceDistribution = FEngineBuildSettings::IsSourceDistribution();
 	NCachedCrashContextProperties::bIsUE4Release = FApp::IsEngineInstalled();
 
-	NCachedCrashContextProperties::GameName = YString::Printf( TEXT("UE4-%s"), FApp::GetGameName() );
+	NCachedCrashContextProperties::GameName = FString::Printf( TEXT("UE4-%s"), FApp::GetGameName() );
 	NCachedCrashContextProperties::ExecutableName = FPlatformProcess::ExecutableName();
 	NCachedCrashContextProperties::PlatformName = FPlatformProperties::PlatformName();
 	NCachedCrashContextProperties::PlatformNameIni = FPlatformProperties::IniPlatformName();
@@ -148,7 +148,7 @@ void FGenericCrashContext::Initialize()
 	}
 
 	const FGuid Guid = FGuid::NewGuid();
-	NCachedCrashContextProperties::CrashGUIDRoot = YString::Printf(TEXT("UE4CC-%s-%s"), *NCachedCrashContextProperties::PlatformNameIni, *Guid.ToString(EGuidFormats::Digits));
+	NCachedCrashContextProperties::CrashGUIDRoot = FString::Printf(TEXT("UE4CC-%s-%s"), *NCachedCrashContextProperties::PlatformNameIni, *Guid.ToString(EGuidFormats::Digits));
 
 	// Initialize delegate for updating SecondsSinceStart, because FPlatformTime::Seconds() is not POSIX safe.
 	const float PollingInterval = 1.0f;
@@ -158,12 +158,12 @@ void FGenericCrashContext::Initialize()
 		return true;
 	} ), PollingInterval );
 
-	FCoreDelegates::UserActivityStringChanged.AddLambda([](const YString& InUserActivity)
+	FCoreDelegates::UserActivityStringChanged.AddLambda([](const FString& InUserActivity)
 	{
 		NCachedCrashContextProperties::UserActivityHint = InUserActivity;
 	});
 
-	FCoreDelegates::GameSessionIDChanged.AddLambda([](const YString& InGameSessionID)
+	FCoreDelegates::GameSessionIDChanged.AddLambda([](const FString& InGameSessionID)
 	{
 		NCachedCrashContextProperties::GameSessionID = InGameSessionID;
 	});
@@ -400,7 +400,7 @@ void FGenericCrashContext::EndSection( const TCHAR* SectionName )
 	CommonBuffer += LINE_TERMINATOR;
 }
 
-YString FGenericCrashContext::EscapeXMLString( const YString& Text )
+FString FGenericCrashContext::EscapeXMLString( const FString& Text )
 {
 	return Text
 		.Replace( TEXT( "&" ), TEXT( "&amp;" ) )
@@ -414,7 +414,7 @@ YString FGenericCrashContext::EscapeXMLString( const YString& Text )
 		.Replace( TEXT( "\r" ), TEXT("") );
 }
 
-YString FGenericCrashContext::UnescapeXMLString( const YString& Text )
+FString FGenericCrashContext::UnescapeXMLString( const FString& Text )
 {
 	return Text
 		.Replace( TEXT( "&amp;" ), TEXT( "&" ) )
@@ -447,7 +447,7 @@ const TCHAR* FGenericCrashContext::EngineModeExString()
 
 const TCHAR* FGenericCrashContext::GetCrashConfigFilePath()
 {
-	static YString CrashConfigFilePath;
+	static FString CrashConfigFilePath;
 	if (CrashConfigFilePath.IsEmpty())
 	{
 		CrashConfigFilePath = YPaths::Combine(*YPaths::GameLogDir(), *NCachedCrashContextProperties::CrashGUIDRoot, FGenericCrashContext::CrashConfigFileNameW);
@@ -455,7 +455,7 @@ const TCHAR* FGenericCrashContext::GetCrashConfigFilePath()
 	return *CrashConfigFilePath;
 }
 
-FProgramCounterSymbolInfoEx::FProgramCounterSymbolInfoEx( YString InModuleName, YString InFunctionName, YString InFilename, uint32 InLineNumber, uint64 InSymbolDisplacement, uint64 InOffsetInModule, uint64 InProgramCounter ) :
+FProgramCounterSymbolInfoEx::FProgramCounterSymbolInfoEx( FString InModuleName, FString InFunctionName, FString InFilename, uint32 InLineNumber, uint64 InSymbolDisplacement, uint64 InOffsetInModule, uint64 InProgramCounter ) :
 	ModuleName( InModuleName ),
 	FunctionName( InFunctionName ),
 	Filename( InFilename ),

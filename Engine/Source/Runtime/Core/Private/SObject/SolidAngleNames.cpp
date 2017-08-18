@@ -10,7 +10,7 @@
 #include "Templates/UnrealTemplate.h"
 #include "Misc/CString.h"
 #include "Misc/Crc.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "UObject/NameTypes.h"
 #include "Logging/LogMacros.h"
 #include "Misc/ByteSwap.h"
@@ -106,15 +106,15 @@ static uint16 GetRawNonCasePreservingHash(const TCharType* Source)
 /**
  * @return YString of name portion minus number.
  */
-YString FNameEntry::GetPlainNameString() const
+FString FNameEntry::GetPlainNameString() const
 {
 	if( IsWide() )
 	{
-		return YString(WideName);
+		return FString(WideName);
 	}
 	else
 	{
-		return YString(AnsiName);
+		return FString(AnsiName);
 	}
 }
 
@@ -123,7 +123,7 @@ YString FNameEntry::GetPlainNameString() const
  *
  * @param	String	String to append this name to
  */
-void FNameEntry::AppendNameToString( YString& String ) const
+void FNameEntry::AppendNameToString( FString& String ) const
 {
 	if( IsWide() )
 	{
@@ -135,7 +135,7 @@ void FNameEntry::AppendNameToString( YString& String ) const
 	}
 }
 
-void FNameEntry::AppendNameToPathString(YString& String) const
+void FNameEntry::AppendNameToPathString(FString& String) const
 {
 	if (IsWide())
 	{
@@ -280,7 +280,7 @@ FCriticalSection* FName::GetCriticalSection()
 	return CriticalSection;
 }
 
-YString FName::NameToDisplayString( const YString& InDisplaFName, const bool bIsBool )
+FString FName::NameToDisplayString( const FString& InDisplaFName, const bool bIsBool )
 {
 	// Copy the characters out so that we can modify the string in place
 	const TArray< TCHAR >& Chars = InDisplaFName.GetCharArray();
@@ -290,7 +290,7 @@ YString FName::NameToDisplayString( const YString& InDisplaFName, const bool bIs
 	bool bInARun = false;
 	bool bWasSpace = false;
 	bool bWasOpenParen = false;
-	YString OutDisplaFName;
+	FString OutDisplaFName;
 	OutDisplaFName.GetCharArray().Reserve(Chars.Num());
 	for( int32 CharIndex = 0 ; CharIndex < Chars.Num() ; ++CharIndex )
 	{
@@ -895,14 +895,14 @@ const FNameEntry* FName::GetDisplaFNameEntry() const
 	return Names[Index];
 }
 
-YString FName::ToString() const
+FString FName::ToString() const
 {
-	YString Out;	
+	FString Out;	
 	ToString(Out);
 	return Out;
 }
 
-void FName::ToString(YString& Out) const
+void FName::ToString(FString& Out) const
 {
 	// a version of ToString that saves at least one string copy
 	const FNameEntry* const NameEntry = GetDisplaFNameEntry();
@@ -910,7 +910,7 @@ void FName::ToString(YString& Out) const
 	AppendString(Out);
 }
 
-void FName::AppendString(YString& Out) const
+void FName::AppendString(FString& Out) const
 {
 	const FNameEntry* const NameEntry = GetDisplaFNameEntry();
 	NameEntry->AppendNameToString( Out );
@@ -1080,7 +1080,7 @@ bool FName::SplitNameWithCheckImpl(const TCharType* OldName, TCharType* NewName,
 	return bSucceeded;
 }
 
-bool FName::IsValidXName(const YString& InName, const YString& InInvalidChars, FText* OutReason, const FText* InErrorCtx)
+bool FName::IsValidXName(const FString& InName, const FString& InInvalidChars, FText* OutReason, const FText* InErrorCtx)
 {
 	if (InName.IsEmpty() || InInvalidChars.IsEmpty())
 	{
@@ -1088,7 +1088,7 @@ bool FName::IsValidXName(const YString& InName, const YString& InInvalidChars, F
 	}
 
 	// See if the name contains invalid characters.
-	YString MatchedInvalidChars;
+	FString MatchedInvalidChars;
 	TSet<TCHAR> AlreadyMatchedInvalidChars;
 	for (const TCHAR InvalidChar : InInvalidChars)
 	{
@@ -1239,7 +1239,7 @@ FArchive& operator<<(FArchive& Ar, FNameEntrySerialized& E)
 	}
 	else
 	{
-		YString Str = E.GetPlainNameString();
+		FString Str = E.GetPlainNameString();
 		Ar << Str;
 		Ar << E.NonCasePreservingHash;
 		Ar << E.CasePreservingHash;
@@ -1449,7 +1449,7 @@ struct FSampleFNameChurn
 	void PrintResultsAndReset()
 	{
 		DumpFrame = GFrameCounter + CVarLogGameThreadFNameChurn_PrintFrequency.GetValueOnGameThread();
-		YOutputDeviceRedirector* Log = YOutputDeviceRedirector::Get();
+		FOutputDeviceRedirector* Log = FOutputDeviceRedirector::Get();
 		float SampleAndFrameCorrection = float(CVarLogGameThreadFNameChurn_SampleFrequency.GetValueOnGameThread()) / float(CVarLogGameThreadFNameChurn_PrintFrequency.GetValueOnGameThread());
 		GGameThreadFNameChurnTracker.DumpStackTraces(CVarLogGameThreadFNameChurn_Threshhold.GetValueOnGameThread(), *Log, SampleAndFrameCorrection);
 		GGameThreadFNameChurnTracker.ResetTracking();

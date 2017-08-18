@@ -40,12 +40,12 @@ public:
 				Verbosity = ELogVerbosity::Error;
 			}
 
-			YString Prefix;
+			FString Prefix;
 			if( Context )
 			{
 				Prefix = Context->GetContext() + TEXT(" : ");
 			}
-			YString Format = Prefix + YOutputDeviceHelper::FormatLogLine(Verbosity, Category, V);
+			FString Format = Prefix + YOutputDeviceHelper::FormatLogLine(Verbosity, Category, V);
 
 			if(Verbosity == ELogVerbosity::Error)
 			{

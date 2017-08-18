@@ -143,12 +143,12 @@ TSharedPtr<IMessageToken> FTokenizedMessage::GetMessageLink() const
 
 FURLToken::FGenerateURL FURLToken::GenerateURL;
 
-void FURLToken::VisitURL(const TSharedRef<IMessageToken>& Token, YString InURL)
+void FURLToken::VisitURL(const TSharedRef<IMessageToken>& Token, FString InURL)
 {	
 	FPlatformProcess::LaunchURL(*InURL, NULL, NULL);
 }
 
-FURLToken::FURLToken( const YString& InURL, const FText& InMessage )
+FURLToken::FURLToken( const FString& InURL, const FText& InMessage )
 {
 	if(GenerateURL.IsBound())
 	{
@@ -173,7 +173,7 @@ FURLToken::FURLToken( const YString& InURL, const FText& InMessage )
 
 FAssetNameToken::FOnGotoAsset FAssetNameToken::GotoAsset;
 
-void FAssetNameToken::FindAsset(const TSharedRef<IMessageToken>& Token, YString InAssetName)
+void FAssetNameToken::FindAsset(const TSharedRef<IMessageToken>& Token, FString InAssetName)
 {
 	if(GotoAsset.IsBound())
 	{
@@ -181,12 +181,12 @@ void FAssetNameToken::FindAsset(const TSharedRef<IMessageToken>& Token, YString 
 	}
 }
 
-TSharedRef<FAssetNameToken> FAssetNameToken::Create(const YString& InAssetName, const FText& InMessage)
+TSharedRef<FAssetNameToken> FAssetNameToken::Create(const FString& InAssetName, const FText& InMessage)
 {
 	return MakeShareable(new FAssetNameToken(InAssetName, InMessage));
 }
 
-FAssetNameToken::FAssetNameToken(const YString& InAssetName, const FText& InMessage)
+FAssetNameToken::FAssetNameToken(const FString& InAssetName, const FText& InMessage)
 	: AssetName(InAssetName)
 {
 	if ( !InMessage.IsEmpty() )
@@ -201,13 +201,13 @@ FAssetNameToken::FAssetNameToken(const YString& InAssetName, const FText& InMess
 	MessageTokenActivated = FOnMessageTokenActivated::CreateStatic(&FAssetNameToken::FindAsset, AssetName);
 }
 
-FDocumentationToken::FDocumentationToken( const YString& InDocumentationLink, const YString& InPreviewExcerptLink, const YString& InPreviewExcerptName )
+FDocumentationToken::FDocumentationToken( const FString& InDocumentationLink, const FString& InPreviewExcerptLink, const FString& InPreviewExcerptName )
 	: DocumentationLink(InDocumentationLink)
 	, PreviewExcerptLink(InPreviewExcerptLink)
 	, PreviewExcerptName(InPreviewExcerptName)
 { }
 
-TSharedRef<FDocumentationToken> FDocumentationToken::Create(const YString& InDocumentationLink, const YString& InPreviewExcerptLink, const YString& InPreviewExcerptName)
+TSharedRef<FDocumentationToken> FDocumentationToken::Create(const FString& InDocumentationLink, const FString& InPreviewExcerptLink, const FString& InPreviewExcerptName)
 {
 	return MakeShareable(new FDocumentationToken(InDocumentationLink, InPreviewExcerptLink, InPreviewExcerptName));
 }

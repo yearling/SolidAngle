@@ -8,7 +8,7 @@
 /**
 * It should be possible to provide a generic implementation as long as a threadID is provided. We don't do that yet.
 */
-struct YGenericPlatformTLS
+struct FGenericPlatformTLS
 {
 	/**
 	* Return false if this is an invalid TLS slot

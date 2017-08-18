@@ -44,7 +44,7 @@ int32 FTokenStream::GetPosition() const
 	return ReadPos - Start;
 }
 
-YString FTokenStream::GetErrorContext() const
+FString FTokenStream::GetErrorContext() const
 {
 	const TCHAR* StartPos = ReadPos;
 	const TCHAR* EndPos = StartPos;
@@ -62,7 +62,7 @@ YString FTokenStream::GetErrorContext() const
 	}
 
 	static const int32 MaxChars = 32;
-	YString Context(YMath::Min(int32(EndPos - StartPos), MaxChars), StartPos);
+	FString Context(YMath::Min(int32(EndPos - StartPos), MaxChars), StartPos);
 	if (EndPos - StartPos > MaxChars)
 	{
 		Context += TEXT("...");
@@ -832,7 +832,7 @@ PRAGMA_DISABLE_OPTIMIZATION
 			int32 ResultingId = New.Cast<T>()->Id;
 			if (ResultingId != 1)
 			{
-				Test->AddError(YString::Printf(TEXT("Expression node move operator did not operate correctly. Expected moved-to state to be 1, it's actually %d."), ResultingId));
+				Test->AddError(FString::Printf(TEXT("Expression node move operator did not operate correctly. Expected moved-to state to be 1, it's actually %d."), ResultingId));
 				return false;
 			}
 
@@ -843,7 +843,7 @@ PRAGMA_DISABLE_OPTIMIZATION
 			ResultingId = New.Cast<T>()->Id;
 			if (ResultingId != 1)
 			{
-				Test->AddError(YString::Printf(TEXT("Expression node move operator did not operate correctly. Expected moved-to state to be 1, it's actually %d."), ResultingId));
+				Test->AddError(FString::Printf(TEXT("Expression node move operator did not operate correctly. Expected moved-to state to be 1, it's actually %d."), ResultingId));
 				return false;
 			}
 
@@ -879,7 +879,7 @@ PRAGMA_DISABLE_OPTIMIZATION
 
 		if (NumLeaks != 0)
 		{
-			Test->AddError(YString::Printf(TEXT("Expression node did not call wrapped type's destructors correctly. Potentially resulted in %d leaks."), NumLeaks));
+			Test->AddError(FString::Printf(TEXT("Expression node did not call wrapped type's destructors correctly. Potentially resulted in %d leaks."), NumLeaks));
 			return false;
 		}
 
@@ -887,7 +887,7 @@ PRAGMA_DISABLE_OPTIMIZATION
 	}
 
 	IMPLEMENT_SIMPLE_AUTOMATION_TEST(FExpressionParserMoveableTypes, "System.Core.Expression Parser.Moveable Types", EAutomationTestFlags::EditorContext | EAutomationTestFlags::SmokeFilter)
-	bool FExpressionParserMoveableTypes::RunTest( const YString& Parameters )
+	bool FExpressionParserMoveableTypes::RunTest( const FString& Parameters )
 	{
 		return TestWithType<FMoveableType>(this);
 	}
@@ -908,7 +908,7 @@ PRAGMA_DISABLE_OPTIMIZATION
 	};
 
 	IMPLEMENT_SIMPLE_AUTOMATION_TEST(FExpressionParserAllocatedTypes, "System.Core.Expression Parser.Allocated Types", EAutomationTestFlags::EditorContext | EAutomationTestFlags::SmokeFilter)
-	bool FExpressionParserAllocatedTypes::RunTest( const YString& Parameters )
+	bool FExpressionParserAllocatedTypes::RunTest( const FString& Parameters )
 	{
 		return TestWithType<FHugeType>(this);
 	}

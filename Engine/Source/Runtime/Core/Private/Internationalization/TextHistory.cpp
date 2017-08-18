@@ -40,7 +40,7 @@ bool FTextHistory::IsOutOfDate() const
 	return Revision != FTextLocalizationManager::Get().GetTextRevision();
 }
 
-const YString* FTextHistory::GetSourceString() const
+const FString* FTextHistory::GetSourceString() const
 {
 	return NULL;
 }
@@ -64,11 +64,11 @@ void FTextHistory::SerializeForDisplayString(FArchive& Ar, FTextDisplayStringPtr
 		//When duplicating, the CDO is used as the template, then values for the instance are assigned.
 		//If we don't duplicate the string, the CDO and the instance are both pointing at the same thing.
 		//This would result in all subsequently duplicated objects stamping over formerly duplicated ones.
-		InOutDisplayString = MakeShareable(new YString());
+		InOutDisplayString = MakeShareable(new FString());
 	}
 }
 
-void FTextHistory::Rebuild(TSharedRef< YString, ESPMode::ThreadSafe > InDisplayString)
+void FTextHistory::Rebuild(TSharedRef< FString, ESPMode::ThreadSafe > InDisplayString)
 {
 	const bool bIsOutOfDate = IsOutOfDate();
 	if(bIsOutOfDate)
@@ -88,7 +88,7 @@ void FTextHistory::Rebuild(TSharedRef< YString, ESPMode::ThreadSafe > InDisplayS
 ///////////////////////////////////////
 // FTextHistory_Base
 
-FTextHistory_Base::FTextHistory_Base(YString&& InSourceString)
+FTextHistory_Base::FTextHistory_Base(FString&& InSourceString)
 	: SourceString(MoveTemp(InSourceString))
 {
 }
@@ -122,7 +122,7 @@ FText FTextHistory_Base::ToText(bool bInAsSource) const
 	return FText::GetEmpty();
 }
 
-const YString* FTextHistory_Base::GetSourceString() const
+const FString* FTextHistory_Base::GetSourceString() const
 {
 	return &SourceString;
 }
@@ -144,8 +144,8 @@ void FTextHistory_Base::SerializeForDisplayString(FArchive& Ar, FTextDisplayStri
 		// We will definitely need to do a rebuild later
 		Revision = 0;
 
-		YString Namespace;
-		YString Key;
+		FString Namespace;
+		FString Key;
 
 		Ar << Namespace;
 		Ar << Key;
@@ -156,10 +156,10 @@ void FTextHistory_Base::SerializeForDisplayString(FArchive& Ar, FTextDisplayStri
 		// We do this on load (as well as save) to handle cases where data is being duplicated, as it will be written by one package and loaded into another
 		if (GIsEditor && !Ar.HasAnyPortFlags(PPF_DuplicateForPIE))
 		{
-			const YString PackageNamespace = TextNamespaceUtil::GetPackageNamespace(Ar);
+			const FString PackageNamespace = TextNamespaceUtil::GetPackageNamespace(Ar);
 			if (!PackageNamespace.IsEmpty())
 			{
-				const YString FullNamespace = TextNamespaceUtil::BuildFullNamespace(Namespace, PackageNamespace);
+				const FString FullNamespace = TextNamespaceUtil::BuildFullNamespace(Namespace, PackageNamespace);
 				if (!Namespace.Equals(FullNamespace, ESearchCase::CaseSensitive))
 				{
 					// We may assign a new key when loading if we don't have the correct package namespace in order to avoid identity conflicts when instancing (which duplicates without any special flags)
@@ -178,24 +178,24 @@ void FTextHistory_Base::SerializeForDisplayString(FArchive& Ar, FTextDisplayStri
 	{
 		check(InOutDisplayString.IsValid());
 
-		YString Namespace;
-		YString Key;
+		FString Namespace;
+		FString Key;
 		const bool bFoundNamespaceAndKey = FTextLocalizationManager::Get().FindNamespaceAndKeyFromDisplayString(InOutDisplayString.ToSharedRef(), Namespace, Key);
 
 #if USE_STABLE_LOCALIZATION_KEYS
 		// Make sure the package namespace for this text property is up-to-date
 		if (GIsEditor && !Ar.HasAnyPortFlags(PPF_DuplicateForPIE))
 		{
-			const YString PackageNamespace = TextNamespaceUtil::GetPackageNamespace(Ar);
+			const FString PackageNamespace = TextNamespaceUtil::GetPackageNamespace(Ar);
 			if (!PackageNamespace.IsEmpty())
 			{
-				const YString FullNamespace = TextNamespaceUtil::BuildFullNamespace(Namespace, PackageNamespace);
+				const FString FullNamespace = TextNamespaceUtil::BuildFullNamespace(Namespace, PackageNamespace);
 				if (!Namespace.Equals(FullNamespace, ESearchCase::CaseSensitive))
 				{
 					if (Ar.IsCooking())
 					{
-						const YString CurPackageNamespace = TextNamespaceUtil::ExtractPackageNamespace(Namespace);
-						const YString CurCleanNamespace = TextNamespaceUtil::StripPackageNamespace(Namespace);
+						const FString CurPackageNamespace = TextNamespaceUtil::ExtractPackageNamespace(Namespace);
+						const FString CurCleanNamespace = TextNamespaceUtil::StripPackageNamespace(Namespace);
 						UE_LOG(LogCore, Warning, TEXT("Package localization ID mismatch during cook! Expected '%s', got '%s'. Namespace: '%s', Key: '%s', Source: '%s'."), *PackageNamespace, *CurPackageNamespace, *CurCleanNamespace, *Key, *SourceString);
 					}
 					else
@@ -383,7 +383,7 @@ void FTextHistory_OrderedFormat::GetHistoricFormatData(const FText& InText, TArr
 	for (int32 ArgIndex = 0; ArgIndex < Arguments.Num(); ++ArgIndex)
 	{
 		const FFormatArgumentValue& ArgumentValue = Arguments[ArgIndex];
-		NamedArgs.Emplace(YString::FromInt(ArgIndex), ArgumentValue);
+		NamedArgs.Emplace(FString::FromInt(ArgIndex), ArgumentValue);
 	}
 	OutHistoricFormatData.Emplace(InText, FTextFormat(SourceFmt), MoveTemp(NamedArgs));
 }
@@ -544,12 +544,12 @@ void FTextHistory_FormatNumber::Serialize(FArchive& Ar)
 
 	if(Ar.IsSaving())
 	{
-		YString CultureName = TargetCulture.IsValid()? TargetCulture->GetName() : YString();
+		FString CultureName = TargetCulture.IsValid()? TargetCulture->GetName() : FString();
 		Ar << CultureName;
 	}
 	else if(Ar.IsLoading())
 	{
-		YString CultureName;
+		FString CultureName;
 		Ar << CultureName;
 
 		if(!CultureName.IsEmpty())
@@ -690,7 +690,7 @@ bool FTextHistory_AsPercent::GetHistoricNumericData(const FText& InText, FHistor
 ///////////////////////////////////////
 // FTextHistory_AsCurrency
 
-FTextHistory_AsCurrency::FTextHistory_AsCurrency(FFormatArgumentValue InSourceValue, YString InCurrencyCode, const FNumberFormattingOptions* const InFormatOptions, FCulturePtr InTargetCulture)
+FTextHistory_AsCurrency::FTextHistory_AsCurrency(FFormatArgumentValue InSourceValue, FString InCurrencyCode, const FNumberFormattingOptions* const InFormatOptions, FCulturePtr InTargetCulture)
 	: FTextHistory_FormatNumber(MoveTemp(InSourceValue), InFormatOptions, MoveTemp(InTargetCulture))
 	, CurrencyCode(MoveTemp(InCurrencyCode))
 {
@@ -766,7 +766,7 @@ void FTextHistory_AsCurrency::Serialize( FArchive& Ar )
 ///////////////////////////////////////
 // FTextHistory_AsDate
 
-FTextHistory_AsDate::FTextHistory_AsDate(FDateTime InSourceDateTime, const EDateTimeStyle::Type InDateStyle, YString InTimeZone, FCulturePtr InTargetCulture)
+FTextHistory_AsDate::FTextHistory_AsDate(FDateTime InSourceDateTime, const EDateTimeStyle::Type InDateStyle, FString InTimeZone, FCulturePtr InTargetCulture)
 	: SourceDateTime(MoveTemp(InSourceDateTime))
 	, DateStyle(InDateStyle)
 	, TimeZone(MoveTemp(InTimeZone))
@@ -817,12 +817,12 @@ void FTextHistory_AsDate::Serialize(FArchive& Ar)
 
 	if(Ar.IsSaving())
 	{
-		YString CultureName = TargetCulture.IsValid()? TargetCulture->GetName() : YString();
+		FString CultureName = TargetCulture.IsValid()? TargetCulture->GetName() : FString();
 		Ar << CultureName;
 	}
 	else if(Ar.IsLoading())
 	{
-		YString CultureName;
+		FString CultureName;
 		Ar << CultureName;
 
 		if(!CultureName.IsEmpty())
@@ -841,7 +841,7 @@ FText FTextHistory_AsDate::ToText(bool bInAsSource) const
 ///////////////////////////////////////
 // FTextHistory_AsTime
 
-FTextHistory_AsTime::FTextHistory_AsTime(FDateTime InSourceDateTime, const EDateTimeStyle::Type InTimeStyle, YString InTimeZone, FCulturePtr InTargetCulture)
+FTextHistory_AsTime::FTextHistory_AsTime(FDateTime InSourceDateTime, const EDateTimeStyle::Type InTimeStyle, FString InTimeZone, FCulturePtr InTargetCulture)
 	: SourceDateTime(MoveTemp(InSourceDateTime))
 	, TimeStyle(InTimeStyle)
 	, TimeZone(MoveTemp(InTimeZone))
@@ -889,12 +889,12 @@ void FTextHistory_AsTime::Serialize(FArchive& Ar)
 
 	if(Ar.IsSaving())
 	{
-		YString CultureName = TargetCulture.IsValid()? TargetCulture->GetName() : YString();
+		FString CultureName = TargetCulture.IsValid()? TargetCulture->GetName() : FString();
 		Ar << CultureName;
 	}
 	else if(Ar.IsLoading())
 	{
-		YString CultureName;
+		FString CultureName;
 		Ar << CultureName;
 
 		if(!CultureName.IsEmpty())
@@ -914,7 +914,7 @@ FText FTextHistory_AsTime::ToText(bool bInAsSource) const
 ///////////////////////////////////////
 // FTextHistory_AsDateTime
 
-FTextHistory_AsDateTime::FTextHistory_AsDateTime(FDateTime InSourceDateTime, const EDateTimeStyle::Type InDateStyle, const EDateTimeStyle::Type InTimeStyle, YString InTimeZone, FCulturePtr InTargetCulture)
+FTextHistory_AsDateTime::FTextHistory_AsDateTime(FDateTime InSourceDateTime, const EDateTimeStyle::Type InDateStyle, const EDateTimeStyle::Type InTimeStyle, FString InTimeZone, FCulturePtr InTargetCulture)
 	: SourceDateTime(MoveTemp(InSourceDateTime))
 	, DateStyle(InDateStyle)
 	, TimeStyle(InTimeStyle)
@@ -969,12 +969,12 @@ void FTextHistory_AsDateTime::Serialize(FArchive& Ar)
 
 	if(Ar.IsSaving())
 	{
-		YString CultureName = TargetCulture.IsValid()? TargetCulture->GetName() : YString();
+		FString CultureName = TargetCulture.IsValid()? TargetCulture->GetName() : FString();
 		Ar << CultureName;
 	}
 	else if(Ar.IsLoading())
 	{
-		YString CultureName;
+		FString CultureName;
 		Ar << CultureName;
 
 		if(!CultureName.IsEmpty())

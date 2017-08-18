@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "HAL/PlatformTLS.h"
 #include "HAL/PlatformAffinity.h"
 
@@ -114,7 +114,7 @@ public:
 	* @return Name that was set by CreateThread
 	* @see GetThreadID
 	*/
-	const YString& GetThreadName() const
+	const FString& GetThreadName() const
 	{
 		return ThreadName;
 	}
@@ -151,12 +151,12 @@ protected:
 	*/
 	static FRunnableThread* GetRunnableThread()
 	{
-		FRunnableThread* RunnableThread = (FRunnableThread*)YPlatformTLS::GetTlsValue(RunnableTlsSlot);
+		FRunnableThread* RunnableThread = (FRunnableThread*)FPlatformTLS::GetTlsValue(RunnableTlsSlot);
 		return RunnableThread;
 	}
 
 	/** Holds the name of the thread. */
-	YString ThreadName;
+	FString ThreadName;
 
 	/** The runnable object to execute on this thread. */
 	FRunnable* Runnable;

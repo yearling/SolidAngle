@@ -122,36 +122,36 @@ const TCHAR* FGenericPlatformTime::StrTimestamp()
  * @param Seconds	Time in seconds
  * @return			Time in a pretty formatted string
  */
-YString FGenericPlatformTime::PrettyTime( double Seconds )
+FString FGenericPlatformTime::PrettyTime( double Seconds )
 {
 	if ( Seconds < 1.0 )
 	{
-		return YString::Printf( TEXT("%d ms"), YMath::TruncToInt(Seconds*1000) );
+		return FString::Printf( TEXT("%d ms"), YMath::TruncToInt(Seconds*1000) );
 	}
 	else if ( Seconds < 10.0 )
 	{
 		int32 Sec = YMath::TruncToInt(Seconds);
 		int32 Ms = YMath::TruncToInt(Seconds*1000) - Sec*1000;
-		return YString::Printf( TEXT("%d.%02d sec"), Sec, Ms/10 );
+		return FString::Printf( TEXT("%d.%02d sec"), Sec, Ms/10 );
 	}
 	else if ( Seconds < 60.0 )
 	{
 		int32 Sec = YMath::TruncToInt(Seconds);
 		int32 Ms = YMath::TruncToInt(Seconds*1000) - Sec*1000;
-		return YString::Printf( TEXT("%d.%d sec"), Sec, Ms/100 );
+		return FString::Printf( TEXT("%d.%d sec"), Sec, Ms/100 );
 	}
 	else if ( Seconds < 60.0*60.0 )
 	{
 		int32 Min = YMath::TruncToInt(Seconds/60.0);
 		int32 Sec = YMath::TruncToInt(Seconds) - Min*60;
-		return YString::Printf( TEXT("%d:%02d min"), Min, Sec );
+		return FString::Printf( TEXT("%d:%02d min"), Min, Sec );
 	}
 	else
 	{
 		int32 Hr = YMath::TruncToInt(Seconds/3600.0);
 		int32 Min = YMath::TruncToInt((Seconds - Hr*3600)/60.0);
 		int32 Sec = YMath::TruncToInt(Seconds - Hr*3600 - Min*60);
-		return YString::Printf( TEXT("%d:%02d:%02d hours"), Hr, Min, Sec );
+		return FString::Printf( TEXT("%d:%02d:%02d hours"), Hr, Min, Sec );
 	}
 }
 
@@ -172,7 +172,7 @@ struct FCPUTimeDump
 	}
 
 	/** Executes the CPUTime.Dump command. */
-	void ExecuteCommand( const TArray< YString >& Args )
+	void ExecuteCommand( const TArray< FString >& Args )
 	{
 		int32 Delay = 0;
 		if( Args.Num() == 0 )

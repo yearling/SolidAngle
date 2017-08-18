@@ -33,7 +33,7 @@ bool ITextFormatArgumentModifier::ParseKeyValueArgs(const FTextFormatString& InA
 	{
 		if (*BufferPtr == TEXT('"'))
 		{
-			YString QuotedString;
+			FString QuotedString;
 			int32 NumCharsRead = 0;
 			if (FParse::QuotedString(BufferPtr, QuotedString, &NumCharsRead))
 			{
@@ -116,7 +116,7 @@ bool ITextFormatArgumentModifier::ParseValueArgs(const FTextFormatString& InArgs
 	{
 		if (*BufferPtr == TEXT('"'))
 		{
-			YString QuotedString;
+			FString QuotedString;
 			int32 NumCharsRead = 0;
 			if (FParse::QuotedString(BufferPtr, QuotedString, &NumCharsRead))
 			{
@@ -177,7 +177,7 @@ TSharedPtr<ITextFormatArgumentModifier> FTextFormatArgumentModifier_PluralForm::
 		PluralForms.Reserve(ArgKeyValues.Num());
 		for (const auto& Pair : ArgKeyValues)
 		{
-			FTextFormat PluralForm = FTextFormat::FromString(YString(Pair.Value.StringLen, Pair.Value.StringPtr));
+			FTextFormat PluralForm = FTextFormat::FromString(FString(Pair.Value.StringLen, Pair.Value.StringPtr));
 			if (!PluralForm.IsValid())
 			{
 				break;
@@ -199,7 +199,7 @@ TSharedPtr<ITextFormatArgumentModifier> FTextFormatArgumentModifier_PluralForm::
 	return nullptr;
 }
 
-void FTextFormatArgumentModifier_PluralForm::Evaluate(const FFormatArgumentValue& InValue, const FPrivateTextFormatArguments& InFormatArgs, YString& OutResult) const
+void FTextFormatArgumentModifier_PluralForm::Evaluate(const FFormatArgumentValue& InValue, const FPrivateTextFormatArguments& InFormatArgs, FString& OutResult) const
 {
 	FInternationalization& I18N = FInternationalization::Get();
 	const FCulture& Culture = *I18N.GetCurrentCulture();
@@ -226,7 +226,7 @@ void FTextFormatArgumentModifier_PluralForm::Evaluate(const FFormatArgumentValue
 	OutResult += FTextFormatter::Format(CompiledPluralForms[(int32)ValuePluralForm], InFormatArgs);
 }
 
-void FTextFormatArgumentModifier_PluralForm::GetFormatArgumentNames(TArray<YString>& OutArgumentNames) const
+void FTextFormatArgumentModifier_PluralForm::GetFormatArgumentNames(TArray<FString>& OutArgumentNames) const
 {
 	CompiledPluralForms[(int32)ETextPluralForm::Zero].GetFormatArgumentNames(OutArgumentNames);
 	CompiledPluralForms[(int32)ETextPluralForm::One].GetFormatArgumentNames(OutArgumentNames);
@@ -269,12 +269,12 @@ TSharedPtr<ITextFormatArgumentModifier> FTextFormatArgumentModifier_GenderForm::
 	if (ParseValueArgs(InArgsString, ArgValues) && (ArgValues.Num() == 2 || ArgValues.Num() == 3))
 	{
 		// Gender forms may contain format markers, so pre-compile all the variants now so that Evaluate doesn't have to (this also lets us validate the gender form strings and fail if they're not correct)
-		FTextFormat MasculineForm = FTextFormat::FromString(YString(ArgValues[0].StringLen, ArgValues[0].StringPtr));
-		FTextFormat FeminineForm  = FTextFormat::FromString(YString(ArgValues[1].StringLen, ArgValues[1].StringPtr));
+		FTextFormat MasculineForm = FTextFormat::FromString(FString(ArgValues[0].StringLen, ArgValues[0].StringPtr));
+		FTextFormat FeminineForm  = FTextFormat::FromString(FString(ArgValues[1].StringLen, ArgValues[1].StringPtr));
 		FTextFormat NeuterForm;
 		if (ArgValues.Num() == 3)
 		{
-			NeuterForm = FTextFormat::FromString(YString(ArgValues[2].StringLen, ArgValues[2].StringPtr));;
+			NeuterForm = FTextFormat::FromString(FString(ArgValues[2].StringLen, ArgValues[2].StringPtr));;
 		}
 
 		// Did everything compile?
@@ -297,7 +297,7 @@ TSharedPtr<ITextFormatArgumentModifier> FTextFormatArgumentModifier_GenderForm::
 	return nullptr;
 }
 
-void FTextFormatArgumentModifier_GenderForm::Evaluate(const FFormatArgumentValue& InValue, const FPrivateTextFormatArguments& InFormatArgs, YString& OutResult) const
+void FTextFormatArgumentModifier_GenderForm::Evaluate(const FFormatArgumentValue& InValue, const FPrivateTextFormatArguments& InFormatArgs, FString& OutResult) const
 {
 	if (InValue.GetType() == EFormatArgumentType::Gender)
 	{
@@ -318,7 +318,7 @@ void FTextFormatArgumentModifier_GenderForm::Evaluate(const FFormatArgumentValue
 	}
 }
 
-void FTextFormatArgumentModifier_GenderForm::GetFormatArgumentNames(TArray<YString>& OutArgumentNames) const
+void FTextFormatArgumentModifier_GenderForm::GetFormatArgumentNames(TArray<FString>& OutArgumentNames) const
 {
 	MasculineForm.GetFormatArgumentNames(OutArgumentNames);
 	FeminineForm.GetFormatArgumentNames(OutArgumentNames);
@@ -352,7 +352,7 @@ TSharedPtr<ITextFormatArgumentModifier> FTextFormatArgumentModifier_HangulPostPo
 	return nullptr;
 }
 
-void FTextFormatArgumentModifier_HangulPostPositions::Evaluate(const FFormatArgumentValue& InValue, const FPrivateTextFormatArguments& InFormatArgs, YString& OutResult) const
+void FTextFormatArgumentModifier_HangulPostPositions::Evaluate(const FFormatArgumentValue& InValue, const FPrivateTextFormatArguments& InFormatArgs, FString& OutResult) const
 {
 	const int32 ArgStartPos = OutResult.Len();
 	FTextFormatter::ArgumentValueToFormattedString(InValue, InFormatArgs, OutResult);
@@ -389,7 +389,7 @@ void FTextFormatArgumentModifier_HangulPostPositions::Evaluate(const FFormatArgu
 	}
 }
 
-void FTextFormatArgumentModifier_HangulPostPositions::GetFormatArgumentNames(TArray<YString>& OutArgumentNames) const
+void FTextFormatArgumentModifier_HangulPostPositions::GetFormatArgumentNames(TArray<FString>& OutArgumentNames) const
 {
 }
 

@@ -13,7 +13,7 @@
 #include "Misc/Parse.h"
 #include "Misc/MessageDialog.h"
 #include "Containers/StringConv.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "CoreGlobals.h"
 #include "Misc/CommandLine.h"
 #include "Misc/Paths.h"
@@ -95,7 +95,7 @@ namespace
 	* version only. To retrive proper version for later version we can check
 	* version of system libraries e.g. kernel32.dll.
 	*/
-	int32 GetWindowsGT62Versions(bool bIsWorkstation, YString& out_OSVersionLabel)
+	int32 GetWindowsGT62Versions(bool bIsWorkstation, FString& out_OSVersionLabel)
 	{
 		const int BufferSize = 256;
 		TCHAR Buffer[BufferSize];
@@ -105,8 +105,8 @@ namespace
 			return (int32)YWindowsOSVersionHelper::ERROR_GETWINDOWSGT62VERSIONS_FAILED;
 		}
 
-		YString SystemDir(Buffer);
-		YString KernelPath = YPaths::Combine(*SystemDir, TEXT("kernel32.dll"));
+		FString SystemDir(Buffer);
+		FString KernelPath = YPaths::Combine(*SystemDir, TEXT("kernel32.dll"));
 
 		DWORD Size = GetFileVersionInfoSize(*KernelPath, nullptr);
 
@@ -188,7 +188,7 @@ namespace
 	}
 }
 
-int32 YWindowsOSVersionHelper::GetOSVersions(YString& out_OSVersionLabel, YString& out_OSSubVersionLabel)
+int32 YWindowsOSVersionHelper::GetOSVersions(FString& out_OSVersionLabel, FString& out_OSSubVersionLabel)
 {
 	int32 ErrorCode = (int32)SUCCEEDED;
 
@@ -206,7 +206,7 @@ int32 YWindowsOSVersionHelper::GetOSVersions(YString& out_OSVersionLabel, YStrin
 	OSVERSIONINFOEX OsVersionInfo = { 0 };
 	OsVersionInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
 	out_OSVersionLabel = TEXT("Windows (unknown version)");
-	out_OSSubVersionLabel = YString();
+	out_OSSubVersionLabel = FString();
 #pragma warning(push)
 #pragma warning(disable : 4996) // 'function' was declared deprecated
 	CA_SUPPRESS(28159)
@@ -780,7 +780,7 @@ void YWindowsPlatformMisc::SubmitErrorReport(const TCHAR* InErrorHist, EErrorRep
 
 		TCHAR ReportDumpVersion[] = TEXT("3");
 
-		YString ReportDumpPath;
+		FString ReportDumpPath;
 		{
 			const TCHAR ReportDumpFilename[] = TEXT("UnrealAutoReportDump");
 			ReportDumpPath = YPaths::CreateTempFilename(*YPaths::GameLogDir(), ReportDumpFilename, TEXT(".txt"));
@@ -794,7 +794,7 @@ void YWindowsPlatformMisc::SubmitErrorReport(const TCHAR* InErrorHist, EErrorRep
 			TCHAR UserName[MAX_STRING_LEN];
 			FCString::Strncpy(UserName, FPlatformProcess::UserName(), MAX_STRING_LEN);
 			TCHAR GameName[MAX_STRING_LEN];
-			FCString::Strncpy(GameName, *YString::Printf(TEXT("%s %s"), *FApp::GetBranchName(), FApp::GetGameName()), MAX_STRING_LEN);
+			FCString::Strncpy(GameName, *FString::Printf(TEXT("%s %s"), *FApp::GetBranchName(), FApp::GetGameName()), MAX_STRING_LEN);
 			TCHAR PlatformName[MAX_STRING_LEN];
 #if PLATFORM_64BITS
 			FCString::Strncpy(PlatformName, TEXT("PC 64-bit"), MAX_STRING_LEN);
@@ -813,12 +813,12 @@ void YWindowsPlatformMisc::SubmitErrorReport(const TCHAR* InErrorHist, EErrorRep
 			const bool bFoundAutomatedBenchMarkingChangelist = FParse::Value(FCommandLine::Get(), TEXT("-gABC="), ChangelistFromCommandLine);
 			if (bFoundAutomatedBenchMarkingChangelist == true)
 			{
-				FCString::Strncpy(ChangelistVersionStr, *YString::FromInt(ChangelistFromCommandLine), MAX_STRING_LEN);
+				FCString::Strncpy(ChangelistVersionStr, *FString::FromInt(ChangelistFromCommandLine), MAX_STRING_LEN);
 			}
 			// we are not passing in the changelist to use so use the one that was stored in the ObjectVersion
 			else
 			{
-				FCString::Strncpy(ChangelistVersionStr, *YString::FromInt(FEngineVersion::Current().GetChangelist()), MAX_STRING_LEN);
+				FCString::Strncpy(ChangelistVersionStr, *FString::FromInt(FEngineVersion::Current().GetChangelist()), MAX_STRING_LEN);
 			}
 
 			TCHAR CmdLine[2048];
@@ -881,7 +881,7 @@ void YWindowsPlatformMisc::SubmitErrorReport(const TCHAR* InErrorHist, EErrorRep
 			{
 				TCHAR AutoReportExe[] = TEXT("../../../Engine/Binaries/DotNET/AutoReporter.exe");
 
-				YString IniDumpPath;
+				FString IniDumpPath;
 				if (!FApp::IsGameNameEmpty())
 				{
 					const TCHAR IniDumpFilename[] = TEXT("UnrealAutoReportIniDump");
@@ -893,21 +893,21 @@ void YWindowsPlatformMisc::SubmitErrorReport(const TCHAR* InErrorHist, EErrorRep
 					AutoReportIniFile.TearDown();
 				}
 
-				YString CrashVideoPath = YPaths::GameLogDir() + TEXT("CrashVideo.avi");
+				FString CrashVideoPath = YPaths::GameLogDir() + TEXT("CrashVideo.avi");
 
 				//get the paths that the files will actually have been saved to
-				YString UserIniDumpPath = IFileManager::Get().ConvertToAbsolutePathForExternalAppForWrite(*IniDumpPath);
-				YString LogDirectory = YPlatformOutputDevices::GetAbsoluteLogFilename();
+				FString UserIniDumpPath = IFileManager::Get().ConvertToAbsolutePathForExternalAppForWrite(*IniDumpPath);
+				FString LogDirectory = YPlatformOutputDevices::GetAbsoluteLogFilename();
 				TCHAR CommandlineLogFile[MAX_SPRINTF] = TEXT("");
 
-				YString UserLogFile = IFileManager::Get().ConvertToAbsolutePathForExternalAppForWrite(*LogDirectory);
-				YString UserReportDumpPath = IFileManager::Get().ConvertToAbsolutePathForExternalAppForWrite(*ReportDumpPath);
-				YString UserCrashVideoPath = IFileManager::Get().ConvertToAbsolutePathForExternalAppForWrite(*CrashVideoPath);
+				FString UserLogFile = IFileManager::Get().ConvertToAbsolutePathForExternalAppForWrite(*LogDirectory);
+				FString UserReportDumpPath = IFileManager::Get().ConvertToAbsolutePathForExternalAppForWrite(*ReportDumpPath);
+				FString UserCrashVideoPath = IFileManager::Get().ConvertToAbsolutePathForExternalAppForWrite(*CrashVideoPath);
 
 				//start up the auto reporting app, passing the report dump file path, the games' log file,
 				// the ini dump path, the minidump path, and the crashvideo path
 				//protect against spaces in paths breaking them up on the commandline
-				YString CallingCommandLine = YString::Printf(TEXT("%d \"%s\" \"%s\" \"%s\" \"%s\" \"%s\""),
+				FString CallingCommandLine = FString::Printf(TEXT("%d \"%s\" \"%s\" \"%s\" \"%s\" \"%s\""),
 					(uint32)(GetCurrentProcessId()), *UserReportDumpPath, *UserLogFile, *UserIniDumpPath,
 					MiniDumpFilenameW, *UserCrashVideoPath);
 
@@ -1006,12 +1006,12 @@ void YWindowsPlatformMisc::PumpMessages(bool bFromMainLoop)
 	FApp::SetVolumeMultiplier(HasFocus ? 1.0f : FApp::GetUnfocusedVolumeMultiplier());
 }
 
-uint32 YWindowsPlatformMisc::GetCharKeyMap(uint32* KeyCodes, YString* KeFNames, uint32 MaxMappings)
+uint32 YWindowsPlatformMisc::GetCharKeyMap(uint32* KeyCodes, FString* KeFNames, uint32 MaxMappings)
 {
 	return YGenericPlatformMisc::GetStandardPrintableKeyMap(KeyCodes, KeFNames, MaxMappings, true, false);
 }
 
-uint32 YWindowsPlatformMisc::GetKeyMap(uint32* KeyCodes, YString* KeFNames, uint32 MaxMappings)
+uint32 YWindowsPlatformMisc::GetKeyMap(uint32* KeyCodes, FString* KeFNames, uint32 MaxMappings)
 {
 #define ADDKEYMAP(KeyCode, KeFName)		if (NumMappings<MaxMappings) { KeyCodes[NumMappings]=KeyCode; KeFNames[NumMappings]=KeFName; ++NumMappings; };
 
@@ -1109,7 +1109,7 @@ uint32 YWindowsPlatformMisc::GetKeyMap(uint32* KeyCodes, YString* KeFNames, uint
 
 		static const uint32 MAX_KEY_MAPPINGS(256);
 		uint32 CharCodes[MAX_KEY_MAPPINGS];
-		YString CharKeFNames[MAX_KEY_MAPPINGS];
+		FString CharKeFNames[MAX_KEY_MAPPINGS];
 		const int32 CharMappings = GetCharKeyMap(CharCodes, CharKeFNames, MAX_KEY_MAPPINGS);
 
 		for (int32 MappingIndex = 0; MappingIndex < CharMappings; ++MappingIndex)
@@ -1119,7 +1119,7 @@ uint32 YWindowsPlatformMisc::GetKeyMap(uint32* KeyCodes, YString* KeFNames, uint
 
 		for (auto It(ScanToVKMap.CreateConstIterator()); It; ++It)
 		{
-			ADDKEYMAP(It.Value(), YString::Chr(It.Key()));
+			ADDKEYMAP(It.Value(), FString::Chr(It.Key()));
 		}
 	}
 
@@ -1222,7 +1222,7 @@ void YWindowsPlatformMisc::ClipboardCopy(const TCHAR* Str)
 	}
 }
 
-void YWindowsPlatformMisc::ClipboardPaste(class YString& Result)
+void YWindowsPlatformMisc::ClipboardPaste(class FString& Result)
 {
 	if (OpenClipboard(GetActiveWindow()))
 	{
@@ -1346,11 +1346,11 @@ PTRINT CALLBACK MessageBoxDlgProc(HWND HandleWnd, uint32 Message, WPARAM WParam,
 		int32 PositionY = Point.y - 10;
 
 		// Localize dialog buttons, sets position and size.
-		YString CancelString;
-		YString NoToAllString;
-		YString NoString;
-		YString YesToAllString;
-		YString YesString;
+		FString CancelString;
+		FString NoToAllString;
+		FString NoString;
+		FString YesToAllString;
+		FString YesString;
 
 		// The Localize* functions will return the Key if a dialog is presented before the config system is initialized.
 		// Instead, we use hard-coded strings if config is not yet initialized.
@@ -1588,11 +1588,11 @@ static bool HandleGameExplorerIntegration()
 						StringFromGUID2(GEGuid, GuidDir, MAX_PATH - 1);
 
 					// make the base path for all tasks
-					YString BaseTaskDirectory = YString(UserPath) + TEXT("\\Microsoft\\Windows\\GameExplorer\\") + GuidDir;
+					FString BaseTaskDirectory = FString(UserPath) + TEXT("\\Microsoft\\Windows\\GameExplorer\\") + GuidDir;
 
 					// make full paths for play and support tasks
-					YString PlayTaskDirectory = BaseTaskDirectory + TEXT("\\PlayTasks");
-					YString SupportTaskDirectory = BaseTaskDirectory + TEXT("\\SupportTasks");
+					FString PlayTaskDirectory = BaseTaskDirectory + TEXT("\\PlayTasks");
+					FString SupportTaskDirectory = BaseTaskDirectory + TEXT("\\SupportTasks");
 
 					// make sure they exist
 					IFileManager::Get().MakeDirectory(*PlayTaskDirectory, true);
@@ -1880,10 +1880,10 @@ bool YWindowsPlatformMisc::VerifyWindowsVersion(uint32 MajorVersion, uint32 Mino
 	return !!VerifyVersionInfo(&Version, VER_MAJORVERSION, VerSetConditionMask(ConditionMask, VER_MAJORVERSION, VER_GREATER_EQUAL));
 }
 
-bool YWindowsPlatformMisc::IsValidAbsolutePathFormat(const YString& Path)
+bool YWindowsPlatformMisc::IsValidAbsolutePathFormat(const FString& Path)
 {
 	bool bIsValid = true;
-	const YString OnlyPath = YPaths::GetPath(Path);
+	const FString OnlyPath = YPaths::GetPath(Path);
 	if (OnlyPath.IsEmpty())
 	{
 		bIsValid = false;
@@ -2051,7 +2051,7 @@ HWND YWindowsPlatformMisc::GetTopLevelWindowHandle(uint32 ProcessId)
 	return Data.Handle;
 }
 
-bool YWindowsPlatformMisc::GetWindowTitleMatchingText(const TCHAR* TitleStartsWith, YString& OutTitle)
+bool YWindowsPlatformMisc::GetWindowTitleMatchingText(const TCHAR* TitleStartsWith, FString& OutTitle)
 {
 	bool bWasFound = false;
 	WCHAR Buffer[8192];
@@ -2087,13 +2087,13 @@ void YWindowsPlatformMisc::RaiseException(uint32 ExceptionCode)
 	::RaiseException(ExceptionCode, 0, 0, NULL);
 }
 
-bool YWindowsPlatformMisc::SetStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeFName, const YString& InValue)
+bool YWindowsPlatformMisc::SetStoredValue(const FString& InStoreId, const FString& InSectionName, const FString& InKeFName, const FString& InValue)
 {
 	check(!InStoreId.IsEmpty());
 	check(!InSectionName.IsEmpty());
 	check(!InKeFName.IsEmpty());
 
-	YString FullRegistryKey = YString(TEXT("Software")) / InStoreId / InSectionName;
+	FString FullRegistryKey = FString(TEXT("Software")) / InStoreId / InSectionName;
 	FullRegistryKey = FullRegistryKey.Replace(TEXT("/"), TEXT("\\")); // we use forward slashes, but the registry needs back slashes
 
 	HKEY hKey;
@@ -2115,19 +2115,19 @@ bool YWindowsPlatformMisc::SetStoredValue(const YString& InStoreId, const YStrin
 	return true;
 }
 
-bool YWindowsPlatformMisc::GetStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeFName, YString& OutValue)
+bool YWindowsPlatformMisc::GetStoredValue(const FString& InStoreId, const FString& InSectionName, const FString& InKeFName, FString& OutValue)
 {
 	check(!InStoreId.IsEmpty());
 	check(!InSectionName.IsEmpty());
 	check(!InKeFName.IsEmpty());
 
-	YString FullRegistryKey = YString(TEXT("Software")) / InStoreId / InSectionName;
+	FString FullRegistryKey = FString(TEXT("Software")) / InStoreId / InSectionName;
 	FullRegistryKey = FullRegistryKey.Replace(TEXT("/"), TEXT("\\")); // we use forward slashes, but the registry needs back slashes
 
 	return QueryRegKey(HKEY_CURRENT_USER, *FullRegistryKey, *InKeFName, OutValue);
 }
 
-bool YWindowsPlatformMisc::DeleteStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeFName)
+bool YWindowsPlatformMisc::DeleteStoredValue(const FString& InStoreId, const FString& InSectionName, const FString& InKeFName)
 {
 	// Deletes values in reg keys and also deletes the owning key if it becomes empty
 
@@ -2135,7 +2135,7 @@ bool YWindowsPlatformMisc::DeleteStoredValue(const YString& InStoreId, const YSt
 	check(!InSectionName.IsEmpty());
 	check(!InKeFName.IsEmpty());
 
-	YString FullRegistryKey = YString(TEXT("Software")) / InStoreId / InSectionName;
+	FString FullRegistryKey = FString(TEXT("Software")) / InStoreId / InSectionName;
 	FullRegistryKey = FullRegistryKey.Replace(TEXT("/"), TEXT("\\")); // we use forward slashes, but the registry needs back slashes
 
 	HKEY hKey;
@@ -2278,7 +2278,7 @@ public:
 	*
 	* @returns CPU vendor name.
 	*/
-	static const YString& GetVendor()
+	static const FString& GetVendor()
 	{
 		return CPUIDStaticCache.Vendor;
 	}
@@ -2288,7 +2288,7 @@ public:
 	*
 	* @returns CPU brand string.
 	*/
-	static const YString& GetBrand()
+	static const FString& GetBrand()
 	{
 		return CPUIDStaticCache.Brand;
 	}
@@ -2342,7 +2342,7 @@ private:
 	*
 	* @returns CPU vendor name.
 	*/
-	static YString QueryCPUVendor()
+	static FString QueryCPUVendor()
 	{
 		union
 		{
@@ -2371,7 +2371,7 @@ private:
 	*
 	* @returns CPU brand string.
 	*/
-	static YString QueryCPUBrand()
+	static FString QueryCPUBrand()
 	{
 		// @see for more information http://msdn.microsoft.com/en-us/library/vstudio/hskdteyh(v=vs.100).aspx
 		ANSICHAR BrandString[0x40] = { 0 };
@@ -2437,10 +2437,10 @@ private:
 	bool bHasCPUIDInstruction;
 
 	/** Vendor of the CPU. */
-	YString Vendor;
+	FString Vendor;
 
 	/** CPU brand. */
-	YString Brand;
+	FString Brand;
 
 	/** CPU info from __cpuid. */
 	uint32 CPUInfo;
@@ -2457,20 +2457,20 @@ bool YWindowsPlatformMisc::HasCPUIDInstruction()
 	return FCPUIDQueriedData::HasCPUIDInstruction();
 }
 
-YString YWindowsPlatformMisc::GetCPUVendor()
+FString YWindowsPlatformMisc::GetCPUVendor()
 {
 	return FCPUIDQueriedData::GetVendor();
 }
 
-YString YWindowsPlatformMisc::GetCPUBrand()
+FString YWindowsPlatformMisc::GetCPUBrand()
 {
 	return FCPUIDQueriedData::GetBrand();
 }
 
 #include "Windows/AllowWindowsPlatformTypes.h"
-YString YWindowsPlatformMisc::GetPrimaryGPUBrand()
+FString YWindowsPlatformMisc::GetPrimaryGPUBrand()
 {
-	static YString PrimaryGPUBrand;
+	static FString PrimaryGPUBrand;
 	if (PrimaryGPUBrand.IsEmpty())
 	{
 		// Find primary display adapter and get the device name.
@@ -2497,7 +2497,7 @@ YString YWindowsPlatformMisc::GetPrimaryGPUBrand()
 	return PrimaryGPUBrand;
 }
 
-static void GetVideoDriverDetails(const YString& Key, FGPUDriverInfo& Out)
+static void GetVideoDriverDetails(const FString& Key, FGPUDriverInfo& Out)
 {
 	// https://msdn.microsoft.com/en-us/library/windows/hardware/ff569240(v=vs.85).aspx
 
@@ -2514,7 +2514,7 @@ static void GetVideoDriverDetails(const YString& Key, FGPUDriverInfo& Out)
 		//	YWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, *Key, TEXT("HardwareInformation.AdapterString"), Out.DeviceDescription); // AMD and NVIDIA
 
 		// Try again in Settings subfolder
-		const YString SettingsSubKey = Key + TEXT("\\Settings");
+		const FString SettingsSubKey = Key + TEXT("\\Settings");
 		bDevice = YWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, *SettingsSubKey, DeviceDescriptionValueName, Out.DeviceDescription); // AMD and NVIDIA
 
 		if (!bDevice)
@@ -2558,13 +2558,13 @@ static void GetVideoDriverDetails(const YString& Key, FGPUDriverInfo& Out)
 	{
 		if (YWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, *Key, TEXT("Catalyst_Version"), Out.UserDriverVersion))
 		{
-			Out.UserDriverVersion = YString(TEXT("Catalyst ")) + Out.UserDriverVersion;
+			Out.UserDriverVersion = FString(TEXT("Catalyst ")) + Out.UserDriverVersion;
 		}
 
-		YString Edition;
+		FString Edition;
 		if (YWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, *Key, TEXT("RadeonSoftwareEdition"), Edition))
 		{
-			YString Version;
+			FString Version;
 			if (YWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, *Key, TEXT("RadeonSoftwareVersion"), Version))
 			{
 				// e.g. TEXT("Crimson 15.12") or TEXT("Catalyst 14.1")
@@ -2577,7 +2577,7 @@ static void GetVideoDriverDetails(const YString& Key, FGPUDriverInfo& Out)
 	YWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, *Key, TEXT("DriverDate"), Out.DriverDate);
 }
 
-FGPUDriverInfo YWindowsPlatformMisc::GetGPUDriverInfo(const YString& DeviceDescription)
+FGPUDriverInfo YWindowsPlatformMisc::GetGPUDriverInfo(const FString& DeviceDescription)
 {
 	// to distinguish failed GetGPUDriverInfo() from call to GetGPUDriverInfo()
 	FGPUDriverInfo Ret;
@@ -2587,7 +2587,7 @@ FGPUDriverInfo YWindowsPlatformMisc::GetGPUDriverInfo(const YString& DeviceDescr
 	Ret.DriverDate = TEXT("Unknown");
 
 	// for debugging, useful even in shipping to see what went wrong
-	YString DebugString;
+	FString DebugString;
 
 	uint32 FoundDriverCount = 0;
 
@@ -2629,15 +2629,15 @@ FGPUDriverInfo YWindowsPlatformMisc::GetGPUDriverInfo(const YString& DeviceDescr
 				}
 			}
 
-			YString DriverLocation = Device.DeviceKey;
+			FString DriverLocation = Device.DeviceKey;
 
 			if (DriverLocation.Left(18) == TEXT("\\Registry\\Machine\\"))		// not case sensitive
 			{
-				DriverLocation = YString(TEXT("\\HKEY_LOCAL_MACHINE\\")) + DriverLocation.RightChop(18);
+				DriverLocation = FString(TEXT("\\HKEY_LOCAL_MACHINE\\")) + DriverLocation.RightChop(18);
 			}
 			if (DriverLocation.Left(20) == TEXT("\\HKEY_LOCAL_MACHINE\\"))		// not case sensitive
 			{
-				YString DriverKey = DriverLocation.RightChop(20);
+				FString DriverKey = DriverLocation.RightChop(20);
 
 				FGPUDriverInfo Local;
 				GetVideoDriverDetails(DriverKey, Local);
@@ -2669,7 +2669,7 @@ FGPUDriverInfo YWindowsPlatformMisc::GetGPUDriverInfo(const YString& DeviceDescr
 		if (FoundDriverCount != 1)
 		{
 			// We assume if multiple entries are found they are all the same driver. If that is correct - this is no error.
-			DebugString += YString::Printf(TEXT("FoundDriverCount:%d "), FoundDriverCount);
+			DebugString += FString::Printf(TEXT("FoundDriverCount:%d "), FoundDriverCount);
 		}
 
 		if (!DebugString.IsEmpty())
@@ -2687,7 +2687,7 @@ FGPUDriverInfo YWindowsPlatformMisc::GetGPUDriverInfo(const YString& DeviceDescr
 		for (uint32 i = 0; i < 256; ++i)
 		{
 			// Iterate all installed display adapters
-			const YString DriverNKey = YString::Printf(TEXT("SYSTEM\\CurrentControlSet\\Control\\Class\\{4D36E968-E325-11CE-BFC1-08002BE10318}\\%04d"), i);
+			const FString DriverNKey = FString::Printf(TEXT("SYSTEM\\CurrentControlSet\\Control\\Class\\{4D36E968-E325-11CE-BFC1-08002BE10318}\\%04d"), i);
 
 			FGPUDriverInfo Local;
 			GetVideoDriverDetails(DriverNKey, Local);
@@ -2723,10 +2723,10 @@ FGPUDriverInfo YWindowsPlatformMisc::GetGPUDriverInfo(const YString& DeviceDescr
 
 		if (bIterateAvailableAndChoose)
 		{
-			DebugString += YString::Printf(TEXT("FoundDriverCount:%d FallbackToPrimary "), FoundDriverCount);
+			DebugString += FString::Printf(TEXT("FoundDriverCount:%d FallbackToPrimary "), FoundDriverCount);
 		}
 
-		YString DriverLocation; // e.g. HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\<videodriver>\Device0
+		FString DriverLocation; // e.g. HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\<videodriver>\Device0
 								// Video0 is the first logical one, not neccesarily the primary, would have to iterate multiple to get the right one (see https://support.microsoft.com/en-us/kb/102992)
 		bool bOk = YWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, TEXT("HARDWARE\\DEVICEMAP\\VIDEO"), TEXT("\\Device\\Video0"), /*out*/ DriverLocation);
 
@@ -2734,11 +2734,11 @@ FGPUDriverInfo YWindowsPlatformMisc::GetGPUDriverInfo(const YString& DeviceDescr
 		{
 			if (DriverLocation.Left(18) == TEXT("\\Registry\\Machine\\"))		// not case sensitive
 			{
-				DriverLocation = YString(TEXT("\\HKEY_LOCAL_MACHINE\\")) + DriverLocation.RightChop(18);
+				DriverLocation = FString(TEXT("\\HKEY_LOCAL_MACHINE\\")) + DriverLocation.RightChop(18);
 			}
 			if (DriverLocation.Left(20) == TEXT("\\HKEY_LOCAL_MACHINE\\"))		// not case sensitive
 			{
-				YString DriverLocationKey = DriverLocation.RightChop(20);
+				FString DriverLocationKey = DriverLocation.RightChop(20);
 
 				FGPUDriverInfo Local;
 				GetVideoDriverDetails(DriverLocationKey, Local);
@@ -2779,10 +2779,10 @@ FGPUDriverInfo YWindowsPlatformMisc::GetGPUDriverInfo(const YString& DeviceDescr
 
 #include "Windows/HideWindowsPlatformTypes.h"
 
-void YWindowsPlatformMisc::GetOSVersions(YString& out_OSVersionLabel, YString& out_OSSubVersionLabel)
+void YWindowsPlatformMisc::GetOSVersions(FString& out_OSVersionLabel, FString& out_OSSubVersionLabel)
 {
-	static YString OSVersionLabel;
-	static YString OSSubVersionLabel;
+	static FString OSVersionLabel;
+	static FString OSSubVersionLabel;
 
 	if (OSVersionLabel.IsEmpty() && OSSubVersionLabel.IsEmpty())
 	{
@@ -2794,11 +2794,11 @@ void YWindowsPlatformMisc::GetOSVersions(YString& out_OSVersionLabel, YString& o
 }
 
 
-bool YWindowsPlatformMisc::GetDiskTotalAndFreeSpace(const YString& InPath, uint64& TotalNumberOfBytes, uint64& NumberOfFreeBytes)
+bool YWindowsPlatformMisc::GetDiskTotalAndFreeSpace(const FString& InPath, uint64& TotalNumberOfBytes, uint64& NumberOfFreeBytes)
 {
 	bool bSuccess = false;
 	// We need to convert the path to make sure it is formatted with windows style Drive e.g. "C:\"
-	const YString ValidatedPath = YPaths::ConvertRelativePathToFull(InPath).Replace(TEXT("/"), TEXT("\\"));
+	const FString ValidatedPath = YPaths::ConvertRelativePathToFull(InPath).Replace(TEXT("/"), TEXT("\\"));
 	if (ValidatedPath.Len() >= 3 && ValidatedPath[1] == ':' && ValidatedPath[2] == '\\')
 	{
 		bSuccess = !!::GetDiskFreeSpaceEx(*ValidatedPath, nullptr, reinterpret_cast<ULARGE_INTEGER*>(&TotalNumberOfBytes), reinterpret_cast<ULARGE_INTEGER*>(&NumberOfFreeBytes));
@@ -2817,7 +2817,7 @@ int32 YWindowsPlatformMisc::GetCacheLineSize()
 	return FCPUIDQueriedData::GetCacheLineSize();
 }
 
-bool YWindowsPlatformMisc::QueryRegKey(const Windows::HKEY InKey, const TCHAR* InSubKey, const TCHAR* InValueName, YString& OutData)
+bool YWindowsPlatformMisc::QueryRegKey(const Windows::HKEY InKey, const TCHAR* InSubKey, const TCHAR* InValueName, FString& OutData)
 {
 	bool bSuccess = false;
 
@@ -2836,7 +2836,7 @@ bool YWindowsPlatformMisc::QueryRegKey(const Windows::HKEY InKey, const TCHAR* I
 				char *Buffer = new char[Size];
 				if (RegQueryValueEx(Key, InValueName, NULL, NULL, (LPBYTE)Buffer, &Size) == ERROR_SUCCESS)
 				{
-					OutData = YString(Size - 1, (TCHAR*)Buffer);
+					OutData = FString(Size - 1, (TCHAR*)Buffer);
 					OutData.TrimToNullTerminator();
 					bSuccess = true;
 				}
@@ -2849,13 +2849,13 @@ bool YWindowsPlatformMisc::QueryRegKey(const Windows::HKEY InKey, const TCHAR* I
 	return bSuccess;
 }
 
-bool YWindowsPlatformMisc::GetVSComnTools(int32 Version, YString& OutData)
+bool YWindowsPlatformMisc::GetVSComnTools(int32 Version, FString& OutData)
 {
 	checkf(12 <= Version && Version <= 15, L"Not supported Visual Studio version.");
 
-	YString ValueName = YString::Printf(TEXT("%d.0"), Version);
+	FString ValueName = FString::Printf(TEXT("%d.0"), Version);
 
-	YString IDEPath;
+	FString IDEPath;
 	if (!QueryRegKey(HKEY_CURRENT_USER, TEXT("SOFTWARE\\Microsoft\\VisualStudio\\SxS\\VS7"), *ValueName, IDEPath))
 	{
 		if (!QueryRegKey(HKEY_LOCAL_MACHINE, TEXT("SOFTWARE\\Microsoft\\VisualStudio\\SxS\\VS7"), *ValueName, IDEPath))
@@ -2904,9 +2904,9 @@ bool YWindowsPlatformMisc::IsRunningOnBattery()
 	return false;
 }
 
-YString YWindowsPlatformMisc::GetOperatingSystemId()
+FString YWindowsPlatformMisc::GetOperatingSystemId()
 {
-	YString Result;
+	FString Result;
 	// more info on this key can be found here: http://stackoverflow.com/questions/99880/generating-a-unique-machine-id
 	QueryRegKey(HKEY_LOCAL_MACHINE, TEXT("Software\\Microsoft\\Cryptography"), TEXT("MachineGuid"), Result);
 	return Result;

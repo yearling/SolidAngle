@@ -220,14 +220,14 @@ IStatsWriteFile::IStatsWriteFile()
 
 #define STATSFILE_TEMPORARY_FILENAME_SUFFIX		TEXT(".inprogress")
 
-void IStatsWriteFile::Start( const YString& InFilename )
+void IStatsWriteFile::Start( const FString& InFilename )
 {
-	const YString PathName = *(YPaths::ProfilingDir() + TEXT( "UnrealStats/" ));
-	const YString Filename = PathName + InFilename;
-	const YString Path = YPaths::GetPath( Filename );
+	const FString PathName = *(YPaths::ProfilingDir() + TEXT( "UnrealStats/" ));
+	const FString Filename = PathName + InFilename;
+	const FString Path = YPaths::GetPath( Filename );
 	IFileManager::Get().MakeDirectory( *Path, true );
 
-	const YString TempFilename = Filename + STATSFILE_TEMPORARY_FILENAME_SUFFIX;
+	const FString TempFilename = Filename + STATSFILE_TEMPORARY_FILENAME_SUFFIX;
 
 	UE_LOG( LogStats, Log, TEXT( "Opening stats file: %s" ), *TempFilename );
 
@@ -260,7 +260,7 @@ void IStatsWriteFile::Stop()
 		delete File;
 		File = nullptr;
 
-		const YString TempFilename = ArchiveFilename + STATSFILE_TEMPORARY_FILENAME_SUFFIX;
+		const FString TempFilename = ArchiveFilename + STATSFILE_TEMPORARY_FILENAME_SUFFIX;
 		if (!IFileManager::Get().Move( *ArchiveFilename, *TempFilename ))
 		{
 			UE_LOG( LogStats, Warning, TEXT( "Could not rename stats file: %s to final name %s" ), *TempFilename, *ArchiveFilename );
@@ -623,7 +623,7 @@ bool FStatsReadFile::PrepareLoading()
 	{
 		const FName EncName = Meta.NameAndInfo.GetEncodedName();
 		const FName RawName = Meta.NameAndInfo.GetRawName();
-		const YString Desc = FStatNameAndInfo::GetShortNameFrom( RawName ).GetPlainNameString();
+		const FString Desc = FStatNameAndInfo::GetShortNameFrom( RawName ).GetPlainNameString();
 		const bool bContainsUObject = Desc.Contains( TEXT( "/" ) );
 		if (bContainsUObject)
 		{
@@ -1133,7 +1133,7 @@ FCommandStatsFile& FCommandStatsFile::Get()
 }
 
 
-void FCommandStatsFile::Start( const YString& Filename )
+void FCommandStatsFile::Start( const FString& Filename )
 {
 	Stop();
 	CurrentStatsFile = new FStatsWriteFile();
@@ -1142,7 +1142,7 @@ void FCommandStatsFile::Start( const YString& Filename )
 	StatFileActiveCounter.Increment();
 }
 
-void FCommandStatsFile::StartRaw( const YString& Filename )
+void FCommandStatsFile::StartRaw( const FString& Filename )
 {
 	Stop();
 	CurrentStatsFile = new FRawStatsWriteFile();
@@ -1165,7 +1165,7 @@ void FCommandStatsFile::Stop()
 
 void FCommandStatsFile::TestLastSaved()
 {
-	const YString& FilePath = FCommandStatsFile::Get().LastFileSaved;
+	const FString& FilePath = FCommandStatsFile::Get().LastFileSaved;
 
 	class FStatsTestReader : public FStatsReadFile
 	{

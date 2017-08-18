@@ -6,11 +6,11 @@
 
 DEFINE_LOG_CATEGORY_STATIC(LogStringUtility, Log, All);
 
-YString StringUtility::UnescapeURI(const YString& URLString)
+FString StringUtility::UnescapeURI(const FString& URLString)
 {
 	// @todo: support decoding of all escaped symbols in a better way
 
-	YString DecodedString = URLString.Replace(TEXT("%20"), TEXT(" "), ESearchCase::CaseSensitive);
+	FString DecodedString = URLString.Replace(TEXT("%20"), TEXT(" "), ESearchCase::CaseSensitive);
 	DecodedString = DecodedString.Replace(TEXT("%21"), TEXT("!"), ESearchCase::CaseSensitive);
 	DecodedString = DecodedString.Replace(TEXT("%3F"), TEXT("?"), ESearchCase::CaseSensitive);
 

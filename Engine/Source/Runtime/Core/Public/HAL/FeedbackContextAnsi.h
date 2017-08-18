@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/StringConv.h"
 #include "CoreGlobals.h"
 #include "Misc/OutputDeviceRedirector.h"
@@ -54,12 +54,12 @@ public:
 				Verbosity = ELogVerbosity::Error;
 			}
 
-			YString Prefix;
+			FString Prefix;
 			if (Context)
 			{
 				Prefix = Context->GetContext() + TEXT(" : ");
 			}
-			YString Format = Prefix + YOutputDeviceHelper::FormatLogLine(Verbosity, Category, V);
+			FString Format = Prefix + YOutputDeviceHelper::FormatLogLine(Verbosity, Category, V);
 
 			// Only store off the message if running a commandlet.
 			if (IsRunningCommandlet())

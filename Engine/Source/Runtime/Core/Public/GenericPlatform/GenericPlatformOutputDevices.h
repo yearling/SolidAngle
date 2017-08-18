@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 
-class YOutputDeviceConsole;
-class YOutputDeviceError;
+class FOutputDeviceConsole;
+class FOutputDeviceError;
 
 /**
 * Generic implementation for most platforms
@@ -15,7 +15,7 @@ struct CORE_API YGenericPlatformOutputDevices
 {
 	/** Add output devices which can vary depending on platform, configuration, command line parameters. */
 	static void							SetupOutputDevices();
-	static YString						GetAbsoluteLogFilename();
+	static FString						GetAbsoluteLogFilename();
 	static FOutputDevice*				GetLog();
 
 	static FOutputDevice*				GetEventLog()
@@ -23,11 +23,11 @@ struct CORE_API YGenericPlatformOutputDevices
 		return nullptr; // normally only used for dedicated servers
 	}
 
-	static YOutputDeviceConsole*		GetLogConsole()
+	static FOutputDeviceConsole*		GetLogConsole()
 	{
 		return nullptr; // normally only used for PC
 	}
 
-	static YOutputDeviceError*			GetError();
+	static FOutputDeviceError*			GetError();
 	static FFeedbackContext*			GetWarn();
 };

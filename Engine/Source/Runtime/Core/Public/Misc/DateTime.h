@@ -2,7 +2,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Misc/Timespan.h"
 
 /**
@@ -231,7 +231,7 @@ public:
 	* @return true on success, false otherwise.
 	* @see ImportTextItem
 	*/
-	CORE_API bool ExportTextItem(YString& ValueStr, FDateTime const& DefaultValue, UObject* Parent, int32 PortFlags, UObject* ExportRootScope) const;
+	CORE_API bool ExportTextItem(FString& ValueStr, FDateTime const& DefaultValue, UObject* Parent, int32 PortFlags, UObject* ExportRootScope) const;
 
 	/**
 	* Gets the date part of this date.
@@ -457,7 +457,7 @@ public:
 	* @return String representation.
 	* @see ParseIso8601, ToString
 	*/
-	CORE_API YString ToIso8601() const;
+	CORE_API FString ToIso8601() const;
 
 	/**
 	* Returns the RFC 1123 string representation of the YDateTime.
@@ -467,7 +467,7 @@ public:
 	* @return String representation.
 	* @see ParseHttpDate, ToString
 	*/
-	CORE_API YString ToHttpDate() const;
+	CORE_API FString ToHttpDate() const;
 
 	/**
 	* Returns the string representation of this date using a default format.
@@ -478,7 +478,7 @@ public:
 	* @return String representation.
 	* @see Parse, ToIso8601
 	*/
-	CORE_API YString ToString() const;
+	CORE_API FString ToString() const;
 
 	/**
 	* Returns the string representation of this date.
@@ -487,7 +487,7 @@ public:
 	* @return String representation.
 	* @see Parse, ToIso8601
 	*/
-	CORE_API YString ToString(const TCHAR* Format) const;
+	CORE_API FString ToString(const TCHAR* Format) const;
 
 	/**
 	* Returns this date as the number of seconds since the Unix Epoch (January 1st of 1970).
@@ -603,7 +603,7 @@ public:
 	* @param OutDateTime Will contain the parsed date and time.
 	* @return true if the string was converted successfully, false otherwise.
 	*/
-	static CORE_API bool Parse(const YString& DateTimeString, FDateTime& OutDateTime);
+	static CORE_API bool Parse(const FString& DateTimeString, FDateTime& OutDateTime);
 
 	/**
 	* Parses a date string in ISO-8601 format.
@@ -624,7 +624,7 @@ public:
 	* @return true if the string was converted successfully, false otherwise.
 	* @see Parse
 	*/
-	static CORE_API bool ParseHttpDate(const YString& HttpDate, FDateTime& OutDateTime);
+	static CORE_API bool ParseHttpDate(const FString& HttpDate, FDateTime& OutDateTime);
 
 	/**
 	* Gets the local date on this computer.

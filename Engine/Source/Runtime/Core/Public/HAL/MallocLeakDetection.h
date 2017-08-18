@@ -11,7 +11,7 @@ MallocLeakDetection.h: Helper class to track memory allocations
 #include "HAL/UnrealMemory.h"
 #include "Containers/Array.h"
 #include "Misc/Crc.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Set.h"
 #include "Containers/Map.h"
 #include "Misc/ScopeLock.h"
@@ -118,7 +118,7 @@ private:
 	TSet<uint32>	KnownDeleters;
 
 	/** Contexts that are associated with allocations */
-	TMap<void*, YString>		PointerContexts;
+	TMap<void*, FString>		PointerContexts;
 
 	/** Stack of contexts */
 	struct ContextString { TCHAR Buffer[128]; };
@@ -141,7 +141,7 @@ private:
 public:
 
 	static FMallocLeakDetection& Get();
-	static void HandleMallocLeakCommand(const TArray< YString >& Args);
+	static void HandleMallocLeakCommand(const TArray< FString >& Args);
 
 	/** Enable/disable collection of allocation with an optional filter on allocation size */
 	void SetAllocationCollection(bool bEnabled, int32 Size = 0);
@@ -176,7 +176,7 @@ public:
 
 	/** Push/Pop a context that will be associated with allocations. All open contexts will be displayed alongside
 	callstacks in a report.  */
-	void PushContext(const YString& Context);
+	void PushContext(const FString& Context);
 	void PopContext();
 
 	/** Returns */

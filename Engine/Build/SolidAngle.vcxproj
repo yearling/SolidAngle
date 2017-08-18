@@ -247,7 +247,6 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\ResourceArray.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\ScriptArray.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\Set.h" />
-    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\SolidAngleString.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\SparseArray.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\StackTracker.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\StaticArray.h" />
@@ -257,6 +256,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\TransArray.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\TripleBuffer.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\Union.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\UnrealString.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Core.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\CoreFwd.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\CoreGlobals.h" />
@@ -560,7 +560,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Modules\ModuleVersion.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\MallocProfiler.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\ProfilingHelpers.h" />
-    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\SMemoryDefines.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\ProfilingDebugging\UMemoryDefines.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\Archive.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\ArchiveLoadCompressedProxy.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\ArchiveProxy.h" />
@@ -606,7 +606,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsTriviallyDestructible.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\Less.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\MemoryOps.h" />
-    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\PointerConvertibleFromTo.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\PointerIsConvertibleFromTo.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\RefCounting.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\RemoveCV.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\RemoveExtent.h" />

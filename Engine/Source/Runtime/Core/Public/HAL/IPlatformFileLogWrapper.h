@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "HAL/PlatformMisc.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Map.h"
 #include "Math/Color.h"
 #include "Logging/LogMacros.h"
@@ -38,7 +38,7 @@ class FLoggedPlatformFile;
 class CORE_API FLoggedFileHandle : public IFileHandle
 {
 	TUniquePtr<IFileHandle>	FileHandle;
-	YString					Filename;
+	FString					Filename;
 #if !UE_BUILD_SHIPPING
 	FLoggedPlatformFile& PlatformFile;
 #endif
@@ -109,7 +109,7 @@ class CORE_API FLoggedPlatformFile : public IPlatformFile
 
 #if !UE_BUILD_SHIPPING
 	FCriticalSection LogFileCritical;
-	TMap<YString, int32> OpenHandles;
+	TMap<FString, int32> OpenHandles;
 #endif
 
 public:
@@ -142,7 +142,7 @@ public:
 
 	virtual bool		FileExists(const TCHAR* Filename) override
 	{
-		YString DataStr = YString::Printf(TEXT("FileExists %s"), Filename);
+		FString DataStr = FString::Printf(TEXT("FileExists %s"), Filename);
 		YScopedNamedEvent NamedEvent(FColor::Emerald, *DataStr);
 		FILE_LOG(LogPlatformFile, Log, TEXT("%s"), *DataStr);
 		double StartTime = FPlatformTime::Seconds();
@@ -153,7 +153,7 @@ public:
 	}
 	virtual int64		FileSize(const TCHAR* Filename) override
 	{
-		YString DataStr = YString::Printf(TEXT("FileSize %s"), Filename);
+		FString DataStr = FString::Printf(TEXT("FileSize %s"), Filename);
 		YScopedNamedEvent NamedEvent(FColor::Emerald, *DataStr);
 		FILE_LOG(LogPlatformFile, Log, TEXT("%s"), *DataStr);
 		double StartTime = FPlatformTime::Seconds();
@@ -164,7 +164,7 @@ public:
 	}
 	virtual bool		DeleteFile(const TCHAR* Filename) override
 	{
-		YString DataStr = YString::Printf(TEXT("DeleteFile %s"), Filename);
+		FString DataStr = FString::Printf(TEXT("DeleteFile %s"), Filename);
 		YScopedNamedEvent NamedEvent(FColor::Emerald, *DataStr);
 		FILE_LOG(LogPlatformFile, Log, TEXT("%s"), *DataStr);
 		double StartTime = FPlatformTime::Seconds();
@@ -175,7 +175,7 @@ public:
 	}
 	virtual bool		IsReadOnly(const TCHAR* Filename) override
 	{
-		YString DataStr = YString::Printf(TEXT("IsReadOnly %s"), Filename);
+		FString DataStr = FString::Printf(TEXT("IsReadOnly %s"), Filename);
 		YScopedNamedEvent NamedEvent(FColor::Emerald, *DataStr);
 		FILE_LOG(LogPlatformFile, Log, TEXT("%s"), *DataStr);
 		double StartTime = FPlatformTime::Seconds();
@@ -186,7 +186,7 @@ public:
 	}
 	virtual bool		MoveFile(const TCHAR* To, const TCHAR* From) override
 	{
-		YString DataStr = YString::Printf(TEXT("MoveFile %s %s"), To, From);
+		FString DataStr = FString::Printf(TEXT("MoveFile %s %s"), To, From);
 		YScopedNamedEvent NamedEvent(FColor::Emerald, *DataStr);
 		FILE_LOG(LogPlatformFile, Log, TEXT("%s"), *DataStr);
 		double StartTime = FPlatformTime::Seconds();
@@ -197,7 +197,7 @@ public:
 	}
 	virtual bool		SetReadOnly(const TCHAR* Filename, bool bNewReadOnlyValue) override
 	{
-		YString DataStr = YString::Printf(TEXT("SetReadOnly %s %d"), Filename, int32(bNewReadOnlyValue));
+		FString DataStr = FString::Printf(TEXT("SetReadOnly %s %d"), Filename, int32(bNewReadOnlyValue));
 		YScopedNamedEvent NamedEvent(FColor::Emerald, *DataStr);
 		FILE_LOG(LogPlatformFile, Log, TEXT("%s"), *DataStr);
 		double StartTime = FPlatformTime::Seconds();
@@ -208,7 +208,7 @@ public:
 	}
 	virtual FDateTime	GetTimeStamp(const TCHAR* Filename) override
 	{
-		YString DataStr = YString::Printf(TEXT("GetTimeStamp %s"), Filename);
+		FString DataStr = FString::Printf(TEXT("GetTimeStamp %s"), Filename);
 		YScopedNamedEvent NamedEvent(FColor::Emerald, *DataStr);
 		FILE_LOG(LogPlatformFile, Log, TEXT("%s"), *DataStr);
 		double StartTime = FPlatformTime::Seconds();
@@ -219,7 +219,7 @@ public:
 	}
 	virtual void		SetTimeStamp(const TCHAR* Filename, FDateTime DateTime) override
 	{
-		YString DataStr = YString::Printf(TEXT("SetTimeStamp %s"), Filename);
+		FString DataStr = FString::Printf(TEXT("SetTimeStamp %s"), Filename);
 		YScopedNamedEvent NamedEvent(FColor::Emerald, *DataStr);
 		FILE_LOG(LogPlatformFile, Log, TEXT("%s"), *DataStr);
 		double StartTime = FPlatformTime::Seconds();
@@ -229,7 +229,7 @@ public:
 	}
 	virtual FDateTime	GetAccessTimeStamp(const TCHAR* Filename) override
 	{
-		YString DataStr = YString::Printf(TEXT("GetAccessTimeStamp %s"), Filename);
+		FString DataStr = FString::Printf(TEXT("GetAccessTimeStamp %s"), Filename);
 		YScopedNamedEvent NamedEvent(FColor::Emerald, *DataStr);
 		FILE_LOG(LogPlatformFile, Log, TEXT("%s"), *DataStr);
 		double StartTime = FPlatformTime::Seconds();
@@ -238,20 +238,20 @@ public:
 		FILE_LOG(LogPlatformFile, Log, TEXT("GetAccessTimeStamp return %llx [%fms]"), Result.GetTicks(), ThisTime);
 		return Result;
 	}
-	virtual YString	GetFilenameOnDisk(const TCHAR* Filename) override
+	virtual FString	GetFilenameOnDisk(const TCHAR* Filename) override
 	{
-		YString DataStr = YString::Printf(TEXT("GetFilenameOnDisk %s"), Filename);
+		FString DataStr = FString::Printf(TEXT("GetFilenameOnDisk %s"), Filename);
 		YScopedNamedEvent NamedEvent(FColor::Emerald, *DataStr);
 		FILE_LOG(LogPlatformFile, Log, TEXT("%s"), *DataStr);
 		double StartTime = FPlatformTime::Seconds();
-		YString Result = LowerLevel->GetFilenameOnDisk(Filename);
+		FString Result = LowerLevel->GetFilenameOnDisk(Filename);
 		float ThisTime = (FPlatformTime::Seconds() - StartTime) / 1000.0;
 		FILE_LOG(LogPlatformFile, Log, TEXT("GetFilenameOnDisk return %s [%fms]"), *Result, ThisTime);
 		return Result;
 	}
 	virtual IFileHandle*	OpenRead(const TCHAR* Filename, bool bAllowWrite) override
 	{
-		YString DataStr = YString::Printf(TEXT("OpenRead %s"), Filename);
+		FString DataStr = FString::Printf(TEXT("OpenRead %s"), Filename);
 		YScopedNamedEvent NamedEvent(FColor::Emerald, *DataStr);
 		FILE_LOG(LogPlatformFile, Log, TEXT("%s"), *DataStr);
 		double StartTime = FPlatformTime::Seconds();
@@ -262,7 +262,7 @@ public:
 	}
 	virtual IFileHandle*	OpenWrite(const TCHAR* Filename, bool bAppend = false, bool bAllowRead = false) override
 	{
-		YString DataStr = YString::Printf(TEXT("OpenWrite %s %d %d"), Filename, int32(bAppend), int32(bAllowRead));
+		FString DataStr = FString::Printf(TEXT("OpenWrite %s %d %d"), Filename, int32(bAppend), int32(bAllowRead));
 		YScopedNamedEvent NamedEvent(FColor::Emerald, *DataStr);
 		FILE_LOG(LogPlatformFile, Log, TEXT("%s"), *DataStr);
 		double StartTime = FPlatformTime::Seconds();
@@ -274,7 +274,7 @@ public:
 
 	virtual bool		DirectoryExists(const TCHAR* Directory) override
 	{
-		YString DataStr = YString::Printf(TEXT("DirectoryExists %s"), Directory);
+		FString DataStr = FString::Printf(TEXT("DirectoryExists %s"), Directory);
 		YScopedNamedEvent NamedEvent(FColor::Emerald, *DataStr);
 		FILE_LOG(LogPlatformFile, Log, TEXT("%s"), *DataStr);
 		double StartTime = FPlatformTime::Seconds();
@@ -285,7 +285,7 @@ public:
 	}
 	virtual bool		CreateDirectory(const TCHAR* Directory) override
 	{
-		YString DataStr = YString::Printf(TEXT("CreateDirectory %s"), Directory);
+		FString DataStr = FString::Printf(TEXT("CreateDirectory %s"), Directory);
 		YScopedNamedEvent NamedEvent(FColor::Emerald, *DataStr);
 		FILE_LOG(LogPlatformFile, Log, TEXT("%s"), *DataStr);
 		double StartTime = FPlatformTime::Seconds();
@@ -296,7 +296,7 @@ public:
 	}
 	virtual bool		DeleteDirectory(const TCHAR* Directory) override
 	{
-		YString DataStr = YString::Printf(TEXT("DeleteDirectory %s"), Directory);
+		FString DataStr = FString::Printf(TEXT("DeleteDirectory %s"), Directory);
 		YScopedNamedEvent NamedEvent(FColor::Emerald, *DataStr);
 		FILE_LOG(LogPlatformFile, Log, TEXT("%s"), *DataStr);
 		double StartTime = FPlatformTime::Seconds();
@@ -307,7 +307,7 @@ public:
 	}
 	virtual FFileStatData GetStatData(const TCHAR* FilenameOrDirectory) override
 	{
-		YString DataStr = YString::Printf(TEXT("GetStatData %s"), FilenameOrDirectory);
+		FString DataStr = FString::Printf(TEXT("GetStatData %s"), FilenameOrDirectory);
 		YScopedNamedEvent NamedEvent(FColor::Emerald, *DataStr);
 		FILE_LOG(LogPlatformFile, Log, TEXT("%s"), *DataStr);
 		double StartTime = FPlatformTime::Seconds();
@@ -338,7 +338,7 @@ public:
 
 	virtual bool		IterateDirectory(const TCHAR* Directory, IPlatformFile::FDirectoryVisitor& Visitor) override
 	{
-		YString DataStr = YString::Printf(TEXT("IterateDirectory %s"), Directory);
+		FString DataStr = FString::Printf(TEXT("IterateDirectory %s"), Directory);
 		YScopedNamedEvent NamedEvent(FColor::Emerald, *DataStr);
 		FILE_LOG(LogPlatformFile, Log, TEXT("%s"), *DataStr);
 		double StartTime = FPlatformTime::Seconds();
@@ -350,7 +350,7 @@ public:
 	}
 	virtual bool		IterateDirectoryRecursively(const TCHAR* Directory, IPlatformFile::FDirectoryVisitor& Visitor) override
 	{
-		YString DataStr = YString::Printf(TEXT("IterateDirectoryRecursively %s"), Directory);
+		FString DataStr = FString::Printf(TEXT("IterateDirectoryRecursively %s"), Directory);
 		YScopedNamedEvent NamedEvent(FColor::Emerald, *DataStr);
 		FILE_LOG(LogPlatformFile, Log, TEXT("%s"), *DataStr);
 		double StartTime = FPlatformTime::Seconds();
@@ -382,7 +382,7 @@ public:
 
 	virtual bool		IterateDirectoryStat(const TCHAR* Directory, IPlatformFile::FDirectoryStatVisitor& Visitor) override
 	{
-		YString DataStr = YString::Printf(TEXT("IterateDirectoryStat %s"), Directory);
+		FString DataStr = FString::Printf(TEXT("IterateDirectoryStat %s"), Directory);
 		YScopedNamedEvent NamedEvent(FColor::Emerald, *DataStr);
 		FILE_LOG(LogPlatformFile, Log, TEXT("%s"), *DataStr);
 		double StartTime = FPlatformTime::Seconds();
@@ -394,7 +394,7 @@ public:
 	}
 	virtual bool		IterateDirectoryStatRecursively(const TCHAR* Directory, IPlatformFile::FDirectoryStatVisitor& Visitor) override
 	{
-		YString DataStr = YString::Printf(TEXT("IterateDirectoryStatRecursively %s"), Directory);
+		FString DataStr = FString::Printf(TEXT("IterateDirectoryStatRecursively %s"), Directory);
 		YScopedNamedEvent NamedEvent(FColor::Emerald, *DataStr);
 		FILE_LOG(LogPlatformFile, Log, TEXT("%s"), *DataStr);
 		double StartTime = FPlatformTime::Seconds();
@@ -407,7 +407,7 @@ public:
 
 	virtual bool		DeleteDirectoryRecursively(const TCHAR* Directory) override
 	{
-		YString DataStr = YString::Printf(TEXT("DeleteDirectoryRecursively %s"), Directory);
+		FString DataStr = FString::Printf(TEXT("DeleteDirectoryRecursively %s"), Directory);
 		YScopedNamedEvent NamedEvent(FColor::Emerald, *DataStr);
 		FILE_LOG(LogPlatformFile, Log, TEXT("%s"), *DataStr);
 		double StartTime = FPlatformTime::Seconds();
@@ -418,7 +418,7 @@ public:
 	}
 	virtual bool		CopyFile(const TCHAR* To, const TCHAR* From, EPlatformFileRead ReadFlags = EPlatformFileRead::None, EPlatformFileWrite WriteFlags = EPlatformFileWrite::None) override
 	{
-		YString DataStr = YString::Printf(TEXT("CopyFile %s %s"), To, From);
+		FString DataStr = FString::Printf(TEXT("CopyFile %s %s"), To, From);
 		YScopedNamedEvent NamedEvent(FColor::Emerald, *DataStr);
 		FILE_LOG(LogPlatformFile, Log, TEXT("%s"), *DataStr);
 		double StartTime = FPlatformTime::Seconds();
@@ -429,13 +429,13 @@ public:
 	}
 
 #if !UE_BUILD_SHIPPING
-	void OnHandleOpen(const YString& Filename)
+	void OnHandleOpen(const FString& Filename)
 	{
 		FScopeLock LogFileLock(&LogFileCritical);
 		int32& NumOpenHandles = OpenHandles.FindOrAdd(Filename);
 		NumOpenHandles++;
 	}
-	void OnHandleClosed(const YString& Filename)
+	void OnHandleClosed(const FString& Filename)
 	{
 		FScopeLock LogFileLock(&LogFileCritical);
 		int32& NumOpenHandles = OpenHandles.FindChecked(Filename);
@@ -448,7 +448,7 @@ public:
 #endif
 	virtual IAsyncReadFileHandle* OpenAsyncRead(const TCHAR* Filename) override
 	{
-		YString DataStr = YString::Printf(TEXT("OpenAsyncRead %s"), Filename);
+		FString DataStr = FString::Printf(TEXT("OpenAsyncRead %s"), Filename);
 		YScopedNamedEvent NamedEvent(FColor::Emerald, *DataStr);
 		FILE_LOG(LogPlatformFile, Log, TEXT("%s"), *DataStr);
 		double StartTime = FPlatformTime::Seconds();

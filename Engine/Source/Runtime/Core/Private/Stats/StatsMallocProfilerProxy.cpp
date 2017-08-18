@@ -121,7 +121,7 @@ void FStatsMallocProfilerProxy::TrackAlloc( void* Ptr, int64 Size, int32 Sequenc
 			{
 				ThreadStats->MemoryMessageScope++;
 				const double InvMB = 1.0f / 1024.0f / 1024.0f;
-				UE_LOG( LogStats, Verbose, TEXT( "ThreadID: %i, Current: %.1f" ), YPlatformTLS::GetCurrentThreadId(), InvMB*(int64)ThreadStats->Packet.StatMessages.Num()*sizeof( FStatMessage ) );
+				UE_LOG( LogStats, Verbose, TEXT( "ThreadID: %i, Current: %.1f" ), FPlatformTLS::GetCurrentThreadId(), InvMB*(int64)ThreadStats->Packet.StatMessages.Num()*sizeof( FStatMessage ) );
 				ThreadStats->MemoryMessageScope--;
 			}
 #endif // UE_BUILD_DEBUG

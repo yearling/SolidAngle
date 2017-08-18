@@ -1,7 +1,7 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #include "GenericPlatform/GenericPlatformSplash.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "HAL/FileManager.h"
 #include "Misc/Paths.h"
 
@@ -16,11 +16,11 @@ const TCHAR* SupportedSplashImageExt[] =
 /**
 * Return the filename found (look for PNG, JPG and BMP in that order, try to avoid BMP, use more space...)
 */
-YString GetSplashFilename(const YString& ContentDir, const YString& Filename)
+FString GetSplashFilename(const FString& ContentDir, const FString& Filename)
 {
 	int index = 0;
-	const YString ImageName = ContentDir / Filename;
-	YString Path;
+	const FString ImageName = ContentDir / Filename;
+	FString Path;
 
 	while (SupportedSplashImageExt[index])
 	{
@@ -44,9 +44,9 @@ YString GetSplashFilename(const YString& ContentDir, const YString& Filename)
 *
 * @return true if a splash screen was found
 */
-bool FGenericPlatformSplash::GetSplashPath(const TCHAR* SplashFilename, YString& OutPath, bool& OutIsCustom)
+bool FGenericPlatformSplash::GetSplashPath(const TCHAR* SplashFilename, FString& OutPath, bool& OutIsCustom)
 {
-	YString Filename = YString(TEXT("Splash/")) + SplashFilename;
+	FString Filename = FString(TEXT("Splash/")) + SplashFilename;
 
 	// first look in game's splash directory
 	OutPath = GetSplashFilename(YPaths::GameContentDir(), Filename);
@@ -68,10 +68,10 @@ bool FGenericPlatformSplash::GetSplashPath(const TCHAR* SplashFilename, YString&
 	return false;
 }
 
-bool FGenericPlatformSplash::GetSplashPath(const TCHAR* SplashFilename, const TCHAR* IconFilename, YString& OutPath, YString& OutIconPath, bool& OutIsCustom)
+bool FGenericPlatformSplash::GetSplashPath(const TCHAR* SplashFilename, const TCHAR* IconFilename, FString& OutPath, FString& OutIconPath, bool& OutIsCustom)
 {
-	YString Filename = YString(TEXT("Splash/")) + SplashFilename;
-	YString IconName = YString(TEXT("Splash/")) + IconFilename;
+	FString Filename = FString(TEXT("Splash/")) + SplashFilename;
+	FString IconName = FString(TEXT("Splash/")) + IconFilename;
 
 	// first look in game's splash directory
 	OutPath = YPaths::ConvertRelativePathToFull(GetSplashFilename(YPaths::GameContentDir(), Filename));

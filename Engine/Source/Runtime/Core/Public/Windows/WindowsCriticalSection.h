@@ -6,7 +6,7 @@
 #include "Misc/Timespan.h"
 #include "HAL/PlatformMemory.h"
 
-class YString;
+class FString;
 
 /**
 * This is the Windows version of a critical section. It uses an aggregate
@@ -83,7 +83,7 @@ class CORE_API FWindowsSystemWideCriticalSection
 {
 public:
 	/** Construct a named, system-wide critical section and attempt to get access/ownership of it */
-	explicit FWindowsSystemWideCriticalSection(const class YString& InName, YTimespan InTimeout = YTimespan::Zero());
+	explicit FWindowsSystemWideCriticalSection(const class FString& InName, YTimespan InTimeout = YTimespan::Zero());
 
 	/** Destructor releases system-wide critical section if it is currently owned */
 	~FWindowsSystemWideCriticalSection();

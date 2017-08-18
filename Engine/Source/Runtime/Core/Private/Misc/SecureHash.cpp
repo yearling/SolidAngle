@@ -460,14 +460,14 @@ void FMD5::Decode( uint32* output, const uint8* input, int32 len )
 
 namespace Lex
 {
-	YString ToString(const FMD5Hash& Hash)
+	FString ToString(const FMD5Hash& Hash)
 	{
 		if (!Hash.bIsValid)
 		{
-			return YString();
+			return FString();
 		}
 
-		return YString::Printf(TEXT("%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x"),
+		return FString::Printf(TEXT("%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x"),
 			Hash.Bytes[0], Hash.Bytes[1], Hash.Bytes[2], Hash.Bytes[3], Hash.Bytes[4], Hash.Bytes[5], Hash.Bytes[6], Hash.Bytes[7],
 			Hash.Bytes[8], Hash.Bytes[9], Hash.Bytes[10], Hash.Bytes[11], Hash.Bytes[12], Hash.Bytes[13], Hash.Bytes[14], Hash.Bytes[15]);
 	}
@@ -573,8 +573,8 @@ FMD5Hash FMD5Hash::HashFileFromArchive( FArchive* Ar, TArray<uint8>* Buffer)
 -----------------------------------------------------------------------------*/
 
 /** Global maps of filename to hash value */
-TMap<YString, uint8*> FSHA1::FullFileSHAHashMap;
-TMap<YString, uint8*> FSHA1::ScriptSHAHashMap;
+TMap<FString, uint8*> FSHA1::FullFileSHAHashMap;
+TMap<FString, uint8*> FSHA1::ScriptSHAHashMap;
 
 // Rotate x bits to the left
 #ifndef ROL32

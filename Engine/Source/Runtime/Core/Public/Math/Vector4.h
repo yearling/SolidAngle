@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Misc/Crc.h"
 #include "Math/UnrealMathUtility.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Misc/Parse.h"
 #include "Logging/LogMacros.h"
 #include "Math/Vector2D.h"
@@ -273,7 +273,7 @@ public:
 	*
 	* @return Text describing the vector.
 	*/
-	YString ToString() const;
+	FString ToString() const;
 
 	/**
 	* Initialize this Vector based on an YString. The String is expected to contain X=, Y=, Z=, W=.
@@ -282,7 +282,7 @@ public:
 	* @param InSourceString	YString containing the vector values.
 	* @return true if the X,Y,Z values were read successfully; false otherwise.
 	*/
-	bool InitFromString(const YString& InSourceString);
+	bool InitFromString(const FString& InSourceString);
 
 	/**
 	* Returns a normalized copy of the vector if safe to normalize.
@@ -587,13 +587,13 @@ FORCEINLINE bool FVector4::Equals(const FVector4& V, float Tolerance) const
 }
 
 
-FORCEINLINE YString FVector4::ToString() const
+FORCEINLINE FString FVector4::ToString() const
 {
-	return YString::Printf(TEXT("X=%3.3f Y=%3.3f Z=%3.3f W=%3.3f"), X, Y, Z, W);
+	return FString::Printf(TEXT("X=%3.3f Y=%3.3f Z=%3.3f W=%3.3f"), X, Y, Z, W);
 }
 
 
-FORCEINLINE bool FVector4::InitFromString(const YString& InSourceString)
+FORCEINLINE bool FVector4::InitFromString(const FString& InSourceString)
 {
 	X = Y = Z = 0;
 	W = 1.0f;

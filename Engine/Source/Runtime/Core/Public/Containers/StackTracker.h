@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Math/NumericLimits.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Map.h"
 
 
@@ -72,7 +72,7 @@ private:
 	/** Mapping an address to an arbitrary alias of that address. Only used with bLookupStringsForAliasRemoval.*/
 	TMap<uint64, uint64> AliasMap;
 	/** Mapping an string to an arbitrary alias of that address. Only used with bLookupStringsForAliasRemoval.*/
-	TMap<YString, uint64> StringAliasMap;
+	TMap<FString, uint64> StringAliasMap;
 	/** Whether we are currently capturing or not, used to avoid re-entrancy. */
 	bool bAvoidCapturing;
 	/** Whether stack tracking is enabled. */

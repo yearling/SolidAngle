@@ -3,11 +3,11 @@
 #include "Windows/WindowsCriticalSection.h"
 #include "Misc/AssertionMacros.h"
 #include "Math/UnrealMathUtility.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Windows/WindowsHWrapper.h"
 #include "Windows/AllowWindowsPlatformTypes.h"
 
-FWindowsSystemWideCriticalSection::FWindowsSystemWideCriticalSection(const YString& InName, YTimespan InTimeout)
+FWindowsSystemWideCriticalSection::FWindowsSystemWideCriticalSection(const FString& InName, YTimespan InTimeout)
 {
 	// Check for valid name length not exceeding the Window mutex name length limit
 	check(InName.Len() > 0)
@@ -17,7 +17,7 @@ FWindowsSystemWideCriticalSection::FWindowsSystemWideCriticalSection(const YStri
 	check(InTimeout.GetTotalMilliseconds() < (double)0x7FFFFFFE)	// limit timespan to a number of millisec that will fit in a signed int32
 
 	// Disallow backslashes as they aren't allowed in Windows mutex names
-	YString NormalizedMutexName(InName);
+	FString NormalizedMutexName(InName);
 	NormalizedMutexName.ReplaceInline(TEXT("\\"), TEXT("/"));
 
 	TCHAR MutexName[MAX_PATH] = TEXT("");

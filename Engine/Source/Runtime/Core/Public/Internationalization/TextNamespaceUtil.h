@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Internationalization/TextNamespaceFwd.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 
 namespace TextNamespaceUtil
 {
@@ -23,7 +23,7 @@ static const TCHAR PackageNamespaceEndMarker = TEXT(']');
  *
  * @return The full namespace that should be used by the localization system.
  */
-CORE_API YString BuildFullNamespace(const YString& InTextNamespace, const YString& InPackageNamespace, const bool bAlwaysApplyPackageNamespace = false);
+CORE_API FString BuildFullNamespace(const FString& InTextNamespace, const FString& InPackageNamespace, const bool bAlwaysApplyPackageNamespace = false);
 
 /**
  * Given a text namespace, extract any package namespace that may currently be present.
@@ -32,7 +32,7 @@ CORE_API YString BuildFullNamespace(const YString& InTextNamespace, const YStrin
  *
  * @return The extracted package namespace component, or an empty string if there was no package namespace component.
  */
-CORE_API YString ExtractPackageNamespace(const YString& InTextNamespace);
+CORE_API FString ExtractPackageNamespace(const FString& InTextNamespace);
 
 /**
  * Given a text namespace, strip any package namespace that may currently be present.
@@ -42,7 +42,7 @@ CORE_API YString ExtractPackageNamespace(const YString& InTextNamespace);
  *
  * @return The namespace stripped of any package namespace component.
  */
-CORE_API YString StripPackageNamespace(const YString& InTextNamespace);
+CORE_API FString StripPackageNamespace(const FString& InTextNamespace);
 
 #if USE_STABLE_LOCALIZATION_KEYS
 
@@ -53,7 +53,7 @@ CORE_API YString StripPackageNamespace(const YString& InTextNamespace);
  *
  * @return The package namespace, or an empty string if the archive has no package namespace set.
  */
-CORE_API YString GetPackageNamespace(FArchive& InArchive);
+CORE_API FString GetPackageNamespace(FArchive& InArchive);
 
 #endif // USE_STABLE_LOCALIZATION_KEYS
 

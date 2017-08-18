@@ -38,19 +38,19 @@ FMallocLeakDetection::~FMallocLeakDetection()
 {	
 }
 
-static uint32 ContextsTLSID = YPlatformTLS::AllocTlsSlot();
+static uint32 ContextsTLSID = FPlatformTLS::AllocTlsSlot();
 
-void FMallocLeakDetection::PushContext(const YString& Context)
+void FMallocLeakDetection::PushContext(const FString& Context)
 {
 	FMallocLeakDetectionProxy::Get().Lock();
 
 	FScopeLock Lock(&AllocatedPointersCritical);
 
-	TArray<ContextString>* TLContexts = (TArray<ContextString>*)YPlatformTLS::GetTlsValue(ContextsTLSID);
+	TArray<ContextString>* TLContexts = (TArray<ContextString>*)FPlatformTLS::GetTlsValue(ContextsTLSID);
 	if (!TLContexts)
 	{
 		TLContexts = new TArray<ContextString>();
-		YPlatformTLS::SetTlsValue(ContextsTLSID, TLContexts);
+		FPlatformTLS::SetTlsValue(ContextsTLSID, TLContexts);
 	}
 
 	bRecursive = true;
@@ -65,7 +65,7 @@ void FMallocLeakDetection::PushContext(const YString& Context)
 
 void FMallocLeakDetection::PopContext()
 {
-	TArray<ContextString>* TLContexts = (TArray<ContextString>*)YPlatformTLS::GetTlsValue(ContextsTLSID);
+	TArray<ContextString>* TLContexts = (TArray<ContextString>*)FPlatformTLS::GetTlsValue(ContextsTLSID);
 	check(TLContexts);
 	TLContexts->Pop(false);
 }
@@ -111,7 +111,7 @@ bool FMallocLeakDetection::Exec(UWorld* InWorld, const TCHAR* Cmd, FOutputDevice
 			FParse::Value(Cmd, TEXT("filtersize="), FilterSize);
 			FilterSize *= 1024;
 
-			YString FileName;
+			FString FileName;
 			FParse::Value(Cmd, TEXT("name="), FileName);
 
 			UE_LOG(LogConsoleResponse, Display, TEXT("Dumping unique calltacks with %i KB or more oustanding."), FilterSize/1024);
@@ -128,7 +128,7 @@ bool FMallocLeakDetection::Exec(UWorld* InWorld, const TCHAR* Cmd, FOutputDevice
 			FParse::Value(Cmd, TEXT("filtersize="), FilterSize);
 			FilterSize *= 1024;
 
-			YString FileName;
+			FString FileName;
 			FParse::Value(Cmd, TEXT("name="), FileName);
 
 			FMallocLeakReportOptions Options;
@@ -372,10 +372,10 @@ int32 FMallocLeakDetection::DumpPotentialLeakers(const FMallocLeakReportOptions&
 
 		if (Options.OutputFile && FCString::Strlen(Options.OutputFile))
 		{
-			const YString PathName = *(YPaths::ProfilingDir() + TEXT("memreports/"));
+			const FString PathName = *(YPaths::ProfilingDir() + TEXT("memreports/"));
 			IFileManager::Get().MakeDirectory(*PathName);
 
-			YString FilePath = PathName + CreateProfileFilename(Options.OutputFile, TEXT(".leaks"), true);
+			FString FilePath = PathName + CreateProfileFilename(Options.OutputFile, TEXT(".leaks"), true);
 
 			FileAr = IFileManager::Get().CreateDebugFileWriter(*FilePath);
 			FileArWrapper = new YOutputDeviceArchiveWrapper(FileAr);
@@ -451,7 +451,7 @@ int32 FMallocLeakDetection::DumpPotentialLeakers(const FMallocLeakReportOptions&
 			{
 				FScopeLock Lock(&AllocatedPointersCritical);
 
-				TArray<YString> SortedContexts;
+				TArray<FString> SortedContexts;
 
 				for (const auto& Pair : OpenPointers)
 				{
@@ -529,10 +529,10 @@ int32 FMallocLeakDetection::DumpOpenCallstacks(const FMallocLeakReportOptions& O
 
 	if (Options.OutputFile && FCString::Strlen(Options.OutputFile))
 	{
-		const YString PathName = *(YPaths::ProfilingDir() + TEXT("memreports/"));
+		const FString PathName = *(YPaths::ProfilingDir() + TEXT("memreports/"));
 		IFileManager::Get().MakeDirectory(*PathName);
 		
-		YString FilePath = PathName + CreateProfileFilename(Options.OutputFile, TEXT(".allocs"), true);
+		FString FilePath = PathName + CreateProfileFilename(Options.OutputFile, TEXT(".allocs"), true);
 
 		FileAr = IFileManager::Get().CreateDebugFileWriter(*FilePath);
 		FileArWrapper = new YOutputDeviceArchiveWrapper(FileAr);
@@ -600,7 +600,7 @@ int32 FMallocLeakDetection::DumpOpenCallstacks(const FMallocLeakReportOptions& O
 			FMemory::Memzero(CallstackString);
 		}
 
-		TArray<YString> SortedContexts;
+		TArray<FString> SortedContexts;
 
 		for (const auto& Pair : OpenPointers)
 		{
@@ -677,7 +677,7 @@ void FMallocLeakDetection::Malloc(void* Ptr, SIZE_T Size)
 				AddCallstack(Callstack);
 				OpenPointers.Add(Ptr, Callstack);
 
-				TArray<ContextString>* TLContexts = (TArray<ContextString>*)YPlatformTLS::GetTlsValue(ContextsTLSID);
+				TArray<ContextString>* TLContexts = (TArray<ContextString>*)FPlatformTLS::GetTlsValue(ContextsTLSID);
 
 				if (TLContexts && TLContexts->Num())
 				{
@@ -716,12 +716,12 @@ void FMallocLeakDetection::Realloc(void* OldPtr, void* NewPtr, SIZE_T Size)
 			// See if we should/need to copy the context across
 			if (OldPtr && NewPtr)
 			{
-				YString* OldContext = PointerContexts.Find(OldPtr);
-				YString* NewContext = PointerContexts.Find(NewPtr);
+				FString* OldContext = PointerContexts.Find(OldPtr);
+				FString* NewContext = PointerContexts.Find(NewPtr);
 
 				if (OldContext && !NewContext)
 				{
-					YString Tmp = *OldContext;
+					FString Tmp = *OldContext;
 					PointerContexts.Add(NewPtr) = Tmp;
 				}
 			}
@@ -739,7 +739,7 @@ void FMallocLeakDetection::Realloc(void* OldPtr, void* NewPtr, SIZE_T Size)
 		{
 			// realloc returned the same pointer, if there was a context when the call happened then
 			// update it.
-			TArray<ContextString>* TLContexts = (TArray<ContextString>*)YPlatformTLS::GetTlsValue(ContextsTLSID);
+			TArray<ContextString>* TLContexts = (TArray<ContextString>*)FPlatformTLS::GetTlsValue(ContextsTLSID);
 
 			if (TLContexts && TLContexts->Num())
 			{

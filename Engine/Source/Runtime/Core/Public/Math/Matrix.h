@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "HAL/UnrealMemory.h"
 #include "Math/UnrealMathUtility.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Math/Vector.h"
 #include "Math/Vector4.h"
 #include "Math/Plane.h"
@@ -314,7 +314,7 @@ public:
 	*
 	* @return Text describing the vector.
 	*/
-	CORE_API YString ToString() const;
+	CORE_API FString ToString() const;
 
 	/** Output ToString */
 	void DebugPrint() const;

@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Map.h"
 #include "HAL/IConsoleManager.h"
 
@@ -23,7 +23,7 @@ public:
 	/** destructor */
 	~FConsoleManager()
 	{
-		for (TMap<YString, IConsoleObject*>::TConstIterator PairIt(ConsoleObjects); PairIt; ++PairIt)
+		for (TMap<FString, IConsoleObject*>::TConstIterator PairIt(ConsoleObjects); PairIt; ++PairIt)
 		{
 			IConsoleObject* Var = PairIt.Value();
 
@@ -37,7 +37,7 @@ public:
 	bool IsThreadPropagationThread();
 
 	/** @param InVar must not be 0 */
-	YString FindConsoleObjectName(const IConsoleObject* Obj) const;
+	FString FindConsoleObjectName(const IConsoleObject* Obj) const;
 
 	/** Can be moved out into some automated testing system */
 	void Test();
@@ -48,7 +48,7 @@ public:
 
 	virtual IConsoleVariable* RegisterConsoleVariable(const TCHAR* Name, int32 DefaultValue, const TCHAR* Help, uint32 Flags) override;
 	virtual IConsoleVariable* RegisterConsoleVariable(const TCHAR* Name, float DefaultValue, const TCHAR* Help, uint32 Flags) override;
-	virtual IConsoleVariable* RegisterConsoleVariable(const TCHAR* Name, const YString& DefaultValue, const TCHAR* Help, uint32 Flags) override;
+	virtual IConsoleVariable* RegisterConsoleVariable(const TCHAR* Name, const FString& DefaultValue, const TCHAR* Help, uint32 Flags) override;
 	virtual IConsoleVariable* RegisterConsoleVariableRef(const TCHAR* Name, int32& RefValue, const TCHAR* Help, uint32 Flags) override;
 	virtual IConsoleVariable* RegisterConsoleVariableRef(const TCHAR* Name, float& RefValue, const TCHAR* Help, uint32 Flags) override;
 	virtual IConsoleVariable* RegisterConsoleVariableRef(const TCHAR* Name, bool& RefValue, const TCHAR* Help, uint32 Flags) override;
@@ -71,7 +71,7 @@ public:
 	virtual void ForEachConsoleObjectThatContains(const FConsoleObjectVisitor& Visitor, const TCHAR* ThatContains) const override;
 	virtual bool ProcessUserConsoleInput(const TCHAR* InInput, FOutputDevice& Ar, UWorld* InWorld) override;
 	virtual void AddConsoleHistoryEntry(const TCHAR* Input) override;
-	virtual void GetConsoleHistory(TArray<YString>& Out) override;
+	virtual void GetConsoleHistory(TArray<FString>& Out) override;
 	virtual bool IsNameRegistered(const TCHAR* Name) const override;
 	virtual void RegisterThreadPropagation(uint32 ThreadId, IConsoleThreadPropagation* InCallback) override;
 	virtual void UnregisterConsoleObject(IConsoleObject* Object, bool bKeepState) override;
@@ -80,9 +80,9 @@ private: // ----------------------------------------------------
 
 		 /** Map of console variables and commands, indexed by the name of that command or variable */
 		 // [name] = pointer (pointer must not be 0)
-	TMap<YString, IConsoleObject*> ConsoleObjects;
+	TMap<FString, IConsoleObject*> ConsoleObjects;
 
-	TArray<YString>	HistoryEntries;
+	TArray<FString>	HistoryEntries;
 	bool bHistoryWasLoaded;
 	TArray<FConsoleCommandDelegate>	ConsoleVariableChangeSinks;
 
@@ -119,7 +119,7 @@ private: // ----------------------------------------------------
 	* Get string till whitespace, jump over whitespace
 	* inefficient but this code is not performance critical
 	*/
-	static YString GetTextSection(const TCHAR* &It);
+	static FString GetTextSection(const TCHAR* &It);
 
 	/** same as FindConsoleObject() but ECVF_CreatedFromIni are not filtered out (for internal use) */
 	IConsoleObject* FindConsoleObjectUnfiltered(const TCHAR* Name) const;

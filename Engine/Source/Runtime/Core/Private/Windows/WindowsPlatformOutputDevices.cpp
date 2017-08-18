@@ -39,7 +39,7 @@ namespace OutputDeviceConstants
 // YWindowsPlatformOutputDevices
 //////////////////////////////////
 
-class YOutputDeviceError*			YWindowsPlatformOutputDevices::GetError()
+class FOutputDeviceError*			YWindowsPlatformOutputDevices::GetError()
 {
 	static FOutputDeviceWindowsError Singleton;
 	return &Singleton;
@@ -55,7 +55,7 @@ class FOutputDevice*				YWindowsPlatformOutputDevices::GetEventLog()
 #endif //WANTS_WINDOWS_EVENT_LOGGING
 }
 
-class YOutputDeviceConsole*			YWindowsPlatformOutputDevices::GetLogConsole()
+class FOutputDeviceConsole*			YWindowsPlatformOutputDevices::GetLogConsole()
 {
 	// this is a slightly different kind of singleton that gives ownership to the caller and should not be called more than once
 	return new YOutputDeviceConsoleWindows();

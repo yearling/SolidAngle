@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Misc/OutputDevice.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Templates/SharedPointer.h"
 #include "Internationalization/Text.h"
 #include "Misc/ScopeLock.h"
@@ -84,7 +84,7 @@ public:
 	virtual ~FFeedbackContext();
 
 	/** Gets warnings history */
-	void GetWarnings(TArray<YString>& OutWarnings) const
+	void GetWarnings(TArray<FString>& OutWarnings) const
 	{
 		FScopeLock WarningsAndErrorsLock(&WarningsAndErrorsCritical);
 		OutWarnings = Warnings;
@@ -95,7 +95,7 @@ public:
 	}
 
 	/** Gets errors history */
-	void GetErrors(TArray<YString>& OutErrors) const
+	void GetErrors(TArray<FString>& OutErrors) const
 	{
 		FScopeLock WarningsAndErrorsLock(&WarningsAndErrorsCritical);
 		OutErrors = Errors;
@@ -106,7 +106,7 @@ public:
 	}
 
 	/** Gets all errors and warnings and clears the history */
-	void GetErrorsAndWarningsAndEmpty(TArray<YString>& OutWarningsAndErrors)
+	void GetErrorsAndWarningsAndEmpty(TArray<FString>& OutWarningsAndErrors)
 	{
 		FScopeLock WarningsAndErrorsLock(&WarningsAndErrorsCritical);
 		OutWarningsAndErrors = MoveTemp(Errors);
@@ -125,9 +125,9 @@ private:
 	FFeedbackContext& operator=(const FFeedbackContext&);
 
 	/** Warnings history */
-	TArray<YString> Warnings;
+	TArray<FString> Warnings;
 	/** Errors history */
-	TArray<YString> Errors;
+	TArray<FString> Errors;
 	/** Guard for the errors and warnings history */
 	mutable FCriticalSection WarningsAndErrorsCritical;
 
@@ -149,7 +149,7 @@ protected:
 	* Adds a new warning message to warnings history.
 	* @param InWarning Warning message
 	*/
-	void AddWarning(const YString& InWarning)
+	void AddWarning(const FString& InWarning)
 	{
 		FScopeLock WarningsAndErrorsLock(&WarningsAndErrorsCritical);
 		Warnings.Add(InWarning);
@@ -159,7 +159,7 @@ protected:
 	* Adds a new error message to errors history.
 	* @param InWarning Error message
 	*/
-	void AddError(const YString& InError)
+	void AddError(const FString& InError)
 	{
 		FScopeLock WarningsAndErrorsLock(&WarningsAndErrorsCritical);
 		Errors.Add(InError);

@@ -2,7 +2,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "UObject/NameTypes.h"
 
 /** Defines the comparison operators that can be used for a complex (key->value) comparison */
@@ -40,8 +40,8 @@ public:
 	FTextFilterString(FTextFilterString&& Other);
 
 	/** Construct from a string */
-	FTextFilterString(const YString& InString);
-	FTextFilterString(YString&& InString);
+	FTextFilterString(const FString& InString);
+	FTextFilterString(FString&& InString);
 	FTextFilterString(const TCHAR* InString);
 
 	/** Construct from a name */
@@ -61,7 +61,7 @@ public:
 	bool CompareNumeric(const FTextFilterString& InOther, const ETextFilterComparisonOperation InComparisonOperation) const;
 
 	/** Get the internal uppercase string of this filter string */
-	FORCEINLINE const YString& AsString() const
+	FORCEINLINE const FString& AsString() const
 	{
 		return InternalString;
 	}
@@ -83,7 +83,7 @@ private:
 	void UppercaseInternalString();
 
 	/** The uppercase string to use for comparisons */
-	YString InternalString;
+	FString InternalString;
 };
 
 namespace TextFilterUtils

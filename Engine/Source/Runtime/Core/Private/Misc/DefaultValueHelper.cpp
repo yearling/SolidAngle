@@ -7,7 +7,7 @@
 #include "Math/Rotator.h"
 
 
-bool FDefaultValueHelper::Is(const YString& Source, const TCHAR* CompareStr)
+bool FDefaultValueHelper::Is(const FString& Source, const TCHAR* CompareStr)
 {
 	check(NULL != CompareStr);
 
@@ -32,9 +32,9 @@ bool FDefaultValueHelper::Is(const YString& Source, const TCHAR* CompareStr)
 }
 
 
-YString FDefaultValueHelper::RemoveWhitespaces(const YString& Source)
+FString FDefaultValueHelper::RemoveWhitespaces(const FString& Source)
 {
-	YString Result;
+	FString Result;
 	if( !Source.IsEmpty() )
 	{
 		Result.Reserve( Source.Len() );
@@ -50,14 +50,14 @@ YString FDefaultValueHelper::RemoveWhitespaces(const YString& Source)
 }
 
 
-const TCHAR* FDefaultValueHelper::EndOf(const YString& Source)
+const TCHAR* FDefaultValueHelper::EndOf(const FString& Source)
 {
 	check(!Source.IsEmpty());
 	return *Source + Source.Len();
 }
 
 
-const TCHAR* FDefaultValueHelper::StartOf(const YString& Source)
+const TCHAR* FDefaultValueHelper::StartOf(const FString& Source)
 {
 	check(!Source.IsEmpty());
 	return *Source;
@@ -80,7 +80,7 @@ bool FDefaultValueHelper::IsWhitespace(TCHAR Char)
 }
 
 
-bool FDefaultValueHelper::Trim(int32& Pos, const YString& Source)
+bool FDefaultValueHelper::Trim(int32& Pos, const FString& Source)
 {
 	for(; Pos < Source.Len() && IsWhitespace(Source[Pos]); ++Pos) { }
 	return (Pos < Source.Len());
@@ -96,9 +96,9 @@ bool FDefaultValueHelper::Trim(const TCHAR* & Start, const TCHAR* End )
 }
 
 
-YString FDefaultValueHelper::GetUnqualifiedEnumValue(const YString& Source)
+FString FDefaultValueHelper::GetUnqualifiedEnumValue(const FString& Source)
 {
-	auto SeparatorPosition = Source.Find(YString("::"), ESearchCase::CaseSensitive);
+	auto SeparatorPosition = Source.Find(FString("::"), ESearchCase::CaseSensitive);
 	if (SeparatorPosition == INDEX_NONE)
 	{
 		return Source;
@@ -108,7 +108,7 @@ YString FDefaultValueHelper::GetUnqualifiedEnumValue(const YString& Source)
 }
 
 
-bool FDefaultValueHelper::HasWhitespaces(const YString& Source)
+bool FDefaultValueHelper::HasWhitespaces(const FString& Source)
 {
 	for(int Pos = 0; Pos < Source.Len(); ++Pos)
 	{
@@ -121,7 +121,7 @@ bool FDefaultValueHelper::HasWhitespaces(const YString& Source)
 }
 
 
-bool FDefaultValueHelper::GetParameters(const YString& Source, const YString& TypeName, YString& OutForm)
+bool FDefaultValueHelper::GetParameters(const FString& Source, const FString& TypeName, FString& OutForm)
 {
 	int32 Pos = 0;
 
@@ -244,7 +244,7 @@ bool FDefaultValueHelper::IsStringValidInteger(const TCHAR* Start, const TCHAR* 
 }
 	
 	
-bool FDefaultValueHelper::IsStringValidInteger(const YString& Source)
+bool FDefaultValueHelper::IsStringValidInteger(const FString& Source)
 {
 	if(!Source.IsEmpty())
 	{
@@ -297,7 +297,7 @@ bool FDefaultValueHelper::IsStringValidFloat(const TCHAR* Start, const TCHAR* En
 }
 
 
-bool FDefaultValueHelper::IsStringValidFloat(const YString& Source)
+bool FDefaultValueHelper::IsStringValidFloat(const FString& Source)
 {
 	if(!Source.IsEmpty())
 	{
@@ -307,7 +307,7 @@ bool FDefaultValueHelper::IsStringValidFloat(const YString& Source)
 }
 
 
-bool FDefaultValueHelper::IsStringValidVector(const YString& Source)
+bool FDefaultValueHelper::IsStringValidVector(const FString& Source)
 {
 	const TCHAR* Start = StartOf(Source);
 	const TCHAR* FirstComma = FCString::Strstr( Start, TEXT(",") );
@@ -339,13 +339,13 @@ bool FDefaultValueHelper::IsStringValidVector(const YString& Source)
 }
 
 
-bool FDefaultValueHelper::IsStringValidRotator(const YString& Source)
+bool FDefaultValueHelper::IsStringValidRotator(const FString& Source)
 {
 	return IsStringValidVector(Source);
 }
 
 
-bool FDefaultValueHelper::IsStringValidLinearColor(const YString& Source)
+bool FDefaultValueHelper::IsStringValidLinearColor(const FString& Source)
 {
 	if(Source.IsEmpty())
 	{
@@ -383,7 +383,7 @@ bool FDefaultValueHelper::IsStringValidLinearColor(const YString& Source)
 }
 
 
-bool FDefaultValueHelper::StringFromCppString(const YString& Source, const YString& TypeName, YString& OutForm)
+bool FDefaultValueHelper::StringFromCppString(const FString& Source, const FString& TypeName, FString& OutForm)
 {
 	int32 Pos = 0, PendingParentheses = 0;
 
@@ -401,7 +401,7 @@ bool FDefaultValueHelper::StringFromCppString(const YString& Source, const YStri
 			return false;
 		}
 
-		if (Source.Find(YString("::"), ESearchCase::CaseSensitive) == Pos)
+		if (Source.Find(FString("::"), ESearchCase::CaseSensitive) == Pos)
 		{
 			Pos += 2;
 
@@ -410,7 +410,7 @@ bool FDefaultValueHelper::StringFromCppString(const YString& Source, const YStri
 				return false;
 			}
 
-			const YString AllowedFunctionName(TEXT("FromString"));
+			const FString AllowedFunctionName(TEXT("FromString"));
 			if (Source.Find(AllowedFunctionName, ESearchCase::CaseSensitive, ESearchDir::FromStart, Pos) == Pos)
 			{
 				Pos += AllowedFunctionName.Len();
@@ -500,11 +500,11 @@ bool FDefaultValueHelper::StringFromCppString(const YString& Source, const YStri
 
 ////////////////////////////////////////////////////////
 
-bool FDefaultValueHelper::ParseVector(const YString& Source, FVector& OutVal)
+bool FDefaultValueHelper::ParseVector(const FString& Source, FVector& OutVal)
 {
 	const bool bHasWhitespace = HasWhitespaces(Source);
-	const YString NoWhitespace = bHasWhitespace ? RemoveWhitespaces(Source) : YString();
-	const YString& ProperSource = bHasWhitespace ? NoWhitespace : Source;
+	const FString NoWhitespace = bHasWhitespace ? RemoveWhitespaces(Source) : FString();
+	const FString& ProperSource = bHasWhitespace ? NoWhitespace : Source;
 	if(ProperSource.IsEmpty())
 	{
 		return false;
@@ -545,11 +545,11 @@ bool FDefaultValueHelper::ParseVector(const YString& Source, FVector& OutVal)
 }
 
 
-bool FDefaultValueHelper::ParseVector2D(const YString& Source, YVector2D& OutVal)
+bool FDefaultValueHelper::ParseVector2D(const FString& Source, YVector2D& OutVal)
 {
 	const bool bHasWhitespace = HasWhitespaces(Source);
-	const YString NoWhitespace = bHasWhitespace ? RemoveWhitespaces(Source) : YString();
-	const YString& ProperSource = bHasWhitespace ? NoWhitespace : Source;
+	const FString NoWhitespace = bHasWhitespace ? RemoveWhitespaces(Source) : FString();
+	const FString& ProperSource = bHasWhitespace ? NoWhitespace : Source;
 	if(ProperSource.IsEmpty())
 	{
 		return false;
@@ -576,7 +576,7 @@ bool FDefaultValueHelper::ParseVector2D(const YString& Source, YVector2D& OutVal
 }
 
 
-bool FDefaultValueHelper::ParseRotator(const YString& Source, FRotator& OutVal)
+bool FDefaultValueHelper::ParseRotator(const FString& Source, FRotator& OutVal)
 {
 	FVector Vector;
 	if( ParseVector( Source, Vector ) )
@@ -588,13 +588,13 @@ bool FDefaultValueHelper::ParseRotator(const YString& Source, FRotator& OutVal)
 }
 
 
-bool FDefaultValueHelper::ParseInt(const YString& Source, int32& OutVal)
+bool FDefaultValueHelper::ParseInt(const FString& Source, int32& OutVal)
 {
 	int32 Base;
 	if( !Source.IsEmpty() && IsStringValidInteger( StartOf(Source), EndOf(Source), Base ) )
 	{
 		const bool bHasWhitespace = HasWhitespaces(Source);
-		const YString NoWhitespace = bHasWhitespace ? RemoveWhitespaces(Source) : YString();
+		const FString NoWhitespace = bHasWhitespace ? RemoveWhitespaces(Source) : FString();
 		OutVal = FCString::Strtoi( bHasWhitespace ? *NoWhitespace : *Source , NULL, Base );
 		return true;
 	}
@@ -602,13 +602,13 @@ bool FDefaultValueHelper::ParseInt(const YString& Source, int32& OutVal)
 }
 
 
-bool FDefaultValueHelper::ParseInt64(const YString& Source, int64& OutVal)
+bool FDefaultValueHelper::ParseInt64(const FString& Source, int64& OutVal)
 {
 	int32 Base;
 	if( !Source.IsEmpty() && IsStringValidInteger( StartOf(Source), EndOf(Source), Base ) )
 	{
 		const bool bHasWhitespace = HasWhitespaces(Source);
-		const YString NoWhitespace = bHasWhitespace ? RemoveWhitespaces(Source) : YString();
+		const FString NoWhitespace = bHasWhitespace ? RemoveWhitespaces(Source) : FString();
 		OutVal = FCString::Strtoui64( bHasWhitespace ? *NoWhitespace : *Source , NULL, Base );
 		return true;
 	}
@@ -616,12 +616,12 @@ bool FDefaultValueHelper::ParseInt64(const YString& Source, int64& OutVal)
 }
 
 
-bool FDefaultValueHelper::ParseFloat(const YString& Source, float& OutVal)
+bool FDefaultValueHelper::ParseFloat(const FString& Source, float& OutVal)
 {
 	if( IsStringValidFloat( Source ) )
 	{
 		const bool bHasWhitespace = HasWhitespaces(Source);
-		const YString NoWhitespace = bHasWhitespace ? RemoveWhitespaces(Source) : YString();
+		const FString NoWhitespace = bHasWhitespace ? RemoveWhitespaces(Source) : FString();
 		OutVal =  FCString::Atof( bHasWhitespace ? *NoWhitespace : *Source );
 		return true;
 	}
@@ -629,12 +629,12 @@ bool FDefaultValueHelper::ParseFloat(const YString& Source, float& OutVal)
 }
 
 
-bool FDefaultValueHelper::ParseDouble(const YString& Source, double& OutVal)
+bool FDefaultValueHelper::ParseDouble(const FString& Source, double& OutVal)
 {
 	if( IsStringValidFloat( Source ) )
 	{
 		const bool bHasWhitespace = HasWhitespaces(Source);
-		const YString NoWhitespace = bHasWhitespace ? RemoveWhitespaces(Source) : YString();
+		const FString NoWhitespace = bHasWhitespace ? RemoveWhitespaces(Source) : FString();
 		OutVal =  FCString::Atod( bHasWhitespace ? *NoWhitespace : *Source );
 		return true;
 	}
@@ -642,11 +642,11 @@ bool FDefaultValueHelper::ParseDouble(const YString& Source, double& OutVal)
 }
 
 
-bool FDefaultValueHelper::ParseLinearColor(const YString& Source, FLinearColor& OutVal)
+bool FDefaultValueHelper::ParseLinearColor(const FString& Source, FLinearColor& OutVal)
 {
 	const bool bHasWhitespace = HasWhitespaces(Source);
-	const YString NoWhitespace = bHasWhitespace ? RemoveWhitespaces(Source) : YString();
-	const YString& ProperSource = bHasWhitespace ? NoWhitespace : Source;
+	const FString NoWhitespace = bHasWhitespace ? RemoveWhitespaces(Source) : FString();
+	const FString& ProperSource = bHasWhitespace ? NoWhitespace : Source;
 	if(ProperSource.IsEmpty())
 	{
 		return false;
@@ -689,11 +689,11 @@ bool FDefaultValueHelper::ParseLinearColor(const YString& Source, FLinearColor& 
 	return true;
 }
 
-bool FDefaultValueHelper::ParseColor(const YString& Source, FColor& OutVal)
+bool FDefaultValueHelper::ParseColor(const FString& Source, FColor& OutVal)
 {
 	const bool bHasWhitespace = HasWhitespaces(Source);
-	const YString NoWhitespace = bHasWhitespace ? RemoveWhitespaces(Source) : YString();
-	const YString& ProperSource = bHasWhitespace ? NoWhitespace : Source;
+	const FString NoWhitespace = bHasWhitespace ? RemoveWhitespaces(Source) : FString();
+	const FString& ProperSource = bHasWhitespace ? NoWhitespace : Source;
 	if(ProperSource.IsEmpty())
 	{
 		return false;

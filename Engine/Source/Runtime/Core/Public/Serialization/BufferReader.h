@@ -6,7 +6,7 @@
 #include "Misc/AssertionMacros.h"
 #include "HAL/UnrealMemory.h"
 #include "Serialization/Archive.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 
 /**
 * Similar to YMemoryReader, but able to internally
@@ -78,7 +78,7 @@ public:
 	*
 	* This is overridden for the specific Archive Types
 	**/
-	virtual YString GetArchiveName() const { return TEXT("FBufferReaderBase"); }
+	virtual FString GetArchiveName() const { return TEXT("FBufferReaderBase"); }
 protected:
 	void*		ReaderData;
 	int64		ReaderPos;
@@ -107,5 +107,5 @@ public:
 	{
 	}
 
-	virtual YString GetArchiveName() const { return TEXT("FBufferReader"); }
+	virtual FString GetArchiveName() const { return TEXT("FBufferReader"); }
 };

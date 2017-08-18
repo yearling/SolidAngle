@@ -563,7 +563,7 @@ public:
 	* @param Ar The archive to serialize from or to.
 	* @param Value The value to serialize.
 	*/
-	friend CORE_API FArchive& operator<<(FArchive& Ar, YString& Value);
+	friend CORE_API FArchive& operator<<(FArchive& Ar, FString& Value);
 
 public:
 
@@ -597,7 +597,7 @@ public:
 	*
 	* This is overridden for the specific Archive Types
 	*/
-	virtual YString GetArchiveName() const;
+	virtual FString GetArchiveName() const;
 
 	/**
 	* If this archive is a FLinkerLoad or FLinkerSave, returns a pointer to the ULinker portion.
@@ -1245,13 +1245,13 @@ public:
 	* Set the localization namespace that this archive should use when serializing text properties.
 	* This is typically the namespace used by the package being serialized (if serializing a package, or an object within a package).
 	*/
-	virtual void SetLocalizationNamespace(const YString& InLocalizationNamespace);
+	virtual void SetLocalizationNamespace(const FString& InLocalizationNamespace);
 
 	/**
 	* Get the localization namespace that this archive should use when serializing text properties.
 	* This is typically the namespace used by the package being serialized (if serializing a package, or an object within a package).
 	*/
-	virtual YString GetLocalizationNamespace() const;
+	virtual FString GetLocalizationNamespace() const;
 #endif // USE_STABLE_LOCALIZATION_KEYS
 
 protected:
@@ -1532,13 +1532,13 @@ private:
 	* This is typically the namespace used by the package being serialized (if serializing a package, or an object within a package).
 	* Stored as a pointer to a heap-allocated string because of a dependency between TArray (thus YString) and YArchive; null should be treated as an empty string.
 	*/
-	class YString* LocalizationNamespacePtr;
+	class FString* LocalizationNamespacePtr;
 
 	/** See SetLocalizationNamespace */
-	void SetBaseLocalizationNamespace(const YString& InLocalizationNamespace);
+	void SetBaseLocalizationNamespace(const FString& InLocalizationNamespace);
 
 	/** See GetLocalizationNamespace */
-	YString GetBaseLocalizationNamespace() const;
+	FString GetBaseLocalizationNamespace() const;
 #endif // USE_STABLE_LOCALIZATION_KEYS
 
 	/**

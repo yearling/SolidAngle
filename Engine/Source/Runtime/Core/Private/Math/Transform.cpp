@@ -26,32 +26,32 @@ void FTransform::DebugPrint() const
 	UE_LOG(LogTransform, Log, TEXT("%s"), *ToHumanReadableString());
 }
 
-YString FTransform::ToHumanReadableString() const
+FString FTransform::ToHumanReadableString() const
 {
 	FQuat R(GetRotation());
 	FVector T(GetTranslation());
 	FVector S(GetScale3D());
 
-	YString Output= YString::Printf(TEXT("Rotation: %f %f %f %f\r\n"), R.X, R.Y, R.Z, R.W);
-	Output += YString::Printf(TEXT("Translation: %f %f %f\r\n"), T.X, T.Y, T.Z);
-	Output += YString::Printf(TEXT("Scale3D: %f %f %f\r\n"), S.X, S.Y, S.Z);
+	FString Output= FString::Printf(TEXT("Rotation: %f %f %f %f\r\n"), R.X, R.Y, R.Z, R.W);
+	Output += FString::Printf(TEXT("Translation: %f %f %f\r\n"), T.X, T.Y, T.Z);
+	Output += FString::Printf(TEXT("Scale3D: %f %f %f\r\n"), S.X, S.Y, S.Z);
 
 	return Output;
 }
 
 
-YString FTransform::ToString() const
+FString FTransform::ToString() const
 {
 	const FRotator R(Rotator());
 	const FVector T(GetTranslation());
 	const FVector S(GetScale3D());
 
-	return YString::Printf(TEXT("%f,%f,%f|%f,%f,%f|%f,%f,%f"), T.X, T.Y, T.Z, R.Pitch, R.Yaw, R.Roll, S.X, S.Y, S.Z);
+	return FString::Printf(TEXT("%f,%f,%f|%f,%f,%f|%f,%f,%f"), T.X, T.Y, T.Z, R.Pitch, R.Yaw, R.Roll, S.X, S.Y, S.Z);
 }
 
-bool FTransform::InitFromString( const YString& Source )
+bool FTransform::InitFromString( const FString& Source )
 {
-	TArray<YString> ComponentStrings;
+	TArray<FString> ComponentStrings;
 	Source.ParseIntoArray(ComponentStrings, TEXT("|"), true);
 	const int32 NumComponents = ComponentStrings.Num();
 	if(3 != NumComponents)

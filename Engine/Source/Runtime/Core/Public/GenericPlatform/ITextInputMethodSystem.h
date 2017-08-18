@@ -62,7 +62,7 @@ public:
 	* @param	InLength		The number of code points to get after the beginning index.
 	* @param	OutString		A string to store the code points being returned.
 	*/
-	virtual void GetTextInRange(const uint32 InBeginIndex, const uint32 InLength, YString& OutString) = 0;
+	virtual void GetTextInRange(const uint32 InBeginIndex, const uint32 InLength, FString& OutString) = 0;
 
 	/**
 	* Sets the code points in a range of indices.
@@ -71,7 +71,7 @@ public:
 	* @param	InLength		The number of code points to set after the beginning index.
 	* @param	InString		A string of the code points to be set.
 	*/
-	virtual void SetTextInRange(const uint32 InBeginIndex, const uint32 InLength, const YString& InString) = 0;
+	virtual void SetTextInRange(const uint32 InBeginIndex, const uint32 InLength, const FString& InString) = 0;
 
 	/**
 	* Gets the index of the code point at the point on the screen.

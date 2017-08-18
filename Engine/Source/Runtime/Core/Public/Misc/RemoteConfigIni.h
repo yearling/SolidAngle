@@ -2,7 +2,7 @@
 
 #include "CoreTypes.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Map.h"
 #include "Misc/DateTime.h"
 #include "Stats/Stats.h"
@@ -22,7 +22,7 @@ struct FRemoteConfigAsyncIOInfo
 	FRemoteConfigAsyncIOInfo& operator=(const FRemoteConfigAsyncIOInfo& Other);
 
 	/** Stores the contents of the remote config file */
-	YString Buffer;
+	FString Buffer;
 
 	/** Time stamp of the remote config file */
 	FDateTime TimeStamp;
@@ -52,7 +52,7 @@ class FRemoteConfigAsyncWorker
 public:
 
 	/** Constructor. */
-	FRemoteConfigAsyncWorker(const TCHAR* InFilename, FRemoteConfigAsyncIOInfo& InIOInfo, YString* InContents, bool bInIsRead);
+	FRemoteConfigAsyncWorker(const TCHAR* InFilename, FRemoteConfigAsyncIOInfo& InIOInfo, FString* InContents, bool bInIsRead);
 
 	/** Performs the actual IO operations. */
 	void DoWork();
@@ -83,7 +83,7 @@ private:
 	FRemoteConfigAsyncIOInfo IOInfo;
 
 	/** Contents to write out. */
-	YString Contents;
+	FString Contents;
 
 	/** true if read operation, false if write. */
 	bool bIsRead;
@@ -96,14 +96,14 @@ private:
 class FRemoteConfigAsyncCachedWriteTask
 {
 public:
-	FRemoteConfigAsyncCachedWriteTask(const TCHAR* InFileName, YString* InContents)
+	FRemoteConfigAsyncCachedWriteTask(const TCHAR* InFileName, FString* InContents)
 	{
 		Filename = InFileName;
 		Contents = *InContents;
 	}
 
-	YString Filename;
-	YString Contents;
+	FString Filename;
+	FString Contents;
 };
 
 
@@ -121,7 +121,7 @@ public:
 	CORE_API void Tick();
 
 	/** Add an async IO task to the queue and kick it off. */
-	bool StartTask(const TCHAR* InFilename, const TCHAR* RemotePath, FRemoteConfigAsyncIOInfo& InIOInfo, YString* InContents, bool bInIsRead);
+	bool StartTask(const TCHAR* InFilename, const TCHAR* RemotePath, FRemoteConfigAsyncIOInfo& InIOInfo, FString* InContents, bool bInIsRead);
 
 	/** Returns true if the task has completed */
 	bool IsFinished(const TCHAR* InFilename);
@@ -138,7 +138,7 @@ private:
 	bool FindCachedWriteTask(const TCHAR* InFilename, bool bCompareContents, const TCHAR* InContents);
 
 	/** List of pending async IO operations */
-	TMap<YString, FAsyncTask<FRemoteConfigAsyncWorker>* > PendingTasks;
+	TMap<FString, FAsyncTask<FRemoteConfigAsyncWorker>* > PendingTasks;
 
 	/** List of cached off write tasks waiting for currently pending tasks to complete. */
 	TArray<FRemoteConfigAsyncCachedWriteTask> CachedWriteTasks;
@@ -177,7 +177,7 @@ public:
 	bool Read(const TCHAR* GeneratedIniFile, const TCHAR* DefaultIniFile);
 
 	/** Queues up a new async task for writing a remote config file. */
-	bool Write(const TCHAR* Filename, YString& Contents);
+	bool Write(const TCHAR* Filename, FString& Contents);
 
 	/** Waits on the async read if it hasn't finished yet... times out if the operation has taken too long. */
 	void FinishRead(const TCHAR* Filename);
@@ -186,18 +186,18 @@ public:
 	CORE_API static void Flush();
 
 	/* Replaces chars used by the ini parser with "special chars". */
-	CORE_API static YString ReplaceIniCharWithSpecialChar(const YString& Str);
+	CORE_API static FString ReplaceIniCharWithSpecialChar(const FString& Str);
 
 	/* Replaces "special chars" that have been inserted to avoid problems with the ini parser with equivalent regular chars. */
-	CORE_API static YString ReplaceIniSpecialCharWithChar(const YString& Str);
+	CORE_API static FString ReplaceIniSpecialCharWithChar(const FString& Str);
 
 private:
 
 	/** Creates the remote path string for the specified file. */
-	YString GenerateRemotePath(const TCHAR* Filename);
+	FString GenerateRemotePath(const TCHAR* Filename);
 
 	/** List of remote config file info. */
-	TMap<YString, FRemoteConfigAsyncIOInfo> ConfigBuffers;
+	TMap<FString, FRemoteConfigAsyncIOInfo> ConfigBuffers;
 
 	/** Async IO operation timeout. */
 	float Timeout;
@@ -209,7 +209,7 @@ private:
 	bool bHasCachedFilenames;
 
 	/** List of desired remote files. */
-	TArray<YString> CachedFileNames;
+	TArray<FString> CachedFileNames;
 };
 
 

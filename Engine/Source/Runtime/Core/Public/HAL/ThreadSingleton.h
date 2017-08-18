@@ -41,7 +41,7 @@ protected:
 
 	/** Default constructor. */
 	TThreadSingleton()
-		: ThreadId(YPlatformTLS::GetCurrentThreadId())
+		: ThreadId(FPlatformTLS::GetCurrentThreadId())
 	{}
 
 	/**

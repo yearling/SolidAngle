@@ -30,42 +30,42 @@ bool FTextInspector::ShouldGatherForLocalization(const FText& Text)
 	return Text.ShouldGatherForLocalization();
 }
 
-TOptional<YString> FTextInspector::GetNamespace(const FText& Text)
+TOptional<FString> FTextInspector::GetNamespace(const FText& Text)
 {
 	FTextDisplayStringPtr LocalizedString = Text.TextData->GetLocalizedString();
 	if (LocalizedString.IsValid())
 	{
-		YString Namespace;
-		YString Key;
+		FString Namespace;
+		FString Key;
 		if (FTextLocalizationManager::Get().FindNamespaceAndKeyFromDisplayString(LocalizedString.ToSharedRef(), Namespace, Key))
 		{
 			return Namespace;
 		}
 	}
-	return TOptional<YString>();
+	return TOptional<FString>();
 }
 
-TOptional<YString> FTextInspector::GetKey(const FText& Text)
+TOptional<FString> FTextInspector::GetKey(const FText& Text)
 {
 	FTextDisplayStringPtr LocalizedString = Text.TextData->GetLocalizedString();
 	if (LocalizedString.IsValid())
 	{
-		YString Namespace;
-		YString Key;
+		FString Namespace;
+		FString Key;
 		if (FTextLocalizationManager::Get().FindNamespaceAndKeyFromDisplayString(LocalizedString.ToSharedRef(), Namespace, Key))
 		{
 			return Key;
 		}
 	}
-	return TOptional<YString>();
+	return TOptional<FString>();
 }
 
-const YString* FTextInspector::GetSourceString(const FText& Text)
+const FString* FTextInspector::GetSourceString(const FText& Text)
 {
 	return &Text.GetSourceString();
 }
 
-const YString& FTextInspector::GetDisplayString(const FText& Text)
+const FString& FTextInspector::GetDisplayString(const FText& Text)
 {
 	return Text.TextData->GetDisplayString();
 }
@@ -164,7 +164,7 @@ FText::FText()
 }
 
 FText::FText( EInitToEmptyString )
-	: TextData(new TLocalizedTextData<FTextHistory_Base>(MakeShareable(new YString())))
+	: TextData(new TLocalizedTextData<FTextHistory_Base>(MakeShareable(new FString())))
 	, Flags(0)
 {
 }
@@ -222,21 +222,21 @@ FText::FText( TSharedRef<ITextData, ESPMode::ThreadSafe> InTextData )
 {
 }
 
-FText::FText( YString&& InSourceString )
-	: TextData(new TGeneratedTextData<FTextHistory_Base>(YString(InSourceString)))
+FText::FText( FString&& InSourceString )
+	: TextData(new TGeneratedTextData<FTextHistory_Base>(FString(InSourceString)))
 	, Flags(0)
 {
 	TextData->SetTextHistory(FTextHistory_Base(MoveTemp(InSourceString)));
 }
 
-FText::FText( YString&& InSourceString, FTextDisplayStringRef InDisplayString )
-	: TextData(new TLocalizedTextData<FTextHistory_Base>(MoveTemp(InDisplayString)))
+FText::FText( FString&& InSourceString, FTextDisplayStringRef InDisplaFString )
+	: TextData(new TLocalizedTextData<FTextHistory_Base>(MoveTemp(InDisplaFString)))
 	, Flags(0)
 {
 	TextData->SetTextHistory(FTextHistory_Base(MoveTemp(InSourceString)));
 }
 
-FText::FText( YString&& InSourceString, const YString& InNamespace, const YString& InKey, uint32 InFlags )
+FText::FText( FString&& InSourceString, const FString& InNamespace, const FString& InKey, uint32 InFlags )
 	: TextData(new TLocalizedTextData<FTextHistory_Base>(FTextLocalizationManager::Get().GetDisplayString(InNamespace, InKey, &InSourceString)))
 	, Flags(InFlags)
 {
@@ -250,13 +250,13 @@ bool FText::IsEmpty() const
 
 bool FText::IsEmptyOrWhitespace() const
 {
-	const YString& DisplayString = TextData->GetDisplayString();
-	if (DisplayString.IsEmpty())
+	const FString& DisplaFString = TextData->GetDisplayString();
+	if (DisplaFString.IsEmpty())
 	{
 		return true;
 	}
 
-	for( const TCHAR Character : DisplayString )
+	for( const TCHAR Character : DisplaFString )
 	{
 		if (!IsWhitespace(Character))
 		{
@@ -269,7 +269,7 @@ bool FText::IsEmptyOrWhitespace() const
 
 FText FText::TrimPreceding( const FText& InText )
 {
-	YString TrimmedString = InText.ToString();
+	FString TrimmedString = InText.ToString();
 	{
 		int32 StartPos = 0;
 		while ( StartPos < TrimmedString.Len() )
@@ -304,7 +304,7 @@ FText FText::TrimPreceding( const FText& InText )
 
 FText FText::TrimTrailing( const FText& InText )
 {
-	YString TrimmedString = InText.ToString();
+	FString TrimmedString = InText.ToString();
 	{
 		int32 EndPos = TrimmedString.Len() - 1;
 		while( EndPos >= 0 )
@@ -339,7 +339,7 @@ FText FText::TrimTrailing( const FText& InText )
 
 FText FText::TrimPrecedingAndTrailing( const FText& InText )
 {
-	YString TrimmedString = InText.ToString();
+	FString TrimmedString = InText.ToString();
 	{
 		int32 StartPos = 0;
 		while ( StartPos < TrimmedString.Len() )
@@ -422,7 +422,7 @@ FText FText::Format(FTextFormat Fmt, FFormatArgumentValue v1, FFormatArgumentVal
 	return FTextFormatter::Format(MoveTemp(Fmt), MoveTemp(Arguments), false, false);
 }
 
-void FText::GetFormatPatternParameters(const FTextFormat& Fmt, TArray<YString>& ParameterNames)
+void FText::GetFormatPatternParameters(const FTextFormat& Fmt, TArray<FString>& ParameterNames)
 {
 	return Fmt.GetFormatArgumentNames(ParameterNames);
 }
@@ -483,7 +483,7 @@ FText FText::AsNumberTemplate(T1 Val, const FNumberFormattingOptions* const Opti
 
 	const FDecimalNumberFormattingRules& FormattingRules = Culture.GetDecimalNumberFormattingRules();
 	const FNumberFormattingOptions& FormattingOptions = (Options) ? *Options : FormattingRules.CultureDefaultFormattingOptions;
-	YString NativeString = FastDecimalFormat::NumberToString(Val, FormattingRules, FormattingOptions);
+	FString NativeString = FastDecimalFormat::NumberToString(Val, FormattingRules, FormattingOptions);
 
 	return FText::CreateNumericalText(MakeShareable(new TGeneratedTextData<FTextHistory_AsNumber>(MoveTemp(NativeString), FTextHistory_AsNumber(Val, Options, TargetCulture))));
 }
@@ -491,7 +491,7 @@ FText FText::AsNumberTemplate(T1 Val, const FNumberFormattingOptions* const Opti
 /**
  * Generate an FText that represents the passed number as currency in the current culture
  */
-#define DEF_ASCURRENCY_CAST(T1, T2) FText FText::AsCurrency(T1 Val, const YString& CurrencyCode, const FNumberFormattingOptions* const Options, const FCulturePtr& TargetCulture) { return FText::AsCurrencyTemplate<T1, T2>(Val, CurrencyCode, Options, TargetCulture); }
+#define DEF_ASCURRENCY_CAST(T1, T2) FText FText::AsCurrency(T1 Val, const FString& CurrencyCode, const FNumberFormattingOptions* const Options, const FCulturePtr& TargetCulture) { return FText::AsCurrencyTemplate<T1, T2>(Val, CurrencyCode, Options, TargetCulture); }
 #define DEF_ASCURRENCY(T) DEF_ASCURRENCY_CAST(T, T)
 DEF_ASCURRENCY(float)
 	DEF_ASCURRENCY(double)
@@ -507,7 +507,7 @@ DEF_ASCURRENCY(float)
 #undef DEF_ASCURRENCY_CAST
 
 template<typename T1, typename T2>
-FText FText::AsCurrencyTemplate(T1 Val, const YString& CurrencyCode, const FNumberFormattingOptions* const Options, const FCulturePtr& TargetCulture)
+FText FText::AsCurrencyTemplate(T1 Val, const FString& CurrencyCode, const FNumberFormattingOptions* const Options, const FCulturePtr& TargetCulture)
 {
 	FInternationalization& I18N = FInternationalization::Get();
 	checkf(I18N.IsInitialized() == true, TEXT("FInternationalization is not initialized. An FText formatting method was likely used in static object initialization - this is not supported."));
@@ -515,12 +515,12 @@ FText FText::AsCurrencyTemplate(T1 Val, const YString& CurrencyCode, const FNumb
 
 	const FDecimalNumberFormattingRules& FormattingRules = Culture.GetCurrencyFormattingRules(CurrencyCode);
 	const FNumberFormattingOptions& FormattingOptions = (Options) ? *Options : FormattingRules.CultureDefaultFormattingOptions;
-	YString NativeString = FastDecimalFormat::NumberToString(Val, FormattingRules, FormattingOptions);
+	FString NativeString = FastDecimalFormat::NumberToString(Val, FormattingRules, FormattingOptions);
 
 	return FText::CreateNumericalText(MakeShareable(new TGeneratedTextData<FTextHistory_AsCurrency>(MoveTemp(NativeString), FTextHistory_AsCurrency(Val, CurrencyCode, Options, TargetCulture))));
 }
 
-FText FText::AsCurrencyBase(int64 BaseVal, const YString& CurrencyCode, const FCulturePtr& TargetCulture)
+FText FText::AsCurrencyBase(int64 BaseVal, const FString& CurrencyCode, const FCulturePtr& TargetCulture)
 {
 	FInternationalization& I18N = FInternationalization::Get();
 	checkf(I18N.IsInitialized() == true, TEXT("FInternationalization is not initialized. An FText formatting method was likely used in static object initialization - this is not supported."));
@@ -529,7 +529,7 @@ FText FText::AsCurrencyBase(int64 BaseVal, const YString& CurrencyCode, const FC
 	const FDecimalNumberFormattingRules& FormattingRules = Culture.GetCurrencyFormattingRules(CurrencyCode);
 	const FNumberFormattingOptions& FormattingOptions = FormattingRules.CultureDefaultFormattingOptions;
 	double Val = static_cast<double>(BaseVal) / YMath::Pow(10.0f, FormattingOptions.MaximumFractionalDigits);
-	YString NativeString = FastDecimalFormat::NumberToString(Val, FormattingRules, FormattingOptions);
+	FString NativeString = FastDecimalFormat::NumberToString(Val, FormattingRules, FormattingOptions);
 
 	return FText::CreateNumericalText(MakeShareable(new TGeneratedTextData<FTextHistory_AsCurrency>(MoveTemp(NativeString), FTextHistory_AsCurrency(Val, CurrencyCode, nullptr, TargetCulture))));
 }
@@ -554,7 +554,7 @@ FText FText::AsPercentTemplate(T1 Val, const FNumberFormattingOptions* const Opt
 
 	const FDecimalNumberFormattingRules& FormattingRules = Culture.GetPercentFormattingRules();
 	const FNumberFormattingOptions& FormattingOptions = (Options) ? *Options : FormattingRules.CultureDefaultFormattingOptions;
-	YString NativeString = FastDecimalFormat::NumberToString(Val * static_cast<T1>(100), FormattingRules, FormattingOptions);
+	FString NativeString = FastDecimalFormat::NumberToString(Val * static_cast<T1>(100), FormattingRules, FormattingOptions);
 
 	return FText::CreateNumericalText(MakeShareable(new TGeneratedTextData<FTextHistory_AsPercent>(MoveTemp(NativeString), FTextHistory_AsPercent(Val, Options, TargetCulture))));
 }
@@ -567,7 +567,7 @@ FText FText::AsMemory(uint64 NumBytes, const FNumberFormattingOptions* const Opt
 	if (NumBytes < 1024)
 	{
 		Args.Add( TEXT("Number"), FText::AsNumber( NumBytes, Options, TargetCulture) );
-		Args.Add( TEXT("Unit"), FText::FromString( YString( TEXT("B") ) ) );
+		Args.Add( TEXT("Unit"), FText::FromString( FString( TEXT("B") ) ) );
 		return FText::Format( NSLOCTEXT("Internationalization", "ComputerMemoryFormatting", "{Number} {Unit}"), Args );
 	}
 
@@ -581,22 +581,22 @@ FText FText::AsMemory(uint64 NumBytes, const FNumberFormattingOptions* const Opt
 
 	const double MemorySizeAsDouble = (double)NumBytes / 1024.0;
 	Args.Add( TEXT("Number"), FText::AsNumber( MemorySizeAsDouble, Options, TargetCulture) );
-	Args.Add( TEXT("Unit"), FText::FromString( YString( 1, &Prefixes[Prefix] ) + TEXT("B") ) );
+	Args.Add( TEXT("Unit"), FText::FromString( FString( 1, &Prefixes[Prefix] ) + TEXT("B") ) );
 	return FText::Format( NSLOCTEXT("Internationalization", "ComputerMemoryFormatting", "{Number} {Unit}"), Args);
 }
 
-YString FText::GetInvariantTimeZone()
+FString FText::GetInvariantTimeZone()
 {
 	return TEXT("Etc/Unknown");
 }
 
-bool FText::FindText( const YString& Namespace, const YString& Key, FText& OutText, const YString* const SourceString )
+bool FText::FindText( const FString& Namespace, const FString& Key, FText& OutText, const FString* const SourceString )
 {
 	FTextDisplayStringPtr FoundString = FTextLocalizationManager::Get().FindDisplayString( Namespace, Key, SourceString );
 
 	if ( FoundString.IsValid() )
 	{
-		OutText = FText( SourceString ? YString(*SourceString) : YString(), FoundString.ToSharedRef() );
+		OutText = FText( SourceString ? FString(*SourceString) : FString(), FoundString.ToSharedRef() );
 		return true;
 	}
 
@@ -612,30 +612,30 @@ void FText::SerializeText(FArchive& Ar, FText& Value)
 	// Older FText's stored their "SourceString", that is now stored in a history class so move it there
 	if (Ar.IsLoading() && Ar.UE4Ver() < VER_UE4_FTEXT_HISTORY)
 	{
-		YString SourceStringToImplantIntoHistory;
+		FString SourceStringToImplantIntoHistory;
 		Ar << SourceStringToImplantIntoHistory;
 
-		FTextDisplayStringPtr DisplayString;
+		FTextDisplayStringPtr DisplaFString;
 
 		// Namespaces and keys are no longer stored in the FText, we need to read them in and discard
 		if (Ar.UE4Ver() >= VER_UE4_ADDED_NAMESPACE_AND_KEY_DATA_TO_FTEXT)
 		{
-			YString Namespace;
-			YString Key;
+			FString Namespace;
+			FString Key;
 
 			Ar << Namespace;
 			Ar << Key;
 
-			// Get the DisplayString using the namespace, key, and source string.
-			DisplayString = FTextLocalizationManager::Get().GetDisplayString(Namespace, Key, &SourceStringToImplantIntoHistory);
+			// Get the DisplaFString using the namespace, key, and source string.
+			DisplaFString = FTextLocalizationManager::Get().GetDisplayString(Namespace, Key, &SourceStringToImplantIntoHistory);
 		}
 		else
 		{
-			DisplayString = MakeShareable(new YString());
+			DisplaFString = MakeShareable(new FString());
 		}
 
-		check(DisplayString.IsValid());
-		Value.TextData = MakeShareable(new TLocalizedTextData<FTextHistory_Base>(DisplayString.ToSharedRef(), FTextHistory_Base(MoveTemp(SourceStringToImplantIntoHistory))));
+		check(DisplaFString.IsValid());
+		Value.TextData = MakeShareable(new TLocalizedTextData<FTextHistory_Base>(DisplaFString.ToSharedRef(), FTextHistory_Base(MoveTemp(SourceStringToImplantIntoHistory))));
 	}
 
 #if WITH_EDITOR
@@ -647,7 +647,7 @@ void FText::SerializeText(FArchive& Ar, FText& Value)
 		}
 		else if (!!(Value.Flags & ETextFlag::InitializedFromString))
 		{
-			UE_LOG(LogText, Warning, TEXT("Saving FText \"%s\" which has been initialized from YString at cook time resave of source package %s may fix issue."), *Value.ToString(), *Ar.GetArchiveName())
+			UE_LOG(LogText, Warning, TEXT("Saving FText \"%s\" which has been initialized from FString at cook time resave of source package %s may fix issue."), *Value.ToString(), *Ar.GetArchiveName())
 		}
 	}
 #endif
@@ -782,9 +782,9 @@ void FText::SerializeText(FArchive& Ar, FText& Value)
 }
 
 #if WITH_EDITOR
-FText FText::ChangeKey( const YString& Namespace, const YString& Key, const FText& Text )
+FText FText::ChangeKey( const FString& Namespace, const FString& Key, const FText& Text )
 {
-	return FText(YString(*Text.TextData->GetTextHistory().GetSourceString()), Namespace, Key, Text.Flags);
+	return FText(FString(*Text.TextData->GetTextHistory().GetSourceString()), Namespace, Key, Text.Flags);
 }
 #endif
 
@@ -813,9 +813,9 @@ FText FText::FromName( const FName& Val)
 	return FText::FromString(Val.ToString());
 }
 
-FText FText::FromString( const YString& String )
+FText FText::FromString( const FString& String )
 {
-	FText NewText = FText( YString(String) );
+	FText NewText = FText( FString(String) );
 
 	if (!GIsEditor)
 	{
@@ -826,7 +826,7 @@ FText FText::FromString( const YString& String )
 	return NewText;
 }
 
-FText FText::FromString( YString&& String )
+FText FText::FromString( FString&& String )
 {
 	FText NewText = FText( MoveTemp(String) );
 
@@ -839,15 +839,15 @@ FText FText::FromString( YString&& String )
 	return NewText;
 }
 
-FText FText::AsCultureInvariant( const YString& String )
+FText FText::AsCultureInvariant( const FString& String )
 {
-	FText NewText = FText( YString(String) );
+	FText NewText = FText( FString(String) );
 	NewText.Flags |= ETextFlag::CultureInvariant;
 
 	return NewText;
 }
 
-FText FText::AsCultureInvariant( YString&& String )
+FText FText::AsCultureInvariant( FString&& String )
 {
 	FText NewText = FText( MoveTemp(String) );
 	NewText.Flags |= ETextFlag::CultureInvariant;
@@ -863,14 +863,14 @@ FText FText::AsCultureInvariant( FText Text )
 	return NewText;
 }
 
-const YString& FText::ToString() const
+const FString& FText::ToString() const
 {
 	Rebuild();
 
 	return TextData->GetDisplayString();
 }
 
-YString FText::BuildSourceString() const
+FString FText::BuildSourceString() const
 {
 	return TextData->GetTextHistory().ToText(true).ToString();
 }
@@ -903,9 +903,9 @@ bool FText::IsCultureInvariant() const
 
 bool FText::ShouldGatherForLocalization() const
 {
-	const YString& SourceString = GetSourceString();
+	const FString& SourceString = GetSourceString();
 
-	auto IsAllWhitespace = [](const YString& String) -> bool
+	auto IsAllWhitespace = [](const FString& String) -> bool
 	{
 		for(int32 i = 0; i < String.Len(); ++i)
 		{
@@ -920,9 +920,9 @@ bool FText::ShouldGatherForLocalization() const
 	return !((Flags & ETextFlag::CultureInvariant) || (Flags & ETextFlag::Transient)) && !SourceString.IsEmpty() && !IsAllWhitespace(SourceString);
 }
 
-const YString& FText::GetSourceString() const
+const FString& FText::GetSourceString() const
 {
-	const YString* SourceString = TextData->GetTextHistory().GetSourceString();
+	const FString* SourceString = TextData->GetTextHistory().GetSourceString();
 	if(SourceString)
 	{
 		return *SourceString;
@@ -991,14 +991,14 @@ FArchive& operator<<(FArchive& Ar, FFormatArgumentValue& Value)
 	return Ar;
 }
 
-YString FFormatArgumentValue::ToFormattedString(const bool bInRebuildText, const bool bInRebuildAsSource) const
+FString FFormatArgumentValue::ToFormattedString(const bool bInRebuildText, const bool bInRebuildAsSource) const
 {
-	YString Result;
+	FString Result;
 	ToFormattedString(bInRebuildText, bInRebuildAsSource, Result);
 	return Result;
 }
 
-void FFormatArgumentValue::ToFormattedString(const bool bInRebuildText, const bool bInRebuildAsSource, YString& OutResult) const
+void FFormatArgumentValue::ToFormattedString(const bool bInRebuildText, const bool bInRebuildAsSource, FString& OutResult) const
 {
 	if (Type == EFormatArgumentType::Text)
 	{
@@ -1060,7 +1060,7 @@ FArchive& operator<<(FArchive& Ar, FFormatArgumentData& Value)
 
 	if (Ar.IsLoading())
 	{
-		// ArgumentName was changed to be YString rather than FText, so we need to convert older data to ensure serialization stays happy outside of UStruct::SerializeTaggedProperties.
+		// ArgumentName was changed to be FString rather than FText, so we need to convert older data to ensure serialization stays happy outside of UStruct::SerializeTaggedProperties.
 		if (Ar.UE4Ver() >= VER_UE4_K2NODE_VAR_REFERENCEGUIDS) // There was no version bump for this change, but VER_UE4_K2NODE_VAR_REFERENCEGUIDS was made at almost the same time.
 		{
 			Ar << Value.ArgumentName;
@@ -1182,16 +1182,16 @@ FScopedTextIdentityPreserver::~FScopedTextIdentityPreserver()
 	if(GIsEditor && HadFoundNamespaceAndKey && (Flags & ETextFlag::Immutable) == 0)
 	{
 		// Get the text's new source string.
-		const YString* SourceString = FTextInspector::GetSourceString(TextToPersist);
+		const FString* SourceString = FTextInspector::GetSourceString(TextToPersist);
 
 		// Without a source string, we can't possibly preserve the identity. If the text we're preserving identity for can't possibly have an identity anymore, this class shouldn't be used on this text.
 		check(SourceString);
 
 		// Create/update the display string instance for this identity in the text localization manager...
-		const FTextDisplayStringRef DisplayString = FTextLocalizationManager::Get().GetDisplayString(Namespace, Key, SourceString);
+		const FTextDisplayStringRef DisplaFString = FTextLocalizationManager::Get().GetDisplayString(Namespace, Key, SourceString);
 
 		// ... and update the data on the text instance
-		TextToPersist.TextData = MakeShareable(new TLocalizedTextData<FTextHistory_Base>(MoveTemp(DisplayString), FTextHistory_Base(YString(*SourceString))));
+		TextToPersist.TextData = MakeShareable(new TLocalizedTextData<FTextHistory_Base>(MoveTemp(DisplaFString), FTextHistory_Base(FString(*SourceString))));
 	}
 }
 
@@ -1212,9 +1212,9 @@ bool TextBiDi::IsControlCharacter(const TCHAR InChar)
 }
 
 #define LOC_DEFINE_REGION
-const YString FTextStringHelper::InvTextMarker = TEXT("INVTEXT");
-const YString FTextStringHelper::NsLocTextMarker = TEXT("NSLOCTEXT");
-const YString FTextStringHelper::LocTextMarker = TEXT("LOCTEXT");
+const FString FTextStringHelper::InvTextMarker = TEXT("INVTEXT");
+const FString FTextStringHelper::NsLocTextMarker = TEXT("NSLOCTEXT");
+const FString FTextStringHelper::LocTextMarker = TEXT("LOCTEXT");
 #undef LOC_DEFINE_REGION
 
 bool FTextStringHelper::ReadFromString_ComplexText(const TCHAR* Buffer, FText& OutValue, const TCHAR* TextNamespace, const TCHAR* PackageNamespace, int32* OutNumCharsRead)
@@ -1222,7 +1222,7 @@ bool FTextStringHelper::ReadFromString_ComplexText(const TCHAR* Buffer, FText& O
 #define LOC_DEFINE_REGION
 	const TCHAR* const Start = Buffer;
 
-	auto ExtractQuotedString = [&](YString& OutStr) -> const TCHAR*
+	auto ExtractQuotedString = [&](FString& OutStr) -> const TCHAR*
 	{
 		int32 CharsRead = 0;
 		if (!FParse::QuotedString(Buffer, OutStr, &CharsRead))
@@ -1272,7 +1272,7 @@ bool FTextStringHelper::ReadFromString_ComplexText(const TCHAR* Buffer, FText& O
 		WALK_TO_CHARACTER('(');
 
 		// Walk to the opening quote, and then parse out the quoted string
-		YString InvariantString;
+		FString InvariantString;
 		WALK_TO_CHARACTER('"');
 		EXTRACT_QUOTED_STRING(InvariantString);
 
@@ -1298,17 +1298,17 @@ bool FTextStringHelper::ReadFromString_ComplexText(const TCHAR* Buffer, FText& O
 		WALK_TO_CHARACTER('(');
 
 		// Walk to the opening quote, and then parse out the quoted namespace
-		YString NamespaceString;
+		FString NamespaceString;
 		WALK_TO_CHARACTER('"');
 		EXTRACT_QUOTED_STRING(NamespaceString);
 
 		// Walk to the opening quote, and then parse out the quoted key
-		YString KeyString;
+		FString KeFString;
 		WALK_TO_CHARACTER('"');
-		EXTRACT_QUOTED_STRING(KeyString);
+		EXTRACT_QUOTED_STRING(KeFString);
 
 		// Walk to the opening quote, and then parse out the quoted source string
-		YString SourceString;
+		FString SourceString;
 		WALK_TO_CHARACTER('"');
 		EXTRACT_QUOTED_STRING(SourceString);
 
@@ -1316,7 +1316,7 @@ bool FTextStringHelper::ReadFromString_ComplexText(const TCHAR* Buffer, FText& O
 		WALK_TO_CHARACTER(')');
 		++Buffer;
 
-		if (KeyString.IsEmpty())
+		if (KeFString.IsEmpty())
 		{
 			OutValue = FText::AsCultureInvariant(MoveTemp(SourceString));
 		}
@@ -1325,17 +1325,17 @@ bool FTextStringHelper::ReadFromString_ComplexText(const TCHAR* Buffer, FText& O
 #if USE_STABLE_LOCALIZATION_KEYS
 			if (GIsEditor && PackageNamespace && *PackageNamespace)
 			{
-				const YString FullNamespace = TextNamespaceUtil::BuildFullNamespace(NamespaceString, PackageNamespace);
+				const FString FullNamespace = TextNamespaceUtil::BuildFullNamespace(NamespaceString, PackageNamespace);
 				if (!NamespaceString.Equals(FullNamespace, ESearchCase::CaseSensitive))
 				{
 					// We may assign a new key when importing if we don't have the correct package namespace in order to avoid identity conflicts when instancing (which duplicates without any special flags)
 					// This can happen if an asset was duplicated (and keeps the same keys) but later both assets are instanced into the same world (causing them to both take the worlds package id, and conflict with each other)
 					NamespaceString = FullNamespace;
-					KeyString = FGuid::NewGuid().ToString();
+					KeFString = FGuid::NewGuid().ToString();
 				}
 			}
 #endif // USE_STABLE_LOCALIZATION_KEYS
-			OutValue = FInternationalization::ForUseOnlyByLocMacroAndGraphNodeTextLiterals_CreateText(*SourceString, *NamespaceString, *KeyString);
+			OutValue = FInternationalization::ForUseOnlyByLocMacroAndGraphNodeTextLiterals_CreateText(*SourceString, *NamespaceString, *KeFString);
 		}
 
 		if (OutNumCharsRead)
@@ -1355,12 +1355,12 @@ bool FTextStringHelper::ReadFromString_ComplexText(const TCHAR* Buffer, FText& O
 		WALK_TO_CHARACTER('(');
 
 		// Walk to the opening quote, and then parse out the quoted key
-		YString KeyString;
+		FString KeFString;
 		WALK_TO_CHARACTER('"');
-		EXTRACT_QUOTED_STRING(KeyString);
+		EXTRACT_QUOTED_STRING(KeFString);
 
 		// Walk to the opening quote, and then parse out the quoted source string
-		YString SourceString;
+		FString SourceString;
 		WALK_TO_CHARACTER('"');
 		EXTRACT_QUOTED_STRING(SourceString);
 
@@ -1368,7 +1368,7 @@ bool FTextStringHelper::ReadFromString_ComplexText(const TCHAR* Buffer, FText& O
 		WALK_TO_CHARACTER(')');
 		++Buffer;
 
-		if (KeyString.IsEmpty())
+		if (KeFString.IsEmpty())
 		{
 			OutValue = FText::AsCultureInvariant(MoveTemp(SourceString));
 		}
@@ -1377,23 +1377,23 @@ bool FTextStringHelper::ReadFromString_ComplexText(const TCHAR* Buffer, FText& O
 #if USE_STABLE_LOCALIZATION_KEYS
 			if (GIsEditor && PackageNamespace && *PackageNamespace)
 			{
-				YString NamespaceString = (TextNamespace) ? TextNamespace : TEXT("");
+				FString NamespaceString = (TextNamespace) ? TextNamespace : TEXT("");
 
-				const YString FullNamespace = TextNamespaceUtil::BuildFullNamespace(NamespaceString, PackageNamespace);
+				const FString FullNamespace = TextNamespaceUtil::BuildFullNamespace(NamespaceString, PackageNamespace);
 				if (!NamespaceString.Equals(FullNamespace, ESearchCase::CaseSensitive))
 				{
 					// We may assign a new key when importing if we don't have the correct package namespace in order to avoid identity conflicts when instancing (which duplicates without any special flags)
 					// This can happen if an asset was duplicated (and keeps the same keys) but later both assets are instanced into the same world (causing them to both take the worlds package id, and conflict with each other)
 					NamespaceString = FullNamespace;
-					KeyString = FGuid::NewGuid().ToString();
+					KeFString = FGuid::NewGuid().ToString();
 				}
 
-				OutValue = FInternationalization::ForUseOnlyByLocMacroAndGraphNodeTextLiterals_CreateText(*SourceString, *NamespaceString, *KeyString);
+				OutValue = FInternationalization::ForUseOnlyByLocMacroAndGraphNodeTextLiterals_CreateText(*SourceString, *NamespaceString, *KeFString);
 			}
 			else
 #endif // USE_STABLE_LOCALIZATION_KEYS
 			{
-				OutValue = FInternationalization::ForUseOnlyByLocMacroAndGraphNodeTextLiterals_CreateText(*SourceString, (TextNamespace) ? TextNamespace : TEXT(""), *KeyString);
+				OutValue = FInternationalization::ForUseOnlyByLocMacroAndGraphNodeTextLiterals_CreateText(*SourceString, (TextNamespace) ? TextNamespace : TEXT(""), *KeFString);
 			}
 		}
 
@@ -1439,7 +1439,7 @@ bool FTextStringHelper::ReadFromString(const TCHAR* Buffer, FText& OutValue, con
 	if (bRequiresQuotes)
 	{
 		// Parse out the quoted source string
-		YString LiteralString;
+		FString LiteralString;
 
 		int32 SubNumCharsRead = 0;
 		if (FParse::QuotedString(Buffer, LiteralString, &SubNumCharsRead))
@@ -1457,7 +1457,7 @@ bool FTextStringHelper::ReadFromString(const TCHAR* Buffer, FText& OutValue, con
 	}
 	else
 	{
-		YString LiteralString = Buffer;
+		FString LiteralString = Buffer;
 
 		// In order to indicate that the value was successfully imported, advance the buffer past the last character that was imported
 		Buffer += LiteralString.Len();
@@ -1474,10 +1474,10 @@ bool FTextStringHelper::ReadFromString(const TCHAR* Buffer, FText& OutValue, con
 	return false;
 }
 
-bool FTextStringHelper::WriteToString(YString& Buffer, const FText& Value, const bool bRequiresQuotes)
+bool FTextStringHelper::WriteToString(FString& Buffer, const FText& Value, const bool bRequiresQuotes)
 {
 #define LOC_DEFINE_REGION
-	const YString& StringValue = FTextInspector::GetDisplayString(Value);
+	const FString& StringValue = FTextInspector::GetDisplayString(Value);
 
 	if (Value.IsCultureInvariant())
 	{
@@ -1489,9 +1489,9 @@ bool FTextStringHelper::WriteToString(YString& Buffer, const FText& Value, const
 	else
 	{
 		bool bIsLocalized = false;
-		YString Namespace;
-		YString Key;
-		const YString* SourceString = FTextInspector::GetSourceString(Value);
+		FString Namespace;
+		FString Key;
+		const FString* SourceString = FTextInspector::GetSourceString(Value);
 
 		if (SourceString && Value.ShouldGatherForLocalization())
 		{

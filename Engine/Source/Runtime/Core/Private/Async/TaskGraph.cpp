@@ -4,7 +4,7 @@
 #include "Math/UnrealMathUtility.h"
 #include "HAL/UnrealMemory.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Logging/LogMacros.h"
 #include "Misc/ScopedEvent.h"
 #include "HAL/Runnable.h"
@@ -79,7 +79,7 @@ static FAutoConsoleVariableRef CVarFastScheduler(
 
 #if CREATE_HIPRI_TASK_THREADS || CREATE_BACKGROUND_TASK_THREADS
 	static int32 GConsoleSpinMode = 0; // when we have multiple task thread banks, we don't want to do spin mode as a high priority thread spinning would interfere with lower priority work
-	static void ThreadSwitchForABTest(const TArray<YString>& Args)
+	static void ThreadSwitchForABTest(const TArray<FString>& Args)
 	{
 		if (Args.Num() == 2)
 		{
@@ -288,7 +288,7 @@ static struct FChaosMode
 	}
 } GChaosMode;
 
-static void EnableRandomizedThreads(const TArray<YString>& Args)
+static void EnableRandomizedThreads(const TArray<FString>& Args)
 {
 	GChaosMode.Enabled = !GChaosMode.Enabled;
 	if (GChaosMode.Enabled)
@@ -320,37 +320,37 @@ FORCEINLINE void TestRandomizedThreads()
 
 #endif
 
-static YString ThreadPriorityToName(ENamedThreads::Type Priority)
+static FString ThreadPriorityToName(ENamedThreads::Type Priority)
 {
 	if (Priority == ENamedThreads::NormalThreadPriority)
 	{
-		return YString(TEXT("Normal"));
+		return FString(TEXT("Normal"));
 	}
 	if (Priority == ENamedThreads::HighThreadPriority)
 	{
-		return YString(TEXT("High"));
+		return FString(TEXT("High"));
 	}
 	if (Priority == ENamedThreads::BackgroundThreadPriority)
 	{
-		return YString(TEXT("Background"));
+		return FString(TEXT("Background"));
 	}
-	return YString(TEXT("??Unknown??"));
+	return FString(TEXT("??Unknown??"));
 }
 
-static YString TaskPriorityToName(ENamedThreads::Type Priority)
+static FString TaskPriorityToName(ENamedThreads::Type Priority)
 {
 	if (Priority == ENamedThreads::NormalTaskPriority)
 	{
-		return YString(TEXT("Normal"));
+		return FString(TEXT("Normal"));
 	}
 	if (Priority == ENamedThreads::HighTaskPriority)
 	{
-		return YString(TEXT("High"));
+		return FString(TEXT("High"));
 	}
-	return YString(TEXT("??Unknown??"));
+	return FString(TEXT("??Unknown??"));
 }
 
-void FAutoConsoleTaskPriority::CommandExecute(const TArray<YString>& Args)
+void FAutoConsoleTaskPriority::CommandExecute(const TArray<FString>& Args)
 {
 	if (Args.Num() > 0)
 	{
@@ -542,7 +542,7 @@ public:
 	/** A one-time call to set the TLS entry for this thread. **/
 	void InitializeForCurrentThread()
 	{
-		YPlatformTLS::SetTlsValue(PerThreadIDTLSSlot,OwnerWorker);
+		FPlatformTLS::SetTlsValue(PerThreadIDTLSSlot,OwnerWorker);
 	}
 
 	/** Return the index of this thread. **/
@@ -1442,7 +1442,7 @@ public:
 		check(NumThreads <= MAX_THREADS);
 		check(!ReentrancyCheck.GetValue()); // reentrant?
 		ReentrancyCheck.Increment(); // just checking for reentrancy
-		PerThreadIDTLSSlot = YPlatformTLS::AllocTlsSlot();
+		PerThreadIDTLSSlot = FPlatformTLS::AllocTlsSlot();
 
 		for (int32 ThreadIndex = 0; ThreadIndex < NumThreads; ThreadIndex++)
 		{
@@ -1463,22 +1463,22 @@ public:
 
 		for (int32 ThreadIndex = LastExternalThread + 1; ThreadIndex < NumThreads; ThreadIndex++)
 		{
-			YString Name;
+			FString Name;
 			int32 Priority = ThreadIndexToPriorityIndex(ThreadIndex);
 			EThreadPriority ThreadPri;
 			if (Priority == 1)
 			{
-				Name = YString::Printf(TEXT("TaskGraphThreadHP %d"), ThreadIndex - (LastExternalThread + 1));
+				Name = FString::Printf(TEXT("TaskGraphThreadHP %d"), ThreadIndex - (LastExternalThread + 1));
 				ThreadPri = TPri_SlightlyBelowNormal; // we want even hi priority tasks below the normal threads
 			}
 			else if (Priority == 2)
 			{
-				Name = YString::Printf(TEXT("TaskGraphThreadBP %d"), ThreadIndex - (LastExternalThread + 1));
+				Name = FString::Printf(TEXT("TaskGraphThreadBP %d"), ThreadIndex - (LastExternalThread + 1));
 				ThreadPri = TPri_Lowest;
 			}
 			else
 			{
-				Name = YString::Printf(TEXT("TaskGraphThreadNP %d"), ThreadIndex - (LastExternalThread + 1));
+				Name = FString::Printf(TEXT("TaskGraphThreadNP %d"), ThreadIndex - (LastExternalThread + 1));
 				ThreadPri = TPri_BelowNormal; // we want normal tasks below normal threads like the game thread
 			}
 			uint32 StackSize = 384 * 1024;
@@ -1518,7 +1518,7 @@ public:
 		{
 			StalledUnnamedThreads[PriorityIndex].PopAll(NotProperlyUnstalled);
 		}
-		YPlatformTLS::FreeTlsSlot(PerThreadIDTLSSlot);
+		FPlatformTLS::FreeTlsSlot(PerThreadIDTLSSlot);
 	}
 
 	// API inherited from FTaskGraphInterface
@@ -2218,7 +2218,7 @@ private:
 	ENamedThreads::Type GetCurrentThread()
 	{
 		ENamedThreads::Type CurrentThreadIfKnown = ENamedThreads::AnyThread;
-		FWorkerThread* TLSPointer = (FWorkerThread*)YPlatformTLS::GetTlsValue(PerThreadIDTLSSlot);
+		FWorkerThread* TLSPointer = (FWorkerThread*)FPlatformTLS::GetTlsValue(PerThreadIDTLSSlot);
 		if (TLSPointer)
 		{
 			checkThreadGraph(TLSPointer - WorkerThreads >= 0 && TLSPointer - WorkerThreads < NumThreads);
@@ -2728,7 +2728,7 @@ private:
 void FTaskGraphInterface::BroadcastSlow_OnlyUseForSpecialPurposes(bool bDoTaskThreads, bool bDoBackgroundThreads, TFunction<void(ENamedThreads::Type CurrentThread)>& Callback)
 {
 	QUICK_SCOPE_CYCLE_COUNTER(STAT_FTaskGraphInterface_BroadcastSlow_OnlyUseForSpecialPurposes);
-	check(YPlatformTLS::GetCurrentThreadId() == GGameThreadId);
+	check(FPlatformTLS::GetCurrentThreadId() == GGameThreadId);
 	if (!TaskGraphImplementationSingleton)
 	{
 		// we aren't going yet
@@ -2917,7 +2917,7 @@ void PrintResult(double& StartTime, double& QueueTime, double& EndTime, double& 
 	JoinTime = 0.0;
 }
 
-static void TaskGraphBenchmark(const TArray<YString>& Args)
+static void TaskGraphBenchmark(const TArray<FString>& Args)
 {
 	double StartTime, QueueTime, EndTime, JoinTime;
 	FThreadSafeCounter Counter;
@@ -3173,7 +3173,7 @@ static FAutoConsoleCommand TaskGraphBenchmarkCmd(
 	FConsoleCommandWithArgsDelegate::CreateStatic(&TaskGraphBenchmark)
 	);
 
-static void SetTaskThreadPriority(const TArray<YString>& Args)
+static void SetTaskThreadPriority(const TArray<FString>& Args)
 {
 	EThreadPriority Pri = TPri_Normal;
 	if (Args.Num() && Args[0] == TEXT("abovenormal"))

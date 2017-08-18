@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
 #include "Math/UnrealMathUtility.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Math/Vector2D.h"
 
 /**
@@ -313,7 +313,7 @@ public:
 	 *
 	 * @return A string describing the box.
 	 */
-	YString ToString() const;
+	FString ToString() const;
 
 public:
 
@@ -420,7 +420,7 @@ FORCEINLINE bool FBox2D::Intersect( const FBox2D & Other ) const
 }
 
 
-FORCEINLINE YString FBox2D::ToString() const
+FORCEINLINE FString FBox2D::ToString() const
 {
-	return YString::Printf(TEXT("bIsValid=%s, Min=(%s), Max=(%s)"), bIsValid ? TEXT("true") : TEXT("false"), *Min.ToString(), *Max.ToString());
+	return FString::Printf(TEXT("bIsValid=%s, Min=(%s), Max=(%s)"), bIsValid ? TEXT("true") : TEXT("false"), *Min.ToString(), *Max.ToString());
 }

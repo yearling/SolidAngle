@@ -1,6 +1,11 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
+
 #include "CoreTypes.h"
 #include "Containers/ContainersFwd.h"
+#include "UObject/UObjectHierarchyFwd.h"
+
 // Basic types
 class FName;
 class FExec;
@@ -15,27 +20,27 @@ class FSphere;
 struct FBox;
 struct FBox2D;
 struct FColor;
-struct YMath;
+struct FLinearColor;
 struct FMatrix;
 struct FPlane;
 struct FQuat;
 struct FRotator;
 struct FTransform;
 struct FVector;
-struct YVector2D;
+struct FVector2D;
 struct FVector4;
-struct YBoxSphereBounds;
-struct YIntPoint;
-struct YIntRect;
+struct FBoxSphereBounds;
+struct FIntPoint;
+struct FIntRect;
 
 // Misc
 struct FResourceSizeEx;
 class IConsoleVariable;
 class FRunnableThread;
 class FEvent;
-class FPlatformFile;
+class IPlatformFile;
 class FMalloc;
-class FFileHandle;
+class IFileHandle;
 class FAutomationTestBase;
 struct FGenericMemoryStats;
 class FSHAHash;
@@ -52,5 +57,3 @@ class FText;
 class FTextFilterString;
 enum class ETextFilterTextComparisonMode : uint8;
 enum class ETextFilterComparisonOperation : uint8;
-
-class UObject;

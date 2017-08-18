@@ -21,7 +21,7 @@ FScopeLogTime::FScopeLogTime( const ANSICHAR* InName, FTotalTimeAndCount* InCumu
 FScopeLogTime::~FScopeLogTime()
 {
 	const double ScopedTime = FPlatformTime::Seconds() - StartTime;
-	const YString DisplayUnitsString = GetDisplayUnitsString();
+	const FString DisplayUnitsString = GetDisplayUnitsString();
 	if( Cumulative )
 	{
 		Cumulative->Key += ScopedTime;
@@ -49,7 +49,7 @@ double FScopeLogTime::GetDisplayScopedTime(double InScopedTime) const
 	return InScopedTime * 1000.0f;
 }
 
-YString FScopeLogTime::GetDisplayUnitsString() const
+FString FScopeLogTime::GetDisplayUnitsString() const
 {
 	switch (Units)
 	{

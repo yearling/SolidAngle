@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "HAL/UnrealMemory.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Map.h"
 #include "Containers/StringConv.h"
 #include "Stats/Stats.h"
@@ -65,7 +65,7 @@ public:
 	*
 	* @param String	the string the hash
 	**/
-	static YString HashAnsiString(const TCHAR* String)
+	static FString HashAnsiString(const TCHAR* String)
 	{
 		uint8 Digest[16];
 
@@ -74,10 +74,10 @@ public:
 		Md5Gen.Update((unsigned char*)TCHAR_TO_ANSI(String), FCString::Strlen(String));
 		Md5Gen.Final(Digest);
 
-		YString MD5;
+		FString MD5;
 		for (int32 i = 0; i<16; i++)
 		{
-			MD5 += YString::Printf(TEXT("%02x"), Digest[i]);
+			MD5 += FString::Printf(TEXT("%02x"), Digest[i]);
 		}
 		return MD5;
 	}
@@ -101,7 +101,7 @@ struct FMD5Hash;
 
 namespace Lex
 {
-	CORE_API YString ToString(const FMD5Hash& Hash);
+	CORE_API FString ToString(const FMD5Hash& Hash);
 	CORE_API void FromString(FMD5Hash& Hash, const TCHAR* Buffer);
 }
 
@@ -159,7 +159,7 @@ private:
 	/** The bytes this hash comprises */
 	uint8 Bytes[16];
 
-	friend YString Lex::ToString(const FMD5Hash&);
+	friend FString Lex::ToString(const FMD5Hash&);
 	friend void Lex::FromString(FMD5Hash& Hash, const TCHAR*);
 };
 
@@ -195,7 +195,7 @@ public:
 		FMemory::Memset(Hash, 0, sizeof(Hash));
 	}
 
-	inline YString ToString() const
+	inline FString ToString() const
 	{
 		return BytesToHex((const uint8*)Hash, sizeof(Hash));
 	}
@@ -295,10 +295,10 @@ private:
 	SHA1_WORKSPACE_BLOCK *m_block; // SHA1 pointer to the byte array above
 
 								   /** Global map of filename to hash value, filled out in InitializeFileHashesFromBuffer */
-	static TMap<YString, uint8*> FullFileSHAHashMap;
+	static TMap<FString, uint8*> FullFileSHAHashMap;
 
 	/** Global map of filename to hash value, but for script-only SHA hashes */
-	static TMap<YString, uint8*> ScriptSHAHashMap;
+	static TMap<FString, uint8*> ScriptSHAHashMap;
 };
 
 
@@ -318,7 +318,7 @@ protected:
 	uint8 Hash[20];
 
 	/** Filename to lookup hash value (can be empty if hash was passed to constructor) */
-	YString Pathname;
+	FString Pathname;
 
 	/** If this is true, and looking up the hash by filename fails, this will abort execution */
 	bool bIsUnfoundHashAnError;
@@ -450,11 +450,11 @@ public:
 	*
 	* This is overridden for the specific Archive Types
 	**/
-	virtual YString GetArchiveName() const { return TEXT("FBufferReaderWithSHA"); }
+	virtual FString GetArchiveName() const { return TEXT("FBufferReaderWithSHA"); }
 
 protected:
 	/** Path to the file to use to lookup the SHA hash value */
-	YString SourcePathname;
+	FString SourcePathname;
 	/** true if failing to lookup the hash should trigger an error */
 	bool bIsUnfoundHashAnError;
 };

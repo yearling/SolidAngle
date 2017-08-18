@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "GenericPlatform/GenericApplicationMessageHandler.h"
 
 
@@ -99,7 +99,7 @@ struct CORE_API FGenericWindowDefinition
 	int32 ExpectedMaxHeight;
 
 	/** the title of the window */
-	YString Title;
+	FString Title;
 	/** opacity of the window (0-1) */
 	float Opacity;
 	/** the radius of the corner rounding of the window */

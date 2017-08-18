@@ -627,13 +627,13 @@ public:
 	TPointerSet_TLSCacheBase()
 	{
 		check(IsInGameThread());
-		TlsSlot = YPlatformTLS::AllocTlsSlot();
-		check(YPlatformTLS::IsValidTlsSlot(TlsSlot));
+		TlsSlot = FPlatformTLS::AllocTlsSlot();
+		check(FPlatformTLS::IsValidTlsSlot(TlsSlot));
 	}
 	/** Destructor, leaks all of the memory **/
 	~TPointerSet_TLSCacheBase()
 	{
-		YPlatformTLS::FreeTlsSlot(TlsSlot);
+		FPlatformTLS::FreeTlsSlot(TlsSlot);
 		TlsSlot = 0;
 	}
 
@@ -742,12 +742,12 @@ private:
 
 	FThreadLocalCache& GetTLS()
 	{
-		checkSlow(YPlatformTLS::IsValidTlsSlot(TlsSlot));
-		FThreadLocalCache* TLS = (FThreadLocalCache*)YPlatformTLS::GetTlsValue(TlsSlot);
+		checkSlow(FPlatformTLS::IsValidTlsSlot(TlsSlot));
+		FThreadLocalCache* TLS = (FThreadLocalCache*)FPlatformTLS::GetTlsValue(TlsSlot);
 		if (!TLS)
 		{
 			TLS = new FThreadLocalCache();
-			YPlatformTLS::SetTlsValue(TlsSlot, TLS);
+			FPlatformTLS::SetTlsValue(TlsSlot, TLS);
 		}
 		return *TLS;
 	}
@@ -785,13 +785,13 @@ public:
 	{
 		static_assert(SIZE >= sizeof(void*) && SIZE % sizeof(void*) == 0, "Blocks in TLockFreeFixedSizeAllocator must be at least the size of a pointer.");
 		check(IsInGameThread());
-		TlsSlot = YPlatformTLS::AllocTlsSlot();
-		check(YPlatformTLS::IsValidTlsSlot(TlsSlot));
+		TlsSlot = FPlatformTLS::AllocTlsSlot();
+		check(FPlatformTLS::IsValidTlsSlot(TlsSlot));
 	}
 	/** Destructor, leaks all of the memory **/
 	~TLockFreeFixedSizeAllocator_TLSCacheBase()
 	{
-		YPlatformTLS::FreeTlsSlot(TlsSlot);
+		FPlatformTLS::FreeTlsSlot(TlsSlot);
 		TlsSlot = 0;
 	}
 
@@ -916,12 +916,12 @@ private:
 
 	FThreadLocalCache& GetTLS()
 	{
-		checkSlow(YPlatformTLS::IsValidTlsSlot(TlsSlot));
-		FThreadLocalCache* TLS = (FThreadLocalCache*)YPlatformTLS::GetTlsValue(TlsSlot);
+		checkSlow(FPlatformTLS::IsValidTlsSlot(TlsSlot));
+		FThreadLocalCache* TLS = (FThreadLocalCache*)FPlatformTLS::GetTlsValue(TlsSlot);
 		if (!TLS)
 		{
 			TLS = new FThreadLocalCache();
-			YPlatformTLS::SetTlsValue(TlsSlot, TLS);
+			FPlatformTLS::SetTlsValue(TlsSlot, TLS);
 		}
 		return *TLS;
 	}

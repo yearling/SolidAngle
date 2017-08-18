@@ -9,7 +9,7 @@
 
 #if PLATFORM_SUPPORTS_NAMED_PIPES
 
-class YString;
+class FString;
 
 
 // Windows wrapper for named pipe communications
@@ -25,7 +25,7 @@ public:
 
 	// FGenericPlatformNamedPipe overrides
 
-	virtual bool Create(const YString& PipeName, bool bAsServer, bool bAsync) override;
+	virtual bool Create(const FString& PipeName, bool bAsServer, bool bAsync) override;
 	virtual bool Destroy() override;
 	virtual bool OpenConnection() override;
 	virtual bool BlockForAsyncIO() override;

@@ -17,7 +17,7 @@ TCHAR FCommandLine::CmdLine[FCommandLine::MaxCommandLineSize] = TEXT("");
 TCHAR FCommandLine::OriginalCmdLine[FCommandLine::MaxCommandLineSize] = TEXT("");
 TCHAR FCommandLine::LoggingCmdLine[FCommandLine::MaxCommandLineSize] = TEXT("");
 TCHAR FCommandLine::LoggingOriginalCmdLine[FCommandLine::MaxCommandLineSize] = TEXT("");
-YString FCommandLine::SubprocessCommandLine(TEXT(" -Multiprocess"));
+FString FCommandLine::SubprocessCommandLine(TEXT(" -Multiprocess"));
 
 bool FCommandLine::IsInitialized()
 {
@@ -86,8 +86,8 @@ void FCommandLine::Append(const TCHAR* AppendString)
 }
 
 #if WANTS_COMMANDLINE_WHITELIST
-TArray<YString> FCommandLine::ApprovedArgs;
-TArray<YString> FCommandLine::FilterArgsForLogging;
+TArray<FString> FCommandLine::ApprovedArgs;
+TArray<FString> FCommandLine::FilterArgsForLogging;
 
 #ifdef OVERRIDE_COMMANDLINE_WHITELIST
 /**
@@ -120,32 +120,32 @@ void FCommandLine::WhitelistCommandLines()
 {
 	if (ApprovedArgs.Num() == 0)
 	{
-		TArray<YString> Ignored;
+		TArray<FString> Ignored;
 		FCommandLine::Parse(OverrideList, ApprovedArgs, Ignored);
 	}
 	if (FilterArgsForLogging.Num() == 0)
 	{
-		TArray<YString> Ignored;
+		TArray<FString> Ignored;
 		FCommandLine::Parse(FilterForLoggingList, FilterArgsForLogging, Ignored);
 	}
 	// Process the original command line
-	TArray<YString> OriginalList = FilterCommandLine(OriginalCmdLine);
+	TArray<FString> OriginalList = FilterCommandLine(OriginalCmdLine);
 	BuildWhitelistCommandLine(OriginalCmdLine, ARRAY_COUNT(OriginalCmdLine), OriginalList);
 	// Process the current command line
-	TArray<YString> CmdList = FilterCommandLine(CmdLine);
+	TArray<FString> CmdList = FilterCommandLine(CmdLine);
 	BuildWhitelistCommandLine(CmdLine, ARRAY_COUNT(CmdLine), CmdList);
 	// Process the command line for logging purposes
-	TArray<YString> LoggingCmdList = FilterCommandLineForLogging(LoggingCmdLine);
+	TArray<FString> LoggingCmdList = FilterCommandLineForLogging(LoggingCmdLine);
 	BuildWhitelistCommandLine(LoggingCmdLine, ARRAY_COUNT(LoggingCmdLine), LoggingCmdList);
 	// Process the original command line for logging purposes
-	TArray<YString> LoggingOriginalCmdList = FilterCommandLineForLogging(LoggingOriginalCmdLine);
+	TArray<FString> LoggingOriginalCmdList = FilterCommandLineForLogging(LoggingOriginalCmdLine);
 	BuildWhitelistCommandLine(LoggingOriginalCmdLine, ARRAY_COUNT(LoggingOriginalCmdLine), LoggingOriginalCmdList);
 }
 
-TArray<YString> FCommandLine::FilterCommandLine(TCHAR* CommandLine)
+TArray<FString> FCommandLine::FilterCommandLine(TCHAR* CommandLine)
 {
-	TArray<YString> Ignored;
-	TArray<YString> ParsedList;
+	TArray<FString> Ignored;
+	TArray<FString> ParsedList;
 	// Parse the command line list
 	FCommandLine::Parse(CommandLine, ParsedList, Ignored);
 	// Remove any that are not in our approved list
@@ -169,10 +169,10 @@ TArray<YString> FCommandLine::FilterCommandLine(TCHAR* CommandLine)
 	return ParsedList;
 }
 
-TArray<YString> FCommandLine::FilterCommandLineForLogging(TCHAR* CommandLine)
+TArray<FString> FCommandLine::FilterCommandLineForLogging(TCHAR* CommandLine)
 {
-	TArray<YString> Ignored;
-	TArray<YString> ParsedList;
+	TArray<FString> Ignored;
+	TArray<FString> ParsedList;
 	// Parse the command line list
 	FCommandLine::Parse(CommandLine, ParsedList, Ignored);
 	// Remove any that are not in our approved list
@@ -191,7 +191,7 @@ TArray<YString> FCommandLine::FilterCommandLineForLogging(TCHAR* CommandLine)
 	return ParsedList;
 }
 
-void FCommandLine::BuildWhitelistCommandLine(TCHAR* CommandLine, uint32 ArrayCount, const TArray<YString>& FilteredArgs)
+void FCommandLine::BuildWhitelistCommandLine(TCHAR* CommandLine, uint32 ArrayCount, const TArray<FString>& FilteredArgs)
 {
 	check(ArrayCount > 0);
 	// Zero the whole string
@@ -224,7 +224,7 @@ void FCommandLine::AddToSubprocessCommandline( const TCHAR* Param )
 	SubprocessCommandLine += Param;
 }
 
-const YString& FCommandLine::GetSubprocessCommandline()
+const FString& FCommandLine::GetSubprocessCommandline()
 {
 	return SubprocessCommandLine;
 }
@@ -268,19 +268,19 @@ const TCHAR* FCommandLine::RemoveExeName(const TCHAR* InCmdLine)
  * @param	Tokens		[out] filled with all parameters found in the string
  * @param	Switches	[out] filled with all switches found in the string
  */
-void FCommandLine::Parse(const TCHAR* InCmdLine, TArray<YString>& Tokens, TArray<YString>& Switches)
+void FCommandLine::Parse(const TCHAR* InCmdLine, TArray<FString>& Tokens, TArray<FString>& Switches)
 {
-	YString NextToken;
+	FString NextToken;
 	while (FParse::Token(InCmdLine, NextToken, false))
 	{
 		if ((**NextToken == TCHAR('-')) || (**NextToken == TCHAR('/')))
 		{
-			new(Switches) YString(NextToken.Mid(1));
-			new(Tokens) YString(NextToken.Right(NextToken.Len() - 1));
+			new(Switches) FString(NextToken.Mid(1));
+			new(Tokens) FString(NextToken.Right(NextToken.Len() - 1));
 		}
 		else
 		{
-			new(Tokens) YString(NextToken);
+			new(Tokens) FString(NextToken);
 		}
 	}
 }

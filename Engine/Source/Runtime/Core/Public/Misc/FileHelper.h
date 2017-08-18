@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "HAL/FileManager.h"
 #include "Containers/ArrayView.h"
 
@@ -39,7 +39,7 @@ struct CORE_API FFileHelper
 	* Load a text file to an YString.
 	* Supports all combination of ANSI/Unicode files and platforms.
 	*/
-	static void BufferToString(YString& Result, const uint8* Buffer, int32 Size);
+	static void BufferToString(FString& Result, const uint8* Buffer, int32 Size);
 
 	/**
 	* Load a binary file to a dynamic array.
@@ -53,7 +53,7 @@ struct CORE_API FFileHelper
 	* @param Filename name of the file to load
 	* @param VerifyFlags flags controlling the hash verification behavior ( see EHashOptions )
 	*/
-	static bool LoadFileToString(YString& Result, const TCHAR* Filename, uint32 VerifyFlags = 0);
+	static bool LoadFileToString(FString& Result, const TCHAR* Filename, uint32 VerifyFlags = 0);
 
 	/**
 	* Save a binary array to a file.
@@ -64,7 +64,7 @@ struct CORE_API FFileHelper
 	* Write the YString to a file.
 	* Supports all combination of ANSI/Unicode files and platforms.
 	*/
-	static bool SaveStringToFile(const YString& String, const TCHAR* Filename, EEncodingOptions::Type EncodingOptions = EEncodingOptions::AutoDetect, IFileManager* FileManager = &IFileManager::Get(), uint32 WriteFlags = 0);
+	static bool SaveStringToFile(const FString& String, const TCHAR* Filename, EEncodingOptions::Type EncodingOptions = EEncodingOptions::AutoDetect, IFileManager* FileManager = &IFileManager::Get(), uint32 WriteFlags = 0);
 
 	/**
 	* Saves a 24/32Bit BMP file to disk
@@ -80,7 +80,7 @@ struct CORE_API FFileHelper
 	*
 	* @return true if success
 	*/
-	static bool CreateBitmap(const TCHAR* Pattern, int32 DataWidth, int32 DataHeight, const struct FColor* Data, struct YIntRect* SubRectangle = NULL, IFileManager* FileManager = &IFileManager::Get(), YString* OutFilename = NULL, bool bInWriteAlpha = false);
+	static bool CreateBitmap(const TCHAR* Pattern, int32 DataWidth, int32 DataHeight, const struct FColor* Data, struct YIntRect* SubRectangle = NULL, IFileManager* FileManager = &IFileManager::Get(), FString* OutFilename = NULL, bool bInWriteAlpha = false);
 
 	/**
 	* Generates the next unique bitmap filename with a specified extension
@@ -92,7 +92,7 @@ struct CORE_API FFileHelper
 	*
 	* @return true if success
 	*/
-	static bool GenerateNextBitmapFilename(const YString& Pattern, const YString& Extension, YString& OutFilename, IFileManager* FileManager = &IFileManager::Get());
+	static bool GenerateNextBitmapFilename(const FString& Pattern, const FString& Extension, FString& OutFilename, IFileManager* FileManager = &IFileManager::Get());
 
 	/**
 	*	Load the given ANSI text file to an array of strings - one YString per line of the file.
@@ -104,5 +104,5 @@ struct CORE_API FFileHelper
 	*
 	*	@return	bool				true if successful, false if not
 	*/
-	static bool LoadANSITextFileToStrings(const TCHAR* InFilename, IFileManager* InFileManager, TArray<YString>& OutStrings);
+	static bool LoadANSITextFileToStrings(const TCHAR* InFilename, IFileManager* InFileManager, TArray<FString>& OutStrings);
 };

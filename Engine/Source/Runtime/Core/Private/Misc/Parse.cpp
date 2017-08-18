@@ -28,7 +28,7 @@
 class ConsoleCommandLibrary
 {
 public:
-	ConsoleCommandLibrary(const YString& InPattern);
+	ConsoleCommandLibrary(const FString& InPattern);
 
 	~ConsoleCommandLibrary();
 
@@ -41,14 +41,14 @@ public:
 		}
 	}
 
-	const YString&		Pattern;
-	TSet<YString>		KnownNames;
+	const FString&		Pattern;
+	TSet<FString>		KnownNames;
 };
 
 // 0 if gathering of names is deactivated
 ConsoleCommandLibrary* GConsoleCommandLibrary;
 
-ConsoleCommandLibrary::ConsoleCommandLibrary(const YString& InPattern) :Pattern(InPattern)
+ConsoleCommandLibrary::ConsoleCommandLibrary(const FString& InPattern) :Pattern(InPattern)
 {
 	// activate name gathering
 	GConsoleCommandLibrary = this;
@@ -67,7 +67,7 @@ class FConsoleVariableDumpVisitor
 public:
 	// @param Name must not be 0
 	// @param " must not be 0
-	static void OnConsoleVariable(const TCHAR *Name, IConsoleObject* CVar,TSet<YString>& Sink)
+	static void OnConsoleVariable(const TCHAR *Name, IConsoleObject* CVar,TSet<FString>& Sink)
 	{
 		if(CVar->TestFlags(ECVF_Unregistered))
 		{
@@ -78,7 +78,7 @@ public:
 	}
 };
 
-void ConsoleCommandLibrary_DumpLibrary(UWorld* InWorld, FExec& SubSystem, const YString& Pattern, FOutputDevice& Ar)
+void ConsoleCommandLibrary_DumpLibrary(UWorld* InWorld, FExec& SubSystem, const FString& Pattern, FOutputDevice& Ar)
 {
 	ConsoleCommandLibrary LocalConsoleCommandLibrary(Pattern);
 
@@ -88,16 +88,16 @@ void ConsoleCommandLibrary_DumpLibrary(UWorld* InWorld, FExec& SubSystem, const 
 
 	{
 		IConsoleManager::Get().ForEachConsoleObjectThatStartsWith(
-			FConsoleObjectVisitor::CreateStatic< TSet<YString>& >(
+			FConsoleObjectVisitor::CreateStatic< TSet<FString>& >(
 			&FConsoleVariableDumpVisitor::OnConsoleVariable,
 			LocalConsoleCommandLibrary.KnownNames ) );
 	}
 
-	LocalConsoleCommandLibrary.KnownNames.Sort( TLess<YString>() );
+	LocalConsoleCommandLibrary.KnownNames.Sort( TLess<FString>() );
 
-	for(TSet<YString>::TConstIterator It(LocalConsoleCommandLibrary.KnownNames); It; ++It)
+	for(TSet<FString>::TConstIterator It(LocalConsoleCommandLibrary.KnownNames); It; ++It)
 	{
-		const YString Name = *It;
+		const FString Name = *It;
 
 		Ar.Logf(TEXT("%s"), *Name);
 	}
@@ -111,9 +111,9 @@ void ConsoleCommandLibrary_DumpLibrary(UWorld* InWorld, FExec& SubSystem, const 
 	}
 }
 
-void ConsoleCommandLibrary_DumpLibraryHTML(UWorld* InWorld, FExec& SubSystem, const YString& OutPath)
+void ConsoleCommandLibrary_DumpLibraryHTML(UWorld* InWorld, FExec& SubSystem, const FString& OutPath)
 {
-	const YString& Pattern(TEXT("*"));
+	const FString& Pattern(TEXT("*"));
 	ConsoleCommandLibrary LocalConsoleCommandLibrary(Pattern);
 
 	FOutputDeviceNull Null;
@@ -122,15 +122,15 @@ void ConsoleCommandLibrary_DumpLibraryHTML(UWorld* InWorld, FExec& SubSystem, co
 
 	{
 		IConsoleManager::Get().ForEachConsoleObjectThatStartsWith(
-			FConsoleObjectVisitor::CreateStatic< TSet<YString>& >(
+			FConsoleObjectVisitor::CreateStatic< TSet<FString>& >(
 			&FConsoleVariableDumpVisitor::OnConsoleVariable,
 			LocalConsoleCommandLibrary.KnownNames ) );
 	}
 
-	LocalConsoleCommandLibrary.KnownNames.Sort( TLess<YString>() );
+	LocalConsoleCommandLibrary.KnownNames.Sort( TLess<FString>() );
 
-	YString TemplateFilename = YPaths::Combine(FPlatformProcess::BaseDir(), TEXT("../../Documentation/Extras"), TEXT("ConsoleHelpTemplate.html"));
-	YString TemplateFile;
+	FString TemplateFilename = YPaths::Combine(FPlatformProcess::BaseDir(), TEXT("../../Documentation/Extras"), TEXT("ConsoleHelpTemplate.html"));
+	FString TemplateFile;
 	if(FFileHelper::LoadFileToString(TemplateFile, *TemplateFilename, FFileHelper::EHashOptions::EnableVerify | FFileHelper::EHashOptions::ErrorMissingHash) )
 	{
 		// todo: do we need to create the directory?
@@ -151,11 +151,11 @@ void ConsoleCommandLibrary_DumpLibraryHTML(UWorld* InWorld, FExec& SubSystem, co
 			// date
 			LazyPrintf.PushParam(*FDateTime::Now().ToString());
 
-			YString AllData;
+			FString AllData;
 
-			for(TSet<YString>::TConstIterator It(LocalConsoleCommandLibrary.KnownNames); It; ++It)
+			for(TSet<FString>::TConstIterator It(LocalConsoleCommandLibrary.KnownNames); It; ++It)
 			{
-				const YString& Name = *It;
+				const FString& Name = *It;
 
 				auto Element = IConsoleManager::Get().FindConsoleObject(*Name);
 
@@ -163,7 +163,7 @@ void ConsoleCommandLibrary_DumpLibraryHTML(UWorld* InWorld, FExec& SubSystem, co
 				{
 					// console command or variable
 
-					YString Help = Element->GetHelp();
+					FString Help = Element->GetHelp();
 
 					Help = Help.ReplaceCharWithEscapedChar();
 
@@ -179,7 +179,7 @@ void ConsoleCommandLibrary_DumpLibraryHTML(UWorld* InWorld, FExec& SubSystem, co
 					}
 
 					//{name: "r.SetRes", help:"To change the screen/window resolution."},
-					YString DataLine = YString::Printf(TEXT("{name: \"%s\", help:\"%s\", type:\"%s\"},\r\n"), *Name, *Help, ElementType);
+					FString DataLine = FString::Printf(TEXT("{name: \"%s\", help:\"%s\", type:\"%s\"},\r\n"), *Name, *Help, ElementType);
 
 					AllData += DataLine;
 				}
@@ -187,7 +187,7 @@ void ConsoleCommandLibrary_DumpLibraryHTML(UWorld* InWorld, FExec& SubSystem, co
 				{
 					// Exec command (better we change them to use the new method as it has better help and is more convenient to use)
 					//{name: "", help:"To change the screen/window resolution."},
-					YString DataLine = YString::Printf(TEXT("{name: \"%s\", help:\"Sorry: Exec commands have no help\", type:\"Exec\"},\r\n"), *Name);
+					FString DataLine = FString::Printf(TEXT("{name: \"%s\", help:\"Sorry: Exec commands have no help\", type:\"Exec\"},\r\n"), *Name);
 
 					AllData += DataLine;
 				}
@@ -311,7 +311,7 @@ bool FParse::Param( const TCHAR* Stream, const TCHAR* Param )
 // 
 // Parse a string.
 //
-bool FParse::Value( const TCHAR* Stream, const TCHAR* Match, YString& Value, bool bShouldStopOnComma )
+bool FParse::Value( const TCHAR* Stream, const TCHAR* Match, FString& Value, bool bShouldStopOnComma )
 {
 	TCHAR Temp[4096]=TEXT("");
 	if( FParse::Value( Stream, Match, Temp, ARRAY_COUNT(Temp), bShouldStopOnComma ) )
@@ -325,7 +325,7 @@ bool FParse::Value( const TCHAR* Stream, const TCHAR* Match, YString& Value, boo
 // 
 // Parse a quoted string.
 //
-bool FParse::QuotedString( const TCHAR* Buffer, YString& Value, int32* OutNumCharsRead )
+bool FParse::QuotedString( const TCHAR* Buffer, FString& Value, int32* OutNumCharsRead )
 {
 	if (OutNumCharsRead)
 	{
@@ -373,7 +373,7 @@ bool FParse::QuotedString( const TCHAR* Buffer, YString& Value, int32* OutNumCha
 		}
 		else // some other escape sequence, assume it's a hex character value
 		{
-			Value += YString::Printf(TEXT("%c"), (HexDigit(Buffer[0]) * 16) + HexDigit(Buffer[1]));
+			Value += FString::Printf(TEXT("%c"), (HexDigit(Buffer[0]) * 16) + HexDigit(Buffer[1]));
 			Buffer += 2;
 		}
 	}
@@ -743,7 +743,7 @@ bool FParse::Token( const TCHAR*& Str, TCHAR* Result, int32 MaxLen, bool UseEsca
 	return Len!=0;
 }
 
-bool FParse::Token( const TCHAR*& Str, YString& Arg, bool UseEscape )
+bool FParse::Token( const TCHAR*& Str, FString& Arg, bool UseEscape )
 {
 	Arg.Empty();
 
@@ -816,7 +816,7 @@ bool FParse::Token( const TCHAR*& Str, YString& Arg, bool UseEscape )
 
 	return Arg.Len() > 0;
 }
-YString FParse::Token( const TCHAR*& Str, bool UseEscape )
+FString FParse::Token( const TCHAR*& Str, bool UseEscape )
 {
 	TCHAR Buffer[1024];
 	if( FParse::Token( Str, Buffer, ARRAY_COUNT(Buffer), UseEscape ) )
@@ -825,7 +825,7 @@ YString FParse::Token( const TCHAR*& Str, bool UseEscape )
 		return TEXT("");
 }
 
-bool FParse::AlnumToken(const TCHAR*& Str, YString& Arg)
+bool FParse::AlnumToken(const TCHAR*& Str, FString& Arg)
 {
 	Arg.Empty();
 
@@ -901,7 +901,7 @@ bool FParse::Line
 bool FParse::Line
 (
 	const TCHAR**	Stream,
-	YString&		Result,
+	FString&		Result,
 	bool			Exact
 )
 {
@@ -953,7 +953,7 @@ bool FParse::Line
 	return **Stream!=0 || GotStream;
 }
 
-bool FParse::LineExtended(const TCHAR** Stream, YString& Result, int32& LinesConsumed, bool Exact)
+bool FParse::LineExtended(const TCHAR** Stream, FString& Result, int32& LinesConsumed, bool Exact)
 {
 	bool GotStream=0;
 	bool IsQuoted=0;
@@ -1086,14 +1086,14 @@ bool FParse::Resolution(const TCHAR* InResolution, uint32& OutX, uint32& OutY, i
 {
 	if(*InResolution)
 	{
-		YString CmdString(InResolution);
+		FString CmdString(InResolution);
 		CmdString = CmdString.Trim().TrimTrailing().ToLower();
 
 		//Retrieve the X dimensional value
 		const uint32 X = YMath::Max(FCString::Atof(*CmdString), 0.0f);
 
 		// Determine whether the user has entered a resolution and extract the Y dimension.
-		YString FTmpString;
+		FString FTmpString;
 
 		// Find separator between values (Example of expected format: 1280x768)
 		const TCHAR* YValue = NULL;
@@ -1110,8 +1110,8 @@ bool FParse::Resolution(const TCHAR* InResolution, uint32& OutX, uint32& OutY, i
 		if ( YValue && FTmpString.Len() > 0 )
 		{
 			// See if there is a fullscreen flag on the end
-			YString FullScreenChar = FTmpString.Mid(FTmpString.Len() - 1);
-			YString WindowFullScreenChars = FTmpString.Mid(FTmpString.Len() - 2);
+			FString FullScreenChar = FTmpString.Mid(FTmpString.Len() - 1);
+			FString WindowFullScreenChars = FTmpString.Mid(FTmpString.Len() - 2);
 			int32 WindowMode = OutWindowMode;
 			if (!FullScreenChar.IsNumeric())
 			{
@@ -1156,7 +1156,7 @@ bool FParse::Resolution( const TCHAR* InResolution, uint32& OutX, uint32& OutY )
 	return Resolution(InResolution, OutX, OutY, WindowModeDummy);
 }
 
-bool FParse::SchemeNameFromURI(const TCHAR* URI, YString& OutSchemeName)
+bool FParse::SchemeNameFromURI(const TCHAR* URI, FString& OutSchemeName)
 {
 	for(int32 Idx = 0;;Idx++)
 	{
@@ -1164,7 +1164,7 @@ bool FParse::SchemeNameFromURI(const TCHAR* URI, YString& OutSchemeName)
 		{
 			if(URI[Idx] == TEXT(':') && Idx > 0)
 			{
-				OutSchemeName = YString(Idx, URI);
+				OutSchemeName = FString(Idx, URI);
 				return true;
 			}
 			return false;

@@ -2,7 +2,7 @@
 
 #include "CoreTypes.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Map.h"
 #include "UObject/NameTypes.h"
 
@@ -147,7 +147,7 @@ struct CORE_API FGenericPlatformStackWalk
 	static bool SymbolInfoToHumanReadableString(const FProgramCounterSymbolInfo& SymbolInfo, ANSICHAR* HumanReadableString, SIZE_T HumanReadableStringSize);
 
 	/** Same as above, but can be used with external applications. */
-	static bool SymbolInfoToHumanReadableStringEx(const FProgramCounterSymbolInfoEx& SymbolInfo, YString& out_HumanReadableString);
+	static bool SymbolInfoToHumanReadableStringEx(const FProgramCounterSymbolInfoEx& SymbolInfo, FString& out_HumanReadableString);
 
 	/**
 	* Converts the passed in program counter address to a symbol info struct, filling in module and filename, line number and displacement.
@@ -244,7 +244,7 @@ struct CORE_API FGenericPlatformStackWalk
 	*
 	* @return	A map containing the meta-data (if any).
 	*/
-	static TMap<FName, YString> GetSymbolMetaData();
+	static TMap<FName, FString> GetSymbolMetaData();
 
 protected:
 

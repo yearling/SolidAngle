@@ -2,7 +2,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Map.h"
 #include "Delegates/Delegate.h"
 #include "Misc/Optional.h"
@@ -188,7 +188,7 @@ public:
 	bool TestTextFilter(const ITextFilterExpressionContext& InContext) const;
 
 	/** Helper function to add callbacks for function tokens */
-	void AddFunctionTokenCallback(YString InFunctionName, FTokenFunctionHandler InCallback);
+	void AddFunctionTokenCallback(FString InFunctionName, FTokenFunctionHandler InCallback);
 protected:
 	/** Sets up grammar used for evaluation */
 	void SetupGrammar();
@@ -215,7 +215,7 @@ protected:
 	TOptional<ExpressionParser::CompileResultType> CompiledFilter;
 
 	/** Mapping of function names to their callbacks */
-	TMap<YString, FTokenFunctionHandler> TokenFunctionHandlers;
+	TMap<FString, FTokenFunctionHandler> TokenFunctionHandlers;
 
 	/** Expression parser */
 	FTokenDefinitions TokenDefinitions;

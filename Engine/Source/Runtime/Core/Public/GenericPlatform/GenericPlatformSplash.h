@@ -29,7 +29,7 @@ namespace SplashTextType
 	};
 }
 
-class YString;
+class FString;
 
 /**
 * Generic implementation for most platforms
@@ -72,6 +72,6 @@ protected:
 	*
 	* @return true if a splash screen was found
 	*/
-	static bool GetSplashPath(const TCHAR* SplashFilename, YString& OutPath, bool& OutIsCustom);
-	static bool GetSplashPath(const TCHAR* SplashFilename, const TCHAR* IconFilename, YString& OutPath, YString& OutIconPath, bool& OutIsCustom);
+	static bool GetSplashPath(const TCHAR* SplashFilename, FString& OutPath, bool& OutIsCustom);
+	static bool GetSplashPath(const TCHAR* SplashFilename, const TCHAR* IconFilename, FString& OutPath, FString& OutIconPath, bool& OutIsCustom);
 };

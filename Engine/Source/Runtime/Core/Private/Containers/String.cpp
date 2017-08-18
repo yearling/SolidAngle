@@ -7,7 +7,7 @@
 #include "Math/UnrealMathUtility.h"
 #include "HAL/UnrealMemory.h"
 #include "Templates/UnrealTemplate.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Logging/LogMacros.h"
 #include "CoreGlobals.h"
 #include "Misc/ByteSwap.h"
@@ -117,7 +117,7 @@ namespace UE4String_Private
 	}
 }
 
-void YString::TrimToNullTerminator()
+void FString::TrimToNullTerminator()
 {
 	if( Data.Num() )
 	{
@@ -131,7 +131,7 @@ void YString::TrimToNullTerminator()
 }
 
 
-int32 YString::Find(const TCHAR* SubStr, ESearchCase::Type SearchCase, ESearchDir::Type SearchDir, int32 StartPosition) const
+int32 FString::Find(const TCHAR* SubStr, ESearchCase::Type SearchCase, ESearchDir::Type SearchDir, int32 StartPosition) const
 {
 	if ( SubStr == nullptr )
 	{
@@ -156,7 +156,7 @@ int32 YString::Find(const TCHAR* SubStr, ESearchCase::Type SearchCase, ESearchDi
 		// times in the loop below
 		if ( SearchCase == ESearchCase::IgnoreCase)
 		{
-			return ToUpper().Find(YString(SubStr).ToUpper(), ESearchCase::CaseSensitive, SearchDir, StartPosition);
+			return ToUpper().Find(FString(SubStr).ToUpper(), ESearchCase::CaseSensitive, SearchDir, StartPosition);
 		}
 		else
 		{
@@ -188,14 +188,14 @@ int32 YString::Find(const TCHAR* SubStr, ESearchCase::Type SearchCase, ESearchDi
 	}
 }
 
-YString YString::ToUpper() const
+FString FString::ToUpper() const
 {
-	YString New(**this);
+	FString New(**this);
 	New.ToUpperInline();
 	return New;
 }
 
-void YString::ToUpperInline()
+void FString::ToUpperInline()
 {
 	const int32 StringLength = Len();
 	TCHAR* RawData = Data.GetData();
@@ -206,14 +206,14 @@ void YString::ToUpperInline()
 }
 
 
-YString YString::ToLower() const
+FString FString::ToLower() const
 {
-	YString New(**this);
+	FString New(**this);
 	New.ToLowerInline();
 	return New;
 }
 
-void YString::ToLowerInline()
+void FString::ToLowerInline()
 {
 	const int32 StringLength = Len();
 	TCHAR* RawData = Data.GetData();
@@ -223,7 +223,7 @@ void YString::ToLowerInline()
 	}
 }
 
-bool YString::StartsWith(const TCHAR* InPrefix, ESearchCase::Type SearchCase) const
+bool FString::StartsWith(const TCHAR* InPrefix, ESearchCase::Type SearchCase) const
 {
 	if (SearchCase == ESearchCase::IgnoreCase)
 	{
@@ -235,7 +235,7 @@ bool YString::StartsWith(const TCHAR* InPrefix, ESearchCase::Type SearchCase) co
 	}
 }
 
-bool YString::StartsWith(const YString& InPrefix, ESearchCase::Type SearchCase ) const
+bool FString::StartsWith(const FString& InPrefix, ESearchCase::Type SearchCase ) const
 {
 	if( SearchCase == ESearchCase::IgnoreCase )
 	{
@@ -247,7 +247,7 @@ bool YString::StartsWith(const YString& InPrefix, ESearchCase::Type SearchCase )
 	}
 }
 
-bool YString::EndsWith(const TCHAR* InSuffix, ESearchCase::Type SearchCase) const
+bool FString::EndsWith(const TCHAR* InSuffix, ESearchCase::Type SearchCase) const
 {
 	if (!InSuffix || *InSuffix == TEXT('\0'))
 	{
@@ -272,7 +272,7 @@ bool YString::EndsWith(const TCHAR* InSuffix, ESearchCase::Type SearchCase) cons
 	}
 }
 
-bool YString::EndsWith(const YString& InSuffix, ESearchCase::Type SearchCase ) const
+bool FString::EndsWith(const FString& InSuffix, ESearchCase::Type SearchCase ) const
 {
 	if( SearchCase == ESearchCase::IgnoreCase )
 	{
@@ -288,7 +288,7 @@ bool YString::EndsWith(const YString& InSuffix, ESearchCase::Type SearchCase ) c
 	}
 }
 
-bool YString::RemoveFromStart( const YString& InPrefix, ESearchCase::Type SearchCase )
+bool FString::RemoveFromStart( const FString& InPrefix, ESearchCase::Type SearchCase )
 {
 	if ( InPrefix.IsEmpty() )
 	{
@@ -304,7 +304,7 @@ bool YString::RemoveFromStart( const YString& InPrefix, ESearchCase::Type Search
 	return false;
 }
 
-bool YString::RemoveFromEnd( const YString& InSuffix, ESearchCase::Type SearchCase )
+bool FString::RemoveFromEnd( const FString& InSuffix, ESearchCase::Type SearchCase )
 {
 	if ( InSuffix.IsEmpty() )
 	{
@@ -326,7 +326,7 @@ bool YString::RemoveFromEnd( const YString& InSuffix, ESearchCase::Type SearchCa
  * @param Str       Pointer to an array of TCHARs (not necessarily null-terminated) to be concatenated onto the end of this.
  * @param StrLength Exact number of characters from Str to append.
  */
-void YString::PathAppend(const TCHAR* Str, int32 StrLength)
+void FString::PathAppend(const TCHAR* Str, int32 StrLength)
 {
 	int32 DataNum = Data.Num();
 	if (StrLength == 0)
@@ -358,7 +358,7 @@ void YString::PathAppend(const TCHAR* Str, int32 StrLength)
 	}
 }
 
-YString YString::Trim()
+FString FString::Trim()
 {
 	int32 Pos = 0;
 	while(Pos < Len())
@@ -378,7 +378,7 @@ YString YString::Trim()
 	return *this;
 }
 
-YString YString::TrimTrailing( void )
+FString FString::TrimTrailing( void )
 {
 	int32 Pos = Len() - 1;
 	while( Pos >= 0 )
@@ -396,7 +396,7 @@ YString YString::TrimTrailing( void )
 	return( *this );
 }
 
-YString YString::TrimQuotes( bool* bQuotesRemoved ) const
+FString FString::TrimQuotes( bool* bQuotesRemoved ) const
 {
 	bool bQuotesWereRemoved=false;
 	int32 Start = 0, Count = Len();
@@ -423,22 +423,22 @@ YString YString::TrimQuotes( bool* bQuotesRemoved ) const
 	return Mid(Start, Count);
 }
 
-int32 YString::CullArray( TArray<YString>* InArray )
+int32 FString::CullArray( TArray<FString>* InArray )
 {
 	check(InArray);
-	YString Empty;
+	FString Empty;
 	InArray->Remove(Empty);
 	return InArray->Num();
 }
 
-YString YString::Reverse() const
+FString FString::Reverse() const
 {
-	YString New(*this);
+	FString New(*this);
 	New.ReverseString();
 	return New;
 }
 
-void YString::ReverseString()
+void FString::ReverseString()
 {
 	if ( Len() > 0 )
 	{
@@ -458,9 +458,9 @@ void YString::ReverseString()
 	}
 }
 
-YString YString::FormatAsNumber( int32 InNumber )
+FString FString::FormatAsNumber( int32 InNumber )
 {
-	YString Number = YString::FromInt( InNumber ), Result;
+	FString Number = FString::FromInt( InNumber ), Result;
 
 	int32 dec = 0;
 	for( int32 x = Number.Len()-1 ; x > -1 ; --x )
@@ -485,7 +485,7 @@ YString YString::FormatAsNumber( int32 InNumber )
  * @param	Ar				Archive to serialize with
  * @param	MinCharacters	Minimum number of characters to serialize.
  */
-void YString::SerializeAsANSICharArray( FArchive& Ar, int32 MinCharacters ) const
+void FString::SerializeAsANSICharArray( FArchive& Ar, int32 MinCharacters ) const
 {
 	int32	Length = YMath::Max( Len(), MinCharacters );
 	Ar << Length;
@@ -504,7 +504,7 @@ void YString::SerializeAsANSICharArray( FArchive& Ar, int32 MinCharacters ) cons
 	}
 }
 
-void YString::AppendInt( int32 InNum )
+void FString::AppendInt( int32 InNum )
 {
 	int64 Num						= InNum; // This avoids having to deal with negating -MAX_int32-1
 	const TCHAR* NumberChar[11]		= { TEXT("0"), TEXT("1"), TEXT("2"), TEXT("3"), TEXT("4"), TEXT("5"), TEXT("6"), TEXT("7"), TEXT("8"), TEXT("9"), TEXT("-") };
@@ -538,24 +538,24 @@ void YString::AppendInt( int32 InNum )
 }
 
 
-bool YString::ToBool() const
+bool FString::ToBool() const
 {
 	return FCString::ToBool(**this);
 }
 
-YString YString::FromBlob(const uint8* SrcBuffer,const uint32 SrcSize)
+FString FString::FromBlob(const uint8* SrcBuffer,const uint32 SrcSize)
 {
-	YString Result;
+	FString Result;
 	Result.Reserve( SrcSize * 3 );
 	// Convert and append each byte in the buffer
 	for (uint32 Count = 0; Count < SrcSize; Count++)
 	{
-		Result += YString::Printf(TEXT("%03d"),(uint8)SrcBuffer[Count]);
+		Result += FString::Printf(TEXT("%03d"),(uint8)SrcBuffer[Count]);
 	}
 	return Result;
 }
 
-bool YString::ToBlob(const YString& Source,uint8* DestBuffer,const uint32 DestSize)
+bool FString::ToBlob(const FString& Source,uint8* DestBuffer,const uint32 DestSize)
 {
 	// Make sure the buffer is at least half the size and that the string is an
 	// even number of characters long
@@ -578,19 +578,19 @@ bool YString::ToBlob(const YString& Source,uint8* DestBuffer,const uint32 DestSi
 	return false;
 }
 
-YString YString::FromHexBlob( const uint8* SrcBuffer, const uint32 SrcSize )
+FString FString::FromHexBlob( const uint8* SrcBuffer, const uint32 SrcSize )
 {
-	YString Result;
+	FString Result;
 	Result.Reserve( SrcSize * 2 );
 	// Convert and append each byte in the buffer
 	for (uint32 Count = 0; Count < SrcSize; Count++)
 	{
-		Result += YString::Printf( TEXT( "%02X" ), (uint8)SrcBuffer[Count] );
+		Result += FString::Printf( TEXT( "%02X" ), (uint8)SrcBuffer[Count] );
 	}
 	return Result;
 }
 
-bool YString::ToHexBlob( const YString& Source, uint8* DestBuffer, const uint32 DestSize )
+bool FString::ToHexBlob( const FString& Source, uint8* DestBuffer, const uint32 DestSize )
 {
 	// Make sure the buffer is at least half the size and that the string is an
 	// even number of characters long
@@ -613,7 +613,7 @@ bool YString::ToHexBlob( const YString& Source, uint8* DestBuffer, const uint32 
 	return false;
 }
 
-YString YString::SanitizeFloat( double InFloat )
+FString FString::SanitizeFloat( double InFloat )
 {
 	// Avoids negative zero
 	if( InFloat == 0 )
@@ -621,9 +621,9 @@ YString YString::SanitizeFloat( double InFloat )
 		InFloat = 0;
 	}
 
-	YString TempString;
+	FString TempString;
 	// First create the string
-	TempString = YString::Printf(TEXT("%f"), InFloat );
+	TempString = FString::Printf(TEXT("%f"), InFloat );
 	const TArray< TCHAR >& Chars = TempString.GetCharArray();	
 	const TCHAR Zero = '0';
 	const TCHAR Period = '.';
@@ -647,18 +647,18 @@ YString YString::SanitizeFloat( double InFloat )
 	return TempString;
 }
 
-YString YString::Chr( TCHAR Ch )
+FString FString::Chr( TCHAR Ch )
 {
 	TCHAR Temp[2]={Ch,0};
-	return YString(Temp);
+	return FString(Temp);
 }
 
 
-YString YString::ChrN( int32 NumCharacters, TCHAR Char )
+FString FString::ChrN( int32 NumCharacters, TCHAR Char )
 {
 	check( NumCharacters >= 0 );
 
-	YString Temp;
+	FString Temp;
 	Temp.Data.AddUninitialized(NumCharacters+1);
 	for( int32 Cx = 0; Cx < NumCharacters; ++Cx )
 	{
@@ -668,7 +668,7 @@ YString YString::ChrN( int32 NumCharacters, TCHAR Char )
 	return Temp;
 }
 
-YString YString::LeftPad( int32 ChCount ) const
+FString FString::LeftPad( int32 ChCount ) const
 {
 	int32 Pad = ChCount - Len();
 
@@ -681,7 +681,7 @@ YString YString::LeftPad( int32 ChCount ) const
 		return *this;
 	}
 }
-YString YString::RightPad( int32 ChCount ) const
+FString FString::RightPad( int32 ChCount ) const
 {
 	int32 Pad = ChCount - Len();
 
@@ -695,7 +695,7 @@ YString YString::RightPad( int32 ChCount ) const
 	}
 }
 
-bool YString::IsNumeric() const
+bool FString::IsNumeric() const
 {
 	if (IsEmpty())
 	{
@@ -714,7 +714,7 @@ bool YString::IsNumeric() const
  *
  * @return	The number of elements in InArray
  */
-int32 YString::ParseIntoArray( TArray<YString>& OutArray, const TCHAR* pchDelim, const bool InCullEmpty ) const
+int32 FString::ParseIntoArray( TArray<FString>& OutArray, const TCHAR* pchDelim, const bool InCullEmpty ) const
 {
 	// Make sure the delimit string is not null or empty
 	check(pchDelim);
@@ -740,10 +740,10 @@ int32 YString::ParseIntoArray( TArray<YString>& OutArray, const TCHAR* pchDelim,
 	return OutArray.Num();
 }
 
-bool YString::MatchesWildcard(const YString& InWildcard, ESearchCase::Type SearchCase) const
+bool FString::MatchesWildcard(const FString& InWildcard, ESearchCase::Type SearchCase) const
 {
-	YString Wildcard(InWildcard);
-	YString Target(*this);
+	FString Wildcard(InWildcard);
+	FString Target(*this);
 	int32 IndexOfStar = Wildcard.Find(TEXT("*"), ESearchCase::CaseSensitive, ESearchDir::FromEnd); // last occurance
 	int32 IndexOfQuestion = Wildcard.Find( TEXT("?"), ESearchCase::CaseSensitive, ESearchDir::FromEnd); // last occurance
 	int32 Suffix = YMath::Max<int32>(IndexOfStar, IndexOfQuestion);
@@ -763,7 +763,7 @@ bool YString::MatchesWildcard(const YString& InWildcard, ESearchCase::Type Searc
 	{
 		if (Suffix + 1 < Wildcard.Len())
 		{
-			YString SuffixString = Wildcard.Mid(Suffix + 1);
+			FString SuffixString = Wildcard.Mid(Suffix + 1);
 			if (!Target.EndsWith(SuffixString, SearchCase))
 			{
 				return false;
@@ -777,7 +777,7 @@ bool YString::MatchesWildcard(const YString& InWildcard, ESearchCase::Type Searc
 		check(Prefix >= 0 && Prefix < Wildcard.Len());
 		if (Prefix > 0)
 		{
-			YString PrefixString = Wildcard.Left(Prefix);
+			FString PrefixString = Wildcard.Left(Prefix);
 			if (!Target.StartsWith(PrefixString, SearchCase))
 			{
 				return false;
@@ -818,7 +818,7 @@ bool YString::MatchesWildcard(const YString& InWildcard, ESearchCase::Type Searc
 
 
 /** Caution!! this routine is O(N^2) allocations...use it for parsing very short text or not at all */
-int32 YString::ParseIntoArrayWS( TArray<YString>& OutArray, const TCHAR* pchExtraDelim, bool InCullEmpty ) const
+int32 FString::ParseIntoArrayWS( TArray<FString>& OutArray, const TCHAR* pchExtraDelim, bool InCullEmpty ) const
 {
 	// default array of White Spaces, the last entry can be replaced with the optional pchExtraDelim string
 	// (if you want to split on white space and another character)
@@ -842,7 +842,7 @@ int32 YString::ParseIntoArrayWS( TArray<YString>& OutArray, const TCHAR* pchExtr
 	return ParseIntoArray(OutArray, WhiteSpace, NumWhiteSpaces, InCullEmpty);
 }
 
-int32 YString::ParseIntoArrayLines(TArray<YString>& OutArray, bool InCullEmpty) const
+int32 FString::ParseIntoArrayLines(TArray<FString>& OutArray, bool InCullEmpty) const
 {
 	// default array of LineEndings
 	static const TCHAR* LineEndings[] =
@@ -857,7 +857,7 @@ int32 YString::ParseIntoArrayLines(TArray<YString>& OutArray, bool InCullEmpty) 
 	return ParseIntoArray(OutArray, LineEndings, NumLineEndings, InCullEmpty);
 }
 
-int32 YString::ParseIntoArray(TArray<YString>& OutArray, const TCHAR** DelimArray, int32 NumDelims, bool InCullEmpty) const
+int32 FString::ParseIntoArray(TArray<FString>& OutArray, const TCHAR** DelimArray, int32 NumDelims, bool InCullEmpty) const
 {
 	// Make sure the delimit string is not null or empty
 	check(DelimArray);
@@ -895,7 +895,7 @@ int32 YString::ParseIntoArray(TArray<YString>& OutArray, const TCHAR** DelimArra
 				if(!InCullEmpty || SubstringLength != 0)
 				{
 					// ... add new string from substring beginning up to the beginning of this delimiter.
-					new (OutArray) YString(SubstringEndIndex - SubstringBeginIndex, Start + SubstringBeginIndex);
+					new (OutArray) FString(SubstringEndIndex - SubstringBeginIndex, Start + SubstringBeginIndex);
 				}
 				// Next substring begins at the end of the discovered delimiter.
 				SubstringBeginIndex = SubstringEndIndex + DelimiterLength;
@@ -913,14 +913,14 @@ int32 YString::ParseIntoArray(TArray<YString>& OutArray, const TCHAR** DelimArra
 		if(!InCullEmpty || SubstringLength != 0)
 		{
 			// ... add new string from substring beginning up to the beginning of this delimiter.
-			new (OutArray) YString(Start + SubstringBeginIndex);
+			new (OutArray) FString(Start + SubstringBeginIndex);
 		}
 	}
 
 	return OutArray.Num();
 }
 
-YString YString::Replace(const TCHAR* From, const TCHAR* To, ESearchCase::Type SearchCase) const
+FString FString::Replace(const TCHAR* From, const TCHAR* To, ESearchCase::Type SearchCase) const
 {
 	// Previous code used to accidentally accept a nullptr replacement string - this is no longer accepted.
 	check(To);
@@ -937,7 +937,7 @@ YString YString::Replace(const TCHAR* From, const TCHAR* To, ESearchCase::Type S
 	int32 FromLength = FCString::Strlen(From);
 	int32 ToLength   = FCString::Strlen(To);
 
-	YString Result;
+	FString Result;
 	while (true)
 	{
 		// look for From in the remaining string
@@ -960,7 +960,7 @@ YString YString::Replace(const TCHAR* From, const TCHAR* To, ESearchCase::Type S
 	return Result;
 }
 
-int32 YString::ReplaceInline(const TCHAR* SearchText, const TCHAR* ReplacementText, ESearchCase::Type SearchCase)
+int32 FString::ReplaceInline(const TCHAR* SearchText, const TCHAR* ReplacementText, ESearchCase::Type SearchCase)
 {
 	int32 ReplacementCount = 0;
 
@@ -996,7 +996,7 @@ int32 YString::ReplaceInline(const TCHAR* SearchText, const TCHAR* ReplacementTe
 		}
 		else if (Contains(SearchText, SearchCase))
 		{
-			YString Copy(*this);
+			FString Copy(*this);
 			Empty(Len());
 
 			// get a pointer into the character data
@@ -1035,11 +1035,11 @@ int32 YString::ReplaceInline(const TCHAR* SearchText, const TCHAR* ReplacementTe
 /**
  * Returns a copy of this string with all quote marks escaped (unless the quote is already escaped)
  */
-YString YString::ReplaceQuotesWithEscapedQuotes() const
+FString FString::ReplaceQuotesWithEscapedQuotes() const
 {
 	if (Contains(TEXT("\""), ESearchCase::CaseSensitive))
 	{
-		YString Result;
+		FString Result;
 
 		const TCHAR* pChar = **this;
 
@@ -1089,11 +1089,11 @@ static const uint32 MaxSupportedEscapeChars = ARRAY_COUNT(CharToEscapeSeqMap);
  *
  * @return	a string with all control characters replaced by the escaped version.
  */
-YString YString::ReplaceCharWithEscapedChar( const TArray<TCHAR>* Chars/*=nullptr*/ ) const
+FString FString::ReplaceCharWithEscapedChar( const TArray<TCHAR>* Chars/*=nullptr*/ ) const
 {
 	if ( Len() > 0 && (Chars == nullptr || Chars->Num() > 0) )
 	{
-		YString Result(*this);
+		FString Result(*this);
 		for ( int32 ChIdx = 0; ChIdx < MaxSupportedEscapeChars; ChIdx++ )
 		{
 			if ( Chars == nullptr || Chars->Contains(*(CharToEscapeSeqMap[ChIdx][0])) )
@@ -1111,11 +1111,11 @@ YString YString::ReplaceCharWithEscapedChar( const TArray<TCHAR>* Chars/*=nullpt
  * Removes the escape backslash for all supported characters, replacing the escape and character with the non-escaped version.  (i.e.
  * replaces "\\n" with "\n".  Counterpart to ReplaceCharWithEscapedChar().
  */
-YString YString::ReplaceEscapedCharWithChar( const TArray<TCHAR>* Chars/*=nullptr*/ ) const
+FString FString::ReplaceEscapedCharWithChar( const TArray<TCHAR>* Chars/*=nullptr*/ ) const
 {
 	if ( Len() > 0 && (Chars == nullptr || Chars->Num() > 0) )
 	{
-		YString Result(*this);
+		FString Result(*this);
 		// Spin CharToEscapeSeqMap backwards to ensure we're doing the inverse of ReplaceCharWithEscapedChar
 		for ( int32 ChIdx = MaxSupportedEscapeChars - 1; ChIdx >= 0; ChIdx-- )
 		{
@@ -1135,17 +1135,17 @@ YString YString::ReplaceEscapedCharWithChar( const TArray<TCHAR>* Chars/*=nullpt
  * Replaces all instances of '\t' with TabWidth number of spaces
  * @param InSpacesPerTab - Number of spaces that a tab represents
  */
-YString YString::ConvertTabsToSpaces (const int32 InSpacesPerTab)
+FString FString::ConvertTabsToSpaces (const int32 InSpacesPerTab)
 {
 	//must call this with at least 1 space so the modulus operation works
 	check(InSpacesPerTab > 0);
 
-	YString FinalString = *this;
+	FString FinalString = *this;
 	int32 TabIndex;
 	while ((TabIndex = FinalString.Find(TEXT("\t"))) != INDEX_NONE )
 	{
-		YString LeftSide = FinalString.Left(TabIndex);
-		YString RightSide = FinalString.Mid(TabIndex+1);
+		FString LeftSide = FinalString.Left(TabIndex);
+		FString RightSide = FinalString.Mid(TabIndex+1);
 
 		FinalString = LeftSide;
 		//for a tab size of 4, 
@@ -1170,7 +1170,7 @@ YString YString::ConvertTabsToSpaces (const int32 InSpacesPerTab)
 // This starting size catches 99.97% of printf calls - there are about 700k printf calls per level
 #define STARTING_BUFFER_SIZE		512
 
-VARARG_BODY( YString, YString::Printf, const TCHAR*, VARARG_NONE )
+VARARG_BODY( FString, FString::Printf, const TCHAR*, VARARG_NONE )
 {
 	int32		BufferSize	= STARTING_BUFFER_SIZE;
 	TCHAR	StartingBuffer[STARTING_BUFFER_SIZE];
@@ -1194,7 +1194,7 @@ VARARG_BODY( YString, YString::Printf, const TCHAR*, VARARG_NONE )
 
 	Buffer[Result] = 0;
 
-	YString ResultString(Buffer);
+	FString ResultString(Buffer);
 
 	if( BufferSize != STARTING_BUFFER_SIZE )
 	{
@@ -1204,7 +1204,7 @@ VARARG_BODY( YString, YString::Printf, const TCHAR*, VARARG_NONE )
 	return ResultString;
 }
 
-FArchive& operator<<( FArchive& Ar, YString& A )
+FArchive& operator<<( FArchive& Ar, FString& A )
 {
 	// > 0 for ANSICHAR, < 0 for UCS2CHAR serialization
 
@@ -1297,8 +1297,8 @@ FArchive& operator<<( FArchive& Ar, YString& A )
 			{
 				// TODO - This is creating a temporary in order to byte-swap.  Need to think about how to make this not necessary.
 				#if !PLATFORM_LITTLE_ENDIAN
-					YString  ATemp  = A;
-					YString& A      = ATemp;
+					FString  ATemp  = A;
+					FString& A      = ATemp;
 					INTEL_ORDER_TCHARARRAY(A.Data.GetData());
 				#endif
 
@@ -1314,7 +1314,7 @@ FArchive& operator<<( FArchive& Ar, YString& A )
 	return Ar;
 }
 
-int32 FindMatchingClosingParenthesis(const YString& TargetString, const int32 StartSearch)
+int32 FindMatchingClosingParenthesis(const FString& TargetString, const int32 StartSearch)
 {
 	check(StartSearch >= 0 && StartSearch <= TargetString.Len());// Check for usage, we do not accept INDEX_NONE like other string functions
 

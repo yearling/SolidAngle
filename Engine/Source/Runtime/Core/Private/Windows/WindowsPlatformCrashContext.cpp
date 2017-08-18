@@ -135,22 +135,22 @@ int32 ReportCrashUsingCrashReportClient(FWindowsPlatformCrashContext& InContext,
 		// Generate Crash GUID
 		TCHAR CrashGUID[FGenericCrashContext::CrashGUIDLength];
 		InContext.GetUniqueCrashName(CrashGUID, FGenericCrashContext::CrashGUIDLength);
-		const YString AppName = YString::Printf(TEXT("UE4-%s"), FApp::GetGameName());
+		const FString AppName = FString::Printf(TEXT("UE4-%s"), FApp::GetGameName());
 
-		YString CrashFolder = YPaths::Combine(*YPaths::GameLogDir(), CrashGUID);
-		YString CrashFolderAbsolute = IFileManager::Get().ConvertToAbsolutePathForExternalAppForWrite(*CrashFolder);
+		FString CrashFolder = YPaths::Combine(*YPaths::GameLogDir(), CrashGUID);
+		FString CrashFolderAbsolute = IFileManager::Get().ConvertToAbsolutePathForExternalAppForWrite(*CrashFolder);
 		if (IFileManager::Get().MakeDirectory(*CrashFolderAbsolute, true))
 		{
 			// Save crash context
-			const YString CrashContextXMLPath = YPaths::Combine(*CrashFolderAbsolute, FPlatformCrashContext::CrashContextRuntimeXMLNameW);
+			const FString CrashContextXMLPath = YPaths::Combine(*CrashFolderAbsolute, FPlatformCrashContext::CrashContextRuntimeXMLNameW);
 			InContext.SerializeAsXML(*CrashContextXMLPath);
 
 			// Save mindump
-			const YString MinidumpFileName = YPaths::Combine(*CrashFolderAbsolute, *FGenericCrashContext::UE4MinidumpName);
+			const FString MinidumpFileName = YPaths::Combine(*CrashFolderAbsolute, *FGenericCrashContext::UE4MinidumpName);
 			WriteMinidump(InContext, *MinidumpFileName, ExceptionInfo, bIsEnsure);
 
 			// Copy log
-			const YString LogSrcAbsolute = YPlatformOutputDevices::GetAbsoluteLogFilename();
+			const FString LogSrcAbsolute = YPlatformOutputDevices::GetAbsoluteLogFilename();
 
 			// Flush out the log
 			GLog->Flush();
@@ -172,8 +172,8 @@ int32 ReportCrashUsingCrashReportClient(FWindowsPlatformCrashContext& InContext,
 #endif
 			if (bHasLogFile)
 			{
-				YString LogFilename = YPaths::GetCleanFilename(LogSrcAbsolute);
-				const YString LogDstAbsolute = YPaths::Combine(*CrashFolderAbsolute, *LogFilename);
+				FString LogFilename = YPaths::GetCleanFilename(LogSrcAbsolute);
+				const FString LogDstAbsolute = YPaths::Combine(*CrashFolderAbsolute, *LogFilename);
 				const bool bReplace = true;
 				const bool bEvenIfReadOnly = false;
 				const bool bAttributes = false;
@@ -185,17 +185,17 @@ int32 ReportCrashUsingCrashReportClient(FWindowsPlatformCrashContext& InContext,
 			const TCHAR* CrashConfigSrcPath = FWindowsPlatformCrashContext::GetCrashConfigFilePath();
 			if (IFileManager::Get().FileExists(CrashConfigSrcPath))
 			{
-				YString CrashConfigFilename = YPaths::GetCleanFilename(CrashConfigSrcPath);
-				const YString CrashConfigDstAbsolute = YPaths::Combine(*CrashFolderAbsolute, *CrashConfigFilename);
+				FString CrashConfigFilename = YPaths::GetCleanFilename(CrashConfigSrcPath);
+				const FString CrashConfigDstAbsolute = YPaths::Combine(*CrashFolderAbsolute, *CrashConfigFilename);
 				static_cast<void>(IFileManager::Get().Copy(*CrashConfigDstAbsolute, CrashConfigSrcPath));	// best effort, so don't care about result: couldn't copy -> tough, no config
 			}
 
 			// If present, include the crash video
-			const YString CrashVideoPath = YPaths::GameLogDir() / TEXT("CrashVideo.avi");
+			const FString CrashVideoPath = YPaths::GameLogDir() / TEXT("CrashVideo.avi");
 			if (IFileManager::Get().FileExists(*CrashVideoPath))
 			{
-				YString CrashVideoFilename = YPaths::GetCleanFilename(CrashVideoPath);
-				const YString CrashVideoDstAbsolute = YPaths::Combine(*CrashFolderAbsolute, *CrashVideoFilename);
+				FString CrashVideoFilename = YPaths::GetCleanFilename(CrashVideoPath);
+				const FString CrashVideoDstAbsolute = YPaths::Combine(*CrashFolderAbsolute, *CrashVideoFilename);
 				static_cast<void>(IFileManager::Get().Copy(*CrashVideoDstAbsolute, *CrashVideoPath));	// best effort, so don't care about result: couldn't copy -> tough, no video
 			}
 
@@ -206,7 +206,7 @@ int32 ReportCrashUsingCrashReportClient(FWindowsPlatformCrashContext& InContext,
 			}
 
 			// Run Crash Report Client
-			YString CrashReportClientArguments = YString::Printf(TEXT("\"%s\""), *CrashFolderAbsolute);
+			FString CrashReportClientArguments = FString::Printf(TEXT("\"%s\""), *CrashFolderAbsolute);
 
 			// Pass nullrhi to CRC when the engine is in this mode to stop the CRC attempting to initialize RHI when the capability isn't available
 			bool bNullRHI = !FApp::CanEverRender();
@@ -221,16 +221,16 @@ int32 ReportCrashUsingCrashReportClient(FWindowsPlatformCrashContext& InContext,
 				CrashReportClientArguments += TEXT(" -nullrhi");
 			}
 
-			CrashReportClientArguments += YString(TEXT(" -AppName=")) + AppName;
-			CrashReportClientArguments += YString(TEXT(" -CrashGUID=")) + CrashGUID;
+			CrashReportClientArguments += FString(TEXT(" -AppName=")) + AppName;
+			CrashReportClientArguments += FString(TEXT(" -CrashGUID=")) + CrashGUID;
 
-			const YString DownstreamStorage = FWindowsPlatformStackWalk::GetDownstreamStorage();
+			const FString DownstreamStorage = FWindowsPlatformStackWalk::GetDownstreamStorage();
 			if (!DownstreamStorage.IsEmpty())
 			{
-				CrashReportClientArguments += YString(TEXT(" -DebugSymbols=")) + DownstreamStorage;
+				CrashReportClientArguments += FString(TEXT(" -DebugSymbols=")) + DownstreamStorage;
 			}
 
-			YString CrashClientPath = YPaths::Combine(*YPaths::EngineDir(), TEXT("Binaries"), FPlatformProcess::GetBinariesSubdirectory(), CrashReportClientExeName);
+			FString CrashClientPath = YPaths::Combine(*YPaths::EngineDir(), TEXT("Binaries"), FPlatformProcess::GetBinariesSubdirectory(), CrashReportClientExeName);
 			bCrashReporterRan = FPlatformProcess::CreateProc(*CrashClientPath, *CrashReportClientArguments, true, false, false, NULL, 0, NULL, NULL).IsValid();
 		}
 
@@ -337,7 +337,7 @@ void NewReportEnsure( const TCHAR* ErrorMessage )
 void CreateExceptionInfoString(EXCEPTION_RECORD* ExceptionRecord)
 {
 	// #CrashReport: 2014-08-18 Fix YString usage?
-	YString ErrorString = TEXT("Unhandled Exception: ");
+	FString ErrorString = TEXT("Unhandled Exception: ");
 
 #define HANDLE_CASE(x) case x: ErrorString += TEXT(#x); break;
 
@@ -353,7 +353,7 @@ void CreateExceptionInfoString(EXCEPTION_RECORD* ExceptionRecord)
 		{
 			ErrorString += TEXT("writing address ");
 		}
-		ErrorString += YString::Printf(TEXT("0x%08x"), (uint32)ExceptionRecord->ExceptionInformation[1]);
+		ErrorString += FString::Printf(TEXT("0x%08x"), (uint32)ExceptionRecord->ExceptionInformation[1]);
 		break;
 	HANDLE_CASE(EXCEPTION_ARRAY_BOUNDS_EXCEEDED)
 	HANDLE_CASE(EXCEPTION_DATATYPE_MISALIGNMENT)
@@ -365,7 +365,7 @@ void CreateExceptionInfoString(EXCEPTION_RECORD* ExceptionRecord)
 	HANDLE_CASE(EXCEPTION_PRIV_INSTRUCTION)
 	HANDLE_CASE(EXCEPTION_STACK_OVERFLOW)
 	default:
-		ErrorString += YString::Printf(TEXT("0x%08x"), (uint32)ExceptionRecord->ExceptionCode);
+		ErrorString += FString::Printf(TEXT("0x%08x"), (uint32)ExceptionRecord->ExceptionCode);
 	}
 
 	FCString::Strncpy(GErrorExceptionDescription, *ErrorString, ARRAY_COUNT(GErrorExceptionDescription));

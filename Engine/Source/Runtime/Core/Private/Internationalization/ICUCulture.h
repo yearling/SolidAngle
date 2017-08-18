@@ -3,7 +3,7 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Set.h"
 #include "Containers/Map.h"
 #include "Templates/SharedPointer.h"
@@ -374,50 +374,50 @@ class FCulture::FICUCultureImplementation
 	friend FText;
 	friend class FICUBreakIteratorManager;
 
-	FICUCultureImplementation(const YString& LocaleName);
+	FICUCultureImplementation(const FString& LocaleName);
 
-	YString GetDisplaFName() const;
+	FString GetDisplaFName() const;
 
-	YString GetEnglishName() const;
+	FString GetEnglishName() const;
 
 	int GetKeyboardLayoutId() const;
 
 	int GetLCID() const;
 
-	static YString GetCanonicalName(const YString& Name);
+	static FString GetCanonicalName(const FString& Name);
 	
-	YString GetName() const;
+	FString GetName() const;
 
-	YString GetNativeName() const;
+	FString GetNativeName() const;
 
-	YString GetUnrealLegacyThreeLetterISOLanguageName() const;
+	FString GetUnrealLegacyThreeLetterISOLanguageName() const;
 
-	YString GetThreeLetterISOLanguageName() const;
+	FString GetThreeLetterISOLanguageName() const;
 
-	YString GetTwoLetterISOLanguageName() const;
+	FString GetTwoLetterISOLanguageName() const;
 
-	YString GetNativeLanguage() const;
+	FString GetNativeLanguage() const;
 
-	YString GetRegion() const;
+	FString GetRegion() const;
 
-	YString GetNativeRegion() const;
+	FString GetNativeRegion() const;
 
-	YString GetScript() const;
+	FString GetScript() const;
 
-	YString GetVariant() const;
+	FString GetVariant() const;
 
 	TSharedRef<const icu::BreakIterator> GetBreakIterator(const EBreakIteratorType Type);
 	TSharedRef<const icu::Collator, ESPMode::ThreadSafe> GetCollator(const ETextComparisonLevel::Type ComparisonLevel);
 	TSharedRef<const icu::DecimalFormat, ESPMode::ThreadSafe> GetDecimalFormatter(const FNumberFormattingOptions* const Options = NULL);
-	TSharedRef<const icu::DecimalFormat> GetCurrencyFormatter(const YString& CurrencyCode = YString(), const FNumberFormattingOptions* const Options = NULL);
+	TSharedRef<const icu::DecimalFormat> GetCurrencyFormatter(const FString& CurrencyCode = FString(), const FNumberFormattingOptions* const Options = NULL);
 	TSharedRef<const icu::DecimalFormat> GetPercentFormatter(const FNumberFormattingOptions* const Options = NULL);
-	TSharedRef<const icu::DateFormat> GetDateFormatter(const EDateTimeStyle::Type DateStyle, const YString& TimeZone);
-	TSharedRef<const icu::DateFormat> GetTimeFormatter(const EDateTimeStyle::Type TimeStyle, const YString& TimeZone);
-	TSharedRef<const icu::DateFormat> GetDateTimeFormatter(const EDateTimeStyle::Type DateStyle, const EDateTimeStyle::Type TimeStyle, const YString& TimeZone);
+	TSharedRef<const icu::DateFormat> GetDateFormatter(const EDateTimeStyle::Type DateStyle, const FString& TimeZone);
+	TSharedRef<const icu::DateFormat> GetTimeFormatter(const EDateTimeStyle::Type TimeStyle, const FString& TimeZone);
+	TSharedRef<const icu::DateFormat> GetDateTimeFormatter(const EDateTimeStyle::Type DateStyle, const EDateTimeStyle::Type TimeStyle, const FString& TimeZone);
 
 	const FDecimalNumberFormattingRules& GetDecimalNumberFormattingRules();
 	const FDecimalNumberFormattingRules& GetPercentFormattingRules();
-	const FDecimalNumberFormattingRules& GetCurrencyFormattingRules(const YString& InCurrencyCode);
+	const FDecimalNumberFormattingRules& GetCurrencyFormattingRules(const FString& InCurrencyCode);
 
 	ETextPluralForm GetPluralForm(int32 Val, const ETextPluralType PluralType);
 	ETextPluralForm GetPluralForm(double Val, const ETextPluralType PluralType);
@@ -454,7 +454,7 @@ class FCulture::FICUCultureImplementation
 	TSharedPtr<const FDecimalNumberFormattingRules, ESPMode::ThreadSafe> UECurrencyFormattingRules;
 	FCriticalSection UECurrencyFormattingRulesCS;
 
-	TMap<YString, TSharedPtr<const FDecimalNumberFormattingRules>> UEAlternateCurrencyFormattingRules;
+	TMap<FString, TSharedPtr<const FDecimalNumberFormattingRules>> UEAlternateCurrencyFormattingRules;
 	FCriticalSection UEAlternateCurrencyFormattingRulesCS;
 };
 #endif

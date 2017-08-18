@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
 #include "Serialization/Archive.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "UObject/NameTypes.h"
 
 /**
@@ -20,7 +20,7 @@ public:
 	 *
 	 * This is overridden for the specific Archive Types
 	 **/
-	virtual YString GetArchiveName() const { return TEXT("YMemoryArchive"); }
+	virtual FString GetArchiveName() const { return TEXT("YMemoryArchive"); }
 
 	void Seek( int64 InPos ) final
 	{
@@ -38,13 +38,13 @@ public:
 		// Serialize the FName as a string
 		if (IsLoading())
 		{
-			YString StringName;
+			FString StringName;
 			*this << StringName;
 			N = FName(*StringName);
 		}
 		else
 		{
-			YString StringName = N.ToString();
+			FString StringName = N.ToString();
 			*this << StringName;
 		}
 		return *this;

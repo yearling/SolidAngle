@@ -30,22 +30,22 @@ const TCHAR* YOutputDeviceHelper::VerbosityToString(ELogVerbosity::Type Verbosit
 	return TEXT("UknownVerbosity");
 }
 
-YString YOutputDeviceHelper::FormatLogLine( ELogVerbosity::Type Verbosity, const class FName& Category, const TCHAR* Message /*= nullptr*/, ELogTimes::Type LogTime /*= ELogTimes::None*/, const double Time /*= -1.0*/ )
+FString YOutputDeviceHelper::FormatLogLine( ELogVerbosity::Type Verbosity, const class FName& Category, const TCHAR* Message /*= nullptr*/, ELogTimes::Type LogTime /*= ELogTimes::None*/, const double Time /*= -1.0*/ )
 {
 	const bool bShowCategory = GPrintLogCategory && Category != NAME_None;
-	YString Format;
+	FString Format;
 
 	switch (LogTime)
 	{
 		case ELogTimes::SinceGStartTime:
 		{																	
 			const double RealTime = Time == -1.0f ? FPlatformTime::Seconds() - GStartTime : Time;
-			Format = YString::Printf( TEXT( "[%07.2f][%3d]" ), RealTime, GFrameCounter % 1000 );
+			Format = FString::Printf( TEXT( "[%07.2f][%3d]" ), RealTime, GFrameCounter % 1000 );
 			break;
 		}
 
 		case ELogTimes::UTC:
-			Format = YString::Printf(TEXT("[%s][%3d]"), *FDateTime::UtcNow().ToString(TEXT("%Y.%m.%d-%H.%M.%S:%s")), GFrameCounter % 1000);
+			Format = FString::Printf(TEXT("[%s][%3d]"), *FDateTime::UtcNow().ToString(TEXT("%Y.%m.%d-%H.%M.%S:%s")), GFrameCounter % 1000);
 			break;
 
 		default:
@@ -103,7 +103,7 @@ void YOutputDeviceHelper::FormatCastAndSerializeLine(FArchive& Output, const TCH
 	const int32 DataLength = FCString::Strlen(Data);
 	const int32 ConvertedDataLength = YTCHARToUTF8_Convert::ConvertedLength(Data, DataLength);
 
-	YString Prefix;
+	FString Prefix;
 	if (!bSuppressEventTag)
 	{
 		Prefix = FormatLogLine(Verbosity, Category, nullptr, GPrintLogTimes, Time);

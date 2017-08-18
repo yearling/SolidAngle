@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Templates/UnrealTemplate.h"
 #include "Misc/Crc.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Containers/Set.h"
 #include "UObject/NameTypes.h"
 #include "Misc/Guid.h"
@@ -155,7 +155,7 @@ public:
 	void Empty();
 
 	/** Return a string representation of custom versions. Used for debug. */
-	YString ToString(const YString& Indent) const;
+	FString ToString(const FString& Indent) const;
 
 private:
 

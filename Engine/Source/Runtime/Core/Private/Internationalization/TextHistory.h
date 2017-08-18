@@ -3,7 +3,7 @@
 
 #include "CoreTypes.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Templates/SharedPointer.h"
 #include "Misc/Optional.h"
 #include "Internationalization/Text.h"
@@ -50,7 +50,7 @@ public:
 	virtual bool IsOutOfDate() const;
 
 	/** Returns the source string managed by the history (if any). */
-	virtual const YString* GetSourceString() const;
+	virtual const FString* GetSourceString() const;
 
 	/** Get any historic text format data from this history */
 	virtual void GetHistoricFormatData(const FText& InText, TArray<FHistoricTextFormatData>& OutHistoricFormatData) const;
@@ -59,7 +59,7 @@ public:
 	virtual bool GetHistoricNumericData(const FText& InText, FHistoricTextNumericData& OutHistoricNumericData) const;
 
 	/** Will rebuild the display string if out of date. */
-	void Rebuild(TSharedRef< YString, ESPMode::ThreadSafe > InDisplayString);
+	void Rebuild(TSharedRef< FString, ESPMode::ThreadSafe > InDisplayString);
 
 	/** Get the raw revision history. Note: Usually you can to call IsOutOfDate rather than test this! */
 	uint16 GetRevision() const { return Revision; }
@@ -82,7 +82,7 @@ class CORE_API FTextHistory_Base : public FTextHistory
 {
 public:
 	FTextHistory_Base() {}
-	explicit FTextHistory_Base(YString&& InSourceString);
+	explicit FTextHistory_Base(FString&& InSourceString);
 
 	/** Allow moving */
 	FTextHistory_Base(FTextHistory_Base&& Other);
@@ -92,7 +92,7 @@ public:
 	virtual FText ToText(bool bInAsSource) const override;
 	virtual void Serialize(FArchive& Ar) override;
 	virtual void SerializeForDisplayString(FArchive& Ar, FTextDisplayStringPtr& InOutDisplayString) override;
-	virtual const YString* GetSourceString() const override;
+	virtual const FString* GetSourceString() const override;
 	//~ End FTextHistory Interface
 
 protected:
@@ -106,7 +106,7 @@ private:
 	FTextHistory_Base& operator=(FTextHistory_Base&);
 
 	/** The source string for an FText */
-	YString SourceString;
+	FString SourceString;
 };
 
 /** Handles history for FText::Format when passing named arguments */
@@ -273,7 +273,7 @@ class CORE_API FTextHistory_AsCurrency : public FTextHistory_FormatNumber
 {
 public:
 	FTextHistory_AsCurrency() {}
-	FTextHistory_AsCurrency(FFormatArgumentValue InSourceValue, YString InCurrencyCode, const FNumberFormattingOptions* const InFormatOptions, FCulturePtr InTargetCulture);
+	FTextHistory_AsCurrency(FFormatArgumentValue InSourceValue, FString InCurrencyCode, const FNumberFormattingOptions* const InFormatOptions, FCulturePtr InTargetCulture);
 
 	/** Allow moving */
 	FTextHistory_AsCurrency(FTextHistory_AsCurrency&& Other);
@@ -290,7 +290,7 @@ private:
 	FTextHistory_AsCurrency& operator=(FTextHistory_AsCurrency&);
 
 	/** The currency used to format the number. */
-	YString CurrencyCode;
+	FString CurrencyCode;
 };
 
 /**  Handles history for formatting using AsDate */
@@ -298,7 +298,7 @@ class CORE_API FTextHistory_AsDate : public FTextHistory
 {
 public:
 	FTextHistory_AsDate() {}
-	FTextHistory_AsDate(FDateTime InSourceDateTime, const EDateTimeStyle::Type InDateStyle, YString InTimeZone, FCulturePtr InTargetCulture);
+	FTextHistory_AsDate(FDateTime InSourceDateTime, const EDateTimeStyle::Type InDateStyle, FString InTimeZone, FCulturePtr InTargetCulture);
 
 	/** Allow moving */
 	FTextHistory_AsDate(FTextHistory_AsDate&& Other);
@@ -319,7 +319,7 @@ private:
 	/** Style to format the date using */
 	EDateTimeStyle::Type DateStyle;
 	/** Timezone to put the time in */
-	YString TimeZone;
+	FString TimeZone;
 	/** Culture to format the date in */
 	FCulturePtr TargetCulture;
 };
@@ -329,7 +329,7 @@ class CORE_API FTextHistory_AsTime : public FTextHistory
 {
 public:
 	FTextHistory_AsTime() {}
-	FTextHistory_AsTime(FDateTime InSourceDateTime, const EDateTimeStyle::Type InTimeStyle, YString InTimeZone, FCulturePtr InTargetCulture);
+	FTextHistory_AsTime(FDateTime InSourceDateTime, const EDateTimeStyle::Type InTimeStyle, FString InTimeZone, FCulturePtr InTargetCulture);
 
 	/** Allow moving */
 	FTextHistory_AsTime(FTextHistory_AsTime&& Other);
@@ -350,7 +350,7 @@ private:
 	/** Style to format the time using */
 	EDateTimeStyle::Type TimeStyle;
 	/** Timezone to put the time in */
-	YString TimeZone;
+	FString TimeZone;
 	/** Culture to format the time in */
 	FCulturePtr TargetCulture;
 };
@@ -360,7 +360,7 @@ class CORE_API FTextHistory_AsDateTime : public FTextHistory
 {
 public:
 	FTextHistory_AsDateTime() {}
-	FTextHistory_AsDateTime(FDateTime InSourceDateTime, const EDateTimeStyle::Type InDateStyle, const EDateTimeStyle::Type InTimeStyle, YString InTimeZone, FCulturePtr InTargetCulture);
+	FTextHistory_AsDateTime(FDateTime InSourceDateTime, const EDateTimeStyle::Type InDateStyle, const EDateTimeStyle::Type InTimeStyle, FString InTimeZone, FCulturePtr InTargetCulture);
 
 	/** Allow moving */
 	FTextHistory_AsDateTime(FTextHistory_AsDateTime&& Other);
@@ -383,7 +383,7 @@ private:
 	/** Style to format the time using */
 	EDateTimeStyle::Type TimeStyle;
 	/** Timezone to put the time in */
-	YString TimeZone;
+	FString TimeZone;
 	/** Culture to format the time in */
 	FCulturePtr TargetCulture;
 };

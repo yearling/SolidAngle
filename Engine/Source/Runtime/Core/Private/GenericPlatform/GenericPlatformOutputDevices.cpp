@@ -43,14 +43,14 @@ void YGenericPlatformOutputDevices::SetupOutputDevices()
 };
 
 
-YString YGenericPlatformOutputDevices::GetAbsoluteLogFilename()
+FString YGenericPlatformOutputDevices::GetAbsoluteLogFilename()
 {
 	static TCHAR		Filename[1024] = { 0 };
 
 	if (!Filename[0])
 	{
 		FCString::Strcpy(Filename, ARRAY_COUNT(Filename), *YPaths::GameLogDir());
-		YString LogFilename;
+		FString LogFilename;
 		if (!FParse::Value(FCommandLine::Get(), TEXT("LOG="), LogFilename))
 		{
 			if (FParse::Value(FCommandLine::Get(), TEXT("ABSLOG="), LogFilename))
@@ -59,7 +59,7 @@ YString YGenericPlatformOutputDevices::GetAbsoluteLogFilename()
 			}
 		}
 
-		YString Extension(YPaths::GetExtension(LogFilename));
+		FString Extension(YPaths::GetExtension(LogFilename));
 		if (Extension != TEXT("log") && Extension != TEXT("txt"))
 		{
 			// Ignoring the specified log filename because it doesn't have a .log extension			
@@ -123,7 +123,7 @@ class FOutputDevice* YGenericPlatformOutputDevices::GetLog()
 }
 
 
-class YOutputDeviceError* YGenericPlatformOutputDevices::GetError()
+class FOutputDeviceError* YGenericPlatformOutputDevices::GetError()
 {
 	static YOutputDeviceAnsiError Singleton;
 	return &Singleton;

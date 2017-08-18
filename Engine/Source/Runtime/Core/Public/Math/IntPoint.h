@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
 #include "Math/UnrealMathUtility.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Templates/TypeHash.h"
 
 /**
@@ -240,7 +240,7 @@ public:
 	*
 	* @return A string describing the point.
 	*/
-	YString ToString() const;
+	FString ToString() const;
 
 public:
 
@@ -502,9 +502,9 @@ FORCEINLINE int32 YIntPoint::SizeSquared() const
 	return X*X + Y*Y;
 }
 
-FORCEINLINE YString YIntPoint::ToString() const
+FORCEINLINE FString YIntPoint::ToString() const
 {
-	return YString::Printf(TEXT("X=%d Y=%d"), X, Y);
+	return FString::Printf(TEXT("X=%d Y=%d"), X, Y);
 }
 
 template <> struct TIsPODType<YIntPoint> { enum { Value = true }; };

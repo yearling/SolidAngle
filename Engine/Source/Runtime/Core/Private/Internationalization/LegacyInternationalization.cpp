@@ -28,34 +28,34 @@ void FLegacyInternationalization::LoadAllCultureData()
 {
 }
 
-bool FLegacyInternationalization::IsCultureRemapped(const YString& Name, YString* OutMappedCulture)
+bool FLegacyInternationalization::IsCultureRemapped(const FString& Name, FString* OutMappedCulture)
 {
 	return false;
 }
 
-bool FLegacyInternationalization::IsCultureDisabled(const YString& Name)
+bool FLegacyInternationalization::IsCultureDisabled(const FString& Name)
 {
 	return false;
 }
 
-bool FLegacyInternationalization::SetCurrentCulture(const YString& Name)
+bool FLegacyInternationalization::SetCurrentCulture(const FString& Name)
 {
 	return Name.IsEmpty();
 }
 
-void FLegacyInternationalization::GetCultureNames(TArray<YString>& CultureNames) const
+void FLegacyInternationalization::GetCultureNames(TArray<FString>& CultureNames) const
 {
 	CultureNames.Add(TEXT(""));
 }
 
-TArray<YString> FLegacyInternationalization::GetPrioritizedCultureNames(const YString& Name)
+TArray<FString> FLegacyInternationalization::GetPrioritizedCultureNames(const FString& Name)
 {
-	TArray<YString> PrioritizedCultureNames;
+	TArray<FString> PrioritizedCultureNames;
 	PrioritizedCultureNames.Add(Name);
 	return PrioritizedCultureNames;
 }
 
-FCulturePtr FLegacyInternationalization::GetCulture(const YString& Name)
+FCulturePtr FLegacyInternationalization::GetCulture(const FString& Name)
 {
 	return Name.IsEmpty() ? I18N->InvariantCulture : nullptr;
 }

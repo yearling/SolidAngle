@@ -155,7 +155,7 @@ public:
 		static const TCHAR* VerbosityToString(ELogVerbosity::Type Verbosity);
 
 	DEPRECATED(4.12, "Please use YOutputDeviceHelper::FormatLogLine.")
-		static YString FormatLogLine(ELogVerbosity::Type Verbosity, const class FName& Category, const TCHAR* Message = nullptr, ELogTimes::Type LogTime = ELogTimes::None, const double Time = -1.0);
+		static FString FormatLogLine(ELogVerbosity::Type Verbosity, const class FName& Category, const TCHAR* Message = nullptr, ELogTimes::Type LogTime = ELogTimes::None, const double Time = -1.0);
 
 
 	// YOutputDevice interface.
@@ -217,10 +217,10 @@ public:
 	void Log(const TCHAR* S);
 	void Log(ELogVerbosity::Type Verbosity, const TCHAR* S);
 	void Log(const class FName& Category, ELogVerbosity::Type Verbosity, const TCHAR* Str);
-	void Log(const YString& S);
+	void Log(const FString& S);
 	void Log(const FText& S);
-	void Log(ELogVerbosity::Type Verbosity, const YString& S);
-	void Log(const class FName& Category, ELogVerbosity::Type Verbosity, const YString& S);
+	void Log(ELogVerbosity::Type Verbosity, const FString& S);
+	void Log(const class FName& Category, ELogVerbosity::Type Verbosity, const FString& S);
 
 	VARARG_DECL(void, void, {}, Logf, VARARG_NONE, const TCHAR*, VARARG_NONE, VARARG_NONE);
 	VARARG_DECL(void, void, {}, Logf, VARARG_NONE, const TCHAR*, VARARG_EXTRA(ELogVerbosity::Type Verbosity), VARARG_EXTRA(Verbosity));

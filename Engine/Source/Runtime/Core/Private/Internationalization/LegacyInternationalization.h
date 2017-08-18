@@ -3,7 +3,7 @@
 
 #include "CoreTypes.h"
 #include "Containers/Array.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Internationalization/CulturePointer.h"
 
 class FInternationalization;
@@ -20,13 +20,13 @@ public:
 
 	void LoadAllCultureData();
 
-	bool IsCultureRemapped(const YString& Name, YString* OutMappedCulture);
-	bool IsCultureDisabled(const YString& Name);
+	bool IsCultureRemapped(const FString& Name, FString* OutMappedCulture);
+	bool IsCultureDisabled(const FString& Name);
 
-	bool SetCurrentCulture(const YString& Name);
-	void GetCultureNames(TArray<YString>& CultureNames) const;
-	TArray<YString> GetPrioritizedCultureNames(const YString& Name);
-	FCulturePtr GetCulture(const YString& Name);
+	bool SetCurrentCulture(const FString& Name);
+	void GetCultureNames(TArray<FString>& CultureNames) const;
+	TArray<FString> GetPrioritizedCultureNames(const FString& Name);
+	FCulturePtr GetCulture(const FString& Name);
 
 private:
 	FInternationalization* const I18N;

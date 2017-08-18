@@ -2,17 +2,17 @@
 
 #include "Misc/FeedbackContextMarkup.h"
 #include "Misc/AssertionMacros.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "HAL/PlatformProcess.h"
 #include "Internationalization/Text.h"
 #include "Misc/FeedbackContext.h"
 
-bool FFeedbackContextMarkup::ParseCommand(const YString& Line, FFeedbackContext* Warn)
+bool FFeedbackContextMarkup::ParseCommand(const FString& Line, FFeedbackContext* Warn)
 {
 	const TCHAR *Text = *Line;
 	if(ReadToken(Text, TEXT("@progress")))
 	{
-		YString Status;
+		FString Status;
 		bool bHaveStatus = ReadString(Text, Status);
 
 		int32 Numerator, Denominator;
@@ -35,7 +35,7 @@ bool FFeedbackContextMarkup::ParseCommand(const YString& Line, FFeedbackContext*
 	return false;
 }
 
-bool FFeedbackContextMarkup::PipeProcessOutput(const FText& Description, const YString& URL, const YString& Params, FFeedbackContext* Warn, int32* OutExitCode)
+bool FFeedbackContextMarkup::PipeProcessOutput(const FText& Description, const FString& URL, const FString& Params, FFeedbackContext* Warn, int32* OutExitCode)
 {
 	bool bRes;
 
@@ -51,7 +51,7 @@ bool FFeedbackContextMarkup::PipeProcessOutput(const FText& Description, const Y
 	FProcHandle ProcessHandle = FPlatformProcess::CreateProc(*URL, *Params, false, true, true, NULL, 0, NULL, PipeWrite);
 	if(ProcessHandle.IsValid())
 	{
-		YString BufferedText;
+		FString BufferedText;
 		for(bool bProcessFinished = false; !bProcessFinished; )
 		{
 			bProcessFinished = FPlatformProcess::GetProcReturnCode(ProcessHandle, OutExitCode);
@@ -67,7 +67,7 @@ bool FFeedbackContextMarkup::PipeProcessOutput(const FText& Description, const Y
 			int32 EndOfLineIdx;
 			while(BufferedText.FindChar('\n', EndOfLineIdx))
 			{
-				YString Line = BufferedText.Left(EndOfLineIdx);
+				FString Line = BufferedText.Left(EndOfLineIdx);
 				Line.RemoveFromEnd(TEXT("\r"));
 
 				if(!ParseCommand(Line, Warn))
@@ -154,7 +154,7 @@ bool FFeedbackContextMarkup::ReadInteger(const TCHAR*& Text, uint32& OutInteger)
 	return false;
 }
 
-bool FFeedbackContextMarkup::ReadString(const TCHAR*& Text, YString& OutString)
+bool FFeedbackContextMarkup::ReadString(const TCHAR*& Text, FString& OutString)
 {
 	if(*Text == '\'' || *Text == '\"')
 	{
@@ -162,7 +162,7 @@ bool FFeedbackContextMarkup::ReadString(const TCHAR*& Text, YString& OutString)
 		{
 			if(*End == *Text)
 			{
-				OutString = YString(End - (Text + 1), Text + 1);
+				OutString = FString(End - (Text + 1), Text + 1);
 				do { End++; } while(FChar::IsWhitespace(*End));
 				Text = End;
 				return true;

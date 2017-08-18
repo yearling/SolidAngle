@@ -2,7 +2,7 @@
 
 #include "Misc/ConfigManifest.h"
 #include "Misc/EngineVersionBase.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "GenericPlatform/GenericPlatformFile.h"
 #include "HAL/PlatformFilemanager.h"
 #include "Containers/StringConv.h"
@@ -51,12 +51,12 @@ bool IsDirectoryEmpty(const TCHAR* InDirectory)
 	return !Visitor.bHasFiles;
 }
 
-YString ProjectSpecificIniPath(const TCHAR* InLeaf)
+FString ProjectSpecificIniPath(const TCHAR* InLeaf)
 {
 	return YPaths::GeneratedConfigDir() / ANSI_TO_TCHAR(FPlatformProperties::PlatformName()) / InLeaf;
 }
 
-YString ProjectAgnosticIniPath(const TCHAR* InLeaf)
+FString ProjectAgnosticIniPath(const TCHAR* InLeaf)
 {
 	return YPaths::GameAgnosticSavedDir() / TEXT("Config") / ANSI_TO_TCHAR(FPlatformProperties::PlatformName()) / InLeaf;
 }
@@ -75,12 +75,12 @@ void MigratePreviousEngineInis()
 	IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
 	while(MinorVersion >= 0)
 	{
-		const FEngineVersion PreviousVersion(FEngineVersion::Current().GetMajor(), MinorVersion--, 0, 0, YString());
+		const FEngineVersion PreviousVersion(FEngineVersion::Current().GetMajor(), MinorVersion--, 0, 0, FString());
 	
-		const YString Directory = YString(FPlatformProcess::UserSettingsDir()) / VERSION_TEXT(EPIC_PRODUCT_IDENTIFIER) / PreviousVersion.ToString(EVersionComponent::Minor) / TEXT("Saved") / TEXT("Config") / ANSI_TO_TCHAR(FPlatformProperties::PlatformName());
+		const FString Directory = FString(FPlatformProcess::UserSettingsDir()) / VERSION_TEXT(EPIC_PRODUCT_IDENTIFIER) / PreviousVersion.ToString(EVersionComponent::Minor) / TEXT("Saved") / TEXT("Config") / ANSI_TO_TCHAR(FPlatformProperties::PlatformName());
 		if (YPaths::DirectoryExists(Directory))
 		{
-			const YString DestDir = ProjectAgnosticIniPath(TEXT(""));
+			const FString DestDir = ProjectAgnosticIniPath(TEXT(""));
 			if (PlatformFile.CreateDirectoryTree(*DestDir))
 			{
 				PlatformFile.CopyDirectoryTree(*DestDir, *Directory, false);
@@ -97,7 +97,7 @@ void FConfigManifest::UpgradeFromPreviousVersions()
 	// First off, load the manifest config if it exists
 	FConfigFile Manifest;
 
-	const YString ManifestFilename = ProjectAgnosticIniPath(TEXT("Manifest.ini"));
+	const FString ManifestFilename = ProjectAgnosticIniPath(TEXT("Manifest.ini"));
 
 	if (!YPaths::FileExists(ManifestFilename) && IsDirectoryEmpty(*YPaths::GetPath(ManifestFilename)))
 	{
@@ -146,8 +146,8 @@ void CombineConfig(const TCHAR* Base, const TCHAR* Other, const TCHAR* Output)
 /** Migrate a project specific ini to be a project agnostic one */
 void MigrateToAgnosticIni(const TCHAR* SrcIniName, const TCHAR* DstIniName)
 {
-	const YString OldIni = ProjectSpecificIniPath(SrcIniName);
-	const YString NewIni = ProjectAgnosticIniPath(DstIniName);
+	const FString OldIni = ProjectSpecificIniPath(SrcIniName);
+	const FString NewIni = ProjectAgnosticIniPath(DstIniName);
 
 	if (YPaths::FileExists(*OldIni))
 	{
@@ -186,7 +186,7 @@ void RenameIni(const TCHAR* OldIni, const TCHAR* NewIni)
 
 void FConfigManifest::MigrateEditorUserSettings()
 {
-	const YString EditorUserSettingsFilename = ProjectSpecificIniPath(TEXT("EditorUserSettings.ini"));
+	const FString EditorUserSettingsFilename = ProjectSpecificIniPath(TEXT("EditorUserSettings.ini"));
 	if (!YPaths::FileExists(EditorUserSettingsFilename))
 	{
 		return;
@@ -202,7 +202,7 @@ void FConfigManifest::MigrateEditorUserSettings()
 		// Rename the config section
 		MigrateConfigSection(OldIni, TEXT("/Script/UnrealEd.EditorUserSettings"), TEXT("/Script/UnrealEd.EditorPerProjectUserSettings"));
 
-		const YString EditorPerProjectUserSettingsFilename = ProjectSpecificIniPath(TEXT("EditorPerProjectUserSettings.ini"));
+		const FString EditorPerProjectUserSettingsFilename = ProjectSpecificIniPath(TEXT("EditorPerProjectUserSettings.ini"));
 
 		FConfigFile NewIni;
 		NewIni.Read(EditorPerProjectUserSettingsFilename);

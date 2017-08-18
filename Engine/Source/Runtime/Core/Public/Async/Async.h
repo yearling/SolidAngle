@@ -2,7 +2,7 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 #include "Templates/Function.h"
 #include "HAL/ThreadSafeCounter.h"
 #include "Stats/Stats.h"
@@ -318,7 +318,7 @@ TFuture<ResultType> Async(EAsyncExecution Execution, TFunction<ResultType()> Fun
 		TPromise<FRunnableThread*> ThreadPromise;
 		TAsyncRunnable<ResultType>* Runnable = new TAsyncRunnable<ResultType>(MoveTemp(Function), MoveTemp(Promise), ThreadPromise.GetFuture());
 
-		const YString TAsyncThreadName = YString::Printf(TEXT("TAsync %d"), FAsyncThreadIndex::GetNext());
+		const FString TAsyncThreadName = FString::Printf(TEXT("TAsync %d"), FAsyncThreadIndex::GetNext());
 		FRunnableThread* RunnableThread = FRunnableThread::Create(Runnable, *TAsyncThreadName);
 
 		check(RunnableThread != nullptr);
@@ -359,7 +359,7 @@ TFuture<ResultType> AsyncThread(TFunction<ResultType()> Function, uint32 StackSi
 	TPromise<FRunnableThread*> ThreadPromise;
 	TAsyncRunnable<ResultType>* Runnable = new TAsyncRunnable<ResultType>(MoveTemp(Function), MoveTemp(Promise), ThreadPromise.GetFuture());
 
-	const YString TAsyncThreadName = YString::Printf(TEXT("TAsyncThread %d"), FAsyncThreadIndex::GetNext());
+	const FString TAsyncThreadName = FString::Printf(TEXT("TAsyncThread %d"), FAsyncThreadIndex::GetNext());
 	FRunnableThread* RunnableThread = FRunnableThread::Create(Runnable, *TAsyncThreadName, StackSize, ThreadPri);
 
 	check(RunnableThread != nullptr);

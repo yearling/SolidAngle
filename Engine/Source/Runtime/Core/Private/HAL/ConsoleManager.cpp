@@ -124,9 +124,9 @@ public:
 		if(!bRet)
 		{
 			FConsoleManager& ConsoleManager = (FConsoleManager&)IConsoleManager::Get();
-			YString CVarName = ConsoleManager.FindConsoleObjectName(this);
+			FString CVarName = ConsoleManager.FindConsoleObjectName(this);
 
-			const YString Message = YString::Printf(TEXT("Setting the console variable '%s' with 'SetBy%s' was ignored as it is lower priority than the previous 'SetBy%s'. Value remains '%s'"),
+			const FString Message = FString::Printf(TEXT("Setting the console variable '%s' with 'SetBy%s' was ignored as it is lower priority than the previous 'SetBy%s'. Value remains '%s'"),
 				CVarName.IsEmpty() ? TEXT("unknown?") : *CVarName,
 				GetSetByTCHAR((EConsoleVariableFlags)NewPri),
 				GetSetByTCHAR((EConsoleVariableFlags)OldPri),
@@ -168,7 +168,7 @@ public:
 protected: // -----------------------------------------
 
 	// not using TCHAR* to allow chars support reloading of modules (otherwise we would keep a pointer into the module)
-	YString Help;
+	FString Help;
 	//
 	EConsoleVariableFlags Flags;
 	/** User function to call when the console variable is changed */
@@ -191,7 +191,7 @@ protected: // -----------------------------------------
 			{
 				if(!bWarnedAboutThreadSafety)
 				{
-					YString CVarName = ConsoleManager.FindConsoleObjectName(this);
+					FString CVarName = ConsoleManager.FindConsoleObjectName(this);
 					UE_LOG(LogConsoleManager, Warning,
 						TEXT("Console variable '%s' used in the render thread. Rendering artifacts could happen. Use ECVF_RenderThreadSafe or don't use in render thread."),
 						CVarName.IsEmpty() ? TEXT("unknown?") : *CVarName
@@ -250,7 +250,7 @@ public:
 private: // -----------------------------------------
 
 	// not using TCHAR* to allow chars support reloading of modules (otherwise we would keep a pointer into the module)
-	YString Help;
+	FString Help;
 
 	EConsoleVariableFlags Flags;
 };
@@ -309,10 +309,10 @@ public:
 
 	virtual int32 GetInt() const;
 	virtual float GetFloat() const;
-	virtual YString GetString() const;
+	virtual FString GetString() const;
 	virtual class TConsoleVariableData<int32>* AsVariableInt() { return 0; }
 	virtual class TConsoleVariableData<float>* AsVariableFloat() { return 0; }
-	virtual class TConsoleVariableData<YString>* AsVariableString() { return 0; }
+	virtual class TConsoleVariableData<FString>* AsVariableString() { return 0; }
 
 //private: // ----------------------------------------------------
 
@@ -344,9 +344,9 @@ template<> float FConsoleVariable<int32>::GetFloat() const
 {
 	return (float)Value();
 }
-template<> YString FConsoleVariable<int32>::GetString() const
+template<> FString FConsoleVariable<int32>::GetString() const
 {
-	return YString::Printf(TEXT("%d"), Value());
+	return FString::Printf(TEXT("%d"), Value());
 }
 template<> TConsoleVariableData<int32>* FConsoleVariable<int32>::AsVariableInt()
 {
@@ -363,9 +363,9 @@ template<> float FConsoleVariable<float>::GetFloat() const
 {
 	return Value();
 }
-template<> YString FConsoleVariable<float>::GetString() const
+template<> FString FConsoleVariable<float>::GetString() const
 {
-	return YString::Printf(TEXT("%g"), Value());
+	return FString::Printf(TEXT("%g"), Value());
 }
 template<> TConsoleVariableData<float>* FConsoleVariable<float>::AsVariableFloat()
 {
@@ -374,7 +374,7 @@ template<> TConsoleVariableData<float>* FConsoleVariable<float>::AsVariableFloat
 
 // specialization for YString
 
-template<> void FConsoleVariable<YString>::Set(const TCHAR* InValue, EConsoleVariableFlags SetBy)
+template<> void FConsoleVariable<FString>::Set(const TCHAR* InValue, EConsoleVariableFlags SetBy)
 {
 	if(CanChange(SetBy))
 	{
@@ -382,20 +382,20 @@ template<> void FConsoleVariable<YString>::Set(const TCHAR* InValue, EConsoleVar
 		OnChanged(SetBy);
 	}
 }
-template<> int32 FConsoleVariable<YString>::GetInt() const
+template<> int32 FConsoleVariable<FString>::GetInt() const
 {
 	return FCString::Atoi(*Value());
 }
-template<> float FConsoleVariable<YString>::GetFloat() const
+template<> float FConsoleVariable<FString>::GetFloat() const
 {
 	return FCString::Atof(*Value());
 }
-template<> YString FConsoleVariable<YString>::GetString() const
+template<> FString FConsoleVariable<FString>::GetString() const
 {
 	return Value();
 }
 
-template<> TConsoleVariableData<YString>* FConsoleVariable<YString>::AsVariableString()
+template<> TConsoleVariableData<FString>* FConsoleVariable<FString>::AsVariableString()
 {
 	return &Data;
 }
@@ -434,7 +434,7 @@ public:
 	{
 		return (float)MainValue;
 	}
-	virtual YString GetString() const
+	virtual FString GetString() const
 	{
 		return TTypeToString<T>::ToString(MainValue);
 	}
@@ -467,10 +467,10 @@ private: // ----------------------------------------------------
 // specialization for float
 
 template <>
-YString FConsoleVariableRef<float>::GetString() const
+FString FConsoleVariableRef<float>::GetString() const
 {
 	// otherwise we get 2.1f would become "2.100000"
-	return YString::SanitizeFloat(RefValue);
+	return FString::SanitizeFloat(RefValue);
 }
 
 // ----
@@ -523,9 +523,9 @@ public:
 	{
 		return (float)GetInt();
 	}
-	virtual YString GetString() const
+	virtual FString GetString() const
 	{
-		return YString::Printf(TEXT("%d"), GetInt());
+		return FString::Printf(TEXT("%d"), GetInt());
 	}
 
 private: // ----------------------------------------------------
@@ -632,7 +632,7 @@ public:
 		delete this; 
 	} 
 
-	virtual bool Execute( const TArray< YString >& Args, UWorld* InWorld, FOutputDevice& OutputDevice ) override
+	virtual bool Execute( const TArray< FString >& Args, UWorld* InWorld, FOutputDevice& OutputDevice ) override
 	{
 		// NOTE: Args are ignored for FConsoleCommand.  Use FConsoleCommandWithArgs if you need parameters.
 		return Delegate.ExecuteIfBound();
@@ -663,7 +663,7 @@ public:
 		delete this; 
 	} 
 
-	virtual bool Execute( const TArray< YString >& Args, UWorld* InWorld, FOutputDevice& OutputDevice ) override
+	virtual bool Execute( const TArray< FString >& Args, UWorld* InWorld, FOutputDevice& OutputDevice ) override
 	{
 		return Delegate.ExecuteIfBound( Args );
 	}
@@ -692,7 +692,7 @@ public:
 		delete this; 
 	} 
 
-	virtual bool Execute( const TArray< YString >& Args, UWorld* InWorld, FOutputDevice& OutputDevice ) override
+	virtual bool Execute( const TArray< FString >& Args, UWorld* InWorld, FOutputDevice& OutputDevice ) override
 	{
 		return Delegate.ExecuteIfBound( InWorld );
 	}
@@ -721,7 +721,7 @@ public:
 		delete this; 
 	} 
 
-	virtual bool Execute( const TArray< YString >& Args, UWorld* InWorld, FOutputDevice& OutputDevice ) override
+	virtual bool Execute( const TArray< FString >& Args, UWorld* InWorld, FOutputDevice& OutputDevice ) override
 	{
 		return Delegate.ExecuteIfBound( Args, InWorld );
 	}
@@ -750,7 +750,7 @@ public:
 		delete this; 
 	} 
 
-	virtual bool Execute( const TArray< YString >& Args, UWorld* InWorld, FOutputDevice& OutputDevice ) override
+	virtual bool Execute( const TArray< FString >& Args, UWorld* InWorld, FOutputDevice& OutputDevice ) override
 	{
 		return Delegate.ExecuteIfBound( OutputDevice );
 	}
@@ -778,7 +778,7 @@ public:
 		delete this; 
 	} 
 
-	virtual bool Execute( const TArray< YString >& Args, UWorld* InCmdWorld, FOutputDevice& OutputDevice ) override
+	virtual bool Execute( const TArray< FString >& Args, UWorld* InCmdWorld, FOutputDevice& OutputDevice ) override
 	{
 		return false;
 	}
@@ -794,11 +794,11 @@ IConsoleVariable* FConsoleManager::RegisterConsoleVariable(const TCHAR* Name, fl
 	return AddConsoleObject(Name, new FConsoleVariable<float>(DefaultValue, Help, (EConsoleVariableFlags)Flags))->AsVariable();
 }
 
-IConsoleVariable* FConsoleManager::RegisterConsoleVariable(const TCHAR* Name, const YString& DefaultValue, const TCHAR* Help, uint32 Flags)
+IConsoleVariable* FConsoleManager::RegisterConsoleVariable(const TCHAR* Name, const FString& DefaultValue, const TCHAR* Help, uint32 Flags)
 {
 	// not supported
 	check((Flags & (uint32)ECVF_RenderThreadSafe) == 0);
-	return AddConsoleObject(Name, new FConsoleVariable<YString>(DefaultValue, Help, (EConsoleVariableFlags)Flags))->AsVariable();
+	return AddConsoleObject(Name, new FConsoleVariable<FString>(DefaultValue, Help, (EConsoleVariableFlags)Flags))->AsVariable();
 }
 
 IConsoleVariable* FConsoleManager::RegisterConsoleVariableRef(const TCHAR* Name, int32& RefValue, const TCHAR* Help, uint32 Flags)
@@ -919,7 +919,7 @@ void FConsoleManager::UnregisterConsoleObject(IConsoleObject* CVar, bool bKeepSt
 	FScopeLock ScopeLock(&ConsoleObjectsSynchronizationObject);
 
 	// Slow search for console object
-	const YString ObjName = FindConsoleObjectName( CVar );
+	const FString ObjName = FindConsoleObjectName( CVar );
 	if( !ObjName.IsEmpty() )
 	{
 		UnregisterConsoleObject(*ObjName, bKeepState);
@@ -963,10 +963,10 @@ void FConsoleManager::LoadHistoryIfNeeded()
 
 	FConfigFile Ini;
 
-	YString ConfigPath = YPaths::GeneratedConfigDir() + TEXT("ConsoleHistory.ini");
+	FString ConfigPath = YPaths::GeneratedConfigDir() + TEXT("ConsoleHistory.ini");
 	ProcessIniContents(*ConfigPath, *ConfigPath, &Ini, false, false);
 
-	const YString History = TEXT("History");
+	const FString History = TEXT("History");
 
 	FConfigSection* Section = Ini.Find(TEXT("ConsoleHistory"));
 
@@ -974,7 +974,7 @@ void FConsoleManager::LoadHistoryIfNeeded()
 	{
 		for (auto It : *Section)
 		{
-			const YString& Key = It.Key.ToString();
+			const FString& Key = It.Key.ToString();
 
 			if(Key == History)
 			{
@@ -990,7 +990,7 @@ void FConsoleManager::SaveHistory()
 
 	FConfigFile Ini;
 
-	YString ConfigPath = YPaths::GeneratedConfigDir() + TEXT("ConsoleHistory.ini");
+	FString ConfigPath = YPaths::GeneratedConfigDir() + TEXT("ConsoleHistory.ini");
 
 	FConfigSection& Section = Ini.Add(TEXT("ConsoleHistory"));
 
@@ -1011,9 +1011,9 @@ void FConsoleManager::ForEachConsoleObjectThatStartsWith(const FConsoleObjectVis
 
 	//@caution, potential deadlock if the visitor tries to call back into the cvar system. Best not to do this, but we could capture and array of them, then release the lock, then dispatch the visitor.
 	FScopeLock ScopeLock( &ConsoleObjectsSynchronizationObject );
-	for(TMap<YString, IConsoleObject*>::TConstIterator PairIt(ConsoleObjects); PairIt; ++PairIt)
+	for(TMap<FString, IConsoleObject*>::TConstIterator PairIt(ConsoleObjects); PairIt; ++PairIt)
 	{
-		const YString& Name = PairIt.Key();
+		const FString& Name = PairIt.Key();
 		IConsoleObject* CVar = PairIt.Value();
 
 		if(MatchPartialName(*Name, ThatStartsWith))
@@ -1028,15 +1028,15 @@ void FConsoleManager::ForEachConsoleObjectThatContains(const FConsoleObjectVisit
 	check(Visitor.IsBound());
 	check(ThatContains);
 
-	TArray<YString> ThatContainsArray;
-	YString(ThatContains).ParseIntoArray(ThatContainsArray, TEXT(" "), true);
+	TArray<FString> ThatContainsArray;
+	FString(ThatContains).ParseIntoArray(ThatContainsArray, TEXT(" "), true);
 	int32 ContainsStringLength = FCString::Strlen(ThatContains);
 
 	//@caution, potential deadlock if the visitor tries to call back into the cvar system. Best not to do this, but we could capture and array of them, then release the lock, then dispatch the visitor.
 	FScopeLock ScopeLock( &ConsoleObjectsSynchronizationObject );
-	for(TMap<YString, IConsoleObject*>::TConstIterator PairIt(ConsoleObjects); PairIt; ++PairIt)
+	for(TMap<FString, IConsoleObject*>::TConstIterator PairIt(ConsoleObjects); PairIt; ++PairIt)
 	{
-		const YString& Name = PairIt.Key();
+		const FString& Name = PairIt.Key();
 		IConsoleObject* CVar = PairIt.Value();
 
 		if (ContainsStringLength == 1)
@@ -1072,7 +1072,7 @@ bool FConsoleManager::ProcessUserConsoleInput(const TCHAR* InInput, FOutputDevic
 
 	const TCHAR* It = InInput;
 
-	YString Param1 = GetTextSection(It);
+	FString Param1 = GetTextSection(It);
 	if(Param1.IsEmpty())
 	{
 		return false;
@@ -1106,8 +1106,8 @@ bool FConsoleManager::ProcessUserConsoleInput(const TCHAR* InInput, FOutputDevic
 	{
 		// Process command
 		// Build up argument list
-		TArray< YString > Args;
-		YString( It ).ParseIntoArrayWS( Args );
+		TArray< FString > Args;
+		FString( It ).ParseIntoArrayWS( Args );
 
 		const bool bShowHelp = Args.Num() == 1 && Args[0] == TEXT("?");
 		if( bShowHelp )
@@ -1134,7 +1134,7 @@ bool FConsoleManager::ProcessUserConsoleInput(const TCHAR* InInput, FOutputDevic
 		}
 		else
 		{
-			YString Param2 = YString(It).Trim().TrimTrailing();
+			FString Param2 = FString(It).Trim().TrimTrailing();
 
 			if(Param2.Len() >= 2)
 			{
@@ -1297,9 +1297,9 @@ IConsoleObject* FConsoleManager::AddConsoleObject(const TCHAR* Name, IConsoleObj
 	}
 }
 
-YString FConsoleManager::GetTextSection(const TCHAR* &It)
+FString FConsoleManager::GetTextSection(const TCHAR* &It)
 {
-	YString ret;
+	FString ret;
 
 	while(*It)
 	{
@@ -1319,24 +1319,24 @@ YString FConsoleManager::GetTextSection(const TCHAR* &It)
 	return ret;
 }
 
-YString FConsoleManager::FindConsoleObjectName(const IConsoleObject* InVar) const
+FString FConsoleManager::FindConsoleObjectName(const IConsoleObject* InVar) const
 {
 	check(InVar);
 
 	FScopeLock ScopeLock( &ConsoleObjectsSynchronizationObject );
-	for(TMap<YString, IConsoleObject*>::TConstIterator PairIt(ConsoleObjects); PairIt; ++PairIt)
+	for(TMap<FString, IConsoleObject*>::TConstIterator PairIt(ConsoleObjects); PairIt; ++PairIt)
 	{
 		IConsoleObject* Var = PairIt.Value();
 
 		if(Var == InVar)
 		{
-			const YString& Name = PairIt.Key();
+			const FString& Name = PairIt.Key();
 
 			return Name;
 		}
 	}
 
-	return YString();
+	return FString();
 }
 
 bool FConsoleManager::MatchPartialName(const TCHAR* Stream, const TCHAR* Pattern)
@@ -1409,14 +1409,14 @@ void FConsoleManager::AddConsoleHistoryEntry(const TCHAR* Input)
 		HistoryEntries.RemoveAt(0);
 	}
 
-	const YString InString(Input);
+	const FString InString(Input);
 	HistoryEntries.Remove(InString);
 	HistoryEntries.Add(InString);
 
 	SaveHistory();
 }
 
-void FConsoleManager::GetConsoleHistory(TArray<YString>& Out)
+void FConsoleManager::GetConsoleHistory(TArray<FString>& Out)
 {
 	LoadHistoryIfNeeded();
 
@@ -1453,7 +1453,7 @@ IConsoleThreadPropagation* FConsoleManager::GetThreadPropagationCallback()
 
 bool FConsoleManager::IsThreadPropagationThread()
 {
-	return YPlatformTLS::GetCurrentThreadId() == ThreadPropagationThreadId;
+	return FPlatformTLS::GetCurrentThreadId() == ThreadPropagationThreadId;
 }
 
 void FConsoleManager::OnCVarChanged()
@@ -1533,21 +1533,21 @@ void FConsoleManager::Test()
 
 		check(VarA->GetInt() == 1);
 		check(VarA->GetFloat() == 1);
-		check(VarA->GetString() == YString(TEXT("1")));
+		check(VarA->GetString() == FString(TEXT("1")));
 
 		check(VarB->GetInt() == 1);
 		check(YMath::IsNearlyEqual(VarB->GetFloat(), 1.2f, KINDA_SMALL_NUMBER));
-		check(VarB->GetString() == YString(TEXT("1.2")));
+		check(VarB->GetString() == FString(TEXT("1.2")));
 
 		check(RefD == 2);
 		check(VarD->GetInt() == 2);
 		check(VarD->GetFloat() == (float)2);
-		check(VarD->GetString() == YString(TEXT("2")));
+		check(VarD->GetString() == FString(TEXT("2")));
 
 		check(YMath::IsNearlyEqual(RefE, 2.1f, KINDA_SMALL_NUMBER));
 		check(VarE->GetInt() == (int32)RefE);
 		check(VarE->GetFloat() == RefE);
-		check(VarE->GetString() == YString(TEXT("2.1")));
+		check(VarE->GetString() == FString(TEXT("2.1")));
 
 		// call Set(string)
 
@@ -1560,10 +1560,10 @@ void FConsoleManager::Test()
 
 		// verify Set()
 
-		check(VarA->GetString() == YString(TEXT("3")));
-		check(VarB->GetString() == YString(TEXT("3.1")));
-		check(VarD->GetString() == YString(TEXT("3")));
-		check(VarE->GetString() == YString(TEXT("3.1")));
+		check(VarA->GetString() == FString(TEXT("3")));
+		check(VarB->GetString() == FString(TEXT("3.1")));
+		check(VarD->GetString() == FString(TEXT("3")));
+		check(VarE->GetString() == FString(TEXT("3.1")));
 		check(RefD == 3);
 		check(RefE == 3.1f);
 
@@ -1599,9 +1599,9 @@ void FConsoleManager::Test()
 			check(VarC->GetInt() == 1);
 			// note: exact comparison fails in Win32 release
 			check(YMath::IsNearlyEqual(VarC->GetFloat(), 1.23f, KINDA_SMALL_NUMBER));
-			check(VarC->GetString() == YString(TEXT("1.23")));
+			check(VarC->GetString() == FString(TEXT("1.23")));
 			VarC->Set(TEXT("3.1"), ECVF_SetByConsole);
-			check(VarC->GetString() == YString(TEXT("3.1")));
+			check(VarC->GetString() == FString(TEXT("3.1")));
 			UnregisterConsoleObject(TEXT("TestNameC"), false);
 			check(!IConsoleManager::Get().FindConsoleVariable(TEXT("TestNameC")));
 		}
@@ -1616,22 +1616,22 @@ void FConsoleManager::Test()
 
 			// lower should fail
 			VarX->Set(TEXT("111"), ECVF_SetByScalability);
-			check(VarX->GetString() == YString(TEXT("3")));
+			check(VarX->GetString() == FString(TEXT("3")));
 			check(((uint32)VarX->GetFlags() & ECVF_SetByMask) == ECVF_SetByConsoleVariablesIni);
 
 			// higher should work
 			VarX->Set(TEXT("222"), ECVF_SetByCommandline);
-			check(VarX->GetString() == YString(TEXT("222")));
+			check(VarX->GetString() == FString(TEXT("222")));
 			check(((uint32)VarX->GetFlags() & ECVF_SetByMask) == ECVF_SetByCommandline);
 
 			// lower should fail
 			VarX->Set(TEXT("333"), ECVF_SetByConsoleVariablesIni);
-			check(VarX->GetString() == YString(TEXT("222")));
+			check(VarX->GetString() == FString(TEXT("222")));
 			check(((uint32)VarX->GetFlags() & ECVF_SetByMask) == ECVF_SetByCommandline);
 
 			// higher should work
 			VarX->Set(TEXT("444"), ECVF_SetByConsole);
-			check(VarX->GetString() == YString(TEXT("444")));
+			check(VarX->GetString() == FString(TEXT("444")));
 			check(((uint32)VarX->GetFlags() & ECVF_SetByMask) == ECVF_SetByConsole);
 
 			IConsoleManager::Get().UnregisterConsoleObject(VarX, false);
@@ -1720,7 +1720,7 @@ static TAutoConsoleVariable<int32> CVarPreViewTranslation(
 	TEXT(" 1: update the offset is each frame (default)"),
 	ECVF_Cheat);
 
-static TAutoConsoleVariable<YString> CVarFreezeAtPosition(
+static TAutoConsoleVariable<FString> CVarFreezeAtPosition(
 	TEXT("FreezeAtPosition"),
 	TEXT(""),	// default value is empty
 	TEXT("This console variable stores the position and rotation for the FreezeAt command which allows\n")
@@ -2054,14 +2054,14 @@ static TAutoConsoleVariable<int32> CVarNetPackageMapDebugAllObjects(
 	TEXT("Debugs PackageMap serialization of all objects"),	
 	ECVF_Default);
 
-static TAutoConsoleVariable<YString> CVarNetPackageMapDebugObject(
+static TAutoConsoleVariable<FString> CVarNetPackageMapDebugObject(
 	TEXT("net.PackageMap.DebugObject"),
 	TEXT(""),
 	TEXT("Debugs PackageMap serialization of object")
 	TEXT("Partial name of object to debug"),
 	ECVF_Default);
 
-static TAutoConsoleVariable<YString> CVarNetReplicationDebugProperty(
+static TAutoConsoleVariable<FString> CVarNetReplicationDebugProperty(
 	TEXT("net.Replication.DebugProperty"),
 	TEXT(""),
 	TEXT("Debugs Replication of property by name")

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "Containers/SolidAngleString.h"
+#include "Containers/UnrealString.h"
 
 /*-----------------------------------------------------------------------------
 Parsing functions.
@@ -35,7 +35,7 @@ struct CORE_API FParse
 	/** Parses a signed double word. */
 	static bool Value(const TCHAR* Stream, const TCHAR* Match, int32& Value);
 	/** Parses a string. */
-	static bool Value(const TCHAR* Stream, const TCHAR* Match, YString& Value, bool bShouldStopOnComma = true);
+	static bool Value(const TCHAR* Stream, const TCHAR* Match, FString& Value, bool bShouldStopOnComma = true);
 	/** Parses an FText. */
 	static bool Value(const TCHAR* Stream, const TCHAR* Match, FText& Value, const TCHAR* Namespace = NULL);
 	/** Parses a quadword. */
@@ -47,19 +47,19 @@ struct CORE_API FParse
 	/** Get a line of Stream (everything up to, but not including, CR/LF. Returns 0 if ok, nonzero if at end of stream and returned 0-length string. */
 	static bool Line(const TCHAR** Stream, TCHAR* Result, int32 MaxLen, bool Exact = 0);
 	/** Get a line of Stream (everything up to, but not including, CR/LF. Returns 0 if ok, nonzero if at end of stream and returned 0-length string. */
-	static bool Line(const TCHAR** Stream, YString& Resultd, bool Exact = 0);
+	static bool Line(const TCHAR** Stream, FString& Resultd, bool Exact = 0);
 	/** Get a line of Stream, with support for extending beyond that line with certain characters, e.g. {} and \
 	* the out character array will not include the ignored endlines
 	*/
-	static bool LineExtended(const TCHAR** Stream, YString& Result, int32& LinesConsumed, bool Exact = 0);
+	static bool LineExtended(const TCHAR** Stream, FString& Result, int32& LinesConsumed, bool Exact = 0);
 	/** Grabs the next space-delimited string from the input stream. If quoted, gets entire quoted string. */
 	static bool Token(const TCHAR*& Str, TCHAR* Result, int32 MaxLen, bool UseEscape);
 	/** Grabs the next space-delimited string from the input stream. If quoted, gets entire quoted string. */
-	static bool Token(const TCHAR*& Str, YString& Arg, bool UseEscape);
+	static bool Token(const TCHAR*& Str, FString& Arg, bool UseEscape);
 	/** Grabs the next alpha-numeric space-delimited token from the input stream. */
-	static bool AlnumToken(const TCHAR*& Str, YString& Arg);
+	static bool AlnumToken(const TCHAR*& Str, FString& Arg);
 	/** Grabs the next space-delimited string from the input stream. If quoted, gets entire quoted string. */
-	static YString Token(const TCHAR*& Str, bool UseEscape);
+	static FString Token(const TCHAR*& Str, bool UseEscape);
 	/** Get next command.  Skips past comments and cr's. */
 	static void Next(const TCHAR** Stream);
 	/** Checks if a command-line parameter exists in the stream. */
@@ -67,7 +67,7 @@ struct CORE_API FParse
 	/** Parse an Text token. */
 	static bool Text(const TCHAR* Stream, FText& Value, const TCHAR* Namespace = nullptr);
 	/** Parse a quoted string token. */
-	static bool QuotedString(const TCHAR* Stream, YString& Value, int32* OutNumCharsRead = nullptr);
+	static bool QuotedString(const TCHAR* Stream, FString& Value, int32* OutNumCharsRead = nullptr);
 
 	//
 	// Parse a hex digit.
@@ -106,12 +106,12 @@ struct CORE_API FParse
 	static bool Resolution(const TCHAR* InResolution, uint32& OutX, uint32& OutY, int32& OutWindowMode);
 
 	/** Parses the scheme name from a URI */
-	static bool SchemeNameFromURI(const TCHAR* InURI, YString& OutSchemeName);
+	static bool SchemeNameFromURI(const TCHAR* InURI, FString& OutSchemeName);
 };
 
 #if !UE_BUILD_SHIPPING
 /** Needed for the console command "DumpConsoleCommands" */
-CORE_API void ConsoleCommandLibrary_DumpLibrary(class UWorld* InWorld, FExec& SubSystem, const YString& Pattern, FOutputDevice& Ar);
+CORE_API void ConsoleCommandLibrary_DumpLibrary(class UWorld* InWorld, FExec& SubSystem, const FString& Pattern, FOutputDevice& Ar);
 /** Needed for the console command "Help" */
-CORE_API void ConsoleCommandLibrary_DumpLibraryHTML(class UWorld* InWorld, FExec& SubSystem, const YString& OutPath);
+CORE_API void ConsoleCommandLibrary_DumpLibraryHTML(class UWorld* InWorld, FExec& SubSystem, const FString& OutPath);
 #endif // !UE_BUILD_SHIPPING
