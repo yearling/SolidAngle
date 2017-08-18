@@ -118,7 +118,7 @@ public:
 		{
 			OldHead = Head;
 			Head = NewNode;
-			YPlatformMisc::MemoryBarrier();
+			FPlatformMisc::MemoryBarrier();
 		}		
 
 		OldHead->NextNode = NewNode;

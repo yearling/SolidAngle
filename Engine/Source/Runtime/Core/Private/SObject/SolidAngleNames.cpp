@@ -789,7 +789,7 @@ bool FName::InitInternal_FindOrAddNameEntry(const TCharType* InName, const EFind
 		// Try to find the name in the hash.
 		for( FNameEntry* Hash=NameHashHead[iHash]; Hash; Hash=Hash->HashNext )
 		{
-			YPlatformMisc::Prefetch( Hash->HashNext );
+			FPlatformMisc::Prefetch( Hash->HashNext );
 			// Compare the passed in string
 			if( Hash->IsEqual( InName, ComparisonMode ) )
 			{
@@ -970,15 +970,15 @@ void FName::StaticInit()
 				if (FCString::Stricmp(*Hash->GetPlainNameString(), *Other->GetPlainNameString()) == 0)
 				{
 					// we can't print out here because there may be no log yet if this happens before main starts
-					if (YPlatformMisc::IsDebuggerPresent())
+					if (FPlatformMisc::IsDebuggerPresent())
 					{
-						YPlatformMisc::DebugBreak();
+						FPlatformMisc::DebugBreak();
 					}
 					else
 					{
-						YPlatformMisc::PromptForRemoteDebugging(false);
+						FPlatformMisc::PromptForRemoteDebugging(false);
 						FMessageDialog::Open(EAppMsgType::Ok, FText::Format( NSLOCTEXT("UnrealEd", "DuplicatedHardcodedName", "Duplicate hardcoded name: {0}"), FText::FromString( Hash->GetPlainNameString() ) ) );
-						YPlatformMisc::RequestExit(false);
+						FPlatformMisc::RequestExit(false);
 					}
 				}
 			}
@@ -987,16 +987,16 @@ void FName::StaticInit()
 	// check that the MAX_NETWORKED_HARDCODED_NAME define is correctly set
 	if (GetMaxNames() <= MAX_NETWORKED_HARDCODED_NAME)
 	{
-		if (YPlatformMisc::IsDebuggerPresent())
+		if (FPlatformMisc::IsDebuggerPresent())
 		{
-			YPlatformMisc::DebugBreak();
+			FPlatformMisc::DebugBreak();
 		}
 		else
 		{
-			YPlatformMisc::PromptForRemoteDebugging(false);
+			FPlatformMisc::PromptForRemoteDebugging(false);
 			// can't use normal check()/UE_LOG(LogUnrealNames, Fatal,) here
 			FMessageDialog::Open( EAppMsgType::Ok, FText::Format( NSLOCTEXT("UnrealEd", "MAX_NETWORKED_HARDCODED_NAME Incorrect", "MAX_NETWORKED_HARDCODED_NAME is incorrectly set! (Currently {0}, must be no greater than {1}"), FText::AsNumber( MAX_NETWORKED_HARDCODED_NAME ), FText::AsNumber( GetMaxNames() - 1 ) ) );
-			YPlatformMisc::RequestExit(false);
+			FPlatformMisc::RequestExit(false);
 		}
 	}
 #endif
@@ -1066,7 +1066,7 @@ bool FName::SplitNameWithCheckImpl(const TCharType* OldName, TCharType* NewName,
 					{
 						NewNumber = (int32)TempConvert;
 						// copy the name portion into the buffer
-						TCString<TCharType>::Strncpy(NewName, OldName, YMath::Min<int32>(Ch - OldName + 1, NewNameLen));
+						TCString<TCharType>::Strncpy(NewName, OldName, FMath::Min<int32>(Ch - OldName + 1, NewNameLen));
 
 						// mark successful
 						bSucceeded = true;

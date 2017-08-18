@@ -411,7 +411,7 @@ public:
 				// First pass with simple bubble-sort.
 				do
 				{
-					int32 GroupEnd = YPlatformMath::Min(SubgroupStart + MinMergeSubgroupSize, Num);
+					int32 GroupEnd = FPlatformMath::Min(SubgroupStart + MinMergeSubgroupSize, Num);
 					do
 					{
 						for (int32 It = SubgroupStart; It < GroupEnd - 1; ++It)
@@ -448,7 +448,7 @@ public:
 				TMergePolicy::Merge(
 					First + SubgroupStart,
 					SubgroupSize,
-					YPlatformMath::Min(SubgroupSize << 1, Num - SubgroupStart),
+					FPlatformMath::Min(SubgroupSize << 1, Num - SubgroupStart),
 					Predicate);
 				SubgroupStart += SubgroupSize << 1;
 			} while (SubgroupStart < Num);

@@ -44,7 +44,7 @@ public:
 				continue;
 			}
 
-			Range = RangeType(YMath::Min(Current.GetLowerBound(), Range.GetLowerBound()), YMath::Max(Current.GetUpperBound(), Range.GetUpperBound()));
+			Range = RangeType(FMath::Min(Current.GetLowerBound(), Range.GetLowerBound()), FMath::Max(Current.GetUpperBound(), Range.GetUpperBound()));
 
 			Ranges.RemoveAtSwap(Index--);
 		}

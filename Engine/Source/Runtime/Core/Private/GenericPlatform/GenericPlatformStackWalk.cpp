@@ -60,7 +60,7 @@ bool FGenericPlatformStackWalk::SymbolInfoToHumanReadableString( const FProgramC
 		// Strip module path.
 		const ANSICHAR* Pos0 = FCStringAnsi::Strrchr( SymbolInfo.ModuleName, '\\' );
 		const ANSICHAR* Pos1 = FCStringAnsi::Strrchr( SymbolInfo.ModuleName, '/' );
-		const UPTRINT RealPos = YMath::Max( (UPTRINT)Pos0, (UPTRINT)Pos1 );
+		const UPTRINT RealPos = FMath::Max( (UPTRINT)Pos0, (UPTRINT)Pos1 );
 		const ANSICHAR* StrippedModuleName = RealPos > 0 ? (const ANSICHAR*)(RealPos + 1) : SymbolInfo.ModuleName;
 
 		//FCStringAnsi::Sprintf( StackLine, "%s!%s [%s:%i]", StrippedModuleName, (const ANSICHAR*)SymbolInfo.FunctionName, (const ANSICHAR*)SymbolInfo.Filename, SymbolInfo.LineNumber );
@@ -114,7 +114,7 @@ bool FGenericPlatformStackWalk::SymbolInfoToHumanReadableStringEx( const FProgra
 	// Strip module path.
 	const TCHAR* Pos0 = FCString::Strrchr( *SymbolInfo.ModuleName, '\\' );
 	const TCHAR* Pos1 = FCString::Strrchr( *SymbolInfo.ModuleName, '/' );
-	const UPTRINT RealPos = YMath::Max( (UPTRINT)Pos0, (UPTRINT)Pos1 );
+	const UPTRINT RealPos = FMath::Max( (UPTRINT)Pos0, (UPTRINT)Pos1 );
 	const FString StrippedModuleName = RealPos > 0 ? (const ANSICHAR*)(RealPos + 1) : SymbolInfo.ModuleName;
 
 	out_HumanReadableString = StrippedModuleName;
@@ -182,7 +182,7 @@ TArray<FProgramCounterSymbolInfo> FGenericPlatformStackWalk::GetStack(int32 Igno
 	// Add 2 to account for CaptureStackBackTrace and GetStack.
 	IgnoreCount += 2;
 
-	MaxDepth = YMath::Min(MAX_DEPTH, IgnoreCount + MaxDepth);
+	MaxDepth = FMath::Min(MAX_DEPTH, IgnoreCount + MaxDepth);
 
 	// Capture stack backtrace.
 	FPlatformStackWalk::CaptureStackBackTrace(StackTrace, MaxDepth, Context);

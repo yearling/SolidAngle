@@ -1,5 +1,7 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 /*=============================================================================
-AsyncWork.h: Definition of queued work classes
+	AsyncWork.h: Definition of queued work classes
 =============================================================================*/
 
 #pragma once
@@ -16,41 +18,41 @@ AsyncWork.h: Definition of queued work classes
 #include "GenericPlatform/GenericPlatformCompression.h"
 
 /**
-FAutoDeleteAsyncTask - template task for jobs that delete themselves when complete
+	FAutoDeleteAsyncTask - template task for jobs that delete themselves when complete
 
-Sample code:
+	Sample code:
 
-class ExampleAutoDeleteAsyncTask : public FNonAbandonableTask
-{
-friend class FAutoDeleteAsyncTask<ExampleAutoDeleteAsyncTask>;
+	class ExampleAutoDeleteAsyncTask : public FNonAbandonableTask
+	{
+		friend class FAutoDeleteAsyncTask<ExampleAutoDeleteAsyncTask>;
 
-int32 ExampleData;
+		int32 ExampleData;
 
-ExampleAutoDeleteAsyncTask(int32 InExampleData)
-: ExampleData(InExampleData)
-{
-}
+		ExampleAutoDeleteAsyncTask(int32 InExampleData)
+		 : ExampleData(InExampleData)
+		{
+		}
 
-void DoWork()
-{
-... do the work here
-}
+		void DoWork()
+		{
+			... do the work here
+		}
 
-FORCEINLINE TStatId GetStatId() const
-{
-RETURN_QUICK_DECLARE_CYCLE_STAT(ExampleAutoDeleteAsyncTask, STATGROUP_ThreadPoolAsyncTasks);
-}
-};
+		FORCEINLINE TStatId GetStatId() const
+		{
+			RETURN_QUICK_DECLARE_CYCLE_STAT(ExampleAutoDeleteAsyncTask, STATGROUP_ThreadPoolAsyncTasks);
+		}
+	};
 
+	
+	void Example()
+	{
+		// start an example job
+		(new FAutoDeleteAsyncTask<ExampleAutoDeleteAsyncTask>(5)->StartBackgroundTask();
 
-void Example()
-{
-// start an example job
-(new FAutoDeleteAsyncTask<ExampleAutoDeleteAsyncTask>(5)->StartBackgroundTask();
-
-// do an example job now, on this thread
-(new FAutoDeleteAsyncTask<ExampleAutoDeleteAsyncTask>(5)->StartSynchronousTask();
-}
+		// do an example job now, on this thread
+		(new FAutoDeleteAsyncTask<ExampleAutoDeleteAsyncTask>(5)->StartSynchronousTask();
+	}
 
 **/
 template<typename TTask>
@@ -61,11 +63,11 @@ class FAutoDeleteAsyncTask
 	TTask Task;
 
 	/* Generic start function, not called directly
-	* @param bForceSynchronous if true, this job will be started synchronously, now, on this thread
+		* @param bForceSynchronous if true, this job will be started synchronously, now, on this thread
 	**/
 	void Start(bool bForceSynchronous)
 	{
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		FQueuedThreadPool* QueuedPool = GThreadPool;
 		if (bForceSynchronous)
 		{
@@ -102,9 +104,9 @@ class FAutoDeleteAsyncTask
 	}
 
 	/**
-	* Always called from the thread pool. Called if the task is removed from queue before it has started which might happen at exit.
-	* If the user job can abandon, we do that, otherwise we force the work to be done now (doing nothing would not be safe).
-	*/
+	 * Always called from the thread pool. Called if the task is removed from queue before it has started which might happen at exit.
+	 * If the user job can abandon, we do that, otherwise we force the work to be done now (doing nothing would not be safe).
+	 */
 	virtual void Abandon(void)
 	{
 		if (Task.CanAbandon())
@@ -125,7 +127,7 @@ public:
 	{
 	}
 
-	/**
+	/** 
 	* Run this task on this thread, now. Will end up destroying myself, so it is not safe to use this object after this call.
 	**/
 	void StartSynchronousTask()
@@ -133,7 +135,7 @@ public:
 		Start(true);
 	}
 
-	/**
+	/** 
 	* Run this task on the lo priority thread pool. It is not safe to use this object after this call.
 	**/
 	void StartBackgroundTask()
@@ -145,63 +147,63 @@ public:
 
 
 /**
-FAsyncTask - template task for jobs queued to thread pools
+	FAsyncTask - template task for jobs queued to thread pools
 
-Sample code:
+	Sample code:
 
-class ExampleAsyncTask : public FNonAbandonableTask
-{
-friend class FAsyncTask<ExampleAsyncTask>;
+	class ExampleAsyncTask : public FNonAbandonableTask
+	{
+		friend class FAsyncTask<ExampleAsyncTask>;
 
-int32 ExampleData;
+		int32 ExampleData;
 
-ExampleAsyncTask(int32 InExampleData)
-: ExampleData(InExampleData)
-{
-}
+		ExampleAsyncTask(int32 InExampleData)
+		 : ExampleData(InExampleData)
+		{
+		}
 
-void DoWork()
-{
-... do the work here
-}
+		void DoWork()
+		{
+			... do the work here
+		}
 
-FORCEINLINE TStatId GetStatId() const
-{
-RETURN_QUICK_DECLARE_CYCLE_STAT(ExampleAsyncTask, STATGROUP_ThreadPoolAsyncTasks);
-}
-};
+		FORCEINLINE TStatId GetStatId() const
+		{
+			RETURN_QUICK_DECLARE_CYCLE_STAT(ExampleAsyncTask, STATGROUP_ThreadPoolAsyncTasks);
+		}
+	};
 
-void Example()
-{
+	void Example()
+	{
 
-//start an example job
+		//start an example job
 
-FAsyncTask<ExampleAsyncTask>* MyTask = new FAsyncTask<ExampleAsyncTask>( 5 );
-MyTask->StartBackgroundTask();
+		FAsyncTask<ExampleAsyncTask>* MyTask = new FAsyncTask<ExampleAsyncTask>( 5 );
+		MyTask->StartBackgroundTask();
 
-//--or --
+		//--or --
 
-MyTask->StartSynchronousTask();
+		MyTask->StartSynchronousTask();
 
-//to just do it now on this thread
-//Check if the task is done :
+		//to just do it now on this thread
+		//Check if the task is done :
 
-if (MyTask->IsDone())
-{
-}
+		if (MyTask->IsDone())
+		{
+		}
 
-//Spinning on IsDone is not acceptable( see EnsureCompletion ), but it is ok to check once a frame.
-//Ensure the task is done, doing the task on the current thread if it has not been started, waiting until completion in all cases.
+		//Spinning on IsDone is not acceptable( see EnsureCompletion ), but it is ok to check once a frame.
+		//Ensure the task is done, doing the task on the current thread if it has not been started, waiting until completion in all cases.
 
-MyTask->EnsureCompletion();
-delete Task;
-}
+		MyTask->EnsureCompletion();
+		delete Task;
+	}
 **/
 template<typename TTask>
 class FAsyncTask
 	: private IQueuedWork
 {
-	/** User job embedded in this task */
+	/** User job embedded in this task */ 
 	TTask Task;
 	/** Thread safe counter that indicates WORK completion, no necessarily finalization of the job */
 	FThreadSafeCounter	WorkNotFinishedCounter;
@@ -219,14 +221,14 @@ class FAsyncTask
 	}
 
 	/* Generic start function, not called directly
-	* @param bForceSynchronous if true, this job will be started synchronously, now, on this thread
+		* @param bForceSynchronous if true, this job will be started synchronously, now, on this thread
 	**/
 	void Start(bool bForceSynchronous, FQueuedThreadPool* InQueuedPool)
 	{
-		FScopeCycleCounter Scope(Task.GetStatId(), true);
-		DECLARE_SCOPE_CYCLE_COUNTER(TEXT("FAsyncTask::Start"), STAT_FAsyncTask_Start, STATGROUP_ThreadPoolAsyncTasks);
+		FScopeCycleCounter Scope( Task.GetStatId(), true );
+		DECLARE_SCOPE_CYCLE_COUNTER( TEXT( "FAsyncTask::Start" ), STAT_FAsyncTask_Start, STATGROUP_ThreadPoolAsyncTasks );
 
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		CheckIdle();  // can't start a job twice without it being completed first
 		WorkNotFinishedCounter.Increment();
 		QueuedPool = InQueuedPool;
@@ -243,7 +245,7 @@ class FAsyncTask
 			DoneEvent->Reset();
 			QueuedPool->AddQueuedWork(this);
 		}
-		else
+		else 
 		{
 			// we aren't doing async stuff
 			DestroyEvent();
@@ -251,19 +253,19 @@ class FAsyncTask
 		}
 	}
 
-	/**
+	/** 
 	* Tells the user job to do the work, sometimes called synchronously, sometimes from the thread pool. Calls the event tracker.
 	**/
 	void DoWork()
-	{
-		FScopeCycleCounter Scope(Task.GetStatId(), true);
+	{	
+		FScopeCycleCounter Scope(Task.GetStatId(), true); 
 
-		Task.DoWork();
+		Task.DoWork();		
 		check(WorkNotFinishedCounter.GetValue() == 1);
 		WorkNotFinishedCounter.Decrement();
 	}
 
-	/**
+	/** 
 	* Triggers the work completion event, only called from a pool thread
 	**/
 	void FinishThreadedWork()
@@ -271,13 +273,13 @@ class FAsyncTask
 		check(QueuedPool);
 		if (DoneEvent)
 		{
-			FScopeCycleCounter Scope(Task.GetStatId(), true);
-			DECLARE_SCOPE_CYCLE_COUNTER(TEXT("FAsyncTask::FinishThreadedWork"), STAT_FAsyncTask_FinishThreadedWork, STATGROUP_ThreadPoolAsyncTasks);
+			FScopeCycleCounter Scope( Task.GetStatId(), true );
+			DECLARE_SCOPE_CYCLE_COUNTER( TEXT( "FAsyncTask::FinishThreadedWork" ), STAT_FAsyncTask_FinishThreadedWork, STATGROUP_ThreadPoolAsyncTasks );		
 			DoneEvent->Trigger();
 		}
 	}
 
-	/**
+	/** 
 	* Performs the work, this is only called from a pool thread.
 	**/
 	virtual void DoThreadedWork()
@@ -287,9 +289,9 @@ class FAsyncTask
 	}
 
 	/**
-	* Always called from the thread pool. Called if the task is removed from queue before it has started which might happen at exit.
-	* If the user job can abandon, we do that, otherwise we force the work to be done now (doing nothing would not be safe).
-	*/
+	 * Always called from the thread pool. Called if the task is removed from queue before it has started which might happen at exit.
+	 * If the user job can abandon, we do that, otherwise we force the work to be done now (doing nothing would not be safe).
+	 */
 	virtual void Abandon(void)
 	{
 		if (Task.CanAbandon())
@@ -305,7 +307,7 @@ class FAsyncTask
 		FinishThreadedWork();
 	}
 
-	/**
+	/** 
 	* Internal call to assert that we are idle
 	**/
 	void CheckIdle() const
@@ -314,16 +316,16 @@ class FAsyncTask
 		check(!QueuedPool);
 	}
 
-	/**
+	/** 
 	* Internal call to synchronize completion between threads, never called from a pool thread
 	**/
 	void SyncCompletion()
 	{
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		if (QueuedPool)
 		{
-			FScopeCycleCounter Scope(Task.GetStatId());
-			DECLARE_SCOPE_CYCLE_COUNTER(TEXT("FAsyncTask::SyncCompletion"), STAT_FAsyncTask_SyncCompletion, STATGROUP_ThreadPoolAsyncTasks);
+			FScopeCycleCounter Scope( Task.GetStatId() );
+			DECLARE_SCOPE_CYCLE_COUNTER( TEXT( "FAsyncTask::SyncCompletion" ), STAT_FAsyncTask_SyncCompletion, STATGROUP_ThreadPoolAsyncTasks );
 
 			check(DoneEvent); // if it is not done yet, we must have an event
 			DoneEvent->Wait();
@@ -332,7 +334,7 @@ class FAsyncTask
 		CheckIdle();
 	}
 
-	/**
+	/** 
 	* Internal call to initialize internal variables
 	**/
 	void Init()
@@ -368,7 +370,7 @@ public:
 	}
 
 	/* Retrieve embedded user job, not legal to call while a job is in process
-	* @return reference to embedded user job
+		* @return reference to embedded user job 
 	**/
 	TTask &GetTask()
 	{
@@ -377,7 +379,7 @@ public:
 	}
 
 	/* Retrieve embedded user job, not legal to call while a job is in process
-	* @return reference to embedded user job
+		* @return reference to embedded user job 
 	**/
 	const TTask &GetTask() const
 	{
@@ -385,7 +387,7 @@ public:
 		return Task;
 	}
 
-	/**
+	/** 
 	* Run this task on this thread
 	* @param bDoNow if true then do the job now instead of at EnsureCompletion
 	**/
@@ -394,7 +396,7 @@ public:
 		Start(true, GThreadPool);
 	}
 
-	/**
+	/** 
 	* Queue this task for processing by the background thread pool
 	**/
 	void StartBackgroundTask(FQueuedThreadPool* InQueuedPool = GThreadPool)
@@ -402,7 +404,7 @@ public:
 		Start(false, InQueuedPool);
 	}
 
-	/**
+	/** 
 	* Wait until the job is complete
 	* @param bDoWorkOnThisThreadIfNotStarted if true and the work has not been started, retract the async task and do it now on this thread
 	**/
@@ -417,14 +419,14 @@ public:
 				{
 					// we got the job back, so do the work now and no need to synchronize
 					DoSyncCompletion = false;
-					DoWork();
+					DoWork(); 
 					FinishThreadedWork();
 					QueuedPool = 0;
 				}
 			}
 			else if (WorkNotFinishedCounter.GetValue())  // in the synchronous case, if we haven't done it yet, do it now
 			{
-				DoWork();
+				DoWork(); 
 			}
 		}
 		if (DoSyncCompletion)
@@ -436,7 +438,7 @@ public:
 
 	/**
 	* Cancel the task, if possible.
-	* Note that this is different than abandoning (which is called by the thread pool at shutdown).
+	* Note that this is different than abandoning (which is called by the thread pool at shutdown). 
 	* @return true if the task was canceled and is safe to delete. If it wasn't canceled, it may be done, but that isn't checked here.
 	**/
 	bool Cancel()
@@ -463,7 +465,7 @@ public:
 	bool WaitCompletionWithTimeout(float TimeLimitSeconds)
 	{
 		check(TimeLimitSeconds > 0.0f)
-			YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		if (QueuedPool)
 		{
 			FScopeCycleCounter Scope(Task.GetStatId());
@@ -485,8 +487,8 @@ public:
 		return true;
 	}
 
-	/** Returns true if the work and TASK has completed, false while it's still in progress.
-	* prior to returning true, it synchronizes so the task can be destroyed or reused
+	/** Returns true if the work and TASK has completed, false while it's still in progress. 
+	 * prior to returning true, it synchronizes so the task can be destroyed or reused
 	*/
 	bool IsDone()
 	{
@@ -498,9 +500,9 @@ public:
 		return true;
 	}
 
-	/** Returns true if the work has completed, false while it's still in progress.
-	* This does not block and if true, you can use the results.
-	* But you can't destroy or reuse the task without IsDone() being true or EnsureCompletion()
+	/** Returns true if the work has completed, false while it's still in progress. 
+	 * This does not block and if true, you can use the results.
+	 * But you can't destroy or reuse the task without IsDone() being true or EnsureCompletion()
 	*/
 	bool IsWorkDone() const
 	{
@@ -520,8 +522,8 @@ public:
 };
 
 /**
-* Stub class to use a base class for tasks that cannot be abandoned
-*/
+ * Stub class to use a base class for tasks that cannot be abandoned
+ */
 class FNonAbandonableTask
 {
 public:
@@ -535,8 +537,8 @@ public:
 };
 
 /**
-* Asynchronous decompression, used for decompressing chunks of memory in the background
-*/
+ * Asynchronous decompression, used for decompressing chunks of memory in the background
+ */
 class FAsyncUncompress : public FNonAbandonableTask
 {
 	/** Buffer containing uncompressed data					*/
@@ -554,38 +556,38 @@ class FAsyncUncompress : public FNonAbandonableTask
 
 public:
 	/**
-	* Initializes the data and creates the event.
-	*
-	* @param	Flags				Flags to control what method to use for decompression
-	* @param	UncompressedBuffer	Buffer containing uncompressed data
-	* @param	UncompressedSize	Size of uncompressed data in bytes
-	* @param	CompressedBuffer	Buffer compressed data is going to be written to
-	* @param	CompressedSize		Size of CompressedBuffer data in bytes
-	* @param	bIsSourcePadded		Whether the source memory is padded with a full cache line at the end
-	*/
-	FAsyncUncompress(
-		ECompressionFlags InFlags,
-		void* InUncompressedBuffer,
-		int32 InUncompressedSize,
-		void* InCompressedBuffer,
-		int32 InCompressedSize,
+	 * Initializes the data and creates the event.
+	 *
+	 * @param	Flags				Flags to control what method to use for decompression
+	 * @param	UncompressedBuffer	Buffer containing uncompressed data
+	 * @param	UncompressedSize	Size of uncompressed data in bytes
+	 * @param	CompressedBuffer	Buffer compressed data is going to be written to
+	 * @param	CompressedSize		Size of CompressedBuffer data in bytes
+	 * @param	bIsSourcePadded		Whether the source memory is padded with a full cache line at the end
+	 */
+	FAsyncUncompress( 
+		ECompressionFlags InFlags, 
+		void* InUncompressedBuffer, 
+		int32 InUncompressedSize, 
+		void* InCompressedBuffer, 
+		int32 InCompressedSize, 
 		bool bIsSourcePadded = false)
-		: UncompressedBuffer(InUncompressedBuffer)
-		, UncompressedSize(InUncompressedSize)
-		, CompressedBuffer(InCompressedBuffer)
-		, CompressedSize(InCompressedSize)
-		, Flags(InFlags)
-		, bIsSourceMemoryPadded(bIsSourcePadded)
+	:	UncompressedBuffer( InUncompressedBuffer )
+		,	UncompressedSize( InUncompressedSize )
+		,	CompressedBuffer( InCompressedBuffer )
+		,	CompressedSize( InCompressedSize )
+		,	Flags( InFlags )
+		,	bIsSourceMemoryPadded( bIsSourcePadded )
 	{
 
 	}
 	/**
-	* Performs the async decompression
-	*/
+	 * Performs the async decompression
+	 */
 	void DoWork()
 	{
 		// Uncompress from memory to memory.
-		verify(YCompression::UncompressMemory(Flags, UncompressedBuffer, UncompressedSize, CompressedBuffer, CompressedSize, bIsSourceMemoryPadded, YPlatformMisc::GetPlatformCompression()->GetCompressionBitWindow()));
+		verify( FCompression::UncompressMemory( Flags, UncompressedBuffer, UncompressedSize, CompressedBuffer, CompressedSize, bIsSourceMemoryPadded, FPlatformMisc::GetPlatformCompression()->GetCompressionBitWindow()) );
 	}
 
 	FORCEINLINE TStatId GetStatId() const

@@ -9,7 +9,7 @@
 /**
  * Mirrors a point about an abitrary plane 
  */
-class YMirrorMatrix
+class FMirrorMatrix
 	: public FMatrix
 {
 public:
@@ -19,16 +19,16 @@ public:
 	 * 
 	 * @param Plane source plane for mirroring (assumed normalized)
 	 */
-	YMirrorMatrix( const FPlane& Plane );
+	FMirrorMatrix( const FPlane& Plane );
 };
 
 
-FORCEINLINE YMirrorMatrix::YMirrorMatrix( const FPlane& Plane ) :
+FORCEINLINE FMirrorMatrix::FMirrorMatrix( const FPlane& Plane ) :
 FMatrix(
 	FPlane( -2.f*Plane.X*Plane.X + 1.f,	-2.f*Plane.Y*Plane.X,		-2.f*Plane.Z*Plane.X,		0.f ),
 	FPlane( -2.f*Plane.X*Plane.Y,			-2.f*Plane.Y*Plane.Y + 1.f,	-2.f*Plane.Z*Plane.Y,		0.f ),
 	FPlane( -2.f*Plane.X*Plane.Z,			-2.f*Plane.Y*Plane.Z,		-2.f*Plane.Z*Plane.Z + 1.f,	0.f ),
 	FPlane(  2.f*Plane.X*Plane.W,			 2.f*Plane.Y*Plane.W,		 2.f*Plane.Z*Plane.W,		1.f ) )
 {
-	//check( YMath::Abs(1.f - Plane.SizeSquared()) < KINDA_SMALL_NUMBER && TEXT("not normalized"));
+	//check( FMath::Abs(1.f - Plane.SizeSquared()) < KINDA_SMALL_NUMBER && TEXT("not normalized"));
 }

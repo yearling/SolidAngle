@@ -16,14 +16,13 @@ class FDefaultBitArrayAllocator;
 * return A ? A : B;
 **/
 template<typename ReferencedType>
-ReferencedType* IfAThenAElseB(ReferencedType* A, ReferencedType* B);
+ReferencedType* IfAThenAElseB(ReferencedType* A,ReferencedType* B);
 
 /** branchless pointer selection based on predicate
 * return PTRINT(Predicate) ? A : B;
 **/
-template<typename PredicateType, typename ReferencedType>
-ReferencedType* IfPThenAElseB(PredicateType Predicate, ReferencedType* A, ReferencedType* B);
-
+template<typename PredicateType,typename ReferencedType>
+ReferencedType* IfPThenAElseB(PredicateType Predicate,ReferencedType* A,ReferencedType* B);
 
 FORCEINLINE int32 DefaultCalculateSlackShrink(int32 NumElements, int32 NumAllocatedElements, SIZE_T BytesPerElement, bool bAllowQuantize, uint32 Alignment = DEFAULT_ALIGNMENT)
 {
@@ -107,7 +106,7 @@ struct FScriptContainerElement
 template <typename AllocatorType>
 struct TAllocatorTraitsBase
 {
-	enum { SupportsMove = false };
+	enum { SupportsMove    = false };
 	enum { IsZeroConstruct = false };
 };
 
@@ -126,45 +125,45 @@ public:
 	enum { RequireRangeCheck = true };
 
 	/**
-	* A class that receives both the explicit allocation policy template parameters specified by the user of the container,
-	* but also the implicit ElementType template parameter from the container type.
-	*/
+	 * A class that receives both the explicit allocation policy template parameters specified by the user of the container,
+	 * but also the implicit ElementType template parameter from the container type.
+	 */
 	template<typename ElementType>
 	class ForElementType
 	{
 		/**
-		* Moves the state of another allocator into this one.
-		* Assumes that the allocator is currently empty, i.e. memory may be allocated but any existing elements have already been destructed (if necessary).
-		* @param Other - The allocator to move the state from.  This allocator should be left in a valid empty state.
-		*/
+		 * Moves the state of another allocator into this one.
+		 * Assumes that the allocator is currently empty, i.e. memory may be allocated but any existing elements have already been destructed (if necessary).
+		 * @param Other - The allocator to move the state from.  This allocator should be left in a valid empty state.
+		 */
 		void MoveToEmpty(ForElementType& Other);
 
 		/** Accesses the container's current data. */
 		ElementType* GetAllocation() const;
 
 		/**
-		* Resizes the container's allocation.
-		* @param PreviousNumElements - The number of elements that were stored in the previous allocation.
-		* @param NumElements - The number of elements to allocate space for.
-		* @param NumBytesPerElement - The number of bytes/element.
-		*/
+		 * Resizes the container's allocation.
+		 * @param PreviousNumElements - The number of elements that were stored in the previous allocation.
+		 * @param NumElements - The number of elements to allocate space for.
+		 * @param NumBytesPerElement - The number of bytes/element.
+		 */
 		void ResizeAllocation(
 			int32 PreviousNumElements,
 			int32 NumElements,
 			SIZE_T NumBytesPerElement
-		);
+			);
 
 		/**
-		* Calculates the amount of slack to allocate for an array that has just grown or shrunk to a given number of elements.
-		* @param NumElements - The number of elements to allocate space for.
-		* @param CurrentNumSlackElements - The current number of elements allocated.
-		* @param NumBytesPerElement - The number of bytes/element.
-		*/
+		 * Calculates the amount of slack to allocate for an array that has just grown or shrunk to a given number of elements.
+		 * @param NumElements - The number of elements to allocate space for.
+		 * @param CurrentNumSlackElements - The current number of elements allocated.
+		 * @param NumBytesPerElement - The number of bytes/element.
+		 */
 		int32 CalculateSlack(
 			int32 NumElements,
 			int32 CurrentNumSlackElements,
 			SIZE_T NumBytesPerElement
-		) const;
+			) const;
 
 		/**
 		* Calculates the amount of slack to allocate for an array that has just shrunk to a given number of elements.
@@ -176,7 +175,7 @@ public:
 			int32 NumElements,
 			int32 CurrentNumSlackElements,
 			SIZE_T NumBytesPerElement
-		) const;
+			) const;
 
 		/**
 		* Calculates the amount of slack to allocate for an array that has just grown to a given number of elements.
@@ -188,15 +187,15 @@ public:
 			int32 NumElements,
 			int32 CurrentNumSlackElements,
 			SIZE_T NumBytesPerElement
-		) const;
+			) const;
 
 		SIZE_T GetAllocatedSize(int32 NumAllocatedElements, SIZE_T NumBytesPerElement) const;
 	};
 
 	/**
-	* A class that may be used when NeedsElementType=false is specified.
-	* If NeedsElementType=true, then this must be present but will not be used, and so can simply be a typedef to void
-	*/
+	 * A class that may be used when NeedsElementType=false is specified.
+	 * If NeedsElementType=true, then this must be present but will not be used, and so can simply be a typedef to void
+	 */
 	typedef ForElementType<FScriptContainerElement> ForAnyElementType;
 };
 
@@ -219,10 +218,10 @@ public:
 		{}
 
 		/**
-		* Moves the state of another allocator into this one.
-		* Assumes that the allocator is currently empty, i.e. memory may be allocated but any existing elements have already been destructed (if necessary).
-		* @param Other - The allocator to move the state from.  This allocator should be left in a valid empty state.
-		*/
+		 * Moves the state of another allocator into this one.
+		 * Assumes that the allocator is currently empty, i.e. memory may be allocated but any existing elements have already been destructed (if necessary).
+		 * @param Other - The allocator to move the state from.  This allocator should be left in a valid empty state.
+		 */
 		FORCEINLINE void MoveToEmpty(ForAnyElementType& Other)
 		{
 			checkSlow(this != &Other);
@@ -236,14 +235,14 @@ public:
 #endif
 			}
 
-			Data = Other.Data;
+			Data       = Other.Data;
 			Other.Data = nullptr;
 		}
 
 		/** Destructor. */
 		FORCEINLINE ~ForAnyElementType()
 		{
-			if (Data)
+			if(Data)
 			{
 #if PLATFORM_HAS_UMA
 				// The RHI should have taken ownership of this memory, so we don't free it here
@@ -262,7 +261,7 @@ public:
 			int32 PreviousNumElements,
 			int32 NumElements,
 			SIZE_T NumBytesPerElement
-		)
+			)
 		{
 			// Avoid calling FMemory::Realloc( nullptr, 0 ) as ANSI C mandates returning a valid pointer which is not what we want.
 			if (Data || NumElements)
@@ -271,7 +270,7 @@ public:
 				Data = (FScriptContainerElement*)FMemory::GPURealloc(Data, NumElements*NumBytesPerElement, Alignment);
 #else
 				//checkSlow(((uint64)NumElements*(uint64)ElementTypeInfo.GetSize() < (uint64)INT_MAX));
-				Data = (FScriptContainerElement*)FMemory::Realloc(Data, NumElements*NumBytesPerElement, Alignment);
+				Data = (FScriptContainerElement*)FMemory::Realloc( Data, NumElements*NumBytesPerElement, Alignment );
 #endif
 			}
 		}
@@ -325,7 +324,7 @@ public:
 template <uint32 Alignment>
 struct TAllocatorTraits<TAlignedHeapAllocator<Alignment>> : TAllocatorTraitsBase<TAlignedHeapAllocator<Alignment>>
 {
-	enum { SupportsMove = true };
+	enum { SupportsMove    = true };
 	enum { IsZeroConstruct = true };
 };
 
@@ -346,10 +345,10 @@ public:
 		{}
 
 		/**
-		* Moves the state of another allocator into this one.
-		* Assumes that the allocator is currently empty, i.e. memory may be allocated but any existing elements have already been destructed (if necessary).
-		* @param Other - The allocator to move the state from.  This allocator should be left in a valid empty state.
-		*/
+		 * Moves the state of another allocator into this one.
+		 * Assumes that the allocator is currently empty, i.e. memory may be allocated but any existing elements have already been destructed (if necessary).
+		 * @param Other - The allocator to move the state from.  This allocator should be left in a valid empty state.
+		 */
 		FORCEINLINE void MoveToEmpty(ForAnyElementType& Other)
 		{
 			checkSlow(this != &Other);
@@ -359,14 +358,14 @@ public:
 				FMemory::Free(Data);
 			}
 
-			Data = Other.Data;
+			Data       = Other.Data;
 			Other.Data = nullptr;
 		}
 
 		/** Destructor. */
 		FORCEINLINE ~ForAnyElementType()
 		{
-			if (Data)
+			if(Data)
 			{
 				FMemory::Free(Data);
 			}
@@ -383,7 +382,7 @@ public:
 			if (Data || NumElements)
 			{
 				//checkSlow(((uint64)NumElements*(uint64)ElementTypeInfo.GetSize() < (uint64)INT_MAX));
-				Data = (FScriptContainerElement*)FMemory::Realloc(Data, NumElements*NumBytesPerElement);
+				Data = (FScriptContainerElement*)FMemory::Realloc( Data, NumElements*NumBytesPerElement );
 			}
 		}
 		FORCEINLINE int32 CalculateSlackReserve(int32 NumElements, int32 NumBytesPerElement) const
@@ -416,7 +415,7 @@ public:
 		/** A pointer to the container's elements. */
 		FScriptContainerElement* Data;
 	};
-
+	
 	template<typename ElementType>
 	class ForElementType : public ForAnyElementType
 	{
@@ -436,17 +435,17 @@ public:
 template <>
 struct TAllocatorTraits<FHeapAllocator> : TAllocatorTraitsBase<FHeapAllocator>
 {
-	enum { SupportsMove = true };
+	enum { SupportsMove    = true };
 	enum { IsZeroConstruct = true };
 };
 
 class FDefaultAllocator;
 
 /**
-* The inline allocation policy allocates up to a specified number of elements in the same allocation as the container.
-* Any allocation needed beyond that causes all data to be moved into an indirect allocation.
-* It always uses DEFAULT_ALIGNMENT.
-*/
+ * The inline allocation policy allocates up to a specified number of elements in the same allocation as the container.
+ * Any allocation needed beyond that causes all data to be moved into an indirect allocation.
+ * It always uses DEFAULT_ALIGNMENT.
+ */
 template <uint32 NumInlineElements, typename SecondaryAllocator = FDefaultAllocator>
 class TInlineAllocator
 {
@@ -466,10 +465,10 @@ public:
 		}
 
 		/**
-		* Moves the state of another allocator into this one.
-		* Assumes that the allocator is currently empty, i.e. memory may be allocated but any existing elements have already been destructed (if necessary).
-		* @param Other - The allocator to move the state from.  This allocator should be left in a valid empty state.
-		*/
+		 * Moves the state of another allocator into this one.
+		 * Assumes that the allocator is currently empty, i.e. memory may be allocated but any existing elements have already been destructed (if necessary).
+		 * @param Other - The allocator to move the state from.  This allocator should be left in a valid empty state.
+		 */
 		FORCEINLINE void MoveToEmpty(ForElementType& Other)
 		{
 			checkSlow(this != &Other);
@@ -488,29 +487,29 @@ public:
 		// FContainerAllocatorInterface
 		FORCEINLINE ElementType* GetAllocation() const
 		{
-			return IfAThenAElseB<ElementType>(SecondaryData.GetAllocation(), GetInlineElements());
+			return IfAThenAElseB<ElementType>(SecondaryData.GetAllocation(),GetInlineElements());
 		}
 
-		void ResizeAllocation(int32 PreviousNumElements, int32 NumElements, SIZE_T NumBytesPerElement)
+		void ResizeAllocation(int32 PreviousNumElements,int32 NumElements,SIZE_T NumBytesPerElement)
 		{
 			// Check if the new allocation will fit in the inline data area.
-			if (NumElements <= NumInlineElements)
+			if(NumElements <= NumInlineElements)
 			{
 				// If the old allocation wasn't in the inline data area, relocate it into the inline data area.
-				if (SecondaryData.GetAllocation())
+				if(SecondaryData.GetAllocation())
 				{
 					RelocateConstructItems<ElementType>((void*)InlineData, (ElementType*)SecondaryData.GetAllocation(), PreviousNumElements);
 
 					// Free the old indirect allocation.
-					SecondaryData.ResizeAllocation(0, 0, NumBytesPerElement);
+					SecondaryData.ResizeAllocation(0,0,NumBytesPerElement);
 				}
 			}
 			else
 			{
-				if (!SecondaryData.GetAllocation())
+				if(!SecondaryData.GetAllocation())
 				{
 					// Allocate new indirect memory for the data.
-					SecondaryData.ResizeAllocation(0, NumElements, NumBytesPerElement);
+					SecondaryData.ResizeAllocation(0,NumElements,NumBytesPerElement);
 
 					// Move the data out of the inline data area into the new allocation.
 					RelocateConstructItems<ElementType>((void*)SecondaryData.GetAllocation(), GetInlineElements(), PreviousNumElements);
@@ -518,7 +517,7 @@ public:
 				else
 				{
 					// Reallocate the indirect data for the new size.
-					SecondaryData.ResizeAllocation(PreviousNumElements, NumElements, NumBytesPerElement);
+					SecondaryData.ResizeAllocation(PreviousNumElements,NumElements,NumBytesPerElement);
 				}
 			}
 		}
@@ -528,21 +527,21 @@ public:
 			// If the elements use less space than the inline allocation, only use the inline allocation as slack.
 			return NumElements <= NumInlineElements ?
 				NumInlineElements :
-				SecondaryData.CalculateSlackReserve(NumElements, NumBytesPerElement);
+								  SecondaryData.CalculateSlackReserve(NumElements, NumBytesPerElement);
 		}
 		FORCEINLINE int32 CalculateSlackShrink(int32 NumElements, int32 NumAllocatedElements, int32 NumBytesPerElement) const
 		{
 			// If the elements use less space than the inline allocation, only use the inline allocation as slack.
 			return NumElements <= NumInlineElements ?
-				NumInlineElements :
-				SecondaryData.CalculateSlackShrink(NumElements, NumAllocatedElements, NumBytesPerElement);
+			NumInlineElements :
+							  SecondaryData.CalculateSlackShrink(NumElements, NumAllocatedElements, NumBytesPerElement);
 		}
 		FORCEINLINE int32 CalculateSlackGrow(int32 NumElements, int32 NumAllocatedElements, int32 NumBytesPerElement) const
 		{
 			// If the elements use less space than the inline allocation, only use the inline allocation as slack.
 			return NumElements <= NumInlineElements ?
-				NumInlineElements :
-				SecondaryData.CalculateSlackGrow(NumElements, NumAllocatedElements, NumBytesPerElement);
+			NumInlineElements :
+							  SecondaryData.CalculateSlackGrow(NumElements, NumAllocatedElements, NumBytesPerElement);
 		}
 
 		SIZE_T GetAllocatedSize(int32 NumAllocatedElements, SIZE_T NumBytesPerElement) const
@@ -582,9 +581,9 @@ struct TAllocatorTraits<TInlineAllocator<NumInlineElements, SecondaryAllocator>>
 };
 
 /**
-* The fixed allocation policy allocates up to a specified number of elements in the same allocation as the container.
-* It's like the inline allocator, except it doesn't provide secondary storage when the inline storage has been filled.
-*/
+ * The fixed allocation policy allocates up to a specified number of elements in the same allocation as the container.
+ * It's like the inline allocator, except it doesn't provide secondary storage when the inline storage has been filled.
+ */
 template <uint32 NumInlineElements>
 class TFixedAllocator
 {
@@ -604,10 +603,10 @@ public:
 		}
 
 		/**
-		* Moves the state of another allocator into this one.
-		* Assumes that the allocator is currently empty, i.e. memory may be allocated but any existing elements have already been destructed (if necessary).
-		* @param Other - The allocator to move the state from.  This allocator should be left in a valid empty state.
-		*/
+		 * Moves the state of another allocator into this one.
+		 * Assumes that the allocator is currently empty, i.e. memory may be allocated but any existing elements have already been destructed (if necessary).
+		 * @param Other - The allocator to move the state from.  This allocator should be left in a valid empty state.
+		 */
 		FORCEINLINE void MoveToEmpty(ForElementType& Other)
 		{
 			checkSlow(this != &Other);
@@ -622,7 +621,7 @@ public:
 			return GetInlineElements();
 		}
 
-		void ResizeAllocation(int32 PreviousNumElements, int32 NumElements, SIZE_T NumBytesPerElement)
+		void ResizeAllocation(int32 PreviousNumElements,int32 NumElements,SIZE_T NumBytesPerElement)
 		{
 			// Ensure the requested allocation will fit in the inline data area.
 			checkSlow(NumElements <= NumInlineElements);
@@ -693,7 +692,7 @@ class FDefaultAllocator;
 class FDefaultBitArrayAllocator;
 
 /** Encapsulates the allocators used by a sparse array in a single type. */
-template<typename InElementAllocator = FDefaultAllocator, typename InBitArrayAllocator = FDefaultBitArrayAllocator>
+template<typename InElementAllocator = FDefaultAllocator,typename InBitArrayAllocator = FDefaultBitArrayAllocator>
 class TSparseArrayAllocator
 {
 public:
@@ -705,19 +704,19 @@ public:
 /** An inline sparse array allocator that allows sizing of the inline allocations for a set number of elements. */
 template<
 	uint32 NumInlineElements,
-	typename SecondaryAllocator = TSparseArrayAllocator<FDefaultAllocator, FDefaultAllocator>
->
+	typename SecondaryAllocator = TSparseArrayAllocator<FDefaultAllocator,FDefaultAllocator>
+	>
 class TInlineSparseArrayAllocator
 {
 private:
 
 	/** The size to allocate inline for the bit array. */
-	enum { InlineBitArrayDWORDs = (NumInlineElements + NumBitsPerDWORD - 1) / NumBitsPerDWORD };
+	enum { InlineBitArrayDWORDs = (NumInlineElements + NumBitsPerDWORD - 1) / NumBitsPerDWORD};
 
 public:
 
-	typedef TInlineAllocator<NumInlineElements, typename SecondaryAllocator::ElementAllocator>		ElementAllocator;
-	typedef TInlineAllocator<InlineBitArrayDWORDs, typename SecondaryAllocator::BitArrayAllocator>	BitArrayAllocator;
+	typedef TInlineAllocator<NumInlineElements,typename SecondaryAllocator::ElementAllocator>		ElementAllocator;
+	typedef TInlineAllocator<InlineBitArrayDWORDs,typename SecondaryAllocator::BitArrayAllocator>	BitArrayAllocator;
 };
 
 //
@@ -730,12 +729,12 @@ public:
 
 /** Encapsulates the allocators used by a set in a single type. */
 template<
-	typename InSparseArrayAllocator = TSparseArrayAllocator<>,
-	typename InHashAllocator = TInlineAllocator<1, FDefaultAllocator>,
+	typename InSparseArrayAllocator               = TSparseArrayAllocator<>,
+	typename InHashAllocator                      = TInlineAllocator<1,FDefaultAllocator>,
 	uint32   AverageNumberOfElementsPerHashBucket = DEFAULT_NUMBER_OF_ELEMENTS_PER_HASH_BUCKET,
-	uint32   BaseNumberOfHashBuckets = DEFAULT_BASE_NUMBER_OF_HASH_BUCKETS,
-	uint32   MinNumberOfHashedElements = DEFAULT_MIN_NUMBER_OF_HASHED_ELEMENTS
->
+	uint32   BaseNumberOfHashBuckets              = DEFAULT_BASE_NUMBER_OF_HASH_BUCKETS,
+	uint32   MinNumberOfHashedElements            = DEFAULT_MIN_NUMBER_OF_HASHED_ELEMENTS
+	>
 class TSetAllocator
 {
 public:
@@ -743,9 +742,9 @@ public:
 	/** Computes the number of hash buckets to use for a given number of elements. */
 	static FORCEINLINE uint32 GetNumberOfHashBuckets(uint32 NumHashedElements)
 	{
-		if (NumHashedElements >= MinNumberOfHashedElements)
+		if(NumHashedElements >= MinNumberOfHashedElements)
 		{
-			return YPlatformMath::RoundUpToPowerOfTwo(NumHashedElements / AverageNumberOfElementsPerHashBucket + BaseNumberOfHashBuckets);
+			return FPlatformMath::RoundUpToPowerOfTwo(NumHashedElements / AverageNumberOfElementsPerHashBucket + BaseNumberOfHashBuckets);
 		}
 
 		return 1;
@@ -760,10 +759,10 @@ class FDefaultAllocator;
 /** An inline set allocator that allows sizing of the inline allocations for a set number of elements. */
 template<
 	uint32   NumInlineElements,
-	typename SecondaryAllocator = TSetAllocator<TSparseArrayAllocator<FDefaultAllocator, FDefaultAllocator>, FDefaultAllocator>,
+	typename SecondaryAllocator                   = TSetAllocator<TSparseArrayAllocator<FDefaultAllocator,FDefaultAllocator>,FDefaultAllocator>,
 	uint32   AverageNumberOfElementsPerHashBucket = DEFAULT_NUMBER_OF_ELEMENTS_PER_HASH_BUCKET,
-	uint32   MinNumberOfHashedElements = DEFAULT_MIN_NUMBER_OF_HASHED_ELEMENTS
->
+	uint32   MinNumberOfHashedElements            = DEFAULT_MIN_NUMBER_OF_HASHED_ELEMENTS
+	>
 class TInlineSetAllocator
 {
 private:
@@ -775,7 +774,7 @@ public:
 	/** Computes the number of hash buckets to use for a given number of elements. */
 	static FORCEINLINE uint32 GetNumberOfHashBuckets(uint32 NumHashedElements)
 	{
-		const uint32 NumDesiredHashBuckets = YPlatformMath::RoundUpToPowerOfTwo(NumHashedElements / AverageNumberOfElementsPerHashBucket);
+		const uint32 NumDesiredHashBuckets = FPlatformMath::RoundUpToPowerOfTwo(NumHashedElements / AverageNumberOfElementsPerHashBucket);
 		if (NumDesiredHashBuckets < NumInlineHashBuckets)
 		{
 			return NumInlineHashBuckets;
@@ -789,24 +788,24 @@ public:
 		return NumDesiredHashBuckets;
 	}
 
-	typedef TInlineSparseArrayAllocator<NumInlineElements, typename SecondaryAllocator::SparseArrayAllocator> SparseArrayAllocator;
-	typedef TInlineAllocator<NumInlineHashBuckets, typename SecondaryAllocator::HashAllocator>                HashAllocator;
+	typedef TInlineSparseArrayAllocator<NumInlineElements,typename SecondaryAllocator::SparseArrayAllocator> SparseArrayAllocator;
+	typedef TInlineAllocator<NumInlineHashBuckets,typename SecondaryAllocator::HashAllocator>                HashAllocator;
 };
 
 
 /**
-* 'typedefs' for various allocator defaults.
-*
-* These should be replaced with actual typedefs when Core.h include order is sorted out, as then we won't need to
-* 'forward' these TAllocatorTraits specializations below.
-*/
+ * 'typedefs' for various allocator defaults.
+ *
+ * These should be replaced with actual typedefs when Core.h include order is sorted out, as then we won't need to
+ * 'forward' these TAllocatorTraits specializations below.
+ */
 
-class FDefaultAllocator : public FHeapAllocator { public: typedef FHeapAllocator          Typedef; };
-class FDefaultSetAllocator : public TSetAllocator<> { public: typedef TSetAllocator<>         Typedef; };
-class FDefaultBitArrayAllocator : public TInlineAllocator<4> { public: typedef TInlineAllocator<4>     Typedef; };
+class FDefaultAllocator            : public FHeapAllocator          { public: typedef FHeapAllocator          Typedef; };
+class FDefaultSetAllocator         : public TSetAllocator<>         { public: typedef TSetAllocator<>         Typedef; };
+class FDefaultBitArrayAllocator    : public TInlineAllocator<4>     { public: typedef TInlineAllocator<4>     Typedef; };
 class FDefaultSparseArrayAllocator : public TSparseArrayAllocator<> { public: typedef TSparseArrayAllocator<> Typedef; };
 
-template <> struct TAllocatorTraits<FDefaultAllocator> : TAllocatorTraits<typename FDefaultAllocator::Typedef> {};
-template <> struct TAllocatorTraits<FDefaultSetAllocator> : TAllocatorTraits<typename FDefaultSetAllocator::Typedef> {};
-template <> struct TAllocatorTraits<FDefaultBitArrayAllocator> : TAllocatorTraits<typename FDefaultBitArrayAllocator::Typedef> {};
+template <> struct TAllocatorTraits<FDefaultAllocator>            : TAllocatorTraits<typename FDefaultAllocator           ::Typedef> {};
+template <> struct TAllocatorTraits<FDefaultSetAllocator>         : TAllocatorTraits<typename FDefaultSetAllocator        ::Typedef> {};
+template <> struct TAllocatorTraits<FDefaultBitArrayAllocator>    : TAllocatorTraits<typename FDefaultBitArrayAllocator   ::Typedef> {};
 template <> struct TAllocatorTraits<FDefaultSparseArrayAllocator> : TAllocatorTraits<typename FDefaultSparseArrayAllocator::Typedef> {};

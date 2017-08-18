@@ -285,7 +285,7 @@ public:
 		if(Ar.IsLoading())
 		{
 			FMemory::Memset(BitArray.Words, 0, sizeof(BitArray.Words));
-			ArchivedNumWords = YMath::Min(BitArray.NumWords, ArchivedNumWords);
+			ArchivedNumWords = FMath::Min(BitArray.NumWords, ArchivedNumWords);
 		}
 
 		Ar.Serialize(BitArray.Words, ArchivedNumWords * sizeof(BitArray.Words[0]));

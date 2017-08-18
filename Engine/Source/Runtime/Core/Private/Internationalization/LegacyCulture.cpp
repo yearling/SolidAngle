@@ -198,7 +198,7 @@ ETextPluralForm FCulture::FLegacyCultureImplementation::GetPluralForm(int32 Val,
 
 ETextPluralForm FCulture::FLegacyCultureImplementation::GetPluralForm(double Val, const ETextPluralType PluralType)
 {
-	checkf(!YMath::IsNegativeDouble(Val), TEXT("GetPluralFormImpl requires a positive value"));
+	checkf(!FMath::IsNegativeDouble(Val), TEXT("GetPluralFormImpl requires a positive value"));
 	return GetDefaultPluralForm((int64)Val, PluralType);
 }
 

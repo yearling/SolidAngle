@@ -50,7 +50,7 @@ THIRD_PARTY_INCLUDES_END
 
 DEFINE_LOG_CATEGORY(LogWindowsDesktop);
 
-const YIntPoint FWindowsApplication::MinimizedWindowPosition(-32000,-32000);
+const FIntPoint FWindowsApplication::MinimizedWindowPosition(-32000,-32000);
 
 FWindowsApplication* WindowsApplication = nullptr;
 
@@ -85,7 +85,7 @@ FWindowsApplication::FWindowsApplication( const HINSTANCE HInstance, const HICON
 	// that message pumping doesn't occur (which causes these messages).
 	::DisableProcessWindowsGhosting();
 
-	YWindowsPlatformMisc::SetHighDPIMode();
+	FWindowsPlatformMisc::SetHighDPIMode();
 
 	// Register the Win32 class for Slate windows and assign the application instance and icon
 	const bool bClassRegistered = RegisterClass( InstanceHandle, IconHandle );
@@ -410,7 +410,7 @@ void FWindowsApplication::SetHighPrecisionMouseMode( const bool Enable, const TS
 	::RegisterRawInputDevices( &RawInputDevice, 1, sizeof( RAWINPUTDEVICE ) );
 }
 
-bool FWindowsApplication::TryCalculatePopupWindowPosition( const FPlatformRect& InAnchor, const YVector2D& InSize, const EPopUpOrientation::Type Orientation, /*OUT*/ YVector2D* const CalculatedPopUpPosition ) const
+bool FWindowsApplication::TryCalculatePopupWindowPosition( const FPlatformRect& InAnchor, const FVector2D& InSize, const EPopUpOrientation::Type Orientation, /*OUT*/ FVector2D* const CalculatedPopUpPosition ) const
 {
 	return false;
 }
@@ -1092,7 +1092,7 @@ int32 FWindowsApplication::ProcessMessage( HWND hwnd, uint32 msg, WPARAM wParam,
 				// client area position
 				const int32 NewX = (int)(short)(LOWORD(lParam));
 				const int32 NewY = (int)(short)(HIWORD(lParam));
-				YIntPoint NewPosition(NewX,NewY);
+				FIntPoint NewPosition(NewX,NewY);
 
 				// Only cache the screen position if its not minimized
 				if ( FWindowsApplication::MinimizedWindowPosition != NewPosition )
@@ -1292,10 +1292,10 @@ int32 FWindowsApplication::ProcessMessage( HWND hwnd, uint32 msg, WPARAM wParam,
 				}
 
 				// We always apply BorderWidth and BorderHeight since Slate always works with client area window sizes
-				MinMaxInfo->ptMinTrackSize.x = YMath::RoundToInt( SizeLimits.GetMinWidth().Get(MinMaxInfo->ptMinTrackSize.x) );
-				MinMaxInfo->ptMinTrackSize.y = YMath::RoundToInt( SizeLimits.GetMinHeight().Get(MinMaxInfo->ptMinTrackSize.y) );
-				MinMaxInfo->ptMaxTrackSize.x = YMath::RoundToInt( SizeLimits.GetMaxWidth().Get(MinMaxInfo->ptMaxTrackSize.x) ) + BorderWidth;
-				MinMaxInfo->ptMaxTrackSize.y = YMath::RoundToInt( SizeLimits.GetMaxHeight().Get(MinMaxInfo->ptMaxTrackSize.y) ) + BorderHeight;
+				MinMaxInfo->ptMinTrackSize.x = FMath::RoundToInt( SizeLimits.GetMinWidth().Get(MinMaxInfo->ptMinTrackSize.x) );
+				MinMaxInfo->ptMinTrackSize.y = FMath::RoundToInt( SizeLimits.GetMinHeight().Get(MinMaxInfo->ptMinTrackSize.y) );
+				MinMaxInfo->ptMaxTrackSize.x = FMath::RoundToInt( SizeLimits.GetMaxWidth().Get(MinMaxInfo->ptMaxTrackSize.x) ) + BorderWidth;
+				MinMaxInfo->ptMaxTrackSize.y = FMath::RoundToInt( SizeLimits.GetMaxHeight().Get(MinMaxInfo->ptMaxTrackSize.y) ) + BorderHeight;
 				return 0;
 			}
 			break;
@@ -1638,7 +1638,7 @@ int32 FWindowsApplication::ProcessDeferredMessage( const FDeferredWindowsMessage
 
 				ClientToScreen(hwnd, &CursorPoint);
 
-				const YVector2D CursorPos(CursorPoint.x, CursorPoint.y);
+				const FVector2D CursorPos(CursorPoint.x, CursorPoint.y);
 
 				EMouseButtons::Type MouseButton = EMouseButtons::Invalid;
 				bool bDoubleClick = false;
@@ -1749,7 +1749,7 @@ int32 FWindowsApplication::ProcessDeferredMessage( const FDeferredWindowsMessage
 				CursorPoint.x = GET_X_LPARAM(lParam);
 				CursorPoint.y = GET_Y_LPARAM(lParam); 
 
-				const YVector2D CursorPos(CursorPoint.x, CursorPoint.y);
+				const FVector2D CursorPos(CursorPoint.x, CursorPoint.y);
 
 				const BOOL Result = MessageHandler->OnMouseWheel( static_cast<float>( WheelDelta ) * SpinFactor, CursorPos );
 				return Result ? 0 : 1;
@@ -1775,7 +1775,7 @@ int32 FWindowsApplication::ProcessDeferredMessage( const FDeferredWindowsMessage
 						for ( uint32 i = 0; i < InputCount; i++ )
 						{
 							TOUCHINPUT Input = Inputs[i];
-							YVector2D Location( Input.x / 100.0f, Input.y / 100.0f );
+							FVector2D Location( Input.x / 100.0f, Input.y / 100.0f );
 							if ( Input.dwFlags & TOUCHEVENTF_DOWN )
 							{
 								int32 TouchIndex = GetTouchIndexForID( Input.dwID );
@@ -2442,7 +2442,7 @@ uint32 FWindowsApplication::GetFirstFreeTouchIndex()
 
 void FTaskbarList::Initialize()
 {
-	if (YWindowsPlatformMisc::CoInitialize())
+	if (FWindowsPlatformMisc::CoInitialize())
 	{
 		if (CoCreateInstance(CLSID_TaskbarList, NULL, CLSCTX_INPROC_SERVER, IID_ITaskbarList3, (void **)&TaskBarList3) != S_OK)
 		{
@@ -2459,7 +2459,7 @@ FTaskbarList::FTaskbarList()
 
 FTaskbarList::~FTaskbarList()
 {
-	if (YWindowsPlatformMisc::CoInitialize() && TaskBarList3)
+	if (FWindowsPlatformMisc::CoInitialize() && TaskBarList3)
 	{
 		TaskBarList3->Release();
 	}

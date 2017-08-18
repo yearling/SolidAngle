@@ -39,25 +39,25 @@ void FMessageDialog::Debugf( const FText& Message, const FText* OptTitle )
 		}
 		else
 		{
-			YPlatformMisc::MessageBoxExt( EAppMsgType::Ok, *Message.ToString(), *NSLOCTEXT("MessageDialog", "DefaultDebugMessageTitle", "ShowDebugMessagef").ToString() );
+			FPlatformMisc::MessageBoxExt( EAppMsgType::Ok, *Message.ToString(), *NSLOCTEXT("MessageDialog", "DefaultDebugMessageTitle", "ShowDebugMessagef").ToString() );
 		}
 	}
 }
 
 void FMessageDialog::ShowLastError()
 {
-	uint32 LastError = YPlatformMisc::GetLastError();
+	uint32 LastError = FPlatformMisc::GetLastError();
 
 	TCHAR TempStr[MAX_SPRINTF]=TEXT("");
 	TCHAR ErrorBuffer[1024];
-	FCString::Sprintf( TempStr, TEXT("GetLastError : %d\n\n%s"), LastError, YPlatformMisc::GetSystemErrorMessage(ErrorBuffer, 1024, 0) );
+	FCString::Sprintf( TempStr, TEXT("GetLastError : %d\n\n%s"), LastError, FPlatformMisc::GetSystemErrorMessage(ErrorBuffer, 1024, 0) );
 	if( FApp::IsUnattended() == true )
 	{
 		UE_LOG(LogOutputDevice, Fatal, TempStr);
 	}
 	else
 	{
-		YPlatformMisc::MessageBoxExt( EAppMsgType::Ok, TempStr, *NSLOCTEXT("MessageDialog", "DefaultSystemErrorTitle", "System Error").ToString() );
+		FPlatformMisc::MessageBoxExt( EAppMsgType::Ok, TempStr, *NSLOCTEXT("MessageDialog", "DefaultSystemErrorTitle", "System Error").ToString() );
 	}
 }
 
@@ -99,7 +99,7 @@ EAppReturnType::Type FMessageDialog::Open( EAppMsgType::Type MessageType, const 
 		}
 		else
 		{
-			return YPlatformMisc::MessageBoxExt( MessageType, *Message.ToString(), *Title.ToString() );
+			return FPlatformMisc::MessageBoxExt( MessageType, *Message.ToString(), *Title.ToString() );
 		}
 	}
 }

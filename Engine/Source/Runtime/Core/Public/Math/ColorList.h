@@ -9,7 +9,7 @@
 #include "Containers/Map.h"
 #include "Math/Color.h"
 
-class CORE_API YColorList
+class CORE_API FColorList
 	: public FExec
 {
 public:
@@ -158,4 +158,4 @@ protected:
 };
 
 
-extern CORE_API YColorList GColorList;
+extern CORE_API FColorList GColorList;

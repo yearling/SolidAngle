@@ -12,7 +12,7 @@
 /**
 * A vector in 2-D space composed of components (X, Y) with floating point precision.
 */
-struct YVector2D
+struct FVector2D
 {
 	/** Vector's X component. */
 	float X;
@@ -23,15 +23,15 @@ struct YVector2D
 public:
 
 	/** Global 2D zero vector constant (0,0) */
-	static CORE_API const YVector2D ZeroVector;
+	static CORE_API const FVector2D ZeroVector;
 
 	/** Global 2D unit vector constant (1,1) */
-	static CORE_API const YVector2D UnitVector;
+	static CORE_API const FVector2D UnitVector;
 
 public:
 
 	/** Default constructor (no initialization). */
-	FORCEINLINE YVector2D() { }
+	FORCEINLINE FVector2D() { }
 
 	/**
 	* Constructor using initial values for each component.
@@ -39,21 +39,21 @@ public:
 	* @param InX X coordinate.
 	* @param InY Y coordinate.
 	*/
-	FORCEINLINE YVector2D(float InX, float InY);
+	FORCEINLINE FVector2D(float InX, float InY);
 
 	/**
 	* Constructs a vector from an YIntPoint.
 	*
 	* @param InPos Integer point used to set this vector.
 	*/
-	FORCEINLINE YVector2D(YIntPoint InPos);
+	FORCEINLINE FVector2D(FIntPoint InPos);
 
 	/**
 	* Constructor which initializes all components to zero.
 	*
 	* @param EForceInit Force init enum
 	*/
-	explicit FORCEINLINE YVector2D(EForceInit);
+	explicit FORCEINLINE FVector2D(EForceInit);
 
 	/**
 	* Constructs a vector from an YVector.
@@ -61,7 +61,7 @@ public:
 	*
 	* @param V Vector to copy from.
 	*/
-	explicit FORCEINLINE YVector2D(const FVector& V);
+	explicit FORCEINLINE FVector2D(const FVector& V);
 
 public:
 
@@ -71,7 +71,7 @@ public:
 	* @param V The other vector to add to this.
 	* @return The result of adding the vectors together.
 	*/
-	FORCEINLINE YVector2D operator+(const YVector2D& V) const;
+	FORCEINLINE FVector2D operator+(const FVector2D& V) const;
 
 	/**
 	* Gets the result of subtracting a vector from this one.
@@ -79,7 +79,7 @@ public:
 	* @param V The other vector to subtract from this.
 	* @return The result of the subtraction.
 	*/
-	FORCEINLINE YVector2D operator-(const YVector2D& V) const;
+	FORCEINLINE FVector2D operator-(const FVector2D& V) const;
 
 	/**
 	* Gets the result of scaling the vector (multiplying each component by a value).
@@ -87,7 +87,7 @@ public:
 	* @param Scale How much to scale the vector by.
 	* @return The result of scaling this vector.
 	*/
-	FORCEINLINE YVector2D operator*(float Scale) const;
+	FORCEINLINE FVector2D operator*(float Scale) const;
 
 	/**
 	* Gets the result of dividing each component of the vector by a value.
@@ -95,7 +95,7 @@ public:
 	* @param Scale How much to divide the vector by.
 	* @return The result of division on this vector.
 	*/
-	YVector2D operator/(float Scale) const;
+	FVector2D operator/(float Scale) const;
 
 	/**
 	* Gets the result of this vector + float A.
@@ -103,7 +103,7 @@ public:
 	* @param A Float to add to each component.
 	* @return The result of this vector + float A.
 	*/
-	FORCEINLINE YVector2D operator+(float A) const;
+	FORCEINLINE FVector2D operator+(float A) const;
 
 	/**
 	* Gets the result of subtracting from each component of the vector.
@@ -111,7 +111,7 @@ public:
 	* @param A Float to subtract from each component
 	* @return The result of this vector - float A.
 	*/
-	FORCEINLINE YVector2D operator-(float A) const;
+	FORCEINLINE FVector2D operator-(float A) const;
 
 	/**
 	* Gets the result of component-wise multiplication of this vector by another.
@@ -119,7 +119,7 @@ public:
 	* @param V The other vector to multiply this by.
 	* @return The result of the multiplication.
 	*/
-	FORCEINLINE YVector2D operator*(const YVector2D& V) const;
+	FORCEINLINE FVector2D operator*(const FVector2D& V) const;
 
 	/**
 	* Gets the result of component-wise division of this vector by another.
@@ -127,7 +127,7 @@ public:
 	* @param V The other vector to divide this by.
 	* @return The result of the division.
 	*/
-	YVector2D operator/(const YVector2D& V) const;
+	FVector2D operator/(const FVector2D& V) const;
 
 	/**
 	* Calculates dot product of this vector and another.
@@ -135,7 +135,7 @@ public:
 	* @param V The other vector.
 	* @return The dot product.
 	*/
-	FORCEINLINE float operator|(const YVector2D& V) const;
+	FORCEINLINE float operator|(const FVector2D& V) const;
 
 	/**
 	* Calculates cross product of this vector and another.
@@ -143,7 +143,7 @@ public:
 	* @param V The other vector.
 	* @return The cross product.
 	*/
-	FORCEINLINE float operator^(const YVector2D& V) const;
+	FORCEINLINE float operator^(const FVector2D& V) const;
 
 public:
 
@@ -153,7 +153,7 @@ public:
 	* @param V The vector to compare against.
 	* @return true if the two vectors are equal, otherwise false.
 	*/
-	bool operator==(const YVector2D& V) const;
+	bool operator==(const FVector2D& V) const;
 
 	/**
 	* Compares this vector against another for inequality.
@@ -161,7 +161,7 @@ public:
 	* @param V The vector to compare against.
 	* @return true if the two vectors are not equal, otherwise false.
 	*/
-	bool operator!=(const YVector2D& V) const;
+	bool operator!=(const FVector2D& V) const;
 
 	/**
 	* Checks whether both components of this vector are less than another.
@@ -169,7 +169,7 @@ public:
 	* @param Other The vector to compare against.
 	* @return true if this is the smaller vector, otherwise false.
 	*/
-	bool operator<(const YVector2D& Other) const;
+	bool operator<(const FVector2D& Other) const;
 
 	/**
 	* Checks whether both components of this vector are greater than another.
@@ -177,7 +177,7 @@ public:
 	* @param Other The vector to compare against.
 	* @return true if this is the larger vector, otherwise false.
 	*/
-	bool operator>(const YVector2D& Other) const;
+	bool operator>(const FVector2D& Other) const;
 
 	/**
 	* Checks whether both components of this vector are less than or equal to another.
@@ -185,7 +185,7 @@ public:
 	* @param Other The vector to compare against.
 	* @return true if this vector is less than or equal to the other vector, otherwise false.
 	*/
-	bool operator<=(const YVector2D& Other) const;
+	bool operator<=(const FVector2D& Other) const;
 
 	/**
 	* Checks whether both components of this vector are greater than or equal to another.
@@ -193,14 +193,14 @@ public:
 	* @param Other The vector to compare against.
 	* @return true if this vector is greater than or equal to the other vector, otherwise false.
 	*/
-	bool operator>=(const YVector2D& Other) const;
+	bool operator>=(const FVector2D& Other) const;
 
 	/**
 	* Gets a negated copy of the vector.
 	*
 	* @return A negated copy of the vector.
 	*/
-	FORCEINLINE YVector2D operator-() const;
+	FORCEINLINE FVector2D operator-() const;
 
 	/**
 	* Adds another vector to this.
@@ -208,7 +208,7 @@ public:
 	* @param V The other vector to add.
 	* @return Copy of the vector after addition.
 	*/
-	FORCEINLINE YVector2D operator+=(const YVector2D& V);
+	FORCEINLINE FVector2D operator+=(const FVector2D& V);
 
 	/**
 	* Subtracts another vector from this.
@@ -216,7 +216,7 @@ public:
 	* @param V The other vector to subtract.
 	* @return Copy of the vector after subtraction.
 	*/
-	FORCEINLINE YVector2D operator-=(const YVector2D& V);
+	FORCEINLINE FVector2D operator-=(const FVector2D& V);
 
 	/**
 	* Scales this vector.
@@ -224,7 +224,7 @@ public:
 	* @param Scale The scale to multiply vector by.
 	* @return Copy of the vector after scaling.
 	*/
-	FORCEINLINE YVector2D operator*=(float Scale);
+	FORCEINLINE FVector2D operator*=(float Scale);
 
 	/**
 	* Divides this vector.
@@ -232,7 +232,7 @@ public:
 	* @param V What to divide vector by.
 	* @return Copy of the vector after division.
 	*/
-	YVector2D operator/=(float V);
+	FVector2D operator/=(float V);
 
 	/**
 	* Multiplies this vector with another vector, using component-wise multiplication.
@@ -240,7 +240,7 @@ public:
 	* @param V The vector to multiply with.
 	* @return Copy of the vector after multiplication.
 	*/
-	YVector2D operator*=(const YVector2D& V);
+	FVector2D operator*=(const FVector2D& V);
 
 	/**
 	* Divides this vector by another vector, using component-wise division.
@@ -248,7 +248,7 @@ public:
 	* @param V The vector to divide by.
 	* @return Copy of the vector after division.
 	*/
-	YVector2D operator/=(const YVector2D& V);
+	FVector2D operator/=(const FVector2D& V);
 
 	/**
 	* Gets specific component of the vector.
@@ -291,7 +291,7 @@ public:
 	* @param B The second vector.
 	* @return The dot product.
 	*/
-	FORCEINLINE static float DotProduct(const YVector2D& A, const YVector2D& B);
+	FORCEINLINE static float DotProduct(const FVector2D& A, const FVector2D& B);
 
 	/**
 	* Squared distance between two 2D points.
@@ -300,7 +300,7 @@ public:
 	* @param V2 The second point.
 	* @return The squared distance between two 2D points.
 	*/
-	FORCEINLINE static float DistSquared(const YVector2D& V1, const YVector2D& V2);
+	FORCEINLINE static float DistSquared(const FVector2D& V1, const FVector2D& V2);
 
 	/**
 	* Distance between two 2D points.
@@ -309,7 +309,7 @@ public:
 	* @param V2 The second point.
 	* @return The squared distance between two 2D points.
 	*/
-	FORCEINLINE static float Distance(const YVector2D& V1, const YVector2D& V2);
+	FORCEINLINE static float Distance(const FVector2D& V1, const FVector2D& V2);
 
 	/**
 	* Calculate the cross product of two vectors.
@@ -318,7 +318,7 @@ public:
 	* @param B The second vector.
 	* @return The cross product.
 	*/
-	FORCEINLINE static float CrossProduct(const YVector2D& A, const YVector2D& B);
+	FORCEINLINE static float CrossProduct(const FVector2D& A, const FVector2D& B);
 
 	/**
 	* Checks for equality with error-tolerant comparison.
@@ -327,7 +327,7 @@ public:
 	* @param Tolerance Error tolerance.
 	* @return true if the vectors are equal within specified tolerance, otherwise false.
 	*/
-	bool Equals(const YVector2D& V, float Tolerance = KINDA_SMALL_NUMBER) const;
+	bool Equals(const FVector2D& V, float Tolerance = KINDA_SMALL_NUMBER) const;
 
 	/**
 	* Set the values of the vector directly.
@@ -378,7 +378,7 @@ public:
 	* @param AngleDeg Angle to rotate (in degrees)
 	* @return Rotated Vector
 	*/
-	YVector2D GetRotated(float AngleDeg) const;
+	FVector2D GetRotated(float AngleDeg) const;
 
 	/**
 	* Gets a normalized copy of the vector, checking it is safe to do so based on the length.
@@ -387,7 +387,7 @@ public:
 	* @param Tolerance Minimum squared length of vector for normalization.
 	* @return A normalized copy of the vector if safe, (0,0) otherwise.
 	*/
-	YVector2D GetSafeNormal(float Tolerance = SMALL_NUMBER) const;
+	FVector2D GetSafeNormal(float Tolerance = SMALL_NUMBER) const;
 
 	/**
 	* Normalize this vector in-place if it is large enough, set it to (0,0) otherwise.
@@ -411,7 +411,7 @@ public:
 	* @param OutDir Reference passed in to store unit direction vector.
 	* @param OutLength Reference passed in to store length of the vector.
 	*/
-	void ToDirectionAndLength(YVector2D &OutDir, float &OutLength) const;
+	void ToDirectionAndLength(FVector2D &OutDir, float &OutLength) const;
 
 	/**
 	* Checks whether all components of the vector are exactly zero.
@@ -425,13 +425,13 @@ public:
 	*
 	* @return New Int Point from this vector.
 	*/
-	YIntPoint IntPoint() const;
+	FIntPoint IntPoint() const;
 
 	/**
 	* Creates a copy of this vector with both axes clamped to the given range.
 	* @return New vector with clamped axes.
 	*/
-	YVector2D ClampAxes(float MinAxisVal, float MaxAxisVal) const;
+	FVector2D ClampAxes(float MinAxisVal, float MaxAxisVal) const;
 
 	/**
 	* Get a copy of the vector as sign only.
@@ -439,14 +439,14 @@ public:
 	*
 	* @param A copy of the vector with each component set to +1 or -1
 	*/
-	FORCEINLINE YVector2D GetSignVector() const;
+	FORCEINLINE FVector2D GetSignVector() const;
 
 	/**
 	* Get a copy of this vector with absolute value of each component.
 	*
 	* @return A copy of this vector with absolute value of each component.
 	*/
-	FORCEINLINE YVector2D GetAbs() const;
+	FORCEINLINE FVector2D GetAbs() const;
 
 	/**
 	* Get a textual representation of the vector.
@@ -471,7 +471,7 @@ public:
 	* @param V Vector being serialized.
 	* @return Reference to Archive after serialization.
 	*/
-	friend FArchive& operator<<(FArchive& Ar, YVector2D& V)
+	friend FArchive& operator<<(FArchive& Ar, FVector2D& V)
 	{
 		// @warning BulkSerialize: YVector2D is serialized as memory dump
 		// See TArray::BulkSerialize for detailed description of implied limitations.
@@ -490,7 +490,7 @@ public:
 		if (ContainsNaN())
 		{
 			logOrEnsureNanError(TEXT("YVector contains NaN: %s"), *ToString());
-			*this = YVector2D::ZeroVector;
+			*this = FVector2D::ZeroVector;
 		}
 	}
 #else
@@ -504,8 +504,8 @@ public:
 	*/
 	FORCEINLINE bool ContainsNaN() const
 	{
-		return (!YMath::IsFinite(X) ||
-			!YMath::IsFinite(Y));
+		return (!FMath::IsFinite(X) ||
+			!FMath::IsFinite(Y));
 	}
 
 	/**
@@ -524,7 +524,7 @@ public:
 * @param Vector the vector to create a hash value for
 * @return The hash value from the components
 */
-FORCEINLINE uint32 GetTypeHash(const YVector2D& Vector)
+FORCEINLINE uint32 GetTypeHash(const FVector2D& Vector)
 {
 	// Note: this assumes there's no padding in YVector2D that could contain uncompared data.
 	return FCrc::MemCrc_DEPRECATED(&Vector, sizeof(Vector));
@@ -533,185 +533,185 @@ FORCEINLINE uint32 GetTypeHash(const YVector2D& Vector)
 /* YVector2D inline functions
 *****************************************************************************/
 
-FORCEINLINE YVector2D operator*(float Scale, const YVector2D& V)
+FORCEINLINE FVector2D operator*(float Scale, const FVector2D& V)
 {
 	return V.operator*(Scale);
 }
 
-template <> struct TIsPODType<YVector2D> { enum { Value = true }; };
+template <> struct TIsPODType<FVector2D> { enum { Value = true }; };
 
 
-FORCEINLINE YVector2D::YVector2D(float InX, float InY)
+FORCEINLINE FVector2D::FVector2D(float InX, float InY)
 	: X(InX), Y(InY)
 { }
 
-FORCEINLINE YVector2D::YVector2D(YIntPoint InPos)
+FORCEINLINE FVector2D::FVector2D(FIntPoint InPos)
 {
 	X = (float)InPos.X;
 	Y = (float)InPos.Y;
 }
 
 
-FORCEINLINE YVector2D::YVector2D(EForceInit)
+FORCEINLINE FVector2D::FVector2D(EForceInit)
 	: X(0), Y(0)
 {
 }
 
-FORCEINLINE YVector2D YVector2D::operator+(const YVector2D& V) const
+FORCEINLINE FVector2D FVector2D::operator+(const FVector2D& V) const
 {
-	return YVector2D(X + V.X, Y + V.Y);
+	return FVector2D(X + V.X, Y + V.Y);
 }
 
 
-FORCEINLINE YVector2D YVector2D::operator-(const YVector2D& V) const
+FORCEINLINE FVector2D FVector2D::operator-(const FVector2D& V) const
 {
-	return YVector2D(X - V.X, Y - V.Y);
+	return FVector2D(X - V.X, Y - V.Y);
 }
 
 
-FORCEINLINE YVector2D YVector2D::operator*(float Scale) const
+FORCEINLINE FVector2D FVector2D::operator*(float Scale) const
 {
-	return YVector2D(X * Scale, Y * Scale);
+	return FVector2D(X * Scale, Y * Scale);
 }
 
 
-FORCEINLINE YVector2D YVector2D::operator/(float Scale) const
+FORCEINLINE FVector2D FVector2D::operator/(float Scale) const
 {
 	const float RScale = 1.f / Scale;
-	return YVector2D(X * RScale, Y * RScale);
+	return FVector2D(X * RScale, Y * RScale);
 }
 
 
-FORCEINLINE YVector2D YVector2D::operator+(float A) const
+FORCEINLINE FVector2D FVector2D::operator+(float A) const
 {
-	return YVector2D(X + A, Y + A);
+	return FVector2D(X + A, Y + A);
 }
 
 
-FORCEINLINE YVector2D YVector2D::operator-(float A) const
+FORCEINLINE FVector2D FVector2D::operator-(float A) const
 {
-	return YVector2D(X - A, Y - A);
+	return FVector2D(X - A, Y - A);
 }
 
 
-FORCEINLINE YVector2D YVector2D::operator*(const YVector2D& V) const
+FORCEINLINE FVector2D FVector2D::operator*(const FVector2D& V) const
 {
-	return YVector2D(X * V.X, Y * V.Y);
+	return FVector2D(X * V.X, Y * V.Y);
 }
 
 
-FORCEINLINE YVector2D YVector2D::operator/(const YVector2D& V) const
+FORCEINLINE FVector2D FVector2D::operator/(const FVector2D& V) const
 {
-	return YVector2D(X / V.X, Y / V.Y);
+	return FVector2D(X / V.X, Y / V.Y);
 }
 
 
-FORCEINLINE float YVector2D::operator|(const YVector2D& V) const
+FORCEINLINE float FVector2D::operator|(const FVector2D& V) const
 {
 	return X*V.X + Y*V.Y;
 }
 
 
-FORCEINLINE float YVector2D::operator^(const YVector2D& V) const
+FORCEINLINE float FVector2D::operator^(const FVector2D& V) const
 {
 	return X*V.Y - Y*V.X;
 }
 
 
-FORCEINLINE float YVector2D::DotProduct(const YVector2D& A, const YVector2D& B)
+FORCEINLINE float FVector2D::DotProduct(const FVector2D& A, const FVector2D& B)
 {
 	return A | B;
 }
 
 
-FORCEINLINE float YVector2D::DistSquared(const YVector2D &V1, const YVector2D &V2)
+FORCEINLINE float FVector2D::DistSquared(const FVector2D &V1, const FVector2D &V2)
 {
-	return YMath::Square(V2.X - V1.X) + YMath::Square(V2.Y - V1.Y);
+	return FMath::Square(V2.X - V1.X) + FMath::Square(V2.Y - V1.Y);
 }
 
 
-FORCEINLINE float YVector2D::Distance(const YVector2D& V1, const YVector2D& V2)
+FORCEINLINE float FVector2D::Distance(const FVector2D& V1, const FVector2D& V2)
 {
-	return YMath::Sqrt(YVector2D::DistSquared(V1, V2));
+	return FMath::Sqrt(FVector2D::DistSquared(V1, V2));
 }
 
 
-FORCEINLINE float YVector2D::CrossProduct(const YVector2D& A, const YVector2D& B)
+FORCEINLINE float FVector2D::CrossProduct(const FVector2D& A, const FVector2D& B)
 {
 	return A ^ B;
 }
 
 
-FORCEINLINE bool YVector2D::operator==(const YVector2D& V) const
+FORCEINLINE bool FVector2D::operator==(const FVector2D& V) const
 {
 	return X == V.X && Y == V.Y;
 }
 
 
-FORCEINLINE bool YVector2D::operator!=(const YVector2D& V) const
+FORCEINLINE bool FVector2D::operator!=(const FVector2D& V) const
 {
 	return X != V.X || Y != V.Y;
 }
 
 
-FORCEINLINE bool YVector2D::operator<(const YVector2D& Other) const
+FORCEINLINE bool FVector2D::operator<(const FVector2D& Other) const
 {
 	return X < Other.X && Y < Other.Y;
 }
 
 
-FORCEINLINE bool YVector2D::operator>(const YVector2D& Other) const
+FORCEINLINE bool FVector2D::operator>(const FVector2D& Other) const
 {
 	return X > Other.X && Y > Other.Y;
 }
 
 
-FORCEINLINE bool YVector2D::operator<=(const YVector2D& Other) const
+FORCEINLINE bool FVector2D::operator<=(const FVector2D& Other) const
 {
 	return X <= Other.X && Y <= Other.Y;
 }
 
 
-FORCEINLINE bool YVector2D::operator>=(const YVector2D& Other) const
+FORCEINLINE bool FVector2D::operator>=(const FVector2D& Other) const
 {
 	return X >= Other.X && Y >= Other.Y;
 }
 
 
-FORCEINLINE bool YVector2D::Equals(const YVector2D& V, float Tolerance) const
+FORCEINLINE bool FVector2D::Equals(const FVector2D& V, float Tolerance) const
 {
-	return YMath::Abs(X - V.X) <= Tolerance && YMath::Abs(Y - V.Y) <= Tolerance;
+	return FMath::Abs(X - V.X) <= Tolerance && FMath::Abs(Y - V.Y) <= Tolerance;
 }
 
 
-FORCEINLINE YVector2D YVector2D::operator-() const
+FORCEINLINE FVector2D FVector2D::operator-() const
 {
-	return YVector2D(-X, -Y);
+	return FVector2D(-X, -Y);
 }
 
 
-FORCEINLINE YVector2D YVector2D::operator+=(const YVector2D& V)
+FORCEINLINE FVector2D FVector2D::operator+=(const FVector2D& V)
 {
 	X += V.X; Y += V.Y;
 	return *this;
 }
 
 
-FORCEINLINE YVector2D YVector2D::operator-=(const YVector2D& V)
+FORCEINLINE FVector2D FVector2D::operator-=(const FVector2D& V)
 {
 	X -= V.X; Y -= V.Y;
 	return *this;
 }
 
 
-FORCEINLINE YVector2D YVector2D::operator*=(float Scale)
+FORCEINLINE FVector2D FVector2D::operator*=(float Scale)
 {
 	X *= Scale; Y *= Scale;
 	return *this;
 }
 
 
-FORCEINLINE YVector2D YVector2D::operator/=(float V)
+FORCEINLINE FVector2D FVector2D::operator/=(float V)
 {
 	const float RV = 1.f / V;
 	X *= RV; Y *= RV;
@@ -719,103 +719,103 @@ FORCEINLINE YVector2D YVector2D::operator/=(float V)
 }
 
 
-FORCEINLINE YVector2D YVector2D::operator*=(const YVector2D& V)
+FORCEINLINE FVector2D FVector2D::operator*=(const FVector2D& V)
 {
 	X *= V.X; Y *= V.Y;
 	return *this;
 }
 
 
-FORCEINLINE YVector2D YVector2D::operator/=(const YVector2D& V)
+FORCEINLINE FVector2D FVector2D::operator/=(const FVector2D& V)
 {
 	X /= V.X; Y /= V.Y;
 	return *this;
 }
 
 
-FORCEINLINE float& YVector2D::operator[](int32 Index)
+FORCEINLINE float& FVector2D::operator[](int32 Index)
 {
 	check(Index >= 0 && Index<2);
 	return ((Index == 0) ? X : Y);
 }
 
 
-FORCEINLINE float YVector2D::operator[](int32 Index) const
+FORCEINLINE float FVector2D::operator[](int32 Index) const
 {
 	check(Index >= 0 && Index<2);
 	return ((Index == 0) ? X : Y);
 }
 
 
-FORCEINLINE void YVector2D::Set(float InX, float InY)
+FORCEINLINE void FVector2D::Set(float InX, float InY)
 {
 	X = InX;
 	Y = InY;
 }
 
 
-FORCEINLINE float YVector2D::GetMax() const
+FORCEINLINE float FVector2D::GetMax() const
 {
-	return YMath::Max(X, Y);
+	return FMath::Max(X, Y);
 }
 
 
-FORCEINLINE float YVector2D::GetAbsMax() const
+FORCEINLINE float FVector2D::GetAbsMax() const
 {
-	return YMath::Max(YMath::Abs(X), YMath::Abs(Y));
+	return FMath::Max(FMath::Abs(X), FMath::Abs(Y));
 }
 
 
-FORCEINLINE float YVector2D::GetMin() const
+FORCEINLINE float FVector2D::GetMin() const
 {
-	return YMath::Min(X, Y);
+	return FMath::Min(X, Y);
 }
 
 
-FORCEINLINE float YVector2D::Size() const
+FORCEINLINE float FVector2D::Size() const
 {
-	return YMath::Sqrt(X*X + Y*Y);
+	return FMath::Sqrt(X*X + Y*Y);
 }
 
 
-FORCEINLINE float YVector2D::SizeSquared() const
+FORCEINLINE float FVector2D::SizeSquared() const
 {
 	return X*X + Y*Y;
 }
 
 
-FORCEINLINE YVector2D YVector2D::GetRotated(const float AngleDeg) const
+FORCEINLINE FVector2D FVector2D::GetRotated(const float AngleDeg) const
 {
 	// Based on YVector::RotateAngleAxis with Axis(0,0,1)
 
 	float S, C;
-	YMath::SinCos(&S, &C, YMath::DegreesToRadians(AngleDeg));
+	FMath::SinCos(&S, &C, FMath::DegreesToRadians(AngleDeg));
 
 	const float OMC = 1.0f - C;
 
-	return YVector2D(
+	return FVector2D(
 		C * X - S * Y,
 		S * X + C * Y);
 }
 
 
-FORCEINLINE YVector2D YVector2D::GetSafeNormal(float Tolerance) const
+FORCEINLINE FVector2D FVector2D::GetSafeNormal(float Tolerance) const
 {
 	const float SquareSum = X*X + Y*Y;
 	if (SquareSum > Tolerance)
 	{
-		const float Scale = YMath::InvSqrt(SquareSum);
-		return YVector2D(X*Scale, Y*Scale);
+		const float Scale = FMath::InvSqrt(SquareSum);
+		return FVector2D(X*Scale, Y*Scale);
 	}
-	return YVector2D(0.f, 0.f);
+	return FVector2D(0.f, 0.f);
 }
 
-FORCEINLINE void YVector2D::Normalize(float Tolerance)
+FORCEINLINE void FVector2D::Normalize(float Tolerance)
 {
 	const float SquareSum = X*X + Y*Y;
 	if (SquareSum > Tolerance)
 	{
-		const float Scale = YMath::InvSqrt(SquareSum);
+		const float Scale = FMath::InvSqrt(SquareSum);
 		X *= Scale;
 		Y *= Scale;
 		return;
@@ -825,79 +825,79 @@ FORCEINLINE void YVector2D::Normalize(float Tolerance)
 }
 
 
-FORCEINLINE void YVector2D::ToDirectionAndLength(YVector2D &OutDir, float &OutLength) const
+FORCEINLINE void FVector2D::ToDirectionAndLength(FVector2D &OutDir, float &OutLength) const
 {
 	OutLength = Size();
 	if (OutLength > SMALL_NUMBER)
 	{
 		float OneOverLength = 1.0f / OutLength;
-		OutDir = YVector2D(X*OneOverLength, Y*OneOverLength);
+		OutDir = FVector2D(X*OneOverLength, Y*OneOverLength);
 	}
 	else
 	{
-		OutDir = YVector2D::ZeroVector;
+		OutDir = FVector2D::ZeroVector;
 	}
 }
 
 
-FORCEINLINE bool YVector2D::IsNearlyZero(float Tolerance) const
+FORCEINLINE bool FVector2D::IsNearlyZero(float Tolerance) const
 {
-	return	YMath::Abs(X) <= Tolerance
-		&&	YMath::Abs(Y) <= Tolerance;
+	return	FMath::Abs(X) <= Tolerance
+		&&	FMath::Abs(Y) <= Tolerance;
 }
 
 
-FORCEINLINE bool YVector2D::IsZero() const
+FORCEINLINE bool FVector2D::IsZero() const
 {
 	return X == 0.f && Y == 0.f;
 }
 
 
-FORCEINLINE float& YVector2D::Component(int32 Index)
+FORCEINLINE float& FVector2D::Component(int32 Index)
 {
 	return (&X)[Index];
 }
 
 
-FORCEINLINE float YVector2D::Component(int32 Index) const
+FORCEINLINE float FVector2D::Component(int32 Index) const
 {
 	return (&X)[Index];
 }
 
-FORCEINLINE YIntPoint YVector2D::IntPoint() const
+FORCEINLINE FIntPoint FVector2D::IntPoint() const
 {
-	return YIntPoint(YMath::RoundToInt(X), YMath::RoundToInt(Y));
+	return FIntPoint(FMath::RoundToInt(X), FMath::RoundToInt(Y));
 }
 
 
-FORCEINLINE YVector2D YVector2D::ClampAxes(float MinAxisVal, float MaxAxisVal) const
+FORCEINLINE FVector2D FVector2D::ClampAxes(float MinAxisVal, float MaxAxisVal) const
 {
-	return YVector2D(YMath::Clamp(X, MinAxisVal, MaxAxisVal), YMath::Clamp(Y, MinAxisVal, MaxAxisVal));
+	return FVector2D(FMath::Clamp(X, MinAxisVal, MaxAxisVal), FMath::Clamp(Y, MinAxisVal, MaxAxisVal));
 }
 
 
-FORCEINLINE YVector2D YVector2D::GetSignVector() const
+FORCEINLINE FVector2D FVector2D::GetSignVector() const
 {
-	return YVector2D
+	return FVector2D
 	(
-		YMath::FloatSelect(X, 1.f, -1.f),
-		YMath::FloatSelect(Y, 1.f, -1.f)
+		FMath::FloatSelect(X, 1.f, -1.f),
+		FMath::FloatSelect(Y, 1.f, -1.f)
 	);
 }
 
-FORCEINLINE YVector2D YVector2D::GetAbs() const
+FORCEINLINE FVector2D FVector2D::GetAbs() const
 {
-	return YVector2D(YMath::Abs(X), YMath::Abs(Y));
+	return FVector2D(FMath::Abs(X), FMath::Abs(Y));
 }
 
 
-FORCEINLINE FString YVector2D::ToString() const
+FORCEINLINE FString FVector2D::ToString() const
 {
 	return FString::Printf(TEXT("X=%3.3f Y=%3.3f"), X, Y);
 }
 
 
-FORCEINLINE bool YVector2D::InitFromString(const FString& InSourceString)
+FORCEINLINE bool FVector2D::InitFromString(const FString& InSourceString)
 {
 	X = Y = 0;
 
@@ -910,12 +910,12 @@ FORCEINLINE bool YVector2D::InitFromString(const FString& InSourceString)
 /* YLinearColor inline functions
 *****************************************************************************/
 
-FORCEINLINE float YMath::GetRangePct(YVector2D const& Range, float Value)
+FORCEINLINE float FMath::GetRangePct(FVector2D const& Range, float Value)
 {
 	return (Range.X != Range.Y) ? (Value - Range.X) / (Range.Y - Range.X) : Range.X;
 }
 
-FORCEINLINE float YMath::GetRangeValue(YVector2D const& Range, float Pct)
+FORCEINLINE float FMath::GetRangeValue(FVector2D const& Range, float Pct)
 {
 	return Lerp<float>(Range.X, Range.Y, Pct);
 }

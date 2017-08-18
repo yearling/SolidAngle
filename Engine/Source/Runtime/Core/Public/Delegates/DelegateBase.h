@@ -198,7 +198,7 @@ private:
 			CurrentInstance->~IDelegateInstance();
 		}
 
-		int32 NewDelegateSize = YMath::DivideAndRoundUp(Size, (int32)sizeof(AlignedInlineDelegateType));
+		int32 NewDelegateSize = FMath::DivideAndRoundUp(Size, (int32)sizeof(AlignedInlineDelegateType));
 		if (DelegateSize != NewDelegateSize)
 		{
 			DelegateAllocator.ResizeAllocation(0, NewDelegateSize, sizeof(AlignedInlineDelegateType));

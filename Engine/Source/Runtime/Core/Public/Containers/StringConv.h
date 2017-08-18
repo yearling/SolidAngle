@@ -1,3 +1,5 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 // This file contains the classes used when converting strings between
 // standards (ANSI, UNICODE, etc.)
 
@@ -15,7 +17,7 @@
 
 
 template <typename From, typename To>
-class YStringConvert
+class TStringConvert
 {
 public:
 	typedef From FromType;
@@ -34,25 +36,25 @@ public:
 };
 
 /**
-* This is a basic ANSICHAR* wrapper which swallows all output written through it.
-*/
-struct YNulPointerIterator
+ * This is a basic ANSICHAR* wrapper which swallows all output written through it.
+ */
+struct FNulPointerIterator
 {
-	YNulPointerIterator()
+	FNulPointerIterator()
 		: Ptr_(NULL)
 	{
 	}
 
-	const YNulPointerIterator& operator* () const { return *this; }
-	const YNulPointerIterator& operator++() { ++Ptr_; return *this; }
-	const YNulPointerIterator& operator++(int) { ++Ptr_; return *this; }
+	const FNulPointerIterator& operator* () const {         return *this; }
+	const FNulPointerIterator& operator++()       { ++Ptr_; return *this; }
+	const FNulPointerIterator& operator++(int)    { ++Ptr_; return *this; }
 
 	ANSICHAR operator=(ANSICHAR Val) const
 	{
 		return Val;
 	}
 
-	friend int32 operator-(YNulPointerIterator Lhs, YNulPointerIterator Rhs)
+	friend int32 operator-(FNulPointerIterator Lhs, FNulPointerIterator Rhs)
 	{
 		return Lhs.Ptr_ - Rhs.Ptr_;
 	}
@@ -61,7 +63,7 @@ struct YNulPointerIterator
 };
 
 // This should be replaced with Platform stuff when FPlatformString starts to know about UTF-8.
-class YTCHARToUTF8_Convert
+class FTCHARToUTF8_Convert
 {
 public:
 	typedef TCHAR    FromType;
@@ -91,21 +93,21 @@ public:
 			// There are seven "UTF-16 surrogates" that are illegal in UTF-8.
 			switch (cp)
 			{
-			case 0xD800:
-			case 0xDB7F:
-			case 0xDB80:
-			case 0xDBFF:
-			case 0xDC00:
-			case 0xDF80:
-			case 0xDFFF:
-				cp = UNICODE_BOGUS_CHAR_CODEPOINT;
+				case 0xD800:
+				case 0xDB7F:
+				case 0xDB80:
+				case 0xDBFF:
+				case 0xDC00:
+				case 0xDF80:
+				case 0xDFFF:
+					cp = UNICODE_BOGUS_CHAR_CODEPOINT;
 			}
 		}
 
 		// Do the encoding...
 		if (cp < 0x80)
 		{
-			*(dst++) = (char)cp;
+			*(dst++) = (char) cp;
 			len--;
 		}
 
@@ -117,8 +119,8 @@ public:
 			}
 			else
 			{
-				*(dst++) = (char)((cp >> 6) | 128 | 64);
-				*(dst++) = (char)(cp & 0x3F) | 128;
+				*(dst++) = (char) ((cp >> 6) | 128 | 64);
+				*(dst++) = (char) (cp & 0x3F) | 128;
 				len -= 2;
 			}
 		}
@@ -131,9 +133,9 @@ public:
 			}
 			else
 			{
-				*(dst++) = (char)((cp >> 12) | 128 | 64 | 32);
-				*(dst++) = (char)((cp >> 6) & 0x3F) | 128;
-				*(dst++) = (char)(cp & 0x3F) | 128;
+				*(dst++) = (char) ((cp >> 12) | 128 | 64 | 32);
+				*(dst++) = (char) ((cp >> 6) & 0x3F) | 128;
+				*(dst++) = (char) (cp & 0x3F) | 128;
 				len -= 3;
 			}
 		}
@@ -146,10 +148,10 @@ public:
 			}
 			else
 			{
-				*(dst++) = (char)((cp >> 18) | 128 | 64 | 32 | 16);
-				*(dst++) = (char)((cp >> 12) & 0x3F) | 128;
-				*(dst++) = (char)((cp >> 6) & 0x3F) | 128;
-				*(dst++) = (char)(cp & 0x3F) | 128;
+				*(dst++) = (char) ((cp >> 18) | 128 | 64 | 32 | 16);
+				*(dst++) = (char) ((cp >> 12) & 0x3F) | 128;
+				*(dst++) = (char) ((cp >> 6) & 0x3F) | 128;
+				*(dst++) = (char) (cp & 0x3F) | 128;
 				len -= 4;
 			}
 		}
@@ -159,13 +161,13 @@ public:
 	}
 
 	/**
-	* Converts the string to the desired format.
-	*
-	* @param Dest      The destination buffer of the converted string.
-	* @param DestLen   The length of the destination buffer.
-	* @param Source    The source string to convert.
-	* @param SourceLen The length of the source string.
-	*/
+	 * Converts the string to the desired format.
+	 *
+	 * @param Dest      The destination buffer of the converted string.
+	 * @param DestLen   The length of the destination buffer.
+	 * @param Source    The source string to convert.
+	 * @param SourceLen The length of the source string.
+	 */
 	static FORCEINLINE void Convert(ANSICHAR* Dest, int32 DestLen, const TCHAR* Source, int32 SourceLen)
 	{
 		// Now do the conversion
@@ -180,14 +182,14 @@ public:
 	}
 
 	/**
-	* Determines the length of the converted string.
-	*
-	* @return The length of the string in UTF-8 code units.
-	*/
+	 * Determines the length of the converted string.
+	 *
+	 * @return The length of the string in UTF-8 code units.
+	 */
 	static int32 ConvertedLength(const TCHAR* Source, int32 SourceLen)
 	{
-		YNulPointerIterator DestStart;
-		YNulPointerIterator Dest;
+		FNulPointerIterator DestStart;
+		FNulPointerIterator Dest;
 		int32               DestLen = SourceLen * 4;
 		while (SourceLen--)
 		{
@@ -199,7 +201,7 @@ public:
 
 // This should be replaced with Platform stuff when FPlatformString starts to know about UTF-8.
 // Also, it's dangerous as it may read past the provided memory buffer if passed a malformed UTF-8 string.
-class YUTF8ToTCHAR_Convert
+class FUTF8ToTCHAR_Convert
 {
 public:
 	typedef ANSICHAR FromType;
@@ -209,7 +211,7 @@ public:
 	{
 		const char *str = *_str;
 		uint32 retval = 0;
-		uint32 octet = (uint32)((uint8)*str);
+		uint32 octet = (uint32) ((uint8) *str);
 		uint32 octet2, octet3, octet4;
 
 		if (octet < 128)  // one octet char: 0 to 127
@@ -226,8 +228,8 @@ public:
 		}
 		else if (octet < 224)  // two octets
 		{
-			octet -= (128 + 64);
-			octet2 = (uint32)((uint8) *(++str));
+			octet -= (128+64);
+			octet2 = (uint32) ((uint8) *(++str));
 			if ((octet2 & (128 + 64)) != 128)  // Format isn't 10xxxxxx?
 			{
 				(*_str)++;  // Sequence was not valid UTF-8. Skip the first byte and continue.
@@ -243,35 +245,35 @@ public:
 		}
 		else if (octet < 240)  // three octets
 		{
-			octet -= (128 + 64 + 32);
-			octet2 = (uint32)((uint8) *(++str));
-			if ((octet2 & (128 + 64)) != 128)  // Format isn't 10xxxxxx?
+			octet -= (128+64+32);
+			octet2 = (uint32) ((uint8) *(++str));
+			if ((octet2 & (128+64)) != 128)  // Format isn't 10xxxxxx?
 			{
 				(*_str)++;  // Sequence was not valid UTF-8. Skip the first byte and continue.
 				return UNICODE_BOGUS_CHAR_CODEPOINT;
 			}
 
-			octet3 = (uint32)((uint8) *(++str));
-			if ((octet3 & (128 + 64)) != 128)  // Format isn't 10xxxxxx?
+			octet3 = (uint32) ((uint8) *(++str));
+			if ((octet3 & (128+64)) != 128)  // Format isn't 10xxxxxx?
 			{
 				(*_str)++;  // Sequence was not valid UTF-8. Skip the first byte and continue.
 				return UNICODE_BOGUS_CHAR_CODEPOINT;
 			}
 
-			retval = (((octet << 12)) | ((octet2 - 128) << 6) | ((octet3 - 128)));
+			retval = ( ((octet << 12)) | ((octet2-128) << 6) | ((octet3-128)) );
 
 			// There are seven "UTF-16 surrogates" that are illegal in UTF-8.
 			switch (retval)
 			{
-			case 0xD800:
-			case 0xDB7F:
-			case 0xDB80:
-			case 0xDBFF:
-			case 0xDC00:
-			case 0xDF80:
-			case 0xDFFF:
-				(*_str)++;  // Sequence was not valid UTF-8. Skip the first byte and continue.
-				return UNICODE_BOGUS_CHAR_CODEPOINT;
+				case 0xD800:
+				case 0xDB7F:
+				case 0xDB80:
+				case 0xDBFF:
+				case 0xDC00:
+				case 0xDF80:
+				case 0xDFFF:
+					(*_str)++;  // Sequence was not valid UTF-8. Skip the first byte and continue.
+					return UNICODE_BOGUS_CHAR_CODEPOINT;
 			}
 
 			// 0xFFFE and 0xFFFF are illegal, too, so we check them at the edge.
@@ -283,30 +285,30 @@ public:
 		}
 		else if (octet < 248)  // four octets
 		{
-			octet -= (128 + 64 + 32 + 16);
-			octet2 = (uint32)((uint8) *(++str));
-			if ((octet2 & (128 + 64)) != 128)  // Format isn't 10xxxxxx?
+			octet -= (128+64+32+16);
+			octet2 = (uint32) ((uint8) *(++str));
+			if ((octet2 & (128+64)) != 128)  // Format isn't 10xxxxxx?
 			{
 				(*_str)++;  // Sequence was not valid UTF-8. Skip the first byte and continue.
 				return UNICODE_BOGUS_CHAR_CODEPOINT;
 			}
 
-			octet3 = (uint32)((uint8) *(++str));
-			if ((octet3 & (128 + 64)) != 128)  // Format isn't 10xxxxxx?
+			octet3 = (uint32) ((uint8) *(++str));
+			if ((octet3 & (128+64)) != 128)  // Format isn't 10xxxxxx?
 			{
 				(*_str)++;  // Sequence was not valid UTF-8. Skip the first byte and continue.
 				return UNICODE_BOGUS_CHAR_CODEPOINT;
 			}
 
-			octet4 = (uint32)((uint8) *(++str));
-			if ((octet4 & (128 + 64)) != 128)  // Format isn't 10xxxxxx?
+			octet4 = (uint32) ((uint8) *(++str));
+			if ((octet4 & (128+64)) != 128)  // Format isn't 10xxxxxx?
 			{
 				(*_str)++;  // Sequence was not valid UTF-8. Skip the first byte and continue.
 				return UNICODE_BOGUS_CHAR_CODEPOINT;
 			}
 
-			retval = (((octet << 18)) | ((octet2 - 128) << 12) |
-				((octet3 - 128) << 6) | ((octet4 - 128)));
+			retval = ( ((octet << 18)) | ((octet2 - 128) << 12) |
+						((octet3 - 128) << 6) | ((octet4 - 128)) );
 			if ((retval >= 0x10000) && (retval <= 0x10FFFF))
 			{
 				*_str += 4;  // skip to next possible start of codepoint.
@@ -318,29 +320,29 @@ public:
 		//  ahead the right number of bytes and don't overflow the buffer.
 		else if (octet < 252)  // five octets
 		{
-			octet = (uint32)((uint8) *(++str));
-			if ((octet & (128 + 64)) != 128)  // Format isn't 10xxxxxx?
+			octet = (uint32) ((uint8) *(++str));
+			if ((octet & (128+64)) != 128)  // Format isn't 10xxxxxx?
 			{
 				(*_str)++;  // Sequence was not valid UTF-8. Skip the first byte and continue.
 				return UNICODE_BOGUS_CHAR_CODEPOINT;
 			}
 
-			octet = (uint32)((uint8) *(++str));
-			if ((octet & (128 + 64)) != 128)  // Format isn't 10xxxxxx?
+			octet = (uint32) ((uint8) *(++str));
+			if ((octet & (128+64)) != 128)  // Format isn't 10xxxxxx?
 			{
 				(*_str)++;  // Sequence was not valid UTF-8. Skip the first byte and continue.
 				return UNICODE_BOGUS_CHAR_CODEPOINT;
 			}
 
-			octet = (uint32)((uint8) *(++str));
-			if ((octet & (128 + 64)) != 128)  // Format isn't 10xxxxxx?
+			octet = (uint32) ((uint8) *(++str));
+			if ((octet & (128+64)) != 128)  // Format isn't 10xxxxxx?
 			{
 				(*_str)++;  // Sequence was not valid UTF-8. Skip the first byte and continue.
 				return UNICODE_BOGUS_CHAR_CODEPOINT;
 			}
 
-			octet = (uint32)((uint8) *(++str));
-			if ((octet & (128 + 64)) != 128)  // Format isn't 10xxxxxx?
+			octet = (uint32) ((uint8) *(++str));
+			if ((octet & (128+64)) != 128)  // Format isn't 10xxxxxx?
 			{
 				(*_str)++;  // Sequence was not valid UTF-8. Skip the first byte and continue.
 				return UNICODE_BOGUS_CHAR_CODEPOINT;
@@ -352,36 +354,36 @@ public:
 
 		else  // six octets
 		{
-			octet = (uint32)((uint8) *(++str));
-			if ((octet & (128 + 64)) != 128)  // Format isn't 10xxxxxx?
+			octet = (uint32) ((uint8) *(++str));
+			if ((octet & (128+64)) != 128)  // Format isn't 10xxxxxx?
 			{
 				(*_str)++;  // Sequence was not valid UTF-8. Skip the first byte and continue.
 				return UNICODE_BOGUS_CHAR_CODEPOINT;
 			}
 
-			octet = (uint32)((uint8) *(++str));
-			if ((octet & (128 + 64)) != 128)  // Format isn't 10xxxxxx?
+			octet = (uint32) ((uint8) *(++str));
+			if ((octet & (128+64)) != 128)  // Format isn't 10xxxxxx?
 			{
 				(*_str)++;  // Sequence was not valid UTF-8. Skip the first byte and continue.
 				return UNICODE_BOGUS_CHAR_CODEPOINT;
 			}
 
-			octet = (uint32)((uint8) *(++str));
-			if ((octet & (128 + 64)) != 128)  // Format isn't 10xxxxxx?
+			octet = (uint32) ((uint8) *(++str));
+			if ((octet & (128+64)) != 128)  // Format isn't 10xxxxxx?
 			{
 				(*_str)++;  // Sequence was not valid UTF-8. Skip the first byte and continue.
 				return UNICODE_BOGUS_CHAR_CODEPOINT;
 			}
 
-			octet = (uint32)((uint8) *(++str));
-			if ((octet & (128 + 64)) != 128)  // Format isn't 10xxxxxx?
+			octet = (uint32) ((uint8) *(++str));
+			if ((octet & (128+64)) != 128)  // Format isn't 10xxxxxx?
 			{
 				(*_str)++;  // Sequence was not valid UTF-8. Skip the first byte and continue.
 				return UNICODE_BOGUS_CHAR_CODEPOINT;
 			}
 
-			octet = (uint32)((uint8) *(++str));
-			if ((octet & (128 + 64)) != 128)  // Format isn't 10xxxxxx?
+			octet = (uint32) ((uint8) *(++str));
+			if ((octet & (128+64)) != 128)  // Format isn't 10xxxxxx?
 			{
 				(*_str)++;  // Sequence was not valid UTF-8. Skip the first byte and continue.
 				return UNICODE_BOGUS_CHAR_CODEPOINT;
@@ -396,13 +398,13 @@ public:
 	}
 
 	/**
-	* Converts the string to the desired format.
-	*
-	* @param Dest      The destination buffer of the converted string.
-	* @param DestLen   The length of the destination buffer.
-	* @param Source    The source string to convert.
-	* @param SourceLen The length of the source string.
-	*/
+	 * Converts the string to the desired format.
+	 *
+	 * @param Dest      The destination buffer of the converted string.
+	 * @param DestLen   The length of the destination buffer.
+	 * @param Source    The source string to convert.
+	 * @param SourceLen The length of the source string.
+	 */
 	static FORCEINLINE void Convert(TCHAR* Dest, int32 DestLen, const ANSICHAR* Source, int32 SourceLen)
 	{
 		// Now do the conversion
@@ -427,13 +429,13 @@ public:
 	}
 
 	/**
-	* Determines the length of the converted string.
-	*
-	* @return The length of the string in UTF-8 code units.
-	*/
+	 * Determines the length of the converted string.
+	 *
+	 * @return The length of the string in UTF-8 code units.
+	 */
 	static int32 ConvertedLength(const ANSICHAR* Source, int32 SourceLen)
 	{
-		int32           DestLen = 0;
+		int32           DestLen   = 0;
 		const ANSICHAR* SourceEnd = Source + SourceLen;
 		while (Source < SourceEnd)
 		{
@@ -448,17 +450,17 @@ struct ENullTerminatedString
 {
 	enum Type
 	{
-		No = 0,
+		No  = 0,
 		Yes = 1
 	};
 };
 
 /**
-* Class takes one type of string and converts it to another. The class includes a
-* chunk of presized memory of the destination type. If the presized array is
-* too small, it mallocs the memory needed and frees on the class going out of
-* scope.
-*/
+ * Class takes one type of string and converts it to another. The class includes a
+ * chunk of presized memory of the destination type. If the presized array is
+ * too small, it mallocs the memory needed and frees on the class going out of
+ * scope.
+ */
 template<typename Converter, int32 DefaultConversionSize = DEFAULT_STRING_CONVERSION_SIZE>
 class TStringConversion : private Converter, private TInlineAllocator<DefaultConversionSize>::template ForElementType<typename Converter::ToType>
 {
@@ -468,8 +470,8 @@ class TStringConversion : private Converter, private TInlineAllocator<DefaultCon
 	typedef typename Converter::ToType   ToType;
 
 	/**
-	* Converts the data by using the Convert() method on the base class
-	*/
+	 * Converts the data by using the Convert() method on the base class
+	 */
 	void Init(const FromType* Source, int32 SourceLen, ENullTerminatedString::Type NullTerminated)
 	{
 		StringLength = Converter::ConvertedLength(Source, SourceLen);
@@ -491,7 +493,7 @@ public:
 		}
 		else
 		{
-			Ptr = NULL;
+			Ptr          = NULL;
 			StringLength = 0;
 		}
 	}
@@ -504,14 +506,14 @@ public:
 		}
 		else
 		{
-			Ptr = NULL;
+			Ptr          = NULL;
 			StringLength = 0;
 		}
 	}
 
 	/**
-	* Move constructor
-	*/
+	 * Move constructor
+	 */
 	TStringConversion(TStringConversion&& Other)
 		: Converter(MoveTemp((Converter&&)Other))
 	{
@@ -519,20 +521,20 @@ public:
 	}
 
 	/**
-	* Accessor for the converted string.
-	*
-	* @return A const pointer to the null-terminated converted string.
-	*/
+	 * Accessor for the converted string.
+	 *
+	 * @return A const pointer to the null-terminated converted string.
+	 */
 	FORCEINLINE const ToType* Get() const
 	{
 		return Ptr;
 	}
 
 	/**
-	* Length of the converted string.
-	*
-	* @return The number of characters in the converted string, excluding any null terminator.
-	*/
+	 * Length of the converted string.
+	 *
+	 * @return The number of characters in the converted string, excluding any null terminator.
+	 */
 	FORCEINLINE int32 Length() const
 	{
 		return StringLength;
@@ -549,25 +551,25 @@ private:
 
 
 /**
-* NOTE: The objects these macros declare have very short lifetimes. They are
-* meant to be used as parameters to functions. You cannot assign a variable
-* to the contents of the converted string as the object will go out of
-* scope and the string released.
-*
-* NOTE: The parameter you pass in MUST be a proper string, as the parameter
-* is typecast to a pointer. If you pass in a char, not char* it will compile
-* and then crash at runtime.
-*
-* Usage:
-*
-*		SomeApi(TCHAR_TO_ANSI(SomeUnicodeString));
-*
-*		const char* SomePointer = TCHAR_TO_ANSI(SomeUnicodeString); <--- Bad!!!
-*/
+ * NOTE: The objects these macros declare have very short lifetimes. They are
+ * meant to be used as parameters to functions. You cannot assign a variable
+ * to the contents of the converted string as the object will go out of
+ * scope and the string released.
+ *
+ * NOTE: The parameter you pass in MUST be a proper string, as the parameter
+ * is typecast to a pointer. If you pass in a char, not char* it will compile
+ * and then crash at runtime.
+ *
+ * Usage:
+ *
+ *		SomeApi(TCHAR_TO_ANSI(SomeUnicodeString));
+ *
+ *		const char* SomePointer = TCHAR_TO_ANSI(SomeUnicodeString); <--- Bad!!!
+ */
 
 // These should be replaced with StringCasts when FPlatformString starts to know about UTF-8.
-typedef TStringConversion<YTCHARToUTF8_Convert> FTCHARToUTF8;
-typedef TStringConversion<YUTF8ToTCHAR_Convert> FUTF8ToTCHAR;
+typedef TStringConversion<FTCHARToUTF8_Convert> FTCHARToUTF8;
+typedef TStringConversion<FUTF8ToTCHAR_Convert> FUTF8ToTCHAR;
 
 // Usage of these should be replaced with StringCasts.
 #define TCHAR_TO_ANSI(str) (ANSICHAR*)StringCast<ANSICHAR>(static_cast<const TCHAR*>(str)).Get()
@@ -601,21 +603,21 @@ private:
 };
 
 /**
-* StringCast example usage:
-*
-* void Func(const YString& Str)
-* {
-*     auto Src = StringCast<ANSICHAR>();
-*     const ANSICHAR* Ptr = Src.Get(); // Ptr is a pointer to an ANSICHAR representing the potentially-converted string data.
-* }
-*
-*/
+ * StringCast example usage:
+ *
+ * void Func(const FString& Str)
+ * {
+ *     auto Src = StringCast<ANSICHAR>();
+ *     const ANSICHAR* Ptr = Src.Get(); // Ptr is a pointer to an ANSICHAR representing the potentially-converted string data.
+ * }
+ *
+ */
 
 /**
-* Creates an object which acts as a source of a given string type.  See example above.
-*
-* @param Str The null-terminated source string to convert.
-*/
+ * Creates an object which acts as a source of a given string type.  See example above.
+ *
+ * @param Str The null-terminated source string to convert.
+ */
 template <typename To, typename From>
 FORCEINLINE typename TEnableIf<FPlatformString::TAreEncodingsCompatible<To, From>::Value, TStringPointer<To>>::Type StringCast(const From* Str)
 {
@@ -623,22 +625,22 @@ FORCEINLINE typename TEnableIf<FPlatformString::TAreEncodingsCompatible<To, From
 }
 
 /**
-* Creates an object which acts as a source of a given string type.  See example above.
-*
-* @param Str The null-terminated source string to convert.
-*/
+ * Creates an object which acts as a source of a given string type.  See example above.
+ *
+ * @param Str The null-terminated source string to convert.
+ */
 template <typename To, typename From>
-FORCEINLINE typename TEnableIf<!FPlatformString::TAreEncodingsCompatible<To, From>::Value, TStringConversion<YStringConvert<From, To>>>::Type StringCast(const From* Str)
+FORCEINLINE typename TEnableIf<!FPlatformString::TAreEncodingsCompatible<To, From>::Value, TStringConversion<TStringConvert<From, To>>>::Type StringCast(const From* Str)
 {
-	return TStringConversion<YStringConvert<From, To>>(Str);
+	return TStringConversion<TStringConvert<From, To>>(Str);
 }
 
 /**
-* Creates an object which acts as a source of a given string type.  See example above.
-*
-* @param Str The source string to convert, not necessarily null-terminated.
-* @param Len The number of From elements in Str.
-*/
+ * Creates an object which acts as a source of a given string type.  See example above.
+ *
+ * @param Str The source string to convert, not necessarily null-terminated.
+ * @param Len The number of From elements in Str.
+ */
 template <typename To, typename From>
 FORCEINLINE typename TEnableIf<FPlatformString::TAreEncodingsCompatible<To, From>::Value, TStringPointer<To>>::Type StringCast(const From* Str, int32 Len)
 {
@@ -646,24 +648,24 @@ FORCEINLINE typename TEnableIf<FPlatformString::TAreEncodingsCompatible<To, From
 }
 
 /**
-* Creates an object which acts as a source of a given string type.  See example above.
-*
-* @param Str The source string to convert, not necessarily null-terminated.
-* @param Len The number of From elements in Str.
-*/
+ * Creates an object which acts as a source of a given string type.  See example above.
+ *
+ * @param Str The source string to convert, not necessarily null-terminated.
+ * @param Len The number of From elements in Str.
+ */
 template <typename To, typename From>
-FORCEINLINE typename TEnableIf<!FPlatformString::TAreEncodingsCompatible<To, From>::Value, TStringConversion<YStringConvert<From, To>>>::Type StringCast(const From* Str, int32 Len)
+FORCEINLINE typename TEnableIf<!FPlatformString::TAreEncodingsCompatible<To, From>::Value, TStringConversion<TStringConvert<From, To>>>::Type StringCast(const From* Str, int32 Len)
 {
-	return TStringConversion<YStringConvert<From, To>>(Str, Len);
+	return TStringConversion<TStringConvert<From, To>>(Str, Len);
 }
 
 
 /**
-* Casts one fixed-width char type into another.
-*
-* @param Ch The character to convert.
-* @return The converted character.
-*/
+ * Casts one fixed-width char type into another.
+ *
+ * @param Ch The character to convert.
+ * @return The converted character.
+ */
 template <typename To, typename From>
 FORCEINLINE To CharCast(From Ch)
 {
@@ -673,8 +675,8 @@ FORCEINLINE To CharCast(From Ch)
 }
 
 /**
-* This class is returned by StringPassthru and is not intended to be used directly.
-*/
+ * This class is returned by StringPassthru and is not intended to be used directly.
+ */
 template <typename ToType, typename FromType>
 class TStringPassthru : private TInlineAllocator<DEFAULT_STRING_CONVERSION_SIZE>::template ForElementType<FromType>
 {
@@ -682,9 +684,9 @@ class TStringPassthru : private TInlineAllocator<DEFAULT_STRING_CONVERSION_SIZE>
 
 public:
 	FORCEINLINE TStringPassthru(ToType* InDest, int32 InDestLen, int32 InSrcLen)
-		: Dest(InDest)
+		: Dest   (InDest)
 		, DestLen(InDestLen)
-		, SrcLen(InSrcLen)
+		, SrcLen (InSrcLen)
 	{
 		AllocatorType::ResizeAllocation(0, SrcLen, sizeof(FromType));
 	}
@@ -741,37 +743,37 @@ private:
 };
 
 /**
-* Allows the efficient conversion of strings by means of a temporary memory buffer only when necessary.  Intended to be used
-* when you have an API which populates a buffer with some string representation which is ultimately going to be stored in another
-* representation, but where you don't want to do a conversion or create a temporary buffer for that string if it's not necessary.
-*
-* Intended use:
-*
-* // Populates the buffer Str with StrLen characters.
-* void SomeAPI(APICharType* Str, int32 StrLen);
-*
-* void Func(DestChar* Buffer, int32 BufferSize)
-* {
-*     // Create a passthru.  This takes the buffer (and its size) which will ultimately hold the string, as well as the length of the
-*     // string that's being converted, which must be known in advance.
-*     // An explicit template argument is also passed to indicate the character type of the source string.
-*     // Buffer must be correctly typed for the destination string type.
-*     auto Passthru = StringMemoryPassthru<APICharType>(Buffer, BufferSize, SourceLength);
-*
-*     // Passthru.Get() returns an APICharType buffer pointer which is guaranteed to be SourceLength characters in size.
-*     // It's possible, and in fact intended, for Get() to return the same pointer as Buffer if DestChar and APICharType are
-*     // compatible string types.  If this is the case, SomeAPI will write directly into Buffer.  If the string types are not
-*     // compatible, Get() will return a pointer to some temporary memory which allocated by and owned by the passthru.
-*     SomeAPI(Passthru.Get(), SourceLength);
-*
-*     // If the string types were not compatible, then the passthru used temporary storage, and we need to write that back to Buffer.
-*     // We do that with the Apply call.  If the string types were compatible, then the data was already written to Buffer directly
-*     // and so Apply is a no-op.
-*     Passthru.Apply();
-*
-*     // Now Buffer holds the data output by SomeAPI, already converted if necessary.
-* }
-*/
+ * Allows the efficient conversion of strings by means of a temporary memory buffer only when necessary.  Intended to be used
+ * when you have an API which populates a buffer with some string representation which is ultimately going to be stored in another
+ * representation, but where you don't want to do a conversion or create a temporary buffer for that string if it's not necessary.
+ *
+ * Intended use:
+ *
+ * // Populates the buffer Str with StrLen characters.
+ * void SomeAPI(APICharType* Str, int32 StrLen);
+ *
+ * void Func(DestChar* Buffer, int32 BufferSize)
+ * {
+ *     // Create a passthru.  This takes the buffer (and its size) which will ultimately hold the string, as well as the length of the
+ *     // string that's being converted, which must be known in advance.
+ *     // An explicit template argument is also passed to indicate the character type of the source string.
+ *     // Buffer must be correctly typed for the destination string type.
+ *     auto Passthru = StringMemoryPassthru<APICharType>(Buffer, BufferSize, SourceLength);
+ *
+ *     // Passthru.Get() returns an APICharType buffer pointer which is guaranteed to be SourceLength characters in size.
+ *     // It's possible, and in fact intended, for Get() to return the same pointer as Buffer if DestChar and APICharType are
+ *     // compatible string types.  If this is the case, SomeAPI will write directly into Buffer.  If the string types are not
+ *     // compatible, Get() will return a pointer to some temporary memory which allocated by and owned by the passthru.
+ *     SomeAPI(Passthru.Get(), SourceLength);
+ *
+ *     // If the string types were not compatible, then the passthru used temporary storage, and we need to write that back to Buffer.
+ *     // We do that with the Apply call.  If the string types were compatible, then the data was already written to Buffer directly
+ *     // and so Apply is a no-op.
+ *     Passthru.Apply();
+ *
+ *     // Now Buffer holds the data output by SomeAPI, already converted if necessary.
+ * }
+ */
 template <typename From, typename To>
 FORCEINLINE typename TEnableIf<FPlatformString::TAreEncodingsCompatible<To, From>::Value, TPassthruPointer<From>>::Type StringMemoryPassthru(To* Buffer, int32 BufferSize, int32 SourceLength)
 {

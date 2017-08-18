@@ -39,7 +39,7 @@ void* TMallocTBB::Malloc( SIZE_T Size, uint32 Alignment )
 	void* NewPtr = NULL;
 	if( Alignment != DEFAULT_ALIGNMENT )
 	{
-		Alignment = YMath::Max(Size >= 16 ? (uint32)16 : (uint32)8, Alignment);
+		Alignment = FMath::Max(Size >= 16 ? (uint32)16 : (uint32)8, Alignment);
 		NewPtr = scalable_aligned_malloc( Size, Alignment );
 	}
 	else
@@ -80,7 +80,7 @@ void* TMallocTBB::Realloc( void* Ptr, SIZE_T NewSize, uint32 Alignment )
 	void* NewPtr = NULL;
 	if (Alignment != DEFAULT_ALIGNMENT)
 	{
-		Alignment = YMath::Max(NewSize >= 16 ? (uint32)16 : (uint32)8, Alignment);
+		Alignment = FMath::Max(NewSize >= 16 ? (uint32)16 : (uint32)8, Alignment);
 		NewPtr = scalable_aligned_realloc(Ptr, NewSize, Alignment);
 	}
 	else

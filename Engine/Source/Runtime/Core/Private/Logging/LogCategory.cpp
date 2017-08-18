@@ -30,7 +30,7 @@ FLogCategoryBase::~FLogCategoryBase()
 void FLogCategoryBase::SetVerbosity(ELogVerbosity::Type NewVerbosity)
 {
 	// regularize the verbosity to be at most whatever we were compiled with
-	Verbosity = YMath::Min<uint8>(CompileTimeVerbosity, (NewVerbosity & ELogVerbosity::VerbosityMask));
+	Verbosity = FMath::Min<uint8>(CompileTimeVerbosity, (NewVerbosity & ELogVerbosity::VerbosityMask));
 	DebugBreakOnLog = !!(NewVerbosity & ELogVerbosity::BreakOnLog);
 	checkSlow(!(Verbosity & ELogVerbosity::BreakOnLog)); // this bit is factored out of this variable, always
 }
@@ -50,6 +50,6 @@ void FLogCategoryBase::PostTrigger(ELogVerbosity::Type VerbosityLevel)
 	{
 		GLog->FlushThreadedLogs();
 		DebugBreakOnLog = false; // toggle this off automatically
-		YPlatformMisc::DebugBreak();
+		FPlatformMisc::DebugBreak();
 	}
 }

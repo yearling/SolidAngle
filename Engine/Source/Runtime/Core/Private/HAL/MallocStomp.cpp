@@ -85,7 +85,7 @@ void* FMallocStomp::Realloc(void* InPtr, SIZE_T NewSize, uint32 Alignment)
 		ReturnPtr = Malloc(NewSize, Alignment);
 
 		FAllocationData *AllocDataPtr = reinterpret_cast<FAllocationData*>(reinterpret_cast<uint8*>(InPtr) - sizeof(FAllocationData));
-		FMemory::Memcpy(ReturnPtr, InPtr, YMath::Min(AllocDataPtr->Size, NewSize));
+		FMemory::Memcpy(ReturnPtr, InPtr, FMath::Min(AllocDataPtr->Size, NewSize));
 		Free(InPtr);
 	}
 	else
@@ -110,7 +110,7 @@ void FMallocStomp::Free(void* InPtr)
 	if(AllocDataPtr->Sentinel != SentinelExpectedValue)
 	{
 		// There was a memory underrun related to this allocation.
-		YPlatformMisc::DebugBreak();
+		FPlatformMisc::DebugBreak();
 	}
 
 #if PLATFORM_LINUX || PLATFORM_MAC

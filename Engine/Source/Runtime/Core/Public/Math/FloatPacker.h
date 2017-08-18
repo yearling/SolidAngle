@@ -11,7 +11,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogFloatPacker, Log, All);
 /**
  *
  */
-class YFloatInfo_IEEE32
+class FFloatInfo_IEEE32
 {
 public:
 	enum { MantissaBits	= 23 };
@@ -41,7 +41,7 @@ public:
 /**
  *
  */
-template<uint32 NumExponentBits, uint32 NumMantissaBits, bool bRound, typename FloatInfo=YFloatInfo_IEEE32>
+template<uint32 NumExponentBits, uint32 NumMantissaBits, bool bRound, typename FloatInfo=FFloatInfo_IEEE32>
 class TFloatPacker
 {
 public:

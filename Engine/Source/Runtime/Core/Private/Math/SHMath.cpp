@@ -9,8 +9,8 @@
 float NormalizationConstants[9];
 int32 BasisL[9];
 int32 BasisM[9];
-template<> CORE_API const float TSHVector<2>::ConstantBasisIntegral = 2.0f * YMath::Sqrt(PI);
-template<> CORE_API const float TSHVector<3>::ConstantBasisIntegral = 2.0f * YMath::Sqrt(PI);
+template<> CORE_API const float TSHVector<2>::ConstantBasisIntegral = 2.0f * FMath::Sqrt(PI);
+template<> CORE_API const float TSHVector<3>::ConstantBasisIntegral = 2.0f * FMath::Sqrt(PI);
 
 /** Computes a factorial. */
 static int32 Factorial(int32 A)
@@ -36,13 +36,13 @@ static int32 InitSHTables()
 		BasisL[BasisIndex] = L;
 		BasisM[BasisIndex] = M;
 
-		NormalizationConstants[BasisIndex] = YMath::Sqrt(
+		NormalizationConstants[BasisIndex] = FMath::Sqrt(
 			(float(2 * L + 1) / float(4 * PI)) *
-			(float(Factorial(L - YMath::Abs(M))) / float(Factorial(L + YMath::Abs(M))))
+			(float(Factorial(L - FMath::Abs(M))) / float(Factorial(L + FMath::Abs(M))))
 			);
 
 		if(M != 0)
-			NormalizationConstants[BasisIndex] *= YMath::Sqrt(2.f);
+			NormalizationConstants[BasisIndex] *= FMath::Sqrt(2.f);
 
 		M++;
 		if(M > L)
@@ -59,7 +59,7 @@ static int32 InitDummy = InitSHTables();
 /** So that e.g. LP(1,1,1) which evaluates to -sqrt(1-1^2) is 0.*/
 FORCEINLINE float SafeSqrt(float F)
 {
-	return YMath::Abs(F) > KINDA_SMALL_NUMBER ? YMath::Sqrt(F) : 0.f;
+	return FMath::Abs(F) > KINDA_SMALL_NUMBER ? FMath::Sqrt(F) : 0.f;
 }
 
 /** Evaluates the LegendrePolynomial for L,M at X */
@@ -91,7 +91,7 @@ float LegendrePolynomial(int32 L,int32 M,float X)
 		else if(M == 2)
 			return -15 * (-X + X * X * X);
 		else if(M == 3)
-			return -15 * YMath::Pow(1 - X * X,1.5f);
+			return -15 * FMath::Pow(1 - X * X,1.5f);
 		break;
 	case 4:
 		if(M == 0)
@@ -101,9 +101,9 @@ float LegendrePolynomial(int32 L,int32 M,float X)
 		else if(M == 2)
 			return -7.5f * (1.0f - 8.0f * X * X + 7.0f * X * X * X * X);
 		else if(M == 3)
-			return -105.0f * X * YMath::Pow(1 - X * X,1.5f);
+			return -105.0f * X * FMath::Pow(1 - X * X,1.5f);
 		else if(M == 4)
-			return 105.0f * YMath::Square(X * X - 1.0f);
+			return 105.0f * FMath::Square(X * X - 1.0f);
 		break;
 	case 5:
 		if(M == 0)
@@ -113,11 +113,11 @@ float LegendrePolynomial(int32 L,int32 M,float X)
 		else if(M == 2)
 			return -52.5f * (X - 4.0f * X * X * X + 3.0f * X * X * X * X * X);
 		else if(M == 3)
-			return -52.5f * YMath::Pow(1.0f - X * X,1.5f) * (9.0f * X * X - 1.0f);
+			return -52.5f * FMath::Pow(1.0f - X * X,1.5f) * (9.0f * X * X - 1.0f);
 		else if(M == 4)
-			return 945.0f * X * YMath::Square(X * X - 1);
+			return 945.0f * X * FMath::Square(X * X - 1);
 		else if(M == 5)
-			return -945.0f * YMath::Pow(1.0f - X * X,2.5f);
+			return -945.0f * FMath::Pow(1.0f - X * X,2.5f);
 		break;
 	};
 

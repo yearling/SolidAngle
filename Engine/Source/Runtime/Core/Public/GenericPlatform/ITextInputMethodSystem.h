@@ -80,7 +80,7 @@ public:
 	*
 	* @return	The index of the code point at the point on the screen. INDEX_NONE if none was found.
 	*/
-	virtual int32 GetCharacterIndexFromPoint(const YVector2D& InPoint) = 0;
+	virtual int32 GetCharacterIndexFromPoint(const FVector2D& InPoint) = 0;
 
 	/**
 	* Measures the screen-space bounds of the text in the specified range of code points.
@@ -92,7 +92,7 @@ public:
 	*
 	* @return	True if the specified range of code points is drawn clipped. False otherwise.
 	*/
-	virtual bool GetTextBounds(const uint32 InBeginIndex, const uint32 InLength, YVector2D& OutPosition, YVector2D& OutSize) = 0;
+	virtual bool GetTextBounds(const uint32 InBeginIndex, const uint32 InLength, FVector2D& OutPosition, FVector2D& OutSize) = 0;
 
 	/**
 	* Measures the screen-space bounds of the display area available for text.
@@ -100,7 +100,7 @@ public:
 	* @param	OutPosition		The screen-space position of the top-left bound of the display area.
 	* @param	OutSize			The screen-space size of the of the display area.
 	*/
-	virtual void GetScreenBounds(YVector2D& OutPosition, YVector2D& OutSize) = 0;
+	virtual void GetScreenBounds(FVector2D& OutPosition, FVector2D& OutSize) = 0;
 
 	/**
 	* Returns the window in which the text is displayed.

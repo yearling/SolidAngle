@@ -13,7 +13,7 @@
 /* FBoxSphereBounds interface
  *****************************************************************************/
 
-YBoxSphereBounds YBoxSphereBounds::TransformBy(const FMatrix& M) const
+FBoxSphereBounds FBoxSphereBounds::TransformBy(const FMatrix& M) const
 {
 #if ENABLE_NAN_DIAGNOSTIC
 	if (M.ContainsNaN())
@@ -23,7 +23,7 @@ YBoxSphereBounds YBoxSphereBounds::TransformBy(const FMatrix& M) const
 	}
 #endif
 
-	YBoxSphereBounds Result;
+	FBoxSphereBounds Result;
 
 	const VectorRegister VecOrigin = VectorLoadFloat3(&Origin);
 	const VectorRegister VecExtent = VectorLoadFloat3(&BoxExtent);
@@ -49,19 +49,19 @@ YBoxSphereBounds YBoxSphereBounds::TransformBy(const FMatrix& M) const
 	MaxRadius = VectorMultiplyAdd(m1, m1, MaxRadius);
 	MaxRadius = VectorMultiplyAdd(m2, m2, MaxRadius);
 	MaxRadius = VectorMax(VectorMax(MaxRadius, VectorReplicate(MaxRadius, 1)), VectorReplicate(MaxRadius, 2));
-	Result.SphereRadius = YMath::Sqrt(VectorGetComponent( MaxRadius, 0) ) * SphereRadius;
+	Result.SphereRadius = FMath::Sqrt(VectorGetComponent( MaxRadius, 0) ) * SphereRadius;
 
 	Result.DiagnosticCheckNaN();
 	return Result;
 }
 
-YBoxSphereBounds YBoxSphereBounds::TransformBy(const FTransform& M) const
+FBoxSphereBounds FBoxSphereBounds::TransformBy(const FTransform& M) const
 {
 #if ENABLE_NAN_DIAGNOSTIC
 	M.DiagnosticCheckNaN_All();
 #endif
 
 	const FMatrix Mat = M.ToMatrixWithScale();
-	YBoxSphereBounds Result = TransformBy(Mat);
+	FBoxSphereBounds Result = TransformBy(Mat);
 	return Result;
 }

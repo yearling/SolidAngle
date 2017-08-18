@@ -70,7 +70,7 @@ struct FNoLoggingCategory {};
 		{ \
 			LowLevelFatalErrorHandler(__FILE__, __LINE__, Format, ##__VA_ARGS__); \
 			_DebugBreakAndPromptForRemote(); \
-			YDebug::AssertFailed("", __FILE__, __LINE__, Format, ##__VA_ARGS__); \
+			FDebug::AssertFailed("", __FILE__, __LINE__, Format, ##__VA_ARGS__); \
 			UE_LOG_EXPAND_IS_FATAL(Verbosity, CA_ASSUME(false);, PREPROCESSOR_NOTHING) \
 		} \
 	}
@@ -84,7 +84,7 @@ struct FNoLoggingCategory {};
 			{ \
 				LowLevelFatalErrorHandler(__FILE__, __LINE__, Format, ##__VA_ARGS__); \
 				_DebugBreakAndPromptForRemote(); \
-				YDebug::AssertFailed("", __FILE__, __LINE__, Format, ##__VA_ARGS__); \
+				FDebug::AssertFailed("", __FILE__, __LINE__, Format, ##__VA_ARGS__); \
 				UE_LOG_EXPAND_IS_FATAL(Verbosity, CA_ASSUME(false);, PREPROCESSOR_NOTHING) \
 			} \
 		} \
@@ -156,7 +156,7 @@ namespace UE4Asserts_Private
 				UE_LOG_EXPAND_IS_FATAL(Verbosity, \
 					{ \
 						_DebugBreakAndPromptForRemote(); \
-						YDebug::AssertFailed("", __FILE__, __LINE__, Format, ##__VA_ARGS__); \
+						FDebug::AssertFailed("", __FILE__, __LINE__, Format, ##__VA_ARGS__); \
 						CA_ASSUME(false); \
 					}, \
 					PREPROCESSOR_NOTHING \
@@ -200,7 +200,7 @@ namespace UE4Asserts_Private
 					UE_LOG_EXPAND_IS_FATAL(Verbosity, \
 						{ \
 							_DebugBreakAndPromptForRemote(); \
-							YDebug::AssertFailed("", __FILE__, __LINE__, Format, ##__VA_ARGS__); \
+							FDebug::AssertFailed("", __FILE__, __LINE__, Format, ##__VA_ARGS__); \
 							CA_ASSUME(false); \
 						}, \
 						PREPROCESSOR_NOTHING \

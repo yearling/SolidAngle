@@ -97,11 +97,11 @@ void YOutputDeviceHelper::FormatCastAndSerializeLine(FArchive& Output, const TCH
 #endif // PLATFORM_LINUX
 	// Line Terminator won't change so we can keep everything as statics
 	static const int32 TerminatorLength = FCString::Strlen(Terminator);
-	static const int32 ConvertedTerminatorLength = YTCHARToUTF8_Convert::ConvertedLength(Terminator, TerminatorLength);
+	static const int32 ConvertedTerminatorLength = FTCHARToUTF8_Convert::ConvertedLength(Terminator, TerminatorLength);
 
 	// Calculate data length
 	const int32 DataLength = FCString::Strlen(Data);
-	const int32 ConvertedDataLength = YTCHARToUTF8_Convert::ConvertedLength(Data, DataLength);
+	const int32 ConvertedDataLength = FTCHARToUTF8_Convert::ConvertedLength(Data, DataLength);
 
 	FString Prefix;
 	if (!bSuppressEventTag)
@@ -111,17 +111,17 @@ void YOutputDeviceHelper::FormatCastAndSerializeLine(FArchive& Output, const TCH
 
 	// Calculate prefix length
 	const int32 PrefixLength = Prefix.Len();
-	const int32 ConvertedPrefixLength = YTCHARToUTF8_Convert::ConvertedLength(*Prefix, Prefix.Len());
+	const int32 ConvertedPrefixLength = FTCHARToUTF8_Convert::ConvertedLength(*Prefix, Prefix.Len());
 
 	// Allocate the conversion buffer. It's ok to always add some slack for the line terminator even if not required
 	TArray<ANSICHAR, TInlineAllocator<2 * DEFAULT_STRING_CONVERSION_SIZE>> ConvertedText;
 	ConvertedText.AddUninitialized(ConvertedPrefixLength + ConvertedDataLength + (bAutoEmitLineTerminator ? ConvertedTerminatorLength : 0));
 	// Do the actual conversion to the pre-allocated buffer
-	YTCHARToUTF8_Convert::Convert(ConvertedText.GetData(), ConvertedPrefixLength, *Prefix, PrefixLength);
-	YTCHARToUTF8_Convert::Convert(ConvertedText.GetData() + ConvertedPrefixLength, ConvertedDataLength, Data, DataLength);
+	FTCHARToUTF8_Convert::Convert(ConvertedText.GetData(), ConvertedPrefixLength, *Prefix, PrefixLength);
+	FTCHARToUTF8_Convert::Convert(ConvertedText.GetData() + ConvertedPrefixLength, ConvertedDataLength, Data, DataLength);
 	if (bAutoEmitLineTerminator)
 	{
-		YTCHARToUTF8_Convert::Convert(ConvertedText.GetData() + ConvertedPrefixLength + ConvertedDataLength, ConvertedTerminatorLength, Terminator, TerminatorLength);
+		FTCHARToUTF8_Convert::Convert(ConvertedText.GetData() + ConvertedPrefixLength + ConvertedDataLength, ConvertedTerminatorLength, Terminator, TerminatorLength);
 	}
 	// Serialize to the destination archive
 	Output.Serialize(ConvertedText.GetData(), ConvertedText.Num() * sizeof(ANSICHAR));

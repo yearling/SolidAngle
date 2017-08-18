@@ -64,14 +64,14 @@ void appBitsCpy( uint8* Dest, int32 DestBit, uint8* Src, int32 SrcBit, int32 Bit
 	// Lead-in needs to read 1 or 2 source bytes depending on alignment.
 	if( ShiftCount>=0 )
 	{
-		FullLoop  = YMath::Max(DestLoop, SrcLoop);  
+		FullLoop  = FMath::Max(DestLoop, SrcLoop);  
 		BitAccu   = Src[SrcIndex] << ShiftCount; 
 		ShiftCount += 8; //prepare for the inner loop.
 	}
 	else
 	{
 		ShiftCount +=8; // turn shifts -7..-1 into +1..+7
-		FullLoop  = YMath::Max(DestLoop, SrcLoop-1);  
+		FullLoop  = FMath::Max(DestLoop, SrcLoop-1);  
 		BitAccu   = Src[SrcIndex] << ShiftCount; 
 		SrcIndex++;		
 		ShiftCount += 8; // Prepare for inner loop.  

@@ -57,19 +57,19 @@ FORCEINLINE uint32 VectorAllLesserThan(VectorRegister Vec1, VectorRegister Vec2)
 // VectorRegister specialization of templates.
 
 // Returns the smaller of the two values (operates on each component individually)
-template<> FORCEINLINE VectorRegister YGenericPlatformMath::Min(const VectorRegister A, const VectorRegister B)
+template<> FORCEINLINE VectorRegister FGenericPlatformMath::Min(const VectorRegister A, const VectorRegister B)
 {
 	return VectorMin(A, B);
 }
 
 // Returns the larger of the two values (operates on each component individually)
-template<> FORCEINLINE VectorRegister YGenericPlatformMath::Max(const VectorRegister A, const VectorRegister B)
+template<> FORCEINLINE VectorRegister FGenericPlatformMath::Max(const VectorRegister A, const VectorRegister B)
 {
 	return VectorMax(A, B);
 }
 
 // Specialization of Lerp template that works with vector registers
-template<> FORCEINLINE VectorRegister YMath::Lerp(const VectorRegister& A, const VectorRegister& B, const VectorRegister& Alpha)
+template<> FORCEINLINE VectorRegister FMath::Lerp(const VectorRegister& A, const VectorRegister& B, const VectorRegister& Alpha)
 {
 	const VectorRegister Delta = VectorSubtract(B, A);
 	return VectorMultiplyAdd(Alpha, Delta, A);

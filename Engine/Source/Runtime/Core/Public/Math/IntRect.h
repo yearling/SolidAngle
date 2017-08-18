@@ -15,18 +15,18 @@ struct Rect;
 *
 * @todo Docs: The operators need better documentation, i.e. what does it mean to divide a rectangle?
 */
-struct YIntRect
+struct FIntRect
 {
 	/** Holds the first pixel line/row (like in Win32 RECT). */
-	YIntPoint Min;
+	FIntPoint Min;
 
 	/** Holds the last pixel line/row (like in Win32 RECT). */
-	YIntPoint Max;
+	FIntPoint Max;
 
 public:
 
 	/** Constructor */
-	YIntRect();
+	FIntRect();
 
 	/**
 	* Constructor
@@ -36,7 +36,7 @@ public:
 	* @param X1 Maximum X coordinate.
 	* @param Y1 Maximum Y coordinate.
 	*/
-	YIntRect(int32 X0, int32 Y0, int32 X1, int32 Y1);
+	FIntRect(int32 X0, int32 Y0, int32 X1, int32 Y1);
 
 	/**
 	* Constructor
@@ -44,7 +44,7 @@ public:
 	* @param InMin Minimum Point
 	* @param InMax Maximum Point
 	*/
-	YIntRect(YIntPoint InMin, YIntPoint InMax);
+	FIntRect(FIntPoint InMin, FIntPoint InMax);
 
 public:
 
@@ -54,7 +54,7 @@ public:
 	* @param PointIndex Index of Point in rectangle.
 	* @return Const reference to point in rectangle.
 	*/
-	const YIntPoint& operator()(int32 PointIndex) const;
+	const FIntPoint& operator()(int32 PointIndex) const;
 
 	/**
 	* Gets a specific point in this rectangle.
@@ -62,7 +62,7 @@ public:
 	* @param PointIndex Index of Point in rectangle.
 	* @return Reference to point in rectangle.
 	*/
-	YIntPoint& operator()(int32 PointIndex);
+	FIntPoint& operator()(int32 PointIndex);
 
 	/**
 	* Compares Rectangles for equality.
@@ -70,7 +70,7 @@ public:
 	* @param Other The Other Rectangle for comparison.
 	* @return true if the rectangles are equal, false otherwise..
 	*/
-	bool operator==(const YIntRect& Other) const;
+	bool operator==(const FIntRect& Other) const;
 
 	/**
 	* Compares Rectangles for inequality.
@@ -78,7 +78,7 @@ public:
 	* @param Other The Other Rectangle for comparison.
 	* @return true if the rectangles are not equal, false otherwise..
 	*/
-	bool operator!=(const YIntRect& Other) const;
+	bool operator!=(const FIntRect& Other) const;
 
 	/**
 	* Applies scaling to this rectangle.
@@ -86,7 +86,7 @@ public:
 	* @param Scale What to multiply the rectangle by.
 	* @return Reference to this rectangle after scaling.
 	*/
-	YIntRect& operator*=(int32 Scale);
+	FIntRect& operator*=(int32 Scale);
 
 	/**
 	* Adds a point to this rectangle.
@@ -94,7 +94,7 @@ public:
 	* @param Point The point to add onto both points in the rectangle.
 	* @return Reference to this rectangle after addition.
 	*/
-	YIntRect& operator+=(const YIntPoint& Point);
+	FIntRect& operator+=(const FIntPoint& Point);
 
 	/**
 	* Subtracts a point from this rectangle.
@@ -102,7 +102,7 @@ public:
 	* @param Point The point to subtract from both points in the rectangle.
 	* @return Reference to this rectangle after subtraction.
 	*/
-	YIntRect& operator-=(const YIntPoint& Point);
+	FIntRect& operator-=(const FIntPoint& Point);
 
 	/**
 	* Gets the result of scaling on this rectangle.
@@ -110,7 +110,7 @@ public:
 	* @param Scale What to multiply this rectangle by.
 	* @return New scaled rectangle.
 	*/
-	YIntRect operator*(int32 Scale) const;
+	FIntRect operator*(int32 Scale) const;
 
 	/**
 	* Gets the result of division on this rectangle.
@@ -118,7 +118,7 @@ public:
 	* @param Div What to divide this rectangle by.
 	* @return New divided rectangle.
 	*/
-	YIntRect operator/(int32 Div) const;
+	FIntRect operator/(int32 Div) const;
 
 	/**
 	* Gets the result of adding a point to this rectangle.
@@ -126,7 +126,7 @@ public:
 	* @param Point The point to add to both points in the rectangle.
 	* @return New rectangle with point added to it.
 	*/
-	YIntRect operator+(const YIntPoint& Point) const;
+	FIntRect operator+(const FIntPoint& Point) const;
 
 	/**
 	* Gets the result of dividing a point with this rectangle.
@@ -134,7 +134,7 @@ public:
 	* @param Point The point to divide with.
 	* @return New rectangle with point divided.
 	*/
-	YIntRect operator/(const YIntPoint& Point) const;
+	FIntRect operator/(const FIntPoint& Point) const;
 
 	/**
 	* Gets the result of subtracting a point from this rectangle.
@@ -142,7 +142,7 @@ public:
 	* @param Point The point to subtract from both points in the rectangle.
 	* @return New rectangle with point subtracted from it.
 	*/
-	YIntRect operator-(const YIntPoint& Point) const;
+	FIntRect operator-(const FIntPoint& Point) const;
 
 	/**
 	* Gets the result of adding two rectangles together.
@@ -150,7 +150,7 @@ public:
 	* @param Other The other rectangle to add to this.
 	* @return New rectangle after both are added together.
 	*/
-	YIntRect operator+(const YIntRect& Other) const;
+	FIntRect operator+(const FIntRect& Other) const;
 
 	/**
 	* Gets the result of subtracting a rectangle from this one.
@@ -158,7 +158,7 @@ public:
 	* @param Other The other rectangle to subtract from this.
 	* @return New rectangle after one is subtracted from this.
 	*/
-	YIntRect operator-(const YIntRect& Other) const;
+	FIntRect operator-(const FIntRect& Other) const;
 
 public:
 
@@ -175,17 +175,17 @@ public:
 	* @param InHeight Height of the new rectangle (<= rectangles original height).
 	* @return The new rectangle.
 	*/
-	YIntRect Bottom(int32 InHeight) const;
+	FIntRect Bottom(int32 InHeight) const;
 
 	/**
 	* Clip a rectangle using the bounds of another rectangle.
 	*
 	* @param Other The other rectangle to clip against.
 	*/
-	void Clip(const YIntRect& Other);
+	void Clip(const FIntRect& Other);
 
 	/** Combines the two rectanges. */
-	void Union(const YIntRect& Other);
+	void Union(const FIntRect& Other);
 
 	/**
 	* Test whether this rectangle contains a point.
@@ -193,7 +193,7 @@ public:
 	* @param Point The point to test against.
 	* @return true if the rectangle contains the specified point,, false otherwise..
 	*/
-	bool Contains(YIntPoint Point) const;
+	bool Contains(FIntPoint Point) const;
 
 	/**
 	* Gets the Center and Extents of this rectangle.
@@ -201,7 +201,7 @@ public:
 	* @param OutCenter Will contain the center point.
 	* @param OutExtent Will contain the extent.
 	*/
-	void GetCenterAndExtents(YIntPoint& OutCenter, YIntPoint& OutExtent) const;
+	void GetCenterAndExtents(FIntPoint& OutCenter, FIntPoint& OutExtent) const;
 
 	/**
 	* Gets the Height of the rectangle.
@@ -222,7 +222,7 @@ public:
 	*
 	* @param Point The point to increase the rectangle to.
 	*/
-	void Include(YIntPoint Point);
+	void Include(FIntPoint Point);
 
 	/**
 	* Gets a new rectangle from the inner of this one.
@@ -230,7 +230,7 @@ public:
 	* @param Shrink How much to remove from each point of this rectangle.
 	* @return New inner Rectangle.
 	*/
-	YIntRect Inner(YIntPoint Shrink) const;
+	FIntRect Inner(FIntPoint Shrink) const;
 
 	/**
 	* Creates a rectangle from the right hand side of this rectangle.
@@ -238,7 +238,7 @@ public:
 	* @param InWidth Width of the new rectangle (<= rectangles original width).
 	* @return The new rectangle.
 	*/
-	YIntRect Right(int32 InWidth) const;
+	FIntRect Right(int32 InWidth) const;
 
 	/**
 	* Scales a rectangle using a floating point number.
@@ -246,14 +246,14 @@ public:
 	* @param Fraction What to scale the rectangle by
 	* @return New scaled rectangle.
 	*/
-	YIntRect Scale(float Fraction) const;
+	FIntRect Scale(float Fraction) const;
 
 	/**
 	* Gets the distance from one corner of the rectangle to the other.
 	*
 	* @return The distance from one corner of the rectangle to the other.
 	*/
-	YIntPoint Size() const;
+	FIntPoint Size() const;
 
 	/**
 	* Get a textual representation of this rectangle.
@@ -285,8 +285,8 @@ public:
 	* @param Div What to divide by.
 	* @return New divided rectangle.
 	*/
-	static YIntRect DivideAndRoundUp(YIntRect lhs, int32 Div);
-	static YIntRect DivideAndRoundUp(YIntRect lhs, YIntPoint Div);
+	static FIntRect DivideAndRoundUp(FIntRect lhs, int32 Div);
+	static FIntRect DivideAndRoundUp(FIntRect lhs, FIntPoint Div);
 
 	/**
 	* Gets number of points in the Rectangle.
@@ -304,68 +304,68 @@ public:
 	* @param Rect The rectangle to serialize.
 	* @return Reference to the Archive after serialization.
 	*/
-	friend FArchive& operator<<(FArchive& Ar, YIntRect& Rect)
+	friend FArchive& operator<<(FArchive& Ar, FIntRect& Rect)
 	{
 		return Ar << Rect.Min.X << Rect.Min.Y << Rect.Max.X << Rect.Max.Y;
 	}
 };
 
 
-FORCEINLINE YIntRect YIntRect::Scale(float Fraction) const
+FORCEINLINE FIntRect FIntRect::Scale(float Fraction) const
 {
-	YVector2D Min2D = YVector2D(Min.X, Min.Y) * Fraction;
-	YVector2D Max2D = YVector2D(Max.X, Max.Y) * Fraction;
+	FVector2D Min2D = FVector2D(Min.X, Min.Y) * Fraction;
+	FVector2D Max2D = FVector2D(Max.X, Max.Y) * Fraction;
 
-	return YIntRect(YMath::FloorToInt(Min2D.X), YMath::FloorToInt(Min2D.Y), YMath::CeilToInt(Max2D.X), YMath::CeilToInt(Max2D.Y));
+	return FIntRect(FMath::FloorToInt(Min2D.X), FMath::FloorToInt(Min2D.Y), FMath::CeilToInt(Max2D.X), FMath::CeilToInt(Max2D.Y));
 }
 
 
 /* FIntRect inline functions
 *****************************************************************************/
 
-FORCEINLINE YIntRect::YIntRect()
+FORCEINLINE FIntRect::FIntRect()
 	: Min(ForceInit)
 	, Max(ForceInit)
 { }
 
 
-FORCEINLINE YIntRect::YIntRect(int32 X0, int32 Y0, int32 X1, int32 Y1)
+FORCEINLINE FIntRect::FIntRect(int32 X0, int32 Y0, int32 X1, int32 Y1)
 	: Min(X0, Y0)
 	, Max(X1, Y1)
 { }
 
 
-FORCEINLINE YIntRect::YIntRect(YIntPoint InMin, YIntPoint InMax)
+FORCEINLINE FIntRect::FIntRect(FIntPoint InMin, FIntPoint InMax)
 	: Min(InMin)
 	, Max(InMax)
 { }
 
 
-FORCEINLINE const YIntPoint& YIntRect::operator()(int32 PointIndex) const
+FORCEINLINE const FIntPoint& FIntRect::operator()(int32 PointIndex) const
 {
 	return (&Min)[PointIndex];
 }
 
 
-FORCEINLINE YIntPoint& YIntRect::operator()(int32 PointIndex)
+FORCEINLINE FIntPoint& FIntRect::operator()(int32 PointIndex)
 {
 	return (&Min)[PointIndex];
 }
 
 
-FORCEINLINE bool YIntRect::operator==(const YIntRect& Other) const
+FORCEINLINE bool FIntRect::operator==(const FIntRect& Other) const
 {
 	return Min == Other.Min && Max == Other.Max;
 }
 
 
-FORCEINLINE bool YIntRect::operator!=(const YIntRect& Other) const
+FORCEINLINE bool FIntRect::operator!=(const FIntRect& Other) const
 {
 	return Min != Other.Min || Max != Other.Max;
 }
 
 
-FORCEINLINE YIntRect& YIntRect::operator*=(int32 Scale)
+FORCEINLINE FIntRect& FIntRect::operator*=(int32 Scale)
 {
 	Min *= Scale;
 	Max *= Scale;
@@ -374,7 +374,7 @@ FORCEINLINE YIntRect& YIntRect::operator*=(int32 Scale)
 }
 
 
-FORCEINLINE YIntRect& YIntRect::operator+=(const YIntPoint& Point)
+FORCEINLINE FIntRect& FIntRect::operator+=(const FIntPoint& Point)
 {
 	Min += Point;
 	Max += Point;
@@ -383,7 +383,7 @@ FORCEINLINE YIntRect& YIntRect::operator+=(const YIntPoint& Point)
 }
 
 
-FORCEINLINE YIntRect& YIntRect::operator-=(const YIntPoint& Point)
+FORCEINLINE FIntRect& FIntRect::operator-=(const FIntPoint& Point)
 {
 	Min -= Point;
 	Max -= Point;
@@ -392,97 +392,97 @@ FORCEINLINE YIntRect& YIntRect::operator-=(const YIntPoint& Point)
 }
 
 
-FORCEINLINE YIntRect YIntRect::operator*(int32 Scale) const
+FORCEINLINE FIntRect FIntRect::operator*(int32 Scale) const
 {
-	return YIntRect(Min * Scale, Max * Scale);
+	return FIntRect(Min * Scale, Max * Scale);
 }
 
 
-FORCEINLINE YIntRect YIntRect::operator/(int32 Div) const
+FORCEINLINE FIntRect FIntRect::operator/(int32 Div) const
 {
-	return YIntRect(Min / Div, Max / Div);
+	return FIntRect(Min / Div, Max / Div);
 }
 
 
-FORCEINLINE YIntRect YIntRect::operator+(const YIntPoint& Point) const
+FORCEINLINE FIntRect FIntRect::operator+(const FIntPoint& Point) const
 {
-	return YIntRect(Min + Point, Max + Point);
+	return FIntRect(Min + Point, Max + Point);
 }
 
 
-FORCEINLINE YIntRect YIntRect::operator/(const YIntPoint& Point) const
+FORCEINLINE FIntRect FIntRect::operator/(const FIntPoint& Point) const
 {
-	return YIntRect(Min / Point, Max / Point);
+	return FIntRect(Min / Point, Max / Point);
 }
 
 
-FORCEINLINE YIntRect YIntRect::operator-(const YIntPoint& Point) const
+FORCEINLINE FIntRect FIntRect::operator-(const FIntPoint& Point) const
 {
-	return YIntRect(Min - Point, Max - Point);
+	return FIntRect(Min - Point, Max - Point);
 }
 
 
-FORCEINLINE YIntRect YIntRect::operator+(const YIntRect& Other) const
+FORCEINLINE FIntRect FIntRect::operator+(const FIntRect& Other) const
 {
-	return YIntRect(Min + Other.Min, Max + Other.Max);
+	return FIntRect(Min + Other.Min, Max + Other.Max);
 }
 
 
-FORCEINLINE YIntRect YIntRect::operator-(const YIntRect& Other) const
+FORCEINLINE FIntRect FIntRect::operator-(const FIntRect& Other) const
 {
-	return YIntRect(Min - Other.Min, Max - Other.Max);
+	return FIntRect(Min - Other.Min, Max - Other.Max);
 }
 
 
-FORCEINLINE int32 YIntRect::Area() const
+FORCEINLINE int32 FIntRect::Area() const
 {
 	return (Max.X - Min.X) * (Max.Y - Min.Y);
 }
 
 
-FORCEINLINE YIntRect YIntRect::Bottom(int32 InHeight) const
+FORCEINLINE FIntRect FIntRect::Bottom(int32 InHeight) const
 {
-	return YIntRect(Min.X, YMath::Max(Min.Y, Max.Y - InHeight), Max.X, Max.Y);
+	return FIntRect(Min.X, FMath::Max(Min.Y, Max.Y - InHeight), Max.X, Max.Y);
 }
 
 
-FORCEINLINE void YIntRect::Clip(const YIntRect& R)
+FORCEINLINE void FIntRect::Clip(const FIntRect& R)
 {
-	Min.X = YMath::Max<int32>(Min.X, R.Min.X);
-	Min.Y = YMath::Max<int32>(Min.Y, R.Min.Y);
-	Max.X = YMath::Min<int32>(Max.X, R.Max.X);
-	Max.Y = YMath::Min<int32>(Max.Y, R.Max.Y);
+	Min.X = FMath::Max<int32>(Min.X, R.Min.X);
+	Min.Y = FMath::Max<int32>(Min.Y, R.Min.Y);
+	Max.X = FMath::Min<int32>(Max.X, R.Max.X);
+	Max.Y = FMath::Min<int32>(Max.Y, R.Max.Y);
 
 	// return zero area if not overlapping
-	Max.X = YMath::Max<int32>(Min.X, Max.X);
-	Max.Y = YMath::Max<int32>(Min.Y, Max.Y);
+	Max.X = FMath::Max<int32>(Min.X, Max.X);
+	Max.Y = FMath::Max<int32>(Min.Y, Max.Y);
 }
 
-FORCEINLINE void YIntRect::Union(const YIntRect& R)
+FORCEINLINE void FIntRect::Union(const FIntRect& R)
 {
-	Min.X = YMath::Min<int32>(Min.X, R.Min.X);
-	Min.Y = YMath::Min<int32>(Min.Y, R.Min.Y);
-	Max.X = YMath::Max<int32>(Max.X, R.Max.X);
-	Max.Y = YMath::Max<int32>(Max.Y, R.Max.Y);
+	Min.X = FMath::Min<int32>(Min.X, R.Min.X);
+	Min.Y = FMath::Min<int32>(Min.Y, R.Min.Y);
+	Max.X = FMath::Max<int32>(Max.X, R.Max.X);
+	Max.Y = FMath::Max<int32>(Max.Y, R.Max.Y);
 }
 
-FORCEINLINE bool YIntRect::Contains(YIntPoint P) const
+FORCEINLINE bool FIntRect::Contains(FIntPoint P) const
 {
 	return P.X >= Min.X && P.X < Max.X && P.Y >= Min.Y && P.Y < Max.Y;
 }
 
 
-FORCEINLINE YIntRect YIntRect::DivideAndRoundUp(YIntRect lhs, int32 Div)
+FORCEINLINE FIntRect FIntRect::DivideAndRoundUp(FIntRect lhs, int32 Div)
 {
-	return DivideAndRoundUp(lhs, YIntPoint(Div, Div));
+	return DivideAndRoundUp(lhs, FIntPoint(Div, Div));
 }
 
-FORCEINLINE YIntRect YIntRect::DivideAndRoundUp(YIntRect lhs, YIntPoint Div)
+FORCEINLINE FIntRect FIntRect::DivideAndRoundUp(FIntRect lhs, FIntPoint Div)
 {
-	return YIntRect(lhs.Min / Div, YIntPoint::DivideAndRoundUp(lhs.Max, Div));
+	return FIntRect(lhs.Min / Div, FIntPoint::DivideAndRoundUp(lhs.Max, Div));
 }
 
-FORCEINLINE void YIntRect::GetCenterAndExtents(YIntPoint& OutCenter, YIntPoint& OutExtent) const
+FORCEINLINE void FIntRect::GetCenterAndExtents(FIntPoint& OutCenter, FIntPoint& OutExtent) const
 {
 	OutExtent.X = (Max.X - Min.X) / 2;
 	OutExtent.Y = (Max.Y - Min.Y) / 2;
@@ -492,13 +492,13 @@ FORCEINLINE void YIntRect::GetCenterAndExtents(YIntPoint& OutCenter, YIntPoint& 
 }
 
 
-FORCEINLINE int32 YIntRect::Height() const
+FORCEINLINE int32 FIntRect::Height() const
 {
 	return (Max.Y - Min.Y);
 }
 
 
-FORCEINLINE void YIntRect::InflateRect(int32 Amount)
+FORCEINLINE void FIntRect::InflateRect(int32 Amount)
 {
 	Min.X -= Amount;
 	Min.Y -= Amount;
@@ -507,50 +507,50 @@ FORCEINLINE void YIntRect::InflateRect(int32 Amount)
 }
 
 
-FORCEINLINE void YIntRect::Include(YIntPoint Point)
+FORCEINLINE void FIntRect::Include(FIntPoint Point)
 {
-	Min.X = YMath::Min(Min.X, Point.X);
-	Min.Y = YMath::Min(Min.Y, Point.Y);
-	Max.X = YMath::Max(Max.X, Point.X);
-	Max.Y = YMath::Max(Max.Y, Point.Y);
+	Min.X = FMath::Min(Min.X, Point.X);
+	Min.Y = FMath::Min(Min.Y, Point.Y);
+	Max.X = FMath::Max(Max.X, Point.X);
+	Max.Y = FMath::Max(Max.Y, Point.Y);
 }
 
-FORCEINLINE YIntRect YIntRect::Inner(YIntPoint Shrink) const
+FORCEINLINE FIntRect FIntRect::Inner(FIntPoint Shrink) const
 {
-	return YIntRect(Min + Shrink, Max - Shrink);
+	return FIntRect(Min + Shrink, Max - Shrink);
 }
 
 
-FORCEINLINE int32 YIntRect::Num()
+FORCEINLINE int32 FIntRect::Num()
 {
 	return 2;
 }
 
 
-FORCEINLINE YIntRect YIntRect::Right(int32 InWidth) const
+FORCEINLINE FIntRect FIntRect::Right(int32 InWidth) const
 {
-	return YIntRect(YMath::Max(Min.X, Max.X - InWidth), Min.Y, Max.X, Max.Y);
+	return FIntRect(FMath::Max(Min.X, Max.X - InWidth), Min.Y, Max.X, Max.Y);
 }
 
 
-FORCEINLINE YIntPoint YIntRect::Size() const
+FORCEINLINE FIntPoint FIntRect::Size() const
 {
-	return YIntPoint(Max.X - Min.X, Max.Y - Min.Y);
+	return FIntPoint(Max.X - Min.X, Max.Y - Min.Y);
 }
 
 
-FORCEINLINE FString YIntRect::ToString() const
+FORCEINLINE FString FIntRect::ToString() const
 {
 	return FString::Printf(TEXT("Min=(%s) Max=(%s)"), *Min.ToString(), *Max.ToString());
 }
 
 
-FORCEINLINE int32 YIntRect::Width() const
+FORCEINLINE int32 FIntRect::Width() const
 {
 	return Max.X - Min.X;
 }
 
-FORCEINLINE bool YIntRect::IsEmpty() const
+FORCEINLINE bool FIntRect::IsEmpty() const
 {
 	return Width() == 0 && Height() == 0;
 }

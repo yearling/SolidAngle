@@ -95,7 +95,7 @@ public:
 			FMemDebug* Ptr = *((FMemDebug**)((uint8*)InPtr - sizeof(int32) - sizeof(FMemDebug*)));
 			check(GIsCriticalError||(Ptr->RefCount==1));
 			void* Result = Malloc( NewSize, Alignment );
-			FMemory::Memcpy( Result, InPtr, YMath::Min<SIZE_T>(Ptr->Size,NewSize) );
+			FMemory::Memcpy( Result, InPtr, FMath::Min<SIZE_T>(Ptr->Size,NewSize) );
 			Free( InPtr );
 			return Result;
 		}

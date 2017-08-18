@@ -545,7 +545,7 @@ bool FDefaultValueHelper::ParseVector(const FString& Source, FVector& OutVal)
 }
 
 
-bool FDefaultValueHelper::ParseVector2D(const FString& Source, YVector2D& OutVal)
+bool FDefaultValueHelper::ParseVector2D(const FString& Source, FVector2D& OutVal)
 {
 	const bool bHasWhitespace = HasWhitespaces(Source);
 	const FString NoWhitespace = bHasWhitespace ? RemoveWhitespaces(Source) : FString();
@@ -569,7 +569,7 @@ bool FDefaultValueHelper::ParseVector2D(const FString& Source, YVector2D& OutVal
 		return false;
 	}
 
-	OutVal = YVector2D( 
+	OutVal = FVector2D( 
 		FCString::Atof(Start),
 		FCString::Atof(FirstComma + 1) );
 	return true;

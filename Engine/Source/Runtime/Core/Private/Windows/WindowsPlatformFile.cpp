@@ -309,7 +309,7 @@ public:
 		FilePos = InPos;
 
 		// If the requested location is not within our current serialize buffer, we need to start the whole read process over
-		bool bWithinSerializeBuffer = (PosDelta < 0 && (SerializePos - YMath::Abs(PosDelta) >= 0)) ||
+		bool bWithinSerializeBuffer = (PosDelta < 0 && (SerializePos - FMath::Abs(PosDelta) >= 0)) ||
 			(PosDelta > 0 && ((PosDelta + SerializePos) < BufferSize));
 		if (bWithinSerializeBuffer)
 		{
@@ -375,7 +375,7 @@ public:
 		while (BytesToRead > 0)
 		{
 			// Figure out how many bytes we can read from the serialize buffer
-			int64 NumToCopy = YMath::Min<int64>(BytesToRead, BufferSize - SerializePos);
+			int64 NumToCopy = FMath::Min<int64>(BytesToRead, BufferSize - SerializePos);
 			if (FilePos + NumToCopy > FileSize)
 			{
 				// Tried to read past the end of the file, so fail
@@ -476,7 +476,7 @@ public:
 		while (BytesToRead)
 		{
 			check(BytesToRead >= 0);
-			int64 ThisSize = YMath::Min<int64>(READWRITE_SIZE, BytesToRead);
+			int64 ThisSize = FMath::Min<int64>(READWRITE_SIZE, BytesToRead);
 			check(Destination);
 			uint32 Result=0;
 			if (!ReadFile(FileHandle, Destination, uint32(ThisSize), (::DWORD *)&Result, NULL) || Result != uint32(ThisSize))
@@ -494,7 +494,7 @@ public:
 		while (BytesToWrite)
 		{
 			check(BytesToWrite >= 0);
-			int64 ThisSize = YMath::Min<int64>(READWRITE_SIZE, BytesToWrite);
+			int64 ThisSize = FMath::Min<int64>(READWRITE_SIZE, BytesToWrite);
 			check(Source);
 			uint32 Result=0;
 			if (!WriteFile(FileHandle, Source, uint32(ThisSize), (::DWORD *)&Result, NULL) || Result != uint32(ThisSize))

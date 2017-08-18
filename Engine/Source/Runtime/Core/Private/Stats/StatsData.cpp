@@ -898,7 +898,7 @@ void FStatsThreadState::AddToHistoryAndEmpty(FStatPacketArray& NewData)
 	History.GenerateKeyArray(Frames);
 	Frames.Sort();
 
-	int64 LatestFinishedFrame = YMath::Min<int64>(CurrentGameFrame, CurrentRenderFrame) - 1;
+	int64 LatestFinishedFrame = FMath::Min<int64>(CurrentGameFrame, CurrentRenderFrame) - 1;
 
 	for (int32 Index = 0; Index < Frames.Num(); Index++)
 	{
@@ -968,7 +968,7 @@ void FStatsThreadState::AddToHistoryAndEmpty(FStatPacketArray& NewData)
 		check(GoodFrames.Contains(NewLatestFrame));
 		if (NewLatestFrame > LastFullFrameProcessed)
 		{
-			int64 FirstNewFrame = YMath::Max<int64>(GetOldestValidFrame(), LastFullFrameProcessed + 1);
+			int64 FirstNewFrame = FMath::Max<int64>(GetOldestValidFrame(), LastFullFrameProcessed + 1);
 
 			// let people know
 			{
@@ -1096,7 +1096,7 @@ void FStatsThreadState::ResetRegularStats()
 void FStatsThreadState::UpdateStatMessagesMemoryUsage()
 {
 	const int32 CurrentNumStatMessages = NumStatMessages.GetValue();
-	MaxNumStatMessages = YMath::Max(MaxNumStatMessages,CurrentNumStatMessages);
+	MaxNumStatMessages = FMath::Max(MaxNumStatMessages,CurrentNumStatMessages);
 
 	TotalNumStatMessages += CurrentNumStatMessages;
 	SET_MEMORY_STAT( STAT_StatMessagesMemory, CurrentNumStatMessages*sizeof(FStatMessage) );
@@ -1842,7 +1842,7 @@ FString FStatsUtils::DebugPrint(FStatMessage const& Item)
 		break;
 	}
 
-	Result = FString(FCString::Spc(YMath::Max<int32>(0, 14 - Result.Len()))) + Result;
+	Result = FString(FCString::Spc(FMath::Max<int32>(0, 14 - Result.Len()))) + Result;
 
 	const FString ShortName = Item.NameAndInfo.GetShortName().ToString();
 	const FName Group = Item.NameAndInfo.GetGroupName();
@@ -2033,7 +2033,7 @@ void FStatsUtils::AccumulateStat(FStatMessage& Dest, FStatMessage const& Item, E
 					Dest.GetValue_double() -= Item.GetValue_double();
 					break;
 				case EStatOperation::MaxVal:
-					Dest.GetValue_double() = YMath::Max<double>(Dest.GetValue_double(), Item.GetValue_double());
+					Dest.GetValue_double() = FMath::Max<double>(Dest.GetValue_double(), Item.GetValue_double());
 					break;
 
 				// Nothing here at this moment.
@@ -2166,7 +2166,7 @@ void FComplexStatUtils::AddAndMax( FComplexStatMessage& Dest, const FStatMessage
 		}
 		else if( StatDataType == EStatDataType::ST_double )
 		{
-			Dest.GetValue_double(MaxIndex) = YMath::Max<double>(Dest.GetValue_double(MaxIndex), Item.GetValue_double());
+			Dest.GetValue_double(MaxIndex) = FMath::Max<double>(Dest.GetValue_double(MaxIndex), Item.GetValue_double());
 		}
 	}
 }

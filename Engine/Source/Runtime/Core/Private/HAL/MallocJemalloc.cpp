@@ -19,7 +19,7 @@ void* FMallocJemalloc::Malloc( SIZE_T Size, uint32 Alignment )
 	void* Free = NULL;
 	if( Alignment != DEFAULT_ALIGNMENT )
 	{
-		Alignment = YMath::Max(Size >= 16 ? (uint32)16 : (uint32)8, Alignment);
+		Alignment = FMath::Max(Size >= 16 ? (uint32)16 : (uint32)8, Alignment);
 
 		// use aligned_alloc when allocating exact multiplies of an alignment
 		// use the fact that Alignment is power of 2 and avoid %, but check it

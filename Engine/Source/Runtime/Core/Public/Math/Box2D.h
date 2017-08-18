@@ -15,10 +15,10 @@ struct FBox2D
 {
 public:
 	/** Holds the box's minimum point. */
-	YVector2D Min;
+	FVector2D Min;
 
 	/** Holds the box's maximum point. */
-	YVector2D Max;
+	FVector2D Max;
 
 	/** Holds a flag indicating whether this box is valid. */
 	bool bIsValid;
@@ -56,7 +56,7 @@ public:
 	 * @param InMin The box's minimum point.
 	 * @param InMax The box's maximum point.
 	 */
-	FBox2D( const YVector2D& InMin, const YVector2D& InMax )
+	FBox2D( const FVector2D& InMin, const FVector2D& InMax )
 		: Min(InMin)
 		, Max(InMax)
 		, bIsValid(true)
@@ -68,14 +68,14 @@ public:
 	 * @param Points Array of Points to create for the bounding volume.
 	 * @param Count The number of points.
 	 */
-	CORE_API FBox2D( const YVector2D* Points, const int32 Count );
+	CORE_API FBox2D( const FVector2D* Points, const int32 Count );
 
 	/**
 	 * Creates and initializes a new box from an array of points.
 	 *
 	 * @param Points Array of Points to create for the bounding volume.
 	 */
-	CORE_API FBox2D( const TArray<YVector2D>& Points );
+	CORE_API FBox2D( const TArray<FVector2D>& Points );
 
 public:
 
@@ -96,7 +96,7 @@ public:
 	 * @param Other The point to increase the bounding volume to.
 	 * @return Reference to this bounding box after resizing to include the other point.
 	 */
-	FORCEINLINE FBox2D& operator+=( const YVector2D &Other );
+	FORCEINLINE FBox2D& operator+=( const FVector2D &Other );
 
 	/**
 	 * Gets the result of addition to this bounding volume.
@@ -104,7 +104,7 @@ public:
 	 * @param Other The other point to add to this.
 	 * @return A new bounding volume.
 	 */
-	FBox2D operator+( const YVector2D& Other ) const
+	FBox2D operator+( const FVector2D& Other ) const
 	{
 		return FBox2D(*this) += Other;
 	}
@@ -134,7 +134,7 @@ public:
 	 * @param Index The index into points of the bounding volume.
 	 * @return A reference to a point of the bounding volume.
 	 */
-   YVector2D& operator[]( int32 Index )
+   FVector2D& operator[]( int32 Index )
 	{
 		check((Index >= 0) && (Index < 2));
 
@@ -154,27 +154,27 @@ public:
 	 * @param Point The point.
 	 * @return The distance.
 	 */
-	FORCEINLINE float ComputeSquaredDistanceToPoint( const YVector2D& Point ) const
+	FORCEINLINE float ComputeSquaredDistanceToPoint( const FVector2D& Point ) const
 	{
 		// Accumulates the distance as we iterate axis
 		float DistSquared = 0.f;
 		
 		if (Point.X < Min.X)
 		{
-			DistSquared += YMath::Square(Point.X - Min.X);
+			DistSquared += FMath::Square(Point.X - Min.X);
 		}
 		else if (Point.X > Max.X)
 		{
-			DistSquared += YMath::Square(Point.X - Max.X);
+			DistSquared += FMath::Square(Point.X - Max.X);
 		}
 		
 		if (Point.Y < Min.Y)
 		{
-			DistSquared += YMath::Square(Point.Y - Min.Y);
+			DistSquared += FMath::Square(Point.Y - Min.Y);
 		}
 		else if (Point.Y > Max.Y)
 		{
-			DistSquared += YMath::Square(Point.Y - Max.Y);
+			DistSquared += FMath::Square(Point.Y - Max.Y);
 		}
 		
 		return DistSquared;
@@ -188,7 +188,7 @@ public:
 	 */
 	FBox2D ExpandBy( const float W ) const
 	{
-		return FBox2D(Min - YVector2D(W, W), Max + YVector2D(W, W));
+		return FBox2D(Min - FVector2D(W, W), Max + FVector2D(W, W));
 	}
 
 	/**
@@ -208,9 +208,9 @@ public:
 	 * @return Th center point.
 	 * @see GetArea, GetCenterAndExtents, GetExtent, GetSize
 	 */
-	YVector2D GetCenter() const
+	FVector2D GetCenter() const
 	{
-		return YVector2D((Min + Max) * 0.5f);
+		return FVector2D((Min + Max) * 0.5f);
 	}
 
 	/**
@@ -220,7 +220,7 @@ public:
 	 * @param Extents[out] reference to the extent around the center
 	 * @see GetArea, GetCenter, GetExtent, GetSize
 	 */
-	void GetCenterAndExtents( YVector2D & center, YVector2D & Extents ) const
+	void GetCenterAndExtents( FVector2D & center, FVector2D & Extents ) const
 	{
 		Extents = GetExtent();
 		center = Min + Extents;
@@ -233,7 +233,7 @@ public:
 	 *
 	 * @return The closest point on or inside the box.
 	 */
-	FORCEINLINE YVector2D GetClosestPointTo( const YVector2D& Point ) const;
+	FORCEINLINE FVector2D GetClosestPointTo( const FVector2D& Point ) const;
 
 	/**
 	 * Gets the box extents around the center.
@@ -241,7 +241,7 @@ public:
 	 * @return Box extents.
 	 * @see GetArea, GetCenter, GetCenterAndExtents, GetSize
 	 */
-	YVector2D GetExtent() const
+	FVector2D GetExtent() const
 	{
 		return 0.5f * (Max - Min);
 	}
@@ -253,7 +253,7 @@ public:
 	 * @return Box size.
 	 * @see GetArea, GetCenter, GetCenterAndExtents, GetExtent
 	 */
-	YVector2D GetSize() const
+	FVector2D GetSize() const
 	{
 		return (Max - Min);
 	}
@@ -263,7 +263,7 @@ public:
 	 */
 	void Init()
 	{
-		Min = Max = YVector2D::ZeroVector;
+		Min = Max = FVector2D::ZeroVector;
 		bIsValid = false;
 	}
 
@@ -281,7 +281,7 @@ public:
 	 * @param Point The point to test.
 	 * @return true if the point is inside this box, otherwise false.
 	 */
-	bool IsInside( const YVector2D & TestPoint ) const
+	bool IsInside( const FVector2D & TestPoint ) const
 	{
 		return ((TestPoint.X > Min.X) && (TestPoint.X < Max.X) && (TestPoint.Y > Min.Y) && (TestPoint.Y < Max.Y));
 	}
@@ -303,7 +303,7 @@ public:
 	 * @param The offset vector to shift by.
 	 * @return A new shifted bounding box.
 	 */
-	FBox2D ShiftBy( const YVector2D& Offset ) const
+	FBox2D ShiftBy( const FVector2D& Offset ) const
 	{
 		return FBox2D(Min + Offset, Max + Offset);
 	}
@@ -335,15 +335,15 @@ public:
 /* FBox2D inline functions
  *****************************************************************************/
 
-FORCEINLINE FBox2D& FBox2D::operator+=( const YVector2D &Other )
+FORCEINLINE FBox2D& FBox2D::operator+=( const FVector2D &Other )
 {
 	if (bIsValid)
 	{
-		Min.X = YMath::Min(Min.X, Other.X);
-		Min.Y = YMath::Min(Min.Y, Other.Y);
+		Min.X = FMath::Min(Min.X, Other.X);
+		Min.Y = FMath::Min(Min.Y, Other.Y);
 	
-		Max.X = YMath::Max(Max.X, Other.X);
-		Max.Y = YMath::Max(Max.Y, Other.Y);
+		Max.X = FMath::Max(Max.X, Other.X);
+		Max.Y = FMath::Max(Max.Y, Other.Y);
 		
 	}
 	else
@@ -360,11 +360,11 @@ FORCEINLINE FBox2D& FBox2D::operator+=( const FBox2D& Other )
 {
 	if (bIsValid && Other.bIsValid)
 	{
-		Min.X = YMath::Min(Min.X, Other.Min.X);
-		Min.Y = YMath::Min(Min.Y, Other.Min.Y);
+		Min.X = FMath::Min(Min.X, Other.Min.X);
+		Min.Y = FMath::Min(Min.Y, Other.Min.Y);
 
-		Max.X = YMath::Max(Max.X, Other.Max.X);
-		Max.Y = YMath::Max(Max.Y, Other.Max.Y);
+		Max.X = FMath::Max(Max.X, Other.Max.X);
+		Max.Y = FMath::Max(Max.Y, Other.Max.Y);
 	}
 	else if (Other.bIsValid)
 	{
@@ -375,10 +375,10 @@ FORCEINLINE FBox2D& FBox2D::operator+=( const FBox2D& Other )
 }
 
 
-FORCEINLINE YVector2D FBox2D::GetClosestPointTo( const YVector2D& Point ) const
+FORCEINLINE FVector2D FBox2D::GetClosestPointTo( const FVector2D& Point ) const
 {
 	// start by considering the point inside the box
-	YVector2D ClosestPoint = Point;
+	FVector2D ClosestPoint = Point;
 
 	// now clamp to inside box if it's outside
 	if (Point.X < Min.X)

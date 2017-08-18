@@ -30,10 +30,10 @@ void YGenericPlatformOutputDevices::SetupOutputDevices()
 
 	// Only create debug output device if a debugger is attached or we're running on a console or build machine
 	// A shipping build with logging explicitly enabled will fail the IsDebuggerPresent() check, but we still need to add the debug output device for logging purposes
-	if (!FPlatformProperties::SupportsWindowedMode() || YPlatformMisc::IsDebuggerPresent() || (UE_BUILD_SHIPPING && !NO_LOGGING) || GIsBuildMachine)
+	if (!FPlatformProperties::SupportsWindowedMode() || FPlatformMisc::IsDebuggerPresent() || (UE_BUILD_SHIPPING && !NO_LOGGING) || GIsBuildMachine)
 	{
 		// Only need to do this if it's actually going to go to a different place than GLogConsole
-		if(!bHasConsole || YPlatformMisc::HasSeparateChannelForDebugOutput())
+		if(!bHasConsole || FPlatformMisc::HasSeparateChannelForDebugOutput())
 		{
 			GLog->AddOutputDevice(new YOutputDeviceDebug());
 		}

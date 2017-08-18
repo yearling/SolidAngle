@@ -10,18 +10,18 @@
 /**
  * Structure for two dimensional vectors with half floating point precision.
  */
-struct YVector2DHalf 
+struct FVector2DHalf 
 {
 	/** Holds the vector's X-component. */
-	YFloat16 X;
+	FFloat16 X;
 
 	/** Holds the vector's Y-component. */
-	YFloat16 Y;
+	FFloat16 Y;
 
 public:
 
 	/** Default Constructor (no initialization). */
-	FORCEINLINE YVector2DHalf() { }
+	FORCEINLINE FVector2DHalf() { }
 
 	/**
 	 * Constructor.
@@ -29,20 +29,20 @@ public:
 	 * InX half float X value
 	 * Iny half float Y value
 	 */
- 	FORCEINLINE YVector2DHalf( const YFloat16& InX,const YFloat16& InY );
+ 	FORCEINLINE FVector2DHalf( const FFloat16& InX,const FFloat16& InY );
 
 	/** Constructor 
 	 *
 	 * InX float X value
 	 * Iny float Y value
 	 */
-	FORCEINLINE YVector2DHalf( float InX,float InY );
+	FORCEINLINE FVector2DHalf( float InX,float InY );
 
 	/** Constructor 
 	 *
 	 * Vector2D float vector
 	 */
-	FORCEINLINE YVector2DHalf( const YVector2D& Vector2D );
+	FORCEINLINE FVector2DHalf( const FVector2D& Vector2D );
 
 public:
 
@@ -51,10 +51,10 @@ public:
 	 *
 	 * @param Vector2D The value to assign.
 	 */
- 	YVector2DHalf& operator=( const YVector2D& Vector2D );
+ 	FVector2DHalf& operator=( const FVector2D& Vector2D );
 
 	/** Implicit conversion operator for conversion to YVector2D. */
-	operator YVector2D() const;
+	operator FVector2D() const;
 
 public:
 
@@ -74,7 +74,7 @@ public:
 	 * @param V Reference to the FVector2DHalf being serialized.
 	 * @return Reference to the Archive after serialization.
 	 */
-	friend FArchive& operator<<( FArchive& Ar, YVector2DHalf& V )
+	friend FArchive& operator<<( FArchive& Ar, FVector2DHalf& V )
 	{
 		return Ar << V.X << V.Y;
 	}
@@ -84,37 +84,37 @@ public:
 /* FVector2DHalf inline functions
  *****************************************************************************/
 
-FORCEINLINE YVector2DHalf::YVector2DHalf( const YFloat16& InX, const YFloat16& InY )
+FORCEINLINE FVector2DHalf::FVector2DHalf( const FFloat16& InX, const FFloat16& InY )
  	:	X(InX), Y(InY)
 { }
 
 
-FORCEINLINE YVector2DHalf::YVector2DHalf( float InX, float InY )
+FORCEINLINE FVector2DHalf::FVector2DHalf( float InX, float InY )
 	:	X(InX), Y(InY)
 { }
 
 
-FORCEINLINE YVector2DHalf::YVector2DHalf( const YVector2D& Vector2D )
+FORCEINLINE FVector2DHalf::FVector2DHalf( const FVector2D& Vector2D )
 	:	X(Vector2D.X), Y(Vector2D.Y)
 { }
 
 
-FORCEINLINE YVector2DHalf& YVector2DHalf::operator=( const YVector2D& Vector2D )
+FORCEINLINE FVector2DHalf& FVector2DHalf::operator=( const FVector2D& Vector2D )
 {
- 	X = YFloat16(Vector2D.X);
- 	Y = YFloat16(Vector2D.Y);
+ 	X = FFloat16(Vector2D.X);
+ 	Y = FFloat16(Vector2D.Y);
 
 	return *this;
 }
 
 
-FORCEINLINE FString YVector2DHalf::ToString() const
+FORCEINLINE FString FVector2DHalf::ToString() const
 {
 	return FString::Printf(TEXT("X=%3.3f Y=%3.3f"), (float)X, (float)Y );
 }
 
 
-FORCEINLINE YVector2DHalf::operator YVector2D() const
+FORCEINLINE FVector2DHalf::operator FVector2D() const
 {
-	return YVector2D((float)X,(float)Y);
+	return FVector2D((float)X,(float)Y);
 }

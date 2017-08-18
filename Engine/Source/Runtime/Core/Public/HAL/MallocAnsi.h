@@ -38,7 +38,7 @@ public:
 	virtual void* Malloc(SIZE_T Size, uint32 Alignment) override
 	{
 		IncrementTotalMallocCalls();
-		Alignment = YMath::Max(Size >= 16 ? (uint32)16 : (uint32)8, Alignment);
+		Alignment = FMath::Max(Size >= 16 ? (uint32)16 : (uint32)8, Alignment);
 
 #if USE_ALIGNED_MALLOC
 		void* Result = _aligned_malloc(Size, Alignment);
@@ -61,7 +61,7 @@ public:
 	{
 		IncrementTotalReallocCalls();
 		void* Result;
-		Alignment = YMath::Max(NewSize >= 16 ? (uint32)16 : (uint32)8, Alignment);
+		Alignment = FMath::Max(NewSize >= 16 ? (uint32)16 : (uint32)8, Alignment);
 
 #if USE_ALIGNED_MALLOC
 		if (Ptr && NewSize)
@@ -84,7 +84,7 @@ public:
 			Result = Malloc(NewSize, Alignment);
 			SIZE_T PtrSize = 0;
 			GetAllocationSize(Ptr, PtrSize);
-			FMemory::Memcpy(Result, Ptr, YMath::Min(NewSize, PtrSize));
+			FMemory::Memcpy(Result, Ptr, FMath::Min(NewSize, PtrSize));
 			Free(Ptr);
 		}
 		else if (Ptr == nullptr)

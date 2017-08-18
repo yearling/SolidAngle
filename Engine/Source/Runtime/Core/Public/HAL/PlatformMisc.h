@@ -23,30 +23,30 @@
 #include "Switch/SwitchPlatformMisc.h"
 #endif
 
-class CORE_API YScopedNamedEvent
+class CORE_API FScopedNamedEvent
 {
 public:
 
-	YScopedNamedEvent(const struct FColor& Color, const TCHAR* Text)
+	FScopedNamedEvent(const struct FColor& Color, const TCHAR* Text)
 	{
-		YPlatformMisc::BeginNamedEvent(Color, Text);
+		FPlatformMisc::BeginNamedEvent(Color, Text);
 	}
 
-	YScopedNamedEvent(const struct FColor& Color, const ANSICHAR* Text)
+	FScopedNamedEvent(const struct FColor& Color, const ANSICHAR* Text)
 	{
-		YPlatformMisc::BeginNamedEvent(Color, Text);
+		FPlatformMisc::BeginNamedEvent(Color, Text);
 	}
 
-	~YScopedNamedEvent()
+	~FScopedNamedEvent()
 	{
-		YPlatformMisc::EndNamedEvent();
+		FPlatformMisc::EndNamedEvent();
 	}
 };
 
 //lightweight scoped named event separate from stats system.  Will be available in test builds.  
 //Events cost profiling overhead so use them judiciously in final code.
 #if !UE_BUILD_SHIPPING
-#define SCOPED_NAMED_EVENT(Name, Color) YScopedNamedEvent PREPROCESSOR_JOIN(Event_##Name,__LINE__)(Color, #Name);
+#define SCOPED_NAMED_EVENT(Name, Color) FScopedNamedEvent PREPROCESSOR_JOIN(Event_##Name,__LINE__)(Color, #Name);
 #else
 #define SCOPED_NAMED_EVENT(Name, Color)
 #endif

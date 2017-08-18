@@ -116,5 +116,5 @@ bool FWindowsPlatformTime::UpdateCPUTime( float /*DeltaTime*/ )
 
 FCPUTime FWindowsPlatformTime::GetCPUTime()
 {
-	return FCPUTime( CPUTimePctRelative / (float)YPlatformMisc::NumberOfCoresIncludingHyperthreads(), CPUTimePctRelative );
+	return FCPUTime( CPUTimePctRelative / (float)FPlatformMisc::NumberOfCoresIncludingHyperthreads(), CPUTimePctRelative );
 }

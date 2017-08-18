@@ -26,12 +26,12 @@ FORCEINLINE float AlphaToBlendType(float InAlpha, uint8 BlendType)
 {
 	switch( BlendType )
 	{
-	case ABT_Sinusoidal         : return YMath::Clamp<float>((YMath::Sin(InAlpha * PI - HALF_PI) + 1.f) / 2.f, 0.f, 1.f);
-	case ABT_Cubic              : return YMath::Clamp<float>(YMath::CubicInterp<float>(0.f, 0.f, 1.f, 0.f, InAlpha), 0.f, 1.f);
-	case ABT_EaseInOutExponent2 : return YMath::Clamp<float>(YMath::InterpEaseInOut<float>(0.f, 1.f, InAlpha, 2), 0.f, 1.f);
-	case ABT_EaseInOutExponent3 : return YMath::Clamp<float>(YMath::InterpEaseInOut<float>(0.f, 1.f, InAlpha, 3), 0.f, 1.f);
-	case ABT_EaseInOutExponent4 : return YMath::Clamp<float>(YMath::InterpEaseInOut<float>(0.f, 1.f, InAlpha, 4), 0.f, 1.f);
-	case ABT_EaseInOutExponent5 : return YMath::Clamp<float>(YMath::InterpEaseInOut<float>(0.f, 1.f, InAlpha, 5), 0.f, 1.f);
+	case ABT_Sinusoidal         : return FMath::Clamp<float>((FMath::Sin(InAlpha * PI - HALF_PI) + 1.f) / 2.f, 0.f, 1.f);
+	case ABT_Cubic              : return FMath::Clamp<float>(FMath::CubicInterp<float>(0.f, 0.f, 1.f, 0.f, InAlpha), 0.f, 1.f);
+	case ABT_EaseInOutExponent2 : return FMath::Clamp<float>(FMath::InterpEaseInOut<float>(0.f, 1.f, InAlpha, 2), 0.f, 1.f);
+	case ABT_EaseInOutExponent3 : return FMath::Clamp<float>(FMath::InterpEaseInOut<float>(0.f, 1.f, InAlpha, 3), 0.f, 1.f);
+	case ABT_EaseInOutExponent4 : return FMath::Clamp<float>(FMath::InterpEaseInOut<float>(0.f, 1.f, InAlpha, 4), 0.f, 1.f);
+	case ABT_EaseInOutExponent5 : return FMath::Clamp<float>(FMath::InterpEaseInOut<float>(0.f, 1.f, InAlpha, 5), 0.f, 1.f);
 	}
 
 	return InAlpha;
@@ -123,7 +123,7 @@ FORCEINLINE FTAlphaBlend::FTAlphaBlend(float InAlphaIn, float InAlphaOut, float 
 
 FORCEINLINE void FTAlphaBlend::SetBlendTime(float InBlendTime)
 {
-	BlendTime = YMath::Max(InBlendTime, 0.f);
+	BlendTime = FMath::Max(InBlendTime, 0.f);
 }
 
 
@@ -160,7 +160,7 @@ FORCEINLINE void FTAlphaBlend::ConditionalSetTarget(float InAlphaTarget)
 FORCEINLINE void FTAlphaBlend::SetTarget(float InAlphaTarget)
 {
 	// Clamp parameters to valid range
-	AlphaTarget = YMath::Clamp<float>(InAlphaTarget, 0.f, 1.f);
+	AlphaTarget = FMath::Clamp<float>(InAlphaTarget, 0.f, 1.f);
 
 	// if blend time is zero, transition now, don't wait to call update.
 	if( BlendTime <= 0.f )
@@ -172,7 +172,7 @@ FORCEINLINE void FTAlphaBlend::SetTarget(float InAlphaTarget)
 	else
 	{
 		// Blend time is to go all the way, so scale that by how much we have to travel
-		BlendTimeToGo = BlendTime * YMath::Abs(AlphaTarget - AlphaIn);
+		BlendTimeToGo = BlendTime * FMath::Abs(AlphaTarget - AlphaIn);
 	}
 }
 

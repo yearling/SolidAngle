@@ -326,11 +326,11 @@ T FInterpCurve<T>::Eval(const float InVal, const T& Default) const
 
 		if (PrevPoint.InterpMode == CIM_Linear)
 		{
-			return YMath::Lerp(PrevPoint.OutVal, NextPoint.OutVal, Alpha);
+			return FMath::Lerp(PrevPoint.OutVal, NextPoint.OutVal, Alpha);
 		}
 		else
 		{
-			return YMath::CubicInterp(PrevPoint.OutVal, PrevPoint.LeaveTangent * Diff, NextPoint.OutVal, NextPoint.ArriveTangent * Diff, Alpha);
+			return FMath::CubicInterp(PrevPoint.OutVal, PrevPoint.LeaveTangent * Diff, NextPoint.OutVal, NextPoint.ArriveTangent * Diff, Alpha);
 		}
 	}
 	else
@@ -396,7 +396,7 @@ T FInterpCurve<T>::EvalDerivative(const float InVal, const T& Default) const
 			const float Alpha = (InVal - PrevPoint.InVal) / Diff;
 			check(Alpha >= 0.0f && Alpha <= 1.0f);
 
-			return YMath::CubicInterpDerivative(PrevPoint.OutVal, PrevPoint.LeaveTangent * Diff, NextPoint.OutVal, NextPoint.ArriveTangent * Diff, Alpha) / Diff;
+			return FMath::CubicInterpDerivative(PrevPoint.OutVal, PrevPoint.LeaveTangent * Diff, NextPoint.OutVal, NextPoint.ArriveTangent * Diff, Alpha) / Diff;
 		}
 	}
 	else
@@ -459,7 +459,7 @@ T FInterpCurve<T>::EvalSecondDerivative(const float InVal, const T& Default) con
 			const float Alpha = (InVal - PrevPoint.InVal) / Diff;
 			check(Alpha >= 0.0f && Alpha <= 1.0f);
 
-			return YMath::CubicInterpSecondDerivative(PrevPoint.OutVal, PrevPoint.LeaveTangent * Diff, NextPoint.OutVal, NextPoint.ArriveTangent * Diff, Alpha) / (Diff * Diff);
+			return FMath::CubicInterpSecondDerivative(PrevPoint.OutVal, PrevPoint.LeaveTangent * Diff, NextPoint.OutVal, NextPoint.ArriveTangent * Diff, Alpha) / (Diff * Diff);
 		}
 	}
 	else
@@ -530,11 +530,11 @@ float FInterpCurve<T>::InaccurateFindNearestOnSegment(const T& PointInSpace, int
 	const float Diff = NextInVal - Points[PtIdx].InVal;
 	if (CIM_Linear == Points[PtIdx].InterpMode)
 	{
-		// like in function: YMath::ClosestPointOnLine
+		// like in function: FMath::ClosestPointOnLine
 		const float A = (Points[PtIdx].OutVal - PointInSpace) | (Points[NextPtIdx].OutVal - Points[PtIdx].OutVal);
 		const float B = (Points[NextPtIdx].OutVal - Points[PtIdx].OutVal).SizeSquared();
-		const float V = YMath::Clamp(-A / B, 0.f, 1.f);
-		OutSquaredDistance = (YMath::Lerp(Points[PtIdx].OutVal, Points[NextPtIdx].OutVal, V) - PointInSpace).SizeSquared();
+		const float V = FMath::Clamp(-A / B, 0.f, 1.f);
+		OutSquaredDistance = (FMath::Lerp(Points[PtIdx].OutVal, Points[NextPtIdx].OutVal, V) - PointInSpace).SizeSquared();
 		return V * Diff + Points[PtIdx].InVal;
 	}
 
@@ -551,7 +551,7 @@ float FInterpCurve<T>::InaccurateFindNearestOnSegment(const T& PointInSpace, int
 
 		T InitialPoints[PointsChecked];
 		InitialPoints[0] = Points[PtIdx].OutVal;
-		InitialPoints[1] = YMath::CubicInterp(Points[PtIdx].OutVal, Points[PtIdx].LeaveTangent * Diff, Points[NextPtIdx].OutVal, Points[NextPtIdx].ArriveTangent * Diff, ValuesT[1]);
+		InitialPoints[1] = FMath::CubicInterp(Points[PtIdx].OutVal, Points[PtIdx].LeaveTangent * Diff, Points[NextPtIdx].OutVal, Points[NextPtIdx].ArriveTangent * Diff, ValuesT[1]);
 		InitialPoints[2] = Points[NextPtIdx].OutVal;
 
 		float DistancesSq[PointsChecked];
@@ -563,14 +563,14 @@ float FInterpCurve<T>::InaccurateFindNearestOnSegment(const T& PointInSpace, int
 			float LastMove = 1.0f;
 			for (int32 iter = 0; iter < IterationNum; ++iter)
 			{
-				const T LastBestTangent = YMath::CubicInterpDerivative(Points[PtIdx].OutVal, Points[PtIdx].LeaveTangent * Diff, Points[NextPtIdx].OutVal, Points[NextPtIdx].ArriveTangent * Diff, ValuesT[point]);
+				const T LastBestTangent = FMath::CubicInterpDerivative(Points[PtIdx].OutVal, Points[PtIdx].LeaveTangent * Diff, Points[NextPtIdx].OutVal, Points[NextPtIdx].ArriveTangent * Diff, ValuesT[point]);
 				const T Delta = (PointInSpace - FoundPoint);
 				float Move = (LastBestTangent | Delta) / LastBestTangent.SizeSquared();
-				Move = YMath::Clamp(Move, -LastMove*Scale, LastMove*Scale);
+				Move = FMath::Clamp(Move, -LastMove*Scale, LastMove*Scale);
 				ValuesT[point] += Move;
-				ValuesT[point] = YMath::Clamp(ValuesT[point], 0.0f, 1.0f);
-				LastMove = YMath::Abs(Move);
-				FoundPoint = YMath::CubicInterp(Points[PtIdx].OutVal, Points[PtIdx].LeaveTangent * Diff, Points[NextPtIdx].OutVal, Points[NextPtIdx].ArriveTangent * Diff, ValuesT[point]);
+				ValuesT[point] = FMath::Clamp(ValuesT[point], 0.0f, 1.0f);
+				LastMove = FMath::Abs(Move);
+				FoundPoint = FMath::CubicInterp(Points[PtIdx].OutVal, Points[PtIdx].LeaveTangent * Diff, Points[NextPtIdx].OutVal, Points[NextPtIdx].ArriveTangent * Diff, ValuesT[point]);
 			}
 			DistancesSq[point] = (FoundPoint - PointInSpace).SizeSquared();
 			ValuesT[point] = ValuesT[point] * Diff + Points[PtIdx].InVal;
@@ -726,8 +726,8 @@ void FInterpCurve<T>::CalcBounds(T& OutMin, T& OutMax, const T& Default) const
 	};
 
 DEFINE_INTERPCURVE_WRAPPER_STRUCT(FInterpCurveFloat,       float)
-DEFINE_INTERPCURVE_WRAPPER_STRUCT(FInterpCurveVector2D,    YVector2D)
+DEFINE_INTERPCURVE_WRAPPER_STRUCT(FInterpCurveVector2D,    FVector2D)
 DEFINE_INTERPCURVE_WRAPPER_STRUCT(FInterpCurveVector,      FVector)
 DEFINE_INTERPCURVE_WRAPPER_STRUCT(FInterpCurveQuat,        FQuat)
-DEFINE_INTERPCURVE_WRAPPER_STRUCT(FInterpCurveTwoVectors,  YTwoVectors)
+DEFINE_INTERPCURVE_WRAPPER_STRUCT(FInterpCurveTwoVectors,  FTwoVectors)
 DEFINE_INTERPCURVE_WRAPPER_STRUCT(FInterpCurveLinearColor, FLinearColor)

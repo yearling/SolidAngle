@@ -138,7 +138,7 @@ protected:
 			}
 		}
 
-		CompactionThreshold = YMath::Max(2, 2 * InvocationList.Num());
+		CompactionThreshold = FMath::Max(2, 2 * InvocationList.Num());
 	}
 
 	/**

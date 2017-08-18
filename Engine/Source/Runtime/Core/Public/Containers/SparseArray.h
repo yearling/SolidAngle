@@ -1,3 +1,5 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
@@ -16,7 +18,7 @@
 #include "Containers/BitArray.h"
 
 // Forward declarations.
-template<typename ElementType, typename Allocator = FDefaultSparseArrayAllocator >
+template<typename ElementType,typename Allocator = FDefaultSparseArrayAllocator >
 class TSparseArray;
 
 
@@ -47,13 +49,13 @@ union TSparseArrayElementOrFreeListLink
 class FScriptSparseArray;
 
 /**
-* A dynamically sized array where element indices aren't necessarily contiguous.  Memory is allocated for all
-* elements in the array's index range, so it doesn't save memory; but it does allow O(1) element removal that
-* doesn't invalidate the indices of subsequent elements.  It uses TArray to store the elements, and a TBitArray
-* to store whether each element index is allocated (for fast iteration over allocated elements).
-*
-**/
-template<typename ElementType, typename Allocator /*= FDefaultSparseArrayAllocator */>
+ * A dynamically sized array where element indices aren't necessarily contiguous.  Memory is allocated for all 
+ * elements in the array's index range, so it doesn't save memory; but it does allow O(1) element removal that 
+ * doesn't invalidate the indices of subsequent elements.  It uses TArray to store the elements, and a TBitArray
+ * to store whether each element index is allocated (for fast iteration over allocated elements).
+ *
+ **/
+template<typename ElementType,typename Allocator /*= FDefaultSparseArrayAllocator */>
 class TSparseArray
 {
 	friend struct TContainerTraits<TSparseArray>;
@@ -87,19 +89,19 @@ public:
 	}
 
 	/**
-	* Allocates space for an element in the array.  The element is not initialized, and you must use the corresponding placement new operator
-	* to construct the element in the allocated memory.
-	*/
+	 * Allocates space for an element in the array.  The element is not initialized, and you must use the corresponding placement new operator
+	 * to construct the element in the allocated memory.
+	 */
 	FSparseArrayAllocationInfo AddUninitialized()
 	{
 		int32 Index;
-		if (NumFreeIndices)
+		if(NumFreeIndices)
 		{
 			// Remove and use the first index from the list of free elements.
 			Index = FirstFreeIndex;
 			FirstFreeIndex = GetData(FirstFreeIndex).NextFreeIndex;
 			--NumFreeIndices;
-			if (NumFreeIndices)
+			if(NumFreeIndices)
 			{
 				GetData(FirstFreeIndex).PrevFreeIndex = -1;
 			}
@@ -123,21 +125,21 @@ public:
 	}
 
 	/**
-	* Allocates space for an element in the array at a given index.  The element is not initialized, and you must use the corresponding placement new operator
-	* to construct the element in the allocated memory.
-	*/
+	 * Allocates space for an element in the array at a given index.  The element is not initialized, and you must use the corresponding placement new operator
+	 * to construct the element in the allocated memory.
+	 */
 	FSparseArrayAllocationInfo InsertUninitialized(int32 Index)
 	{
 		// Enlarge the array to include the given index.
-		if (Index >= Data.Num())
+		if(Index >= Data.Num())
 		{
 			Data.AddUninitialized(Index + 1 - Data.Num());
-			while (AllocationFlags.Num() < Data.Num())
+			while(AllocationFlags.Num() < Data.Num())
 			{
 				const int32 FreeIndex = AllocationFlags.Num();
 				GetData(FreeIndex).PrevFreeIndex = -1;
 				GetData(FreeIndex).NextFreeIndex = FirstFreeIndex;
-				if (NumFreeIndices)
+				if(NumFreeIndices)
 				{
 					GetData(FirstFreeIndex).PrevFreeIndex = FreeIndex;
 				}
@@ -154,7 +156,7 @@ public:
 		--NumFreeIndices;
 		const int32 PrevFreeIndex = GetData(Index).PrevFreeIndex;
 		const int32 NextFreeIndex = GetData(Index).NextFreeIndex;
-		if (PrevFreeIndex != -1)
+		if(PrevFreeIndex != -1)
 		{
 			GetData(PrevFreeIndex).NextFreeIndex = NextFreeIndex;
 		}
@@ -162,7 +164,7 @@ public:
 		{
 			FirstFreeIndex = NextFreeIndex;
 		}
-		if (NextFreeIndex != -1)
+		if(NextFreeIndex != -1)
 		{
 			GetData(NextFreeIndex).PrevFreeIndex = PrevFreeIndex;
 		}
@@ -171,15 +173,15 @@ public:
 	}
 
 	/**
-	* Inserts an element to the array.
-	*/
-	void Insert(int32 Index, typename TTypeTraits<ElementType>::ConstInitType Element)
+	 * Inserts an element to the array.
+	 */
+	void Insert(int32 Index,typename TTypeTraits<ElementType>::ConstInitType Element)
 	{
 		new(InsertUninitialized(Index)) ElementType(Element);
 	}
 
 	/** Removes Count elements from the array, starting from Index. */
-	void RemoveAt(int32 Index, int32 Count = 1)
+	void RemoveAt(int32 Index,int32 Count = 1)
 	{
 		if (!TIsTriviallyDestructible<ElementType>::Value)
 		{
@@ -193,14 +195,14 @@ public:
 	}
 
 	/** Removes Count elements from the array, starting from Index, without destructing them. */
-	void RemoveAtUninitialized(int32 Index, int32 Count = 1)
+	void RemoveAtUninitialized(int32 Index,int32 Count = 1)
 	{
 		for (; Count; --Count)
 		{
 			check(AllocationFlags[Index]);
 
 			// Mark the element as free and add it to the free element list.
-			if (NumFreeIndices)
+			if(NumFreeIndices)
 			{
 				GetData(FirstFreeIndex).PrevFreeIndex = Index;
 			}
@@ -216,15 +218,15 @@ public:
 	}
 
 	/**
-	* Removes all elements from the array, potentially leaving space allocated for an expected number of elements about to be added.
-	* @param ExpectedNumElements - The expected number of elements about to be added.
-	*/
+	 * Removes all elements from the array, potentially leaving space allocated for an expected number of elements about to be added.
+	 * @param ExpectedNumElements - The expected number of elements about to be added.
+	 */
 	void Empty(int32 ExpectedNumElements = 0)
 	{
 		// Destruct the allocated elements.
-		if (!TIsTriviallyDestructible<ElementType>::Value)
+		if( !TIsTriviallyDestructible<ElementType>::Value )
 		{
-			for (TIterator It(*this); It; ++It)
+			for(TIterator It(*this);It;++It)
 			{
 				ElementType& Element = *It;
 				Element.~ElementType();
@@ -242,9 +244,9 @@ public:
 	void Reset()
 	{
 		// Destruct the allocated elements.
-		if (!TIsTriviallyDestructible<ElementType>::Value)
+		if( !TIsTriviallyDestructible<ElementType>::Value )
 		{
-			for (TIterator It(*this); It; ++It)
+			for(TIterator It(*this);It;++It)
 			{
 				ElementType& Element = *It;
 				Element.~ElementType();
@@ -259,13 +261,13 @@ public:
 	}
 
 	/**
-	* Preallocates enough memory to contain the specified number of elements.
-	*
-	* @param	ExpectedNumElements		the total number of elements that the array will have
-	*/
+	 * Preallocates enough memory to contain the specified number of elements.
+	 *
+	 * @param	ExpectedNumElements		the total number of elements that the array will have
+	 */
 	void Reserve(int32 ExpectedNumElements)
 	{
-		if (ExpectedNumElements > Data.Num())
+		if ( ExpectedNumElements > Data.Num() )
 		{
 			const int32 ElementsToAdd = ExpectedNumElements - Data.Num();
 
@@ -273,9 +275,9 @@ public:
 			int32 ElementIndex = Data.AddUninitialized(ElementsToAdd);
 
 			// now mark the new elements as free
-			for (int32 FreeIndex = ExpectedNumElements - 1; FreeIndex >= ElementIndex; --FreeIndex)
+			for ( int32 FreeIndex = ExpectedNumElements - 1; FreeIndex >= ElementIndex; --FreeIndex )
 			{
-				if (NumFreeIndices)
+				if(NumFreeIndices)
 				{
 					GetData(FirstFreeIndex).PrevFreeIndex = FreeIndex;
 				}
@@ -285,7 +287,7 @@ public:
 				++NumFreeIndices;
 			}
 			//@fixme - this will have to do until TBitArray has a Reserve method....
-			for (int32 i = 0; i < ElementsToAdd; i++)
+			for ( int32 i = 0; i < ElementsToAdd; i++ )
 			{
 				AllocationFlags.Add(false);
 			}
@@ -297,29 +299,29 @@ public:
 	{
 		// Determine the highest allocated index in the data array.
 		int32 MaxAllocatedIndex = INDEX_NONE;
-		for (TConstSetBitIterator<typename Allocator::BitArrayAllocator> AllocatedIndexIt(AllocationFlags); AllocatedIndexIt; ++AllocatedIndexIt)
+		for(TConstSetBitIterator<typename Allocator::BitArrayAllocator> AllocatedIndexIt(AllocationFlags);AllocatedIndexIt;++AllocatedIndexIt)
 		{
-			MaxAllocatedIndex = YMath::Max(MaxAllocatedIndex, AllocatedIndexIt.GetIndex());
+			MaxAllocatedIndex = FMath::Max(MaxAllocatedIndex,AllocatedIndexIt.GetIndex());
 		}
 
 		const int32 FirstIndexToRemove = MaxAllocatedIndex + 1;
-		if (FirstIndexToRemove < Data.Num())
+		if(FirstIndexToRemove < Data.Num())
 		{
-			if (NumFreeIndices > 0)
+			if(NumFreeIndices > 0)
 			{
 				// Look for elements in the free list that are in the memory to be freed.
 				int32 FreeIndex = FirstFreeIndex;
-				while (FreeIndex != INDEX_NONE)
+				while(FreeIndex != INDEX_NONE)
 				{
-					if (FreeIndex >= FirstIndexToRemove)
+					if(FreeIndex >= FirstIndexToRemove)
 					{
 						const int32 PrevFreeIndex = GetData(FreeIndex).PrevFreeIndex;
 						const int32 NextFreeIndex = GetData(FreeIndex).NextFreeIndex;
-						if (NextFreeIndex != -1)
+						if(NextFreeIndex != -1)
 						{
 							GetData(NextFreeIndex).PrevFreeIndex = PrevFreeIndex;
 						}
-						if (PrevFreeIndex != -1)
+						if(PrevFreeIndex != -1)
 						{
 							GetData(PrevFreeIndex).NextFreeIndex = NextFreeIndex;
 						}
@@ -339,8 +341,8 @@ public:
 			}
 
 			// Truncate unallocated elements at the end of the data array.
-			Data.RemoveAt(FirstIndexToRemove, Data.Num() - FirstIndexToRemove);
-			AllocationFlags.RemoveAt(FirstIndexToRemove, AllocationFlags.Num() - FirstIndexToRemove);
+			Data.RemoveAt(FirstIndexToRemove,Data.Num() - FirstIndexToRemove);
+			AllocationFlags.RemoveAt(FirstIndexToRemove,AllocationFlags.Num() - FirstIndexToRemove);
 		}
 
 		// Shrink the data array.
@@ -361,9 +363,9 @@ public:
 
 		FElementOrFreeListLink* ElementData = Data.GetData();
 
-		int32 EndIndex = Data.Num();
+		int32 EndIndex    = Data.Num();
 		int32 TargetIndex = EndIndex - NumFree;
-		int32 FreeIndex = FirstFreeIndex;
+		int32 FreeIndex   = FirstFreeIndex;
 		while (FreeIndex != -1)
 		{
 			int32 NextFreeIndex = GetData(FreeIndex).NextFreeIndex;
@@ -373,7 +375,8 @@ public:
 				do
 				{
 					--EndIndex;
-				} while (!AllocationFlags[EndIndex]);
+				}
+				while (!AllocationFlags[EndIndex]);
 
 				RelocateConstructItems<FElementOrFreeListLink>(ElementData + FreeIndex, ElementData + EndIndex, 1);
 				AllocationFlags[FreeIndex] = true;
@@ -384,7 +387,7 @@ public:
 			FreeIndex = NextFreeIndex;
 		}
 
-		Data.RemoveAt(TargetIndex, NumFree);
+		Data           .RemoveAt(TargetIndex, NumFree);
 		AllocationFlags.RemoveAt(TargetIndex, NumFree);
 
 		NumFreeIndices = 0;
@@ -403,47 +406,47 @@ public:
 		}
 
 		// Copy the existing elements to a new array.
-		TSparseArray<ElementType, Allocator> CompactedArray;
+		TSparseArray<ElementType,Allocator> CompactedArray;
 		CompactedArray.Empty(Num());
-		for (TConstIterator It(*this); It; ++It)
+		for(TConstIterator It(*this);It;++It)
 		{
 			new(CompactedArray.AddUninitialized()) ElementType(*It);
 		}
 
 		// Replace this array with the compacted array.
-		Exchange(*this, CompactedArray);
+		Exchange(*this,CompactedArray);
 
 		return true;
 	}
 
 	/** Sorts the elements using the provided comparison class. */
 	template<typename PREDICATE_CLASS>
-	void Sort(const PREDICATE_CLASS& Predicate)
+	void Sort( const PREDICATE_CLASS& Predicate )
 	{
-		if (Num() > 0)
+		if(Num() > 0)
 		{
 			// Compact the elements array so all the elements are contiguous.
 			Compact();
 
 			// Sort the elements according to the provided comparison class.
-			::Sort(&GetData(0), Num(), FElementCompareClass< PREDICATE_CLASS >(Predicate));
+			::Sort( &GetData(0), Num(), FElementCompareClass< PREDICATE_CLASS >( Predicate ) );
 		}
 	}
 
 	/** Sorts the elements assuming < operator is defined for ElementType. */
 	void Sort()
 	{
-		Sort(TLess< ElementType >());
+		Sort( TLess< ElementType >() );
 	}
 
-	/**
-	* Helper function to return the amount of memory allocated by this container
-	* @return number of bytes allocated by this container
-	*/
-	uint32 GetAllocatedSize(void) const
+	/** 
+	 * Helper function to return the amount of memory allocated by this container 
+	 * @return number of bytes allocated by this container
+	 */
+	uint32 GetAllocatedSize( void ) const
 	{
 		return	(Data.Num() + Data.GetSlack()) * sizeof(FElementOrFreeListLink) +
-			AllocationFlags.GetAllocatedSize();
+				AllocationFlags.GetAllocatedSize();
 	}
 
 	/** Tracks the container's memory use through an archive. */
@@ -454,16 +457,16 @@ public:
 	}
 
 	/** Serializer. */
-	friend FArchive& operator<<(FArchive& Ar, TSparseArray& Array)
+	friend FArchive& operator<<(FArchive& Ar,TSparseArray& Array)
 	{
 		Array.CountBytes(Ar);
-		if (Ar.IsLoading())
+		if( Ar.IsLoading() )
 		{
 			// Load array.
 			int32 NewNumElements = 0;
 			Ar << NewNumElements;
-			Array.Empty(NewNumElements);
-			for (int32 ElementIndex = 0; ElementIndex < NewNumElements; ElementIndex++)
+			Array.Empty( NewNumElements );
+			for(int32 ElementIndex = 0;ElementIndex < NewNumElements;ElementIndex++)
 			{
 				Ar << *::new(Array.AddUninitialized())ElementType;
 			}
@@ -473,7 +476,7 @@ public:
 			// Save array.
 			int32 NewNumElements = Array.Num();
 			Ar << NewNumElements;
-			for (TIterator It(Array); It; ++It)
+			for(TIterator It(Array);It;++It)
 			{
 				Ar << *It;
 			}
@@ -482,27 +485,27 @@ public:
 	}
 
 	/**
-	* Equality comparison operator.
-	* Checks that both arrays have the same elements and element indices; that means that unallocated elements are signifigant!
-	*/
-	friend bool operator==(const TSparseArray& A, const TSparseArray& B)
+	 * Equality comparison operator.
+	 * Checks that both arrays have the same elements and element indices; that means that unallocated elements are signifigant!
+	 */
+	friend bool operator==(const TSparseArray& A,const TSparseArray& B)
 	{
-		if (A.GetMaxIndex() != B.GetMaxIndex())
+		if(A.GetMaxIndex() != B.GetMaxIndex())
 		{
 			return false;
 		}
 
-		for (int32 ElementIndex = 0; ElementIndex < A.GetMaxIndex(); ElementIndex++)
+		for(int32 ElementIndex = 0;ElementIndex < A.GetMaxIndex();ElementIndex++)
 		{
 			const bool bIsAllocatedA = A.IsAllocated(ElementIndex);
 			const bool bIsAllocatedB = B.IsAllocated(ElementIndex);
-			if (bIsAllocatedA != bIsAllocatedB)
+			if(bIsAllocatedA != bIsAllocatedB)
 			{
 				return false;
 			}
-			else if (bIsAllocatedA)
+			else if(bIsAllocatedA)
 			{
-				if (A[ElementIndex] != B[ElementIndex])
+				if(A[ElementIndex] != B[ElementIndex])
 				{
 					return false;
 				}
@@ -513,18 +516,18 @@ public:
 	}
 
 	/**
-	* Inequality comparison operator.
-	* Checks that both arrays have the same elements and element indices; that means that unallocated elements are signifigant!
-	*/
-	friend bool operator!=(const TSparseArray& A, const TSparseArray& B)
+	 * Inequality comparison operator.
+	 * Checks that both arrays have the same elements and element indices; that means that unallocated elements are signifigant!
+	 */
+	friend bool operator!=(const TSparseArray& A,const TSparseArray& B)
 	{
 		return !(A == B);
 	}
 
 	/** Default constructor. */
 	TSparseArray()
-		: FirstFreeIndex(-1)
-		, NumFreeIndices(0)
+	:	FirstFreeIndex(-1)
+	,	NumFreeIndices(0)
 	{}
 
 	/** Move constructor. */
@@ -535,8 +538,8 @@ public:
 
 	/** Copy constructor. */
 	TSparseArray(const TSparseArray& InCopy)
-		: FirstFreeIndex(-1)
-		, NumFreeIndices(0)
+	:	FirstFreeIndex(-1)
+	,	NumFreeIndices(0)
 	{
 		*this = InCopy;
 	}
@@ -544,7 +547,7 @@ public:
 	/** Move assignment operator. */
 	TSparseArray& operator=(TSparseArray&& InCopy)
 	{
-		if (this != &InCopy)
+		if(this != &InCopy)
 		{
 			MoveOrCopy(*this, InCopy);
 		}
@@ -554,29 +557,29 @@ public:
 	/** Copy assignment operator. */
 	TSparseArray& operator=(const TSparseArray& InCopy)
 	{
-		if (this != &InCopy)
+		if(this != &InCopy)
 		{
 			// Reallocate the array.
 			Empty(InCopy.GetMaxIndex());
 			Data.AddUninitialized(InCopy.GetMaxIndex());
 
 			// Copy the other array's element allocation state.
-			FirstFreeIndex = InCopy.FirstFreeIndex;
-			NumFreeIndices = InCopy.NumFreeIndices;
+			FirstFreeIndex  = InCopy.FirstFreeIndex;
+			NumFreeIndices  = InCopy.NumFreeIndices;
 			AllocationFlags = InCopy.AllocationFlags;
 
 			// Determine whether we need per element construction or bulk copy is fine
 			if (!TIsTriviallyCopyConstructible<ElementType>::Value)
 			{
-				FElementOrFreeListLink* SrcData = (FElementOrFreeListLink*)Data.GetData();
+				      FElementOrFreeListLink* SrcData  = (FElementOrFreeListLink*)Data.GetData();
 				const FElementOrFreeListLink* DestData = (FElementOrFreeListLink*)InCopy.Data.GetData();
 
 				// Use the inplace new to copy the element to an array element
-				for (int32 Index = 0; Index < InCopy.GetMaxIndex(); Index++)
+				for(int32 Index = 0;Index < InCopy.GetMaxIndex();Index++)
 				{
-					FElementOrFreeListLink& DestElement = SrcData[Index];
+					      FElementOrFreeListLink& DestElement   = SrcData [Index];
 					const FElementOrFreeListLink& SourceElement = DestData[Index];
-					if (InCopy.IsAllocated(Index))
+					if(InCopy.IsAllocated(Index))
 					{
 						::new((uint8*)&DestElement.ElementData) ElementType(*(ElementType*)&SourceElement.ElementData);
 					}
@@ -587,7 +590,7 @@ public:
 			else
 			{
 				// Use the much faster path for types that allow it
-				FMemory::Memcpy(Data.GetData(), InCopy.Data.GetData(), sizeof(FElementOrFreeListLink) * InCopy.GetMaxIndex());
+				FMemory::Memcpy(Data.GetData(),InCopy.Data.GetData(),sizeof(FElementOrFreeListLink) * InCopy.GetMaxIndex());
 			}
 		}
 		return *this;
@@ -598,7 +601,7 @@ private:
 	FORCEINLINE static typename TEnableIf<TContainerTraits<SparseArrayType>::MoveWillEmptyContainer>::Type MoveOrCopy(SparseArrayType& ToArray, SparseArrayType& FromArray)
 	{
 		// Destruct the allocated elements.
-		if (!TIsTriviallyDestructible<ElementType>::Value)
+		if( !TIsTriviallyDestructible<ElementType>::Value )
 		{
 			for (ElementType& Element : ToArray)
 			{
@@ -606,7 +609,7 @@ private:
 			}
 		}
 
-		ToArray.Data = (DataType&&)FromArray.Data;
+		ToArray.Data            = (DataType&&)FromArray.Data;
 		ToArray.AllocationFlags = (AllocationBitArrayType&&)FromArray.AllocationFlags;
 
 		ToArray.FirstFreeIndex = FromArray.FirstFreeIndex;
@@ -641,11 +644,11 @@ public:
 	int32 Num() const { return Data.Num() - NumFreeIndices; }
 
 	/**
-	* Checks that the specified address is not part of an element within the container.  Used for implementations
-	* to check that reference arguments aren't going to be invalidated by possible reallocation.
-	*
-	* @param Addr The address to check.
-	*/
+	 * Checks that the specified address is not part of an element within the container.  Used for implementations
+	 * to check that reference arguments aren't going to be invalidated by possible reallocation.
+	 *
+	 * @param Addr The address to check.
+	 */
 	FORCEINLINE void CheckAddress(const ElementType* Addr) const
 	{
 		Data.CheckAddress(Addr);
@@ -661,12 +664,12 @@ private:
 		typedef TConstSetBitIterator<typename Allocator::BitArrayAllocator> BitArrayItType;
 
 	private:
-		typedef typename TChooseClass<bConst, const TSparseArray, TSparseArray>::Result ArrayType;
-		typedef typename TChooseClass<bConst, const ElementType, ElementType>::Result ItElementType;
+		typedef typename TChooseClass<bConst,const TSparseArray,TSparseArray>::Result ArrayType;
+		typedef typename TChooseClass<bConst,const ElementType,ElementType>::Result ItElementType;
 
 	public:
 		explicit TBaseIterator(ArrayType& InArray, const BitArrayItType& InBitArrayIt)
-			: Array(InArray)
+			: Array     (InArray)
 			, BitArrayIt(InBitArrayIt)
 		{
 		}
@@ -685,12 +688,12 @@ private:
 
 		/** conversion to "bool" returning true if the iterator is valid. */
 		FORCEINLINE explicit operator bool() const
-		{
-			return !!BitArrayIt;
+		{ 
+			return !!BitArrayIt; 
 		}
 
 		/** inverse of the "bool" operator */
-		FORCEINLINE bool operator !() const
+		FORCEINLINE bool operator !() const 
 		{
 			return !(bool)*this;
 		}
@@ -756,13 +759,13 @@ public:
 
 private:
 	/**
-	* DO NOT USE DIRECTLY
-	* STL-like iterators to enable range-based for loop support.
-	*/
-	FORCEINLINE friend TIterator      begin(TSparseArray& Array) { return TIterator(Array, TConstSetBitIterator<typename Allocator::BitArrayAllocator>(Array.AllocationFlags)); }
+	 * DO NOT USE DIRECTLY
+	 * STL-like iterators to enable range-based for loop support.
+	 */
+	FORCEINLINE friend TIterator      begin(      TSparseArray& Array) { return TIterator     (Array, TConstSetBitIterator<typename Allocator::BitArrayAllocator>(Array.AllocationFlags)); }
 	FORCEINLINE friend TConstIterator begin(const TSparseArray& Array) { return TConstIterator(Array, TConstSetBitIterator<typename Allocator::BitArrayAllocator>(Array.AllocationFlags)); }
-	FORCEINLINE friend TIterator      end(TSparseArray& Array) { return TIterator(Array, TConstSetBitIterator<typename Allocator::BitArrayAllocator>(Array.AllocationFlags, Array.AllocationFlags.Num())); }
-	FORCEINLINE friend TConstIterator end(const TSparseArray& Array) { return TConstIterator(Array, TConstSetBitIterator<typename Allocator::BitArrayAllocator>(Array.AllocationFlags, Array.AllocationFlags.Num())); }
+	FORCEINLINE friend TIterator      end  (      TSparseArray& Array) { return TIterator     (Array, TConstSetBitIterator<typename Allocator::BitArrayAllocator>(Array.AllocationFlags, Array.AllocationFlags.Num())); }
+	FORCEINLINE friend TConstIterator end  (const TSparseArray& Array) { return TConstIterator(Array, TConstSetBitIterator<typename Allocator::BitArrayAllocator>(Array.AllocationFlags, Array.AllocationFlags.Num())); }
 
 public:
 	/** An iterator which only iterates over the elements of the array which correspond to set bits in a separate bit array. */
@@ -770,9 +773,9 @@ public:
 	class TConstSubsetIterator
 	{
 	public:
-		TConstSubsetIterator(const TSparseArray& InArray, const TBitArray<SubsetAllocator>& InBitArray) :
+		TConstSubsetIterator( const TSparseArray& InArray, const TBitArray<SubsetAllocator>& InBitArray ):
 			Array(InArray),
-			BitArrayIt(InArray.AllocationFlags, InBitArray)
+			BitArrayIt(InArray.AllocationFlags,InBitArray)
 		{}
 		FORCEINLINE TConstSubsetIterator& operator++()
 		{
@@ -781,14 +784,14 @@ public:
 			return *this;
 		}
 		FORCEINLINE int32 GetIndex() const { return BitArrayIt.GetIndex(); }
-
+		
 		/** conversion to "bool" returning true if the iterator is valid. */
 		FORCEINLINE explicit operator bool() const
-		{
-			return !!BitArrayIt;
+		{ 
+			return !!BitArrayIt; 
 		}
 		/** inverse of the "bool" operator */
-		FORCEINLINE bool operator !() const
+		FORCEINLINE bool operator !() const 
 		{
 			return !(bool)*this;
 		}
@@ -798,23 +801,23 @@ public:
 		FORCEINLINE const FRelativeBitReference& GetRelativeBitReference() const { return BitArrayIt; }
 	private:
 		const TSparseArray& Array;
-		TConstDualSetBitIterator<typename Allocator::BitArrayAllocator, SubsetAllocator> BitArrayIt;
+		TConstDualSetBitIterator<typename Allocator::BitArrayAllocator,SubsetAllocator> BitArrayIt;
 	};
 
 	/** Concatenation operators */
-	TSparseArray& operator+=(const TSparseArray& OtherArray)
+	TSparseArray& operator+=( const TSparseArray& OtherArray )
 	{
 		this->Reserve(this->Num() + OtherArray.Num());
-		for (typename TSparseArray::TConstIterator It(OtherArray); It; ++It)
+		for ( typename TSparseArray::TConstIterator It(OtherArray); It; ++It )
 		{
 			this->Add(*It);
 		}
 		return *this;
 	}
-	TSparseArray& operator+=(const TArray<ElementType>& OtherArray)
+	TSparseArray& operator+=( const TArray<ElementType>& OtherArray )
 	{
 		this->Reserve(this->Num() + OtherArray.Num());
-		for (int32 Idx = 0; Idx < OtherArray.Num(); Idx++)
+		for ( int32 Idx = 0; Idx < OtherArray.Num(); Idx++ )
 		{
 			this->Add(OtherArray[Idx]);
 		}
@@ -824,12 +827,12 @@ public:
 private:
 
 	/**
-	* The element type stored is only indirectly related to the element type requested, to avoid instantiating TArray redundantly for
-	* compatible types.
-	*/
+	 * The element type stored is only indirectly related to the element type requested, to avoid instantiating TArray redundantly for
+	 * compatible types.
+	 */
 	typedef TSparseArrayElementOrFreeListLink<
-		TAlignedBytes<sizeof(ElementType), ALIGNOF(ElementType)>
-	> FElementOrFreeListLink;
+		TAlignedBytes<sizeof(ElementType),ALIGNOF(ElementType)>
+		> FElementOrFreeListLink;
 
 	/** Extracts the element value from the array's element structure and passes it to the user provided comparison class. */
 	template <typename PREDICATE_CLASS>
@@ -838,13 +841,13 @@ private:
 		const PREDICATE_CLASS& Predicate;
 
 	public:
-		FElementCompareClass(const PREDICATE_CLASS& InPredicate)
-			: Predicate(InPredicate)
+		FElementCompareClass( const PREDICATE_CLASS& InPredicate )
+			: Predicate( InPredicate )
 		{}
 
-		bool operator()(const FElementOrFreeListLink& A, const FElementOrFreeListLink& B) const
+		bool operator()( const FElementOrFreeListLink& A,const FElementOrFreeListLink& B ) const
 		{
-			return Predicate(*(ElementType*)&A.ElementData, *(ElementType*)&B.ElementData);
+			return Predicate(*(ElementType*)&A.ElementData,*(ElementType*)&B.ElementData);
 		}
 	};
 
@@ -860,7 +863,7 @@ private:
 		return ((FElementOrFreeListLink*)Data.GetData())[Index];
 	}
 
-	typedef TArray<FElementOrFreeListLink, typename Allocator::ElementAllocator> DataType;
+	typedef TArray<FElementOrFreeListLink,typename Allocator::ElementAllocator> DataType;
 	DataType Data;
 
 	typedef TBitArray<typename Allocator::BitArrayAllocator> AllocationBitArrayType;
@@ -876,11 +879,9 @@ private:
 template<typename ElementType, typename Allocator>
 struct TContainerTraits<TSparseArray<ElementType, Allocator> > : public TContainerTraitsBase<TSparseArray<ElementType, Allocator> >
 {
-	enum {
-		MoveWillEmptyContainer =
+	enum { MoveWillEmptyContainer =
 		TContainerTraits<typename TSparseArray<ElementType, Allocator>::DataType>::MoveWillEmptyContainer &&
-		TContainerTraits<typename TSparseArray<ElementType, Allocator>::AllocationBitArrayType>::MoveWillEmptyContainer
-	};
+		TContainerTraits<typename TSparseArray<ElementType, Allocator>::AllocationBitArrayType>::MoveWillEmptyContainer };
 };
 
 struct FScriptSparseArrayLayout
@@ -899,8 +900,8 @@ public:
 	{
 		FScriptSparseArrayLayout Result;
 		Result.ElementOffset = 0;
-		Result.Alignment = YMath::Max(ElementAlignment, (int32)ALIGNOF(FFreeListLink));
-		Result.Size = YMath::Max(ElementSize, (int32)sizeof(FFreeListLink));
+		Result.Alignment     = FMath::Max(ElementAlignment, (int32)ALIGNOF(FFreeListLink));
+		Result.Size          = FMath::Max(ElementSize,      (int32)sizeof (FFreeListLink));
 
 		return Result;
 	}
@@ -946,10 +947,10 @@ public:
 	}
 
 	/**
-	* Adds an uninitialized object to the array.
-	*
-	* @return  The index of the added element.
-	*/
+	 * Adds an uninitialized object to the array.
+	 *
+	 * @return  The index of the added element.
+	 */
 	int32 AddUninitialized(const FScriptSparseArrayLayout& Layout)
 	{
 		int32 Index;
@@ -959,7 +960,7 @@ public:
 			Index = FirstFreeIndex;
 			FirstFreeIndex = GetFreeListLink(FirstFreeIndex, Layout)->NextFreeIndex;
 			--NumFreeIndices;
-			if (NumFreeIndices)
+			if(NumFreeIndices)
 			{
 				GetFreeListLink(FirstFreeIndex, Layout)->PrevFreeIndex = -1;
 			}
@@ -984,7 +985,7 @@ public:
 			check(AllocationFlags[Index]);
 
 			// Mark the element as free and add it to the free element list.
-			if (NumFreeIndices)
+			if(NumFreeIndices)
 			{
 				GetFreeListLink(FirstFreeIndex, Layout)->PrevFreeIndex = Index;
 			}
@@ -1013,20 +1014,20 @@ private:
 		typedef TSparseArray<int32> RealType;
 
 		// Check that the class footprint is the same
-		static_assert(sizeof(ScriptType) == sizeof(RealType), "FScriptSparseArray's size doesn't match TSparseArray");
+		static_assert(sizeof (ScriptType) == sizeof (RealType), "FScriptSparseArray's size doesn't match TSparseArray");
 		static_assert(ALIGNOF(ScriptType) == ALIGNOF(RealType), "FScriptSparseArray's alignment doesn't match TSparseArray");
 
 		// Check member sizes
-		static_assert(sizeof(DeclVal<ScriptType>().Data) == sizeof(DeclVal<RealType>().Data), "FScriptSparseArray's Data member size does not match TSparseArray's");
+		static_assert(sizeof(DeclVal<ScriptType>().Data)            == sizeof(DeclVal<RealType>().Data),            "FScriptSparseArray's Data member size does not match TSparseArray's");
 		static_assert(sizeof(DeclVal<ScriptType>().AllocationFlags) == sizeof(DeclVal<RealType>().AllocationFlags), "FScriptSparseArray's AllocationFlags member size does not match TSparseArray's");
-		static_assert(sizeof(DeclVal<ScriptType>().FirstFreeIndex) == sizeof(DeclVal<RealType>().FirstFreeIndex), "FScriptSparseArray's FirstFreeIndex member size does not match TSparseArray's");
-		static_assert(sizeof(DeclVal<ScriptType>().NumFreeIndices) == sizeof(DeclVal<RealType>().NumFreeIndices), "FScriptSparseArray's NumFreeIndices member size does not match TSparseArray's");
+		static_assert(sizeof(DeclVal<ScriptType>().FirstFreeIndex)  == sizeof(DeclVal<RealType>().FirstFreeIndex),  "FScriptSparseArray's FirstFreeIndex member size does not match TSparseArray's");
+		static_assert(sizeof(DeclVal<ScriptType>().NumFreeIndices)  == sizeof(DeclVal<RealType>().NumFreeIndices),  "FScriptSparseArray's NumFreeIndices member size does not match TSparseArray's");
 
 		// Check member offsets
-		static_assert(STRUCT_OFFSET(ScriptType, Data) == STRUCT_OFFSET(RealType, Data), "FScriptSparseArray's Data member offset does not match TSparseArray's");
+		static_assert(STRUCT_OFFSET(ScriptType, Data)            == STRUCT_OFFSET(RealType, Data),            "FScriptSparseArray's Data member offset does not match TSparseArray's");
 		static_assert(STRUCT_OFFSET(ScriptType, AllocationFlags) == STRUCT_OFFSET(RealType, AllocationFlags), "FScriptSparseArray's AllocationFlags member offset does not match TSparseArray's");
-		static_assert(STRUCT_OFFSET(ScriptType, FirstFreeIndex) == STRUCT_OFFSET(RealType, FirstFreeIndex), "FScriptSparseArray's FirstFreeIndex member offset does not match TSparseArray's");
-		static_assert(STRUCT_OFFSET(ScriptType, NumFreeIndices) == STRUCT_OFFSET(RealType, NumFreeIndices), "FScriptSparseArray's NumFreeIndices member offset does not match TSparseArray's");
+		static_assert(STRUCT_OFFSET(ScriptType, FirstFreeIndex)  == STRUCT_OFFSET(RealType, FirstFreeIndex),  "FScriptSparseArray's FirstFreeIndex member offset does not match TSparseArray's");
+		static_assert(STRUCT_OFFSET(ScriptType, NumFreeIndices)  == STRUCT_OFFSET(RealType, NumFreeIndices),  "FScriptSparseArray's NumFreeIndices member offset does not match TSparseArray's");
 
 		// Check free index offsets
 		static_assert(STRUCT_OFFSET(ScriptType::FFreeListLink, PrevFreeIndex) == STRUCT_OFFSET(RealType::FElementOrFreeListLink, PrevFreeIndex), "FScriptSparseArray's FFreeListLink's PrevFreeIndex member offset does not match TSparseArray's");
@@ -1062,9 +1063,9 @@ struct TIsZeroConstructType<FScriptSparseArray>
 };
 
 /**
-* A placement new operator which constructs an element in a sparse array allocation.
-*/
-inline void* operator new(size_t Size, const FSparseArrayAllocationInfo& Allocation)
+ * A placement new operator which constructs an element in a sparse array allocation.
+ */
+inline void* operator new(size_t Size,const FSparseArrayAllocationInfo& Allocation)
 {
 	ASSUME(Allocation.Pointer);
 	return Allocation.Pointer;

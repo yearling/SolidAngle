@@ -1,3 +1,5 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
@@ -16,9 +18,9 @@ CORE_API DECLARE_LOG_CATEGORY_EXTERN(LogLockFreeList, Log, All);
 #define MONITOR_LINK_ALLOCATION (0)
 
 #if	MONITOR_LINK_ALLOCATION==1
-typedef FThreadSafeCounter	FLockFreeListCounter;
+	typedef FThreadSafeCounter	FLockFreeListCounter;
 #else
-typedef FNoopCounter		FLockFreeListCounter;
+	typedef FNoopCounter		FLockFreeListCounter;
 #endif // MONITOR_LINK_ALLOCATION==1
 
 /** Enumerates lock free list alignments. */

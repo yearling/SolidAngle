@@ -386,7 +386,7 @@ uint32 WINAPI StartSplashScreenThread( LPVOID unused )
 	wc.cbWndExtra  = 0; 
 	wc.hInstance   = hInstance; 
 
-	wc.hIcon       = LoadIcon(hInstance, MAKEINTRESOURCE(YWindowsPlatformMisc::GetAppIcon()));
+	wc.hIcon       = LoadIcon(hInstance, MAKEINTRESOURCE(FWindowsPlatformMisc::GetAppIcon()));
 	if(wc.hIcon == NULL)
 	{
 		wc.hIcon   = LoadIcon((HINSTANCE) NULL, IDI_APPLICATION); 
@@ -561,7 +561,7 @@ uint32 WINAPI StartSplashScreenThread( LPVOID unused )
 				{
 					// Set window to fully transparent to start out
 					const float TimeSinceFadeStart = (float)( FPlatformTime::Seconds() - FadeStartTime );
-					const float FadeAmount = YMath::Clamp( TimeSinceFadeStart / FadeDuration, 0.0f, 1.0f );
+					const float FadeAmount = FMath::Clamp( TimeSinceFadeStart / FadeDuration, 0.0f, 1.0f );
 					const int32 NewOpacityByte = 255 * FadeAmount;
 					if( NewOpacityByte != CurrentOpacityByte )
 					{

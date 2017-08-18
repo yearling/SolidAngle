@@ -26,8 +26,8 @@ FLockFreeVoidPointerListBase128::FLinkAllocator::FLinkAllocator()
 	if( !FPlatformAtomics::CanUseCompareExchange128() )
 	{
 		// This is a fatal error.
-		YPlatformMisc::MessageBoxExt( EAppMsgType::Ok, TEXT( "CPU does not support Compare and Exchange 128-bit operation. Unreal Engine 4 will exit now." ), TEXT( "Unsupported processor" ) );
-		YPlatformMisc::RequestExit( true );
+		FPlatformMisc::MessageBoxExt( EAppMsgType::Ok, TEXT( "CPU does not support Compare and Exchange 128-bit operation. Unreal Engine 4 will exit now." ), TEXT( "Unsupported processor" ) );
+		FPlatformMisc::RequestExit( true );
 		UE_LOG( LogHAL, Fatal, TEXT( "CPU does not support Compare and Exchange 128-bit operation" ) );
 	}
 }
@@ -113,7 +113,7 @@ void LockFreeCriticalSpin(int32& SpinCount)
 	}
 	else if (SpinCount > 8)
 	{
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 	}
 }
 

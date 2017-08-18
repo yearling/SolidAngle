@@ -272,7 +272,7 @@ public:
 
 		for (int32 BasisIndex = 0; BasisIndex < MaxSHBasis; BasisIndex++)
 		{
-			bValid = bValid && YMath::IsFinite(V[BasisIndex]) && !YMath::IsNaN(V[BasisIndex]);
+			bValid = bValid && FMath::IsFinite(V[BasisIndex]) && !FMath::IsNaN(V[BasisIndex]);
 		}
 		
 		return bValid;
@@ -329,14 +329,14 @@ public:
 		// Multiply the result by the phi-dependent part of the SH bases.
 		// Skip this for X=0 and Y=0, because atan will be undefined and
 		// we know the Vector will be (0,0,+1) or (0,0,-1).
-		if (YMath::Abs(Vector.X) > KINDA_SMALL_NUMBER || YMath::Abs(Vector.Y) > KINDA_SMALL_NUMBER)
+		if (FMath::Abs(Vector.X) > KINDA_SMALL_NUMBER || FMath::Abs(Vector.Y) > KINDA_SMALL_NUMBER)
 		{
-			const float	Phi = YMath::Atan2(Vector.Y, Vector.X);
+			const float	Phi = FMath::Atan2(Vector.Y, Vector.X);
 
 			for (int32 BandIndex = 1; BandIndex < TSHVector::MaxSHOrder; BandIndex++)
 			{
-				const float	SinPhiM = YMath::Sin(BandIndex * Phi);
-				const float	CosPhiM = YMath::Cos(BandIndex * Phi);
+				const float	SinPhiM = FMath::Sin(BandIndex * Phi);
+				const float	CosPhiM = FMath::Cos(BandIndex * Phi);
 
 				for (int32 RecurrentBandIndex = BandIndex; RecurrentBandIndex < TSHVector::MaxSHOrder; RecurrentBandIndex++)
 				{
@@ -349,7 +349,7 @@ public:
 		// Multiply the result by the theta-dependent part of the SH bases.
 		for (int32 BasisIndex = 1; BasisIndex < TSHVector::MaxSHBasis; BasisIndex++)
 		{
-			Result.V[BasisIndex] *= LegendrePolynomial(BasisL[BasisIndex], YMath::Abs(BasisM[BasisIndex]), Vector.Z);
+			Result.V[BasisIndex] *= LegendrePolynomial(BasisL[BasisIndex], FMath::Abs(BasisM[BasisIndex]), Vector.Z);
 		}
 
 		return Result;
@@ -359,7 +359,7 @@ public:
 	static TSHVector AmbientFunction()
 	{
 		TSHVector AmbientFunctionSH;
-		AmbientFunctionSH.V[0] = 1.0f / (2.0f * YMath::Sqrt(PI));
+		AmbientFunctionSH.V[0] = 1.0f / (2.0f * FMath::Sqrt(PI));
 		return AmbientFunctionSH;
 	}
 } GCC_ALIGN(16);

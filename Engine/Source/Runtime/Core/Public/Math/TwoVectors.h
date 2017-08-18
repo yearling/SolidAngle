@@ -6,7 +6,7 @@
 /**
 * A pair of 3D vectors.
 */
-struct YTwoVectors
+struct FTwoVectors
 {
 public:
 
@@ -19,7 +19,7 @@ public:
 public:
 
 	/** Default constructor. */
-	FORCEINLINE	YTwoVectors();
+	FORCEINLINE	FTwoVectors();
 
 	/**
 	* Creates and initializes a new instance with the specified vectors.
@@ -27,14 +27,14 @@ public:
 	* @param In1 The first Vector.
 	* @param In2 The second Vector.
 	*/
-	FORCEINLINE	YTwoVectors(FVector In1, FVector In2);
+	FORCEINLINE	FTwoVectors(FVector In1, FVector In2);
 
 	/**
 	* Constructor.
 	*
 	* @param EForceInit Force Init Enum
 	*/
-	explicit FORCEINLINE YTwoVectors(EForceInit);
+	explicit FORCEINLINE FTwoVectors(EForceInit);
 
 public:
 
@@ -44,7 +44,7 @@ public:
 	* @param V The pair to add.
 	* @return Result of addition.
 	*/
-	FORCEINLINE YTwoVectors operator+(const YTwoVectors& V) const;
+	FORCEINLINE FTwoVectors operator+(const FTwoVectors& V) const;
 
 	/**
 	* Gets result of subtraction of two pairs of vectors.
@@ -52,7 +52,7 @@ public:
 	* @param V The pair to subtract.
 	* @return Result of subtraction.
 	*/
-	FORCEINLINE YTwoVectors operator-(const YTwoVectors& V) const;
+	FORCEINLINE FTwoVectors operator-(const FTwoVectors& V) const;
 
 	/**
 	* Gets result of scaling pair of vectors.
@@ -60,7 +60,7 @@ public:
 	* @param Scale The scaling factor.
 	* @return Result of Scaling.
 	*/
-	FORCEINLINE YTwoVectors operator*(float Scale) const;
+	FORCEINLINE FTwoVectors operator*(float Scale) const;
 
 	/**
 	* Gets result of dividing pair of vectors.
@@ -68,7 +68,7 @@ public:
 	* @param Scale What to divide by.
 	* @return Result of division.
 	*/
-	YTwoVectors operator/(float Scale) const;
+	FTwoVectors operator/(float Scale) const;
 
 	/**
 	* Gets result of multiplying two pairs of vectors.
@@ -76,7 +76,7 @@ public:
 	* @param V The pair to multiply with.
 	* @return Result of multiplication.
 	*/
-	FORCEINLINE YTwoVectors operator*(const YTwoVectors& V) const;
+	FORCEINLINE FTwoVectors operator*(const FTwoVectors& V) const;
 
 	/**
 	* Gets result of division of two pairs of vectors.
@@ -84,7 +84,7 @@ public:
 	* @param V The pair to divide by.
 	* @return Result of division.
 	*/
-	FORCEINLINE YTwoVectors operator/(const YTwoVectors& V) const;
+	FORCEINLINE FTwoVectors operator/(const FTwoVectors& V) const;
 
 	// Binary comparison operators.
 
@@ -94,7 +94,7 @@ public:
 	* @param V The other pair.
 	* @return true if the two pairs are equal, false otherwise..
 	*/
-	bool operator==(const YTwoVectors& V) const;
+	bool operator==(const FTwoVectors& V) const;
 
 	/**
 	* Checks two pairs for inequality.
@@ -102,7 +102,7 @@ public:
 	* @param V The other pair.
 	* @return true if the two pairs are different, false otherwise..
 	*/
-	bool operator!=(const YTwoVectors& V) const;
+	bool operator!=(const FTwoVectors& V) const;
 
 	/**
 	* Error-tolerant comparison.
@@ -111,7 +111,7 @@ public:
 	* @param Tolerance Error Tolerance.
 	* @return true if two pairs are equal within specified tolerance, false otherwise..
 	*/
-	bool Equals(const YTwoVectors& V, float Tolerance = KINDA_SMALL_NUMBER) const;
+	bool Equals(const FTwoVectors& V, float Tolerance = KINDA_SMALL_NUMBER) const;
 
 	// Unary operators.
 
@@ -120,7 +120,7 @@ public:
 	*
 	* @return A negated copy of the pair.
 	*/
-	FORCEINLINE YTwoVectors operator-() const;
+	FORCEINLINE FTwoVectors operator-() const;
 
 	// Assignment operators.
 
@@ -130,7 +130,7 @@ public:
 	* @param The pair to add.
 	* @return Copy of the pair after addition.
 	*/
-	FORCEINLINE YTwoVectors operator+=(const YTwoVectors& V);
+	FORCEINLINE FTwoVectors operator+=(const FTwoVectors& V);
 
 	/**
 	* Subtract a pair from this.
@@ -138,7 +138,7 @@ public:
 	* @param The pair to subtract.
 	* @return Copy of the pair after subtraction.
 	*/
-	FORCEINLINE YTwoVectors operator-=(const YTwoVectors& V);
+	FORCEINLINE FTwoVectors operator-=(const FTwoVectors& V);
 
 	/**
 	* Scale the pair.
@@ -146,7 +146,7 @@ public:
 	* @param Scale What to scale by.
 	* @return Copy of the pair after scaling.
 	*/
-	FORCEINLINE YTwoVectors operator*=(float Scale);
+	FORCEINLINE FTwoVectors operator*=(float Scale);
 
 	/**
 	* Divide the pair.
@@ -154,7 +154,7 @@ public:
 	* @param What to divide by.
 	* @return Copy of the pair after division.
 	*/
-	YTwoVectors operator/=(float V);
+	FTwoVectors operator/=(float V);
 
 	/**
 	* Multiply the pair by another.
@@ -162,7 +162,7 @@ public:
 	* @param The other pair.
 	* @return Copy of the pair after multiplication.
 	*/
-	YTwoVectors operator*=(const YTwoVectors& V);
+	FTwoVectors operator*=(const FTwoVectors& V);
 
 	/**
 	* Divide the pair by another.
@@ -170,7 +170,7 @@ public:
 	* @param The other pair.
 	* @return Copy of the pair after multiplication.
 	*/
-	YTwoVectors operator/=(const YTwoVectors& V);
+	FTwoVectors operator/=(const FTwoVectors& V);
 
 	/**
 	* Get a specific component from the pair.
@@ -213,7 +213,7 @@ public:
 	* @param TwoVectors The two-vector to serialize.
 	* @return Reference to the Archive after serialization.
 	*/
-	friend FArchive& operator<<(FArchive& Ar, YTwoVectors& TwoVectors)
+	friend FArchive& operator<<(FArchive& Ar, FTwoVectors& TwoVectors)
 	{
 		return Ar << TwoVectors.v1 << TwoVectors.v2;
 	}
@@ -229,114 +229,114 @@ public:
 /* YTwoVectors inline functions
 *****************************************************************************/
 
-FORCEINLINE YTwoVectors operator*(float Scale, const YTwoVectors& V)
+FORCEINLINE FTwoVectors operator*(float Scale, const FTwoVectors& V)
 {
 	return V.operator*(Scale);
 }
 
 
-FORCEINLINE	YTwoVectors::YTwoVectors() :
+FORCEINLINE	FTwoVectors::FTwoVectors() :
 	v1(0.0f),
 	v2(0.0f)
 { }
 
 
-FORCEINLINE YTwoVectors::YTwoVectors(FVector In1, FVector In2)
+FORCEINLINE FTwoVectors::FTwoVectors(FVector In1, FVector In2)
 	: v1(In1)
 	, v2(In2)
 { }
 
 
-FORCEINLINE YTwoVectors::YTwoVectors(EForceInit)
+FORCEINLINE FTwoVectors::FTwoVectors(EForceInit)
 	: v1(ForceInit)
 	, v2(ForceInit)
 { }
 
 
-FORCEINLINE YTwoVectors YTwoVectors::operator+(const YTwoVectors& V) const
+FORCEINLINE FTwoVectors FTwoVectors::operator+(const FTwoVectors& V) const
 {
-	return YTwoVectors(
+	return FTwoVectors(
 		FVector(v1 + V.v1),
 		FVector(v2 + V.v2)
 	);
 }
 
 
-FORCEINLINE YTwoVectors YTwoVectors::operator-(const YTwoVectors& V) const
+FORCEINLINE FTwoVectors FTwoVectors::operator-(const FTwoVectors& V) const
 {
-	return YTwoVectors(
+	return FTwoVectors(
 		FVector(v1 - V.v1),
 		FVector(v2 - V.v2)
 	);
 }
 
 
-FORCEINLINE YTwoVectors YTwoVectors::operator*(float Scale) const
+FORCEINLINE FTwoVectors FTwoVectors::operator*(float Scale) const
 {
-	return YTwoVectors(
+	return FTwoVectors(
 		FVector(v1 * Scale),
 		FVector(v2 * Scale)
 	);
 }
 
 
-FORCEINLINE YTwoVectors YTwoVectors::operator/(float Scale) const
+FORCEINLINE FTwoVectors FTwoVectors::operator/(float Scale) const
 {
 	const float RScale = 1.f / Scale;
 
-	return YTwoVectors(
+	return FTwoVectors(
 		FVector(v1 * RScale),
 		FVector(v2 * RScale)
 	);
 }
 
 
-FORCEINLINE YTwoVectors YTwoVectors::operator*(const YTwoVectors& V) const
+FORCEINLINE FTwoVectors FTwoVectors::operator*(const FTwoVectors& V) const
 {
-	return YTwoVectors(
+	return FTwoVectors(
 		FVector(v1 * V.v1),
 		FVector(v2 * V.v2)
 	);
 }
 
 
-FORCEINLINE YTwoVectors YTwoVectors::operator/(const YTwoVectors& V) const
+FORCEINLINE FTwoVectors FTwoVectors::operator/(const FTwoVectors& V) const
 {
-	return YTwoVectors(
+	return FTwoVectors(
 		FVector(v1 / V.v1),
 		FVector(v2 / V.v2)
 	);
 }
 
 
-FORCEINLINE bool YTwoVectors::operator==(const YTwoVectors& V) const
+FORCEINLINE bool FTwoVectors::operator==(const FTwoVectors& V) const
 {
 	return ((v1 == V.v1) && (v2 == V.v2));
 }
 
 
-FORCEINLINE bool YTwoVectors::operator!=(const YTwoVectors& V) const
+FORCEINLINE bool FTwoVectors::operator!=(const FTwoVectors& V) const
 {
 	return ((v1 != V.v1) || (v2 != V.v2));
 }
 
 
-FORCEINLINE bool YTwoVectors::Equals(const YTwoVectors& V, float Tolerance) const
+FORCEINLINE bool FTwoVectors::Equals(const FTwoVectors& V, float Tolerance) const
 {
 	return v1.Equals(V.v1, Tolerance) && v2.Equals(V.v2, Tolerance);
 }
 
 
-FORCEINLINE YTwoVectors YTwoVectors::operator-() const
+FORCEINLINE FTwoVectors FTwoVectors::operator-() const
 {
-	return YTwoVectors(
+	return FTwoVectors(
 		FVector(-v1),
 		FVector(-v2)
 	);
 }
 
 
-FORCEINLINE YTwoVectors YTwoVectors::operator+=(const YTwoVectors& V)
+FORCEINLINE FTwoVectors FTwoVectors::operator+=(const FTwoVectors& V)
 {
 	v1 += V.v1;
 	v2 += V.v2;
@@ -345,7 +345,7 @@ FORCEINLINE YTwoVectors YTwoVectors::operator+=(const YTwoVectors& V)
 }
 
 
-FORCEINLINE YTwoVectors YTwoVectors::operator-=(const YTwoVectors& V)
+FORCEINLINE FTwoVectors FTwoVectors::operator-=(const FTwoVectors& V)
 {
 	v1 -= V.v1;
 	v2 -= V.v2;
@@ -354,7 +354,7 @@ FORCEINLINE YTwoVectors YTwoVectors::operator-=(const YTwoVectors& V)
 }
 
 
-FORCEINLINE YTwoVectors YTwoVectors::operator*=(float Scale)
+FORCEINLINE FTwoVectors FTwoVectors::operator*=(float Scale)
 {
 	v1 *= Scale;
 	v2 *= Scale;
@@ -363,7 +363,7 @@ FORCEINLINE YTwoVectors YTwoVectors::operator*=(float Scale)
 }
 
 
-FORCEINLINE YTwoVectors YTwoVectors::operator/=(float V)
+FORCEINLINE FTwoVectors FTwoVectors::operator/=(float V)
 {
 	const float RV = 1.f / V;
 
@@ -374,7 +374,7 @@ FORCEINLINE YTwoVectors YTwoVectors::operator/=(float V)
 }
 
 
-FORCEINLINE YTwoVectors YTwoVectors::operator*=(const YTwoVectors& V)
+FORCEINLINE FTwoVectors FTwoVectors::operator*=(const FTwoVectors& V)
 {
 	v1 *= V.v1;
 	v2 *= V.v2;
@@ -382,7 +382,7 @@ FORCEINLINE YTwoVectors YTwoVectors::operator*=(const YTwoVectors& V)
 }
 
 
-FORCEINLINE YTwoVectors YTwoVectors::operator/=(const YTwoVectors& V)
+FORCEINLINE FTwoVectors FTwoVectors::operator/=(const FTwoVectors& V)
 {
 	v1 /= V.v1;
 	v2 /= V.v2;
@@ -391,25 +391,25 @@ FORCEINLINE YTwoVectors YTwoVectors::operator/=(const YTwoVectors& V)
 }
 
 
-FORCEINLINE float YTwoVectors::GetMax() const
+FORCEINLINE float FTwoVectors::GetMax() const
 {
-	const float MaxMax = YMath::Max(YMath::Max(v1.X, v1.Y), v1.Z);
-	const float MaxMin = YMath::Max(YMath::Max(v2.X, v2.Y), v2.Z);
+	const float MaxMax = FMath::Max(FMath::Max(v1.X, v1.Y), v1.Z);
+	const float MaxMin = FMath::Max(FMath::Max(v2.X, v2.Y), v2.Z);
 
-	return YMath::Max(MaxMax, MaxMin);
+	return FMath::Max(MaxMax, MaxMin);
 }
 
 
-FORCEINLINE float YTwoVectors::GetMin() const
+FORCEINLINE float FTwoVectors::GetMin() const
 {
-	const float MinMax = YMath::Min(YMath::Min(v1.X, v1.Y), v1.Z);
-	const float MinMin = YMath::Min(YMath::Min(v2.X, v2.Y), v2.Z);
+	const float MinMax = FMath::Min(FMath::Min(v1.X, v1.Y), v1.Z);
+	const float MinMin = FMath::Min(FMath::Min(v2.X, v2.Y), v2.Z);
 
-	return YMath::Min(MinMax, MinMin);
+	return FMath::Min(MinMax, MinMin);
 }
 
 
-FORCEINLINE float& YTwoVectors::operator[](int32 i)
+FORCEINLINE float& FTwoVectors::operator[](int32 i)
 {
 	check(i > -1);
 	check(i < 6);
@@ -425,8 +425,8 @@ FORCEINLINE float& YTwoVectors::operator[](int32 i)
 	}
 }
 
-FORCEINLINE FString YTwoVectors::ToString() const
+FORCEINLINE FString FTwoVectors::ToString() const
 {
 	return FString::Printf(TEXT("V1=(%s) V2=(%s)"), *v1.ToString(), *v2.ToString());
 }
-template <> struct TIsPODType<YTwoVectors> { enum { Value = true }; };
+template <> struct TIsPODType<FTwoVectors> { enum { Value = true }; };

@@ -66,7 +66,7 @@ FInteractiveProcess::~FInteractiveProcess()
 	}
 }
 
-YTimespan FInteractiveProcess::GetDuration() const
+FTimespan FInteractiveProcess::GetDuration() const
 {
 	if (IsRunning() == true)
 	{

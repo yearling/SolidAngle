@@ -281,7 +281,7 @@ bool CORE_API StringHasBadDashes(const TCHAR* Str)
 	return false;
 }
 
-void GenerateConvenientWindowedResolutions(const FDisplayMetrics& InDisplayMetrics, TArray<YIntPoint>& OutResolutions)
+void GenerateConvenientWindowedResolutions(const FDisplayMetrics& InDisplayMetrics, TArray<FIntPoint>& OutResolutions)
 {
 	bool bInPortraitMode = InDisplayMetrics.PrimaryDisplayWidth < InDisplayMetrics.PrimaryDisplayHeight;
 
@@ -303,18 +303,18 @@ void GenerateConvenientWindowedResolutions(const FDisplayMetrics& InDisplayMetri
 
 			if (bInPortraitMode)
 			{
-				TargetHeight = YMath::RoundToFloat(InDisplayMetrics.PrimaryDisplayHeight * Scales[ScaleIndex]);
+				TargetHeight = FMath::RoundToFloat(InDisplayMetrics.PrimaryDisplayHeight * Scales[ScaleIndex]);
 				TargetWidth = TargetHeight * Aspect;
 			}
 			else
 			{
-				TargetWidth = YMath::RoundToFloat(InDisplayMetrics.PrimaryDisplayWidth * Scales[ScaleIndex]);
+				TargetWidth = FMath::RoundToFloat(InDisplayMetrics.PrimaryDisplayWidth * Scales[ScaleIndex]);
 				TargetHeight = TargetWidth * Aspect;
 			}
 
 			if (TargetWidth < InDisplayMetrics.PrimaryDisplayWidth && TargetHeight < InDisplayMetrics.PrimaryDisplayHeight && TargetWidth >= MinWidth && TargetHeight >= MinHeight)
 			{
-				OutResolutions.Add(YIntPoint(TargetWidth, TargetHeight));
+				OutResolutions.Add(FIntPoint(TargetWidth, TargetHeight));
 			}
 		}
 	}
@@ -325,14 +325,14 @@ void GenerateConvenientWindowedResolutions(const FDisplayMetrics& InDisplayMetri
 		if (InDisplayMetrics.PrimaryDisplayHeight > MinHeight && InDisplayMetrics.PrimaryDisplayWidth > MinWidth)
 		{
 			//Add the minimum size if it fit
-			OutResolutions.Add(YIntPoint(MinWidth, MinHeight));
+			OutResolutions.Add(FIntPoint(MinWidth, MinHeight));
 		}
 		else
 		{
 			//Force a resolution even if its smaller then the minimum height and width to avoid a bigger window then the desktop
-			float TargetWidth = YMath::RoundToFloat(InDisplayMetrics.PrimaryDisplayWidth) * Scales[NumScales - 1];
-			float TargetHeight = YMath::RoundToFloat(InDisplayMetrics.PrimaryDisplayHeight) * Scales[NumScales - 1];
-			OutResolutions.Add(YIntPoint(TargetWidth, TargetHeight));
+			float TargetWidth = FMath::RoundToFloat(InDisplayMetrics.PrimaryDisplayWidth) * Scales[NumScales - 1];
+			float TargetHeight = FMath::RoundToFloat(InDisplayMetrics.PrimaryDisplayHeight) * Scales[NumScales - 1];
+			OutResolutions.Add(FIntPoint(TargetWidth, TargetHeight));
 		}
 	}
 }

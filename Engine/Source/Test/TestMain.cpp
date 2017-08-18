@@ -463,9 +463,9 @@ int main()
 	//static_assert(!TIsPODType<PODTypeWithStdVector>::Value, "shoudl be true");
 	//static_assert(TAnd<>::Value, "should be true");
 	std::cout << "---------------Align-----------" << std::endl;
-	std::cout << YMath::RoundUpToPowerOfTwo(31) << std::endl;
-	std::cout << YMath::FloorLog2(31) << std::endl;
-	std::cout << YMath::CeilLogTwo(31) << std::endl;
+	std::cout << FMath::RoundUpToPowerOfTwo(31) << std::endl;
+	std::cout << FMath::FloorLog2(31) << std::endl;
+	std::cout << FMath::CeilLogTwo(31) << std::endl;
 	std::cout << Align(1023, 16) << std::endl;
 	std::cout << AlignDown(1023, 16) << std::endl;
 

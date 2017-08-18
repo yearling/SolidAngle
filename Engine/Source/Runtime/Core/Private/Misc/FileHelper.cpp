@@ -243,10 +243,10 @@ bool FFileHelper::GenerateNextBitmapFilename( const FString& Pattern, const FStr
  *
  * @return true if success
  */
-bool FFileHelper::CreateBitmap( const TCHAR* Pattern, int32 SourceWidth, int32 SourceHeight, const FColor* Data, struct YIntRect* SubRectangle, IFileManager* FileManager /*= &IFileManager::Get()*/, FString* OutFilename /*= NULL*/, bool bInWriteAlpha /*= false*/ )
+bool FFileHelper::CreateBitmap( const TCHAR* Pattern, int32 SourceWidth, int32 SourceHeight, const FColor* Data, struct FIntRect* SubRectangle, IFileManager* FileManager /*= &IFileManager::Get()*/, FString* OutFilename /*= NULL*/, bool bInWriteAlpha /*= false*/ )
 {
 #if ALLOW_DEBUG_FILES
-	YIntRect Src(0, 0, SourceWidth, SourceHeight);
+	FIntRect Src(0, 0, SourceWidth, SourceHeight);
 	if (SubRectangle == NULL || SubRectangle->Area() == 0)
 	{
 		SubRectangle = &Src;
@@ -552,7 +552,7 @@ void FMaintenance::DeleteOldLogs()
 		{
 			const FString CrashContextDirectory = YPaths::GameLogDir() / Dir;
 			const FDateTime DirectoryAccessTime = IFileManager::Get().GetTimeStamp( *CrashContextDirectory );
-			if (FDateTime::Now() - DirectoryAccessTime > YTimespan::FromDays( PurgeLogsDays ))
+			if (FDateTime::Now() - DirectoryAccessTime > FTimespan::FromDays( PurgeLogsDays ))
 			{
 				UE_LOG( LogStreaming, Log, TEXT( "Deleting old crash context %s" ), *Dir );
 				IFileManager::Get().DeleteDirectory( *CrashContextDirectory, false, true );

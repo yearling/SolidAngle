@@ -189,7 +189,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 	}
 
 	// Check that we're running on Vista or newer (version 6.0+).
-	bool bIsVistaOrNewer = YWindowsPlatformMisc::VerifyWindowsVersion(6, 0);
+	bool bIsVistaOrNewer = FWindowsPlatformMisc::VerifyWindowsVersion(6, 0);
 
 	FMemory::Memset(&OutResults, 0, sizeof(FHardwareSurveyResults));
 
@@ -390,7 +390,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 
 	// Get system info
 	SYSTEM_INFO SystemInfo;
-	if (YPlatformMisc::Is64bitOperatingSystem())
+	if (FPlatformMisc::Is64bitOperatingSystem())
 	{
 		GetNativeSystemInfo(&SystemInfo);
 	}
@@ -445,7 +445,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 	}
 
 	// Get CPU brand
-	FString CPUBrand = YWindowsPlatformMisc::GetCPUVendor();
+	FString CPUBrand = FWindowsPlatformMisc::GetCPUVendor();
 	WriteFStringToResults(OutResults.CPUBrand, CPUBrand);
 	if (CPUBrand.Len() == 0)
 	{
@@ -455,7 +455,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 	}
 
 	// Get CPU info
-	OutResults.CPUInfo = YWindowsPlatformMisc::GetCPUInfo();
+	OutResults.CPUInfo = FWindowsPlatformMisc::GetCPUInfo();
 
 	// get HDD details
 	OutResults.HardDriveGB = -1;
@@ -466,7 +466,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 	}
 	else
 	{
-		uint32 ErrorCode = YPlatformMisc::GetLastError();
+		uint32 ErrorCode = FPlatformMisc::GetLastError();
 		UE_LOG(LogWindows, Warning, TEXT("FWindowsPlatformSurvey::TickSurveyHardware() failed to get UE4 root-folder drive size from Win32") );
 		OutResults.ErrorCount++;
 		WriteFStringToResults(OutResults.LastSurveyError, TEXT("GetDiskFreeSpaceEx() failed"));
@@ -475,7 +475,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 
 	// OS info
 	GetOSVersionLabels(SystemInfo, OutResults);
-	OutResults.OSBits = YPlatformMisc::Is64bitOperatingSystem() ? 64 : 32;
+	OutResults.OSBits = FPlatformMisc::Is64bitOperatingSystem() ? 64 : 32;
 
 	// OS language
 	LCID DefaultLocale = GetSystemDefaultLCID();
@@ -487,7 +487,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 
 	if (LangReturn == 0 || CountryReturn == 0)
 	{
-		uint32 ErrorCode = YPlatformMisc::GetLastError();
+		uint32 ErrorCode = FPlatformMisc::GetLastError();
 		UE_LOG(LogWindows, Warning, TEXT("FWindowsPlatformSurvey::TickSurveyHardware() failed to get locale info from Win32") );
 		OutResults.ErrorCount++;
 		WriteFStringToResults(OutResults.LastSurveyError, TEXT("GetLocaleInfo() failed"));
@@ -720,7 +720,7 @@ void GetOSVersionLabels(const SYSTEM_INFO& SystemInfo, FHardwareSurveyResults& O
 
 	if( ErrorCode & YWindowsOSVersionHelper::ERROR_GETVERSIONEX_FAILED )
 	{
-		const uint32 LastError = YPlatformMisc::GetLastError();
+		const uint32 LastError = FPlatformMisc::GetLastError();
 		UE_LOG( LogWindows, Warning, TEXT( "FWindowsPlatformSurvey::GetOSVersionLabel() failed to get Windows version info from GetVersionEx()" ) );
 		OutResults.ErrorCount++;
 		WriteFStringToResults( OutResults.LastSurveyError, TEXT( "GetVersionEx() failed" ) );
@@ -752,7 +752,7 @@ void WriteFStringToResults(TCHAR* OutBuffer, const FString& InString)
 {
 	FMemory::Memset( OutBuffer, 0, sizeof(TCHAR) * FHardwareSurveyResults::MaxStringLength );
 	TCHAR* Cursor = OutBuffer;
-	for (int32 i = 0; i < YMath::Min(InString.Len(), FHardwareSurveyResults::MaxStringLength - 1); i++)
+	for (int32 i = 0; i < FMath::Min(InString.Len(), FHardwareSurveyResults::MaxStringLength - 1); i++)
 	{
 		*Cursor++ = InString[i];
 	}

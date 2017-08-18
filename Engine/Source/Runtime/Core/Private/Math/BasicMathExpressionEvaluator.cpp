@@ -157,12 +157,12 @@ FBasicMathExpressionEvaluator::FBasicMathExpressionEvaluator()
 
 	JumpTable.MapPreUnary<FPlus>([](double N)			{ return N; });
 	JumpTable.MapPreUnary<FMinus>([](double N)			{ return -N; });
-	JumpTable.MapPreUnary<FSquareRoot>([](double A)		{ return double(YMath::Sqrt(A)); });
+	JumpTable.MapPreUnary<FSquareRoot>([](double A)		{ return double(FMath::Sqrt(A)); });
 
 	JumpTable.MapBinary<FPlus>([](double A, double B)	{ return A + B; });
 	JumpTable.MapBinary<FMinus>([](double A, double B)	{ return A - B; });
 	JumpTable.MapBinary<FStar>([](double A, double B)	{ return A * B; });
-	JumpTable.MapBinary<FPower>([](double A, double B)	{ return double(YMath::Pow(A, B)); });
+	JumpTable.MapBinary<FPower>([](double A, double B)	{ return double(FMath::Pow(A, B)); });
 
 	JumpTable.MapBinary<FForwardSlash>([](double A, double B) -> FExpressionResult {
 		if (B == 0)
@@ -178,7 +178,7 @@ FBasicMathExpressionEvaluator::FBasicMathExpressionEvaluator()
 			return MakeError(LOCTEXT("ModZero", "Modulo zero"));
 		}
 
-		return MakeValue(double(YMath::Fmod(A, B)));
+		return MakeValue(double(FMath::Fmod(A, B)));
 	});
 }
 

@@ -78,13 +78,13 @@ void FSlowTask::EnterProgressFrame(float ExpectedWorkThisFrame, FText Text)
 
 #if PLATFORM_XBOXONE
 	// Make sure OS events are getting through while the task is being processed
-	YPlatformMisc::PumpMessages(true);
+	FPlatformMisc::PumpMessages(true);
 #endif
 
 	const float WorkRemaining = TotalAmountOfWork - CompletedWork;
 	// Add a small threshold here because when there are a lot of tasks, numerical imprecision can add up and trigger this.
 	ensureMsgf(ExpectedWorkThisFrame <= 1.01f * TotalAmountOfWork - CompletedWork, TEXT("Work overflow in slow task. Please revise call-site to account for entire progress range."));
-	CurrentFrameScope = YMath::Min(WorkRemaining, ExpectedWorkThisFrame);
+	CurrentFrameScope = FMath::Min(WorkRemaining, ExpectedWorkThisFrame);
 
 	if (!bCreatedDialog && OpenDialogThreshold.IsSet() && static_cast<float>(FPlatformTime::Seconds() - StartTime) > OpenDialogThreshold.GetValue())
 	{

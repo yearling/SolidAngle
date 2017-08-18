@@ -102,7 +102,7 @@ inline const FMatrix& ToMatrix(const FMatrix& Transform)
  */
 inline FMatrix ToMatrix(float Scale)
 {
-	return YScaleMatrix(Scale);
+	return FScaleMatrix(Scale);
 }
 
 /**
@@ -113,7 +113,7 @@ inline FMatrix ToMatrix(float Scale)
  */
 inline FMatrix ToMatrix(const FScale& Scale)
 {
-	return YScaleMatrix(Scale.GetVector());
+	return FScaleMatrix(Scale.GetVector());
 }
 
 /**
@@ -124,7 +124,7 @@ inline FMatrix ToMatrix(const FScale& Scale)
  */
 inline FMatrix ToMatrix(const FVector& Translation)
 {
-	return YTranslationMatrix(Translation);
+	return FTranslationMatrix(Translation);
 }
 
 /**
@@ -135,7 +135,7 @@ inline FMatrix ToMatrix(const FVector& Translation)
  */
 inline FMatrix ToMatrix(const FRotator& Rotation)
 {
-	return YRotationMatrix(Rotation);
+	return FRotationMatrix(Rotation);
 }
 
 /**
@@ -146,7 +146,7 @@ inline FMatrix ToMatrix(const FRotator& Rotation)
  */
 inline FMatrix ToMatrix(const FQuat& Rotation)
 {
-	return YRotationMatrix::Make(Rotation);
+	return FRotationMatrix::Make(Rotation);
 }
 
 /**

@@ -72,7 +72,7 @@ class ICursor
 public:
 
 	/** The position of the cursor */
-	virtual YVector2D GetPosition() const = 0;
+	virtual FVector2D GetPosition() const = 0;
 
 	/** Sets the position of the cursor */
 	virtual void SetPosition( const int32 X, const int32 Y ) = 0;

@@ -9,7 +9,7 @@
 #include "Math/Quat.h"
 
 /** Rotation and translation matrix using quaternion rotation */
-class YQuatRotationTranslationMatrix
+class FQuatRotationTranslationMatrix
 	: public FMatrix
 {
 public:
@@ -19,19 +19,19 @@ public:
 	* @param Q rotation
 	* @param Origin translation to apply
 	*/
-	YQuatRotationTranslationMatrix(const FQuat& Q, const FVector& Origin);
+	FQuatRotationTranslationMatrix(const FQuat& Q, const FVector& Origin);
 
 	/** Matrix factory. Return an FMatrix so we don't have type conversion issues in expressions. */
 	static FMatrix Make(const FQuat& Q, const FVector& Origin)
 	{
-		return YQuatRotationTranslationMatrix(Q, Origin);
+		return FQuatRotationTranslationMatrix(Q, Origin);
 	}
 };
 
 
 /** Rotation matrix using quaternion rotation */
 class YQuatRotationMatrix
-	: public YQuatRotationTranslationMatrix
+	: public FQuatRotationTranslationMatrix
 {
 public:
 
@@ -40,7 +40,7 @@ public:
 	* @param Q rotation
 	*/
 	YQuatRotationMatrix(const FQuat& Q)
-		: YQuatRotationTranslationMatrix(Q, FVector::ZeroVector)
+		: FQuatRotationTranslationMatrix(Q, FVector::ZeroVector)
 	{
 	}
 
@@ -52,7 +52,7 @@ public:
 };
 
 
-FORCEINLINE YQuatRotationTranslationMatrix::YQuatRotationTranslationMatrix(const FQuat& Q, const FVector& Origin)
+FORCEINLINE FQuatRotationTranslationMatrix::FQuatRotationTranslationMatrix(const FQuat& Q, const FVector& Origin)
 {
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST) && WITH_EDITORONLY_DATA
 	// Make sure Quaternion is normalized

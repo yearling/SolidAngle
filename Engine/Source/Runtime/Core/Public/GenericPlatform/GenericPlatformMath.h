@@ -13,7 +13,7 @@ GenericPlatformMath.h: Generic platform Math classes, mostly implemented with AN
 /**
 * Generic implementation for most platforms
 */
-struct YGenericPlatformMath
+struct FGenericPlatformMath
 {
 	// Convert a float to an integer with truncation towards zero.
 	// this usually a slow operation implement by ANSI C++,Depend on platform.
@@ -366,7 +366,7 @@ private:
 };
 
 template<>
-FORCEINLINE float YGenericPlatformMath::Abs(const float A)
+FORCEINLINE float FGenericPlatformMath::Abs(const float A)
 {
 	return fabsf(A);
 }

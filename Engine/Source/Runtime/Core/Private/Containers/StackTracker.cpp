@@ -160,7 +160,7 @@ void FStackTracker::DumpStackTraces(int32 StackThreshold, FOutputDevice& Ar, flo
 	// Log quick summary as we don't log each individual so totals in CSV won't represent real totals.
 	if (SampleCountCorrectionFactor != 1.0f)
 	{
-		StackThreshold = YMath::Max<int32>(1, int32(float(StackThreshold) / SampleCountCorrectionFactor));
+		StackThreshold = FMath::Max<int32>(1, int32(float(StackThreshold) / SampleCountCorrectionFactor));
 		// assume here the user has already rolled the number of frames into the correction factor
 		Ar.Logf(TEXT("Captured %i unique callstacks averaging %f function calls per frame"), SortedCallStacks.Num(), float(TotalStackCount) * SampleCountCorrectionFactor);
 	}

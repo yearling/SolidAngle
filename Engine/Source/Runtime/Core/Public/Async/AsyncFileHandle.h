@@ -7,7 +7,7 @@
 #include "Templates/Function.h"
 #include "Stats/Stats.h"
 #include "GenericPlatform/GenericPlatformFile.h"
-#include "Templates/Function.h"
+#include "Function.h"
 
 class IAsyncReadRequest;
 
@@ -95,7 +95,7 @@ public:
 	{
 		bCanceled = true;
 		bDataIsReady = true;
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		if (!PollCompletion())
 		{
 			return CancelImpl();
@@ -145,14 +145,14 @@ protected:
 	void SetComplete()
 	{
 		bDataIsReady = true;
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		if (Callback)
 		{
 			(*Callback)(bCanceled, this);
 		}
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		bCompleteAndCallbackCalled = true;
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 	}
 };
 

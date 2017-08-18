@@ -1619,6 +1619,21 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\PointerIsConvertibleFromTo.h">
       <Filter>Source\Runtime\Core\Public\Templates</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Async\IAsyncProgress.h">
+      <Filter>Source\Runtime\Core\Public\Async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Async\IAsyncTask.h">
+      <Filter>Source\Runtime\Core\Public\Async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Async\PhysXASync.h">
+      <Filter>Source\Runtime\Core\Public\Async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Async\AsyncResult.h">
+      <Filter>Source\Runtime\Core\Public\Async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\UnrealMath.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformMath.cpp">

@@ -83,7 +83,7 @@ FOutputDeviceWindowsError::FOutputDeviceWindowsError()
 
 void FOutputDeviceWindowsError::Serialize( const TCHAR* Msg, ELogVerbosity::Type Verbosity, const class FName& Category )
 {
-	YPlatformMisc::DebugBreak();
+	FPlatformMisc::DebugBreak();
    
 	if( !GIsCriticalError )
 	{   
@@ -97,11 +97,11 @@ void FOutputDeviceWindowsError::Serialize( const TCHAR* Msg, ELogVerbosity::Type
 		// Windows error.
 		if (LastError == 0)
 		{
-			UE_LOG(LogWindows, Log, TEXT("Windows GetLastError: %s (%i)"), YPlatformMisc::GetSystemErrorMessage(ErrorBuffer, 1024, LastError), LastError);
+			UE_LOG(LogWindows, Log, TEXT("Windows GetLastError: %s (%i)"), FPlatformMisc::GetSystemErrorMessage(ErrorBuffer, 1024, LastError), LastError);
 		}
 		else
 		{
-			UE_LOG(LogWindows, Error, TEXT("Windows GetLastError: %s (%i)"), YPlatformMisc::GetSystemErrorMessage(ErrorBuffer, 1024, LastError), LastError);
+			UE_LOG(LogWindows, Error, TEXT("Windows GetLastError: %s (%i)"), FPlatformMisc::GetSystemErrorMessage(ErrorBuffer, 1024, LastError), LastError);
 		}
 	}
 	else
@@ -113,15 +113,15 @@ void FOutputDeviceWindowsError::Serialize( const TCHAR* Msg, ELogVerbosity::Type
 	{
 		// Propagate error so structured exception handler can perform necessary work.
 #if PLATFORM_EXCEPTIONS_DISABLED
-		YPlatformMisc::DebugBreak();
+		FPlatformMisc::DebugBreak();
 #endif
-		YPlatformMisc::RaiseException( 1 );
+		FPlatformMisc::RaiseException( 1 );
 	}
 	else
 	{
 		// We crashed outside the guarded code (e.g. appExit).
 		HandleError();
-		YPlatformMisc::RequestExit( true );
+		FPlatformMisc::RequestExit( true );
 	}
 }
 
@@ -161,9 +161,9 @@ void FOutputDeviceWindowsError::HandleError()
 	::ClipCursor(NULL);
 	
 	// Copy to clipboard in non-cooked editor builds.
-	YPlatformMisc::ClipboardCopy(GErrorHist);
+	FPlatformMisc::ClipboardCopy(GErrorHist);
 
-	YPlatformMisc::SubmitErrorReport( GErrorHist, EErrorReportMode::Interactive );
+	FPlatformMisc::SubmitErrorReport( GErrorHist, EErrorReportMode::Interactive );
 
 	FCoreDelegates::OnShutdownAfterError.Broadcast();
 }
@@ -285,16 +285,16 @@ void YOutputDeviceConsoleWindows::Show( bool ShowWindow )
 				static const int32 ActualScreenWidth = DisplayMetrics.VirtualDisplayRect.Right - DisplayMetrics.VirtualDisplayRect.Left;
 				static const int32 ActualScreenHeight = DisplayMetrics.VirtualDisplayRect.Bottom - DisplayMetrics.VirtualDisplayRect.Top;
 
-				static const int32 RightPadding = YMath::Max(50, YMath::Min((ActualConsoleWidth / 2), ActualScreenWidth / 2));
-				static const int32 BottomPadding = YMath::Max(50, YMath::Min((ActualConsoleHeight / 2), ActualScreenHeight / 2));
+				static const int32 RightPadding = FMath::Max(50, FMath::Min((ActualConsoleWidth / 2), ActualScreenWidth / 2));
+				static const int32 BottomPadding = FMath::Max(50, FMath::Min((ActualConsoleHeight / 2), ActualScreenHeight / 2));
 				
-				ConsolePosX = YMath::Min(YMath::Max(ConsolePosX, DisplayMetrics.VirtualDisplayRect.Left), DisplayMetrics.VirtualDisplayRect.Right - RightPadding);
-				ConsolePosY = YMath::Min(YMath::Max(ConsolePosY, DisplayMetrics.VirtualDisplayRect.Top), DisplayMetrics.VirtualDisplayRect.Bottom - BottomPadding);
+				ConsolePosX = FMath::Min(FMath::Max(ConsolePosX, DisplayMetrics.VirtualDisplayRect.Left), DisplayMetrics.VirtualDisplayRect.Right - RightPadding);
+				ConsolePosY = FMath::Min(FMath::Max(ConsolePosY, DisplayMetrics.VirtualDisplayRect.Top), DisplayMetrics.VirtualDisplayRect.Bottom - BottomPadding);
 
 				::SetWindowPos( GetConsoleWindow(), HWND_TOP, ConsolePosX, ConsolePosY, 0, 0, SWP_NOSIZE | SWP_NOSENDCHANGING | SWP_NOZORDER );
 				
 				// set the control-c, etc handler
-				YPlatformMisc::SetGracefulTerminationHandler();
+				FPlatformMisc::SetGracefulTerminationHandler();
 			}
 		}
 	}

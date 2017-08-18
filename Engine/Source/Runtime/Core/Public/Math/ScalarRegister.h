@@ -189,7 +189,7 @@ FORCEINLINE ScalarRegister ScalarMax(const ScalarRegister& A, const ScalarRegist
 }
 
 // Specialization of Lerp template that works with scalar (float in vector) registers
-template<> FORCEINLINE ScalarRegister YMath::Lerp(const ScalarRegister& A, const ScalarRegister& B, const ScalarRegister& Alpha)
+template<> FORCEINLINE ScalarRegister FMath::Lerp(const ScalarRegister& A, const ScalarRegister& B, const ScalarRegister& Alpha)
 {
 	const VectorRegister Delta = VectorSubtract(B.Value, A.Value);
 	return ScalarRegister(VectorMultiplyAdd(Alpha.Value, Delta, A.Value));

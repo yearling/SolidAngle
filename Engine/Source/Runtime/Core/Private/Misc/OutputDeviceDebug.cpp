@@ -17,7 +17,7 @@ void YOutputDeviceDebug::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbo
 	{
 		if (Verbosity != ELogVerbosity::SetColor)
 		{
-			YPlatformMisc::LowLevelOutputDebugStringf(TEXT("%s%s"),*YOutputDeviceHelper::FormatLogLine(Verbosity, Category, Data, GPrintLogTimes, Time),LINE_TERMINATOR);
+			FPlatformMisc::LowLevelOutputDebugStringf(TEXT("%s%s"),*YOutputDeviceHelper::FormatLogLine(Verbosity, Category, Data, GPrintLogTimes, Time),LINE_TERMINATOR);
 		}
 	}
 	else

@@ -387,7 +387,7 @@ struct YMallocBinned2::Private
 	{
 		bool PushBundle(uint32 InPoolIndex, FBundleNode* InBundle)
 		{
-			uint32 NumCachedBundles = YMath::Min<uint32>(GMallocBinned2MaxBundlesBeforeRecycle, BINNED2_MAX_GMallocBinned2MaxBundlesBeforeRecycle);
+			uint32 NumCachedBundles = FMath::Min<uint32>(GMallocBinned2MaxBundlesBeforeRecycle, BINNED2_MAX_GMallocBinned2MaxBundlesBeforeRecycle);
 			for (uint32 Slot = 0; Slot < NumCachedBundles; Slot++)
 			{
 				if (!Bundles[InPoolIndex].FreeBundles[Slot])
@@ -403,7 +403,7 @@ struct YMallocBinned2::Private
 
 		FBundleNode* PopBundle(uint32 InPoolIndex)
 		{
-			uint32 NumCachedBundles = YMath::Min<uint32>(GMallocBinned2MaxBundlesBeforeRecycle, BINNED2_MAX_GMallocBinned2MaxBundlesBeforeRecycle);
+			uint32 NumCachedBundles = FMath::Min<uint32>(GMallocBinned2MaxBundlesBeforeRecycle, BINNED2_MAX_GMallocBinned2MaxBundlesBeforeRecycle);
 			for (uint32 Slot = 0; Slot < NumCachedBundles; Slot++)
 			{
 				FBundleNode* Result = Bundles[InPoolIndex].FreeBundles[Slot];
@@ -553,8 +553,8 @@ YMallocBinned2::YMallocBinned2()
 	NumPoolsPerPage = PageSize / sizeof(FPoolInfo);
 	PtrToPoolMapping.Init(PageSize, NumPoolsPerPage, Constants.AddressLimit);
 
-	checkf(YMath::IsPowerOfTwo(PageSize), TEXT("OS page size must be a power of two"));
-	checkf(YMath::IsPowerOfTwo(Constants.AddressLimit), TEXT("OS address limit must be a power of two"));
+	checkf(FMath::IsPowerOfTwo(PageSize), TEXT("OS page size must be a power of two"));
+	checkf(FMath::IsPowerOfTwo(Constants.AddressLimit), TEXT("OS address limit must be a power of two"));
 	checkf(Constants.AddressLimit > PageSize, TEXT("OS address limit must be greater than the page size")); // Check to catch 32 bit overflow in AddressLimit
 	checkf(SmallBlockSizes[BINNED2_SMALL_POOL_COUNT - 1] == BINNED2_MAX_SMALL_POOL_SIZE, TEXT("BINNED2_MAX_SMALL_POOL_SIZE must equal the smallest block size"));
 	checkf(PageSize % BINNED2_LARGE_ALLOC == 0, TEXT("OS page size must be a multiple of BINNED2_LARGE_ALLOC"));
@@ -672,10 +672,10 @@ void* YMallocBinned2::MallocExternal(SIZE_T Size, uint32 Alignment)
 
 		return Result;
 	}
-	Alignment = YMath::Max<uint32>(Alignment, BINNED2_MINIMUM_ALIGNMENT);
-	Size = Align(YMath::Max((SIZE_T)1, Size), Alignment);
+	Alignment = FMath::Max<uint32>(Alignment, BINNED2_MINIMUM_ALIGNMENT);
+	Size = Align(FMath::Max((SIZE_T)1, Size), Alignment);
 
-	check(YMath::IsPowerOfTwo(Alignment));
+	check(FMath::IsPowerOfTwo(Alignment));
 	check(Alignment <= PageSize);
 
 	FScopeLock Lock(&Mutex);
@@ -706,7 +706,7 @@ void* YMallocBinned2::ReallocExternal(void* Ptr, SIZE_T NewSize, uint32 Alignmen
 		return nullptr;
 	}
 	static_assert(DEFAULT_ALIGNMENT <= BINNED2_MINIMUM_ALIGNMENT, "DEFAULT_ALIGNMENT is assumed to be zero"); // used below
-	check(YMath::IsPowerOfTwo(Alignment));
+	check(FMath::IsPowerOfTwo(Alignment));
 	check(Alignment <= PageSize);
 
 	if (!IsOSAllocation(Ptr))
@@ -726,7 +726,7 @@ void* YMallocBinned2::ReallocExternal(void* Ptr, SIZE_T NewSize, uint32 Alignmen
 
 		// Reallocate and copy the data across
 		void* Result = YMallocBinned2::MallocExternal(NewSize, Alignment);
-		FMemory::Memcpy(Result, Ptr, YMath::Min<SIZE_T>(NewSize, BlockSize));
+		FMemory::Memcpy(Result, Ptr, FMath::Min<SIZE_T>(NewSize, BlockSize));
 		YMallocBinned2::FreeExternal(Ptr);
 		return Result;
 	}
@@ -753,7 +753,7 @@ void* YMallocBinned2::ReallocExternal(void* Ptr, SIZE_T NewSize, uint32 Alignmen
 	{
 		// Grow or shrink.
 		void* Result = YMallocBinned2::MallocExternal(NewSize, Alignment);
-		FMemory::Memcpy(Result, Ptr, YMath::Min<SIZE_T>(NewSize, PoolOSRequestedBytes));
+		FMemory::Memcpy(Result, Ptr, FMath::Min<SIZE_T>(NewSize, PoolOSRequestedBytes));
 		YMallocBinned2::FreeExternal(Ptr);
 		return Result;
 	}

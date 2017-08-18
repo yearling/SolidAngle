@@ -5,14 +5,14 @@
 #include "Containers/UnrealString.h"
 #include "UObject/PropertyPortFlags.h"
 
-/* YTimespan interface
+/* FTimespan interface
  *****************************************************************************/
 
-bool YTimespan::ExportTextItem(FString& ValueStr, YTimespan const& DefaultValue, UObject* Parent, int32 PortFlags, UObject* ExportRootScope) const
+bool FTimespan::ExportTextItem(FString& ValueStr, FTimespan const& DefaultValue, UObject* Parent, int32 PortFlags, UObject* ExportRootScope) const
 {
 	if (0 != (PortFlags & EPropertyPortFlags::PPF_ExportCpp))
 	{
-		ValueStr += FString::Printf(TEXT("YTimespan(0x%016X)"), Ticks);
+		ValueStr += FString::Printf(TEXT("FTimespan(0x%016X)"), Ticks);
 		return true;
 	}
 
@@ -22,14 +22,14 @@ bool YTimespan::ExportTextItem(FString& ValueStr, YTimespan const& DefaultValue,
 }
 
 
-bool YTimespan::ImportTextItem(const TCHAR*& Buffer, int32 PortFlags, UObject* Parent, FOutputDevice* ErrorText)
+bool FTimespan::ImportTextItem(const TCHAR*& Buffer, int32 PortFlags, UObject* Parent, FOutputDevice* ErrorText)
 {
-	// @todo gmp: implement YTimespan::ImportTextItem
+	// @todo gmp: implement FTimespan::ImportTextItem
 	return false;
 }
 
 
-bool YTimespan::Serialize(FArchive& Ar)
+bool FTimespan::Serialize(FArchive& Ar)
 {
 	Ar << *this;
 
@@ -37,7 +37,7 @@ bool YTimespan::Serialize(FArchive& Ar)
 }
 
 
-FString YTimespan::ToString() const
+FString FTimespan::ToString() const
 {
 	if (GetDays() == 0)
 	{
@@ -48,7 +48,7 @@ FString YTimespan::ToString() const
 }
 
 
-FString YTimespan::ToString(const TCHAR* Format) const
+FString FTimespan::ToString(const TCHAR* Format) const
 {
 	FString Result;
 
@@ -60,16 +60,16 @@ FString YTimespan::ToString(const TCHAR* Format) const
 			{
 			case TCHAR('n'): if (Ticks < 0) Result += TCHAR('-'); break;
 			case TCHAR('N'): Result += (Ticks < 0) ? TCHAR('-') : TCHAR('+'); break;
-			case TCHAR('d'): Result += FString::Printf(TEXT("%i"), YMath::Abs(GetDays())); break;
-			case TCHAR('h'): Result += FString::Printf(TEXT("%02i"), YMath::Abs(GetHours())); break;
-			case TCHAR('m'): Result += FString::Printf(TEXT("%02i"), YMath::Abs(GetMinutes())); break;
-			case TCHAR('s'): Result += FString::Printf(TEXT("%02i"), YMath::Abs(GetSeconds())); break;
-			case TCHAR('f'): Result += FString::Printf(TEXT("%03i"), YMath::Abs(GetMilliseconds())); break;
-			case TCHAR('D'): Result += FString::Printf(TEXT("%f"), YMath::Abs(GetTotalDays())); break;
-			case TCHAR('H'): Result += FString::Printf(TEXT("%f"), YMath::Abs(GetTotalHours())); break;
-			case TCHAR('M'): Result += FString::Printf(TEXT("%f"), YMath::Abs(GetTotalMinutes())); break;
-			case TCHAR('S'): Result += FString::Printf(TEXT("%f"), YMath::Abs(GetTotalSeconds())); break;
-			case TCHAR('F'): Result += FString::Printf(TEXT("%f"), YMath::Abs(GetTotalMilliseconds())); break;
+			case TCHAR('d'): Result += FString::Printf(TEXT("%i"), FMath::Abs(GetDays())); break;
+			case TCHAR('h'): Result += FString::Printf(TEXT("%02i"), FMath::Abs(GetHours())); break;
+			case TCHAR('m'): Result += FString::Printf(TEXT("%02i"), FMath::Abs(GetMinutes())); break;
+			case TCHAR('s'): Result += FString::Printf(TEXT("%02i"), FMath::Abs(GetSeconds())); break;
+			case TCHAR('f'): Result += FString::Printf(TEXT("%03i"), FMath::Abs(GetMilliseconds())); break;
+			case TCHAR('D'): Result += FString::Printf(TEXT("%f"), FMath::Abs(GetTotalDays())); break;
+			case TCHAR('H'): Result += FString::Printf(TEXT("%f"), FMath::Abs(GetTotalHours())); break;
+			case TCHAR('M'): Result += FString::Printf(TEXT("%f"), FMath::Abs(GetTotalMinutes())); break;
+			case TCHAR('S'): Result += FString::Printf(TEXT("%f"), FMath::Abs(GetTotalSeconds())); break;
+			case TCHAR('F'): Result += FString::Printf(TEXT("%f"), FMath::Abs(GetTotalMilliseconds())); break;
 
 			default:
 
@@ -88,60 +88,60 @@ FString YTimespan::ToString(const TCHAR* Format) const
 }
 
 
-/* YTimespan static interface
+/* FTimespan static interface
  *****************************************************************************/
 
-YTimespan YTimespan::FromDays(double Days)
+FTimespan FTimespan::FromDays(double Days)
 {
 	check((Days >= MinValue().GetTotalDays()) && (Days <= MaxValue().GetTotalDays()));
 
-	return YTimespan(Days * ETimespan::TicksPerDay);
+	return FTimespan(Days * ETimespan::TicksPerDay);
 }
 
 
-YTimespan YTimespan::FromHours(double Hours)
+FTimespan FTimespan::FromHours(double Hours)
 {
 	check((Hours >= MinValue().GetTotalHours()) && (Hours <= MaxValue().GetTotalHours()));
 
-	return YTimespan(Hours * ETimespan::TicksPerHour);
+	return FTimespan(Hours * ETimespan::TicksPerHour);
 }
 
 
-YTimespan YTimespan::FromMicroseconds(double Microseconds)
+FTimespan FTimespan::FromMicroseconds(double Microseconds)
 {
 	check((Microseconds >= MinValue().GetTotalMicroseconds()) && (Microseconds <= MaxValue().GetTotalMicroseconds()));
 
-	return YTimespan(Microseconds * ETimespan::TicksPerMicrosecond);
+	return FTimespan(Microseconds * ETimespan::TicksPerMicrosecond);
 }
 
 
-YTimespan YTimespan::FromMilliseconds(double Milliseconds)
+FTimespan FTimespan::FromMilliseconds(double Milliseconds)
 {
 	check((Milliseconds >= MinValue().GetTotalMilliseconds()) && (Milliseconds <= MaxValue().GetTotalMilliseconds()));
 
-	return YTimespan(Milliseconds * ETimespan::TicksPerMillisecond);
+	return FTimespan(Milliseconds * ETimespan::TicksPerMillisecond);
 }
 
 
-YTimespan YTimespan::FromMinutes(double Minutes)
+FTimespan FTimespan::FromMinutes(double Minutes)
 {
 	check((Minutes >= MinValue().GetTotalMinutes()) && (Minutes <= MaxValue().GetTotalMinutes()));
 
-	return YTimespan(Minutes * ETimespan::TicksPerMinute);
+	return FTimespan(Minutes * ETimespan::TicksPerMinute);
 }
 
 
-YTimespan YTimespan::FromSeconds(double Seconds)
+FTimespan FTimespan::FromSeconds(double Seconds)
 {
 	check((Seconds >= MinValue().GetTotalSeconds()) && (Seconds <= MaxValue().GetTotalSeconds()));
 
-	return YTimespan(Seconds * ETimespan::TicksPerSecond);
+	return FTimespan(Seconds * ETimespan::TicksPerSecond);
 }
 
 
-bool YTimespan::Parse(const FString& TimespanString, YTimespan& OutTimespan)
+bool FTimespan::Parse(const FString& TimespanString, FTimespan& OutTimespan)
 {
-	// @todo gmp: implement stricter YTimespan parsing; this implementation is too forgiving.
+	// @todo gmp: implement stricter FTimespan parsing; this implementation is too forgiving.
 	FString TokenString = TimespanString.Replace(TEXT("."), TEXT(":"));
 	TokenString.ReplaceInline(TEXT(","), TEXT(":"));
 
@@ -172,25 +172,25 @@ bool YTimespan::Parse(const FString& TimespanString, YTimespan& OutTimespan)
 }
 
 
-/* YTimespan friend functions
+/* FTimespan friend functions
  *****************************************************************************/
 
-FArchive& operator<<(FArchive& Ar, YTimespan& Timespan)
+FArchive& operator<<(FArchive& Ar, FTimespan& Timespan)
 {
 	return Ar << Timespan.Ticks;
 }
 
 
-uint32 GetTypeHash(const YTimespan& Timespan)
+uint32 GetTypeHash(const FTimespan& Timespan)
 {
 	return GetTypeHash(Timespan.Ticks);
 }
 
 
-/* YTimespan implementation
+/* FTimespan implementation
  *****************************************************************************/
 
-void YTimespan::Assign(int32 Days, int32 Hours, int32 Minutes, int32 Seconds, int32 Milliseconds, int32 Microseconds)
+void FTimespan::Assign(int32 Days, int32 Hours, int32 Minutes, int32 Seconds, int32 Milliseconds, int32 Microseconds)
 {
 	int64 TotalTicks = ETimespan::TicksPerMicrosecond * (1000 * (1000 * (60 * 60 * 24 * (int64)Days + 60 * 60 * (int64)Hours + 60 * (int64)Minutes + (int64)Seconds) + (int64)Milliseconds) + (int64)Microseconds);
 	check((TotalTicks >= MinValue().GetTicks()) && (TotalTicks <= MaxValue().GetTicks()));

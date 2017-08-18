@@ -8,7 +8,7 @@
 #include "Containers/UnrealString.h"
 #include "Misc/Parse.h"
 
-class YFloat16Color;
+class FFloat16Color;
 
 /**
 * Enum for the different kinds of gamma spaces we expect to need to convert from/to.
@@ -54,7 +54,7 @@ struct FLinearColor
 
 	CORE_API FLinearColor(const FVector& Vector);
 
-	CORE_API explicit FLinearColor(const YFloat16Color& C);
+	CORE_API explicit FLinearColor(const FFloat16Color& C);
 
 	// Serializer.
 
@@ -212,10 +212,10 @@ struct FLinearColor
 	{
 		FLinearColor Ret;
 
-		Ret.R = YMath::Clamp(R, InMin, InMax);
-		Ret.G = YMath::Clamp(G, InMin, InMax);
-		Ret.B = YMath::Clamp(B, InMin, InMax);
-		Ret.A = YMath::Clamp(A, InMin, InMax);
+		Ret.R = FMath::Clamp(R, InMin, InMax);
+		Ret.G = FMath::Clamp(G, InMin, InMax);
+		Ret.B = FMath::Clamp(B, InMin, InMax);
+		Ret.A = FMath::Clamp(A, InMin, InMax);
 
 		return Ret;
 	}
@@ -233,7 +233,7 @@ struct FLinearColor
 	// Error-tolerant comparison.
 	FORCEINLINE bool Equals(const FLinearColor& ColorB, float Tolerance = KINDA_SMALL_NUMBER) const
 	{
-		return YMath::Abs(this->R - ColorB.R) < Tolerance && YMath::Abs(this->G - ColorB.G) < Tolerance && YMath::Abs(this->B - ColorB.B) < Tolerance && YMath::Abs(this->A - ColorB.A) < Tolerance;
+		return FMath::Abs(this->R - ColorB.R) < Tolerance && FMath::Abs(this->G - ColorB.G) < Tolerance && FMath::Abs(this->B - ColorB.B) < Tolerance && FMath::Abs(this->A - ColorB.A) < Tolerance;
 	}
 
 	CORE_API FLinearColor CopyWithNewOpacity(float NewOpacicty) const
@@ -263,7 +263,7 @@ struct FLinearColor
 	*/
 	static inline float Dist(const FLinearColor &V1, const FLinearColor &V2)
 	{
-		return YMath::Sqrt(YMath::Square(V2.R - V1.R) + YMath::Square(V2.G - V1.G) + YMath::Square(V2.B - V1.B) + YMath::Square(V2.A - V1.A));
+		return FMath::Sqrt(FMath::Square(V2.R - V1.R) + FMath::Square(V2.G - V1.G) + FMath::Square(V2.B - V1.B) + FMath::Square(V2.A - V1.A));
 	}
 
 	/**
@@ -284,7 +284,7 @@ struct FLinearColor
 
 	/**
 	* Linearly interpolates between two colors by the specified progress amount.  The interpolation is performed in HSV color space
-	* taking the shortest path to the new color's hue.  This can give better results than YMath::Lerp(), but is much more expensive.
+	* taking the shortest path to the new color's hue.  This can give better results than FMath::Lerp(), but is much more expensive.
 	* The incoming colors are in RGB space, and the output color will be RGB.  The alpha value will also be interpolated.
 	*
 	* @param	From		The color and alpha to interpolate from as linear RGBA
@@ -318,13 +318,13 @@ struct FLinearColor
 	*/
 	FORCEINLINE float GetMax() const
 	{
-		return YMath::Max(YMath::Max(YMath::Max(R, G), B), A);
+		return FMath::Max(FMath::Max(FMath::Max(R, G), B), A);
 	}
 
 	/** useful to detect if a light contribution needs to be rendered */
 	bool IsAlmostBlack() const
 	{
-		return YMath::Square(R) < DELTA && YMath::Square(G) < DELTA && YMath::Square(B) < DELTA;
+		return FMath::Square(R) < DELTA && FMath::Square(G) < DELTA && FMath::Square(B) < DELTA;
 	}
 
 	/**
@@ -334,7 +334,7 @@ struct FLinearColor
 	*/
 	FORCEINLINE float GetMin() const
 	{
-		return YMath::Min(YMath::Min(YMath::Min(R, G), B), A);
+		return FMath::Min(FMath::Min(FMath::Min(R, G), B), A);
 	}
 
 	FORCEINLINE float GetLuminance() const
@@ -455,10 +455,10 @@ public:
 
 	FORCEINLINE void operator+=(const FColor& C)
 	{
-		R = (uint8)YMath::Min((int32)R + (int32)C.R, 255);
-		G = (uint8)YMath::Min((int32)G + (int32)C.G, 255);
-		B = (uint8)YMath::Min((int32)B + (int32)C.B, 255);
-		A = (uint8)YMath::Min((int32)A + (int32)C.A, 255);
+		R = (uint8)FMath::Min((int32)R + (int32)C.R, 255);
+		G = (uint8)FMath::Min((int32)G + (int32)C.G, 255);
+		B = (uint8)FMath::Min((int32)B + (int32)C.B, 255);
+		A = (uint8)FMath::Min((int32)A + (int32)C.A, 255);
 	}
 
 	CORE_API FLinearColor FromRGBE() const;

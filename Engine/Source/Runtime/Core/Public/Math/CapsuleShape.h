@@ -5,7 +5,7 @@
 *
 * A capsule consists of two sphere connected by a cylinder.
 */
-struct YCapsuleShape
+struct FCapsuleShape
 {
 	/** The capsule's center point. */
 	FVector Center;
@@ -22,7 +22,7 @@ struct YCapsuleShape
 public:
 
 	/** Default constructor. */
-	YCapsuleShape() { }
+	FCapsuleShape() { }
 
 	/**
 	* Create and inintialize a new instance.
@@ -32,7 +32,7 @@ public:
 	* @param InOrientation The capsule's orientation in space.
 	* @param InLength The capsule's length.
 	*/
-	YCapsuleShape(FVector InCenter, float InRadius, FVector InOrientation, float InLength)
+	FCapsuleShape(FVector InCenter, float InRadius, FVector InOrientation, float InLength)
 		: Center(InCenter)
 		, Radius(InRadius)
 		, Orientation(InOrientation)

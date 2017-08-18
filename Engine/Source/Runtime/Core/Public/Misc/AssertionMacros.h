@@ -4,11 +4,11 @@
 #include "HAL/PlatformMisc.h"
 
 /**
-* YDebug
+* FDebug
 * These functions offer debugging and diagnostic functionality and its presence
 * depends on compiler switches.
 **/
-struct CORE_API YDebug
+struct CORE_API FDebug
 {
 	/** Logs final assert message and exits the program. */
 	static void VARARGS AssertFailed(const ANSICHAR* Expr, const ANSICHAR* File, int32 Line, const TCHAR* Format = TEXT(""), ...);
@@ -60,25 +60,25 @@ Check, verify, etc macros
 
 #if !UE_BUILD_SHIPPING
 #define _DebugBreakAndPromptForRemote() \
-	if (!YPlatformMisc::IsDebuggerPresent()) { YPlatformMisc::PromptForRemoteDebugging(false); } YPlatformMisc::DebugBreak();
+	if (!FPlatformMisc::IsDebuggerPresent()) { FPlatformMisc::PromptForRemoteDebugging(false); } FPlatformMisc::DebugBreak();
 #else
 #define _DebugBreakAndPromptForRemote()
 #endif // !UE_BUILD_SHIPPING
 #if DO_CHECK
 #define checkCode( Code )		do { Code; } while ( false );
-#define verify(expr)			{ if(UNLIKELY(!(expr))) { YDebug::LogAssertFailedMessage( #expr, __FILE__, __LINE__ ); _DebugBreakAndPromptForRemote(); YDebug::AssertFailed( #expr, __FILE__, __LINE__ ); CA_ASSUME(false); } }
-#define check(expr)				{ if(UNLIKELY(!(expr))) { YDebug::LogAssertFailedMessage( #expr, __FILE__, __LINE__ ); _DebugBreakAndPromptForRemote(); YDebug::AssertFailed( #expr, __FILE__, __LINE__ ); CA_ASSUME(false); } }
+#define verify(expr)			{ if(UNLIKELY(!(expr))) { FDebug::LogAssertFailedMessage( #expr, __FILE__, __LINE__ ); _DebugBreakAndPromptForRemote(); FDebug::AssertFailed( #expr, __FILE__, __LINE__ ); CA_ASSUME(false); } }
+#define check(expr)				{ if(UNLIKELY(!(expr))) { FDebug::LogAssertFailedMessage( #expr, __FILE__, __LINE__ ); _DebugBreakAndPromptForRemote(); FDebug::AssertFailed( #expr, __FILE__, __LINE__ ); CA_ASSUME(false); } }
 
 /**
 * verifyf, checkf: Same as verify, check but with printf style additional parameters
 * Read about __VA_ARGS__ (variadic macros) on http://gcc.gnu.org/onlinedocs/gcc-3.4.4/cpp.pdf.
 */
-#define verifyf(expr, format,  ...)		{ if(UNLIKELY(!(expr))) { YDebug::LogAssertFailedMessage( #expr, __FILE__, __LINE__, format, ##__VA_ARGS__ ); _DebugBreakAndPromptForRemote(); YDebug::AssertFailed(#expr, __FILE__, __LINE__, format, ##__VA_ARGS__); CA_ASSUME(false); } }
-#define checkf(expr, format,  ...)		{ if(UNLIKELY(!(expr))) { YDebug::LogAssertFailedMessage( #expr, __FILE__, __LINE__, format, ##__VA_ARGS__ ); _DebugBreakAndPromptForRemote(); YDebug::AssertFailed(#expr, __FILE__, __LINE__, format, ##__VA_ARGS__); CA_ASSUME(false); } }
+#define verifyf(expr, format,  ...)		{ if(UNLIKELY(!(expr))) { FDebug::LogAssertFailedMessage( #expr, __FILE__, __LINE__, format, ##__VA_ARGS__ ); _DebugBreakAndPromptForRemote(); FDebug::AssertFailed(#expr, __FILE__, __LINE__, format, ##__VA_ARGS__); CA_ASSUME(false); } }
+#define checkf(expr, format,  ...)		{ if(UNLIKELY(!(expr))) { FDebug::LogAssertFailedMessage( #expr, __FILE__, __LINE__, format, ##__VA_ARGS__ ); _DebugBreakAndPromptForRemote(); FDebug::AssertFailed(#expr, __FILE__, __LINE__, format, ##__VA_ARGS__); CA_ASSUME(false); } }
 /**
 * Denotes code paths that should never be reached.
 */
-#define checkNoEntry()       { YDebug::LogAssertFailedMessage( "Enclosing block should never be called", __FILE__, __LINE__ ); _DebugBreakAndPromptForRemote(); YDebug::AssertFailed("Enclosing block should never be called", __FILE__, __LINE__ ); CA_ASSUME(false); }
+#define checkNoEntry()       { FDebug::LogAssertFailedMessage( "Enclosing block should never be called", __FILE__, __LINE__ ); _DebugBreakAndPromptForRemote(); FDebug::AssertFailed("Enclosing block should never be called", __FILE__, __LINE__ ); CA_ASSUME(false); }
 
 /**
 * Denotes code paths that should not be executed more than once.
@@ -103,7 +103,7 @@ private:
 	                            checkf( RecursionCounter##__LINE__ == 0, TEXT("Enclosing block was entered recursively") );  \
 	                            const FRecursionScopeMarker ScopeMarker##__LINE__( RecursionCounter##__LINE__ )
 
-#define unimplemented()       { YDebug::LogAssertFailedMessage( "Unimplemented function called", __FILE__, __LINE__ ); _DebugBreakAndPromptForRemote(); YDebug::AssertFailed("Unimplemented function called", __FILE__, __LINE__); CA_ASSUME(false); }
+#define unimplemented()       { FDebug::LogAssertFailedMessage( "Unimplemented function called", __FILE__, __LINE__ ); _DebugBreakAndPromptForRemote(); FDebug::AssertFailed("Unimplemented function called", __FILE__, __LINE__); CA_ASSUME(false); }
 
 #else
 #define checkCode(...)
@@ -121,9 +121,9 @@ private:
 // Check for development only.
 //
 #if DO_GUARD_SLOW
-#define checkSlow(expr)					{ if(UNLIKELY(!(expr))) { YDebug::LogAssertFailedMessage( #expr, __FILE__, __LINE__ ); _DebugBreakAndPromptForRemote(); YDebug::AssertFailed(#expr, __FILE__, __LINE__); CA_ASSUME(false); } }
-#define checkfSlow(expr, format, ...)	{ if(UNLIKELY(!(expr))) { YDebug::LogAssertFailedMessage( #expr, __FILE__, __LINE__, format, ##__VA_ARGS__ ); _DebugBreakAndPromptForRemote(); YDebug::AssertFailed( #expr, __FILE__, __LINE__, format, ##__VA_ARGS__ ); CA_ASSUME(false); } }
-#define verifySlow(expr)				{ if(UNLIKELY(!(expr))) { YDebug::LogAssertFailedMessage( #expr, __FILE__, __LINE__ ); _DebugBreakAndPromptForRemote(); YDebug::AssertFailed(#expr, __FILE__, __LINE__); CA_ASSUME(false); } }
+#define checkSlow(expr)					{ if(UNLIKELY(!(expr))) { FDebug::LogAssertFailedMessage( #expr, __FILE__, __LINE__ ); _DebugBreakAndPromptForRemote(); FDebug::AssertFailed(#expr, __FILE__, __LINE__); CA_ASSUME(false); } }
+#define checkfSlow(expr, format, ...)	{ if(UNLIKELY(!(expr))) { FDebug::LogAssertFailedMessage( #expr, __FILE__, __LINE__, format, ##__VA_ARGS__ ); _DebugBreakAndPromptForRemote(); FDebug::AssertFailed( #expr, __FILE__, __LINE__, format, ##__VA_ARGS__ ); CA_ASSUME(false); } }
+#define verifySlow(expr)				{ if(UNLIKELY(!(expr))) { FDebug::LogAssertFailedMessage( #expr, __FILE__, __LINE__ ); _DebugBreakAndPromptForRemote(); FDebug::AssertFailed(#expr, __FILE__, __LINE__); CA_ASSUME(false); } }
 #else
 #define checkSlow(expr)					{ CA_ASSUME(expr); }
 #define checkfSlow(expr, format, ...)	{ CA_ASSUME(expr); }
@@ -168,20 +168,20 @@ namespace UE4Asserts_Private
 		return Result;
 	}
 
-	FORCEINLINE bool OptionallyDebugBreakAndPromptForRemoteReturningFalse(bool bBreak, bool bIsEnsure = false)
+	FORCEINLINE bool OptionallFDebugBreakAndPromptForRemoteReturningFalse(bool bBreak, bool bIsEnsure = false)
 	{
 		if (bBreak)
 		{
-			YPlatformMisc::DebugBreakAndPromptForRemoteReturningFalse(bIsEnsure);
+			FPlatformMisc::DebugBreakAndPromptForRemoteReturningFalse(bIsEnsure);
 		}
 		return false;
 	}
 }
 
-#define ensure(           InExpression                ) (LIKELY(!!(InExpression)) || YDebug::OptionallyLogFormattedEnsureMessageReturningFalse(UE4Asserts_Private::TrueOnFirstCallOnly([]{}), #InExpression, __FILE__, __LINE__, TEXT("")               ) || UE4Asserts_Private::OptionallyDebugBreakAndPromptForRemoteReturningFalse(UE4Asserts_Private::TrueOnFirstCallOnly([]{}), true))
-#define ensureMsgf(       InExpression, InFormat, ... ) (LIKELY(!!(InExpression)) || YDebug::OptionallyLogFormattedEnsureMessageReturningFalse(UE4Asserts_Private::TrueOnFirstCallOnly([]{}), #InExpression, __FILE__, __LINE__, InFormat, ##__VA_ARGS__) || UE4Asserts_Private::OptionallyDebugBreakAndPromptForRemoteReturningFalse(UE4Asserts_Private::TrueOnFirstCallOnly([]{}), true))
-#define ensureAlways(     InExpression                ) (LIKELY(!!(InExpression)) || YDebug::OptionallyLogFormattedEnsureMessageReturningFalse(true,                                          #InExpression, __FILE__, __LINE__, TEXT("")               ) || YPlatformMisc::DebugBreakAndPromptForRemoteReturningFalse(true))
-#define ensureAlwaysMsgf( InExpression, InFormat, ... ) (LIKELY(!!(InExpression)) || YDebug::OptionallyLogFormattedEnsureMessageReturningFalse(true,                                          #InExpression, __FILE__, __LINE__, InFormat, ##__VA_ARGS__) || YPlatformMisc::DebugBreakAndPromptForRemoteReturningFalse(true))
+#define ensure(           InExpression                ) (LIKELY(!!(InExpression)) || FDebug::OptionallyLogFormattedEnsureMessageReturningFalse(UE4Asserts_Private::TrueOnFirstCallOnly([]{}), #InExpression, __FILE__, __LINE__, TEXT("")               ) || UE4Asserts_Private::OptionallFDebugBreakAndPromptForRemoteReturningFalse(UE4Asserts_Private::TrueOnFirstCallOnly([]{}), true))
+#define ensureMsgf(       InExpression, InFormat, ... ) (LIKELY(!!(InExpression)) || FDebug::OptionallyLogFormattedEnsureMessageReturningFalse(UE4Asserts_Private::TrueOnFirstCallOnly([]{}), #InExpression, __FILE__, __LINE__, InFormat, ##__VA_ARGS__) || UE4Asserts_Private::OptionallFDebugBreakAndPromptForRemoteReturningFalse(UE4Asserts_Private::TrueOnFirstCallOnly([]{}), true))
+#define ensureAlways(     InExpression                ) (LIKELY(!!(InExpression)) || FDebug::OptionallyLogFormattedEnsureMessageReturningFalse(true,                                          #InExpression, __FILE__, __LINE__, TEXT("")               ) || FPlatformMisc::DebugBreakAndPromptForRemoteReturningFalse(true))
+#define ensureAlwaysMsgf( InExpression, InFormat, ... ) (LIKELY(!!(InExpression)) || FDebug::OptionallyLogFormattedEnsureMessageReturningFalse(true,                                          #InExpression, __FILE__, __LINE__, InFormat, ##__VA_ARGS__) || FPlatformMisc::DebugBreakAndPromptForRemoteReturningFalse(true))
 
 #else	// DO_CHECK
 
@@ -234,14 +234,14 @@ namespace UE4Asserts_Private
 Low level error macros
 ----------------------------------------------------------------------------*/
 
-struct YTCharArrayTester
+struct FTCharArrayTester
 {
 	template <uint32 N>
 	static char(&Func(const TCHAR(&)[N]))[2];
 	static char(&Func(...))[1];
 };
 
-#define IS_TCHAR_ARRAY(expr) (sizeof(YTCharArrayTester::Func(expr)) == 2)
+#define IS_TCHAR_ARRAY(expr) (sizeof(FTCharArrayTester::Func(expr)) == 2)
 
 /** low level fatal error handler. */
 CORE_API void VARARGS LowLevelFatalErrorHandler(const ANSICHAR* File, int32 Line, const TCHAR* Format = TEXT(""), ...);
@@ -251,6 +251,6 @@ CORE_API void VARARGS LowLevelFatalErrorHandler(const ANSICHAR* File, int32 Line
 		static_assert(IS_TCHAR_ARRAY(Format), "Formatting string must be a TCHAR array."); \
 		LowLevelFatalErrorHandler(__FILE__, __LINE__, Format, ##__VA_ARGS__); \
 		_DebugBreakAndPromptForRemote(); \
-		YDebug::AssertFailed("", __FILE__, __LINE__, Format, ##__VA_ARGS__); \
+		FDebug::AssertFailed("", __FILE__, __LINE__, Format, ##__VA_ARGS__); \
 	}
 

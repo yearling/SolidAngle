@@ -1,3 +1,5 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
@@ -11,14 +13,14 @@ class FNoncopyable;
 class FNoopCounter;
 struct FMemory;
 
-/**
-* Base class for a lock free list of pointers
-* This class has several different features. Not all methods are supported in all situations.
-* The intention is that derived classes use private inheritance to build a data structure only supports a small meaningful set of operations.
-*
-* A key feature is that lists can be "closed". A closed list cannot be pushed to or popped from. Closure is atomic with push and pop.
-* All operations are threadsafe, except that the constructor is not reentrant.
-*/
+/** 
+ * Base class for a lock free list of pointers 
+ * This class has several different features. Not all methods are supported in all situations.
+ * The intention is that derived classes use private inheritance to build a data structure only supports a small meaningful set of operations.
+ *
+ * A key feature is that lists can be "closed". A closed list cannot be pushed to or popped from. Closure is atomic with push and pop.
+ * All operations are threadsafe, except that the constructor is not reentrant.
+ */
 class FLockFreeVoidPointerListBase : public FNoncopyable
 {
 public:
@@ -35,11 +37,11 @@ public:
 		//checkLockFreePointerList(Head == nullptr || Head == FLinkAllocator::Get().ClosedLink()); // we do not allow destruction except in the empty or closed state
 	}
 
-	/**
-	*	Push an item onto the head of the list
-	*	@param NewItem, the new item to push on the list, cannot be nullptr
-	*	CAUTION: This method should not be used unless the list is known to not be closed.
-	*/
+	/**	
+	 *	Push an item onto the head of the list
+	 *	@param NewItem, the new item to push on the list, cannot be nullptr
+	 *	CAUTION: This method should not be used unless the list is known to not be closed.
+	 */
 	void Push(void *NewItem)
 	{
 		FLink* NewLink = FLinkAllocator::Get().AllocateLink(NewItem);
@@ -47,11 +49,11 @@ public:
 		checkLockFreePointerList(NewLink->Next != FLinkAllocator::Get().ClosedLink()); // it is not permissible to call push on a Closed queue
 	}
 
-	/**
-	*	Push an item onto the head of the list, unless the list is closed
-	*	@param NewItem, the new item to push on the list, cannot be nullptr
-	*	@return true if the item was pushed on the list, false if the list was closed.
-	*/
+	/**	
+	 *	Push an item onto the head of the list, unless the list is closed
+	 *	@param NewItem, the new item to push on the list, cannot be nullptr
+	 *	@return true if the item was pushed on the list, false if the list was closed.
+	 */
 	bool PushIfNotClosed(void *NewItem)
 	{
 		FLink* NewLink = FLinkAllocator::Get().AllocateLink(NewItem);
@@ -63,11 +65,11 @@ public:
 		return bSuccess;
 	}
 
-	/**
-	*	Push an item onto the head of the list, opening it first if necessary
-	*	@param NewItem, the new item to push on the list, cannot be nullptr
-	*	@return true if the list needed to be opened first, false if the list was not closed before our push
-	*/
+	/**	
+	 *	Push an item onto the head of the list, opening it first if necessary
+	 *	@param NewItem, the new item to push on the list, cannot be nullptr
+	 *	@return true if the list needed to be opened first, false if the list was not closed before our push
+	 */
 	bool ReopenIfClosedAndPush(void *NewItem)
 	{
 		FLink* NewLink = FLinkAllocator::Get().AllocateLink(NewItem);
@@ -84,11 +86,11 @@ public:
 		}
 	}
 
-	/**
-	*	Pop an item from the list or return nullptr if the list is empty
-	*	@return The popped item, if any
-	*	CAUTION: This method should not be used unless the list is known to not be closed.
-	*/
+	/**	
+	 *	Pop an item from the list or return nullptr if the list is empty
+	 *	@return The popped item, if any
+	 *	CAUTION: This method should not be used unless the list is known to not be closed.
+	 */
 	void* Pop()
 	{
 		FLink* Link = FLink::Unlink(&Head);
@@ -102,10 +104,10 @@ public:
 		return Return;
 	}
 
-	/**
-	*	Pop an item from the list or return nullptr if the list is empty or closed
-	*	@return The new item, if any
-	*/
+	/**	
+	 *	Pop an item from the list or return nullptr if the list is empty or closed
+	 *	@return The new item, if any
+	 */
 	void* PopIfNotClosed()
 	{
 		FLink* Link = FLink::Unlink(&Head, FLinkAllocator::Get().ClosedLink());
@@ -119,26 +121,26 @@ public:
 		return Return;
 	}
 
-	/**
-	*	Close the list if it is empty
-	*	@return true if this call actively closed the list
-	*/
+	/**	
+	 *	Close the list if it is empty
+	 *	@return true if this call actively closed the list
+	 */
 	bool CloseIfEmpty()
 	{
-		if (FLinkAllocator::Get().ClosedLink()->ReplaceHeadIfHeadEqual(&Head, nullptr))
+		if (FLinkAllocator::Get().ClosedLink()->ReplaceHeadIfHeadEqual(&Head,nullptr))
 		{
 			return true;
 		}
 		return false;
 	}
 
-	/**
-	*	If the list is empty, replace it with the other list and null the other list.
-	*	@return true if this call actively closed the list
-	*/
+	/**	
+	 *	If the list is empty, replace it with the other list and null the other list.
+	 *	@return true if this call actively closed the list
+	 */
 	bool ReplaceListIfEmpty(FLockFreeVoidPointerListBase& NotThreadSafeTempListToReplaceWith)
 	{
-		if (NotThreadSafeTempListToReplaceWith.Head->ReplaceHeadIfHeadEqual(&Head, nullptr))
+		if (NotThreadSafeTempListToReplaceWith.Head->ReplaceHeadIfHeadEqual(&Head,nullptr))
 		{
 			NotThreadSafeTempListToReplaceWith.Head = nullptr;
 			return true;
@@ -146,11 +148,11 @@ public:
 		return false;
 	}
 
-	/**
-	*	Pop all items from the list
-	*	@param Output The array to hold the returned items. Must be empty.
-	*	CAUTION: This method should not be used unless the list is known to not be closed.
-	*/
+	/**	
+	 *	Pop all items from the list 
+	 *	@param Output The array to hold the returned items. Must be empty.
+	 *	CAUTION: This method should not be used unless the list is known to not be closed.
+	 */
 	template <class ARRAYTYPE, typename ElementType>
 	void PopAll(ARRAYTYPE& Output)
 	{
@@ -167,10 +169,10 @@ public:
 		}
 	}
 
-	/**
-	*	Pop all items from the list and atomically close it.
-	*	@param Output The array to hold the returned items. Must be empty.
-	*/
+	/**	
+	 *	Pop all items from the list and atomically close it.
+	 *	@param Output The array to hold the returned items. Must be empty.
+	 */
 	template <class ARRAYTYPE, typename ElementType>
 	void PopAllAndClose(ARRAYTYPE& Output)
 	{
@@ -187,27 +189,27 @@ public:
 		}
 	}
 
-	/**
-	*	Check if the list is closed
-	*	@return true if the list is closed.
-	*	CAUTION: This methods safety depends on external assumptions. For example, if another thread could open or close the list at any time, the return value is no better than a best guess.
-	*	As typically used, the list is only closed once it is lifetime, so a return of true here means it is closed forever.
-	*/
+	/**	
+	 *	Check if the list is closed
+	 *	@return true if the list is closed.
+	 *	CAUTION: This methods safety depends on external assumptions. For example, if another thread could open or close the list at any time, the return value is no better than a best guess.
+	 *	As typically used, the list is only closed once it is lifetime, so a return of true here means it is closed forever.
+	 */
 	bool IsClosed() const  // caution, if this returns false, that does not mean the list is open!
 	{
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		return Head == FLinkAllocator::Get().ClosedLink();
 	}
 
-	/**
-	*	Check if the list is empty
-	*	@return true if the list is empty.
-	*	CAUTION: This methods safety depends on external assumptions. For example, if another thread could add to the list at any time, the return value is no better than a best guess.
-	*	As typically used, the list is not being access concurrently when this is called.
-	*/
-	bool IsEmpty() const
+	/**	
+	 *	Check if the list is empty
+	 *	@return true if the list is empty.
+	 *	CAUTION: This methods safety depends on external assumptions. For example, if another thread could add to the list at any time, the return value is no better than a best guess.
+	 *	As typically used, the list is not being access concurrently when this is called.
+	 */
+	bool IsEmpty() const  
 	{
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		return Head == nullptr;
 	}
 
@@ -218,10 +220,10 @@ private:
 	{
 		/** Next item in the list or nullptr if we are at the end of the list */
 		FLink*				Next;
-		/**
-		* Pointer to the item this list holds. The is useful to the external users of the system. Must not be nullptr for ordinary links.
-		* Also part of the solution to the ABA problem. nullptr Items are always on the recycling list and NON-nullptr items are not.
-		*/
+		/** 
+		 * Pointer to the item this list holds. The is useful to the external users of the system. Must not be nullptr for ordinary links. 
+		 * Also part of the solution to the ABA problem. nullptr Items are always on the recycling list and NON-nullptr items are not.
+		 */
 		void*				Item;
 		/** Part of the solution to the ABA problem. Links cannot be recycled until no threads hold pointers to them. When the lock count drops to zero, the link is recycled. */
 		FThreadSafeCounter	LockCount;
@@ -235,11 +237,11 @@ private:
 		{
 		}
 
-		/**
-		*	Link this node into the head of the given list.
-		*	@param HeadPointer; the head of the list
-		*	CAUTION: Not checked here, but linking into a closed list with the routine would accidently and incorrectly open the list
-		*/
+		/**	
+		 *	Link this node into the head of the given list.
+		 *	@param HeadPointer; the head of the list
+		 *	CAUTION: Not checked here, but linking into a closed list with the routine would accidently and incorrectly open the list
+		 */
 		void Link(FLink** HeadPointer)
 		{
 			CheckNotMarkedForDeath();
@@ -248,7 +250,7 @@ private:
 				FLink*  LocalHeadPointer = LockLink(HeadPointer);
 				CheckNotMarkedForDeath();
 				SetNextPointer(LocalHeadPointer);
-				FLink* ValueWas = (FLink*)FPlatformAtomics::InterlockedCompareExchangePointer((void**)HeadPointer, this, LocalHeadPointer);
+				FLink* ValueWas = (FLink*)FPlatformAtomics::InterlockedCompareExchangePointer((void**)HeadPointer,this,LocalHeadPointer);
 				if (ValueWas == LocalHeadPointer)
 				{
 					if (LocalHeadPointer)
@@ -265,12 +267,12 @@ private:
 			}
 		}
 
-		/**
-		*	Link this node into the head of the given list, unless the head is a special, given node
-		*	@param HeadPointer; the head of the list
-		*	@param SpecialClosedLink; special link that is never recycled that indicates a closed list.
-		*	@return true if this node was linked to the head.
-		*/
+		/**	
+		 *	Link this node into the head of the given list, unless the head is a special, given node
+		 *	@param HeadPointer; the head of the list
+		 *	@param SpecialClosedLink; special link that is never recycled that indicates a closed list.
+		 *	@return true if this node was linked to the head.
+		 */
 		bool LinkIfHeadNotEqual(FLink** HeadPointer, FLink* SpecialClosedLink)
 		{
 
@@ -287,7 +289,7 @@ private:
 				CheckNotMarkedForDeath();
 				// here if the list turns out to be locked now, the compare and swap will fail anyway
 				SetNextPointer(LocalHeadPointer);
-				FLink* ValueWas = (FLink*)FPlatformAtomics::InterlockedCompareExchangePointer((void**)HeadPointer, this, LocalHeadPointer);
+				FLink* ValueWas = (FLink*)FPlatformAtomics::InterlockedCompareExchangePointer((void**)HeadPointer,this,LocalHeadPointer);
 				if (ValueWas == LocalHeadPointer)
 				{
 					if (LocalHeadPointer)
@@ -304,13 +306,13 @@ private:
 			}
 			return true;
 		}
-		/**
-		*	If the head is a particular value, then replace it with this node. This is the primitive that is used to close and open lists
-		*	@param HeadPointer; the head of the list
-		*	@param SpecialTestLink; special link that is never recycled that indicates a closed list. Or nullptr in the case that we are using this to open the list
-		*	@return true if this node was linked to the head.
-		*	CAUTION: The test link must nullptr or a special link that is never recycled. The ABA problem is assumed to not occur here.
-		*/
+		/**	
+		 *	If the head is a particular value, then replace it with this node. This is the primitive that is used to close and open lists
+		 *	@param HeadPointer; the head of the list
+		 *	@param SpecialTestLink; special link that is never recycled that indicates a closed list. Or nullptr in the case that we are using this to open the list
+		 *	@return true if this node was linked to the head.
+		 *	CAUTION: The test link must nullptr or a special link that is never recycled. The ABA problem is assumed to not occur here.
+		 */
 		bool ReplaceHeadIfHeadEqual(FLink** HeadPointer, FLink* SpecialTestLink)
 		{
 			CheckNotMarkedForDeath();
@@ -321,20 +323,20 @@ private:
 					return false;
 				}
 				CheckNotMarkedForDeath();
-				if (FPlatformAtomics::InterlockedCompareExchangePointer((void**)HeadPointer, this, SpecialTestLink) == SpecialTestLink)
+				if (FPlatformAtomics::InterlockedCompareExchangePointer((void**)HeadPointer,this,SpecialTestLink) == SpecialTestLink)
 				{
 					break;
 				}
 			}
 			return true;
 		}
-		/**
-		*	Pop an item off the list, unless the list is empty or the head is a special, given node
-		*	@param HeadPointer; the head of the list
-		*	@param SpecialClosedLink; special link that is never recycled that indicates a closed list. Can be nullptr for lists that are known to not be closed
-		*	@return The link that was popped off, or nullptr if the list was empty or closed.
-		*	CAUTION: Not checked here, but if the list is closed and SpecialClosedLink is nullptr, you will pop off the closed link, and that usually isn't what you want
-		*/
+		/**	
+		 *	Pop an item off the list, unless the list is empty or the head is a special, given node
+		 *	@param HeadPointer; the head of the list
+		 *	@param SpecialClosedLink; special link that is never recycled that indicates a closed list. Can be nullptr for lists that are known to not be closed
+		 *	@return The link that was popped off, or nullptr if the list was empty or closed.
+		 *	CAUTION: Not checked here, but if the list is closed and SpecialClosedLink is nullptr, you will pop off the closed link, and that usually isn't what you want
+		 */
 		static FLink* Unlink(FLink** HeadPointer, FLink* SpecialClosedLink = nullptr)
 		{
 			while (1)
@@ -345,7 +347,7 @@ private:
 					break;
 				}
 				FLink* NextLink = LocalHeadPointer->Next;
-				FLink* ValueWas = (FLink*)FPlatformAtomics::InterlockedCompareExchangePointer((void**)HeadPointer, NextLink, LocalHeadPointer);
+				FLink* ValueWas = (FLink*)FPlatformAtomics::InterlockedCompareExchangePointer((void**)HeadPointer,NextLink,LocalHeadPointer);
 				if (ValueWas == LocalHeadPointer)
 				{
 					checkLockFreePointerList(NextLink == LocalHeadPointer->Next);
@@ -358,13 +360,13 @@ private:
 			}
 			return nullptr;
 		}
-		/**
-		*	Replace the list with another list.h Use to either acquire all of the items or acquire all of the items and close the list.
-		*	@param HeadPointer; the head of the list
-		*	@param NewHeadLink; Head of the new list to replace this list with
-		*	@return The original list before we replaced it.
-		*	CAUTION: Not checked here, but if the list is closed this is probably not what you want.
-		*/
+		/**	
+		 *	Replace the list with another list.h Use to either acquire all of the items or acquire all of the items and close the list.
+		 *	@param HeadPointer; the head of the list
+		 *	@param NewHeadLink; Head of the new list to replace this list with
+		 *	@return The original list before we replaced it.
+		 *	CAUTION: Not checked here, but if the list is closed this is probably not what you want. 
+		 */
 		static FLink* ReplaceList(FLink** HeadPointer, FLink* NewHeadLink = nullptr)
 		{
 			while (1)
@@ -376,7 +378,7 @@ private:
 					break;
 				}
 				checkLockFreePointerList(LocalHeadPointer != NewHeadLink); // replacing nullptr with nullptr is ok, but otherwise we cannot be replacing something with itself or we lose determination of who did what.
-				FLink* ValueWas = (FLink*)FPlatformAtomics::InterlockedCompareExchangePointer((void**)HeadPointer, NewHeadLink, LocalHeadPointer);
+				FLink* ValueWas = (FLink*)FPlatformAtomics::InterlockedCompareExchangePointer((void**)HeadPointer,NewHeadLink,LocalHeadPointer);
 				if (ValueWas == LocalHeadPointer)
 				{
 					if (LocalHeadPointer)
@@ -391,16 +393,16 @@ private:
 					LocalHeadPointer->Unlock();
 				}
 			}
-			return nullptr;
+			return nullptr;  
 		}
 
-		/**
-		*	Internal function to safely grab the head pointer and increase the ref count of a link to avoid the ABA problem
-		*	@param HeadPointer; the head of the list
-		*	@param SpecialClosedLink; special link that is never recycled that indicates a closed list. Can be nullptr for lists that are known to not be closed, or if you want to operate on the closed link.
-		*	@return Pointer to the head link, with the ref count increased. Or nullptr if the head is nullptr or SpecialClosedLink
-		*	CAUTION: Not checked here, but if the list is closed this is probably not what you want.
-		*/
+		/**	
+		 *	Internal function to safely grab the head pointer and increase the ref count of a link to avoid the ABA problem
+		 *	@param HeadPointer; the head of the list
+		 *	@param SpecialClosedLink; special link that is never recycled that indicates a closed list. Can be nullptr for lists that are known to not be closed, or if you want to operate on the closed link.
+		 *	@return Pointer to the head link, with the ref count increased. Or nullptr if the head is nullptr or SpecialClosedLink
+		 *	CAUTION: Not checked here, but if the list is closed this is probably not what you want. 
+		 */
 		static FLink* LockLink(FLink** HeadPointer, FLink* SpecialClosedLink = nullptr)
 		{
 			while (1)
@@ -411,7 +413,7 @@ private:
 					return nullptr;
 				}
 				LocalHeadPointer->LockCount.Increment();
-				YPlatformMisc::MemoryBarrier();
+				FPlatformMisc::MemoryBarrier();
 				if (*HeadPointer == LocalHeadPointer)
 				{
 					return LocalHeadPointer;
@@ -431,7 +433,7 @@ private:
 #else
 			Next = NewNext;
 #endif
-			YPlatformMisc::MemoryBarrier();
+			FPlatformMisc::MemoryBarrier();
 			if (NewNext)
 			{
 				CheckNotMarkedForDeath(); // it shouldn't be possible for the node to die while we are setting a non-nullptr next pointer
@@ -444,9 +446,9 @@ private:
 			checkLockFreePointerList(MarkedForDeath.GetValue() == 0); // we don't allow nullptr items
 		}
 
-		/**
-		*	Mark the node for disposal and unlock it
-		*/
+		/**	
+		 *	Mark the node for disposal and unlock it
+		 */
 		void Dispose()
 		{
 			CheckNotMarkedForDeath();
@@ -455,7 +457,7 @@ private:
 			{
 				void *CurrentItem = Item;
 				checkLockFreePointerList(CurrentItem); // we don't allow nullptr items
-				void* ValueWas = FPlatformAtomics::InterlockedCompareExchangePointer(&Item, nullptr, CurrentItem); // do not need an interlocked operation here
+				void* ValueWas = FPlatformAtomics::InterlockedCompareExchangePointer(&Item,nullptr,CurrentItem); // do not need an interlocked operation here
 				checkLockFreePointerList(ValueWas == CurrentItem); // there should be no concurrency here
 			}
 
@@ -468,39 +470,39 @@ private:
 			Item = nullptr;
 			Next = nullptr;
 #endif
-			YPlatformMisc::MemoryBarrier(); // memory barrier in here to make sure item and next are cleared before the link is recycled
+			FPlatformMisc::MemoryBarrier(); // memory barrier in here to make sure item and next are cleared before the link is recycled
 
 			int32 Death = MarkedForDeath.Increment();
 			checkLockFreePointerList(Death == 1); // there should be no concurrency here
 			Unlock();
 		}
 
-		/**
-		*	Internal function to unlock a link and recycle it if the ref count drops to zero and it hasn't already been recycled.
-		*	This solves the ABA problem by delaying recycling until all pointers to this link are gone.
-		*	@param bShouldNeverCauseAFree - if true, then this should never result in a free if it does, there is a run time error
-		*/
+		/**	
+		 *	Internal function to unlock a link and recycle it if the ref count drops to zero and it hasn't already been recycled.
+		 *	This solves the ABA problem by delaying recycling until all pointers to this link are gone.
+		 *	@param bShouldNeverCauseAFree - if true, then this should never result in a free if it does, there is a run time error
+		 */
 		void Unlock(bool bShouldNeverCauseAFree = false);
 	};
 
-	/**
-	*	Class to allocate and recycle links.
-	*/
+	/**	
+	 *	Class to allocate and recycle links.
+	 */
 	class FLinkAllocator
 	{
 	public:
 
-		/**
-		*	Return a new link.
-		*	@param NewItem "item" pointer of the new node.
-		*	@return New node, ready for use
-		*/
+		/**	
+		 *	Return a new link.
+		 *	@param NewItem "item" pointer of the new node.
+		 *	@return New node, ready for use
+		 */
 		FLink* AllocateLink(void *NewItem)
 		{
 			checkLockFreePointerList(NewItem); // we don't allow nullptr items
 			if (NumUsedLinks.Increment() % 8192 == 1)
 			{
-				UE_CLOG(0/*MONITOR_LINK_ALLOCATION*/, LogLockFreeList, Log, TEXT("Number of links %d"), NumUsedLinks.GetValue());
+				UE_CLOG(0/*MONITOR_LINK_ALLOCATION*/,LogLockFreeList, Log, TEXT("Number of links %d"),NumUsedLinks.GetValue());
 			}
 
 			FLink*  NewLink = FLink::Unlink(&FreeLinks);
@@ -512,7 +514,7 @@ private:
 			{
 				if (NumAllocatedLinks.Increment() % 10 == 1)
 				{
-					UE_CLOG(0/*MONITOR_LINK_ALLOCATION*/, LogLockFreeList, Log, TEXT("Number of allocated links %d"), NumAllocatedLinks.GetValue());
+					UE_CLOG(0/*MONITOR_LINK_ALLOCATION*/,LogLockFreeList, Log, TEXT("Number of allocated links %d"),NumAllocatedLinks.GetValue());
 				}
 
 				NewLink = new FLink();
@@ -527,50 +529,50 @@ private:
 #else
 			NewLink->Item = NewItem;
 #endif
-			YPlatformMisc::MemoryBarrier();
+			FPlatformMisc::MemoryBarrier();
 			return NewLink;
 		}
-		/**
-		*	Make a link available for recycling.
-		*	@param Link link to recycle
-		*	CAUTION: Do not call this directly, it should only be called when the reference count drop to zero.
-		*/
+		/**	
+		 *	Make a link available for recycling. 
+		 *	@param Link link to recycle
+		 *	CAUTION: Do not call this directly, it should only be called when the reference count drop to zero.
+		 */
 		void FreeLink(FLink* Link)
 		{
 			checkLockFreePointerList(Link != ClosedLink());  // very bad to recycle the special link
 			NumUsedLinks.Decrement();
 			Link->LockCount.Increment();
-			YPlatformMisc::MemoryBarrier();
+			FPlatformMisc::MemoryBarrier();
 			Link->Link(&FreeLinks);
 			NumFreeLinks.Increment();
 		}
-		/**
-		*	Return a pointer to the special closed link
-		*	@return pointer to special closed link
-		*/
+		/**	
+		 *	Return a pointer to the special closed link
+		 *	@return pointer to special closed link
+		 */
 		FLink* ClosedLink()
 		{
 			checkLockFreePointerList(nullptr != SpecialClosedLink);
 			return SpecialClosedLink;
 		}
-		/**
-		*	Singleton access
-		*	@return the singleton for the link allocator
-		*/
+		/**	
+		 *	Singleton access
+		 *	@return the singleton for the link allocator
+		 */
 		static CORE_API FLinkAllocator& Get();
 
 	private:
-		/**
-		*	Constructor zeros the free link list and creates the special closed link
-		*	@return the singleton for the link allocator
-		*/
+		/**	
+		 *	Constructor zeros the free link list and creates the special closed link
+		 *	@return the singleton for the link allocator
+		 */
 		FLinkAllocator();
 
-		/**
-		*	Destructor, should only be called when there are no outstanding links.
-		*	Frees the elements of the free list and frees the special link
-		*	@return the singleton for the link allocator
-		*/
+		/**	
+		 *	Destructor, should only be called when there are no outstanding links. 
+		 *	Frees the elements of the free list and frees the special link
+		 *	@return the singleton for the link allocator
+		 */
 		~FLinkAllocator();
 
 		/** Head to a list of free links that can be used for new allocations. */
@@ -580,32 +582,32 @@ private:
 		FLink*				SpecialClosedLink;
 
 		/** Total number of links outstanding and not in the free list */
-		FLockFreeListCounter	NumUsedLinks;
+		FLockFreeListCounter	NumUsedLinks; 
 		/** Total number of links in the free list */
 		FLockFreeListCounter	NumFreeLinks;
 		/** Total number of links allocated */
-		FLockFreeListCounter	NumAllocatedLinks;
+		FLockFreeListCounter	NumAllocatedLinks; 
 	};
 
 	/** Head of the list */
 	MS_ALIGN(8) FLink*	Head;
 };
 
-/**
-*	Internal function to unlock a link and recycle it if the ref count drops to zero and it hasn't already been recycled.
-*	This solves the ABA problem by delaying recycling until all pointers to this link are gone.
-*	@param bShouldNeverCauseAFree - if true, then this should never result in a free if it does, there is a run time error
-*/
+/**	
+ *	Internal function to unlock a link and recycle it if the ref count drops to zero and it hasn't already been recycled.
+ *	This solves the ABA problem by delaying recycling until all pointers to this link are gone.
+ *	@param bShouldNeverCauseAFree - if true, then this should never result in a free if it does, there is a run time error
+ */
 inline void FLockFreeVoidPointerListBase::FLink::Unlock(bool bShouldNeverCauseAFree)
 {
-	YPlatformMisc::MemoryBarrier();
+	FPlatformMisc::MemoryBarrier();
 	checkLockFreePointerList(LockCount.GetValue() > 0);
 	if (LockCount.Decrement() == 0)
 	{
 		checkLockFreePointerList(MarkedForDeath.GetValue() < 2);
 		if (MarkedForDeath.Reset())
 		{
-			checkLockFreePointerList(!bShouldNeverCauseAFree);
+			checkLockFreePointerList(!bShouldNeverCauseAFree); 
 			FLockFreeVoidPointerListBase::FLinkAllocator::Get().FreeLink(this);
 		}
 	}
@@ -620,7 +622,7 @@ class TPointerSet_TLSCacheBase : public FNoncopyable
 {
 	enum
 	{
-		NUM_PER_BUNDLE = 32,
+		NUM_PER_BUNDLE=32,
 	};
 public:
 
@@ -638,11 +640,11 @@ public:
 	}
 
 	/**
-	* Allocates a memory block of size SIZE.
-	*
-	* @return Pointer to the allocated memory.
-	* @see Free
-	*/
+	 * Allocates a memory block of size SIZE.
+	 *
+	 * @return Pointer to the allocated memory.
+	 * @see Free
+	 */
 	T* Pop()
 	{
 		FThreadLocalCache& TLS = GetTLS();
@@ -675,11 +677,11 @@ public:
 	}
 
 	/**
-	* Puts a memory block previously obtained from Allocate() back on the free list for future use.
-	*
-	* @param Item The item to free.
-	* @see Allocate
-	*/
+	 * Puts a memory block previously obtained from Allocate() back on the free list for future use.
+	 *
+	 * @param Item The item to free.
+	 * @see Allocate
+	 */
 	void Push(T *Item)
 	{
 		NumUsed.Decrement();
@@ -702,22 +704,22 @@ public:
 	}
 
 	/**
-	* Gets the number of allocated memory blocks that are currently in use.
-	*
-	* @return Number of used memory blocks.
-	* @see GetNumFree
-	*/
+	 * Gets the number of allocated memory blocks that are currently in use.
+	 *
+	 * @return Number of used memory blocks.
+	 * @see GetNumFree
+	 */
 	const TTrackingCounter& GetNumUsed() const
 	{
 		return NumUsed;
 	}
 
 	/**
-	* Gets the number of allocated memory blocks that are currently unused.
-	*
-	* @return Number of unused memory blocks.
-	* @see GetNumUsed
-	*/
+	 * Gets the number of allocated memory blocks that are currently unused.
+	 *
+	 * @return Number of unused memory blocks.
+	 * @see GetNumUsed
+	 */
 	const TTrackingCounter& GetNumFree() const
 	{
 		return NumFree;
@@ -759,17 +761,17 @@ private:
 	TBundleRecycler GlobalFreeListBundles;
 
 	/** Total number of blocks outstanding and not in the free list. */
-	TTrackingCounter NumUsed;
+	TTrackingCounter NumUsed; 
 
 	/** Total number of blocks in the free list. */
 	TTrackingCounter NumFree;
 };
 
 /**
-* Thread safe, lock free pooling allocator of fixed size blocks that
-* never returns free space, even at shutdown
-* alignment isn't handled, assumes FMemory::Malloc will work
-*/
+ * Thread safe, lock free pooling allocator of fixed size blocks that
+ * never returns free space, even at shutdown
+ * alignment isn't handled, assumes FMemory::Malloc will work
+ */
 
 #define USE_NIEVE_TLockFreeFixedSizeAllocator_TLSCacheBase (0) // this is useful for find who really leaked
 template<int32 SIZE, typename TBundleRecycler, typename TTrackingCounter = FNoopCounter>
@@ -777,7 +779,7 @@ class TLockFreeFixedSizeAllocator_TLSCacheBase : public FNoncopyable
 {
 	enum
 	{
-		NUM_PER_BUNDLE = 32,
+		NUM_PER_BUNDLE=32,
 	};
 public:
 
@@ -796,11 +798,11 @@ public:
 	}
 
 	/**
-	* Allocates a memory block of size SIZE.
-	*
-	* @return Pointer to the allocated memory.
-	* @see Free
-	*/
+	 * Allocates a memory block of size SIZE.
+	 *
+	 * @return Pointer to the allocated memory.
+	 * @see Free
+	 */
 	FORCEINLINE void* Allocate()
 	{
 #if USE_NIEVE_TLockFreeFixedSizeAllocator_TLSCacheBase
@@ -845,11 +847,11 @@ public:
 	}
 
 	/**
-	* Puts a memory block previously obtained from Allocate() back on the free list for future use.
-	*
-	* @param Item The item to free.
-	* @see Allocate
-	*/
+	 * Puts a memory block previously obtained from Allocate() back on the free list for future use.
+	 *
+	 * @param Item The item to free.
+	 * @see Allocate
+	 */
 	FORCEINLINE void Free(void *Item)
 	{
 #if USE_NIEVE_TLockFreeFixedSizeAllocator_TLSCacheBase
@@ -876,22 +878,22 @@ public:
 	}
 
 	/**
-	* Gets the number of allocated memory blocks that are currently in use.
-	*
-	* @return Number of used memory blocks.
-	* @see GetNumFree
-	*/
+	 * Gets the number of allocated memory blocks that are currently in use.
+	 *
+	 * @return Number of used memory blocks.
+	 * @see GetNumFree
+	 */
 	const TTrackingCounter& GetNumUsed() const
 	{
 		return NumUsed;
 	}
 
 	/**
-	* Gets the number of allocated memory blocks that are currently unused.
-	*
-	* @return Number of unused memory blocks.
-	* @see GetNumUsed
-	*/
+	 * Gets the number of allocated memory blocks that are currently unused.
+	 *
+	 * @return Number of unused memory blocks.
+	 * @see GetNumUsed
+	 */
 	const TTrackingCounter& GetNumFree() const
 	{
 		return NumFree;
@@ -933,7 +935,7 @@ private:
 	TBundleRecycler GlobalFreeListBundles;
 
 	/** Total number of blocks outstanding and not in the free list. */
-	TTrackingCounter NumUsed;
+	TTrackingCounter NumUsed; 
 
 	/** Total number of blocks in the free list. */
 	TTrackingCounter NumFree;
@@ -978,7 +980,7 @@ public:
 		T* Prev = (T*)FPlatformAtomics::InterlockedExchangePtr((void**)&Head, Link);
 		TestCriticalStall();
 		Prev->LockFreePointerQueueNext = Link;
-		//YPlatformMisc::MemoryBarrier();
+		//FPlatformMisc::MemoryBarrier();
 	}
 
 	T* Pop()
@@ -986,8 +988,8 @@ public:
 		int32 SpinCount = 0;
 		while (true)
 		{
-			T* LocalTail = Tail;
-			T* LocalTailNext = (T*)(LocalTail->LockFreePointerQueueNext);
+			T* LocalTail = Tail; 
+			T* LocalTailNext = (T*)(LocalTail->LockFreePointerQueueNext); 
 			if (LocalTail == GetStub())
 			{
 				if (!LocalTailNext)
@@ -1014,7 +1016,7 @@ public:
 				continue;
 			}
 			Push(GetStub());
-			LocalTailNext = (T*)(LocalTail->LockFreePointerQueueNext);
+			LocalTailNext = (T*)(LocalTail->LockFreePointerQueueNext); 
 			if (LocalTailNext)
 			{
 				Tail = LocalTailNext;
@@ -1024,17 +1026,17 @@ public:
 		}
 		return nullptr;
 	}
-	/**
-	*	Check if the list is empty.
-	*
-	*	@return true if the list is empty.
-	*	CAUTION: This methods safety depends on external assumptions. For example, if another thread could add to the list at any time, the return value is no better than a best guess.
-	*	As typically used, the list is not being access concurrently when this is called.
-	*/
+	/**	
+	 *	Check if the list is empty.
+	 *
+	 *	@return true if the list is empty.
+	 *	CAUTION: This methods safety depends on external assumptions. For example, if another thread could add to the list at any time, the return value is no better than a best guess.
+	 *	As typically used, the list is not being access concurrently when this is called.
+	 */
 	bool IsEmpty() const
 	{
-		//YPlatformMisc::MemoryBarrier();
-		T* LocalTail = Tail;
+		//FPlatformMisc::MemoryBarrier();
+		T* LocalTail = Tail; 
 		return Head == LocalTail && GetStub() == LocalTail;
 	}
 
@@ -1069,7 +1071,7 @@ public:
 		T* Prev = (T*)FPlatformAtomics::InterlockedExchangePtr((void**)&Head, Link);
 		TestCriticalStall();
 		Prev->LockFreePointerQueueNext = Link;
-		//YPlatformMisc::MemoryBarrier();
+		//FPlatformMisc::MemoryBarrier();
 	}
 
 	T* Pop()
@@ -1124,7 +1126,7 @@ public:
 	*/
 	bool IsEmpty() const
 	{
-		//YPlatformMisc::MemoryBarrier();
+		//FPlatformMisc::MemoryBarrier();
 		T* LocalTail = Tail;
 		return Head == LocalTail && GetStub() == LocalTail;
 	}
@@ -1163,7 +1165,7 @@ public:
 				{
 					Result = Queue.Pop(false);
 				}
-				YPlatformMisc::MemoryBarrier();
+				FPlatformMisc::MemoryBarrier();
 				Lock = 0;
 				return Result;
 			}
@@ -1179,7 +1181,7 @@ public:
 			{
 				TestCriticalStall();
 				Queue.Add(Item);
-				YPlatformMisc::MemoryBarrier();
+				FPlatformMisc::MemoryBarrier();
 				Lock = 0;
 				return;
 			}
@@ -1210,7 +1212,7 @@ public:
 				{
 					Result = Queue.Pop(false);
 				}
-				YPlatformMisc::MemoryBarrier();
+				FPlatformMisc::MemoryBarrier();
 				Lock = 0;
 				return Result;
 			}
@@ -1226,7 +1228,7 @@ public:
 			{
 				TestCriticalStall();
 				Queue.Add(Item);
-				YPlatformMisc::MemoryBarrier();
+				FPlatformMisc::MemoryBarrier();
 				Lock = 0;
 				return;
 			}
@@ -1305,7 +1307,7 @@ public:
 		FLockFreeLink* Prev = (FLockFreeLink*)FPlatformAtomics::InterlockedExchangePtr((void**)&Head, Link);
 		TestCriticalStall();
 		Prev->Next = Link;
-		//YPlatformMisc::MemoryBarrier();
+		//FPlatformMisc::MemoryBarrier();
 	}
 
 	FLockFreeLink* Pop()
@@ -1313,8 +1315,8 @@ public:
 		int32 SpinCount = 0;
 		while (true)
 		{
-			FLockFreeLink* LocalTail = Tail;
-			FLockFreeLink* LocalTailNext = LocalTail->Next;
+			FLockFreeLink* LocalTail = Tail; 
+			FLockFreeLink* LocalTailNext = LocalTail->Next; 
 			if (LocalTailNext)
 			{
 				Tail = LocalTailNext;
@@ -1330,15 +1332,15 @@ public:
 		return nullptr;
 	}
 
-	/**
-	*	Check if the list is empty.
-	*	@return true if the list is empty.
-	*	CAUTION: This methods safety depends on external assumptions. For example, if another thread could add to the list at any time, the return value is no better than a best guess.
-	*	As typically used, the list is not being access concurrently when this is called.
-	*/
+	/**	
+	 *	Check if the list is empty.
+	 *	@return true if the list is empty.
+	 *	CAUTION: This methods safety depends on external assumptions. For example, if another thread could add to the list at any time, the return value is no better than a best guess.
+	 *	As typically used, the list is not being access concurrently when this is called.
+	 */
 	bool IsEmpty() const
 	{
-		//YPlatformMisc::MemoryBarrier();
+		//FPlatformMisc::MemoryBarrier();
 		return Head == Tail;
 	}
 
@@ -1373,7 +1375,7 @@ public:
 		FLockFreeLink* Prev = (FLockFreeLink*)FPlatformAtomics::InterlockedExchangePtr((void**)&Head, Link);
 		TestCriticalStall();
 		Prev->Next = Link;
-		//YPlatformMisc::MemoryBarrier();
+		//FPlatformMisc::MemoryBarrier();
 	}
 
 	FLockFreeLink* Pop()
@@ -1406,7 +1408,7 @@ public:
 	*/
 	bool IsEmpty() const
 	{
-		//YPlatformMisc::MemoryBarrier();
+		//FPlatformMisc::MemoryBarrier();
 		return Head == Tail;
 	}
 
@@ -1433,18 +1435,18 @@ public:
 		FLockFreePointerQueueBaseLinkAllocator::Get().Free(Head);
 	}
 
-	/**
-	*	Push an item onto the head of the list, unless the list is closed
-	*	@param NewItem, the new item to push on the list, cannot be nullptr
-	*	@return true if the item was pushed on the list, false if the list was closed.
-	*/
+	/**	
+	 *	Push an item onto the head of the list, unless the list is closed
+	 *	@param NewItem, the new item to push on the list, cannot be nullptr
+	 *	@return true if the item was pushed on the list, false if the list was closed.
+	 */
 	bool PushIfNotClosed(FLockFreeLink* Link)
 	{
 		checkLockFreePointerList(Link);
 		Link->Next = nullptr;
 		while (true)
 		{
-			FLockFreeLink* LocalHead = Head;
+			FLockFreeLink* LocalHead = Head; 
 			if (!IsClosed(LocalHead))
 			{
 				if (FPlatformAtomics::InterlockedCompareExchangePointer((void**)&Head, Link, LocalHead) == LocalHead)
@@ -1462,22 +1464,22 @@ public:
 		return false;
 	}
 
-	/**
-	*	Push an item onto the head of the list, opening it first if necessary
-	*	@param NewItem, the new item to push on the list, cannot be nullptr
-	*	@return true if the list needed to be opened first, false if the list was not closed before our push
-	*/
+	/**	
+	 *	Push an item onto the head of the list, opening it first if necessary
+	 *	@param NewItem, the new item to push on the list, cannot be nullptr
+	 *	@return true if the list needed to be opened first, false if the list was not closed before our push
+	 */
 	bool ReopenIfClosedAndPush(FLockFreeLink *Link)
 	{
 		bool bWasReopenedByMe = false;
 		Link->Next = nullptr;
 		while (true)
 		{
-			FLockFreeLink* LocalHead = Head;
+			FLockFreeLink* LocalHead = Head; 
 			if (FPlatformAtomics::InterlockedCompareExchangePointer((void**)&Head, Link, LocalHead) == LocalHead)
 			{
 				TestCriticalStall();
-				FLockFreeLink* LocalHeadOpen = ClearClosed(LocalHead);
+				FLockFreeLink* LocalHeadOpen = ClearClosed(LocalHead); 
 				bWasReopenedByMe = IsClosed(LocalHead);
 				LocalHeadOpen->Next = Link;
 				break;
@@ -1486,22 +1488,22 @@ public:
 		return bWasReopenedByMe;
 	}
 
-	/**
-	*	Close the list if it is empty
-	*	@return true if this call actively closed the list
-	*/
+	/**	
+	 *	Close the list if it is empty
+	 *	@return true if this call actively closed the list
+	 */
 	bool CloseIfEmpty()
 	{
 		int32 SpinCount = 0;
 		while (true)
 		{
-			YPlatformMisc::MemoryBarrier();
-			FLockFreeLink* LocalTail = Tail;
-			FLockFreeLink* LocalHead = Head;
+			FPlatformMisc::MemoryBarrier();
+			FLockFreeLink* LocalTail = Tail; 
+			FLockFreeLink* LocalHead = Head; 
 			checkLockFreePointerList(!IsClosed(LocalHead));
 			if (LocalTail == LocalHead)
 			{
-				FLockFreeLink* LocalHeadClosed = SetClosed(LocalHead);
+				FLockFreeLink* LocalHeadClosed = SetClosed(LocalHead); 
 				checkLockFreePointerList(LocalHeadClosed != LocalHead);
 				if (FPlatformAtomics::InterlockedCompareExchangePointer((void**)&Head, LocalHeadClosed, LocalHead) == LocalHead)
 				{
@@ -1516,19 +1518,19 @@ public:
 		}
 		return false;
 	}
-	/**
-	*	Pop an item from the list or return nullptr if the list is empty
-	*	@return The popped item, if any
-	*	CAUTION: This method should not be used unless the list is known to not be closed.
-	*/
+	/**	
+	 *	Pop an item from the list or return nullptr if the list is empty
+	 *	@return The popped item, if any
+	 *	CAUTION: This method should not be used unless the list is known to not be closed.
+	 */
 	FLockFreeLink* Pop()
 	{
 		int32 SpinCount = 0;
 		while (true)
 		{
-			FLockFreeLink* LocalTail = Tail;
+			FLockFreeLink* LocalTail = Tail; 
 			checkLockFreePointerList(!IsClosed(LocalTail));
-			FLockFreeLink* LocalTailNext = LocalTail->Next;
+			FLockFreeLink* LocalTailNext = LocalTail->Next; 
 			checkLockFreePointerList(!IsClosed(LocalTailNext));
 			if (LocalTailNext)
 			{
@@ -1545,38 +1547,38 @@ public:
 		}
 		return nullptr;
 	}
-	/**
-	*	Check if the list is empty.
-	*
-	*	@return true if the list is empty.
-	*	CAUTION: This methods safety depends on external assumptions. For example, if another thread could add to the list at any time, the return value is no better than a best guess.
-	*	As typically used, the list is not being access concurrently when this is called.
-	*/
+	/**	
+	 *	Check if the list is empty.
+	 *
+	 *	@return true if the list is empty.
+	 *	CAUTION: This methods safety depends on external assumptions. For example, if another thread could add to the list at any time, the return value is no better than a best guess.
+	 *	As typically used, the list is not being access concurrently when this is called.
+	 */
 	bool IsEmpty() const
 	{
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		return ClearClosed(Head) == Tail;
 	}
 
-	/**
-	*	Check if the list is closed
-	*	@return true if the list is closed.
-	*	CAUTION: This methods safety depends on external assumptions. For example, if another thread could open or close the list at any time, the return value is no better than a best guess.
-	*	As typically used, the list is only closed once it is lifetime, so a return of true here means it is closed forever.
-	*/
+	/**	
+	 *	Check if the list is closed
+	 *	@return true if the list is closed.
+	 *	CAUTION: This methods safety depends on external assumptions. For example, if another thread could open or close the list at any time, the return value is no better than a best guess.
+	 *	As typically used, the list is only closed once it is lifetime, so a return of true here means it is closed forever.
+	 */
 	FORCEINLINE bool IsClosed() const  // caution, if this returns false, that does not mean the list is open!
 	{
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		return IsClosed(Head);
 	}
-	/**
-	*	Not thread safe, used to reset the list for recycling without freeing the stub
-	*	@return true if the list is closed.
-	*/
+	/**	
+	 *	Not thread safe, used to reset the list for recycling without freeing the stub
+	 *	@return true if the list is closed.
+	 */
 	void Reset()
 	{
 		Head = ClearClosed(Head);
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		checkLockFreePointerList(Head == Tail); // we don't clear the list here, we assume it is already clear and possibly closed
 	}
 
@@ -1679,7 +1681,7 @@ public:
 		int32 SpinCount = 0;
 		while (true)
 		{
-			YPlatformMisc::MemoryBarrier();
+			FPlatformMisc::MemoryBarrier();
 			FLockFreeLink* LocalTail = Tail;
 			FLockFreeLink* LocalHead = Head;
 			checkLockFreePointerList(!IsClosed(LocalHead));
@@ -1738,7 +1740,7 @@ public:
 	*/
 	bool IsEmpty() const
 	{
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		return ClearClosed(Head) == Tail;
 	}
 
@@ -1750,7 +1752,7 @@ public:
 	*/
 	FORCEINLINE bool IsClosed() const  // caution, if this returns false, that does not mean the list is open!
 	{
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		return IsClosed(Head);
 	}
 	/**
@@ -1760,7 +1762,7 @@ public:
 	void Reset()
 	{
 		Head = ClearClosed(Head);
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		checkLockFreePointerList(Head == Tail); // we don't clear the list here, we assume it is already clear and possibly closed
 	}
 
@@ -1794,18 +1796,18 @@ public:
 		GetStub()->LockFreePointerQueueNext = nullptr;
 	}
 #if 0
-	/**
-	*	Push an item onto the head of the list, unless the list is closed
-	*	@param NewItem, the new item to push on the list, cannot be nullptr
-	*	@return true if the item was pushed on the list, false if the list was closed.
-	*/
+	/**	
+	 *	Push an item onto the head of the list, unless the list is closed
+	 *	@param NewItem, the new item to push on the list, cannot be nullptr
+	 *	@return true if the item was pushed on the list, false if the list was closed.
+	 */
 	bool PushIfNotClosed(T* Link)
 	{
 		checkLockFreePointerList(Link);
 		Link->LockFreePointerQueueNext = nullptr;
 		while (true)
 		{
-			T* LocalHead = Head;
+			T* LocalHead = Head; 
 			if (!IsClosed(LocalHead))
 			{
 				if (FPlatformAtomics::InterlockedCompareExchangePointer((void**)&Head, Link, LocalHead) == LocalHead)
@@ -1823,11 +1825,11 @@ public:
 		return false;
 	}
 #endif
-	/**
-	*	Push an item onto the head of the list, opening it first if necessary
-	*	@param NewItem, the new item to push on the list, cannot be nullptr
-	*	@return true if the list needed to be opened first, false if the list was not closed before our push
-	*/
+	/**	
+	 *	Push an item onto the head of the list, opening it first if necessary
+	 *	@param NewItem, the new item to push on the list, cannot be nullptr
+	 *	@return true if the list needed to be opened first, false if the list was not closed before our push
+	 */
 	bool ReopenIfClosedAndPush(T *Link)
 	{
 		bool bWasReopenedByMe = false;
@@ -1835,11 +1837,11 @@ public:
 		Link->LockFreePointerQueueNext = nullptr;
 		while (true)
 		{
-			T* LocalHead = Head;
+			T* LocalHead = Head; 
 			if (FPlatformAtomics::InterlockedCompareExchangePointer((void**)&Head, Link, LocalHead) == LocalHead)
 			{
 				TestCriticalStall();
-				T* LocalHeadOpen = ClearClosed(LocalHead);
+				T* LocalHeadOpen = ClearClosed(LocalHead); 
 				bWasReopenedByMe = IsClosed(LocalHead);
 				LocalHeadOpen->LockFreePointerQueueNext = Link;
 				break;
@@ -1848,21 +1850,21 @@ public:
 		return bWasReopenedByMe;
 	}
 
-	/**
-	*	Close the list if it is empty
-	*	@return true if this call actively closed the list
-	*/
+	/**	
+	 *	Close the list if it is empty
+	 *	@return true if this call actively closed the list
+	 */
 	bool CloseIfEmpty()
 	{
 		int32 SpinCount = 0;
 		while (true)
 		{
-			T* LocalTail = Tail;
-			T* LocalHead = Head;
+			T* LocalTail = Tail; 
+			T* LocalHead = Head; 
 			checkLockFreePointerList(!IsClosed(LocalHead));
 			if (LocalTail == LocalHead)
 			{
-				T* LocalHeadClosed = SetClosed(LocalHead);
+				T* LocalHeadClosed = SetClosed(LocalHead); 
 				checkLockFreePointerList(LocalHeadClosed != LocalHead);
 				if (FPlatformAtomics::InterlockedCompareExchangePointer((void**)&Head, LocalHeadClosed, LocalHead) == LocalHead)
 				{
@@ -1878,19 +1880,19 @@ public:
 		return false;
 	}
 
-	/**
-	*	Pop an item from the list or return nullptr if the list is empty
-	*	@return The popped item, if any
-	*	CAUTION: This method should not be used unless the list is known to not be closed.
-	*/
+	/**	
+	 *	Pop an item from the list or return nullptr if the list is empty
+	 *	@return The popped item, if any
+	 *	CAUTION: This method should not be used unless the list is known to not be closed.
+	 */
 	FORCEINLINE T* Pop()
 	{
 		int32 SpinCount = 0;
 		while (true)
 		{
-			T* LocalTail = Tail;
+			T* LocalTail = Tail; 
 			checkLockFreePointerList(!IsClosed(LocalTail));
-			T* LocalTailNext = (T*)(LocalTail->LockFreePointerQueueNext);
+			T* LocalTailNext = (T*)(LocalTail->LockFreePointerQueueNext); 
 			checkLockFreePointerList(!IsClosed(LocalTailNext));
 			if (LocalTail == GetStub())
 			{
@@ -1918,7 +1920,7 @@ public:
 				continue;
 			}
 			Push(GetStub());
-			LocalTailNext = (T*)(LocalTail->LockFreePointerQueueNext);
+			LocalTailNext = (T*)(LocalTail->LockFreePointerQueueNext); 
 			if (LocalTailNext)
 			{
 				Tail = LocalTailNext;
@@ -1928,39 +1930,39 @@ public:
 		}
 		return nullptr;
 	}
-	/**
-	*	Check if the list is closed
-	*	@return true if the list is closed.
-	*	CAUTION: This methods safety depends on external assumptions. For example, if another thread could open or close the list at any time, the return value is no better than a best guess.
-	*	As typically used, the list is only closed once it is lifetime, so a return of true here means it is closed forever.
-	*/
+	/**	
+	 *	Check if the list is closed
+	 *	@return true if the list is closed.
+	 *	CAUTION: This methods safety depends on external assumptions. For example, if another thread could open or close the list at any time, the return value is no better than a best guess.
+	 *	As typically used, the list is only closed once it is lifetime, so a return of true here means it is closed forever.
+	 */
 	FORCEINLINE bool IsClosed() const  // caution, if this returns false, that does not mean the list is open!
 	{
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		return IsClosed(Head);
 	}
 #if 0
-	/**
-	*	Check if the list is empty.
-	*
-	*	@return true if the list is empty.
-	*	CAUTION: This methods safety depends on external assumptions. For example, if another thread could add to the list at any time, the return value is no better than a best guess.
-	*	As typically used, the list is not being access concurrently when this is called.
-	*/
+	/**	
+	 *	Check if the list is empty.
+	 *
+	 *	@return true if the list is empty.
+	 *	CAUTION: This methods safety depends on external assumptions. For example, if another thread could add to the list at any time, the return value is no better than a best guess.
+	 *	As typically used, the list is not being access concurrently when this is called.
+	 */
 	bool IsEmpty() const
 	{
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		return ClearClosed(Head) == Tail;
 	}
 
-	/**
-	*	Not thread safe, used to reset the list for recycling without freeing the stub
-	*	@return true if the list is closed.
-	*/
+	/**	
+	 *	Not thread safe, used to reset the list for recycling without freeing the stub
+	 *	@return true if the list is closed.
+	 */
 	void Reset()
 	{
 		Head = ClearClosed(Head);
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		checkLockFreePointerList(Head == Tail); // we don't clear the list here, we assume it is already clear and possibly closed
 	}
 #endif
@@ -1971,7 +1973,7 @@ private:
 		T* Prev = (T*)FPlatformAtomics::InterlockedExchangePtr((void**)&Head, Link);
 		TestCriticalStall();
 		Prev->LockFreePointerQueueNext = Link;
-		//YPlatformMisc::MemoryBarrier();
+		//FPlatformMisc::MemoryBarrier();
 	}
 
 	// we will use the lowest bit for the closed state
@@ -2155,7 +2157,7 @@ public:
 	*/
 	FORCEINLINE bool IsClosed() const  // caution, if this returns false, that does not mean the list is open!
 	{
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		return IsClosed(Head);
 	}
 #if 0
@@ -2168,7 +2170,7 @@ public:
 	*/
 	bool IsEmpty() const
 	{
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		return ClearClosed(Head) == Tail;
 	}
 
@@ -2179,7 +2181,7 @@ public:
 	void Reset()
 	{
 		Head = ClearClosed(Head);
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		checkLockFreePointerList(Head == Tail); // we don't clear the list here, we assume it is already clear and possibly closed
 	}
 #endif
@@ -2190,7 +2192,7 @@ private:
 		T* Prev = (T*)FPlatformAtomics::InterlockedExchangePtr((void**)&Head, Link);
 		TestCriticalStall();
 		Prev->LockFreePointerQueueNext = Link;
-		//YPlatformMisc::MemoryBarrier();
+		//FPlatformMisc::MemoryBarrier();
 	}
 
 	// we will use the lowest bit for the closed state
@@ -2242,7 +2244,7 @@ public:
 		{
 			TCounter LocalNumPushed = NumPushed;
 			TCounter LocalNumPopped = NumPopped;
-			if (TSignedCounter(LocalNumPushed - LocalNumPopped) < 0)
+			if (TSignedCounter(LocalNumPushed - LocalNumPopped) < 0) 
 			{
 				LockFreeCriticalSpin(SpinCount);
 				continue;
@@ -2252,7 +2254,7 @@ public:
 				break;
 			}
 			uint32 Slot = LocalNumPopped % DequeueCacheSize;
-			YPlatformMisc::MemoryBarrier();
+			FPlatformMisc::MemoryBarrier();
 			void *ReturnPtr = Available[Slot];
 			TCounter Result = (TCounter)FPlatformAtomics::InterlockedCompareExchange((volatile TSignedCounter*)&NumPopped, LocalNumPopped + 1, LocalNumPopped);
 			if (Result == LocalNumPopped)
@@ -2285,7 +2287,7 @@ public:
 		}
 		check(TSignedCounter(LocalNumPushed - LocalNumPopped) >= 0); // wraparound is ok, this would mean we have at least 16GB of queue for 32 bits...which is not possible
 		Available[LocalNumPushed % DequeueCacheSize] = Item;
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		verify(++NumPushed == LocalNumPushed + 1);
 		return true;
 	}
@@ -2336,14 +2338,14 @@ public:
 				if (Result)
 				{
 					// someone beat us to it
-					YPlatformMisc::MemoryBarrier();
+					FPlatformMisc::MemoryBarrier();
 					DequeueLock = 0;
 					return Result;
 				}
 				T* Link = IncomingQueue.Pop();
 				if (!Link)
 				{
-					YPlatformMisc::MemoryBarrier();
+					FPlatformMisc::MemoryBarrier();
 					DequeueLock = 0;
 					return nullptr;
 				}
@@ -2351,28 +2353,28 @@ public:
 				verify(DequeueCache.Push(Link));
 				while (!DequeueCache.IsFull())
 				{
-					T* Repush = IncomingQueue.Pop();
+					T* Repush = IncomingQueue.Pop(); 
 					if (!Repush)
 					{
 						break;
 					}
 					verify(DequeueCache.Push(Repush));
 				}
-				YPlatformMisc::MemoryBarrier();
+				FPlatformMisc::MemoryBarrier();
 				DequeueLock = 0;
 			}
 			LockFreeCriticalSpin(SpinCount);
 		}
 	}
 
-	/**
-	*	Check if the list is empty.
-	*
-	*	@return true if the list is empty.
-	*	CAUTION: This methods safety depends on external assumptions. For example, if another thread could add to the list at any time, the return value is no better than a best guess.
-	*	As typically used, the list is not being access concurrently when this is called.
-	*/
-	bool IsEmpty()
+	/**	
+	 *	Check if the list is empty.
+	 *
+	 *	@return true if the list is empty.
+	 *	CAUTION: This methods safety depends on external assumptions. For example, if another thread could add to the list at any time, the return value is no better than a best guess.
+	 *	As typically used, the list is not being access concurrently when this is called.
+	 */
+	bool IsEmpty()  
 	{
 		int32 SpinCount = 0;
 		bool bResult = true;
@@ -2389,10 +2391,10 @@ public:
 				bool bAny = false;
 				if (!DequeueCache.IsFull())
 				{
-					T* Repush = IncomingQueue.Pop();
+					T* Repush = IncomingQueue.Pop(); 
 					if (!Repush)
 					{
-						YPlatformMisc::MemoryBarrier();
+						FPlatformMisc::MemoryBarrier();
 						DequeueLock = 0;
 						break;
 					}
@@ -2403,7 +2405,7 @@ public:
 				{
 					bResult = false; // we didn't pop one because the dequeue cache is full...guess it isn't empty
 				}
-				YPlatformMisc::MemoryBarrier();
+				FPlatformMisc::MemoryBarrier();
 				DequeueLock = 0;
 				break;
 			}
@@ -2411,19 +2413,19 @@ public:
 		}
 		return bResult;
 	}
-	/**
-	*	Check if the list is empty. This is a faster, less rigorous test that can miss a queue full of stuff. Used to optimize thread restarts.
-	*/
-	bool IsEmptyFast()
+	/**	
+	 *	Check if the list is empty. This is a faster, less rigorous test that can miss a queue full of stuff. Used to optimize thread restarts.
+	 */
+	bool IsEmptyFast()  
 	{
 		return DequeueCache.IsEmpty() && IncomingQueue.IsEmpty();
 	}
 
-	/**
-	*	Pop all items from the list.
-	*
-	*	@param Output The array to hold the returned items. Must be empty.
-	*/
+	/**	
+	 *	Pop all items from the list.
+	 *
+	 *	@param Output The array to hold the returned items. Must be empty.
+	 */
 	void PopAll(TArray<T *>& Output)
 	{
 		while (true)
@@ -2435,7 +2437,7 @@ public:
 			}
 			Output.Add(Item);
 		}
-	}
+	}	
 
 private:
 	FLockFreePointerQueueBaseSingleConsumerIntrusive<T, TPaddingForCacheContention> IncomingQueue;
@@ -2480,14 +2482,14 @@ public:
 				if (Result)
 				{
 					// someone beat us to it
-					YPlatformMisc::MemoryBarrier();
+					FPlatformMisc::MemoryBarrier();
 					DequeueLock = 0;
 					return Result;
 				}
 				T* Link = IncomingQueue.Pop();
 				if (!Link)
 				{
-					YPlatformMisc::MemoryBarrier();
+					FPlatformMisc::MemoryBarrier();
 					DequeueLock = 0;
 					return nullptr;
 				}
@@ -2502,7 +2504,7 @@ public:
 					}
 					verify(DequeueCache.Push(Repush));
 				}
-				YPlatformMisc::MemoryBarrier();
+				FPlatformMisc::MemoryBarrier();
 				DequeueLock = 0;
 			}
 			LockFreeCriticalSpin(SpinCount);
@@ -2536,7 +2538,7 @@ public:
 					T* Repush = IncomingQueue.Pop();
 					if (!Repush)
 					{
-						YPlatformMisc::MemoryBarrier();
+						FPlatformMisc::MemoryBarrier();
 						DequeueLock = 0;
 						break;
 					}
@@ -2547,7 +2549,7 @@ public:
 				{
 					bResult = false; // we didn't pop one because the dequeue cache is full...guess it isn't empty
 				}
-				YPlatformMisc::MemoryBarrier();
+				FPlatformMisc::MemoryBarrier();
 				DequeueLock = 0;
 				break;
 			}
@@ -2627,14 +2629,14 @@ public:
 				if (Result)
 				{
 					// someone beat us to it
-					YPlatformMisc::MemoryBarrier();
+					FPlatformMisc::MemoryBarrier();
 					DequeueLock = 0;
 					return Result;
 				}
 				FLockFreeLink* Link = IncomingQueue.Pop();
 				if (!Link)
 				{
-					YPlatformMisc::MemoryBarrier();
+					FPlatformMisc::MemoryBarrier();
 					DequeueLock = 0;
 					return nullptr;
 				}
@@ -2643,7 +2645,7 @@ public:
 				LinkAllocator.Free(Link);
 				while (!DequeueCache.IsFull())
 				{
-					FLockFreeLink* Repush = IncomingQueue.Pop();
+					FLockFreeLink* Repush = IncomingQueue.Pop(); 
 					if (!Repush)
 					{
 						break;
@@ -2652,21 +2654,21 @@ public:
 					verify(DequeueCache.Push(Repush->Payload));
 					LinkAllocator.Free(Repush);
 				}
-				YPlatformMisc::MemoryBarrier();
+				FPlatformMisc::MemoryBarrier();
 				DequeueLock = 0;
 			}
 			LockFreeCriticalSpin(SpinCount);
 		}
 	}
 
-	/**
-	*	Check if the list is empty.
-	*
-	*	@return true if the list is empty.
-	*	CAUTION: This methods safety depends on external assumptions. For example, if another thread could add to the list at any time, the return value is no better than a best guess.
-	*	As typically used, the list is not being access concurrently when this is called.
-	*/
-	bool IsEmpty()
+	/**	
+	 *	Check if the list is empty.
+	 *
+	 *	@return true if the list is empty.
+	 *	CAUTION: This methods safety depends on external assumptions. For example, if another thread could add to the list at any time, the return value is no better than a best guess.
+	 *	As typically used, the list is not being access concurrently when this is called.
+	 */
+	bool IsEmpty()  
 	{
 		bool bResult = true;
 		int32 SpinCount = 0;
@@ -2683,10 +2685,10 @@ public:
 				bool bAny = false;
 				if (!DequeueCache.IsFull())
 				{
-					FLockFreeLink* Repush = IncomingQueue.Pop();
+					FLockFreeLink* Repush = IncomingQueue.Pop(); 
 					if (!Repush)
 					{
-						YPlatformMisc::MemoryBarrier();
+						FPlatformMisc::MemoryBarrier();
 						DequeueLock = 0;
 						break;
 					}
@@ -2699,7 +2701,7 @@ public:
 				{
 					bResult = false; // we didn't pop one because the dequeue cache is full...guess it isn't empty
 				}
-				YPlatformMisc::MemoryBarrier();
+				FPlatformMisc::MemoryBarrier();
 				DequeueLock = 0;
 				break;
 			}
@@ -2707,10 +2709,10 @@ public:
 		}
 		return bResult;
 	}
-	/**
-	*	Check if the list is empty. This is a faster, less rigorous test that can miss a queue full of stuff. Used to optimize thread restarts.
-	*/
-	bool IsEmptyFast()
+	/**	
+	 *	Check if the list is empty. This is a faster, less rigorous test that can miss a queue full of stuff. Used to optimize thread restarts.
+	 */
+	bool IsEmptyFast()  
 	{
 		return DequeueCache.IsEmpty() && IncomingQueue.IsEmpty();
 	}
@@ -2762,14 +2764,14 @@ public:
 				if (Result)
 				{
 					// someone beat us to it
-					YPlatformMisc::MemoryBarrier();
+					FPlatformMisc::MemoryBarrier();
 					DequeueLock = 0;
 					return Result;
 				}
 				FLockFreeLink* Link = IncomingQueue.Pop();
 				if (!Link)
 				{
-					YPlatformMisc::MemoryBarrier();
+					FPlatformMisc::MemoryBarrier();
 					DequeueLock = 0;
 					return nullptr;
 				}
@@ -2787,7 +2789,7 @@ public:
 					verify(DequeueCache.Push(Repush->Payload));
 					LinkAllocator.Free(Repush);
 				}
-				YPlatformMisc::MemoryBarrier();
+				FPlatformMisc::MemoryBarrier();
 				DequeueLock = 0;
 			}
 			LockFreeCriticalSpin(SpinCount);
@@ -2821,7 +2823,7 @@ public:
 					FLockFreeLink* Repush = IncomingQueue.Pop();
 					if (!Repush)
 					{
-						YPlatformMisc::MemoryBarrier();
+						FPlatformMisc::MemoryBarrier();
 						DequeueLock = 0;
 						break;
 					}
@@ -2834,7 +2836,7 @@ public:
 				{
 					bResult = false; // we didn't pop one because the dequeue cache is full...guess it isn't empty
 				}
-				YPlatformMisc::MemoryBarrier();
+				FPlatformMisc::MemoryBarrier();
 				DequeueLock = 0;
 				break;
 			}
@@ -2868,11 +2870,11 @@ public:
 	{
 	}
 	/**
-	*	Push an item onto the head of the list, unless the list is closed
-	*
-	*	@param NewItem, the new item to push on the list, cannot be NULL
-	*	@return true if the item was pushed on the list, false if the list was closed.
-	*/
+	 *	Push an item onto the head of the list, unless the list is closed
+	 *
+	 *	@param NewItem, the new item to push on the list, cannot be NULL
+	 *	@return true if the item was pushed on the list, false if the list was closed.
+	 */
 	bool PushIfNotClosed(void *NewItem)
 	{
 		FLockFreeLink* Link = LinkAllocator.Alloc();
@@ -2885,11 +2887,11 @@ public:
 		return true;
 	}
 
-	/**
-	*	Pop all items from the list and atomically close it.
-	*
-	*	@param Output The array to hold the returned items. Must be empty.
-	*/
+	/**	
+	 *	Pop all items from the list and atomically close it.
+	 *
+	 *	@param Output The array to hold the returned items. Must be empty.
+	 */
 	template<class T>
 	void PopAllAndClose(TArray<T *>& Output)
 	{
@@ -2906,24 +2908,24 @@ public:
 				break;
 			}
 		}
-	}
+	}	
 
-	/**
-	*	Check if the list is closed
-	*
-	*	@return true if the list is closed.
-	*/
+	/**	
+	 *	Check if the list is closed
+	 *
+	 *	@return true if the list is closed.
+	 */
 	FORCEINLINE bool IsClosed() const
 	{
 		return IncomingQueue.IsClosed();
 	}
 
-	/**
-	*	Push an item onto the head of the list, opening it first if necessary.
-	*
-	*	@param NewItem, the new item to push on the list, cannot be NULL.
-	*	@return true if the list needed to be opened first, false if the list was not closed before our push.
-	*/
+	/**	
+	 *	Push an item onto the head of the list, opening it first if necessary.
+	 *
+	 *	@param NewItem, the new item to push on the list, cannot be NULL.
+	 *	@return true if the list needed to be opened first, false if the list was not closed before our push.
+	 */
 	bool ReopenIfClosedAndPush(void *NewItem)
 	{
 		FLockFreeLink* Link = LinkAllocator.Alloc();
@@ -2932,11 +2934,11 @@ public:
 		return bWasReopenedByMe;
 	}
 
-	/**
-	*	Pop an item from the list or return NULL if the list is empty or closed.
-	*	CAUTION: This method should not be used unless the list is known to not be closed.
-	*	@return The new item, if any
-	*/
+	/**	
+	 *	Pop an item from the list or return NULL if the list is empty or closed.
+	 *	CAUTION: This method should not be used unless the list is known to not be closed.
+	 *	@return The new item, if any
+	 */
 	void* Pop()
 	{
 		FLockFreeLink* Link = IncomingQueue.Pop();
@@ -2949,20 +2951,20 @@ public:
 		return nullptr;
 	}
 
-	/**
-	*	Close the list if it is empty.
-	*
-	*	@return true if this call actively closed the list.
-	*/
+	/**	
+	 *	Close the list if it is empty.
+	 *
+	 *	@return true if this call actively closed the list.
+	 */
 	bool CloseIfEmpty()
 	{
 		return IncomingQueue.CloseIfEmpty();
 	}
 
-	/**
-	*	Not thread safe, used to reset the list for recycling without freeing the stub
-	*	@return true if the list is closed.
-	*/
+	/**	
+	 *	Not thread safe, used to reset the list for recycling without freeing the stub
+	 *	@return true if the list is closed.
+	 */
 	FORCEINLINE void Reset()
 	{
 		return IncomingQueue.Reset();
@@ -3094,30 +3096,30 @@ template<class T, int TPaddingForCacheContention>
 class TLockFreePointerListFIFO : private FLockFreePointerListFIFOBase<TPaddingForCacheContention>
 {
 public:
-	/**
-	*	Push an item onto the head of the list.
-	*
-	*	@param NewItem, the new item to push on the list, cannot be NULL.
-	*/
+	/**	
+	 *	Push an item onto the head of the list.
+	 *
+	 *	@param NewItem, the new item to push on the list, cannot be NULL.
+	 */
 	FORCEINLINE void Push(T *NewItem)
 	{
 		FLockFreePointerListFIFOBase<TPaddingForCacheContention>::Push(NewItem);
 	}
 
-	/**
-	*	Pop an item from the list or return NULL if the list is empty.
-	*	@return The popped item, if any.
-	*/
+	/**	
+	 *	Pop an item from the list or return NULL if the list is empty.
+	 *	@return The popped item, if any.
+	 */
 	FORCEINLINE T* Pop()
 	{
 		return (T*)FLockFreePointerListFIFOBase<TPaddingForCacheContention>::Pop();
 	}
 
-	/**
-	*	Pop all items from the list.
-	*
-	*	@param Output The array to hold the returned items. Must be empty.
-	*/
+	/**	
+	 *	Pop all items from the list.
+	 *
+	 *	@param Output The array to hold the returned items. Must be empty.
+	 */
 	void PopAll(TArray<T *>& Output)
 	{
 		while (true)
@@ -3129,23 +3131,23 @@ public:
 			}
 			Output.Add(Item);
 		}
-	}
+	}	
 
-	/**
-	*	Check if the list is empty.
-	*
-	*	@return true if the list is empty.
-	*	CAUTION: This methods safety depends on external assumptions. For example, if another thread could add to the list at any time, the return value is no better than a best guess.
-	*	As typically used, the list is not being access concurrently when this is called.
-	*/
-	FORCEINLINE bool IsEmpty()
+	/**	
+	 *	Check if the list is empty.
+	 *
+	 *	@return true if the list is empty.
+	 *	CAUTION: This methods safety depends on external assumptions. For example, if another thread could add to the list at any time, the return value is no better than a best guess.
+	 *	As typically used, the list is not being access concurrently when this is called.
+	 */
+	FORCEINLINE bool IsEmpty()  
 	{
 		return FLockFreePointerListFIFOBase<TPaddingForCacheContention>::IsEmpty();
 	}
-	/**
-	*	Check if the list is empty. This is a faster, less rigorous test that can miss a queue full of stuff. Used to optimize thread restarts.
-	*/
-	FORCEINLINE bool IsEmptyFast()
+	/**	
+	 *	Check if the list is empty. This is a faster, less rigorous test that can miss a queue full of stuff. Used to optimize thread restarts.
+	 */
+	FORCEINLINE bool IsEmptyFast()  
 	{
 		return FLockFreePointerListFIFOBase<TPaddingForCacheContention>::IsEmptyFast();
 	}

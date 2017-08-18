@@ -69,7 +69,7 @@ void FDateTime::GetDate( int32& OutYear, int32& OutMonth, int32& OutDay ) const
 
 	int32 i, j, k, l, n;
 
-	l = YMath::FloorToInt(GetJulianDay() + 0.5) + 68569;
+	l = FMath::FloorToInt(GetJulianDay() + 0.5) + 68569;
 	n = 4 * l / 146097;
 	l = l - (146097 * n + 3) / 4;
 	i = 4000 * (l + 1) / 1461001;
@@ -477,7 +477,7 @@ bool FDateTime::ParseIso8601( const TCHAR* DateTimeString, FDateTime& OutDateTim
 
 	// adjust for the timezone (bringing the DateTime into UTC)
 	int32 TzOffsetMinutes = (TzHour < 0) ? TzHour * 60 - TzMinute : TzHour * 60 + TzMinute;
-	Final -= YTimespan(0, TzOffsetMinutes, 0);
+	Final -= FTimespan(0, TzOffsetMinutes, 0);
 	OutDateTime = Final;
 
 	return true;

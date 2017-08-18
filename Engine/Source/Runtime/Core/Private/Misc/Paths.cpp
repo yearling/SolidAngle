@@ -92,12 +92,12 @@ bool YPaths::ShouldSaveToUserDir()
 
 FString YPaths::LaunchDir()
 {
-	return FString(YPlatformMisc::LaunchDir());
+	return FString(FPlatformMisc::LaunchDir());
 }
 
 FString YPaths::EngineDir()
 {
-	return FString(YPlatformMisc::EngineDir());
+	return FString(FPlatformMisc::EngineDir());
 }
 
 FString YPaths::EngineUserDir()
@@ -151,12 +151,12 @@ FString YPaths::EnginePluginsDir()
 
 FString YPaths::RootDir()
 {
-	return FString(YPlatformMisc::RootDir());
+	return FString(FPlatformMisc::RootDir());
 }
 
 FString YPaths::GameDir()
 {
-	return FString(YPlatformMisc::GameDir());
+	return FString(FPlatformMisc::GameDir());
 }
 
 FString YPaths::GameUserDir()
@@ -205,7 +205,7 @@ FString YPaths::GamePluginsDir()
 
 FString YPaths::GamePersistentDownloadDir()
 {
-	return YPlatformMisc::GamePersistentDownloadDir();
+	return FPlatformMisc::GamePersistentDownloadDir();
 }
 
 FString YPaths::SourceConfigDir()
@@ -273,7 +273,7 @@ FString YPaths::AutomationLogDir()
 
 FString YPaths::CloudDir()
 {
-	return YPlatformMisc::CloudDir();
+	return FPlatformMisc::CloudDir();
 }
 
 FString YPaths::GameDevelopersDir()
@@ -701,7 +701,7 @@ void YPaths::NormalizeFilename(FString& InPath)
 {
 	InPath.ReplaceInline(TEXT("\\"), TEXT("/"), ESearchCase::CaseSensitive);
 
-	YPlatformMisc::NormalizePath(InPath);
+	FPlatformMisc::NormalizePath(InPath);
 }
 
 void YPaths::NormalizeDirectorFName(FString& InPath)
@@ -715,7 +715,7 @@ void YPaths::NormalizeDirectorFName(FString& InPath)
 		InPath.TrimToNullTerminator();
 	}
 
-	YPlatformMisc::NormalizePath(InPath);
+	FPlatformMisc::NormalizePath(InPath);
 }
 
 bool YPaths::CollapseRelativeDirectories(FString& InPath)
@@ -742,7 +742,7 @@ bool YPaths::CollapseRelativeDirectories(FString& InPath)
 		for (;;)
 		{
 			// Find the previous slash
-			PreviousSeparatorIndex = YMath::Max(0, InPath.Find( TEXT("/"), ESearchCase::CaseSensitive, ESearchDir::FromEnd, PreviousSeparatorIndex - 1));
+			PreviousSeparatorIndex = FMath::Max(0, InPath.Find( TEXT("/"), ESearchCase::CaseSensitive, ESearchDir::FromEnd, PreviousSeparatorIndex - 1));
 
 			// Stop if we've hit the start of the string
 			if (PreviousSeparatorIndex == 0)
@@ -822,8 +822,8 @@ void YPaths::MakeStandardFilename(FString& InPath)
 
 void YPaths::MakePlatformFilename( FString& InPath )
 {
-	InPath.ReplaceInline(TEXT( "\\" ), YPlatformMisc::GetDefaultPathSeparator(), ESearchCase::CaseSensitive);
-	InPath.ReplaceInline(TEXT( "/" ), YPlatformMisc::GetDefaultPathSeparator(), ESearchCase::CaseSensitive);
+	InPath.ReplaceInline(TEXT( "\\" ), FPlatformMisc::GetDefaultPathSeparator(), ESearchCase::CaseSensitive);
+	InPath.ReplaceInline(TEXT( "/" ), FPlatformMisc::GetDefaultPathSeparator(), ESearchCase::CaseSensitive);
 }
 
 bool YPaths::MakePathRelativeTo( FString& InPath, const TCHAR* InRelativeTo )

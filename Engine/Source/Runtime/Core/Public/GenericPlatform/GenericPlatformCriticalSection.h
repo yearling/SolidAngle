@@ -10,7 +10,7 @@ class FSystemWideCriticalSectionNotImplemented
 {
 public:
 	/** Construct a named, system-wide critical section and attempt to get access/ownership of it */
-	explicit FSystemWideCriticalSectionNotImplemented(const FString& Name, YTimespan Timeout = YTimespan::Zero());
+	explicit FSystemWideCriticalSectionNotImplemented(const FString& Name, FTimespan Timeout = FTimespan::Zero());
 
 	/** Destructor releases system-wide critical section if it is currently owned */
 	~FSystemWideCriticalSectionNotImplemented() {}

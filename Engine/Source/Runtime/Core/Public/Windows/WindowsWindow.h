@@ -13,7 +13,7 @@
 #include "HideWindowsPlatformTypes.h"
 
 class FWindowsApplication;
-struct YVector2D;
+struct FVector2D;
 enum class EWindowTransparency;
 
 /**
@@ -70,7 +70,7 @@ public:
 	void AdjustWindowRegion(int32 Width, int32 Height);
 
 	/** @return	Gives the native window a chance to adjust our stored window size before we cache it off. */
-	virtual void AdjustCachedSize(YVector2D& Size) const override;
+	virtual void AdjustCachedSize(FVector2D& Size) const override;
 
 	virtual float GetDPIScaleFactor() const override
 	{

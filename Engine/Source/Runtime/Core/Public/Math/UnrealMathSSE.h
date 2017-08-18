@@ -918,25 +918,25 @@ FORCEINLINE VectorRegister VectorStep(const VectorRegister& X)
 //TODO: Vectorize
 FORCEINLINE VectorRegister VectorExp(const VectorRegister& X)
 {
-	return MakeVectorRegister(YMath::Exp(VectorGetComponent(X, 0)), YMath::Exp(VectorGetComponent(X, 1)), YMath::Exp(VectorGetComponent(X, 2)), YMath::Exp(VectorGetComponent(X, 3)));
+	return MakeVectorRegister(FMath::Exp(VectorGetComponent(X, 0)), FMath::Exp(VectorGetComponent(X, 1)), FMath::Exp(VectorGetComponent(X, 2)), FMath::Exp(VectorGetComponent(X, 3)));
 }
 
 //TODO: Vectorize
 FORCEINLINE VectorRegister VectorExp2(const VectorRegister& X)
 {
-	return MakeVectorRegister(YMath::Exp2(VectorGetComponent(X, 0)), YMath::Exp2(VectorGetComponent(X, 1)), YMath::Exp2(VectorGetComponent(X, 2)), YMath::Exp2(VectorGetComponent(X, 3)));
+	return MakeVectorRegister(FMath::Exp2(VectorGetComponent(X, 0)), FMath::Exp2(VectorGetComponent(X, 1)), FMath::Exp2(VectorGetComponent(X, 2)), FMath::Exp2(VectorGetComponent(X, 3)));
 }
 
 //TODO: Vectorize
 FORCEINLINE VectorRegister VectorLog(const VectorRegister& X)
 {
-	return MakeVectorRegister(YMath::Loge(VectorGetComponent(X, 0)), YMath::Loge(VectorGetComponent(X, 1)), YMath::Loge(VectorGetComponent(X, 2)), YMath::Loge(VectorGetComponent(X, 3)));
+	return MakeVectorRegister(FMath::Loge(VectorGetComponent(X, 0)), FMath::Loge(VectorGetComponent(X, 1)), FMath::Loge(VectorGetComponent(X, 2)), FMath::Loge(VectorGetComponent(X, 3)));
 }
 
 //TODO: Vectorize
 FORCEINLINE VectorRegister VectorLog2(const VectorRegister& X)
 {
-	return MakeVectorRegister(YMath::Log2(VectorGetComponent(X, 0)), YMath::Log2(VectorGetComponent(X, 1)), YMath::Log2(VectorGetComponent(X, 2)), YMath::Log2(VectorGetComponent(X, 3)));
+	return MakeVectorRegister(FMath::Log2(VectorGetComponent(X, 0)), FMath::Log2(VectorGetComponent(X, 1)), FMath::Log2(VectorGetComponent(X, 2)), FMath::Log2(VectorGetComponent(X, 3)));
 }
 
 /**
@@ -1040,32 +1040,32 @@ FORCEINLINE void VectorSinCos(VectorRegister* RESTRICT VSinAngles, VectorRegiste
 //TODO: Vectorize
 FORCEINLINE VectorRegister VectorTan(const VectorRegister& X)
 {
-	return MakeVectorRegister(YMath::Tan(VectorGetComponent(X, 0)), YMath::Tan(VectorGetComponent(X, 1)), YMath::Tan(VectorGetComponent(X, 2)), YMath::Tan(VectorGetComponent(X, 3)));
+	return MakeVectorRegister(FMath::Tan(VectorGetComponent(X, 0)), FMath::Tan(VectorGetComponent(X, 1)), FMath::Tan(VectorGetComponent(X, 2)), FMath::Tan(VectorGetComponent(X, 3)));
 }
 
 //TODO: Vectorize
 FORCEINLINE VectorRegister VectorASin(const VectorRegister& X)
 {
-	return MakeVectorRegister(YMath::Asin(VectorGetComponent(X, 0)), YMath::Asin(VectorGetComponent(X, 1)), YMath::Asin(VectorGetComponent(X, 2)), YMath::Asin(VectorGetComponent(X, 3)));
+	return MakeVectorRegister(FMath::Asin(VectorGetComponent(X, 0)), FMath::Asin(VectorGetComponent(X, 1)), FMath::Asin(VectorGetComponent(X, 2)), FMath::Asin(VectorGetComponent(X, 3)));
 }
 
 //TODO: Vectorize
 FORCEINLINE VectorRegister VectorACos(const VectorRegister& X)
 {
-	return MakeVectorRegister(YMath::Acos(VectorGetComponent(X, 0)), YMath::Acos(VectorGetComponent(X, 1)), YMath::Acos(VectorGetComponent(X, 2)), YMath::Acos(VectorGetComponent(X, 3)));
+	return MakeVectorRegister(FMath::Acos(VectorGetComponent(X, 0)), FMath::Acos(VectorGetComponent(X, 1)), FMath::Acos(VectorGetComponent(X, 2)), FMath::Acos(VectorGetComponent(X, 3)));
 }
 
 //TODO: Vectorize
 FORCEINLINE VectorRegister VectorATan(const VectorRegister& X)
 {
-	return MakeVectorRegister(YMath::Atan(VectorGetComponent(X, 0)), YMath::Atan(VectorGetComponent(X, 1)), YMath::Atan(VectorGetComponent(X, 2)), YMath::Atan(VectorGetComponent(X, 3)));
+	return MakeVectorRegister(FMath::Atan(VectorGetComponent(X, 0)), FMath::Atan(VectorGetComponent(X, 1)), FMath::Atan(VectorGetComponent(X, 2)), FMath::Atan(VectorGetComponent(X, 3)));
 }
 
 //TODO: Vectorize
 FORCEINLINE VectorRegister VectorATan2(const VectorRegister& X, const VectorRegister& Y)
 {
-	return MakeVectorRegister(YMath::Atan2(VectorGetComponent(X, 0), VectorGetComponent(Y, 0)),
-		YMath::Atan2(VectorGetComponent(X, 1), VectorGetComponent(Y, 1)),
-		YMath::Atan2(VectorGetComponent(X, 2), VectorGetComponent(Y, 2)),
-		YMath::Atan2(VectorGetComponent(X, 3), VectorGetComponent(Y, 3)));
+	return MakeVectorRegister(FMath::Atan2(VectorGetComponent(X, 0), VectorGetComponent(Y, 0)),
+		FMath::Atan2(VectorGetComponent(X, 1), VectorGetComponent(Y, 1)),
+		FMath::Atan2(VectorGetComponent(X, 2), VectorGetComponent(Y, 2)),
+		FMath::Atan2(VectorGetComponent(X, 3), VectorGetComponent(Y, 3)));
 }

@@ -23,7 +23,7 @@
 * E=31, M!=0		== NAN
 *
 */
-class YFloat16
+class FFloat16
 {
 public:
 	union
@@ -45,19 +45,19 @@ public:
 	};
 
 	/** Default constructor */
-	YFloat16( );
+	FFloat16( );
 
 	/** Copy constructor. */
-	YFloat16( const YFloat16& FP16Value );
+	FFloat16( const FFloat16& FP16Value );
 
 	/** Conversion constructor. Convert from Fp32 to Fp16. */
-	YFloat16( float FP32Value );	
+	FFloat16( float FP32Value );	
 
 	/** Assignment operator. Convert from Fp32 to Fp16. */
-	YFloat16& operator=( float FP32Value );
+	FFloat16& operator=( float FP32Value );
 
 	/** Assignment operator. Copy Fp16 value. */
-	YFloat16& operator=( const YFloat16& FP16Value );
+	FFloat16& operator=( const FFloat16& FP16Value );
 
 	/** Convert from Fp16 to Fp32. */
 	operator float() const;
@@ -86,53 +86,53 @@ public:
 	 *
 	 * @return Reference to the Archive after serialization.
 	 */
-	friend FArchive& operator<<( FArchive& Ar, YFloat16& V )
+	friend FArchive& operator<<( FArchive& Ar, FFloat16& V )
 	{
 		return Ar << V.Encoded;
 	}
 };
 
 
-FORCEINLINE YFloat16::YFloat16( )
+FORCEINLINE FFloat16::FFloat16( )
 	:	Encoded(0)
 { }
 
 
-FORCEINLINE YFloat16::YFloat16( const YFloat16& FP16Value )
+FORCEINLINE FFloat16::FFloat16( const FFloat16& FP16Value )
 {
 	Encoded = FP16Value.Encoded;
 }
 
 
-FORCEINLINE YFloat16::YFloat16( float FP32Value )
+FORCEINLINE FFloat16::FFloat16( float FP32Value )
 {
 	Set( FP32Value );
 }	
 
 
-FORCEINLINE YFloat16& YFloat16::operator=( float FP32Value )
+FORCEINLINE FFloat16& FFloat16::operator=( float FP32Value )
 {
 	Set( FP32Value );
 	return *this;
 }
 
 
-FORCEINLINE YFloat16& YFloat16::operator=( const YFloat16& FP16Value )
+FORCEINLINE FFloat16& FFloat16::operator=( const FFloat16& FP16Value )
 {
 	Encoded = FP16Value.Encoded;
 	return *this;
 }
 
 
-FORCEINLINE YFloat16::operator float() const
+FORCEINLINE FFloat16::operator float() const
 {
 	return GetFloat();
 }
 
 
-FORCEINLINE void YFloat16::Set( float FP32Value )
+FORCEINLINE void FFloat16::Set( float FP32Value )
 {
-	YFloat32 FP32(FP32Value);
+	FFloat32 FP32(FP32Value);
 
 	// Copy sign-bit
 	Components.Sign = FP32.Components.Sign;
@@ -160,9 +160,9 @@ FORCEINLINE void YFloat16::Set( float FP32Value )
 }
 
 
-FORCEINLINE void YFloat16::SetWithoutBoundsChecks( const float FP32Value )
+FORCEINLINE void FFloat16::SetWithoutBoundsChecks( const float FP32Value )
 {
-	const YFloat32 FP32(FP32Value);
+	const FFloat32 FP32(FP32Value);
 
 	// Make absolutely sure that you never pass in a single precision floating
 	// point value that may actually need the checks. If you are not 100% sure
@@ -174,9 +174,9 @@ FORCEINLINE void YFloat16::SetWithoutBoundsChecks( const float FP32Value )
 }
 
 
-FORCEINLINE float YFloat16::GetFloat() const
+FORCEINLINE float FFloat16::GetFloat() const
 {
-	YFloat32	Result;
+	FFloat32	Result;
 
 	Result.Components.Sign = Components.Sign;
 	if (Components.Exponent == 0)
@@ -191,7 +191,7 @@ FORCEINLINE float YFloat16::GetFloat() const
 		else
 		{
 			// Denormal.
-			uint32 MantissaShift = 10 - (uint32)YMath::TruncToInt(YMath::Log2(Mantissa));
+			uint32 MantissaShift = 10 - (uint32)FMath::TruncToInt(FMath::Log2(Mantissa));
 			Result.Components.Exponent = 127 - (15 - 1) - MantissaShift;
 			Result.Components.Mantissa = Mantissa << (MantissaShift + 23 - 10);
 		}

@@ -58,7 +58,7 @@ VARARG_BODY(void, FMsg::Logf, const TCHAR*, VARARG_EXTRA(const ANSICHAR* File) V
 		}
 
 		StaticFailDebug(TEXT("Fatal error:"), File, Line, Message, false);
-		YDebug::AssertFailed("", File, Line, Message);
+		FDebug::AssertFailed("", File, Line, Message);
 	}
 #endif
 }
@@ -119,5 +119,5 @@ void VARARGS FMsg::SendNotificationStringf( const TCHAR *Fmt, ... )
 
 void FMsg::SendNotificationString( const TCHAR* Message )
 {
-	YPlatformMisc::LowLevelOutputDebugString(Message);
+	FPlatformMisc::LowLevelOutputDebugString(Message);
 }

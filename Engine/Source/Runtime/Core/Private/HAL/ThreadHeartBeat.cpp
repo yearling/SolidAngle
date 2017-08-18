@@ -34,7 +34,7 @@ FThreadHeartBeat::FThreadHeartBeat()
 		}
 	}
 
-	const bool bAllowThreadHeartBeat = YPlatformMisc::AllowThreadHeartBeat() && HangDuration > 0.0;
+	const bool bAllowThreadHeartBeat = FPlatformMisc::AllowThreadHeartBeat() && HangDuration > 0.0;
 
 	// We don't care about programs for now so no point in spawning the extra thread
 #if !IS_PROGRAM
@@ -162,7 +162,7 @@ uint32 FThreadHeartBeat::Run()
 				GLog->PanicFlushThreadedLogs();
 				// GErrorMessage here is very unfortunate but it's used internally by the crash context code.
 				FCString::Strcpy(GErrorMessage, ARRAY_COUNT(GErrorMessage), *ErrorMessage);
-				// Skip macros and YDebug, we always want this to fire
+				// Skip macros and FDebug, we always want this to fire
 				NewReportEnsure(*ErrorMessage);
 				GErrorMessage[0] = '\0';
 #endif
@@ -200,7 +200,7 @@ uint32 FThreadHeartBeat::CheckHeartBeat()
 {
 	// Editor and debug builds run too slow to measure them correctly
 #if !WITH_EDITORONLY_DATA && !IS_PROGRAM && !UE_BUILD_DEBUG
-	if (HangDuration > 0.0 && bReadyToCheckHeartbeat && !GIsRequestingExit && !YPlatformMisc::IsDebuggerPresent())
+	if (HangDuration > 0.0 && bReadyToCheckHeartbeat && !GIsRequestingExit && !FPlatformMisc::IsDebuggerPresent())
 	{
 		// Check heartbeat for all threads and return thread ID of the thread that hung.
 		const double CurrentTime = FPlatformTime::Seconds();

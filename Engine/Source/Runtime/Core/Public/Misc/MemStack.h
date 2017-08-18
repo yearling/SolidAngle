@@ -93,7 +93,7 @@ public:
 
 	FORCEINLINE uint8* PushBytes(int32 AllocSize, int32 Alignment)
 	{
-		return (uint8*)Alloc(AllocSize, YMath::Max(AllocSize >= 16 ? (int32)16 : (int32)8, Alignment));
+		return (uint8*)Alloc(AllocSize, FMath::Max(AllocSize >= 16 ? (int32)16 : (int32)8, Alignment));
 	}
 
 	FORCEINLINE void* Alloc(int32 AllocSize, int32 Alignment)
@@ -299,13 +299,13 @@ public:
 				// Allocate memory from the stack.
 				Data = (ElementType*)FMemStack::Get().PushBytes(
 					NumElements * NumBytesPerElement,
-					YMath::Max(Alignment, (uint32)ALIGNOF(ElementType))
+					FMath::Max(Alignment, (uint32)ALIGNOF(ElementType))
 				);
 
 				// If the container previously held elements, copy them into the new allocation.
 				if (OldData && PreviousNumElements)
 				{
-					const int32 NumCopiedElements = YMath::Min(NumElements, PreviousNumElements);
+					const int32 NumCopiedElements = FMath::Min(NumElements, PreviousNumElements);
 					FMemory::Memcpy(Data, OldData, NumCopiedElements * NumBytesPerElement);
 				}
 			}

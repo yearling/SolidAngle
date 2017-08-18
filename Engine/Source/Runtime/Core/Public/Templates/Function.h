@@ -137,7 +137,7 @@ inline void* operator new(size_t Size, UE4Function_Private::FFunctionStorage& St
 		Obj->~IFunction_OwnedObject();
 	}
 
-	int32 NewSize = YMath::DivideAndRoundUp(Size, sizeof(UE4Function_Private::AlignedInlineFunctionType));
+	int32 NewSize = FMath::DivideAndRoundUp(Size, sizeof(UE4Function_Private::AlignedInlineFunctionType));
 	if (Storage.AllocatedSize != NewSize)
 	{
 		Storage.Allocator.ResizeAllocation(0, NewSize, sizeof(UE4Function_Private::AlignedInlineFunctionType));

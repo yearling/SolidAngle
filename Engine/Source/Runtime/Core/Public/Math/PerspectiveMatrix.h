@@ -7,7 +7,7 @@
 #include "Math/Plane.h"
 #include "Math/Matrix.h"
 
-class YPerspectiveMatrix
+class FPerspectiveMatrix
 	: public FMatrix
 {
 public:
@@ -25,7 +25,7 @@ public:
 	 * @param MinZ distance to the near Z plane
 	 * @param MaxZ distance to the far Z plane
 	 */
-	YPerspectiveMatrix(float HalfFOVX, float HalfFOVY, float MultFOVX, float MultFOVY, float MinZ, float MaxZ);
+	FPerspectiveMatrix(float HalfFOVX, float HalfFOVY, float MultFOVX, float MultFOVY, float MinZ, float MaxZ);
 
 	/**
 	 * Constructor
@@ -37,7 +37,7 @@ public:
 	 * @param MaxZ distance to the far Z plane
 	 * @note that the FOV you pass in is actually half the FOV, unlike most perspective matrix functions (D3DXMatrixPerspectiveFovLH).
 	 */
-	YPerspectiveMatrix(float HalfFOV, float Width, float Height, float MinZ, float MaxZ);
+	FPerspectiveMatrix(float HalfFOV, float Width, float Height, float MinZ, float MaxZ);
 
 	/**
 	 * Constructor
@@ -48,7 +48,7 @@ public:
 	 * @param MinZ distance to the near Z plane
 	 * @note that the FOV you pass in is actually half the FOV, unlike most perspective matrix functions (D3DXMatrixPerspectiveFovLH).
 	 */
-	YPerspectiveMatrix(float HalfFOV, float Width, float Height, float MinZ);
+	FPerspectiveMatrix(float HalfFOV, float Width, float Height, float MinZ);
 };
 
 
@@ -68,30 +68,30 @@ public:
 #endif
 
 
-FORCEINLINE YPerspectiveMatrix::YPerspectiveMatrix(float HalfFOVX, float HalfFOVY, float MultFOVX, float MultFOVY, float MinZ, float MaxZ)
+FORCEINLINE FPerspectiveMatrix::FPerspectiveMatrix(float HalfFOVX, float HalfFOVY, float MultFOVX, float MultFOVY, float MinZ, float MaxZ)
 	: FMatrix(
-		FPlane(MultFOVX / YMath::Tan(HalfFOVX),	0.0f,								0.0f,																	0.0f),
-		FPlane(0.0f,							MultFOVY / YMath::Tan(HalfFOVY),	0.0f,																	0.0f),
+		FPlane(MultFOVX / FMath::Tan(HalfFOVX),	0.0f,								0.0f,																	0.0f),
+		FPlane(0.0f,							MultFOVY / FMath::Tan(HalfFOVY),	0.0f,																	0.0f),
 		FPlane(0.0f,							0.0f,								((MinZ == MaxZ) ? (1.0f - Z_PRECISION) : MaxZ / (MaxZ - MinZ)),			1.0f),
 		FPlane(0.0f,							0.0f,								-MinZ * ((MinZ == MaxZ) ? (1.0f - Z_PRECISION) : MaxZ / (MaxZ - MinZ)),	0.0f)
 	)
 { }
 
 
-FORCEINLINE YPerspectiveMatrix::YPerspectiveMatrix(float HalfFOV, float Width, float Height, float MinZ, float MaxZ)
+FORCEINLINE FPerspectiveMatrix::FPerspectiveMatrix(float HalfFOV, float Width, float Height, float MinZ, float MaxZ)
 	: FMatrix(
-		FPlane(1.0f / YMath::Tan(HalfFOV),	0.0f,									0.0f,							0.0f),
-		FPlane(0.0f,						Width / YMath::Tan(HalfFOV) / Height,	0.0f,							0.0f),
+		FPlane(1.0f / FMath::Tan(HalfFOV),	0.0f,									0.0f,							0.0f),
+		FPlane(0.0f,						Width / FMath::Tan(HalfFOV) / Height,	0.0f,							0.0f),
 		FPlane(0.0f,						0.0f,									((MinZ == MaxZ) ? (1.0f - Z_PRECISION) : MaxZ / (MaxZ - MinZ)),			1.0f),
 		FPlane(0.0f,						0.0f,									-MinZ * ((MinZ == MaxZ) ? (1.0f - Z_PRECISION) : MaxZ / (MaxZ - MinZ)),	0.0f)
 	)
 { }
 
 
-FORCEINLINE YPerspectiveMatrix::YPerspectiveMatrix(float HalfFOV, float Width, float Height, float MinZ)
+FORCEINLINE FPerspectiveMatrix::FPerspectiveMatrix(float HalfFOV, float Width, float Height, float MinZ)
 	: FMatrix(
-		FPlane(1.0f / YMath::Tan(HalfFOV),	0.0f,									0.0f,							0.0f),
-		FPlane(0.0f,						Width / YMath::Tan(HalfFOV) / Height,	0.0f,							0.0f),
+		FPlane(1.0f / FMath::Tan(HalfFOV),	0.0f,									0.0f,							0.0f),
+		FPlane(0.0f,						Width / FMath::Tan(HalfFOV) / Height,	0.0f,							0.0f),
 		FPlane(0.0f,						0.0f,									(1.0f - Z_PRECISION),			1.0f),
 		FPlane(0.0f,						0.0f,									-MinZ * (1.0f - Z_PRECISION),	0.0f)
 	)
@@ -100,8 +100,8 @@ FORCEINLINE YPerspectiveMatrix::YPerspectiveMatrix(float HalfFOV, float Width, f
 
 FORCEINLINE FReversedZPerspectiveMatrix::FReversedZPerspectiveMatrix(float HalfFOVX, float HalfFOVY, float MultFOVX, float MultFOVY, float MinZ, float MaxZ)
 	: FMatrix(
-		FPlane(MultFOVX / YMath::Tan(HalfFOVX),	0.0f,								0.0f,													0.0f),
-		FPlane(0.0f,							MultFOVY / YMath::Tan(HalfFOVY),	0.0f,													0.0f),
+		FPlane(MultFOVX / FMath::Tan(HalfFOVX),	0.0f,								0.0f,													0.0f),
+		FPlane(0.0f,							MultFOVY / FMath::Tan(HalfFOVY),	0.0f,													0.0f),
 		FPlane(0.0f,							0.0f,								((MinZ == MaxZ) ? 0.0f : MinZ / (MinZ - MaxZ)),			1.0f),
 		FPlane(0.0f,							0.0f,								((MinZ == MaxZ) ? MinZ : -MaxZ * MinZ / (MinZ - MaxZ)),	0.0f)
 	)
@@ -110,8 +110,8 @@ FORCEINLINE FReversedZPerspectiveMatrix::FReversedZPerspectiveMatrix(float HalfF
 
 FORCEINLINE FReversedZPerspectiveMatrix::FReversedZPerspectiveMatrix(float HalfFOV, float Width, float Height, float MinZ, float MaxZ)
 	: FMatrix(
-		FPlane(1.0f / YMath::Tan(HalfFOV),	0.0f,									0.0f,													0.0f),
-		FPlane(0.0f,						Width / YMath::Tan(HalfFOV) / Height,	0.0f,													0.0f),
+		FPlane(1.0f / FMath::Tan(HalfFOV),	0.0f,									0.0f,													0.0f),
+		FPlane(0.0f,						Width / FMath::Tan(HalfFOV) / Height,	0.0f,													0.0f),
 		FPlane(0.0f,						0.0f,									((MinZ == MaxZ) ? 0.0f : MinZ / (MinZ - MaxZ)),			1.0f),
 		FPlane(0.0f,						0.0f,									((MinZ == MaxZ) ? MinZ : -MaxZ * MinZ / (MinZ - MaxZ)),	0.0f)
 	)
@@ -120,8 +120,8 @@ FORCEINLINE FReversedZPerspectiveMatrix::FReversedZPerspectiveMatrix(float HalfF
 
 FORCEINLINE FReversedZPerspectiveMatrix::FReversedZPerspectiveMatrix(float HalfFOV, float Width, float Height, float MinZ)
 	: FMatrix(
-		FPlane(1.0f / YMath::Tan(HalfFOV),	0.0f,									0.0f, 0.0f),
-		FPlane(0.0f,						Width / YMath::Tan(HalfFOV) / Height,	0.0f, 0.0f),
+		FPlane(1.0f / FMath::Tan(HalfFOV),	0.0f,									0.0f, 0.0f),
+		FPlane(0.0f,						Width / FMath::Tan(HalfFOV) / Height,	0.0f, 0.0f),
 		FPlane(0.0f,						0.0f,									0.0f, 1.0f),
 		FPlane(0.0f,						0.0f,									MinZ, 0.0f)
 	)

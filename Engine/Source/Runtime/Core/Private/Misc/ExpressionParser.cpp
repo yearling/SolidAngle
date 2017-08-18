@@ -62,7 +62,7 @@ FString FTokenStream::GetErrorContext() const
 	}
 
 	static const int32 MaxChars = 32;
-	FString Context(YMath::Min(int32(EndPos - StartPos), MaxChars), StartPos);
+	FString Context(FMath::Min(int32(EndPos - StartPos), MaxChars), StartPos);
 	if (EndPos - StartPos > MaxChars)
 	{
 		Context += TEXT("...");

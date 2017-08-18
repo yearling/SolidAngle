@@ -9,7 +9,7 @@
 
 #include "Math/Box2D.h"
 
-FBox2D::FBox2D(const YVector2D* Points, const int32 Count)
+FBox2D::FBox2D(const FVector2D* Points, const int32 Count)
 	: Min(0.f, 0.f)
 	, Max(0.f, 0.f)
 	, bIsValid(false)
@@ -21,12 +21,12 @@ FBox2D::FBox2D(const YVector2D* Points, const int32 Count)
 }
 
 
-FBox2D::FBox2D(const TArray<YVector2D>& Points)
+FBox2D::FBox2D(const TArray<FVector2D>& Points)
 	: Min(0.f, 0.f)
 	, Max(0.f, 0.f)
 	, bIsValid(false)
 {
-	for(const YVector2D& EachPoint : Points)
+	for(const FVector2D& EachPoint : Points)
 	{
 		*this += EachPoint;
 	}

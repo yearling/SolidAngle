@@ -141,7 +141,7 @@ public:
 	 *
 	 * @return true if the conversion happened, false otherwise
 	 */
-	static bool ParseVector2D(const FString& Source, YVector2D& OutVal);
+	static bool ParseVector2D(const FString& Source, FVector2D& OutVal);
 
 	/**
 	 * Converts a string into a YRotator. Accepted form: " %f, %f, %f "

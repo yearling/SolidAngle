@@ -24,7 +24,7 @@ public:
 
 	int64 TotalSize()
 	{
-		return YMath::Min((int64)Bytes.Num(), LimitSize);
+		return FMath::Min((int64)Bytes.Num(), LimitSize);
 	}
 
 	void Serialize( void* Data, int64 Num )

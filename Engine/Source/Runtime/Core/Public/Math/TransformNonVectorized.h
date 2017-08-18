@@ -127,8 +127,8 @@ public:
 		// Note: This can be used to track down initialization issues with bone transform arrays; but it will
 		// cause issues with transient fields such as RootMotionDelta that get initialized to 0 by default
 #if ENABLE_NAN_DIAGNOSTIC
-		float qnan = YMath::Log2(-5.3f);
-		check(YMath::IsNaN(qnan));
+		float qnan = FMath::Log2(-5.3f);
+		check(FMath::IsNaN(qnan));
 		Translation = FVector(qnan, qnan, qnan);
 		Rotation = FQuat(qnan, qnan, qnan, qnan);
 		Scale3D = FVector(qnan, qnan, qnan);
@@ -407,8 +407,8 @@ public:
 		else
 		{
 			// Simple linear interpolation for translation and scale.
-			Translation = YMath::Lerp(Atom1.Translation, Atom2.Translation, Alpha);
-			Scale3D = YMath::Lerp(Atom1.Scale3D, Atom2.Scale3D, Alpha);
+			Translation = FMath::Lerp(Atom1.Translation, Atom2.Translation, Alpha);
+			Scale3D = FMath::Lerp(Atom1.Scale3D, Atom2.Scale3D, Alpha);
 			Rotation = FQuat::FastLerp(Atom1.Rotation, Atom2.Rotation, Alpha);
 
 			// ..and renormalize
@@ -434,8 +434,8 @@ public:
 			else
 			{
 				// Simple linear interpolation for translation and scale.
-				Translation = YMath::Lerp(Translation, OtherAtom.Translation, Alpha);
-				Scale3D = YMath::Lerp(Scale3D, OtherAtom.Scale3D, Alpha);
+				Translation = FMath::Lerp(Translation, OtherAtom.Translation, Alpha);
+				Scale3D = FMath::Lerp(Scale3D, OtherAtom.Scale3D, Alpha);
 				Rotation = FQuat::FastLerp(Rotation, OtherAtom.Rotation, Alpha);
 
 				// ..and renormalize
@@ -879,7 +879,7 @@ public:
 	FORCEINLINE void Accumulate(const FTransform& SourceAtom)
 	{
 		// Add ref pose relative animation to base animation, only if rotation is significant.
-		if (YMath::Square(SourceAtom.Rotation.W) < 1.f - DELTA * DELTA)
+		if (FMath::Square(SourceAtom.Rotation.W) < 1.f - DELTA * DELTA)
 		{
 			Rotation = SourceAtom.Rotation * Rotation;
 		}
@@ -909,7 +909,7 @@ public:
 		FTransform SourceAtom(Atom * BlendWeight);
 
 		// Add ref pose relative animation to base animation, only if rotation is significant.
-		if (YMath::Square(SourceAtom.Rotation.W) < 1.f - DELTA * DELTA)
+		if (FMath::Square(SourceAtom.Rotation.W) < 1.f - DELTA * DELTA)
 		{
 			Rotation = SourceAtom.Rotation * Rotation;
 		}
@@ -981,7 +981,7 @@ public:
 		FTransform SourceAtom(Atom * BlendWeight);
 
 		// Add ref pose relative animation to base animation, only if rotation is significant.
-		if (YMath::Square(SourceAtom.Rotation.W) < 1.f - DELTA * DELTA)
+		if (FMath::Square(SourceAtom.Rotation.W) < 1.f - DELTA * DELTA)
 		{
 			Rotation = SourceAtom.Rotation * Rotation;
 		}
@@ -994,8 +994,8 @@ public:
 	/**
 	* Set the translation and Scale3D components of this transform to a linearly interpolated combination of two other transforms
 	*
-	* Translation = YMath::Lerp(SourceAtom1.Translation, SourceAtom2.Translation, Alpha)
-	* Scale3D = YMath::Lerp(SourceAtom1.Scale3D, SourceAtom2.Scale3D, Alpha)
+	* Translation = FMath::Lerp(SourceAtom1.Translation, SourceAtom2.Translation, Alpha)
+	* Scale3D = FMath::Lerp(SourceAtom1.Scale3D, SourceAtom2.Scale3D, Alpha)
 	*
 	* @param SourceAtom1 The starting point source atom (used 100% if Alpha is 0)
 	* @param SourceAtom2 The ending point source atom (used 100% if Alpha is 1)
@@ -1003,8 +1003,8 @@ public:
 	*/
 	FORCEINLINE void LerpTranslationScale3D(const FTransform& SourceAtom1, const FTransform& SourceAtom2, ScalarRegister Alpha)
 	{
-		Translation = YMath::Lerp(SourceAtom1.Translation, SourceAtom2.Translation, Alpha);
-		Scale3D = YMath::Lerp(SourceAtom1.Scale3D, SourceAtom2.Scale3D, Alpha);
+		Translation = FMath::Lerp(SourceAtom1.Translation, SourceAtom2.Translation, Alpha);
+		Scale3D = FMath::Lerp(SourceAtom1.Scale3D, SourceAtom2.Scale3D, Alpha);
 
 		DiagnosticCheckNaN_Translate();
 		DiagnosticCheckNaN_Scale3D();
@@ -1053,7 +1053,7 @@ public:
 		}
 
 		// Add ref pose relative animation to base animation, only if rotation is significant.
-		if (YMath::Square(SourceAtom.Rotation.W) < 1.f - DELTA * DELTA)
+		if (FMath::Square(SourceAtom.Rotation.W) < 1.f - DELTA * DELTA)
 		{
 			FinalAtom.Rotation = SourceAtom.Rotation * FinalAtom.Rotation;
 		}
@@ -1555,7 +1555,7 @@ inline float FTransform::GetMinimumAxisScale() const
 FORCEINLINE FVector FTransform::GetSafeScaleReciprocal(const FVector& InScale, float Tolerance)
 {
 	FVector SafeReciprocalScale;
-	if (YMath::Abs(InScale.X) <= Tolerance)
+	if (FMath::Abs(InScale.X) <= Tolerance)
 	{
 		SafeReciprocalScale.X = 0.f;
 	}
@@ -1564,7 +1564,7 @@ FORCEINLINE FVector FTransform::GetSafeScaleReciprocal(const FVector& InScale, f
 		SafeReciprocalScale.X = 1 / InScale.X;
 	}
 
-	if (YMath::Abs(InScale.Y) <= Tolerance)
+	if (FMath::Abs(InScale.Y) <= Tolerance)
 	{
 		SafeReciprocalScale.Y = 0.f;
 	}
@@ -1573,7 +1573,7 @@ FORCEINLINE FVector FTransform::GetSafeScaleReciprocal(const FVector& InScale, f
 		SafeReciprocalScale.Y = 1 / InScale.Y;
 	}
 
-	if (YMath::Abs(InScale.Z) <= Tolerance)
+	if (FMath::Abs(InScale.Z) <= Tolerance)
 	{
 		SafeReciprocalScale.Z = 0.f;
 	}

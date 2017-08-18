@@ -632,7 +632,7 @@ public:
 	bool GetVector2D(
 		const TCHAR*   Section,
 		const TCHAR*   Key,
-		YVector2D&     Value,
+		FVector2D&     Value,
 		const FString& Filename);
 	bool GetVector
 	(
@@ -714,7 +714,7 @@ public:
 	void SetVector2D(
 		const TCHAR*   Section,
 		const TCHAR*   Key,
-		YVector2D      Value,
+		FVector2D      Value,
 		const FString& Filename);
 	void SetVector
 	(

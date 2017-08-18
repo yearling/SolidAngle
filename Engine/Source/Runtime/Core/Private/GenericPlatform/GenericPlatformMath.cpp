@@ -8,17 +8,17 @@
 static int32 GSRandSeed;
 
 
-void YGenericPlatformMath::SRandInit( int32 Seed ) 
+void FGenericPlatformMath::SRandInit( int32 Seed ) 
 {
 	GSRandSeed = Seed; 
 }
 
-int32 YGenericPlatformMath::GetRandSeed()
+int32 FGenericPlatformMath::GetRandSeed()
 {
 	return GSRandSeed;
 }
 
-float YGenericPlatformMath::SRand() 
+float FGenericPlatformMath::SRand() 
 { 
 	GSRandSeed = (GSRandSeed * 196314165) + 907633515;
 	union { float f; int32 i; } Result;
@@ -26,18 +26,18 @@ float YGenericPlatformMath::SRand()
 	const float SRandTemp = 1.0f;
 	Temp.f = SRandTemp;
 	Result.i = (Temp.i & 0xff800000) | (GSRandSeed & 0x007fffff);
-	return YPlatformMath::Fractional( Result.f );
+	return FPlatformMath::Fractional( Result.f );
 } 
 
-float YGenericPlatformMath::Atan2(float Y, float X)
+float FGenericPlatformMath::Atan2(float Y, float X)
 {
 	//return atan2f(Y,X);
 	// atan2f occasionally returns NaN with perfectly valid input (possibly due to a compiler or library bug).
 	// We are replacing it with a minimax approximation with a max relative error of 7.15255737e-007 compared to the C library function.
 	// On PC this has been measured to be 2x faster than the std C version.
 
-	const float absX = YMath::Abs(X);
-	const float absY = YMath::Abs(Y);
+	const float absX = FMath::Abs(X);
+	const float absY = FMath::Abs(Y);
 	const bool yAbsBigger = (absY > absX);
 	float t0 = yAbsBigger ? absY : absX; // Max(absY, absX)
 	float t1 = yAbsBigger ? absX : absY; // Min(absX, absY)
@@ -74,18 +74,18 @@ float YGenericPlatformMath::Atan2(float Y, float X)
 	return t3;
 }
 
-void YGenericPlatformMath::FmodReportError(float X, float Y)
+void FGenericPlatformMath::FmodReportError(float X, float Y)
 {
 	if (Y == 0)
 	{
-		ensureMsgf(Y != 0, TEXT("YMath::FMod(X=%f, Y=%f) : Y is zero, this is invalid and would result in NaN!"), X, Y);
+		ensureMsgf(Y != 0, TEXT("FMath::FMod(X=%f, Y=%f) : Y is zero, this is invalid and would result in NaN!"), X, Y);
 	}
 }
 
 #if WITH_DEV_AUTOMATION_TESTS
 extern float TheCompilerDoesntKnowThisIsAlwaysZero;
 
-void YGenericPlatformMath::AutoTest() 
+void FGenericPlatformMath::AutoTest() 
 {
 	check(IsNaN(sqrtf(-1.0f)));
 	check(!IsFinite(sqrtf(-1.0f)));

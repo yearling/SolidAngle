@@ -15,7 +15,7 @@ class TChunkedArray
 public:
 
 	/** Initialization constructor. */
-	TChunkedArray(int32 InNumElements = 0) :
+	TChunkedArray(int32 InNumElements = 0):
 		NumElements(InNumElements)
 	{
 		// Compute the number of chunks needed.
@@ -23,7 +23,7 @@ public:
 
 		// Allocate the chunks.
 		Chunks.Empty(NumChunks);
-		for (int32 ChunkIndex = 0; ChunkIndex < NumChunks; ChunkIndex++)
+		for(int32 ChunkIndex = 0;ChunkIndex < NumChunks;ChunkIndex++)
 		{
 			new(Chunks) FChunk;
 		}
@@ -33,7 +33,7 @@ private:
 	template <typename ArrayType>
 	FORCEINLINE static typename TEnableIf<TContainerTraits<ArrayType>::MoveWillEmptyContainer>::Type MoveOrCopy(ArrayType& ToArray, ArrayType& FromArray)
 	{
-		ToArray.Chunks = (ChunksType&&)FromArray.Chunks;
+		ToArray.Chunks      = (ChunksType&&)FromArray.Chunks;
 		ToArray.NumElements = FromArray.NumElements;
 		FromArray.NumElements = 0;
 	}
@@ -68,14 +68,14 @@ public:
 #else
 
 	FORCEINLINE TChunkedArray(const TChunkedArray& Other)
-		: Chunks(Other.Chunks)
+		: Chunks     (Other.Chunks)
 		, NumElements(Other.NumElements)
 	{
 	}
 
 	FORCEINLINE TChunkedArray& operator=(const TChunkedArray& Other)
 	{
-		Chunks = Other.Chunks;
+		Chunks      = Other.Chunks;
 		NumElements = Other.NumElements;
 
 		return *this;
@@ -108,12 +108,12 @@ public:
 		const int32 ChunkElementIndex = ElementIndex % NumElementsPerChunk;
 		return Chunks[ChunkIndex].Elements[ChunkElementIndex];
 	}
-	int32 Num() const
-	{
-		return NumElements;
+	int32 Num() const 
+	{ 
+		return NumElements; 
 	}
 
-	SIZE_T GetAllocatedSize(void) const
+	SIZE_T GetAllocatedSize( void ) const
 	{
 		return Chunks.GetAllocatedSize();
 	}
@@ -132,51 +132,51 @@ public:
 	}
 
 	/**
-	* Adds a new item to the end of the chunked array.
-	*
-	* @param Item	The item to add
-	* @return		Index to the new item
-	*/
-	int32 AddElement(const ElementType& Item)
+	 * Adds a new item to the end of the chunked array.
+	 *
+	 * @param Item	The item to add
+	 * @return		Index to the new item
+	 */
+	int32 AddElement( const ElementType& Item )
 	{
 		new(*this) ElementType(Item);
 		return this->NumElements - 1;
 	}
 
 	/**
-	* Appends the specified array to this array.
-	* Cannot append to self.
-	*
-	* @param Other The array to append.
-	*/
-	FORCEINLINE TChunkedArray& operator+=(const TArray<ElementType>& Other)
-	{
-		if ((UPTRINT*)this != (UPTRINT*)&Other)
+	 * Appends the specified array to this array.
+	 * Cannot append to self.
+	 *
+	 * @param Other The array to append.
+	 */
+	FORCEINLINE TChunkedArray& operator+=(const TArray<ElementType>& Other) 
+	{ 
+		if( (UPTRINT*)this != (UPTRINT*)&Other )
 		{
-			for (const auto& It : Other)
+			for( const auto& It : Other )
 			{
 				AddElement(It);
 			}
 		}
-		return *this;
+		return *this; 
 	}
 
-	FORCEINLINE TChunkedArray& operator+=(const TChunkedArray& Other)
-	{
-		if ((UPTRINT*)this != (UPTRINT*)&Other)
+	FORCEINLINE TChunkedArray& operator+=(const TChunkedArray& Other) 
+	{ 
+		if( (UPTRINT*)this != (UPTRINT*)&Other )
 		{
-			for (int32 Index = 0; Index < Other.Num(); ++Index)
+			for( int32 Index = 0; Index < Other.Num(); ++Index )
 			{
 				AddElement(Other[Index]);
 			}
 		}
-		return *this;
+		return *this; 
 	}
 
-	int32 Add(int32 Count = 1)
+	int32 Add( int32 Count=1 )
 	{
-		check(Count >= 0);
-		checkSlow(NumElements >= 0);
+		check(Count>=0);
+		checkSlow(NumElements>=0);
 
 		const int32 OldNum = NumElements;
 		for (int32 i = 0; i < Count; i++)
@@ -190,7 +190,7 @@ public:
 		return OldNum;
 	}
 
-	void Empty(int32 Slack = 0)
+	void Empty( int32 Slack=0 ) 
 	{
 		// Compute the number of chunks needed.
 		const int32 NumChunks = (Slack + NumElementsPerChunk - 1) / NumElementsPerChunk;
@@ -199,11 +199,11 @@ public:
 	}
 
 	/**
-	* Reserves memory such that the array can contain at least Number elements.
-	*
-	* @param Number The number of elements that the array should be able to
-	*               contain after allocation.
-	*/
+	 * Reserves memory such that the array can contain at least Number elements.
+	 *
+	 * @param Number The number of elements that the array should be able to
+	 *               contain after allocation.
+	 */
 	void Reserve(int32 Number)
 	{
 		// Compute the number of chunks needed.
@@ -245,7 +245,7 @@ struct TContainerTraits<TChunkedArray<ElementType, TargetBytesPerChunk> > : publ
 };
 
 
-template <typename T, uint32 TargetBytesPerChunk> void* operator new(size_t Size, TChunkedArray<T, TargetBytesPerChunk>& ChunkedArray)
+template <typename T,uint32 TargetBytesPerChunk> void* operator new( size_t Size, TChunkedArray<T,TargetBytesPerChunk>& ChunkedArray )
 {
 	check(Size == sizeof(T));
 	const int32 Index = ChunkedArray.Add(1);

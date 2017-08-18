@@ -554,7 +554,7 @@ FMD5Hash FMD5Hash::HashFileFromArchive( FArchive* Ar, TArray<uint8>* Buffer)
 		// Read in BufferSize chunks
 		while (Position < Size)
 		{
-			const auto ReadNum = YMath::Min(Size - Position, (int64)Buffer->Num());
+			const auto ReadNum = FMath::Min(Size - Position, (int64)Buffer->Num());
 			Ar->Serialize(Buffer->GetData(), ReadNum);
 			MD5.Update(Buffer->GetData(), ReadNum);
 

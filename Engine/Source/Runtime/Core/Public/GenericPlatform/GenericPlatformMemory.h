@@ -35,7 +35,7 @@ struct YGenericPlatformMemoryConstants
 	// It is ok to go outside this range, lookups will just be a little slower
 	uint64 AddressLimit;
 
-	/** Approximate physical RAM in GB; 1 on everything except PC. Used for "course tuning", like YPlatformMisc::NumberOfCores(). */
+	/** Approximate physical RAM in GB; 1 on everything except PC. Used for "course tuning", like FPlatformMisc::NumberOfCores(). */
 	uint32 TotalPhysicalGB;
 
 	/** Default constructor, clears all variables. */

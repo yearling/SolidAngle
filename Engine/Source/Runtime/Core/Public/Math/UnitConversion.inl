@@ -6,11 +6,11 @@
 #include "CoreTypes.h"
 #include "CoreFwd.h"
 
-struct YMath;
+struct FMath;
 struct YUnitConversion;
 enum class EUnit : uint8;
 enum class EUnitType;
-template<typename NumericType> struct YNumericUnit;
+template<typename NumericType> struct FNumericUnit;
 template<typename OptionalType> struct TOptional;
 template<typename ValueType, typename ErrorType> class TValueOrError;
 
@@ -36,7 +36,7 @@ namespace UnitConversion
 	CORE_API double TimeUnificationFactor(EUnit From);
 
 	/** Attempt to parse an expression into a numeric unit */
-	CORE_API TValueOrError<YNumericUnit<double>, FText> TryParseExpression(const TCHAR* InExpression, EUnit DefaultUnit, const YNumericUnit<double>& InExistingValue);
+	CORE_API TValueOrError<FNumericUnit<double>, FText> TryParseExpression(const TCHAR* InExpression, EUnit DefaultUnit, const FNumericUnit<double>& InExistingValue);
 
 	/** Structure used to define the factor required to get from one unit type to the next. */
 	struct FQuantizationInfo
@@ -106,12 +106,12 @@ T YUnitConversion::Convert(T InValue, EUnit From, EUnit To)
 }
 
 template<typename T>
-YNumericUnit<T> YUnitConversion::QuantizeUnitsToBestFit(T Value, EUnit Units)
+FNumericUnit<T> YUnitConversion::QuantizeUnitsToBestFit(T Value, EUnit Units)
 {
 	auto OptionalBounds = UnitConversion::GetQuantizationBounds(Units);
 	if (!OptionalBounds.IsSet())
 	{
-		return YNumericUnit<T>(Value, Units);
+		return FNumericUnit<T>(Value, Units);
 	}
 
 	const auto& Bounds = *OptionalBounds.GetValue();
@@ -121,7 +121,7 @@ YNumericUnit<T> YUnitConversion::QuantizeUnitsToBestFit(T Value, EUnit Units)
 	EUnit NewUnits = Units;
 	double NewValue = Value;
 
-	if (YMath::Abs(NewValue) > 1)
+	if (FMath::Abs(NewValue) > 1)
 	{
 		// Large number? Try larger units
 		for (int32 Index = CurrentUnitIndex; Index < Bounds.Num(); ++Index)
@@ -133,7 +133,7 @@ YNumericUnit<T> YUnitConversion::QuantizeUnitsToBestFit(T Value, EUnit Units)
 
 			const auto Tmp = NewValue / Bounds[Index].Factor;
 
-			if (YMath::Abs(Tmp) < 1)
+			if (FMath::Abs(Tmp) < 1)
 			{
 				break;
 			}
@@ -150,14 +150,14 @@ YNumericUnit<T> YUnitConversion::QuantizeUnitsToBestFit(T Value, EUnit Units)
 			NewValue *= Bounds[Index].Factor;
 			NewUnits = Bounds[Index].Units;
 
-			if (YMath::Abs(NewValue) > 1)
+			if (FMath::Abs(NewValue) > 1)
 			{
 				break;
 			}
 		}
 	}
 
-	return YNumericUnit<T>(NewValue, NewUnits);
+	return FNumericUnit<T>(NewValue, NewUnits);
 }
 
 template<typename T>
@@ -190,7 +190,7 @@ EUnit YUnitConversion::CalculateDisplayUnit(T Value, EUnit InUnits)
 		double This = Convert(Value, InUnits, DisplayUnits[Index]);
 		double Next = Convert(Value, InUnits, DisplayUnits[Index + 1]);
 
-		if (YMath::Abs(YMath::LogX(10.0f, This)) < YMath::Abs(YMath::LogX(10.0f, Next)))
+		if (FMath::Abs(FMath::LogX(10.0f, This)) < FMath::Abs(FMath::LogX(10.0f, Next)))
 		{
 			BestIndex = Index;
 		}
@@ -204,24 +204,24 @@ EUnit YUnitConversion::CalculateDisplayUnit(T Value, EUnit InUnits)
 }
 
 template<typename NumericType>
-YNumericUnit<NumericType>::YNumericUnit()
+FNumericUnit<NumericType>::FNumericUnit()
 	: Units(EUnit::Unspecified)
 {}
 
 template<typename NumericType>
-YNumericUnit<NumericType>::YNumericUnit(const NumericType& InValue, EUnit InUnits)
+FNumericUnit<NumericType>::FNumericUnit(const NumericType& InValue, EUnit InUnits)
 	: Value(InValue), Units(InUnits)
 {}
 
 template<typename NumericType>
-YNumericUnit<NumericType>::YNumericUnit(const YNumericUnit& Other)
+FNumericUnit<NumericType>::FNumericUnit(const FNumericUnit& Other)
 	: Units(EUnit::Unspecified)
 {
 	(*this) = Other;
 }
 
 template<typename NumericType>
-YNumericUnit<NumericType>& YNumericUnit<NumericType>::operator=(const YNumericUnit& Other)
+FNumericUnit<NumericType>& FNumericUnit<NumericType>::operator=(const FNumericUnit& Other)
 {
 	CopyValueWithConversion(Other);
 	return *this;
@@ -229,13 +229,13 @@ YNumericUnit<NumericType>& YNumericUnit<NumericType>::operator=(const YNumericUn
 
 /** Templated Copy construction/assignment from differing numeric types. Relies on implicit conversion of the two numeric types. */
 template<typename NumericType> template<typename OtherType>
-YNumericUnit<NumericType>::YNumericUnit(const YNumericUnit<OtherType>& Other)
+FNumericUnit<NumericType>::FNumericUnit(const FNumericUnit<OtherType>& Other)
 {
 	(*this) = Other;
 }
 
 template<typename NumericType> template<typename OtherType>
-YNumericUnit<NumericType>& YNumericUnit<NumericType>::operator=(const YNumericUnit<OtherType>& Other)
+FNumericUnit<NumericType>& FNumericUnit<NumericType>::operator=(const FNumericUnit<OtherType>& Other)
 {
 	CopyValueWithConversion(Other);
 	return *this;
@@ -243,43 +243,43 @@ YNumericUnit<NumericType>& YNumericUnit<NumericType>::operator=(const YNumericUn
 
 /** Convert this quantity to a different unit */
 template<typename NumericType>
-TOptional<YNumericUnit<NumericType>> YNumericUnit<NumericType>::ConvertTo(EUnit ToUnits) const
+TOptional<FNumericUnit<NumericType>> FNumericUnit<NumericType>::ConvertTo(EUnit ToUnits) const
 {
 	if (Units == EUnit::Unspecified)
 	{
-		return YNumericUnit(Value, ToUnits);
+		return FNumericUnit(Value, ToUnits);
 	}
 	else if (YUnitConversion::AreUnitsCompatible(Units, ToUnits))
 	{
-		return YNumericUnit<NumericType>(YUnitConversion::Convert(Value, Units, ToUnits), ToUnits);
+		return FNumericUnit<NumericType>(YUnitConversion::Convert(Value, Units, ToUnits), ToUnits);
 	}
 
-	return TOptional<YNumericUnit<NumericType>>();
+	return TOptional<FNumericUnit<NumericType>>();
 }
 
 template<typename NumericType>
-YNumericUnit<NumericType> YNumericUnit<NumericType>::QuantizeUnitsToBestFit() const
+FNumericUnit<NumericType> FNumericUnit<NumericType>::QuantizeUnitsToBestFit() const
 {
 	return YUnitConversion::QuantizeUnitsToBestFit(Value, Units);
 }
 
 template<typename NumericType>
-TValueOrError<YNumericUnit<NumericType>, FText> YNumericUnit<NumericType>::TryParseExpression(const TCHAR* InExpression, EUnit InDefaultUnit, const YNumericUnit<NumericType>& InExistingValue)
+TValueOrError<FNumericUnit<NumericType>, FText> FNumericUnit<NumericType>::TryParseExpression(const TCHAR* InExpression, EUnit InDefaultUnit, const FNumericUnit<NumericType>& InExistingValue)
 {
-	TValueOrError<YNumericUnit<double>, FText> Result = UnitConversion::TryParseExpression(InExpression, InDefaultUnit, InExistingValue);
+	TValueOrError<FNumericUnit<double>, FText> Result = UnitConversion::TryParseExpression(InExpression, InDefaultUnit, InExistingValue);
 	if (Result.IsValid())
 	{
 		const auto& Value = Result.GetValue();
-		return MakeValue(YNumericUnit<NumericType>((NumericType)Value.Value, Value.Units));
+		return MakeValue(FNumericUnit<NumericType>((NumericType)Value.Value, Value.Units));
 	}
 
 	return MakeError(Result.GetError());
 }
 
 template<typename NumericType>
-TOptional<YNumericUnit<NumericType>> YNumericUnit<NumericType>::TryParseString(const TCHAR* InSource)
+TOptional<FNumericUnit<NumericType>> FNumericUnit<NumericType>::TryParseString(const TCHAR* InSource)
 {
-	TOptional<YNumericUnit<NumericType>> Result;
+	TOptional<FNumericUnit<NumericType>> Result;
 	if (!InSource || !*InSource)
 	{
 		return Result;
@@ -317,7 +317,7 @@ TOptional<YNumericUnit<NumericType>> YNumericUnit<NumericType>::TryParseString(c
 
 /** Copy another unit into this one, taking account of its units, and applying necessary conversion */
 template<typename NumericType> template<typename OtherType>
-void YNumericUnit<NumericType>::CopyValueWithConversion(const YNumericUnit<OtherType>& Other)
+void FNumericUnit<NumericType>::CopyValueWithConversion(const FNumericUnit<OtherType>& Other)
 {
 	if (Units != EUnit::Unspecified && Other.Units != EUnit::Unspecified)
 	{
@@ -348,7 +348,7 @@ void YNumericUnit<NumericType>::CopyValueWithConversion(const YNumericUnit<Other
 }
 
 template<typename NumericType>
-bool YNumericUnit<NumericType>::ExtractNumberBoundary(const TCHAR* Start, const TCHAR*& End)
+bool FNumericUnit<NumericType>::ExtractNumberBoundary(const TCHAR* Start, const TCHAR*& End)
 {
 	while(FChar::IsWhitespace(*Start)) ++Start;
 
@@ -377,7 +377,7 @@ bool YNumericUnit<NumericType>::ExtractNumberBoundary(const TCHAR* Start, const 
 
 /** Global arithmetic operators for number types. Deals with conversion from related units correctly. */
 template<typename NumericType, typename OtherType>
-bool operator==(const YNumericUnit<NumericType>& LHS, const YNumericUnit<OtherType>& RHS)
+bool operator==(const FNumericUnit<NumericType>& LHS, const FNumericUnit<OtherType>& RHS)
 {
 	if (LHS.Units != EUnit::Unspecified && RHS.Units != EUnit::Unspecified)
 	{
@@ -402,20 +402,20 @@ bool operator==(const YNumericUnit<NumericType>& LHS, const YNumericUnit<OtherTy
 }
 
 template<typename NumericType, typename OtherType>
-bool operator!=(const YNumericUnit<NumericType>& LHS, const YNumericUnit<OtherType>& RHS)
+bool operator!=(const FNumericUnit<NumericType>& LHS, const FNumericUnit<OtherType>& RHS)
 {
 	return !(LHS == RHS);
 }
 
 
 template <typename NumericType>
-struct TNumericLimits<YNumericUnit<NumericType>> : public TNumericLimits<NumericType>
+struct TNumericLimits<FNumericUnit<NumericType>> : public TNumericLimits<NumericType>
 { };
 
 namespace Lex
 {
 	template<typename T>
-	FString ToString(const YNumericUnit<T>& NumericUnit)
+	FString ToString(const FNumericUnit<T>& NumericUnit)
 	{
 		FString String = ToString(NumericUnit.Value);
 		String += TEXT(" ");
@@ -425,7 +425,7 @@ namespace Lex
 	}
 
 	template<typename T>
-	FString ToSanitizedString(const YNumericUnit<T>& NumericUnit)
+	FString ToSanitizedString(const FNumericUnit<T>& NumericUnit)
 	{
 		FString String = ToSanitizedString(NumericUnit.Value);
 		String += TEXT(" ");
@@ -435,9 +435,9 @@ namespace Lex
 	}
 
 	template<typename T>
-	void FromString(YNumericUnit<T>& OutValue, const TCHAR* String)
+	void FromString(FNumericUnit<T>& OutValue, const TCHAR* String)
 	{
-		auto Parsed = YNumericUnit<T>::TryParseString(String);
+		auto Parsed = FNumericUnit<T>::TryParseString(String);
 		if (Parsed)
 		{
 			OutValue = Parsed.GetValue();
@@ -445,9 +445,9 @@ namespace Lex
 	}
 	
 	template<typename T>
-	bool TryParseString(YNumericUnit<T>& OutValue, const TCHAR* String)
+	bool TryParseString(FNumericUnit<T>& OutValue, const TCHAR* String)
 	{
-		auto Parsed = YNumericUnit<T>::TryParseString(String);
+		auto Parsed = FNumericUnit<T>::TryParseString(String);
 		if (Parsed)
 		{
 			OutValue = Parsed.GetValue();

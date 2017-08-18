@@ -9,7 +9,7 @@
 #include "Math/Transform.h"
 
 /** Dual quaternion class */
-class YDualQuat
+class FDualQuat
 {
 public:
 
@@ -19,39 +19,39 @@ public:
 	FQuat D;
 
 	// Constructors
-	YDualQuat(const FQuat &InR, const FQuat &InD)
+	FDualQuat(const FQuat &InR, const FQuat &InD)
 		: R(InR)
 		, D(InD)
 	{}
 
-	YDualQuat(const FTransform &T)
+	FDualQuat(const FTransform &T)
 	{
 		FVector V = T.GetTranslation()*0.5f;
-		*this = YDualQuat(FQuat(0, 0, 0, 1), FQuat(V.X, V.Y, V.Z, 0.f)) * YDualQuat(T.GetRotation(), FQuat(0, 0, 0, 0));
+		*this = FDualQuat(FQuat(0, 0, 0, 1), FQuat(V.X, V.Y, V.Z, 0.f)) * FDualQuat(T.GetRotation(), FQuat(0, 0, 0, 0));
 	}
 
 	/** Dual quat addition */
-	YDualQuat operator+(const YDualQuat &B) const
+	FDualQuat operator+(const FDualQuat &B) const
 	{
 		return{ R + B.R, D + B.D };
 	}
 
 	/** Dual quat product */
-	YDualQuat operator*(const YDualQuat &B) const
+	FDualQuat operator*(const FDualQuat &B) const
 	{
 		return{ R*B.R, D*B.R + B.D*R };
 	}
 
 	/** Scale dual quat */
-	YDualQuat operator*(const float S) const
+	FDualQuat operator*(const float S) const
 	{
 		return{ R*S, D*S };
 	}
 
 	/** Return normalized dual quat */
-	YDualQuat Normalized() const
+	FDualQuat Normalized() const
 	{
-		float MinV = 1.0f / YMath::Sqrt(R | R);
+		float MinV = 1.0f / FMath::Sqrt(R | R);
 		return{ R*MinV, D*MinV };
 	}
 

@@ -78,7 +78,7 @@ void YArchiveLoadCompressedProxy::Serialize( void* InData, int64 Count )
 	{	
 		while( Count )
 		{
-			int32 BytesToCopy = YMath::Min<int32>( Count, (int32)(TmpDataEnd - TmpData) );
+			int32 BytesToCopy = FMath::Min<int32>( Count, (int32)(TmpDataEnd - TmpData) );
 			// Enough room in buffer to copy some data.
 			if( BytesToCopy )
 			{

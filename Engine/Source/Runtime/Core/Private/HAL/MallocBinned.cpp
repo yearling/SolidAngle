@@ -160,7 +160,7 @@ struct YMallocBinned::Private
 		Table->TotalWaste += Table->BlockSize - Size;
 		Table->TotalRequests++;
 		Table->ActiveRequests++;
-		Table->MaxActiveRequests = YMath::Max(Table->MaxActiveRequests, Table->ActiveRequests);
+		Table->MaxActiveRequests = FMath::Max(Table->MaxActiveRequests, Table->ActiveRequests);
 		Table->MaxRequest = Size > Table->MaxRequest ? Size : Table->MaxRequest;
 		Table->MinRequest = Size < Table->MinRequest ? Size : Table->MinRequest;
 #endif
@@ -387,7 +387,7 @@ struct YMallocBinned::Private
 
 #if STATS
 		Table->NumActivePools++;
-		Table->MaxActivePools = YMath::Max(Table->MaxActivePools, Table->NumActivePools);
+		Table->MaxActivePools = FMath::Max(Table->MaxActivePools, Table->NumActivePools);
 #endif
 		// Create first free item.
 		Free->NumFreeBlocks = Blocks;
@@ -769,12 +769,12 @@ YMallocBinned::YMallocBinned(uint32 InPageSize, uint64 AddressLimit)
 	check(AddressLimit > PageSize); // Check to catch 32 bit overflow in AddressLimit
 
 	/** Shift to get the reference from the indirect tables */
-	PoolBitShift = YPlatformMath::CeilLogTwo(PageSize);
-	IndirectPoolBitShift = YPlatformMath::CeilLogTwo(PageSize/sizeof(FPoolInfo));
+	PoolBitShift = FPlatformMath::CeilLogTwo(PageSize);
+	IndirectPoolBitShift = FPlatformMath::CeilLogTwo(PageSize/sizeof(FPoolInfo));
 	IndirectPoolBlockSize = PageSize/sizeof(FPoolInfo);
 
 	MaxHashBuckets = AddressLimit >> (IndirectPoolBitShift+PoolBitShift); 
-	MaxHashBucketBits = YPlatformMath::CeilLogTwo(MaxHashBuckets);
+	MaxHashBucketBits = FPlatformMath::CeilLogTwo(MaxHashBuckets);
 	MaxHashBucketWaste = (MaxHashBuckets*sizeof(PoolHashBucket))/1024;
 	MaxBookKeepingOverhead = ((AddressLimit/PageSize)*sizeof(PoolHashBucket))/(1024*1024);
 	/** 
@@ -869,9 +869,9 @@ void* YMallocBinned::Malloc(SIZE_T Size, uint32 Alignment)
 		Alignment = Private::DEFAULT_BINNED_ALLOCATOR_ALIGNMENT;
 	}
 
-	Alignment = YMath::Max<uint32>(Alignment, Private::DEFAULT_BINNED_ALLOCATOR_ALIGNMENT);
-	SIZE_T SpareBytesCount = YMath::Min<SIZE_T>(Private::DEFAULT_BINNED_ALLOCATOR_ALIGNMENT, Size);
-	Size = YMath::Max<SIZE_T>(PoolTable[0].BlockSize, Size + (Alignment - SpareBytesCount));
+	Alignment = FMath::Max<uint32>(Alignment, Private::DEFAULT_BINNED_ALLOCATOR_ALIGNMENT);
+	SIZE_T SpareBytesCount = FMath::Min<SIZE_T>(Private::DEFAULT_BINNED_ALLOCATOR_ALIGNMENT, Size);
+	Size = FMath::Max<SIZE_T>(PoolTable[0].BlockSize, Size + (Alignment - SpareBytesCount));
 	MEM_TIME(MemTime -= FPlatformTime::Seconds());
 	
 	BINNED_INCREMENT_STATCOUNTER(CurrentAllocs);
@@ -971,12 +971,12 @@ void* YMallocBinned::Realloc( void* Ptr, SIZE_T NewSize, uint32 Alignment )
 		Alignment = Private::DEFAULT_BINNED_ALLOCATOR_ALIGNMENT;
 	}
 
-	Alignment = YMath::Max<uint32>(Alignment, Private::DEFAULT_BINNED_ALLOCATOR_ALIGNMENT);
+	Alignment = FMath::Max<uint32>(Alignment, Private::DEFAULT_BINNED_ALLOCATOR_ALIGNMENT);
 	const uint32 NewSizeUnmodified = NewSize;
-	SIZE_T SpareBytesCount = YMath::Min<SIZE_T>(Private::DEFAULT_BINNED_ALLOCATOR_ALIGNMENT, NewSize);
+	SIZE_T SpareBytesCount = FMath::Min<SIZE_T>(Private::DEFAULT_BINNED_ALLOCATOR_ALIGNMENT, NewSize);
 	if (NewSize)
 	{
-		NewSize = YMath::Max<SIZE_T>(PoolTable[0].BlockSize, NewSize + (Alignment - SpareBytesCount));
+		NewSize = FMath::Max<SIZE_T>(PoolTable[0].BlockSize, NewSize + (Alignment - SpareBytesCount));
 	}
 	MEM_TIME(MemTime -= FPlatformTime::Seconds());
 	UPTRINT BasePtr;
@@ -992,7 +992,7 @@ void* YMallocBinned::Realloc( void* Ptr, SIZE_T NewSize, uint32 Alignment )
 			if (NewSizeUnmodified > MemSizeToPoolTable[Pool->TableIndex]->BlockSize || NewSizeUnmodified <= MemSizeToPoolTable[Pool->TableIndex - 1]->BlockSize)
 			{
 				NewPtr = Malloc(NewSizeUnmodified, Alignment);
-				FMemory::Memcpy(NewPtr, Ptr, YMath::Min<SIZE_T>(NewSizeUnmodified, MemSizeToPoolTable[Pool->TableIndex]->BlockSize - (Alignment - SpareBytesCount)));
+				FMemory::Memcpy(NewPtr, Ptr, FMath::Min<SIZE_T>(NewSizeUnmodified, MemSizeToPoolTable[Pool->TableIndex]->BlockSize - (Alignment - SpareBytesCount)));
 				Free( Ptr );
 			}
 			else if (((UPTRINT)Ptr & (UPTRINT)(Alignment - 1)) != 0)
@@ -1008,7 +1008,7 @@ void* YMallocBinned::Realloc( void* Ptr, SIZE_T NewSize, uint32 Alignment )
 			{
 				// Grow or shrink.
 				NewPtr = Malloc(NewSizeUnmodified, Alignment);
-				FMemory::Memcpy(NewPtr, Ptr, YMath::Min<SIZE_T>(NewSizeUnmodified, Pool->GetBytes()));
+				FMemory::Memcpy(NewPtr, Ptr, FMath::Min<SIZE_T>(NewSizeUnmodified, Pool->GetBytes()));
 				Free( Ptr );
 			}
 			else

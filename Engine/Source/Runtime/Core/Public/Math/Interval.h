@@ -176,7 +176,7 @@ public:
 	{
 		if (A.IsValid() && B.IsValid())
 		{
-			return TInterval(YMath::Max(A.Min, B.Min), YMath::Min(A.Max, B.Max));
+			return TInterval(FMath::Max(A.Min, B.Min), FMath::Min(A.Max, B.Max));
 		}
 
 		return TInterval();

@@ -144,7 +144,7 @@ public:
 	/** Called when the user accepts an invitation to the current game */
 	static FOnInviteAccepted OnInviteAccepted;
 
-	DECLARE_MULTICAST_DELEGATE_ThreeParams(FWorldOriginOffset, class UWorld*, YIntVector, YIntVector);
+	DECLARE_MULTICAST_DELEGATE_ThreeParams(FWorldOriginOffset, class UWorld*, FIntVector, FIntVector);
 	/** called before world origin shifting */
 	static FWorldOriginOffset PreWorldOriginOffset;
 	/** called after world origin shifting */

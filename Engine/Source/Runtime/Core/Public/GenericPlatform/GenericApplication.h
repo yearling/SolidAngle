@@ -352,10 +352,10 @@ struct FDisplayMetrics
 	FPlatformRect VirtualDisplayRect;
 
 	/** The safe area for all content on TVs (see http://en.wikipedia.org/wiki/Safe_area_%28television%29) - content will be inset TitleSafePaddingSize.X on left _and_ right */
-	YVector2D TitleSafePaddingSize;
+	FVector2D TitleSafePaddingSize;
 
 	/** The safe area for less important spill over on TVs (see TitleSafePaddingSize) */
-	YVector2D ActionSafePaddingSize;
+	FVector2D ActionSafePaddingSize;
 
 	CORE_API static void GetDisplayMetrics(struct FDisplayMetrics& OutDisplayMetrics);
 
@@ -463,7 +463,7 @@ public:
 		return OutRect;
 	}
 
-	virtual bool TryCalculatePopupWindowPosition(const FPlatformRect& InAnchor, const YVector2D& InSize, const EPopUpOrientation::Type Orientation, /*OUT*/ YVector2D* const CalculatedPopUpPosition) const { return false; }
+	virtual bool TryCalculatePopupWindowPosition(const FPlatformRect& InAnchor, const FVector2D& InSize, const EPopUpOrientation::Type Orientation, /*OUT*/ FVector2D* const CalculatedPopUpPosition) const { return false; }
 
 	DECLARE_EVENT_OneParam(GenericApplication, FOnDisplayMetricsChanged, const FDisplayMetrics&);
 

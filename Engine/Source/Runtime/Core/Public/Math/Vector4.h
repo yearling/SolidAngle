@@ -63,7 +63,7 @@ public:
 	* @param InXY A 2D vector holding the X- and Y-components.
 	* @param InZW A 2D vector holding the Z- and W-components.
 	*/
-	explicit FVector4(YVector2D InXY, YVector2D InZW);
+	explicit FVector4(FVector2D InXY, FVector2D InZW);
 
 	/**
 	* Creates and initializes a new vector to zero.
@@ -474,7 +474,7 @@ FORCEINLINE FVector4::FVector4(EForceInit)
 }
 
 
-FORCEINLINE FVector4::FVector4(YVector2D InXY, YVector2D InZW)
+FORCEINLINE FVector4::FVector4(FVector2D InXY, FVector2D InZW)
 	: X(InXY.X)
 	, Y(InXY.Y)
 	, Z(InZW.X)
@@ -583,7 +583,7 @@ FORCEINLINE bool FVector4::operator!=(const FVector4& V) const
 
 FORCEINLINE bool FVector4::Equals(const FVector4& V, float Tolerance) const
 {
-	return YMath::Abs(X - V.X) <= Tolerance && YMath::Abs(Y - V.Y) <= Tolerance && YMath::Abs(Z - V.Z) <= Tolerance && YMath::Abs(W - V.W) <= Tolerance;
+	return FMath::Abs(X - V.X) <= Tolerance && FMath::Abs(Y - V.Y) <= Tolerance && FMath::Abs(Z - V.Z) <= Tolerance && FMath::Abs(W - V.W) <= Tolerance;
 }
 
 
@@ -613,7 +613,7 @@ FORCEINLINE FVector4 FVector4::GetSafeNormal(float Tolerance) const
 	const float SquareSum = X*X + Y*Y + Z*Z;
 	if (SquareSum > Tolerance)
 	{
-		const float Scale = YMath::InvSqrt(SquareSum);
+		const float Scale = FMath::InvSqrt(SquareSum);
 		return FVector4(X*Scale, Y*Scale, Z*Scale, 0.0f);
 	}
 	return FVector4(0.f);
@@ -628,7 +628,7 @@ FORCEINLINE FVector4 FVector4::SafeNormal(float Tolerance) const
 
 FORCEINLINE FVector4 FVector4::GetUnsafeNormal3() const
 {
-	const float Scale = YMath::InvSqrt(X*X + Y*Y + Z*Z);
+	const float Scale = FMath::InvSqrt(X*X + Y*Y + Z*Z);
 	return FVector4(X*Scale, Y*Scale, Z*Scale, 0.0f);
 }
 
@@ -641,7 +641,7 @@ FORCEINLINE FVector4 FVector4::UnsafeNormal3() const
 
 FORCEINLINE float FVector4::Size3() const
 {
-	return YMath::Sqrt(X*X + Y*Y + Z*Z);
+	return FMath::Sqrt(X*X + Y*Y + Z*Z);
 }
 
 
@@ -652,7 +652,7 @@ FORCEINLINE float FVector4::SizeSquared3() const
 
 FORCEINLINE float FVector4::Size() const
 {
-	return YMath::Sqrt(X*X + Y*Y + Z*Z + W*W);
+	return FMath::Sqrt(X*X + Y*Y + Z*Z + W*W);
 }
 
 FORCEINLINE float FVector4::SizeSquared() const
@@ -663,25 +663,25 @@ FORCEINLINE float FVector4::SizeSquared() const
 
 FORCEINLINE bool FVector4::IsUnit3(float LengthSquaredTolerance) const
 {
-	return YMath::Abs(1.0f - SizeSquared3()) < LengthSquaredTolerance;
+	return FMath::Abs(1.0f - SizeSquared3()) < LengthSquaredTolerance;
 }
 
 
 FORCEINLINE bool FVector4::ContainsNaN() const
 {
-	return (!YMath::IsFinite(X) ||
-		!YMath::IsFinite(Y) ||
-		!YMath::IsFinite(Z) ||
-		!YMath::IsFinite(W));
+	return (!FMath::IsFinite(X) ||
+		!FMath::IsFinite(Y) ||
+		!FMath::IsFinite(Z) ||
+		!FMath::IsFinite(W));
 }
 
 
 FORCEINLINE bool FVector4::IsNearlyZero3(float Tolerance) const
 {
 	return
-		YMath::Abs(X) <= Tolerance
-		&&	YMath::Abs(Y) <= Tolerance
-		&&	YMath::Abs(Z) <= Tolerance;
+		FMath::Abs(X) <= Tolerance
+		&&	FMath::Abs(Y) <= Tolerance
+		&&	FMath::Abs(Z) <= Tolerance;
 }
 
 
@@ -693,9 +693,9 @@ FORCEINLINE FVector4 FVector4::Reflect3(const FVector4& Normal) const
 
 FORCEINLINE void FVector4::FindBestAxisVectors3(FVector4& Axis1, FVector4& Axis2) const
 {
-	const float NX = YMath::Abs(X);
-	const float NY = YMath::Abs(Y);
-	const float NZ = YMath::Abs(Z);
+	const float NX = FMath::Abs(X);
+	const float NY = FMath::Abs(Y);
+	const float NZ = FMath::Abs(Z);
 
 	// Find best basis vectors.
 	if (NZ>NX && NZ>NY)	Axis1 = FVector4(1, 0, 0);

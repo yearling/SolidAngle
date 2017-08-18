@@ -44,7 +44,7 @@ private:
 		{
 			uint8* B1 = CompressBuffer + P1;
 			uint8* B2 = CompressBuffer + P2;
-			for( int32 Count=CompressLength-YMath::Max(P1,P2); Count>0; Count--,B1++,B2++ )
+			for( int32 Count=CompressLength-FMath::Max(P1,P2); Count>0; Count--,B1++,B2++ )
 			{
 				if( *B1 < *B2 )
 					return true;
@@ -65,7 +65,7 @@ public:
 		int32 i, First=0, Last=0;
 		while( !In.AtEnd() )
 		{
-			CompressLength = YMath::Min<int32>( In.TotalSize()-In.Tell(), MAX_BUFFER_SIZE );
+			CompressLength = FMath::Min<int32>( In.TotalSize()-In.Tell(), MAX_BUFFER_SIZE );
 			In.Serialize( CompressBuffer, CompressLength );
 			for( i=0; i<CompressLength+1; i++ )
 				CompressPosition[i] = i;
@@ -131,7 +131,7 @@ private:
 	enum {RLE_LEAD=5};
 	void EncodeEmitRun( FArchive& Out, uint8 Char, uint8 Count )
 	{
-		for( int32 Down=YMath::Min<int32>(Count,RLE_LEAD); Down>0; Down-- )
+		for( int32 Down=FMath::Min<int32>(Count,RLE_LEAD); Down>0; Down-- )
 			Out << Char;
 		if( Count>=RLE_LEAD )
 			Out << Count;

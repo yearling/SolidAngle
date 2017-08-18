@@ -39,8 +39,8 @@ static_assert(ARRAY_COUNT(Pow10Table) - 1 >= MaxFractionalPrintPrecision, "Pow10
 void SanitizeNumberFormattingOptions(FNumberFormattingOptions& InOutFormattingOptions)
 {
 	// Ensure that the maximum limits are >= the minimum limits
-	InOutFormattingOptions.MaximumIntegralDigits = YMath::Max(InOutFormattingOptions.MinimumIntegralDigits, InOutFormattingOptions.MaximumIntegralDigits);
-	InOutFormattingOptions.MaximumFractionalDigits = YMath::Max(InOutFormattingOptions.MinimumFractionalDigits, InOutFormattingOptions.MaximumFractionalDigits);
+	InOutFormattingOptions.MaximumIntegralDigits = FMath::Max(InOutFormattingOptions.MinimumIntegralDigits, InOutFormattingOptions.MaximumIntegralDigits);
+	InOutFormattingOptions.MaximumFractionalDigits = FMath::Max(InOutFormattingOptions.MinimumFractionalDigits, InOutFormattingOptions.MaximumFractionalDigits);
 }
 
 int32 IntegralToString_UInt64ToString(
@@ -79,7 +79,7 @@ int32 IntegralToString_UInt64ToString(
 
 	// Pad the string to the min digits requested
 	{
-		const int32 PaddingToApply = YMath::Min(InMinDigitsToPrint - DigitsPrinted, MaxIntegralPrintLength - DigitsPrinted);
+		const int32 PaddingToApply = FMath::Min(InMinDigitsToPrint - DigitsPrinted, MaxIntegralPrintLength - DigitsPrinted);
 		for (int32 PaddingIndex = 0; PaddingIndex < PaddingToApply; ++PaddingIndex)
 		{
 			if (InUseGrouping && NumUntilNextGroup-- == 0)
@@ -120,14 +120,14 @@ FORCEINLINE int32 IntegralToString_Common(const uint64 InVal, const FDecimalNumb
 
 void FractionalToString_SplitAndRoundNumber(const bool bIsNegative, const double InValue, const int32 InNumDecimalPlaces, ERoundingMode InRoundingMode, double& OutIntegralPart, double& OutFractionalPart)
 {
-	const int32 DecimalPlacesToRoundTo = YMath::Min(InNumDecimalPlaces, MaxFractionalPrintPrecision);
+	const int32 DecimalPlacesToRoundTo = FMath::Min(InNumDecimalPlaces, MaxFractionalPrintPrecision);
 
 	const bool bIsRoundingEntireNumber = DecimalPlacesToRoundTo == 0;
 
 	// We split the value before performing the rounding to avoid losing precision during the rounding calculations
 	// If we're rounding to zero decimal places, then we just apply rounding to the number as a whole
 	double IntegralPart = InValue;
-	double FractionalPart = (bIsRoundingEntireNumber) ? 0.0 : YMath::Modf(InValue, &IntegralPart);
+	double FractionalPart = (bIsRoundingEntireNumber) ? 0.0 : FMath::Modf(InValue, &IntegralPart);
 
 	// Multiply the value to round by 10^DecimalPlacesToRoundTo - this will allow us to perform rounding calculations 
 	// that correctly trim any remaining fractional parts that are outside of our rounding range
@@ -139,37 +139,37 @@ void FractionalToString_SplitAndRoundNumber(const bool bIsNegative, const double
 	{
 	case ERoundingMode::HalfToEven:
 		// Rounds to the nearest place, equidistant ties go to the value which is closest to an even value: 1.5 becomes 2, 0.5 becomes 0
-		ValueToRound = YMath::RoundHalfToEven(ValueToRound);
+		ValueToRound = FMath::RoundHalfToEven(ValueToRound);
 		break;
 
 	case ERoundingMode::HalfFromZero:
 		// Rounds to nearest place, equidistant ties go to the value which is further from zero: -0.5 becomes -1.0, 0.5 becomes 1.0
-		ValueToRound = YMath::RoundHalfFromZero(ValueToRound);
+		ValueToRound = FMath::RoundHalfFromZero(ValueToRound);
 		break;
 	
 	case ERoundingMode::HalfToZero:
 		// Rounds to nearest place, equidistant ties go to the value which is closer to zero: -0.5 becomes 0, 0.5 becomes 0
-		ValueToRound = YMath::RoundHalfToZero(ValueToRound);
+		ValueToRound = FMath::RoundHalfToZero(ValueToRound);
 		break;
 
 	case ERoundingMode::FromZero:
 		// Rounds to the value which is further from zero, "larger" in absolute value: 0.1 becomes 1, -0.1 becomes -1
-		ValueToRound = YMath::RoundFromZero(ValueToRound);
+		ValueToRound = FMath::RoundFromZero(ValueToRound);
 		break;
 	
 	case ERoundingMode::ToZero:
 		// Rounds to the value which is closer to zero, "smaller" in absolute value: 0.1 becomes 0, -0.1 becomes 0
-		ValueToRound = YMath::RoundToZero(ValueToRound);
+		ValueToRound = FMath::RoundToZero(ValueToRound);
 		break;
 	
 	case ERoundingMode::ToNegativeInfinity:
 		// Rounds to the value which is more negative: 0.1 becomes 0, -0.1 becomes -1
-		ValueToRound = YMath::RoundToNegativeInfinity(ValueToRound);
+		ValueToRound = FMath::RoundToNegativeInfinity(ValueToRound);
 		break;
 	
 	case ERoundingMode::ToPositiveInfinity:
 		// Rounds to the value which is more positive: 0.1 becomes 1, -0.1 becomes 0
-		ValueToRound = YMath::RoundToPositiveInfinity(ValueToRound);
+		ValueToRound = FMath::RoundToPositiveInfinity(ValueToRound);
 		break;
 
 	default:
@@ -235,7 +235,7 @@ void IntegralToString(const bool bIsNegative, const uint64 InVal, const FDecimal
 	int32 FractionalPartLen = 0;
 	if (InFormattingOptions.MinimumFractionalDigits > 0)
 	{
-		const int32 PaddingToApply = YMath::Min(InFormattingOptions.MinimumFractionalDigits, MaxFractionalPrintPrecision);
+		const int32 PaddingToApply = FMath::Min(InFormattingOptions.MinimumFractionalDigits, MaxFractionalPrintPrecision);
 		for (int32 PaddingIndex = 0; PaddingIndex < PaddingToApply; ++PaddingIndex)
 		{
 			FractionalPartBuffer[FractionalPartLen++] = '0';
@@ -250,13 +250,13 @@ void FractionalToString(const double InVal, const FDecimalNumberFormattingRules&
 {
 	SanitizeNumberFormattingOptions(InFormattingOptions);
 
-	if (YMath::IsNaN(InVal))
+	if (FMath::IsNaN(InVal))
 	{
 		OutString.Append(InFormattingRules.NaNString);
 		return;
 	}
 
-	const bool bIsNegative = YMath::IsNegativeDouble(InVal);
+	const bool bIsNegative = FMath::IsNegativeDouble(InVal);
 
 	double IntegralPart = 0.0;
 	double FractionalPart = 0.0;
@@ -281,7 +281,7 @@ void FractionalToString(const double InVal, const FDecimalNumberFormattingRules&
 	
 		{
 			// Pad the fractional part with any leading zeros that may have been lost when the number was split
-			const int32 LeadingZerosToAdd = YMath::Min(InFormattingOptions.MaximumFractionalDigits - FractionalPartLen, MaxFractionalPrintPrecision - FractionalPartLen);
+			const int32 LeadingZerosToAdd = FMath::Min(InFormattingOptions.MaximumFractionalDigits - FractionalPartLen, MaxFractionalPrintPrecision - FractionalPartLen);
 			if (LeadingZerosToAdd > 0)
 			{
 				FMemory::Memmove(FractionalPartBuffer + LeadingZerosToAdd, FractionalPartBuffer, FractionalPartLen * sizeof(TCHAR));
@@ -305,7 +305,7 @@ void FractionalToString(const double InVal, const FDecimalNumberFormattingRules&
 
 	// Pad the fractional part with any zeros that may have been missed so far
 	{
-		const int32 PaddingToApply = YMath::Min(InFormattingOptions.MinimumFractionalDigits - FractionalPartLen, MaxFractionalPrintPrecision - FractionalPartLen);
+		const int32 PaddingToApply = FMath::Min(InFormattingOptions.MinimumFractionalDigits - FractionalPartLen, MaxFractionalPrintPrecision - FractionalPartLen);
 		for (int32 PaddingIndex = 0; PaddingIndex < PaddingToApply; ++PaddingIndex)
 		{
 			FractionalPartBuffer[FractionalPartLen++] = '0';

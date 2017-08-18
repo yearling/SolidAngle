@@ -19,7 +19,7 @@ uint32 FRunnableThreadWin::GuardedRun()
 #if UE_BUILD_DEBUG
 	if (true && !GAlwaysReportCrash)
 #else
-	if (YPlatformMisc::IsDebuggerPresent() && !GAlwaysReportCrash)
+	if (FPlatformMisc::IsDebuggerPresent() && !GAlwaysReportCrash)
 #endif // UE_BUILD_DEBUG
 	{
 		ExitCode = Run();
@@ -46,7 +46,7 @@ uint32 FRunnableThreadWin::GuardedRun()
 			// Crashed.
 			ExitCode = 1;		
 			GError->HandleError();
-			YPlatformMisc::RequestExit( true );
+			FPlatformMisc::RequestExit( true );
 		}
 #endif // !PLATFORM_SEH_EXCEPTIONS_DISABLED
 	}

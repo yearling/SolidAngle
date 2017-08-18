@@ -54,13 +54,13 @@ enum class EMonthOfYear
 * calculate the number of days in a given month and year, check for leap years and determine the
 * time of day, day of week and month of year of a given date and time.
 *
-* The companion struct YTimespan is provided for enabling date and time based arithmetic, such as
+* The companion struct FTimespan is provided for enabling date and time based arithmetic, such as
 * calculating the difference between two dates or adding a certain amount of time to a given date.
 *
 * Ranges of dates and times can be represented by the FDateRange class.
 *
 * @see FDateRange
-* @see YTimespan
+* @see FTimespan
 */
 struct FDateTime
 {
@@ -97,9 +97,9 @@ public:
 	* Returns result of adding the given time span to this date.
 	*
 	* @return A date whose value is the sum of this date and the given time span.
-	* @see YTimespan
+	* @see FTimespan
 	*/
-	FDateTime operator+(const YTimespan& Other) const
+	FDateTime operator+(const FTimespan& Other) const
 	{
 		return FDateTime(Ticks + Other.GetTicks());
 	}
@@ -108,9 +108,9 @@ public:
 	* Adds the given time span to this date.
 	*
 	* @return This date.
-	* @see YTimespan
+	* @see FTimespan
 	*/
-	FDateTime& operator+=(const YTimespan& Other)
+	FDateTime& operator+=(const FTimespan& Other)
 	{
 		Ticks += Other.GetTicks();
 
@@ -121,20 +121,20 @@ public:
 	* Returns time span between this date and the given date.
 	*
 	* @return A time span whose value is the difference of this date and the given date.
-	* @see YTimespan
+	* @see FTimespan
 	*/
-	YTimespan operator-(const FDateTime& Other) const
+	FTimespan operator-(const FDateTime& Other) const
 	{
-		return YTimespan(Ticks - Other.Ticks);
+		return FTimespan(Ticks - Other.Ticks);
 	}
 
 	/**
 	* Returns result of subtracting the given time span from this date.
 	*
 	* @return A date whose value is the difference of this date and the given time span.
-	* @see YTimespan
+	* @see FTimespan
 	*/
-	FDateTime operator-(const YTimespan& Other) const
+	FDateTime operator-(const FTimespan& Other) const
 	{
 		return FDateTime(Ticks - Other.GetTicks());
 	}
@@ -143,9 +143,9 @@ public:
 	* Subtracts the given time span from this date.
 	*
 	* @return This date.
-	* @see YTimespan
+	* @see FTimespan
 	*/
-	FDateTime& operator-=(const YTimespan& Other)
+	FDateTime& operator-=(const FTimespan& Other)
 	{
 		Ticks -= Other.GetTicks();
 
@@ -394,9 +394,9 @@ public:
 	* @param Time of day since midnight.
 	* @see GetDayOfWeek, GetDayOfYear, GetMonthOfYear
 	*/
-	YTimespan GetTimeOfDay() const
+	FTimespan GetTimeOfDay() const
 	{
-		return YTimespan(Ticks % ETimespan::TicksPerDay);
+		return FTimespan(Ticks % ETimespan::TicksPerDay);
 	}
 
 	/**
@@ -542,7 +542,7 @@ public:
 	*/
 	static FDateTime FromUnixTimestamp(int64 UnixTime)
 	{
-		return FDateTime(1970, 1, 1) + YTimespan(UnixTime * ETimespan::TicksPerSecond);
+		return FDateTime(1970, 1, 1) + FTimespan(UnixTime * ETimespan::TicksPerSecond);
 	}
 
 	/**

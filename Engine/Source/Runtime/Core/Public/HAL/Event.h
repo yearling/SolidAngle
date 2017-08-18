@@ -76,7 +76,7 @@ public:
 	* @param bIgnoreThreadIdleStats If true, ignores ThreadIdleStats
 	* @return true if the event was triggered, false if the wait timed out.
 	*/
-	bool Wait(const YTimespan& WaitTime, const bool bIgnoreThreadIdleStats = false)
+	bool Wait(const FTimespan& WaitTime, const bool bIgnoreThreadIdleStats = false)
 	{
 		return Wait(WaitTime.GetTotalMilliseconds(), bIgnoreThreadIdleStats);
 	}

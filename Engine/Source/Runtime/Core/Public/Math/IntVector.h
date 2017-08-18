@@ -3,7 +3,7 @@
 /**
 * Structure for integer vectors in 3-d space.
 */
-struct YIntVector
+struct FIntVector
 {
 	/** Holds the point's x-coordinate. */
 	int32 X;
@@ -17,17 +17,17 @@ struct YIntVector
 public:
 
 	/** An int point with zeroed values. */
-	CORE_API static const YIntVector ZeroValue;
+	CORE_API static const FIntVector ZeroValue;
 
 	/** An int point with INDEX_NONE values. */
-	CORE_API static const YIntVector NoneValue;
+	CORE_API static const FIntVector NoneValue;
 
 public:
 
 	/**
 	* Default constructor (no initialization).
 	*/
-	YIntVector();
+	FIntVector();
 
 	/**
 	* Creates and initializes a new instance with the specified coordinates.
@@ -36,21 +36,21 @@ public:
 	* @param InY The y-coordinate.
 	* @param InZ The z-coordinate.
 	*/
-	YIntVector(int32 InX, int32 InY, int32 InZ);
+	FIntVector(int32 InX, int32 InY, int32 InZ);
 
 	/**
 	* Constructor
 	*
 	* @param InValue replicated to all components
 	*/
-	explicit YIntVector(int32 InValue);
+	explicit FIntVector(int32 InValue);
 
 	/**
 	* Constructor
 	*
 	* @param EForceInit Force init enum
 	*/
-	explicit FORCEINLINE YIntVector(EForceInit);
+	explicit FORCEINLINE FIntVector(EForceInit);
 
 public:
 
@@ -92,7 +92,7 @@ public:
 	* @param Other The other int point being compared.
 	* @return true if the points are equal, false otherwise..
 	*/
-	bool operator==(const YIntVector& Other) const;
+	bool operator==(const FIntVector& Other) const;
 
 	/**
 	* Compares points for inequality.
@@ -100,7 +100,7 @@ public:
 	* @param Other The other int point being compared.
 	* @return true if the points are not equal, false otherwise..
 	*/
-	bool operator!=(const YIntVector& Other) const;
+	bool operator!=(const FIntVector& Other) const;
 
 	/**
 	* Scales this point.
@@ -108,7 +108,7 @@ public:
 	* @param Scale What to multiply the point by.
 	* @return Reference to this point after multiplication.
 	*/
-	YIntVector& operator*=(int32 Scale);
+	FIntVector& operator*=(int32 Scale);
 
 	/**
 	* Divides this point.
@@ -116,7 +116,7 @@ public:
 	* @param Divisor What to divide the point by.
 	* @return Reference to this point after division.
 	*/
-	YIntVector& operator/=(int32 Divisor);
+	FIntVector& operator/=(int32 Divisor);
 
 	/**
 	* Adds to this point.
@@ -124,7 +124,7 @@ public:
 	* @param Other The point to add to this point.
 	* @return Reference to this point after addition.
 	*/
-	YIntVector& operator+=(const YIntVector& Other);
+	FIntVector& operator+=(const FIntVector& Other);
 
 	/**
 	* Subtracts from this point.
@@ -132,7 +132,7 @@ public:
 	* @param Other The point to subtract from this point.
 	* @return Reference to this point after subtraction.
 	*/
-	YIntVector& operator-=(const YIntVector& Other);
+	FIntVector& operator-=(const FIntVector& Other);
 
 	/**
 	* Assigns another point to this one.
@@ -140,7 +140,7 @@ public:
 	* @param Other The point to assign this point from.
 	* @return Reference to this point after assignment.
 	*/
-	YIntVector& operator=(const YIntVector& Other);
+	FIntVector& operator=(const FIntVector& Other);
 
 	/**
 	* Gets the result of scaling on this point.
@@ -148,7 +148,7 @@ public:
 	* @param Scale What to multiply the point by.
 	* @return A new scaled int point.
 	*/
-	YIntVector operator*(int32 Scale) const;
+	FIntVector operator*(int32 Scale) const;
 
 	/**
 	* Gets the result of division on this point.
@@ -156,7 +156,7 @@ public:
 	* @param Divisor What to divide the point by.
 	* @return A new divided int point.
 	*/
-	YIntVector operator/(int32 Divisor) const;
+	FIntVector operator/(int32 Divisor) const;
 
 	/**
 	* Gets the result of addition on this point.
@@ -164,7 +164,7 @@ public:
 	* @param Other The other point to add to this.
 	* @return A new combined int point.
 	*/
-	YIntVector operator+(const YIntVector& Other) const;
+	FIntVector operator+(const FIntVector& Other) const;
 
 	/**
 	* Gets the result of subtraction from this point.
@@ -172,7 +172,7 @@ public:
 	* @param Other The other point to subtract from this.
 	* @return A new subtracted int point.
 	*/
-	YIntVector operator-(const YIntVector& Other) const;
+	FIntVector operator-(const FIntVector& Other) const;
 
 	/**
 	* Is vector equal to zero.
@@ -219,7 +219,7 @@ public:
 	* @param Divisor What to divide the int point by.
 	* @return A new divided int point.
 	*/
-	static YIntVector DivideAndRoundUp(YIntVector lhs, int32 Divisor);
+	static FIntVector DivideAndRoundUp(FIntVector lhs, int32 Divisor);
 
 	/**
 	* Gets the number of components a point has.
@@ -237,7 +237,7 @@ public:
 	* @param Vector The vector to serialize.
 	* @return Reference to the Archive after serialization.
 	*/
-	friend FArchive& operator<<(FArchive& Ar, YIntVector& Vector)
+	friend FArchive& operator<<(FArchive& Ar, FIntVector& Vector)
 	{
 		return Ar << Vector.X << Vector.Y << Vector.Z;
 	}
@@ -253,67 +253,67 @@ public:
 /* YIntVector inline functions
 *****************************************************************************/
 
-FORCEINLINE YIntVector::YIntVector()
+FORCEINLINE FIntVector::FIntVector()
 { }
 
 
-FORCEINLINE YIntVector::YIntVector(int32 InX, int32 InY, int32 InZ)
+FORCEINLINE FIntVector::FIntVector(int32 InX, int32 InY, int32 InZ)
 	: X(InX)
 	, Y(InY)
 	, Z(InZ)
 { }
 
 
-FORCEINLINE YIntVector::YIntVector(int32 InValue)
+FORCEINLINE FIntVector::FIntVector(int32 InValue)
 	: X(InValue)
 	, Y(InValue)
 	, Z(InValue)
 { }
 
 
-FORCEINLINE YIntVector::YIntVector(EForceInit)
+FORCEINLINE FIntVector::FIntVector(EForceInit)
 	: X(0)
 	, Y(0)
 	, Z(0)
 { }
 
 
-FORCEINLINE const int32& YIntVector::operator()(int32 ComponentIndex) const
+FORCEINLINE const int32& FIntVector::operator()(int32 ComponentIndex) const
 {
 	return (&X)[ComponentIndex];
 }
 
 
-FORCEINLINE int32& YIntVector::operator()(int32 ComponentIndex)
+FORCEINLINE int32& FIntVector::operator()(int32 ComponentIndex)
 {
 	return (&X)[ComponentIndex];
 }
 
 
-FORCEINLINE const int32& YIntVector::operator[](int32 ComponentIndex) const
+FORCEINLINE const int32& FIntVector::operator[](int32 ComponentIndex) const
 {
 	return (&X)[ComponentIndex];
 }
 
 
-FORCEINLINE int32& YIntVector::operator[](int32 ComponentIndex)
+FORCEINLINE int32& FIntVector::operator[](int32 ComponentIndex)
 {
 	return (&X)[ComponentIndex];
 }
 
-FORCEINLINE bool YIntVector::operator==(const YIntVector& Other) const
+FORCEINLINE bool FIntVector::operator==(const FIntVector& Other) const
 {
 	return X == Other.X && Y == Other.Y && Z == Other.Z;
 }
 
 
-FORCEINLINE bool YIntVector::operator!=(const YIntVector& Other) const
+FORCEINLINE bool FIntVector::operator!=(const FIntVector& Other) const
 {
 	return X != Other.X || Y != Other.Y || Z != Other.Z;
 }
 
 
-FORCEINLINE YIntVector& YIntVector::operator*=(int32 Scale)
+FORCEINLINE FIntVector& FIntVector::operator*=(int32 Scale)
 {
 	X *= Scale;
 	Y *= Scale;
@@ -323,7 +323,7 @@ FORCEINLINE YIntVector& YIntVector::operator*=(int32 Scale)
 }
 
 
-FORCEINLINE YIntVector& YIntVector::operator/=(int32 Divisor)
+FORCEINLINE FIntVector& FIntVector::operator/=(int32 Divisor)
 {
 	X /= Divisor;
 	Y /= Divisor;
@@ -333,7 +333,7 @@ FORCEINLINE YIntVector& YIntVector::operator/=(int32 Divisor)
 }
 
 
-FORCEINLINE YIntVector& YIntVector::operator+=(const YIntVector& Other)
+FORCEINLINE FIntVector& FIntVector::operator+=(const FIntVector& Other)
 {
 	X += Other.X;
 	Y += Other.Y;
@@ -343,7 +343,7 @@ FORCEINLINE YIntVector& YIntVector::operator+=(const YIntVector& Other)
 }
 
 
-FORCEINLINE YIntVector& YIntVector::operator-=(const YIntVector& Other)
+FORCEINLINE FIntVector& FIntVector::operator-=(const FIntVector& Other)
 {
 	X -= Other.X;
 	Y -= Other.Y;
@@ -353,7 +353,7 @@ FORCEINLINE YIntVector& YIntVector::operator-=(const YIntVector& Other)
 }
 
 
-FORCEINLINE YIntVector& YIntVector::operator=(const YIntVector& Other)
+FORCEINLINE FIntVector& FIntVector::operator=(const FIntVector& Other)
 {
 	X = Other.X;
 	Y = Other.Y;
@@ -363,75 +363,75 @@ FORCEINLINE YIntVector& YIntVector::operator=(const YIntVector& Other)
 }
 
 
-FORCEINLINE YIntVector YIntVector::operator*(int32 Scale) const
+FORCEINLINE FIntVector FIntVector::operator*(int32 Scale) const
 {
-	return YIntVector(*this) *= Scale;
+	return FIntVector(*this) *= Scale;
 }
 
 
-FORCEINLINE YIntVector YIntVector::operator/(int32 Divisor) const
+FORCEINLINE FIntVector FIntVector::operator/(int32 Divisor) const
 {
-	return YIntVector(*this) /= Divisor;
+	return FIntVector(*this) /= Divisor;
 }
 
 
-FORCEINLINE YIntVector YIntVector::operator+(const YIntVector& Other) const
+FORCEINLINE FIntVector FIntVector::operator+(const FIntVector& Other) const
 {
-	return YIntVector(*this) += Other;
+	return FIntVector(*this) += Other;
 }
 
-FORCEINLINE YIntVector YIntVector::operator-(const YIntVector& Other) const
+FORCEINLINE FIntVector FIntVector::operator-(const FIntVector& Other) const
 {
-	return YIntVector(*this) -= Other;
-}
-
-
-FORCEINLINE YIntVector YIntVector::DivideAndRoundUp(YIntVector lhs, int32 Divisor)
-{
-	return YIntVector(YMath::DivideAndRoundUp(lhs.X, Divisor), YMath::DivideAndRoundUp(lhs.Y, Divisor), YMath::DivideAndRoundUp(lhs.Z, Divisor));
+	return FIntVector(*this) -= Other;
 }
 
 
-FORCEINLINE float YIntVector::GetMax() const
+FORCEINLINE FIntVector FIntVector::DivideAndRoundUp(FIntVector lhs, int32 Divisor)
 {
-	return YMath::Max(YMath::Max(X, Y), Z);
+	return FIntVector(FMath::DivideAndRoundUp(lhs.X, Divisor), FMath::DivideAndRoundUp(lhs.Y, Divisor), FMath::DivideAndRoundUp(lhs.Z, Divisor));
 }
 
 
-FORCEINLINE float YIntVector::GetMin() const
+FORCEINLINE float FIntVector::GetMax() const
 {
-	return YMath::Min(YMath::Min(X, Y), Z);
+	return FMath::Max(FMath::Max(X, Y), Z);
 }
 
 
-FORCEINLINE int32 YIntVector::Num()
+FORCEINLINE float FIntVector::GetMin() const
+{
+	return FMath::Min(FMath::Min(X, Y), Z);
+}
+
+
+FORCEINLINE int32 FIntVector::Num()
 {
 	return 3;
 }
 
 
-FORCEINLINE int32 YIntVector::Size() const
+FORCEINLINE int32 FIntVector::Size() const
 {
 	int64 X64 = (int64)X;
 	int64 Y64 = (int64)Y;
 	int64 Z64 = (int64)Z;
-	return int32(YMath::Sqrt(float(X64 * X64 + Y64 * Y64 + Z64 * Z64)));
+	return int32(FMath::Sqrt(float(X64 * X64 + Y64 * Y64 + Z64 * Z64)));
 }
 
-FORCEINLINE bool YIntVector::IsZero() const
+FORCEINLINE bool FIntVector::IsZero() const
 {
 	return *this == ZeroValue;
 }
 
 
-FORCEINLINE FString YIntVector::ToString() const
+FORCEINLINE FString FIntVector::ToString() const
 {
 	return FString::Printf(TEXT("X=%d Y=%d Z=%d"), X, Y, Z);
 }
 
-FORCEINLINE uint32 GetTypeHash(const YIntVector& Vector)
+FORCEINLINE uint32 GetTypeHash(const FIntVector& Vector)
 {
-	return FCrc::MemCrc_DEPRECATED(&Vector, sizeof(YIntVector));
+	return FCrc::MemCrc_DEPRECATED(&Vector, sizeof(FIntVector));
 }
 
 struct YIntVector4
@@ -544,6 +544,6 @@ struct FUintVector4
 	}
 };
 
-template <> struct TIsPODType<YIntVector> { enum { Value = true }; };
+template <> struct TIsPODType<FIntVector> { enum { Value = true }; };
 template <> struct TIsPODType<YIntVector4> { enum { Value = true }; };
 template <> struct TIsPODType<FUintVector4> { enum { Value = true }; };

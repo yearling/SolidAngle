@@ -8,7 +8,7 @@
 #include "Math/Matrix.h"
 
 /** Combined rotation and translation matrix */
-class YRotationTranslationMatrix
+class FRotationTranslationMatrix
 	: public FMatrix
 {
 public:
@@ -19,17 +19,17 @@ public:
 	* @param Rot rotation
 	* @param Origin translation to apply
 	*/
-	YRotationTranslationMatrix(const FRotator& Rot, const FVector& Origin);
+	FRotationTranslationMatrix(const FRotator& Rot, const FVector& Origin);
 
 	/** Matrix factory. Return an YMatrix so we don't have type conversion issues in expressions. */
 	static FMatrix Make(const FRotator& Rot, const FVector& Origin)
 	{
-		return YRotationTranslationMatrix(Rot, Origin);
+		return FRotationTranslationMatrix(Rot, Origin);
 	}
 };
 
 
-FORCEINLINE YRotationTranslationMatrix::YRotationTranslationMatrix(const FRotator& Rot, const FVector& Origin)
+FORCEINLINE FRotationTranslationMatrix::FRotationTranslationMatrix(const FRotator& Rot, const FVector& Origin)
 {
 #if PLATFORM_ENABLE_VECTORINTRINSICS
 
@@ -50,9 +50,9 @@ FORCEINLINE YRotationTranslationMatrix::YRotationTranslationMatrix(const FRotato
 
 	float SP, SY, SR;
 	float CP, CY, CR;
-	YMath::SinCos(&SP, &CP, YMath::DegreesToRadians(Rot.Pitch));
-	YMath::SinCos(&SY, &CY, YMath::DegreesToRadians(Rot.Yaw));
-	YMath::SinCos(&SR, &CR, YMath::DegreesToRadians(Rot.Roll));
+	FMath::SinCos(&SP, &CP, FMath::DegreesToRadians(Rot.Pitch));
+	FMath::SinCos(&SY, &CY, FMath::DegreesToRadians(Rot.Yaw));
+	FMath::SinCos(&SR, &CR, FMath::DegreesToRadians(Rot.Roll));
 
 #endif // PLATFORM_ENABLE_VECTORINTRINSICS
 

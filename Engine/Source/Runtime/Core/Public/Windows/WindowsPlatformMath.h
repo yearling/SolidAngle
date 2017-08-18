@@ -11,7 +11,7 @@
 /**
 * Windows implementation of the Math OS functions
 **/
-struct YWindowsPlatformMath : public YGenericPlatformMath
+struct FWindowsPlatformMath : public FGenericPlatformMath
 {
 #if PLATFORM_ENABLE_VECTORINTRINSICS
 	static FORCEINLINE int32 TruncToInt(float F)
@@ -116,4 +116,4 @@ struct YWindowsPlatformMath : public YGenericPlatformMath
 #endif
 };
 
-typedef YWindowsPlatformMath	YPlatformMath;
+typedef FWindowsPlatformMath	FPlatformMath;

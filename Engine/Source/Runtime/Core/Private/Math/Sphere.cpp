@@ -32,7 +32,7 @@ FSphere::FSphere(const FVector* Pts, int32 Count)
 			}
 		}
 
-		W = YMath::Sqrt(W) * 1.001f;
+		W = FMath::Sqrt(W) * 1.001f;
 	}
 }
 
@@ -50,7 +50,7 @@ FSphere FSphere::TransformBy(const FMatrix& M) const
 	const FVector YAxis(M.M[1][0], M.M[1][1], M.M[1][2]);
 	const FVector ZAxis(M.M[2][0], M.M[2][1], M.M[2][2]);
 
-	Result.W = YMath::Sqrt(YMath::Max(XAxis | XAxis, YMath::Max(YAxis | YAxis, ZAxis | ZAxis))) * W;
+	Result.W = FMath::Sqrt(FMath::Max(XAxis | XAxis, FMath::Max(YAxis | YAxis, ZAxis | ZAxis))) * W;
 
 	return Result;
 }

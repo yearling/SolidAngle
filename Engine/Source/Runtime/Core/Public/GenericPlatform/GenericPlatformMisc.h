@@ -187,7 +187,7 @@ struct CORE_API FSHA256Signature
 /**
 * Generic implementation for most platforms
 **/
-struct CORE_API YGenericPlatformMisc
+struct CORE_API FGenericPlatformMisc
 {
 	/**
 	* Called during appInit() after cmd line setup
@@ -829,7 +829,7 @@ public:
 	* @param	InGamma			Optional gamma correction to apply to the screen color
 	* @return					The color of the pixel displayed at the chosen location
 	*/
-	static struct FLinearColor GetScreenPixelColor(const struct YVector2D& InScreenPos, float InGamma = 1.0f);
+	static struct FLinearColor GetScreenPixelColor(const struct FVector2D& InScreenPos, float InGamma = 1.0f);
 
 #if !UE_BUILD_SHIPPING
 	static void SetShouldPromptForRemoteDebugging(bool bInShouldPrompt)

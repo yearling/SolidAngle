@@ -165,9 +165,9 @@ struct FPtrToPoolMapping
 
 	void Init(uint32 InPageSize, uint64 InNumPoolsPerPage, uint64 AddressLimit)
 	{
-		uint64 PoolPageToPoolBitShift = YPlatformMath::CeilLogTwo(InNumPoolsPerPage);
+		uint64 PoolPageToPoolBitShift = FPlatformMath::CeilLogTwo(InNumPoolsPerPage);
 
-		PtrToPoolPageBitShift = YPlatformMath::CeilLogTwo(InPageSize);
+		PtrToPoolPageBitShift = FPlatformMath::CeilLogTwo(InPageSize);
 		HashKeyShift = PtrToPoolPageBitShift + PoolPageToPoolBitShift;
 		PoolMask = (1ull << PoolPageToPoolBitShift) - 1;
 		MaxHashBuckets = AddressLimit >> HashKeyShift;
@@ -415,7 +415,7 @@ public:
 					{
 						if (Result && Ptr)
 						{
-							FMemory::Memcpy(Result, Ptr, YPlatformMath::Min<SIZE_T>(NewSize, BlockSize));
+							FMemory::Memcpy(Result, Ptr, FPlatformMath::Min<SIZE_T>(NewSize, BlockSize));
 						}
 						if (Ptr)
 						{
@@ -472,7 +472,7 @@ public:
 		}
 		else
 		{
-			Alignment = YPlatformMath::Max<uint32>(Alignment, OsAllocationGranularity);
+			Alignment = FPlatformMath::Max<uint32>(Alignment, OsAllocationGranularity);
 			checkSlow(Alignment <= PageSize);
 			SizeOut = Align(Count, Alignment);
 		}

@@ -75,7 +75,7 @@ struct FHapticFeedbackValues
 
 	FHapticFeedbackValues(const float InFrequency, const float InAmplitude)
 	{
-		// can't use YMath::Clamp here due to header files dependencies
+		// can't use FMath::Clamp here due to header files dependencies
 		Frequency = (InFrequency < 0.f) ? 0.f : ((InFrequency > 1.f) ? 1.f : InFrequency);
 		Amplitude = (InAmplitude < 0.f) ? 0.f : ((InAmplitude > 1.f) ? 1.f : InAmplitude);
 		HapticBuffer = NULL;

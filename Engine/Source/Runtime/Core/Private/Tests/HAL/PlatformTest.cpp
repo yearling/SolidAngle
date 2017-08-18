@@ -56,27 +56,27 @@ bool FPlatformVerificationTest::RunTest (const FString& Parameters)
 #else
 	check(*(uint8*)&Test == 0x12);
 #endif
-	check(YMath::IsNaN(sqrtf(-1.0f)));
-	check(!YMath::IsFinite(sqrtf(-1.0f)));
-	check(!YMath::IsFinite(-1.0f/TheCompilerDoesntKnowThisIsAlwaysZero));
-	check(!YMath::IsFinite(1.0f/TheCompilerDoesntKnowThisIsAlwaysZero));
-	check(!YMath::IsNaN(-1.0f/TheCompilerDoesntKnowThisIsAlwaysZero));
-	check(!YMath::IsNaN(1.0f/TheCompilerDoesntKnowThisIsAlwaysZero));
-	check(!YMath::IsNaN(MAX_FLT));
-	check(YMath::IsFinite(MAX_FLT));
-	check(!YMath::IsNaN(0.0f));
-	check(YMath::IsFinite(0.0f));
-	check(!YMath::IsNaN(1.0f));
-	check(YMath::IsFinite(1.0f));
-	check(!YMath::IsNaN(-1.e37f));
-	check(YMath::IsFinite(-1.e37f));
-	check(YMath::FloorLog2(0) == 0);
-	check(YMath::FloorLog2(1) == 0);
-	check(YMath::FloorLog2(2) == 1);
-	check(YMath::FloorLog2(12) == 3);
-	check(YMath::FloorLog2(16) == 4);
+	check(FMath::IsNaN(sqrtf(-1.0f)));
+	check(!FMath::IsFinite(sqrtf(-1.0f)));
+	check(!FMath::IsFinite(-1.0f/TheCompilerDoesntKnowThisIsAlwaysZero));
+	check(!FMath::IsFinite(1.0f/TheCompilerDoesntKnowThisIsAlwaysZero));
+	check(!FMath::IsNaN(-1.0f/TheCompilerDoesntKnowThisIsAlwaysZero));
+	check(!FMath::IsNaN(1.0f/TheCompilerDoesntKnowThisIsAlwaysZero));
+	check(!FMath::IsNaN(MAX_FLT));
+	check(FMath::IsFinite(MAX_FLT));
+	check(!FMath::IsNaN(0.0f));
+	check(FMath::IsFinite(0.0f));
+	check(!FMath::IsNaN(1.0f));
+	check(FMath::IsFinite(1.0f));
+	check(!FMath::IsNaN(-1.e37f));
+	check(FMath::IsFinite(-1.e37f));
+	check(FMath::FloorLog2(0) == 0);
+	check(FMath::FloorLog2(1) == 0);
+	check(FMath::FloorLog2(2) == 1);
+	check(FMath::FloorLog2(12) == 3);
+	check(FMath::FloorLog2(16) == 4);
 
-	YGenericPlatformMath::AutoTest();
+	FGenericPlatformMath::AutoTest();
 
 #if WITH_EDITORONLY_DATA
 	check(FPlatformProperties::HasEditorOnlyData());

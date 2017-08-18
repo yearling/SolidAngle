@@ -269,10 +269,10 @@ public:
 		}
 		else
 		{
-			int16 iX(YMath::RoundToInt(X));
-			int16 iY(YMath::RoundToInt(Y));
-			int16 iZ(YMath::RoundToInt(Z));
-			int16 iW(YMath::RoundToInt(W));
+			int16 iX(FMath::RoundToInt(X));
+			int16 iY(FMath::RoundToInt(Y));
+			int16 iZ(FMath::RoundToInt(Z));
+			int16 iW(FMath::RoundToInt(W));
 			Ar << iX << iY << iZ << iW;
 		}
 		bOutSuccess = true;
@@ -282,7 +282,7 @@ public:
 /* YLinearColor inline functions
 *****************************************************************************/
 
-inline FVector YMath::LinePlaneIntersection
+inline FVector FMath::LinePlaneIntersection
 (
 	const FVector &Point1,
 	const FVector &Point2,
@@ -295,7 +295,7 @@ inline FVector YMath::LinePlaneIntersection
 		*	((Plane.W - (Point1 | Plane)) / ((Point2 - Point1) | Plane));
 }
 
-inline bool YMath::IntersectPlanes3(FVector& I, const FPlane& P1, const FPlane& P2, const FPlane& P3)
+inline bool FMath::IntersectPlanes3(FVector& I, const FPlane& P1, const FPlane& P2, const FPlane& P3)
 {
 	// Compute determinant, the triple product P1|(P2^P3)==(P1^P2)|P3.
 	const float Det = (P1 ^ P2) | P3;
@@ -313,7 +313,7 @@ inline bool YMath::IntersectPlanes3(FVector& I, const FPlane& P1, const FPlane& 
 	return 1;
 }
 
-inline bool YMath::IntersectPlanes2(FVector& I, FVector& D, const FPlane& P1, const FPlane& P2)
+inline bool FMath::IntersectPlanes2(FVector& I, FVector& D, const FPlane& P1, const FPlane& P2)
 {
 	// Compute line direction, perpendicular to both plane normals.
 	D = P1 ^ P2;
@@ -431,7 +431,7 @@ FORCEINLINE bool FPlane::operator!=(const FPlane& V) const
 
 FORCEINLINE bool FPlane::Equals(const FPlane& V, float Tolerance) const
 {
-	return (YMath::Abs(X - V.X) < Tolerance) && (YMath::Abs(Y - V.Y) < Tolerance) && (YMath::Abs(Z - V.Z) < Tolerance) && (YMath::Abs(W - V.W) < Tolerance);
+	return (FMath::Abs(X - V.X) < Tolerance) && (FMath::Abs(Y - V.Y) < Tolerance) && (FMath::Abs(Z - V.Z) < Tolerance) && (FMath::Abs(W - V.W) < Tolerance);
 }
 
 

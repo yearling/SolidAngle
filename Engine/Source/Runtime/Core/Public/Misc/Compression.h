@@ -45,7 +45,7 @@ enum ECompressionFlags
 #define LOADING_COMPRESSION_CHUNK_SIZE			131072
 #define SAVING_COMPRESSION_CHUNK_SIZE			LOADING_COMPRESSION_CHUNK_SIZE
 
-struct YCompression
+struct FCompression
 {
 	/** Maximum allowed size of an uncompressed buffer passed to CompressMemory or UncompressMemory. */
 	const static uint32 MaxUncompressedSize = 256 * 1024;

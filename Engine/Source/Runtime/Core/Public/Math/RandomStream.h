@@ -14,7 +14,7 @@
 *
 * Very bad quality in the lower bits. Don't use the modulus (%) operator.
 */
-struct YRandomStream
+struct FRandomStream
 {
 #ifdef COREUOBJECT_API
 	friend COREUOBJECT_API class UScriptStruct* Z_Construct_UScriptStruct_FRandomStream();
@@ -29,7 +29,7 @@ public:
 	*
 	* The seed should be set prior to use.
 	*/
-	YRandomStream()
+	FRandomStream()
 		: InitialSeed(0)
 		, Seed(0)
 	{ }
@@ -39,7 +39,7 @@ public:
 	*
 	* @param InSeed The seed value.
 	*/
-	YRandomStream(int32 InSeed)
+	FRandomStream(int32 InSeed)
 		: InitialSeed(InSeed)
 		, Seed(InSeed)
 	{ }
@@ -75,7 +75,7 @@ public:
 	*/
 	void GenerateNewSeed()
 	{
-		Initialize(YMath::Rand());
+		Initialize(FMath::Rand());
 	}
 
 	/**
@@ -92,7 +92,7 @@ public:
 
 		*(int32*)&Result = (*(int32*)&SRandTemp & 0xff800000) | (Seed & 0x007fffff);
 
-		return YMath::Fractional(Result);
+		return FMath::Fractional(Result);
 	}
 
 	/**
@@ -140,7 +140,7 @@ public:
 	}
 
 	/**
-	* Mirrors the random number API in YMath
+	* Mirrors the random number API in FMath
 	*
 	* @return Random number.
 	*/
@@ -157,7 +157,7 @@ public:
 	FORCEINLINE int32 RandHelper(int32 A) const
 	{
 		// Can't just multiply GetFraction by A, as GetFraction could be == 1.0f
-		return ((A > 0) ? YMath::TruncToInt(GetFraction() * ((float)A - DELTA)) : 0);
+		return ((A > 0) ? FMath::TruncToInt(GetFraction() * ((float)A - DELTA)) : 0);
 	}
 
 	/**
@@ -209,15 +209,15 @@ public:
 			// Get spherical coords that have an even distribution over the unit sphere
 			// Method described at http://mathworld.wolfram.com/SpherePointPicking.html	
 			float Theta = 2.f * PI * RandU;
-			float Phi = YMath::Acos((2.f * RandV) - 1.f);
+			float Phi = FMath::Acos((2.f * RandV) - 1.f);
 
 			// restrict phi to [0, ConeHalfAngleRad]
 			// this gives an even distribution of points on the surface of the cone
 			// centered at the origin, pointing upward (z), with the desired angle
-			Phi = YMath::Fmod(Phi, ConeHalfAngleRad);
+			Phi = FMath::Fmod(Phi, ConeHalfAngleRad);
 
 			// get axes we need to rotate around
-			FMatrix const DirMat = YRotationMatrix(Dir.Rotation());
+			FMatrix const DirMat = FRotationMatrix(Dir.Rotation());
 			// note the axis translation, since we want the variation to be around X
 			FVector const DirZ = DirMat.GetUnitAxis(EAxis::X);
 			FVector const DirY = DirMat.GetUnitAxis(EAxis::Y);
@@ -254,20 +254,20 @@ public:
 			// Get spherical coords that have an even distribution over the unit sphere
 			// Method described at http://mathworld.wolfram.com/SpherePointPicking.html	
 			float Theta = 2.f * PI * RandU;
-			float Phi = YMath::Acos((2.f * RandV) - 1.f);
+			float Phi = FMath::Acos((2.f * RandV) - 1.f);
 
 			// restrict phi to [0, ConeHalfAngleRad]
 			// where ConeHalfAngleRad is now a function of Theta
 			// (specifically, radius of an ellipse as a function of angle)
 			// function is ellipse function (x/a)^2 + (y/b)^2 = 1, converted to polar coords
-			float ConeHalfAngleRad = YMath::Square(YMath::Cos(Theta) / VerticalConeHalfAngleRad) + YMath::Square(YMath::Sin(Theta) / HorizontalConeHalfAngleRad);
-			ConeHalfAngleRad = YMath::Sqrt(1.f / ConeHalfAngleRad);
+			float ConeHalfAngleRad = FMath::Square(FMath::Cos(Theta) / VerticalConeHalfAngleRad) + FMath::Square(FMath::Sin(Theta) / HorizontalConeHalfAngleRad);
+			ConeHalfAngleRad = FMath::Sqrt(1.f / ConeHalfAngleRad);
 
 			// clamp to make a cone instead of a sphere
-			Phi = YMath::Fmod(Phi, ConeHalfAngleRad);
+			Phi = FMath::Fmod(Phi, ConeHalfAngleRad);
 
 			// get axes we need to rotate around
-			FMatrix const DirMat = YRotationMatrix(Dir.Rotation());
+			FMatrix const DirMat = FRotationMatrix(Dir.Rotation());
 			// note the axis translation, since we want the variation to be around X
 			FVector const DirZ = DirMat.GetUnitAxis(EAxis::X);
 			FVector const DirY = DirMat.GetUnitAxis(EAxis::Y);
@@ -297,7 +297,7 @@ public:
 	* @return true on success, false otherwise.
 	* @see ImportTextItem
 	*/
-	CORE_API bool ExportTextItem(FString& ValueStr, YRandomStream const& DefaultValue, class UObject* Parent, int32 PortFlags, class UObject* ExportRootScope) const;
+	CORE_API bool ExportTextItem(FString& ValueStr, FRandomStream const& DefaultValue, class UObject* Parent, int32 PortFlags, class UObject* ExportRootScope) const;
 
 protected:
 

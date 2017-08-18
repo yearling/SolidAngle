@@ -231,8 +231,8 @@ public:
 		// Note: This can be used to track down initialization issues with bone transform arrays; but it will
 		// cause issues with transient fields such as RootMotionDelta that get initialized to 0 by default
 #if ENABLE_NAN_DIAGNOSTIC
-		float qnan = YMath::Log2(-5.3f);
-		check(YMath::IsNaN(qnan));
+		float qnan = FMath::Log2(-5.3f);
+		check(FMath::IsNaN(qnan));
 		Translation = MakeVectorRegister(qnan, qnan, qnan, qnan);
 		Rotation = MakeVectorRegister(qnan, qnan, qnan, qnan);
 		Scale3D = MakeVectorRegister(qnan, qnan, qnan, qnan);
@@ -429,12 +429,12 @@ public:
 		check(Atom2.IsRotationNormalized());
 #endif
 
-		if (YMath::Abs(Alpha) <= ZERO_ANIMWEIGHT_THRESH)
+		if (FMath::Abs(Alpha) <= ZERO_ANIMWEIGHT_THRESH)
 		{
 			// if blend is all the way for child1, then just copy its bone atoms
 			(*this) = Atom1;
 		}
-		else if (YMath::Abs(Alpha - 1.0f) <= ZERO_ANIMWEIGHT_THRESH)
+		else if (FMath::Abs(Alpha - 1.0f) <= ZERO_ANIMWEIGHT_THRESH)
 		{
 			// if blend is all the way for child2, then just copy its bone atoms
 			(*this) = Atom2;
@@ -444,8 +444,8 @@ public:
 			// Simple linear interpolation for translation and scale.			
 			ScalarRegister BlendWeight = ScalarRegister(Alpha);
 
-			Translation = YMath::Lerp(Atom1.Translation, Atom2.Translation, BlendWeight.Value);
-			Scale3D = YMath::Lerp(Atom1.Scale3D, Atom2.Scale3D, BlendWeight.Value);
+			Translation = FMath::Lerp(Atom1.Translation, Atom2.Translation, BlendWeight.Value);
+			Scale3D = FMath::Lerp(Atom1.Scale3D, Atom2.Scale3D, BlendWeight.Value);
 
 			VectorRegister VRotation = VectorLerpQuat(Atom1.Rotation, Atom2.Rotation, BlendWeight.Value);
 
@@ -476,9 +476,9 @@ public:
 			{
 				// Simple linear interpolation for translation and scale.				
 				ScalarRegister BlendWeight = ScalarRegister(Alpha);
-				Translation = YMath::Lerp(Translation, OtherAtom.Translation, BlendWeight.Value);
+				Translation = FMath::Lerp(Translation, OtherAtom.Translation, BlendWeight.Value);
 
-				Scale3D = YMath::Lerp(Scale3D, OtherAtom.Scale3D, BlendWeight.Value);
+				Scale3D = FMath::Lerp(Scale3D, OtherAtom.Scale3D, BlendWeight.Value);
 
 				VectorRegister VRotation = VectorLerpQuat(Rotation, OtherAtom.Rotation, BlendWeight.Value);
 
@@ -679,23 +679,23 @@ private:
 
 	inline bool Private_RotationEquals(const VectorRegister& InRotation, const ScalarRegister& Tolerance = ScalarRegister(GlobalVectorConstants::KindaSmallNumber)) const
 	{
-		// !( (YMath::Abs(X-Q.X) > Tolerance) || (YMath::Abs(Y-Q.Y) > Tolerance) || (YMath::Abs(Z-Q.Z) > Tolerance) || (YMath::Abs(W-Q.W) > Tolerance) )
+		// !( (FMath::Abs(X-Q.X) > Tolerance) || (FMath::Abs(Y-Q.Y) > Tolerance) || (FMath::Abs(Z-Q.Z) > Tolerance) || (FMath::Abs(W-Q.W) > Tolerance) )
 		const VectorRegister RotationSub = VectorAbs(VectorSubtract(Rotation, InRotation));
-		// !( (YMath::Abs(X+Q.X) > Tolerance) || (YMath::Abs(Y+Q.Y) > Tolerance) || (YMath::Abs(Z+Q.Z) > Tolerance) || (YMath::Abs(W+Q.W) > Tolerance) )
+		// !( (FMath::Abs(X+Q.X) > Tolerance) || (FMath::Abs(Y+Q.Y) > Tolerance) || (FMath::Abs(Z+Q.Z) > Tolerance) || (FMath::Abs(W+Q.W) > Tolerance) )
 		const VectorRegister RotationAdd = VectorAbs(VectorAdd(Rotation, InRotation));
 		return !VectorAnyGreaterThan(RotationSub, Tolerance.Value) || !VectorAnyGreaterThan(RotationAdd, Tolerance.Value);
 	}
 
 	inline bool Private_TranslationEquals(const VectorRegister& InTranslation, const ScalarRegister& Tolerance = ScalarRegister(GlobalVectorConstants::KindaSmallNumber)) const
 	{
-		// !( (YMath::Abs(X-V.X) > Tolerance) || (YMath::Abs(Y-V.Y) > Tolerance) || (YMath::Abs(Z-V.Z) > Tolerance) )
+		// !( (FMath::Abs(X-V.X) > Tolerance) || (FMath::Abs(Y-V.Y) > Tolerance) || (FMath::Abs(Z-V.Z) > Tolerance) )
 		const VectorRegister TranslationDiff = VectorAbs(VectorSubtract(Translation, InTranslation));
 		return !VectorAnyGreaterThan(TranslationDiff, Tolerance.Value);
 	}
 
 	inline bool Private_Scale3DEquals(const VectorRegister& InScale3D, const ScalarRegister& Tolerance = ScalarRegister(GlobalVectorConstants::KindaSmallNumber)) const
 	{
-		// !( (YMath::Abs(X-V.X) > Tolerance) || (YMath::Abs(Y-V.Y) > Tolerance) || (YMath::Abs(Z-V.Z) > Tolerance) )
+		// !( (FMath::Abs(X-V.X) > Tolerance) || (FMath::Abs(Y-V.Y) > Tolerance) || (FMath::Abs(Z-V.Z) > Tolerance) )
 		const VectorRegister ScaleDiff = VectorAbs(VectorSubtract(Scale3D, InScale3D));
 		return !VectorAnyGreaterThan(ScaleDiff, Tolerance.Value);
 	}
@@ -1039,8 +1039,8 @@ public:
 	/**
 	* Set the translation and Scale3D components of this transform to a linearly interpolated combination of two other transforms
 	*
-	* Translation = YMath::Lerp(SourceAtom1.Translation, SourceAtom2.Translation, Alpha)
-	* Scale3D = YMath::Lerp(SourceAtom1.Scale3D, SourceAtom2.Scale3D, Alpha)
+	* Translation = FMath::Lerp(SourceAtom1.Translation, SourceAtom2.Translation, Alpha)
+	* Scale3D = FMath::Lerp(SourceAtom1.Scale3D, SourceAtom2.Scale3D, Alpha)
 	*
 	* @param SourceAtom1 The starting point source atom (used 100% if Alpha is 0)
 	* @param SourceAtom2 The ending point source atom (used 100% if Alpha is 1)
@@ -1048,8 +1048,8 @@ public:
 	*/
 	FORCEINLINE void LerpTranslationScale3D(const FTransform& SourceAtom1, const FTransform& SourceAtom2, const ScalarRegister& Alpha)
 	{
-		Translation = YMath::Lerp(SourceAtom1.Translation, SourceAtom2.Translation, Alpha.Value);
-		Scale3D = YMath::Lerp(SourceAtom1.Scale3D, SourceAtom2.Scale3D, Alpha.Value);
+		Translation = FMath::Lerp(SourceAtom1.Translation, SourceAtom2.Translation, Alpha.Value);
+		Scale3D = FMath::Lerp(SourceAtom1.Scale3D, SourceAtom2.Scale3D, Alpha.Value);
 
 		DiagnosticCheckNaN_Translate();
 		DiagnosticCheckNaN_Scale3D();
@@ -1116,8 +1116,8 @@ public:
 		// Blend translation and scale
 		//    BlendedAtom.Translation = Lerp(Zero, SourceAtom.Translation, Alpha);
 		//    BlendedAtom.Scale = Lerp(0, SourceAtom.Scale, Alpha);
-		const VectorRegister BlendedTranslation = YMath::Lerp(VectorZero(), SourceAtom.Translation, BlendWeight.Value);
-		const VectorRegister BlendedScale3D = YMath::Lerp(VectorZero(), SourceAtom.Scale3D, BlendWeight.Value);
+		const VectorRegister BlendedTranslation = FMath::Lerp(VectorZero(), SourceAtom.Translation, BlendWeight.Value);
+		const VectorRegister BlendedScale3D = FMath::Lerp(VectorZero(), SourceAtom.Scale3D, BlendWeight.Value);
 
 		// Apply translation and scale to final atom
 		//     FinalAtom.Translation += BlendedAtom.Translation
@@ -1908,7 +1908,7 @@ inline float FTransform::GetMinimumAxisScale() const
 FORCEINLINE FVector FTransform::GetSafeScaleReciprocal(const FVector& InScale, float Tolerance)
 {
 	FVector SafeReciprocalScale;
-	if (YMath::Abs(InScale.X) <= Tolerance)
+	if (FMath::Abs(InScale.X) <= Tolerance)
 	{
 		SafeReciprocalScale.X = 0.f;
 	}
@@ -1917,7 +1917,7 @@ FORCEINLINE FVector FTransform::GetSafeScaleReciprocal(const FVector& InScale, f
 		SafeReciprocalScale.X = 1 / InScale.X;
 	}
 
-	if (YMath::Abs(InScale.Y) <= Tolerance)
+	if (FMath::Abs(InScale.Y) <= Tolerance)
 	{
 		SafeReciprocalScale.Y = 0.f;
 	}
@@ -1926,7 +1926,7 @@ FORCEINLINE FVector FTransform::GetSafeScaleReciprocal(const FVector& InScale, f
 		SafeReciprocalScale.Y = 1 / InScale.Y;
 	}
 
-	if (YMath::Abs(InScale.Z) <= Tolerance)
+	if (FMath::Abs(InScale.Z) <= Tolerance)
 	{
 		SafeReciprocalScale.Z = 0.f;
 	}

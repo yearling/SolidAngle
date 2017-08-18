@@ -131,14 +131,14 @@ void FDisplayMetrics::ApplyDefaultSafeZones()
 	if (SafeZoneRatio < 1.0f)
 	{
 		const float HalfUnsafeRatio = (1.0f - SafeZoneRatio) * 0.5f;
-		TitleSafePaddingSize = YVector2D(PrimaryDisplayWidth * HalfUnsafeRatio, PrimaryDisplayHeight * HalfUnsafeRatio);
+		TitleSafePaddingSize = FVector2D(PrimaryDisplayWidth * HalfUnsafeRatio, PrimaryDisplayHeight * HalfUnsafeRatio);
 	}
 
 	const float ActionSafeZoneRatio = GetDebugActionSafeZoneRatio();
 	if (ActionSafeZoneRatio < 1.0f)
 	{
 		const float HalfUnsafeRatio = (1.0f - ActionSafeZoneRatio) * 0.5f;
-		ActionSafePaddingSize = YVector2D(PrimaryDisplayWidth * HalfUnsafeRatio, PrimaryDisplayHeight * HalfUnsafeRatio);
+		ActionSafePaddingSize = FVector2D(PrimaryDisplayWidth * HalfUnsafeRatio, PrimaryDisplayHeight * HalfUnsafeRatio);
 	}
 }
 

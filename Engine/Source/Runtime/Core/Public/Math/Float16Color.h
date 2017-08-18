@@ -9,26 +9,26 @@
 /**
  *	RGBA Color made up of FFloat16
  */
-class YFloat16Color
+class FFloat16Color
 {
 public:
 
-	YFloat16 R;
-	YFloat16 G;
-	YFloat16 B;
-	YFloat16 A;
+	FFloat16 R;
+	FFloat16 G;
+	FFloat16 B;
+	FFloat16 A;
 
 	/** Default constructor */
-	YFloat16Color();
+	FFloat16Color();
 
 	/** Copy constructor. */
-	YFloat16Color(const YFloat16Color& Src);
+	FFloat16Color(const FFloat16Color& Src);
 
 	/** Constructor from a linear color. */
-	YFloat16Color(const FLinearColor& Src);
+	FFloat16Color(const FLinearColor& Src);
 
 	/** assignment operator */
-	YFloat16Color& operator=(const YFloat16Color& Src);
+	FFloat16Color& operator=(const FFloat16Color& Src);
 
  	/**
 	 * Checks whether two colors are identical.
@@ -36,14 +36,14 @@ public:
 	 * @param Src The other color.
 	 * @return true if the two colors are identical, otherwise false.
 	 */
-	bool operator==(const YFloat16Color& Src);
+	bool operator==(const FFloat16Color& Src);
 };
 
 
-FORCEINLINE YFloat16Color::YFloat16Color() { }
+FORCEINLINE FFloat16Color::FFloat16Color() { }
 
 
-FORCEINLINE YFloat16Color::YFloat16Color(const YFloat16Color& Src)
+FORCEINLINE FFloat16Color::FFloat16Color(const FFloat16Color& Src)
 {
 	R = Src.R;
 	G = Src.G;
@@ -52,7 +52,7 @@ FORCEINLINE YFloat16Color::YFloat16Color(const YFloat16Color& Src)
 }
 
 
-FORCEINLINE YFloat16Color::YFloat16Color(const FLinearColor& Src) :
+FORCEINLINE FFloat16Color::FFloat16Color(const FLinearColor& Src) :
 	R(Src.R),
 	G(Src.G),
 	B(Src.B),
@@ -60,7 +60,7 @@ FORCEINLINE YFloat16Color::YFloat16Color(const FLinearColor& Src) :
 { }
 
 
-FORCEINLINE YFloat16Color& YFloat16Color::operator=(const YFloat16Color& Src)
+FORCEINLINE FFloat16Color& FFloat16Color::operator=(const FFloat16Color& Src)
 {
 	R = Src.R;
 	G = Src.G;
@@ -70,7 +70,7 @@ FORCEINLINE YFloat16Color& YFloat16Color::operator=(const YFloat16Color& Src)
 }
 
 
-FORCEINLINE bool YFloat16Color::operator==(const YFloat16Color& Src)
+FORCEINLINE bool FFloat16Color::operator==(const FFloat16Color& Src)
 {
 	return (
 		(R == Src.R) &&

@@ -145,7 +145,7 @@ public:
 	* IMPORTANT:
 	*   - This is Overridden from UnrealTemplate.h TArray::BulkSerialize  Please make certain changes are propogated accordingly
 	*
-	* @param Ar	YArchive to bulk serialize this TArray to/from
+	* @param Ar	FArchive to bulk serialize this TArray to/from
 	*/
 	void BulkSerialize(FArchive& Ar)
 	{

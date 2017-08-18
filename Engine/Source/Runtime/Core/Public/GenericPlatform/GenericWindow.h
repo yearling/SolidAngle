@@ -154,7 +154,7 @@ public:
 	virtual const FGenericWindowDefinition& GetDefinition() const;
 
 	/** @return	Gives the native window a chance to adjust our stored window size before we cache it off */
-	virtual void AdjustCachedSize(YVector2D& Size) const;
+	virtual void AdjustCachedSize(FVector2D& Size) const;
 
 	/**
 	* @return ratio of pixels to SlateUnits in this window.

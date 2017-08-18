@@ -75,7 +75,7 @@ void FStatsMallocProfilerProxy::SetState( bool bNewState )
 	{
 		UE_LOG( LogStats, Warning, TEXT( "Malloc profiler has already been stopped and cannot be restarted." ) );
 	}
-	YPlatformMisc::MemoryBarrier();
+	FPlatformMisc::MemoryBarrier();
 }
 
 void FStatsMallocProfilerProxy::InitializeStatsMetadata()

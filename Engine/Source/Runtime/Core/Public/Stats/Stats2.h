@@ -1280,7 +1280,7 @@ public:
 	{
 		if (Packet.ThreadType == EThreadType::Other)
 		{
-			YPlatformMisc::MemoryBarrier();
+			FPlatformMisc::MemoryBarrier();
 			const bool bFrameHasChanged = FStats::GameThreadStatsFrame > CurrentGameFrame;
 			if (bFrameHasChanged)
 			{
@@ -1451,16 +1451,16 @@ public:
 	static FORCEINLINE_STATS void MasterDisableChangeTagLockAdd(int32 Value = 1)
 	{
 		MasterDisableChangeTagLock.Add(Value);
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		MasterEnableUpdateNumber.Increment();
 	}
 
 	/** Indicate that you no longer need stat data, if nobody else needs stat data, then no stat data will be collected. Think reference count. **/
 	static FORCEINLINE_STATS void MasterDisableChangeTagLockSubtract(int32 Value = 1)
 	{
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		MasterEnableUpdateNumber.Increment();
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		MasterDisableChangeTagLock.Subtract(Value);
 	}
 
@@ -1478,23 +1478,23 @@ public:
 	/** Call this if something disrupts data gathering. For example when the render thread is killed, data is abandoned.**/
 	static FORCEINLINE_STATS void FrameDataIsIncomplete()
 	{
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		MasterEnableUpdateNumber.Increment();
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 	}
 
 	/** Enables the raw stats mode. */
 	static FORCEINLINE_STATS void EnableRawStats()
 	{
 		bIsRawStatsActive = true;
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 	}
 
 	/** Disables the raw stats mode. */
 	static FORCEINLINE_STATS void DisableRawStats()
 	{
 		bIsRawStatsActive = false;
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 	}
 
 	/** Called by launch engine loop to start the stats thread **/
@@ -1532,9 +1532,9 @@ public:
 			if (GCycleStatsShouldEmitNamedEvents > 0)
 			{
 #if	PLATFORM_USES_ANSI_STRING_FOR_EXTERNAL_PROFILING
-				YPlatformMisc::BeginNamedEvent(FColor(0), InStatId.GetStatDescriptionANSI());
+				FPlatformMisc::BeginNamedEvent(FColor(0), InStatId.GetStatDescriptionANSI());
 #else
-				YPlatformMisc::BeginNamedEvent(FColor(0), InStatId.GetStatDescriptionWIDE());
+				FPlatformMisc::BeginNamedEvent(FColor(0), InStatId.GetStatDescriptionWIDE());
 #endif // PLATFORM_USES_ANSI_STRING_FOR_EXTERNAL_PROFILING
 			}
 		}
@@ -1552,7 +1552,7 @@ public:
 			// End named event for active cycle stat.
 			if (GCycleStatsShouldEmitNamedEvents > 0)
 			{
-				YPlatformMisc::EndNamedEvent();
+				FPlatformMisc::EndNamedEvent();
 			}
 		}
 	}

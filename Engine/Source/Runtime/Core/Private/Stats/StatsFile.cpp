@@ -273,7 +273,7 @@ void IStatsWriteFile::Stop()
 
 FText IStatsWriteFile::GetFileMetaDesc() const
 {
-	const YTimespan Duration = YTimespan( 0, 0, FPlatformTime::Seconds() - StartTime );
+	const FTimespan Duration = FTimespan( 0, 0, FPlatformTime::Seconds() - StartTime );
 
 	const FText FileMetaDesc = FText::Format( LOCTEXT( "FileMetaDesc_Fmt", "STATS FILE: Duration: {0}, Filesize: {1}" ), FText::AsTimespan( Duration ), FText::AsMemory( (SIZE_T)FileSize ) );
 	return FileMetaDesc;
@@ -754,7 +754,7 @@ void FStatsReadFile::ReadRawStats()
 		else
 		{
 			Frame.Packets.Add( StatPacket );
-			FileInfo.MaximumPacketSize = YMath::Max<int32>( FileInfo.MaximumPacketSize, StatPacket->StatMessages.GetAllocatedSize() );
+			FileInfo.MaximumPacketSize = FMath::Max<int32>( FileInfo.MaximumPacketSize, StatPacket->StatMessages.GetAllocatedSize() );
 		}
 
 		UpdateReadStageProgress();
@@ -864,7 +864,7 @@ void FStatsReadFile::ProcessStats()
 
 			// Read all stats messages for all frames, decode callstacks.
 			const int32 FirstFrame = 0;
-			const int32 OnePercent = YMath::Max( int32( FileInfo.TotalStatMessagesNum / 200 ), 65536 );
+			const int32 OnePercent = FMath::Max( int32( FileInfo.TotalStatMessagesNum / 200 ), 65536 );
 			int32 MessageIndexForStageProgressUpdate = 0;
 
 			for (int32 FrameIndex = 0; FrameIndex < Frames.Num(); ++FrameIndex)

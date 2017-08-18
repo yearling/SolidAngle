@@ -163,7 +163,7 @@ namespace ConvexHull2D
 	}
 
 	/** Returns <0 if C is left of A-B */
-	inline float ComputeDeterminant2D(const YVector2D& A, const YVector2D& B, const YVector2D& C)
+	inline float ComputeDeterminant2D(const FVector2D& A, const FVector2D& B, const FVector2D& C)
 	{
 		const float u1 = B.X - A.X;
 		const float v1 = B.Y - A.Y;
@@ -177,7 +177,7 @@ namespace ConvexHull2D
 	 * Alternate simple implementation that was found to work correctly for points that are very close together (inside the 0-1 range).
 	 */
 	template<typename Allocator>
-	void ComputeConvexHull2(const TArray<YVector2D, Allocator>& Points, TArray<int32, Allocator>& OutIndices)
+	void ComputeConvexHull2(const TArray<FVector2D, Allocator>& Points, TArray<int32, Allocator>& OutIndices)
 	{
 		if (Points.Num() == 0)
 		{
@@ -186,7 +186,7 @@ namespace ConvexHull2D
 
 		// Jarvis march implementation
 		int32 LeftmostIndex = -1;
-		YVector2D Leftmost(FLT_MAX, FLT_MAX);
+		FVector2D Leftmost(FLT_MAX, FLT_MAX);
 
 		for (int32 PointIndex = 0; PointIndex < Points.Num(); PointIndex++)
 		{

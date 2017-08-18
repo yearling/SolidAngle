@@ -14,7 +14,7 @@ public:
 
 	virtual ~FWindowsCursor();
 
-	virtual YVector2D GetPosition() const override;
+	virtual FVector2D GetPosition() const override;
 
 	virtual void SetPosition( const int32 X, const int32 Y ) override;
 

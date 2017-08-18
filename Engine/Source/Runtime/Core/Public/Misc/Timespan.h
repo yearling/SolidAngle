@@ -46,19 +46,19 @@ namespace ETimespan
 *
 * @see YDateTime
 */
-struct YTimespan
+struct FTimespan
 {
 public:
 
 	/** Default constructor (no initialization). */
-	YTimespan() { }
+	FTimespan() { }
 
 	/**
 	* Creates and initializes a new time interval with the specified number of ticks.
 	*
 	* @param Ticks The number of ticks.
 	*/
-	YTimespan(int64 InTicks)
+	FTimespan(int64 InTicks)
 		: Ticks(InTicks)
 	{ }
 
@@ -69,7 +69,7 @@ public:
 	* @param Minutes The minutes component.
 	* @param Seconds The seconds component.
 	*/
-	YTimespan(int32 Hours, int32 Minutes, int32 Seconds)
+	FTimespan(int32 Hours, int32 Minutes, int32 Seconds)
 	{
 		Assign(0, Hours, Minutes, Seconds, 0, 0);
 	}
@@ -82,7 +82,7 @@ public:
 	* @param Minutes The minutes component.
 	* @param Seconds The seconds component.
 	*/
-	YTimespan(int32 Days, int32 Hours, int32 Minutes, int32 Seconds)
+	FTimespan(int32 Days, int32 Hours, int32 Minutes, int32 Seconds)
 	{
 		Assign(Days, Hours, Minutes, Seconds, 0, 0);
 	}
@@ -97,7 +97,7 @@ public:
 	* @param Milliseconds The milliseconds component.
 	* @param Microseconds The microseconds component (default = 0).
 	*/
-	YTimespan(int32 Days, int32 Hours, int32 Minutes, int32 Seconds, int32 Milliseconds, int32 Microseconds = 0)
+	FTimespan(int32 Days, int32 Hours, int32 Minutes, int32 Seconds, int32 Milliseconds, int32 Microseconds = 0)
 	{
 		Assign(Days, Hours, Minutes, Seconds, Milliseconds, Microseconds);
 	}
@@ -109,9 +109,9 @@ public:
 	*
 	* @return A time span whose value is the sum of this time span and the given time span.
 	*/
-	YTimespan operator+(const YTimespan& Other) const
+	FTimespan operator+(const FTimespan& Other) const
 	{
-		return YTimespan(Ticks + Other.Ticks);
+		return FTimespan(Ticks + Other.Ticks);
 	}
 
 	/**
@@ -119,7 +119,7 @@ public:
 	*
 	* @return This time span.
 	*/
-	YTimespan& operator+=(const YTimespan& Other)
+	FTimespan& operator+=(const FTimespan& Other)
 	{
 		Ticks += Other.Ticks;
 		return *this;
@@ -128,13 +128,13 @@ public:
 	/**
 	* Returns the inverse of this time span.
 	*
-	* The value of this time span must be greater than YTimespan::MinValue(), or else an overflow will occur.
+	* The value of this time span must be greater than FTimespan::MinValue(), or else an overflow will occur.
 	*
 	* @return Inverse of this time span.
 	*/
-	YTimespan operator-() const
+	FTimespan operator-() const
 	{
-		return YTimespan(-Ticks);
+		return FTimespan(-Ticks);
 	}
 
 	/**
@@ -143,9 +143,9 @@ public:
 	* @param Other The time span to compare with.
 	* @return A time span whose value is the difference of this time span and the given time span.
 	*/
-	YTimespan operator-(const YTimespan& Other) const
+	FTimespan operator-(const FTimespan& Other) const
 	{
-		return YTimespan(Ticks - Other.Ticks);
+		return FTimespan(Ticks - Other.Ticks);
 	}
 
 	/**
@@ -154,7 +154,7 @@ public:
 	* @param Other The time span to subtract.
 	* @return This time span.
 	*/
-	YTimespan& operator-=(const YTimespan& Other)
+	FTimespan& operator-=(const FTimespan& Other)
 	{
 		Ticks -= Other.Ticks;
 		return *this;
@@ -166,9 +166,9 @@ public:
 	* @param Scalar The scalar to multiply with.
 	* @return A time span whose value is the product of this time span and the given scalar.
 	*/
-	YTimespan operator*(float Scalar) const
+	FTimespan operator*(float Scalar) const
 	{
-		return YTimespan((int64)(Ticks * Scalar));
+		return FTimespan((int64)(Ticks * Scalar));
 	}
 
 	/**
@@ -177,7 +177,7 @@ public:
 	* @param Scalar The scalar to multiply with.
 	* @return This time span.
 	*/
-	YTimespan& operator*=(float Scalar)
+	FTimespan& operator*=(float Scalar)
 	{
 		Ticks = (int64)(Ticks * Scalar);
 		return *this;
@@ -189,9 +189,9 @@ public:
 	* @param Other The time span to divide by.
 	* @return A time span representing the remainder of the modulus operation.
 	*/
-	YTimespan operator%(const YTimespan& Other) const
+	FTimespan operator%(const FTimespan& Other) const
 	{
-		return YTimespan(Ticks % Other.Ticks);
+		return FTimespan(Ticks % Other.Ticks);
 	}
 
 	/**
@@ -200,7 +200,7 @@ public:
 	* @param Other The time span to divide by.
 	* @return This time span.
 	*/
-	YTimespan& operator%=(const YTimespan& Other)
+	FTimespan& operator%=(const FTimespan& Other)
 	{
 		Ticks = Ticks % Other.Ticks;
 		return *this;
@@ -212,7 +212,7 @@ public:
 	* @param Other The time span to compare with.
 	* @return true if the time spans are equal, false otherwise.
 	*/
-	bool operator==(const YTimespan& Other) const
+	bool operator==(const FTimespan& Other) const
 	{
 		return (Ticks == Other.Ticks);
 	}
@@ -223,7 +223,7 @@ public:
 	* @param Other The time span to compare with.
 	* @return true if the time spans are not equal, false otherwise.
 	*/
-	bool operator!=(const YTimespan& Other) const
+	bool operator!=(const FTimespan& Other) const
 	{
 		return (Ticks != Other.Ticks);
 	}
@@ -234,7 +234,7 @@ public:
 	* @param Other The time span to compare with.
 	* @return true if this time span is greater, false otherwise.
 	*/
-	bool operator>(const YTimespan& Other) const
+	bool operator>(const FTimespan& Other) const
 	{
 		return (Ticks > Other.Ticks);
 	}
@@ -245,7 +245,7 @@ public:
 	* @param Other The time span to compare with.
 	* @return true if this time span is greater or equal, false otherwise.
 	*/
-	bool operator>=(const YTimespan& Other) const
+	bool operator>=(const FTimespan& Other) const
 	{
 		return (Ticks >= Other.Ticks);
 	}
@@ -256,7 +256,7 @@ public:
 	* @param Other The time span to compare with.
 	* @return true if this time span is less, false otherwise.
 	*/
-	bool operator<(const YTimespan& Other) const
+	bool operator<(const FTimespan& Other) const
 	{
 		return (Ticks < Other.Ticks);
 	}
@@ -267,7 +267,7 @@ public:
 	* @param Other The time span to compare with.
 	* @return true if this time span is less or equal, false otherwise.
 	*/
-	bool operator<=(const YTimespan& Other) const
+	bool operator<=(const FTimespan& Other) const
 	{
 		return (Ticks <= Other.Ticks);
 	}
@@ -285,7 +285,7 @@ public:
 	* @return true on success, false otherwise.
 	* @see ImportTextItem
 	*/
-	CORE_API bool ExportTextItem(FString& ValueStr, YTimespan const& DefaultValue, UObject* Parent, int32 PortFlags, UObject* ExportRootScope) const;
+	CORE_API bool ExportTextItem(FString& ValueStr, FTimespan const& DefaultValue, UObject* Parent, int32 PortFlags, UObject* ExportRootScope) const;
 
 	/**
 	* Gets the days component of this time span.
@@ -305,9 +305,9 @@ public:
 	* @return Duration of this time span.
 	* @see MinValue
 	*/
-	YTimespan GetDuration()
+	FTimespan GetDuration()
 	{
-		return YTimespan(Ticks >= 0 ? Ticks : -Ticks);
+		return FTimespan(Ticks >= 0 ? Ticks : -Ticks);
 	}
 
 	/**
@@ -515,7 +515,7 @@ public:
 	* @return Time span.
 	* @see FromHours, FromMicroseconds, FromMilliseconds, FromMinutes, FromSeconds
 	*/
-	static CORE_API YTimespan FromDays(double Days);
+	static CORE_API FTimespan FromDays(double Days);
 
 	/**
 	* Creates a time span that represents the specified number of hours.
@@ -524,7 +524,7 @@ public:
 	* @return Time span.
 	* @see FromDays, FromMicroseconds, FromMilliseconds, FromMinutes, FromSeconds
 	*/
-	static CORE_API YTimespan FromHours(double Hours);
+	static CORE_API FTimespan FromHours(double Hours);
 
 	/**
 	* Creates a time span that represents the specified number of microseconds.
@@ -533,7 +533,7 @@ public:
 	* @return Time span.
 	* @see FromDays, FromHours, FromMinutes, FromSeconds, FromMilliseconds
 	*/
-	static CORE_API YTimespan FromMicroseconds(double Microseconds);
+	static CORE_API FTimespan FromMicroseconds(double Microseconds);
 
 	/**
 	* Creates a time span that represents the specified number of milliseconds.
@@ -542,7 +542,7 @@ public:
 	* @return Time span.
 	* @see FromDays, FromHours, FromMicroseconds, FromMinutes, FromSeconds
 	*/
-	static CORE_API YTimespan FromMilliseconds(double Milliseconds);
+	static CORE_API FTimespan FromMilliseconds(double Milliseconds);
 
 	/**
 	* Creates a time span that represents the specified number of minutes.
@@ -551,7 +551,7 @@ public:
 	* @return Time span.
 	* @see FromDays, FromHours, FromMicroseconds, FromMilliseconds, FromSeconds
 	*/
-	static CORE_API YTimespan FromMinutes(double Minutes);
+	static CORE_API FTimespan FromMinutes(double Minutes);
 
 	/**
 	* Creates a time span that represents the specified number of seconds.
@@ -560,7 +560,7 @@ public:
 	* @return Time span.
 	* @see FromDays, FromHours, FromMicroseconds, FromMilliseconds, FromMinutes
 	*/
-	static CORE_API YTimespan FromSeconds(double Seconds);
+	static CORE_API FTimespan FromSeconds(double Seconds);
 
 	/**
 	* Returns the maximum time span value.
@@ -570,9 +570,9 @@ public:
 	* @return Maximum time span.
 	* @see MinValue,Zero
 	*/
-	static YTimespan MaxValue()
+	static FTimespan MaxValue()
 	{
-		return YTimespan(9223372036854775807);
+		return FTimespan(9223372036854775807);
 	}
 
 	/**
@@ -583,15 +583,15 @@ public:
 	* @return Minimum time span.
 	* @see MaxValue, ZeroValue
 	*/
-	static YTimespan MinValue()
+	static FTimespan MinValue()
 	{
-		return YTimespan(-9223372036854775807 - 1);
+		return FTimespan(-9223372036854775807 - 1);
 	}
 
 	/**
 	* Converts a string to a time span.
 	*
-	* Currently, the string must be in the format written by YTimespan.ToString().
+	* Currently, the string must be in the format written by FTimespan.ToString().
 	* Other formats are not supported at this time.
 	*
 	* @param TimespanString The string to convert.
@@ -599,7 +599,7 @@ public:
 	* @return true if the string was converted successfully, false otherwise.
 	* @see ToString
 	*/
-	static CORE_API bool Parse(const FString& TimespanString, YTimespan& OutTimespan);
+	static CORE_API bool Parse(const FString& TimespanString, FTimespan& OutTimespan);
 
 	/**
 	* Returns the zero time span value.
@@ -609,9 +609,9 @@ public:
 	* @return Zero time span.
 	* @see IsZero, MaxValue, MinValue
 	*/
-	static YTimespan Zero()
+	static FTimespan Zero()
 	{
-		return YTimespan(0);
+		return FTimespan(0);
 	}
 
 public:
@@ -627,7 +627,7 @@ public:
 	*
 	* @todo gmp: Figure out better include order in Core.h so this can be inlined.
 	*/
-	friend CORE_API FArchive& operator<<(FArchive& Ar, YTimespan& Timespan);
+	friend CORE_API FArchive& operator<<(FArchive& Ar, FTimespan& Timespan);
 
 	/**
 	* Gets the hash for the specified time span.
@@ -635,7 +635,7 @@ public:
 	* @param Timespan The timespan to get the hash for.
 	* @return Hash value.
 	*/
-	friend CORE_API uint32 GetTypeHash(const YTimespan& Timespan);
+	friend CORE_API uint32 GetTypeHash(const FTimespan& Timespan);
 
 protected:
 
@@ -664,7 +664,7 @@ private:
 * @param Scalar The scalar to pre-multiply with.
 * @param Timespan The time span to multiply.
 */
-inline YTimespan operator*(float Scalar, const YTimespan& Timespan)
+inline FTimespan operator*(float Scalar, const FTimespan& Timespan)
 {
 	return Timespan.operator*(Scalar);
 }

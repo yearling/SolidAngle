@@ -119,7 +119,7 @@ public:
 			Purgatory[GFrameNumber % PURGATORY_STOMP_CHECKS_FRAMES].Push(Ptr);
 			OutstandingSizeInKB.Add((Size + 1023) / 1024);
 		}
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		uint32 LocalLastCheckFrame = LastCheckFrame;
 		uint32 LocalGFrameNumber = GFrameNumber;
 
@@ -130,7 +130,7 @@ public:
 			if (bFlushAnyway || FPlatformAtomics::InterlockedCompareExchange((volatile int32*)&LastCheckFrame, LocalGFrameNumber, LocalLastCheckFrame) == LocalLastCheckFrame)
 			{
 				int32 FrameToPop = ((bFlushAnyway ? NextOversizeClear.Increment() : LocalGFrameNumber) + PURGATORY_STOMP_CHECKS_FRAMES - 1) % PURGATORY_STOMP_CHECKS_FRAMES;
-				//YPlatformMisc::LowLevelOutputDebugStringf(TEXT("Pop %d at %d %d\r\n"), FrameToPop, LocalGFrameNumber, LocalGFrameNumber % PURGATORY_STOMP_CHECKS_FRAMES);
+				//FPlatformMisc::LowLevelOutputDebugStringf(TEXT("Pop %d at %d %d\r\n"), FrameToPop, LocalGFrameNumber, LocalGFrameNumber % PURGATORY_STOMP_CHECKS_FRAMES);
 				while (true)
 				{
 					uint8* Pop = (uint8*)Purgatory[FrameToPop].Pop();
@@ -144,7 +144,7 @@ public:
 					{
 						if (Pop[At] != PURGATORY_STOMP_CHECKS_CANARYBYTE)
 						{
-							YPlatformMisc::LowLevelOutputDebugStringf(TEXT("Freed memory at %p + %d == %x (should be %x)\r\n"), Pop, At, (int32)Pop[At], (int32)PURGATORY_STOMP_CHECKS_CANARYBYTE);
+							FPlatformMisc::LowLevelOutputDebugStringf(TEXT("Freed memory at %p + %d == %x (should be %x)\r\n"), Pop, At, (int32)Pop[At], (int32)PURGATORY_STOMP_CHECKS_CANARYBYTE);
 							UE_LOG(LogMemory, Fatal, TEXT("Freed memory at %p + %d == %x (should be %x)"), Pop, At, (int32)Pop[At], (int32)PURGATORY_STOMP_CHECKS_CANARYBYTE);
 						}
 					}
@@ -533,7 +533,7 @@ void FMemory::TestMemory()
 	// allocate pointers that will be freed later
 	for (int32 Index = 0; Index < NumFreedAllocations; Index++)
 	{
-		FreedPointers.Add(FMemory::Malloc(YMath::RandHelper(MaxAllocationSize)));
+		FreedPointers.Add(FMemory::Malloc(FMath::RandHelper(MaxAllocationSize)));
 	}
 
 
@@ -541,7 +541,7 @@ void FMemory::TestMemory()
 	LeakedPointers.Empty();
 	for (int32 Index = 0; Index < NumLeakedAllocations; Index++)
 	{
-		LeakedPointers.Add(FMemory::Malloc(YMath::RandHelper(MaxAllocationSize)));
+		LeakedPointers.Add(FMemory::Malloc(FMath::RandHelper(MaxAllocationSize)));
 	}
 
 	// free the leaked pointers from _last_ call to this function

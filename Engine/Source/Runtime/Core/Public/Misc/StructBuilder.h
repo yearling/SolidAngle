@@ -31,7 +31,7 @@ public:
 	{
 		int32 Result = Align(EndOfLastMember, MemberAlignment);
 		EndOfLastMember = Result + MemberSize;
-		Alignment = YMath::Max(Alignment, MemberAlignment);
+		Alignment = FMath::Max(Alignment, MemberAlignment);
 		return Result;
 	}
 

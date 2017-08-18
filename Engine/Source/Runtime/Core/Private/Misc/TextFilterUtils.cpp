@@ -235,7 +235,7 @@ bool FTextFilterString::CompareNumeric(const FTextFilterString& InOther, const E
 	const double OtherNumericValue = FCString::Atod(*InOther.InternalString);
 	const double Difference = OurNumericValue - OtherNumericValue;
 
-	const int32 ComparisonSign = (int32)YMath::Sign(Difference);
+	const int32 ComparisonSign = (int32)FMath::Sign(Difference);
 	switch (InComparisonOperation)
 	{
 	case ETextFilterComparisonOperation::Equal:

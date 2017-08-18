@@ -179,35 +179,35 @@ FString FSHA256Signature::ToString() const
  *****************************************************************************/
 
 #if !UE_BUILD_SHIPPING
-	bool YGenericPlatformMisc::bShouldPromptForRemoteDebugging = false;
-	bool YGenericPlatformMisc::bPromptForRemoteDebugOnEnsure = false;
+	bool FGenericPlatformMisc::bShouldPromptForRemoteDebugging = false;
+	bool FGenericPlatformMisc::bPromptForRemoteDebugOnEnsure = false;
 #endif	//#if !UE_BUILD_SHIPPING
 
 
-GenericApplication* YGenericPlatformMisc::CreateApplication()
+GenericApplication* FGenericPlatformMisc::CreateApplication()
 {
 	return new GenericApplication( nullptr );
 }
 
-void YGenericPlatformMisc::SetEnvironmentVar(const TCHAR* VariableName, const TCHAR* Value)
+void FGenericPlatformMisc::SetEnvironmentVar(const TCHAR* VariableName, const TCHAR* Value)
 {
 	UE_LOG(LogGenericPlatformMisc, Error, TEXT("SetEnvironmentVar not implemented for this platform: %s = %s"), VariableName, Value);
 }
 
-const TCHAR* YGenericPlatformMisc::GetPathVarDelimiter()
+const TCHAR* FGenericPlatformMisc::GetPathVarDelimiter()
 {
 	return TEXT(";");
 }
 
-TArray<uint8> YGenericPlatformMisc::GetMacAddress()
+TArray<uint8> FGenericPlatformMisc::GetMacAddress()
 {
 	return TArray<uint8>();
 }
 
-FString YGenericPlatformMisc::GetMacAddressString()
+FString FGenericPlatformMisc::GetMacAddressString()
 {
 	PRAGMA_DISABLE_DEPRECATION_WARNINGS
-	TArray<uint8> MacAddr = YPlatformMisc::GetMacAddress();
+	TArray<uint8> MacAddr = FPlatformMisc::GetMacAddress();
 	PRAGMA_ENABLE_DEPRECATION_WARNINGS
 	FString Result;
 	for (TArray<uint8>::TConstIterator it(MacAddr);it;++it)
@@ -217,21 +217,21 @@ FString YGenericPlatformMisc::GetMacAddressString()
 	return Result;
 }
 
-FString YGenericPlatformMisc::GetHashedMacAddressString()
+FString FGenericPlatformMisc::GetHashedMacAddressString()
 {
 	PRAGMA_DISABLE_DEPRECATION_WARNINGS
-	return FMD5::HashAnsiString(*YPlatformMisc::GetMacAddressString());
+	return FMD5::HashAnsiString(*FPlatformMisc::GetMacAddressString());
 	PRAGMA_ENABLE_DEPRECATION_WARNINGS
 }
 
-FString YGenericPlatformMisc::GetUniqueDeviceId()
+FString FGenericPlatformMisc::GetUniqueDeviceId()
 {
 	PRAGMA_DISABLE_DEPRECATION_WARNINGS
-	return YPlatformMisc::GetHashedMacAddressString();
+	return FPlatformMisc::GetHashedMacAddressString();
 	PRAGMA_ENABLE_DEPRECATION_WARNINGS
 }
 
-FString YGenericPlatformMisc::GetDeviceId()
+FString FGenericPlatformMisc::GetDeviceId()
 {
 	// @todo: When this function is finally removed, the functionality used will need to be moved in here.
 	PRAGMA_DISABLE_DEPRECATION_WARNINGS
@@ -239,9 +239,9 @@ FString YGenericPlatformMisc::GetDeviceId()
 	PRAGMA_ENABLE_DEPRECATION_WARNINGS
 }
 
-void YGenericPlatformMisc::SubmitErrorReport( const TCHAR* InErrorHist, EErrorReportMode::Type InMode )
+void FGenericPlatformMisc::SubmitErrorReport( const TCHAR* InErrorHist, EErrorReportMode::Type InMode )
 {
-	if ((!YPlatformMisc::IsDebuggerPresent() || GAlwaysReportCrash) && !FParse::Param(FCommandLine::Get(), TEXT("CrashForUAT")))
+	if ((!FPlatformMisc::IsDebuggerPresent() || GAlwaysReportCrash) && !FParse::Param(FCommandLine::Get(), TEXT("CrashForUAT")))
 	{
 		if ( GUseCrashReportClient )
 		{
@@ -260,36 +260,36 @@ void YGenericPlatformMisc::SubmitErrorReport( const TCHAR* InErrorHist, EErrorRe
 }
 
 
-FString YGenericPlatformMisc::GetCPUVendor()
+FString FGenericPlatformMisc::GetCPUVendor()
 {
 	// Not implemented cross-platform. Each platform may or may not choose to implement this.
 	return FString( TEXT( "GenericCPUVendor" ) );
 }
 
-FString YGenericPlatformMisc::GetCPUBrand()
+FString FGenericPlatformMisc::GetCPUBrand()
 {
 	// Not implemented cross-platform. Each platform may or may not choose to implement this.
 	return FString( TEXT( "GenericCPUBrand" ) );
 }
 
-uint32 YGenericPlatformMisc::GetCPUInfo()
+uint32 FGenericPlatformMisc::GetCPUInfo()
 {
 	// Not implemented cross-platform. Each platform may or may not choose to implement this.
 	return 0;
 }
 
-FString YGenericPlatformMisc::GetPrimaryGPUBrand()
+FString FGenericPlatformMisc::GetPrimaryGPUBrand()
 {
 	// Not implemented cross-platform. Each platform may or may not choose to implement this.
 	return FString( TEXT( "GenericGPUBrand" ) );
 }
 
-FGPUDriverInfo YGenericPlatformMisc::GetGPUDriverInfo(const FString& DeviceDescription)
+FGPUDriverInfo FGenericPlatformMisc::GetGPUDriverInfo(const FString& DeviceDescription)
 {
 	return FGPUDriverInfo();
 }
 
-void YGenericPlatformMisc::GetOSVersions( FString& out_OSVersionLabel, FString& out_OSSubVersionLabel )
+void FGenericPlatformMisc::GetOSVersions( FString& out_OSVersionLabel, FString& out_OSSubVersionLabel )
 {
 	// Not implemented cross-platform. Each platform may or may not choose to implement this.
 	out_OSVersionLabel = FString( TEXT( "GenericOSVersionLabel" ) );
@@ -297,7 +297,7 @@ void YGenericPlatformMisc::GetOSVersions( FString& out_OSVersionLabel, FString& 
 }
 
 
-bool YGenericPlatformMisc::GetDiskTotalAndFreeSpace( const FString& InPath, uint64& TotalNumberOfBytes, uint64& NumberOfFreeBytes )
+bool FGenericPlatformMisc::GetDiskTotalAndFreeSpace( const FString& InPath, uint64& TotalNumberOfBytes, uint64& NumberOfFreeBytes )
 {
 	// Not implemented cross-platform. Each platform may or may not choose to implement this.
 	TotalNumberOfBytes = 0;
@@ -306,16 +306,16 @@ bool YGenericPlatformMisc::GetDiskTotalAndFreeSpace( const FString& InPath, uint
 }
 
 
-void YGenericPlatformMisc::MemoryBarrier()
+void FGenericPlatformMisc::MemoryBarrier()
 {
 }
 
-void YGenericPlatformMisc::HandleIOFailure( const TCHAR* Filename )
+void FGenericPlatformMisc::HandleIOFailure( const TCHAR* Filename )
 {
 	UE_LOG(LogGenericPlatformMisc, Fatal,TEXT("I/O failure operating on '%s'"), Filename ? Filename : TEXT("Unknown file"));
 }
 
-void YGenericPlatformMisc::RaiseException(uint32 ExceptionCode)
+void FGenericPlatformMisc::RaiseException(uint32 ExceptionCode)
 {
 	/** This is the last place to gather memory stats before exception. */
 	FGenericCrashContext::CrashMemoryStats = YPlatformMemory::GetStats();
@@ -329,7 +329,7 @@ void YGenericPlatformMisc::RaiseException(uint32 ExceptionCode)
 #endif
 }
 
-bool YGenericPlatformMisc::SetStoredValue(const FString& InStoreId, const FString& InSectionName, const FString& InKeFName, const FString& InValue)
+bool FGenericPlatformMisc::SetStoredValue(const FString& InStoreId, const FString& InSectionName, const FString& InKeFName, const FString& InValue)
 {
 	check(!InStoreId.IsEmpty());
 	check(!InSectionName.IsEmpty());
@@ -350,7 +350,7 @@ bool YGenericPlatformMisc::SetStoredValue(const FString& InStoreId, const FStrin
 	return ConfigFile.Write(ConfigPath);
 }
 
-bool YGenericPlatformMisc::GetStoredValue(const FString& InStoreId, const FString& InSectionName, const FString& InKeFName, FString& OutValue)
+bool FGenericPlatformMisc::GetStoredValue(const FString& InStoreId, const FString& InSectionName, const FString& InKeFName, FString& OutValue)
 {
 	check(!InStoreId.IsEmpty());
 	check(!InSectionName.IsEmpty());
@@ -376,7 +376,7 @@ bool YGenericPlatformMisc::GetStoredValue(const FString& InStoreId, const FStrin
 	return false;
 }
 
-bool YGenericPlatformMisc::DeleteStoredValue(const FString& InStoreId, const FString& InSectionName, const FString& InKeFName)
+bool FGenericPlatformMisc::DeleteStoredValue(const FString& InStoreId, const FString& InSectionName, const FString& InKeFName)
 {	
 	check(!InStoreId.IsEmpty());
 	check(!InSectionName.IsEmpty());
@@ -400,24 +400,24 @@ bool YGenericPlatformMisc::DeleteStoredValue(const FString& InStoreId, const FSt
 	return false;
 }
 
-void YGenericPlatformMisc::LowLevelOutputDebugString( const TCHAR *Message )
+void FGenericPlatformMisc::LowLevelOutputDebugString( const TCHAR *Message )
 {
-	YPlatformMisc::LocalPrint( Message );
+	FPlatformMisc::LocalPrint( Message );
 }
 
-void YGenericPlatformMisc::LowLevelOutputDebugStringf(const TCHAR *Fmt, ... )
+void FGenericPlatformMisc::LowLevelOutputDebugStringf(const TCHAR *Fmt, ... )
 {
 	GROWABLE_LOGF(
-		YPlatformMisc::LowLevelOutputDebugString( Buffer );
+		FPlatformMisc::LowLevelOutputDebugString( Buffer );
 	);
 }
 
-void YGenericPlatformMisc::SetUTF8Output()
+void FGenericPlatformMisc::SetUTF8Output()
 {
 	// assume that UTF-8 is possible by default anyway
 }
 
-void YGenericPlatformMisc::LocalPrint( const TCHAR* Str )
+void FGenericPlatformMisc::LocalPrint( const TCHAR* Str )
 {
 #if PLATFORM_USE_LS_SPEC_FOR_WIDECHAR
 	printf("%ls", Str);
@@ -426,18 +426,18 @@ void YGenericPlatformMisc::LocalPrint( const TCHAR* Str )
 #endif
 }
 
-bool YGenericPlatformMisc::HasSeparateChannelForDebugOutput()
+bool FGenericPlatformMisc::HasSeparateChannelForDebugOutput()
 {
 	return true;
 }
 
-void YGenericPlatformMisc::RequestMinimize()
+void FGenericPlatformMisc::RequestMinimize()
 {
 }
 
-void YGenericPlatformMisc::RequestExit( bool Force )
+void FGenericPlatformMisc::RequestExit( bool Force )
 {
-	UE_LOG(LogGenericPlatformMisc, Log,  TEXT("YPlatformMisc::RequestExit(%i)"), Force );
+	UE_LOG(LogGenericPlatformMisc, Log,  TEXT("FPlatformMisc::RequestExit(%i)"), Force );
 	if( Force )
 	{
 		// Force immediate exit.
@@ -452,15 +452,15 @@ void YGenericPlatformMisc::RequestExit( bool Force )
 	}
 }
 
-void YGenericPlatformMisc::RequestExitWithStatus(bool Force, uint8 ReturnCode)
+void FGenericPlatformMisc::RequestExitWithStatus(bool Force, uint8 ReturnCode)
 {
 	// Generic implementation will ignore the return code - this may be important, so warn.
-	UE_LOG(LogGenericPlatformMisc, Warning, TEXT("YPlatformMisc::RequestExitWithStatus(%i, %d) - return code will be ignored by the generic implementation."), Force, ReturnCode);
+	UE_LOG(LogGenericPlatformMisc, Warning, TEXT("FPlatformMisc::RequestExitWithStatus(%i, %d) - return code will be ignored by the generic implementation."), Force, ReturnCode);
 
-	return YPlatformMisc::RequestExit(Force);
+	return FPlatformMisc::RequestExit(Force);
 }
 
-const TCHAR* YGenericPlatformMisc::GetSystemErrorMessage(TCHAR* OutBuffer, int32 BufferCount, int32 Error)
+const TCHAR* FGenericPlatformMisc::GetSystemErrorMessage(TCHAR* OutBuffer, int32 BufferCount, int32 Error)
 {
 	const TCHAR* Message = TEXT("No system errors available on this platform.");
 	check(OutBuffer && BufferCount > 80);
@@ -469,29 +469,29 @@ const TCHAR* YGenericPlatformMisc::GetSystemErrorMessage(TCHAR* OutBuffer, int32
 	return OutBuffer;
 }
 
-void YGenericPlatformMisc::ClipboardCopy(const TCHAR* Str)
+void FGenericPlatformMisc::ClipboardCopy(const TCHAR* Str)
 {
 
 }
-void YGenericPlatformMisc:: ClipboardPaste(class FString& Dest)
+void FGenericPlatformMisc:: ClipboardPaste(class FString& Dest)
 {
 	Dest = FString();
 }
 
-void YGenericPlatformMisc::CreateGuid(FGuid& Guid)
+void FGenericPlatformMisc::CreateGuid(FGuid& Guid)
 {
 	static uint16 IncrementCounter = 0; 
 
 	int32 Year = 0, Month = 0, DayOfWeek = 0, Day = 0, Hour = 0, Min = 0, Sec = 0, MSec = 0; // Use real time for baseline uniqueness
 	uint32 SequentialBits = static_cast<uint32>(IncrementCounter++); // Add sequential bits to ensure sequentially generated guids are unique even if Cycles is wrong
-	uint32 RandBits = YMath::Rand() & 0xFFFF; // Add randomness to improve uniqueness across machines
+	uint32 RandBits = FMath::Rand() & 0xFFFF; // Add randomness to improve uniqueness across machines
 
 	FPlatformTime::SystemTime(Year, Month, DayOfWeek, Day, Hour, Min, Sec, MSec);
 
 	Guid = FGuid(RandBits | (SequentialBits << 16), Day | (Hour << 8) | (Month << 16) | (Sec << 24), MSec | (Min << 16), Year ^ FPlatformTime::Cycles());
 }
 
-EAppReturnType::Type YGenericPlatformMisc::MessageBoxExt( EAppMsgType::Type MsgType, const TCHAR* Text, const TCHAR* Caption )
+EAppReturnType::Type FGenericPlatformMisc::MessageBoxExt( EAppMsgType::Type MsgType, const TCHAR* Text, const TCHAR* Caption )
 {
 	if (GWarn)
 	{
@@ -520,7 +520,7 @@ EAppReturnType::Type YGenericPlatformMisc::MessageBoxExt( EAppMsgType::Type MsgT
 	return EAppReturnType::Cancel; // Cancel
 }
 
-const TCHAR* YGenericPlatformMisc::RootDir()
+const TCHAR* FGenericPlatformMisc::RootDir()
 {
 	static FString Path;
 	if (Path.Len() == 0)
@@ -574,7 +574,7 @@ const TCHAR* YGenericPlatformMisc::RootDir()
 	return *Path;
 }
 
-const TCHAR* YGenericPlatformMisc::EngineDir()
+const TCHAR* FGenericPlatformMisc::EngineDir()
 {
 	static FString EngineDirectory = TEXT("");
 	if (EngineDirectory.Len() == 0)
@@ -614,7 +614,7 @@ static FString& GetWrappedLaunchDir()
 	return LaunchDir;
 }
 
-void YGenericPlatformMisc::CacheLaunchDir()
+void FGenericPlatformMisc::CacheLaunchDir()
 {
 	// we can only cache this ONCE
 	static bool bOneTime = false;
@@ -627,30 +627,30 @@ void YGenericPlatformMisc::CacheLaunchDir()
 	GetWrappedLaunchDir() = FPlatformProcess::GetCurrentWorkingDirectory() + TEXT("/");
 }
 
-const TCHAR* YGenericPlatformMisc::LaunchDir()
+const TCHAR* FGenericPlatformMisc::LaunchDir()
 {
 	return *GetWrappedLaunchDir();
 }
 
 
-const TCHAR* YGenericPlatformMisc::GetNullRHIShaderFormat()
+const TCHAR* FGenericPlatformMisc::GetNullRHIShaderFormat()
 {
 	return TEXT("PCD3D_SM5");
 }
 
-IPlatformChunkInstall* YGenericPlatformMisc::GetPlatformChunkInstall()
+IPlatformChunkInstall* FGenericPlatformMisc::GetPlatformChunkInstall()
 {
 	static FGenericPlatformChunkInstall Singleton;
 	return &Singleton;
 }
 
-IPlatformCompression* YGenericPlatformMisc::GetPlatformCompression()
+IPlatformCompression* FGenericPlatformMisc::GetPlatformCompression()
 {
 	static FGenericPlatformCompression Singleton;
 	return &Singleton;
 }
 
-FLinearColor YGenericPlatformMisc::GetScreenPixelColor(const struct YVector2D& InScreenPos, float InGamma)
+FLinearColor FGenericPlatformMisc::GetScreenPixelColor(const struct FVector2D& InScreenPos, float InGamma)
 { 
 	return FLinearColor::Black;
 }
@@ -665,7 +665,7 @@ void GenericPlatformMisc_GetProjectFilePathGameDir(FString& OutGameDir)
 	OutGameDir = BasePath;
 }
 
-const TCHAR* YGenericPlatformMisc::GameDir()
+const TCHAR* FGenericPlatformMisc::GameDir()
 {
 	static FString GameDir = TEXT("");
 
@@ -708,7 +708,7 @@ const TCHAR* YGenericPlatformMisc::GameDir()
 					{
 						// The game binaries folder was *not* found
 						// 
-						YPlatformMisc::LowLevelOutputDebugStringf(TEXT("Failed to find game directory: %s\n"), *GameDir);
+						FPlatformMisc::LowLevelOutputDebugStringf(TEXT("Failed to find game directory: %s\n"), *GameDir);
 
 						// Use the uprojectdirs
 						FString GameProjectFile = FUProjectDictionary::GetDefault().GetRelativeProjectPathForGame(FApp::GetGameName(), FPlatformProcess::BaseDir());
@@ -774,12 +774,12 @@ const TCHAR* YGenericPlatformMisc::GameDir()
 	return *GameDir;
 }
 
-FString YGenericPlatformMisc::CloudDir()
+FString FGenericPlatformMisc::CloudDir()
 {
 	return YPaths::GameSavedDir() + TEXT("Cloud/");
 }
 
-const TCHAR* YGenericPlatformMisc::GamePersistentDownloadDir()
+const TCHAR* FGenericPlatformMisc::GamePersistentDownloadDir()
 {
 	static FString GamePersistentDownloadDir = TEXT("");
 
@@ -795,7 +795,7 @@ const TCHAR* YGenericPlatformMisc::GamePersistentDownloadDir()
 	return *GamePersistentDownloadDir;
 }
 
-uint32 YGenericPlatformMisc::GetStandardPrintableKeyMap(uint32* KeyCodes, FString* KeFNames, uint32 MaxMappings, bool bMapUppercaseKeys, bool bMapLowercaseKeys)
+uint32 FGenericPlatformMisc::GetStandardPrintableKeyMap(uint32* KeyCodes, FString* KeFNames, uint32 MaxMappings, bool bMapUppercaseKeys, bool bMapLowercaseKeys)
 {
 	uint32 NumMappings = 0;
 
@@ -906,71 +906,71 @@ uint32 YGenericPlatformMisc::GetStandardPrintableKeyMap(uint32* KeyCodes, FStrin
 	return NumMappings;
 }
 
-const TCHAR* YGenericPlatformMisc::GetUBTPlatform()
+const TCHAR* FGenericPlatformMisc::GetUBTPlatform()
 {
 	return TEXT( PREPROCESSOR_TO_STRING(UBT_COMPILED_PLATFORM) );
 }
 
-const TCHAR* YGenericPlatformMisc::GetUBTTarget()
+const TCHAR* FGenericPlatformMisc::GetUBTTarget()
 {
     return TEXT(PREPROCESSOR_TO_STRING(UBT_COMPILED_TARGET));
 }
 
-const TCHAR* YGenericPlatformMisc::GetDefaultDeviceProfileName()
+const TCHAR* FGenericPlatformMisc::GetDefaultDeviceProfileName()
 {
 	return TEXT("Default");
 }
 
-void YGenericPlatformMisc::SetOverrideGameDir(const FString& InOverrideDir)
+void FGenericPlatformMisc::SetOverrideGameDir(const FString& InOverrideDir)
 {
 	OverrideGameDir = InOverrideDir;
 }
 
-int32 YGenericPlatformMisc::NumberOfCoresIncludingHyperthreads()
+int32 FGenericPlatformMisc::NumberOfCoresIncludingHyperthreads()
 {
-	return YPlatformMisc::NumberOfCores();
+	return FPlatformMisc::NumberOfCores();
 }
 
-int32 YGenericPlatformMisc::NumberOfWorkerThreadsToSpawn()
+int32 FGenericPlatformMisc::NumberOfWorkerThreadsToSpawn()
 {
 	static int32 MaxGameThreads = 4;
 	static int32 MaxThreads = 16;
 
-	int32 NumberOfCores = YPlatformMisc::NumberOfCores();
+	int32 NumberOfCores = FPlatformMisc::NumberOfCores();
 	int32 MaxWorkerThreadsWanted = (IsRunningGame() || IsRunningDedicatedServer() || IsRunningClientOnly()) ? MaxGameThreads : MaxThreads;
 	// need to spawn at least one worker thread (see FTaskGraphImplementation)
-	return YMath::Max(YMath::Min(NumberOfCores - 1, MaxWorkerThreadsWanted), 1);
+	return FMath::Max(FMath::Min(NumberOfCores - 1, MaxWorkerThreadsWanted), 1);
 }
 
-int32 YGenericPlatformMisc::NumberOfIOWorkerThreadsToSpawn()
+int32 FGenericPlatformMisc::NumberOfIOWorkerThreadsToSpawn()
 {
 	return 4;
 }
 
-void YGenericPlatformMisc::GetValidTargetPlatforms(class TArray<class FString>& TargetPlatformNames)
+void FGenericPlatformMisc::GetValidTargetPlatforms(class TArray<class FString>& TargetPlatformNames)
 {
 	// by default, just return the running PlatformName as the only TargetPlatform we support
 	TargetPlatformNames.Add(FPlatformProperties::PlatformName());
 }
 
-TArray<uint8> YGenericPlatformMisc::GetSystemFontBytes()
+TArray<uint8> FGenericPlatformMisc::GetSystemFontBytes()
 {
 	return TArray<uint8>();
 }
 
-const TCHAR* YGenericPlatformMisc::GetDefaultPathSeparator()
+const TCHAR* FGenericPlatformMisc::GetDefaultPathSeparator()
 {
 	return TEXT( "/" );
 }
 
-bool YGenericPlatformMisc::GetSHA256Signature(const void* Data, uint32 ByteSize, FSHA256Signature& OutSignature)
+bool FGenericPlatformMisc::GetSHA256Signature(const void* Data, uint32 ByteSize, FSHA256Signature& OutSignature)
 {
 	checkf(false, TEXT("No SHA256 Platform implementation"));
 	FMemory::Memzero(OutSignature.Signature);
 	return false;
 }
 
-FString YGenericPlatformMisc::GetDefaultLocale()
+FString FGenericPlatformMisc::GetDefaultLocale()
 {
 #if UE_ENABLE_ICU
 	icu::Locale ICUDefaultLocale = icu::Locale::getDefault();
@@ -980,29 +980,29 @@ FString YGenericPlatformMisc::GetDefaultLocale()
 #endif
 }
 
-FText YGenericPlatformMisc::GetFileManagerName()
+FText FGenericPlatformMisc::GetFileManagerName()
 {
 	return NSLOCTEXT("GenericPlatform", "FileManagerName", "File Manager");
 }
 
-bool YGenericPlatformMisc::IsRunningOnBattery()
+bool FGenericPlatformMisc::IsRunningOnBattery()
 {
 	return false;
 }
 
-FGuid YGenericPlatformMisc::GetMachineId()
+FGuid FGenericPlatformMisc::GetMachineId()
 {
 	static FGuid MachineId;
 	FString MachineIdString;
 
 	// Check to see if we already have a valid machine ID to use
-	if( !MachineId.IsValid() && (!YPlatformMisc::GetStoredValue( TEXT( "Epic Games" ), TEXT( "Unreal Engine/Identifiers" ), TEXT( "MachineId" ), MachineIdString ) || !FGuid::Parse( MachineIdString, MachineId )) )
+	if( !MachineId.IsValid() && (!FPlatformMisc::GetStoredValue( TEXT( "Epic Games" ), TEXT( "Unreal Engine/Identifiers" ), TEXT( "MachineId" ), MachineIdString ) || !FGuid::Parse( MachineIdString, MachineId )) )
 	{
 		// No valid machine ID, generate and save a new one
 		MachineId = FGuid::NewGuid();
 		MachineIdString = MachineId.ToString( EGuidFormats::Digits );
 
-		if( !YPlatformMisc::SetStoredValue( TEXT( "Epic Games" ), TEXT( "Unreal Engine/Identifiers" ), TEXT( "MachineId" ), MachineIdString ) )
+		if( !FPlatformMisc::SetStoredValue( TEXT( "Epic Games" ), TEXT( "Unreal Engine/Identifiers" ), TEXT( "MachineId" ), MachineIdString ) )
 		{
 			// Failed to persist the machine ID - reset it to zero to avoid returning a transient value
 			MachineId = FGuid();
@@ -1012,10 +1012,10 @@ FGuid YGenericPlatformMisc::GetMachineId()
 	return MachineId;
 }
 
-FString YGenericPlatformMisc::GetLoginId()
+FString FGenericPlatformMisc::GetLoginId()
 {
 	PRAGMA_DISABLE_DEPRECATION_WARNINGS
-	FGuid Id = YPlatformMisc::GetMachineId();
+	FGuid Id = FPlatformMisc::GetMachineId();
 	PRAGMA_ENABLE_DEPRECATION_WARNINGS
 	// force an empty string if we cannot determine an ID.
 	if (Id == FGuid())
@@ -1026,24 +1026,24 @@ FString YGenericPlatformMisc::GetLoginId()
 }
 
 
-FString YGenericPlatformMisc::GetEpicAccountId()
+FString FGenericPlatformMisc::GetEpicAccountId()
 {
 	FString AccountId;
-	YPlatformMisc::GetStoredValue( TEXT( "Epic Games" ), TEXT( "Unreal Engine/Identifiers" ), TEXT( "AccountId" ), AccountId );
+	FPlatformMisc::GetStoredValue( TEXT( "Epic Games" ), TEXT( "Unreal Engine/Identifiers" ), TEXT( "AccountId" ), AccountId );
 	return AccountId;
 }
 
-bool YGenericPlatformMisc::SetEpicAccountId( const FString& AccountId )
+bool FGenericPlatformMisc::SetEpicAccountId( const FString& AccountId )
 {
-	return YPlatformMisc::SetStoredValue( TEXT( "Epic Games" ), TEXT( "Unreal Engine/Identifiers" ), TEXT( "AccountId" ), AccountId );
+	return FPlatformMisc::SetStoredValue( TEXT( "Epic Games" ), TEXT( "Unreal Engine/Identifiers" ), TEXT( "AccountId" ), AccountId );
 }
 
-EConvertibleLaptopMode YGenericPlatformMisc::GetConvertibleLaptopMode()
+EConvertibleLaptopMode FGenericPlatformMisc::GetConvertibleLaptopMode()
 {
 	return EConvertibleLaptopMode::NotSupported;
 }
 
-const TCHAR* YGenericPlatformMisc::GetEngineMode()
+const TCHAR* FGenericPlatformMisc::GetEngineMode()
 {
 	return	
 		IsRunningCommandlet() ? TEXT( "Commandlet" ) :
@@ -1052,36 +1052,36 @@ const TCHAR* YGenericPlatformMisc::GetEngineMode()
 		TEXT( "Game" );
 }
 
-TArray<FString> YGenericPlatformMisc::GetPreferredLanguages()
+TArray<FString> FGenericPlatformMisc::GetPreferredLanguages()
 {
 	// not implemented by default
 	return TArray<FString>();
 }
 
-FString YGenericPlatformMisc::GetLocalCurrencyCode()
+FString FGenericPlatformMisc::GetLocalCurrencyCode()
 {
 	// not implemented by default
 	return FString();
 }
 
-FString YGenericPlatformMisc::GetLocalCurrencySymbol()
+FString FGenericPlatformMisc::GetLocalCurrencySymbol()
 {
 	// not implemented by default
 	return FString();
 }
 
-void YGenericPlatformMisc::PlatformPreInit()
+void FGenericPlatformMisc::PlatformPreInit()
 {
 	FGenericCrashContext::Initialize();
 }
 
-FString YGenericPlatformMisc::GetOperatingSystemId()
+FString FGenericPlatformMisc::GetOperatingSystemId()
 {
 	// not implemented by default.
 	return FString();
 }
 
-void YGenericPlatformMisc::RegisterForRemoteNotifications()
+void FGenericPlatformMisc::RegisterForRemoteNotifications()
 {
 	// not implemented by default
 }

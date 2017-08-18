@@ -432,7 +432,7 @@ protected:
 
 			IQueuedWork* LocalQueuedWork = QueuedWork;
 			QueuedWork = nullptr;
-			YPlatformMisc::MemoryBarrier();
+			FPlatformMisc::MemoryBarrier();
 			check(LocalQueuedWork || TimeToDie); // well you woke me up, where is the job or termination request?
 			while (LocalQueuedWork)
 			{
@@ -517,7 +517,7 @@ public:
 		check(QueuedWork == nullptr && "Can't do more than one task at a time");
 		// Tell the thread the work to be done
 		QueuedWork = InQueuedWork;
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		// Tell the thread to wake up and do its job
 		DoWorkEvent->Trigger();
 	}
@@ -611,7 +611,7 @@ public:
 			{
 				FScopeLock Lock(SynchQueue);
 				TimeToDie = 1;
-				YPlatformMisc::MemoryBarrier();
+				FPlatformMisc::MemoryBarrier();
 				// Clean up all queued objects
 				for (int32 Index = 0; Index < QueuedWork.Num(); Index++)
 				{

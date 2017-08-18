@@ -7,7 +7,7 @@
 #include "Math/Matrix.h"
 
 /** Combined Scale rotation and translation matrix */
-class YScaleRotationTranslationMatrix
+class FScaleRotationTranslationMatrix
 	: public FMatrix
 {
 public:
@@ -19,17 +19,17 @@ public:
 	 * @param Rot rotation
 	 * @param Origin translation to apply
 	 */
-	YScaleRotationTranslationMatrix(const FVector& Scale, const FRotator& Rot, const FVector& Origin);
+	FScaleRotationTranslationMatrix(const FVector& Scale, const FRotator& Rot, const FVector& Origin);
 };
 
 
-FORCEINLINE YScaleRotationTranslationMatrix::YScaleRotationTranslationMatrix(const FVector& Scale, const FRotator& Rot, const FVector& Origin)
+FORCEINLINE FScaleRotationTranslationMatrix::FScaleRotationTranslationMatrix(const FVector& Scale, const FRotator& Rot, const FVector& Origin)
 {
 	float SP, SY, SR;
 	float CP, CY, CR;
-	YMath::SinCos(&SP, &CP, YMath::DegreesToRadians(Rot.Pitch));
-	YMath::SinCos(&SY, &CY, YMath::DegreesToRadians(Rot.Yaw));
-	YMath::SinCos(&SR, &CR, YMath::DegreesToRadians(Rot.Roll));
+	FMath::SinCos(&SP, &CP, FMath::DegreesToRadians(Rot.Pitch));
+	FMath::SinCos(&SY, &CY, FMath::DegreesToRadians(Rot.Yaw));
+	FMath::SinCos(&SR, &CR, FMath::DegreesToRadians(Rot.Roll));
 
 	M[0][0]	= (CP * CY) * Scale.X;
 	M[0][1]	= (CP * SY) * Scale.X;

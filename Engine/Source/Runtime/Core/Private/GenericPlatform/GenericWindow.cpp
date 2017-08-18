@@ -143,7 +143,7 @@ int32 FGenericWindow::GetWindowTitleBarSize() const
 void* FGenericWindow::GetOSWindowHandle() const
 {
 	// empty default functionality (for platforms that don't need an OS handle)
-	return YPlatformMisc::GetHardwareWindow();
+	return FPlatformMisc::GetHardwareWindow();
 }
 
 bool FGenericWindow::IsForegroundWindow() const 
@@ -163,7 +163,7 @@ const FGenericWindowDefinition& FGenericWindow::GetDefinition() const
 }
 
 
-void FGenericWindow::AdjustCachedSize( YVector2D& Size ) const
+void FGenericWindow::AdjustCachedSize( FVector2D& Size ) const
 {
 }
 

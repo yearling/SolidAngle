@@ -53,7 +53,7 @@ public:
 	*
 	* @return Time duration.
 	*/
-	YTimespan GetDuration() const;
+	FTimespan GetDuration() const;
 
 	/**
 	* Checks whether the process is still running.

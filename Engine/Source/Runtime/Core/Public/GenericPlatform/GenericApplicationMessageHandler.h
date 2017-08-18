@@ -262,7 +262,7 @@ public:
 		return false;
 	}
 
-	virtual bool OnMouseDown(const TSharedPtr< FGenericWindow >& Window, const EMouseButtons::Type Button, const YVector2D CursorPos)
+	virtual bool OnMouseDown(const TSharedPtr< FGenericWindow >& Window, const EMouseButtons::Type Button, const FVector2D CursorPos)
 	{
 		return false;
 	}
@@ -272,7 +272,7 @@ public:
 		return false;
 	}
 
-	virtual bool OnMouseUp(const EMouseButtons::Type Button, const YVector2D CursorPos)
+	virtual bool OnMouseUp(const EMouseButtons::Type Button, const FVector2D CursorPos)
 	{
 		return false;
 	}
@@ -282,7 +282,7 @@ public:
 		return false;
 	}
 
-	virtual bool OnMouseDoubleClick(const TSharedPtr< FGenericWindow >& Window, const EMouseButtons::Type Button, const YVector2D CursorPos)
+	virtual bool OnMouseDoubleClick(const TSharedPtr< FGenericWindow >& Window, const EMouseButtons::Type Button, const FVector2D CursorPos)
 	{
 		return false;
 	}
@@ -292,7 +292,7 @@ public:
 		return false;
 	}
 
-	virtual bool OnMouseWheel(const float Delta, const YVector2D CursorPos)
+	virtual bool OnMouseWheel(const float Delta, const FVector2D CursorPos)
 	{
 		return false;
 	}
@@ -331,7 +331,7 @@ public:
 	{
 	}
 
-	virtual bool OnTouchGesture(EGestureEvent::Type GestureType, const YVector2D& Delta, float WheelDelta, bool bIsDirectionInvertedFromDevice)
+	virtual bool OnTouchGesture(EGestureEvent::Type GestureType, const FVector2D& Delta, float WheelDelta, bool bIsDirectionInvertedFromDevice)
 	{
 		return false;
 	}
@@ -340,17 +340,17 @@ public:
 	{
 	}
 
-	virtual bool OnTouchStarted(const TSharedPtr< FGenericWindow >& Window, const YVector2D& Location, int32 TouchIndex, int32 ControllerId)
+	virtual bool OnTouchStarted(const TSharedPtr< FGenericWindow >& Window, const FVector2D& Location, int32 TouchIndex, int32 ControllerId)
 	{
 		return false;
 	}
 
-	virtual bool OnTouchMoved(const YVector2D& Location, int32 TouchIndex, int32 ControllerId)
+	virtual bool OnTouchMoved(const FVector2D& Location, int32 TouchIndex, int32 ControllerId)
 	{
 		return false;
 	}
 
-	virtual bool OnTouchEnded(const YVector2D& Location, int32 TouchIndex, int32 ControllerId)
+	virtual bool OnTouchEnded(const FVector2D& Location, int32 TouchIndex, int32 ControllerId)
 	{
 		return false;
 	}

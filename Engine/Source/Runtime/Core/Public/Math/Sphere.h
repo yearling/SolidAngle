@@ -71,7 +71,7 @@ public:
 	*/
 	bool						Equals(const FSphere& Sphere, float Tolerance = KINDA_SMALL_NUMBER) const
 	{
-		return Center.Equals(Sphere.Center, Tolerance) && YMath::Abs(W - Sphere.W) <= Tolerance;
+		return Center.Equals(Sphere.Center, Tolerance) && FMath::Abs(W - Sphere.W) <= Tolerance;
 	}
 
 	/**
@@ -88,7 +88,7 @@ public:
 			return false;
 		}
 
-		return (Center - Other.Center).SizeSquared() <= YMath::Square(Other.W + Tolerance - W);
+		return (Center - Other.Center).SizeSquared() <= FMath::Square(Other.W + Tolerance - W);
 	}
 
 	/**
@@ -99,7 +99,7 @@ public:
 	*/
 	bool						IsInside(const FVector& In, float Tolerance = KINDA_SMALL_NUMBER) const
 	{
-		return (Center - In).SizeSquared() <= YMath::Square(W + Tolerance);
+		return (Center - In).SizeSquared() <= FMath::Square(W + Tolerance);
 	}
 
 	/**
@@ -111,7 +111,7 @@ public:
 	*/
 	FORCEINLINE bool			Intersects(const FSphere& Other, float Tolerance = KINDA_SMALL_NUMBER) const
 	{
-		return (Center - Other.Center).SizeSquared() <= YMath::Square(YMath::Max(0.f, Other.W + W + Tolerance));
+		return (Center - Other.Center).SizeSquared() <= FMath::Square(FMath::Max(0.f, Other.W + W + Tolerance));
 	}
 
 	/**
@@ -179,9 +179,9 @@ public:
 /**
 * Converts a sphere into a point plus radius squared for the test above
 */
-FORCEINLINE bool YMath::SphereAABBIntersection(const FSphere& Sphere, const FBox& AABB)
+FORCEINLINE bool FMath::SphereAABBIntersection(const FSphere& Sphere, const FBox& AABB)
 {
-	float RadiusSquared = YMath::Square(Sphere.W);
+	float RadiusSquared = FMath::Square(Sphere.W);
 	// If the distance is less than or equal to the radius, they intersect
 	return SphereAABBIntersection(Sphere.Center, RadiusSquared, AABB);
 }

@@ -192,7 +192,7 @@ bool FApp::IsUnattended() // @todo clang: Workaround for missing symbol export
 #if HAVE_RUNTIME_THREADING_SWITCHES
 bool FApp::ShouldUseThreadingForPerformance()
 {
-	static bool OnlyOneThread = FParse::Param(FCommandLine::Get(), TEXT("ONETHREAD")) || IsRunningDedicatedServer() || !FPlatformProcess::SupportsMultithreading() || YPlatformMisc::NumberOfCores() < 2;
+	static bool OnlyOneThread = FParse::Param(FCommandLine::Get(), TEXT("ONETHREAD")) || IsRunningDedicatedServer() || !FPlatformProcess::SupportsMultithreading() || FPlatformMisc::NumberOfCores() < 2;
 	return !OnlyOneThread;
 }
 #endif // HAVE_RUNTIME_THREADING_SWITCHES

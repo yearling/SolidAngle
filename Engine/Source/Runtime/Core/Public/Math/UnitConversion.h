@@ -10,7 +10,7 @@
 #include "Internationalization/Text.h"
 #include "Templates/ValueOrError.h"
 
-template<typename NumericType> struct YNumericUnit;
+template<typename NumericType> struct FNumericUnit;
 
 /** Enum *must* be zero-indexed and sequential. Must be grouped by relevance and ordered by magnitude. */
 /** Enum *must* match the mirrored enum that exists in CoreUObject/Classes/Object.h for the purposes of UObject reflection */
@@ -65,7 +65,7 @@ enum class EUnitType
 	NumberOf,
 };
 
-template<typename NumericType> struct YNumericUnit;
+template<typename NumericType> struct FNumericUnit;
 
 /** Unit settings accessed globally through FUnitConversion::Settings() */
 class CORE_API YUnitSettings
@@ -127,7 +127,7 @@ public:
 
 	/** Quantizes this number to the most appropriate unit for user friendly presentation (e.g. 1000m returns 1km). */
 	template<typename T>
-	static YNumericUnit<T> QuantizeUnitsToBestFit(T Value, EUnit Units);
+	static FNumericUnit<T> QuantizeUnitsToBestFit(T Value, EUnit Units);
 
 	/** Quantizes this number to the most appropriate unit for user friendly presentation (e.g. 1000m returns 1km), adhereing to global display settings. */
 	template<typename T>
@@ -141,7 +141,7 @@ public:
  * It handles conversion to/from related units automatically. The units are considered not to contribute to the type's state, and as such should be considered immutable once set.
  */
 template<typename NumericType>
-struct YNumericUnit
+struct FNumericUnit
 {
 	/** The numeric (scalar) value */
 	NumericType Value;
@@ -149,30 +149,30 @@ struct YNumericUnit
 	const EUnit Units;
 
 	/** Constructors */
-	YNumericUnit();
-	YNumericUnit(const NumericType& InValue, EUnit InUnits = EUnit::Unspecified);
+	FNumericUnit();
+	FNumericUnit(const NumericType& InValue, EUnit InUnits = EUnit::Unspecified);
 
 	/** Copy construction/assignment from the same type */
-	YNumericUnit(const YNumericUnit& Other);
-	YNumericUnit& operator=(const YNumericUnit& Other);
+	FNumericUnit(const FNumericUnit& Other);
+	FNumericUnit& operator=(const FNumericUnit& Other);
 
 	/** Templated Copy construction/assignment from differing numeric types. Relies on implicit conversion of the two numeric types. */
-	template<typename OtherType> YNumericUnit(const YNumericUnit<OtherType>& Other);
-	template<typename OtherType> YNumericUnit& operator=(const YNumericUnit<OtherType>& Other);
+	template<typename OtherType> FNumericUnit(const FNumericUnit<OtherType>& Other);
+	template<typename OtherType> FNumericUnit& operator=(const FNumericUnit<OtherType>& Other);
 
 	/** Convert this quantity to a different unit */
-	TOptional<YNumericUnit<NumericType>> ConvertTo(EUnit ToUnits) const;
+	TOptional<FNumericUnit<NumericType>> ConvertTo(EUnit ToUnits) const;
 
 public:
 
 	/** Quantizes this number to the most appropriate unit for user friendly presentation (e.g. 1000m returns 1km). */
-	YNumericUnit<NumericType> QuantizeUnitsToBestFit() const;
+	FNumericUnit<NumericType> QuantizeUnitsToBestFit() const;
 
 	/** Try and parse an expression into a numeric unit */
-	static TValueOrError<YNumericUnit<NumericType>, FText> TryParseExpression(const TCHAR* InExpression, EUnit InDefaultUnit, const YNumericUnit<NumericType>& InExistingValue);
+	static TValueOrError<FNumericUnit<NumericType>, FText> TryParseExpression(const TCHAR* InExpression, EUnit InDefaultUnit, const FNumericUnit<NumericType>& InExistingValue);
 
 	/** Parse a numeric unit from a string */
-	static TOptional<YNumericUnit<NumericType>> TryParseString(const TCHAR* InSource);
+	static TOptional<FNumericUnit<NumericType>> TryParseString(const TCHAR* InSource);
 
 private:
 	/** Conversion to the numeric type disabled as coupled with implicit construction from NumericType can easily lead to loss of associated units. */
@@ -180,7 +180,7 @@ private:
 
 	/** Copy another unit into this one, taking account of its units, and applying necessary conversion */
 	template<typename OtherType>
-	void CopyValueWithConversion(const YNumericUnit<OtherType>& Other);
+	void CopyValueWithConversion(const FNumericUnit<OtherType>& Other);
 
 	/** Given a string, skip past whitespace, then any numeric characters. Set End pointer to the end of the last numeric character. */
 	static bool ExtractNumberBoundary(const TCHAR* Start, const TCHAR*& End);
@@ -188,24 +188,24 @@ private:
 
 /** Global arithmetic operators for number types. Deals with conversion from related units correctly. */
 template<typename NumericType, typename OtherType>
-bool operator==(const YNumericUnit<NumericType>& LHS, const YNumericUnit<OtherType>& RHS);
+bool operator==(const FNumericUnit<NumericType>& LHS, const FNumericUnit<OtherType>& RHS);
 
 template<typename NumericType, typename OtherType>
-bool operator!=(const YNumericUnit<NumericType>& LHS, const YNumericUnit<OtherType>& RHS);
+bool operator!=(const FNumericUnit<NumericType>& LHS, const FNumericUnit<OtherType>& RHS);
 
 namespace Lex
 {
 	template<typename T>
-	FString ToString(const YNumericUnit<T>& NumericUnit);
+	FString ToString(const FNumericUnit<T>& NumericUnit);
 
 	template<typename T>
-	FString ToSanitizedString(const YNumericUnit<T>& NumericUnit);
+	FString ToSanitizedString(const FNumericUnit<T>& NumericUnit);
 
 	template<typename T>
-	void FromString(YNumericUnit<T>& OutValue, const TCHAR* String);
+	void FromString(FNumericUnit<T>& OutValue, const TCHAR* String);
 	
 	template<typename T>
-	bool TryParseString(YNumericUnit<T>& OutValue, const TCHAR* String);
+	bool TryParseString(FNumericUnit<T>& OutValue, const TCHAR* String);
 }
 
 

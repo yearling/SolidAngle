@@ -409,7 +409,7 @@ public:
 		ExpandChunksToIndex(NumElements + NumToAdd - 1);
 		check(Result == NumElements);
 		NumElements += NumToAdd;
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		return Result;
 	}
 	/**

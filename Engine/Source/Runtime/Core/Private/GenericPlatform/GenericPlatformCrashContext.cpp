@@ -100,18 +100,18 @@ void FGenericCrashContext::Initialize()
 	NCachedCrashContextProperties::PlatformNameIni = FPlatformProperties::IniPlatformName();
 	NCachedCrashContextProperties::DeploymentName = FApp::GetDeploymentName();
 	NCachedCrashContextProperties::BaseDir = FPlatformProcess::BaseDir();
-	NCachedCrashContextProperties::RootDir = YPlatformMisc::RootDir();
-	NCachedCrashContextProperties::EpicAccountId = YPlatformMisc::GetEpicAccountId();
-	NCachedCrashContextProperties::LoginIdStr = YPlatformMisc::GetLoginId();
-	YPlatformMisc::GetOSVersions(NCachedCrashContextProperties::OsVersion, NCachedCrashContextProperties::OsSubVersion);
-	NCachedCrashContextProperties::NumberOfCores = YPlatformMisc::NumberOfCores();
-	NCachedCrashContextProperties::NumberOfCoresIncludingHyperthreads = YPlatformMisc::NumberOfCoresIncludingHyperthreads();
+	NCachedCrashContextProperties::RootDir = FPlatformMisc::RootDir();
+	NCachedCrashContextProperties::EpicAccountId = FPlatformMisc::GetEpicAccountId();
+	NCachedCrashContextProperties::LoginIdStr = FPlatformMisc::GetLoginId();
+	FPlatformMisc::GetOSVersions(NCachedCrashContextProperties::OsVersion, NCachedCrashContextProperties::OsSubVersion);
+	NCachedCrashContextProperties::NumberOfCores = FPlatformMisc::NumberOfCores();
+	NCachedCrashContextProperties::NumberOfCoresIncludingHyperthreads = FPlatformMisc::NumberOfCoresIncludingHyperthreads();
 
-	NCachedCrashContextProperties::CPUVendor = YPlatformMisc::GetCPUVendor();
-	NCachedCrashContextProperties::CPUBrand = YPlatformMisc::GetCPUBrand();
-	NCachedCrashContextProperties::PrimaryGPUBrand = YPlatformMisc::GetPrimaryGPUBrand();
+	NCachedCrashContextProperties::CPUVendor = FPlatformMisc::GetCPUVendor();
+	NCachedCrashContextProperties::CPUBrand = FPlatformMisc::GetCPUBrand();
+	NCachedCrashContextProperties::PrimaryGPUBrand = FPlatformMisc::GetPrimaryGPUBrand();
 	NCachedCrashContextProperties::UserName = FPlatformProcess::UserName();
-	NCachedCrashContextProperties::DefaultLocale = YPlatformMisc::GetDefaultLocale();
+	NCachedCrashContextProperties::DefaultLocale = FPlatformMisc::GetDefaultLocale();
 	NCachedCrashContextProperties::CommandLine = FCommandLine::IsInitialized() ? FCommandLine::GetOriginalForLogging() : TEXT(""); 
 
 	if (FInternationalization::IsAvailable())
@@ -134,7 +134,7 @@ void FGenericCrashContext::Initialize()
 
 	// Using the -fullcrashdump parameter will cause full memory minidumps to be created for crashes
 	NCachedCrashContextProperties::CrashDumpMode = (int32)ECrashDumpMode::Default;
-	if (YPlatformMisc::SupportsFullCrashDumps() && FCommandLine::IsInitialized())
+	if (FPlatformMisc::SupportsFullCrashDumps() && FCommandLine::IsInitialized())
 	{
 		const TCHAR* CmdLine = FCommandLine::Get();
 		if (FParse::Param( CmdLine, TEXT("fullcrashdumpalways") ))
@@ -230,8 +230,8 @@ void FGenericCrashContext::SerializeContentToBuffer()
 	AddCrashProperty( TEXT( "IsPerforceBuild" ), NCachedCrashContextProperties::bIsPerforceBuild );
 	AddCrashProperty( TEXT( "IsSourceDistribution" ), NCachedCrashContextProperties::bIsSourceDistribution );
 	AddCrashProperty( TEXT( "IsEnsure" ), bIsEnsure );
-	AddCrashProperty( TEXT( "IsAssert" ), YDebug::bHasAsserted );
-	AddCrashProperty( TEXT( "CrashType" ), GetCrashTypeString(bIsEnsure, YDebug::bHasAsserted) );
+	AddCrashProperty( TEXT( "IsAssert" ), FDebug::bHasAsserted );
+	AddCrashProperty( TEXT( "CrashType" ), GetCrashTypeString(bIsEnsure, FDebug::bHasAsserted) );
 
 	AddCrashProperty( TEXT( "SecondsSinceStart" ), NCachedCrashContextProperties::SecondsSinceStart );
 
@@ -243,7 +243,7 @@ void FGenericCrashContext::SerializeContentToBuffer()
 
 	AddCrashProperty( TEXT( "PlatformName" ), *NCachedCrashContextProperties::PlatformName );
 	AddCrashProperty( TEXT( "PlatformNameIni" ), *NCachedCrashContextProperties::PlatformNameIni );
-	AddCrashProperty( TEXT( "EngineMode" ), YPlatformMisc::GetEngineMode() );
+	AddCrashProperty( TEXT( "EngineMode" ), FPlatformMisc::GetEngineMode() );
 	AddCrashProperty( TEXT( "EngineModeEx" ), EngineModeExString());
 
 	AddCrashProperty( TEXT( "DeploymentName"), *NCachedCrashContextProperties::DeploymentName );
@@ -277,7 +277,7 @@ void FGenericCrashContext::SerializeContentToBuffer()
 	// Add misc stats.
 	AddCrashProperty( TEXT( "Misc.NumberOfCores" ), NCachedCrashContextProperties::NumberOfCores );
 	AddCrashProperty( TEXT( "Misc.NumberOfCoresIncludingHyperthreads" ), NCachedCrashContextProperties::NumberOfCoresIncludingHyperthreads );
-	AddCrashProperty( TEXT( "Misc.Is64bitOperatingSystem" ), (int32)YPlatformMisc::Is64bitOperatingSystem() );
+	AddCrashProperty( TEXT( "Misc.Is64bitOperatingSystem" ), (int32)FPlatformMisc::Is64bitOperatingSystem() );
 
 	AddCrashProperty( TEXT( "Misc.CPUVendor" ), *NCachedCrashContextProperties::CPUVendor );
 	AddCrashProperty( TEXT( "Misc.CPUBrand" ), *NCachedCrashContextProperties::CPUBrand );
@@ -290,7 +290,7 @@ void FGenericCrashContext::SerializeContentToBuffer()
 	/*{
 		uint64 AppDiskTotalNumberOfBytes = 0;
 		uint64 AppDiskNumberOfFreeBytes = 0;
-		YPlatformMisc::GetDiskTotalAndFreeSpace( FPlatformProcess::BaseDir(), AppDiskTotalNumberOfBytes, AppDiskNumberOfFreeBytes );
+		FPlatformMisc::GetDiskTotalAndFreeSpace( FPlatformProcess::BaseDir(), AppDiskTotalNumberOfBytes, AppDiskNumberOfFreeBytes );
 		AddCrashProperty( TEXT( "Misc.AppDiskTotalNumberOfBytes" ), AppDiskTotalNumberOfBytes );
 		AddCrashProperty( TEXT( "Misc.AppDiskNumberOfFreeBytes" ), AppDiskNumberOfFreeBytes );
 	}*/

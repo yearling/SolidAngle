@@ -282,7 +282,7 @@ void YGenericPlatformMemory::MemswapGreaterThan8(void* RESTRICT Ptr1, void* REST
 		Size -= 4;
 	}
 
-	uint32 CommonAlignment = YMath::Min(YMath::CountTrailingZeros(Union1.PtrUint - Union2.PtrUint), 3u);
+	uint32 CommonAlignment = FMath::Min(FMath::CountTrailingZeros(Union1.PtrUint - Union2.PtrUint), 3u);
 	switch (CommonAlignment)
 	{
 	default:

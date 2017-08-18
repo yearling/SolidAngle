@@ -483,13 +483,13 @@ FORCEINLINE FBox& FBox::operator+=( const FVector &Other )
 {
 	if (IsValid)
 	{
-		Min.X = YMath::Min(Min.X, Other.X);
-		Min.Y = YMath::Min(Min.Y, Other.Y);
-		Min.Z = YMath::Min(Min.Z, Other.Z);
+		Min.X = FMath::Min(Min.X, Other.X);
+		Min.Y = FMath::Min(Min.Y, Other.Y);
+		Min.Z = FMath::Min(Min.Z, Other.Z);
 
-		Max.X = YMath::Max(Max.X, Other.X);
-		Max.Y = YMath::Max(Max.Y, Other.Y);
-		Max.Z = YMath::Max(Max.Z, Other.Z);
+		Max.X = FMath::Max(Max.X, Other.X);
+		Max.Y = FMath::Max(Max.Y, Other.Y);
+		Max.Z = FMath::Max(Max.Z, Other.Z);
 	}
 	else
 	{
@@ -505,13 +505,13 @@ FORCEINLINE FBox& FBox::operator+=( const FBox& Other )
 {
 	if (IsValid && Other.IsValid)
 	{
-		Min.X = YMath::Min(Min.X, Other.Min.X);
-		Min.Y = YMath::Min(Min.Y, Other.Min.Y);
-		Min.Z = YMath::Min(Min.Z, Other.Min.Z);
+		Min.X = FMath::Min(Min.X, Other.Min.X);
+		Min.Y = FMath::Min(Min.Y, Other.Min.Y);
+		Min.Z = FMath::Min(Min.Z, Other.Min.Z);
 
-		Max.X = YMath::Max(Max.X, Other.Max.X);
-		Max.Y = YMath::Max(Max.Y, Other.Max.Y);
-		Max.Z = YMath::Max(Max.Z, Other.Max.Z);
+		Max.X = FMath::Max(Max.X, Other.Max.X);
+		Max.Y = FMath::Max(Max.Y, Other.Max.Y);
+		Max.Z = FMath::Max(Max.Z, Other.Max.Z);
 	}
 	else if (Other.IsValid)
 	{
@@ -603,10 +603,10 @@ FORCEINLINE FString FBox::ToString() const
 	return FString::Printf(TEXT("IsValid=%s, Min=(%s), Max=(%s)"), IsValid ? TEXT("true") : TEXT("false"), *Min.ToString(), *Max.ToString());
 }
 
-/* YMath inline functions
+/* FMath inline functions
  *****************************************************************************/
 
-inline bool YMath::PointBoxIntersection
+inline bool FMath::PointBoxIntersection
 	(
 	const FVector&	Point,
 	const FBox&		Box
@@ -620,7 +620,7 @@ inline bool YMath::PointBoxIntersection
 		return 0;
 }
 
-inline bool YMath::LineBoxIntersection
+inline bool FMath::LineBoxIntersection
 	( 
 	const FBox& Box, 
 	const FVector& Start, 
@@ -631,7 +631,7 @@ inline bool YMath::LineBoxIntersection
 	return LineBoxIntersection(Box, Start, End, Direction, Direction.Reciprocal());
 }
 
-inline bool YMath::LineBoxIntersection
+inline bool FMath::LineBoxIntersection
 	(
 	const FBox&		Box,
 	const FVector&	Start,
@@ -767,7 +767,7 @@ inline bool YMath::LineBoxIntersection
  *
  * @return Whether the sphere/box intersect or not.
  */
-FORCEINLINE bool YMath::SphereAABBIntersection(const FVector& SphereCenter,const float RadiusSquared,const FBox& AABB)
+FORCEINLINE bool FMath::SphereAABBIntersection(const FVector& SphereCenter,const float RadiusSquared,const FBox& AABB)
 {
 	// Accumulates the distance as we iterate axis
 	float DistSquared = 0.f;
@@ -775,27 +775,27 @@ FORCEINLINE bool YMath::SphereAABBIntersection(const FVector& SphereCenter,const
 	// NOTE: Loop manually unrolled for > 2x speed up
 	if (SphereCenter.X < AABB.Min.X)
 	{
-		DistSquared += YMath::Square(SphereCenter.X - AABB.Min.X);
+		DistSquared += FMath::Square(SphereCenter.X - AABB.Min.X);
 	}
 	else if (SphereCenter.X > AABB.Max.X)
 	{
-		DistSquared += YMath::Square(SphereCenter.X - AABB.Max.X);
+		DistSquared += FMath::Square(SphereCenter.X - AABB.Max.X);
 	}
 	if (SphereCenter.Y < AABB.Min.Y)
 	{
-		DistSquared += YMath::Square(SphereCenter.Y - AABB.Min.Y);
+		DistSquared += FMath::Square(SphereCenter.Y - AABB.Min.Y);
 	}
 	else if (SphereCenter.Y > AABB.Max.Y)
 	{
-		DistSquared += YMath::Square(SphereCenter.Y - AABB.Max.Y);
+		DistSquared += FMath::Square(SphereCenter.Y - AABB.Max.Y);
 	}
 	if (SphereCenter.Z < AABB.Min.Z)
 	{
-		DistSquared += YMath::Square(SphereCenter.Z - AABB.Min.Z);
+		DistSquared += FMath::Square(SphereCenter.Z - AABB.Min.Z);
 	}
 	else if (SphereCenter.Z > AABB.Max.Z)
 	{
-		DistSquared += YMath::Square(SphereCenter.Z - AABB.Max.Z);
+		DistSquared += FMath::Square(SphereCenter.Z - AABB.Max.Z);
 	}
 	// If the distance is less than or equal to the radius, they intersect
 	return DistSquared <= RadiusSquared;

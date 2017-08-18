@@ -23,7 +23,7 @@
 #include "HAL/ExceptionHandling.h"
 #include "HAL/ThreadHeartBeat.h"
 
-bool YDebug::bHasAsserted = false;
+bool FDebug::bHasAsserted = false;
 
 #define FILE_LINE_DESC TEXT(" [File:%s] [Line: %i] ")
 
@@ -78,7 +78,7 @@ void StaticFailDebug(const TCHAR* Error, const ANSICHAR* File, int32 Line, const
 	}
 
 	FScopeLock Lock(&FailDebugCriticalSection);
-	YPlatformMisc::LowLevelOutputDebugStringf(TEXT("%s") FILE_LINE_DESC TEXT("\n%s\n"), Error, ANSI_TO_TCHAR(File), Line, Description);
+	FPlatformMisc::LowLevelOutputDebugStringf(TEXT("%s") FILE_LINE_DESC TEXT("\n%s\n"), Error, ANSI_TO_TCHAR(File), Line, Description);
 
 	// Copy the detailed error into the error message.
 	FCString::Snprintf(GErrorMessage, ARRAY_COUNT(GErrorMessage), TEXT("%s") FILE_LINE_DESC TEXT("\n%s\n"), Error, ANSI_TO_TCHAR(File), Line, Description);
@@ -136,7 +136,7 @@ void OutputMultiLineCallstack(const ANSICHAR* File, int32 Line, const FName& Log
 // Failed assertion handler.
 //warning: May be called at library startup time.
 //
-void VARARGS YDebug::LogAssertFailedMessage(const ANSICHAR* Expr, const ANSICHAR* File, int32 Line, const TCHAR* Format/*=TEXT("")*/, ...)
+void VARARGS FDebug::LogAssertFailedMessage(const ANSICHAR* Expr, const ANSICHAR* File, int32 Line, const TCHAR* Format/*=TEXT("")*/, ...)
 {
 	// Print out the blueprint callstack
 	PrintScriptCallstack(true);
@@ -174,11 +174,11 @@ void VARARGS YDebug::LogAssertFailedMessage(const ANSICHAR* Expr, const ANSICHAR
 * @param	Line	Line number (__LINE__)
 * @param	Msg		Informative error message text
 */
-void YDebug::EnsureFailed(const ANSICHAR* Expr, const ANSICHAR* File, int32 Line, const TCHAR* Msg)
+void FDebug::EnsureFailed(const ANSICHAR* Expr, const ANSICHAR* File, int32 Line, const TCHAR* Msg)
 {
 
 #if STATS
-	FString EnsureFailedPerfMessage = FString::Printf(TEXT("YDebug::EnsureFailed"));
+	FString EnsureFailedPerfMessage = FString::Printf(TEXT("FDebug::EnsureFailed"));
 	SCOPE_LOG_TIME_IN_SECONDS(*EnsureFailedPerfMessage, nullptr)
 #endif
 
@@ -187,7 +187,7 @@ void YDebug::EnsureFailed(const ANSICHAR* Expr, const ANSICHAR* File, int32 Line
 	if (bShouldCrash)
 	{
 		// Just trigger a regular assertion which will crash via GError->Logf()
-		YDebug::LogAssertFailedMessage(Expr, File, Line, Msg);
+		FDebug::LogAssertFailedMessage(Expr, File, Line, Msg);
 		return;
 	}
 
@@ -201,7 +201,7 @@ void YDebug::EnsureFailed(const ANSICHAR* Expr, const ANSICHAR* File, int32 Line
 	StaticFailDebug(ErrorString, File, Line, Msg, true);
 
 	// Is there a debugger attached?  If not we'll submit an error report.
-	if (YPlatformMisc::IsDebuggerPresent())
+	if (FPlatformMisc::IsDebuggerPresent())
 	{
 #if !NO_LOGGING
 		UE_LOG(LogOutputDevice, Error, TEXT("%s [File:%s] [Line: %i]"), ErrorString, ANSI_TO_TCHAR(File), Line);
@@ -288,7 +288,7 @@ void YDebug::EnsureFailed(const ANSICHAR* Expr, const ANSICHAR* File, int32 Line
 
 						FCoreDelegates::OnHandleSystemEnsure.Broadcast();
 
-					YPlatformMisc::SubmitErrorReport(ErrorMsg, EErrorReportMode::Balloon);
+					FPlatformMisc::SubmitErrorReport(ErrorMsg, EErrorReportMode::Balloon);
 
 					bShouldSendNewReport = true;
 				}
@@ -328,7 +328,7 @@ void YDebug::EnsureFailed(const ANSICHAR* Expr, const ANSICHAR* File, int32 Line
 
 #endif // DO_CHECK || DO_GUARD_SLOW
 
-void VARARGS YDebug::AssertFailed(const ANSICHAR* Expr, const ANSICHAR* File, int32 Line, const TCHAR* Format/* = TEXT("")*/, ...)
+void VARARGS FDebug::AssertFailed(const ANSICHAR* Expr, const ANSICHAR* File, int32 Line, const TCHAR* Format/* = TEXT("")*/, ...)
 {
 	if (GIsCriticalError)
 	{
@@ -350,7 +350,7 @@ void VARARGS YDebug::AssertFailed(const ANSICHAR* Expr, const ANSICHAR* File, in
 }
 
 #if DO_CHECK || DO_GUARD_SLOW
-bool VARARGS YDebug::OptionallyLogFormattedEnsureMessageReturningFalse(bool bLog, const ANSICHAR* Expr, const ANSICHAR* File, int32 Line, const TCHAR* FormattedMsg, ...)
+bool VARARGS FDebug::OptionallyLogFormattedEnsureMessageReturningFalse(bool bLog, const ANSICHAR* Expr, const ANSICHAR* File, int32 Line, const TCHAR* FormattedMsg, ...)
 {
 	if (bLog)
 	{

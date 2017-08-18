@@ -191,7 +191,7 @@ uint32 FFileManagerGeneric::CopyWithProgress(const TCHAR* InDestFile, const TCHA
 				uint8* Buffer = new uint8[COPYBLOCKSIZE];
 				for( int64 Total = 0; Total < Size; Total += sizeof(Buffer) )
 				{
-					int64 Count = YMath::Min( Size - Total, (int64)sizeof(Buffer) );
+					int64 Count = FMath::Min( Size - Total, (int64)sizeof(Buffer) );
 					Src->Serialize( Buffer, Count );
 					if( Src->IsError() )
 					{
@@ -273,7 +273,7 @@ bool FFileManagerGeneric::Delete( const TCHAR* Filename, bool RequireExists, boo
 		{
 			if (!Quiet)
 			{
-				UE_LOG( LogFileManager, Warning, TEXT( "Error deleting file: %s (Error Code %i)" ), Filename, YPlatformMisc::GetLastError() );
+				UE_LOG( LogFileManager, Warning, TEXT( "Error deleting file: %s (Error Code %i)" ), Filename, FPlatformMisc::GetLastError() );
 			}
 			return false;
 		}
@@ -479,7 +479,7 @@ double FFileManagerGeneric::GetFileAgeSeconds( const TCHAR* Filename )
 		return -1.0;
 	}
 	// get difference in time between now (UTC) and the filetime
-	YTimespan Age = FDateTime::UtcNow() - GetTimeStamp(Filename);
+	FTimespan Age = FDateTime::UtcNow() - GetTimeStamp(Filename);
 	return Age.GetTotalSeconds();
 }
 
@@ -524,7 +524,7 @@ FString FFileManagerGeneric::DefaultConvertToRelativePath( const TCHAR* Filename
 	YPaths::NormalizeFilename(RelativePath);
 
 	// See whether it is a relative path.
-	FString RootDirectory( YPlatformMisc::RootDir() );
+	FString RootDirectory( FPlatformMisc::RootDir() );
 	YPaths::NormalizeFilename(RootDirectory);
 
 	//the default relative directory it to the app root which is 3 directories up from the starting directory
@@ -625,7 +625,7 @@ void YArchiveFileReaderGeneric::Seek( int64 InPos )
 	{
 		TCHAR ErrorBuffer[1024];
 		ArIsError = true;
-		UE_LOG(LogFileManager, Error, TEXT("SetFilePointer on %s Failed %lld/%lld: %lld %s"), *Filename, InPos, Size, Pos, YPlatformMisc::GetSystemErrorMessage(ErrorBuffer, 1024, 0));
+		UE_LOG(LogFileManager, Error, TEXT("SetFilePointer on %s Failed %lld/%lld: %lld %s"), *Filename, InPos, Size, Pos, FPlatformMisc::GetSystemErrorMessage(ErrorBuffer, 1024, 0));
 	}
 	Pos         = InPos;
 	BufferBase  = Pos;
@@ -671,8 +671,8 @@ bool YArchiveFileReaderGeneric::InternalPrecache( int64 PrecacheOffset, int64 Pr
 	if( Pos == PrecacheOffset &&( !BufferBase || !BufferCount || BufferBase != Pos ) )
 	{
 		BufferBase = Pos;
-		BufferCount = YMath::Min( YMath::Min( PrecacheSize,( int64 )( ARRAY_COUNT( Buffer ) -( Pos&( ARRAY_COUNT( Buffer )-1 ) ) ) ), Size-Pos );
-		BufferCount = YMath::Max( BufferCount, 0LL ); // clamp to 0
+		BufferCount = FMath::Min( FMath::Min( PrecacheSize,( int64 )( ARRAY_COUNT( Buffer ) -( Pos&( ARRAY_COUNT( Buffer )-1 ) ) ) ), Size-Pos );
+		BufferCount = FMath::Max( BufferCount, 0LL ); // clamp to 0
 		int64 Count = 0;
 
 		{
@@ -691,7 +691,7 @@ bool YArchiveFileReaderGeneric::InternalPrecache( int64 PrecacheOffset, int64 Pr
 		{
 			TCHAR ErrorBuffer[1024];
 			ArIsError = true;
-			UE_LOG( LogFileManager, Warning, TEXT( "ReadFile failed: Count=%lld BufferCount=%lld Error=%s" ), Count, BufferCount, YPlatformMisc::GetSystemErrorMessage( ErrorBuffer, 1024, 0 ) );
+			UE_LOG( LogFileManager, Warning, TEXT( "ReadFile failed: Count=%lld BufferCount=%lld Error=%s" ), Count, BufferCount, FPlatformMisc::GetSystemErrorMessage( ErrorBuffer, 1024, 0 ) );
 		}
 	}
 	return true;
@@ -701,7 +701,7 @@ void YArchiveFileReaderGeneric::Serialize( void* V, int64 Length )
 {
 	while( Length>0 )
 	{
-		int64 Copy = YMath::Min( Length, BufferBase+BufferCount-Pos );
+		int64 Copy = FMath::Min( Length, BufferBase+BufferCount-Pos );
 		if( Copy<=0 )
 		{
 			if( Length >= ARRAY_COUNT( Buffer ) )
@@ -715,7 +715,7 @@ void YArchiveFileReaderGeneric::Serialize( void* V, int64 Length )
 					TCHAR ErrorBuffer[1024];
 					ArIsError = true;
 					UE_LOG( LogFileManager, Warning, TEXT( "ReadFile failed: Count=%lld Length=%lld Error=%s for file %s" ), 
-						Count, Length, YPlatformMisc::GetSystemErrorMessage( ErrorBuffer, 1024, 0 ), *Filename );
+						Count, Length, FPlatformMisc::GetSystemErrorMessage( ErrorBuffer, 1024, 0 ), *Filename );
 				}
 				Pos += Length;
 				return;
@@ -726,7 +726,7 @@ void YArchiveFileReaderGeneric::Serialize( void* V, int64 Length )
 				UE_LOG( LogFileManager, Warning, TEXT( "ReadFile failed during precaching for file %s" ),*Filename );
 				return;
 			}
-			Copy = YMath::Min( Length, BufferBase+BufferCount-Pos );
+			Copy = FMath::Min( Length, BufferBase+BufferCount-Pos );
 			if( Copy<=0 )
 			{
 				ArIsError = true;
@@ -859,7 +859,7 @@ void YArchiveFileWriterGeneric::LogWriteError(const TCHAR* Message)
 	{
 		bLoggingError = true;
 		TCHAR ErrorBuffer[1024];
-		UE_LOG(LogFileManager, Error, TEXT("%s: %s (%s)"), Message, *Filename, YPlatformMisc::GetSystemErrorMessage(ErrorBuffer, 1024, 0));
+		UE_LOG(LogFileManager, Error, TEXT("%s: %s (%s)"), Message, *Filename, FPlatformMisc::GetSystemErrorMessage(ErrorBuffer, 1024, 0));
 		bLoggingError = false;
 	}
 }

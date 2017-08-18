@@ -12,44 +12,44 @@
 namespace ArrayViewPrivate
 {
 	/**
-	* Trait testing whether a type is compatible with the view type
-	*/
+	 * Trait testing whether a type is compatible with the view type
+	 */
 	template <typename T, typename ElementType>
 	struct TIsCompatibleElementType
 	{
 	public:
 		/** NOTE:
-		* The stars in the TPointerIsConvertibleFromTo test are *IMPORTANT*
-		* They prevent TArrayView<Base>(TArray<Derived>&) from compiling!
-		*/
+		 * The stars in the TPointerIsConvertibleFromTo test are *IMPORTANT*
+		 * They prevent TArrayView<Base>(TArray<Derived>&) from compiling!
+		 */
 		enum { Value = TPointerIsConvertibleFromTo<T*, ElementType* const>::Value };
 	};
 }
 
 /**
-* Templated fixed-size view of another array
-*
-* A statically sized view of an array of typed elements.  Designed to allow functions to take either a fixed C array
-* or a TArray with an arbitrary allocator as an argument when the function neither adds nor removes elements
-*
-* e.g.:
-* int32 SumAll(TArrayView<const int32> array)
-* {
-*     return Algo::Accumulate(array);
-* }
-*
-* could be called as:
-*     SumAll(MyTArray);
-*     SumAll(MyCArray);
-*     SumAll({1, 2, 3});
-*     SumAll(MakeArrayView(Ptr, Num));
-*
-* Note:
-*   View classes are not const-propagating! If you want a view where the elements are const, you need "TArrayView<const T>" not "const TArrayView<T>"!
-*
-* Caution:
-*   Treat a view like a *reference* to the elements in the array. DO NOT free or reallocate the array while the view exists!
-*/
+ * Templated fixed-size view of another array
+ *
+ * A statically sized view of an array of typed elements.  Designed to allow functions to take either a fixed C array
+ * or a TArray with an arbitrary allocator as an argument when the function neither adds nor removes elements
+ *
+ * e.g.:
+ * int32 SumAll(TArrayView<const int32> array)
+ * {
+ *     return Algo::Accumulate(array);
+ * }
+ * 
+ * could be called as:
+ *     SumAll(MyTArray);
+ *     SumAll(MyCArray);
+ *     SumAll({1, 2, 3});
+ *     SumAll(MakeArrayView(Ptr, Num));
+ * 
+ * Note:
+ *   View classes are not const-propagating! If you want a view where the elements are const, you need "TArrayView<const T>" not "const TArrayView<T>"!
+ *
+ * Caution:
+ *   Treat a view like a *reference* to the elements in the array. DO NOT free or reallocate the array while the view exists!
+ */
 template<typename InElementType>
 class TArrayView
 {
@@ -57,8 +57,8 @@ public:
 	using ElementType = InElementType;
 
 	/**
-	* Constructor.
-	*/
+	 * Constructor.
+	 */
 	TArrayView()
 		: DataPtr(nullptr)
 		, ArrayNum(0)
@@ -71,26 +71,26 @@ private:
 
 public:
 	/**
-	* Copy constructor from another view
-	*
-	* @param Other The source array view to copy
-	*/
+	 * Copy constructor from another view
+	 *
+	 * @param Other The source array view to copy
+	 */
 	template <typename OtherElementType,
 		typename = typename TEnableIf<TIsCompatibleElementType<OtherElementType>::Value>::Type>
-		FORCEINLINE TArrayView(const TArrayView<OtherElementType>& Other)
+	FORCEINLINE TArrayView(const TArrayView<OtherElementType>& Other)
 		: DataPtr(Other.GetData())
 		, ArrayNum(Other.Num())
 	{
 	}
 
 	/**
-	* Construct a view of a C array with a compatible element type
-	*
-	* @param Other The source array to view.
-	*/
+	 * Construct a view of a C array with a compatible element type
+	 *
+	 * @param Other The source array to view.
+	 */
 	template <typename OtherElementType, size_t Size,
 		typename = typename TEnableIf<TIsCompatibleElementType<OtherElementType>::Value>::Type>
-		FORCEINLINE TArrayView(OtherElementType(&Other)[Size])
+	FORCEINLINE TArrayView(OtherElementType (&Other)[Size])
 		: DataPtr(Other)
 		, ArrayNum((int32)Size)
 	{
@@ -98,13 +98,13 @@ public:
 	}
 
 	/**
-	* Construct a view of a C array with a compatible element type
-	*
-	* @param Other The source array to view.
-	*/
+	 * Construct a view of a C array with a compatible element type
+	 *
+	 * @param Other The source array to view.
+	 */
 	template <typename OtherElementType, size_t Size,
 		typename = typename TEnableIf<TIsCompatibleElementType<const OtherElementType>::Value>::Type>
-		FORCEINLINE TArrayView(const OtherElementType(&Other)[Size])
+		FORCEINLINE TArrayView(const OtherElementType (&Other)[Size])
 		: DataPtr(Other)
 		, ArrayNum((int32)Size)
 	{
@@ -112,13 +112,13 @@ public:
 	}
 
 	/**
-	* Construct a view of a TArray with a compatible element type
-	*
-	* @param Other The source array to view.
-	*/
+	 * Construct a view of a TArray with a compatible element type
+	 *
+	 * @param Other The source array to view.
+	 */
 	template <typename OtherElementType, typename OtherAllocator,
 		typename = typename TEnableIf<TIsCompatibleElementType<OtherElementType>::Value>::Type>
-		FORCEINLINE TArrayView(TArray<OtherElementType, OtherAllocator>& Other)
+	FORCEINLINE TArrayView(TArray<OtherElementType, OtherAllocator>& Other)
 		: DataPtr(Other.GetData())
 		, ArrayNum(Other.Num())
 	{
@@ -126,34 +126,34 @@ public:
 
 	template <typename OtherElementType, typename OtherAllocator,
 		typename = typename TEnableIf<TIsCompatibleElementType<const OtherElementType>::Value>::Type>
-		FORCEINLINE TArrayView(const TArray<OtherElementType, OtherAllocator>& Other)
+	FORCEINLINE TArrayView(const TArray<OtherElementType, OtherAllocator>& Other)
 		: DataPtr(Other.GetData())
 		, ArrayNum(Other.Num())
 	{
 	}
 
 	/**
-	* Construct a view from an initializer list with a compatible element type
-	*
-	* @param List The initializer list to view.
-	*/
+	 * Construct a view from an initializer list with a compatible element type
+	 *
+	 * @param List The initializer list to view.
+	 */
 	template <typename OtherElementType,
 		typename = typename TEnableIf<TIsCompatibleElementType<OtherElementType>::Value>::Type>
-		FORCEINLINE TArrayView(std::initializer_list<OtherElementType> List)
+	FORCEINLINE TArrayView(std::initializer_list<OtherElementType> List)
 		: DataPtr(&*List.begin())
 		, ArrayNum(List.size())
 	{
 	}
 
 	/**
-	* Construct a view of an arbitrary pointer
-	*
-	* @param InData	The data to view
-	* @param InCount	The number of elements
-	*/
+	 * Construct a view of an arbitrary pointer
+	 *
+	 * @param InData	The data to view
+	 * @param InCount	The number of elements
+	 */
 	template <typename OtherElementType,
 		typename = typename TEnableIf<TIsCompatibleElementType<OtherElementType>::Value>::Type>
-		FORCEINLINE TArrayView(OtherElementType* InData, int32 InCount)
+	FORCEINLINE TArrayView(OtherElementType* InData, int32 InCount)
 		: DataPtr(InData)
 		, ArrayNum(InCount)
 	{
@@ -161,13 +161,13 @@ public:
 	}
 
 	/**
-	* Assignment operator
-	*
-	* @param Other The source array view to assign from
-	*/
+	 * Assignment operator
+	 *
+	 * @param Other The source array view to assign from
+	 */
 	template <typename OtherElementType,
 		typename = typename TEnableIf<TIsCompatibleElementType<OtherElementType>::Value>::Type>
-		FORCEINLINE TArrayView& operator=(const TArrayView<OtherElementType>& Other)
+	FORCEINLINE TArrayView& operator=(const TArrayView<OtherElementType>& Other)
 	{
 		if (this != &Other)
 		{
@@ -180,73 +180,73 @@ public:
 public:
 
 	/**
-	* Helper function for returning a typed pointer to the first array entry.
-	*
-	* @returns Pointer to first array entry or nullptr if ArrayMax == 0.
-	*/
+	 * Helper function for returning a typed pointer to the first array entry.
+	 *
+	 * @returns Pointer to first array entry or nullptr if ArrayMax == 0.
+	 */
 	FORCEINLINE ElementType* GetData() const
 	{
 		return DataPtr;
 	}
 
-	/**
-	* Helper function returning the size of the inner type.
-	*
-	* @returns Size in bytes of array type.
-	*/
+	/** 
+	 * Helper function returning the size of the inner type.
+	 *
+	 * @returns Size in bytes of array type.
+	 */
 	FORCEINLINE size_t GetTypeSize() const
 	{
 		return sizeof(ElementType);
 	}
 
 	/**
-	* Checks array invariants: if array size is greater than zero and less
-	* than maximum.
-	*/
+	 * Checks array invariants: if array size is greater than zero and less
+	 * than maximum.
+	 */
 	FORCEINLINE void CheckInvariants() const
 	{
 		checkSlow(ArrayNum >= 0);
 	}
 
 	/**
-	* Checks if index is in array range.
-	*
-	* @param Index Index to check.
-	*/
+	 * Checks if index is in array range.
+	 *
+	 * @param Index Index to check.
+	 */
 	FORCEINLINE void RangeCheck(int32 Index) const
 	{
 		CheckInvariants();
 
-		checkf((Index >= 0) & (Index < ArrayNum), TEXT("Array index out of bounds: %i from an array of size %i"), Index, ArrayNum); // & for one branch
+		checkf((Index >= 0) & (Index < ArrayNum),TEXT("Array index out of bounds: %i from an array of size %i"),Index,ArrayNum); // & for one branch
 	}
 
 	/**
-	* Tests if index is valid, i.e. than or equal to zero, and less than the number of elements in the array.
-	*
-	* @param Index Index to test.
-	*
-	* @returns True if index is valid. False otherwise.
-	*/
+	 * Tests if index is valid, i.e. than or equal to zero, and less than the number of elements in the array.
+	 *
+	 * @param Index Index to test.
+	 *
+	 * @returns True if index is valid. False otherwise.
+	 */
 	FORCEINLINE bool IsValidIndex(int32 Index) const
 	{
 		return (Index >= 0) && (Index < ArrayNum);
 	}
 
 	/**
-	* Returns number of elements in array.
-	*
-	* @returns Number of elements in array.
-	*/
+	 * Returns number of elements in array.
+	 *
+	 * @returns Number of elements in array.
+	 */
 	FORCEINLINE int32 Num() const
 	{
 		return ArrayNum;
 	}
 
 	/**
-	* Array bracket operator. Returns reference to element at give index.
-	*
-	* @returns Reference to indexed element.
-	*/
+	 * Array bracket operator. Returns reference to element at give index.
+	 *
+	 * @returns Reference to indexed element.
+	 */
 	FORCEINLINE ElementType& operator[](int32 Index) const
 	{
 		RangeCheck(Index);
@@ -254,13 +254,13 @@ public:
 	}
 
 	/**
-	* Returns n-th last element from the array.
-	*
-	* @param IndexFromTheEnd (Optional) Index from the end of array.
-	*                        Default is 0.
-	*
-	* @returns Reference to n-th last element from the array.
-	*/
+	 * Returns n-th last element from the array.
+	 *
+	 * @param IndexFromTheEnd (Optional) Index from the end of array.
+	 *                        Default is 0.
+	 *
+	 * @returns Reference to n-th last element from the array.
+	 */
 	FORCEINLINE ElementType& Last(int32 IndexFromTheEnd = 0) const
 	{
 		RangeCheck(ArrayNum - IndexFromTheEnd - 1);
@@ -268,12 +268,12 @@ public:
 	}
 
 	/**
-	* Returns a sliced view
-	*
-	* @param Index starting index of the new view
-	* @param InNum number of elements in the new view
-	* @returns Sliced view
-	*/
+	 * Returns a sliced view
+	 *
+	 * @param Index starting index of the new view
+	 * @param InNum number of elements in the new view
+	 * @returns Sliced view
+	 */
 	FORCEINLINE TArrayView Slice(int32 Index, int32 InNum)
 	{
 		check(InNum > 0);
@@ -283,13 +283,13 @@ public:
 	}
 
 	/**
-	* Finds element within the array.
-	*
-	* @param Item Item to look for.
-	* @param Index Output parameter. Found index.
-	*
-	* @returns True if found. False otherwise.
-	*/
+	 * Finds element within the array.
+	 *
+	 * @param Item Item to look for.
+	 * @param Index Output parameter. Found index.
+	 *
+	 * @returns True if found. False otherwise.
+	 */
 	FORCEINLINE bool Find(const ElementType& Item, int32& Index) const
 	{
 		Index = this->Find(Item);
@@ -297,12 +297,12 @@ public:
 	}
 
 	/**
-	* Finds element within the array.
-	*
-	* @param Item Item to look for.
-	*
-	* @returns Index of the found element. INDEX_NONE otherwise.
-	*/
+	 * Finds element within the array.
+	 *
+	 * @param Item Item to look for.
+	 *
+	 * @returns Index of the found element. INDEX_NONE otherwise.
+	 */
 	int32 Find(const ElementType& Item) const
 	{
 		const ElementType* RESTRICT Start = GetData();
@@ -317,13 +317,13 @@ public:
 	}
 
 	/**
-	* Finds element within the array starting from the end.
-	*
-	* @param Item Item to look for.
-	* @param Index Output parameter. Found index.
-	*
-	* @returns True if found. False otherwise.
-	*/
+	 * Finds element within the array starting from the end.
+	 *
+	 * @param Item Item to look for.
+	 * @param Index Output parameter. Found index.
+	 *
+	 * @returns True if found. False otherwise.
+	 */
 	FORCEINLINE bool FindLast(const ElementType& Item, int32& Index) const
 	{
 		Index = this->FindLast(Item);
@@ -331,13 +331,13 @@ public:
 	}
 
 	/**
-	* Finds element within the array starting from StartIndex and going backwards. Uses predicate to match element.
-	*
-	* @param Pred Predicate taking array element and returns true if element matches search criteria, false otherwise.
-	* @param StartIndex Index of element from which to start searching.
-	*
-	* @returns Index of the found element. INDEX_NONE otherwise.
-	*/
+	 * Finds element within the array starting from StartIndex and going backwards. Uses predicate to match element.
+	 *
+	 * @param Pred Predicate taking array element and returns true if element matches search criteria, false otherwise.
+	 * @param StartIndex Index of element from which to start searching.
+	 *
+	 * @returns Index of the found element. INDEX_NONE otherwise.
+	 */
 	template <typename Predicate>
 	int32 FindLastByPredicate(Predicate Pred, int32 StartIndex) const
 	{
@@ -367,14 +367,14 @@ public:
 	}
 
 	/**
-	* Finds an item by key (assuming the ElementType overloads operator== for
-	* the comparison).
-	*
-	* @param Key The key to search by.
-	*
-	* @returns Index to the first matching element, or INDEX_NONE if none is
-	*          found.
-	*/
+	 * Finds an item by key (assuming the ElementType overloads operator== for
+	 * the comparison).
+	 *
+	 * @param Key The key to search by.
+	 *
+	 * @returns Index to the first matching element, or INDEX_NONE if none is
+	 *          found.
+	 */
 	template <typename KeyType>
 	int32 IndexOfByKey(const KeyType& Key) const
 	{
@@ -390,13 +390,13 @@ public:
 	}
 
 	/**
-	* Finds an item by predicate.
-	*
-	* @param Pred The predicate to match.
-	*
-	* @returns Index to the first matching element, or INDEX_NONE if none is
-	*          found.
-	*/
+	 * Finds an item by predicate.
+	 *
+	 * @param Pred The predicate to match.
+	 *
+	 * @returns Index to the first matching element, or INDEX_NONE if none is
+	 *          found.
+	 */
 	template <typename Predicate>
 	int32 IndexOfByPredicate(Predicate Pred) const
 	{
@@ -412,13 +412,13 @@ public:
 	}
 
 	/**
-	* Finds an item by key (assuming the ElementType overloads operator== for
-	* the comparison).
-	*
-	* @param Key The key to search by.
-	*
-	* @returns Pointer to the first matching element, or nullptr if none is found.
-	*/
+	 * Finds an item by key (assuming the ElementType overloads operator== for
+	 * the comparison).
+	 *
+	 * @param Key The key to search by.
+	 *
+	 * @returns Pointer to the first matching element, or nullptr if none is found.
+	 */
 	template <typename KeyType>
 	ElementType* FindByKey(const KeyType& Key) const
 	{
@@ -434,13 +434,13 @@ public:
 	}
 
 	/**
-	* Finds an element which matches a predicate functor.
-	*
-	* @param Pred The functor to apply to each element.
-	*
-	* @return Pointer to the first element for which the predicate returns
-	*         true, or nullptr if none is found.
-	*/
+	 * Finds an element which matches a predicate functor.
+	 *
+	 * @param Pred The functor to apply to each element.
+	 *
+	 * @return Pointer to the first element for which the predicate returns
+	 *         true, or nullptr if none is found.
+	 */
 	template <typename Predicate>
 	ElementType* FindByPredicate(Predicate Pred) const
 	{
@@ -456,13 +456,13 @@ public:
 	}
 
 	/**
-	* Filters the elements in the array based on a predicate functor.
-	*
-	* @param Pred The functor to apply to each element.
-	*
-	* @returns TArray with the same type as this object which contains
-	*          the subset of elements for which the functor returns true.
-	*/
+	 * Filters the elements in the array based on a predicate functor.
+	 *
+	 * @param Pred The functor to apply to each element.
+	 *
+	 * @returns TArray with the same type as this object which contains
+	 *          the subset of elements for which the functor returns true.
+	 */
 	template <typename Predicate>
 	TArray<typename TRemoveConst<ElementType>::Type> FilterByPredicate(Predicate Pred) const
 	{
@@ -478,10 +478,10 @@ public:
 	}
 
 	/**
-	* Checks if this array contains the element.
-	*
-	* @returns	True if found. False otherwise.
-	*/
+	 * Checks if this array contains the element.
+	 *
+	 * @returns	True if found. False otherwise.
+	 */
 	template <typename ComparisonType>
 	bool Contains(const ComparisonType& Item) const
 	{
@@ -496,12 +496,12 @@ public:
 	}
 
 	/**
-	* Checks if this array contains element for which the predicate is true.
-	*
-	* @param Predicate to use
-	*
-	* @returns	True if found. False otherwise.
-	*/
+	 * Checks if this array contains element for which the predicate is true.
+	 *
+	 * @param Predicate to use
+	 *
+	 * @returns	True if found. False otherwise.
+	 */
 	template <typename Predicate>
 	FORCEINLINE bool ContainsByPredicate(Predicate Pred) const
 	{
@@ -510,26 +510,26 @@ public:
 
 private:
 	/**
-	* DO NOT USE DIRECTLY
-	* STL-like iterators to enable range-based for loop support.
-	*/
+	 * DO NOT USE DIRECTLY
+	 * STL-like iterators to enable range-based for loop support.
+	 */
 	FORCEINLINE friend ElementType* begin(const TArrayView& Array) { return Array.GetData(); }
-	FORCEINLINE friend ElementType* end(const TArrayView& Array) { return Array.GetData() + Array.Num(); }
+	FORCEINLINE friend ElementType* end  (const TArrayView& Array) { return Array.GetData() + Array.Num(); }
 
 public:
 	/**
-	* Sorts the array assuming < operator is defined for the item type.
-	*/
+	 * Sorts the array assuming < operator is defined for the item type.
+	 */
 	void Sort()
 	{
 		::Sort(GetData(), Num());
 	}
 
 	/**
-	* Sorts the array using user define predicate class.
-	*
-	* @param Predicate Predicate class instance.
-	*/
+	 * Sorts the array using user define predicate class.
+	 *
+	 * @param Predicate Predicate class instance.
+	 */
 	template <class PREDICATE_CLASS>
 	void Sort(const PREDICATE_CLASS& Predicate)
 	{
@@ -537,22 +537,22 @@ public:
 	}
 
 	/**
-	* Stable sorts the array assuming < operator is defined for the item type.
-	*
-	* Stable sort is slower than non-stable algorithm.
-	*/
+	 * Stable sorts the array assuming < operator is defined for the item type.
+	 *
+	 * Stable sort is slower than non-stable algorithm.
+	 */
 	void StableSort()
 	{
 		::StableSort(GetData(), Num());
 	}
 
 	/**
-	* Stable sorts the array using user defined predicate class.
-	*
-	* Stable sort is slower than non-stable algorithm.
-	*
-	* @param Predicate Predicate class instance
-	*/
+	 * Stable sorts the array using user defined predicate class.
+	 *
+	 * Stable sort is slower than non-stable algorithm.
+	 *
+	 * @param Predicate Predicate class instance
+	 */
 	template <class PREDICATE_CLASS>
 	void StableSort(const PREDICATE_CLASS& Predicate)
 	{

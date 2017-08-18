@@ -18,8 +18,8 @@ template<typename ResultType> class TSharedFuture;
 *****************************************************************************/
 
 /**
-* Base class for the internal state of asynchronous return values (futures).
-*/
+ * Base class for the internal state of asynchronous return values (futures).
+ */
 class FFutureState
 {
 public:
@@ -31,10 +31,10 @@ public:
 	{ }
 
 	/**
-	* Create and initialize a new instance with a callback.
-	*
-	* @param InCompletionCallback A function that is called when the state is completed.
-	*/
+	 * Create and initialize a new instance with a callback.
+	 *
+	 * @param InCompletionCallback A function that is called when the state is completed.
+	 */
 	FFutureState(TFunction<void()>&& InCompletionCallback)
 		: CompletionCallback(InCompletionCallback)
 		, CompletionEvent(FPlatformProcess::GetSynchEventFromPool(true))
@@ -51,24 +51,24 @@ public:
 public:
 
 	/**
-	* Checks whether the asynchronous result has been set.
-	*
-	* @return true if the result has been set, false otherwise.
-	* @see WaitFor
-	*/
+	 * Checks whether the asynchronous result has been set.
+	 *
+	 * @return true if the result has been set, false otherwise.
+	 * @see WaitFor
+	 */
 	bool IsComplete() const
 	{
 		return Complete;
 	}
 
 	/**
-	* Blocks the calling thread until the future result is available.
-	*
-	* @param Duration The maximum time span to wait for the future result.
-	* @return true if the result is available, false otherwise.
-	* @see IsComplete
-	*/
-	bool WaitFor(const YTimespan& Duration) const
+	 * Blocks the calling thread until the future result is available.
+	 *
+	 * @param Duration The maximum time span to wait for the future result.
+	 * @return true if the result is available, false otherwise.
+	 * @see IsComplete
+	 */
+	bool WaitFor(const FTimespan& Duration) const
 	{
 		if (CompletionEvent->Wait(Duration))
 		{
@@ -106,8 +106,8 @@ private:
 
 
 /**
-* Implements the internal state of asynchronous return values (futures).
-*/
+ * Implements the internal state of asynchronous return values (futures).
+ */
 template<typename InternalResultType>
 class TFutureState
 	: public FFutureState
@@ -120,10 +120,10 @@ public:
 	{ }
 
 	/**
-	* Create and initialize a new instance with a callback.
-	*
-	* @param CompletionCallback A function that is called when the state is completed.
-	*/
+	 * Create and initialize a new instance with a callback.
+	 *
+	 * @param CompletionCallback A function that is called when the state is completed.
+	 */
 	TFutureState(TFunction<void()>&& CompletionCallback)
 		: FFutureState(MoveTemp(CompletionCallback))
 	{ }
@@ -131,27 +131,27 @@ public:
 public:
 
 	/**
-	* Gets the result (will block the calling thread until the result is available).
-	*
-	* @return The result value.
-	* @see SetResult
-	*/
+	 * Gets the result (will block the calling thread until the result is available).
+	 *
+	 * @return The result value.
+	 * @see SetResult
+	 */
 	const InternalResultType& GetResult() const
 	{
 		while (!IsComplete())
 		{
-			WaitFor(YTimespan::MaxValue());
+			WaitFor(FTimespan::MaxValue());
 		}
 
 		return Result;
 	}
 
 	/**
-	* Sets the result and notifies any waiting threads.
-	*
-	* @param InResult The result to set.
-	* @see GetResult
-	*/
+	 * Sets the result and notifies any waiting threads.
+	 *
+	 * @param InResult The result to set.
+	 * @see GetResult
+	 */
 	void SetResult(const InternalResultType& InResult)
 	{
 		check(!IsComplete());
@@ -161,11 +161,11 @@ public:
 	}
 
 	/**
-	* Sets the result and notifies any waiting threads (from rvalue).
-	*
-	* @param InResult The result to set.
-	* @see GetResult
-	*/
+	 * Sets the result and notifies any waiting threads (from rvalue).
+	 *
+	 * @param InResult The result to set.
+	 * @see GetResult
+	 */
 	void SetResult(InternalResultType&& InResult)
 	{
 		check(!IsComplete());
@@ -182,67 +182,67 @@ private:
 
 
 /**
-* Abstract base template for futures and shared futures.
-*/
+ * Abstract base template for futures and shared futures.
+ */
 template<typename InternalResultType>
 class TFutureBase
 {
 public:
 
 	/**
-	* Checks whether this future object has its value set.
-	*
-	* @return true if this future has a shared state and the value has been set, false otherwise.
-	* @see IsValid
-	*/
+	 * Checks whether this future object has its value set.
+	 *
+	 * @return true if this future has a shared state and the value has been set, false otherwise.
+	 * @see IsValid
+	 */
 	bool IsReady() const
 	{
 		return State.IsValid() ? State->IsComplete() : false;
 	}
 
 	/**
-	* Checks whether this future object has a valid state.
-	*
-	* @return true if the state is valid, false otherwise.
-	* @see IsReady
-	*/
+	 * Checks whether this future object has a valid state.
+	 *
+	 * @return true if the state is valid, false otherwise.
+	 * @see IsReady
+	 */
 	bool IsValid() const
 	{
 		return State.IsValid();
 	}
 
 	/**
-	* Blocks the calling thread until the future result is available.
-	*
-	* Note that this method may block forever if the result is never set. Use
-	* the WaitFor or WaitUntil methods to specify a maximum timeout for the wait.
-	*
-	* @see WaitFor, WaitUntil
-	*/
+	 * Blocks the calling thread until the future result is available.
+	 *
+	 * Note that this method may block forever if the result is never set. Use
+	 * the WaitFor or WaitUntil methods to specify a maximum timeout for the wait.
+	 *
+	 * @see WaitFor, WaitUntil
+	 */
 	void Wait() const
 	{
-		while (!WaitFor(YTimespan::MaxValue()));
+		while (!WaitFor(FTimespan::MaxValue()));
 	}
 
 	/**
-	* Blocks the calling thread until the future result is available or the specified duration is exceeded.
-	*
-	* @param Duration The maximum time span to wait for the future result.
-	* @return true if the result is available, false otherwise.
-	* @see Wait, WaitUntil
-	*/
-	bool WaitFor(const YTimespan& Duration) const
+	 * Blocks the calling thread until the future result is available or the specified duration is exceeded.
+	 *
+	 * @param Duration The maximum time span to wait for the future result.
+	 * @return true if the result is available, false otherwise.
+	 * @see Wait, WaitUntil
+	 */
+	bool WaitFor(const FTimespan& Duration) const
 	{
 		return State.IsValid() ? State->WaitFor(Duration) : false;
 	}
 
 	/**
-	* Blocks the calling thread until the future result is available or the specified time is hit.
-	*
-	* @param Time The time until to wait for the future result (in UTC).
-	* @return true if the result is available, false otherwise.
-	* @see Wait, WaitUntil
-	*/
+	 * Blocks the calling thread until the future result is available or the specified time is hit.
+	 *
+	 * @param Time The time until to wait for the future result (in UTC).
+	 * @return true if the result is available, false otherwise.
+	 * @see Wait, WaitUntil
+	 */
 	bool WaitUntil(const FDateTime& Time) const
 	{
 		return WaitFor(Time - FDateTime::UtcNow());
@@ -256,19 +256,19 @@ protected:
 	TFutureBase() { }
 
 	/**
-	* Creates and initializes a new instance.
-	*
-	* @param InState The shared state to initialize with.
-	*/
+	 * Creates and initializes a new instance.
+	 *
+	 * @param InState The shared state to initialize with.
+	 */
 	TFutureBase(const StateType& InState)
 		: State(InState)
 	{ }
 
 	/**
-	* Move constructor.
-	*
-	* @param Other The future holding the shared state to move.
-	*/
+	 * Move constructor.
+	 *
+	 * @param Other The future holding the shared state to move.
+	 */
 	TFutureBase(TFutureBase&& Other)
 		: State(MoveTemp(Other.State))
 	{
@@ -291,10 +291,10 @@ protected:
 protected:
 
 	/**
-	* Gets the shared state object.
-	*
-	* @return The shared state object.
-	*/
+	 * Gets the shared state object.
+	 *
+	 * @return The shared state object.
+	 */
 	const StateType& GetState() const
 	{
 		// if you hit this assertion then your future has an invalid state.
@@ -319,8 +319,8 @@ template<typename ResultType> class TSharedFuture;
 
 
 /**
-* Template for unshared futures.
-*/
+ * Template for unshared futures.
+ */
 template<typename ResultType>
 class TFuture
 	: public TFutureBase<ResultType>
@@ -333,10 +333,10 @@ public:
 	TFuture() { }
 
 	/**
-	* Creates and initializes a new instance.
-	*
-	* @param InState The shared state to initialize with.
-	*/
+	 * Creates and initializes a new instance.
+	 *
+	 * @param InState The shared state to initialize with.
+	 */
 	TFuture(const typename BaseType::StateType& InState)
 		: BaseType(InState)
 	{ }
@@ -361,20 +361,20 @@ public:
 public:
 
 	/**
-	* Gets the future's result.
-	*
-	* @return The result.
-	*/
+	 * Gets the future's result.
+	 *
+	 * @return The result.
+	 */
 	ResultType Get() const
 	{
 		return MoveTemp(this->GetState()->GetResult());
 	}
 
 	/**
-	* Moves this future's state into a shared future.
-	*
-	* @return The shared future object.
-	*/
+	 * Moves this future's state into a shared future.
+	 *
+	 * @return The shared future object.
+	 */
 	TSharedFuture<ResultType> Share()
 	{
 		return TSharedFuture<ResultType>(MoveTemp(*this));
@@ -391,8 +391,8 @@ private:
 
 
 /**
-* Template for unshared futures (specialization for reference types).
-*/
+ * Template for unshared futures (specialization for reference types).
+ */
 template<typename ResultType>
 class TFuture<ResultType&>
 	: public TFutureBase<ResultType*>
@@ -405,10 +405,10 @@ public:
 	TFuture() { }
 
 	/**
-	* Creates and initializes a new instance.
-	*
-	* @param InState The shared state to initialize with.
-	*/
+	 * Creates and initializes a new instance.
+	 *
+	 * @param InState The shared state to initialize with.
+	 */
 	TFuture(const typename BaseType::StateType& InState)
 		: BaseType(InState)
 	{ }
@@ -433,20 +433,20 @@ public:
 public:
 
 	/**
-	* Gets the future's result.
-	*
-	* @return The result.
-	*/
+	 * Gets the future's result.
+	 *
+	 * @return The result.
+	 */
 	ResultType& Get() const
 	{
 		return *this->GetState()->GetResult();
 	}
 
 	/**
-	* Moves this future's state into a shared future.
-	*
-	* @return The shared future object.
-	*/
+	 * Moves this future's state into a shared future.
+	 *
+	 * @return The shared future object.
+	 */
 	TSharedFuture<ResultType&> Share()
 	{
 		return TSharedFuture<ResultType&>(MoveTemp(*this));
@@ -463,8 +463,8 @@ private:
 
 
 /**
-* Template for unshared futures (specialization for void).
-*/
+ * Template for unshared futures (specialization for void).
+ */
 template<>
 class TFuture<void>
 	: public TFutureBase<int>
@@ -477,10 +477,10 @@ public:
 	TFuture() { }
 
 	/**
-	* Creates and initializes a new instance.
-	*
-	* @param InState The shared state to initialize with.
-	*/
+	 * Creates and initializes a new instance.
+	 *
+	 * @param InState The shared state to initialize with.
+	 */
 	TFuture(const BaseType::StateType& InState)
 		: BaseType(InState)
 	{ }
@@ -505,20 +505,20 @@ public:
 public:
 
 	/**
-	* Gets the future's result.
-	*
-	* @return The result.
-	*/
+	 * Gets the future's result.
+	 *
+	 * @return The result.
+	 */
 	void Get() const
 	{
 		GetState()->GetResult();
 	}
 
 	/**
-	* Moves this future's state into a shared future.
-	*
-	* @return The shared future object.
-	*/
+	 * Moves this future's state into a shared future.
+	 *
+	 * @return The shared future object.
+	 */
 	TSharedFuture<void> Share();
 
 private:
@@ -535,8 +535,8 @@ private:
 *****************************************************************************/
 
 /**
-* Template for shared futures.
-*/
+ * Template for shared futures.
+ */
 template<typename ResultType>
 class TSharedFuture
 	: public TFutureBase<ResultType>
@@ -549,19 +549,19 @@ public:
 	TSharedFuture() { }
 
 	/**
-	* Creates and initializes a new instance.
-	*
-	* @param InState The shared state to initialize from.
-	*/
+	 * Creates and initializes a new instance.
+	 *
+	 * @param InState The shared state to initialize from.
+	 */
 	TSharedFuture(const typename BaseType::StateType& InState)
 		: BaseType(InState)
 	{ }
 
 	/**
-	* Creates and initializes a new instances from a future object.
-	*
-	* @param Future The future object to initialize from.
-	*/
+	 * Creates and initializes a new instances from a future object.
+	 *
+	 * @param Future The future object to initialize from.
+	 */
 	TSharedFuture(TFuture<ResultType>&& Future)
 		: BaseType(MoveTemp(Future))
 	{ }
@@ -598,10 +598,10 @@ public:
 public:
 
 	/**
-	* Gets the future's result.
-	*
-	* @return The result.
-	*/
+	 * Gets the future's result.
+	 *
+	 * @return The result.
+	 */
 	ResultType Get() const
 	{
 		return MoveTemp(this->GetState()->GetResult());
@@ -610,8 +610,8 @@ public:
 
 
 /**
-* Template for shared futures (specialization for reference types).
-*/
+ * Template for shared futures (specialization for reference types).
+ */
 template<typename ResultType>
 class TSharedFuture<ResultType&>
 	: public TFutureBase<ResultType*>
@@ -624,10 +624,10 @@ public:
 	TSharedFuture() { }
 
 	/**
-	* Creates and initializes a new instance.
-	*
-	* @param InState The shared state to initialize from.
-	*/
+	 * Creates and initializes a new instance.
+	 *
+	 * @param InState The shared state to initialize from.
+	 */
 	TSharedFuture(const typename BaseType::StateType& InState)
 		: BaseType(InState)
 	{ }
@@ -673,10 +673,10 @@ public:
 public:
 
 	/**
-	* Gets the future's result.
-	*
-	* @return The result.
-	*/
+	 * Gets the future's result.
+	 *
+	 * @return The result.
+	 */
 	ResultType& Get() const
 	{
 		return *this->GetState()->GetResult();
@@ -685,8 +685,8 @@ public:
 
 
 /**
-* Template for shared futures (specialization for void).
-*/
+ * Template for shared futures (specialization for void).
+ */
 template<>
 class TSharedFuture<void>
 	: public TFutureBase<int>
@@ -699,26 +699,26 @@ public:
 	TSharedFuture() { }
 
 	/**
-	* Creates and initializes a new instance from shared state.
-	*
-	* @param InState The shared state to initialize from.
-	*/
+	 * Creates and initializes a new instance from shared state.
+	 *
+	 * @param InState The shared state to initialize from.
+	 */
 	TSharedFuture(const BaseType::StateType& InState)
 		: BaseType(InState)
 	{ }
 
 	/**
-	* Creates and initializes a new instances from a future object.
-	*
-	* @param Future The future object to initialize from.
-	*/
+	 * Creates and initializes a new instances from a future object.
+	 *
+	 * @param Future The future object to initialize from.
+	 */
 	TSharedFuture(TFuture<void>&& Future)
 		: BaseType(MoveTemp(Future))
 	{ }
 
 	/** Copy constructor. */
-	/*	TSharedFuture(const TSharedFuture& Other)
-	: BaseType(Other)
+/*	TSharedFuture(const TSharedFuture& Other)
+		: BaseType(Other)
 	{ }*/
 
 	/** Move constructor. */
@@ -732,10 +732,10 @@ public:
 public:
 
 	/** Copy assignment operator. */
-	/*	TSharedFuture& operator=(const TSharedFuture& Other)
+/*	TSharedFuture& operator=(const TSharedFuture& Other)
 	{
-	BaseType::operator=(Other);
-	return *this;
+		BaseType::operator=(Other);
+		return *this;
 	}*/
 
 	/** Move assignment operator. */
@@ -748,10 +748,10 @@ public:
 public:
 
 	/**
-	* Gets the future's result.
-	*
-	* @return The result.
-	*/
+	 * Gets the future's result.
+	 *
+	 * @return The result.
+	 */
 	void Get() const
 	{
 		GetState()->GetResult();
@@ -782,10 +782,10 @@ public:
 	{ }
 
 	/**
-	* Move constructor.
-	*
-	* @param Other The promise holding the shared state to move.
-	*/
+	 * Move constructor.
+	 *
+	 * @param Other The promise holding the shared state to move.
+	 */
 	TPromiseBase(TPromiseBase&& Other)
 		: State(MoveTemp(Other.State))
 	{
@@ -793,10 +793,10 @@ public:
 	}
 
 	/**
-	* Create and initialize a new instance with a callback.
-	*
-	* @param CompletionCallback A function that is called when the future state is completed.
-	*/
+	 * Create and initialize a new instance with a callback.
+	 *
+	 * @param CompletionCallback A function that is called when the future state is completed.
+	 */
 	TPromiseBase(TFunction<void()>&& CompletionCallback)
 		: State(MakeShareable(new TFutureState<InternalResultType>(MoveTemp(CompletionCallback))))
 	{ }
@@ -825,10 +825,10 @@ protected:
 	}
 
 	/**
-	* Gets the shared state object.
-	*
-	* @return The shared state object.
-	*/
+	 * Gets the shared state object.
+	 *
+	 * @return The shared state object.
+	 */
 	const StateType& GetState()
 	{
 		// if you hit this assertion then your promise has an invalid state.
@@ -846,8 +846,8 @@ private:
 
 
 /**
-* Template for promises.
-*/
+ * Template for promises.
+ */
 template<typename ResultType>
 class TPromise
 	: public TPromiseBase<ResultType>
@@ -863,20 +863,20 @@ public:
 	{ }
 
 	/**
-	* Move constructor.
-	*
-	* @param Other The promise holding the shared state to move.
-	*/
+	 * Move constructor.
+	 *
+	 * @param Other The promise holding the shared state to move.
+	 */
 	TPromise(TPromise&& Other)
 		: BaseType(MoveTemp(Other))
 		, FutureRetrieved(MoveTemp(Other.FutureRetrieved))
 	{ }
 
 	/**
-	* Create and initialize a new instance with a callback.
-	*
-	* @param CompletionCallback A function that is called when the future state is completed.
-	*/
+	 * Create and initialize a new instance with a callback.
+	 *
+	 * @param CompletionCallback A function that is called when the future state is completed.
+	 */
 	TPromise(TFunction<void()>&& CompletionCallback)
 		: BaseType(MoveTemp(CompletionCallback))
 		, FutureRetrieved(false)
@@ -885,10 +885,10 @@ public:
 public:
 
 	/**
-	* Move assignment operator.
-	*
-	* @param Other The promise holding the shared state to move.
-	*/
+	 * Move assignment operator.
+	 *
+	 * @param Other The promise holding the shared state to move.
+	 */
 	TPromise& operator=(TPromise&& Other)
 	{
 		BaseType::operator=(MoveTemp(Other));
@@ -900,10 +900,10 @@ public:
 public:
 
 	/**
-	* Gets a TFuture object associated with the shared state of this promise.
-	*
-	* @return The TFuture object.
-	*/
+	 * Gets a TFuture object associated with the shared state of this promise.
+	 *
+	 * @return The TFuture object.
+	 */
 	TFuture<ResultType> GetFuture()
 	{
 		check(!FutureRetrieved);
@@ -913,26 +913,26 @@ public:
 	}
 
 	/**
-	* Sets the promised result.
-	*
-	* The result must be set only once. An assertion will
-	* be triggered if this method is called a second time.
-	*
-	* @param Result The result value to set.
-	*/
+	 * Sets the promised result.
+	 *
+	 * The result must be set only once. An assertion will
+	 * be triggered if this method is called a second time.
+	 *
+	 * @param Result The result value to set.
+	 */
 	void SetValue(const ResultType& Result)
 	{
 		this->GetState()->SetResult(Result);
 	}
 
 	/**
-	* Sets the promised result (from rvalue).
-	*
-	* The result must be set only once. An assertion will
-	* be triggered if this method is called a second time.
-	*
-	* @param Result The result value to set.
-	*/
+	 * Sets the promised result (from rvalue).
+	 *
+	 * The result must be set only once. An assertion will
+	 * be triggered if this method is called a second time.
+	 *
+	 * @param Result The result value to set.
+	 */
 	void SetValue(ResultType&& Result)
 	{
 		this->GetState()->SetResult(MoveTemp(Result));
@@ -946,8 +946,8 @@ private:
 
 
 /**
-* Template for promises (specialization for reference types).
-*/
+ * Template for promises (specialization for reference types).
+ */
 template<typename ResultType>
 class TPromise<ResultType&>
 	: public TPromiseBase<ResultType*>
@@ -963,20 +963,20 @@ public:
 	{ }
 
 	/**
-	* Move constructor.
-	*
-	* @param Other The promise holding the shared state to move.
-	*/
+	 * Move constructor.
+	 *
+	 * @param Other The promise holding the shared state to move.
+	 */
 	TPromise(TPromise&& Other)
 		: BaseType(MoveTemp(Other))
 		, FutureRetrieved(MoveTemp(Other.FutureRetrieved))
 	{ }
 
 	/**
-	* Create and initialize a new instance with a callback.
-	*
-	* @param CompletionCallback A function that is called when the future state is completed.
-	*/
+	 * Create and initialize a new instance with a callback.
+	 *
+	 * @param CompletionCallback A function that is called when the future state is completed.
+	 */
 	TPromise(TFunction<void()>&& CompletionCallback)
 		: BaseType(MoveTemp(CompletionCallback))
 		, FutureRetrieved(false)
@@ -985,10 +985,10 @@ public:
 public:
 
 	/**
-	* Move assignment operator.
-	*
-	* @param Other The promise holding the shared state to move.
-	*/
+	 * Move assignment operator.
+	 *
+	 * @param Other The promise holding the shared state to move.
+	 */
 	TPromise& operator=(TPromise&& Other)
 	{
 		BaseType::operator=(MoveTemp(Other));
@@ -1000,10 +1000,10 @@ public:
 public:
 
 	/**
-	* Gets a TFuture object associated with the shared state of this promise.
-	*
-	* @return The TFuture object.
-	*/
+	 * Gets a TFuture object associated with the shared state of this promise.
+	 *
+	 * @return The TFuture object.
+	 */
 	TFuture<ResultType&> GetFuture()
 	{
 		check(!FutureRetrieved);
@@ -1013,13 +1013,13 @@ public:
 	}
 
 	/**
-	* Sets the promised result.
-	*
-	* The result must be set only once. An assertion will
-	* be triggered if this method is called a second time.
-	*
-	* @param Result The result value to set.
-	*/
+	 * Sets the promised result.
+	 *
+	 * The result must be set only once. An assertion will
+	 * be triggered if this method is called a second time.
+	 *
+	 * @param Result The result value to set.
+	 */
 	void SetValue(ResultType& Result)
 	{
 		this->GetState()->SetResult(Result);
@@ -1033,8 +1033,8 @@ private:
 
 
 /**
-* Template for promises (specialization for void results).
-*/
+ * Template for promises (specialization for void results).
+ */
 template<>
 class TPromise<void>
 	: public TPromiseBase<int>
@@ -1050,20 +1050,20 @@ public:
 	{ }
 
 	/**
-	* Move constructor.
-	*
-	* @param Other The promise holding the shared state to move.
-	*/
+	 * Move constructor.
+	 *
+	 * @param Other The promise holding the shared state to move.
+	 */
 	TPromise(TPromise&& Other)
 		: BaseType(MoveTemp(Other))
 		, FutureRetrieved(false)
 	{ }
 
 	/**
-	* Create and initialize a new instance with a callback.
-	*
-	* @param CompletionCallback A function that is called when the future state is completed.
-	*/
+	 * Create and initialize a new instance with a callback.
+	 *
+	 * @param CompletionCallback A function that is called when the future state is completed.
+	 */
 	TPromise(TFunction<void()>&& CompletionCallback)
 		: BaseType(MoveTemp(CompletionCallback))
 		, FutureRetrieved(false)
@@ -1072,10 +1072,10 @@ public:
 public:
 
 	/**
-	* Move assignment operator.
-	*
-	* @param Other The promise holding the shared state to move.
-	*/
+	 * Move assignment operator.
+	 *
+	 * @param Other The promise holding the shared state to move.
+	 */
 	TPromise& operator=(TPromise&& Other)
 	{
 		BaseType::operator=(MoveTemp(Other));
@@ -1087,10 +1087,10 @@ public:
 public:
 
 	/**
-	* Gets a TFuture object associated with the shared state of this promise.
-	*
-	* @return The TFuture object.
-	*/
+	 * Gets a TFuture object associated with the shared state of this promise.
+	 *
+	 * @return The TFuture object.
+	 */
 	TFuture<void> GetFuture()
 	{
 		check(!FutureRetrieved);
@@ -1100,11 +1100,11 @@ public:
 	}
 
 	/**
-	* Sets the promised result.
-	*
-	* The result must be set only once. An assertion will
-	* be triggered if this method is called a second time.
-	*/
+	 * Sets the promised result.
+	 *
+	 * The result must be set only once. An assertion will
+	 * be triggered if this method is called a second time.
+	 */
 	void SetValue()
 	{
 		GetState()->SetResult(0);

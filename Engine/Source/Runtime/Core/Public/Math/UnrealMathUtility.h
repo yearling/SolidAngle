@@ -21,11 +21,11 @@ struct  FBox;
 struct  FRotator;
 struct  FMatrix;
 struct  FQuat;
-struct  YTwoVectors;
+struct  FTwoVectors;
 struct  FTransform;
 class	FSphere;
-struct	YVector2D;
-struct	YMath;
+struct	FVector2D;
+struct	FMath;
 
 #undef  PI
 #define PI 						(3.1415926535897932f)
@@ -71,7 +71,7 @@ struct	YMath;
 #define THRESH_QUAT_NORMALIZED			(0.01f)		/** Allowed error for a normalized quaternion (against squared magnitude) */
 
 // Structure for all math helper functions, inherits from platform math to pick up platform-specific implementations
-struct YMath :public YPlatformMath
+struct FMath :public FPlatformMath
 {
 	//Random Number Functions
 
@@ -304,13 +304,13 @@ struct YMath :public YPlatformMath
 	{
 		// Clamp input to [-1,1].
 		bool nonnegative = (Value >= 0.0f);
-		float x = YMath::Abs(Value);
+		float x = FMath::Abs(Value);
 		float omx = 1.0f - x;
 		if (omx < 0.0f)
 		{
 			omx = 0.0f;
 		}
-		float root = YMath::Sqrt(omx);
+		float root = FMath::Sqrt(omx);
 		// 7-degree minimax approximation
 		float result = ((((((-0.0012624911f * x + 0.0066700901f) * x - 0.0170881256f) * x + 0.0308918810f) * x - 0.0501743046f) * x + 0.0889789874f) * x - 0.2145988016f) * x + FASTASIN_HALF_PI;
 		result *= root;  // acos(|x|)
@@ -424,7 +424,7 @@ struct YMath :public YPlatformMath
 	}
 
 	// Converts given Cartesian coordinate pair to Polar coordinate system.
-	static FORCEINLINE void		CartesianToPolar(const YVector2D InCart, YVector2D& OutPolar);
+	static FORCEINLINE void		CartesianToPolar(const FVector2D InCart, FVector2D& OutPolar);
 	 
 	// Converts given Polar coordinate pair to Cartesian coordinate system
 	static FORCEINLINE void		PolarToCartesion(const float Rad, const float Ang, float& OutX, float& OutY)
@@ -434,7 +434,7 @@ struct YMath :public YPlatformMath
 	}
 
 	// Converts given Polar coordinate pair to Cartesian coordinate system
-	static FORCEINLINE void		PolarToCartesion(const YVector2D InPolar, YVector2D& OutCart);
+	static FORCEINLINE void		PolarToCartesion(const FVector2D InPolar, FVector2D& OutCart);
 
 	/**
 	* Calculates the dotted distance of vector 'Direction' to coordinate system O(AxisX,AxisY,AxisZ).
@@ -454,7 +454,7 @@ struct YMath :public YPlatformMath
 	*
 	* @return	true if 'Direction' is facing AxisX (Direction dot AxisX >= 0.f)
 	*/
-	static CORE_API bool		GetDotDistance(YVector2D &OutDotDist, const FVector& Direction, const FVector& AxisX, const FVector& AxisY, const FVector& AxisZ);
+	static CORE_API bool		GetDotDistance(FVector2D &OutDotDist, const FVector& Direction, const FVector& AxisX, const FVector& AxisY, const FVector& AxisZ);
 
 	/**
 	* Returns Azimuth and Elevation of vector 'Direction' in coordinate system O(AxisX,AxisY,AxisZ).
@@ -471,7 +471,7 @@ struct YMath :public YPlatformMath
 	* @return	YVector2D	X = Azimuth angle (in radians) (-PI, +PI)
 	*						Y = Elevation angle (in radians) (-PI/2, +PI/2)
 	*/
-	static CORE_API YVector2D	GetAzimuthAndElevation(const FVector& Direction, const FVector &AxisX, const FVector& AxisY, const FVector& AxisZ);
+	static CORE_API FVector2D	GetAzimuthAndElevation(const FVector& Direction, const FVector &AxisX, const FVector& AxisY, const FVector& AxisZ);
 
 	// Interpolation Functions
 
@@ -482,13 +482,13 @@ struct YMath :public YPlatformMath
 	}
 
 	// Calculates the percentage along a line from MinValue to MaxValue that Value is, range is represented by YVector2
-	static float				GetRangePct(YVector2D const & Range, float Value);
+	static float				GetRangePct(FVector2D const & Range, float Value);
 
 	// Basically a Vector2D Version of Lerp
-	static float				GetRangeValue(YVector2D const& Range, float Pct);
+	static float				GetRangeValue(FVector2D const& Range, float Pct);
 
 	// For the given Value clamped to the [Input:Range] inclusive, returns the corresponding percentage in [Output:Range] Inclusive.
-	static FORCEINLINE float	GetMappedRangeValueClamped(const YVector2D& InputRange, const YVector2D& OutputRange, const float Value)
+	static FORCEINLINE float	GetMappedRangeValueClamped(const FVector2D& InputRange, const FVector2D& OutputRange, const float Value)
 	{
 		const float ClampedPct = Clamp<float>(GetRangePct(InputRange, Value), 0.0f, 1.0f);
 		return GetRangeValue(OutputRange, ClampedPct);
@@ -752,7 +752,7 @@ struct YMath :public YPlatformMath
 		float T3MinusT2 = (T3 - T2);
 		float T2MinusT0 = (T2 - T0);
 		float T3MinusT1 = (T3 - T1);
-		if (YMath::IsNearlyZero(T1MinusT0) || YMath::IsNearlyZero(T2MinusT1) || YMath::IsNearlyZero(T3MinusT2) || YMath::IsNearlyZero(T2MinusT0) || YMath::IsNearlyZero(T3MinusT1))
+		if (FMath::IsNearlyZero(T1MinusT0) || FMath::IsNearlyZero(T2MinusT1) || FMath::IsNearlyZero(T3MinusT2) || FMath::IsNearlyZero(T2MinusT0) || FMath::IsNearlyZero(T3MinusT1))
 		{
 			//There's going to be a divide by zero here so just bail out and return P1
 			return P1;
@@ -785,10 +785,10 @@ struct YMath :public YPlatformMath
 	static CORE_API FVector		VInterpTo(const FVector& Current, const FVector& Target, float DeltaTime, float InterpSpeed);
 
 	// Interpolate vector2D from Current to Target with constant step
-	static CORE_API YVector2D	Vector2DInterpConstantTo(const YVector2D& Current, const YVector2D& Target, float DeltaTime, float InterpSpeed);
+	static CORE_API FVector2D	Vector2DInterpConstantTo(const FVector2D& Current, const FVector2D& Target, float DeltaTime, float InterpSpeed);
 
 	/** Interpolate vector2D from Current to Target. Scaled by distance to Target, so it has a strong start speed and ease out. */
-	static CORE_API YVector2D	Vector2DInterpTo(const YVector2D& Current, const YVector2D& Target, float DeltaTime, float InterpSpeed);
+	static CORE_API FVector2D	Vector2DInterpTo(const FVector2D& Current, const FVector2D& Target, float DeltaTime, float InterpSpeed);
 
 	/** Interpolate rotator from Current to Target with constant step */
 	static CORE_API FRotator	RInterpConstantTo(const FRotator& Current, const FRotator& Target, float DeltaTime, float InterpSpeed);
@@ -812,7 +812,7 @@ struct YMath :public YPlatformMath
 	// Return:					Pulsating Value (0.0~1.0)
 	static float MakePulsatingValue(const double InCurrentTime, const float InPulsesPerSecond, const float InPhase = 0.0f)
 	{
-		return 0.5f + 0.5f * YMath::Sin(((0.25f + InPhase) * PI * 2.0) + (InCurrentTime * PI * 2.0) * InPulsesPerSecond);
+		return 0.5f + 0.5f * FMath::Sin(((0.25f + InPhase) * PI * 2.0) + (InCurrentTime * PI * 2.0) * InPulsesPerSecond);
 	}
 		// Geomerty intersection
 
@@ -827,7 +827,7 @@ struct YMath :public YPlatformMath
 	// return 0: light is not visible,
 	// return 1: use scissor rect,
 	// return 2: no scissor rect needed.
-	static CORE_API uint32		ComputeProjectedSphereScissorRect(struct YIntRect& InOutSissorRect, FVector SphereOrigin, float Radius, FVector ViewOrigin, const FMatrix& ViewMatrix, const FMatrix& ProjMatrix);
+	static CORE_API uint32		ComputeProjectedSphereScissorRect(struct FIntRect& InOutSissorRect, FVector SphereOrigin, float Radius, FVector ViewOrigin, const FMatrix& ViewMatrix, const FMatrix& ProjMatrix);
 
 	// Determine if a plane and an AABB intersect
 	// p:						the plane to test
@@ -901,7 +901,7 @@ struct YMath :public YPlatformMath
 	// StartPoint:				StartPoint of Segment.
 	// EndPoint:				EndPoint of Segment.
 	// Return:					point on the segment defined by (StartPoint, EndPoint) that is closest to Point.
-	static CORE_API YVector2D	ClosestPointOnSegment2D(const YVector2D& Point, const YVector2D & StartPint, const YVector2D &EndPoint);
+	static CORE_API FVector2D	ClosestPointOnSegment2D(const FVector2D& Point, const FVector2D & StartPint, const FVector2D &EndPoint);
 
 	// Return distance from a point to the closet point on a segment.
 	// Point:					point to check distance for

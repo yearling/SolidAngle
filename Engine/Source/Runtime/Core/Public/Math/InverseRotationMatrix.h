@@ -24,19 +24,19 @@ public:
 FORCEINLINE FInverseRotationMatrix::FInverseRotationMatrix(const FRotator& Rot)
 	: FMatrix(
 		FMatrix( // Yaw
-		FPlane(+YMath::Cos(Rot.Yaw * PI / 180.f), -YMath::Sin(Rot.Yaw * PI / 180.f), 0.0f, 0.0f),
-		FPlane(+YMath::Sin(Rot.Yaw * PI / 180.f), +YMath::Cos(Rot.Yaw * PI / 180.f), 0.0f, 0.0f),
+		FPlane(+FMath::Cos(Rot.Yaw * PI / 180.f), -FMath::Sin(Rot.Yaw * PI / 180.f), 0.0f, 0.0f),
+		FPlane(+FMath::Sin(Rot.Yaw * PI / 180.f), +FMath::Cos(Rot.Yaw * PI / 180.f), 0.0f, 0.0f),
 		FPlane(0.0f, 0.0f, 1.0f, 0.0f),
 		FPlane(0.0f, 0.0f, 0.0f, 1.0f)) *
 		FMatrix( // Pitch
-		FPlane(+YMath::Cos(Rot.Pitch * PI / 180.f), 0.0f, -YMath::Sin(Rot.Pitch * PI / 180.f), 0.0f),
+		FPlane(+FMath::Cos(Rot.Pitch * PI / 180.f), 0.0f, -FMath::Sin(Rot.Pitch * PI / 180.f), 0.0f),
 		FPlane(0.0f, 1.0f, 0.0f, 0.0f),
-		FPlane(+YMath::Sin(Rot.Pitch * PI / 180.f), 0.0f, +YMath::Cos(Rot.Pitch * PI / 180.f), 0.0f),
+		FPlane(+FMath::Sin(Rot.Pitch * PI / 180.f), 0.0f, +FMath::Cos(Rot.Pitch * PI / 180.f), 0.0f),
 		FPlane(0.0f, 0.0f, 0.0f, 1.0f)) *
 		FMatrix( // Roll
 		FPlane(1.0f, 0.0f, 0.0f, 0.0f),
-		FPlane(0.0f, +YMath::Cos(Rot.Roll * PI / 180.f), +YMath::Sin(Rot.Roll * PI / 180.f), 0.0f),
-		FPlane(0.0f, -YMath::Sin(Rot.Roll * PI / 180.f), +YMath::Cos(Rot.Roll * PI / 180.f), 0.0f),
+		FPlane(0.0f, +FMath::Cos(Rot.Roll * PI / 180.f), +FMath::Sin(Rot.Roll * PI / 180.f), 0.0f),
+		FPlane(0.0f, -FMath::Sin(Rot.Roll * PI / 180.f), +FMath::Cos(Rot.Roll * PI / 180.f), 0.0f),
 		FPlane(0.0f, 0.0f, 0.0f, 1.0f))
 	)
 { }

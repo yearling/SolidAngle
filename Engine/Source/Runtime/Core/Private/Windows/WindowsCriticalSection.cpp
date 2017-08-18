@@ -7,13 +7,13 @@
 #include "Windows/WindowsHWrapper.h"
 #include "Windows/AllowWindowsPlatformTypes.h"
 
-FWindowsSystemWideCriticalSection::FWindowsSystemWideCriticalSection(const FString& InName, YTimespan InTimeout)
+FWindowsSystemWideCriticalSection::FWindowsSystemWideCriticalSection(const FString& InName, FTimespan InTimeout)
 {
 	// Check for valid name length not exceeding the Window mutex name length limit
 	check(InName.Len() > 0)
 	check(InName.Len() < MAX_PATH)
 	// Check for valid positive timeouts
-	check(InTimeout >= YTimespan::Zero())
+	check(InTimeout >= FTimespan::Zero())
 	check(InTimeout.GetTotalMilliseconds() < (double)0x7FFFFFFE)	// limit timespan to a number of millisec that will fit in a signed int32
 
 	// Disallow backslashes as they aren't allowed in Windows mutex names
@@ -31,10 +31,10 @@ FWindowsSystemWideCriticalSection::FWindowsSystemWideCriticalSection(const FStri
 		// CreateMutex returned a valid handle but we didn't get ownership because another process/thread has already created it
 		bool bMutexOwned = false;
 
-		if (InTimeout != YTimespan::Zero())
+		if (InTimeout != FTimespan::Zero())
 		{
 			// We have a handle already so try waiting for it to be released by the current owner
-			DWORD WaitResult = WaitForSingleObject(Mutex, YMath::TruncToInt((float)InTimeout.GetTotalMilliseconds()));
+			DWORD WaitResult = WaitForSingleObject(Mutex, FMath::TruncToInt((float)InTimeout.GetTotalMilliseconds()));
 
 			// WAIT_OBJECT_0 = we got ownership when the previous owner released it
 			// WAIT_ABANDONED = we got ownership when the previous owner exited WITHOUT releasing the mutex gracefully (we own it now but the state of any shared resource could be corrupted!)

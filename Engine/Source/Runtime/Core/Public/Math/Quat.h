@@ -581,7 +581,7 @@ inline FQuat::FQuat(const FMatrix& M)
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
 	// Make sure the Rotation part of the Matrix is unit length.
 	// Changed to this (same as RemoveScaling) from RotDeterminant as using two different ways of checking unit length matrix caused inconsistency. 
-	if (!ensure((YMath::Abs(1.f - M.GetScaledAxis(EAxis::X).SizeSquared()) <= KINDA_SMALL_NUMBER) && (YMath::Abs(1.f - M.GetScaledAxis(EAxis::Y).SizeSquared()) <= KINDA_SMALL_NUMBER) && (YMath::Abs(1.f - M.GetScaledAxis(EAxis::Z).SizeSquared()) <= KINDA_SMALL_NUMBER)))
+	if (!ensure((FMath::Abs(1.f - M.GetScaledAxis(EAxis::X).SizeSquared()) <= KINDA_SMALL_NUMBER) && (FMath::Abs(1.f - M.GetScaledAxis(EAxis::Y).SizeSquared()) <= KINDA_SMALL_NUMBER) && (FMath::Abs(1.f - M.GetScaledAxis(EAxis::Z).SizeSquared()) <= KINDA_SMALL_NUMBER)))
 	{
 		*this = FQuat::Identity;
 		return;
@@ -596,7 +596,7 @@ inline FQuat::FQuat(const FMatrix& M)
 
 	if (tr > 0.0f)
 	{
-		float InvS = YMath::InvSqrt(tr + 1.f);
+		float InvS = FMath::InvSqrt(tr + 1.f);
 		this->W = 0.5f * (1.f / InvS);
 		s = 0.5f * InvS;
 
@@ -621,7 +621,7 @@ inline FQuat::FQuat(const FMatrix& M)
 
 		s = M.M[i][i] - M.M[j][j] - M.M[k][k] + 1.0f;
 
-		float InvS = YMath::InvSqrt(s);
+		float InvS = FMath::InvSqrt(s);
 
 		float qt[4];
 		qt[i] = 0.5f * (1.f / InvS);
@@ -724,7 +724,7 @@ FORCEINLINE FQuat::FQuat(FVector Axis, float AngleRad)
 {
 	const float half_a = 0.5f * AngleRad;
 	float s, c;
-	YMath::SinCos(&s, &c, half_a);
+	FMath::SinCos(&s, &c, half_a);
 
 	X = s * Axis.X;
 	Y = s * Axis.Y;
@@ -771,8 +771,8 @@ FORCEINLINE bool FQuat::Equals(const FQuat& Q, float Tolerance) const
 	const VectorRegister RotationAdd = VectorAbs(VectorAdd(A, B));
 	return !VectorAnyGreaterThan(RotationSub, ToleranceV) || !VectorAnyGreaterThan(RotationAdd, ToleranceV);
 #else
-	return (YMath::Abs(X - Q.X) <= Tolerance && YMath::Abs(Y - Q.Y) <= Tolerance && YMath::Abs(Z - Q.Z) <= Tolerance && YMath::Abs(W - Q.W) <= Tolerance)
-		|| (YMath::Abs(X + Q.X) <= Tolerance && YMath::Abs(Y + Q.Y) <= Tolerance && YMath::Abs(Z + Q.Z) <= Tolerance && YMath::Abs(W + Q.W) <= Tolerance);
+	return (FMath::Abs(X - Q.X) <= Tolerance && FMath::Abs(Y - Q.Y) <= Tolerance && FMath::Abs(Z - Q.Z) <= Tolerance && FMath::Abs(W - Q.W) <= Tolerance)
+		|| (FMath::Abs(X + Q.X) <= Tolerance && FMath::Abs(Y + Q.Y) <= Tolerance && FMath::Abs(Z + Q.Z) <= Tolerance && FMath::Abs(W + Q.W) <= Tolerance);
 #endif // PLATFORM_ENABLE_VECTORINTRINSICS
 }
 
@@ -909,7 +909,7 @@ FORCEINLINE void FQuat::Normalize(float Tolerance)
 
 	if (SquareSum >= Tolerance)
 	{
-		const float Scale = YMath::InvSqrt(SquareSum);
+		const float Scale = FMath::InvSqrt(SquareSum);
 
 		X *= Scale;
 		Y *= Scale;
@@ -935,13 +935,13 @@ FORCEINLINE FQuat FQuat::GetNormalized(float Tolerance) const
 
 FORCEINLINE bool FQuat::IsNormalized() const
 {
-	return (YMath::Abs(1.f - SizeSquared()) < THRESH_QUAT_NORMALIZED);
+	return (FMath::Abs(1.f - SizeSquared()) < THRESH_QUAT_NORMALIZED);
 }
 
 
 FORCEINLINE float FQuat::Size() const
 {
-	return YMath::Sqrt(X * X + Y * Y + Z * Z + W * W);
+	return FMath::Sqrt(X * X + Y * Y + Z * Z + W * W);
 }
 
 
@@ -953,14 +953,14 @@ FORCEINLINE float FQuat::SizeSquared() const
 
 FORCEINLINE void FQuat::ToAxisAndAngle(FVector& Axis, float& Angle) const
 {
-	Angle = 2.f * YMath::Acos(W);
+	Angle = 2.f * FMath::Acos(W);
 	Axis = GetRotationAxis();
 }
 
 FORCEINLINE FVector FQuat::GetRotationAxis() const
 {
 	// Ensure we never try to sqrt a neg number
-	const float S = YMath::Sqrt(YMath::Max(1.f - (W * W), 0.f));
+	const float S = FMath::Sqrt(FMath::Max(1.f - (W * W), 0.f));
 
 	if (S >= 0.0001f)
 	{
@@ -973,7 +973,7 @@ FORCEINLINE FVector FQuat::GetRotationAxis() const
 float FQuat::AngularDistance(const FQuat& Q) const
 {
 	float InnerProd = X*Q.X + Y*Q.Y + Z*Q.Z + W*Q.W;
-	return YMath::Acos((2 * InnerProd * InnerProd) - 1.f);
+	return FMath::Acos((2 * InnerProd * InnerProd) - 1.f);
 }
 
 
@@ -1028,7 +1028,7 @@ FORCEINLINE FQuat FQuat::Inverse() const
 FORCEINLINE void FQuat::EnforceShortestArcWith(const FQuat& OtherQuat)
 {
 	const float DotResult = (OtherQuat | *this);
-	const float Bias = YMath::FloatSelect(DotResult, 1.0f, -1.0f);
+	const float Bias = FMath::FloatSelect(DotResult, 1.0f, -1.0f);
 
 	X *= Bias;
 	Y *= Bias;
@@ -1078,8 +1078,8 @@ FORCEINLINE FVector FQuat::Vector() const
 
 FORCEINLINE float FQuat::Error(const FQuat& Q1, const FQuat& Q2)
 {
-	const float cosom = YMath::Abs(Q1.X * Q2.X + Q1.Y * Q2.Y + Q1.Z * Q2.Z + Q1.W * Q2.W);
-	return (YMath::Abs(cosom) < 0.9999999f) ? YMath::Acos(cosom)*(1.f / PI) : 0.0f;
+	const float cosom = FMath::Abs(Q1.X * Q2.X + Q1.Y * Q2.Y + Q1.Z * Q2.Z + Q1.W * Q2.W);
+	return (FMath::Abs(cosom) < 0.9999999f) ? FMath::Acos(cosom)*(1.f / PI) : 0.0f;
 }
 
 
@@ -1099,7 +1099,7 @@ FORCEINLINE FQuat FQuat::FastLerp(const FQuat& A, const FQuat& B, const float Al
 {
 	// To ensure the 'shortest route', we make sure the dot product between the both rotations is positive.
 	const float DotResult = (A | B);
-	const float Bias = YMath::FloatSelect(DotResult, 1.0f, -1.0f);
+	const float Bias = FMath::FloatSelect(DotResult, 1.0f, -1.0f);
 	return (B * Alpha) + (A * (Bias * (1.f - Alpha)));
 }
 
@@ -1116,27 +1116,27 @@ FORCEINLINE FQuat FQuat::FastBilerp(const FQuat& P00, const FQuat& P10, const FQ
 
 FORCEINLINE bool FQuat::ContainsNaN() const
 {
-	return (!YMath::IsFinite(X) ||
-		!YMath::IsFinite(Y) ||
-		!YMath::IsFinite(Z) ||
-		!YMath::IsFinite(W)
+	return (!FMath::IsFinite(X) ||
+		!FMath::IsFinite(Y) ||
+		!FMath::IsFinite(Z) ||
+		!FMath::IsFinite(W)
 		);
 }
 
 
 template<> struct TIsPODType<FQuat> { enum { Value = true }; };
 
-/* YMath inline functions
+/* FMath inline functions
 *****************************************************************************/
 
 template<class U>
-FORCEINLINE_DEBUGGABLE FQuat YMath::Lerp(const FQuat& A, const FQuat& B, const U& Alpha)
+FORCEINLINE_DEBUGGABLE FQuat FMath::Lerp(const FQuat& A, const FQuat& B, const U& Alpha)
 {
 	return FQuat::Slerp(A, B, Alpha);
 }
 
 template<class U>
-FORCEINLINE_DEBUGGABLE FQuat YMath::BiLerp(const FQuat& P00, const FQuat& P10, const FQuat& P01, const FQuat& P11, float FracX, float FracY)
+FORCEINLINE_DEBUGGABLE FQuat FMath::BiLerp(const FQuat& P00, const FQuat& P10, const FQuat& P01, const FQuat& P11, float FracX, float FracY)
 {
 	FQuat Result;
 
@@ -1150,7 +1150,7 @@ FORCEINLINE_DEBUGGABLE FQuat YMath::BiLerp(const FQuat& P00, const FQuat& P10, c
 }
 
 template<class U>
-FORCEINLINE_DEBUGGABLE FQuat YMath::CubicInterp(const FQuat& P0, const FQuat& T0, const FQuat& P1, const FQuat& T1, const U& A)
+FORCEINLINE_DEBUGGABLE FQuat FMath::CubicInterp(const FQuat& P0, const FQuat& T0, const FQuat& P1, const FQuat& T1, const U& A)
 {
 	return FQuat::Squad(P0, T0, P1, T1, A);
 }

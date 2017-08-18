@@ -450,7 +450,7 @@ public:
 	void DoWork()
 	{
 		// Compress from memory to memory.
-		verify( YCompression::CompressMemory( Flags, CompressedBuffer, CompressedSize, UncompressedBuffer, UncompressedSize, BitWindow) );
+		verify( FCompression::CompressMemory( Flags, CompressedBuffer, CompressedSize, UncompressedBuffer, UncompressedSize, BitWindow) );
 	}
 
 	FORCEINLINE TStatId GetStatId() const
@@ -536,11 +536,11 @@ void FArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Fla
 				CompressionChunks[ChunkIndex].CompressedSize	= BYTESWAP_ORDER64( CompressionChunks[ChunkIndex].CompressedSize );
 				CompressionChunks[ChunkIndex].UncompressedSize	= BYTESWAP_ORDER64( CompressionChunks[ChunkIndex].UncompressedSize );
 			}
-			MaxCompressedSize = YMath::Max( CompressionChunks[ChunkIndex].CompressedSize, MaxCompressedSize );
+			MaxCompressedSize = FMath::Max( CompressionChunks[ChunkIndex].CompressedSize, MaxCompressedSize );
 		}
 
 		int64 Padding = 0;
-		const int32 CompressionBitWindow = bUsePlatformBitWindow ? YPlatformMisc::GetPlatformCompression()->GetCompressionBitWindow() : DEFAULT_ZLIB_BIT_WINDOW;
+		const int32 CompressionBitWindow = bUsePlatformBitWindow ? FPlatformMisc::GetPlatformCompression()->GetCompressionBitWindow() : DEFAULT_ZLIB_BIT_WINDOW;
 
 		// Set up destination pointer and allocate memory for compressed chunk[s] (one at a time).
 		uint8*	Dest				= (uint8*) V;
@@ -553,7 +553,7 @@ void FArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Fla
 			// Read compressed data.
 			Serialize( CompressedBuffer, Chunk.CompressedSize );
 			// Decompress into dest pointer directly.
-			verify( YCompression::UncompressMemory( Flags, Dest, Chunk.UncompressedSize, CompressedBuffer, Chunk.CompressedSize, (Padding > 0) ? true : false, CompressionBitWindow ) );
+			verify( FCompression::UncompressMemory( Flags, Dest, Chunk.UncompressedSize, CompressedBuffer, Chunk.CompressedSize, (Padding > 0) ? true : false, CompressionBitWindow ) );
 			// And advance it by read amount.
 			Dest += Chunk.UncompressedSize;
 		}
@@ -614,11 +614,11 @@ void FArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Fla
 
 		// Maximum number of concurrent async tasks we're going to kick off. This is based on the number of processors
 		// available in the system.
-		int32 MaxConcurrentAsyncChunks = YMath::Clamp<int32>( YPlatformMisc::NumberOfCores() - GNumUnusedThreads_SerializeCompressed, 1, MAX_COMPRESSION_JOBS );
+		int32 MaxConcurrentAsyncChunks = FMath::Clamp<int32>( FPlatformMisc::NumberOfCores() - GNumUnusedThreads_SerializeCompressed, 1, MAX_COMPRESSION_JOBS );
 		if (FParse::Param(FCommandLine::Get(), TEXT("MTCHILD")))
 		{
 			// throttle this back when doing MT cooks
-			MaxConcurrentAsyncChunks = YMath::Min<int32>( MaxConcurrentAsyncChunks,4 );
+			MaxConcurrentAsyncChunks = FMath::Min<int32>( MaxConcurrentAsyncChunks,4 );
 		}
 
 		// Number of chunks left to finalize.
@@ -674,7 +674,7 @@ void FArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Fla
 					}
 
 					// By default everything is chunked up into GSavingCompressionChunkSize chunks.
-					NewChunk.UncompressedSize	= YMath::Min( BytesRemainingToKickOff, (int64)GSavingCompressionChunkSize );
+					NewChunk.UncompressedSize	= FMath::Min( BytesRemainingToKickOff, (int64)GSavingCompressionChunkSize );
 					check(NewChunk.UncompressedSize>0);
 
 					// Need to serialize source data if passed in pointer is an YArchive.
@@ -704,7 +704,7 @@ void FArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Fla
 					}
 					else
 					{
-						IPlatformCompression* PlatformCompression = YPlatformMisc::GetPlatformCompression();
+						IPlatformCompression* PlatformCompression = FPlatformMisc::GetPlatformCompression();
 						check(PlatformCompression);
 						NewChunk.BitWindow = PlatformCompression->GetCompressionBitWindow();
 					}
@@ -811,7 +811,7 @@ void FArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Fla
 
 		while( BytesRemaining > 0 )
 		{
-			int64 BytesToCompress = YMath::Min( BytesRemaining, (int64)GSavingCompressionChunkSize );
+			int64 BytesToCompress = FMath::Min( BytesRemaining, (int64)GSavingCompressionChunkSize );
 			int64 CompressedSize	= CompressedBufferSize;
 
 			// read in the next chunk from the reader
@@ -834,7 +834,7 @@ void FArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Fla
 			}
 			else
 			{
-				IPlatformCompression* PlatformCompression = YPlatformMisc::GetPlatformCompression();
+				IPlatformCompression* PlatformCompression = FPlatformMisc::GetPlatformCompression();
 				check(PlatformCompression);
 				BitWindow = PlatformCompression->GetCompressionBitWindow();
 			}

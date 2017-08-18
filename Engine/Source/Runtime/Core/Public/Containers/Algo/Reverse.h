@@ -1,3 +1,5 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
@@ -17,22 +19,22 @@ namespace AlgoImpl
 namespace Algo
 {
 	/**
-	* Reverses a range
-	*
-	* @param  Array  The array to reverse.
-	*/
+	 * Reverses a range
+	 *
+	 * @param  Array  The array to reverse.
+	 */
 	template <typename T, int32 ArraySize>
-	FORCEINLINE void Reverse(T(&Array)[ArraySize])
+	FORCEINLINE void Reverse(T (&Array)[ArraySize])
 	{
 		return AlgoImpl::Reverse((T*)Array, ArraySize);
 	}
 
 	/**
-	* Reverses a range
-	*
-	* @param  Array      A pointer to the array to reverse
-	* @param  ArraySize  The number of elements in the array.
-	*/
+	 * Reverses a range
+	 *
+	 * @param  Array      A pointer to the array to reverse
+	 * @param  ArraySize  The number of elements in the array.
+	 */
 	template <typename T>
 	FORCEINLINE void Reverse(T* Array, int32 ArraySize)
 	{
@@ -40,10 +42,10 @@ namespace Algo
 	}
 
 	/**
-	* Reverses a range
-	*
-	* @param  Container  The container to reverse
-	*/
+	 * Reverses a range
+	 *
+	 * @param  Container  The container to reverse
+	 */
 	template <typename ContainerType>
 	FORCEINLINE void Reverse(ContainerType& Container)
 	{

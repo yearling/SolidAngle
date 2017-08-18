@@ -22,9 +22,9 @@ YOutputDeviceAnsiError::YOutputDeviceAnsiError()
 void YOutputDeviceAnsiError::Serialize( const TCHAR* Msg, ELogVerbosity::Type Verbosity, const class FName& Category )
 {
 	// Display the error and exit.
-	YPlatformMisc::LocalPrint( TEXT("\nappError called: \n") );
-	YPlatformMisc::LocalPrint( Msg );
-	YPlatformMisc::LocalPrint( TEXT("\n") );
+	FPlatformMisc::LocalPrint( TEXT("\nappError called: \n") );
+	FPlatformMisc::LocalPrint( Msg );
+	FPlatformMisc::LocalPrint( TEXT("\n") );
 
 	if( !GIsCriticalError )
 	{
@@ -40,15 +40,15 @@ void YOutputDeviceAnsiError::Serialize( const TCHAR* Msg, ELogVerbosity::Type Ve
 		UE_LOG(LogHAL, Error, TEXT("Error reentered: %s"), Msg );
 	}
 
-	YPlatformMisc::DebugBreak();
+	FPlatformMisc::DebugBreak();
 
 	if( GIsGuarded )
 	{
 		// Propagate error so structured exception handler can perform necessary work.
 #if PLATFORM_EXCEPTIONS_DISABLED
-		YPlatformMisc::DebugBreak();
+		FPlatformMisc::DebugBreak();
 #endif
-		YPlatformMisc::RaiseException( 1 );
+		FPlatformMisc::RaiseException( 1 );
 	}
 	else
 	{
@@ -57,7 +57,7 @@ void YOutputDeviceAnsiError::Serialize( const TCHAR* Msg, ELogVerbosity::Type Ve
 		// pop up a crash window if we are not in unattended mode
 		if( FApp::IsUnattended() == false )
 		{
-			YPlatformMisc::RequestExit( true );
+			FPlatformMisc::RequestExit( true );
 		}
 		else
 		{
@@ -88,10 +88,10 @@ void YOutputDeviceAnsiError::HandleError()
 	}
 	else
 	{
-		YPlatformMisc::LocalPrint( GErrorHist );
+		FPlatformMisc::LocalPrint( GErrorHist );
 	}
 
-	YPlatformMisc::LocalPrint( TEXT("\n\nExiting due to error\n") );
+	FPlatformMisc::LocalPrint( TEXT("\n\nExiting due to error\n") );
 
 	FCoreDelegates::OnShutdownAfterError.Broadcast();
 }

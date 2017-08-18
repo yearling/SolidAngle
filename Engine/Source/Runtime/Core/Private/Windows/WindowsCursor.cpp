@@ -143,12 +143,12 @@ FWindowsCursor::~FWindowsCursor()
 	}
 }
 
-YVector2D FWindowsCursor::GetPosition() const
+FVector2D FWindowsCursor::GetPosition() const
 {
 	POINT CursorPos;
 	::GetCursorPos(&CursorPos);
 
-	return YVector2D( CursorPos.x, CursorPos.y );
+	return FVector2D( CursorPos.x, CursorPos.y );
 }
 
 void FWindowsCursor::SetPosition( const int32 X, const int32 Y )

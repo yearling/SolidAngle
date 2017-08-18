@@ -299,8 +299,8 @@ void FMallocLeakDetection::FCallstackTrack::GetLinearFit()
 			ReportAr->Logf(Format, ##__VA_ARGS__);\
 		}\
 		else {\
-			YPlatformMisc::LowLevelOutputDebugStringf(Format, ##__VA_ARGS__);\
-			YPlatformMisc::LowLevelOutputDebugStringf(TEXT("\n"));\
+			FPlatformMisc::LowLevelOutputDebugStringf(Format, ##__VA_ARGS__);\
+			FPlatformMisc::LowLevelOutputDebugStringf(TEXT("\n"));\
 		}\
 	} while(0);\
 

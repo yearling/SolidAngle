@@ -60,8 +60,8 @@ void FLightweightTimeGuard::ReportHitch(const TCHAR* InName, const float TimeMS)
 
 	Data.Count++;
 	Data.Total += TimeMS;
-	Data.Min = YMath::Min(Data.Min, TimeMS);
-	Data.Max = YMath::Max(Data.Max, TimeMS);
+	Data.Min = FMath::Min(Data.Min, TimeMS);
+	Data.Max = FMath::Max(Data.Max, TimeMS);
 	Data.LastTime = FDateTime::UtcNow();
 
 	LastHitchTime = TimeNow;

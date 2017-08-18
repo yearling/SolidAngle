@@ -142,7 +142,7 @@ int32 FString::Find(const TCHAR* SubStr, ESearchCase::Type SearchCase, ESearchDi
 		const TCHAR* Start = **this;
 		if ( StartPosition != INDEX_NONE )
 		{
-			Start += YMath::Clamp(StartPosition, 0, Len() - 1);
+			Start += FMath::Clamp(StartPosition, 0, Len() - 1);
 		}
 		const TCHAR* Tmp = SearchCase == ESearchCase::IgnoreCase
 			? FCString::Stristr(Start, SubStr)
@@ -160,7 +160,7 @@ int32 FString::Find(const TCHAR* SubStr, ESearchCase::Type SearchCase, ESearchDi
 		}
 		else
 		{
-			const int32 SearchStringLength=YMath::Max(1, FCString::Strlen(SubStr));
+			const int32 SearchStringLength=FMath::Max(1, FCString::Strlen(SubStr));
 			
 			if ( StartPosition == INDEX_NONE )
 			{
@@ -487,7 +487,7 @@ FString FString::FormatAsNumber( int32 InNumber )
  */
 void FString::SerializeAsANSICharArray( FArchive& Ar, int32 MinCharacters ) const
 {
-	int32	Length = YMath::Max( Len(), MinCharacters );
+	int32	Length = FMath::Max( Len(), MinCharacters );
 	Ar << Length;
 	
 	for( int32 CharIndex=0; CharIndex<Len(); CharIndex++ )
@@ -746,7 +746,7 @@ bool FString::MatchesWildcard(const FString& InWildcard, ESearchCase::Type Searc
 	FString Target(*this);
 	int32 IndexOfStar = Wildcard.Find(TEXT("*"), ESearchCase::CaseSensitive, ESearchDir::FromEnd); // last occurance
 	int32 IndexOfQuestion = Wildcard.Find( TEXT("?"), ESearchCase::CaseSensitive, ESearchDir::FromEnd); // last occurance
-	int32 Suffix = YMath::Max<int32>(IndexOfStar, IndexOfQuestion);
+	int32 Suffix = FMath::Max<int32>(IndexOfStar, IndexOfQuestion);
 	if (Suffix == INDEX_NONE)
 	{
 		// no wildcards
@@ -773,7 +773,7 @@ bool FString::MatchesWildcard(const FString& InWildcard, ESearchCase::Type Searc
 		}
 		int32 PrefixIndexOfStar = Wildcard.Find(TEXT("*"), ESearchCase::CaseSensitive); 
 		int32 PrefixIndexOfQuestion = Wildcard.Find(TEXT("?"), ESearchCase::CaseSensitive);
-		int32 Prefix = YMath::Min<int32>(PrefixIndexOfStar < 0 ? MAX_int32 : PrefixIndexOfStar, PrefixIndexOfQuestion < 0 ? MAX_int32 : PrefixIndexOfQuestion);
+		int32 Prefix = FMath::Min<int32>(PrefixIndexOfStar < 0 ? MAX_int32 : PrefixIndexOfStar, PrefixIndexOfQuestion < 0 ? MAX_int32 : PrefixIndexOfQuestion);
 		check(Prefix >= 0 && Prefix < Wildcard.Len());
 		if (Prefix > 0)
 		{
@@ -799,7 +799,7 @@ bool FString::MatchesWildcard(const FString& InWildcard, ESearchCase::Type Searc
 				return true;
 			}
 		}
-		int32 MaxNum = YMath::Min<int32>(Target.Len(), FirstWild == TEXT('?') ? 1 : MAX_int32);
+		int32 MaxNum = FMath::Min<int32>(Target.Len(), FirstWild == TEXT('?') ? 1 : MAX_int32);
 		for (int32 Index = 0; Index <= MaxNum; Index++)
 		{
 			if (Target.Right(Target.Len() - Index).MatchesWildcard(Wildcard, SearchCase))

@@ -133,7 +133,7 @@ public:
 				// and cause this block to be executed, as well as constantly zeroing out memory inside AddZeroes (though the memory would be allocated
 				// in chunks).
 
-				Max = YMath::Max<int64>(Max<<1,Num+LengthBits);
+				Max = FMath::Max<int64>(Max<<1,Num+LengthBits);
 				int32 ByteMax = (Max+7)>>3;
 				Buffer.AddZeroed(ByteMax - Buffer.Num());
 				check((Max+7)>>3== Buffer.Num());

@@ -9,7 +9,7 @@ NOTE: This file should ONLY be included by UnrealMath.h!
 
 struct YBasisVectorMatrix;
 struct YLookAtMatrix;
-struct YMath;
+struct FMath;
 
 /**
 * YMatrix inline functions.
@@ -126,7 +126,7 @@ inline bool FMatrix::Equals(const FMatrix& Other, float Tolerance/*=KINDA_SMALL_
 	{
 		for (int32 Y = 0; Y < 4; Y++)
 		{
-			if (YMath::Abs(M[X][Y] - Other.M[X][Y]) > Tolerance)
+			if (FMath::Abs(M[X][Y] - Other.M[X][Y]) > Tolerance)
 			{
 				return false;
 			}
@@ -336,9 +336,9 @@ inline void FMatrix::RemoveScaling(float Tolerance/*=SMALL_NUMBER*/)
 	const float SquareSum0 = (M[0][0] * M[0][0]) + (M[0][1] * M[0][1]) + (M[0][2] * M[0][2]);
 	const float SquareSum1 = (M[1][0] * M[1][0]) + (M[1][1] * M[1][1]) + (M[1][2] * M[1][2]);
 	const float SquareSum2 = (M[2][0] * M[2][0]) + (M[2][1] * M[2][1]) + (M[2][2] * M[2][2]);
-	const float Scale0 = YMath::FloatSelect(SquareSum0 - Tolerance, YMath::InvSqrt(SquareSum0), 1.0f);
-	const float Scale1 = YMath::FloatSelect(SquareSum1 - Tolerance, YMath::InvSqrt(SquareSum1), 1.0f);
-	const float Scale2 = YMath::FloatSelect(SquareSum2 - Tolerance, YMath::InvSqrt(SquareSum2), 1.0f);
+	const float Scale0 = FMath::FloatSelect(SquareSum0 - Tolerance, FMath::InvSqrt(SquareSum0), 1.0f);
+	const float Scale1 = FMath::FloatSelect(SquareSum1 - Tolerance, FMath::InvSqrt(SquareSum1), 1.0f);
+	const float Scale2 = FMath::FloatSelect(SquareSum2 - Tolerance, FMath::InvSqrt(SquareSum2), 1.0f);
 	M[0][0] *= Scale0;
 	M[0][1] *= Scale0;
 	M[0][2] *= Scale0;
@@ -370,7 +370,7 @@ inline FVector FMatrix::ExtractScaling(float Tolerance/*=SMALL_NUMBER*/)
 
 	if (SquareSum0 > Tolerance)
 	{
-		float Scale0 = YMath::Sqrt(SquareSum0);
+		float Scale0 = FMath::Sqrt(SquareSum0);
 		Scale3D[0] = Scale0;
 		float InvScale0 = 1.f / Scale0;
 		M[0][0] *= InvScale0;
@@ -384,7 +384,7 @@ inline FVector FMatrix::ExtractScaling(float Tolerance/*=SMALL_NUMBER*/)
 
 	if (SquareSum1 > Tolerance)
 	{
-		float Scale1 = YMath::Sqrt(SquareSum1);
+		float Scale1 = FMath::Sqrt(SquareSum1);
 		Scale3D[1] = Scale1;
 		float InvScale1 = 1.f / Scale1;
 		M[1][0] *= InvScale1;
@@ -398,7 +398,7 @@ inline FVector FMatrix::ExtractScaling(float Tolerance/*=SMALL_NUMBER*/)
 
 	if (SquareSum2 > Tolerance)
 	{
-		float Scale2 = YMath::Sqrt(SquareSum2);
+		float Scale2 = FMath::Sqrt(SquareSum2);
 		Scale3D[2] = Scale2;
 		float InvScale2 = 1.f / Scale2;
 		M[2][0] *= InvScale2;
@@ -424,7 +424,7 @@ inline FVector FMatrix::GetScaleVector(float Tolerance/*=SMALL_NUMBER*/) const
 		const float SquareSum = (M[i][0] * M[i][0]) + (M[i][1] * M[i][1]) + (M[i][2] * M[i][2]);
 		if (SquareSum > Tolerance)
 		{
-			Scale3D[i] = YMath::Sqrt(SquareSum);
+			Scale3D[i] = FMath::Sqrt(SquareSum);
 		}
 		else
 		{
@@ -479,7 +479,7 @@ inline bool FMatrix::ContainsNaN() const
 	{
 		for (int32 j = 0; j<4; j++)
 		{
-			if (!YMath::IsFinite(M[i][j]))
+			if (!FMath::IsFinite(M[i][j]))
 			{
 				return true;
 			}
@@ -492,14 +492,14 @@ inline bool FMatrix::ContainsNaN() const
 /** @return the maximum magnitude of any row of the matrix. */
 inline float FMatrix::GetMaximumAxisScale() const
 {
-	const float MaxRowScaleSquared = YMath::Max(
+	const float MaxRowScaleSquared = FMath::Max(
 		GetScaledAxis(EAxis::X).SizeSquared(),
-		YMath::Max(
+		FMath::Max(
 			GetScaledAxis(EAxis::Y).SizeSquared(),
 			GetScaledAxis(EAxis::Z).SizeSquared()
 		)
 	);
-	return YMath::Sqrt(MaxRowScaleSquared);
+	return FMath::Sqrt(MaxRowScaleSquared);
 }
 
 inline void FMatrix::ScaleTranslation(const FVector& InScale3D)
@@ -609,7 +609,7 @@ FORCEINLINE bool MakeFrustumPlane(float A, float B, float C, float D, FPlane& Ou
 	const float	LengthSquared = A * A + B * B + C * C;
 	if (LengthSquared > DELTA*DELTA)
 	{
-		const float	InvLength = YMath::InvSqrt(LengthSquared);
+		const float	InvLength = FMath::InvSqrt(LengthSquared);
 		OutPlane = FPlane(-A * InvLength, -B * InvLength, -C * InvLength, D * InvLength);
 		return 1;
 	}

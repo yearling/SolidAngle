@@ -206,7 +206,7 @@ inline void ComputeCurveTangent( float PrevTime, const T& PrevPoint,
 
 	AutoCalcTangent( PrevPoint, CurPoint, NextPoint, Tension, OutTangent );
 
-	const float PrevToNextTimeDiff = YMath::Max< double >( KINDA_SMALL_NUMBER, NextTime - PrevTime );
+	const float PrevToNextTimeDiff = FMath::Max< double >( KINDA_SMALL_NUMBER, NextTime - PrevTime );
 
 	OutTangent /= PrevToNextTimeDiff;
 }
@@ -257,7 +257,7 @@ inline void ComputeClampableFloatVectorCurveTangent( float PrevTime, const T& Pr
 		// No clamping needed
 		AutoCalcTangent( PrevPoint, CurPoint, NextPoint, Tension, OutTangent );
 
-		const float PrevToNextTimeDiff = YMath::Max< double >( KINDA_SMALL_NUMBER, NextTime - PrevTime );
+		const float PrevToNextTimeDiff = FMath::Max< double >( KINDA_SMALL_NUMBER, NextTime - PrevTime );
 
 		OutTangent /= PrevToNextTimeDiff;
 	}
@@ -297,12 +297,12 @@ inline void ComputeCurveTangent( float PrevTime, const FVector& PrevPoint,
 
 
 /** Computes a tangent for the specified control point.  Special case for YVector2D types; supports clamping. */
-inline void ComputeCurveTangent( float PrevTime, const YVector2D& PrevPoint,
-									float CurTime, const YVector2D& CurPoint,
-									float NextTime, const YVector2D& NextPoint,
+inline void ComputeCurveTangent( float PrevTime, const FVector2D& PrevPoint,
+									float CurTime, const FVector2D& CurPoint,
+									float NextTime, const FVector2D& NextPoint,
 									float Tension,
 									bool bWantClamping,
-									YVector2D& OutTangent )
+									FVector2D& OutTangent )
 {
 	ComputeClampableFloatVectorCurveTangent(
 		PrevTime, PrevPoint,
@@ -313,12 +313,12 @@ inline void ComputeCurveTangent( float PrevTime, const YVector2D& PrevPoint,
 
 
 /** Computes a tangent for the specified control point.  Special case for YTwoVectors types; supports clamping. */
-inline void ComputeCurveTangent( float PrevTime, const YTwoVectors& PrevPoint,
-									float CurTime, const YTwoVectors& CurPoint,
-									float NextTime, const YTwoVectors& NextPoint,
+inline void ComputeCurveTangent( float PrevTime, const FTwoVectors& PrevPoint,
+									float CurTime, const FTwoVectors& CurPoint,
+									float NextTime, const FTwoVectors& NextPoint,
 									float Tension,
 									bool bWantClamping,
-									YTwoVectors& OutTangent )
+									FTwoVectors& OutTangent )
 {
 	ComputeClampableFloatVectorCurveTangent(
 		PrevTime, PrevPoint,
@@ -346,7 +346,7 @@ void CORE_API CurveFloatFindIntervalBounds( const FInterpCurvePoint<float>& Star
  * @param CurrentMin Input and Output could be updated if needs new interval minimum bound
  * @param CurrentMax  Input and Output could be updated if needs new interval maximmum bound
  */
-void CORE_API CurveVector2DFindIntervalBounds( const FInterpCurvePoint<YVector2D>& Start, const FInterpCurvePoint<YVector2D>& End, YVector2D& CurrentMin, YVector2D& CurrentMax );
+void CORE_API CurveVector2DFindIntervalBounds( const FInterpCurvePoint<FVector2D>& Start, const FInterpCurvePoint<FVector2D>& End, FVector2D& CurrentMin, FVector2D& CurrentMax );
 
 
 /**
@@ -368,7 +368,7 @@ void CORE_API CurveVectorFindIntervalBounds( const FInterpCurvePoint<FVector>& S
  * @param CurrentMin Input and Output could be updated if needs new interval minimum bound
  * @param CurrentMax  Input and Output could be updated if needs new interval maximmum bound
  */
-void CORE_API CurveTwoVectorsFindIntervalBounds(const FInterpCurvePoint<YTwoVectors>& Start, const FInterpCurvePoint<YTwoVectors>& End, YTwoVectors& CurrentMin, YTwoVectors& CurrentMax);
+void CORE_API CurveTwoVectorsFindIntervalBounds(const FInterpCurvePoint<FTwoVectors>& Start, const FInterpCurvePoint<FTwoVectors>& End, FTwoVectors& CurrentMin, FTwoVectors& CurrentMax);
 
 
 /**
@@ -395,7 +395,7 @@ inline void CurveFindIntervalBounds( const FInterpCurvePoint<float>& Start, cons
 
 
 template< class U > 
-void CurveFindIntervalBounds( const FInterpCurvePoint<YVector2D>& Start, const FInterpCurvePoint<YVector2D>& End, YVector2D& CurrentMin, YVector2D& CurrentMax, const U& Dummy )
+void CurveFindIntervalBounds( const FInterpCurvePoint<FVector2D>& Start, const FInterpCurvePoint<FVector2D>& End, FVector2D& CurrentMin, FVector2D& CurrentMax, const U& Dummy )
 {
 	CurveVector2DFindIntervalBounds(Start, End, CurrentMin, CurrentMax);
 }
@@ -409,7 +409,7 @@ inline void CurveFindIntervalBounds( const FInterpCurvePoint<FVector>& Start, co
 
 
 template< class U > 
-inline void CurveFindIntervalBounds( const FInterpCurvePoint<YTwoVectors>& Start, const FInterpCurvePoint<YTwoVectors>& End, YTwoVectors& CurrentMin, YTwoVectors& CurrentMax, const U& Dummy )
+inline void CurveFindIntervalBounds( const FInterpCurvePoint<FTwoVectors>& Start, const FInterpCurvePoint<FTwoVectors>& End, FTwoVectors& CurrentMin, FTwoVectors& CurrentMax, const U& Dummy )
 {
 	CurveTwoVectorsFindIntervalBounds(Start, End, CurrentMin, CurrentMax);
 }
@@ -423,8 +423,8 @@ inline void CurveFindIntervalBounds( const FInterpCurvePoint<FLinearColor>& Star
 
 // Native implementation of NOEXPORT FInterpCurvePoint structures
 typedef FInterpCurvePoint<float> FInterpCurvePointFloat;
-typedef FInterpCurvePoint<YVector2D> FInterpCurvePointVector2D;
+typedef FInterpCurvePoint<FVector2D> FInterpCurvePointVector2D;
 typedef FInterpCurvePoint<FVector> FInterpCurvePointVector;
 typedef FInterpCurvePoint<FQuat> FInterpCurvePointQuat;
-typedef FInterpCurvePoint<YTwoVectors> FInterpCurvePointTwoVectors;
+typedef FInterpCurvePoint<FTwoVectors> FInterpCurvePointTwoVectors;
 typedef FInterpCurvePoint<FLinearColor> FInterpCurvePointLinearColor;

@@ -63,25 +63,25 @@ void FGenericPlatformProcess::SetThreadAffinityMask( uint64 AffinityMask )
 const TCHAR* FGenericPlatformProcess::UserDir()
 {
 	// default to the root directory
-	return YPlatformMisc::RootDir();
+	return FPlatformMisc::RootDir();
 }
 
 const TCHAR *FGenericPlatformProcess::UserSettingsDir()
 {
 	// default to the root directory
-	return YPlatformMisc::RootDir();
+	return FPlatformMisc::RootDir();
 }
 
 const TCHAR *FGenericPlatformProcess::UserTempDir()
 {
 	// default to the root directory
-	return YPlatformMisc::RootDir();
+	return FPlatformMisc::RootDir();
 }
 
 const TCHAR* FGenericPlatformProcess::ApplicationSettingsDir()
 {
 	// default to the root directory
-	return YPlatformMisc::RootDir();
+	return FPlatformMisc::RootDir();
 }
 
 const TCHAR* FGenericPlatformProcess::ComputerName()
@@ -97,7 +97,7 @@ const TCHAR* FGenericPlatformProcess::UserName(bool bOnlyAlphaNumeric/* = true*/
 void FGenericPlatformProcess::SetCurrentWorkingDirectoryToBaseDir()
 {
 	// even if we don't set a directory, we should remember the current one so LaunchDir works
-	YPlatformMisc::CacheLaunchDir();
+	FPlatformMisc::CacheLaunchDir();
 }
 
 FString FGenericPlatformProcess::GetCurrentWorkingDirectory()
@@ -304,7 +304,7 @@ void FGenericPlatformProcess::Sleep( float Seconds )
 
 void FGenericPlatformProcess::SleepNoStats( float Seconds )
 {
-	const int32 usec = YPlatformMath::TruncToInt(Seconds * 1000000.0f);
+	const int32 usec = FPlatformMath::TruncToInt(Seconds * 1000000.0f);
 	if (usec > 0)
 	{
 		usleep(usec);
@@ -554,7 +554,7 @@ bool FGenericPlatformProcess::IsFirstInstance()
 #endif
 }
 
-FSystemWideCriticalSectionNotImplemented::FSystemWideCriticalSectionNotImplemented(const FString& Name, YTimespan Timeout)
+FSystemWideCriticalSectionNotImplemented::FSystemWideCriticalSectionNotImplemented(const FString& Name, FTimespan Timeout)
 {
 	UE_LOG(LogHAL, Fatal, TEXT("FSystemWideCriticalSection not implemented on this platform"));
 }

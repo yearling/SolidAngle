@@ -36,25 +36,25 @@ class YMatrix2x2;
 //////////////////////////////////////////////////////////////////////////
 
 /** Specialization for concatenating two 2D Translations. */
-inline YVector2D Concatenate(const YVector2D& LHS, const YVector2D& RHS)
+inline FVector2D Concatenate(const FVector2D& LHS, const FVector2D& RHS)
 {
 	return LHS + RHS;
 }
 
 /** Specialization for inverting a 2D translation. */
-inline YVector2D Inverse(const YVector2D& Transform)
+inline FVector2D Inverse(const FVector2D& Transform)
 {
 	return -Transform;
 }
 
 /** Specialization for YVector2D Translation. */
-inline YVector2D TransformPoint(const YVector2D& Transform, const YVector2D& Point)
+inline FVector2D TransformPoint(const FVector2D& Transform, const FVector2D& Point)
 {
 	return Transform + Point;
 }
 
 /** Specialization for YVector2D Translation (does nothing). */
-inline const YVector2D& TransformVector(const YVector2D& Transform, const YVector2D& Vector)
+inline const FVector2D& TransformVector(const FVector2D& Transform, const FVector2D& Vector)
 {
 	return Vector;
 }
@@ -69,7 +69,7 @@ inline const YVector2D& TransformVector(const YVector2D& Transform, const YVecto
 /**
  * Specialization for uniform Scale.
  */
-inline YVector2D TransformPoint(float Transform, const YVector2D& Point)
+inline FVector2D TransformPoint(float Transform, const FVector2D& Point)
 {
 	return Transform * Point;
 }
@@ -77,7 +77,7 @@ inline YVector2D TransformPoint(float Transform, const YVector2D& Point)
 /**
  * Specialization for uniform Scale.
  */
-inline YVector2D TransformVector(float Transform, const YVector2D& Vector)
+inline FVector2D TransformVector(float Transform, const FVector2D& Vector)
 {
 	return Transform * Vector;
 }
@@ -93,15 +93,15 @@ public:
 	/** Ctor. initialize from a non-uniform scale. */
 	explicit YScale2D(float InScaleX, float InScaleY) :Scale(InScaleX, InScaleY) {}
 	/** Ctor. initialize from an YVector defining the 3D scale. */
-	explicit YScale2D(const YVector2D& InScale) :Scale(InScale) {}
+	explicit YScale2D(const FVector2D& InScale) :Scale(InScale) {}
 	
 	/** Transform 2D Point */
-	YVector2D TransformPoint(const YVector2D& Point) const
+	FVector2D TransformPoint(const FVector2D& Point) const
 	{
 		return Scale * Point;
 	}
 	/** Transform 2D Vector*/
-	YVector2D TransformVector(const YVector2D& Vector) const
+	FVector2D TransformVector(const FVector2D& Vector) const
 	{
 		return TransformPoint(Vector);
 	}
@@ -114,7 +114,7 @@ public:
 	/** Invert the scale. */
 	YScale2D Inverse() const
 	{
-		return YScale2D(YVector2D(1.0f / Scale.X, 1.0f / Scale.Y));
+		return YScale2D(FVector2D(1.0f / Scale.X, 1.0f / Scale.Y));
 	}
 
 	/** Equality. */
@@ -130,10 +130,10 @@ public:
 	}
 
 	/** Access to the underlying YVector2D that stores the scale. */
-	const YVector2D& GetVector() const { return Scale; }
+	const FVector2D& GetVector() const { return Scale; }
 private:
 	/** Underlying storage of the 2D scale. */
-	YVector2D Scale;
+	FVector2D Scale;
 };
 
 /** concatenation rules for 2D scales. */
@@ -155,20 +155,20 @@ public:
 	/** Ctor. initialize from a set of shears parallel to the X and Y axis, respectively. */
 	explicit FShear2D(float ShearX, float ShearY) :Shear(ShearX, ShearY) {}
 	/** Ctor. initialize from a 2D vector representing a set of shears parallel to the X and Y axis, respectively. */
-	explicit FShear2D(const YVector2D& InShear) :Shear(InShear) {}
+	explicit FShear2D(const FVector2D& InShear) :Shear(InShear) {}
 	
 	/**
 	 * Generates a shear structure based on angles instead of slope.
 	 * @param InShearAngles The angles of shear.
 	 * @return the sheare structure.
 	 */
-	static FShear2D FromShearAngles(const YVector2D& InShearAngles)
+	static FShear2D FromShearAngles(const FVector2D& InShearAngles)
 	{
 		// Compute the M (Shear Slot) = CoTan(90 - SlopeAngle)
 
 		// 0 is a special case because Tan(90) == infinity
-		float ShearX = InShearAngles.X == 0 ? 0 : ( 1.0f / YMath::Tan(YMath::DegreesToRadians(90 - YMath::Clamp(InShearAngles.X, -89.0f, 89.0f))) );
-		float ShearY = InShearAngles.Y == 0 ? 0 : ( 1.0f / YMath::Tan(YMath::DegreesToRadians(90 - YMath::Clamp(InShearAngles.Y, -89.0f, 89.0f))) );
+		float ShearX = InShearAngles.X == 0 ? 0 : ( 1.0f / FMath::Tan(FMath::DegreesToRadians(90 - FMath::Clamp(InShearAngles.X, -89.0f, 89.0f))) );
+		float ShearY = InShearAngles.Y == 0 ? 0 : ( 1.0f / FMath::Tan(FMath::DegreesToRadians(90 - FMath::Clamp(InShearAngles.Y, -89.0f, 89.0f))) );
 
 		return FShear2D(ShearX, ShearY);
 	}
@@ -178,12 +178,12 @@ public:
 	 * [X Y] * [1 YY] == [X+Y*XX Y+X*YY]
 	 *         [XX 1]
 	 */
-	YVector2D TransformPoint(const YVector2D& Point) const
+	FVector2D TransformPoint(const FVector2D& Point) const
 	{
-		return Point + YVector2D(Point.Y, Point.X) * Shear;
+		return Point + FVector2D(Point.Y, Point.X) * Shear;
 	}
 	/** Transform 2D Vector*/
-	YVector2D TransformVector(const YVector2D& Vector) const
+	FVector2D TransformVector(const FVector2D& Vector) const
 	{
 		return TransformPoint(Vector);
 	}
@@ -218,10 +218,10 @@ public:
 	}
 
 	/** Access to the underlying YVector2D that stores the scale. */
-	const YVector2D& GetVector() const { return Shear; }
+	const FVector2D& GetVector() const { return Shear; }
 private:
 	/** Underlying storage of the 2D shear. */
-	YVector2D Shear;
+	FVector2D Shear;
 };
 
 /** 
@@ -237,9 +237,9 @@ public:
 	/** Ctor. initialize to an identity rotation. */
 	FQuat2D() :Rot(1.0f, 0.0f) {}
 	/** Ctor. initialize from a rotation in radians. */
-	explicit FQuat2D(float RotRadians) :Rot(YMath::Cos(RotRadians), YMath::Sin(RotRadians)) {}
+	explicit FQuat2D(float RotRadians) :Rot(FMath::Cos(RotRadians), FMath::Sin(RotRadians)) {}
 	/** Ctor. initialize from an YVector2D, representing a complex number. */
-	explicit FQuat2D(const YVector2D& InRot) :Rot(InRot) {}
+	explicit FQuat2D(const FVector2D& InRot) :Rot(InRot) {}
 
 	/**
 	 * Transform a 2D point by the 2D complex number representing the rotation:
@@ -252,16 +252,16 @@ public:
 	 *         
 	 * Looking at the above results, we see the equivalence with matrix multiplication.
 	 */
-	YVector2D TransformPoint(const YVector2D& Point) const
+	FVector2D TransformPoint(const FVector2D& Point) const
 	{
-		return YVector2D(
+		return FVector2D(
 			Point.X * Rot.X - Point.Y * Rot.Y,
 			Point.X * Rot.Y + Point.Y * Rot.X);
 	}
 	/**
 	 * Vector rotation is equivalent to rotating a point.
 	 */
-	YVector2D TransformVector(const YVector2D& Vector) const
+	FVector2D TransformVector(const FVector2D& Vector) const
 	{
 		return TransformPoint(Vector);
 	}
@@ -290,7 +290,7 @@ public:
 	 */
 	FQuat2D Inverse() const
 	{
-		return FQuat2D(YVector2D(Rot.X, -Rot.Y));
+		return FQuat2D(FVector2D(Rot.X, -Rot.Y));
 	}
 
 	/** Equality. */
@@ -306,10 +306,10 @@ public:
 	}
 
 	/** Access to the underlying YVector2D that stores the complex number. */
-	const YVector2D& GetVector() const { return Rot; }
+	const FVector2D& GetVector() const { return Rot; }
 private:
 	/** Underlying storage of the rotation (X = cos(theta), Y = sin(theta). */
-	YVector2D Rot;
+	FVector2D Rot;
 };
 
 /**
@@ -373,16 +373,16 @@ public:
 	 *    [X Y] * [m00 m01]
 	 *            [m10 m11]
 	 */
-	YVector2D TransformPoint(const YVector2D& Point) const
+	FVector2D TransformPoint(const FVector2D& Point) const
 	{
-		return YVector2D(
+		return FVector2D(
 			Point.X * M[0][0] + Point.Y * M[1][0],
 			Point.X * M[0][1] + Point.Y * M[1][1]);
 	}
 	/**
 	 * Vector transformation is equivalent to point transformation as our matrix is not homogeneous.
 	 */
-	YVector2D TransformVector(const YVector2D& Vector) const
+	FVector2D TransformVector(const FVector2D& Vector) const
 	{
 		return TransformPoint(Vector);
 	}
@@ -422,10 +422,10 @@ public:
 		float E, F, G, H;
 		RHS.GetMatrix(E, F, G, H);
 		return
-			YMath::IsNearlyEqual(A, E, KINDA_SMALL_NUMBER) &&
-			YMath::IsNearlyEqual(B, F, KINDA_SMALL_NUMBER) &&
-			YMath::IsNearlyEqual(C, G, KINDA_SMALL_NUMBER) &&
-			YMath::IsNearlyEqual(D, H, KINDA_SMALL_NUMBER);
+			FMath::IsNearlyEqual(A, E, KINDA_SMALL_NUMBER) &&
+			FMath::IsNearlyEqual(B, F, KINDA_SMALL_NUMBER) &&
+			FMath::IsNearlyEqual(C, G, KINDA_SMALL_NUMBER) &&
+			FMath::IsNearlyEqual(D, H, KINDA_SMALL_NUMBER);
 	}
 
 	/** Inequality. */
@@ -466,7 +466,7 @@ public:
 	YScale2D GetScale() const
 	{
 		YScale2D ScaleSquared = GetScaleSquared();
-		return YScale2D(YMath::Sqrt(ScaleSquared.GetVector().X), YMath::Sqrt(ScaleSquared.GetVector().Y));
+		return YScale2D(FMath::Sqrt(ScaleSquared.GetVector().X), FMath::Sqrt(ScaleSquared.GetVector().Y));
 	}
 
 	/** Determines if the matrix is identity or not. Uses exact float comparison, so rounding error is not considered. */
@@ -523,49 +523,49 @@ class YTransform2D
 {
 public:
 	/** Initialize the transform using an identity matrix and a translation. */
-	YTransform2D(const YVector2D& Translation = YVector2D(0.f,0.f))
+	YTransform2D(const FVector2D& Translation = FVector2D(0.f,0.f))
 		: Trans(Translation)
 	{
 	}
 
 	/** Initialize the transform using a uniform scale and a translation. */
-	explicit YTransform2D(float UniformScale, const YVector2D& Translation = YVector2D(0.f,0.f))
+	explicit YTransform2D(float UniformScale, const FVector2D& Translation = FVector2D(0.f,0.f))
 		: M(YScale2D(UniformScale)), Trans(Translation)
 	{
 	}
 
 	/** Initialize the transform using a 2D scale and a translation. */
-	explicit YTransform2D(const YScale2D& Scale, const YVector2D& Translation = YVector2D(0.f,0.f))
+	explicit YTransform2D(const YScale2D& Scale, const FVector2D& Translation = FVector2D(0.f,0.f))
 		: M(Scale), Trans(Translation)
 	{
 	}
 
 	/** Initialize the transform using a 2D shear and a translation. */
-	explicit YTransform2D(const FShear2D& Shear, const YVector2D& Translation = YVector2D(0.f,0.f))
+	explicit YTransform2D(const FShear2D& Shear, const FVector2D& Translation = FVector2D(0.f,0.f))
 		: M(Shear), Trans(Translation)
 	{
 	}
 
 	/** Initialize the transform using a 2D rotation and a translation. */
-	explicit YTransform2D(const FQuat2D& Rot, const YVector2D& Translation = YVector2D(0.f,0.f))
+	explicit YTransform2D(const FQuat2D& Rot, const FVector2D& Translation = FVector2D(0.f,0.f))
 		: M(Rot), Trans(Translation)
 	{
 	}
 
 	/** Initialize the transform using a general 2x2 transform and a translation. */
-	explicit YTransform2D(const YMatrix2x2& Transform, const YVector2D& Translation = YVector2D(0.f,0.f))
+	explicit YTransform2D(const YMatrix2x2& Transform, const FVector2D& Translation = FVector2D(0.f,0.f))
 		: M(Transform), Trans(Translation)
 	{
 	}
 
 	/** 2D transformation of a point. */
-	YVector2D TransformPoint(const YVector2D& Point) const
+	FVector2D TransformPoint(const FVector2D& Point) const
 	{
 		return ::TransformPoint(Trans, ::TransformPoint(M, Point));
 	}
 
 	/** 2D transformation of a vector. */
-	YVector2D TransformVector(const YVector2D& Vector) const
+	FVector2D TransformVector(const FVector2D& Vector) const
 	{
 		return ::TransformVector(M, Vector);
 	}
@@ -615,7 +615,7 @@ public:
 	YTransform2D Inverse() const
 	{
 		YMatrix2x2 InvM = ::Inverse(M);
-		YVector2D InvTrans = ::TransformPoint(InvM, ::Inverse(Trans));
+		FVector2D InvTrans = ::TransformPoint(InvM, ::Inverse(Trans));
 		return YTransform2D(InvM, InvTrans);
 	}
 	
@@ -634,19 +634,19 @@ public:
 	/** Access to the 2x2 transform */
 	const YMatrix2x2& GetMatrix() const { return M; }
 	/** Access to the translation */
-	const YVector2D& GetTranslation() const { return Trans; }
+	const FVector2D& GetTranslation() const { return Trans; }
 
 	/**
 	 * Specialized function to determine if a transform is precisely the identity transform. Uses exact float comparison, so rounding error is not considered.
 	 */
 	bool IsIdentity() const
 	{
-		return M.IsIdentity() && Trans == YVector2D::ZeroVector;
+		return M.IsIdentity() && Trans == FVector2D::ZeroVector;
 	}
 
 private:
 	YMatrix2x2 M;
-	YVector2D Trans;
+	FVector2D Trans;
 };
 
 template<> struct TIsPODType<YTransform2D> { enum { Value = true }; };
@@ -659,61 +659,61 @@ template<> struct TIsPODType<YTransform2D> { enum { Value = true }; };
 //////////////////////////////////////////////////////////////////////////
 
 /** Specialization for concatenating a 2D scale and 2D Translation. */
-inline YTransform2D Concatenate(const YScale2D& Scale, const YVector2D& Translation)
+inline YTransform2D Concatenate(const YScale2D& Scale, const FVector2D& Translation)
 {
 	return YTransform2D(Scale, Translation);
 }
 
 /** Specialization for concatenating a 2D shear and 2D Translation. */
-inline YTransform2D Concatenate(const FShear2D& Shear, const YVector2D& Translation)
+inline YTransform2D Concatenate(const FShear2D& Shear, const FVector2D& Translation)
 {
 	return YTransform2D(Shear, Translation);
 }
 
 /** Specialization for concatenating 2D Rotation and 2D Translation. */
-inline YTransform2D Concatenate(const FQuat2D& Rot, const YVector2D& Translation)
+inline YTransform2D Concatenate(const FQuat2D& Rot, const FVector2D& Translation)
 {
 	return YTransform2D(Rot, Translation);
 }
 
 /** Specialization for concatenating 2D generalized transform and 2D Translation. */
-inline YTransform2D Concatenate(const YMatrix2x2& Transform, const YVector2D& Translation)
+inline YTransform2D Concatenate(const YMatrix2x2& Transform, const FVector2D& Translation)
 {
 	return YTransform2D(Transform, Translation);
 }
 
 /** Specialization for concatenating transform and 2D Translation. */
-inline YTransform2D Concatenate(const YTransform2D& Transform, const YVector2D& Translation)
+inline YTransform2D Concatenate(const YTransform2D& Transform, const FVector2D& Translation)
 {
 	return YTransform2D(Transform.GetMatrix(), Concatenate(Transform.GetTranslation(), Translation));
 }
 
 /** Specialization for concatenating a 2D Translation and 2D scale. */
-inline YTransform2D Concatenate(const YVector2D& Translation, const YScale2D& Scale)
+inline YTransform2D Concatenate(const FVector2D& Translation, const YScale2D& Scale)
 {
 	return YTransform2D(Scale, ::TransformPoint(Scale, Translation));
 }
 
 /** Specialization for concatenating a 2D Translation and 2D shear. */
-inline YTransform2D Concatenate(const YVector2D& Translation, const FShear2D& Shear)
+inline YTransform2D Concatenate(const FVector2D& Translation, const FShear2D& Shear)
 {
 	return YTransform2D(Shear, ::TransformPoint(Shear, Translation));
 }
 
 /** Specialization for concatenating 2D Translation and 2D Rotation. */
-inline YTransform2D Concatenate(const YVector2D& Translation, const FQuat2D& Rot)
+inline YTransform2D Concatenate(const FVector2D& Translation, const FQuat2D& Rot)
 {
 	return YTransform2D(Rot, ::TransformPoint(Rot, Translation));
 }
 
 /** Specialization for concatenating 2D Translation and 2D generalized transform. See docs for FTransform2D::Inverse for details on how this math is derived. */
-inline YTransform2D Concatenate(const YVector2D& Translation, const YMatrix2x2& Transform)
+inline YTransform2D Concatenate(const FVector2D& Translation, const YMatrix2x2& Transform)
 {
 	return YTransform2D(Transform, ::TransformPoint(Transform, Translation));
 }
 
 /** Specialization for concatenating 2D Translation and transform. See docs for FTransform2D::Inverse for details on how this math is derived. */
-inline YTransform2D Concatenate(const YVector2D& Translation, const YTransform2D& Transform)
+inline YTransform2D Concatenate(const FVector2D& Translation, const YTransform2D& Transform)
 {
 	return YTransform2D(Transform.GetMatrix(), Concatenate(::TransformPoint(Transform.GetMatrix(), Translation), Transform.GetTranslation()));
 }

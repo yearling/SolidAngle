@@ -183,7 +183,7 @@ TSharedPtr<ITextFormatArgumentModifier> FTextFormatArgumentModifier_PluralForm::
 				break;
 			}
 
-			LongestPluralFormStringLen = YMath::Max(LongestPluralFormStringLen, Pair.Value.StringLen);
+			LongestPluralFormStringLen = FMath::Max(LongestPluralFormStringLen, Pair.Value.StringLen);
 			bDoPluralFormsUseFormatArgs |= PluralForm.GetExpressionType() == FTextFormat::EExpressionType::Complex;
 
 			PluralForms.Add(Pair.Key, MoveTemp(PluralForm));
@@ -280,10 +280,10 @@ TSharedPtr<ITextFormatArgumentModifier> FTextFormatArgumentModifier_GenderForm::
 		// Did everything compile?
 		if (MasculineForm.IsValid() && FeminineForm.IsValid())
 		{
-			int32 LongestGenderFormStringLen = YMath::Max(ArgValues[0].StringLen, ArgValues[1].StringLen);
+			int32 LongestGenderFormStringLen = FMath::Max(ArgValues[0].StringLen, ArgValues[1].StringLen);
 			if (ArgValues.Num() == 3)
 			{
-				LongestGenderFormStringLen = YMath::Max(LongestGenderFormStringLen, ArgValues[2].StringLen);
+				LongestGenderFormStringLen = FMath::Max(LongestGenderFormStringLen, ArgValues[2].StringLen);
 			}
 
 			const bool bDoGenderFormsUseFormatArgs = MasculineForm.GetExpressionType() == FTextFormat::EExpressionType::Complex 

@@ -1090,7 +1090,7 @@ bool FParse::Resolution(const TCHAR* InResolution, uint32& OutX, uint32& OutY, i
 		CmdString = CmdString.Trim().TrimTrailing().ToLower();
 
 		//Retrieve the X dimensional value
-		const uint32 X = YMath::Max(FCString::Atof(*CmdString), 0.0f);
+		const uint32 X = FMath::Max(FCString::Atof(*CmdString), 0.0f);
 
 		// Determine whether the user has entered a resolution and extract the Y dimension.
 		FString FTmpString;
@@ -1138,7 +1138,7 @@ bool FParse::Resolution(const TCHAR* InResolution, uint32& OutX, uint32& OutY, i
 
 			if (FTmpString.IsNumeric())
 			{
-				Y = YMath::Max(FCString::Atof(YValue), 0.0f);
+				Y = FMath::Max(FCString::Atof(YValue), 0.0f);
 				OutX = X;
 				OutY = Y;
 				OutWindowMode = WindowMode;

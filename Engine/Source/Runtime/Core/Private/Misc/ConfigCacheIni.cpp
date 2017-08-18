@@ -2090,7 +2090,7 @@ bool FConfigCacheIni::GetPerObjectConfigSections(const FString& Filename, const 
 {
 	bool bResult = false;
 
-	MaxResults = YMath::Max(0, MaxResults);
+	MaxResults = FMath::Max(0, MaxResults);
 	FConfigFile* File = Find(Filename, false);
 	if (File != nullptr)
 	{
@@ -2308,7 +2308,7 @@ bool FConfigCacheIni::GetColor
 bool FConfigCacheIni::GetVector2D(
 	const TCHAR*   Section,
 	const TCHAR*   Key,
-	YVector2D&     Value,
+	FVector2D&     Value,
 	const FString& Filename)
 {
 	FString Text;
@@ -2481,7 +2481,7 @@ void FConfigCacheIni::SetColor
 void FConfigCacheIni::SetVector2D(
 	const TCHAR*   Section,
 	const TCHAR*   Key,
-	YVector2D      Value,
+	FVector2D      Value,
 	const FString& Filename)
 {
 	SetString(Section, Key, *Value.ToString(), Filename);
@@ -2585,9 +2585,9 @@ struct FConfigMemoryData
 		SIZE_T TotalMem = MemAr.GetNum();
 		SIZE_T MaxMem = MemAr.GetMax();
 
-		NameIndent = YMath::Max(NameIndent, ConfigFilename.Len());
-		SizeIndent = YMath::Max(SizeIndent, FString::FromInt(TotalMem).Len());
-		MaxSizeIndent = YMath::Max(MaxSizeIndent, FString::FromInt(MaxMem).Len());
+		NameIndent = FMath::Max(NameIndent, ConfigFilename.Len());
+		SizeIndent = FMath::Max(SizeIndent, FString::FromInt(TotalMem).Len());
+		MaxSizeIndent = FMath::Max(MaxSizeIndent, FString::FromInt(MaxMem).Len());
 
 		new(MemoryData) FConfigFileMemoryData(ConfigFilename, TotalMem, MaxMem);
 	}

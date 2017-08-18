@@ -186,7 +186,7 @@ static FAutoConsoleVariableRef CVarMaxTasksToStartOnDequeue(
 				if (Target->NumSamplesFinished.Increment() == 1000)
 				{
 					Target->NumSamplesFinished.Reset();
-					YPlatformMisc::MemoryBarrier();
+					FPlatformMisc::MemoryBarrier();
 					uint64 Total = 0;
 					for (int32 Index = 0; Index < 1000; Index++)
 					{
@@ -241,7 +241,7 @@ static struct FChaosMode
 	FChaosMode()
 		: Enabled(0)
 	{
-		YRandomStream Stream((int32)FPlatformTime::Cycles());
+		FRandomStream Stream((int32)FPlatformTime::Cycles());
 		for (int32 Index = 0; Index < NumSamples; Index++)
 		{
 			DelayTimes[Index] = Stream.GetFraction();
@@ -1105,7 +1105,7 @@ private:
 			// @Hack - Only stall when multithreading is enabled.
 			if (FPlatformProcess::SupportsMultithreading())
 			{
-				YPlatformMisc::MemoryBarrier();
+				FPlatformMisc::MemoryBarrier();
 				Queue(QueueIndex).StallRestartEvent->Reset();
 				TestRandomizedThreads();
 				if (Queue(QueueIndex).IncomingQueue.CloseIfEmpty())
@@ -1315,7 +1315,7 @@ private:
 			// @Hack - Only stall when multithreading is enabled.
 			if (FPlatformProcess::SupportsMultithreading())
 			{
-				YPlatformMisc::MemoryBarrier();
+				FPlatformMisc::MemoryBarrier();
 
 				FScopeCycleCounter Scope( StallStatId );
 
@@ -1400,7 +1400,7 @@ public:
 		bCreatedBackgroundPriorityThreads = !!ENamedThreads::bHasBackgroundThreads;
 
 		int32 MaxTaskThreads = MAX_THREADS;
-		int32 NumTaskThreads = YPlatformMisc::NumberOfWorkerThreadsToSpawn();
+		int32 NumTaskThreads = FPlatformMisc::NumberOfWorkerThreadsToSpawn();
 
 		// if we don't want any performance-based threads, then force the task graph to not create any worker threads, and run in game thread
 		if (!FPlatformProcess::SupportsMultithreading())
@@ -1426,13 +1426,13 @@ public:
 		NumTaskThreadSets = 1 + bCreatedHiPriorityThreads + bCreatedBackgroundPriorityThreads;
 
 		// if we don't have enough threads to allow all of the sets asked for, then we can't create what was asked for.
-		check(NumTaskThreadSets == 1 || YMath::Min<int32>(NumTaskThreads * NumTaskThreadSets + NumNamedThreads, MAX_THREADS) == NumTaskThreads * NumTaskThreadSets + NumNamedThreads);
-		NumThreads = YMath::Max<int32>(YMath::Min<int32>(NumTaskThreads * NumTaskThreadSets + NumNamedThreads, MAX_THREADS), NumNamedThreads + 1);
+		check(NumTaskThreadSets == 1 || FMath::Min<int32>(NumTaskThreads * NumTaskThreadSets + NumNamedThreads, MAX_THREADS) == NumTaskThreads * NumTaskThreadSets + NumNamedThreads);
+		NumThreads = FMath::Max<int32>(FMath::Min<int32>(NumTaskThreads * NumTaskThreadSets + NumNamedThreads, MAX_THREADS), NumNamedThreads + 1);
 
 		// Cap number of extra threads to the platform worker thread count
 		// if we don't have enough threads to allow all of the sets asked for, then we can't create what was asked for.
-		check(NumTaskThreadSets == 1 || YMath::Min(NumThreads, NumNamedThreads + NumTaskThreads * NumTaskThreadSets) == NumThreads);
-		NumThreads = YMath::Min(NumThreads, NumNamedThreads + NumTaskThreads * NumTaskThreadSets);
+		check(NumTaskThreadSets == 1 || FMath::Min(NumThreads, NumNamedThreads + NumTaskThreads * NumTaskThreadSets) == NumThreads);
+		NumThreads = FMath::Min(NumThreads, NumNamedThreads + NumTaskThreads * NumTaskThreadSets);
 
 		NumTaskThreadsPerSet = (NumThreads - NumNamedThreads) / NumTaskThreadSets;
 		check((NumThreads - NumNamedThreads) % NumTaskThreadSets == 0); // should be equal numbers of threads per priority set
@@ -1869,7 +1869,7 @@ public:
 
 			if (NumStalled)
 			{
-				uint32 IndexToStart = 31 - YMath::CountLeadingZeros((uint32)LocalAtomicForConsoleApproachInner.Stalled);
+				uint32 IndexToStart = 31 - FMath::CountLeadingZeros((uint32)LocalAtomicForConsoleApproachInner.Stalled);
 				check(IndexToStart != MyIndex);
 				check(((uint32)LocalAtomicForConsoleApproachInner.Stalled) & (1 << IndexToStart));
 
@@ -1886,7 +1886,7 @@ public:
 			}
 			else if (NumSpinning)
 			{
-				uint32 IndexToPreventStall = 31 - YMath::CountLeadingZeros(uint32((1 << FAtomicStateBitfield_MAX_THREADS) - 1) ^ uint32(LocalAtomicForConsoleApproachInner.Working | LocalAtomicForConsoleApproachInner.Stalled));
+				uint32 IndexToPreventStall = 31 - FMath::CountLeadingZeros(uint32((1 << FAtomicStateBitfield_MAX_THREADS) - 1) ^ uint32(LocalAtomicForConsoleApproachInner.Working | LocalAtomicForConsoleApproachInner.Stalled));
 				check(IndexToPreventStall != MyIndex);
 				check(!(((uint32)LocalAtomicForConsoleApproachInner.Working) & (1 << IndexToPreventStall)));
 				check(!(((uint32)LocalAtomicForConsoleApproachInner.Stalled) & (1 << IndexToPreventStall)));
@@ -1934,7 +1934,7 @@ public:
 				// start one while we flip ourselves to working.
 				check(LocalAtomicForConsoleApproachInner.Stalled);
 
-				uint32 IndexToStart =  31 - YMath::CountLeadingZeros((uint32)LocalAtomicForConsoleApproachInner.Stalled);
+				uint32 IndexToStart =  31 - FMath::CountLeadingZeros((uint32)LocalAtomicForConsoleApproachInner.Stalled);
 				check(IndexToStart != MyIndex);
 				check(((uint32)LocalAtomicForConsoleApproachInner.Stalled) & (1 << IndexToStart));
 
@@ -2351,7 +2351,7 @@ private:
 					}
 					Table[Index] = Result;
 				}
-				YPlatformMisc::MemoryBarrier();
+				FPlatformMisc::MemoryBarrier();
 				Table[63] = 6;
 			}
 			int32 Count = 0;
@@ -2528,7 +2528,7 @@ FGraphEventRef FGraphEvent::CreateGraphEvent()
 	FGraphEvent* Used =  TheGraphEventAllocator.Pop();
 	if (Used)
 	{
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		checkThreadGraph(!Used->SubsequentList.IsClosed());
 		checkThreadGraph(Used->ReferenceCount.GetValue() == 0);
 		checkThreadGraph(!Used->EventsToWaitFor.Num());
@@ -2550,7 +2550,7 @@ FGraphEvent* FGraphEvent::CreateGraphEventWithInlineStorage()
 	Used = TheGraphEventWithInlineStorageAllocator.Pop();
 	if (Used)
 	{
-		YPlatformMisc::MemoryBarrier();
+		FPlatformMisc::MemoryBarrier();
 		checkThreadGraph(!Used->SubsequentList.IsClosed());
 		checkThreadGraph(Used->ReferenceCount.GetValue() == 0);
 		checkThreadGraph(!Used->EventsToWaitFor.Num());
@@ -3042,7 +3042,7 @@ static void TaskGraphBenchmark(const TArray<FString>& Args)
 		JoinTime = QueueTime;
 		while (Counter.GetValue() < 1000)
 		{
-			YPlatformMisc::MemoryBarrier();
+			FPlatformMisc::MemoryBarrier();
 		}
 		EndTime = FPlatformTime::Seconds();
 	}

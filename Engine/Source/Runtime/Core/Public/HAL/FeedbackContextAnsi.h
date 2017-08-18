@@ -35,7 +35,7 @@ public:
 #else
 		// If this function ever gets more complicated, we could make a PlatformMisc::Printf, and each platform can then 
 		// do the right thing. For instance, LocalPrint is OutputDebugString on Windows, which messes up a lot of stuff
-		YPlatformMisc::LocalPrint(Str);
+		FPlatformMisc::LocalPrint(Str);
 #endif
 	}
 

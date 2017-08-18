@@ -191,17 +191,17 @@ static void LaunchWebURL( const FString& URLParams, FString* Error )
 
 	// First lookup the program Id for the default browser.
 	FString ProgId;
-	if (YWindowsPlatformMisc::QueryRegKey(HKEY_CURRENT_USER, TEXT("Software\\Microsoft\\Windows\\Shell\\Associations\\UrlAssociations\\http\\UserChoice"), TEXT("Progid"), ProgId))
+	if (FWindowsPlatformMisc::QueryRegKey(HKEY_CURRENT_USER, TEXT("Software\\Microsoft\\Windows\\Shell\\Associations\\UrlAssociations\\http\\UserChoice"), TEXT("Progid"), ProgId))
 	{
 		// If we found it, then lookup it's open shell command in the classes registry.
 		FString BrowserRegPath = ProgId + TEXT("\\shell\\open\\command");
-		YWindowsPlatformMisc::QueryRegKey(HKEY_CLASSES_ROOT, *BrowserRegPath, NULL, BrowserOpenCommand);
+		FWindowsPlatformMisc::QueryRegKey(HKEY_CLASSES_ROOT, *BrowserRegPath, NULL, BrowserOpenCommand);
 	}
 
 	// If we failed to find a default browser using the newer location, revert to using shell open command for the HTTP file association.
 	if (BrowserOpenCommand.IsEmpty())
 	{
-		YWindowsPlatformMisc::QueryRegKey(HKEY_CLASSES_ROOT, TEXT("http\\shell\\open\\command"), NULL, BrowserOpenCommand);
+		FWindowsPlatformMisc::QueryRegKey(HKEY_CLASSES_ROOT, TEXT("http\\shell\\open\\command"), NULL, BrowserOpenCommand);
 	}
 
 	// If we have successfully looked up the correct shell command, then we can create a new process using that command
@@ -903,7 +903,7 @@ const TCHAR* FWindowsPlatformProcess::UserName(bool bOnlyAlphaNumeric/* = true*/
 
 void FWindowsPlatformProcess::SetCurrentWorkingDirectoryToBaseDir()
 {
-	YPlatformMisc::CacheLaunchDir();
+	FPlatformMisc::CacheLaunchDir();
 	verify(SetCurrentDirectoryW(BaseDir()));
 }
 

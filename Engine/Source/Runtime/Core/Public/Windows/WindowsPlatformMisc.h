@@ -8,7 +8,7 @@
 
 class GenericApplication;
 struct FGuid;
-struct YVector2D;
+struct FVector2D;
 class IPlatformChunkInstall;
 
 /** Helper struct used to get the string version of the Windows version. */
@@ -30,8 +30,8 @@ struct YWindowsOSVersionHelper
 /**
 * Windows implementation of the misc OS functions
 **/
-struct CORE_API YWindowsPlatformMisc
-	: public YGenericPlatformMisc
+struct CORE_API FWindowsPlatformMisc
+	: public FGenericPlatformMisc
 {
 	static void SetHighDPIMode();
 	static void PlatformPreInit();
@@ -167,7 +167,7 @@ struct CORE_API YWindowsPlatformMisc
 	*
 	* @return					The color of the pixel displayed at the chosen location
 	*/
-	static struct FLinearColor GetScreenPixelColor(const YVector2D& InScreenPos, float InGamma = 1.0f);
+	static struct FLinearColor GetScreenPixelColor(const FVector2D& InScreenPos, float InGamma = 1.0f);
 
 #if !UE_BUILD_SHIPPING
 	static void PromptForRemoteDebugging(bool bIsEnsure);
@@ -274,4 +274,4 @@ struct CORE_API YWindowsPlatformMisc
 };
 
 
-typedef YWindowsPlatformMisc YPlatformMisc;
+typedef FWindowsPlatformMisc FPlatformMisc;

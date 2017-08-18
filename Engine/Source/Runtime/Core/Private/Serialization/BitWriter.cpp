@@ -97,7 +97,7 @@ void FBitWriter::SerializeInt(uint32& Value, uint32 ValueMax)
 {
 	check(ValueMax >= 2);
 
-	const int32 LengthBits = YMath::CeilLogTwo(ValueMax);
+	const int32 LengthBits = FMath::CeilLogTwo(ValueMax);
 	uint32 WriteValue = Value;
 
 	if (WriteValue >= ValueMax)
@@ -136,7 +136,7 @@ void FBitWriter::WriteIntWrapped(uint32 Value, uint32 ValueMax)
 {
 	check(ValueMax >= 2);
 
-	const int32 LengthBits = YMath::CeilLogTwo(ValueMax);
+	const int32 LengthBits = FMath::CeilLogTwo(ValueMax);
 
 	if (AllowAppend(LengthBits))
 	{

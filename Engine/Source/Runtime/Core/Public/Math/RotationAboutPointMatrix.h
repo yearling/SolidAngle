@@ -8,8 +8,8 @@
 #include "Math/RotationTranslationMatrix.h"
 
 /** Rotates about an Origin point. */
-class YRotationAboutPointMatrix
-	: public YRotationTranslationMatrix
+class FRotationAboutPointMatrix
+	: public FRotationTranslationMatrix
 {
 public:
 
@@ -19,12 +19,12 @@ public:
 	 * @param Rot rotation
 	 * @param Origin about which to rotate.
 	 */
-	YRotationAboutPointMatrix(const FRotator& Rot, const FVector& Origin);
+	FRotationAboutPointMatrix(const FRotator& Rot, const FVector& Origin);
 
 	/** Matrix factory. Return an YMatrix so we don't have type conversion issues in expressions. */
 	static FMatrix Make(const FRotator& Rot, const FVector& Origin)
 	{
-		return YRotationAboutPointMatrix(Rot, Origin);
+		return FRotationAboutPointMatrix(Rot, Origin);
 	}
 
 	/** Matrix factory. Return an YMatrix so we don't have type conversion issues in expressions. */
@@ -32,8 +32,8 @@ public:
 };
 
 
-FORCEINLINE YRotationAboutPointMatrix::YRotationAboutPointMatrix(const FRotator& Rot, const FVector& Origin)
-	: YRotationTranslationMatrix(Rot, Origin)
+FORCEINLINE FRotationAboutPointMatrix::FRotationAboutPointMatrix(const FRotator& Rot, const FVector& Origin)
+	: FRotationTranslationMatrix(Rot, Origin)
 {
 	// FRotationTranslationMatrix generates R * T.
 	// We need -T * R * T, so prepend that translation:

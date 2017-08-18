@@ -17,7 +17,7 @@
 #include "WindowsTextInputMethodSystem.h"
 
 class FGenericWindow;
-struct YVector2D;
+struct FVector2D;
 enum class EWindowTransparency;
 class IInputInterface;
 class ITextInputMethodSystem;
@@ -355,7 +355,7 @@ public:
 	virtual FModifierKeysState GetModifierKeys() const override;
 	virtual bool IsCursorDirectlyOverSlateWindow() const override;
 	virtual FPlatformRect GetWorkArea(const FPlatformRect& CurrentWindow) const override;
-	virtual bool TryCalculatePopupWindowPosition(const FPlatformRect& InAnchor, const YVector2D& InSize, const EPopUpOrientation::Type Orientation, /*OUT*/ YVector2D* const CalculatedPopUpPosition) const override;
+	virtual bool TryCalculatePopupWindowPosition(const FPlatformRect& InAnchor, const FVector2D& InSize, const EPopUpOrientation::Type Orientation, /*OUT*/ FVector2D* const CalculatedPopUpPosition) const override;
 	virtual void GetInitialDisplayMetrics(FDisplayMetrics& OutDisplayMetrics) const override;
 	virtual EWindowTitleAlignment::Type GetWindowTitleAlignment() const override;
 	virtual EWindowTransparency GetWindowTransparencySupport() const override;
@@ -452,7 +452,7 @@ private:
 
 private:
 
-	static const YIntPoint MinimizedWindowPosition;
+	static const FIntPoint MinimizedWindowPosition;
 
 	HINSTANCE InstanceHandle;
 

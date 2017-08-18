@@ -430,13 +430,13 @@ bool IPlatformFile::CopyFile(const TCHAR* To, const TCHAR* From, EPlatformFileRe
 		check(Size == 0);
 		return true;
 	}
-	int64 AllocSize = YMath::Min<int64>(MaxBufferSize, Size);
+	int64 AllocSize = FMath::Min<int64>(MaxBufferSize, Size);
 	check(AllocSize);
 	uint8* Buffer = (uint8*)FMemory::Malloc(int32(AllocSize));
 	check(Buffer);
 	while (Size)
 	{
-		int64 ThisSize = YMath::Min<int64>(AllocSize, Size);
+		int64 ThisSize = FMath::Min<int64>(AllocSize, Size);
 		FromFile->Read(Buffer, ThisSize);
 		ToFile->Write(Buffer, ThisSize);
 		Size -= ThisSize;

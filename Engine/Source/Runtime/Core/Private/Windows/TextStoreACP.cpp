@@ -285,7 +285,7 @@ STDAPI FTextStoreACP::GetSelection(ULONG ulIndex, ULONG ulCount, __RPC__out_ecou
 	}
 
 	*pcFetched = 0;
-	ULONG SelectionCount = YMath::Min(1ul, ulCount);
+	ULONG SelectionCount = FMath::Min(1ul, ulCount);
 	for(ULONG i = 0; i < SelectionCount; ++i)
 	{
 		uint32 SelectionBeginIndex;
@@ -321,7 +321,7 @@ STDAPI FTextStoreACP::SetSelection(ULONG ulCount, __RPC__in_ecount_full(ulCount)
 
 	const LONG StringLength = TextContext->GetTextLength();
 
-	unsigned int SelectionCount = YMath::Min(1ul, ulCount);
+	unsigned int SelectionCount = FMath::Min(1ul, ulCount);
 
 	// Validate selections.
 	for(unsigned int i = 0; i < SelectionCount; ++i)
@@ -439,7 +439,7 @@ STDAPI FTextStoreACP::GetACPFromPoint(TsViewCookie vcView, __RPC__in const POINT
 		return TS_E_NOLOCK;
 	}
 
-	const YVector2D Point(pt->x, pt->y);
+	const FVector2D Point(pt->x, pt->y);
 
 	// TODO: Implement logic based on dwFlags.
 	*pacp = TextContext->GetCharacterIndexFromPoint(Point);
@@ -470,8 +470,8 @@ STDAPI FTextStoreACP::GetTextExt(TsViewCookie vcView, LONG acpStart, LONG acpEnd
 		return TS_E_INVALIDPOS;
 	}
 
-	YVector2D Position;
-	YVector2D Size;
+	FVector2D Position;
+	FVector2D Size;
 	*pfClipped	=	TextContext->GetTextBounds(acpStart, acpEnd - acpStart, Position, Size);
 	prc->left	=	Position.X;
 	prc->top	=	Position.Y;
@@ -491,8 +491,8 @@ STDAPI FTextStoreACP::GetScreenExt(TsViewCookie vcView, __RPC__out RECT *prc)
 		return E_INVALIDARG;
 	}
 
-	YVector2D Position;
-	YVector2D Size;
+	FVector2D Position;
+	FVector2D Size;
 	TextContext->GetScreenBounds(Position, Size);
 	prc->left	=	Position.X;
 	prc->top	=	Position.Y;
@@ -553,7 +553,7 @@ STDAPI FTextStoreACP::GetText(LONG acpStart, LONG acpEnd, __RPC__out_ecount_part
 	if(prgRunInfo && ulRunInfoReq > 0)
 	{
 		// We only edit text that's been stripped of any markup, so we have no need to provide multiple runs.
-		prgRunInfo[0].uCount = YMath::Min(static_cast<uint32>(ulRunInfoReq), Length);
+		prgRunInfo[0].uCount = FMath::Min(static_cast<uint32>(ulRunInfoReq), Length);
 		prgRunInfo[0].type = TS_RT_PLAIN;
 		++(*pulRunInfoOut);
 	}

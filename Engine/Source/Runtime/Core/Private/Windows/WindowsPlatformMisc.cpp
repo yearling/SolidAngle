@@ -194,7 +194,7 @@ int32 YWindowsOSVersionHelper::GetOSVersions(FString& out_OSVersionLabel, FStrin
 
 	// Get system info
 	SYSTEM_INFO SystemInfo;
-	if (YPlatformMisc::Is64bitOperatingSystem())
+	if (FPlatformMisc::Is64bitOperatingSystem())
 	{
 		GetNativeSystemInfo(&SystemInfo);
 	}
@@ -432,7 +432,7 @@ _purecall_handler DefaultPureCallHandler;
 static void PureCallHandler()
 {
 	static bool bHasAlreadyBeenCalled = false;
-	YPlatformMisc::DebugBreak();
+	FPlatformMisc::DebugBreak();
 	if (bHasAlreadyBeenCalled)
 	{
 		// Call system handler if we're double faulting.
@@ -524,7 +524,7 @@ static void SetProcessMemoryLimit(SIZE_T ProcessMemoryLimitMB)
 	const BOOL bAssign = ::AssignProcessToJobObject(JobObject, GetCurrentProcess());
 }
 
-void YWindowsPlatformMisc::SetHighDPIMode()
+void FWindowsPlatformMisc::SetHighDPIMode()
 {
 	if (FParse::Param(FCommandLine::Get(), TEXT("enablehighdpi")))
 	{
@@ -555,7 +555,7 @@ void YWindowsPlatformMisc::SetHighDPIMode()
 
 }
 
-float YWindowsPlatformMisc::GetDPIScaleFactorAtPoint(float X, float Y)
+float FWindowsPlatformMisc::GetDPIScaleFactorAtPoint(float X, float Y)
 {
 	if (FParse::Param(FCommandLine::Get(), TEXT("enablehighdpi")))
 	{
@@ -581,11 +581,11 @@ float YWindowsPlatformMisc::GetDPIScaleFactorAtPoint(float X, float Y)
 	return 1.0f;
 }
 
-void YWindowsPlatformMisc::PlatformPreInit()
+void FWindowsPlatformMisc::PlatformPreInit()
 {
 	//SetProcessMemoryLimit( 92 );
 
-	YGenericPlatformMisc::PlatformPreInit();
+	FGenericPlatformMisc::PlatformPreInit();
 
 	// Use our own handler for pure virtuals being called.
 	DefaultPureCallHandler = _set_purecall_handler(PureCallHandler);
@@ -594,7 +594,7 @@ void YWindowsPlatformMisc::PlatformPreInit()
 	if (::GetSystemMetrics(SM_CXSCREEN) < MinResolution[0] || ::GetSystemMetrics(SM_CYSCREEN) < MinResolution[1])
 	{
 		FMessageDialog::Open(EAppMsgType::Ok, NSLOCTEXT("Launch", "Error_ResolutionTooLow", "The current resolution is too low to run this game."));
-		YPlatformMisc::RequestExit(false);
+		FPlatformMisc::RequestExit(false);
 	}
 
 	// initialize the file SHA hash mapping
@@ -604,7 +604,7 @@ void YWindowsPlatformMisc::PlatformPreInit()
 }
 
 
-void YWindowsPlatformMisc::PlatformInit()
+void FWindowsPlatformMisc::PlatformInit()
 {
 #if defined(_MSC_VER) && _MSC_VER == 1800 && PLATFORM_64BITS
 	// Work around bug in the VS 2013 math libraries in 64bit on certain windows versions. http://connect.microsoft.com/VisualStudio/feedback/details/811093 has details, remove this when runtime libraries are fixed
@@ -620,7 +620,7 @@ void YWindowsPlatformMisc::PlatformInit()
 
 	// Get CPU info.
 	const YPlatformMemoryConstants& MemoryConstants = YPlatformMemory::GetConstants();
-	UE_LOG(LogInit, Log, TEXT("CPU Page size=%i, Cores=%i"), MemoryConstants.PageSize, YPlatformMisc::NumberOfCores());
+	UE_LOG(LogInit, Log, TEXT("CPU Page size=%i, Cores=%i"), MemoryConstants.PageSize, FPlatformMisc::NumberOfCores());
 
 	// Timer resolution.
 	UE_LOG(LogInit, Log, TEXT("High frequency timer resolution =%f MHz"), 0.000001 / FPlatformTime::GetSecondsPerCycle());
@@ -630,7 +630,7 @@ void YWindowsPlatformMisc::PlatformInit()
 }
 
 
-void YWindowsPlatformMisc::PreventScreenSaver()
+void FWindowsPlatformMisc::PreventScreenSaver()
 {
 	INPUT Input = { 0 };
 	Input.type = INPUT_MOUSE;
@@ -681,7 +681,7 @@ static BOOL WINAPI ConsoleCtrlHandler(::DWORD /*Type*/)
 	return true;
 }
 
-GenericApplication* YWindowsPlatformMisc::CreateApplication()
+GenericApplication* FWindowsPlatformMisc::CreateApplication()
 {
 	HICON AppIconHandle = LoadIcon(hInstance, MAKEINTRESOURCE(GetAppIcon()));
 	if (AppIconHandle == NULL)
@@ -692,13 +692,13 @@ GenericApplication* YWindowsPlatformMisc::CreateApplication()
 	return FWindowsApplication::CreateWindowsApplication(hInstance, AppIconHandle);
 }
 
-void YWindowsPlatformMisc::SetGracefulTerminationHandler()
+void FWindowsPlatformMisc::SetGracefulTerminationHandler()
 {
 	// Set console control handler so we can exit if requested.
 	SetConsoleCtrlHandler(ConsoleCtrlHandler, true);
 }
 
-void YWindowsPlatformMisc::GetEnvironmentVariable(const TCHAR* VariableName, TCHAR* Result, int32 ResultLength)
+void FWindowsPlatformMisc::GetEnvironmentVariable(const TCHAR* VariableName, TCHAR* Result, int32 ResultLength)
 {
 	uint32 Error = ::GetEnvironmentVariableW(VariableName, Result, ResultLength);
 	if (Error <= 0)
@@ -707,7 +707,7 @@ void YWindowsPlatformMisc::GetEnvironmentVariable(const TCHAR* VariableName, TCH
 	}
 }
 
-void YWindowsPlatformMisc::SetEnvironmentVar(const TCHAR* VariableName, const TCHAR* Value)
+void FWindowsPlatformMisc::SetEnvironmentVar(const TCHAR* VariableName, const TCHAR* Value)
 {
 	uint32 Error = ::SetEnvironmentVariable(VariableName, Value);
 	if (Error == 0)
@@ -716,7 +716,7 @@ void YWindowsPlatformMisc::SetEnvironmentVar(const TCHAR* VariableName, const TC
 	}
 }
 
-TArray<uint8> YWindowsPlatformMisc::GetMacAddress()
+TArray<uint8> FWindowsPlatformMisc::GetMacAddress()
 {
 	TArray<uint8> Result;
 	IP_ADAPTER_INFO IpAddresses[16];
@@ -766,9 +766,9 @@ static void HardKillIfAutomatedTesting()
 }
 
 
-void YWindowsPlatformMisc::SubmitErrorReport(const TCHAR* InErrorHist, EErrorReportMode::Type InMode)
+void FWindowsPlatformMisc::SubmitErrorReport(const TCHAR* InErrorHist, EErrorReportMode::Type InMode)
 {
-	if ((!YPlatformMisc::IsDebuggerPresent() || GAlwaysReportCrash) && !FParse::Param(FCommandLine::Get(), TEXT("CrashForUAT")))
+	if ((!FPlatformMisc::IsDebuggerPresent() || GAlwaysReportCrash) && !FParse::Param(FCommandLine::Get(), TEXT("CrashForUAT")))
 	{
 		if (GUseCrashReportClient)
 		{
@@ -939,7 +939,7 @@ void YWindowsPlatformMisc::SubmitErrorReport(const TCHAR* InErrorHist, EErrorRep
 }
 
 #if !UE_BUILD_SHIPPING
-bool YWindowsPlatformMisc::IsDebuggerPresent()
+bool FWindowsPlatformMisc::IsDebuggerPresent()
 {
 	return !GIgnoreDebugger && !!::IsDebuggerPresent();
 }
@@ -963,7 +963,7 @@ static void WinPumpSentMessages()
 	PeekMessage(&Msg, NULL, 0, 0, PM_NOREMOVE | PM_QS_SENDMESSAGE);
 }
 
-void YWindowsPlatformMisc::PumpMessages(bool bFromMainLoop)
+void FWindowsPlatformMisc::PumpMessages(bool bFromMainLoop)
 {
 	if (!bFromMainLoop)
 	{
@@ -1006,12 +1006,12 @@ void YWindowsPlatformMisc::PumpMessages(bool bFromMainLoop)
 	FApp::SetVolumeMultiplier(HasFocus ? 1.0f : FApp::GetUnfocusedVolumeMultiplier());
 }
 
-uint32 YWindowsPlatformMisc::GetCharKeyMap(uint32* KeyCodes, FString* KeFNames, uint32 MaxMappings)
+uint32 FWindowsPlatformMisc::GetCharKeyMap(uint32* KeyCodes, FString* KeFNames, uint32 MaxMappings)
 {
-	return YGenericPlatformMisc::GetStandardPrintableKeyMap(KeyCodes, KeFNames, MaxMappings, true, false);
+	return FGenericPlatformMisc::GetStandardPrintableKeyMap(KeyCodes, KeFNames, MaxMappings, true, false);
 }
 
-uint32 YWindowsPlatformMisc::GetKeyMap(uint32* KeyCodes, FString* KeFNames, uint32 MaxMappings)
+uint32 FWindowsPlatformMisc::GetKeyMap(uint32* KeyCodes, FString* KeFNames, uint32 MaxMappings)
 {
 #define ADDKEYMAP(KeyCode, KeFName)		if (NumMappings<MaxMappings) { KeyCodes[NumMappings]=KeyCode; KeFNames[NumMappings]=KeFName; ++NumMappings; };
 
@@ -1129,20 +1129,20 @@ uint32 YWindowsPlatformMisc::GetKeyMap(uint32* KeyCodes, FString* KeFNames, uint
 #undef ADDKEYMAP
 }
 
-void YWindowsPlatformMisc::SetUTF8Output()
+void FWindowsPlatformMisc::SetUTF8Output()
 {
 	CA_SUPPRESS(6031)
 		_setmode(_fileno(stdout), _O_U8TEXT);
 }
 
-void YWindowsPlatformMisc::LocalPrint(const TCHAR *Message)
+void FWindowsPlatformMisc::LocalPrint(const TCHAR *Message)
 {
 	OutputDebugString(Message);
 }
 
-void YWindowsPlatformMisc::RequestExit(bool Force)
+void FWindowsPlatformMisc::RequestExit(bool Force)
 {
-	UE_LOG(LogWindows, Log, TEXT("YPlatformMisc::RequestExit(%i)"), Force);
+	UE_LOG(LogWindows, Log, TEXT("FPlatformMisc::RequestExit(%i)"), Force);
 
 	FCoreDelegates::ApplicationWillTerminateDelegate.Broadcast();
 
@@ -1172,12 +1172,12 @@ void YWindowsPlatformMisc::RequestExit(bool Force)
 	}
 }
 
-void YWindowsPlatformMisc::RequestMinimize()
+void FWindowsPlatformMisc::RequestMinimize()
 {
 	::ShowWindow(::GetActiveWindow(), SW_MINIMIZE);
 }
 
-const TCHAR* YWindowsPlatformMisc::GetSystemErrorMessage(TCHAR* OutBuffer, int32 BufferCount, int32 Error)
+const TCHAR* FWindowsPlatformMisc::GetSystemErrorMessage(TCHAR* OutBuffer, int32 BufferCount, int32 Error)
 {
 	check(OutBuffer && BufferCount);
 	*OutBuffer = TEXT('\0');
@@ -1204,7 +1204,7 @@ const TCHAR* YWindowsPlatformMisc::GetSystemErrorMessage(TCHAR* OutBuffer, int32
 // text buffer for internal operations.
 PRAGMA_DISABLE_OPTIMIZATION
 
-void YWindowsPlatformMisc::ClipboardCopy(const TCHAR* Str)
+void FWindowsPlatformMisc::ClipboardCopy(const TCHAR* Str)
 {
 	if (OpenClipboard(GetActiveWindow()))
 	{
@@ -1222,7 +1222,7 @@ void YWindowsPlatformMisc::ClipboardCopy(const TCHAR* Str)
 	}
 }
 
-void YWindowsPlatformMisc::ClipboardPaste(class FString& Result)
+void FWindowsPlatformMisc::ClipboardPaste(class FString& Result)
 {
 	if (OpenClipboard(GetActiveWindow()))
 	{
@@ -1268,7 +1268,7 @@ void YWindowsPlatformMisc::ClipboardPaste(class FString& Result)
 
 PRAGMA_ENABLE_OPTIMIZATION
 
-void YWindowsPlatformMisc::CreateGuid(FGuid& Result)
+void FWindowsPlatformMisc::CreateGuid(FGuid& Result)
 {
 	verify(CoCreateGuid((GUID*)&Result) == S_OK);
 }
@@ -1487,7 +1487,7 @@ int MessageBoxExtInternal(EAppMsgType::Type MsgType, HWND HandleWnd, const TCHAR
 
 
 
-EAppReturnType::Type YWindowsPlatformMisc::MessageBoxExt(EAppMsgType::Type MsgType, const TCHAR* Text, const TCHAR* Caption)
+EAppReturnType::Type FWindowsPlatformMisc::MessageBoxExt(EAppMsgType::Type MsgType, const TCHAR* Text, const TCHAR* Caption)
 {
 	FSlowHeartBeatScope SuspendHeartBeat;
 
@@ -1541,7 +1541,7 @@ static bool HandleGameExplorerIntegration()
 		GetModuleFileName(NULL, AppPath, MAX_PATH - 1);
 
 		// Initialize COM. We only want to do this once and not override settings of previous calls.
-		if (!YWindowsPlatformMisc::CoInitialize())
+		if (!FWindowsPlatformMisc::CoInitialize())
 		{
 			return false;
 		}
@@ -1659,7 +1659,7 @@ static bool HandleGameExplorerIntegration()
 			// free the string and shutdown COM
 			SysFreeString(AppPathBSTR);
 			SAFE_RELEASE(GameExp);
-			YWindowsPlatformMisc::CoUninitialize();
+			FWindowsPlatformMisc::CoUninitialize();
 
 			return false;
 		}
@@ -1685,7 +1685,7 @@ static bool HandleGameExplorerIntegration()
 			// free the string and shutdown COM
 			SysFreeString(AppPathBSTR);
 			SAFE_RELEASE(GameExp);
-			YWindowsPlatformMisc::CoUninitialize();
+			FWindowsPlatformMisc::CoUninitialize();
 
 			return false;
 		}
@@ -1693,7 +1693,7 @@ static bool HandleGameExplorerIntegration()
 		// free the string and shutdown COM
 		SysFreeString(AppPathBSTR);
 		SAFE_RELEASE(GameExp);
-		YWindowsPlatformMisc::CoUninitialize();
+		FWindowsPlatformMisc::CoUninitialize();
 
 		// if we don't have access, we must quit ASAP after showing a message
 		if (!bHasAccess)
@@ -1762,7 +1762,7 @@ static bool HandleFirewallIntegration()
 	{
 		HRESULT hr = S_OK;
 
-		if (YWindowsPlatformMisc::CoInitialize())
+		if (FWindowsPlatformMisc::CoInitialize())
 		{
 			INetFwProfile* pFwProfile = GetFirewallProfile();
 			if (pFwProfile)
@@ -1809,7 +1809,7 @@ static bool HandleFirewallIntegration()
 				pFwProfile->Release();
 			}
 
-			YWindowsPlatformMisc::CoUninitialize();
+			FWindowsPlatformMisc::CoUninitialize();
 		}
 
 		SysFreeString(bstrFriendlyAppName);
@@ -1833,7 +1833,7 @@ static bool HandleFirstInstall()
 	return true; // allow the game to continue;
 }
 
-bool YWindowsPlatformMisc::CommandLineCommands()
+bool FWindowsPlatformMisc::CommandLineCommands()
 {
 	return HandleFirstInstall() && HandleGameExplorerIntegration() && HandleFirewallIntegration();
 }
@@ -1843,7 +1843,7 @@ bool YWindowsPlatformMisc::CommandLineCommands()
 *
 * @return	true if we're running in a 64-bit operating system
 */
-bool YWindowsPlatformMisc::Is64bitOperatingSystem()
+bool FWindowsPlatformMisc::Is64bitOperatingSystem()
 {
 #if PLATFORM_64BITS
 	return true;
@@ -1865,12 +1865,12 @@ bool YWindowsPlatformMisc::Is64bitOperatingSystem()
 #endif
 }
 
-int32 YWindowsPlatformMisc::GetAppIcon()
+int32 FWindowsPlatformMisc::GetAppIcon()
 {
 	return IDICON_UE4Game;
 }
 
-bool YWindowsPlatformMisc::VerifyWindowsVersion(uint32 MajorVersion, uint32 MinorVersion)
+bool FWindowsPlatformMisc::VerifyWindowsVersion(uint32 MajorVersion, uint32 MinorVersion)
 {
 	OSVERSIONINFOEX Version;
 	Version.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
@@ -1880,7 +1880,7 @@ bool YWindowsPlatformMisc::VerifyWindowsVersion(uint32 MajorVersion, uint32 Mino
 	return !!VerifyVersionInfo(&Version, VER_MAJORVERSION, VerSetConditionMask(ConditionMask, VER_MAJORVERSION, VER_GREATER_EQUAL));
 }
 
-bool YWindowsPlatformMisc::IsValidAbsolutePathFormat(const FString& Path)
+bool FWindowsPlatformMisc::IsValidAbsolutePathFormat(const FString& Path)
 {
 	bool bIsValid = true;
 	const FString OnlyPath = YPaths::GetPath(Path);
@@ -1916,7 +1916,7 @@ bool YWindowsPlatformMisc::IsValidAbsolutePathFormat(const FString& Path)
 	return bIsValid;
 }
 
-int32 YWindowsPlatformMisc::NumberOfCores()
+int32 FWindowsPlatformMisc::NumberOfCores()
 {
 	static int32 CoreCount = 0;
 	if (CoreCount == 0)
@@ -1960,7 +1960,7 @@ int32 YWindowsPlatformMisc::NumberOfCores()
 	return CoreCount;
 }
 
-int32 YWindowsPlatformMisc::NumberOfCoresIncludingHyperthreads()
+int32 FWindowsPlatformMisc::NumberOfCoresIncludingHyperthreads()
 {
 	static int32 CoreCount = 0;
 	if (CoreCount == 0)
@@ -1973,10 +1973,10 @@ int32 YWindowsPlatformMisc::NumberOfCoresIncludingHyperthreads()
 	return CoreCount;
 }
 
-void YWindowsPlatformMisc::LoadPreInitModules()
+void FWindowsPlatformMisc::LoadPreInitModules()
 {
 	// D3D11 is not supported on WinXP, so in this case we use the OpenGL RHI
-	if (YWindowsPlatformMisc::VerifyWindowsVersion(6, 0))
+	if (FWindowsPlatformMisc::VerifyWindowsVersion(6, 0))
 	{
 		//#todo-rco: Only try on Win10
 		const bool bForceD3D12 = FParse::Param(FCommandLine::Get(), TEXT("d3d12")) || FParse::Param(FCommandLine::Get(), TEXT("dx12"));
@@ -1989,7 +1989,7 @@ void YWindowsPlatformMisc::LoadPreInitModules()
 	FModuleManager::Get().LoadModule(TEXT("OpenGLDrv"));
 }
 
-void YWindowsPlatformMisc::LoadStartupModules()
+void FWindowsPlatformMisc::LoadStartupModules()
 {
 	FModuleManager::Get().LoadModule(TEXT("XAudio2"));
 #if !UE_SERVER
@@ -2001,7 +2001,7 @@ void YWindowsPlatformMisc::LoadStartupModules()
 #endif	//WITH_EDITOR
 }
 
-bool YWindowsPlatformMisc::OsExecute(const TCHAR* CommandType, const TCHAR* Command, const TCHAR* CommandLine)
+bool FWindowsPlatformMisc::OsExecute(const TCHAR* CommandType, const TCHAR* Command, const TCHAR* CommandLine)
 {
 	HINSTANCE hApp = ShellExecute(NULL,
 		CommandType,
@@ -2038,7 +2038,7 @@ int32 CALLBACK GetMainWindowHandleCallback(HWND Handle, LPARAM lParam)
 	return 0;
 }
 
-HWND YWindowsPlatformMisc::GetTopLevelWindowHandle(uint32 ProcessId)
+HWND FWindowsPlatformMisc::GetTopLevelWindowHandle(uint32 ProcessId)
 {
 	FGetMainWindowHandleData Data;
 	{
@@ -2051,7 +2051,7 @@ HWND YWindowsPlatformMisc::GetTopLevelWindowHandle(uint32 ProcessId)
 	return Data.Handle;
 }
 
-bool YWindowsPlatformMisc::GetWindowTitleMatchingText(const TCHAR* TitleStartsWith, FString& OutTitle)
+bool FWindowsPlatformMisc::GetWindowTitleMatchingText(const TCHAR* TitleStartsWith, FString& OutTitle)
 {
 	bool bWasFound = false;
 	WCHAR Buffer[8192];
@@ -2079,7 +2079,7 @@ bool YWindowsPlatformMisc::GetWindowTitleMatchingText(const TCHAR* TitleStartsWi
 	return bWasFound;
 }
 
-void YWindowsPlatformMisc::RaiseException(uint32 ExceptionCode)
+void FWindowsPlatformMisc::RaiseException(uint32 ExceptionCode)
 {
 	/** This is the last place to gather memory stats before exception. */
 	FGenericCrashContext::CrashMemoryStats = YPlatformMemory::GetStats();
@@ -2087,7 +2087,7 @@ void YWindowsPlatformMisc::RaiseException(uint32 ExceptionCode)
 	::RaiseException(ExceptionCode, 0, 0, NULL);
 }
 
-bool YWindowsPlatformMisc::SetStoredValue(const FString& InStoreId, const FString& InSectionName, const FString& InKeFName, const FString& InValue)
+bool FWindowsPlatformMisc::SetStoredValue(const FString& InStoreId, const FString& InSectionName, const FString& InKeFName, const FString& InValue)
 {
 	check(!InStoreId.IsEmpty());
 	check(!InSectionName.IsEmpty());
@@ -2115,7 +2115,7 @@ bool YWindowsPlatformMisc::SetStoredValue(const FString& InStoreId, const FStrin
 	return true;
 }
 
-bool YWindowsPlatformMisc::GetStoredValue(const FString& InStoreId, const FString& InSectionName, const FString& InKeFName, FString& OutValue)
+bool FWindowsPlatformMisc::GetStoredValue(const FString& InStoreId, const FString& InSectionName, const FString& InKeFName, FString& OutValue)
 {
 	check(!InStoreId.IsEmpty());
 	check(!InSectionName.IsEmpty());
@@ -2127,7 +2127,7 @@ bool YWindowsPlatformMisc::GetStoredValue(const FString& InStoreId, const FStrin
 	return QueryRegKey(HKEY_CURRENT_USER, *FullRegistryKey, *InKeFName, OutValue);
 }
 
-bool YWindowsPlatformMisc::DeleteStoredValue(const FString& InStoreId, const FString& InSectionName, const FString& InKeFName)
+bool FWindowsPlatformMisc::DeleteStoredValue(const FString& InStoreId, const FString& InSectionName, const FString& InKeFName)
 {
 	// Deletes values in reg keys and also deletes the owning key if it becomes empty
 
@@ -2168,18 +2168,18 @@ bool YWindowsPlatformMisc::DeleteStoredValue(const FString& InStoreId, const FSt
 	return Result == ERROR_SUCCESS;
 }
 
-uint32 YWindowsPlatformMisc::GetLastError()
+uint32 FWindowsPlatformMisc::GetLastError()
 {
 	return (uint32)::GetLastError();
 }
 
-bool YWindowsPlatformMisc::CoInitialize()
+bool FWindowsPlatformMisc::CoInitialize()
 {
 	HRESULT hr = ::CoInitialize(NULL);
 	return hr == S_OK || hr == S_FALSE;
 }
 
-void YWindowsPlatformMisc::CoUninitialize()
+void FWindowsPlatformMisc::CoUninitialize()
 {
 	::CoUninitialize();
 }
@@ -2187,7 +2187,7 @@ void YWindowsPlatformMisc::CoUninitialize()
 #if !UE_BUILD_SHIPPING
 static TCHAR GErrorRemoteDebugPromptMessage[MAX_SPRINTF];
 
-void YWindowsPlatformMisc::PromptForRemoteDebugging(bool bIsEnsure)
+void FWindowsPlatformMisc::PromptForRemoteDebugging(bool bIsEnsure)
 {
 	if (bShouldPromptForRemoteDebugging)
 	{
@@ -2231,7 +2231,7 @@ void YWindowsPlatformMisc::PromptForRemoteDebugging(bool bIsEnsure)
 }
 #endif	//#if !UE_BUILD_SHIPPING
 
-FLinearColor YWindowsPlatformMisc::GetScreenPixelColor(const YVector2D& InScreenPos, float /*InGamma*/)
+FLinearColor FWindowsPlatformMisc::GetScreenPixelColor(const FVector2D& InScreenPos, float /*InGamma*/)
 {
 	COLORREF PixelColorRef = GetPixel(GetDC(HWND_DESKTOP), InScreenPos.X, InScreenPos.Y);
 
@@ -2452,29 +2452,29 @@ private:
 /** Static initialization of data to pre-cache __cpuid queries. */
 FCPUIDQueriedData FCPUIDQueriedData::CPUIDStaticCache;
 
-bool YWindowsPlatformMisc::HasCPUIDInstruction()
+bool FWindowsPlatformMisc::HasCPUIDInstruction()
 {
 	return FCPUIDQueriedData::HasCPUIDInstruction();
 }
 
-FString YWindowsPlatformMisc::GetCPUVendor()
+FString FWindowsPlatformMisc::GetCPUVendor()
 {
 	return FCPUIDQueriedData::GetVendor();
 }
 
-FString YWindowsPlatformMisc::GetCPUBrand()
+FString FWindowsPlatformMisc::GetCPUBrand()
 {
 	return FCPUIDQueriedData::GetBrand();
 }
 
 #include "Windows/AllowWindowsPlatformTypes.h"
-FString YWindowsPlatformMisc::GetPrimaryGPUBrand()
+FString FWindowsPlatformMisc::GetPrimaryGPUBrand()
 {
 	static FString PrimaryGPUBrand;
 	if (PrimaryGPUBrand.IsEmpty())
 	{
 		// Find primary display adapter and get the device name.
-		PrimaryGPUBrand = YGenericPlatformMisc::GetPrimaryGPUBrand();
+		PrimaryGPUBrand = FGenericPlatformMisc::GetPrimaryGPUBrand();
 
 		DISPLAY_DEVICE DisplayDevice;
 		DisplayDevice.cb = sizeof(DisplayDevice);
@@ -2503,7 +2503,7 @@ static void GetVideoDriverDetails(const FString& Key, FGPUDriverInfo& Out)
 
 	const TCHAR* DeviceDescriptionValueName = TEXT("Device Description");
 
-	bool bDevice = YWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, *Key, DeviceDescriptionValueName, Out.DeviceDescription); // AMD and NVIDIA
+	bool bDevice = FWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, *Key, DeviceDescriptionValueName, Out.DeviceDescription); // AMD and NVIDIA
 
 	if (!bDevice)
 	{
@@ -2515,7 +2515,7 @@ static void GetVideoDriverDetails(const FString& Key, FGPUDriverInfo& Out)
 
 		// Try again in Settings subfolder
 		const FString SettingsSubKey = Key + TEXT("\\Settings");
-		bDevice = YWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, *SettingsSubKey, DeviceDescriptionValueName, Out.DeviceDescription); // AMD and NVIDIA
+		bDevice = FWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, *SettingsSubKey, DeviceDescriptionValueName, Out.DeviceDescription); // AMD and NVIDIA
 
 		if (!bDevice)
 		{
@@ -2527,7 +2527,7 @@ static void GetVideoDriverDetails(const FString& Key, FGPUDriverInfo& Out)
 
 	// some key/value pairs explained: http://www.helpdoc-online.com/SCDMS01EN1A330P306~Windows-NT-Workstation-3.51-Resource-Kit-Help-en~Video-Device-Driver-Entries.htm
 
-	YWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, *Key, TEXT("ProviderName"), Out.ProviderName);
+	FWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, *Key, TEXT("ProviderName"), Out.ProviderName);
 
 	if (!Out.ProviderName.IsEmpty())
 	{
@@ -2546,7 +2546,7 @@ static void GetVideoDriverDetails(const FString& Key, FGPUDriverInfo& Out)
 	}
 
 	// technical driver version, AMD and NVIDIA
-	YWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, *Key, TEXT("DriverVersion"), Out.InternalDriverVersion);
+	FWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, *Key, TEXT("DriverVersion"), Out.InternalDriverVersion);
 
 	Out.UserDriverVersion = Out.InternalDriverVersion;
 
@@ -2556,16 +2556,16 @@ static void GetVideoDriverDetails(const FString& Key, FGPUDriverInfo& Out)
 	}
 	else if (Out.IsAMD())
 	{
-		if (YWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, *Key, TEXT("Catalyst_Version"), Out.UserDriverVersion))
+		if (FWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, *Key, TEXT("Catalyst_Version"), Out.UserDriverVersion))
 		{
 			Out.UserDriverVersion = FString(TEXT("Catalyst ")) + Out.UserDriverVersion;
 		}
 
 		FString Edition;
-		if (YWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, *Key, TEXT("RadeonSoftwareEdition"), Edition))
+		if (FWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, *Key, TEXT("RadeonSoftwareEdition"), Edition))
 		{
 			FString Version;
-			if (YWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, *Key, TEXT("RadeonSoftwareVersion"), Version))
+			if (FWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, *Key, TEXT("RadeonSoftwareVersion"), Version))
 			{
 				// e.g. TEXT("Crimson 15.12") or TEXT("Catalyst 14.1")
 				Out.UserDriverVersion = Edition + TEXT(" ") + Version;
@@ -2574,10 +2574,10 @@ static void GetVideoDriverDetails(const FString& Key, FGPUDriverInfo& Out)
 	}
 
 	// AMD and NVIDIA
-	YWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, *Key, TEXT("DriverDate"), Out.DriverDate);
+	FWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, *Key, TEXT("DriverDate"), Out.DriverDate);
 }
 
-FGPUDriverInfo YWindowsPlatformMisc::GetGPUDriverInfo(const FString& DeviceDescription)
+FGPUDriverInfo FWindowsPlatformMisc::GetGPUDriverInfo(const FString& DeviceDescription)
 {
 	// to distinguish failed GetGPUDriverInfo() from call to GetGPUDriverInfo()
 	FGPUDriverInfo Ret;
@@ -2728,7 +2728,7 @@ FGPUDriverInfo YWindowsPlatformMisc::GetGPUDriverInfo(const FString& DeviceDescr
 
 		FString DriverLocation; // e.g. HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\<videodriver>\Device0
 								// Video0 is the first logical one, not neccesarily the primary, would have to iterate multiple to get the right one (see https://support.microsoft.com/en-us/kb/102992)
-		bool bOk = YWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, TEXT("HARDWARE\\DEVICEMAP\\VIDEO"), TEXT("\\Device\\Video0"), /*out*/ DriverLocation);
+		bool bOk = FWindowsPlatformMisc::QueryRegKey(HKEY_LOCAL_MACHINE, TEXT("HARDWARE\\DEVICEMAP\\VIDEO"), TEXT("\\Device\\Video0"), /*out*/ DriverLocation);
 
 		if (bOk)
 		{
@@ -2779,7 +2779,7 @@ FGPUDriverInfo YWindowsPlatformMisc::GetGPUDriverInfo(const FString& DeviceDescr
 
 #include "Windows/HideWindowsPlatformTypes.h"
 
-void YWindowsPlatformMisc::GetOSVersions(FString& out_OSVersionLabel, FString& out_OSSubVersionLabel)
+void FWindowsPlatformMisc::GetOSVersions(FString& out_OSVersionLabel, FString& out_OSSubVersionLabel)
 {
 	static FString OSVersionLabel;
 	static FString OSSubVersionLabel;
@@ -2794,7 +2794,7 @@ void YWindowsPlatformMisc::GetOSVersions(FString& out_OSVersionLabel, FString& o
 }
 
 
-bool YWindowsPlatformMisc::GetDiskTotalAndFreeSpace(const FString& InPath, uint64& TotalNumberOfBytes, uint64& NumberOfFreeBytes)
+bool FWindowsPlatformMisc::GetDiskTotalAndFreeSpace(const FString& InPath, uint64& TotalNumberOfBytes, uint64& NumberOfFreeBytes)
 {
 	bool bSuccess = false;
 	// We need to convert the path to make sure it is formatted with windows style Drive e.g. "C:\"
@@ -2807,17 +2807,17 @@ bool YWindowsPlatformMisc::GetDiskTotalAndFreeSpace(const FString& InPath, uint6
 }
 
 
-uint32 YWindowsPlatformMisc::GetCPUInfo()
+uint32 FWindowsPlatformMisc::GetCPUInfo()
 {
 	return FCPUIDQueriedData::GetCPUInfo();
 }
 
-int32 YWindowsPlatformMisc::GetCacheLineSize()
+int32 FWindowsPlatformMisc::GetCacheLineSize()
 {
 	return FCPUIDQueriedData::GetCacheLineSize();
 }
 
-bool YWindowsPlatformMisc::QueryRegKey(const Windows::HKEY InKey, const TCHAR* InSubKey, const TCHAR* InValueName, FString& OutData)
+bool FWindowsPlatformMisc::QueryRegKey(const Windows::HKEY InKey, const TCHAR* InSubKey, const TCHAR* InValueName, FString& OutData)
 {
 	bool bSuccess = false;
 
@@ -2849,7 +2849,7 @@ bool YWindowsPlatformMisc::QueryRegKey(const Windows::HKEY InKey, const TCHAR* I
 	return bSuccess;
 }
 
-bool YWindowsPlatformMisc::GetVSComnTools(int32 Version, FString& OutData)
+bool FWindowsPlatformMisc::GetVSComnTools(int32 Version, FString& OutData)
 {
 	checkf(12 <= Version && Version <= 15, L"Not supported Visual Studio version.");
 
@@ -2874,17 +2874,17 @@ bool YWindowsPlatformMisc::GetVSComnTools(int32 Version, FString& OutData)
 	return true;
 }
 
-const TCHAR* YWindowsPlatformMisc::GetDefaultPathSeparator()
+const TCHAR* FWindowsPlatformMisc::GetDefaultPathSeparator()
 {
 	return TEXT("\\");
 }
 
-FText YWindowsPlatformMisc::GetFileManagerName()
+FText FWindowsPlatformMisc::GetFileManagerName()
 {
 	return NSLOCTEXT("WindowsPlatform", "FileManagerName", "Explorer");
 }
 
-bool YWindowsPlatformMisc::IsRunningOnBattery()
+bool FWindowsPlatformMisc::IsRunningOnBattery()
 {
 	SYSTEM_POWER_STATUS status;
 	GetSystemPowerStatus(&status);
@@ -2904,7 +2904,7 @@ bool YWindowsPlatformMisc::IsRunningOnBattery()
 	return false;
 }
 
-FString YWindowsPlatformMisc::GetOperatingSystemId()
+FString FWindowsPlatformMisc::GetOperatingSystemId()
 {
 	FString Result;
 	// more info on this key can be found here: http://stackoverflow.com/questions/99880/generating-a-unique-machine-id
@@ -2913,7 +2913,7 @@ FString YWindowsPlatformMisc::GetOperatingSystemId()
 }
 
 
-EConvertibleLaptopMode YWindowsPlatformMisc::GetConvertibleLaptopMode()
+EConvertibleLaptopMode FWindowsPlatformMisc::GetConvertibleLaptopMode()
 {
 	if (!VerifyWindowsVersion(6, 2))
 	{
@@ -2928,7 +2928,7 @@ EConvertibleLaptopMode YWindowsPlatformMisc::GetConvertibleLaptopMode()
 	return EConvertibleLaptopMode::Laptop;
 }
 
-IPlatformChunkInstall* YWindowsPlatformMisc::GetPlatformChunkInstall()
+IPlatformChunkInstall* FWindowsPlatformMisc::GetPlatformChunkInstall()
 {
 	static IPlatformChunkInstall* ChunkInstall = nullptr;
 	if (!ChunkInstall)
@@ -2952,7 +2952,7 @@ IPlatformChunkInstall* YWindowsPlatformMisc::GetPlatformChunkInstall()
 #endif
 		{
 			// Placeholder instance
-			ChunkInstall = YGenericPlatformMisc::GetPlatformChunkInstall();
+			ChunkInstall = FGenericPlatformMisc::GetPlatformChunkInstall();
 		}
 	}
 

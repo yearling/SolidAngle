@@ -1051,7 +1051,7 @@ public:
 
 	void TestEqual(const FString& What, const float Actual, const float Expected, float Tolerance = 1.e-4)
 	{
-		if ( !YMath::IsNearlyEqual(Actual, Expected, Tolerance) )
+		if ( !FMath::IsNearlyEqual(Actual, Expected, Tolerance) )
 		{
 			AddError(FString::Printf(TEXT("Expected '%s' to be %f, but it was %f within tolerance %f."), *What, Expected, Actual, Tolerance), 1);
 		}

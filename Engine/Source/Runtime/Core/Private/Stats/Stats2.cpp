@@ -1012,7 +1012,7 @@ FThreadStatsPool::FThreadStatsPool()
 
 FThreadStats* FThreadStatsPool::GetFromPool()
 {
-	YPlatformMisc::MemoryBarrier();
+	FPlatformMisc::MemoryBarrier();
 	FThreadStats* Result = new(Pool.Pop()) FThreadStats();
 	check(Result && "Increase NUM_ELEMENTS_IN_POOL");
 	return Result;

@@ -27,7 +27,7 @@ FText FText::AsTime( const FDateTime& DateTime, const EDateTimeStyle::Type TimeS
 	return FText::FromString( DateTime.ToString( TEXT("%H.%M.%S") ) );
 }
 
-FText FText::AsTimespan( const YTimespan& Timespan, const FCulturePtr& TargetCulture)
+FText FText::AsTimespan( const FTimespan& Timespan, const FCulturePtr& TargetCulture)
 {
 	checkf(FInternationalization::Get().IsInitialized() == true, TEXT("FInternationalization is not initialized. An FText formatting method was likely used in static object initialization - this is not supported."));
 	FDateTime DateTime(Timespan.GetTicks());

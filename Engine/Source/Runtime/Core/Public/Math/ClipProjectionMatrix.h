@@ -12,7 +12,7 @@
  * from: http://sourceforge.net/mailarchive/message.php?msg_id=000901c26324%242181ea90%24a1e93942%40firefly
  * Updated for the fact that our FPlane uses Ax+By+Cz=D.
  */
-class YClipProjectionMatrix : public FMatrix
+class FClipProjectionMatrix : public FMatrix
 {
 public:
 	/**
@@ -21,7 +21,7 @@ public:
 	 * @param	SrcProjMat - source projection matrix to premultiply with the clip matrix
 	 * @param	Plane - clipping plane used to build the clip matrix (assumed to be in camera space)
 	 */
-	YClipProjectionMatrix( const FMatrix& SrcProjMat, const FPlane& Plane );
+	FClipProjectionMatrix( const FMatrix& SrcProjMat, const FPlane& Plane );
 
 private:
 	/** return sign of a number */
@@ -29,7 +29,7 @@ private:
 };
 
 
-FORCEINLINE YClipProjectionMatrix::YClipProjectionMatrix( const FMatrix& SrcProjMat, const FPlane& Plane ) :
+FORCEINLINE FClipProjectionMatrix::FClipProjectionMatrix( const FMatrix& SrcProjMat, const FPlane& Plane ) :
 FMatrix(SrcProjMat)
 {
 	// Calculate the clip-space corner point opposite the clipping plane
@@ -55,7 +55,7 @@ FMatrix(SrcProjMat)
 }
 
 
-FORCEINLINE float YClipProjectionMatrix::sgn( float a )
+FORCEINLINE float FClipProjectionMatrix::sgn( float a )
 {
 	if (a > 0.0f) return (1.0f);
 	if (a < 0.0f) return (-1.0f);

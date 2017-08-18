@@ -9,7 +9,7 @@
 /**
  * Scale matrix.
  */
-class YScaleMatrix
+class FScaleMatrix
 	: public FMatrix
 {
 public:
@@ -17,23 +17,23 @@ public:
 	/**
 	 * @param Scale uniform scale to apply to matrix.
 	 */
-	YScaleMatrix( float Scale );
+	FScaleMatrix( float Scale );
 
 	/**
 	 * @param Scale Non-uniform scale to apply to matrix.
 	 */
-	YScaleMatrix( const FVector& Scale );
+	FScaleMatrix( const FVector& Scale );
 
 	/** Matrix factory. Return an FMatrix so we don't have type conversion issues in expressions. */
 	static FMatrix Make(float Scale)
 	{
-		return YScaleMatrix(Scale);
+		return FScaleMatrix(Scale);
 	}
 
 	/** Matrix factory. Return an FMatrix so we don't have type conversion issues in expressions. */
 	static FMatrix Make(const FVector& Scale)
 	{
-		return YScaleMatrix(Scale);
+		return FScaleMatrix(Scale);
 	}
 };
 
@@ -41,7 +41,7 @@ public:
 /* FScaleMatrix inline functions
  *****************************************************************************/
 
-FORCEINLINE YScaleMatrix::YScaleMatrix( float Scale )
+FORCEINLINE FScaleMatrix::FScaleMatrix( float Scale )
 	: FMatrix(
 		FPlane(Scale,	0.0f,	0.0f,	0.0f),
 		FPlane(0.0f,	Scale,	0.0f,	0.0f),
@@ -51,7 +51,7 @@ FORCEINLINE YScaleMatrix::YScaleMatrix( float Scale )
 { }
 
 
-FORCEINLINE YScaleMatrix::YScaleMatrix( const FVector& Scale )
+FORCEINLINE FScaleMatrix::FScaleMatrix( const FVector& Scale )
 	: FMatrix(
 		FPlane(Scale.X,	0.0f,		0.0f,		0.0f),
 		FPlane(0.0f,	Scale.Y,	0.0f,		0.0f),

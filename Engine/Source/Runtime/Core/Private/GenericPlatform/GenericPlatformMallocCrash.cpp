@@ -98,7 +98,7 @@ struct FMallocCrashPool
 		AllocatedMemory = MaxNumAllocations*AllocationSize + sizeof(Allocations);
 
 #ifdef	_DEBUG
-		YPlatformMisc::LowLevelOutputDebugStringf( TEXT( "FMallocCrashPool Size=%5u Num=%4i Mem=%8u\n" ), PoolDesc.Size, MaxNumAllocations, AllocatedMemory );
+		FPlatformMisc::LowLevelOutputDebugStringf( TEXT( "FMallocCrashPool Size=%5u Num=%4i Mem=%8u\n" ), PoolDesc.Size, MaxNumAllocations, AllocatedMemory );
 #endif // _DEBUG
 	}
 
@@ -114,7 +114,7 @@ struct FMallocCrashPool
 			if( PtrIt->Size == 0 )
 			{
 				PtrInfo = PtrIt;
-				MaxUsedIndex = YMath::Max(MaxUsedIndex,Index);
+				MaxUsedIndex = FMath::Max(MaxUsedIndex,Index);
 				break;
 			}
 		}
@@ -123,22 +123,22 @@ struct FMallocCrashPool
 		{
 			NumUsed++;
 			TotalNumUsed++;
-			MaxNumUsed = YMath::Max(MaxNumUsed,NumUsed);
+			MaxNumUsed = FMath::Max(MaxNumUsed,NumUsed);
 			PtrInfo->Size = InAllocationSize;
 
 			FMemory::Memset( (void*)PtrInfo->Ptr, FGenericPlatformMallocCrash::MEM_TAG, PtrInfo->Size );
 			DebugVerify();
 
-			//YPlatformMisc::LowLevelOutputDebugStringf( TEXT( "Malloc Size=%u, PooledPtr=0x%016llx \n" ), AllocationSize, (uint64)PtrInfo->Ptr );
+			//FPlatformMisc::LowLevelOutputDebugStringf( TEXT( "Malloc Size=%u, PooledPtr=0x%016llx \n" ), AllocationSize, (uint64)PtrInfo->Ptr );
 
 			return PtrInfo->Ptr;
 		}
 		else
 		{
-			YPlatformMisc::DebugBreak();
-			YPlatformMisc::LowLevelOutputDebugStringf( TEXT( "AllocateFromPool run out of memory allocating %u bytes for %u allocations\n" ), InAllocationSize, MaxNumAllocations );
-			YPlatformMisc::LowLevelOutputDebugString( TEXT( "Please increase MaxNumAllocations for that pool, exiting...\n" ) );
-			YPlatformMisc::RequestExit( true );
+			FPlatformMisc::DebugBreak();
+			FPlatformMisc::LowLevelOutputDebugStringf( TEXT( "AllocateFromPool run out of memory allocating %u bytes for %u allocations\n" ), InAllocationSize, MaxNumAllocations );
+			FPlatformMisc::LowLevelOutputDebugString( TEXT( "Please increase MaxNumAllocations for that pool, exiting...\n" ) );
+			FPlatformMisc::RequestExit( true );
 		}
 		return nullptr;
 	}
@@ -147,7 +147,7 @@ struct FMallocCrashPool
 	void TryFreeFromPool( uint8* Ptr )
 	{
 		//const uint32 PtrSize = FGenericPlatformMallocCrash::GetAllocationSize(Ptr);
-		//YPlatformMisc::LowLevelOutputDebugStringf( TEXT( "Free SizeWithOverhead=%u, PooledPtr=0x%016llx \n" ), PtrSize, (uint64)Ptr );
+		//FPlatformMisc::LowLevelOutputDebugStringf( TEXT( "Free SizeWithOverhead=%u, PooledPtr=0x%016llx \n" ), PtrSize, (uint64)Ptr );
 
 		bool bRemoved = false;
 		for( uint32 Index = 0; Index < MaxNumAllocations; ++Index )
@@ -167,7 +167,7 @@ struct FMallocCrashPool
 
 		if( !bRemoved )
 		{
-			YPlatformMisc::DebugBreak();
+			FPlatformMisc::DebugBreak();
 		}
 
 		DebugVerify();
@@ -182,7 +182,7 @@ private:
 			FPtrInfo* PtrIt = Allocations[Index];
 			if( PtrIt->Size > 32768 )
 			{
-				YPlatformMisc::DebugBreak();
+				FPlatformMisc::DebugBreak();
 			}
 		}
 #endif // _DEBUG
@@ -200,19 +200,19 @@ FGenericPlatformMallocCrash::FGenericPlatformMallocCrash( FMalloc* MainMalloc ) 
 	SmallMemoryPool = (uint8*)YPlatformMemory::BinnedAllocFromOS( (SIZE_T)GetSmallPoolTotalSize() );
 	if( !SmallMemoryPool || !LargeMemoryPool )
 	{
-		YPlatformMisc::LowLevelOutputDebugString( TEXT( "Memory pools allocations failed, exiting...\n" ) );
-		YPlatformMisc::RequestExit(true);
+		FPlatformMisc::LowLevelOutputDebugString( TEXT( "Memory pools allocations failed, exiting...\n" ) );
+		FPlatformMisc::RequestExit(true);
 	}
 
 	if((UPTRINT(LargeMemoryPool) & (REQUIRED_ALIGNMENT - 1)) != 0 || (UPTRINT(SmallMemoryPool) & (REQUIRED_ALIGNMENT - 1)) != 0)
 	{
-		YPlatformMisc::LowLevelOutputDebugString( TEXT( "OS allocations must be aligned to a value multiple of 16, exiting...\n" ) );
-		YPlatformMisc::RequestExit(true);
+		FPlatformMisc::LowLevelOutputDebugString( TEXT( "OS allocations must be aligned to a value multiple of 16, exiting...\n" ) );
+		FPlatformMisc::RequestExit(true);
 	}
 
 	InitializeSmallPools();
 #ifdef	_DEBUG
-	YPlatformMisc::LowLevelOutputDebugStringf( TEXT( "FGenericPlatformMallocCrash overhead is %u bytes\n" ), LargeMemoryPoolSize+GetSmallPoolTotalSize() );
+	FPlatformMisc::LowLevelOutputDebugStringf( TEXT( "FGenericPlatformMallocCrash overhead is %u bytes\n" ), LargeMemoryPoolSize+GetSmallPoolTotalSize() );
 #endif // _DEBUG
 }
 
@@ -242,8 +242,8 @@ void* FGenericPlatformMallocCrash::Malloc( SIZE_T Size, uint32 Alignment )
 	const uint32 Size32 = (uint32)Size;
 	if( Alignment > 16 )
 	{
-		YPlatformMisc::DebugBreak();
-		YPlatformMisc::LowLevelOutputDebugString( TEXT( "Alignment > 16 is not supported\n" ) );
+		FPlatformMisc::DebugBreak();
+		FPlatformMisc::LowLevelOutputDebugString( TEXT( "Alignment > 16 is not supported\n" ) );
 	}
 
 	if( IsOnCrashedThread() )
@@ -268,15 +268,15 @@ void* FGenericPlatformMallocCrash::Malloc( SIZE_T Size, uint32 Alignment )
 				PtrInfo->Size = Size32;
 				PtrInfo->Ptr = LargeMemoryPool+ReturnMemoryPoolOffset+PER_ALLOC_OVERHEAD;
 
-				YPlatformMisc::LowLevelOutputDebugStringf( TEXT( "Malloc Size=%u LargeMemoryPoolOffset=%u \n" ), Size32, LargeMemoryPoolOffset );
+				FPlatformMisc::LowLevelOutputDebugStringf( TEXT( "Malloc Size=%u LargeMemoryPoolOffset=%u \n" ), Size32, LargeMemoryPoolOffset );
 				return (void*)PtrInfo->Ptr;
 			}
 			else
 			{
-				YPlatformMisc::DebugBreak();
-				YPlatformMisc::LowLevelOutputDebugStringf( TEXT( "MallocCrash run out of memory allocating %u bytes, free %u bytes\n" ), Size32, LARGE_MEMORYPOOL_SIZE-LargeMemoryPoolOffset );
-				YPlatformMisc::LowLevelOutputDebugString( TEXT( "Please increase LARGE_MEMORYPOOL_SIZE, exiting...\n" ) );
-				YPlatformMisc::RequestExit( true );			
+				FPlatformMisc::DebugBreak();
+				FPlatformMisc::LowLevelOutputDebugStringf( TEXT( "MallocCrash run out of memory allocating %u bytes, free %u bytes\n" ), Size32, LARGE_MEMORYPOOL_SIZE-LargeMemoryPoolOffset );
+				FPlatformMisc::LowLevelOutputDebugString( TEXT( "Please increase LARGE_MEMORYPOOL_SIZE, exiting...\n" ) );
+				FPlatformMisc::RequestExit( true );			
 			}
 		}
 	}
@@ -302,15 +302,15 @@ void* FGenericPlatformMallocCrash::Realloc( void* Ptr, SIZE_T NewSize, uint32 Al
 					// Realloc from the previous allocator.
 					if (!PreviousMalloc->GetAllocationSize(Ptr, PtrSize) || PtrSize == 0)
 					{
-						YPlatformMisc::LowLevelOutputDebugString( TEXT( "Realloc from previous malloc - we were not able to get correct allocation size, exiting...\n" ) );
-						YPlatformMisc::RequestExit( true );
+						FPlatformMisc::LowLevelOutputDebugString( TEXT( "Realloc from previous malloc - we were not able to get correct allocation size, exiting...\n" ) );
+						FPlatformMisc::RequestExit( true );
 					}
 				}
 				// There is nothing we can do about it.
 				else
 				{
-					YPlatformMisc::LowLevelOutputDebugString( TEXT( "Realloc from previous malloc - we don't know how to get allocation size, exiting...\n" ) );
-					YPlatformMisc::RequestExit( true );	
+					FPlatformMisc::LowLevelOutputDebugString( TEXT( "Realloc from previous malloc - we don't know how to get allocation size, exiting...\n" ) );
+					FPlatformMisc::RequestExit( true );	
 				}
 			}
 			else
@@ -319,11 +319,11 @@ void* FGenericPlatformMallocCrash::Realloc( void* Ptr, SIZE_T NewSize, uint32 Al
 			}
 			
 			Result = Malloc( NewSize, REQUIRED_ALIGNMENT );
-			FMemory::Memcpy( Result, Ptr, YMath::Min(NewSize,PtrSize) );
+			FMemory::Memcpy( Result, Ptr, FMath::Min(NewSize,PtrSize) );
 			
 			if( PtrSize > 32768 )
 			{
-				YPlatformMisc::LowLevelOutputDebugStringf( TEXT( "Realloc PtrSize=%u NewSize=%u PooledPtr=0x%016llx\n" ), (uint32)PtrSize, (uint32)NewSize, (uint64)Ptr );
+				FPlatformMisc::LowLevelOutputDebugStringf( TEXT( "Realloc PtrSize=%u NewSize=%u PooledPtr=0x%016llx\n" ), (uint32)PtrSize, (uint32)NewSize, (uint64)Ptr );
 			}
 
 			Free( Ptr );
@@ -355,7 +355,7 @@ void FGenericPlatformMallocCrash::Free( void* Ptr )
 			}
 			else
 			{
-				YPlatformMisc::DebugBreak();
+				FPlatformMisc::DebugBreak();
 			}
 		}
 		else if( IsPtrInLargePool(Ptr) )
@@ -372,20 +372,20 @@ void FGenericPlatformMallocCrash::Free( void* Ptr )
 void FGenericPlatformMallocCrash::PrintPoolsUsage()
 {
 #ifdef	_DEBUG
-	YPlatformMisc::LowLevelOutputDebugString( TEXT( "FPoolDesc used\n" ) );
+	FPlatformMisc::LowLevelOutputDebugString( TEXT( "FPoolDesc used\n" ) );
 	for( uint32 Index = 0; Index < FGenericPlatformMallocCrash::NUM_POOLS; ++Index )
 	{
 		const FMallocCrashPool& CrashPool = *Pools[Index];
-		YPlatformMisc::LowLevelOutputDebugStringf( TEXT( "FPoolDesc(%5u,%4u),\n" ), CrashPool.AllocationSize-FGenericPlatformMallocCrash::PER_ALLOC_OVERHEAD, CrashPool.MaxUsedIndex );
+		FPlatformMisc::LowLevelOutputDebugStringf( TEXT( "FPoolDesc(%5u,%4u),\n" ), CrashPool.AllocationSize-FGenericPlatformMallocCrash::PER_ALLOC_OVERHEAD, CrashPool.MaxUsedIndex );
 	}
 
-	YPlatformMisc::LowLevelOutputDebugString( TEXT( "FPoolDesc tweaked\n" ) );
+	FPlatformMisc::LowLevelOutputDebugString( TEXT( "FPoolDesc tweaked\n" ) );
 	for( uint32 Index = 0; Index < FGenericPlatformMallocCrash::NUM_POOLS; ++Index )
 	{
 		const FMallocCrashPool& CrashPool = *Pools[Index];
-		YPlatformMisc::LowLevelOutputDebugStringf( TEXT( "FPoolDesc(%5u,%4u),\n" ), CrashPool.AllocationSize-FGenericPlatformMallocCrash::PER_ALLOC_OVERHEAD, Align(CrashPool.MaxUsedIndex*2+16,16) );
+		FPlatformMisc::LowLevelOutputDebugStringf( TEXT( "FPoolDesc(%5u,%4u),\n" ), CrashPool.AllocationSize-FGenericPlatformMallocCrash::PER_ALLOC_OVERHEAD, Align(CrashPool.MaxUsedIndex*2+16,16) );
 	}
-	YPlatformMisc::LowLevelOutputDebugStringf( TEXT( "LargeMemoryPoolOffset=%u\n" ), LargeMemoryPoolOffset );
+	FPlatformMisc::LowLevelOutputDebugStringf( TEXT( "LargeMemoryPoolOffset=%u\n" ), LargeMemoryPoolOffset );
 #endif // _DEBUG
 }
 
@@ -532,7 +532,7 @@ void FGenericStackBasedMallocCrash::SetAsGMalloc()
 
 void* FGenericStackBasedMallocCrash::Malloc(SIZE_T Size, uint32 Alignment)
 {
-	Alignment = YMath::Max(Size >= 16 ? (uint32)16 : (uint32)8, Alignment);
+	Alignment = FMath::Max(Size >= 16 ? (uint32)16 : (uint32)8, Alignment);
 
 	SIZE_T TotalSize = Size + Alignment + sizeof(SIZE_T);
 	void* Ptr = CurrentFreeMemPtr;
@@ -559,7 +559,7 @@ void* FGenericStackBasedMallocCrash::Realloc(void* Ptr, SIZE_T NewSize, uint32 A
 			return Ptr;
 		}
 		void* Result = Malloc(NewSize, Alignment);
-		FMemory::Memcpy(Result, Ptr, YMath::Min(NewSize, PtrSize));
+		FMemory::Memcpy(Result, Ptr, FMath::Min(NewSize, PtrSize));
 		return Result;
 	}
 	else

@@ -9,7 +9,7 @@
 /**
  * Structure for arbitrarily oriented boxes (not necessarily axis-aligned).
  */
-struct YOrientedBox
+struct FOrientedBox
 {
 	/** Holds the center of the box. */
 	FVector Center;
@@ -39,7 +39,7 @@ public:
 	 *
 	 * Constructs a unit-sized, origin-centered box with axes aligned to the coordinate system.
 	 */
-	YOrientedBox()
+	FOrientedBox()
 		: Center(0.0f)
 		, AxisX(1.0f, 0.0f, 0.0f)
 		, AxisY(0.0f, 1.0f, 0.0f)
@@ -70,7 +70,7 @@ public:
 /* FOrientedBox inline functions
  *****************************************************************************/
 
-FORCEINLINE void YOrientedBox::CalcVertices( FVector* Verts ) const
+FORCEINLINE void FOrientedBox::CalcVertices( FVector* Verts ) const
 {
 	static const float Signs[] = { -1.0f, 1.0f };
 
@@ -87,7 +87,7 @@ FORCEINLINE void YOrientedBox::CalcVertices( FVector* Verts ) const
 }
 
 
-FORCEINLINE FFloatInterval YOrientedBox::Project( const FVector& Axis ) const
+FORCEINLINE FFloatInterval FOrientedBox::Project( const FVector& Axis ) const
 {
 	static const float Signs[] = {-1.0f, 1.0f};
 
@@ -117,4 +117,4 @@ FORCEINLINE FFloatInterval YOrientedBox::Project( const FVector& Axis ) const
 	return ProjectionInterval;
 }
 
-template <> struct TIsPODType<YOrientedBox> { enum { Value = true }; };
+template <> struct TIsPODType<FOrientedBox> { enum { Value = true }; };

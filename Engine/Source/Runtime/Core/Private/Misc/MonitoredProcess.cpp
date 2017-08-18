@@ -43,7 +43,7 @@ FMonitoredProcess::~FMonitoredProcess()
 /* FMonitoredProcess interface
  *****************************************************************************/
 
-YTimespan FMonitoredProcess::GetDuration() const
+FTimespan FMonitoredProcess::GetDuration() const
 {
 	if (IsRunning())
 	{

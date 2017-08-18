@@ -6,7 +6,7 @@
 #include "Math/Plane.h"
 #include "Math/Matrix.h"
 
-class YOrthoMatrix
+class FOrthoMatrix
 	: public FMatrix
 {
 public:
@@ -19,7 +19,7 @@ public:
 	 * @param ZScale scale in the Z axis
 	 * @param ZOffset offset in the Z axis
 	 */
-	YOrthoMatrix(float Width,float Height,float ZScale,float ZOffset);
+	FOrthoMatrix(float Width,float Height,float ZScale,float ZOffset);
 };
 
 
@@ -30,7 +30,7 @@ public:
 };
 
 
-FORCEINLINE YOrthoMatrix::YOrthoMatrix(float Width,float Height,float ZScale,float ZOffset)
+FORCEINLINE FOrthoMatrix::FOrthoMatrix(float Width,float Height,float ZScale,float ZOffset)
 	: FMatrix(
 		FPlane((Width)? (1.0f / Width) : 1.0f,	0.0f,								0.0f,				0.0f),
 		FPlane(0.0f,							(Height)? (1.0f / Height) : 1.f,	0.0f,				0.0f),

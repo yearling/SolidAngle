@@ -59,12 +59,12 @@ void FWindowsWindow::Initialize( FWindowsApplication* const Application, const T
 	const float WidthInitial = Definition->WidthDesiredOnScreen;
 	const float HeightInitial = Definition->HeightDesiredOnScreen;
 
-	DPIScaleFactor = YPlatformMisc::GetDPIScaleFactorAtPoint(XInitialRect, YInitialRect);
+	DPIScaleFactor = FPlatformMisc::GetDPIScaleFactorAtPoint(XInitialRect, YInitialRect);
 
-	int32 ClientX = YMath::TruncToInt( XInitialRect );
-	int32 ClientY = YMath::TruncToInt( YInitialRect );
-	int32 ClientWidth = YMath::TruncToInt( WidthInitial );
-	int32 ClientHeight = YMath::TruncToInt( HeightInitial );
+	int32 ClientX = FMath::TruncToInt( XInitialRect );
+	int32 ClientY = FMath::TruncToInt( YInitialRect );
+	int32 ClientWidth = FMath::TruncToInt( WidthInitial );
+	int32 ClientHeight = FMath::TruncToInt( HeightInitial );
 	int32 WindowX = ClientX;
 	int32 WindowY = ClientY;
 	int32 WindowWidth = ClientWidth;
@@ -431,8 +431,8 @@ void FWindowsWindow::ReshapeWindow( int32 NewX, int32 NewY, int32 NewWidth, int3
 		const int32 MinRetainedWidth = Definition->ExpectedMaxWidth != INDEX_NONE ? Definition->ExpectedMaxWidth : OldWidth;
 		const int32 MinRetainedHeight = Definition->ExpectedMaxHeight != INDEX_NONE ? Definition->ExpectedMaxHeight : OldHeight;
 
-		NewWidth = YMath::Max( NewWidth, YMath::Min( OldWidth, MinRetainedWidth ) );
-		NewHeight = YMath::Max( NewHeight, YMath::Min( OldHeight, MinRetainedHeight ) );
+		NewWidth = FMath::Max( NewWidth, FMath::Min( OldWidth, MinRetainedWidth ) );
+		NewHeight = FMath::Max( NewHeight, FMath::Min( OldHeight, MinRetainedHeight ) );
 	}
 
 	if (IsMaximized())
@@ -677,12 +677,12 @@ void FWindowsWindow::SetWindowMode( EWindowMode::Type NewWindowMode )
 			// Else, use the monitor's res for windowed fullscreen.
 			LONG MonitorWidth  = MonitorInfo.rcMonitor.right - MonitorInfo.rcMonitor.left;
 			LONG TargetClientWidth = bTrueFullscreen ?
-				YMath::Min(MonitorWidth, ClientRect.right - ClientRect.left) :
+				FMath::Min(MonitorWidth, ClientRect.right - ClientRect.left) :
 				MonitorWidth;
 
 			LONG MonitorHeight = MonitorInfo.rcMonitor.bottom - MonitorInfo.rcMonitor.top;
 			LONG TargetClientHeight = bTrueFullscreen ?
-				YMath::Min(MonitorHeight, ClientRect.bottom - ClientRect.top) :
+				FMath::Min(MonitorHeight, ClientRect.bottom - ClientRect.top) :
 				MonitorHeight;
 
 
@@ -753,11 +753,11 @@ bool FWindowsWindow::GetRestoredDimensions(int32& X, int32& Y, int32& Width, int
 }
 
 
-void FWindowsWindow::AdjustCachedSize( YVector2D& Size ) const
+void FWindowsWindow::AdjustCachedSize( FVector2D& Size ) const
 {
 	if( Definition.IsValid() && Definition->SizeWillChangeOften )
 	{
-		Size = YVector2D( VirtualWidth, VirtualHeight );
+		Size = FVector2D( VirtualWidth, VirtualHeight );
 	}
 	else if(HWnd)
 	{
@@ -798,7 +798,7 @@ void FWindowsWindow::SetWindowFocus()
  */
 void FWindowsWindow::SetOpacity( const float InOpacity )
 {
-	SetLayeredWindowAttributes( HWnd, 0, YMath::TruncToInt( InOpacity * 255.0f ), LWA_ALPHA );
+	SetLayeredWindowAttributes( HWnd, 0, FMath::TruncToInt( InOpacity * 255.0f ), LWA_ALPHA );
 }
 
 /**

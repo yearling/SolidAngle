@@ -241,7 +241,7 @@ int32 ReportCrashUsingCrashReportClient(FWindowsPlatformCrashContext& InContext,
 			FText MessageTitle(FText::Format(
 				NSLOCTEXT("MessageDialog", "AppHasCrashed", "The {0} {1} has crashed and will close"),
 				FText::FromString(AppName),
-				FText::FromString(YPlatformMisc::GetEngineMode())
+				FText::FromString(FPlatformMisc::GetEngineMode())
 				));
 			FMessageDialog::Open(EAppMsgType::Ok, FText::FromString(GErrorHist), &MessageTitle);
 		}
@@ -304,7 +304,7 @@ void NewReportEnsure( const TCHAR* ErrorMessage )
 	__try
 #endif
 	{
-		YPlatformMisc::RaiseException( 1 );
+		FPlatformMisc::RaiseException( 1 );
 	}
 #if !PLATFORM_SEH_EXCEPTIONS_DISABLED
 	__except(ReportEnsureUsingCrashReportClient(GetExceptionInformation(), ErrorMessage, IsInteractiveEnsureMode() ? EErrorReportUI::ShowDialog : EErrorReportUI::ReportInUnattendedMode))

@@ -150,14 +150,14 @@ FBox FBox::Overlap( const FBox& Other ) const
 	// so find overlapping box
 	FVector MinVector, MaxVector;
 
-	MinVector.X = YMath::Max(Min.X, Other.Min.X);
-	MaxVector.X = YMath::Min(Max.X, Other.Max.X);
+	MinVector.X = FMath::Max(Min.X, Other.Min.X);
+	MaxVector.X = FMath::Min(Max.X, Other.Max.X);
 
-	MinVector.Y = YMath::Max(Min.Y, Other.Min.Y);
-	MaxVector.Y = YMath::Min(Max.Y, Other.Max.Y);
+	MinVector.Y = FMath::Max(Min.Y, Other.Min.Y);
+	MaxVector.Y = FMath::Min(Max.Y, Other.Max.Y);
 
-	MinVector.Z = YMath::Max(Min.Z, Other.Min.Z);
-	MaxVector.Z = YMath::Min(Max.Z, Other.Max.Z);
+	MinVector.Z = FMath::Max(Min.Z, Other.Min.Z);
+	MaxVector.Z = FMath::Min(Max.Z, Other.Max.Z);
 
 	return FBox(MinVector, MaxVector);
 }

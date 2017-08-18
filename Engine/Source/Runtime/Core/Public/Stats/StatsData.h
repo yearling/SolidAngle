@@ -757,12 +757,12 @@ struct CORE_API FStatsUtils
 		if (DestNameAndInfo.GetFlag(EStatMetaFlags::IsPackedCCAndDuration))
 		{
 			Dest = ToPackedCallCountDuration(
-				YMath::Max<uint32>(FromPackedCallCountDuration_CallCount(Dest), FromPackedCallCountDuration_CallCount(Other)),
-				YMath::Max<uint32>(FromPackedCallCountDuration_Duration(Dest), FromPackedCallCountDuration_Duration(Other)));
+				FMath::Max<uint32>(FromPackedCallCountDuration_CallCount(Dest), FromPackedCallCountDuration_CallCount(Other)),
+				FMath::Max<uint32>(FromPackedCallCountDuration_Duration(Dest), FromPackedCallCountDuration_Duration(Other)));
 		}
 		else
 		{
-			Dest = YMath::Max<int64>(Dest,Other);
+			Dest = FMath::Max<int64>(Dest,Other);
 		}
 	}
 

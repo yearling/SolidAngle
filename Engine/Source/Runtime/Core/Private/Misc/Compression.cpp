@@ -202,11 +202,11 @@ bool appUncompressMemoryZLIB( void* UncompressedBuffer, int32 UncompressedSize, 
 }
 
 /** Time spent compressing data in seconds. */
-double YCompression::CompressorTime		= 0;
+double FCompression::CompressorTime		= 0;
 /** Number of bytes before compression.		*/
-uint64 YCompression::CompressorSrcBytes	= 0;
+uint64 FCompression::CompressorSrcBytes	= 0;
 /** Nubmer of bytes after compression.		*/
-uint64 YCompression::CompressorDstBytes	= 0;
+uint64 FCompression::CompressorDstBytes	= 0;
 
 static ECompressionFlags CheckGlobalCompressionFlags(ECompressionFlags Flags)
 {
@@ -242,7 +242,7 @@ static ECompressionFlags CheckGlobalCompressionFlags(ECompressionFlags Flags)
 * @param	BitWindow					Bit window to use in compression
 * @return The maximum possible bytes needed for compression of data buffer of size UncompressedSize
 */
-int32 YCompression::CompressMemoryBound( ECompressionFlags Flags, int32 UncompressedSize, int32 BitWindow ) 
+int32 FCompression::CompressMemoryBound( ECompressionFlags Flags, int32 UncompressedSize, int32 BitWindow ) 
 {
 	int32 CompressionBound = UncompressedSize;
 	//!FIXME by zyx 先不引进第三方库
@@ -272,7 +272,7 @@ int32 YCompression::CompressMemoryBound( ECompressionFlags Flags, int32 Uncompre
 
 #if !WITH_EDITOR
 	// check platform specific bounds, if available
-	IPlatformCompression* PlatformCompression = YPlatformMisc::GetPlatformCompression();
+	IPlatformCompression* PlatformCompression = FPlatformMisc::GetPlatformCompression();
 	if (PlatformCompression != nullptr)
 	{
 		int32 PlatformSpecificCompressionBound = PlatformCompression->CompressMemoryBound(Flags, UncompressedSize, BitWindow);
@@ -302,7 +302,7 @@ int32 YCompression::CompressMemoryBound( ECompressionFlags Flags, int32 Uncompre
  * @param	BitWindow					Bit window to use in compression
  * @return true if compression succeeds, false if it fails because CompressedBuffer was too small or other reasons
  */
-bool YCompression::CompressMemory( ECompressionFlags Flags, void* CompressedBuffer, int32& CompressedSize, const void* UncompressedBuffer, int32 UncompressedSize, int32 BitWindow )
+bool FCompression::CompressMemory( ECompressionFlags Flags, void* CompressedBuffer, int32& CompressedSize, const void* UncompressedBuffer, int32 UncompressedSize, int32 BitWindow )
 {
 	double CompressorStartTime = FPlatformTime::Seconds();
 
@@ -314,7 +314,7 @@ bool YCompression::CompressMemory( ECompressionFlags Flags, void* CompressedBuff
 	Flags = CheckGlobalCompressionFlags(Flags);
 
 #if !WITH_EDITOR
-	IPlatformCompression* PlatformCompression = YPlatformMisc::GetPlatformCompression();
+	IPlatformCompression* PlatformCompression = FPlatformMisc::GetPlatformCompression();
 	if (PlatformCompression != nullptr)
 	{
 		bCompressSucceeded = PlatformCompression->CompressMemory(Flags, CompressedBuffer, CompressedSize, UncompressedBuffer, UncompressedSize, BitWindow);
@@ -371,7 +371,7 @@ bool YCompression::CompressMemory( ECompressionFlags Flags, void* CompressedBuff
  */
 DECLARE_FLOAT_ACCUMULATOR_STAT(TEXT("Uncompressor total time"),STAT_UncompressorTime,STATGROUP_Compression);
 
-bool YCompression::UncompressMemory( ECompressionFlags Flags, void* UncompressedBuffer, int32 UncompressedSize, const void* CompressedBuffer, int32 CompressedSize, bool bIsSourcePadded /*= false*/, int32 BitWindow /*= DEFAULT_ZLIB_BIT_WINDOW*/ )
+bool FCompression::UncompressMemory( ECompressionFlags Flags, void* UncompressedBuffer, int32 UncompressedSize, const void* CompressedBuffer, int32 CompressedSize, bool bIsSourcePadded /*= false*/, int32 BitWindow /*= DEFAULT_ZLIB_BIT_WINDOW*/ )
 {
 	// Keep track of time spent uncompressing memory.
 	STAT(double UncompressorStartTime = FPlatformTime::Seconds();)
@@ -382,7 +382,7 @@ bool YCompression::UncompressMemory( ECompressionFlags Flags, void* Uncompressed
 	bool bUncompressSucceeded = false;
 
 	// try to use a platform specific decompression routine if available
-	IPlatformCompression* PlatformCompression = YPlatformMisc::GetPlatformCompression();
+	IPlatformCompression* PlatformCompression = FPlatformMisc::GetPlatformCompression();
 	if (PlatformCompression != nullptr)
 	{
 		bUncompressSucceeded = PlatformCompression->UncompressMemory(Flags, UncompressedBuffer, UncompressedSize, CompressedBuffer, CompressedSize, bIsSourcePadded, BitWindow);
@@ -421,11 +421,11 @@ bool YCompression::UncompressMemory( ECompressionFlags Flags, void* Uncompressed
 					bUncompressSucceeded = true;
 				}
 				// Always log an error
-				UE_LOG(LogCompression, Error, TEXT("YCompression::UncompressMemory - Failed to uncompress memory (%d/%d), this may indicate the asset is corrupt!"), CompressedSize, UncompressedSize);
+				UE_LOG(LogCompression, Error, TEXT("FCompression::UncompressMemory - Failed to uncompress memory (%d/%d), this may indicate the asset is corrupt!"), CompressedSize, UncompressedSize);
 			}
 			break;
 		default:
-			UE_LOG(LogCompression, Warning, TEXT("YCompression::UncompressMemory - This compression type not supported"));
+			UE_LOG(LogCompression, Warning, TEXT("FCompression::UncompressMemory - This compression type not supported"));
 			bUncompressSucceeded = false;
 	}
 
@@ -503,7 +503,7 @@ int32 FCompressedGrowableBuffer::Append( void* Data, int32 Size )
 		void* TempBuffer = FMemory::Malloc( CompressedSize );
 
 		// Compress the memory. CompressedSize is [in/out]
-		verify( YCompression::CompressMemory( CompressionFlags, TempBuffer, CompressedSize, PendingCompressionBuffer.GetData(), PendingCompressionBuffer.Num() ) );
+		verify( FCompression::CompressMemory( CompressionFlags, TempBuffer, CompressedSize, PendingCompressionBuffer.GetData(), PendingCompressionBuffer.Num() ) );
 
 		// Append the compressed data to the compressed buffer and delete temporary data.
 		int32 StartIndex = CompressedBuffer.AddUninitialized( CompressedSize );
@@ -574,7 +574,7 @@ void* FCompressedGrowableBuffer::Access( int32 Offset )
 				// Found the right buffer, now decompress it.
 				DecompressedBuffer.Empty( Info.UncompressedSize );
 				DecompressedBuffer.AddUninitialized( Info.UncompressedSize );
-				verify( YCompression::UncompressMemory( CompressionFlags, DecompressedBuffer.GetData(), Info.UncompressedSize, &CompressedBuffer[Info.CompressedOffset], Info.CompressedSize ) );
+				verify( FCompression::UncompressMemory( CompressionFlags, DecompressedBuffer.GetData(), Info.UncompressedSize, &CompressedBuffer[Info.CompressedOffset], Info.CompressedSize ) );
 
 				// Figure out index into uncompressed data and set it. DecompressionBuffer (return value) is going 
 				// to be valid till the next call to Access or Unlock.

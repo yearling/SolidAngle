@@ -13,7 +13,7 @@
 /**
  * Structure for a combined axis aligned bounding box and bounding sphere with the same origin. (28 bytes).
  */
-struct YBoxSphereBounds
+struct FBoxSphereBounds
 {
 	/** Holds the origin of the bounding box and sphere. */
 	FVector	Origin;
@@ -27,14 +27,14 @@ struct YBoxSphereBounds
 public:
 
 	/** Default constructor. */
-	YBoxSphereBounds() { }
+	FBoxSphereBounds() { }
 
 	/**
 	 * Creates and initializes a new instance.
 	 *
 	 * @param EForceInit Force Init Enum.
 	 */
-	explicit FORCEINLINE YBoxSphereBounds( EForceInit ) 
+	explicit FORCEINLINE FBoxSphereBounds( EForceInit ) 
 		: Origin(ForceInit)
 		, BoxExtent(ForceInit)
 		, SphereRadius(0.f)
@@ -49,7 +49,7 @@ public:
 	 * @param InBoxExtent half size of box.
 	 * @param InSphereRadius radius of the sphere.
 	 */
-	YBoxSphereBounds( const FVector& InOrigin, const FVector& InBoxExtent, float InSphereRadius )
+	FBoxSphereBounds( const FVector& InOrigin, const FVector& InBoxExtent, float InSphereRadius )
 		: Origin(InOrigin)
 		, BoxExtent(InBoxExtent)
 		, SphereRadius(InSphereRadius)
@@ -63,10 +63,10 @@ public:
 	 * @param Box The bounding box.
 	 * @param Sphere The bounding sphere.
 	 */
-	YBoxSphereBounds( const FBox& Box, const FSphere& Sphere )
+	FBoxSphereBounds( const FBox& Box, const FSphere& Sphere )
 	{
 		Box.GetCenterAndExtents(Origin,BoxExtent);
-		SphereRadius = YMath::Min(BoxExtent.Size(), (Sphere.Center - Origin).Size() + Sphere.W);
+		SphereRadius = FMath::Min(BoxExtent.Size(), (Sphere.Center - Origin).Size() + Sphere.W);
 
 		DiagnosticCheckNaN();
 	}
@@ -78,7 +78,7 @@ public:
 	 *
 	 * @param Box The bounding box.
 	 */
-	YBoxSphereBounds( const FBox& Box )
+	FBoxSphereBounds( const FBox& Box )
 	{
 		Box.GetCenterAndExtents(Origin,BoxExtent);
 		SphereRadius = BoxExtent.Size();
@@ -89,7 +89,7 @@ public:
 	/**
 	 * Creates and initializes a new instance for the given sphere.
 	 */
-	YBoxSphereBounds( const FSphere& Sphere )
+	FBoxSphereBounds( const FSphere& Sphere )
 	{
 		Origin = Sphere.Center;
 		BoxExtent = FVector(Sphere.W);
@@ -106,7 +106,7 @@ public:
 	 * @param Points The points to be considered for the bounding box.
 	 * @param NumPoints Number of points in the Points array.
 	 */
-	YBoxSphereBounds( const FVector* Points, uint32 NumPoints );
+	FBoxSphereBounds( const FVector* Points, uint32 NumPoints );
 
 
 public:
@@ -117,7 +117,7 @@ public:
 	 * @param Other The other bounding volume.
 	 * @return The combined bounding volume.
 	 */
-	FORCEINLINE YBoxSphereBounds operator+( const YBoxSphereBounds& Other ) const;
+	FORCEINLINE FBoxSphereBounds operator+( const FBoxSphereBounds& Other ) const;
 
 
 public:
@@ -144,9 +144,9 @@ public:
 	 * @param  Tolerance Error tolerance added to test distance.
 	 * @return true if spheres intersect, false otherwise.
 	 */
-	FORCEINLINE static bool SpheresIntersect(const YBoxSphereBounds& A, const YBoxSphereBounds& B, float Tolerance = KINDA_SMALL_NUMBER)
+	FORCEINLINE static bool SpheresIntersect(const FBoxSphereBounds& A, const FBoxSphereBounds& B, float Tolerance = KINDA_SMALL_NUMBER)
 	{
-		return (A.Origin - B.Origin).SizeSquared() <= YMath::Square(YMath::Max(0.f, A.SphereRadius + B.SphereRadius + Tolerance));
+		return (A.Origin - B.Origin).SizeSquared() <= FMath::Square(FMath::Max(0.f, A.SphereRadius + B.SphereRadius + Tolerance));
 	}
 
 	/**
@@ -156,7 +156,7 @@ public:
 	 * @param  B Second BoxSphereBounds to test.
 	 * @return true if boxes intersect, false otherwise.
 	 */
-	FORCEINLINE static bool BoxesIntersect(const YBoxSphereBounds& A, const YBoxSphereBounds& B)
+	FORCEINLINE static bool BoxesIntersect(const FBoxSphereBounds& A, const FBoxSphereBounds& B)
 	{
 		return A.GetBox().Intersect(B.GetBox());
 	}
@@ -203,9 +203,9 @@ public:
 	 * @param ExpandAmount The size to increase by.
 	 * @return A new box with the expanded size.
 	 */
-	FORCEINLINE YBoxSphereBounds ExpandBy( float ExpandAmount ) const
+	FORCEINLINE FBoxSphereBounds ExpandBy( float ExpandAmount ) const
 	{
-		return YBoxSphereBounds(Origin, BoxExtent + ExpandAmount, SphereRadius + ExpandAmount);
+		return FBoxSphereBounds(Origin, BoxExtent + ExpandAmount, SphereRadius + ExpandAmount);
 	}
 
 	/**
@@ -214,7 +214,7 @@ public:
 	 * @param M The matrix.
 	 * @return The transformed volume.
 	 */
-	CORE_API YBoxSphereBounds TransformBy( const FMatrix& M ) const;
+	CORE_API FBoxSphereBounds TransformBy( const FMatrix& M ) const;
 
 	/**
 	 * Gets a bounding volume transformed by a FTransform object.
@@ -222,7 +222,7 @@ public:
 	 * @param M The FTransform object.
 	 * @return The transformed volume.
 	 */
-	CORE_API YBoxSphereBounds TransformBy( const FTransform& M ) const;
+	CORE_API FBoxSphereBounds TransformBy( const FTransform& M ) const;
 
 	/**
 	 * Get a textual representation of this bounding box.
@@ -236,7 +236,7 @@ public:
 	 *
 	 * This is a legacy version of the function used to compute primitive bounds, to avoid the need to rebuild lighting after the change.
 	 */
-	friend YBoxSphereBounds Union( const YBoxSphereBounds& A,const YBoxSphereBounds& B )
+	friend FBoxSphereBounds Union( const FBoxSphereBounds& A,const FBoxSphereBounds& B )
 	{
 		FBox BoundingBox(0);
 
@@ -246,9 +246,9 @@ public:
 		BoundingBox += (B.Origin + B.BoxExtent);
 
 		// Build a bounding sphere from the bounding box's origin and the radii of A and B.
-		YBoxSphereBounds Result(BoundingBox);
+		FBoxSphereBounds Result(BoundingBox);
 
-		Result.SphereRadius = YMath::Min(Result.SphereRadius,YMath::Max((A.Origin - Result.Origin).Size() + A.SphereRadius,(B.Origin - Result.Origin).Size() + B.SphereRadius));
+		Result.SphereRadius = FMath::Min(Result.SphereRadius,FMath::Max((A.Origin - Result.Origin).Size() + A.SphereRadius,(B.Origin - Result.Origin).Size() + B.SphereRadius));
 		Result.DiagnosticCheckNaN();
 
 		return Result;
@@ -260,17 +260,17 @@ public:
 		if (Origin.ContainsNaN())
 		{
 			logOrEnsureNanError(TEXT("Origin contains NaN: %s"), *Origin.ToString());
-			const_cast<YBoxSphereBounds*>(this)->Origin = FVector::ZeroVector;
+			const_cast<FBoxSphereBounds*>(this)->Origin = FVector::ZeroVector;
 		}
 		if (BoxExtent.ContainsNaN())
 		{
 			logOrEnsureNanError(TEXT("BoxExtent contains NaN: %s"), *BoxExtent.ToString());
-			const_cast<YBoxSphereBounds*>(this)->BoxExtent = FVector::ZeroVector;
+			const_cast<FBoxSphereBounds*>(this)->BoxExtent = FVector::ZeroVector;
 		}
-		if (YMath::IsNaN(SphereRadius) || !YMath::IsFinite(SphereRadius))
+		if (FMath::IsNaN(SphereRadius) || !FMath::IsFinite(SphereRadius))
 		{
 			logOrEnsureNanError(TEXT("SphereRadius contains NaN: %f"), SphereRadius);
-			const_cast<YBoxSphereBounds*>(this)->SphereRadius = 0.f;
+			const_cast<FBoxSphereBounds*>(this)->SphereRadius = 0.f;
 		}
 	}
 #else
@@ -279,7 +279,7 @@ public:
 
 	inline bool ContainsNaN() const
 	{
-		return Origin.ContainsNaN() || BoxExtent.ContainsNaN() || !YMath::IsFinite(SphereRadius);
+		return Origin.ContainsNaN() || BoxExtent.ContainsNaN() || !FMath::IsFinite(SphereRadius);
 	}
 
 public:
@@ -291,7 +291,7 @@ public:
 	 * @param Bounds The bounding volume to serialize.
 	 * @return The archive..
 	 */
-	friend FArchive& operator<<( FArchive& Ar, YBoxSphereBounds& Bounds )
+	friend FArchive& operator<<( FArchive& Ar, FBoxSphereBounds& Bounds )
 	{
 		return Ar << Bounds.Origin << Bounds.BoxExtent << Bounds.SphereRadius;
 	}
@@ -301,7 +301,7 @@ public:
 /* FBoxSphereBounds inline functions
  *****************************************************************************/
 
-FORCEINLINE YBoxSphereBounds::YBoxSphereBounds( const FVector* Points, uint32 NumPoints )
+FORCEINLINE FBoxSphereBounds::FBoxSphereBounds( const FVector* Points, uint32 NumPoints )
 {
 	FBox BoundingBox(0);
 
@@ -318,14 +318,14 @@ FORCEINLINE YBoxSphereBounds::YBoxSphereBounds( const FVector* Points, uint32 Nu
 
 	for (uint32 PointIndex = 0; PointIndex < NumPoints; PointIndex++)
 	{
-		SphereRadius = YMath::Max(SphereRadius,(Points[PointIndex] - Origin).Size());
+		SphereRadius = FMath::Max(SphereRadius,(Points[PointIndex] - Origin).Size());
 	}
 
 	DiagnosticCheckNaN();
 }
 
 
-FORCEINLINE YBoxSphereBounds YBoxSphereBounds::operator+( const YBoxSphereBounds& Other ) const
+FORCEINLINE FBoxSphereBounds FBoxSphereBounds::operator+( const FBoxSphereBounds& Other ) const
 {
 	FBox BoundingBox(0);
 
@@ -335,18 +335,18 @@ FORCEINLINE YBoxSphereBounds YBoxSphereBounds::operator+( const YBoxSphereBounds
 	BoundingBox += (Other.Origin + Other.BoxExtent);
 
 	// build a bounding sphere from the bounding box's origin and the radii of A and B.
-	YBoxSphereBounds Result(BoundingBox);
+	FBoxSphereBounds Result(BoundingBox);
 
-	Result.SphereRadius = YMath::Min(Result.SphereRadius, YMath::Max((Origin - Result.Origin).Size() + SphereRadius, (Other.Origin - Result.Origin).Size() + Other.SphereRadius));
+	Result.SphereRadius = FMath::Min(Result.SphereRadius, FMath::Max((Origin - Result.Origin).Size() + SphereRadius, (Other.Origin - Result.Origin).Size() + Other.SphereRadius));
 	Result.DiagnosticCheckNaN();
 
 	return Result;
 }
 
 
-FORCEINLINE FString YBoxSphereBounds::ToString() const
+FORCEINLINE FString FBoxSphereBounds::ToString() const
 {
 	return FString::Printf(TEXT("Origin=%s, BoxExtent=(%s), SphereRadius=(%f)"), *Origin.ToString(), *BoxExtent.ToString(), SphereRadius);
 }
 
-template <> struct TIsPODType<YBoxSphereBounds> { enum { Value = true }; };
+template <> struct TIsPODType<FBoxSphereBounds> { enum { Value = true }; };

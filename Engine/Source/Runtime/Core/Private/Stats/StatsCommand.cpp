@@ -625,7 +625,7 @@ static void DumpHitch(int64 Frame)
 	if ((GameThreadTime > HitchThresholdSecs) || (RenderThreadTime > HitchThresholdSecs))
 	{
 		HitchIndex++;
-		float ThisHitch = YMath::Max<float>(GameThreadTime, RenderThreadTime) * 1000.0f;
+		float ThisHitch = FMath::Max<float>(GameThreadTime, RenderThreadTime) * 1000.0f;
 		TotalHitchTime += ThisHitch;
 		UE_LOG(LogStats, Log, TEXT("------------------Thread Hitch %d, Frame %lld  %6.1fms ---------------"), HitchIndex, Frame, ThisHitch);
 		FRawStatStackNode Stack;

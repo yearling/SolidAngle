@@ -7,23 +7,23 @@
 #include "Math/Plane.h"
 #include "Math/Matrix.h"
 
-class YTranslationMatrix
+class FTranslationMatrix
 	: public FMatrix
 {
 public:
 
 	/** Constructor translation matrix based on given vector */
-	YTranslationMatrix(const FVector& Delta);
+	FTranslationMatrix(const FVector& Delta);
 
 	/** Matrix factory. Return an FMatrix so we don't have type conversion issues in expressions. */
 	static FMatrix Make(FVector const& Delta)
 	{
-		return YTranslationMatrix(Delta);
+		return FTranslationMatrix(Delta);
 	}
 };
 
 
-FORCEINLINE YTranslationMatrix::YTranslationMatrix(const FVector& Delta)
+FORCEINLINE FTranslationMatrix::FTranslationMatrix(const FVector& Delta)
 	: FMatrix(
 		FPlane(1.0f,	0.0f,	0.0f,	0.0f),
 		FPlane(0.0f,	1.0f,	0.0f,	0.0f),

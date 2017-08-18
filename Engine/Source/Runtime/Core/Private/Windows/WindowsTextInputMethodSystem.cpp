@@ -268,8 +268,8 @@ void FWindowsTextInputMethodSystem::UpdateIMMWindowPositions(HIMC IMMContext)
 		// Get start of composition area.
 		const uint32 BeginIndex = InternalContext.IMMContext.CompositionBeginIndex;
 		const uint32 Length = InternalContext.IMMContext.CompositionLength;
-		YVector2D Position;
-		YVector2D Size;
+		FVector2D Position;
+		FVector2D Size;
 		ActiveContext->GetTextBounds(BeginIndex, Length, Position, Size);
 
 		// Positions provided to IMM are relative to the window, but we retrieved screen-space coordinates.
@@ -368,7 +368,7 @@ bool FWindowsTextInputMethodSystem::InitializeTSF()
 		if(FAILED(Result))
 		{
 			TCHAR ErrorMsg[1024];
-			YPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
+			FPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
 			UE_LOG(LogWindowsTextInputMethodSystem, Error, TEXT("Initialization failed while creating the TSF input processor profiles. %s (0x%08x)"), ErrorMsg, Result);
 			return false;
 		}
@@ -379,7 +379,7 @@ bool FWindowsTextInputMethodSystem::InitializeTSF()
 		if(FAILED(Result))
 		{
 			TCHAR ErrorMsg[1024];
-			YPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
+			FPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
 			UE_LOG(LogWindowsTextInputMethodSystem, Error, TEXT("Initialization failed while acquiring the TSF input processor profile manager. %s (0x%08x)"), ErrorMsg, Result);
 			TSFInputProcessorProfiles.Reset();
 			return false;
@@ -394,7 +394,7 @@ bool FWindowsTextInputMethodSystem::InitializeTSF()
 		if(FAILED(Result))
 		{
 			TCHAR ErrorMsg[1024];
-			YPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
+			FPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
 			if (!GIsBuildMachine)
 			{
 				UE_LOG(LogWindowsTextInputMethodSystem, Warning, TEXT("Initialization failed while creating the TSF thread manager. %s (0x%08x)"), ErrorMsg, Result);
@@ -410,7 +410,7 @@ bool FWindowsTextInputMethodSystem::InitializeTSF()
 		if(FAILED(Result))
 		{
 			TCHAR ErrorMsg[1024];
-			YPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
+			FPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
 			UE_LOG(LogWindowsTextInputMethodSystem, Error, TEXT("Initialization failed while activating the TSF thread manager. %s (0x%08x)"), ErrorMsg, Result);
 			TSFInputProcessorProfiles.Reset();
 			TSFInputProcessorProfileManager.Reset();
@@ -424,7 +424,7 @@ bool FWindowsTextInputMethodSystem::InitializeTSF()
 		if(FAILED(Result))
 		{
 			TCHAR ErrorMsg[1024];
-			YPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
+			FPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
 			UE_LOG(LogWindowsTextInputMethodSystem, Error, TEXT("Initialization failed while acquiring the TSF source from TSF thread manager. %s (0x%08x)"), ErrorMsg, Result);
 			TSFInputProcessorProfiles.Reset();
 			TSFInputProcessorProfileManager.Reset();
@@ -453,7 +453,7 @@ bool FWindowsTextInputMethodSystem::InitializeTSF()
 			if(FAILED(Result))
 			{
 				TCHAR ErrorMsg[1024];
-				YPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
+				FPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
 				UE_LOG(LogWindowsTextInputMethodSystem, Error, TEXT("Initialization failed while advising the profile notification sink to the TSF source. %s (0x%08x)"), ErrorMsg, Result);
 				TSFInputProcessorProfiles.Reset();
 				TSFInputProcessorProfileManager.Reset();
@@ -469,7 +469,7 @@ bool FWindowsTextInputMethodSystem::InitializeTSF()
 			if(FAILED(Result))
 			{
 				TCHAR ErrorMsg[1024];
-				YPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
+				FPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
 				UE_LOG(LogWindowsTextInputMethodSystem, Error, TEXT("Initialization failed while advising the language notification sink to the TSF source. %s (0x%08x)"), ErrorMsg, Result);
 				TSFInputProcessorProfiles.Reset();
 				TSFInputProcessorProfileManager.Reset();
@@ -485,7 +485,7 @@ bool FWindowsTextInputMethodSystem::InitializeTSF()
 	if(FAILED(Result))
 	{
 		TCHAR ErrorMsg[1024];
-		YPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
+		FPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
 		if (!GIsBuildMachine)
 		{
 			UE_LOG(LogWindowsTextInputMethodSystem, Warning, TEXT("Initialization failed while creating the TSF thread manager. %s (0x%08x)"), ErrorMsg, Result);
@@ -502,7 +502,7 @@ bool FWindowsTextInputMethodSystem::InitializeTSF()
 	if(FAILED(Result))
 	{
 		TCHAR ErrorMsg[1024];
-		YPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
+		FPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
 		UE_LOG(LogWindowsTextInputMethodSystem, Error, TEXT("Initialization failed while activating the TSF thread manager. %s (0x%08x)"), ErrorMsg, Result);
 		TSFInputProcessorProfiles.Reset();
 		TSFInputProcessorProfileManager.Reset();
@@ -527,7 +527,7 @@ void FWindowsTextInputMethodSystem::Terminate()
 	if(FAILED(Result) || !TSFSource)
 	{
 		TCHAR ErrorMsg[1024];
-		YPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
+		FPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
 		UE_LOG(LogWindowsTextInputMethodSystem, Error, TEXT("Terminating failed while acquiring the TSF source from the TSF thread manager. %s (0x%08x)"), ErrorMsg, Result);
 	}
 
@@ -540,7 +540,7 @@ void FWindowsTextInputMethodSystem::Terminate()
 			if(FAILED(Result))
 			{
 				TCHAR ErrorMsg[1024];
-				YPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
+				FPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
 				UE_LOG(LogWindowsTextInputMethodSystem, Error, TEXT("Terminating failed while unadvising the language notification sink from the TSF source. %s (0x%08x)"), ErrorMsg, Result);
 			}
 		}
@@ -552,7 +552,7 @@ void FWindowsTextInputMethodSystem::Terminate()
 			if(FAILED(Result))
 			{
 				TCHAR ErrorMsg[1024];
-				YPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
+				FPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
 				UE_LOG(LogWindowsTextInputMethodSystem, Error, TEXT("Terminating failed while unadvising the profile notification sink from the TSF source. %s (0x%08x)"), ErrorMsg, Result);
 			}
 		}
@@ -563,7 +563,7 @@ void FWindowsTextInputMethodSystem::Terminate()
 	if(FAILED(Result))
 	{
 		TCHAR ErrorMsg[1024];
-		YPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
+		FPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
 		UE_LOG(LogWindowsTextInputMethodSystem, Error, TEXT("Terminating failed while deactivating the TSF thread manager. %s (0x%08x)"), ErrorMsg, Result);
 	}
 
@@ -635,7 +635,7 @@ TSharedPtr<ITextInputMethodChangeNotifier> FWindowsTextInputMethodSystem::Regist
 	if(FAILED(Result) || !TextStore->TSFDocumentManager)
 	{
 		TCHAR ErrorMsg[1024];
-		YPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
+		FPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
 		UE_LOG(LogWindowsTextInputMethodSystem, Error, TEXT("Registering a context failed while creating the TSF document manager. %s (0x%08x)"), ErrorMsg, Result);
 		TextStore.Reset();
 		return nullptr;
@@ -645,7 +645,7 @@ TSharedPtr<ITextInputMethodChangeNotifier> FWindowsTextInputMethodSystem::Regist
 	if(FAILED(Result) || !TextStore->TSFContext)
 	{
 		TCHAR ErrorMsg[1024];
-		YPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
+		FPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
 		UE_LOG(LogWindowsTextInputMethodSystem, Error, TEXT("Registering a context failed while creating the TSF context. %s (0x%08x)"), ErrorMsg, Result);
 		TextStore.Reset();
 		return nullptr;
@@ -655,7 +655,7 @@ TSharedPtr<ITextInputMethodChangeNotifier> FWindowsTextInputMethodSystem::Regist
 	if(FAILED(Result))
 	{
 		TCHAR ErrorMsg[1024];
-		YPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
+		FPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
 		UE_LOG(LogWindowsTextInputMethodSystem, Error, TEXT("Registering a context failed while pushing a TSF context onto the TSF document manager. %s (0x%08x)"), ErrorMsg, Result);
 		TextStore.Reset();
 		return nullptr;
@@ -665,12 +665,12 @@ TSharedPtr<ITextInputMethodChangeNotifier> FWindowsTextInputMethodSystem::Regist
 	if(FAILED(Result) || !TextStore->TSFContextOwnerCompositionServices)
 	{
 		TCHAR ErrorMsg[1024];
-		YPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
+		FPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
 		UE_LOG(LogWindowsTextInputMethodSystem, Error, TEXT("Registering a context failed while getting the TSF context owner composition services. %s (0x%08x)"), ErrorMsg, Result);
 		Result = TextStore->TSFDocumentManager->Pop(TF_POPF_ALL);
 		if(FAILED(Result))
 		{
-			YPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
+			FPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
 			UE_LOG(LogWindowsTextInputMethodSystem, Error, TEXT("Failed to pop a TSF context off from TSF document manager while recovering from failing. %s (0x%08x)"), ErrorMsg, Result);
 		}
 		TextStore.Reset();
@@ -700,7 +700,7 @@ void FWindowsTextInputMethodSystem::UnregisterContext(const TSharedRef<ITextInpu
 	if(FAILED(Result))
 	{
 		TCHAR ErrorMsg[1024];
-		YPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
+		FPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
 		UE_LOG(LogWindowsTextInputMethodSystem, Error, TEXT("Unregistering a context failed while popping a TSF context off from the TSF document manager. %s (0x%08x)"), ErrorMsg, Result);
 	}
 
@@ -734,7 +734,7 @@ void FWindowsTextInputMethodSystem::ActivateContext(const TSharedRef<ITextInputM
 	if(FAILED(Result))
 	{
 		TCHAR ErrorMsg[1024];
-		YPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
+		FPlatformMisc::GetSystemErrorMessage(ErrorMsg, 1024, Result);
 		UE_LOG(LogWindowsTextInputMethodSystem, Error, TEXT("Activating a context failed while setting focus on a TSF document manager. %s (0x%08x)"), ErrorMsg, Result);
 	}
 

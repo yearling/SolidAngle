@@ -530,9 +530,9 @@ FORCEINLINE bool FRotator::IsNearlyZero(float Tolerance) const
 	return !VectorAnyGreaterThan(AbsNorm, VectorLoadFloat1(&Tolerance));
 #else
 	return
-		YMath::Abs(NormalizeAxis(Pitch)) <= Tolerance
-		&&	YMath::Abs(NormalizeAxis(Yaw)) <= Tolerance
-		&&	YMath::Abs(NormalizeAxis(Roll)) <= Tolerance;
+		FMath::Abs(NormalizeAxis(Pitch)) <= Tolerance
+		&&	FMath::Abs(NormalizeAxis(Yaw)) <= Tolerance
+		&&	FMath::Abs(NormalizeAxis(Roll)) <= Tolerance;
 #endif
 }
 
@@ -552,9 +552,9 @@ FORCEINLINE bool FRotator::Equals(const FRotator& R, float Tolerance) const
 	const VectorRegister AbsNormDelta = VectorAbs(NormDelta);
 	return !VectorAnyGreaterThan(AbsNormDelta, VectorLoadFloat1(&Tolerance));
 #else
-	return (YMath::Abs(NormalizeAxis(Pitch - R.Pitch)) <= Tolerance)
-		&& (YMath::Abs(NormalizeAxis(Yaw - R.Yaw)) <= Tolerance)
-		&& (YMath::Abs(NormalizeAxis(Roll - R.Roll)) <= Tolerance);
+	return (FMath::Abs(NormalizeAxis(Pitch - R.Pitch)) <= Tolerance)
+		&& (FMath::Abs(NormalizeAxis(Yaw - R.Yaw)) <= Tolerance)
+		&& (FMath::Abs(NormalizeAxis(Roll - R.Roll)) <= Tolerance);
 #endif
 }
 
@@ -573,9 +573,9 @@ FORCEINLINE FRotator FRotator::GridSnap(const FRotator& RotGrid) const
 {
 	return FRotator
 	(
-		YMath::GridSnap(Pitch, RotGrid.Pitch),
-		YMath::GridSnap(Yaw, RotGrid.Yaw),
-		YMath::GridSnap(Roll, RotGrid.Roll)
+		FMath::GridSnap(Pitch, RotGrid.Pitch),
+		FMath::GridSnap(Yaw, RotGrid.Yaw),
+		FMath::GridSnap(Roll, RotGrid.Roll)
 	);
 }
 
@@ -589,7 +589,7 @@ FORCEINLINE FRotator FRotator::Clamp() const
 FORCEINLINE float FRotator::ClampAxis(float Angle)
 {
 	// returns Angle in the range (-360,360)
-	Angle = YMath::Fmod(Angle, 360.f);
+	Angle = FMath::Fmod(Angle, 360.f);
 
 	if (Angle < 0.f)
 	{
@@ -619,7 +619,7 @@ FORCEINLINE float FRotator::NormalizeAxis(float Angle)
 FORCEINLINE uint8 FRotator::CompressAxisToByte(float Angle)
 {
 	// map [0->360) to [0->256) and mask off any winding
-	return YMath::RoundToInt(Angle * 256.f / 360.f) & 0xFF;
+	return FMath::RoundToInt(Angle * 256.f / 360.f) & 0xFF;
 }
 
 
@@ -633,7 +633,7 @@ FORCEINLINE float FRotator::DecompressAxisFromByte(uint16 Angle)
 FORCEINLINE uint16 FRotator::CompressAxisToShort(float Angle)
 {
 	// map [0->360) to [0->65536) and mask off any winding
-	return YMath::RoundToInt(Angle * 65536.f / 360.f) & 0xFFFF;
+	return FMath::RoundToInt(Angle * 65536.f / 360.f) & 0xFFFF;
 }
 
 
@@ -691,12 +691,12 @@ FORCEINLINE FString FRotator::ToCompactString() const
 
 	FString ReturnString(TEXT("R("));
 	bool bIsEmptyString = true;
-	if (!YMath::IsNearlyZero(Pitch))
+	if (!FMath::IsNearlyZero(Pitch))
 	{
 		ReturnString += FString::Printf(TEXT("P=%.2f"), Pitch);
 		bIsEmptyString = false;
 	}
-	if (!YMath::IsNearlyZero(Yaw))
+	if (!FMath::IsNearlyZero(Yaw))
 	{
 		if (!bIsEmptyString)
 		{
@@ -705,7 +705,7 @@ FORCEINLINE FString FRotator::ToCompactString() const
 		ReturnString += FString::Printf(TEXT("Y=%.2f"), Yaw);
 		bIsEmptyString = false;
 	}
-	if (!YMath::IsNearlyZero(Roll))
+	if (!FMath::IsNearlyZero(Roll))
 	{
 		if (!bIsEmptyString)
 		{
@@ -732,9 +732,9 @@ FORCEINLINE bool FRotator::InitFromString(const FString& InSourceString)
 
 FORCEINLINE bool FRotator::ContainsNaN() const
 {
-	return (!YMath::IsFinite(Pitch) ||
-		!YMath::IsFinite(Yaw) ||
-		!YMath::IsFinite(Roll));
+	return (!FMath::IsFinite(Pitch) ||
+		!FMath::IsFinite(Yaw) ||
+		!FMath::IsFinite(Roll));
 }
 
 
@@ -745,13 +745,13 @@ template<> struct TIsPODType<FRotator> { enum { Value = true }; };
 *****************************************************************************/
 
 template<class U>
-FORCEINLINE_DEBUGGABLE FRotator YMath::Lerp(const FRotator& A, const FRotator& B, const U& Alpha)
+FORCEINLINE_DEBUGGABLE FRotator FMath::Lerp(const FRotator& A, const FRotator& B, const U& Alpha)
 {
 	return A + (B - A).GetNormalized() * Alpha;
 }
 
 template<class U>
-FORCEINLINE_DEBUGGABLE FRotator YMath::LerpRange(const FRotator& A, const FRotator& B, const U& Alpha)
+FORCEINLINE_DEBUGGABLE FRotator FMath::LerpRange(const FRotator& A, const FRotator& B, const U& Alpha)
 {
 	// Similar to Lerp, but does not take the shortest path. Allows interpolation over more than 180 degrees.
 	return (A * (1 - Alpha) + B * Alpha).GetNormalized();

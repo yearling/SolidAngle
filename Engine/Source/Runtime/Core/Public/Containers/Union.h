@@ -35,7 +35,7 @@ public:
 	{
 		return true;
 	}
-
+	
 	bool operator!=(const FNull&) const
 	{
 		return false;
@@ -44,11 +44,11 @@ public:
 
 
 /**
-* Represents a type which is the union of several other types; i.e. it can have a value whose type is of any the union's subtypes.
-* This differs from C union types by being type-safe, and supporting non-trivial data types as subtypes.
-* Since a value for the union must be of a single subtype, the union stores potential values of different subtypes in overlapped memory, and keeps track of which one is currently valid.
-*/
-template<typename TypeA, typename TypeB = FNull, typename TypeC = FNull, typename TypeD = FNull, typename TypeE = FNull, typename TypeF = FNull>
+ * Represents a type which is the union of several other types; i.e. it can have a value whose type is of any the union's subtypes.
+ * This differs from C union types by being type-safe, and supporting non-trivial data types as subtypes.
+ * Since a value for the union must be of a single subtype, the union stores potential values of different subtypes in overlapped memory, and keeps track of which one is currently valid.
+ */
+template<typename TypeA,typename TypeB = FNull,typename TypeC = FNull,typename TypeD = FNull,typename TypeE = FNull,typename TypeF = FNull>
 class TUnion
 {
 public:
@@ -64,35 +64,35 @@ public:
 	{
 		SetSubtype<TypeA>(InValue);
 	}
-
+	
 	/** Initialization constructor. */
 	explicit TUnion(typename TCallTraits<TypeB>::ParamType InValue, TDisambiguater<1> Disambiguater = TDisambiguater<1>())
 		: CurrentSubtypeIndex(-1)
 	{
 		SetSubtype<TypeB>(InValue);
 	}
-
+	
 	/** Initialization constructor. */
 	explicit TUnion(typename TCallTraits<TypeC>::ParamType InValue, TDisambiguater<2> Disambiguater = TDisambiguater<2>())
 		: CurrentSubtypeIndex(-1)
 	{
 		SetSubtype<TypeC>(InValue);
 	}
-
+	
 	/** Initialization constructor. */
 	explicit TUnion(typename TCallTraits<TypeD>::ParamType InValue, TDisambiguater<3> Disambiguater = TDisambiguater<3>())
 		: CurrentSubtypeIndex(-1)
 	{
 		SetSubtype<TypeD>(InValue);
 	}
-
+	
 	/** Initialization constructor. */
 	explicit TUnion(typename TCallTraits<TypeE>::ParamType InValue, TDisambiguater<4> Disambiguater = TDisambiguater<4>())
 		: CurrentSubtypeIndex(-1)
 	{
 		SetSubtype<TypeE>(InValue);
 	}
-
+	
 	/** Initialization constructor. */
 	explicit TUnion(typename TCallTraits<TypeF>::ParamType InValue, TDisambiguater<5> Disambiguater = TDisambiguater<5>())
 		: CurrentSubtypeIndex(-1)
@@ -102,10 +102,10 @@ public:
 
 	/** Copy constructor. */
 	TUnion(const TUnion& Other)
-		: CurrentSubtypeIndex(-1)
+	:	CurrentSubtypeIndex(-1)
 	{
 		// Copy the value of the appropriate subtype from the other union
-		switch (Other.CurrentSubtypeIndex)
+		switch(Other.CurrentSubtypeIndex)
 		{
 		case (uint8)-1: break;
 		case 0: SetSubtype<TypeA>(Other.GetSubtype<TypeA>()); break;
@@ -132,7 +132,7 @@ public:
 		// Determine the subtype's index and reference.
 		int32 SubtypeIndex;
 		const Subtype* SubtypeValuePointer;
-		GetSubtypeIndexAndReference<Subtype, const Subtype*>(*this, SubtypeIndex, SubtypeValuePointer);
+		GetSubtypeIndexAndReference<Subtype,const Subtype*>(*this,SubtypeIndex,SubtypeValuePointer);
 
 		return CurrentSubtypeIndex == SubtypeIndex;
 	}
@@ -144,10 +144,10 @@ public:
 		// Determine the subtype's index and reference.
 		int32 SubtypeIndex;
 		Subtype* SubtypeValuePointer;
-		GetSubtypeIndexAndReference<Subtype, Subtype*>(*this, SubtypeIndex, SubtypeValuePointer);
+		GetSubtypeIndexAndReference<Subtype,Subtype*>(*this,SubtypeIndex,SubtypeValuePointer);
 
 		// Only reset the value if it is of the specified subtype.
-		if (CurrentSubtypeIndex == SubtypeIndex)
+		if(CurrentSubtypeIndex == SubtypeIndex)
 		{
 			CurrentSubtypeIndex = -1;
 
@@ -163,7 +163,7 @@ public:
 		// Determine the subtype's index and reference.
 		int32 SubtypeIndex;
 		const Subtype* SubtypeValuePointer;
-		GetSubtypeIndexAndReference<Subtype, const Subtype*>(*this, SubtypeIndex, SubtypeValuePointer);
+		GetSubtypeIndexAndReference<Subtype,const Subtype*>(*this,SubtypeIndex,SubtypeValuePointer);
 
 		// Validate that the union has a value of the requested subtype.
 		check(CurrentSubtypeIndex == SubtypeIndex);
@@ -178,7 +178,7 @@ public:
 		// Determine the subtype's index and reference.
 		int32 SubtypeIndex;
 		Subtype* SubtypeValuePointer;
-		GetSubtypeIndexAndReference<Subtype, Subtype*>(*this, SubtypeIndex, SubtypeValuePointer);
+		GetSubtypeIndexAndReference<Subtype,Subtype*>(*this,SubtypeIndex,SubtypeValuePointer);
 
 		// Validate that the union has a value of the requested subtype.
 		check(CurrentSubtypeIndex == SubtypeIndex);
@@ -192,7 +192,7 @@ public:
 	{
 		int32 SubtypeIndex;
 		Subtype* SubtypeValuePointer;
-		GetSubtypeIndexAndReference<Subtype, Subtype*>(*this, SubtypeIndex, SubtypeValuePointer);
+		GetSubtypeIndexAndReference<Subtype,Subtype*>(*this,SubtypeIndex,SubtypeValuePointer);
 
 		Reset();
 
@@ -205,7 +205,7 @@ public:
 	/** Sets the union's value to NULL. */
 	void Reset()
 	{
-		switch (CurrentSubtypeIndex)
+		switch(CurrentSubtypeIndex)
 		{
 		case 0: ResetSubtype<TypeA>(); break;
 		case 1: ResetSubtype<TypeB>(); break;
@@ -221,7 +221,7 @@ public:
 	{
 		uint32 Result = GetTypeHash(Union.CurrentSubtypeIndex);
 
-		switch (Union.CurrentSubtypeIndex)
+		switch(Union.CurrentSubtypeIndex)
 		{
 		case 0: Result ^= GetTypeHash(Union.GetSubtype<TypeA>()); break;
 		case 1: Result ^= GetTypeHash(Union.GetSubtype<TypeB>()); break;
@@ -238,9 +238,9 @@ public:
 	/** Equality comparison. */
 	bool operator==(const TUnion& Other) const
 	{
-		if (CurrentSubtypeIndex == Other.CurrentSubtypeIndex)
+		if(CurrentSubtypeIndex == Other.CurrentSubtypeIndex)
 		{
-			switch (CurrentSubtypeIndex)
+			switch(CurrentSubtypeIndex)
 			{
 			case 0: return GetSubtype<TypeA>() == Other.GetSubtype<TypeA>(); break;
 			case 1: return GetSubtype<TypeB>() == Other.GetSubtype<TypeB>(); break;
@@ -255,15 +255,15 @@ public:
 		return false;
 	}
 
-	friend FArchive& operator<<(FArchive& Ar, TUnion& Union)
+	friend FArchive& operator<<(FArchive& Ar,TUnion& Union)
 	{
-		if (Ar.IsLoading())
+		if(Ar.IsLoading())
 		{
 			Union.Reset();
 
 			Ar << Union.CurrentSubtypeIndex;
 
-			switch (Union.CurrentSubtypeIndex)
+			switch(Union.CurrentSubtypeIndex)
 			{
 			case 0: Ar << Union.InitSubtype<TypeA>(); break;
 			case 1: Ar << Union.InitSubtype<TypeB>(); break;
@@ -278,7 +278,7 @@ public:
 		{
 			Ar << Union.CurrentSubtypeIndex;
 
-			switch (Union.CurrentSubtypeIndex)
+			switch(Union.CurrentSubtypeIndex)
 			{
 			case 0: Ar << Union.GetSubtype<TypeA>(); break;
 			case 1: Ar << Union.GetSubtype<TypeB>(); break;
@@ -317,39 +317,39 @@ private:
 	}
 
 	/** Determines the index and reference to the potential value for the given union subtype. */
-	template<typename Subtype, typename PointerType>
+	template<typename Subtype,typename PointerType>
 	static void GetSubtypeIndexAndReference(
 		const TUnion& Union,
 		int32& OutIndex,
 		PointerType& OutValuePointer
-	)
+		)
 	{
-		if (TAreTypesEqual<TypeA, Subtype>::Value)
+		if(TAreTypesEqual<TypeA,Subtype>::Value)
 		{
 			OutIndex = 0;
 			OutValuePointer = (PointerType)&Union.Values.A;
 		}
-		else if (TAreTypesEqual<TypeB, Subtype>::Value)
+		else if(TAreTypesEqual<TypeB,Subtype>::Value)
 		{
 			OutIndex = 1;
 			OutValuePointer = (PointerType)&Union.Values.B;
 		}
-		else if (TAreTypesEqual<TypeC, Subtype>::Value)
+		else if(TAreTypesEqual<TypeC,Subtype>::Value)
 		{
 			OutIndex = 2;
 			OutValuePointer = (PointerType)&Union.Values.C;
 		}
-		else if (TAreTypesEqual<TypeD, Subtype>::Value)
+		else if(TAreTypesEqual<TypeD,Subtype>::Value)
 		{
 			OutIndex = 3;
 			OutValuePointer = (PointerType)&Union.Values.D;
 		}
-		else if (TAreTypesEqual<TypeE, Subtype>::Value)
+		else if(TAreTypesEqual<TypeE,Subtype>::Value)
 		{
 			OutIndex = 4;
 			OutValuePointer = (PointerType)&Union.Values.E;
 		}
-		else if (TAreTypesEqual<TypeF, Subtype>::Value)
+		else if(TAreTypesEqual<TypeF,Subtype>::Value)
 		{
 			OutIndex = 5;
 			OutValuePointer = (PointerType)&Union.Values.F;

@@ -350,12 +350,12 @@ class FLogSuppressionImplementation: public FLogSuppressionInterface, private FS
 
 			if (bVerbosityGoingDown)
 			{
-				NewVerbosity = YMath::Min<uint8>(GlobalVerbosity.Verbosity, Verb->Verbosity);
+				NewVerbosity = FMath::Min<uint8>(GlobalVerbosity.Verbosity, Verb->Verbosity);
 			}
 			if (bVerbosityGoingUp)
 			{
-				NewVerbosity = YMath::Max<uint8>(GlobalVerbosity.Verbosity, Verb->Verbosity);
-				NewVerbosity = YMath::Min<uint8>(Verb->CompileTimeVerbosity, NewVerbosity);
+				NewVerbosity = FMath::Max<uint8>(GlobalVerbosity.Verbosity, Verb->Verbosity);
+				NewVerbosity = FMath::Min<uint8>(Verb->CompileTimeVerbosity, NewVerbosity);
 			}
 			// store off the last non-zero one for toggle
 			if (NewVerbosity)

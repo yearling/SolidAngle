@@ -49,7 +49,7 @@ typedef int32 BINNED_STAT_TYPE;
 #		define BINNED_INCREMENT_STATCOUNTER(counter) (++(counter))
 #		define BINNED_DECREMENT_STATCOUNTER(counter) (--(counter))
 #		define BINNED_ADD_STATCOUNTER(counter, value) ((counter) += (value))
-#		define BINNED_PEAK_STATCOUNTER(PeakCounter, CompareVal) ((PeakCounter) = YMath::Max((PeakCounter), (CompareVal)))
+#		define BINNED_PEAK_STATCOUNTER(PeakCounter, CompareVal) ((PeakCounter) = FMath::Max((PeakCounter), (CompareVal)))
 #	else
 #		define BINNED_STAT volatile BINNED_STAT_TYPE
 #		define BINNED_INCREMENT_STATCOUNTER(counter) (FPlatformAtomics::InterlockedIncrement(&(counter)))
@@ -61,7 +61,7 @@ typedef int32 BINNED_STAT_TYPE;
 																	do																											\
 																	{																											\
 																		NewCompare = (PeakCounter);																				\
-																		NewPeak = YMath::Max((PeakCounter), (CompareVal));														\
+																		NewPeak = FMath::Max((PeakCounter), (CompareVal));														\
 																	}																											\
 																	while (FPlatformAtomics::InterlockedCompareExchange(&(PeakCounter), NewPeak, NewCompare) != NewCompare);	\
 																}

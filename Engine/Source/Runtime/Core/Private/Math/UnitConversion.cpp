@@ -134,7 +134,7 @@ const EUnitType UnitTypes[] = {
 
 
 
-DEFINE_EXPRESSION_NODE_TYPE(YNumericUnit<double>, 0x3C138BC9, 0x71314F0B, 0xBB469BF7, 0xED47D147)
+DEFINE_EXPRESSION_NODE_TYPE(FNumericUnit<double>, 0x3C138BC9, 0x71314F0B, 0xBB469BF7, 0xED47D147)
 
 struct FUnitExpressionParser
 {
@@ -169,11 +169,11 @@ struct FUnitExpressionParser
 		Grammar.DefineBinaryOperator<FForwardSlash>(4);
 
 		// Unary operators for numeric units
-		JumpTable.MapPreUnary<FPlus>(	[](const YNumericUnit<double>& N) {	return YNumericUnit<double>(N.Value, N.Units);		});
-		JumpTable.MapPreUnary<FMinus>(	[](const YNumericUnit<double>& N) {	return YNumericUnit<double>(-N.Value, N.Units);		});
+		JumpTable.MapPreUnary<FPlus>(	[](const FNumericUnit<double>& N) {	return FNumericUnit<double>(N.Value, N.Units);		});
+		JumpTable.MapPreUnary<FMinus>(	[](const FNumericUnit<double>& N) {	return FNumericUnit<double>(-N.Value, N.Units);		});
 
 		/** Addition for numeric units */
-		JumpTable.MapBinary<FPlus>([InDefaultUnit](const YNumericUnit<double>& A, const YNumericUnit<double>& B) -> FExpressionResult {
+		JumpTable.MapBinary<FPlus>([InDefaultUnit](const FNumericUnit<double>& A, const FNumericUnit<double>& B) -> FExpressionResult {
 
 			// Have to ensure we're adding the correct units here
 
@@ -192,11 +192,11 @@ struct FUnitExpressionParser
 			{
 				if (UnitsLHS != EUnit::Unspecified)
 				{
-					return MakeValue(YNumericUnit<double>(A.Value + YUnitConversion::Convert(B.Value, UnitsRHS, UnitsLHS), UnitsLHS));
+					return MakeValue(FNumericUnit<double>(A.Value + YUnitConversion::Convert(B.Value, UnitsRHS, UnitsLHS), UnitsLHS));
 				}
 				else
 				{
-					return MakeValue(YNumericUnit<double>(YUnitConversion::Convert(A.Value, UnitsLHS, UnitsRHS) + B.Value, UnitsRHS));
+					return MakeValue(FNumericUnit<double>(YUnitConversion::Convert(A.Value, UnitsLHS, UnitsRHS) + B.Value, UnitsRHS));
 				}
 			}
 
@@ -207,7 +207,7 @@ struct FUnitExpressionParser
 		});
 
 		/** Subtraction for numeric units */
-		JumpTable.MapBinary<FMinus>([InDefaultUnit](const YNumericUnit<double>& A, const YNumericUnit<double>& B) -> FExpressionResult {
+		JumpTable.MapBinary<FMinus>([InDefaultUnit](const FNumericUnit<double>& A, const FNumericUnit<double>& B) -> FExpressionResult {
 			
 			// Have to ensure we're adding the correct units here
 
@@ -226,11 +226,11 @@ struct FUnitExpressionParser
 			{
 				if (UnitsLHS != EUnit::Unspecified)
 				{
-					return MakeValue(YNumericUnit<double>(A.Value - YUnitConversion::Convert(B.Value, UnitsRHS, UnitsLHS), UnitsLHS));
+					return MakeValue(FNumericUnit<double>(A.Value - YUnitConversion::Convert(B.Value, UnitsRHS, UnitsLHS), UnitsLHS));
 				}
 				else
 				{
-					return MakeValue(YNumericUnit<double>(YUnitConversion::Convert(A.Value, UnitsLHS, UnitsRHS) - B.Value, UnitsRHS));
+					return MakeValue(FNumericUnit<double>(YUnitConversion::Convert(A.Value, UnitsLHS, UnitsRHS) - B.Value, UnitsRHS));
 				}
 			}
 
@@ -241,16 +241,16 @@ struct FUnitExpressionParser
 		});
 
 		/** Multiplication */
-		JumpTable.MapBinary<FStar>([](const YNumericUnit<double>& A, const YNumericUnit<double>& B) -> FExpressionResult {
+		JumpTable.MapBinary<FStar>([](const FNumericUnit<double>& A, const FNumericUnit<double>& B) -> FExpressionResult {
 			if (A.Units != EUnit::Unspecified && B.Units != EUnit::Unspecified)
 			{
 				return MakeError(LOCTEXT("InvalidMultiplication", "Cannot multiply by numbers with units"));
 			}
-			return MakeValue(YNumericUnit<double>(B.Value*A.Value, A.Units == EUnit::Unspecified ? B.Units : A.Units));
+			return MakeValue(FNumericUnit<double>(B.Value*A.Value, A.Units == EUnit::Unspecified ? B.Units : A.Units));
 		});
 
 		/** Division */
-		JumpTable.MapBinary<FForwardSlash>([](const YNumericUnit<double>& A, const YNumericUnit<double>& B) -> FExpressionResult {
+		JumpTable.MapBinary<FForwardSlash>([](const FNumericUnit<double>& A, const FNumericUnit<double>& B) -> FExpressionResult {
 			if (B.Units != EUnit::Unspecified)
 			{
 				return MakeError(LOCTEXT("InvalidDivision", "Cannot divide by numbers with units"));
@@ -259,7 +259,7 @@ struct FUnitExpressionParser
 			{
 				return MakeError(LOCTEXT("DivideByZero", "DivideByZero"));	
 			}
-			return MakeValue(YNumericUnit<double>(A.Value/B.Value, A.Units));
+			return MakeValue(FNumericUnit<double>(A.Value/B.Value, A.Units));
 		});
 	}
 
@@ -295,18 +295,18 @@ struct FUnitExpressionParser
 			const double Value = FCString::Atod(*NumberToken.GetValue().GetString());
 			if (Unit.IsSet())
 			{
-				Consumer.Add(NumberToken.GetValue(), YNumericUnit<double>(Value, Unit.GetValue()));
+				Consumer.Add(NumberToken.GetValue(), FNumericUnit<double>(Value, Unit.GetValue()));
 			}
 			else
 			{
-				Consumer.Add(NumberToken.GetValue(), YNumericUnit<double>(Value));
+				Consumer.Add(NumberToken.GetValue(), FNumericUnit<double>(Value));
 			}
 		}
 
 		return TOptional<FExpressionError>();
 	}
 
-	TValueOrError<YNumericUnit<double>, FExpressionError> Evaluate(const TCHAR* InExpression, const YNumericUnit<double>& InExistingValue) const
+	TValueOrError<FNumericUnit<double>, FExpressionError> Evaluate(const TCHAR* InExpression, const FNumericUnit<double>& InExistingValue) const
 	{
 		using namespace ExpressionParser;
 
@@ -368,9 +368,9 @@ struct FUnitExpressionParser
 		auto& Node = Result.GetValue();
 		if (const auto* Numeric = Node.Cast<double>())
 		{
-			return MakeValue(YNumericUnit<double>(*Numeric, EUnit::Unspecified));
+			return MakeValue(FNumericUnit<double>(*Numeric, EUnit::Unspecified));
 		}
-		else if (const auto* NumericUnit = Node.Cast<YNumericUnit<double>>())
+		else if (const auto* NumericUnit = Node.Cast<FNumericUnit<double>>())
 		{
 			return MakeValue(*NumericUnit);
 		}
@@ -633,7 +633,7 @@ namespace UnitConversion
 		}
 	}
 
-	TValueOrError<YNumericUnit<double>, FText> TryParseExpression(const TCHAR* InExpression, EUnit From, const YNumericUnit<double>& InExistingValue)
+	TValueOrError<FNumericUnit<double>, FText> TryParseExpression(const TCHAR* InExpression, EUnit From, const FNumericUnit<double>& InExistingValue)
 	{
 		const FUnitExpressionParser Parser(From);
 		auto Result = Parser.Evaluate(InExpression, InExistingValue);
@@ -641,7 +641,7 @@ namespace UnitConversion
 		{
 			if (Result.GetValue().Units == EUnit::Unspecified)
 			{
-				return MakeValue(YNumericUnit<double>(Result.GetValue().Value, From));
+				return MakeValue(FNumericUnit<double>(Result.GetValue().Value, From));
 			}
 			else
 			{

@@ -64,7 +64,7 @@ public:
 			}
 		}
 
-		NumberCount = YMath::Min(NumberCount, Size);
+		NumberCount = FMath::Min(NumberCount, Size);
 
 		// parse the data
 		{

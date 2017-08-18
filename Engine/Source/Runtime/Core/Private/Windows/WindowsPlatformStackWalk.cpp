@@ -180,13 +180,13 @@ static bool GMaxCallstackDepthInitialized = false;
 void DetermineMaxCallstackDepth()
 {
 	// Check that we're running on Vista or newer (version 6.0+).
-	if ( YWindowsPlatformMisc::VerifyWindowsVersion(6, 0) )
+	if ( FWindowsPlatformMisc::VerifyWindowsVersion(6, 0) )
 	{
 		GMaxCallstackDepth = MAX_CALLSTACK_DEPTH;
 	}
 	else
 	{
-		GMaxCallstackDepth = YMath::Min<ULONG>(62,MAX_CALLSTACK_DEPTH);
+		GMaxCallstackDepth = FMath::Min<ULONG>(62,MAX_CALLSTACK_DEPTH);
 	}
 	GMaxCallstackDepthInitialized = true;
 }
@@ -254,7 +254,7 @@ void FWindowsPlatformStackWalk::CaptureStackBackTrace( uint64* BackTrace, uint32
 			DetermineMaxCallstackDepth();
 		}
 		PVOID WinBackTrace[MAX_CALLSTACK_DEPTH];
-		uint16 NumFrames = RtlCaptureStackBackTrace(0, YMath::Min<ULONG>(GMaxCallstackDepth, MaxDepth), WinBackTrace, NULL);
+		uint16 NumFrames = RtlCaptureStackBackTrace(0, FMath::Min<ULONG>(GMaxCallstackDepth, MaxDepth), WinBackTrace, NULL);
 		for (uint16 FrameIndex = 0; FrameIndex < NumFrames; ++FrameIndex)
 		{
 			BackTrace[FrameIndex] = (uint64)WinBackTrace[FrameIndex];
@@ -485,7 +485,7 @@ bool FWindowsPlatformStackWalk::UploadLocalSymbols()
 				{
 					HRESULT Result = GetLastError();
 					TCHAR ErrorBuffer[1024];
-					YPlatformMisc::GetSystemErrorMessage(ErrorBuffer, sizeof(ErrorBuffer) / sizeof(ErrorBuffer[0]), Result);
+					FPlatformMisc::GetSystemErrorMessage(ErrorBuffer, sizeof(ErrorBuffer) / sizeof(ErrorBuffer[0]), Result);
 					UE_LOG(LogWindows, Warning, TEXT("Uploading to symbol storage failed. Error Code %u: %s"), Result, ErrorBuffer);
 					// Calling SymSrvStoreFileW can crash if called after failing, so ditch out of the loop on error
 					break;
@@ -497,7 +497,7 @@ bool FWindowsPlatformStackWalk::UploadLocalSymbols()
 				{
 					HRESULT Result = GetLastError();
 					TCHAR ErrorBuffer[1024];
-					YPlatformMisc::GetSystemErrorMessage(ErrorBuffer, sizeof(ErrorBuffer) / sizeof(ErrorBuffer[0]), Result);
+					FPlatformMisc::GetSystemErrorMessage(ErrorBuffer, sizeof(ErrorBuffer) / sizeof(ErrorBuffer[0]), Result);
 					UE_LOG(LogWindows, Warning, TEXT("Uploading to symbol storage failed. Error Code %u: %s"), Result, ErrorBuffer);
 					// Calling SymSrvStoreFileW can crash if called after failing, so ditch out of the loop on error
 					break;

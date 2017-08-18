@@ -104,7 +104,7 @@ public:
 				{
 					// need to update the cache
 					uint64 AlignedFilePos = FilePos&BufferSizeMask; // Aligned Version
-					uint64 SizeToRead = YMath::Min<uint64>(BufferCacheSize, FileSize - AlignedFilePos);
+					uint64 SizeToRead = FMath::Min<uint64>(BufferCacheSize, FileSize - AlignedFilePos);
 					InnerSeek(AlignedFilePos);
 					Result = InnerRead(BufferCache[CurrentCache], SizeToRead);
 
@@ -124,7 +124,7 @@ public:
 				{
 					// Analyzer doesn't see this - if this code ever changes make sure there are no buffer overruns!
 					CA_ASSUME(CacheIndex < CacheCount);
-					uint64 CorrectedBytesToRead = YMath::Min<uint64>(BytesToRead, CacheEnd[CacheIndex] - FilePos);
+					uint64 CorrectedBytesToRead = FMath::Min<uint64>(BytesToRead, CacheEnd[CacheIndex] - FilePos);
 					FMemory::Memcpy(Destination, BufferCache[CacheIndex] + (FilePos - CacheStart[CacheIndex]), CorrectedBytesToRead);
 					FilePos += CorrectedBytesToRead;
 					Destination += CorrectedBytesToRead;
@@ -152,7 +152,7 @@ public:
 		if (Result)
 		{
 			FilePos += BytesToWrite;
-			FileSize = YMath::Max<int64>(FilePos, FileSize);
+			FileSize = FMath::Max<int64>(FilePos, FileSize);
 			FlushCache();
 			TellPos = FilePos;
 		}

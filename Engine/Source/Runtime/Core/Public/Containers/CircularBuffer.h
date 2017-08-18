@@ -28,7 +28,7 @@ public:
 		checkSlow(Capacity > 0);
 		checkSlow(Capacity <= 0xffffffffU);
 
-		Elements.AddZeroed(YMath::RoundUpToPowerOfTwo(Capacity));
+		Elements.AddZeroed(FMath::RoundUpToPowerOfTwo(Capacity));
 		IndexMask = Elements.Num() - 1;
 	}
 
@@ -42,7 +42,7 @@ public:
 	{
 		checkSlow(Capacity <= 0xffffffffU);
 
-		Elements.Init(InitialValue, YMath::RoundUpToPowerOfTwo(Capacity));
+		Elements.Init(InitialValue, FMath::RoundUpToPowerOfTwo(Capacity));
 		IndexMask = Elements.Num() - 1;
 	}
 

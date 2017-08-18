@@ -1,7 +1,7 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 /*=============================================================================
-ParllelFor.h: TaskGraph library
+	ParllelFor.h: TaskGraph library
 =============================================================================*/
 
 #pragma once
@@ -71,7 +71,7 @@ class FParallelForTask
 	int32 TasksToSpawn;
 public:
 	FParallelForTask(TSharedRef<FParallelForData, ESPMode::ThreadSafe>& InData, int32 InTasksToSpawn = 0)
-		: Data(InData)
+		: Data(InData) 
 		, TasksToSpawn(InTasksToSpawn)
 	{
 	}
@@ -83,9 +83,9 @@ public:
 	{
 		return ENamedThreads::AnyHiPriThreadHiPriTask;
 	}
-	static FORCEINLINE ESubsequentsMode::Type GetSubsequentsMode()
-	{
-		return ESubsequentsMode::FireAndForget;
+	static FORCEINLINE ESubsequentsMode::Type GetSubsequentsMode() 
+	{ 
+		return ESubsequentsMode::FireAndForget; 
 	}
 	void DoTask(ENamedThreads::Type CurrentThread, const FGraphEventRef& MyCompletionGraphEvent)
 	{
@@ -103,8 +103,8 @@ inline bool FParallelForData::Process(int32 TasksToSpawn, TSharedRef<FParallelFo
 	int32 MaybeTasksLeft = Num - IndexToDo.GetValue();
 	if (TasksToSpawn && MaybeTasksLeft > 0)
 	{
-		TasksToSpawn = YMath::Min<int32>(TasksToSpawn, MaybeTasksLeft);
-		TGraphTask<FParallelForTask>::CreateTask().ConstructAndDispatchWhenReady(Data, TasksToSpawn - 1);
+		TasksToSpawn = FMath::Min<int32>(TasksToSpawn, MaybeTasksLeft);
+		TGraphTask<FParallelForTask>::CreateTask().ConstructAndDispatchWhenReady(Data, TasksToSpawn - 1);		
 	}
 	int32 LocalBlockSize = BlockSize;
 	int32 LocalNum = Num;
@@ -151,12 +151,12 @@ inline bool FParallelForData::Process(int32 TasksToSpawn, TSharedRef<FParallelFo
 	return false;
 }
 
-/**
-*	General purpose parallel for that uses the taskgraph
-*	@param Num; number of calls of Body; Body(0), Body(1)....Body(Num - 1)
-*	@param Body; Function to call from multiple threads
-*	@param bForceSingleThread; Mostly used for testing, if true, run single threaded instead.
-*	Notes: Please add stats around to calls to parallel for and within your lambda as appropriate. Do not clog the task graph with long running tasks or tasks that block.
+/** 
+	*	General purpose parallel for that uses the taskgraph
+	*	@param Num; number of calls of Body; Body(0), Body(1)....Body(Num - 1)
+	*	@param Body; Function to call from multiple threads
+	*	@param bForceSingleThread; Mostly used for testing, if true, run single threaded instead.
+	*	Notes: Please add stats around to calls to parallel for and within your lambda as appropriate. Do not clog the task graph with long running tasks or tasks that block.
 **/
 inline void ParallelFor(int32 Num, TFunctionRef<void(int32)> Body, bool bForceSingleThread = false)
 {
@@ -166,7 +166,7 @@ inline void ParallelFor(int32 Num, TFunctionRef<void(int32)> Body, bool bForceSi
 	int32 AnyThreadTasks = 0;
 	if (Num > 1 && !bForceSingleThread && FApp::ShouldUseThreadingForPerformance())
 	{
-		AnyThreadTasks = YMath::Min<int32>(FTaskGraphInterface::Get().GetNumWorkerThreads(), Num - 1);
+		AnyThreadTasks = FMath::Min<int32>(FTaskGraphInterface::Get().GetNumWorkerThreads(), Num - 1);
 	}
 	if (!AnyThreadTasks)
 	{
@@ -179,7 +179,7 @@ inline void ParallelFor(int32 Num, TFunctionRef<void(int32)> Body, bool bForceSi
 	}
 	FParallelForData* DataPtr = new FParallelForData(Num, AnyThreadTasks + 1, Num > AnyThreadTasks + 1, Body);
 	TSharedRef<FParallelForData, ESPMode::ThreadSafe> Data = MakeShareable(DataPtr);
-	TGraphTask<FParallelForTask>::CreateTask().ConstructAndDispatchWhenReady(Data, AnyThreadTasks - 1);
+	TGraphTask<FParallelForTask>::CreateTask().ConstructAndDispatchWhenReady(Data, AnyThreadTasks - 1);		
 	// this thread can help too and this is important to prevent deadlock on recursion 
 	if (!Data->Process(0, Data, true))
 	{
@@ -196,13 +196,13 @@ inline void ParallelFor(int32 Num, TFunctionRef<void(int32)> Body, bool bForceSi
 	// Data must live on until all of the tasks are cleared which might be long after this function exits
 }
 
-/**
-*	General purpose parallel for that uses the taskgraph
-*	@param Num; number of calls of Body; Body(0), Body(1)....Body(Num - 1)
-*	@param Body; Function to call from multiple threads
-*   @param CurrentThreadWorkToDoBeforeHelping; The work is performed on the main thread before it starts helping with the ParallelFor proper
-*	@param bForceSingleThread; Mostly used for testing, if true, run single threaded instead.
-*	Notes: Please add stats around to calls to parallel for and within your lambda as appropriate. Do not clog the task graph with long running tasks or tasks that block.
+/** 
+	*	General purpose parallel for that uses the taskgraph
+	*	@param Num; number of calls of Body; Body(0), Body(1)....Body(Num - 1)
+	*	@param Body; Function to call from multiple threads
+	*   @param CurrentThreadWorkToDoBeforeHelping; The work is performed on the main thread before it starts helping with the ParallelFor proper
+	*	@param bForceSingleThread; Mostly used for testing, if true, run single threaded instead.
+	*	Notes: Please add stats around to calls to parallel for and within your lambda as appropriate. Do not clog the task graph with long running tasks or tasks that block.
 **/
 inline void ParallelForWithPreWork(int32 Num, TFunctionRef<void(int32)> Body, TFunctionRef<void()> CurrentThreadWorkToDoBeforeHelping, bool bForceSingleThread = false)
 {
@@ -211,7 +211,7 @@ inline void ParallelForWithPreWork(int32 Num, TFunctionRef<void(int32)> Body, TF
 	int32 AnyThreadTasks = 0;
 	if (!bForceSingleThread && FApp::ShouldUseThreadingForPerformance())
 	{
-		AnyThreadTasks = YMath::Min<int32>(FTaskGraphInterface::Get().GetNumWorkerThreads(), Num);
+		AnyThreadTasks = FMath::Min<int32>(FTaskGraphInterface::Get().GetNumWorkerThreads(), Num);
 	}
 	if (!AnyThreadTasks)
 	{
@@ -227,7 +227,7 @@ inline void ParallelForWithPreWork(int32 Num, TFunctionRef<void(int32)> Body, TF
 	check(Num);
 	FParallelForData* DataPtr = new FParallelForData(Num, AnyThreadTasks, false, Body);
 	TSharedRef<FParallelForData, ESPMode::ThreadSafe> Data = MakeShareable(DataPtr);
-	TGraphTask<FParallelForTask>::CreateTask().ConstructAndDispatchWhenReady(Data, AnyThreadTasks - 1);
+	TGraphTask<FParallelForTask>::CreateTask().ConstructAndDispatchWhenReady(Data, AnyThreadTasks - 1);		
 	// do the prework
 	CurrentThreadWorkToDoBeforeHelping();
 	// this thread can help too and this is important to prevent deadlock on recursion 
