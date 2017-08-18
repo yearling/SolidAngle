@@ -12,7 +12,7 @@
 #include "Containers/Set.h"
 #include "Containers/Map.h"
 #include "Misc/Parse.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Delegates/Delegate.h"
 #include "HAL/ThreadSafeCounter.h"
 #include "Containers/IndirectArray.h"
@@ -35,17 +35,17 @@ enum
 struct CORE_API FStatConstants
 {
 	/** Special name for thread root. */
-	static const YName NAME_ThreadRoot;
+	static const FName NAME_ThreadRoot;
 
 	/** This is a special group name used to store threads metadata. */
 	static const char* ThreadGroupName;
-	static const YName NAME_ThreadGroup;
+	static const FName NAME_ThreadGroup;
 
 	/** Stat raw name for seconds per cycle. */
-	static const YName RAW_SecondsPerCycle;
+	static const FName RAW_SecondsPerCycle;
 
 	/** Special case category, when we want to Stat to appear at the root of the menu (leaving the category blank omits it from the menu entirely) */
-	static const YName NAME_NoCategory;
+	static const FName NAME_NoCategory;
 
 	/** Extension used to save a stats file. */
 	static const YString StatsFileExtension;
@@ -57,13 +57,13 @@ struct CORE_API FStatConstants
 	static const YString ThreadNameMarker;
 
 	/** A raw name for the event wait with id. */
-	static const YName RAW_EventWaitWithId;
+	static const FName RAW_EventWaitWithId;
 
 	/** A raw name for the event trigger with id. */
-	static const YName RAW_EventTriggerWithId;
+	static const FName RAW_EventTriggerWithId;
 
 	/** A raw name for the stat marker. */
-	static const YName RAW_NamedMarker;
+	static const FName RAW_NamedMarker;
 
 	/** A special meta data used to advance the frame. */
 	static const FStatNameAndInfo AdvanceFrame;
@@ -71,9 +71,9 @@ struct CORE_API FStatConstants
 
 namespace Lex
 {
-	inline void FromString(YName& OutValue, const TCHAR* Buffer )
+	inline void FromString(FName& OutValue, const TCHAR* Buffer )
 	{
-		OutValue = YName( Buffer );
+		OutValue = FName( Buffer );
 	}
 }
 
@@ -245,7 +245,7 @@ struct CORE_API FRawStatStackNode
 	FStatMessage Meta; // includes aggregated inclusive time and call counts packed into the int64
 
 	/** Map from long name to children of this node **/
-	TMap<YName, FRawStatStackNode*> Children;
+	TMap<FName, FRawStatStackNode*> Children;
 
 	/** Constructor, this always and only builds the thread root node. The thread root is not a numeric stat! **/
 	FRawStatStackNode()
@@ -271,7 +271,7 @@ struct CORE_API FRawStatStackNode
 			Meta = Other.Meta;
 
 			Children.Empty(Other.Children.Num());
-			for (TMap<YName, FRawStatStackNode*>::TConstIterator It(Other.Children); It; ++It)
+			for (TMap<FName, FRawStatStackNode*>::TConstIterator It(Other.Children); It; ++It)
 			{
 				Children.Add(It.Key(), new FRawStatStackNode(*It.Value()));
 			}
@@ -335,7 +335,7 @@ struct CORE_API FRawStatStackNode
 protected:
 	void DeleteAllChildrenNodes()
 	{
-		for (TMap<YName, FRawStatStackNode*>::TIterator It(Children); It; ++It)
+		for (TMap<FName, FRawStatStackNode*>::TIterator It(Children); It; ++It)
 		{
 			delete It.Value();
 		}
@@ -383,7 +383,7 @@ struct FComplexRawStatStackNode
 	FComplexStatMessage ComplexStat;
 
 	/** Map from long name to children of this node **/
-	TMap<YName, FComplexRawStatStackNode*> Children;
+	TMap<FName, FComplexRawStatStackNode*> Children;
 
 	/** Default constructor. */
 	FComplexRawStatStackNode()
@@ -395,7 +395,7 @@ struct FComplexRawStatStackNode
 	/** Copy constructor. */
 	explicit FComplexRawStatStackNode(FRawStatStackNode const& Other);
 
-	void CopyNameHierarchy( const FRawStatStackNode& Other )	
+	void CopFNameHierarchy( const FRawStatStackNode& Other )	
 	{
 		DeleteAllChildrenNodes();
 
@@ -527,7 +527,7 @@ public:
 
 private:
 	/** Internal method to accumulate any non-frame stats. **/
-	void ProcessNonFrameStats( FStatMessagesArray& Data, TSet<YName>* NonFrameStatsFound );
+	void ProcessNonFrameStats( FStatMessagesArray& Data, TSet<FName>* NonFrameStatsFound );
 
 	/** Internal method to place the data into the history, discard and broadcast any new frames to anyone who cares. **/
 	void AddToHistoryAndEmpty( FStatPacketArray& NewData );
@@ -611,22 +611,22 @@ public:
 	int64 CurrentRenderFrame;
 
 	/** List of the stats, with data of all of the things that are NOT cleared every frame. We need to accumulate these over the entire life of the executable. **/
-	TMap<YName, FStatMessage> NotClearedEveryFrame;
+	TMap<FName, FStatMessage> NotClearedEveryFrame;
 
 	/** Map from a short name to the SetLongName message that defines the metadata and long name for this stat **/
-	TMap<YName, FStatMessage> ShortNameToLongName;
+	TMap<FName, FStatMessage> ShortNameToLongName;
 
 	/** Map from the unique event id to the event stats. */
 	mutable TMap<uint32, FEventData> EventsHistory;
 
 	/** Map from memory pool to long name**/
-	TMap<YPlatformMemory::EMemoryCounterRegion, YName> MemoryPoolToCapacityLongName;
+	TMap<YPlatformMemory::EMemoryCounterRegion, FName> MemoryPoolToCapacityLongName;
 
 	/** Defines the groups. the group called "Groups" can be used to enumerate the groups. **/
-	TMultiMap<YName, YName> Groups;
+	TMultiMap<FName, FName> Groups;
 
 	/** Map from a thread id to the thread name. */
-	TMap<uint32, YName> Threads;
+	TMap<uint32, FName> Threads;
 
 	/** Raw data for a frame. **/
 	TMap<int64, FStatPacketArray> History;
@@ -648,7 +648,7 @@ public:
 	int64 GetFastThreadFrameTime(int64 TargetFrame, uint32 ThreadID) const;
 
 	/** For the specified stat packet looks for the thread name. */
-	YName GetStatThreadName( const FStatPacket& Packet ) const;
+	FName GetStatThreadName( const FStatPacket& Packet ) const;
 
 	/** Looks in the history for a condensed frame, builds it if it isn't there. **/
 	TArray<FStatMessage> const& GetCondensedHistory(int64 TargetFrame) const;
@@ -662,10 +662,10 @@ public:
 	}
 
 	/** Gets the old-skool flat grouped inclusive stats. These ignore recursion, merge threads, etc and so generally the condensed callstack is less confusing. **/
-	void GetInclusiveAggregateStackStats( const TArray<FStatMessage>& CondensedMessages, TArray<FStatMessage>& OutStats, IItemFiler* Filter = nullptr, bool bAddNonStackStats = true, TMap<YName, TArray<FStatMessage>>* OptionalOutThreadBreakdownMap = nullptr ) const;
+	void GetInclusiveAggregateStackStats( const TArray<FStatMessage>& CondensedMessages, TArray<FStatMessage>& OutStats, IItemFiler* Filter = nullptr, bool bAddNonStackStats = true, TMap<FName, TArray<FStatMessage>>* OptionalOutThreadBreakdownMap = nullptr ) const;
 
 	/** Gets the old-skool flat grouped inclusive stats. These ignore recursion, merge threads, etc and so generally the condensed callstack is less confusing. **/
-	void GetInclusiveAggregateStackStats(int64 TargetFrame, TArray<FStatMessage>& OutStats, IItemFiler* Filter = nullptr, bool bAddNonStackStats = true, TMap<YName, TArray<FStatMessage>>* OptionalOutThreadBreakdownMap = nullptr) const;
+	void GetInclusiveAggregateStackStats(int64 TargetFrame, TArray<FStatMessage>& OutStats, IItemFiler* Filter = nullptr, bool bAddNonStackStats = true, TMap<FName, TArray<FStatMessage>>* OptionalOutThreadBreakdownMap = nullptr) const;
 
 	/** Gets the old-skool flat grouped exclusive stats. These merge threads, etc and so generally the condensed callstack is less confusing. **/
 	void GetExclusiveAggregateStackStats( const TArray<FStatMessage>& CondensedMessages, TArray<FStatMessage>& OutStats, IItemFiler* Filter = nullptr, bool bAddNonStackStats = true ) const;
@@ -680,7 +680,7 @@ public:
 	void UncondenseStackStats(int64 TargetFrame, FRawStatStackNode& Root, IItemFiler* Filter = nullptr, TArray<FStatMessage>* OutNonStackStats = nullptr) const;
 
 	/** Adds missing stats to the group so it doesn't jitter. **/
-	void AddMissingStats(TArray<FStatMessage>& Dest, TSet<YName> const& EnabledItems) const;
+	void AddMissingStats(TArray<FStatMessage>& Dest, TSet<FName> const& EnabledItems) const;
 
 	/** Singleton to get the stats being collected by this executable. Can be only accessed from the stats thread. **/
 	static FStatsThreadState& GetLocalState();
@@ -709,11 +709,11 @@ struct CORE_API FStatsUtils
 	static void AccumulateStat(FStatMessage& Dest, FStatMessage const& Item, EStatOperation::Type Op = EStatOperation::Invalid, bool bAllowNameMismatch = false);
 
 	/** Adds a non-stack stats */
-	static void AddNonStackStats( const YName LongName, const FStatMessage& Item, const EStatOperation::Type Op, TMap<YName, FStatMessage>& out_NonStackStats )
+	static void AddNonStackStats( const FName LongName, const FStatMessage& Item, const EStatOperation::Type Op, TMap<FName, FStatMessage>& out_NonStackStats )
 	{
 		if (
 			Item.NameAndInfo.GetField<EStatDataType>() != EStatDataType::ST_None && 
-			Item.NameAndInfo.GetField<EStatDataType>() != EStatDataType::ST_YName &&
+			Item.NameAndInfo.GetField<EStatDataType>() != EStatDataType::ST_FName &&
 			(Op == EStatOperation::Set ||
 			Op == EStatOperation::Clear ||
 			Op == EStatOperation::Add ||
@@ -766,7 +766,7 @@ struct CORE_API FStatsUtils
 		}
 	}
 
-	/** Internal use, converts arbitrary string to and from an escaped notation for storage in an YName. **/
+	/** Internal use, converts arbitrary string to and from an escaped notation for storage in an FName. **/
 	static YString ToEscapedFString(const TCHAR* Source);
 	static YString FromEscapedFString(const TCHAR* Escaped);
 	
@@ -823,8 +823,8 @@ struct FGroupSort
 {
 	FORCEINLINE bool operator()( FStatMessage const& A, FStatMessage const& B ) const 
 	{ 
-		YName GroupA = A.NameAndInfo.GetGroupName();
-		YName GroupB = B.NameAndInfo.GetGroupName();
+		FName GroupA = A.NameAndInfo.GetGroupName();
+		FName GroupB = B.NameAndInfo.GetGroupName();
 		// first sort by group
 		if (GroupA == GroupB)
 		{
@@ -869,7 +869,7 @@ struct FHudGroup
 	TArray<FComplexStatMessage> FlatAggregate;
 
 	/** Array of all flat aggregates for the last n frames broken down by thread. */
-	TMap<YName, TArray<FComplexStatMessage>> FlatAggregateThreadBreakdown;
+	TMap<FName, TArray<FComplexStatMessage>> FlatAggregateThreadBreakdown;
 	
 	/** Array of all aggregates for the last n frames. */
 	TArray<FComplexStatMessage> HierAggregate;
@@ -884,10 +884,10 @@ struct FHudGroup
 	TArray<FComplexStatMessage> CountersAggregate;
 
 	/** Children stats that should not be used when adding up group cost **/
-	TSet<YName> BudgetIgnoreStats;
+	TSet<FName> BudgetIgnoreStats;
 
 	/** Expected group budget */
-	TMap<YName, float> ThreadBudgetMap;
+	TMap<FName, float> ThreadBudgetMap;
 };
 
 /**
@@ -901,7 +901,7 @@ struct FGameThreadHudData
 	{}
 
 	TIndirectArray<FHudGroup> HudGroups;
-	TArray<YName> GroupNames;
+	TArray<FName> GroupNames;
 	TArray<YString> GroupDescriptions;
 	TMap<YPlatformMemory::EMemoryCounterRegion, int64> PoolCapacity;
 	TMap<YPlatformMemory::EMemoryCounterRegion, YString> PoolAbbreviation;
@@ -945,7 +945,7 @@ public:
 	void NewData(FStatNameAndInfo NameAndInfo)
 	{
 		NameAndInfos.Add(NameAndInfo);
-		const YName GroupName = NameAndInfo.GetGroupName();
+		const FName GroupName = NameAndInfo.GetGroupName();
 		if (!GroupName.IsNone() && GroupName != NAME_Groups)
 		{
 			StatGroupNames.Add(GroupName);
@@ -973,7 +973,7 @@ public:
 	FOnNewStatGroupRegistered NewStatGroupDelegate;
 
 	/** A set of all the stat group names which have been registered */
-	TSet<YName> StatGroupNames;
+	TSet<FName> StatGroupNames;
 
 private:
 	FStatGroupGameThreadNotifier(){}

@@ -39,7 +39,7 @@ public:
 		return (X.Value != Y.Value);
 	}
 	
-	friend YArchive& operator<<( YArchive& Ar, FNetworkGUID& G )
+	friend FArchive& operator<<( FArchive& Ar, FNetworkGUID& G )
 	{
 		Ar.SerializeIntPacked(G.Value);
 		return Ar;
@@ -81,7 +81,7 @@ public:
 		return Value > 0;
 	}
 
-	CORE_API bool NetSerialize( YArchive& Ar, class UPackageMap* Map, bool& bOutSuccess );
+	CORE_API bool NetSerialize( FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess );
 
 	/** A Valid but unassigned NetGUID */
 	bool IsDefault() const

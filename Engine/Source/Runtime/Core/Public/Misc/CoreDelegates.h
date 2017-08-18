@@ -243,7 +243,7 @@ public:
 	DECLARE_DELEGATE_RetVal_OneParam(bool, FLoadStringAssetReferenceInCook, const YString&);
 	static FLoadStringAssetReferenceInCook LoadStringAssetReferenceInCook;
 
-	DECLARE_DELEGATE_RetVal_OneParam(bool, YStringAssetReferenceLoaded, const YName&);
+	DECLARE_DELEGATE_RetVal_OneParam(bool, YStringAssetReferenceLoaded, const FName&);
 	static YStringAssetReferenceLoaded StringAssetReferenceLoaded;
 
 	/** Sent when the platform needs the user to fix headset tracking on startup (PS4 Morpheus only) */

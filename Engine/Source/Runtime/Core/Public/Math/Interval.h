@@ -189,7 +189,7 @@ public:
 	 * @param Interval The interval to serialize.
 	 * @return Reference to the Archive after serialization.
 	 */
-	friend class YArchive& operator<<( class YArchive& Ar, TInterval& Interval )
+	friend class FArchive& operator<<( class FArchive& Ar, TInterval& Interval )
 	{
 		return Ar << Interval.Min << Interval.Max;
 	}

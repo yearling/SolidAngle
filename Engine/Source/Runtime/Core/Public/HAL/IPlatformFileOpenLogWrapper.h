@@ -132,15 +132,15 @@ public:
 	{
 		return LowerLevel->SetReadOnly(Filename, bNewReadOnlyValue);
 	}
-	virtual YDateTime	GetTimeStamp(const TCHAR* Filename) override
+	virtual FDateTime	GetTimeStamp(const TCHAR* Filename) override
 	{
 		return LowerLevel->GetTimeStamp(Filename);
 	}
-	virtual void		SetTimeStamp(const TCHAR* Filename, YDateTime DateTime) override
+	virtual void		SetTimeStamp(const TCHAR* Filename, FDateTime DateTime) override
 	{
 		LowerLevel->SetTimeStamp(Filename, DateTime);
 	}
-	virtual YDateTime	GetAccessTimeStamp(const TCHAR* Filename) override
+	virtual FDateTime	GetAccessTimeStamp(const TCHAR* Filename) override
 	{
 		return LowerLevel->GetAccessTimeStamp(Filename);
 	}

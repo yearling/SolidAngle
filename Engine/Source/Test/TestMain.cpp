@@ -277,9 +277,146 @@ void TestBitArray()
 	BooleanBit = TestAllTrue[32];
 	for (TBitArray<>::FIterator It(TestAllTrue); (bool)It; ++It)
 	{
-		std::cout << "TBitArray[" << It.GetIndex() << "]'s Value is " << It.GetValue() << std::endl;
+		//std::cout << "TBitArray[" << It.GetIndex() << "]'s Value is " << It.GetValue() << std::endl;
 	}
 	std::cout << "1<<31:" << (1 << 1) << std::endl;
+}
+
+void TestArray()
+{
+	std::cout << "\n---------------TArrayTest----------" << std::endl;
+	TArray<int32> TestDefaultConsturct;
+	TArray<int32> TestInitializer{ 1,2,3,4,5 };
+	TArray<int32> TestCopy(TestInitializer);
+	TArray<int32> TestMove(MoveTemp(TestInitializer));
+	TArray<int32> TestInitilaizerOperator = { 1,2,3,4,5 };
+	check(TestMove.GetData() == &TestMove[0]);
+	check(TestMove.GetTypeSize() == sizeof(int32));
+	TestMove.GetAllocatedSize();
+	TestMove.GetSlack();
+	TestMove.RangeCheck(2);
+	check(TestMove.IsValidIndex(2));
+	TestMove.Num();
+	TestMove.Max();
+	TestMove.Pop();
+	TestMove.Push(0);
+	TestMove.Top();
+	TestMove.Last();
+	TestMove.Last(1);
+	TestMove.Shrink();
+	int nIndex;
+	if (TestMove.Find(5, nIndex))
+	{
+	}
+	nIndex = TestMove.Find(5);
+	check(nIndex == INDEX_NONE);
+	nIndex = TestMove.FindLast(3);
+	nIndex = TestMove.FindLastByPredicate([](int32 n) { return n == 4; });
+	nIndex = TestMove.IndexOfByKey(5);
+	int32 *pFindResultPtr = TestMove.FindByPredicate([](int32 n) { return n == 4; });
+	TArray<int32> nFilterResult = TestMove.FilterByPredicate([](int32 n) {return n > 2; });
+	//check(TestMove.Contains(1));
+	//check(TestMove.ContainsByPredicate([](int32 n) { return n == 5; }));
+	TestMove.AddUninitialized(5);
+	TestMove.InsertDefaulted(0, 5);
+	TestMove.InsertZeroed(0, 5);
+	TestMove.InsertDefaulted(0, 5);
+	TestMove.Insert({ 1,2,3,4,5 }, 0);
+	TestMove.Insert(TestCopy,0);
+	TestMove.CheckAddress(&TestCopy[1]);
+	TestMove.RemoveAt(0);
+	TestMove.RemoveAt(1);
+	TestMove.RemoveAtSwap(3);
+	TestMove.Reset(0);
+	TestMove.Empty();
+	TestMove.SetNum(200);
+	TestMove.SetNumZeroed(200);
+	TestMove.SetNumUninitialized(200);
+	TestMove.Append(TestCopy);
+	TestCopy.Emplace(0);
+	TestCopy.EmplaceAt(3,0);
+	TestCopy.Add(0);
+	TestCopy.AddZeroed(5);
+	TestCopy.AddDefaulted(5);
+	TestCopy.AddUnique(5);
+	TestCopy.Reserve(200);
+	TestCopy.Init(4, 200);
+	TestCopy.RemoveSingle(4);
+	TestCopy.RemoveSingleSwap(4);
+	TestCopy.Remove(4);
+	TestCopy.RemoveSwap(4);
+	TestCopy.RemoveAll([](int n) {return n == 4; });
+	TestCopy.RemoveAllSwap([](int n) {return n == 4; });
+	TestCopy.SwapMemory(0, 1);
+	TestCopy.Empty();
+	TestCopy = { 1,2 };
+	TestCopy.Swap(0, 1);
+	for (auto Iter = TestCopy.CreateIterator(); Iter; ++Iter)
+	{
+
+	}
+	TestCopy.Sort();
+}
+
+void TestSparseArray()
+{
+	std::cout << "\n---------------TSparseArrayTest----------" << std::endl;
+	TSparseArray<int> TestSparseArray;
+	TestSparseArray.Add(1);
+	TestSparseArray.Add(2);
+	TestSparseArray.Add(3);
+	TestSparseArray.Add(4);
+	TestSparseArray.RemoveAt(0);
+	std::cout << "before Add" << std::endl;
+	for (auto Iter = TestSparseArray.CreateIterator(); Iter; ++Iter)
+	{
+		if (Iter)
+		{
+			//std::cout << *Iter << std::endl;
+		}
+	}
+	std::cout << "After Add" << std::endl;
+	TestSparseArray.Add(3);
+	for (auto Iter = TestSparseArray.CreateIterator(); Iter; ++Iter)
+	{
+		if (Iter)
+		{
+			//std::cout << *Iter << std::endl;
+		}
+	}
+	TestSparseArray.Insert(100, 5);
+	std::cout << "Max elements num:" << TestSparseArray.GetMaxIndex() << std::endl;
+	for (auto Iter = TestSparseArray.CreateIterator(); Iter; ++Iter)
+	{
+		if (Iter)
+		{
+			//std::cout << *Iter << std::endl;
+		}
+	}
+	TestSparseArray.Compact();
+	std::cout << "After compact ,Max elements num:" << TestSparseArray.GetMaxIndex() << std::endl;
+
+}
+
+void TestSet()
+{
+	std::cout << "\n---------------TSetTest----------" << std::endl;
+	TSet<int> SetTest;
+	TSet<int> SetInitializer = { 1,2,3,4,5,6 };
+	TSet<int> SetInitializerRepeat = { 1,2,3,4,5,6,1,2,3 };
+	check(SetInitializer.Find(2));
+	check(SetInitializer.Contains(2));
+	FSetElementId SetID = SetInitializer.FindId(2);
+	int nFindFromID = SetInitializer[SetID];
+	auto SetInterset = SetInitializer.Intersect(SetInitializerRepeat);
+	auto SetUnion = SetInitializer.Union(SetInitializerRepeat);
+	auto SetDifference = SetInitializer.Difference(SetInitializerRepeat);
+	check(SetInitializerRepeat.Includes(SetInitializer));
+	TArray<int> TestArrayFromSet = SetInitializer.Array();
+	for (TSet<int>::TIterator Iter(SetInitializer); Iter; ++Iter)
+	{
+		std::cout << *Iter << std::endl;
+	}
 }
 IMPLEMENT_MODULE(YTestModel, TestModel);
 
@@ -383,7 +520,10 @@ int main()
 
 	TestUniquePtr();
 	TestSharedPtr();
+	TestArray();
 	TestBitArray();
+	TestSparseArray();
+	TestSet();
 //PODTypeWithStdString* pMemLeak = new PODTypeWithStdString();
 
 

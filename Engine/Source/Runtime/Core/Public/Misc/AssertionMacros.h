@@ -212,20 +212,20 @@ namespace UE4Asserts_Private
 	bool GetMemberNameCheckedJunk(const volatile T&);
 }
 
-// Returns YName(TEXT("EnumeratorName")), while statically verifying that the enumerator exists in the enum
+// Returns FName(TEXT("EnumeratorName")), while statically verifying that the enumerator exists in the enum
 #define GET_ENUMERATOR_NAME_CHECKED(EnumName, EnumeratorName) \
-	((void)sizeof(UE4Asserts_Private::GetMemberNameCheckedJunk(EnumName::EnumeratorName)), YName(TEXT(#EnumeratorName)))
+	((void)sizeof(UE4Asserts_Private::GetMemberNameCheckedJunk(EnumName::EnumeratorName)), FName(TEXT(#EnumeratorName)))
 
-// Returns YName(TEXT("MemberName")), while statically verifying that the member exists in ClassName
+// Returns FName(TEXT("MemberName")), while statically verifying that the member exists in ClassName
 #define GET_MEMBER_NAME_CHECKED(ClassName, MemberName) \
-	((void)sizeof(UE4Asserts_Private::GetMemberNameCheckedJunk(((ClassName*)0)->MemberName)), YName(TEXT(#MemberName)))
+	((void)sizeof(UE4Asserts_Private::GetMemberNameCheckedJunk(((ClassName*)0)->MemberName)), FName(TEXT(#MemberName)))
 
 #define GET_MEMBER_NAME_STRING_CHECKED(ClassName, MemberName) \
 	((void)sizeof(UE4Asserts_Private::GetMemberNameCheckedJunk(((ClassName*)0)->MemberName)), TEXT(#MemberName))
 
-// Returns YName(TEXT("FunctionName")), while statically verifying that the function exists in ClassName
+// Returns FName(TEXT("FunctionName")), while statically verifying that the function exists in ClassName
 #define GET_FUNCTION_NAME_CHECKED(ClassName, FunctionName) \
-	((void)sizeof(&ClassName::FunctionName), YName(TEXT(#FunctionName)))
+	((void)sizeof(&ClassName::FunctionName), FName(TEXT(#FunctionName)))
 
 #define GET_FUNCTION_NAME_STRING_CHECKED(ClassName, FunctionName) \
 	((void)sizeof(&ClassName::FunctionName), TEXT(#FunctionName))

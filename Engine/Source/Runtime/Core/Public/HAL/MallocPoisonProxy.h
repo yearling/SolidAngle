@@ -22,15 +22,15 @@
 /**
 * YMalloc proxy that poisons new and freed allocations, helping to catch code that relies on uninitialized or freed memory.
 */
-class FMallocPoisonProxy : public YMalloc
+class FMallocPoisonProxy : public FMalloc
 {
 private:
 	/** Malloc we're based on, aka using under the hood */
-	YMalloc* UsedMalloc;
+	FMalloc* UsedMalloc;
 
 public:
 	// YMalloc interface begin
-	explicit FMallocPoisonProxy(YMalloc* InMalloc)
+	explicit FMallocPoisonProxy(FMalloc* InMalloc)
 		: UsedMalloc(InMalloc)
 	{
 		checkf(UsedMalloc, TEXT("FMallocPoisonProxy is used without a valid malloc!"));
@@ -88,12 +88,12 @@ public:
 		}
 	}
 
-	virtual void GetAllocatorStats(YGenericMemoryStats& out_Stats) override
+	virtual void GetAllocatorStats(FGenericMemoryStats& out_Stats) override
 	{
 		UsedMalloc->GetAllocatorStats(out_Stats);
 	}
 
-	virtual void DumpAllocatorStats(class YOutputDevice& Ar) override
+	virtual void DumpAllocatorStats(class FOutputDevice& Ar) override
 	{
 		UsedMalloc->DumpAllocatorStats(Ar);
 	}
@@ -103,7 +103,7 @@ public:
 		return UsedMalloc->ValidateHeap();
 	}
 
-	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, YOutputDevice& Ar) override
+	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar) override
 	{
 		return UsedMalloc->Exec(InWorld, Cmd, Ar);
 	}

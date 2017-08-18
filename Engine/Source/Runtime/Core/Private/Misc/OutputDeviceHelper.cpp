@@ -30,7 +30,7 @@ const TCHAR* YOutputDeviceHelper::VerbosityToString(ELogVerbosity::Type Verbosit
 	return TEXT("UknownVerbosity");
 }
 
-YString YOutputDeviceHelper::FormatLogLine( ELogVerbosity::Type Verbosity, const class YName& Category, const TCHAR* Message /*= nullptr*/, ELogTimes::Type LogTime /*= ELogTimes::None*/, const double Time /*= -1.0*/ )
+YString YOutputDeviceHelper::FormatLogLine( ELogVerbosity::Type Verbosity, const class FName& Category, const TCHAR* Message /*= nullptr*/, ELogTimes::Type LogTime /*= ELogTimes::None*/, const double Time /*= -1.0*/ )
 {
 	const bool bShowCategory = GPrintLogCategory && Category != NAME_None;
 	YString Format;
@@ -45,7 +45,7 @@ YString YOutputDeviceHelper::FormatLogLine( ELogVerbosity::Type Verbosity, const
 		}
 
 		case ELogTimes::UTC:
-			Format = YString::Printf(TEXT("[%s][%3d]"), *YDateTime::UtcNow().ToString(TEXT("%Y.%m.%d-%H.%M.%S:%s")), GFrameCounter % 1000);
+			Format = YString::Printf(TEXT("[%s][%3d]"), *FDateTime::UtcNow().ToString(TEXT("%Y.%m.%d-%H.%M.%S:%s")), GFrameCounter % 1000);
 			break;
 
 		default:
@@ -85,7 +85,7 @@ YString YOutputDeviceHelper::FormatLogLine( ELogVerbosity::Type Verbosity, const
 	return Format;
 }
 
-void YOutputDeviceHelper::FormatCastAndSerializeLine(YArchive& Output, const TCHAR* Data, ELogVerbosity::Type Verbosity, const class YName& Category, const double Time, bool bSuppressEventTag, bool bAutoEmitLineTerminator)
+void YOutputDeviceHelper::FormatCastAndSerializeLine(FArchive& Output, const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category, const double Time, bool bSuppressEventTag, bool bAutoEmitLineTerminator)
 {
 	// First gather all strings to serialize (prefix, data, terminator) including their size before and after conversion
 	// then allocate the conversion buffer only once and serialize only once

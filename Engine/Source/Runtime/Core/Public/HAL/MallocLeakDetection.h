@@ -163,7 +163,7 @@ public:
 
 
 	/** Cmd handler */
-	bool Exec(UWorld* InWorld, const TCHAR* Cmd, YOutputDevice& Ar);
+	bool Exec(UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar);
 
 	/** Handles new allocated pointer */
 	void Malloc(void* Ptr, SIZE_T Size);
@@ -187,11 +187,11 @@ public:
 * A verifying proxy malloc that takes a malloc to be used and tracks unique callstacks with outstanding allocations
 * to help identify leaks.
 */
-class FMallocLeakDetectionProxy : public YMalloc
+class FMallocLeakDetectionProxy : public FMalloc
 {
 private:
 	/** Malloc we're based on, aka using under the hood */
-	YMalloc* UsedMalloc;
+	FMalloc* UsedMalloc;
 
 	/* Verifier object */
 	FMallocLeakDetection& Verify;
@@ -199,7 +199,7 @@ private:
 	FCriticalSection AllocatedPointersCritical;
 
 public:
-	explicit FMallocLeakDetectionProxy(YMalloc* InMalloc);
+	explicit FMallocLeakDetectionProxy(FMalloc* InMalloc);
 
 	static FMallocLeakDetectionProxy& Get();
 
@@ -234,12 +234,12 @@ public:
 		UsedMalloc->InitializeStatsMetadata();
 	}
 
-	virtual void GetAllocatorStats(YGenericMemoryStats& OutStats) override
+	virtual void GetAllocatorStats(FGenericMemoryStats& OutStats) override
 	{
 		UsedMalloc->GetAllocatorStats(OutStats);
 	}
 
-	virtual void DumpAllocatorStats(YOutputDevice& Ar) override
+	virtual void DumpAllocatorStats(FOutputDevice& Ar) override
 	{
 		FScopeLock Lock(&AllocatedPointersCritical);
 		//Verify.DumpOpenCallstacks(1024 * 1024);
@@ -251,7 +251,7 @@ public:
 		return UsedMalloc->ValidateHeap();
 	}
 
-	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, YOutputDevice& Ar) override
+	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar) override
 	{
 		FScopeLock Lock(&AllocatedPointersCritical);
 		if (Verify.Exec(InWorld, Cmd, Ar))

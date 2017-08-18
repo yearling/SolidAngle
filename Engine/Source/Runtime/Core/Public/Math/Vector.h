@@ -21,7 +21,7 @@
 /**
 * A vector in 3-D space composed of components (X, Y, Z) with floating point precision.
 */
-struct YVector
+struct FVector
 {
 public:
 
@@ -37,16 +37,16 @@ public:
 public:
 
 	/** A zero vector (0,0,0) */
-	static CORE_API const YVector ZeroVector;
+	static CORE_API const FVector ZeroVector;
 
 	/** World up vector (0,0,1) */
-	static CORE_API const YVector UpVector;
+	static CORE_API const FVector UpVector;
 
 	/** Unreal forward vector (1,0,0) */
-	static CORE_API const YVector ForwardVector;
+	static CORE_API const FVector ForwardVector;
 
 	/** Unreal right vector (0,1,0) */
-	static CORE_API const YVector RightVector;
+	static CORE_API const FVector RightVector;
 
 public:
 
@@ -56,7 +56,7 @@ public:
 		if (ContainsNaN())
 		{
 			logOrEnsureNanError(TEXT("YVector contains NaN: %s"), *ToString());
-			*const_cast<YVector*>(this) = ZeroVector;
+			*const_cast<FVector*>(this) = ZeroVector;
 		}
 	}
 
@@ -65,7 +65,7 @@ public:
 		if (ContainsNaN())
 		{
 			logOrEnsureNanError(TEXT("%s: YVector contains NaN: %s"), Message, *ToString());
-			*const_cast<YVector*>(this) = ZeroVector;
+			*const_cast<FVector*>(this) = ZeroVector;
 		}
 	}
 #else
@@ -74,14 +74,14 @@ public:
 #endif
 
 	/** Default constructor (no initialization). */
-	FORCEINLINE YVector();
+	FORCEINLINE FVector();
 
 	/**
 	* Constructor initializing all components to a single float value.
 	*
 	* @param InF Value to set all components to.
 	*/
-	explicit FORCEINLINE YVector(float InF);
+	explicit FORCEINLINE FVector(float InF);
 
 	/**
 	* Constructor using initial values for each component.
@@ -90,7 +90,7 @@ public:
 	* @param InY Y Coordinate.
 	* @param InZ Z Coordinate.
 	*/
-	FORCEINLINE YVector(float InX, float InY, float InZ);
+	FORCEINLINE FVector(float InX, float InY, float InZ);
 
 	/**
 	* Constructs a vector from an YVector2D and Z value.
@@ -98,42 +98,42 @@ public:
 	* @param V Vector to copy from.
 	* @param InZ Z Coordinate.
 	*/
-	explicit FORCEINLINE YVector(const YVector2D V, float InZ);
+	explicit FORCEINLINE FVector(const YVector2D V, float InZ);
 
 	/**
 	* Constructor using the XYZ components from a 4D vector.
 	*
 	* @param V 4D Vector to copy from.
 	*/
-	FORCEINLINE YVector(const YVector4& V);
+	FORCEINLINE FVector(const FVector4& V);
 
 	/**
 	* Constructs a vector from an YLinearColor.
 	*
 	* @param InColor Color to copy from.
 	*/
-	explicit YVector(const YLinearColor& InColor);
+	explicit FVector(const FLinearColor& InColor);
 
 	/**
 	* Constructs a vector from an YIntVector.
 	*
 	* @param InVector YIntVector to copy from.
 	*/
-	explicit YVector(YIntVector InVector);
+	explicit FVector(YIntVector InVector);
 
 	/**
 	* Constructs a vector from an YIntPoint.
 	*
 	* @param A Int Point used to set X and Y coordinates, Z is set to zero.
 	*/
-	explicit YVector(YIntPoint A);
+	explicit FVector(YIntPoint A);
 
 	/**
 	* Constructor which initializes all components to zero.
 	*
 	* @param EForceInit Force init enum
 	*/
-	explicit FORCEINLINE YVector(EForceInit);
+	explicit FORCEINLINE FVector(EForceInit);
 
 #ifdef IMPLEMENT_ASSIGNMENT_OPERATOR_MANUALLY
 	/**
@@ -142,7 +142,7 @@ public:
 	* @param Other The other vector.
 	* @return Reference to vector after copy.
 	*/
-	FORCEINLINE YVector& operator=(const YVector& Other);
+	FORCEINLINE FVector& operator=(const FVector& Other);
 #endif
 
 	/**
@@ -151,7 +151,7 @@ public:
 	* @param V The other vector.
 	* @return The cross product.
 	*/
-	FORCEINLINE YVector operator^(const YVector& V) const;
+	FORCEINLINE FVector operator^(const FVector& V) const;
 
 	/**
 	* Calculate the cross product of two vectors.
@@ -160,7 +160,7 @@ public:
 	* @param B The second vector.
 	* @return The cross product.
 	*/
-	FORCEINLINE static YVector CrossProduct(const YVector& A, const YVector& B);
+	FORCEINLINE static FVector CrossProduct(const FVector& A, const FVector& B);
 
 	/**
 	* Calculate the dot product between this and another vector.
@@ -168,7 +168,7 @@ public:
 	* @param V The other vector.
 	* @return The dot product.
 	*/
-	FORCEINLINE float operator|(const YVector& V) const;
+	FORCEINLINE float operator|(const FVector& V) const;
 
 	/**
 	* Calculate the dot product of two vectors.
@@ -177,7 +177,7 @@ public:
 	* @param B The second vector.
 	* @return The dot product.
 	*/
-	FORCEINLINE static float DotProduct(const YVector& A, const YVector& B);
+	FORCEINLINE static float DotProduct(const FVector& A, const FVector& B);
 
 	/**
 	* Gets the result of component-wise addition of this and another vector.
@@ -185,7 +185,7 @@ public:
 	* @param V The vector to add to this.
 	* @return The result of vector addition.
 	*/
-	FORCEINLINE YVector operator+(const YVector& V) const;
+	FORCEINLINE FVector operator+(const FVector& V) const;
 
 	/**
 	* Gets the result of component-wise subtraction of this by another vector.
@@ -193,7 +193,7 @@ public:
 	* @param V The vector to subtract from this.
 	* @return The result of vector subtraction.
 	*/
-	FORCEINLINE YVector operator-(const YVector& V) const;
+	FORCEINLINE FVector operator-(const FVector& V) const;
 
 	/**
 	* Gets the result of subtracting from each component of the vector.
@@ -201,7 +201,7 @@ public:
 	* @param Bias How much to subtract from each component.
 	* @return The result of subtraction.
 	*/
-	FORCEINLINE YVector operator-(float Bias) const;
+	FORCEINLINE FVector operator-(float Bias) const;
 
 	/**
 	* Gets the result of adding to each component of the vector.
@@ -209,7 +209,7 @@ public:
 	* @param Bias How much to add to each component.
 	* @return The result of addition.
 	*/
-	FORCEINLINE YVector operator+(float Bias) const;
+	FORCEINLINE FVector operator+(float Bias) const;
 
 	/**
 	* Gets the result of scaling the vector (multiplying each component by a value).
@@ -217,7 +217,7 @@ public:
 	* @param Scale What to multiply each component by.
 	* @return The result of multiplication.
 	*/
-	FORCEINLINE YVector operator*(float Scale) const;
+	FORCEINLINE FVector operator*(float Scale) const;
 
 	/**
 	* Gets the result of dividing each component of the vector by a value.
@@ -225,7 +225,7 @@ public:
 	* @param Scale What to divide each component by.
 	* @return The result of division.
 	*/
-	YVector operator/(float Scale) const;
+	FVector operator/(float Scale) const;
 
 	/**
 	* Gets the result of component-wise multiplication of this vector by another.
@@ -233,7 +233,7 @@ public:
 	* @param V The vector to multiply with.
 	* @return The result of multiplication.
 	*/
-	FORCEINLINE YVector operator*(const YVector& V) const;
+	FORCEINLINE FVector operator*(const FVector& V) const;
 
 	/**
 	* Gets the result of component-wise division of this vector by another.
@@ -241,7 +241,7 @@ public:
 	* @param V The vector to divide by.
 	* @return The result of division.
 	*/
-	FORCEINLINE YVector operator/(const YVector& V) const;
+	FORCEINLINE FVector operator/(const FVector& V) const;
 
 	// Binary comparison operators.
 
@@ -251,7 +251,7 @@ public:
 	* @param V The vector to check against.
 	* @return true if the vectors are equal, false otherwise.
 	*/
-	bool operator==(const YVector& V) const;
+	bool operator==(const FVector& V) const;
 
 	/**
 	* Check against another vector for inequality.
@@ -259,7 +259,7 @@ public:
 	* @param V The vector to check against.
 	* @return true if the vectors are not equal, false otherwise.
 	*/
-	bool operator!=(const YVector& V) const;
+	bool operator!=(const FVector& V) const;
 
 	/**
 	* Check against another vector for equality, within specified error limits.
@@ -268,7 +268,7 @@ public:
 	* @param Tolerance Error tolerance.
 	* @return true if the vectors are equal within tolerance limits, false otherwise.
 	*/
-	bool Equals(const YVector& V, float Tolerance = KINDA_SMALL_NUMBER) const;
+	bool Equals(const FVector& V, float Tolerance = KINDA_SMALL_NUMBER) const;
 
 	/**
 	* Checks whether all components of this vector are the same, within a tolerance.
@@ -283,7 +283,7 @@ public:
 	*
 	* @return A negated copy of the vector.
 	*/
-	FORCEINLINE YVector operator-() const;
+	FORCEINLINE FVector operator-() const;
 
 	/**
 	* Adds another vector to this.
@@ -292,7 +292,7 @@ public:
 	* @param V Vector to add to this.
 	* @return Copy of the vector after addition.
 	*/
-	FORCEINLINE YVector operator+=(const YVector& V);
+	FORCEINLINE FVector operator+=(const FVector& V);
 
 	/**
 	* Subtracts another vector from this.
@@ -301,7 +301,7 @@ public:
 	* @param V Vector to subtract from this.
 	* @return Copy of the vector after subtraction.
 	*/
-	FORCEINLINE YVector operator-=(const YVector& V);
+	FORCEINLINE FVector operator-=(const FVector& V);
 
 	/**
 	* Scales the vector.
@@ -309,7 +309,7 @@ public:
 	* @param Scale Amount to scale this vector by.
 	* @return Copy of the vector after scaling.
 	*/
-	FORCEINLINE YVector operator*=(float Scale);
+	FORCEINLINE FVector operator*=(float Scale);
 
 	/**
 	* Divides the vector by a number.
@@ -317,7 +317,7 @@ public:
 	* @param V What to divide this vector by.
 	* @return Copy of the vector after division.
 	*/
-	YVector operator/=(float V);
+	FVector operator/=(float V);
 
 	/**
 	* Multiplies the vector with another vector, using component-wise multiplication.
@@ -325,7 +325,7 @@ public:
 	* @param V What to multiply this vector with.
 	* @return Copy of the vector after multiplication.
 	*/
-	YVector operator*=(const YVector& V);
+	FVector operator*=(const FVector& V);
 
 	/**
 	* Divides the vector by another vector, using component-wise division.
@@ -333,7 +333,7 @@ public:
 	* @param V What to divide vector by.
 	* @return Copy of the vector after division.
 	*/
-	YVector operator/=(const YVector& V);
+	FVector operator/=(const FVector& V);
 
 	/**
 	* Gets specific component of the vector.
@@ -410,17 +410,17 @@ public:
 	float GetAbsMin() const;
 
 	/** Gets the component-wise min of two vectors. */
-	YVector ComponentMin(const YVector& Other) const;
+	FVector ComponentMin(const FVector& Other) const;
 
 	/** Gets the component-wise max of two vectors. */
-	YVector ComponentMax(const YVector& Other) const;
+	FVector ComponentMax(const FVector& Other) const;
 
 	/**
 	* Get a copy of this vector with absolute value of each component.
 	*
 	* @return A copy of this vector with absolute value of each component.
 	*/
-	YVector GetAbs() const;
+	FVector GetAbs() const;
 
 	/**
 	* Get the length (magnitude) of this vector.
@@ -486,7 +486,7 @@ public:
 	* @param OutDir Reference passed in to store unit direction vector.
 	* @param OutLength Reference passed in to store length of the vector.
 	*/
-	void ToDirectionAndLength(YVector &OutDir, float &OutLength) const;
+	void ToDirectionAndLength(FVector &OutDir, float &OutLength) const;
 
 	/**
 	* Get a copy of the vector as sign only.
@@ -494,14 +494,14 @@ public:
 	*
 	* @param A copy of the vector with each component set to +1 or -1
 	*/
-	FORCEINLINE YVector GetSignVector() const;
+	FORCEINLINE FVector GetSignVector() const;
 
 	/**
 	* Projects 2D components of vector based on Z.
 	*
 	* @return Projected version of vector based on Z.
 	*/
-	YVector Projection() const;
+	FVector Projection() const;
 
 	/**
 	* Calculates normalized version of vector without checking for zero length.
@@ -509,10 +509,10 @@ public:
 	* @return Normalized version of vector.
 	* @see GetSafeNormal()
 	*/
-	FORCEINLINE YVector GetUnsafeNormal() const;
+	FORCEINLINE FVector GetUnsafeNormal() const;
 
 	DEPRECATED(4.7, "Deprecated due to unclear name, use GetUnsafeNormal instead.")
-		FORCEINLINE YVector UnsafeNormal() const;
+		FORCEINLINE FVector UnsafeNormal() const;
 
 	/**
 	* Gets a copy of this vector snapped to a grid.
@@ -521,7 +521,7 @@ public:
 	* @return A copy of this vector snapped to a grid.
 	* @see YMath::GridSnap()
 	*/
-	YVector GridSnap(const float& GridSz) const;
+	FVector GridSnap(const float& GridSz) const;
 
 	/**
 	* Get a copy of this vector, clamped inside of a cube.
@@ -529,31 +529,31 @@ public:
 	* @param Radius Half size of the cube.
 	* @return A copy of this vector, bound by cube.
 	*/
-	YVector BoundToCube(float Radius) const;
+	FVector BoundToCube(float Radius) const;
 
 	/** Create a copy of this vector, with its magnitude clamped between Min and Max. */
-	YVector GetClampedToSize(float Min, float Max) const;
+	FVector GetClampedToSize(float Min, float Max) const;
 
 	DEPRECATED(4.7, "Deprecated due to unclear name, use GetClampedToSize instead.")
-		YVector ClampSize(float Min, float Max) const;
+		FVector ClampSize(float Min, float Max) const;
 
 	/** Create a copy of this vector, with the 2D magnitude clamped between Min and Max. Z is unchanged. */
-	YVector GetClampedToSize2D(float Min, float Max) const;
+	FVector GetClampedToSize2D(float Min, float Max) const;
 
 	DEPRECATED(4.7, "Deprecated due to unclear name, use GetClampedToSize2D instead.")
-		YVector ClampSize2D(float Min, float Max) const;
+		FVector ClampSize2D(float Min, float Max) const;
 
 	/** Create a copy of this vector, with its maximum magnitude clamped to MaxSize. */
-	YVector GetClampedToMaxSize(float MaxSize) const;
+	FVector GetClampedToMaxSize(float MaxSize) const;
 
 	DEPRECATED(4.7, "Deprecated due to unclear name, use GetClampedToMaxSize instead.")
-		YVector ClampMaxSize(float MaxSize) const;
+		FVector ClampMaxSize(float MaxSize) const;
 
 	/** Create a copy of this vector, with the maximum 2D magnitude clamped to MaxSize. Z is unchanged. */
-	YVector GetClampedToMaxSize2D(float MaxSize) const;
+	FVector GetClampedToMaxSize2D(float MaxSize) const;
 
 	DEPRECATED(4.7, "Deprecated due to unclear name, use GetClampedToMaxSize2D instead.")
-		YVector ClampMaxSize2D(float MaxSize) const;
+		FVector ClampMaxSize2D(float MaxSize) const;
 
 	/**
 	* Add a vector to this and clamp the result in a cube.
@@ -561,7 +561,7 @@ public:
 	* @param V Vector to add.
 	* @param Radius Half size of the cube.
 	*/
-	void AddBounded(const YVector& V, float Radius = MAX_int16);
+	void AddBounded(const FVector& V, float Radius = MAX_int16);
 
 	/**
 	* Gets the reciprocal of this vector, avoiding division by zero.
@@ -569,7 +569,7 @@ public:
 	*
 	* @return Reciprocal of this vector.
 	*/
-	YVector Reciprocal() const;
+	FVector Reciprocal() const;
 
 	/**
 	* Check whether X, Y and Z are nearly equal.
@@ -585,7 +585,7 @@ public:
 	* @param MirrorNormal Normal vector to mirror about.
 	* @return Mirrored vector.
 	*/
-	YVector MirrorByVector(const YVector& MirrorNormal) const;
+	FVector MirrorByVector(const FVector& MirrorNormal) const;
 
 	/**
 	* Mirrors a vector about a plane.
@@ -593,7 +593,7 @@ public:
 	* @param Plane Plane to mirror about.
 	* @return Mirrored vector.
 	*/
-	YVector MirrorByPlane(const YPlane& Plane) const;
+	FVector MirrorByPlane(const FPlane& Plane) const;
 
 	/**
 	* Rotates around Axis (assumes Axis.Size() == 1).
@@ -602,7 +602,7 @@ public:
 	* @param Axis Axis to rotate around.
 	* @return Rotated Vector.
 	*/
-	YVector RotateAngleAxis(const float AngleDeg, const YVector& Axis) const;
+	FVector RotateAngleAxis(const float AngleDeg, const FVector& Axis) const;
 
 	/**
 	* Gets a normalized copy of the vector, checking it is safe to do so based on the length.
@@ -611,10 +611,10 @@ public:
 	* @param Tolerance Minimum squared vector length.
 	* @return A normalized copy if safe, (0,0,0) otherwise.
 	*/
-	YVector GetSafeNormal(float Tolerance = SMALL_NUMBER) const;
+	FVector GetSafeNormal(float Tolerance = SMALL_NUMBER) const;
 
 	DEPRECATED(4.7, "Deprecated due to unclear name, use GetSafeNormal instead.")
-		YVector SafeNormal(float Tolerance = SMALL_NUMBER) const;
+		FVector SafeNormal(float Tolerance = SMALL_NUMBER) const;
 
 	/**
 	* Gets a normalized copy of the 2D components of the vector, checking it is safe to do so. Z is set to zero.
@@ -623,10 +623,10 @@ public:
 	* @param Tolerance Minimum squared vector length.
 	* @return Normalized copy if safe, otherwise returns zero vector.
 	*/
-	YVector GetSafeNormal2D(float Tolerance = SMALL_NUMBER) const;
+	FVector GetSafeNormal2D(float Tolerance = SMALL_NUMBER) const;
 
 	DEPRECATED(4.7, "Deprecated due to unclear name, use GetSafeNormal2D instead.")
-		YVector SafeNormal2D(float Tolerance = SMALL_NUMBER) const;
+		FVector SafeNormal2D(float Tolerance = SMALL_NUMBER) const;
 
 	/**
 	* Returns the cosine of the angle between this vector and another projected onto the XY plane (no Z).
@@ -634,7 +634,7 @@ public:
 	* @param B the other vector to find the 2D cosine of the angle with.
 	* @return The cosine.
 	*/
-	FORCEINLINE float CosineAngle2D(YVector B) const;
+	FORCEINLINE float CosineAngle2D(FVector B) const;
 
 	/**
 	* Gets a copy of this vector projected onto the input vector.
@@ -642,7 +642,7 @@ public:
 	* @param A	Vector to project onto, does not assume it is normalized.
 	* @return Projected vector.
 	*/
-	FORCEINLINE YVector ProjectOnTo(const YVector& A) const;
+	FORCEINLINE FVector ProjectOnTo(const FVector& A) const;
 
 	/**
 	* Gets a copy of this vector projected onto the input vector, which is assumed to be unit length.
@@ -650,7 +650,7 @@ public:
 	* @param  Normal Vector to project onto (assumed to be unit length).
 	* @return Projected vector.
 	*/
-	FORCEINLINE YVector ProjectOnToNormal(const YVector& Normal) const;
+	FORCEINLINE FVector ProjectOnToNormal(const FVector& Normal) const;
 
 	/**
 	* Return the YRotator orientation corresponding to the direction in which the vector points.
@@ -659,7 +659,7 @@ public:
 	* @return YRotator from the Vector's direction, without any roll.
 	* @see ToOrientationQuat()
 	*/
-	CORE_API YRotator ToOrientationRotator() const;
+	CORE_API FRotator ToOrientationRotator() const;
 
 	/**
 	* Return the Quaternion orientation corresponding to the direction in which the vector points.
@@ -671,7 +671,7 @@ public:
 	* @return Quaternion from the Vector's direction, without any roll.
 	* @see ToOrientationRotator(), YQuat::FindBetweenVectors()
 	*/
-	CORE_API YQuat ToOrientationQuat() const;
+	CORE_API FQuat ToOrientationQuat() const;
 
 	/**
 	* Return the YRotator orientation corresponding to the direction in which the vector points.
@@ -680,7 +680,7 @@ public:
 	* @return YRotator from the Vector's direction.
 	* @see ToOrientationRotator(), ToOrientationQuat()
 	*/
-	CORE_API YRotator Rotation() const;
+	CORE_API FRotator Rotation() const;
 
 	/**
 	* Find good arbitrary axis vectors to represent U and V axes of a plane,
@@ -689,7 +689,7 @@ public:
 	* @param Axis1 Reference to first axis.
 	* @param Axis2 Reference to second axis.
 	*/
-	CORE_API void FindBestAxisVectors(YVector& Axis1, YVector& Axis2) const;
+	CORE_API void FindBestAxisVectors(FVector& Axis1, FVector& Axis2) const;
 
 	/** When this vector contains Euler angles (degrees), ensure that angles are between +/-180 */
 	CORE_API void UnwindEuler();
@@ -761,7 +761,7 @@ public:
 	* @param YAxis The input basis' YAxis, and upon return the orthonormal basis' YAxis.
 	* @param ZAxis The input basis' ZAxis, and upon return the orthonormal basis' ZAxis.
 	*/
-	static CORE_API void CreateOrthonormalBasis(YVector& XAxis, YVector& YAxis, YVector& ZAxis);
+	static CORE_API void CreateOrthonormalBasis(FVector& XAxis, FVector& YAxis, FVector& ZAxis);
 
 	/**
 	* Compare two points and see if they're the same, using a threshold.
@@ -770,7 +770,7 @@ public:
 	* @param Q Second vector.
 	* @return Whether points are the same within a threshold. Uses fast distance approximation (linear per-component distance).
 	*/
-	static bool PointsAreSame(const YVector &P, const YVector &Q);
+	static bool PointsAreSame(const FVector &P, const FVector &Q);
 
 	/**
 	* Compare two points and see if they're within specified distance.
@@ -780,7 +780,7 @@ public:
 	* @param Dist Specified distance.
 	* @return Whether two points are within the specified distance. Uses fast distance approximation (linear per-component distance).
 	*/
-	static bool PointsAreNear(const YVector &Point1, const YVector &Point2, float Dist);
+	static bool PointsAreNear(const FVector &Point1, const FVector &Point2, float Dist);
 
 	/**
 	* Calculate the signed distance (in the direction of the normal) between a point and a plane.
@@ -790,7 +790,7 @@ public:
 	* @param PlaneNormal The Normal of the plane (assumed to be unit length).
 	* @return Signed distance between point and plane.
 	*/
-	static float PointPlaneDist(const YVector &Point, const YVector &PlaneBase, const YVector &PlaneNormal);
+	static float PointPlaneDist(const FVector &Point, const FVector &PlaneBase, const FVector &PlaneNormal);
 
 	/**
 	* Calculate the projection of a point on the given plane.
@@ -799,7 +799,7 @@ public:
 	* @param Plane The plane
 	* @return Projection of Point onto Plane
 	*/
-	static YVector PointPlaneProject(const YVector& Point, const YPlane& Plane);
+	static FVector PointPlaneProject(const FVector& Point, const FPlane& Plane);
 
 	/**
 	* Calculate the projection of a point on the plane defined by counter-clockwise (CCW) points A,B,C.
@@ -810,7 +810,7 @@ public:
 	* @param C 3rd of three points in CCW order defining the plane
 	* @return Projection of Point onto plane ABC
 	*/
-	static YVector PointPlaneProject(const YVector& Point, const YVector& A, const YVector& B, const YVector& C);
+	static FVector PointPlaneProject(const FVector& Point, const FVector& A, const FVector& B, const FVector& C);
 
 	/**
 	* Calculate the projection of a point on the plane defined by PlaneBase and PlaneNormal.
@@ -820,7 +820,7 @@ public:
 	* @param PlaneNorm Normal of the plane (assumed to be unit length).
 	* @return Projection of Point onto plane
 	*/
-	static YVector PointPlaneProject(const YVector& Point, const YVector& PlaneBase, const YVector& PlaneNormal);
+	static FVector PointPlaneProject(const FVector& Point, const FVector& PlaneBase, const FVector& PlaneNormal);
 
 	/**
 	* Calculate the projection of a vector on the plane defined by PlaneNormal.
@@ -829,7 +829,7 @@ public:
 	* @param  PlaneNormal Normal of the plane (assumed to be unit length).
 	* @return Projection of V onto plane.
 	*/
-	static YVector VectorPlaneProject(const YVector& V, const YVector& PlaneNormal);
+	static FVector VectorPlaneProject(const FVector& V, const FVector& PlaneNormal);
 
 	/**
 	* Euclidean distance between two points.
@@ -838,8 +838,8 @@ public:
 	* @param V2 The second point.
 	* @return The distance between two points.
 	*/
-	static FORCEINLINE float Dist(const YVector &V1, const YVector &V2);
-	static FORCEINLINE float Distance(const YVector &V1, const YVector &V2) { return Dist(V1, V2); }
+	static FORCEINLINE float Dist(const FVector &V1, const FVector &V2);
+	static FORCEINLINE float Distance(const FVector &V1, const FVector &V2) { return Dist(V1, V2); }
 
 	/**
 	* Euclidean distance between two points in the XY plane (ignoring Z).
@@ -848,8 +848,8 @@ public:
 	* @param V2 The second point.
 	* @return The distance between two points in the XY plane.
 	*/
-	static FORCEINLINE float DistXY(const YVector &V1, const YVector &V2);
-	static FORCEINLINE float Dist2D(const YVector &V1, const YVector &V2) { return DistXY(V1, V2); }
+	static FORCEINLINE float DistXY(const FVector &V1, const FVector &V2);
+	static FORCEINLINE float Dist2D(const FVector &V1, const FVector &V2) { return DistXY(V1, V2); }
 
 	/**
 	* Squared distance between two points.
@@ -858,7 +858,7 @@ public:
 	* @param V2 The second point.
 	* @return The squared distance between two points.
 	*/
-	static FORCEINLINE float DistSquared(const YVector &V1, const YVector &V2);
+	static FORCEINLINE float DistSquared(const FVector &V1, const FVector &V2);
 
 	/**
 	* Squared distance between two points in the XY plane only.
@@ -867,8 +867,8 @@ public:
 	* @param V2 The second point.
 	* @return The squared distance between two points in the XY plane
 	*/
-	static FORCEINLINE float DistSquaredXY(const YVector &V1, const YVector &V2);
-	static FORCEINLINE float DistSquared2D(const YVector &V1, const YVector &V2) { return DistSquaredXY(V1, V2); }
+	static FORCEINLINE float DistSquaredXY(const FVector &V1, const FVector &V2);
+	static FORCEINLINE float DistSquared2D(const FVector &V1, const FVector &V2) { return DistSquaredXY(V1, V2); }
 
 	/**
 	* Compute pushout of a box from a plane.
@@ -877,7 +877,7 @@ public:
 	* @param Size The size of the box.
 	* @return Pushout required.
 	*/
-	static FORCEINLINE float BoxPushOut(const YVector& Normal, const YVector& Size);
+	static FORCEINLINE float BoxPushOut(const FVector& Normal, const FVector& Size);
 
 	/**
 	* See if two normal vectors are nearly parallel, meaning the angle between them is close to 0 degrees.
@@ -887,7 +887,7 @@ public:
 	* @param  ParallelCosineThreshold Normals are parallel if absolute value of dot product (cosine of angle between them) is greater than or equal to this. For example: cos(1.0 degrees).
 	* @return true if vectors are nearly parallel, false otherwise.
 	*/
-	static bool Parallel(const YVector& Normal1, const YVector& Normal2, float ParallelCosineThreshold = THRESH_NORMALS_ARE_PARALLEL);
+	static bool Parallel(const FVector& Normal1, const FVector& Normal2, float ParallelCosineThreshold = THRESH_NORMALS_ARE_PARALLEL);
 
 	/**
 	* See if two normal vectors are coincident (nearly parallel and point in the same direction).
@@ -897,7 +897,7 @@ public:
 	* @param  ParallelCosineThreshold Normals are coincident if dot product (cosine of angle between them) is greater than or equal to this. For example: cos(1.0 degrees).
 	* @return true if vectors are coincident (nearly parallel and point in the same direction), false otherwise.
 	*/
-	static bool Coincident(const YVector& Normal1, const YVector& Normal2, float ParallelCosineThreshold = THRESH_NORMALS_ARE_PARALLEL);
+	static bool Coincident(const FVector& Normal1, const FVector& Normal2, float ParallelCosineThreshold = THRESH_NORMALS_ARE_PARALLEL);
 
 	/**
 	* See if two normal vectors are nearly orthogonal (perpendicular), meaning the angle between them is close to 90 degrees.
@@ -907,7 +907,7 @@ public:
 	* @param  OrthogonalCosineThreshold Normals are orthogonal if absolute value of dot product (cosine of angle between them) is less than or equal to this. For example: cos(89.0 degrees).
 	* @return true if vectors are orthogonal (perpendicular), false otherwise.
 	*/
-	static bool Orthogonal(const YVector& Normal1, const YVector& Normal2, float OrthogonalCosineThreshold = THRESH_NORMALS_ARE_ORTHOGONAL);
+	static bool Orthogonal(const FVector& Normal1, const FVector& Normal2, float OrthogonalCosineThreshold = THRESH_NORMALS_ARE_ORTHOGONAL);
 
 	/**
 	* See if two planes are coplanar. They are coplanar if the normals are nearly parallel and the planes include the same set of points.
@@ -919,7 +919,7 @@ public:
 	* @param ParallelCosineThreshold Normals are parallel if absolute value of dot product is greater than or equal to this.
 	* @return true if the planes are coplanar, false otherwise.
 	*/
-	static bool Coplanar(const YVector& Base1, const YVector& Normal1, const YVector& Base2, const YVector& Normal2, float ParallelCosineThreshold = THRESH_NORMALS_ARE_PARALLEL);
+	static bool Coplanar(const FVector& Base1, const FVector& Normal1, const FVector& Base2, const FVector& Normal2, float ParallelCosineThreshold = THRESH_NORMALS_ARE_PARALLEL);
 
 	/**
 	* Triple product of three vectors: X dot (Y cross Z).
@@ -929,7 +929,7 @@ public:
 	* @param Z The third vector.
 	* @return The triple product: X dot (Y cross Z).
 	*/
-	static float Triple(const YVector& X, const YVector& Y, const YVector& Z);
+	static float Triple(const FVector& X, const FVector& Y, const FVector& Z);
 
 	/**
 	* Generates a list of sample points on a Bezier curve defined by 2 points.
@@ -939,7 +939,7 @@ public:
 	* @param OutPoints Receives the output samples.
 	* @return The path length.
 	*/
-	static CORE_API float EvaluateBezier(const YVector* ControlPoints, int32 NumPoints, TArray<YVector>& OutPoints);
+	static CORE_API float EvaluateBezier(const FVector* ControlPoints, int32 NumPoints, TArray<FVector>& OutPoints);
 
 	/**
 	* Converts a vector containing radian values to a vector containing degree values.
@@ -947,7 +947,7 @@ public:
 	* @param RadVector	Vector containing radian values
 	* @return Vector  containing degree values
 	*/
-	static YVector RadiansToDegrees(const YVector& RadVector);
+	static FVector RadiansToDegrees(const FVector& RadVector);
 
 	/**
 	* Converts a vector containing degree values to a vector containing radian values.
@@ -955,7 +955,7 @@ public:
 	* @param DegVector	Vector containing degree values
 	* @return Vector containing radian values
 	*/
-	static YVector DegreesToRadians(const YVector& DegVector);
+	static FVector DegreesToRadians(const FVector& DegVector);
 
 	/**
 	* Given a current set of cluster centers, a set of points, iterate N times to move clusters to be central.
@@ -966,7 +966,7 @@ public:
 	* @param NumConnectionsToBeValid Sometimes you will have long strings that come off the mass of points
 	* which happen to have been chosen as Cluster starting points.  You want to be able to disregard those.
 	*/
-	static CORE_API void GenerateClusterCenters(TArray<YVector>& Clusters, const TArray<YVector>& Points, int32 NumIterations, int32 NumConnectionsToBeValid);
+	static CORE_API void GenerateClusterCenters(TArray<FVector>& Clusters, const TArray<FVector>& Points, int32 NumIterations, int32 NumConnectionsToBeValid);
 
 	/**
 	* Serializer.
@@ -975,14 +975,14 @@ public:
 	* @param V Vector to serialize.
 	* @return Reference to Archive after serialization.
 	*/
-	friend YArchive& operator<<(YArchive& Ar, YVector& V)
+	friend FArchive& operator<<(FArchive& Ar, FVector& V)
 	{
 		// @warning BulkSerialize: YVector is serialized as memory dump
 		// See TArray::BulkSerialize for detailed description of implied limitations.
 		return Ar << V.X << V.Y << V.Z;
 	}
 
-	bool Serialize(YArchive& Ar)
+	bool Serialize(FArchive& Ar)
 	{
 		Ar << *this;
 		return true;
@@ -994,7 +994,7 @@ public:
 	*
 	* @see FVector_NetQuantize, FVector_NetQuantize10, FVector_NetQuantize100, FVector_NetQuantizeNormal
 	*/
-	CORE_API bool NetSerialize(YArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
+	CORE_API bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
 };
 
 
@@ -1008,7 +1008,7 @@ public:
 * @param V Vector to scale.
 * @return Result of multiplication.
 */
-FORCEINLINE YVector operator*(float Scale, const YVector& V)
+FORCEINLINE FVector operator*(float Scale, const FVector& V)
 {
 	return V.operator*(Scale);
 }
@@ -1020,7 +1020,7 @@ FORCEINLINE YVector operator*(float Scale, const YVector& V)
 * @param Vector the vector to create a hash value for
 * @return The hash value from the components
 */
-FORCEINLINE uint32 GetTypeHash(const YVector& Vector)
+FORCEINLINE uint32 GetTypeHash(const FVector& Vector)
 {
 	// Note: this assumes there's no padding in YVector that could contain uncompared data.
 	return FCrc::MemCrc_DEPRECATED(&Vector, sizeof(Vector));
@@ -1030,9 +1030,9 @@ FORCEINLINE uint32 GetTypeHash(const YVector& Vector)
 #if PLATFORM_LITTLE_ENDIAN
 #define INTEL_ORDER_VECTOR(x) (x)
 #else
-static FORCEINLINE YVector INTEL_ORDER_VECTOR(YVector v)
+static FORCEINLINE FVector INTEL_ORDER_VECTOR(FVector v)
 {
-	return YVector(INTEL_ORDERF(v.X), INTEL_ORDERF(v.Y), INTEL_ORDERF(v.Z));
+	return FVector(INTEL_ORDERF(v.X), INTEL_ORDERF(v.Y), INTEL_ORDERF(v.Z));
 }
 #endif
 
@@ -1045,7 +1045,7 @@ static FORCEINLINE YVector INTEL_ORDER_VECTOR(YVector v)
 * @param Point 3D position of interest
 * @return the distance from the Point to the bounding box.
 */
-FORCEINLINE float ComputeSquaredDistanceFromBoxToPoint(const YVector& Mins, const YVector& Maxs, const YVector& Point)
+FORCEINLINE float ComputeSquaredDistanceFromBoxToPoint(const FVector& Mins, const FVector& Maxs, const FVector& Point)
 {
 	// Accumulates the distance as we iterate axis
 	float DistSquared = 0.f;
@@ -1083,14 +1083,14 @@ FORCEINLINE float ComputeSquaredDistanceFromBoxToPoint(const YVector& Mins, cons
 }
 
 
-FORCEINLINE YVector::YVector(const YVector2D V, float InZ)
+FORCEINLINE FVector::FVector(const YVector2D V, float InZ)
 	: X(V.X), Y(V.Y), Z(InZ)
 {
 	DiagnosticCheckNaN();
 }
 
 
-inline YVector YVector::RotateAngleAxis(const float AngleDeg, const YVector& Axis) const
+inline FVector FVector::RotateAngleAxis(const float AngleDeg, const FVector& Axis) const
 {
 	float S, C;
 	YMath::SinCos(&S, &C, YMath::DegreesToRadians(AngleDeg));
@@ -1109,14 +1109,14 @@ inline YVector YVector::RotateAngleAxis(const float AngleDeg, const YVector& Axi
 
 	const float OMC = 1.f - C;
 
-	return YVector(
+	return FVector(
 		(OMC * XX + C) * X + (OMC * XY - ZS) * Y + (OMC * ZX + YS) * Z,
 		(OMC * XY + ZS) * X + (OMC * YY + C) * Y + (OMC * YZ - XS) * Z,
 		(OMC * ZX - YS) * X + (OMC * YZ + XS) * Y + (OMC * ZZ + C) * Z
 	);
 }
 
-inline bool YVector::PointsAreSame(const YVector &P, const YVector &Q)
+inline bool FVector::PointsAreSame(const FVector &P, const FVector &Q)
 {
 	float Temp;
 	Temp = P.X - Q.X;
@@ -1135,7 +1135,7 @@ inline bool YVector::PointsAreSame(const YVector &P, const YVector &Q)
 	return false;
 }
 
-inline bool YVector::PointsAreNear(const YVector &Point1, const YVector &Point2, float Dist)
+inline bool FVector::PointsAreNear(const FVector &Point1, const FVector &Point2, float Dist)
 {
 	float Temp;
 	Temp = (Point1.X - Point2.X); if (YMath::Abs(Temp) >= Dist) return false;
@@ -1144,55 +1144,55 @@ inline bool YVector::PointsAreNear(const YVector &Point1, const YVector &Point2,
 	return true;
 }
 
-inline float YVector::PointPlaneDist
+inline float FVector::PointPlaneDist
 (
-	const YVector &Point,
-	const YVector &PlaneBase,
-	const YVector &PlaneNormal
+	const FVector &Point,
+	const FVector &PlaneBase,
+	const FVector &PlaneNormal
 )
 {
 	return (Point - PlaneBase) | PlaneNormal;
 }
 
 
-inline YVector YVector::PointPlaneProject(const YVector& Point, const YVector& PlaneBase, const YVector& PlaneNorm)
+inline FVector FVector::PointPlaneProject(const FVector& Point, const FVector& PlaneBase, const FVector& PlaneNorm)
 {
 	//Find the distance of X from the plane
 	//Add the distance back along the normal from the point
-	return Point - YVector::PointPlaneDist(Point, PlaneBase, PlaneNorm) * PlaneNorm;
+	return Point - FVector::PointPlaneDist(Point, PlaneBase, PlaneNorm) * PlaneNorm;
 }
 
-inline YVector YVector::VectorPlaneProject(const YVector& V, const YVector& PlaneNormal)
+inline FVector FVector::VectorPlaneProject(const FVector& V, const FVector& PlaneNormal)
 {
 	return V - V.ProjectOnToNormal(PlaneNormal);
 }
 
-inline bool YVector::Parallel(const YVector& Normal1, const YVector& Normal2, float ParallelCosineThreshold)
+inline bool FVector::Parallel(const FVector& Normal1, const FVector& Normal2, float ParallelCosineThreshold)
 {
 	const float NormalDot = Normal1 | Normal2;
 	return YMath::Abs(NormalDot) >= ParallelCosineThreshold;
 }
 
-inline bool YVector::Coincident(const YVector& Normal1, const YVector& Normal2, float ParallelCosineThreshold)
+inline bool FVector::Coincident(const FVector& Normal1, const FVector& Normal2, float ParallelCosineThreshold)
 {
 	const float NormalDot = Normal1 | Normal2;
 	return NormalDot >= ParallelCosineThreshold;
 }
 
-inline bool YVector::Orthogonal(const YVector& Normal1, const YVector& Normal2, float OrthogonalCosineThreshold)
+inline bool FVector::Orthogonal(const FVector& Normal1, const FVector& Normal2, float OrthogonalCosineThreshold)
 {
 	const float NormalDot = Normal1 | Normal2;
 	return YMath::Abs(NormalDot) <= OrthogonalCosineThreshold;
 }
 
-inline bool YVector::Coplanar(const YVector &Base1, const YVector &Normal1, const YVector &Base2, const YVector &Normal2, float ParallelCosineThreshold)
+inline bool FVector::Coplanar(const FVector &Base1, const FVector &Normal1, const FVector &Base2, const FVector &Normal2, float ParallelCosineThreshold)
 {
-	if (!YVector::Parallel(Normal1, Normal2, ParallelCosineThreshold)) return false;
-	else if (YVector::PointPlaneDist(Base2, Base1, Normal1) > THRESH_POINT_ON_PLANE) return false;
+	if (!FVector::Parallel(Normal1, Normal2, ParallelCosineThreshold)) return false;
+	else if (FVector::PointPlaneDist(Base2, Base1, Normal1) > THRESH_POINT_ON_PLANE) return false;
 	else return true;
 }
 
-inline float YVector::Triple(const YVector& X, const YVector& Y, const YVector& Z)
+inline float FVector::Triple(const FVector& X, const FVector& Y, const FVector& Z)
 {
 	return
 		((X.X * (Y.Y * Z.Z - Y.Z * Z.Y))
@@ -1200,57 +1200,57 @@ inline float YVector::Triple(const YVector& X, const YVector& Y, const YVector& 
 			+ (X.Z * (Y.X * Z.Y - Y.Y * Z.X)));
 }
 
-inline YVector YVector::RadiansToDegrees(const YVector& RadVector)
+inline FVector FVector::RadiansToDegrees(const FVector& RadVector)
 {
 	return RadVector * (180.f / PI);
 }
 
-inline YVector YVector::DegreesToRadians(const YVector& DegVector)
+inline FVector FVector::DegreesToRadians(const FVector& DegVector)
 {
 	return DegVector * (PI / 180.f);
 }
 
-FORCEINLINE YVector::YVector()
+FORCEINLINE FVector::FVector()
 {}
 
-FORCEINLINE YVector::YVector(float InF)
+FORCEINLINE FVector::FVector(float InF)
 	: X(InF), Y(InF), Z(InF)
 {
 	DiagnosticCheckNaN();
 }
 
-FORCEINLINE YVector::YVector(float InX, float InY, float InZ)
+FORCEINLINE FVector::FVector(float InX, float InY, float InZ)
 	: X(InX), Y(InY), Z(InZ)
 {
 	DiagnosticCheckNaN();
 }
 
-FORCEINLINE YVector::YVector(const YLinearColor& InColor)
+FORCEINLINE FVector::FVector(const FLinearColor& InColor)
 	: X(InColor.R), Y(InColor.G), Z(InColor.B)
 {
 	DiagnosticCheckNaN();
 }
 
-FORCEINLINE YVector::YVector(YIntVector InVector)
+FORCEINLINE FVector::FVector(YIntVector InVector)
 	: X(InVector.X), Y(InVector.Y), Z(InVector.Z)
 {
 	DiagnosticCheckNaN();
 }
 
-FORCEINLINE YVector::YVector(YIntPoint A)
+FORCEINLINE FVector::FVector(YIntPoint A)
 	: X(A.X), Y(A.Y), Z(0.f)
 {
 	DiagnosticCheckNaN();
 }
 
-FORCEINLINE YVector::YVector(EForceInit)
+FORCEINLINE FVector::FVector(EForceInit)
 	: X(0.0f), Y(0.0f), Z(0.0f)
 {
 	DiagnosticCheckNaN();
 }
 
 #ifdef IMPLEMENT_ASSIGNMENT_OPERATOR_MANUALLY
-FORCEINLINE YVector& YVector::operator=(const YVector& Other)
+FORCEINLINE FVector& FVector::operator=(const FVector& Other)
 {
 	this->X = Other.X;
 	this->Y = Other.Y;
@@ -1262,9 +1262,9 @@ FORCEINLINE YVector& YVector::operator=(const YVector& Other)
 }
 #endif
 
-FORCEINLINE YVector YVector::operator^(const YVector& V) const
+FORCEINLINE FVector FVector::operator^(const FVector& V) const
 {
-	return YVector
+	return FVector
 	(
 		Y * V.Z - Z * V.Y,
 		Z * V.X - X * V.Z,
@@ -1272,111 +1272,111 @@ FORCEINLINE YVector YVector::operator^(const YVector& V) const
 	);
 }
 
-FORCEINLINE YVector YVector::CrossProduct(const YVector& A, const YVector& B)
+FORCEINLINE FVector FVector::CrossProduct(const FVector& A, const FVector& B)
 {
 	return A ^ B;
 }
 
-FORCEINLINE float YVector::operator|(const YVector& V) const
+FORCEINLINE float FVector::operator|(const FVector& V) const
 {
 	return X*V.X + Y*V.Y + Z*V.Z;
 }
 
-FORCEINLINE float YVector::DotProduct(const YVector& A, const YVector& B)
+FORCEINLINE float FVector::DotProduct(const FVector& A, const FVector& B)
 {
 	return A | B;
 }
 
-FORCEINLINE YVector YVector::operator+(const YVector& V) const
+FORCEINLINE FVector FVector::operator+(const FVector& V) const
 {
-	return YVector(X + V.X, Y + V.Y, Z + V.Z);
+	return FVector(X + V.X, Y + V.Y, Z + V.Z);
 }
 
-FORCEINLINE YVector YVector::operator-(const YVector& V) const
+FORCEINLINE FVector FVector::operator-(const FVector& V) const
 {
-	return YVector(X - V.X, Y - V.Y, Z - V.Z);
+	return FVector(X - V.X, Y - V.Y, Z - V.Z);
 }
 
-FORCEINLINE YVector YVector::operator-(float Bias) const
+FORCEINLINE FVector FVector::operator-(float Bias) const
 {
-	return YVector(X - Bias, Y - Bias, Z - Bias);
+	return FVector(X - Bias, Y - Bias, Z - Bias);
 }
 
-FORCEINLINE YVector YVector::operator+(float Bias) const
+FORCEINLINE FVector FVector::operator+(float Bias) const
 {
-	return YVector(X + Bias, Y + Bias, Z + Bias);
+	return FVector(X + Bias, Y + Bias, Z + Bias);
 }
 
-FORCEINLINE YVector YVector::operator*(float Scale) const
+FORCEINLINE FVector FVector::operator*(float Scale) const
 {
-	return YVector(X * Scale, Y * Scale, Z * Scale);
+	return FVector(X * Scale, Y * Scale, Z * Scale);
 }
 
-FORCEINLINE YVector YVector::operator/(float Scale) const
+FORCEINLINE FVector FVector::operator/(float Scale) const
 {
 	const float RScale = 1.f / Scale;
-	return YVector(X * RScale, Y * RScale, Z * RScale);
+	return FVector(X * RScale, Y * RScale, Z * RScale);
 }
 
-FORCEINLINE YVector YVector::operator*(const YVector& V) const
+FORCEINLINE FVector FVector::operator*(const FVector& V) const
 {
-	return YVector(X * V.X, Y * V.Y, Z * V.Z);
+	return FVector(X * V.X, Y * V.Y, Z * V.Z);
 }
 
-FORCEINLINE YVector YVector::operator/(const YVector& V) const
+FORCEINLINE FVector FVector::operator/(const FVector& V) const
 {
-	return YVector(X / V.X, Y / V.Y, Z / V.Z);
+	return FVector(X / V.X, Y / V.Y, Z / V.Z);
 }
 
-FORCEINLINE bool YVector::operator==(const YVector& V) const
+FORCEINLINE bool FVector::operator==(const FVector& V) const
 {
 	return X == V.X && Y == V.Y && Z == V.Z;
 }
 
-FORCEINLINE bool YVector::operator!=(const YVector& V) const
+FORCEINLINE bool FVector::operator!=(const FVector& V) const
 {
 	return X != V.X || Y != V.Y || Z != V.Z;
 }
 
-FORCEINLINE bool YVector::Equals(const YVector& V, float Tolerance) const
+FORCEINLINE bool FVector::Equals(const FVector& V, float Tolerance) const
 {
 	return YMath::Abs(X - V.X) <= Tolerance && YMath::Abs(Y - V.Y) <= Tolerance && YMath::Abs(Z - V.Z) <= Tolerance;
 }
 
-FORCEINLINE bool YVector::AllComponentsEqual(float Tolerance) const
+FORCEINLINE bool FVector::AllComponentsEqual(float Tolerance) const
 {
 	return YMath::Abs(X - Y) <= Tolerance && YMath::Abs(X - Z) <= Tolerance && YMath::Abs(Y - Z) <= Tolerance;
 }
 
 
-FORCEINLINE YVector YVector::operator-() const
+FORCEINLINE FVector FVector::operator-() const
 {
-	return YVector(-X, -Y, -Z);
+	return FVector(-X, -Y, -Z);
 }
 
 
-FORCEINLINE YVector YVector::operator+=(const YVector& V)
+FORCEINLINE FVector FVector::operator+=(const FVector& V)
 {
 	X += V.X; Y += V.Y; Z += V.Z;
 	DiagnosticCheckNaN();
 	return *this;
 }
 
-FORCEINLINE YVector YVector::operator-=(const YVector& V)
+FORCEINLINE FVector FVector::operator-=(const FVector& V)
 {
 	X -= V.X; Y -= V.Y; Z -= V.Z;
 	DiagnosticCheckNaN();
 	return *this;
 }
 
-FORCEINLINE YVector YVector::operator*=(float Scale)
+FORCEINLINE FVector FVector::operator*=(float Scale)
 {
 	X *= Scale; Y *= Scale; Z *= Scale;
 	DiagnosticCheckNaN();
 	return *this;
 }
 
-FORCEINLINE YVector YVector::operator/=(float V)
+FORCEINLINE FVector FVector::operator/=(float V)
 {
 	const float RV = 1.f / V;
 	X *= RV; Y *= RV; Z *= RV;
@@ -1384,21 +1384,21 @@ FORCEINLINE YVector YVector::operator/=(float V)
 	return *this;
 }
 
-FORCEINLINE YVector YVector::operator*=(const YVector& V)
+FORCEINLINE FVector FVector::operator*=(const FVector& V)
 {
 	X *= V.X; Y *= V.Y; Z *= V.Z;
 	DiagnosticCheckNaN();
 	return *this;
 }
 
-FORCEINLINE YVector YVector::operator/=(const YVector& V)
+FORCEINLINE FVector FVector::operator/=(const FVector& V)
 {
 	X /= V.X; Y /= V.Y; Z /= V.Z;
 	DiagnosticCheckNaN();
 	return *this;
 }
 
-FORCEINLINE float& YVector::operator[](int32 Index)
+FORCEINLINE float& FVector::operator[](int32 Index)
 {
 	check(Index >= 0 && Index < 3);
 	if (Index == 0)
@@ -1415,7 +1415,7 @@ FORCEINLINE float& YVector::operator[](int32 Index)
 	}
 }
 
-FORCEINLINE float YVector::operator[](int32 Index)const
+FORCEINLINE float FVector::operator[](int32 Index)const
 {
 	check(Index >= 0 && Index < 3);
 	if (Index == 0)
@@ -1432,7 +1432,7 @@ FORCEINLINE float YVector::operator[](int32 Index)const
 	}
 }
 
-FORCEINLINE void YVector::Set(float InX, float InY, float InZ)
+FORCEINLINE void FVector::Set(float InX, float InY, float InZ)
 {
 	X = InX;
 	Y = InY;
@@ -1440,62 +1440,62 @@ FORCEINLINE void YVector::Set(float InX, float InY, float InZ)
 	DiagnosticCheckNaN();
 }
 
-FORCEINLINE float YVector::GetMax() const
+FORCEINLINE float FVector::GetMax() const
 {
 	return YMath::Max(YMath::Max(X, Y), Z);
 }
 
-FORCEINLINE float YVector::GetAbsMax() const
+FORCEINLINE float FVector::GetAbsMax() const
 {
 	return YMath::Max(YMath::Max(YMath::Abs(X), YMath::Abs(Y)), YMath::Abs(Z));
 }
 
-FORCEINLINE float YVector::GetMin() const
+FORCEINLINE float FVector::GetMin() const
 {
 	return YMath::Min(YMath::Min(X, Y), Z);
 }
 
-FORCEINLINE float YVector::GetAbsMin() const
+FORCEINLINE float FVector::GetAbsMin() const
 {
 	return YMath::Min(YMath::Min(YMath::Abs(X), YMath::Abs(Y)), YMath::Abs(Z));
 }
 
-FORCEINLINE YVector YVector::ComponentMin(const YVector& Other) const
+FORCEINLINE FVector FVector::ComponentMin(const FVector& Other) const
 {
-	return YVector(YMath::Min(X, Other.X), YMath::Min(Y, Other.Y), YMath::Min(Z, Other.Z));
+	return FVector(YMath::Min(X, Other.X), YMath::Min(Y, Other.Y), YMath::Min(Z, Other.Z));
 }
 
-FORCEINLINE YVector YVector::ComponentMax(const YVector& Other) const
+FORCEINLINE FVector FVector::ComponentMax(const FVector& Other) const
 {
-	return YVector(YMath::Max(X, Other.X), YMath::Max(Y, Other.Y), YMath::Max(Z, Other.Z));
+	return FVector(YMath::Max(X, Other.X), YMath::Max(Y, Other.Y), YMath::Max(Z, Other.Z));
 }
 
-FORCEINLINE YVector YVector::GetAbs() const
+FORCEINLINE FVector FVector::GetAbs() const
 {
-	return YVector(YMath::Abs(X), YMath::Abs(Y), YMath::Abs(Z));
+	return FVector(YMath::Abs(X), YMath::Abs(Y), YMath::Abs(Z));
 }
 
-FORCEINLINE float YVector::Size() const
+FORCEINLINE float FVector::Size() const
 {
 	return YMath::Sqrt(X*X + Y*Y + Z*Z);
 }
 
-FORCEINLINE float YVector::SizeSquared() const
+FORCEINLINE float FVector::SizeSquared() const
 {
 	return X*X + Y*Y + Z*Z;
 }
 
-FORCEINLINE float YVector::Size2D() const
+FORCEINLINE float FVector::Size2D() const
 {
 	return YMath::Sqrt(X*X + Y*Y);
 }
 
-FORCEINLINE float YVector::SizeSquared2D() const
+FORCEINLINE float FVector::SizeSquared2D() const
 {
 	return X*X + Y*Y;
 }
 
-FORCEINLINE bool YVector::IsNearlyZero(float Tolerance) const
+FORCEINLINE bool FVector::IsNearlyZero(float Tolerance) const
 {
 	return
 		YMath::Abs(X) <= Tolerance
@@ -1503,12 +1503,12 @@ FORCEINLINE bool YVector::IsNearlyZero(float Tolerance) const
 		&&	YMath::Abs(Z) <= Tolerance;
 }
 
-FORCEINLINE bool YVector::IsZero() const
+FORCEINLINE bool FVector::IsZero() const
 {
 	return X == 0.f && Y == 0.f && Z == 0.f;
 }
 
-FORCEINLINE bool YVector::Normalize(float Tolerance)
+FORCEINLINE bool FVector::Normalize(float Tolerance)
 {
 	const float SquareSum = X*X + Y*Y + Z*Z;
 	if (SquareSum > Tolerance)
@@ -1520,29 +1520,29 @@ FORCEINLINE bool YVector::Normalize(float Tolerance)
 	return false;
 }
 
-FORCEINLINE bool YVector::IsNormalized() const
+FORCEINLINE bool FVector::IsNormalized() const
 {
 	return (YMath::Abs(1.f - SizeSquared()) < THRESH_VECTOR_NORMALIZED);
 }
 
-FORCEINLINE void YVector::ToDirectionAndLength(YVector &OutDir, float &OutLength) const
+FORCEINLINE void FVector::ToDirectionAndLength(FVector &OutDir, float &OutLength) const
 {
 	OutLength = Size();
 	if (OutLength > SMALL_NUMBER)
 	{
 		float OneOverLength = 1.0f / OutLength;
-		OutDir = YVector(X*OneOverLength, Y*OneOverLength,
+		OutDir = FVector(X*OneOverLength, Y*OneOverLength,
 			Z*OneOverLength);
 	}
 	else
 	{
-		OutDir = YVector::ZeroVector;
+		OutDir = FVector::ZeroVector;
 	}
 }
 
-FORCEINLINE YVector YVector::GetSignVector() const
+FORCEINLINE FVector FVector::GetSignVector() const
 {
-	return YVector
+	return FVector
 	(
 		YMath::FloatSelect(X, 1.f, -1.f),
 		YMath::FloatSelect(Y, 1.f, -1.f),
@@ -1550,31 +1550,31 @@ FORCEINLINE YVector YVector::GetSignVector() const
 	);
 }
 
-FORCEINLINE YVector YVector::Projection() const
+FORCEINLINE FVector FVector::Projection() const
 {
 	const float RZ = 1.f / Z;
-	return YVector(X*RZ, Y*RZ, 1);
+	return FVector(X*RZ, Y*RZ, 1);
 }
 
-FORCEINLINE YVector YVector::GetUnsafeNormal() const
+FORCEINLINE FVector FVector::GetUnsafeNormal() const
 {
 	const float Scale = YMath::InvSqrt(X*X + Y*Y + Z*Z);
-	return YVector(X*Scale, Y*Scale, Z*Scale);
+	return FVector(X*Scale, Y*Scale, Z*Scale);
 }
 
-FORCEINLINE YVector YVector::UnsafeNormal() const
+FORCEINLINE FVector FVector::UnsafeNormal() const
 {
 	return GetUnsafeNormal();
 }
 
-FORCEINLINE YVector YVector::GridSnap(const float& GridSz) const
+FORCEINLINE FVector FVector::GridSnap(const float& GridSz) const
 {
-	return YVector(YMath::GridSnap(X, GridSz), YMath::GridSnap(Y, GridSz), YMath::GridSnap(Z, GridSz));
+	return FVector(YMath::GridSnap(X, GridSz), YMath::GridSnap(Y, GridSz), YMath::GridSnap(Z, GridSz));
 }
 
-FORCEINLINE YVector YVector::BoundToCube(float Radius) const
+FORCEINLINE FVector FVector::BoundToCube(float Radius) const
 {
-	return YVector
+	return FVector
 	(
 		YMath::Clamp(X, -Radius, Radius),
 		YMath::Clamp(Y, -Radius, Radius),
@@ -1582,49 +1582,49 @@ FORCEINLINE YVector YVector::BoundToCube(float Radius) const
 	);
 }
 
-FORCEINLINE YVector YVector::GetClampedToSize(float Min, float Max) const
+FORCEINLINE FVector FVector::GetClampedToSize(float Min, float Max) const
 {
 	float VecSize = Size();
-	const YVector VecDir = (VecSize > SMALL_NUMBER) ? (*this / VecSize) : YVector::ZeroVector;
+	const FVector VecDir = (VecSize > SMALL_NUMBER) ? (*this / VecSize) : FVector::ZeroVector;
 
 	VecSize = YMath::Clamp(VecSize, Min, Max);
 
 	return VecSize * VecDir;
 }
 
-FORCEINLINE YVector YVector::ClampSize(float Min, float Max) const
+FORCEINLINE FVector FVector::ClampSize(float Min, float Max) const
 {
 	return GetClampedToSize(Min, Max);
 }
 
-FORCEINLINE YVector YVector::GetClampedToSize2D(float Min, float Max) const
+FORCEINLINE FVector FVector::GetClampedToSize2D(float Min, float Max) const
 {
 	float VecSize2D = Size2D();
-	const YVector VecDir = (VecSize2D > SMALL_NUMBER) ? (*this / VecSize2D) : YVector::ZeroVector;
+	const FVector VecDir = (VecSize2D > SMALL_NUMBER) ? (*this / VecSize2D) : FVector::ZeroVector;
 
 	VecSize2D = YMath::Clamp(VecSize2D, Min, Max);
 
-	return YVector(VecSize2D * VecDir.X, VecSize2D * VecDir.Y, Z);
+	return FVector(VecSize2D * VecDir.X, VecSize2D * VecDir.Y, Z);
 }
 
-FORCEINLINE YVector YVector::ClampSize2D(float Min, float Max) const
+FORCEINLINE FVector FVector::ClampSize2D(float Min, float Max) const
 {
 	return GetClampedToSize2D(Min, Max);
 }
 
 
-FORCEINLINE YVector YVector::GetClampedToMaxSize(float MaxSize) const
+FORCEINLINE FVector FVector::GetClampedToMaxSize(float MaxSize) const
 {
 	if (MaxSize < KINDA_SMALL_NUMBER)
 	{
-		return YVector::ZeroVector;
+		return FVector::ZeroVector;
 	}
 
 	const float VSq = SizeSquared();
 	if (VSq > YMath::Square(MaxSize))
 	{
 		const float Scale = MaxSize * YMath::InvSqrt(VSq);
-		return YVector(X*Scale, Y*Scale, Z*Scale);
+		return FVector(X*Scale, Y*Scale, Z*Scale);
 	}
 	else
 	{
@@ -1632,23 +1632,23 @@ FORCEINLINE YVector YVector::GetClampedToMaxSize(float MaxSize) const
 	}
 }
 
-FORCEINLINE YVector YVector::ClampMaxSize(float MaxSize) const
+FORCEINLINE FVector FVector::ClampMaxSize(float MaxSize) const
 {
 	return GetClampedToMaxSize(MaxSize);
 }
 
-FORCEINLINE YVector YVector::GetClampedToMaxSize2D(float MaxSize) const
+FORCEINLINE FVector FVector::GetClampedToMaxSize2D(float MaxSize) const
 {
 	if (MaxSize < KINDA_SMALL_NUMBER)
 	{
-		return YVector(0.f, 0.f, Z);
+		return FVector(0.f, 0.f, Z);
 	}
 
 	const float VSq2D = SizeSquared2D();
 	if (VSq2D > YMath::Square(MaxSize))
 	{
 		const float Scale = MaxSize * YMath::InvSqrt(VSq2D);
-		return YVector(X*Scale, Y*Scale, Z);
+		return FVector(X*Scale, Y*Scale, Z);
 	}
 	else
 	{
@@ -1656,30 +1656,30 @@ FORCEINLINE YVector YVector::GetClampedToMaxSize2D(float MaxSize) const
 	}
 }
 
-FORCEINLINE YVector YVector::ClampMaxSize2D(float MaxSize) const
+FORCEINLINE FVector FVector::ClampMaxSize2D(float MaxSize) const
 {
 	return GetClampedToMaxSize2D(MaxSize);
 }
 
 
-FORCEINLINE void YVector::AddBounded(const YVector& V, float Radius)
+FORCEINLINE void FVector::AddBounded(const FVector& V, float Radius)
 {
 	*this = (*this + V).BoundToCube(Radius);
 }
 
-FORCEINLINE float& YVector::Component(int32 Index)
+FORCEINLINE float& FVector::Component(int32 Index)
 {
 	return (&X)[Index];
 }
 
-FORCEINLINE float YVector::Component(int32 Index) const
+FORCEINLINE float FVector::Component(int32 Index) const
 {
 	return (&X)[Index];
 }
 
-FORCEINLINE YVector YVector::Reciprocal() const
+FORCEINLINE FVector FVector::Reciprocal() const
 {
-	YVector RecVector;
+	FVector RecVector;
 	if (X != 0.f)
 	{
 		RecVector.X = 1.f / X;
@@ -1708,17 +1708,17 @@ FORCEINLINE YVector YVector::Reciprocal() const
 	return RecVector;
 }
 
-FORCEINLINE bool YVector::IsUniform(float Tolerance) const
+FORCEINLINE bool FVector::IsUniform(float Tolerance) const
 {
 	return AllComponentsEqual(Tolerance);
 }
 
-FORCEINLINE YVector YVector::MirrorByVector(const YVector& MirrorNormal) const
+FORCEINLINE FVector FVector::MirrorByVector(const FVector& MirrorNormal) const
 {
 	return *this - MirrorNormal * (2.f * (*this | MirrorNormal));
 }
 
-FORCEINLINE YVector YVector::GetSafeNormal(float Tolerance) const
+FORCEINLINE FVector FVector::GetSafeNormal(float Tolerance) const
 {
 	const float SquareSum = X*X + Y*Y + Z*Z;
 
@@ -1729,18 +1729,18 @@ FORCEINLINE YVector YVector::GetSafeNormal(float Tolerance) const
 	}
 	else if (SquareSum < Tolerance)
 	{
-		return YVector::ZeroVector;
+		return FVector::ZeroVector;
 	}
 	const float Scale = YMath::InvSqrt(SquareSum);
-	return YVector(X*Scale, Y*Scale, Z*Scale);
+	return FVector(X*Scale, Y*Scale, Z*Scale);
 }
 
-FORCEINLINE YVector YVector::SafeNormal(float Tolerance) const
+FORCEINLINE FVector FVector::SafeNormal(float Tolerance) const
 {
 	return GetSafeNormal(Tolerance);
 }
 
-FORCEINLINE YVector YVector::GetSafeNormal2D(float Tolerance) const
+FORCEINLINE FVector FVector::GetSafeNormal2D(float Tolerance) const
 {
 	const float SquareSum = X*X + Y*Y;
 
@@ -1753,26 +1753,26 @@ FORCEINLINE YVector YVector::GetSafeNormal2D(float Tolerance) const
 		}
 		else
 		{
-			return YVector(X, Y, 0.f);
+			return FVector(X, Y, 0.f);
 		}
 	}
 	else if (SquareSum < Tolerance)
 	{
-		return YVector::ZeroVector;
+		return FVector::ZeroVector;
 	}
 
 	const float Scale = YMath::InvSqrt(SquareSum);
-	return YVector(X*Scale, Y*Scale, 0.f);
+	return FVector(X*Scale, Y*Scale, 0.f);
 }
 
-FORCEINLINE YVector YVector::SafeNormal2D(float Tolerance) const
+FORCEINLINE FVector FVector::SafeNormal2D(float Tolerance) const
 {
 	return GetSafeNormal2D(Tolerance);
 }
 
-FORCEINLINE float YVector::CosineAngle2D(YVector B) const
+FORCEINLINE float FVector::CosineAngle2D(FVector B) const
 {
-	YVector A(*this);
+	FVector A(*this);
 	A.Z = 0.0f;
 	B.Z = 0.0f;
 	A.Normalize();
@@ -1780,35 +1780,35 @@ FORCEINLINE float YVector::CosineAngle2D(YVector B) const
 	return A | B;
 }
 
-FORCEINLINE YVector YVector::ProjectOnTo(const YVector& A) const
+FORCEINLINE FVector FVector::ProjectOnTo(const FVector& A) const
 {
 	return (A * ((*this | A) / (A | A)));
 }
 
-FORCEINLINE YVector YVector::ProjectOnToNormal(const YVector& Normal) const
+FORCEINLINE FVector FVector::ProjectOnToNormal(const FVector& Normal) const
 {
 	return (Normal * (*this | Normal));
 }
 
 
-FORCEINLINE bool YVector::ContainsNaN() const
+FORCEINLINE bool FVector::ContainsNaN() const
 {
 	return (!YMath::IsFinite(X) ||
 		!YMath::IsFinite(Y) ||
 		!YMath::IsFinite(Z));
 }
 
-FORCEINLINE bool YVector::IsUnit(float LengthSquaredTolerance) const
+FORCEINLINE bool FVector::IsUnit(float LengthSquaredTolerance) const
 {
 	return YMath::Abs(1.0f - SizeSquared()) < LengthSquaredTolerance;
 }
 
-FORCEINLINE YString YVector::ToString() const
+FORCEINLINE YString FVector::ToString() const
 {
 	return YString::Printf(TEXT("X=%3.3f Y=%3.3f Z=%3.3f"), X, Y, Z);
 }
 
-FORCEINLINE FText YVector::ToText() const
+FORCEINLINE FText FVector::ToText() const
 {
 	FFormatNamedArguments Args;
 	Args.Add(TEXT("X"), X);
@@ -1818,7 +1818,7 @@ FORCEINLINE FText YVector::ToText() const
 	return FText::Format(NSLOCTEXT("Core", "Vector3", "X={X} Y={Y} Z={Z}"), Args);
 }
 
-FORCEINLINE FText YVector::ToCompactText() const
+FORCEINLINE FText FVector::ToCompactText() const
 {
 	if (IsNearlyZero())
 	{
@@ -1870,7 +1870,7 @@ FORCEINLINE FText YVector::ToCompactText() const
 	return NSLOCTEXT("Core", "Vector3_CompactZeroVector", "V(0)");
 }
 
-FORCEINLINE YString YVector::ToCompactString() const
+FORCEINLINE YString FVector::ToCompactString() const
 {
 	if (IsNearlyZero())
 	{
@@ -1906,7 +1906,7 @@ FORCEINLINE YString YVector::ToCompactString() const
 	return ReturnString;
 }
 
-FORCEINLINE bool YVector::InitFromString(const YString& InSourceString)
+FORCEINLINE bool FVector::InitFromString(const YString& InSourceString)
 {
 	X = Y = Z = 0;
 
@@ -1916,7 +1916,7 @@ FORCEINLINE bool YVector::InitFromString(const YString& InSourceString)
 	return bSuccessful;
 }
 
-FORCEINLINE YVector2D YVector::UnitCartesianToSpherical() const
+FORCEINLINE YVector2D FVector::UnitCartesianToSpherical() const
 {
 	checkSlow(IsUnit());
 	const float Theta = YMath::Acos(Z / Size());
@@ -1924,10 +1924,10 @@ FORCEINLINE YVector2D YVector::UnitCartesianToSpherical() const
 	return YVector2D(Theta, Phi);
 }
 
-FORCEINLINE float YVector::HeadingAngle() const
+FORCEINLINE float FVector::HeadingAngle() const
 {
 	// Project Dir into Z plane.
-	YVector PlaneDir = *this;
+	FVector PlaneDir = *this;
 	PlaneDir.Z = 0.f;
 	PlaneDir = PlaneDir.GetSafeNormal();
 
@@ -1943,52 +1943,52 @@ FORCEINLINE float YVector::HeadingAngle() const
 
 
 
-FORCEINLINE float YVector::Dist(const YVector &V1, const YVector &V2)
+FORCEINLINE float FVector::Dist(const FVector &V1, const FVector &V2)
 {
-	return YMath::Sqrt(YVector::DistSquared(V1, V2));
+	return YMath::Sqrt(FVector::DistSquared(V1, V2));
 }
 
-FORCEINLINE float YVector::DistXY(const YVector &V1, const YVector &V2)
+FORCEINLINE float FVector::DistXY(const FVector &V1, const FVector &V2)
 {
-	return YMath::Sqrt(YVector::DistSquaredXY(V1, V2));
+	return YMath::Sqrt(FVector::DistSquaredXY(V1, V2));
 }
 
-FORCEINLINE float YVector::DistSquared(const YVector &V1, const YVector &V2)
+FORCEINLINE float FVector::DistSquared(const FVector &V1, const FVector &V2)
 {
 	return YMath::Square(V2.X - V1.X) + YMath::Square(V2.Y - V1.Y) + YMath::Square(V2.Z - V1.Z);
 }
 
-FORCEINLINE float YVector::DistSquaredXY(const YVector &V1, const YVector &V2)
+FORCEINLINE float FVector::DistSquaredXY(const FVector &V1, const FVector &V2)
 {
 	return YMath::Square(V2.X - V1.X) + YMath::Square(V2.Y - V1.Y);
 }
 
-FORCEINLINE float YVector::BoxPushOut(const YVector& Normal, const YVector& Size)
+FORCEINLINE float FVector::BoxPushOut(const FVector& Normal, const FVector& Size)
 {
 	return YMath::Abs(Normal.X*Size.X) + YMath::Abs(Normal.Y*Size.Y) + YMath::Abs(Normal.Z*Size.Z);
 }
 
 /** Component-wise clamp for YVector */
-FORCEINLINE YVector ClampVector(const YVector& V, const YVector& Min, const YVector& Max)
+FORCEINLINE FVector ClampVector(const FVector& V, const FVector& Min, const FVector& Max)
 {
-	return YVector(
+	return FVector(
 		YMath::Clamp(V.X, Min.X, Max.X),
 		YMath::Clamp(V.Y, Min.Y, Max.Y),
 		YMath::Clamp(V.Z, Min.Z, Max.Z)
 	);
 }
 
-template <> struct TIsPODType<YVector> { enum { Value = true }; };
+template <> struct TIsPODType<FVector> { enum { Value = true }; };
 
 /* YMath inline functions
 *****************************************************************************/
 
-inline YVector YMath::LinePlaneIntersection
+inline FVector YMath::LinePlaneIntersection
 (
-	const YVector &Point1,
-	const YVector &Point2,
-	const YVector &PlaneOrigin,
-	const YVector &PlaneNormal
+	const FVector &Point1,
+	const FVector &Point2,
+	const FVector &PlaneOrigin,
+	const FVector &PlaneNormal
 )
 {
 	return
@@ -1997,9 +1997,9 @@ inline YVector YMath::LinePlaneIntersection
 		*	(((PlaneOrigin - Point1) | PlaneNormal) / ((Point2 - Point1) | PlaneNormal));
 }
 
-inline bool YMath::LineSphereIntersection(const YVector& Start, const YVector& Dir, float Length, const YVector& Origin, float Radius)
+inline bool YMath::LineSphereIntersection(const FVector& Start, const FVector& Dir, float Length, const FVector& Origin, float Radius)
 {
-	const YVector	EO = Start - Origin;
+	const FVector	EO = Start - Origin;
 	const float		v = (Dir | (Origin - Start));
 	const float		disc = Radius * Radius - ((EO | EO) - v * v);
 
@@ -2016,9 +2016,9 @@ inline bool YMath::LineSphereIntersection(const YVector& Start, const YVector& D
 		return 0;
 }
 
-inline YVector YMath::VRand()
+inline FVector YMath::VRand()
 {
-	YVector Result;
+	FVector Result;
 
 	float L;
 
@@ -2038,13 +2038,13 @@ inline YVector YMath::VRand()
 /* YVector2D inline functions
 *****************************************************************************/
 
-FORCEINLINE YVector2D::YVector2D(const YVector& V)
+FORCEINLINE YVector2D::YVector2D(const FVector& V)
 	: X(V.X), Y(V.Y)
 {
 }
 
-inline YVector YVector2D::SphericalToUnitCartesian() const
+inline FVector YVector2D::SphericalToUnitCartesian() const
 {
 	const float SinTheta = YMath::Sin(X);
-	return YVector(YMath::Cos(Y) * SinTheta, YMath::Sin(Y) * SinTheta, YMath::Cos(X));
+	return FVector(YMath::Cos(Y) * SinTheta, YMath::Sin(Y) * SinTheta, YMath::Cos(X));
 }

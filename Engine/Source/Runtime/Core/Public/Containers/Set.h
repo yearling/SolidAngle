@@ -171,7 +171,7 @@ public:
 	FORCEINLINE TSetElement& operator=(TSetElement&& Rhs) { Value = MoveTemp(Rhs.Value); HashNextId = MoveTemp(Rhs.HashNextId); HashIndex = Rhs.HashIndex; return *this; }
 
 	/** Serializer. */
-	FORCEINLINE friend YArchive& operator<<(YArchive& Ar, TSetElement& Element)
+	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, TSetElement& Element)
 	{
 		return Ar << Element.Value;
 	}
@@ -427,7 +427,7 @@ public:
 	}
 
 	/** Tracks the container's memory use through an archive. */
-	FORCEINLINE void CountBytes(YArchive& Ar)
+	FORCEINLINE void CountBytes(FArchive& Ar)
 	{
 		Elements.CountBytes(Ar);
 		Ar.CountBytes(HashSize * sizeof(int32), HashSize * sizeof(FSetElementId));
@@ -734,7 +734,7 @@ public:
 	}
 
 	/** Serializer. */
-	friend YArchive& operator<<(YArchive& Ar, TSet& Set)
+	friend FArchive& operator<<(FArchive& Ar, TSet& Set)
 	{
 		// Load the set's new elements.
 		Ar << Set.Elements;
@@ -756,7 +756,7 @@ public:
 	* Describes the set's contents through an output device.
 	* @param Ar - The output device to describe the set's contents through.
 	*/
-	void Dump(YOutputDevice& Ar)
+	void Dump(FOutputDevice& Ar)
 	{
 		Ar.Logf(TEXT("TSet: %i elements, %i hash slots"), Elements.Num(), HashSize);
 		for (int32 HashIndex = 0, LocalHashSize = HashSize; HashIndex < LocalHashSize; ++HashIndex)
@@ -795,7 +795,7 @@ public:
 		return bResult;
 	}
 
-	void DumpHashElements(YOutputDevice& Ar)
+	void DumpHashElements(FOutputDevice& Ar)
 	{
 		for (int32 HashIndex = 0, LocalHashSize = HashSize; HashIndex < LocalHashSize; ++HashIndex)
 		{

@@ -25,7 +25,7 @@ public:
 	DECLARE_DELEGATE_TwoParams( FItemToStringArray, ItemType, OUT TArray< YString >& );
 
 	/** Defines a function signature used to test a complex expression for an Item */
-	DECLARE_DELEGATE_RetVal_FiveParams( bool, FItemTestComplexExpression, ItemType, const YName& /*InKey*/, const FTextFilterString& /*InValue*/, ETextFilterComparisonOperation /*InComparisonOperation*/, ETextFilterTextComparisonMode /*InTextComparisonMode*/ );
+	DECLARE_DELEGATE_RetVal_FiveParams( bool, FItemTestComplexExpression, ItemType, const FName& /*InKey*/, const FTextFilterString& /*InValue*/, ETextFilterComparisonOperation /*InComparisonOperation*/, ETextFilterTextComparisonMode /*InTextComparisonMode*/ );
 
 	/** 
 	 *	TTextFilter Constructor
@@ -128,7 +128,7 @@ private:
 			return false;
 		}
 
-		virtual bool TestComplexExpression(const YName& InKey, const FTextFilterString& InValue, const ETextFilterComparisonOperation InComparisonOperation, const ETextFilterTextComparisonMode InTextComparisonMode) const override
+		virtual bool TestComplexExpression(const FName& InKey, const FTextFilterString& InValue, const ETextFilterComparisonOperation InComparisonOperation, const ETextFilterTextComparisonMode InTextComparisonMode) const override
 		{
 			if (ItemPtr && TestComplexExpressionDelegate.IsBound())
 			{

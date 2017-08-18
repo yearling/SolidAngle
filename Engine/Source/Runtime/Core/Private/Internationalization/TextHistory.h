@@ -41,10 +41,10 @@ public:
 	virtual FText ToText(bool bInAsSource) const = 0;
 	
 	/** Serializes the history to/from an YArchive */
-	virtual void Serialize(YArchive& Ar) = 0;
+	virtual void Serialize(FArchive& Ar) = 0;
 
 	/** Serializes data needed to get the FText's DisplayString */
-	virtual void SerializeForDisplayString(YArchive& Ar, FTextDisplayStringPtr& InOutDisplayString);
+	virtual void SerializeForDisplayString(FArchive& Ar, FTextDisplayStringPtr& InOutDisplayString);
 
 	/** Returns TRUE if the Revision is out of date */
 	virtual bool IsOutOfDate() const;
@@ -90,8 +90,8 @@ public:
 
 	//~ Begin FTextHistory Interface
 	virtual FText ToText(bool bInAsSource) const override;
-	virtual void Serialize(YArchive& Ar) override;
-	virtual void SerializeForDisplayString(YArchive& Ar, FTextDisplayStringPtr& InOutDisplayString) override;
+	virtual void Serialize(FArchive& Ar) override;
+	virtual void SerializeForDisplayString(FArchive& Ar, FTextDisplayStringPtr& InOutDisplayString) override;
 	virtual const YString* GetSourceString() const override;
 	//~ End FTextHistory Interface
 
@@ -122,7 +122,7 @@ public:
 
 	//~ Begin FTextHistory Interface
 	virtual FText ToText(bool bInAsSource) const override;
-	virtual void Serialize(YArchive& Ar) override;
+	virtual void Serialize(FArchive& Ar) override;
 	virtual void GetHistoricFormatData(const FText& InText, TArray<FHistoricTextFormatData>& OutHistoricFormatData) const override;
 	//~ End FTextHistory Interface
 
@@ -150,7 +150,7 @@ public:
 
 	//~ Begin FTextHistory Interface
 	virtual FText ToText(bool bInAsSource) const override;
-	virtual void Serialize(YArchive& Ar) override;
+	virtual void Serialize(FArchive& Ar) override;
 	virtual void GetHistoricFormatData(const FText& InText, TArray<FHistoricTextFormatData>& OutHistoricFormatData) const override;
 	//~ End FTextHistory Interface
 
@@ -178,7 +178,7 @@ public:
 
 	//~ Begin FTextHistory Interface
 	virtual FText ToText(bool bInAsSource) const override;
-	virtual void Serialize(YArchive& Ar) override;
+	virtual void Serialize(FArchive& Ar) override;
 	virtual void GetHistoricFormatData(const FText& InText, TArray<FHistoricTextFormatData>& OutHistoricFormatData) const override;
 	//~ End FTextHistory Interface
 
@@ -205,7 +205,7 @@ public:
 	FTextHistory_FormatNumber& operator=(FTextHistory_FormatNumber&& Other);
 
 	//~ Begin FTextHistory Interface
-	virtual void Serialize(YArchive& Ar) override;
+	virtual void Serialize(FArchive& Ar) override;
 	//~ End FTextHistory interface
 
 protected:
@@ -235,7 +235,7 @@ public:
 
 	//~ Begin FTextHistory Interface
 	virtual FText ToText(bool bInAsSource) const override;
-	virtual void Serialize(YArchive& Ar) override;
+	virtual void Serialize(FArchive& Ar) override;
 	virtual bool GetHistoricNumericData(const FText& InText, FHistoricTextNumericData& OutHistoricNumericData) const override;
 	//~ End FTextHistory interface
 
@@ -258,7 +258,7 @@ public:
 
 	//~ Begin FTextHistory Interface
 	virtual FText ToText(bool bInAsSource) const override;
-	virtual void Serialize(YArchive& Ar) override;
+	virtual void Serialize(FArchive& Ar) override;
 	virtual bool GetHistoricNumericData(const FText& InText, FHistoricTextNumericData& OutHistoricNumericData) const override;
 	//~ End FTextHistory interface
 
@@ -281,7 +281,7 @@ public:
 
 	//~ Begin FTextHistory Interface
 	virtual FText ToText(bool bInAsSource) const override;
-	virtual void Serialize(YArchive& Ar) override;
+	virtual void Serialize(FArchive& Ar) override;
 	//~ End FTextHistory Interface
 
 private:
@@ -298,7 +298,7 @@ class CORE_API FTextHistory_AsDate : public FTextHistory
 {
 public:
 	FTextHistory_AsDate() {}
-	FTextHistory_AsDate(YDateTime InSourceDateTime, const EDateTimeStyle::Type InDateStyle, YString InTimeZone, FCulturePtr InTargetCulture);
+	FTextHistory_AsDate(FDateTime InSourceDateTime, const EDateTimeStyle::Type InDateStyle, YString InTimeZone, FCulturePtr InTargetCulture);
 
 	/** Allow moving */
 	FTextHistory_AsDate(FTextHistory_AsDate&& Other);
@@ -306,7 +306,7 @@ public:
 
 	//~ Begin FTextHistory Interface
 	virtual FText ToText(bool bInAsSource) const override;
-	virtual void Serialize(YArchive& Ar) override;
+	virtual void Serialize(FArchive& Ar) override;
 	//~ End FTextHistory Interface
 
 private:
@@ -315,7 +315,7 @@ private:
 	FTextHistory_AsDate& operator=(FTextHistory_AsDate&);
 
 	/** The source date structure to format */
-	YDateTime SourceDateTime;
+	FDateTime SourceDateTime;
 	/** Style to format the date using */
 	EDateTimeStyle::Type DateStyle;
 	/** Timezone to put the time in */
@@ -329,7 +329,7 @@ class CORE_API FTextHistory_AsTime : public FTextHistory
 {
 public:
 	FTextHistory_AsTime() {}
-	FTextHistory_AsTime(YDateTime InSourceDateTime, const EDateTimeStyle::Type InTimeStyle, YString InTimeZone, FCulturePtr InTargetCulture);
+	FTextHistory_AsTime(FDateTime InSourceDateTime, const EDateTimeStyle::Type InTimeStyle, YString InTimeZone, FCulturePtr InTargetCulture);
 
 	/** Allow moving */
 	FTextHistory_AsTime(FTextHistory_AsTime&& Other);
@@ -337,7 +337,7 @@ public:
 
 	//~ Begin FTextHistory Interface
 	virtual FText ToText(bool bInAsSource) const override;
-	virtual void Serialize(YArchive& Ar) override;
+	virtual void Serialize(FArchive& Ar) override;
 	//~ End FTextHistory Interface
 
 private:
@@ -346,7 +346,7 @@ private:
 	FTextHistory_AsTime& operator=(FTextHistory_AsTime&);
 
 	/** The source time structure to format */
-	YDateTime SourceDateTime;
+	FDateTime SourceDateTime;
 	/** Style to format the time using */
 	EDateTimeStyle::Type TimeStyle;
 	/** Timezone to put the time in */
@@ -360,7 +360,7 @@ class CORE_API FTextHistory_AsDateTime : public FTextHistory
 {
 public:
 	FTextHistory_AsDateTime() {}
-	FTextHistory_AsDateTime(YDateTime InSourceDateTime, const EDateTimeStyle::Type InDateStyle, const EDateTimeStyle::Type InTimeStyle, YString InTimeZone, FCulturePtr InTargetCulture);
+	FTextHistory_AsDateTime(FDateTime InSourceDateTime, const EDateTimeStyle::Type InDateStyle, const EDateTimeStyle::Type InTimeStyle, YString InTimeZone, FCulturePtr InTargetCulture);
 
 	/** Allow moving */
 	FTextHistory_AsDateTime(FTextHistory_AsDateTime&& Other);
@@ -368,7 +368,7 @@ public:
 
 	//~ Begin FTextHistory Interface
 	virtual FText ToText(bool bInAsSource) const override;
-	virtual void Serialize(YArchive& Ar) override;
+	virtual void Serialize(FArchive& Ar) override;
 	//~ End FTextHistory Interfaces
 
 private:
@@ -377,7 +377,7 @@ private:
 	FTextHistory_AsDateTime& operator=(FTextHistory_AsDateTime&);
 
 	/** The source date and time structure to format */
-	YDateTime SourceDateTime;
+	FDateTime SourceDateTime;
 	/** Style to format the date using */
 	EDateTimeStyle::Type DateStyle;
 	/** Style to format the time using */

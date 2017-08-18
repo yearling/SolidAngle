@@ -25,7 +25,7 @@ struct FRemoteConfigAsyncIOInfo
 	YString Buffer;
 
 	/** Time stamp of the remote config file */
-	YDateTime TimeStamp;
+	FDateTime TimeStamp;
 
 	/** Time at which the last read was initiated */
 	double StartReadTime;
@@ -220,7 +220,7 @@ bool IsUsingLocalIniFile(const TCHAR* FilenameToLoad, const TCHAR* IniFileName);
 void ProcessIniContents(const TCHAR* FilenameToLoad, const TCHAR* IniFileName, FConfigFile* Config, bool bDoEmptyConfig, bool bDoCombine);
 
 /** Returns the timestamp of the appropriate config file. */
-YDateTime GetIniTimeStamp(const TCHAR* FilenameToLoad, const TCHAR* IniFileName);
+FDateTime GetIniTimeStamp(const TCHAR* FilenameToLoad, const TCHAR* IniFileName);
 
 /** Before overwriting the local file with the contents from the remote file, we save off a copy of the local file (if it exists). */
 void MakeLocalCopy(const TCHAR* Filename);

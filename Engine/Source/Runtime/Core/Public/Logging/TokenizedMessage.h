@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Containers/Array.h"
 #include "Containers/SolidAngleString.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Templates/SharedPointer.h"
 #include "Delegates/Delegate.h"
 #include "Internationalization/Text.h"
@@ -202,7 +202,7 @@ public:
 	* @param	InSeverity	the severity to use
 	* @returns the name of the icon for the severity
 	*/
-	CORE_API static YName GetSeverityIconName(EMessageSeverity::Type InSeverity);
+	CORE_API static FName GetSeverityIconName(EMessageSeverity::Type InSeverity);
 
 private:
 	/** Private constructor - we want to only create these structures as shared references via Create() */
@@ -258,7 +258,7 @@ class FImageToken : public IMessageToken
 {
 public:
 	/** Factory method, tokens can only be constructed as shared refs */
-	CORE_API static TSharedRef<FImageToken> Create(const YName& InImageName)
+	CORE_API static TSharedRef<FImageToken> Create(const FName& InImageName)
 	{
 		return MakeShareable(new FImageToken(InImageName));
 	}
@@ -271,21 +271,21 @@ public:
 	/** End IMessageToken interface */
 
 	/** Get the name of the image for this token */
-	const YName& GetImageName() const
+	const FName& GetImageName() const
 	{
 		return ImageName;
 	}
 
 private:
 	/** Private constructor */
-	FImageToken(const YName& InImageName)
+	FImageToken(const FName& InImageName)
 		: ImageName(InImageName)
 	{
 		CachedText = FText::FromName(InImageName);
 	}
 
 	/** A name to be used as a brush in this message */
-	YName ImageName;
+	FName ImageName;
 };
 
 /** Basic message token with a severity payload */

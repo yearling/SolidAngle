@@ -89,7 +89,7 @@ DECLARE_MEMORY_STAT_EXTERN(TEXT("Binned Slack Current"), STAT_Binned_SlackCurren
 //
 // Optimized virtual memory allocator.
 //
-class YMallocBinned : public YMalloc
+class YMallocBinned : public FMalloc
 {
 	struct Private;
 
@@ -290,14 +290,14 @@ public:
 	virtual void UpdateStats() override;
 
 	/** Writes allocator stats from the last update into the specified destination. */
-	virtual void GetAllocatorStats(YGenericMemoryStats& out_Stats) override;
+	virtual void GetAllocatorStats(FGenericMemoryStats& out_Stats) override;
 
 	/**
 	* Dumps allocator stats to an output device. Subclasses should override to add additional info
 	*
 	* @param Ar	[in] Output device
 	*/
-	virtual void DumpAllocatorStats(class YOutputDevice& Ar) override;
+	virtual void DumpAllocatorStats(class FOutputDevice& Ar) override;
 
 	virtual const TCHAR* GetDescriptiveName() override;
 };

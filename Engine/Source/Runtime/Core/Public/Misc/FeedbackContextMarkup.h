@@ -23,10 +23,10 @@ class CORE_API FFeedbackContextMarkup
 public:
 
 	/** Markup stack manipulation. */
-	static bool ParseCommand(const YString& Line, YFeedbackContext* Warn);
+	static bool ParseCommand(const YString& Line, FFeedbackContext* Warn);
 
 	/** Utility functions for dealing with external processes. */
-	static bool PipeProcessOutput(const FText& Description, const YString& URL, const YString& Params, YFeedbackContext* Warn, int32* OutExitCode);
+	static bool PipeProcessOutput(const FText& Description, const YString& URL, const YString& Params, FFeedbackContext* Warn, int32* OutExitCode);
 
 private:
 

@@ -1,15 +1,15 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
-#include "SObject/DevObjectVersion.h"
+#include "UObject/DevObjectVersion.h"
 #include "Logging/LogMacros.h"
-//#include "UObject/BlueprintsObjectVersion.h"
+//#include "UObject/BlueprintUObjectVersion.h"
 //#include "UObject/BuildObjectVersion.h"
 //#include "UObject/CoreObjectVersion.h"
-#include "SObject/EditorObjectVersion.h"
+#include "UObject/EditorObjectVersion.h"
 //#include "UObject/FrameworkObjectVersion.h"
 //#include "UObject/MobileObjectVersion.h"
 //#include "UObject/NetworkingObjectVersion.h"
 //#include "UObject/OnlineObjectVersion.h"
-//#include "UObject/PhysicsObjectVersion.h"
+//#include "UObject/PhysicUObjectVersion.h"
 //#include "UObject/PlatformObjectVersion.h"
 //#include "UObject/RenderingObjectVersion.h"
 //#include "UObject/SequencerObjectVersion.h"
@@ -18,10 +18,10 @@
 DEFINE_LOG_CATEGORY_STATIC(LogDevObjectVersion, Log, All);
 
 #if !UE_BUILD_SHIPPING
-static TArray<YGuid> GDevVersions;
+static TArray<FGuid> GDevVersions;
 #endif
-FDevVersionRegistration::FDevVersionRegistration(YGuid InKey, int32 Version, YName InFriendlyName)
-: FCustomVersionRegistration(InKey, Version, InFriendlyName)
+FDevVersionRegistration::FDevVersionRegistration(FGuid InKey, int32 Version, FName InFriendlFName)
+: FCustomVersionRegistration(InKey, Version, InFriendlFName)
 {
 #if !UE_BUILD_SHIPPING
 	GDevVersions.Add(InKey);
@@ -31,18 +31,18 @@ void FDevVersionRegistration::DumpVersionsToLog()
 {
 #if !UE_BUILD_SHIPPING
 	UE_LOG(LogDevObjectVersion, Log, TEXT("Number of dev versions registered: %d"), GDevVersions.Num());
-	for (YGuid& Guid : GDevVersions)
+	for (FGuid& Guid : GDevVersions)
 	{
 		const FCustomVersion* Version = FCustomVersionContainer::GetRegistered().GetVersion(Guid);
 		check(Version);
-		UE_LOG(LogDevObjectVersion, Log, TEXT("  %s (%s): %d"), *Version->GetFriendlyName().ToString(), *Version->Key.ToString(EGuidFormats::DigitsWithHyphens), Version->Version);
+		UE_LOG(LogDevObjectVersion, Log, TEXT("  %s (%s): %d"), *Version->GetFriendlFName().ToString(), *Version->Key.ToString(EGuidFormats::DigitsWithHyphens), Version->Version);
 	}
 #endif
 }
 // Unique Blueprints Object version id
-//const YGuid FBlueprintsObjectVersion::GUID(0xB0D832E4, 0x1F894F0D, 0xACCF7EB7, 0x36FD4AA2);
+//const YGuid FBlueprintUObjectVersion::GUID(0xB0D832E4, 0x1F894F0D, 0xACCF7EB7, 0x36FD4AA2);
 //// Register Blueprints custom version with Core
-//FDevVersionRegistration GRegisterBlueprintsObjectVersion(FBlueprintsObjectVersion::GUID, FBlueprintsObjectVersion::LatestVersion, TEXT("Dev-Blueprints"));
+//FDevVersionRegistration GRegisterBlueprintUObjectVersion(FBlueprintUObjectVersion::GUID, FBlueprintUObjectVersion::LatestVersion, TEXT("Dev-Blueprints"));
 //
 //// Unique Build Object version id
 //const YGuid FBuildObjectVersion::GUID(0xE1C64328, 0xA22C4D53, 0xA36C8E86, 0x6417BD8C);
@@ -55,7 +55,7 @@ void FDevVersionRegistration::DumpVersionsToLog()
 //FDevVersionRegistration GRegisterCoreObjectVersion(FCoreObjectVersion::GUID, FCoreObjectVersion::LatestVersion, TEXT("Dev-Core"));
 //
 // Unique Editor Object version id
-const YGuid FEditorObjectVersion::GUID(0xE4B068ED, 0xF49442E9, 0xA231DA0B, 0x2E46BB41);
+const FGuid FEditorObjectVersion::GUID(0xE4B068ED, 0xF49442E9, 0xA231DA0B, 0x2E46BB41);
 // Register Editor custom version with Core
 FDevVersionRegistration GRegisterEditorObjectVersion(FEditorObjectVersion::GUID, FEditorObjectVersion::LatestVersion, TEXT("Dev-Editor"));
 
@@ -80,9 +80,9 @@ FDevVersionRegistration GRegisterEditorObjectVersion(FEditorObjectVersion::GUID,
 //FDevVersionRegistration GRegisterOnlineObjectVersion(FOnlineObjectVersion::GUID, FOnlineObjectVersion::LatestVersion, TEXT("Dev-Online"));
 //
 //// Unique Physics Object version id
-//const YGuid FPhysicsObjectVersion::GUID(0x78F01B33, 0xEBEA4F98, 0xB9B484EA, 0xCCB95AA2);
+//const YGuid FPhysicUObjectVersion::GUID(0x78F01B33, 0xEBEA4F98, 0xB9B484EA, 0xCCB95AA2);
 //// Register Physics custom version with Core
-//FDevVersionRegistration GRegisterPhysicsObjectVersion(FPhysicsObjectVersion::GUID, FPhysicsObjectVersion::LatestVersion, TEXT("Dev-Physics"));
+//FDevVersionRegistration GRegisterPhysicUObjectVersion(FPhysicUObjectVersion::GUID, FPhysicUObjectVersion::LatestVersion, TEXT("Dev-Physics"));
 //
 //// Unique Platform Object version id
 //const YGuid FPlatformObjectVersion::GUID(0x6631380F, 0x2D4D43E0, 0x8009CF27, 0x6956A95A);
@@ -105,6 +105,6 @@ FDevVersionRegistration GRegisterEditorObjectVersion(FEditorObjectVersion::GUID,
 //FDevVersionRegistration GRegisterVRObjectVersion(FVRObjectVersion::GUID, FVRObjectVersion::LatestVersion, TEXT("Dev-VR"));
 //
 //// Unique Load Times version id
-//const YGuid FLoadTimesObjectVersion::GUID(0xC2A15278, 0xBFE74AFE, 0x6C1790FF, 0x531DF755);
+//const YGuid FLoadTimeUObjectVersion::GUID(0xC2A15278, 0xBFE74AFE, 0x6C1790FF, 0x531DF755);
 //// Register LoadTimes custom version with Core
-//FDevVersionRegistration GRegisterLoadTimesObjectVersion(FLoadTimesObjectVersion::GUID, FLoadTimesObjectVersion::LatestVersion, TEXT("Dev-LoadTimes"));
+//FDevVersionRegistration GRegisterLoadTimeUObjectVersion(FLoadTimeUObjectVersion::GUID, FLoadTimeUObjectVersion::LatestVersion, TEXT("Dev-LoadTimes"));

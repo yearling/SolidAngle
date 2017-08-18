@@ -8,7 +8,7 @@
 #include "HAL/SolidAngleMemory.h"
 #include "Containers/StringConv.h"
 #include "Containers/SolidAngleString.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Misc/ScopeLock.h"
 #include "Misc/Paths.h"
 #include "Misc/CommandLine.h"
@@ -690,7 +690,7 @@ int32 FWindowsPlatformStackWalk::GetProcessModuleSignatures(FStackWalkModuleInfo
 /**
  * Callback from the modules system that the loaded modules have changed and we need to reload symbols.
  */ 
-static void OnModulesChanged( YName ModuleThatChanged, EModuleChangeReason ReasonForChange )
+static void OnModulesChanged( FName ModuleThatChanged, EModuleChangeReason ReasonForChange )
 {
 	GNeedToRefreshSymbols = true;
 }

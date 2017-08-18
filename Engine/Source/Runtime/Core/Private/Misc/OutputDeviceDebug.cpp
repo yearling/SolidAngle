@@ -10,7 +10,7 @@
  * @param	Data	Text to log
  * @param	Event	Event name used for suppression purposes
  */
-void YOutputDeviceDebug::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class YName& Category, const double Time )
+void YOutputDeviceDebug::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category, const double Time )
 {
 	static bool Entry=false;
 	if( !GIsCriticalError || Entry )
@@ -28,7 +28,7 @@ void YOutputDeviceDebug::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbo
 	}
 }
 
-void YOutputDeviceDebug::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class YName& Category )
+void YOutputDeviceDebug::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category )
 {
 	Serialize( Data, Verbosity, Category, -1.0 );
 }

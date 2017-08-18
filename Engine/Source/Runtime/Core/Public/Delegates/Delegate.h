@@ -4,9 +4,9 @@
 
 #include "CoreTypes.h"
 #include "Misc/AssertionMacros.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Templates/SharedPointer.h"
-#include "SObject/WeakObjectPtrTemplates.h"
+#include "UObject/WeakObjectPtrTemplates.h"
 #include "Delegates/MulticastDelegateBase.h"
 #include "Delegates/IntegerSequence.h"
 
@@ -120,7 +120,7 @@
 *  -----------------------------------------------------------------------------------------------
 *
 *	The delegate system understands certain types of objects, and additional features are enabled when
-*  using these objects.  If you bind a delegate to a member of a SObject or shared pointer class, the
+*  using these objects.  If you bind a delegate to a member of a UObject or shared pointer class, the
 *  delegate system can keep a weak reference to the object, so that if the object gets destroyed out
 *  from underneath the delegate, you'll be able to handle these cases by calling IsBound() or
 *  ExecuteIfBound() functions.  Note the special binding syntax for the various types of supported objects.
@@ -155,7 +155,7 @@
 *
 *                       Single-cast delegates:  DECLARE_DELEGATE...()
 *                        Multi-cast delegates:  DECLARE_MULTICAST_DELEGATE...()
-*	 Dynamic (SObject, serializable) delegates:  DECLARE_DYNAMIC_DELEGATE...()
+*	 Dynamic (UObject, serializable) delegates:  DECLARE_DYNAMIC_DELEGATE...()
 */
 
 
@@ -191,7 +191,7 @@
 		{ \
 		} \
 		\
-		/** Construction from an FScriptDelegate must be explicit.  This is really only used by SObject system internals. */ \
+		/** Construction from an FScriptDelegate must be explicit.  This is really only used by UObject system internals. */ \
 		explicit DynamicDelegateName( const TScriptDelegate<>& InScriptDelegate ) \
 			: TBaseDynamicDelegate<TWeakPtr, __VA_ARGS__>( InScriptDelegate ) \
 		{ \
@@ -225,7 +225,7 @@
 		{ \
 		} \
 		\
-		/** Construction from an FScriptDelegate must be explicit.  This is really only used by SObject system internals. */ \
+		/** Construction from an FScriptDelegate must be explicit.  This is really only used by UObject system internals. */ \
 		explicit DynamicDelegateName( const TScriptDelegate<>& InScriptDelegate ) \
 			: TBaseDynamicDelegate<TWeakPtr, __VA_ARGS__>( InScriptDelegate ) \
 		{ \
@@ -251,7 +251,7 @@ class DynamicMulticastDelegateName : public TBaseDynamicMulticastDelegate<TWeakP
 		{ \
 		} \
 		\
-		/** Construction from an FMulticastScriptDelegate must be explicit.  This is really only used by SObject system internals. */ \
+		/** Construction from an FMulticastScriptDelegate must be explicit.  This is really only used by UObject system internals. */ \
 		explicit DynamicMulticastDelegateName( const TMulticastScriptDelegate<>& InMulticastScriptDelegate ) \
 			: TBaseDynamicMulticastDelegate<TWeakPtr, __VA_ARGS__>( InMulticastScriptDelegate ) \
 		{ \
@@ -271,9 +271,9 @@ class DynamicMulticastDelegateName : public TBaseDynamicMulticastDelegate<TWeakP
 
 
 
-#define ENABLE_STATIC_FUNCTION_YNameS (PLATFORM_COMPILER_CLANG && (__clang_major__ > 3 || (__clang_major__ == 3 && __clang_minor__ >= 5)))
+#define ENABLE_STATIC_FUNCTION_FNameS (PLATFORM_COMPILER_CLANG && (__clang_major__ > 3 || (__clang_major__ == 3 && __clang_minor__ >= 5)))
 
-#if ENABLE_STATIC_FUNCTION_YNameS
+#if ENABLE_STATIC_FUNCTION_FNameS
 
 
 namespace NStrAfterLastDoubleColon_Private
@@ -320,19 +320,19 @@ namespace NStrAfterLastDoubleColon_Private
 
 
 	template <typename IntSeq>
-	struct TStaticYNameFromCharSequence;
+	struct TStaticFNameFromCharSequence;
 
 	template <typename T, T... Chars>
-	struct TStaticYNameFromCharSequence<TIntegerSequence<T, Chars...>>
+	struct TStaticFNameFromCharSequence<TIntegerSequence<T, Chars...>>
 	{
-		static YName Get()
+		static FName Get()
 		{
-			static YName Result = Create();
+			static FName Result = Create();
 			return Result;
 		}
 
 	private:
-		static YName Create()
+		static FName Create()
 		{
 			const T Str[sizeof...(Chars)+1] = { Chars..., 0 };
 			return Str;
@@ -364,29 +364,29 @@ FORCEINLINE constexpr TIntegerSequence<T, Chars...> operator""_intseq()
 	return{};
 }
 
-#define STATIC_FUNCTION_YName(str) NStrAfterLastDoubleColon_Private::TStaticYNameFromCharSequence<typename NStrAfterLastDoubleColon_Private::TStrAfterLastDoubleColon<decltype(PREPROCESSOR_JOIN(str, _intseq))>::Type>::Get()
+#define STATIC_FUNCTION_FName(str) NStrAfterLastDoubleColon_Private::TStaticFNameFromCharSequence<typename NStrAfterLastDoubleColon_Private::TStrAfterLastDoubleColon<decltype(PREPROCESSOR_JOIN(str, _intseq))>::Type>::Get()
 
 #else
 
-#define STATIC_FUNCTION_YName(str) UE4Delegates_Private::GetTrimmedMemberFunctionName(str)
+#define STATIC_FUNCTION_FName(str) UE4Delegates_Private::GetTrimmedMemberFunctionName(str)
 
 #endif
 
 
 // Helper macro for calling BindDynamic() on dynamic delegates.  Automatically generates the function name string.
-#define BindDynamic( UserObject, FuncName ) __Internal_BindDynamic( UserObject, FuncName, STATIC_FUNCTION_YName( TEXT( #FuncName ) ) )
+#define BindDynamic( UserObject, FuncName ) __Internal_BindDynamic( UserObject, FuncName, STATIC_FUNCTION_FName( TEXT( #FuncName ) ) )
 
 // Helper macro for calling AddDynamic() on dynamic multi-cast delegates.  Automatically generates the function name string.
-#define AddDynamic( UserObject, FuncName ) __Internal_AddDynamic( UserObject, FuncName, STATIC_FUNCTION_YName( TEXT( #FuncName ) ) )
+#define AddDynamic( UserObject, FuncName ) __Internal_AddDynamic( UserObject, FuncName, STATIC_FUNCTION_FName( TEXT( #FuncName ) ) )
 
 // Helper macro for calling AddUniqueDynamic() on dynamic multi-cast delegates.  Automatically generates the function name string.
-#define AddUniqueDynamic( UserObject, FuncName ) __Internal_AddUniqueDynamic( UserObject, FuncName, STATIC_FUNCTION_YName( TEXT( #FuncName ) ) )
+#define AddUniqueDynamic( UserObject, FuncName ) __Internal_AddUniqueDynamic( UserObject, FuncName, STATIC_FUNCTION_FName( TEXT( #FuncName ) ) )
 
 // Helper macro for calling RemoveDynamic() on dynamic multi-cast delegates.  Automatically generates the function name string.
-#define RemoveDynamic( UserObject, FuncName ) __Internal_RemoveDynamic( UserObject, FuncName, STATIC_FUNCTION_YName( TEXT( #FuncName ) ) )
+#define RemoveDynamic( UserObject, FuncName ) __Internal_RemoveDynamic( UserObject, FuncName, STATIC_FUNCTION_FName( TEXT( #FuncName ) ) )
 
 // Helper macro for calling IsAlreadyBound() on dynamic multi-cast delegates.  Automatically generates the function name string.
-#define IsAlreadyBound( UserObject, FuncName ) __Internal_IsAlreadyBound( UserObject, FuncName, STATIC_FUNCTION_YName( TEXT( #FuncName ) ) )
+#define IsAlreadyBound( UserObject, FuncName ) __Internal_IsAlreadyBound( UserObject, FuncName, STATIC_FUNCTION_FName( TEXT( #FuncName ) ) )
 
 
 namespace UE4Delegates_Private
@@ -396,15 +396,15 @@ namespace UE4Delegates_Private
 	* Note: this function only returns a pointer to the substring and doesn't create a new string.
 	*
 	* @param  InMacroFunctionName  The string containing the member function name.
-	* @return An YName of the member function name.
+	* @return An FName of the member function name.
 	*/
-	inline YName GetTrimmedMemberFunctionName(const TCHAR* InMacroFunctionName)
+	inline FName GetTrimmedMemberFunctionName(const TCHAR* InMacroFunctionName)
 	{
 		// We strip off the class prefix and just return the function name by itself.
 		check(InMacroFunctionName);
 		const TCHAR* Result = FCString::Strrstr(InMacroFunctionName, TEXT("::"));
 		checkf(Result && Result[2] != (TCHAR)'0', TEXT("'%s' does not look like a member function"), InMacroFunctionName);
-		return YName(Result + 2);
+		return FName(Result + 2);
 	}
 }
 

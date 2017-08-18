@@ -25,7 +25,7 @@ public:
 	YFloat16Color(const YFloat16Color& Src);
 
 	/** Constructor from a linear color. */
-	YFloat16Color(const YLinearColor& Src);
+	YFloat16Color(const FLinearColor& Src);
 
 	/** assignment operator */
 	YFloat16Color& operator=(const YFloat16Color& Src);
@@ -52,7 +52,7 @@ FORCEINLINE YFloat16Color::YFloat16Color(const YFloat16Color& Src)
 }
 
 
-FORCEINLINE YFloat16Color::YFloat16Color(const YLinearColor& Src) :
+FORCEINLINE YFloat16Color::YFloat16Color(const FLinearColor& Src) :
 	R(Src.R),
 	G(Src.G),
 	B(Src.B),

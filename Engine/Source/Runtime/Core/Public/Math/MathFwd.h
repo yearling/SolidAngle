@@ -2,15 +2,15 @@
 
 #pragma once
 
-class YSphere;
-struct YBox;
-struct YBox2D;
-struct YColor;
-struct YLinearColor;
-struct YMatrix;
-struct YPlane;
-struct YQuat;
-struct YRotator;
-struct YTransform;
-struct YVector;
-struct YVector4;
+class FSphere;
+struct FBox;
+struct FBox2D;
+struct FColor;
+struct FLinearColor;
+struct FMatrix;
+struct FPlane;
+struct FQuat;
+struct FRotator;
+struct FTransform;
+struct FVector;
+struct FVector4;

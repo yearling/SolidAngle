@@ -7,7 +7,7 @@
 #include "Math/SolidAngleMath.h"
 #include "Stats/Stats.h"
 #include "Math/RandomStream.h"
-#include "SObject/PropertyPortFlags.h"
+#include "UObject/PropertyPortFlags.h"
 
 DEFINE_LOG_CATEGORY(LogUnrealMath);
 
@@ -22,13 +22,13 @@ DECLARE_CYCLE_STAT( TEXT( "Convert Quat to Rotator" ), STAT_MathConvertQuatToRot
 	Globals
 -----------------------------------------------------------------------------*/
 
-CORE_API const YVector YVector::ZeroVector(0.0f, 0.0f, 0.0f);
-CORE_API const YVector YVector::UpVector(0.0f, 0.0f, 1.0f);
-CORE_API const YVector YVector::ForwardVector(1.0f, 0.0f, 0.0f);
-CORE_API const YVector YVector::RightVector(0.0f, 1.0f, 0.0f);
+CORE_API const FVector FVector::ZeroVector(0.0f, 0.0f, 0.0f);
+CORE_API const FVector FVector::UpVector(0.0f, 0.0f, 1.0f);
+CORE_API const FVector FVector::ForwardVector(1.0f, 0.0f, 0.0f);
+CORE_API const FVector FVector::RightVector(0.0f, 1.0f, 0.0f);
 CORE_API const YVector2D YVector2D::ZeroVector(0.0f, 0.0f);
 CORE_API const YVector2D YVector2D::UnitVector(1.0f, 1.0f);
-CORE_API const YRotator YRotator::ZeroRotator(0.f,0.f,0.f);
+CORE_API const FRotator FRotator::ZeroRotator(0.f,0.f,0.f);
 
 CORE_API const VectorRegister VECTOR_INV_255 = DECLARE_VECTOR_REGISTER(1.f/255.f, 1.f/255.f, 1.f/255.f, 1.f/255.f);
 
@@ -50,7 +50,7 @@ CORE_API const YIntVector YIntVector::ZeroValue(0,0,0);
 CORE_API const YIntVector YIntVector::NoneValue(INDEX_NONE,INDEX_NONE,INDEX_NONE);
 
 /** FVectors NetSerialize without quantization. Use the FVectors_NetQuantize etc (NetSerialization.h) instead. */
-bool YVector::NetSerialize(YArchive& Ar, class UPackageMap* Map, bool& bOutSuccess)
+bool FVector::NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess)
 {
 	Ar << X;
 	Ar << Y;
@@ -58,25 +58,25 @@ bool YVector::NetSerialize(YArchive& Ar, class UPackageMap* Map, bool& bOutSucce
 	return true;
 }
 
-bool YVector2D::NetSerialize(YArchive& Ar, class UPackageMap* Map, bool& bOutSuccess)
+bool YVector2D::NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess)
 {
 	Ar << X;
 	Ar << Y;
 	return true;
 }
 
-bool YRotator::NetSerialize(YArchive& Ar, class UPackageMap* Map, bool& bOutSuccess)
+bool FRotator::NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess)
 {
 	SerializeCompressedShort( Ar );
 	bOutSuccess = true;
 	return true;
 }
 
-void YRotator::SerializeCompressed( YArchive& Ar )
+void FRotator::SerializeCompressed( FArchive& Ar )
 {
-	uint8 BytePitch = YRotator::CompressAxisToByte(Pitch);
-	uint8 ByteYaw = YRotator::CompressAxisToByte(Yaw);
-	uint8 ByteRoll = YRotator::CompressAxisToByte(Roll);
+	uint8 BytePitch = FRotator::CompressAxisToByte(Pitch);
+	uint8 ByteYaw = FRotator::CompressAxisToByte(Yaw);
+	uint8 ByteRoll = FRotator::CompressAxisToByte(Roll);
 
 	uint8 B = (BytePitch!=0);
 	Ar.SerializeBits( &B, 1 );
@@ -113,17 +113,17 @@ void YRotator::SerializeCompressed( YArchive& Ar )
 	
 	if( Ar.IsLoading() )
 	{
-		Pitch = YRotator::DecompressAxisFromByte(BytePitch);
-		Yaw	= YRotator::DecompressAxisFromByte(ByteYaw);
-		Roll = YRotator::DecompressAxisFromByte(ByteRoll);
+		Pitch = FRotator::DecompressAxisFromByte(BytePitch);
+		Yaw	= FRotator::DecompressAxisFromByte(ByteYaw);
+		Roll = FRotator::DecompressAxisFromByte(ByteRoll);
 	}
 }
 
-void YRotator::SerializeCompressedShort( YArchive& Ar )
+void FRotator::SerializeCompressedShort( FArchive& Ar )
 {
-	uint16 ShortPitch = YRotator::CompressAxisToShort(Pitch);
-	uint16 ShortYaw = YRotator::CompressAxisToShort(Yaw);
-	uint16 ShortRoll = YRotator::CompressAxisToShort(Roll);
+	uint16 ShortPitch = FRotator::CompressAxisToShort(Pitch);
+	uint16 ShortYaw = FRotator::CompressAxisToShort(Yaw);
+	uint16 ShortRoll = FRotator::CompressAxisToShort(Roll);
 
 	uint8 B = (ShortPitch!=0);
 	Ar.SerializeBits( &B, 1 );
@@ -160,15 +160,15 @@ void YRotator::SerializeCompressedShort( YArchive& Ar )
 
 	if( Ar.IsLoading() )
 	{
-		Pitch = YRotator::DecompressAxisFromShort(ShortPitch);
-		Yaw	= YRotator::DecompressAxisFromShort(ShortYaw);
-		Roll = YRotator::DecompressAxisFromShort(ShortRoll);
+		Pitch = FRotator::DecompressAxisFromShort(ShortPitch);
+		Yaw	= FRotator::DecompressAxisFromShort(ShortYaw);
+		Roll = FRotator::DecompressAxisFromShort(ShortRoll);
 	}
 }
 
-YRotator YVector::ToOrientationRotator() const
+FRotator FVector::ToOrientationRotator() const
 {
-	YRotator R;
+	FRotator R;
 
 	// Find yaw.
 	R.Yaw = YMath::Atan2(Y,X) * (180.f / PI);
@@ -183,21 +183,21 @@ YRotator YVector::ToOrientationRotator() const
 	if (R.ContainsNaN())
 	{
 		logOrEnsureNanError(TEXT("YVector::Rotation(): Rotator result %s contains NaN! Input YVector = %s"), *R.ToString(), *this->ToString());
-		R = YRotator::ZeroRotator;
+		R = FRotator::ZeroRotator;
 	}
 #endif
 
 	return R;
 }
 
-YRotator YVector::Rotation() const
+FRotator FVector::Rotation() const
 {
 	return ToOrientationRotator();
 }
 
-YRotator YVector4::ToOrientationRotator() const
+FRotator FVector4::ToOrientationRotator() const
 {
-	YRotator R;
+	FRotator R;
 
 	// Find yaw.
 	R.Yaw = YMath::Atan2(Y,X) * (180.f / PI);
@@ -212,19 +212,19 @@ YRotator YVector4::ToOrientationRotator() const
 	if (R.ContainsNaN())
 	{
 		logOrEnsureNanError(TEXT("YVector4::Rotation(): Rotator result %s contains NaN! Input YVector4 = %s"), *R.ToString(), *this->ToString());
-		R = YRotator::ZeroRotator;
+		R = FRotator::ZeroRotator;
 	}
 #endif
 
 	return R;
 }
 
-YRotator YVector4::Rotation() const
+FRotator FVector4::Rotation() const
 {
 	return ToOrientationRotator();
 }
 
-YQuat YVector::ToOrientationQuat() const
+FQuat FVector::ToOrientationQuat() const
 {
 	// Essentially an optimized Vector->Rotator->Quat made possible by knowing Roll == 0, and avoiding radians->degrees->radians.
 	// This is done to avoid adding any roll (which our API states as a constraint).
@@ -238,7 +238,7 @@ YQuat YVector::ToOrientationQuat() const
 	YMath::SinCos(&SP, &CP, PitchRad * DIVIDE_BY_2);
 	YMath::SinCos(&SY, &CY, YawRad * DIVIDE_BY_2);
 
-	YQuat RotationQuat;
+	FQuat RotationQuat;
 	RotationQuat.X =  SP*SY;
 	RotationQuat.Y = -SP*CY;
 	RotationQuat.Z =  CP*SY;
@@ -247,7 +247,7 @@ YQuat YVector::ToOrientationQuat() const
 }
 
 
-YQuat YVector4::ToOrientationQuat() const
+FQuat FVector4::ToOrientationQuat() const
 {
 	// Essentially an optimized Vector->Rotator->Quat made possible by knowing Roll == 0, and avoiding radians->degrees->radians.
 	// This is done to avoid adding any roll (which our API states as a constraint).
@@ -261,7 +261,7 @@ YQuat YVector4::ToOrientationQuat() const
 	YMath::SinCos(&SP, &CP, PitchRad * DIVIDE_BY_2);
 	YMath::SinCos(&SY, &CY, YawRad * DIVIDE_BY_2);
 
-	YQuat RotationQuat;
+	FQuat RotationQuat;
 	RotationQuat.X =  SP*SY;
 	RotationQuat.Y = -SP*CY;
 	RotationQuat.Z =  CP*SY;
@@ -270,21 +270,21 @@ YQuat YVector4::ToOrientationQuat() const
 }
 
 
-void YVector::FindBestAxisVectors( YVector& Axis1, YVector& Axis2 ) const
+void FVector::FindBestAxisVectors( FVector& Axis1, FVector& Axis2 ) const
 {
 	const float NX = YMath::Abs(X);
 	const float NY = YMath::Abs(Y);
 	const float NZ = YMath::Abs(Z);
 
 	// Find best basis vectors.
-	if( NZ>NX && NZ>NY )	Axis1 = YVector(1,0,0);
-	else					Axis1 = YVector(0,0,1);
+	if( NZ>NX && NZ>NY )	Axis1 = FVector(1,0,0);
+	else					Axis1 = FVector(0,0,1);
 
 	Axis1 = (Axis1 - *this * (Axis1 | *this)).GetSafeNormal();
 	Axis2 = Axis1 ^ *this;
 }
 
-YVector YMath::ClosestPointOnLine(const YVector& LineStart, const YVector& LineEnd, const YVector& Point)
+FVector YMath::ClosestPointOnLine(const FVector& LineStart, const FVector& LineEnd, const FVector& Point)
 {
 	// Solve to find alpha along line that is closest point
 	// Weisstein, Eric W. "Point-Line Distance--3-Dimensional." From MathWorld--A Switchram Web Resource. http://mathworld.wolfram.com/Point-LineDistance3-Dimensional.html 
@@ -294,12 +294,12 @@ YVector YMath::ClosestPointOnLine(const YVector& LineStart, const YVector& LineE
 	const float T = YMath::Clamp(-A/B, 0.f, 1.f);
 
 	// Generate closest point
-	YVector ClosestPoint = LineStart + (T * (LineEnd - LineStart));
+	FVector ClosestPoint = LineStart + (T * (LineEnd - LineStart));
 
 	return ClosestPoint;
 }
 
-YVector YMath::ClosestPointOnInfiniteLine(const YVector& LineStart, const YVector& LineEnd, const YVector& Point)
+FVector YMath::ClosestPointOnInfiniteLine(const FVector& LineStart, const FVector& LineEnd, const FVector& Point)
 {
 	const float A = (LineStart - Point) | (LineEnd - LineStart);
 	const float B = (LineEnd - LineStart).SizeSquared();
@@ -310,11 +310,11 @@ YVector YMath::ClosestPointOnInfiniteLine(const YVector& LineStart, const YVecto
 	const float T = -A/B;
 
 	// Generate closest point
-	const YVector ClosestPoint = LineStart + (T * (LineEnd - LineStart));
+	const FVector ClosestPoint = LineStart + (T * (LineEnd - LineStart));
 	return ClosestPoint;
 }
 
-void YVector::CreateOrthonormalBasis(YVector& XAxis,YVector& YAxis,YVector& ZAxis)
+void FVector::CreateOrthonormalBasis(FVector& XAxis,FVector& YAxis,FVector& ZAxis)
 {
 	// Project the X and Y axes onto the plane perpendicular to the Z axis.
 	XAxis -= (XAxis | ZAxis) / (ZAxis | ZAxis) * ZAxis;
@@ -338,7 +338,7 @@ void YVector::CreateOrthonormalBasis(YVector& XAxis,YVector& YAxis,YVector& ZAxi
 	ZAxis.Normalize();
 }
 
-void YVector::UnwindEuler()
+void FVector::UnwindEuler()
 {
 	X = YMath::UnwindDegrees(X);
 	Y = YMath::UnwindDegrees(Y);
@@ -346,31 +346,31 @@ void YVector::UnwindEuler()
 }
 
 
-YRotator::YRotator(const YQuat& Quat)
+FRotator::FRotator(const FQuat& Quat)
 {
 	*this = Quat.Rotator();
 	DiagnosticCheckNaN();
 }
 
 
-CORE_API YVector YRotator::Vector() const
+CORE_API FVector FRotator::Vector() const
 {
 	float CP, SP, CY, SY;
 	YMath::SinCos( &SP, &CP, YMath::DegreesToRadians(Pitch) );
 	YMath::SinCos( &SY, &CY, YMath::DegreesToRadians(Yaw) );
-	YVector V = YVector( CP*CY, CP*SY, SP );
+	FVector V = FVector( CP*CY, CP*SY, SP );
 
 	return V;
 }
 
 
-YRotator YRotator::GetInverse() const
+FRotator FRotator::GetInverse() const
 {
 	return Quaternion().Inverse().Rotator();
 }
 
 
-YQuat YRotator::Quaternion() const
+FQuat FRotator::Quaternion() const
 {
 	SCOPE_CYCLE_COUNTER(STAT_MathConvertRotatorToQuat);
 
@@ -403,7 +403,7 @@ YQuat YRotator::Quaternion() const
 	const VectorRegister LeftTerm  = VectorBitwiseXor(SignBitsLeft , VectorMultiply(CR, VectorMultiply(SP_SP_CP_CP, SY_CY_SY_CY)));
 	const VectorRegister RightTerm = VectorBitwiseXor(SignBitsRight, VectorMultiply(SR, VectorMultiply(CP_CP_SP_SP, CY_SY_CY_SY)));
 
-	YQuat RotationQuat;
+	FQuat RotationQuat;
 	const VectorRegister Result = VectorAdd(LeftTerm, RightTerm);	
 	VectorStoreAligned(Result, &RotationQuat);
 #else
@@ -416,7 +416,7 @@ YQuat YRotator::Quaternion() const
 	YMath::SinCos(&SY, &CY, Yaw*DIVIDE_BY_2);
 	YMath::SinCos(&SR, &CR, Roll*DIVIDE_BY_2);
 
-	YQuat RotationQuat;
+	FQuat RotationQuat;
 	RotationQuat.X =  CR*SP*SY - SR*CP*CY;
 	RotationQuat.Y = -CR*SP*CY - SR*CP*SY;
 	RotationQuat.Z =  CR*CP*SY - SR*SP*CY;
@@ -428,28 +428,28 @@ YQuat YRotator::Quaternion() const
 	return RotationQuat;
 }
 
-YVector YRotator::Euler() const
+FVector FRotator::Euler() const
 {
-	return YVector( Roll, Pitch, Yaw );
+	return FVector( Roll, Pitch, Yaw );
 }
 
-YRotator YRotator::MakeFromEuler(const YVector& Euler)
+FRotator FRotator::MakeFromEuler(const FVector& Euler)
 {
-	return YRotator(Euler.Y, Euler.Z, Euler.X);
+	return FRotator(Euler.Y, Euler.Z, Euler.X);
 }
 
-YVector YRotator::UnrotateVector(const YVector& V) const
+FVector FRotator::UnrotateVector(const FVector& V) const
 {
 	return YRotationMatrix(*this).GetTransposed().TransformVector( V );
 }	
 
-YVector YRotator::RotateVector(const YVector& V) const
+FVector FRotator::RotateVector(const FVector& V) const
 {
 	return YRotationMatrix(*this).TransformVector( V );
 }	
 
 
-void YRotator::GetWindingAndRemainder(YRotator& Winding, YRotator& Remainder) const
+void FRotator::GetWindingAndRemainder(FRotator& Winding, FRotator& Remainder) const
 {
 	//// YAW
 	Remainder.Yaw = NormalizeAxis(Yaw);
@@ -469,19 +469,19 @@ void YRotator::GetWindingAndRemainder(YRotator& Winding, YRotator& Remainder) co
 
 
 
-YRotator YMatrix::Rotator() const
+FRotator FMatrix::Rotator() const
 {
-	const YVector		XAxis	= GetScaledAxis( EAxis::X );
-	const YVector		YAxis	= GetScaledAxis( EAxis::Y );
-	const YVector		ZAxis	= GetScaledAxis( EAxis::Z );
+	const FVector		XAxis	= GetScaledAxis( EAxis::X );
+	const FVector		YAxis	= GetScaledAxis( EAxis::Y );
+	const FVector		ZAxis	= GetScaledAxis( EAxis::Z );
 
-	YRotator	Rotator	= YRotator( 
+	FRotator	Rotator	= FRotator( 
 									YMath::Atan2( XAxis.Z, YMath::Sqrt(YMath::Square(XAxis.X)+YMath::Square(XAxis.Y)) ) * 180.f / PI, 
 									YMath::Atan2( XAxis.Y, XAxis.X ) * 180.f / PI, 
 									0 
 								);
 	
-	const YVector		SYAxis	= YRotationMatrix( Rotator ).GetScaledAxis( EAxis::Y );
+	const FVector		SYAxis	= YRotationMatrix( Rotator ).GetScaledAxis( EAxis::Y );
 	Rotator.Roll		= YMath::Atan2( ZAxis | SYAxis, YAxis | SYAxis ) * 180.f / PI;
 
 	Rotator.DiagnosticCheckNaN();
@@ -489,17 +489,17 @@ YRotator YMatrix::Rotator() const
 }
 
 
-YQuat YMatrix::ToQuat() const
+FQuat FMatrix::ToQuat() const
 {
-	YQuat Result(*this);
+	FQuat Result(*this);
 	return Result;
 }
 
-const YMatrix YMatrix::Identity(YPlane(1,0,0,0),YPlane(0,1,0,0),YPlane(0,0,1,0),YPlane(0,0,0,1));
+const FMatrix FMatrix::Identity(FPlane(1,0,0,0),FPlane(0,1,0,0),FPlane(0,0,1,0),FPlane(0,0,0,1));
 
-CORE_API const YQuat YQuat::Identity(0,0,0,1);
+CORE_API const FQuat FQuat::Identity(0,0,0,1);
 
-YString YMatrix::ToString() const
+YString FMatrix::ToString() const
 {
 	YString Output;
 
@@ -511,12 +511,12 @@ YString YMatrix::ToString() const
 	return Output;
 }
 
-void YMatrix::DebugPrint() const
+void FMatrix::DebugPrint() const
 {
 	UE_LOG(LogUnrealMath, Log, TEXT("%s"), *ToString());
 }
 
-uint32 YMatrix::ComputeHash() const
+uint32 FMatrix::ComputeHash() const
 {
 	uint32 Ret = 0;
 
@@ -533,7 +533,7 @@ uint32 YMatrix::ComputeHash() const
 //////////////////////////////////////////////////////////////////////////
 // YQuat
 
-YRotator YQuat::Rotator() const
+FRotator FQuat::Rotator() const
 {
 	SCOPE_CYCLE_COUNTER(STAT_MathConvertQuatToRotator);
 
@@ -551,19 +551,19 @@ YRotator YQuat::Rotator() const
 	// where both of world lives happily. 
 	const float SINGULARITY_THRESHOLD = 0.4999995f;
 	const float RAD_TO_DEG = (180.f)/PI;
-	YRotator RotatorFromQuat;
+	FRotator RotatorFromQuat;
 
 	if (SingularityTest < -SINGULARITY_THRESHOLD)
 	{
 		RotatorFromQuat.Pitch = -90.f;
 		RotatorFromQuat.Yaw = YMath::Atan2(YawY, YawX) * RAD_TO_DEG;
-		RotatorFromQuat.Roll = YRotator::NormalizeAxis(-RotatorFromQuat.Yaw - (2.f * YMath::Atan2(X, W) * RAD_TO_DEG));
+		RotatorFromQuat.Roll = FRotator::NormalizeAxis(-RotatorFromQuat.Yaw - (2.f * YMath::Atan2(X, W) * RAD_TO_DEG));
 	}
 	else if (SingularityTest > SINGULARITY_THRESHOLD)
 	{
 		RotatorFromQuat.Pitch = 90.f;
 		RotatorFromQuat.Yaw = YMath::Atan2(YawY, YawX) * RAD_TO_DEG;
-		RotatorFromQuat.Roll = YRotator::NormalizeAxis(RotatorFromQuat.Yaw - (2.f * YMath::Atan2(X, W) * RAD_TO_DEG));
+		RotatorFromQuat.Roll = FRotator::NormalizeAxis(RotatorFromQuat.Yaw - (2.f * YMath::Atan2(X, W) * RAD_TO_DEG));
 	}
 	else
 	{
@@ -576,30 +576,30 @@ YRotator YQuat::Rotator() const
 	if (RotatorFromQuat.ContainsNaN())
 	{
 		logOrEnsureNanError(TEXT("YQuat::Rotator(): Rotator result %s contains NaN! Quat = %s, YawY = %.9f, YawX = %.9f"), *RotatorFromQuat.ToString(), *this->ToString(), YawY, YawX);
-		RotatorFromQuat = YRotator::ZeroRotator;
+		RotatorFromQuat = FRotator::ZeroRotator;
 	}
 #endif
 
 	return RotatorFromQuat;
 }
 
-YQuat YQuat::MakeFromEuler(const YVector& Euler)
+FQuat FQuat::MakeFromEuler(const FVector& Euler)
 {
-	return YRotator::MakeFromEuler(Euler).Quaternion();
+	return FRotator::MakeFromEuler(Euler).Quaternion();
 }
 
-void YQuat::ToSwingTwist(const YVector& InTwistAxis, YQuat& OutSwing, YQuat& OutTwist) const
+void FQuat::ToSwingTwist(const FVector& InTwistAxis, FQuat& OutSwing, FQuat& OutTwist) const
 {
 	// Vector part projected onto twist axis
-	YVector Projection = YVector::DotProduct(InTwistAxis, YVector(X, Y, Z)) * InTwistAxis;
+	FVector Projection = FVector::DotProduct(InTwistAxis, FVector(X, Y, Z)) * InTwistAxis;
 
 	// Twist quaternion
-	OutTwist = YQuat(Projection.X, Projection.Y, Projection.Z, W);
+	OutTwist = FQuat(Projection.X, Projection.Y, Projection.Z, W);
 
 	// Singularity close to 180deg
 	if(OutTwist.SizeSquared() == 0.0f)
 	{
-		OutTwist = YQuat::Identity;
+		OutTwist = FQuat::Identity;
 	}
 	else
 	{
@@ -610,178 +610,178 @@ void YQuat::ToSwingTwist(const YVector& InTwistAxis, YQuat& OutSwing, YQuat& Out
 	OutSwing = *this * OutTwist.Inverse();
 }
 
-YMatrix YRotationAboutPointMatrix::Make(const YQuat& Rot, const YVector& Origin)
+FMatrix YRotationAboutPointMatrix::Make(const FQuat& Rot, const FVector& Origin)
 {
 	return YRotationAboutPointMatrix(Rot.Rotator(), Origin);
 }
 
-YMatrix YRotationMatrix::Make(YQuat const& Rot)
+FMatrix YRotationMatrix::Make(FQuat const& Rot)
 {
-	return YQuatRotationTranslationMatrix(Rot, YVector::ZeroVector);
+	return YQuatRotationTranslationMatrix(Rot, FVector::ZeroVector);
 }
 
-YMatrix YRotationMatrix::MakeFromX(YVector const& XAxis)
+FMatrix YRotationMatrix::MakeFromX(FVector const& XAxis)
 {
-	YVector const NewX = XAxis.GetSafeNormal();
+	FVector const NewX = XAxis.GetSafeNormal();
 
 	// try to use up if possible
-	YVector const UpVector = ( YMath::Abs(NewX.Z) < (1.f - KINDA_SMALL_NUMBER) ) ? YVector(0,0,1.f) : YVector(1.f,0,0);
+	FVector const UpVector = ( YMath::Abs(NewX.Z) < (1.f - KINDA_SMALL_NUMBER) ) ? FVector(0,0,1.f) : FVector(1.f,0,0);
 
-	const YVector NewY = (UpVector ^ NewX).GetSafeNormal();
-	const YVector NewZ = NewX ^ NewY;
+	const FVector NewY = (UpVector ^ NewX).GetSafeNormal();
+	const FVector NewZ = NewX ^ NewY;
 
-	return YMatrix(NewX, NewY, NewZ, YVector::ZeroVector);
+	return FMatrix(NewX, NewY, NewZ, FVector::ZeroVector);
 }
 
-YMatrix YRotationMatrix::MakeFromY(YVector const& YAxis)
+FMatrix YRotationMatrix::MakeFromY(FVector const& YAxis)
 {
-	YVector const NewY = YAxis.GetSafeNormal();
+	FVector const NewY = YAxis.GetSafeNormal();
 
 	// try to use up if possible
-	YVector const UpVector = ( YMath::Abs(NewY.Z) < (1.f - KINDA_SMALL_NUMBER) ) ? YVector(0,0,1.f) : YVector(1.f,0,0);
+	FVector const UpVector = ( YMath::Abs(NewY.Z) < (1.f - KINDA_SMALL_NUMBER) ) ? FVector(0,0,1.f) : FVector(1.f,0,0);
 
-	const YVector NewZ = (UpVector ^ NewY).GetSafeNormal();
-	const YVector NewX = NewY ^ NewZ;
+	const FVector NewZ = (UpVector ^ NewY).GetSafeNormal();
+	const FVector NewX = NewY ^ NewZ;
 
-	return YMatrix(NewX, NewY, NewZ, YVector::ZeroVector);
+	return FMatrix(NewX, NewY, NewZ, FVector::ZeroVector);
 }
 
-YMatrix YRotationMatrix::MakeFromZ(YVector const& ZAxis)
+FMatrix YRotationMatrix::MakeFromZ(FVector const& ZAxis)
 {
-	YVector const NewZ = ZAxis.GetSafeNormal();
+	FVector const NewZ = ZAxis.GetSafeNormal();
 
 	// try to use up if possible
-	YVector const UpVector = ( YMath::Abs(NewZ.Z) < (1.f - KINDA_SMALL_NUMBER) ) ? YVector(0,0,1.f) : YVector(1.f,0,0);
+	FVector const UpVector = ( YMath::Abs(NewZ.Z) < (1.f - KINDA_SMALL_NUMBER) ) ? FVector(0,0,1.f) : FVector(1.f,0,0);
 
-	const YVector NewX = (UpVector ^ NewZ).GetSafeNormal();
-	const YVector NewY = NewZ ^ NewX;
+	const FVector NewX = (UpVector ^ NewZ).GetSafeNormal();
+	const FVector NewY = NewZ ^ NewX;
 
-	return YMatrix(NewX, NewY, NewZ, YVector::ZeroVector);
+	return FMatrix(NewX, NewY, NewZ, FVector::ZeroVector);
 }
 
-YMatrix YRotationMatrix::MakeFromXY(YVector const& XAxis, YVector const& YAxis)
+FMatrix YRotationMatrix::MakeFromXY(FVector const& XAxis, FVector const& YAxis)
 {
-	YVector NewX = XAxis.GetSafeNormal();
-	YVector Norm = YAxis.GetSafeNormal();
+	FVector NewX = XAxis.GetSafeNormal();
+	FVector Norm = YAxis.GetSafeNormal();
 
 	// if they're almost same, we need to find arbitrary vector
 	if ( YMath::IsNearlyEqual(YMath::Abs(NewX | Norm), 1.f) )
 	{
 		// make sure we don't ever pick the same as NewX
-		Norm = ( YMath::Abs(NewX.Z) < (1.f - KINDA_SMALL_NUMBER) ) ? YVector(0,0,1.f) : YVector(1.f,0,0);
+		Norm = ( YMath::Abs(NewX.Z) < (1.f - KINDA_SMALL_NUMBER) ) ? FVector(0,0,1.f) : FVector(1.f,0,0);
 	}
 
-	const YVector NewZ = (NewX ^ Norm).GetSafeNormal();
-	const YVector NewY = NewZ ^ NewX;
+	const FVector NewZ = (NewX ^ Norm).GetSafeNormal();
+	const FVector NewY = NewZ ^ NewX;
 
-	return YMatrix(NewX, NewY, NewZ, YVector::ZeroVector);
+	return FMatrix(NewX, NewY, NewZ, FVector::ZeroVector);
 }
 
-YMatrix YRotationMatrix::MakeFromXZ(YVector const& XAxis, YVector const& ZAxis)
+FMatrix YRotationMatrix::MakeFromXZ(FVector const& XAxis, FVector const& ZAxis)
 {
-	YVector const NewX = XAxis.GetSafeNormal();
-	YVector Norm = ZAxis.GetSafeNormal();
+	FVector const NewX = XAxis.GetSafeNormal();
+	FVector Norm = ZAxis.GetSafeNormal();
 
 	// if they're almost same, we need to find arbitrary vector
 	if ( YMath::IsNearlyEqual(YMath::Abs(NewX | Norm), 1.f) )
 	{
 		// make sure we don't ever pick the same as NewX
-		Norm = ( YMath::Abs(NewX.Z) < (1.f - KINDA_SMALL_NUMBER) ) ? YVector(0,0,1.f) : YVector(1.f,0,0);
+		Norm = ( YMath::Abs(NewX.Z) < (1.f - KINDA_SMALL_NUMBER) ) ? FVector(0,0,1.f) : FVector(1.f,0,0);
 	}
 
-	const YVector NewY = (Norm ^ NewX).GetSafeNormal();
-	const YVector NewZ = NewX ^ NewY;
+	const FVector NewY = (Norm ^ NewX).GetSafeNormal();
+	const FVector NewZ = NewX ^ NewY;
 
-	return YMatrix(NewX, NewY, NewZ, YVector::ZeroVector);
+	return FMatrix(NewX, NewY, NewZ, FVector::ZeroVector);
 }
 
-YMatrix YRotationMatrix::MakeFromYX(YVector const& YAxis, YVector const& XAxis)
+FMatrix YRotationMatrix::MakeFromYX(FVector const& YAxis, FVector const& XAxis)
 {
-	YVector const NewY = YAxis.GetSafeNormal();
-	YVector Norm = XAxis.GetSafeNormal();
+	FVector const NewY = YAxis.GetSafeNormal();
+	FVector Norm = XAxis.GetSafeNormal();
 
 	// if they're almost same, we need to find arbitrary vector
 	if ( YMath::IsNearlyEqual(YMath::Abs(NewY | Norm), 1.f) )
 	{
 		// make sure we don't ever pick the same as NewX
-		Norm = ( YMath::Abs(NewY.Z) < (1.f - KINDA_SMALL_NUMBER) ) ? YVector(0,0,1.f) : YVector(1.f,0,0);
+		Norm = ( YMath::Abs(NewY.Z) < (1.f - KINDA_SMALL_NUMBER) ) ? FVector(0,0,1.f) : FVector(1.f,0,0);
 	}
 	
-	const YVector NewZ = (Norm ^ NewY).GetSafeNormal();
-	const YVector NewX = NewY ^ NewZ;
+	const FVector NewZ = (Norm ^ NewY).GetSafeNormal();
+	const FVector NewX = NewY ^ NewZ;
 
-	return YMatrix(NewX, NewY, NewZ, YVector::ZeroVector);
+	return FMatrix(NewX, NewY, NewZ, FVector::ZeroVector);
 }
 
-YMatrix YRotationMatrix::MakeFromYZ(YVector const& YAxis, YVector const& ZAxis)
+FMatrix YRotationMatrix::MakeFromYZ(FVector const& YAxis, FVector const& ZAxis)
 {
-	YVector const NewY = YAxis.GetSafeNormal();
-	YVector Norm = ZAxis.GetSafeNormal();
+	FVector const NewY = YAxis.GetSafeNormal();
+	FVector Norm = ZAxis.GetSafeNormal();
 
 	// if they're almost same, we need to find arbitrary vector
 	if ( YMath::IsNearlyEqual(YMath::Abs(NewY | Norm), 1.f) )
 	{
 		// make sure we don't ever pick the same as NewX
-		Norm = ( YMath::Abs(NewY.Z) < (1.f - KINDA_SMALL_NUMBER) ) ? YVector(0,0,1.f) : YVector(1.f,0,0);
+		Norm = ( YMath::Abs(NewY.Z) < (1.f - KINDA_SMALL_NUMBER) ) ? FVector(0,0,1.f) : FVector(1.f,0,0);
 	}
 
-	const YVector NewX = (NewY ^ Norm).GetSafeNormal();
-	const YVector NewZ = NewX ^ NewY;
+	const FVector NewX = (NewY ^ Norm).GetSafeNormal();
+	const FVector NewZ = NewX ^ NewY;
 
-	return YMatrix(NewX, NewY, NewZ, YVector::ZeroVector);
+	return FMatrix(NewX, NewY, NewZ, FVector::ZeroVector);
 }
 
-YMatrix YRotationMatrix::MakeFromZX(YVector const& ZAxis, YVector const& XAxis)
+FMatrix YRotationMatrix::MakeFromZX(FVector const& ZAxis, FVector const& XAxis)
 {
-	YVector const NewZ = ZAxis.GetSafeNormal();
-	YVector Norm = XAxis.GetSafeNormal();
+	FVector const NewZ = ZAxis.GetSafeNormal();
+	FVector Norm = XAxis.GetSafeNormal();
 
 	// if they're almost same, we need to find arbitrary vector
 	if ( YMath::IsNearlyEqual(YMath::Abs(NewZ | Norm), 1.f) )
 	{
 		// make sure we don't ever pick the same as NewX
-		Norm = ( YMath::Abs(NewZ.Z) < (1.f - KINDA_SMALL_NUMBER) ) ? YVector(0,0,1.f) : YVector(1.f,0,0);
+		Norm = ( YMath::Abs(NewZ.Z) < (1.f - KINDA_SMALL_NUMBER) ) ? FVector(0,0,1.f) : FVector(1.f,0,0);
 	}
 
-	const YVector NewY = (NewZ ^ Norm).GetSafeNormal();
-	const YVector NewX = NewY ^ NewZ;
+	const FVector NewY = (NewZ ^ Norm).GetSafeNormal();
+	const FVector NewX = NewY ^ NewZ;
 
-	return YMatrix(NewX, NewY, NewZ, YVector::ZeroVector);
+	return FMatrix(NewX, NewY, NewZ, FVector::ZeroVector);
 }
 
-YMatrix YRotationMatrix::MakeFromZY(YVector const& ZAxis, YVector const& YAxis)
+FMatrix YRotationMatrix::MakeFromZY(FVector const& ZAxis, FVector const& YAxis)
 {
-	YVector const NewZ = ZAxis.GetSafeNormal();
-	YVector Norm = YAxis.GetSafeNormal();
+	FVector const NewZ = ZAxis.GetSafeNormal();
+	FVector Norm = YAxis.GetSafeNormal();
 
 	// if they're almost same, we need to find arbitrary vector
 	if ( YMath::IsNearlyEqual(YMath::Abs(NewZ | Norm), 1.f) )
 	{
 		// make sure we don't ever pick the same as NewX
-		Norm = ( YMath::Abs(NewZ.Z) < (1.f - KINDA_SMALL_NUMBER) ) ? YVector(0,0,1.f) : YVector(1.f,0,0);
+		Norm = ( YMath::Abs(NewZ.Z) < (1.f - KINDA_SMALL_NUMBER) ) ? FVector(0,0,1.f) : FVector(1.f,0,0);
 	}
 
-	const YVector NewX = (Norm ^ NewZ).GetSafeNormal();
-	const YVector NewY = NewZ ^ NewX;
+	const FVector NewX = (Norm ^ NewZ).GetSafeNormal();
+	const FVector NewY = NewZ ^ NewX;
 
-	return YMatrix(NewX, NewY, NewZ, YVector::ZeroVector);
+	return FMatrix(NewX, NewY, NewZ, FVector::ZeroVector);
 }
 
-YVector YQuat::Euler() const
+FVector FQuat::Euler() const
 {
 	return Rotator().Euler();
 }
 
-bool YQuat::NetSerialize(YArchive& Ar, class UPackageMap*, bool& bOutSuccess)
+bool FQuat::NetSerialize(FArchive& Ar, class UPackageMap*, bool& bOutSuccess)
 {
-	YQuat &Q = *this;
+	FQuat &Q = *this;
 
 	if (Ar.IsSaving())
 	{
 		// Make sure we have a non null SquareSum. It shouldn't happen with a quaternion, but better be safe.
 		if(Q.SizeSquared() <= SMALL_NUMBER)
 		{
-			Q = YQuat::Identity;
+			Q = FQuat::Identity;
 		}
 		else
 		{
@@ -830,15 +830,15 @@ bool YQuat::NetSerialize(YArchive& Ar, class UPackageMap*, bool& bOutSuccess)
 // http://lolengine.net/blog/2014/02/24/quaternion-from-two-vectors-final
 // http://www.euclideanspace.com/maths/algebra/vectors/angleBetween/index.htm
 //
-FORCEINLINE_DEBUGGABLE YQuat FindBetween_Helper(const YVector& A, const YVector& B, float NormAB)
+FORCEINLINE_DEBUGGABLE FQuat FindBetween_Helper(const FVector& A, const FVector& B, float NormAB)
 {
-	float W = NormAB + YVector::DotProduct(A, B);
-	YQuat Result;
+	float W = NormAB + FVector::DotProduct(A, B);
+	FQuat Result;
 
 	if (W >= 1e-6f * NormAB)
 	{
 		//Axis = YVector::CrossProduct(A, B);
-		Result = YQuat(A.Y * B.Z - A.Z * B.Y,
+		Result = FQuat(A.Y * B.Z - A.Z * B.Y,
 					   A.Z * B.X - A.X * B.Z,
 					   A.X * B.Y - A.Y * B.X,
 					   W);
@@ -848,29 +848,29 @@ FORCEINLINE_DEBUGGABLE YQuat FindBetween_Helper(const YVector& A, const YVector&
 		// A and B point in opposite directions
 		W = 0.f;
 		Result = YMath::Abs(A.X) > YMath::Abs(A.Y)
-				? YQuat(-A.Z, 0.f, A.X, W)
-				: YQuat(0.f, -A.Z, A.Y, W);
+				? FQuat(-A.Z, 0.f, A.X, W)
+				: FQuat(0.f, -A.Z, A.Y, W);
 	}
 
 	Result.Normalize();
 	return Result;
 }
 
-YQuat YQuat::FindBetweenNormals(const YVector& A, const YVector& B)
+FQuat FQuat::FindBetweenNormals(const FVector& A, const FVector& B)
 {
 	const float NormAB = 1.f;
 	return FindBetween_Helper(A, B, NormAB);
 }
 
-YQuat YQuat::FindBetweenVectors(const YVector& A, const YVector& B)
+FQuat FQuat::FindBetweenVectors(const FVector& A, const FVector& B)
 {
 	const float NormAB = YMath::Sqrt(A.SizeSquared() * B.SizeSquared());
 	return FindBetween_Helper(A, B, NormAB);
 }
 
-YQuat YQuat::Log() const
+FQuat FQuat::Log() const
 {
-	YQuat Result;
+	FQuat Result;
 	Result.W = 0.f;
 
 	if ( YMath::Abs(W) < 1.f )
@@ -896,12 +896,12 @@ YQuat YQuat::Log() const
 	return Result;
 }
 
-YQuat YQuat::Exp() const
+FQuat FQuat::Exp() const
 {
 	const float Angle = YMath::Sqrt(X*X + Y*Y + Z*Z);
 	const float SinAngle = YMath::Sin(Angle);
 
-	YQuat Result;
+	FQuat Result;
 	Result.W = YMath::Cos(Angle);
 
 	if ( YMath::Abs(SinAngle) >= SMALL_NUMBER )
@@ -926,15 +926,15 @@ YQuat YQuat::Exp() const
 -----------------------------------------------------------------------------*/
 
 /* Line-extent/Box Test Util */
-bool YMath::LineExtentBoxIntersection(const YBox& inBox, 
-								 const YVector& Start, 
-								 const YVector& End,
-								 const YVector& Extent,
-								 YVector& HitLocation,
-								 YVector& HitNormal,
+bool YMath::LineExtentBoxIntersection(const FBox& inBox, 
+								 const FVector& Start, 
+								 const FVector& End,
+								 const FVector& Extent,
+								 FVector& HitLocation,
+								 FVector& HitNormal,
 								 float& HitTime)
 {
-	YBox box = inBox;
+	FBox box = inBox;
 	box.Max.X += Extent.X;
 	box.Max.Y += Extent.Y;
 	box.Max.Z += Extent.Z;
@@ -943,9 +943,9 @@ bool YMath::LineExtentBoxIntersection(const YBox& inBox,
 	box.Min.Y -= Extent.Y;
 	box.Min.Z -= Extent.Z;
 
-	const YVector Dir = (End - Start);
+	const FVector Dir = (End - Start);
 	
-	YVector	Time;
+	FVector	Time;
 	bool	Inside = 1;
 	float   faceDir[3] = {1, 1, 1};
 	
@@ -1028,7 +1028,7 @@ bool YMath::LineExtentBoxIntersection(const YBox& inBox,
 	if(Inside)
 	{
 		HitLocation = Start;
-		HitNormal = YVector(0, 0, 1);
+		HitNormal = FVector(0, 0, 1);
 		HitTime = 0;
 		return 1;
 	}
@@ -1038,18 +1038,18 @@ bool YMath::LineExtentBoxIntersection(const YBox& inBox,
 		if(Time.Y > Time.Z)
 		{
 			HitTime = Time.Y;
-			HitNormal = YVector(0, faceDir[1], 0);
+			HitNormal = FVector(0, faceDir[1], 0);
 		}
 		else
 		{
 			HitTime = Time.Z;
-			HitNormal = YVector(0, 0, faceDir[2]);
+			HitNormal = FVector(0, 0, faceDir[2]);
 		}
 		
 		if(Time.X > HitTime)
 		{
 			HitTime = Time.X;
-			HitNormal = YVector(faceDir[0], 0, 0);
+			HitNormal = FVector(faceDir[0], 0, 0);
 		}
 		
 		if(HitTime >= 0.0f && HitTime <= 1.0f)
@@ -1068,7 +1068,7 @@ bool YMath::LineExtentBoxIntersection(const YBox& inBox,
 	}
 }
 
-float YVector::EvaluateBezier(const YVector* ControlPoints, int32 NumPoints, TArray<YVector>& OutPoints)
+float FVector::EvaluateBezier(const FVector* ControlPoints, int32 NumPoints, TArray<FVector>& OutPoints)
 {
 	check( ControlPoints );
 	check( NumPoints >= 2 );
@@ -1077,27 +1077,27 @@ float YVector::EvaluateBezier(const YVector* ControlPoints, int32 NumPoints, TAr
 	const float q = 1.f/(NumPoints-1); // q is dependent on the number of GAPS = POINTS-1
 
 	// recreate the names used in the derivation
-	const YVector& P0 = ControlPoints[0];
-	const YVector& P1 = ControlPoints[1];
-	const YVector& P2 = ControlPoints[2];
-	const YVector& P3 = ControlPoints[3];
+	const FVector& P0 = ControlPoints[0];
+	const FVector& P1 = ControlPoints[1];
+	const FVector& P2 = ControlPoints[2];
+	const FVector& P3 = ControlPoints[3];
 
 	// coefficients of the cubic polynomial that we're FDing -
-	const YVector a = P0;
-	const YVector b = 3*(P1-P0);
-	const YVector c = 3*(P2-2*P1+P0);
-	const YVector d = P3-3*P2+3*P1-P0;
+	const FVector a = P0;
+	const FVector b = 3*(P1-P0);
+	const FVector c = 3*(P2-2*P1+P0);
+	const FVector d = P3-3*P2+3*P1-P0;
 
 	// initial values of the poly and the 3 diffs -
-	YVector S  = a;						// the poly value
-	YVector U  = b*q + c*q*q + d*q*q*q;	// 1st order diff (quadratic)
-	YVector V  = 2*c*q*q + 6*d*q*q*q;	// 2nd order diff (linear)
-	YVector W  = 6*d*q*q*q;				// 3rd order diff (constant)
+	FVector S  = a;						// the poly value
+	FVector U  = b*q + c*q*q + d*q*q*q;	// 1st order diff (quadratic)
+	FVector V  = 2*c*q*q + 6*d*q*q*q;	// 2nd order diff (linear)
+	FVector W  = 6*d*q*q*q;				// 3rd order diff (constant)
 
 	// Path length.
 	float Length = 0.f;
 
-	YVector OldPos = P0;
+	FVector OldPos = P0;
 	OutPoints.Add( P0 );	// first point on the curve is always P0.
 
 	for( int32 i = 1 ; i < NumPoints ; ++i )
@@ -1109,7 +1109,7 @@ float YVector::EvaluateBezier(const YVector* ControlPoints, int32 NumPoints, TAr
 		// 3rd order diff is constant => no update needed.
 
 		// Update Length.
-		Length += YVector::Dist( S, OldPos );
+		Length += FVector::Dist( S, OldPos );
 		OldPos  = S;
 
 		OutPoints.Add( S );
@@ -1119,7 +1119,7 @@ float YVector::EvaluateBezier(const YVector* ControlPoints, int32 NumPoints, TAr
 	return Length;
 }
 
-float YLinearColor::EvaluateBezier(const YLinearColor* ControlPoints, int32 NumPoints, TArray<YLinearColor>& OutPoints)
+float FLinearColor::EvaluateBezier(const FLinearColor* ControlPoints, int32 NumPoints, TArray<FLinearColor>& OutPoints)
 {
 	check( ControlPoints );
 	check( NumPoints >= 2 );
@@ -1128,27 +1128,27 @@ float YLinearColor::EvaluateBezier(const YLinearColor* ControlPoints, int32 NumP
 	const float q = 1.f/(NumPoints-1); // q is dependent on the number of GAPS = POINTS-1
 
 	// recreate the names used in the derivation
-	const YLinearColor& P0 = ControlPoints[0];
-	const YLinearColor& P1 = ControlPoints[1];
-	const YLinearColor& P2 = ControlPoints[2];
-	const YLinearColor& P3 = ControlPoints[3];
+	const FLinearColor& P0 = ControlPoints[0];
+	const FLinearColor& P1 = ControlPoints[1];
+	const FLinearColor& P2 = ControlPoints[2];
+	const FLinearColor& P3 = ControlPoints[3];
 
 	// coefficients of the cubic polynomial that we're FDing -
-	const YLinearColor a = P0;
-	const YLinearColor b = 3*(P1-P0);
-	const YLinearColor c = 3*(P2-2*P1+P0);
-	const YLinearColor d = P3-3*P2+3*P1-P0;
+	const FLinearColor a = P0;
+	const FLinearColor b = 3*(P1-P0);
+	const FLinearColor c = 3*(P2-2*P1+P0);
+	const FLinearColor d = P3-3*P2+3*P1-P0;
 
 	// initial values of the poly and the 3 diffs -
-	YLinearColor S  = a;						// the poly value
-	YLinearColor U  = b*q + c*q*q + d*q*q*q;	// 1st order diff (quadratic)
-	YLinearColor V  = 2*c*q*q + 6*d*q*q*q;	// 2nd order diff (linear)
-	YLinearColor W  = 6*d*q*q*q;				// 3rd order diff (constant)
+	FLinearColor S  = a;						// the poly value
+	FLinearColor U  = b*q + c*q*q + d*q*q*q;	// 1st order diff (quadratic)
+	FLinearColor V  = 2*c*q*q + 6*d*q*q*q;	// 2nd order diff (linear)
+	FLinearColor W  = 6*d*q*q*q;				// 3rd order diff (constant)
 
 	// Path length.
 	float Length = 0.f;
 
-	YLinearColor OldPos = P0;
+	FLinearColor OldPos = P0;
 	OutPoints.Add( P0 );	// first point on the curve is always P0.
 
 	for( int32 i = 1 ; i < NumPoints ; ++i )
@@ -1160,7 +1160,7 @@ float YLinearColor::EvaluateBezier(const YLinearColor* ControlPoints, int32 NumP
 		// 3rd order diff is constant => no update needed.
 
 		// Update Length.
-		Length += YLinearColor::Dist( S, OldPos );
+		Length += FLinearColor::Dist( S, OldPos );
 		OldPos  = S;
 
 		OutPoints.Add( S );
@@ -1172,7 +1172,7 @@ float YLinearColor::EvaluateBezier(const YLinearColor* ControlPoints, int32 NumP
 
 
 
-YQuat YQuat::Slerp_NotNormalized(const YQuat& Quat1,const YQuat& Quat2, float Slerp)
+FQuat FQuat::Slerp_NotNormalized(const FQuat& Quat1,const FQuat& Quat2, float Slerp)
 {
 	// Get cosine of angle between quats.
 	const float RawCosom = 
@@ -1202,7 +1202,7 @@ YQuat YQuat::Slerp_NotNormalized(const YQuat& Quat1,const YQuat& Quat2, float Sl
 	// In keeping with our flipped Cosom:
 	Scale1 = YMath::FloatSelect( RawCosom, Scale1, -Scale1 );
 
-	YQuat Result;
+	FQuat Result;
 		
 	Result.X = Scale0 * Quat1.X + Scale1 * Quat2.X;
 	Result.Y = Scale0 * Quat1.Y + Scale1 * Quat2.Y;
@@ -1212,7 +1212,7 @@ YQuat YQuat::Slerp_NotNormalized(const YQuat& Quat1,const YQuat& Quat2, float Sl
 	return Result;
 }
 
-YQuat YQuat::SlerpFullPath_NotNormalized(const YQuat &quat1, const YQuat &quat2, float Alpha )
+FQuat FQuat::SlerpFullPath_NotNormalized(const FQuat &quat1, const FQuat &quat2, float Alpha )
 {
 	const float CosAngle = YMath::Clamp(quat1 | quat2, -1.f, 1.f);
 	const float Angle = YMath::Acos(CosAngle);
@@ -1233,33 +1233,33 @@ YQuat YQuat::SlerpFullPath_NotNormalized(const YQuat &quat1, const YQuat &quat2,
 	return quat1*Scale0 + quat2*Scale1;
 }
 
-YQuat YQuat::Squad(const YQuat& quat1, const YQuat& tang1, const YQuat& quat2, const YQuat& tang2, float Alpha)
+FQuat FQuat::Squad(const FQuat& quat1, const FQuat& tang1, const FQuat& quat2, const FQuat& tang2, float Alpha)
 {
 	// Always slerp along the short path from quat1 to quat2 to prevent axis flipping.
 	// This approach is taken by OGRE engine, amongst others.
-	const YQuat Q1 = YQuat::Slerp_NotNormalized(quat1, quat2, Alpha);
-	const YQuat Q2 = YQuat::SlerpFullPath_NotNormalized(tang1, tang2, Alpha);
-	const YQuat Result = YQuat::SlerpFullPath(Q1, Q2, 2.f * Alpha * (1.f - Alpha));
+	const FQuat Q1 = FQuat::Slerp_NotNormalized(quat1, quat2, Alpha);
+	const FQuat Q2 = FQuat::SlerpFullPath_NotNormalized(tang1, tang2, Alpha);
+	const FQuat Result = FQuat::SlerpFullPath(Q1, Q2, 2.f * Alpha * (1.f - Alpha));
 
 	return Result;
 }
 
-YQuat YQuat::SquadFullPath(const YQuat& quat1, const YQuat& tang1, const YQuat& quat2, const YQuat& tang2, float Alpha)
+FQuat FQuat::SquadFullPath(const FQuat& quat1, const FQuat& tang1, const FQuat& quat2, const FQuat& tang2, float Alpha)
 {
-	const YQuat Q1 = YQuat::SlerpFullPath_NotNormalized(quat1, quat2, Alpha);
-	const YQuat Q2 = YQuat::SlerpFullPath_NotNormalized(tang1, tang2, Alpha);
-	const YQuat Result = YQuat::SlerpFullPath(Q1, Q2, 2.f * Alpha * (1.f - Alpha));
+	const FQuat Q1 = FQuat::SlerpFullPath_NotNormalized(quat1, quat2, Alpha);
+	const FQuat Q2 = FQuat::SlerpFullPath_NotNormalized(tang1, tang2, Alpha);
+	const FQuat Result = FQuat::SlerpFullPath(Q1, Q2, 2.f * Alpha * (1.f - Alpha));
 
 	return Result;
 }
 
-void YQuat::CalcTangents(const YQuat& PrevP, const YQuat& P, const YQuat& NextP, float Tension, YQuat& OutTan)
+void FQuat::CalcTangents(const FQuat& PrevP, const FQuat& P, const FQuat& NextP, float Tension, FQuat& OutTan)
 {
-	const YQuat InvP = P.Inverse();
-	const YQuat Part1 = (InvP * PrevP).Log();
-	const YQuat Part2 = (InvP * NextP).Log();
+	const FQuat InvP = P.Inverse();
+	const FQuat Part1 = (InvP * PrevP).Log();
+	const FQuat Part2 = (InvP * NextP).Log();
 
-	const YQuat PreExp = (Part1 + Part2) * -0.5f;
+	const FQuat PreExp = (Part1 + Part2) * -0.5f;
 
 	OutTan = P * PreExp.Exp();
 }
@@ -1336,7 +1336,7 @@ void CORE_API CurveVector2DFindIntervalBounds( const FInterpCurvePoint<YVector2D
 	CurrentMax.Y = YMath::Max( CurrentMax.Y, OutMax );
 }
 
-void CORE_API CurveVectorFindIntervalBounds( const FInterpCurvePoint<YVector>& Start, const FInterpCurvePoint<YVector>& End, YVector& CurrentMin, YVector& CurrentMax )
+void CORE_API CurveVectorFindIntervalBounds( const FInterpCurvePoint<FVector>& Start, const FInterpCurvePoint<FVector>& End, FVector& CurrentMin, FVector& CurrentMax )
 {
 	const bool bIsCurve = Start.IsCurveKey();
 
@@ -1389,7 +1389,7 @@ void CORE_API CurveTwoVectorsFindIntervalBounds(const FInterpCurvePoint<YTwoVect
 	CurrentMax.v2.Z = YMath::Max( CurrentMax.v2.Z, OutMax );
 }
 
-void CORE_API CurveLinearColorFindIntervalBounds( const FInterpCurvePoint<YLinearColor>& Start, const FInterpCurvePoint<YLinearColor>& End, YLinearColor& CurrentMin, YLinearColor& CurrentMax )
+void CORE_API CurveLinearColorFindIntervalBounds( const FInterpCurvePoint<FLinearColor>& Start, const FInterpCurvePoint<FLinearColor>& End, FLinearColor& CurrentMin, FLinearColor& CurrentMax )
 {
 	const bool bIsCurve = Start.IsCurveKey();
 
@@ -1412,24 +1412,24 @@ void CORE_API CurveLinearColorFindIntervalBounds( const FInterpCurvePoint<YLinea
 	CurrentMax.A = YMath::Max( CurrentMax.A, OutMax );
 }
 
-CORE_API float YMath::PointDistToLine(const YVector &Point, const YVector &Direction, const YVector &Origin, YVector &OutClosestPoint)
+CORE_API float YMath::PointDistToLine(const FVector &Point, const FVector &Direction, const FVector &Origin, FVector &OutClosestPoint)
 {
-	const YVector SafeDir = Direction.GetSafeNormal();
+	const FVector SafeDir = Direction.GetSafeNormal();
 	OutClosestPoint = Origin + (SafeDir * ((Point-Origin) | SafeDir));
 	return (OutClosestPoint-Point).Size();
 }
 
-CORE_API float YMath::PointDistToLine(const YVector &Point, const YVector &Direction, const YVector &Origin)
+CORE_API float YMath::PointDistToLine(const FVector &Point, const FVector &Direction, const FVector &Origin)
 {
-	const YVector SafeDir = Direction.GetSafeNormal();
-	const YVector OutClosestPoint = Origin + (SafeDir * ((Point-Origin) | SafeDir));
+	const FVector SafeDir = Direction.GetSafeNormal();
+	const FVector OutClosestPoint = Origin + (SafeDir * ((Point-Origin) | SafeDir));
 	return (OutClosestPoint-Point).Size();
 }
 
-YVector YMath::ClosestPointOnSegment(const YVector &Point, const YVector &StartPoint, const YVector &EndPoint)
+FVector YMath::ClosestPointOnSegment(const FVector &Point, const FVector &StartPoint, const FVector &EndPoint)
 {
-	const YVector Segment = EndPoint - StartPoint;
-	const YVector VectToPoint = Point - StartPoint;
+	const FVector Segment = EndPoint - StartPoint;
+	const FVector VectToPoint = Point - StartPoint;
 
 	// See if closest point is before StartPoint
 	const float Dot1 = VectToPoint | Segment;
@@ -1472,21 +1472,21 @@ YVector2D YMath::ClosestPointOnSegment2D(const YVector2D &Point, const YVector2D
 	return StartPoint + Segment * (Dot1 / Dot2);
 }
 
-float YMath::PointDistToSegment(const YVector &Point, const YVector &StartPoint, const YVector &EndPoint) 
+float YMath::PointDistToSegment(const FVector &Point, const FVector &StartPoint, const FVector &EndPoint) 
 {
-	const YVector ClosestPoint = ClosestPointOnSegment(Point, StartPoint, EndPoint);
+	const FVector ClosestPoint = ClosestPointOnSegment(Point, StartPoint, EndPoint);
 	return (Point - ClosestPoint).Size();
 }
 
-float YMath::PointDistToSegmentSquared(const YVector &Point, const YVector &StartPoint, const YVector &EndPoint) 
+float YMath::PointDistToSegmentSquared(const FVector &Point, const FVector &StartPoint, const FVector &EndPoint) 
 {
-	const YVector ClosestPoint = ClosestPointOnSegment(Point, StartPoint, EndPoint);
+	const FVector ClosestPoint = ClosestPointOnSegment(Point, StartPoint, EndPoint);
 	return (Point - ClosestPoint).SizeSquared();
 }
 
 struct SegmentDistToSegment_Solver
 {
-	SegmentDistToSegment_Solver(const YVector& InA1, const YVector& InB1, const YVector& InA2, const YVector& InB2):
+	SegmentDistToSegment_Solver(const FVector& InA1, const FVector& InB1, const FVector& InA2, const FVector& InB2):
 		bLinesAreNearlyParallel(false),
 		A1(InA1),
 		A2(InA2),
@@ -1498,14 +1498,14 @@ struct SegmentDistToSegment_Solver
 
 	bool bLinesAreNearlyParallel;
 
-	const YVector& A1;
-	const YVector& A2;
+	const FVector& A1;
+	const FVector& A2;
 
-	const YVector S1;
-	const YVector S2;
-	const YVector S3;
+	const FVector S1;
+	const FVector S2;
+	const FVector S3;
 
-	void Solve(YVector& OutP1, YVector& OutP2)
+	void Solve(FVector& OutP1, FVector& OutP2)
 	{
 		const float Dot11 = S1 | S1;
 		const float Dot12 = S1 | S2;
@@ -1602,12 +1602,12 @@ struct SegmentDistToSegment_Solver
 	}
 };
 
-void YMath::SegmentDistToSegmentSafe(YVector A1, YVector B1, YVector A2, YVector B2, YVector& OutP1, YVector& OutP2)
+void YMath::SegmentDistToSegmentSafe(FVector A1, FVector B1, FVector A2, FVector B2, FVector& OutP1, FVector& OutP2)
 {
 	SegmentDistToSegment_Solver Solver(A1, B1, A2, B2);
 
-	const YVector S1_norm = Solver.S1.GetSafeNormal();
-	const YVector S2_norm = Solver.S2.GetSafeNormal();
+	const FVector S1_norm = Solver.S1.GetSafeNormal();
+	const FVector S2_norm = Solver.S2.GetSafeNormal();
 
 	const bool bS1IsPoint = S1_norm.IsZero();
 	const bool bS2IsPoint = S2_norm.IsZero();
@@ -1639,17 +1639,17 @@ void YMath::SegmentDistToSegmentSafe(YVector A1, YVector B1, YVector A2, YVector
 	}
 }
 
-void YMath::SegmentDistToSegment(YVector A1, YVector B1, YVector A2, YVector B2, YVector& OutP1, YVector& OutP2)
+void YMath::SegmentDistToSegment(FVector A1, FVector B1, FVector A2, FVector B2, FVector& OutP1, FVector& OutP2)
 {
 	SegmentDistToSegment_Solver(A1, B1, A2, B2).Solve(OutP1, OutP2);
 }
 
-float YMath::GetTForSegmentPlaneIntersect(const YVector& StartPoint, const YVector& EndPoint, const YPlane& Plane)
+float YMath::GetTForSegmentPlaneIntersect(const FVector& StartPoint, const FVector& EndPoint, const FPlane& Plane)
 {
 	return ( Plane.W - (StartPoint|Plane) ) / ( (EndPoint - StartPoint)|Plane);	
 }
 
-bool YMath::SegmentPlaneIntersection(const YVector& StartPoint, const YVector& EndPoint, const YPlane& Plane, YVector& out_IntersectionPoint)
+bool YMath::SegmentPlaneIntersection(const FVector& StartPoint, const FVector& EndPoint, const FPlane& Plane, FVector& out_IntersectionPoint)
 {
 	float T = YMath::GetTForSegmentPlaneIntersect(StartPoint, EndPoint, Plane);
 	// If the parameter value is not between 0 and 1, there is no intersection
@@ -1661,10 +1661,10 @@ bool YMath::SegmentPlaneIntersection(const YVector& StartPoint, const YVector& E
 	return false;
 }
 
-bool YMath::SegmentIntersection2D(const YVector& SegmentStartA, const YVector& SegmentEndA, const YVector& SegmentStartB, const YVector& SegmentEndB, YVector& out_IntersectionPoint)
+bool YMath::SegmentIntersection2D(const FVector& SegmentStartA, const FVector& SegmentEndA, const FVector& SegmentStartB, const FVector& SegmentEndB, FVector& out_IntersectionPoint)
 {
-	const YVector VectorA = SegmentEndA - SegmentStartA;
-	const YVector VectorB = SegmentEndB - SegmentStartB;
+	const FVector VectorA = SegmentEndA - SegmentStartA;
+	const FVector VectorB = SegmentEndB - SegmentStartB;
 
 	const float S = (-VectorA.Y * (SegmentStartA.X - SegmentStartB.X) + VectorA.X * (SegmentStartA.Y - SegmentStartB.Y)) / (-VectorB.X * VectorA.Y + VectorA.X * VectorB.Y);
 	const float T = (VectorB.X * (SegmentStartA.Y - SegmentStartB.Y) - VectorB.Y * (SegmentStartA.X - SegmentStartB.X)) / (-VectorB.X * VectorA.Y + VectorA.X * VectorB.Y);
@@ -1690,8 +1690,8 @@ static bool ComputeProjectedSphereShaft(
 	float LightX,
 	float LightZ,
 	float Radius,
-	const YMatrix& ProjMatrix,
-	const YVector& Axis,
+	const FMatrix& ProjMatrix,
+	const FVector& Axis,
 	float AxisSign,
 	int32& InOutMinX,
 	int32& InOutMaxX
@@ -1718,7 +1718,7 @@ static bool ComputeProjectedSphereShaft(
 		if(Pza > 0)
 		{
 			float Pxa = -Pza * Nza / Nxa;
-			YVector4 P = ProjMatrix.TransformFVector4(YVector4(Axis.X * Pxa,Axis.Y * Pxa,Pza,1));
+			FVector4 P = ProjMatrix.TransformFVector4(FVector4(Axis.X * Pxa,Axis.Y * Pxa,Pza,1));
 			float X = (Dot3(P,Axis) / P.W + 1.0f * AxisSign) / 2.0f * AxisSign;
 			if(YMath::IsNegativeFloat(Nxa) ^ YMath::IsNegativeFloat(AxisSign))
 			{
@@ -1734,7 +1734,7 @@ static bool ComputeProjectedSphereShaft(
 		if(Pzb > 0)
 		{
 			float Pxb = -Pzb * Nzb / Nxb;
-			YVector4 P = ProjMatrix.TransformFVector4(YVector4(Axis.X * Pxb,Axis.Y * Pxb,Pzb,1));
+			FVector4 P = ProjMatrix.TransformFVector4(FVector4(Axis.X * Pxb,Axis.Y * Pxb,Pzb,1));
 			float X = (Dot3(P,Axis) / P.W + 1.0f * AxisSign) / 2.0f * AxisSign;
 			if(YMath::IsNegativeFloat(Nxb) ^ YMath::IsNegativeFloat(AxisSign))
 			{
@@ -1750,19 +1750,19 @@ static bool ComputeProjectedSphereShaft(
 	return InOutMinX <= InOutMaxX;
 }
 
-uint32 YMath::ComputeProjectedSphereScissorRect(YIntRect& InOutScissorRect, YVector SphereOrigin, float Radius, YVector ViewOrigin, const YMatrix& ViewMatrix, const YMatrix& ProjMatrix)
+uint32 YMath::ComputeProjectedSphereScissorRect(YIntRect& InOutScissorRect, FVector SphereOrigin, float Radius, FVector ViewOrigin, const FMatrix& ViewMatrix, const FMatrix& ProjMatrix)
 {
 	// Calculate a scissor rectangle for the light's radius.
 	if((SphereOrigin - ViewOrigin).SizeSquared() > YMath::Square(Radius))
 	{
-		YVector LightVector = ViewMatrix.TransformPosition(SphereOrigin);
+		FVector LightVector = ViewMatrix.TransformPosition(SphereOrigin);
 
 		if(!ComputeProjectedSphereShaft(
 			LightVector.X,
 			LightVector.Z,
 			Radius,
 			ProjMatrix,
-			YVector(+1,0,0),
+			FVector(+1,0,0),
 			+1,
 			InOutScissorRect.Min.X,
 			InOutScissorRect.Max.X))
@@ -1775,7 +1775,7 @@ uint32 YMath::ComputeProjectedSphereScissorRect(YIntRect& InOutScissorRect, YVec
 			LightVector.Z,
 			Radius,
 			ProjMatrix,
-			YVector(0,+1,0),
+			FVector(0,+1,0),
 			-1,
 			InOutScissorRect.Min.Y,
 			InOutScissorRect.Max.Y))
@@ -1791,10 +1791,10 @@ uint32 YMath::ComputeProjectedSphereScissorRect(YIntRect& InOutScissorRect, YVec
 	}
 }
 
-bool YMath::PlaneAABBIntersection(const YPlane& P, const YBox& AABB)
+bool YMath::PlaneAABBIntersection(const FPlane& P, const FBox& AABB)
 {
 	// find diagonal most closely aligned with normal of plane
-	YVector Vmin, Vmax;
+	FVector Vmin, Vmax;
 
 	// Bypass the slow YVector[] operator. Not RESTRICT because it won't update Vmin, Vmax
 	float* VminPtr = (float*)&Vmin;
@@ -1827,7 +1827,7 @@ bool YMath::PlaneAABBIntersection(const YPlane& P, const YBox& AABB)
 	return (dMax >= 0.f && dMin <= 0.f);
 }
 
-bool YMath::SphereConeIntersection(const YVector& SphereCenter, float SphereRadius, const YVector& ConeAxis, float ConeAngleSin, float ConeAngleCos)
+bool YMath::SphereConeIntersection(const FVector& SphereCenter, float SphereRadius, const FVector& ConeAxis, float ConeAngleSin, float ConeAngleCos)
 {
 	/**
 	 * from http://www.geometrictools.com/Documentation/IntersectionSphereCone.pdf
@@ -1836,8 +1836,8 @@ bool YMath::SphereConeIntersection(const YVector& SphereCenter, float SphereRadi
 
 	// the following code assumes the cone tip is at 0,0,0 (means the SphereCenter is relative to the cone tip)
 
-	YVector U = ConeAxis * (-SphereRadius / ConeAngleSin);
-	YVector D = SphereCenter - U;
+	FVector U = ConeAxis * (-SphereRadius / ConeAngleSin);
+	FVector D = SphereCenter - U;
 	float dsqr = D | D;
 	float e = ConeAxis | D;
 
@@ -1857,17 +1857,17 @@ bool YMath::SphereConeIntersection(const YVector& SphereCenter, float SphereRadi
 	return false;
 }
 
-YVector YMath::ClosestPointOnTriangleToPoint(const YVector& Point, const YVector& A, const YVector& B, const YVector& C)
+FVector YMath::ClosestPointOnTriangleToPoint(const FVector& Point, const FVector& A, const FVector& B, const FVector& C)
 {
 	//Figure out what region the point is in and compare against that "point" or "edge"
-	const YVector BA = A - B;
-	const YVector AC = C - A;
-	const YVector CB = B - C;
-	const YVector TriNormal = BA ^ CB;
+	const FVector BA = A - B;
+	const FVector AC = C - A;
+	const FVector CB = B - C;
+	const FVector TriNormal = BA ^ CB;
 
 	// Get the planes that define this triangle
 	// edges BA, AC, BC with normals perpendicular to the edges facing outward
-	const YPlane Planes[3] = { YPlane(B, TriNormal ^ BA), YPlane(A, TriNormal ^ AC), YPlane(C, TriNormal ^ CB) };
+	const FPlane Planes[3] = { FPlane(B, TriNormal ^ BA), FPlane(A, TriNormal ^ AC), FPlane(C, TriNormal ^ CB) };
 	int32 PlaneHalfspaceBitmask = 0;
 
 	//Determine which side of each plane the test point exists
@@ -1879,11 +1879,11 @@ YVector YMath::ClosestPointOnTriangleToPoint(const YVector& Point, const YVector
 		}
 	}
 
-	YVector Result(Point.X, Point.Y, Point.Z);
+	FVector Result(Point.X, Point.Y, Point.Z);
 	switch (PlaneHalfspaceBitmask)
 	{
 	case 0: //000 Inside
-		return YVector::PointPlaneProject(Point, A, B, C);
+		return FVector::PointPlaneProject(Point, A, B, C);
 	case 1:	//001 Segment BA
 		Result = YMath::ClosestPointOnSegment(Point, B, A);
 		break;
@@ -1907,23 +1907,23 @@ YVector YMath::ClosestPointOnTriangleToPoint(const YVector& Point, const YVector
 	return Result;
 }
 
-YVector YMath::GetBaryCentric2D(const YVector& Point, const YVector& A, const YVector& B, const YVector& C)
+FVector YMath::GetBaryCentric2D(const FVector& Point, const FVector& A, const FVector& B, const FVector& C)
 {
 	float a = ((B.Y-C.Y)*(Point.X-C.X) + (C.X-B.X)*(Point.Y-C.Y)) / ((B.Y-C.Y)*(A.X-C.X) + (C.X-B.X)*(A.Y-C.Y));
 	float b = ((C.Y-A.Y)*(Point.X-C.X) + (A.X-C.X)*(Point.Y-C.Y)) / ((B.Y-C.Y)*(A.X-C.X) + (C.X-B.X)*(A.Y-C.Y));
 
-	return YVector(a, b, 1.0f - a - b);	
+	return FVector(a, b, 1.0f - a - b);	
 }
 
-YVector YMath::ComputeBaryCentric2D(const YVector& Point, const YVector& A, const YVector& B, const YVector& C)
+FVector YMath::ComputeBaryCentric2D(const FVector& Point, const FVector& A, const FVector& B, const FVector& C)
 {
 	// Compute the normal of the triangle
-	const YVector TriNorm = (B-A) ^ (C-A);
+	const FVector TriNorm = (B-A) ^ (C-A);
 
 	//check collinearity of A,B,C
 	check(TriNorm.SizeSquared() > SMALL_NUMBER && "Collinear points in YMath::ComputeBaryCentric2D()");
 
-	const YVector N = TriNorm.GetSafeNormal();
+	const FVector N = TriNorm.GetSafeNormal();
 
 	// Compute twice area of triangle ABC
 	const float AreaABCInv = 1.0f / (N | TriNorm);
@@ -1937,37 +1937,37 @@ YVector YMath::ComputeBaryCentric2D(const YVector& Point, const YVector& A, cons
 	const float b = AreaPCA * AreaABCInv;
 
 	// Compute c contribution
-	return YVector(a, b, 1.0f - a - b);
+	return FVector(a, b, 1.0f - a - b);
 }
 
-YVector4 YMath::ComputeBaryCentric3D(const YVector& Point, const YVector& A, const YVector& B, const YVector& C, const YVector& D)
+FVector4 YMath::ComputeBaryCentric3D(const FVector& Point, const FVector& A, const FVector& B, const FVector& C, const FVector& D)
 {	
 	//http://www.devmaster.net/wiki/Barycentric_coordinates
 	//Pick A as our origin and
 	//Setup three basis vectors AB, AC, AD
-	const YVector B1 = (B-A);
-	const YVector B2 = (C-A);
-	const YVector B3 = (D-A);
+	const FVector B1 = (B-A);
+	const FVector B2 = (C-A);
+	const FVector B3 = (D-A);
 
 	//check co-planarity of A,B,C,D
 	check( fabsf(B1 | (B2 ^ B3)) > SMALL_NUMBER && "Coplanar points in YMath::ComputeBaryCentric3D()");
 
 	//Transform Point into this new space
-	const YVector V = (Point - A);
+	const FVector V = (Point - A);
 
 	//Create a matrix of linearly independent vectors
-	const YMatrix SolvMat(B1, B2, B3, YVector::ZeroVector);
+	const FMatrix SolvMat(B1, B2, B3, FVector::ZeroVector);
 
 	//The point V can be expressed as Ax=v where x is the vector containing the weights {w1...wn}
 	//Solve for x by multiplying both sides by AInv   (AInv * A)x = AInv * v ==> x = AInv * v
-	const YMatrix InvSolvMat = SolvMat.Inverse();
-	const YPlane BaryCoords = InvSolvMat.TransformVector(V);	 
+	const FMatrix InvSolvMat = SolvMat.Inverse();
+	const FPlane BaryCoords = InvSolvMat.TransformVector(V);	 
 
 	//Reorder the weights to be a, b, c, d
-	return YVector4(1.0f - BaryCoords.X - BaryCoords.Y - BaryCoords.Z, BaryCoords.X, BaryCoords.Y, BaryCoords.Z);
+	return FVector4(1.0f - BaryCoords.X - BaryCoords.Y - BaryCoords.Z, BaryCoords.X, BaryCoords.Y, BaryCoords.Z);
 }
 
-YVector YMath::ClosestPointOnTetrahedronToPoint(const YVector& Point, const YVector& A, const YVector& B, const YVector& C, const YVector& D)
+FVector YMath::ClosestPointOnTetrahedronToPoint(const FVector& Point, const FVector& A, const FVector& B, const FVector& C, const FVector& D)
 {
 	//Check for coplanarity of all four points
 	check( fabsf((C-A) | ((B-A)^(D-C))) > 0.0001f && "Coplanar points in YMath::ComputeBaryCentric3D()");
@@ -1983,8 +1983,8 @@ YVector YMath::ClosestPointOnTetrahedronToPoint(const YVector& Point, const YVec
 	//     A				D
 	
 	// Figure out the ordering (is D in the direction of the CCW triangle ABC)
-	YVector Pt1(A),Pt2(B),Pt3(C),Pt4(D);
- 	const YPlane ABC(A,B,C);
+	FVector Pt1(A),Pt2(B),Pt3(C),Pt4(D);
+ 	const FPlane ABC(A,B,C);
  	if (ABC.PlaneDot(D) < 0.0f)
  	{
  		//Swap two points to maintain CCW orders
@@ -1993,7 +1993,7 @@ YVector YMath::ClosestPointOnTetrahedronToPoint(const YVector& Point, const YVec
  	}
 		
 	//Tetrahedron made up of 4 CCW faces - DCA, DBC, DAB, ACB
-	const YPlane Planes[4] = {YPlane(Pt4,Pt3,Pt1), YPlane(Pt4,Pt2,Pt3), YPlane(Pt4,Pt1,Pt2), YPlane(Pt1,Pt3,Pt2)};
+	const FPlane Planes[4] = {FPlane(Pt4,Pt3,Pt1), FPlane(Pt4,Pt2,Pt3), FPlane(Pt4,Pt1,Pt2), FPlane(Pt1,Pt3,Pt2)};
 
 	//Determine which side of each plane the test point exists
 	int32 PlaneHalfspaceBitmask = 0;
@@ -2006,7 +2006,7 @@ YVector YMath::ClosestPointOnTetrahedronToPoint(const YVector& Point, const YVec
 	}
 
 	//Verts + Faces - Edges = 2	(Euler)
-	YVector Result(Point.X, Point.Y, Point.Z);
+	FVector Result(Point.X, Point.Y, Point.Z);
 	switch (PlaneHalfspaceBitmask)
 	{
 	case 0:	 //inside (0000)
@@ -2054,11 +2054,11 @@ YVector YMath::ClosestPointOnTetrahedronToPoint(const YVector& Point, const YVec
 	return Result;
 }
 
-void YMath::SphereDistToLine(YVector SphereOrigin, float SphereRadius, YVector LineOrigin, YVector NormalizedLineDir, YVector& OutClosestPoint)
+void YMath::SphereDistToLine(FVector SphereOrigin, float SphereRadius, FVector LineOrigin, FVector NormalizedLineDir, FVector& OutClosestPoint)
 {
 	//const float A = NormalizedLineDir | NormalizedLineDir  (this is 1 because normalized)
 	//solving quadratic formula in terms of t where closest point = LineOrigin + t * NormalizedLineDir
-	const YVector LineOriginToSphereOrigin = SphereOrigin - LineOrigin;
+	const FVector LineOriginToSphereOrigin = SphereOrigin - LineOrigin;
 	const float B = -2.f * (NormalizedLineDir | LineOriginToSphereOrigin);
 	const float C = LineOriginToSphereOrigin.SizeSquared() - YMath::Square(SphereRadius);
 	const float D	= YMath::Square(B) - 4.f * C;
@@ -2066,7 +2066,7 @@ void YMath::SphereDistToLine(YVector SphereOrigin, float SphereRadius, YVector L
 	if( D <= KINDA_SMALL_NUMBER )
 	{
 		// line is not intersecting sphere (or is tangent at one point if D == 0 )
-		const YVector PointOnLine = LineOrigin + ( -B * 0.5f ) * NormalizedLineDir;
+		const FVector PointOnLine = LineOrigin + ( -B * 0.5f ) * NormalizedLineDir;
 		OutClosestPoint = SphereOrigin + (PointOnLine - SphereOrigin).GetSafeNormal() * SphereRadius;
 	}
 	else
@@ -2081,20 +2081,20 @@ void YMath::SphereDistToLine(YVector SphereOrigin, float SphereRadius, YVector L
 	}
 }
 
-bool YMath::GetDistanceWithinConeSegment(YVector Point, YVector ConeStartPoint, YVector ConeLine, float RadiusAtStart, float RadiusAtEnd, float &PercentageOut)
+bool YMath::GetDistanceWithinConeSegment(FVector Point, FVector ConeStartPoint, FVector ConeLine, float RadiusAtStart, float RadiusAtEnd, float &PercentageOut)
 {
 	check(RadiusAtStart >= 0.0f && RadiusAtEnd >= 0.0f && ConeLine.SizeSquared() > 0);
 	// -- First we'll draw out a line from the ConeStartPoint down the ConeLine. We'll find the closest point on that line to Point.
 	//    If we're outside the max distance, or behind the StartPoint, we bail out as that means we've no chance to be in the cone.
 
-	YVector PointOnCone; // Stores the point on the cone's center line closest to our target point.
+	FVector PointOnCone; // Stores the point on the cone's center line closest to our target point.
 
 	const float Distance = YMath::PointDistToLine(Point, ConeLine, ConeStartPoint, PointOnCone); // distance is how far from the viewline we are
 
 	PercentageOut = 0.0; // start assuming we're outside cone until proven otherwise.
 
-	const YVector VectToStart = ConeStartPoint - PointOnCone;
-	const YVector VectToEnd = (ConeStartPoint + ConeLine) - PointOnCone;
+	const FVector VectToStart = ConeStartPoint - PointOnCone;
+	const FVector VectToEnd = (ConeStartPoint + ConeLine) - PointOnCone;
 	
 	const float ConeLengthSqr = ConeLine.SizeSquared();
 	const float DistToStartSqr = VectToStart.SizeSquared();
@@ -2117,7 +2117,7 @@ bool YMath::GetDistanceWithinConeSegment(YVector Point, YVector ConeStartPoint, 
 	return true;
 }
 
-bool YMath::PointsAreCoplanar(const TArray<YVector>& Points, const float Tolerance)
+bool YMath::PointsAreCoplanar(const TArray<FVector>& Points, const float Tolerance)
 {
 	//less than 4 points = coplanar
 	if (Points.Num() < 4)
@@ -2126,13 +2126,13 @@ bool YMath::PointsAreCoplanar(const TArray<YVector>& Points, const float Toleran
 	}
 
 	//Get the Normal for plane determined by first 3 points
-	const YVector Normal = YVector::CrossProduct(Points[2] - Points[0], Points[1] - Points[0]).GetSafeNormal();
+	const FVector Normal = FVector::CrossProduct(Points[2] - Points[0], Points[1] - Points[0]).GetSafeNormal();
 
 	const int32 Total = Points.Num();
 	for (int32 v = 3; v < Total; v++)
 	{
 		//Abs of PointPlaneDist, dist should be 0
-		if (YMath::Abs(YVector::PointPlaneDist(Points[v], Points[0], Normal)) > Tolerance)
+		if (YMath::Abs(FVector::PointPlaneDist(Points[v], Points[0], Normal)) > Tolerance)
 		{
 			return false;
 		}
@@ -2144,16 +2144,16 @@ bool YMath::PointsAreCoplanar(const TArray<YVector>& Points, const float Toleran
 bool YMath::GetDotDistance
 ( 
 			YVector2D	&OutDotDist, 
-	const	YVector		&Direction, 
-	const	YVector		&AxisX, 
-	const	YVector		&AxisY, 
-	const	YVector		&AxisZ 	
+	const	FVector		&Direction, 
+	const	FVector		&AxisX, 
+	const	FVector		&AxisY, 
+	const	FVector		&AxisZ 	
 )
 {
-	const YVector NormalDir = Direction.GetSafeNormal();
+	const FVector NormalDir = Direction.GetSafeNormal();
 
 	// Find projected point (on AxisX and AxisY, remove AxisZ component)
-	const YVector NoZProjDir = (NormalDir - (NormalDir | AxisZ) * AxisZ).GetSafeNormal();
+	const FVector NoZProjDir = (NormalDir - (NormalDir | AxisZ) * AxisZ).GetSafeNormal();
 	
 	// Figure out if projection is on right or left.
 	const float AzimuthSign = ( (NoZProjDir | AxisY) < 0.f ) ? -1.f : 1.f;
@@ -2167,15 +2167,15 @@ bool YMath::GetDotDistance
 
 YVector2D YMath::GetAzimuthAndElevation
 (
-	const YVector &Direction, 
-	const YVector &AxisX, 
-	const YVector &AxisY, 
-	const YVector &AxisZ 	
+	const FVector &Direction, 
+	const FVector &AxisX, 
+	const FVector &AxisY, 
+	const FVector &AxisZ 	
 )
 {
-	const YVector NormalDir = Direction.GetSafeNormal();
+	const FVector NormalDir = Direction.GetSafeNormal();
 	// Find projected point (on AxisX and AxisY, remove AxisZ component)
-	const YVector NoZProjDir = (NormalDir - (NormalDir | AxisZ) * AxisZ).GetSafeNormal();
+	const FVector NoZProjDir = (NormalDir - (NormalDir | AxisZ) * AxisZ).GetSafeNormal();
 	// Figure out if projection is on right or left.
 	const float AzimuthSign = ((NoZProjDir | AxisY) < 0.f) ? -1.f : 1.f;
 	const float ElevationSin = NormalDir | AxisZ;
@@ -2185,13 +2185,13 @@ YVector2D YMath::GetAzimuthAndElevation
 	return YVector2D(YMath::Acos(AzimuthCos) * AzimuthSign, YMath::Asin(ElevationSin));
 }
 
-CORE_API YVector YMath::VInterpNormalRotationTo(const YVector& Current, const YVector& Target, float DeltaTime, float RotationSpeedDegrees)
+CORE_API FVector YMath::VInterpNormalRotationTo(const FVector& Current, const FVector& Target, float DeltaTime, float RotationSpeedDegrees)
 {
 	// Find delta rotation between both normals.
-	YQuat DeltaQuat = YQuat::FindBetween(Current, Target);
+	FQuat DeltaQuat = FQuat::FindBetween(Current, Target);
 
 	// Decompose into an axis and angle for rotation
-	YVector DeltaAxis(0.f);
+	FVector DeltaAxis(0.f);
 	float DeltaAngle = 0.f;
 	DeltaQuat.ToAxisAndAngle(DeltaAxis, DeltaAngle);
 
@@ -2201,15 +2201,15 @@ CORE_API YVector YMath::VInterpNormalRotationTo(const YVector& Current, const YV
 	if( YMath::Abs(DeltaAngle) > RotationStepRadians )
 	{
 		DeltaAngle = YMath::Clamp(DeltaAngle, -RotationStepRadians, RotationStepRadians);
-		DeltaQuat = YQuat(DeltaAxis, DeltaAngle);
+		DeltaQuat = FQuat(DeltaAxis, DeltaAngle);
 		return DeltaQuat.RotateVector(Current);
 	}
 	return Target;
 }
 
-CORE_API YVector YMath::VInterpConstantTo(const YVector& Current, const YVector& Target, float DeltaTime, float InterpSpeed)
+CORE_API FVector YMath::VInterpConstantTo(const FVector& Current, const FVector& Target, float DeltaTime, float InterpSpeed)
 {
-	const YVector Delta = Target - Current;
+	const FVector Delta = Target - Current;
 	const float DeltaM = Delta.Size();
 	const float MaxStep = InterpSpeed * DeltaTime;
 
@@ -2217,7 +2217,7 @@ CORE_API YVector YMath::VInterpConstantTo(const YVector& Current, const YVector&
 	{
 		if( MaxStep > 0.f )
 		{
-			const YVector DeltaN = Delta / DeltaM;
+			const FVector DeltaN = Delta / DeltaM;
 			return Current + DeltaN * MaxStep;
 		}
 		else
@@ -2229,7 +2229,7 @@ CORE_API YVector YMath::VInterpConstantTo(const YVector& Current, const YVector&
 	return Target;
 }
 
-CORE_API YVector YMath::VInterpTo( const YVector& Current, const YVector& Target, float DeltaTime, float InterpSpeed )
+CORE_API FVector YMath::VInterpTo( const FVector& Current, const FVector& Target, float DeltaTime, float InterpSpeed )
 {
 	// If no interp speed, jump to target value
 	if( InterpSpeed <= 0.f )
@@ -2238,7 +2238,7 @@ CORE_API YVector YMath::VInterpTo( const YVector& Current, const YVector& Target
 	}
 
 	// Distance to reach
-	const YVector Dist = Target - Current;
+	const FVector Dist = Target - Current;
 
 	// If distance is too small, just set the desired location
 	if( Dist.SizeSquared() < KINDA_SMALL_NUMBER )
@@ -2247,7 +2247,7 @@ CORE_API YVector YMath::VInterpTo( const YVector& Current, const YVector& Target
 	}
 
 	// Delta Move, Clamp so we do not over shoot.
-	const YVector	DeltaMove = Dist * YMath::Clamp<float>(DeltaTime * InterpSpeed, 0.f, 1.f);
+	const FVector	DeltaMove = Dist * YMath::Clamp<float>(DeltaTime * InterpSpeed, 0.f, 1.f);
 
 	return Current + DeltaMove;
 }
@@ -2291,7 +2291,7 @@ CORE_API YVector2D YMath::Vector2DInterpTo( const YVector2D& Current, const YVec
 	return Current + DeltaMove;
 }
 
-CORE_API YRotator YMath::RInterpConstantTo( const YRotator& Current, const YRotator& Target, float DeltaTime, float InterpSpeed )
+CORE_API FRotator YMath::RInterpConstantTo( const FRotator& Current, const FRotator& Target, float DeltaTime, float InterpSpeed )
 {
 	// if DeltaTime is 0, do not perform any interpolation (Location was already calculated for that frame)
 	if( DeltaTime == 0.f || Current == Target )
@@ -2307,15 +2307,15 @@ CORE_API YRotator YMath::RInterpConstantTo( const YRotator& Current, const YRota
 
 	const float DeltaInterpSpeed = InterpSpeed * DeltaTime;
 	
-	const YRotator DeltaMove = (Target - Current).GetNormalized();
-	YRotator Result = Current;
+	const FRotator DeltaMove = (Target - Current).GetNormalized();
+	FRotator Result = Current;
 	Result.Pitch += YMath::Clamp(DeltaMove.Pitch, -DeltaInterpSpeed, DeltaInterpSpeed);
 	Result.Yaw += YMath::Clamp(DeltaMove.Yaw, -DeltaInterpSpeed, DeltaInterpSpeed);
 	Result.Roll += YMath::Clamp(DeltaMove.Roll, -DeltaInterpSpeed, DeltaInterpSpeed);
 	return Result.GetNormalized();
 }
 
-CORE_API YRotator YMath::RInterpTo( const YRotator& Current, const YRotator& Target, float DeltaTime, float InterpSpeed)
+CORE_API FRotator YMath::RInterpTo( const FRotator& Current, const FRotator& Target, float DeltaTime, float InterpSpeed)
 {
 	// if DeltaTime is 0, do not perform any interpolation (Location was already calculated for that frame)
 	if( DeltaTime == 0.f || Current == Target )
@@ -2331,7 +2331,7 @@ CORE_API YRotator YMath::RInterpTo( const YRotator& Current, const YRotator& Tar
 
 	const float DeltaInterpSpeed = InterpSpeed * DeltaTime;
 
-	const YRotator Delta = (Target - Current).GetNormalized();
+	const FRotator Delta = (Target - Current).GetNormalized();
 	
 	// If steps are too small, just return Target and assume we have reached our destination.
 	if (Delta.IsNearlyZero())
@@ -2340,7 +2340,7 @@ CORE_API YRotator YMath::RInterpTo( const YRotator& Current, const YRotator& Tar
 	}
 
 	// Delta Move, Clamp so we do not over shoot.
-	const YRotator DeltaMove = Delta * YMath::Clamp<float>(DeltaInterpSpeed, 0.f, 1.f);
+	const FRotator DeltaMove = Delta * YMath::Clamp<float>(DeltaInterpSpeed, 0.f, 1.f);
 	return (Current + DeltaMove).GetNormalized();
 }
 
@@ -2382,7 +2382,7 @@ CORE_API float YMath::FInterpConstantTo( float Current, float Target, float Delt
 }
 
 /** Interpolate Linear Color from Current to Target. Scaled by distance to Target, so it has a strong start speed and ease out. */
-CORE_API YLinearColor YMath::CInterpTo(const YLinearColor& Current, const YLinearColor& Target, float DeltaTime, float InterpSpeed)
+CORE_API FLinearColor YMath::CInterpTo(const FLinearColor& Current, const FLinearColor& Target, float DeltaTime, float InterpSpeed)
 {
 	// If no interp speed, jump to target value
 	if (InterpSpeed <= 0.f)
@@ -2391,7 +2391,7 @@ CORE_API YLinearColor YMath::CInterpTo(const YLinearColor& Current, const YLinea
 	}
 
 	// Difference between colors
-	const float Dist = YLinearColor::Dist(Target, Current);
+	const float Dist = FLinearColor::Dist(Target, Current);
 
 	// If distance is too small, just set the desired color
 	if (Dist < KINDA_SMALL_NUMBER)
@@ -2400,7 +2400,7 @@ CORE_API YLinearColor YMath::CInterpTo(const YLinearColor& Current, const YLinea
 	}
 
 	// Delta change, Clamp so we do not over shoot.
-	const YLinearColor DeltaMove = (Target - Current) * YMath::Clamp<float>(DeltaTime * InterpSpeed, 0.f, 1.f);
+	const FLinearColor DeltaMove = (Target - Current) * YMath::Clamp<float>(DeltaTime * InterpSpeed, 0.f, 1.f);
 
 	return Current + DeltaMove;
 }
@@ -2490,7 +2490,7 @@ CORE_API float ClampFloatTangent( float PrevPointVal, float PrevTime, float CurP
 	return OutTangentVal;
 }
 
-YVector YMath::VRandCone(YVector const& Dir, float ConeHalfAngleRad)
+FVector YMath::VRandCone(FVector const& Dir, float ConeHalfAngleRad)
 {
 	if (ConeHalfAngleRad > 0.f)
 	{
@@ -2508,12 +2508,12 @@ YVector YMath::VRandCone(YVector const& Dir, float ConeHalfAngleRad)
 		Phi = YMath::Fmod(Phi, ConeHalfAngleRad);
 
 		// get axes we need to rotate around
-		YMatrix const DirMat = YRotationMatrix(Dir.Rotation());
+		FMatrix const DirMat = YRotationMatrix(Dir.Rotation());
 		// note the axis translation, since we want the variation to be around X
-		YVector const DirZ = DirMat.GetScaledAxis( EAxis::X );		
-		YVector const DirY = DirMat.GetScaledAxis( EAxis::Y );
+		FVector const DirZ = DirMat.GetScaledAxis( EAxis::X );		
+		FVector const DirY = DirMat.GetScaledAxis( EAxis::Y );
 
-		YVector Result = Dir.RotateAngleAxis(Phi * 180.f / PI, DirY);
+		FVector Result = Dir.RotateAngleAxis(Phi * 180.f / PI, DirY);
 		Result = Result.RotateAngleAxis(Theta * 180.f / PI, DirZ);
 
 		// ensure it's a unit vector (might not have been passed in that way)
@@ -2527,7 +2527,7 @@ YVector YMath::VRandCone(YVector const& Dir, float ConeHalfAngleRad)
 	}
 }
 
-YVector YMath::VRandCone(YVector const& Dir, float HorizontalConeHalfAngleRad, float VerticalConeHalfAngleRad)
+FVector YMath::VRandCone(FVector const& Dir, float HorizontalConeHalfAngleRad, float VerticalConeHalfAngleRad)
 {
 	if ( (VerticalConeHalfAngleRad > 0.f) && (HorizontalConeHalfAngleRad > 0.f) )
 	{
@@ -2550,12 +2550,12 @@ YVector YMath::VRandCone(YVector const& Dir, float HorizontalConeHalfAngleRad, f
 		Phi = YMath::Fmod(Phi, ConeHalfAngleRad);
 
 		// get axes we need to rotate around
-		YMatrix const DirMat = YRotationMatrix(Dir.Rotation());
+		FMatrix const DirMat = YRotationMatrix(Dir.Rotation());
 		// note the axis translation, since we want the variation to be around X
-		YVector const DirZ = DirMat.GetScaledAxis( EAxis::X );		
-		YVector const DirY = DirMat.GetScaledAxis( EAxis::Y );
+		FVector const DirZ = DirMat.GetScaledAxis( EAxis::X );		
+		FVector const DirY = DirMat.GetScaledAxis( EAxis::Y );
 
-		YVector Result = Dir.RotateAngleAxis(Phi * 180.f / PI, DirY);
+		FVector Result = Dir.RotateAngleAxis(Phi * 180.f / PI, DirY);
 		Result = Result.RotateAngleAxis(Theta * 180.f / PI, DirZ);
 
 		// ensure it's a unit vector (might not have been passed in that way)
@@ -2569,25 +2569,25 @@ YVector YMath::VRandCone(YVector const& Dir, float HorizontalConeHalfAngleRad, f
 	}
 }
 
-YVector YMath::RandPointInBox(const YBox& Box)
+FVector YMath::RandPointInBox(const FBox& Box)
 {
-	return YVector(	FRandRange(Box.Min.X, Box.Max.X),
+	return FVector(	FRandRange(Box.Min.X, Box.Max.X),
 					FRandRange(Box.Min.Y, Box.Max.Y),
 					FRandRange(Box.Min.Z, Box.Max.Z) );
 }
 
-YVector YMath::GetReflectionVector(const YVector& Direction, const YVector& SurfaceNormal)
+FVector YMath::GetReflectionVector(const FVector& Direction, const FVector& SurfaceNormal)
 {
 	return Direction - 2 * (Direction | SurfaceNormal.GetSafeNormal()) * SurfaceNormal.GetSafeNormal();
 }
 
 struct FClusterMovedHereToMakeCompile
 {
-	YVector ClusterPosAccum;
+	FVector ClusterPosAccum;
 	int32 ClusterSize;
 };
 
-void YVector::GenerateClusterCenters(TArray<YVector>& Clusters, const TArray<YVector>& Points, int32 NumIterations, int32 NumConnectionsToBeValid)
+void FVector::GenerateClusterCenters(TArray<FVector>& Clusters, const TArray<FVector>& Points, int32 NumIterations, int32 NumConnectionsToBeValid)
 {
 	// Check we have >0 points and clusters
 	if(Points.Num() == 0 || Clusters.Num() == 0)
@@ -2605,7 +2605,7 @@ void YVector::GenerateClusterCenters(TArray<YVector>& Clusters, const TArray<YVe
 		// Classify each point - find closest cluster center
 		for(int32 i=0; i<Points.Num(); i++)
 		{
-			const YVector& Pos = Points[i];
+			const FVector& Pos = Points[i];
 
 			// Iterate over all clusters to find closes one
 			int32 NearestClusterIndex = INDEX_NONE;
@@ -3138,17 +3138,17 @@ float YMath::FixedTurn(float InCurrent, float InDesired, float InDeltaRate)
 {
 	if (InDeltaRate == 0.f)
 	{
-		return YRotator::ClampAxis(InCurrent);
+		return FRotator::ClampAxis(InCurrent);
 	}
 
 	if (InDeltaRate >= 360.f)
 	{
-		return YRotator::ClampAxis(InDesired);
+		return FRotator::ClampAxis(InDesired);
 	}
 
-	float result = YRotator::ClampAxis(InCurrent);
+	float result = FRotator::ClampAxis(InCurrent);
 	InCurrent = result;
-	InDesired = YRotator::ClampAxis(InDesired);
+	InDesired = FRotator::ClampAxis(InDesired);
 
 	if (InCurrent > InDesired)
 	{
@@ -3164,30 +3164,30 @@ float YMath::FixedTurn(float InCurrent, float InDesired, float InDeltaRate)
 		else
 			result -= YMath::Min((InCurrent + 360.f - InDesired), YMath::Abs(InDeltaRate));
 	}
-	return YRotator::ClampAxis(result);
+	return FRotator::ClampAxis(result);
 }
 
 float YMath::ClampAngle(float AngleDegrees, float MinAngleDegrees, float MaxAngleDegrees)
 {
-	float const MaxDelta = YRotator::ClampAxis(MaxAngleDegrees - MinAngleDegrees) * 0.5f;			// 0..180
-	float const RangeCenter = YRotator::ClampAxis(MinAngleDegrees + MaxDelta);						// 0..360
-	float const DeltaFromCenter = YRotator::NormalizeAxis(AngleDegrees - RangeCenter);				// -180..180
+	float const MaxDelta = FRotator::ClampAxis(MaxAngleDegrees - MinAngleDegrees) * 0.5f;			// 0..180
+	float const RangeCenter = FRotator::ClampAxis(MinAngleDegrees + MaxDelta);						// 0..360
+	float const DeltaFromCenter = FRotator::NormalizeAxis(AngleDegrees - RangeCenter);				// -180..180
 
 	// maybe clamp to nearest edge
 	if (DeltaFromCenter > MaxDelta)
 	{
-		return YRotator::NormalizeAxis(RangeCenter + MaxDelta);
+		return FRotator::NormalizeAxis(RangeCenter + MaxDelta);
 	}
 	else if (DeltaFromCenter < -MaxDelta)
 	{
-		return YRotator::NormalizeAxis(RangeCenter - MaxDelta);
+		return FRotator::NormalizeAxis(RangeCenter - MaxDelta);
 	}
 
 	// already in range, just return it
-	return YRotator::NormalizeAxis(AngleDegrees);
+	return FRotator::NormalizeAxis(AngleDegrees);
 }
 
-void YMath::ApplyScaleToFloat(float& Dst, const YVector& DeltaScale, float Magnitude)
+void YMath::ApplyScaleToFloat(float& Dst, const FVector& DeltaScale, float Magnitude)
 {
 	const float Multiplier = ( DeltaScale.X > 0.0f || DeltaScale.Y > 0.0f || DeltaScale.Z > 0.0f ) ? Magnitude : -Magnitude;
 	Dst += Multiplier * DeltaScale.Size();
@@ -3206,7 +3206,7 @@ void YMath::PolarToCartesion(const YVector2D InPolar, YVector2D& OutCart)
 	OutCart.Y = InPolar.X * Sin(InPolar.Y);
 }
 
-bool YRandomStream::ExportTextItem(YString& ValueStr, YRandomStream const& DefaultValue, class SObject* Parent, int32 PortFlags, class SObject* ExportRootScope) const
+bool YRandomStream::ExportTextItem(YString& ValueStr, YRandomStream const& DefaultValue, class UObject* Parent, int32 PortFlags, class UObject* ExportRootScope) const
 {
 	if (0 != (PortFlags & EPropertyPortFlags::PPF_ExportCpp))
 	{

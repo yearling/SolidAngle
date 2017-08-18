@@ -3,7 +3,7 @@
 #include "Logging/LogScopedCategoryAndVerbosityOverride.h"
 #include "HAL/PlatformTLS.h"
 
-FLogScopedCategoryAndVerbosityOverride::FLogScopedCategoryAndVerbosityOverride(YName Category, ELogVerbosity::Type Verbosity)
+FLogScopedCategoryAndVerbosityOverride::FLogScopedCategoryAndVerbosityOverride(FName Category, ELogVerbosity::Type Verbosity)
 {
 	FOverride* TLS = GetTLSCurrent();
 	Backup = *TLS;

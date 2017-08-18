@@ -74,7 +74,7 @@ public:
 	 * @param V Reference to the FVector2DHalf being serialized.
 	 * @return Reference to the Archive after serialization.
 	 */
-	friend YArchive& operator<<( YArchive& Ar, YVector2DHalf& V )
+	friend FArchive& operator<<( FArchive& Ar, YVector2DHalf& V )
 	{
 		return Ar << V.X << V.Y;
 	}

@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Containers/SolidAngleString.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Math/Vector2D.h"
 #include "Templates/SharedPointer.h"
 #include "Misc/Optional.h"
@@ -25,107 +25,107 @@ namespace EMouseButtons
 	};
 }
 
-struct CORE_API FGamepadKeyNames
+struct CORE_API FGamepadKeFNames
 {
-	typedef YName Type;
+	typedef FName Type;
 
-	static const YName Invalid;
+	static const FName Invalid;
 
-	static const YName LeftAnalogX;
-	static const YName LeftAnalogY;
-	static const YName RightAnalogX;
-	static const YName RightAnalogY;
-	static const YName LeftTriggerAnalog;
-	static const YName RightTriggerAnalog;
+	static const FName LeftAnalogX;
+	static const FName LeftAnalogY;
+	static const FName RightAnalogX;
+	static const FName RightAnalogY;
+	static const FName LeftTriggerAnalog;
+	static const FName RightTriggerAnalog;
 
-	static const YName LeftThumb;
-	static const YName RightThumb;
-	static const YName SpecialLeft;
-	static const YName SpecialLeft_X;
-	static const YName SpecialLeft_Y;
-	static const YName SpecialRight;
-	static const YName FaceButtonBottom;
-	static const YName FaceButtonRight;
-	static const YName FaceButtonLeft;
-	static const YName FaceButtonTop;
-	static const YName LeftShoulder;
-	static const YName RightShoulder;
-	static const YName LeftTriggerThreshold;
-	static const YName RightTriggerThreshold;
-	static const YName DPadUp;
-	static const YName DPadDown;
-	static const YName DPadRight;
-	static const YName DPadLeft;
+	static const FName LeftThumb;
+	static const FName RightThumb;
+	static const FName SpecialLeft;
+	static const FName SpecialLeft_X;
+	static const FName SpecialLeft_Y;
+	static const FName SpecialRight;
+	static const FName FaceButtonBottom;
+	static const FName FaceButtonRight;
+	static const FName FaceButtonLeft;
+	static const FName FaceButtonTop;
+	static const FName LeftShoulder;
+	static const FName RightShoulder;
+	static const FName LeftTriggerThreshold;
+	static const FName RightTriggerThreshold;
+	static const FName DPadUp;
+	static const FName DPadDown;
+	static const FName DPadRight;
+	static const FName DPadLeft;
 
-	static const YName LeftStickUp;
-	static const YName LeftStickDown;
-	static const YName LeftStickRight;
-	static const YName LeftStickLeft;
+	static const FName LeftStickUp;
+	static const FName LeftStickDown;
+	static const FName LeftStickRight;
+	static const FName LeftStickLeft;
 
-	static const YName RightStickUp;
-	static const YName RightStickDown;
-	static const YName RightStickRight;
-	static const YName RightStickLeft;
+	static const FName RightStickUp;
+	static const FName RightStickDown;
+	static const FName RightStickRight;
+	static const FName RightStickLeft;
 
 	// Motion Controls
 	//		Left Controller
-	static const YName MotionController_Left_FaceButton1;
-	static const YName MotionController_Left_FaceButton2;
-	static const YName MotionController_Left_FaceButton3;
-	static const YName MotionController_Left_FaceButton4;
-	static const YName MotionController_Left_FaceButton5;
-	static const YName MotionController_Left_FaceButton6;
-	static const YName MotionController_Left_FaceButton7;
-	static const YName MotionController_Left_FaceButton8;
+	static const FName MotionController_Left_FaceButton1;
+	static const FName MotionController_Left_FaceButton2;
+	static const FName MotionController_Left_FaceButton3;
+	static const FName MotionController_Left_FaceButton4;
+	static const FName MotionController_Left_FaceButton5;
+	static const FName MotionController_Left_FaceButton6;
+	static const FName MotionController_Left_FaceButton7;
+	static const FName MotionController_Left_FaceButton8;
 
-	static const YName MotionController_Left_Shoulder;
-	static const YName MotionController_Left_Trigger;
+	static const FName MotionController_Left_Shoulder;
+	static const FName MotionController_Left_Trigger;
 
-	static const YName MotionController_Left_Grip1;
-	static const YName MotionController_Left_Grip2;
+	static const FName MotionController_Left_Grip1;
+	static const FName MotionController_Left_Grip2;
 
-	static const YName MotionController_Left_Thumbstick;
-	static const YName MotionController_Left_Thumbstick_Up;
-	static const YName MotionController_Left_Thumbstick_Down;
-	static const YName MotionController_Left_Thumbstick_Left;
-	static const YName MotionController_Left_Thumbstick_Right;
+	static const FName MotionController_Left_Thumbstick;
+	static const FName MotionController_Left_Thumbstick_Up;
+	static const FName MotionController_Left_Thumbstick_Down;
+	static const FName MotionController_Left_Thumbstick_Left;
+	static const FName MotionController_Left_Thumbstick_Right;
 
 	//		Right Controller
-	static const YName MotionController_Right_FaceButton1;
-	static const YName MotionController_Right_FaceButton2;
-	static const YName MotionController_Right_FaceButton3;
-	static const YName MotionController_Right_FaceButton4;
-	static const YName MotionController_Right_FaceButton5;
-	static const YName MotionController_Right_FaceButton6;
-	static const YName MotionController_Right_FaceButton7;
-	static const YName MotionController_Right_FaceButton8;
+	static const FName MotionController_Right_FaceButton1;
+	static const FName MotionController_Right_FaceButton2;
+	static const FName MotionController_Right_FaceButton3;
+	static const FName MotionController_Right_FaceButton4;
+	static const FName MotionController_Right_FaceButton5;
+	static const FName MotionController_Right_FaceButton6;
+	static const FName MotionController_Right_FaceButton7;
+	static const FName MotionController_Right_FaceButton8;
 
-	static const YName MotionController_Right_Shoulder;
-	static const YName MotionController_Right_Trigger;
+	static const FName MotionController_Right_Shoulder;
+	static const FName MotionController_Right_Trigger;
 
-	static const YName MotionController_Right_Grip1;
-	static const YName MotionController_Right_Grip2;
+	static const FName MotionController_Right_Grip1;
+	static const FName MotionController_Right_Grip2;
 
-	static const YName MotionController_Right_Thumbstick;
-	static const YName MotionController_Right_Thumbstick_Up;
-	static const YName MotionController_Right_Thumbstick_Down;
-	static const YName MotionController_Right_Thumbstick_Left;
-	static const YName MotionController_Right_Thumbstick_Right;
+	static const FName MotionController_Right_Thumbstick;
+	static const FName MotionController_Right_Thumbstick_Up;
+	static const FName MotionController_Right_Thumbstick_Down;
+	static const FName MotionController_Right_Thumbstick_Left;
+	static const FName MotionController_Right_Thumbstick_Right;
 
 	//   Motion Controller Axes
 	//		Left Controller
-	static const YName MotionController_Left_Thumbstick_X;
-	static const YName MotionController_Left_Thumbstick_Y;
-	static const YName MotionController_Left_TriggerAxis;
-	static const YName MotionController_Left_Grip1Axis;
-	static const YName MotionController_Left_Grip2Axis;
+	static const FName MotionController_Left_Thumbstick_X;
+	static const FName MotionController_Left_Thumbstick_Y;
+	static const FName MotionController_Left_TriggerAxis;
+	static const FName MotionController_Left_Grip1Axis;
+	static const FName MotionController_Left_Grip2Axis;
 
 	//		Right Controller
-	static const YName MotionController_Right_Thumbstick_X;
-	static const YName MotionController_Right_Thumbstick_Y;
-	static const YName MotionController_Right_TriggerAxis;
-	static const YName MotionController_Right_Grip1Axis;
-	static const YName MotionController_Right_Grip2Axis;
+	static const FName MotionController_Right_Thumbstick_X;
+	static const FName MotionController_Right_Thumbstick_Y;
+	static const FName MotionController_Right_TriggerAxis;
+	static const FName MotionController_Right_Grip1Axis;
+	static const FName MotionController_Right_Grip2Axis;
 };
 
 namespace EWindowActivation
@@ -312,17 +312,17 @@ public:
 		return false;
 	}
 
-	virtual bool OnControllerAnalog(FGamepadKeyNames::Type KeyName, int32 ControllerId, float AnalogValue)
+	virtual bool OnControllerAnalog(FGamepadKeFNames::Type KeFName, int32 ControllerId, float AnalogValue)
 	{
 		return false;
 	}
 
-	virtual bool OnControllerButtonPressed(FGamepadKeyNames::Type KeyName, int32 ControllerId, bool IsRepeat)
+	virtual bool OnControllerButtonPressed(FGamepadKeFNames::Type KeFName, int32 ControllerId, bool IsRepeat)
 	{
 		return false;
 	}
 
-	virtual bool OnControllerButtonReleased(FGamepadKeyNames::Type KeyName, int32 ControllerId, bool IsRepeat)
+	virtual bool OnControllerButtonReleased(FGamepadKeFNames::Type KeFName, int32 ControllerId, bool IsRepeat)
 	{
 		return false;
 	}
@@ -355,7 +355,7 @@ public:
 		return false;
 	}
 
-	virtual bool OnMotionDetected(const YVector& Tilt, const YVector& RotationRate, const YVector& Gravity, const YVector& Acceleration, int32 ControllerId)
+	virtual bool OnMotionDetected(const FVector& Tilt, const FVector& RotationRate, const FVector& Gravity, const FVector& Acceleration, int32 ControllerId)
 	{
 		return false;
 	}

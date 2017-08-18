@@ -255,7 +255,7 @@ public:
 		return false;
 	}
 
-	friend YArchive& operator<<(YArchive& Ar, TUnion& Union)
+	friend FArchive& operator<<(FArchive& Ar, TUnion& Union)
 	{
 		if (Ar.IsLoading())
 		{

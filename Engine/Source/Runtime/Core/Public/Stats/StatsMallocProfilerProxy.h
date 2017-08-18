@@ -11,11 +11,11 @@
 /**
  * Malloc proxy for gathering memory messages.
  */
-class FStatsMallocProfilerProxy : public YMalloc
+class FStatsMallocProfilerProxy : public FMalloc
 {
 private:
 	/** Malloc we're based on. */
-	YMalloc* UsedMalloc;
+	FMalloc* UsedMalloc;
 	
 	/** Whether the stats malloc profiler is enabled, disabled by default */
 	bool bEnabled;
@@ -41,7 +41,7 @@ public:
 	 * 
 	 * @param	InMalloc - YMalloc that is going to be used for actual allocations
 	 */
-	FStatsMallocProfilerProxy( YMalloc* InMalloc);
+	FStatsMallocProfilerProxy( FMalloc* InMalloc);
 
 	static CORE_API FStatsMallocProfilerProxy* Get();
 
@@ -98,12 +98,12 @@ public:
 
 	virtual void UpdateStats() override;
 
-	virtual void GetAllocatorStats( YGenericMemoryStats& out_Stats ) override
+	virtual void GetAllocatorStats( FGenericMemoryStats& out_Stats ) override
 	{
 		UsedMalloc->GetAllocatorStats( out_Stats );
 	}
 
-	virtual void DumpAllocatorStats( class YOutputDevice& Ar ) override
+	virtual void DumpAllocatorStats( class FOutputDevice& Ar ) override
 	{
 		UsedMalloc->DumpAllocatorStats( Ar );
 	}
@@ -113,7 +113,7 @@ public:
 		return UsedMalloc->ValidateHeap();
 	}
 
-	virtual bool Exec( UWorld* InWorld, const TCHAR* Cmd, YOutputDevice& Ar ) override
+	virtual bool Exec( UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar ) override
 	{
 		return UsedMalloc->Exec( InWorld, Cmd, Ar);
 	}

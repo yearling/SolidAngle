@@ -7,7 +7,7 @@
 #include "Math/Matrix.h"
 
 class YOrthoMatrix
-	: public YMatrix
+	: public FMatrix
 {
 public:
 
@@ -23,7 +23,7 @@ public:
 };
 
 
-class FReversedZOrthoMatrix : public YMatrix
+class FReversedZOrthoMatrix : public FMatrix
 {
 public:
 	FReversedZOrthoMatrix(float Width,float Height,float ZScale,float ZOffset);
@@ -31,20 +31,20 @@ public:
 
 
 FORCEINLINE YOrthoMatrix::YOrthoMatrix(float Width,float Height,float ZScale,float ZOffset)
-	: YMatrix(
-		YPlane((Width)? (1.0f / Width) : 1.0f,	0.0f,								0.0f,				0.0f),
-		YPlane(0.0f,							(Height)? (1.0f / Height) : 1.f,	0.0f,				0.0f),
-		YPlane(0.0f,							0.0f,								ZScale,				0.0f),
-		YPlane(0.0f,							0.0f,								ZOffset * ZScale,	1.0f)
+	: FMatrix(
+		FPlane((Width)? (1.0f / Width) : 1.0f,	0.0f,								0.0f,				0.0f),
+		FPlane(0.0f,							(Height)? (1.0f / Height) : 1.f,	0.0f,				0.0f),
+		FPlane(0.0f,							0.0f,								ZScale,				0.0f),
+		FPlane(0.0f,							0.0f,								ZOffset * ZScale,	1.0f)
 	)
 { }
 
 
 FORCEINLINE FReversedZOrthoMatrix::FReversedZOrthoMatrix(float Width,float Height,float ZScale,float ZOffset)
-	: YMatrix(
-		YPlane((Width)? (1.0f / Width) : 1.0f,	0.0f,								0.0f,					0.0f),
-		YPlane(0.0f,							(Height)? (1.0f / Height) : 1.f,	0.0f,					0.0f),
-		YPlane(0.0f,							0.0f,								-ZScale,				0.0f),
-		YPlane(0.0f,							0.0f,								1.0 - ZOffset * ZScale,	1.0f)
+	: FMatrix(
+		FPlane((Width)? (1.0f / Width) : 1.0f,	0.0f,								0.0f,					0.0f),
+		FPlane(0.0f,							(Height)? (1.0f / Height) : 1.f,	0.0f,					0.0f),
+		FPlane(0.0f,							0.0f,								-ZScale,				0.0f),
+		FPlane(0.0f,							0.0f,								1.0 - ZOffset * ZScale,	1.0f)
 	)
 { }

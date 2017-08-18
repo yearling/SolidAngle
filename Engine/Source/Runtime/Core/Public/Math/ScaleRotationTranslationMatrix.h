@@ -8,7 +8,7 @@
 
 /** Combined Scale rotation and translation matrix */
 class YScaleRotationTranslationMatrix
-	: public YMatrix
+	: public FMatrix
 {
 public:
 
@@ -19,11 +19,11 @@ public:
 	 * @param Rot rotation
 	 * @param Origin translation to apply
 	 */
-	YScaleRotationTranslationMatrix(const YVector& Scale, const YRotator& Rot, const YVector& Origin);
+	YScaleRotationTranslationMatrix(const FVector& Scale, const FRotator& Rot, const FVector& Origin);
 };
 
 
-FORCEINLINE YScaleRotationTranslationMatrix::YScaleRotationTranslationMatrix(const YVector& Scale, const YRotator& Rot, const YVector& Origin)
+FORCEINLINE YScaleRotationTranslationMatrix::YScaleRotationTranslationMatrix(const FVector& Scale, const FRotator& Rot, const FVector& Origin)
 {
 	float SP, SY, SR;
 	float CP, CY, CR;

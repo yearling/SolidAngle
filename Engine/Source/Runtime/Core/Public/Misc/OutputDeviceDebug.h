@@ -3,7 +3,7 @@
 #include "CoreTypes.h"
 #include "Misc/OutputDevice.h"
 
-class CORE_API YOutputDeviceDebug : public YOutputDevice
+class CORE_API YOutputDeviceDebug : public FOutputDevice
 {
 public:
 	/**
@@ -12,9 +12,9 @@ public:
 	* @param	Data	Text to log
 	* @param	Event	Event name used for suppression purposes
 	*/
-	virtual void Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class YName& Category, const double Time) override;
+	virtual void Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category, const double Time) override;
 
-	virtual void Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class YName& Category) override;
+	virtual void Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category) override;
 
 	virtual bool CanBeUsedOnAnyThread() const override
 	{

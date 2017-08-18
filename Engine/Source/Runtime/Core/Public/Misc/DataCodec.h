@@ -21,8 +21,8 @@ DECLARE_LOG_CATEGORY_EXTERN(LogDataCodex, Log, All);
 class FCodec
 {
 public:
-	virtual bool Encode( YArchive& In, YArchive& Out )=0;
-	virtual bool Decode( YArchive& In, YArchive& Out )=0;
+	virtual bool Encode( FArchive& In, FArchive& Out )=0;
+	virtual bool Decode( FArchive& In, FArchive& Out )=0;
 	virtual ~FCodec(){}
 };
 
@@ -55,7 +55,7 @@ private:
 		}
 	};
 public:
-	bool Encode( YArchive& In, YArchive& Out )
+	bool Encode( FArchive& In, FArchive& Out )
 	{
 		TArray<uint8> CompressBufferArray;
 		TArray<int32> CompressPosition;
@@ -84,7 +84,7 @@ public:
 		}
 		return 0;
 	}
-	bool Decode( YArchive& In, YArchive& Out )
+	bool Decode( FArchive& In, FArchive& Out )
 	{
 		TArray<uint8> DecompressBuffer;
 		TArray<int32> Temp;
@@ -129,7 +129,7 @@ class FCodecRLE : public FCodec
 {
 private:
 	enum {RLE_LEAD=5};
-	void EncodeEmitRun( YArchive& Out, uint8 Char, uint8 Count )
+	void EncodeEmitRun( FArchive& Out, uint8 Char, uint8 Count )
 	{
 		for( int32 Down=YMath::Min<int32>(Count,RLE_LEAD); Down>0; Down-- )
 			Out << Char;
@@ -137,7 +137,7 @@ private:
 			Out << Count;
 	}
 public:
-	bool Encode( YArchive& In, YArchive& Out )
+	bool Encode( FArchive& In, FArchive& Out )
 	{
 		uint8 PrevChar=0, PrevCount=0, B;
 		while( !In.AtEnd() )
@@ -154,7 +154,7 @@ public:
 		EncodeEmitRun( Out, PrevChar, PrevCount );
 		return 0;
 	}
-	bool Decode( YArchive& In, YArchive& Out )
+	bool Decode( FArchive& In, FArchive& Out )
 	{
 		int32 Count=0;
 		uint8 PrevChar=0, B, C;
@@ -236,7 +236,7 @@ private:
 	};
 	
 public:
-	bool Encode( YArchive& In, YArchive& Out )
+	bool Encode( FArchive& In, FArchive& Out )
 	{
 		int32 SavedPos = In.Tell();
 		int32 Total=0, i;
@@ -297,7 +297,7 @@ public:
 		delete Root;
 		return 0;
 	}
-	bool Decode( YArchive& In, YArchive& Out )
+	bool Decode( FArchive& In, FArchive& Out )
 	{
 		int32 Total;
 		In << Total;
@@ -327,7 +327,7 @@ public:
 class FCodecMTF : public FCodec
 {
 public:
-	bool Encode( YArchive& In, YArchive& Out )
+	bool Encode( FArchive& In, FArchive& Out )
 	{
 		uint8 List[256], B, C;
 		int32 i;
@@ -349,7 +349,7 @@ public:
 		}
 		return 0;
 	}
-	bool Decode( YArchive& In, YArchive& Out )
+	bool Decode( FArchive& In, FArchive& Out )
 	{
 		uint8 List[256], B, C;
 		int32 i;
@@ -377,7 +377,7 @@ class FCodecFull : public FCodec
 {
 private:
 	TArray<FCodec*> Codecs;
-	void Code( YArchive& In, YArchive& Out, int32 Step, int32 First, bool (FCodec::*Func)(YArchive&,YArchive&) )
+	void Code( FArchive& In, FArchive& Out, int32 Step, int32 First, bool (FCodec::*Func)(FArchive&,FArchive&) )
 	{
 		TArray<uint8> InData, OutData;
 		for( int32 i=0; i<Codecs.Num(); i++ )
@@ -393,12 +393,12 @@ private:
 		}
 	}
 public:
-	bool Encode( YArchive& In, YArchive& Out )
+	bool Encode( FArchive& In, FArchive& Out )
 	{
 		Code( In, Out, 1, 0, &FCodec::Encode );
 		return 0;
 	}
-	bool Decode( YArchive& In, YArchive& Out )
+	bool Decode( FArchive& In, FArchive& Out )
 	{
 		Code( In, Out, -1, Codecs.Num()-1, &FCodec::Decode );
 		return 1;

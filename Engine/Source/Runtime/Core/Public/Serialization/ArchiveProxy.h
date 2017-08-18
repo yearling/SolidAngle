@@ -14,7 +14,7 @@ struct FUntypedBulkData;
  *
  * Archive proxies are archive types that modify the behavior of another archive type.
  */
-class YArchiveProxy : public YArchive
+class YArchiveProxy : public FArchive
 {
 public:
 	/**
@@ -22,27 +22,27 @@ public:
 	 *
 	 * @param InInnerArchive The inner archive to proxy.
 	 */
-	CORE_API YArchiveProxy(YArchive& InInnerArchive);
+	CORE_API YArchiveProxy(FArchive& InInnerArchive);
 
-	virtual YArchive& operator<<(class YName& Value) override
+	virtual FArchive& operator<<(class FName& Value) override
 	{
 		InnerArchive << Value;
 		return *this;
 	}
 
-	virtual YArchive& operator<<(class FText& Value) override
+	virtual FArchive& operator<<(class FText& Value) override
 	{
 		InnerArchive << Value;
 		return *this;
 	}
 
-	virtual YArchive& operator<<(class SObject*& Value) override
+	virtual FArchive& operator<<(class UObject*& Value) override
 	{
 		InnerArchive << Value;
 		return *this;
 	}
 
-	virtual YArchive& operator<<(struct FStringAssetReference& Value) override
+	virtual FArchive& operator<<(struct FStringAssetReference& Value) override
 	{
 		InnerArchive << Value;
 		return *this;
@@ -63,7 +63,7 @@ public:
 		InnerArchive.SerializeInt(Value, Max);
 	}
 
-	virtual void Preload(SObject* Object) override
+	virtual void Preload(UObject* Object) override
 	{
 		InnerArchive.Preload(Object);
 	}
@@ -105,7 +105,7 @@ public:
 		InnerArchive.Seek(InPos);
 	}
 
-	virtual void AttachBulkData(SObject* Owner, FUntypedBulkData* BulkData) override
+	virtual void AttachBulkData(UObject* Owner, FUntypedBulkData* BulkData) override
 	{
 		InnerArchive.AttachBulkData(Owner, BulkData);
 	}
@@ -140,12 +140,12 @@ public:
 		return InnerArchive.GetError();
 	}
 
-	virtual void MarkScriptSerializationStart(const SObject* Obj) override
+	virtual void MarkScriptSerializationStart(const UObject* Obj) override
 	{
 		InnerArchive.MarkScriptSerializationStart(Obj);
 	}
 
-	virtual void MarkScriptSerializationEnd(const SObject* Obj) override
+	virtual void MarkScriptSerializationEnd(const UObject* Obj) override
 	{
 		InnerArchive.MarkScriptSerializationEnd(Obj);
 	}
@@ -171,7 +171,7 @@ public:
 	}
 
 #if WITH_EDITOR
-	virtual void PushDebugDataString(const YName& DebugData) override
+	virtual void PushDebugDataString(const FName& DebugData) override
 	{
 		InnerArchive.PushDebugDataString(DebugData);
 	}
@@ -183,5 +183,5 @@ public:
 protected:
 
 	/** Holds the archive that this archive is a proxy to. */
-	YArchive& InnerArchive;
+	FArchive& InnerArchive;
 };

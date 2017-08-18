@@ -491,7 +491,7 @@ void ProcessIniContents(const TCHAR* FilenameToLoad, const TCHAR* IniFileName, F
 }
 
 /** Returns the timestamp of the appropriate config file */
-YDateTime GetIniTimeStamp(const TCHAR* FilenameToLoad, const TCHAR* IniFileName)
+FDateTime GetIniTimeStamp(const TCHAR* FilenameToLoad, const TCHAR* IniFileName)
 {
 	check(FilenameToLoad);
 	check(IniFileName);

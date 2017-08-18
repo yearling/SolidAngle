@@ -28,7 +28,7 @@
 //     AutomationTool command (as well as the ENGINE_IS_LICENSEE_VERSION and BRANCH_NAME macros).
 //
 //  -  The *object version* (aka serialization version) is as a monotonically incrementing (but manually updated) integer, and is used to write one-way 
-//     upgrade code in custom SObject serialization functions. It is set by the enum in ObjectVersion.h, and is global to the whole engine. This version number 
+//     upgrade code in custom UObject serialization functions. It is set by the enum in ObjectVersion.h, and is global to the whole engine. This version number 
 //     is saved as a raw integer value in package headers, so it cannot be safely reordered or merged between branches. It should ONLY be updated 
 //     by Epic, otherwise future engine merges may corrupt content.
 //

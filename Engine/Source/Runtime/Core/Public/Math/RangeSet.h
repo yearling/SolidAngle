@@ -212,7 +212,7 @@ public:
 	 * @param RangeSet The range set to serialize.
 	 * @return The archive.
 	 */
-	friend class YArchive& operator<<(class YArchive& Ar, TRangeSet& RangeSet)
+	friend class FArchive& operator<<(class FArchive& Ar, TRangeSet& RangeSet)
 	{
 		return Ar << RangeSet.Ranges;
 	}

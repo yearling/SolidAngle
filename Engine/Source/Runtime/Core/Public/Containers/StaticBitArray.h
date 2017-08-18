@@ -277,7 +277,7 @@ public:
 	/**
 	 * Serializer.
 	 */
-	friend YArchive& operator<<(YArchive& Ar, TStaticBitArray& BitArray)
+	friend FArchive& operator<<(FArchive& Ar, TStaticBitArray& BitArray)
 	{
 		uint32 ArchivedNumWords = BitArray.NumWords;
 		Ar << ArchivedNumWords;

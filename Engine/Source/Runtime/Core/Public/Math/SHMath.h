@@ -55,7 +55,7 @@ public:
 		V[3] = V3;
 	}
 
-	explicit TSHVector(const YVector4& Vector)
+	explicit TSHVector(const FVector4& Vector)
 	{
 		YMemory::Memzero(V,sizeof(V));
 
@@ -240,7 +240,7 @@ public:
 		return *this;
 	}
 
-	friend YArchive& operator<<(YArchive& Ar, TSHVector& SH)
+	friend FArchive& operator<<(FArchive& Ar, TSHVector& SH)
 	{
 		for (int32 BasisIndex = 0; BasisIndex < MaxSHBasis; BasisIndex++)
 		{
@@ -279,13 +279,13 @@ public:
 	}
 
 	/** Compute the direction which the spherical harmonic is highest at. */
-	YVector GetMaximumDirection() const
+	FVector GetMaximumDirection() const
 	{
 		// This is an approximation which only takes into account first and second order spherical harmonics.
-		return YVector(-V[3], -V[1], V[2]).GetSafeNormal();
+		return FVector(-V[3], -V[1], V[2]).GetSafeNormal();
 	}
 
-	static TSHVector CalcDiffuseTransfer(const YVector& Normal)
+	static TSHVector CalcDiffuseTransfer(const FVector& Normal)
 	{
 		TSHVector Result = SHBasisFunction(Normal);
 
@@ -316,7 +316,7 @@ public:
 	}
 
 	/** Returns the value of the SH basis L,M at the point on the sphere defined by the unit vector Vector. */
-	static TSHVector SHBasisFunction(const YVector& Vector)
+	static TSHVector SHBasisFunction(const FVector& Vector)
 	{
 		TSHVector Result;
 
@@ -367,7 +367,7 @@ public:
 
 /** Specialization for 2nd order to avoid expensive trig functions. */
 template<> 
-inline TSHVector<2> TSHVector<2>::SHBasisFunction(const YVector& Vector) 
+inline TSHVector<2> TSHVector<2>::SHBasisFunction(const FVector& Vector) 
 {
 	TSHVector<2> Result;
 	Result.V[0] = 0.282095f; 
@@ -379,7 +379,7 @@ inline TSHVector<2> TSHVector<2>::SHBasisFunction(const YVector& Vector)
 
 /** Specialization for 3rd order to avoid expensive trig functions. */
 template<> 
-inline TSHVector<3> TSHVector<3>::SHBasisFunction(const YVector& Vector) 
+inline TSHVector<3> TSHVector<3>::SHBasisFunction(const FVector& Vector) 
 {
 	TSHVector<3> Result;
 	Result.V[0] = 0.282095f; 
@@ -387,7 +387,7 @@ inline TSHVector<3> TSHVector<3>::SHBasisFunction(const YVector& Vector)
 	Result.V[2] = 0.488603f * Vector.Z;
 	Result.V[3] = -0.488603f * Vector.X;
 
-	YVector VectorSquared = Vector * Vector;
+	FVector VectorSquared = Vector * Vector;
 	Result.V[4] = 1.092548f * Vector.X * Vector.Y;
 	Result.V[5] = -1.092548f * Vector.Y * Vector.Z;
 	Result.V[6] = 0.315392f * (3.0f * VectorSquared.Z - 1.0f);
@@ -432,9 +432,9 @@ public:
 	}
 
 	/** Calculates the integral of the function over the surface of the sphere. */
-	YLinearColor CalcIntegral() const
+	FLinearColor CalcIntegral() const
 	{
-		YLinearColor Result;
+		FLinearColor Result;
 		Result.R = R.CalcIntegral();
 		Result.G = G.CalcIntegral();
 		Result.B = B.CalcIntegral();
@@ -470,7 +470,7 @@ public:
 	}
 
 	/** Color multiplication operator. */
-	friend FORCEINLINE TSHVectorRGB operator*(const TSHVectorRGB& A,const YLinearColor& Color)
+	friend FORCEINLINE TSHVectorRGB operator*(const TSHVectorRGB& A,const FLinearColor& Color)
 	{
 		TSHVectorRGB Result;
 		Result.R = A.R * Color.R;
@@ -480,7 +480,7 @@ public:
 	}
 
 	/** Color multiplication operator. */
-	friend FORCEINLINE TSHVectorRGB operator*(const YLinearColor& Color,const TSHVectorRGB& A)
+	friend FORCEINLINE TSHVectorRGB operator*(const FLinearColor& Color,const TSHVectorRGB& A)
 	{
 		TSHVectorRGB Result;
 		Result.R = A.R * Color.R;
@@ -520,9 +520,9 @@ public:
 	}
 
 	/** Dot product operator. */
-	friend FORCEINLINE YLinearColor Dot(const TSHVectorRGB& A,const TSHVector<MaxSHOrder>& InB)
+	friend FORCEINLINE FLinearColor Dot(const TSHVectorRGB& A,const TSHVector<MaxSHOrder>& InB)
 	{
-		YLinearColor Result;
+		FLinearColor Result;
 		Result.R = Dot(A.R,InB);
 		Result.G = Dot(A.G,InB);
 		Result.B = Dot(A.B,InB);
@@ -567,19 +567,19 @@ public:
 		return *this;
 	}
 
-	friend YArchive& operator<<(YArchive& Ar, TSHVectorRGB& SH)
+	friend FArchive& operator<<(FArchive& Ar, TSHVectorRGB& SH)
 	{
 		return Ar << SH.R << SH.G << SH.B;
 	}
 
 	/** Adds an impulse to the SH environment. */
-	inline void AddIncomingRadiance(const YLinearColor& IncomingRadiance, float Weight, const YVector4& WorldSpaceDirection)
+	inline void AddIncomingRadiance(const FLinearColor& IncomingRadiance, float Weight, const FVector4& WorldSpaceDirection)
 	{
 		*this += TSHVector<MaxSHOrder>::SHBasisFunction(WorldSpaceDirection) * (IncomingRadiance * Weight);
 	}
 
 	/** Adds ambient lighting. */
-	inline void AddAmbient(const YLinearColor& Intensity)
+	inline void AddAmbient(const FLinearColor& Intensity)
 	{
 		*this += TSHVector<MaxSHOrder>::AmbientFunction() * Intensity;
 	}
@@ -587,7 +587,7 @@ public:
 
 /** Color multiplication operator. */
 template<int32 Order>
-FORCEINLINE TSHVectorRGB<Order> operator*(const TSHVector<Order>& A,const YLinearColor& B)
+FORCEINLINE TSHVectorRGB<Order> operator*(const TSHVector<Order>& A,const FLinearColor& B)
 {
 	TSHVectorRGB<Order> Result;
 	Result.R = A * B.R;

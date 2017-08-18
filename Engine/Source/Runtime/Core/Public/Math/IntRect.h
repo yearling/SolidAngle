@@ -304,7 +304,7 @@ public:
 	* @param Rect The rectangle to serialize.
 	* @return Reference to the Archive after serialization.
 	*/
-	friend YArchive& operator<<(YArchive& Ar, YIntRect& Rect)
+	friend FArchive& operator<<(FArchive& Ar, YIntRect& Rect)
 	{
 		return Ar << Rect.Min.X << Rect.Min.Y << Rect.Max.X << Rect.Max.Y;
 	}

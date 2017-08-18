@@ -6,7 +6,7 @@
 #include "Misc/OutputDevice.h"
 
 // Error device.
-class CORE_API YOutputDeviceError : public YOutputDevice
+class CORE_API YOutputDeviceError : public FOutputDevice
 {
 public:
 	virtual void HandleError() = 0;

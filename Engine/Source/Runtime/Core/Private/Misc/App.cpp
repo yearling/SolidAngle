@@ -11,8 +11,8 @@ DEFINE_LOG_CATEGORY_STATIC(LogApp, Log, All);
 /* FApp static initialization
  *****************************************************************************/
 
-YGuid FApp::InstanceId = YGuid::NewGuid();
-YGuid FApp::SessionId = YGuid::NewGuid();
+FGuid FApp::InstanceId = FGuid::NewGuid();
+FGuid FApp::SessionId = FGuid::NewGuid();
 YString FApp::SessionName = YString();
 YString FApp::SessionOwner = YString();
 TArray<YString> FApp::SessionUsers = TArray<YString>();
@@ -111,7 +111,7 @@ void FApp::InitializeSession()
 
 	if (FParse::Value(FCommandLine::Get(), TEXT("-InstanceId="), InstanceIdString))
 	{
-		if (!YGuid::Parse(InstanceIdString, InstanceId))
+		if (!FGuid::Parse(InstanceIdString, InstanceId))
 		{
 			UE_LOG(LogInit, Warning, TEXT("Invalid InstanceId on command line: %s"), *InstanceIdString);
 		}
@@ -119,14 +119,14 @@ void FApp::InitializeSession()
 
 	if (!InstanceId.IsValid())
 	{
-		InstanceId = YGuid::NewGuid();
+		InstanceId = FGuid::NewGuid();
 	}
 
 	YString SessionIdString;
 
 	if (FParse::Value(FCommandLine::Get(), TEXT("-SessionId="), SessionIdString))
 	{
-		if (YGuid::Parse(SessionIdString, SessionId))
+		if (FGuid::Parse(SessionIdString, SessionId))
 		{
 			Standalone = false;
 		}

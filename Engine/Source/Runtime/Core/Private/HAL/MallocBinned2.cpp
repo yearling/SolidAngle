@@ -601,7 +601,7 @@ YMallocBinned2::YMallocBinned2()
 	HashBuckets = (PoolHashBucket*)YPlatformMemory::BinnedAllocFromOS(Align(MaxHashBuckets * sizeof(PoolHashBucket), OsAllocationGranularity));
 	DefaultConstructItems<PoolHashBucket>(HashBuckets, MaxHashBuckets);
 	MallocBinned2 = this;
-	GFixedMallocLocationPtr = (YMalloc**)(&MallocBinned2);
+	GFixedMallocLocationPtr = (FMalloc**)(&MallocBinned2);
 }
 
 YMallocBinned2::~YMallocBinned2()

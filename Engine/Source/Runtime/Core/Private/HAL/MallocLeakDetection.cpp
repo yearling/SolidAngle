@@ -70,7 +70,7 @@ void FMallocLeakDetection::PopContext()
 	TLContexts->Pop(false);
 }
 
-bool FMallocLeakDetection::Exec(UWorld* InWorld, const TCHAR* Cmd, YOutputDevice& Ar)
+bool FMallocLeakDetection::Exec(UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar)
 {
 	if (FParse::Command(&Cmd, TEXT("mallocleak")))
 	{
@@ -366,8 +366,8 @@ int32 FMallocLeakDetection::DumpPotentialLeakers(const FMallocLeakReportOptions&
 
 	if (HashesToLeakRate.Num() > 0)
 	{
-		YOutputDevice* ReportAr = nullptr;
-		YArchive* FileAr = nullptr;
+		FOutputDevice* ReportAr = nullptr;
+		FArchive* FileAr = nullptr;
 		YOutputDeviceArchiveWrapper* FileArWrapper = nullptr;
 
 		if (Options.OutputFile && FCString::Strlen(Options.OutputFile))
@@ -387,7 +387,7 @@ int32 FMallocLeakDetection::DumpPotentialLeakers(const FMallocLeakReportOptions&
 		const float InvToMb = 1.0 / (1024 * 1024);
 		YPlatformMemoryStats MemoryStats = YPlatformMemory::GetStats();
 
-		LOG_OUTPUT(TEXT("Current Time: %s, Current Frame %d"), *YDateTime::Now().ToString(TEXT("%m.%d-%H.%M.%S")), GFrameCounter);
+		LOG_OUTPUT(TEXT("Current Time: %s, Current Frame %d"), *FDateTime::Now().ToString(TEXT("%m.%d-%H.%M.%S")), GFrameCounter);
 
 		LOG_OUTPUT(TEXT("Current Memory: %.02fMB (Peak: %.02fMB)."),
 			MemoryStats.UsedPhysical * InvToMb,
@@ -523,8 +523,8 @@ int32 FMallocLeakDetection::DumpOpenCallstacks(const FMallocLeakReportOptions& O
 		}
 	}
 	
-	YOutputDevice* ReportAr = nullptr;
-	YArchive* FileAr = nullptr;
+	FOutputDevice* ReportAr = nullptr;
+	FArchive* FileAr = nullptr;
 	YOutputDeviceArchiveWrapper* FileArWrapper = nullptr;
 
 	if (Options.OutputFile && FCString::Strlen(Options.OutputFile))
@@ -544,7 +544,7 @@ int32 FMallocLeakDetection::DumpOpenCallstacks(const FMallocLeakReportOptions& O
 	const float InvToMb = 1.0 / (1024 * 1024);
 	YPlatformMemoryStats MemoryStats = YPlatformMemory::GetStats();
 
-	LOG_OUTPUT(TEXT("Current Time: %s, Current Frame %d"), *YDateTime::Now().ToString(TEXT("%m.%d-%H.%M.%S")), GFrameCounter);
+	LOG_OUTPUT(TEXT("Current Time: %s, Current Frame %d"), *FDateTime::Now().ToString(TEXT("%m.%d-%H.%M.%S")), GFrameCounter);
 
 	LOG_OUTPUT(TEXT("Current Memory: %.02fMB (Peak: %.02fMB)."),
 		MemoryStats.UsedPhysical * InvToMb,
@@ -782,7 +782,7 @@ void FMallocLeakDetection::Free(void* Ptr)
 
 static FMallocLeakDetectionProxy* ProxySingleton = nullptr;
 
-FMallocLeakDetectionProxy::FMallocLeakDetectionProxy(YMalloc* InMalloc)
+FMallocLeakDetectionProxy::FMallocLeakDetectionProxy(FMalloc* InMalloc)
 	: UsedMalloc(InMalloc)
 	, Verify(FMallocLeakDetection::Get())
 {

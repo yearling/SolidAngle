@@ -18,14 +18,14 @@ enum
 
 
 /** The global memory allocator. */
-CORE_API extern class YMalloc* GMalloc;
-CORE_API extern class YMalloc** GFixedMallocLocationPtr;
+CORE_API extern class FMalloc* GMalloc;
+CORE_API extern class FMalloc** GFixedMallocLocationPtr;
 
 /** Global FMallocProfiler variable to allow multiple malloc profilers to communicate. */
 MALLOC_PROFILER(CORE_API extern class FMallocProfiler* GMallocProfiler; )
 
 /** Holds generic memory stats, internally implemented as a map. */
-struct YGenericMemoryStats;
+struct FGenericMemoryStats;
 
 
 /**
@@ -68,9 +68,9 @@ public:
 };
 
 /** The global memory allocator's interface. */
-class CORE_API YMalloc :
+class CORE_API FMalloc :
 	public YUseSystemMallocForNew,
-	public YExec
+	public FExec
 {
 public:
 	/**
@@ -134,14 +134,14 @@ public:
 
 	/**
 	*	Initializes stats metadata. We need to do this as soon as possible, but cannot be done in the constructor
-	*	due to the YName::StaticInit
+	*	due to the FName::StaticInit
 	*/
 	virtual void InitializeStatsMetadata();
 
 	/**
 	* Handles any commands passed in on the command line
 	*/
-	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, YOutputDevice& Ar) override
+	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar) override
 	{
 		return false;
 	}
@@ -150,10 +150,10 @@ public:
 	virtual void UpdateStats();
 
 	/** Writes allocator stats from the last update into the specified destination. */
-	virtual void GetAllocatorStats(YGenericMemoryStats& out_Stats);
+	virtual void GetAllocatorStats(FGenericMemoryStats& out_Stats);
 
 	/** Dumps current allocator stats to the log. */
-	virtual void DumpAllocatorStats(class YOutputDevice& Ar)
+	virtual void DumpAllocatorStats(class FOutputDevice& Ar)
 	{
 		Ar.Logf(TEXT("Allocator Stats for %s: (not implemented)"), GetDescriptiveName());
 	}
@@ -191,19 +191,19 @@ protected:
 	/** Atomically increment total malloc calls. */
 	FORCEINLINE void IncrementTotalMallocCalls()
 	{
-		FPlatformAtomics::InterlockedIncrement((volatile int32*)&YMalloc::TotalMallocCalls);
+		FPlatformAtomics::InterlockedIncrement((volatile int32*)&FMalloc::TotalMallocCalls);
 	}
 
 	/** Atomically increment total free calls. */
 	FORCEINLINE void IncrementTotalFreeCalls()
 	{
-		FPlatformAtomics::InterlockedIncrement((volatile int32*)&YMalloc::TotalFreeCalls);
+		FPlatformAtomics::InterlockedIncrement((volatile int32*)&FMalloc::TotalFreeCalls);
 	}
 
 	/** Atomically increment total realloc calls. */
 	FORCEINLINE void IncrementTotalReallocCalls()
 	{
-		FPlatformAtomics::InterlockedIncrement((volatile int32*)&YMalloc::TotalReallocCalls);
+		FPlatformAtomics::InterlockedIncrement((volatile int32*)&FMalloc::TotalReallocCalls);
 	}
 
 	/** Total number of calls Malloc, if implemented by derived class. */

@@ -70,7 +70,7 @@ YTimespan FInteractiveProcess::GetDuration() const
 {
 	if (IsRunning() == true)
 	{
-		return (YDateTime::UtcNow() - StartTime);
+		return (FDateTime::UtcNow() - StartTime);
 	}
 
 	return (EndTime - StartTime);
@@ -189,7 +189,7 @@ void FInteractiveProcess::SendWhenReady(const YString &Message)
 uint32 FInteractiveProcess::Run()
 {
 	// control and interact with the process
-	StartTime = YDateTime::UtcNow();
+	StartTime = FDateTime::UtcNow();
 	{
 		do
 		{
@@ -226,7 +226,7 @@ uint32 FInteractiveProcess::Run()
 		ReturnCode = -1;
 	}
 
-	EndTime = YDateTime::UtcNow();
+	EndTime = FDateTime::UtcNow();
 
 	CompletedDelegate.ExecuteIfBound(ReturnCode, bCanceling);
 

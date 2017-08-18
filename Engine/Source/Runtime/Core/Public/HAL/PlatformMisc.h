@@ -27,12 +27,12 @@ class CORE_API YScopedNamedEvent
 {
 public:
 
-	YScopedNamedEvent(const struct YColor& Color, const TCHAR* Text)
+	YScopedNamedEvent(const struct FColor& Color, const TCHAR* Text)
 	{
 		YPlatformMisc::BeginNamedEvent(Color, Text);
 	}
 
-	YScopedNamedEvent(const struct YColor& Color, const ANSICHAR* Text)
+	YScopedNamedEvent(const struct FColor& Color, const ANSICHAR* Text)
 	{
 		YPlatformMisc::BeginNamedEvent(Color, Text);
 	}

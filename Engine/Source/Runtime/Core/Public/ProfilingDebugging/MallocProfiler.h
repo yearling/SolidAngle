@@ -12,7 +12,7 @@ MallocProfiler.h: Memory profiling support.
 #include "Containers/Array.h"
 #include "Containers/SolidAngleString.h"
 #include "Containers/Map.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Misc/CompressedGrowableBuffer.h"
 
 class FScopeLock;
@@ -121,7 +121,7 @@ struct FCallStackAddressInfo
 	* @param	AddressInfo	AddressInfo to serialize
 	* @return	Passed in archive
 	*/
-	friend YArchive& operator << (YArchive& Ar, FCallStackAddressInfo AddressInfo)
+	friend FArchive& operator << (FArchive& Ar, FCallStackAddressInfo AddressInfo)
 	{
 		Ar << AddressInfo.ProgramCounter
 #if SERIALIZE_SYMBOL_INFO
@@ -141,11 +141,11 @@ FMallocProfilerBufferedFileWriter
 /**
 * Special buffered file writer, used to serialize data before GFileManager is initialized.
 */
-class FMallocProfilerBufferedFileWriter : public YArchive
+class FMallocProfilerBufferedFileWriter : public FArchive
 {
 public:
 	/** Internal file writer used to serialize to HDD. */
-	YArchive*		FileWriter;
+	FArchive*		FileWriter;
 	/** Buffered data being serialized before GameName has been set up. */
 	TArray<uint8>	BufferedData;
 	/** Timestamped filename with path.	*/
@@ -198,7 +198,7 @@ public:
 * Memory profiling malloc, routing allocations to real malloc and writing information on all
 * operations to a file for analysis by a standalone tool.
 */
-class CORE_API FMallocProfiler : public YMalloc
+class CORE_API FMallocProfiler : public FMalloc
 {
 	friend class	FMallocGcmProfiler;
 	friend class	FScopedMallocProfilerLock;
@@ -206,7 +206,7 @@ class CORE_API FMallocProfiler : public YMalloc
 
 protected:
 	/** Malloc we're based on, aka using under the hood												*/
-	YMalloc*								UsedMalloc;
+	FMalloc*								UsedMalloc;
 	/** Whether or not EndProfiling()  has been Ended.  Once it has been ended it has ended most operations are no longer valid **/
 	bool									bEndProfilingHasBeenCalled;
 	/** Time malloc profiler was created. Used to convert arbitrary double time to relative float.	*/
@@ -295,7 +295,7 @@ protected:
 	* @param	Name	Name to find index for
 	* @return	Index of passed in name
 	*/
-	int32 GetNameTableIndex(const YName& Name)
+	int32 GetNameTableIndex(const FName& Name)
 	{
 		return GetNameTableIndex(Name.ToString());
 	}
@@ -371,7 +371,7 @@ protected:
 	/**
 	* Gather texture memory stats.
 	*/
-	virtual void GetTexturePoolSize(YGenericMemoryStats& out_Stats);
+	virtual void GetTexturePoolSize(FGenericMemoryStats& out_Stats);
 
 	/**
 	Added for untracked memory calculation
@@ -403,7 +403,7 @@ public:
 	static void SnapshotMemoryLevelStreamEnd(const YString& LevelName);
 
 	/** Returns malloc we're based on. */
-	virtual YMalloc* GetInnermostMalloc()
+	virtual FMalloc* GetInnermostMalloc()
 	{
 		return UsedMalloc;
 	}
@@ -420,7 +420,7 @@ public:
 	*
 	* @param	InMalloc	The allocator wrapped by FMallocProfiler that will actually do the allocs/deallocs.
 	*/
-	FMallocProfiler(YMalloc* InMalloc);
+	FMallocProfiler(FMalloc* InMalloc);
 
 	/**
 	* Begins profiling operation and opens file.
@@ -431,13 +431,13 @@ public:
 	* Adds a tag to the list of tags associated with the calling thread.
 	* @note Tags are ref-counted so calls to Add and Remove must be paired correctly.
 	*/
-	void AddTag(const YName InTag);
+	void AddTag(const FName InTag);
 
 	/**
 	* Removes a tag from the list of tags associated with the calling thread.
 	* @note Tags are ref-counted so calls to Add and Remove must be paired correctly.
 	*/
-	void RemoveTag(const YName InTag);
+	void RemoveTag(const FName InTag);
 
 	/**
 	* Malloc
@@ -490,14 +490,14 @@ public:
 	}
 
 	/** Writes allocator stats from the last update into the specified destination. */
-	virtual void GetAllocatorStats(YGenericMemoryStats& out_Stats) override
+	virtual void GetAllocatorStats(FGenericMemoryStats& out_Stats) override
 	{
 		FScopeLock Lock(&CriticalSection);
 		UsedMalloc->GetAllocatorStats(out_Stats);
 	}
 
 	/** Dumps allocator stats to an output device. */
-	virtual void DumpAllocatorStats(class YOutputDevice& Ar) override
+	virtual void DumpAllocatorStats(class FOutputDevice& Ar) override
 	{
 		FScopeLock Lock(&CriticalSection);
 		UsedMalloc->DumpAllocatorStats(Ar);
@@ -527,16 +527,16 @@ public:
 
 
 	//~ Begin Exec Interface
-	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, YOutputDevice& Ar) override;
+	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar) override;
 	//~ End Exec Interface
 
 	/**
 	* Exec command handlers
 	*/
-	bool HandleMProfCommand(const TCHAR* Cmd, YOutputDevice& Ar);
-	bool HandleDumpAllocsToFileCommand(const TCHAR* Cmd, YOutputDevice& Ar);
-	bool HandleSnapshotMemoryCommand(const TCHAR* Cmd, YOutputDevice& Ar);
-	bool HandleSnapshotMemoryFrameCommand(const TCHAR* Cmd, YOutputDevice& Ar);
+	bool HandleMProfCommand(const TCHAR* Cmd, FOutputDevice& Ar);
+	bool HandleDumpAllocsToFileCommand(const TCHAR* Cmd, FOutputDevice& Ar);
+	bool HandleSnapshotMemoryCommand(const TCHAR* Cmd, FOutputDevice& Ar);
+	bool HandleSnapshotMemoryFrameCommand(const TCHAR* Cmd, FOutputDevice& Ar);
 
 	virtual const TCHAR* GetDescriptiveName() override
 	{

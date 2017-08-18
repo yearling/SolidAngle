@@ -632,7 +632,7 @@ public:
 		delete this; 
 	} 
 
-	virtual bool Execute( const TArray< YString >& Args, UWorld* InWorld, YOutputDevice& OutputDevice ) override
+	virtual bool Execute( const TArray< YString >& Args, UWorld* InWorld, FOutputDevice& OutputDevice ) override
 	{
 		// NOTE: Args are ignored for FConsoleCommand.  Use FConsoleCommandWithArgs if you need parameters.
 		return Delegate.ExecuteIfBound();
@@ -663,7 +663,7 @@ public:
 		delete this; 
 	} 
 
-	virtual bool Execute( const TArray< YString >& Args, UWorld* InWorld, YOutputDevice& OutputDevice ) override
+	virtual bool Execute( const TArray< YString >& Args, UWorld* InWorld, FOutputDevice& OutputDevice ) override
 	{
 		return Delegate.ExecuteIfBound( Args );
 	}
@@ -692,7 +692,7 @@ public:
 		delete this; 
 	} 
 
-	virtual bool Execute( const TArray< YString >& Args, UWorld* InWorld, YOutputDevice& OutputDevice ) override
+	virtual bool Execute( const TArray< YString >& Args, UWorld* InWorld, FOutputDevice& OutputDevice ) override
 	{
 		return Delegate.ExecuteIfBound( InWorld );
 	}
@@ -721,7 +721,7 @@ public:
 		delete this; 
 	} 
 
-	virtual bool Execute( const TArray< YString >& Args, UWorld* InWorld, YOutputDevice& OutputDevice ) override
+	virtual bool Execute( const TArray< YString >& Args, UWorld* InWorld, FOutputDevice& OutputDevice ) override
 	{
 		return Delegate.ExecuteIfBound( Args, InWorld );
 	}
@@ -750,7 +750,7 @@ public:
 		delete this; 
 	} 
 
-	virtual bool Execute( const TArray< YString >& Args, UWorld* InWorld, YOutputDevice& OutputDevice ) override
+	virtual bool Execute( const TArray< YString >& Args, UWorld* InWorld, FOutputDevice& OutputDevice ) override
 	{
 		return Delegate.ExecuteIfBound( OutputDevice );
 	}
@@ -778,7 +778,7 @@ public:
 		delete this; 
 	} 
 
-	virtual bool Execute( const TArray< YString >& Args, UWorld* InCmdWorld, YOutputDevice& OutputDevice ) override
+	virtual bool Execute( const TArray< YString >& Args, UWorld* InCmdWorld, FOutputDevice& OutputDevice ) override
 	{
 		return false;
 	}
@@ -986,7 +986,7 @@ void FConsoleManager::LoadHistoryIfNeeded()
 
 void FConsoleManager::SaveHistory()
 {
-	const YName History = TEXT("History");
+	const FName History = TEXT("History");
 
 	FConfigFile Ini;
 
@@ -1066,7 +1066,7 @@ void FConsoleManager::ForEachConsoleObjectThatContains(const FConsoleObjectVisit
 	}
 }
 
-bool FConsoleManager::ProcessUserConsoleInput(const TCHAR* InInput, YOutputDevice& Ar, UWorld* InWorld)
+bool FConsoleManager::ProcessUserConsoleInput(const TCHAR* InInput, FOutputDevice& Ar, UWorld* InWorld)
 {
 	check(InInput);
 

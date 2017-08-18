@@ -4,8 +4,8 @@
 #include "WindowsSystemIncludes.h"
 
 class YString;
-class YMalloc;
-struct YGenericMemoryStats;
+class FMalloc;
+struct FGenericMemoryStats;
 
 /**
 *	Windows implementation of the FGenericPlatformMemoryStats.
@@ -79,9 +79,9 @@ struct CORE_API YWindowsPlatformMemory
 		return 32 * 1024 * 1024;
 	}
 
-	static class YMalloc*		BaseAllocator();
+	static class FMalloc*		BaseAllocator();
 	static YPlatformMemoryStats GetStats();
-	static void					GetStatsForMallocProfiler(YGenericMemoryStats& out_Stats);
+	static void					GetStatsForMallocProfiler(FGenericMemoryStats& out_Stats);
 	static const YPlatformMemoryConstants& GetConstants();
 	static bool					PageProtect(void* const Ptr, const SIZE_T Size, const bool bCanRead, const bool bCanWrite);
 	static void*				BinnedAllocFromOS(SIZE_T Size);

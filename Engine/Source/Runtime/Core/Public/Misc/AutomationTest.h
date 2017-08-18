@@ -155,13 +155,13 @@ public:
 	/**
 	 * Constructor
 	 *
-	 * @param	InDisplayName - Name used in the UI
+	 * @param	InDisplaFName - Name used in the UI
 	 * @param	InTestName - The test command string
 	 * @param	InTestFlag - Test flags
 	 * @param	InParameterName - optional parameter. e.g. asset name
 	 */
-	FAutomationTestInfo(const YString& InDisplayName, const YString& InFullTestPath, const YString& InTestName, const uint32 InTestFlags, const int32 InNumParticipantsRequired, const YString& InParameterName = YString(), const YString& InSourceFile = YString(), int32 InSourceFileLine = 0, const YString& InAssetPath = YString(), const YString& InOpenCommand = YString())
-		: DisplayName( InDisplayName )
+	FAutomationTestInfo(const YString& InDisplaFName, const YString& InFullTestPath, const YString& InTestName, const uint32 InTestFlags, const int32 InNumParticipantsRequired, const YString& InParameterName = YString(), const YString& InSourceFile = YString(), int32 InSourceFileLine = 0, const YString& InAssetPath = YString(), const YString& InOpenCommand = YString())
+		: DisplaFName( InDisplaFName )
 		, FullTestPath( InFullTestPath )
 		, TestName( InTestName )
 		, TestParameter( InParameterName )
@@ -191,9 +191,9 @@ public:
 	 *
 	 * @return the display name.
 	 */
-	const YString& GetDisplayName() const
+	const YString& GetDisplaFName() const
 	{
-		return DisplayName;
+		return DisplaFName;
 	}
 
 	/**
@@ -316,11 +316,11 @@ public:
 	/**
 	 * Set the display name of the child node.
 	 *
-	 * @Param InDisplayName - the new child test name.
+	 * @Param InDisplaFName - the new child test name.
 	 */
-	void SetDisplayName( const YString& InDisplayName )
+	void SetDisplaFName( const YString& InDisplaFName )
 	{
-		DisplayName = InDisplayName;
+		DisplaFName = InDisplaFName;
 	}
 
 	/**
@@ -335,7 +335,7 @@ public:
 
 private:
 	/** Display name used in the UI */
-	YString DisplayName; 
+	YString DisplaFName; 
 
 	YString FullTestPath;
 
@@ -466,7 +466,7 @@ struct FAutomationScreenshotData
 	YString Name;
 	YString Context;
 
-	YGuid Id;
+	FGuid Id;
 
 	int32 Width;
 	int32 Height;
@@ -544,7 +544,7 @@ struct FAutomationScreenshotData
  * The first parameter is the array of the raw color data.
  * The second parameter is the image metadata.
  */
-DECLARE_DELEGATE_TwoParams(FOnTestScreenshotCaptured, const TArray<YColor>&, const FAutomationScreenshotData&);
+DECLARE_DELEGATE_TwoParams(FOnTestScreenshotCaptured, const TArray<FColor>&, const FAutomationScreenshotData&);
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnTestScreenshotComparisonComplete, bool /*bWasNew*/, bool /*bWasSimilar*/);
 
@@ -640,7 +640,7 @@ public:
 	 * @param	InTestToRun			Name of the test that should be run
 	 * @param	InRoleIndex			Identifier for which worker in this group that should execute a command
 	 */
-	void StartTestByName( const YString& InTestToRun, const int32 InRoleIndex );
+	void StartTestBFName( const YString& InTestToRun, const int32 InRoleIndex );
 
 	/**
 	 * Stop the current test and return the results of execution
@@ -743,7 +743,7 @@ public:
 private:
 
 	/** Special feedback context used exclusively while automation testing */
-	 class FAutomationTestFeedbackContext : public YFeedbackContext
+	 class FAutomationTestFeedbackContext : public FFeedbackContext
 	{
 	public:
 
@@ -763,7 +763,7 @@ private:
 		 * @param	V		String to serialize within the context
 		 * @param	Event	Event associated with the string
 		 */
-		virtual void Serialize( const TCHAR* V, ELogVerbosity::Type Verbosity, const class YName& Category ) override;
+		virtual void Serialize( const TCHAR* V, ELogVerbosity::Type Verbosity, const class FName& Category ) override;
 
 		/**
 		 * Set the automation test associated with the feedback context. The automation test is where all warnings, errors, etc.
@@ -825,7 +825,7 @@ private:
 	FAutomationTestFramework& operator=( const FAutomationTestFramework& );
 
 	/** Cached feedback context, contains the contents of GWarn at the time of automation testing, restored to GWarn when automation testing is complete */
-	YFeedbackContext* CachedContext;
+	FFeedbackContext* CachedContext;
 
 	/** Specialized feedback context used for automation testing */
 	FAutomationTestFeedbackContext AutomationTestFeedbackContext;
@@ -2226,7 +2226,7 @@ public: \
  * the automation test framework as a result of the macro.
  */
 
-#define IMPLEMENT_SIMPLE_AUTOMATION_TEST_PRIVATE( TClass, TBaseClass, PrettyName, TFlags, FileName, LineNumber ) \
+#define IMPLEMENT_SIMPLE_AUTOMATION_TEST_PRIVATE( TClass, TBaseClass, PrettFName, TFlags, FileName, LineNumber ) \
 	class TClass : public TBaseClass \
 	{ \
 	public: \
@@ -2248,14 +2248,14 @@ public: \
 	protected: \
 		virtual void GetTests(TArray<YString>& OutBeautifiedNames, TArray <YString>& OutTestCommands) const override \
 		{ \
-			OutBeautifiedNames.Add(PrettyName); \
+			OutBeautifiedNames.Add(PrettFName); \
 			OutTestCommands.Add(YString()); \
 		} \
 		virtual bool RunTest(const YString& Parameters) override; \
-		virtual YString GetBeautifiedTestName() const override { return PrettyName; } \
+		virtual YString GetBeautifiedTestName() const override { return PrettFName; } \
 	};
 
-#define IMPLEMENT_COMPLEX_AUTOMATION_TEST_PRIVATE( TClass, TBaseClass, PrettyName, TFlags, FileName, LineNumber ) \
+#define IMPLEMENT_COMPLEX_AUTOMATION_TEST_PRIVATE( TClass, TBaseClass, PrettFName, TFlags, FileName, LineNumber ) \
 	class TClass : public TBaseClass \
 	{ \
 	public: \
@@ -2277,10 +2277,10 @@ public: \
 	protected: \
 		virtual void GetTests(TArray<YString>& OutBeautifiedNames, TArray <YString>& OutTestCommands) const override; \
 		virtual bool RunTest(const YString& Parameters) override; \
-		virtual YString GetBeautifiedTestName() const override { return PrettyName; } \
+		virtual YString GetBeautifiedTestName() const override { return PrettFName; } \
 	};
 
-#define IMPLEMENT_NETWORKED_AUTOMATION_TEST_PRIVATE(TClass, TBaseClass, PrettyName, TFlags, NumParticipants, FileName, LineNumber) \
+#define IMPLEMENT_NETWORKED_AUTOMATION_TEST_PRIVATE(TClass, TBaseClass, PrettFName, TFlags, NumParticipants, FileName, LineNumber) \
 	class TClass : public TBaseClass \
 	{ \
 	public: \
@@ -2301,14 +2301,14 @@ public: \
 	protected: \
 		virtual void GetTests(TArray<YString>& OutBeautifiedNames, TArray <YString>& OutTestCommands) const override \
 		{ \
-			OutBeautifiedNames.Add(PrettyName); \
+			OutBeautifiedNames.Add(PrettFName); \
 			OutTestCommands.Add(YString()); \
 		} \
 		virtual bool RunTest(const YString& Parameters) override; \
-		virtual YString GetBeautifiedTestName() const override { return PrettyName; } \
+		virtual YString GetBeautifiedTestName() const override { return PrettFName; } \
 	};
 
-#define IMPLEMENT_BDD_AUTOMATION_TEST_PRIVATE( TClass, PrettyName, TFlags, FileName, LineNumber ) \
+#define IMPLEMENT_BDD_AUTOMATION_TEST_PRIVATE( TClass, PrettFName, TFlags, FileName, LineNumber ) \
 	class TClass : public FBDDAutomationTestBase \
 	{ \
 	public: \
@@ -2329,12 +2329,12 @@ public: \
 		virtual int32 GetTestSourceFileLine() const override { return LineNumber; } \
 	protected: \
 		virtual bool RunTest(const YString& Parameters) override; \
-		virtual YString GetBeautifiedTestName() const override { return PrettyName; } \
+		virtual YString GetBeautifiedTestName() const override { return PrettFName; } \
 	private: \
 		void Define(); \
 	};
 
-#define DEFINE_SPEC_PRIVATE( TClass, PrettyName, TFlags, FileName, LineNumber ) \
+#define DEFINE_SPEC_PRIVATE( TClass, PrettFName, TFlags, FileName, LineNumber ) \
 	class TClass : public FAutomationSpecBase \
 	{ \
 	public: \
@@ -2352,11 +2352,11 @@ public: \
 		virtual YString GetTestSourceFileName() const override { return FileName; } \
 		virtual int32 GetTestSourceFileLine() const override { return LineNumber; } \
 	protected: \
-		virtual YString GetBeautifiedTestName() const override { return PrettyName; } \
+		virtual YString GetBeautifiedTestName() const override { return PrettFName; } \
 		virtual void Define() override; \
 	};
 
-#define BEGIN_DEFINE_SPEC_PRIVATE( TClass, PrettyName, TFlags, FileName, LineNumber ) \
+#define BEGIN_DEFINE_SPEC_PRIVATE( TClass, PrettFName, TFlags, FileName, LineNumber ) \
 	class TClass : public FAutomationSpecBase \
 	{ \
 	public: \
@@ -2376,59 +2376,59 @@ public: \
 		using FAutomationSpecBase::GetTestSourceFileLine; \
 		virtual int32 GetTestSourceFileLine() const override { return LineNumber; } \
 	protected: \
-		virtual YString GetBeautifiedTestName() const override { return PrettyName; } \
+		virtual YString GetBeautifiedTestName() const override { return PrettFName; } \
 		virtual void Define() override;
 
 #if WITH_AUTOMATION_WORKER
-	#define IMPLEMENT_SIMPLE_AUTOMATION_TEST( TClass, PrettyName, TFlags ) \
-		IMPLEMENT_SIMPLE_AUTOMATION_TEST_PRIVATE(TClass, FAutomationTestBase, PrettyName, TFlags, __FILE__, __LINE__) \
+	#define IMPLEMENT_SIMPLE_AUTOMATION_TEST( TClass, PrettFName, TFlags ) \
+		IMPLEMENT_SIMPLE_AUTOMATION_TEST_PRIVATE(TClass, FAutomationTestBase, PrettFName, TFlags, __FILE__, __LINE__) \
 		namespace\
 		{\
 			TClass TClass##AutomationTestInstance( TEXT(#TClass) );\
 		}
-	#define IMPLEMENT_COMPLEX_AUTOMATION_TEST( TClass, PrettyName, TFlags ) \
-		IMPLEMENT_COMPLEX_AUTOMATION_TEST_PRIVATE(TClass, FAutomationTestBase, PrettyName, TFlags, __FILE__, __LINE__) \
+	#define IMPLEMENT_COMPLEX_AUTOMATION_TEST( TClass, PrettFName, TFlags ) \
+		IMPLEMENT_COMPLEX_AUTOMATION_TEST_PRIVATE(TClass, FAutomationTestBase, PrettFName, TFlags, __FILE__, __LINE__) \
 		namespace\
 		{\
 			TClass TClass##AutomationTestInstance( TEXT(#TClass) );\
 		}
-	#define IMPLEMENT_NETWORKED_AUTOMATION_TEST(TClass, PrettyName, TFlags, NumParticipants) \
-		IMPLEMENT_NETWORKED_AUTOMATION_TEST_PRIVATE(TClass, FAutomationTestBase, PrettyName, TFlags, NumParticipants, __FILE__, __LINE__) \
-		namespace\
-		{\
-			TClass TClass##AutomationTestInstance( TEXT(#TClass) );\
-		}
-
-	#define IMPLEMENT_CUSTOM_SIMPLE_AUTOMATION_TEST( TClass, TBaseClass, PrettyName, TFlags ) \
-		IMPLEMENT_SIMPLE_AUTOMATION_TEST_PRIVATE(TClass, TBaseClass, PrettyName, TFlags, __FILE__, __LINE__) \
+	#define IMPLEMENT_NETWORKED_AUTOMATION_TEST(TClass, PrettFName, TFlags, NumParticipants) \
+		IMPLEMENT_NETWORKED_AUTOMATION_TEST_PRIVATE(TClass, FAutomationTestBase, PrettFName, TFlags, NumParticipants, __FILE__, __LINE__) \
 		namespace\
 		{\
 			TClass TClass##AutomationTestInstance( TEXT(#TClass) );\
 		}
 
-	#define IMPLEMENT_CUSTOM_COMPLEX_AUTOMATION_TEST( TClass, TBaseClass, PrettyName, TFlags ) \
-		IMPLEMENT_COMPLEX_AUTOMATION_TEST_PRIVATE(TClass, TBaseClass, PrettyName, TFlags, __FILE__, __LINE__) \
+	#define IMPLEMENT_CUSTOM_SIMPLE_AUTOMATION_TEST( TClass, TBaseClass, PrettFName, TFlags ) \
+		IMPLEMENT_SIMPLE_AUTOMATION_TEST_PRIVATE(TClass, TBaseClass, PrettFName, TFlags, __FILE__, __LINE__) \
 		namespace\
 		{\
 			TClass TClass##AutomationTestInstance( TEXT(#TClass) );\
 		}
 
-	#define IMPLEMENT_BDD_AUTOMATION_TEST( TClass, PrettyName, TFlags ) \
-		IMPLEMENT_BDD_AUTOMATION_TEST_PRIVATE(TClass, PrettyName, TFlags, __FILE__, __LINE__) \
+	#define IMPLEMENT_CUSTOM_COMPLEX_AUTOMATION_TEST( TClass, TBaseClass, PrettFName, TFlags ) \
+		IMPLEMENT_COMPLEX_AUTOMATION_TEST_PRIVATE(TClass, TBaseClass, PrettFName, TFlags, __FILE__, __LINE__) \
 		namespace\
 		{\
 			TClass TClass##AutomationTestInstance( TEXT(#TClass) );\
 		}
 
-	#define DEFINE_SPEC( TClass, PrettyName, TFlags ) \
-		DEFINE_SPEC_PRIVATE(TClass, PrettyName, TFlags, __FILE__, __LINE__) \
+	#define IMPLEMENT_BDD_AUTOMATION_TEST( TClass, PrettFName, TFlags ) \
+		IMPLEMENT_BDD_AUTOMATION_TEST_PRIVATE(TClass, PrettFName, TFlags, __FILE__, __LINE__) \
+		namespace\
+		{\
+			TClass TClass##AutomationTestInstance( TEXT(#TClass) );\
+		}
+
+	#define DEFINE_SPEC( TClass, PrettFName, TFlags ) \
+		DEFINE_SPEC_PRIVATE(TClass, PrettFName, TFlags, __FILE__, __LINE__) \
 		namespace\
 		{\
 			TClass TClass##AutomationSpecInstance( TEXT(#TClass) );\
 		}
 
-	#define BEGIN_DEFINE_SPEC( TClass, PrettyName, TFlags ) \
-		BEGIN_DEFINE_SPEC_PRIVATE(TClass, PrettyName, TFlags, __FILE__, __LINE__) 
+	#define BEGIN_DEFINE_SPEC( TClass, PrettFName, TFlags ) \
+		BEGIN_DEFINE_SPEC_PRIVATE(TClass, PrettFName, TFlags, __FILE__, __LINE__) 
 
 	#define END_DEFINE_SPEC( TClass ) \
 		};\
@@ -2437,42 +2437,42 @@ public: \
 			TClass TClass##AutomationSpecInstance( TEXT(#TClass) );\
 		}
 
-	//#define BEGIN_CUSTOM_COMPLEX_AUTOMATION_TEST( TClass, TBaseClass, PrettyName, TFlags ) \
-	//	BEGIN_COMPLEX_AUTOMATION_TEST_PRIVATE(TClass, TBaseClass, PrettyName, TFlags, __FILE__, __LINE__)
+	//#define BEGIN_CUSTOM_COMPLEX_AUTOMATION_TEST( TClass, TBaseClass, PrettFName, TFlags ) \
+	//	BEGIN_COMPLEX_AUTOMATION_TEST_PRIVATE(TClass, TBaseClass, PrettFName, TFlags, __FILE__, __LINE__)
 	//
 	//#define END_CUSTOM_COMPLEX_AUTOMATION_TEST( TClass ) \
-	//	BEGIN_COMPLEX_AUTOMATION_TEST_PRIVATE(TClass, TBaseClass, PrettyName, TFlags, __FILE__, __LINE__)
+	//	BEGIN_COMPLEX_AUTOMATION_TEST_PRIVATE(TClass, TBaseClass, PrettFName, TFlags, __FILE__, __LINE__)
 	//	namespace\
 	//	{\
 	//		TClass TClass##AutomationTestInstance( TEXT(#TClass) );\
 	//	}
 
 #else
-	#define IMPLEMENT_SIMPLE_AUTOMATION_TEST( TClass, PrettyName, TFlags ) \
-		IMPLEMENT_SIMPLE_AUTOMATION_TEST_PRIVATE(TClass, FAutomationTestBase, PrettyName, TFlags, __FILE__, __LINE__)
-	#define IMPLEMENT_COMPLEX_AUTOMATION_TEST( TClass, PrettyName, TFlags ) \
-		IMPLEMENT_COMPLEX_AUTOMATION_TEST_PRIVATE(TClass, FAutomationTestBase, PrettyName, TFlags, __FILE__, __LINE__)
-	#define IMPLEMENT_NETWORKED_AUTOMATION_TEST(TClass, PrettyName, TFlags, NumParticipants) \
-		IMPLEMENT_NETWORKED_AUTOMATION_TEST_PRIVATE(TClass, FAutomationTestBase, PrettyName, TFlags, NumParticipants, __FILE__, __LINE__)
+	#define IMPLEMENT_SIMPLE_AUTOMATION_TEST( TClass, PrettFName, TFlags ) \
+		IMPLEMENT_SIMPLE_AUTOMATION_TEST_PRIVATE(TClass, FAutomationTestBase, PrettFName, TFlags, __FILE__, __LINE__)
+	#define IMPLEMENT_COMPLEX_AUTOMATION_TEST( TClass, PrettFName, TFlags ) \
+		IMPLEMENT_COMPLEX_AUTOMATION_TEST_PRIVATE(TClass, FAutomationTestBase, PrettFName, TFlags, __FILE__, __LINE__)
+	#define IMPLEMENT_NETWORKED_AUTOMATION_TEST(TClass, PrettFName, TFlags, NumParticipants) \
+		IMPLEMENT_NETWORKED_AUTOMATION_TEST_PRIVATE(TClass, FAutomationTestBase, PrettFName, TFlags, NumParticipants, __FILE__, __LINE__)
 
-	#define IMPLEMENT_CUSTOM_SIMPLE_AUTOMATION_TEST( TClass, TBaseClass, PrettyName, TFlags ) \
-		IMPLEMENT_SIMPLE_AUTOMATION_TEST_PRIVATE(TClass, TBaseClass, PrettyName, TFlags, __FILE__, __LINE__)
-	#define IMPLEMENT_CUSTOM_COMPLEX_AUTOMATION_TEST( TClass, TBaseClass, PrettyName, TFlags ) \
-		IMPLEMENT_COMPLEX_AUTOMATION_TEST_PRIVATE(TClass, TBaseClass, PrettyName, TFlags, __FILE__, __LINE__)
-	#define IMPLEMENT_BDD_AUTOMATION_TEST(TClass, PrettyName, TFlags) \
-		IMPLEMENT_BDD_AUTOMATION_TEST_PRIVATE(TClass, PrettyName, TFlags, __FILE__, __LINE__)
-	#define DEFINE_SPEC(TClass, PrettyName, TFlags) \
-		DEFINE_SPEC_PRIVATE(TClass, PrettyName, TFlags, __FILE__, __LINE__)
-	#define BEGIN_DEFINE_SPEC(TClass, PrettyName, TFlags) \
-		BEGIN_DEFINE_SPEC_PRIVATE(TClass, PrettyName, TFlags, __FILE__, __LINE__)
+	#define IMPLEMENT_CUSTOM_SIMPLE_AUTOMATION_TEST( TClass, TBaseClass, PrettFName, TFlags ) \
+		IMPLEMENT_SIMPLE_AUTOMATION_TEST_PRIVATE(TClass, TBaseClass, PrettFName, TFlags, __FILE__, __LINE__)
+	#define IMPLEMENT_CUSTOM_COMPLEX_AUTOMATION_TEST( TClass, TBaseClass, PrettFName, TFlags ) \
+		IMPLEMENT_COMPLEX_AUTOMATION_TEST_PRIVATE(TClass, TBaseClass, PrettFName, TFlags, __FILE__, __LINE__)
+	#define IMPLEMENT_BDD_AUTOMATION_TEST(TClass, PrettFName, TFlags) \
+		IMPLEMENT_BDD_AUTOMATION_TEST_PRIVATE(TClass, PrettFName, TFlags, __FILE__, __LINE__)
+	#define DEFINE_SPEC(TClass, PrettFName, TFlags) \
+		DEFINE_SPEC_PRIVATE(TClass, PrettFName, TFlags, __FILE__, __LINE__)
+	#define BEGIN_DEFINE_SPEC(TClass, PrettFName, TFlags) \
+		BEGIN_DEFINE_SPEC_PRIVATE(TClass, PrettFName, TFlags, __FILE__, __LINE__)
 	#define END_DEFINE_SPEC(TClass) \
 		}; \
 
-	//#define BEGIN_CUSTOM_COMPLEX_AUTOMATION_TEST( TClass, TBaseClass, PrettyName, TFlags ) \
-	//	BEGIN_CUSTOM_COMPLEX_AUTOMATION_TEST_PRIVATE(TClass, TBaseClass, PrettyName, TFlags, __FILE__, __LINE__)
+	//#define BEGIN_CUSTOM_COMPLEX_AUTOMATION_TEST( TClass, TBaseClass, PrettFName, TFlags ) \
+	//	BEGIN_CUSTOM_COMPLEX_AUTOMATION_TEST_PRIVATE(TClass, TBaseClass, PrettFName, TFlags, __FILE__, __LINE__)
 
 	//#define END_CUSTOM_COMPLEX_AUTOMATION_TEST( TClass )
-	//	END_COMPLEX_AUTOMATION_TEST_PRIVATE(TClass, TBaseClass, PrettyName, TFlags, __FILE__, __LINE__)
+	//	END_COMPLEX_AUTOMATION_TEST_PRIVATE(TClass, TBaseClass, PrettFName, TFlags, __FILE__, __LINE__)
 #endif // #if WITH_AUTOMATION_WORKER
 
 

@@ -126,7 +126,7 @@ DECLARE_DELEGATE_OneParam(FConsoleCommandWithWorldDelegate, UWorld*);
 DECLARE_DELEGATE_TwoParams(FConsoleCommandWithWorldAndArgsDelegate, const TArray< YString >&, UWorld*);
 
 /** Console command delegate type with the output device passed through. */
-DECLARE_DELEGATE_OneParam(FConsoleCommandWithOutputDeviceDelegate, YOutputDevice&);
+DECLARE_DELEGATE_OneParam(FConsoleCommandWithOutputDeviceDelegate, FOutputDevice&);
 
 template <class T> class TConsoleVariableData;
 
@@ -301,7 +301,7 @@ struct IConsoleCommand : public IConsoleObject
 	* @param	InWorld		World context for this command
 	* @return	True if the delegate for this command was executed successfully
 	*/
-	virtual bool Execute(const TArray< YString >& Args, UWorld* InWorld, class YOutputDevice& OutputDevice) = 0;
+	virtual bool Execute(const TArray< YString >& Args, UWorld* InWorld, class FOutputDevice& OutputDevice) = 0;
 };
 
 /**
@@ -573,7 +573,7 @@ struct CORE_API IConsoleManager
 	*  @param	InWorld		world context
 	*  @return true if the command was recognized
 	*/
-	virtual bool ProcessUserConsoleInput(const TCHAR* Input, YOutputDevice& Ar, UWorld* InWorld) = 0;
+	virtual bool ProcessUserConsoleInput(const TCHAR* Input, FOutputDevice& Ar, UWorld* InWorld) = 0;
 
 	/**
 	* @param Input - must not be 0

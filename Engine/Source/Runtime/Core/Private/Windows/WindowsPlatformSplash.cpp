@@ -10,7 +10,7 @@
 #include "Misc/Parse.h"
 #include "Misc/EngineVersionBase.h"
 #include "Containers/SolidAngleString.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Misc/ScopeLock.h"
 #include "Misc/CommandLine.h"
 #include "Internationalization/Text.h"
@@ -682,7 +682,7 @@ void FWindowsPlatformSplash::Show()
 			DWORD ThreadID = 0;
 			GSplashScreenThread = CreateThread(NULL, 128 * 1024, (LPTHREAD_START_ROUTINE)StartSplashScreenThread, (LPVOID)NULL, STACK_SIZE_PARAM_IS_A_RESERVATION, &ThreadID);
 #if	STATS
-			FStartupMessages::Get().AddThreadMetadata( YName( "SplashScreenThread" ), ThreadID );
+			FStartupMessages::Get().AddThreadMetadata( FName( "SplashScreenThread" ), ThreadID );
 #endif // STATS
 		}
 	}

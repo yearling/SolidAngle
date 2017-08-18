@@ -26,8 +26,8 @@ public:
 		float		Min;
 		float		Max;
 		float		Total;
-		YDateTime	FirstTime;
-		YDateTime	LastTime;
+		FDateTime	FirstTime;
+		FDateTime	LastTime;
 
 		FGuardInfo() :
 			Count(0)

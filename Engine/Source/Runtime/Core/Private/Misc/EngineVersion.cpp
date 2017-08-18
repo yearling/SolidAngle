@@ -4,7 +4,7 @@
 #include "Misc/Guid.h"
 #include "Serialization/CustomVersion.h"
 #include "Runtime/Launch/Resources/Version.h"
-#include "SObject/ReleaseObjectVersion.h"
+#include "UObject/ReleaseObjectVersion.h"
 
 /** Version numbers for networking - DEPRECATED!!!! Use FNetworkVersion::GetNetworkCompatibleChangelist instead!!! */
 int32 GEngineNetVersion = ENGINE_NET_VERSION;
@@ -218,7 +218,7 @@ bool FEngineVersion::OverrideCurrentVersionChangelist(int32 NewChangelist, int32
 	return true;
 }
 
-void operator<<(YArchive &Ar, FEngineVersion &Version)
+void operator<<(FArchive &Ar, FEngineVersion &Version)
 {
 	Ar << Version.Major;
 	Ar << Version.Minor;
@@ -229,6 +229,6 @@ void operator<<(YArchive &Ar, FEngineVersion &Version)
 
 
 // Unique Release Object version id
-const YGuid FReleaseObjectVersion::GUID(0x9C54D522, 0xA8264FBE, 0x94210746, 0x61B482D0);
+const FGuid FReleaseObjectVersion::GUID(0x9C54D522, 0xA8264FBE, 0x94210746, 0x61B482D0);
 // Register Release custom version with Core
 FCustomVersionRegistration GRegisterReleaseObjectVersion(FReleaseObjectVersion::GUID, FReleaseObjectVersion::LatestVersion, TEXT("Release"));

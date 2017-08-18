@@ -4,7 +4,7 @@
 #include "Containers/Array.h"
 #include "Containers/SolidAngleString.h"
 #include "Containers/Map.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 
 struct FGenericCrashContext;
 struct FProgramCounterSymbolInfoEx;
@@ -244,7 +244,7 @@ struct CORE_API FGenericPlatformStackWalk
 	*
 	* @return	A map containing the meta-data (if any).
 	*/
-	static TMap<YName, YString> GetSymbolMetaData();
+	static TMap<FName, YString> GetSymbolMetaData();
 
 protected:
 

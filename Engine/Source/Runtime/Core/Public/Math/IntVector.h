@@ -237,12 +237,12 @@ public:
 	* @param Vector The vector to serialize.
 	* @return Reference to the Archive after serialization.
 	*/
-	friend YArchive& operator<<(YArchive& Ar, YIntVector& Vector)
+	friend FArchive& operator<<(FArchive& Ar, YIntVector& Vector)
 	{
 		return Ar << Vector.X << Vector.Y << Vector.Z;
 	}
 
-	bool Serialize(YArchive& Ar)
+	bool Serialize(FArchive& Ar)
 	{
 		Ar << *this;
 		return true;

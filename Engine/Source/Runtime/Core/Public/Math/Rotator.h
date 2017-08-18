@@ -15,7 +15,7 @@
 *
 * All rotation values are stored in degrees.
 */
-struct YRotator
+struct FRotator
 {
 public:
 	/** Rotation around the right axis (around Y axis), Looking up and down (0=Straight Ahead, +Up, -Down) */
@@ -30,7 +30,7 @@ public:
 public:
 
 	/** A rotator of zero degrees on each axis. */
-	static CORE_API const YRotator ZeroRotator;
+	static CORE_API const FRotator ZeroRotator;
 
 public:
 
@@ -40,7 +40,7 @@ public:
 		if (ContainsNaN())
 		{
 			logOrEnsureNanError(TEXT("YRotator contains NaN: %s"), *ToString());
-			*const_cast<YRotator*>(this) = ZeroRotator;
+			*const_cast<FRotator*>(this) = ZeroRotator;
 		}
 	}
 
@@ -49,7 +49,7 @@ public:
 		if (ContainsNaN())
 		{
 			logOrEnsureNanError(TEXT("%s: YRotator contains NaN: %s"), Message, *ToString());
-			*const_cast<YRotator*>(this) = ZeroRotator;
+			*const_cast<FRotator*>(this) = ZeroRotator;
 		}
 	}
 #else
@@ -60,14 +60,14 @@ public:
 	/**
 	* Default constructor (no initialization).
 	*/
-	FORCEINLINE YRotator() { }
+	FORCEINLINE FRotator() { }
 
 	/**
 	* Constructor
 	*
 	* @param InF Value to set all components to.
 	*/
-	explicit FORCEINLINE YRotator(float InF);
+	explicit FORCEINLINE FRotator(float InF);
 
 	/**
 	* Constructor.
@@ -76,21 +76,21 @@ public:
 	* @param InYaw Yaw in degrees.
 	* @param InRoll Roll in degrees.
 	*/
-	FORCEINLINE YRotator(float InPitch, float InYaw, float InRoll);
+	FORCEINLINE FRotator(float InPitch, float InYaw, float InRoll);
 
 	/**
 	* Constructor.
 	*
 	* @param EForceInit Force Init Enum.
 	*/
-	explicit FORCEINLINE YRotator(EForceInit);
+	explicit FORCEINLINE FRotator(EForceInit);
 
 	/**
 	* Constructor.
 	*
 	* @param Quat Quaternion used to specify rotation.
 	*/
-	explicit CORE_API YRotator(const YQuat& Quat);
+	explicit CORE_API FRotator(const FQuat& Quat);
 
 public:
 
@@ -102,7 +102,7 @@ public:
 	* @param R The other rotator.
 	* @return The result of adding a rotator to this.
 	*/
-	YRotator operator+(const YRotator& R) const;
+	FRotator operator+(const FRotator& R) const;
 
 	/**
 	* Get the result of subtracting a rotator from this.
@@ -110,7 +110,7 @@ public:
 	* @param R The other rotator.
 	* @return The result of subtracting a rotator from this.
 	*/
-	YRotator operator-(const YRotator& R) const;
+	FRotator operator-(const FRotator& R) const;
 
 	/**
 	* Get the result of scaling this rotator.
@@ -118,7 +118,7 @@ public:
 	* @param Scale The scaling factor.
 	* @return The result of scaling.
 	*/
-	YRotator operator*(float Scale) const;
+	FRotator operator*(float Scale) const;
 
 	/**
 	* Multiply this rotator by a scaling factor.
@@ -126,7 +126,7 @@ public:
 	* @param Scale The scaling factor.
 	* @return Copy of the rotator after scaling.
 	*/
-	YRotator operator*=(float Scale);
+	FRotator operator*=(float Scale);
 
 	// Unary operators.
 
@@ -136,7 +136,7 @@ public:
 	* @return A negated copy of the rotator.
 	*/
 	DEPRECATED(4.9, "The unary negation operator has been deprecated as componentwise negation is not meaningful for a Rotator. To get the inverse, please use YRotator::GetInverse()")
-		FORCEINLINE YRotator operator-() const;
+		FORCEINLINE FRotator operator-() const;
 
 	// Binary comparison operators.
 
@@ -147,7 +147,7 @@ public:
 	* @return true if two rotators are identical, otherwise false.
 	* @see Equals()
 	*/
-	bool operator==(const YRotator& R) const;
+	bool operator==(const FRotator& R) const;
 
 	/**
 	* Checks whether two rotators are different.
@@ -155,7 +155,7 @@ public:
 	* @param V The other rotator.
 	* @return true if two rotators are different, otherwise false.
 	*/
-	bool operator!=(const YRotator& V) const;
+	bool operator!=(const FRotator& V) const;
 
 	// Assignment operators.
 
@@ -165,7 +165,7 @@ public:
 	* @param R The other rotator.
 	* @return Copy of rotator after addition.
 	*/
-	YRotator operator+=(const YRotator& R);
+	FRotator operator+=(const FRotator& R);
 
 	/**
 	* Subtracts another rotator from this.
@@ -173,7 +173,7 @@ public:
 	* @param R The other rotator.
 	* @return Copy of rotator after subtraction.
 	*/
-	YRotator operator-=(const YRotator& R);
+	FRotator operator-=(const FRotator& R);
 
 public:
 
@@ -204,7 +204,7 @@ public:
 	* @param Tolerance Error Tolerance.
 	* @return true if two rotators are equal, within specified tolerance, otherwise false.
 	*/
-	bool Equals(const YRotator& R, float Tolerance = KINDA_SMALL_NUMBER) const;
+	bool Equals(const FRotator& R, float Tolerance = KINDA_SMALL_NUMBER) const;
 
 	/**
 	* Adds to each component of the rotator.
@@ -214,12 +214,12 @@ public:
 	* @param DeltaRoll Change in roll. (+/-)
 	* @return Copy of rotator after addition.
 	*/
-	YRotator Add(float DeltaPitch, float DeltaYaw, float DeltaRoll);
+	FRotator Add(float DeltaPitch, float DeltaYaw, float DeltaRoll);
 
 	/**
 	* Returns the inverse of the rotator.
 	*/
-	CORE_API YRotator GetInverse() const;
+	CORE_API FRotator GetInverse() const;
 
 	/**
 	* Get the rotation, snapped to specified degree segments.
@@ -227,28 +227,28 @@ public:
 	* @param RotGrid A Rotator specifying how to snap each component.
 	* @return Snapped version of rotation.
 	*/
-	YRotator GridSnap(const YRotator& RotGrid) const;
+	FRotator GridSnap(const FRotator& RotGrid) const;
 
 	/**
 	* Convert a rotation into a unit vector facing in its direction.
 	*
 	* @return Rotation as a unit direction vector.
 	*/
-	CORE_API YVector Vector() const;
+	CORE_API FVector Vector() const;
 
 	/**
 	* Get Rotation as a quaternion.
 	*
 	* @return Rotation as a quaternion.
 	*/
-	CORE_API YQuat Quaternion() const;
+	CORE_API FQuat Quaternion() const;
 
 	/**
 	* Convert a Rotator into floating-point Euler angles (in degrees). Rotator now stored in degrees.
 	*
 	* @return Rotation as a Euler angle vector.
 	*/
-	CORE_API YVector Euler() const;
+	CORE_API FVector Euler() const;
 
 	/**
 	* Rotate a vector rotated by this rotator.
@@ -256,7 +256,7 @@ public:
 	* @param V The vector to rotate.
 	* @return The rotated vector.
 	*/
-	CORE_API YVector RotateVector(const YVector& V) const;
+	CORE_API FVector RotateVector(const FVector& V) const;
 
 	/**
 	* Returns the vector rotated by the inverse of this rotator.
@@ -264,28 +264,28 @@ public:
 	* @param V The vector to rotate.
 	* @return The rotated vector.
 	*/
-	CORE_API YVector UnrotateVector(const YVector& V) const;
+	CORE_API FVector UnrotateVector(const FVector& V) const;
 
 	/**
 	* Gets the rotation values so they fall within the range [0,360]
 	*
 	* @return Clamped version of rotator.
 	*/
-	YRotator Clamp() const;
+	FRotator Clamp() const;
 
 	/**
 	* Create a copy of this rotator and normalize, removes all winding and creates the "shortest route" rotation.
 	*
 	* @return Normalized copy of this rotator
 	*/
-	YRotator GetNormalized() const;
+	FRotator GetNormalized() const;
 
 	/**
 	* Create a copy of this rotator and denormalize, clamping each axis to 0 - 360.
 	*
 	* @return Denormalized copy of this rotator
 	*/
-	YRotator GetDenormalized() const;
+	FRotator GetDenormalized() const;
 
 	/**
 	* In-place normalize, removes all winding and creates the "shortest route" rotation.
@@ -299,7 +299,7 @@ public:
 	* @param Winding[Out] the Winding part of this Rotator
 	* @param Remainder[Out] the Remainder
 	*/
-	CORE_API void GetWindingAndRemainder(YRotator& Winding, YRotator& Remainder) const;
+	CORE_API void GetWindingAndRemainder(FRotator& Winding, FRotator& Remainder) const;
 
 	/**
 	* Get a textual representation of the vector.
@@ -332,18 +332,18 @@ public:
 	*
 	* @param	Ar	Archive to serialize to/ from
 	*/
-	CORE_API void SerializeCompressed(YArchive& Ar);
+	CORE_API void SerializeCompressed(FArchive& Ar);
 
 	/**
 	* Serializes the rotator compressed for e.g. network transmission (use shorts though).
 	*
 	* @param	Ar	Archive to serialize to/ from
 	*/
-	CORE_API void SerializeCompressedShort(YArchive& Ar);
+	CORE_API void SerializeCompressedShort(FArchive& Ar);
 
 	/**
 	*/
-	CORE_API bool NetSerialize(YArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
+	CORE_API bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
 
 public:
 
@@ -401,7 +401,7 @@ public:
 	* @param Euler Euler angle vector.
 	* @return A rotator from a Euler angle.
 	*/
-	static CORE_API YRotator MakeFromEuler(const YVector& Euler);
+	static CORE_API FRotator MakeFromEuler(const FVector& Euler);
 
 public:
 
@@ -412,13 +412,13 @@ public:
 	* @param R Rotator being serialized.
 	* @return Reference to Archive after serialization.
 	*/
-	friend YArchive& operator<<(YArchive& Ar, YRotator& R)
+	friend FArchive& operator<<(FArchive& Ar, FRotator& R)
 	{
 		Ar << R.Pitch << R.Yaw << R.Roll;
 		return Ar;
 	}
 
-	bool Serialize(YArchive& Ar)
+	bool Serialize(FArchive& Ar)
 	{
 		Ar << *this;
 		return true;
@@ -436,50 +436,50 @@ public:
 * @param R rotator to be scaled.
 * @return Scaled rotator.
 */
-FORCEINLINE YRotator operator*(float Scale, const YRotator& R)
+FORCEINLINE FRotator operator*(float Scale, const FRotator& R)
 {
 	return R.operator*(Scale);
 }
 
 
-FORCEINLINE YRotator::YRotator(float InF)
+FORCEINLINE FRotator::FRotator(float InF)
 	: Pitch(InF), Yaw(InF), Roll(InF)
 {
 	DiagnosticCheckNaN();
 }
 
 
-FORCEINLINE YRotator::YRotator(float InPitch, float InYaw, float InRoll)
+FORCEINLINE FRotator::FRotator(float InPitch, float InYaw, float InRoll)
 	: Pitch(InPitch), Yaw(InYaw), Roll(InRoll)
 {
 	DiagnosticCheckNaN();
 }
 
 
-FORCEINLINE YRotator::YRotator(EForceInit)
+FORCEINLINE FRotator::FRotator(EForceInit)
 	: Pitch(0), Yaw(0), Roll(0)
 {}
 
 
-FORCEINLINE YRotator YRotator::operator+(const YRotator& R) const
+FORCEINLINE FRotator FRotator::operator+(const FRotator& R) const
 {
-	return YRotator(Pitch + R.Pitch, Yaw + R.Yaw, Roll + R.Roll);
+	return FRotator(Pitch + R.Pitch, Yaw + R.Yaw, Roll + R.Roll);
 }
 
 
-FORCEINLINE YRotator YRotator::operator-(const YRotator& R) const
+FORCEINLINE FRotator FRotator::operator-(const FRotator& R) const
 {
-	return YRotator(Pitch - R.Pitch, Yaw - R.Yaw, Roll - R.Roll);
+	return FRotator(Pitch - R.Pitch, Yaw - R.Yaw, Roll - R.Roll);
 }
 
 
-FORCEINLINE YRotator YRotator::operator*(float Scale) const
+FORCEINLINE FRotator FRotator::operator*(float Scale) const
 {
-	return YRotator(Pitch*Scale, Yaw*Scale, Roll*Scale);
+	return FRotator(Pitch*Scale, Yaw*Scale, Roll*Scale);
 }
 
 
-FORCEINLINE YRotator YRotator::operator*= (float Scale)
+FORCEINLINE FRotator FRotator::operator*= (float Scale)
 {
 	Pitch = Pitch*Scale; Yaw = Yaw*Scale; Roll = Roll*Scale;
 	DiagnosticCheckNaN();
@@ -487,25 +487,25 @@ FORCEINLINE YRotator YRotator::operator*= (float Scale)
 }
 
 
-FORCEINLINE YRotator YRotator::operator-() const
+FORCEINLINE FRotator FRotator::operator-() const
 {
-	return YRotator(-Pitch, -Yaw, -Roll);
+	return FRotator(-Pitch, -Yaw, -Roll);
 }
 
 
-FORCEINLINE bool YRotator::operator==(const YRotator& R) const
+FORCEINLINE bool FRotator::operator==(const FRotator& R) const
 {
 	return Pitch == R.Pitch && Yaw == R.Yaw && Roll == R.Roll;
 }
 
 
-FORCEINLINE bool YRotator::operator!=(const YRotator& V) const
+FORCEINLINE bool FRotator::operator!=(const FRotator& V) const
 {
 	return Pitch != V.Pitch || Yaw != V.Yaw || Roll != V.Roll;
 }
 
 
-FORCEINLINE YRotator YRotator::operator+=(const YRotator& R)
+FORCEINLINE FRotator FRotator::operator+=(const FRotator& R)
 {
 	Pitch += R.Pitch; Yaw += R.Yaw; Roll += R.Roll;
 	DiagnosticCheckNaN();
@@ -513,7 +513,7 @@ FORCEINLINE YRotator YRotator::operator+=(const YRotator& R)
 }
 
 
-FORCEINLINE YRotator YRotator::operator-=(const YRotator& R)
+FORCEINLINE FRotator FRotator::operator-=(const FRotator& R)
 {
 	Pitch -= R.Pitch; Yaw -= R.Yaw; Roll -= R.Roll;
 	DiagnosticCheckNaN();
@@ -521,7 +521,7 @@ FORCEINLINE YRotator YRotator::operator-=(const YRotator& R)
 }
 
 
-FORCEINLINE bool YRotator::IsNearlyZero(float Tolerance) const
+FORCEINLINE bool FRotator::IsNearlyZero(float Tolerance) const
 {
 #if PLATFORM_ENABLE_VECTORINTRINSICS
 	const VectorRegister RegA = VectorLoadFloat3_W0(this);
@@ -537,13 +537,13 @@ FORCEINLINE bool YRotator::IsNearlyZero(float Tolerance) const
 }
 
 
-FORCEINLINE bool YRotator::IsZero() const
+FORCEINLINE bool FRotator::IsZero() const
 {
 	return (ClampAxis(Pitch) == 0.f) && (ClampAxis(Yaw) == 0.f) && (ClampAxis(Roll) == 0.f);
 }
 
 
-FORCEINLINE bool YRotator::Equals(const YRotator& R, float Tolerance) const
+FORCEINLINE bool FRotator::Equals(const FRotator& R, float Tolerance) const
 {
 #if PLATFORM_ENABLE_VECTORINTRINSICS
 	const VectorRegister RegA = VectorLoadFloat3_W0(this);
@@ -559,7 +559,7 @@ FORCEINLINE bool YRotator::Equals(const YRotator& R, float Tolerance) const
 }
 
 
-FORCEINLINE YRotator YRotator::Add(float DeltaPitch, float DeltaYaw, float DeltaRoll)
+FORCEINLINE FRotator FRotator::Add(float DeltaPitch, float DeltaYaw, float DeltaRoll)
 {
 	Yaw += DeltaYaw;
 	Pitch += DeltaPitch;
@@ -569,9 +569,9 @@ FORCEINLINE YRotator YRotator::Add(float DeltaPitch, float DeltaYaw, float Delta
 }
 
 
-FORCEINLINE YRotator YRotator::GridSnap(const YRotator& RotGrid) const
+FORCEINLINE FRotator FRotator::GridSnap(const FRotator& RotGrid) const
 {
-	return YRotator
+	return FRotator
 	(
 		YMath::GridSnap(Pitch, RotGrid.Pitch),
 		YMath::GridSnap(Yaw, RotGrid.Yaw),
@@ -580,13 +580,13 @@ FORCEINLINE YRotator YRotator::GridSnap(const YRotator& RotGrid) const
 }
 
 
-FORCEINLINE YRotator YRotator::Clamp() const
+FORCEINLINE FRotator FRotator::Clamp() const
 {
-	return YRotator(ClampAxis(Pitch), ClampAxis(Yaw), ClampAxis(Roll));
+	return FRotator(ClampAxis(Pitch), ClampAxis(Yaw), ClampAxis(Roll));
 }
 
 
-FORCEINLINE float YRotator::ClampAxis(float Angle)
+FORCEINLINE float FRotator::ClampAxis(float Angle)
 {
 	// returns Angle in the range (-360,360)
 	Angle = YMath::Fmod(Angle, 360.f);
@@ -601,7 +601,7 @@ FORCEINLINE float YRotator::ClampAxis(float Angle)
 }
 
 
-FORCEINLINE float YRotator::NormalizeAxis(float Angle)
+FORCEINLINE float FRotator::NormalizeAxis(float Angle)
 {
 	// returns Angle in the range [0,360)
 	Angle = ClampAxis(Angle);
@@ -616,45 +616,45 @@ FORCEINLINE float YRotator::NormalizeAxis(float Angle)
 }
 
 
-FORCEINLINE uint8 YRotator::CompressAxisToByte(float Angle)
+FORCEINLINE uint8 FRotator::CompressAxisToByte(float Angle)
 {
 	// map [0->360) to [0->256) and mask off any winding
 	return YMath::RoundToInt(Angle * 256.f / 360.f) & 0xFF;
 }
 
 
-FORCEINLINE float YRotator::DecompressAxisFromByte(uint16 Angle)
+FORCEINLINE float FRotator::DecompressAxisFromByte(uint16 Angle)
 {
 	// map [0->256) to [0->360)
 	return (Angle * 360.f / 256.f);
 }
 
 
-FORCEINLINE uint16 YRotator::CompressAxisToShort(float Angle)
+FORCEINLINE uint16 FRotator::CompressAxisToShort(float Angle)
 {
 	// map [0->360) to [0->65536) and mask off any winding
 	return YMath::RoundToInt(Angle * 65536.f / 360.f) & 0xFFFF;
 }
 
 
-FORCEINLINE float YRotator::DecompressAxisFromShort(uint16 Angle)
+FORCEINLINE float FRotator::DecompressAxisFromShort(uint16 Angle)
 {
 	// map [0->65536) to [0->360)
 	return (Angle * 360.f / 65536.f);
 }
 
 
-FORCEINLINE YRotator YRotator::GetNormalized() const
+FORCEINLINE FRotator FRotator::GetNormalized() const
 {
-	YRotator Rot = *this;
+	FRotator Rot = *this;
 	Rot.Normalize();
 	return Rot;
 }
 
 
-FORCEINLINE YRotator YRotator::GetDenormalized() const
+FORCEINLINE FRotator FRotator::GetDenormalized() const
 {
-	YRotator Rot = *this;
+	FRotator Rot = *this;
 	Rot.Pitch = ClampAxis(Rot.Pitch);
 	Rot.Yaw = ClampAxis(Rot.Yaw);
 	Rot.Roll = ClampAxis(Rot.Roll);
@@ -662,7 +662,7 @@ FORCEINLINE YRotator YRotator::GetDenormalized() const
 }
 
 
-FORCEINLINE void YRotator::Normalize()
+FORCEINLINE void FRotator::Normalize()
 {
 #if PLATFORM_ENABLE_VECTORINTRINSICS
 	VectorRegister VRotator = VectorLoadFloat3_W0(this);
@@ -676,13 +676,13 @@ FORCEINLINE void YRotator::Normalize()
 	DiagnosticCheckNaN();
 }
 
-FORCEINLINE YString YRotator::ToString() const
+FORCEINLINE YString FRotator::ToString() const
 {
 	return YString::Printf(TEXT("P=%f Y=%f R=%f"), Pitch, Yaw, Roll);
 }
 
 
-FORCEINLINE YString YRotator::ToCompactString() const
+FORCEINLINE YString FRotator::ToCompactString() const
 {
 	if (IsNearlyZero())
 	{
@@ -719,7 +719,7 @@ FORCEINLINE YString YRotator::ToCompactString() const
 }
 
 
-FORCEINLINE bool YRotator::InitFromString(const YString& InSourceString)
+FORCEINLINE bool FRotator::InitFromString(const YString& InSourceString)
 {
 	Pitch = Yaw = Roll = 0;
 
@@ -730,7 +730,7 @@ FORCEINLINE bool YRotator::InitFromString(const YString& InSourceString)
 }
 
 
-FORCEINLINE bool YRotator::ContainsNaN() const
+FORCEINLINE bool FRotator::ContainsNaN() const
 {
 	return (!YMath::IsFinite(Pitch) ||
 		!YMath::IsFinite(Yaw) ||
@@ -738,20 +738,20 @@ FORCEINLINE bool YRotator::ContainsNaN() const
 }
 
 
-template<> struct TIsPODType<YRotator> { enum { Value = true }; };
+template<> struct TIsPODType<FRotator> { enum { Value = true }; };
 
 
 /* YLinearColor inline functions
 *****************************************************************************/
 
 template<class U>
-FORCEINLINE_DEBUGGABLE YRotator YMath::Lerp(const YRotator& A, const YRotator& B, const U& Alpha)
+FORCEINLINE_DEBUGGABLE FRotator YMath::Lerp(const FRotator& A, const FRotator& B, const U& Alpha)
 {
 	return A + (B - A).GetNormalized() * Alpha;
 }
 
 template<class U>
-FORCEINLINE_DEBUGGABLE YRotator YMath::LerpRange(const YRotator& A, const YRotator& B, const U& Alpha)
+FORCEINLINE_DEBUGGABLE FRotator YMath::LerpRange(const FRotator& A, const FRotator& B, const U& Alpha)
 {
 	// Similar to Lerp, but does not take the shortest path. Allows interpolation over more than 180 degrees.
 	return (A * (1 - Alpha) + B * Alpha).GetNormalized();

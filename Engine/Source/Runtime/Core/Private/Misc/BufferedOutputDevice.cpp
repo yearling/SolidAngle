@@ -3,7 +3,7 @@
 #include "Misc/BufferedOutputDevice.h"
 #include "Misc/ScopeLock.h"
 
-void FBufferedOutputDevice::Serialize(const TCHAR* InData, ELogVerbosity::Type Verbosity, const class YName& Category)
+void FBufferedOutputDevice::Serialize(const TCHAR* InData, ELogVerbosity::Type Verbosity, const class FName& Category)
 {
 	if (Verbosity > FilterLevel)
 		return;

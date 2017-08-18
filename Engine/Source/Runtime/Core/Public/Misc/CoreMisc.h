@@ -8,7 +8,7 @@
 #include "Containers/SolidAngleString.h"
 #include "Containers/Map.h"
 #include "Math/IntPoint.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "CoreGlobals.h"
 #include "HAL/ThreadSingleton.h"
 
@@ -16,7 +16,7 @@
 * Exec handler that registers itself and is being routed via StaticExec.
 * Note: Not intended for use with UObjects!
 */
-class CORE_API FSelfRegisteringExec : public YExec
+class CORE_API FSelfRegisteringExec : public FExec
 {
 public:
 	/** Constructor, registering this instance. */
@@ -25,7 +25,7 @@ public:
 	virtual ~FSelfRegisteringExec();
 
 	/** Routes a command to the self-registered execs. */
-	static bool StaticExec(UWorld* Inworld, const TCHAR* Cmd, YOutputDevice& Ar);
+	static bool StaticExec(UWorld* Inworld, const TCHAR* Cmd, FOutputDevice& Ar);
 
 private:
 
@@ -39,15 +39,15 @@ class CORE_API FStaticSelfRegisteringExec : public FSelfRegisteringExec
 public:
 
 	/** Initialization constructor. */
-	FStaticSelfRegisteringExec(bool(*InStaticExecFunc)(UWorld* Inworld, const TCHAR* Cmd, YOutputDevice& Ar));
+	FStaticSelfRegisteringExec(bool(*InStaticExecFunc)(UWorld* Inworld, const TCHAR* Cmd, FOutputDevice& Ar));
 
 	//~ Begin Exec Interface
-	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, YOutputDevice& Ar);
+	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar);
 	//~ End Exec Interface
 
 private:
 
-	bool(*StaticExecFunc)(UWorld* Inworld, const TCHAR* Cmd, YOutputDevice& Ar);
+	bool(*StaticExecFunc)(UWorld* Inworld, const TCHAR* Cmd, FOutputDevice& Ar);
 };
 
 // Interface for returning a context string.
@@ -186,10 +186,10 @@ void CORE_API GenerateConvenientWindowedResolutions(const struct FDisplayMetrics
 */
 struct FScriptTraceStackNode
 {
-	YName	Scope;
-	YName	FunctionName;
+	FName	Scope;
+	FName	FunctionName;
 
-	FScriptTraceStackNode(YName InScope, YName InFunctionName)
+	FScriptTraceStackNode(FName InScope, FName InFunctionName)
 		: Scope(InScope)
 		, FunctionName(InFunctionName)
 	{
@@ -244,7 +244,7 @@ struct CORE_API FBlueprintExceptionTracker : TThreadSingleton<FBlueprintExceptio
 	static FBlueprintExceptionTracker& Get();
 public:
 	// map of currently displayed warnings in exception handler
-	TMap<YName, int32> DisplayedWarningsMap;
+	TMap<FName, int32> DisplayedWarningsMap;
 
 	// runaway tracking
 	int32 Runaway;

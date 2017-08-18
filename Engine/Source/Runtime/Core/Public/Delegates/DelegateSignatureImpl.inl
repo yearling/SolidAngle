@@ -10,10 +10,10 @@
 #include "Templates/RemoveReference.h"
 #include "Templates/SolidAngleTemplate.h"
 #include "Misc/Crc.h"
-#include "SObject/NameTypes.h"
-#include "SObject/WeakObjectPtrTemplates.h"
+#include "UObject/NameTypes.h"
+#include "UObject/WeakObjectPtrTemplates.h"
 #include "Templates/SharedPointer.h"
-#include "SObject/ScriptDelegates.h"
+#include "UObject/ScriptDelegates.h"
 
 class FDelegateBase;
 class FDelegateHandle;
@@ -77,13 +77,13 @@ public:
 	template <typename UserClass, typename Var1Type, typename Var2Type, typename Var3Type, typename Var4Type> struct TRawMethodDelegate_FourVars_Const : TBaseRawMethodDelegateInstance<true, UserClass, TFuncType, Var1Type, Var2Type, Var3Type, Var4Type> { typedef TBaseRawMethodDelegateInstance<true, UserClass, TFuncType, Var1Type, Var2Type, Var3Type, Var4Type> Super; TRawMethodDelegate_FourVars_Const(UserClass* InUserObject, typename Super::FMethodPtr InMethodPtr, Var1Type Var1, Var2Type Var2, Var3Type Var3, Var4Type Var4) : Super(InUserObject, InMethodPtr, Var1, Var2, Var3, Var4) {} };
 
 	/** Declare the user's UFunction-based delegate instance types. */
-	template <typename UObjectTemplate                                                                            > struct TUFunctionDelegateBinding : TBaseUFunctionDelegateInstance<UObjectTemplate, TFuncType                                        > { typedef TBaseUFunctionDelegateInstance<UObjectTemplate, TFuncType                                        > Super; TUFunctionDelegateBinding(UObjectTemplate* InUserObject, const YName& InFunctionName) : Super(InUserObject, InFunctionName) {} };
-	template <typename UObjectTemplate, typename Var1Type                                                         > struct TUFunctionDelegateBinding_OneVar : TBaseUFunctionDelegateInstance<UObjectTemplate, TFuncType, Var1Type                              > { typedef TBaseUFunctionDelegateInstance<UObjectTemplate, TFuncType, Var1Type                              > Super; TUFunctionDelegateBinding_OneVar(UObjectTemplate* InUserObject, const YName& InFunctionName, Var1Type Var1) : Super(InUserObject, InFunctionName, Var1) {} };
-	template <typename UObjectTemplate, typename Var1Type, typename Var2Type                                      > struct TUFunctionDelegateBinding_TwoVars : TBaseUFunctionDelegateInstance<UObjectTemplate, TFuncType, Var1Type, Var2Type                    > { typedef TBaseUFunctionDelegateInstance<UObjectTemplate, TFuncType, Var1Type, Var2Type                    > Super; TUFunctionDelegateBinding_TwoVars(UObjectTemplate* InUserObject, const YName& InFunctionName, Var1Type Var1, Var2Type Var2) : Super(InUserObject, InFunctionName, Var1, Var2) {} };
-	template <typename UObjectTemplate, typename Var1Type, typename Var2Type, typename Var3Type                   > struct TUFunctionDelegateBinding_ThreeVars : TBaseUFunctionDelegateInstance<UObjectTemplate, TFuncType, Var1Type, Var2Type, Var3Type          > { typedef TBaseUFunctionDelegateInstance<UObjectTemplate, TFuncType, Var1Type, Var2Type, Var3Type          > Super; TUFunctionDelegateBinding_ThreeVars(UObjectTemplate* InUserObject, const YName& InFunctionName, Var1Type Var1, Var2Type Var2, Var3Type Var3) : Super(InUserObject, InFunctionName, Var1, Var2, Var3) {} };
-	template <typename UObjectTemplate, typename Var1Type, typename Var2Type, typename Var3Type, typename Var4Type> struct TUFunctionDelegateBinding_FourVars : TBaseUFunctionDelegateInstance<UObjectTemplate, TFuncType, Var1Type, Var2Type, Var3Type, Var4Type> { typedef TBaseUFunctionDelegateInstance<UObjectTemplate, TFuncType, Var1Type, Var2Type, Var3Type, Var4Type> Super; TUFunctionDelegateBinding_FourVars(UObjectTemplate* InUserObject, const YName& InFunctionName, Var1Type Var1, Var2Type Var2, Var3Type Var3, Var4Type Var4) : Super(InUserObject, InFunctionName, Var1, Var2, Var3, Var4) {} };
+	template <typename UObjectTemplate                                                                            > struct TUFunctionDelegateBinding : TBaseUFunctionDelegateInstance<UObjectTemplate, TFuncType                                        > { typedef TBaseUFunctionDelegateInstance<UObjectTemplate, TFuncType                                        > Super; TUFunctionDelegateBinding(UObjectTemplate* InUserObject, const FName& InFunctionName) : Super(InUserObject, InFunctionName) {} };
+	template <typename UObjectTemplate, typename Var1Type                                                         > struct TUFunctionDelegateBinding_OneVar : TBaseUFunctionDelegateInstance<UObjectTemplate, TFuncType, Var1Type                              > { typedef TBaseUFunctionDelegateInstance<UObjectTemplate, TFuncType, Var1Type                              > Super; TUFunctionDelegateBinding_OneVar(UObjectTemplate* InUserObject, const FName& InFunctionName, Var1Type Var1) : Super(InUserObject, InFunctionName, Var1) {} };
+	template <typename UObjectTemplate, typename Var1Type, typename Var2Type                                      > struct TUFunctionDelegateBinding_TwoVars : TBaseUFunctionDelegateInstance<UObjectTemplate, TFuncType, Var1Type, Var2Type                    > { typedef TBaseUFunctionDelegateInstance<UObjectTemplate, TFuncType, Var1Type, Var2Type                    > Super; TUFunctionDelegateBinding_TwoVars(UObjectTemplate* InUserObject, const FName& InFunctionName, Var1Type Var1, Var2Type Var2) : Super(InUserObject, InFunctionName, Var1, Var2) {} };
+	template <typename UObjectTemplate, typename Var1Type, typename Var2Type, typename Var3Type                   > struct TUFunctionDelegateBinding_ThreeVars : TBaseUFunctionDelegateInstance<UObjectTemplate, TFuncType, Var1Type, Var2Type, Var3Type          > { typedef TBaseUFunctionDelegateInstance<UObjectTemplate, TFuncType, Var1Type, Var2Type, Var3Type          > Super; TUFunctionDelegateBinding_ThreeVars(UObjectTemplate* InUserObject, const FName& InFunctionName, Var1Type Var1, Var2Type Var2, Var3Type Var3) : Super(InUserObject, InFunctionName, Var1, Var2, Var3) {} };
+	template <typename UObjectTemplate, typename Var1Type, typename Var2Type, typename Var3Type, typename Var4Type> struct TUFunctionDelegateBinding_FourVars : TBaseUFunctionDelegateInstance<UObjectTemplate, TFuncType, Var1Type, Var2Type, Var3Type, Var4Type> { typedef TBaseUFunctionDelegateInstance<UObjectTemplate, TFuncType, Var1Type, Var2Type, Var3Type, Var4Type> Super; TUFunctionDelegateBinding_FourVars(UObjectTemplate* InUserObject, const FName& InFunctionName, Var1Type Var1, Var2Type Var2, Var3Type Var3, Var4Type Var4) : Super(InUserObject, InFunctionName, Var1, Var2, Var3, Var4) {} };
 
-	/** Declare the user's SObject-based delegate instance types. */
+	/** Declare the user's UObject-based delegate instance types. */
 	template <typename UserClass                                                                            > struct TUObjectMethodDelegate : TBaseUObjectMethodDelegateInstance<false, UserClass, TFuncType                                        > { typedef TBaseUObjectMethodDelegateInstance<false, UserClass, TFuncType                                        > Super; TUObjectMethodDelegate(UserClass* InUserObject, typename Super::FMethodPtr InMethodPtr) : Super(InUserObject, InMethodPtr) {} };
 	template <typename UserClass                                                                            > struct TUObjectMethodDelegate_Const : TBaseUObjectMethodDelegateInstance<true, UserClass, TFuncType                                        > { typedef TBaseUObjectMethodDelegateInstance<true, UserClass, TFuncType                                        > Super; TUObjectMethodDelegate_Const(UserClass* InUserObject, typename Super::FMethodPtr InMethodPtr) : Super(InUserObject, InMethodPtr) {} };
 	template <typename UserClass, typename Var1Type                                                         > struct TUObjectMethodDelegate_OneVar : TBaseUObjectMethodDelegateInstance<false, UserClass, TFuncType, Var1Type                              > { typedef TBaseUObjectMethodDelegateInstance<false, UserClass, TFuncType, Var1Type                              > Super; TUObjectMethodDelegate_OneVar(UserClass* InUserObject, typename Super::FMethodPtr InMethodPtr, Var1Type Var1) : Super(InUserObject, InMethodPtr, Var1) {} };
@@ -256,7 +256,7 @@ public:
 	*/
 	template <typename UObjectTemplate, typename... VarTypes>
 	FUNCTION_CHECK_RETURN_START
-		inline static TBaseDelegate<RetValType, ParamTypes...> CreateUFunction(UObjectTemplate* InUserObject, const YName& InFunctionName, VarTypes... Vars)
+		inline static TBaseDelegate<RetValType, ParamTypes...> CreateUFunction(UObjectTemplate* InUserObject, const FName& InFunctionName, VarTypes... Vars)
 		FUNCTION_CHECK_RETURN_END
 	{
 		TBaseDelegate<RetValType, ParamTypes...> Result;
@@ -265,9 +265,9 @@ public:
 	}
 
 	/**
-	* Static: Creates a SObject-based member function delegate.
+	* Static: Creates a UObject-based member function delegate.
 	*
-	* SObject delegates keep a weak reference to your object.
+	* UObject delegates keep a weak reference to your object.
 	* You can use ExecuteIfBound() to call them.
 	*/
 	template <typename UserClass, typename... VarTypes>
@@ -493,15 +493,15 @@ public:
 	* You can use ExecuteIfBound() to call them.
 	*/
 	template <typename UObjectTemplate, typename... VarTypes>
-	inline void BindUFunction(UObjectTemplate* InUserObject, const YName& InFunctionName, VarTypes... Vars)
+	inline void BindUFunction(UObjectTemplate* InUserObject, const FName& InFunctionName, VarTypes... Vars)
 	{
 		*this = CreateUFunction(InUserObject, InFunctionName, Vars...);
 	}
 
 	/**
-	* Binds a SObject-based member function delegate.
+	* Binds a UObject-based member function delegate.
 	*
-	* SObject delegates keep a weak reference to your object.
+	* UObject delegates keep a weak reference to your object.
 	* You can use ExecuteIfBound() to call them.
 	*/
 	template <typename UserClass, typename... VarTypes>
@@ -816,15 +816,15 @@ public:
 	* @param	InFunctionName			Class method function address
 	*/
 	template <typename UObjectTemplate, typename... VarTypes>
-	inline FDelegateHandle AddUFunction(UObjectTemplate* InUserObject, const YName& InFunctionName, VarTypes... Vars)
+	inline FDelegateHandle AddUFunction(UObjectTemplate* InUserObject, const FName& InFunctionName, VarTypes... Vars)
 	{
 		return Add(FDelegate::CreateUFunction(InUserObject, InFunctionName, Vars...));
 	}
 
 	/**
-	* Adds a SObject-based member function delegate.
+	* Adds a UObject-based member function delegate.
 	*
-	* SObject delegates keep a weak reference to your object.
+	* UObject delegates keep a weak reference to your object.
 	*
 	* @param	InUserObject	User object to bind to
 	* @param	InFunc			Class method function address
@@ -997,7 +997,7 @@ private:
 
 
 /**
-* Dynamic delegate base object (SObject-based, serializable).  You'll use the various DECLARE_DYNAMIC_DELEGATE
+* Dynamic delegate base object (UObject-based, serializable).  You'll use the various DECLARE_DYNAMIC_DELEGATE
 * macros to create the actual delegate type, templated to the function signature the delegate is compatible with.
 * Then, you can create an instance of that class when you want to assign functions to the delegate.
 */
@@ -1011,7 +1011,7 @@ public:
 	TBaseDynamicDelegate() { }
 
 	/**
-	* Construction from an FScriptDelegate must be explicit.  This is really only used by SObject system internals.
+	* Construction from an FScriptDelegate must be explicit.  This is really only used by UObject system internals.
 	*
 	* @param	InScriptDelegate	The delegate to construct from by copying
 	*/
@@ -1030,9 +1030,9 @@ public:
 	};
 
 	/**
-	* Binds a SObject instance and a SObject method address to this delegate.
+	* Binds a UObject instance and a UObject method address to this delegate.
 	*
-	* @param	InUserObject		SObject instance
+	* @param	InUserObject		UObject instance
 	* @param	InMethodPtr			Member function address pointer
 	* @param	InFunctionName		Name of member function, without class name
 	*
@@ -1040,13 +1040,13 @@ public:
 	*        automatically sets the function name string for the caller.
 	*/
 	template< class UserClass >
-	void __Internal_BindDynamic(UserClass* InUserObject, typename TMethodPtrResolver< UserClass >::FMethodPtr InMethodPtr, YName InFunctionName)
+	void __Internal_BindDynamic(UserClass* InUserObject, typename TMethodPtrResolver< UserClass >::FMethodPtr InMethodPtr, FName InFunctionName)
 	{
 		check(InUserObject != nullptr && InMethodPtr != nullptr);
 
 		// NOTE: We're not actually storing the incoming method pointer or calling it.  We simply require it for type-safety reasons.
 
-		// NOTE: If you hit a compile error on the following line, it means you're trying to use a non-SObject type
+		// NOTE: If you hit a compile error on the following line, it means you're trying to use a non-UObject type
 		//       with this delegate, which is not supported
 		this->Object = InUserObject;
 
@@ -1068,7 +1068,7 @@ public:
 
 
 /**
-* Dynamic multi-cast delegate base object (SObject-based, serializable).  You'll use the various
+* Dynamic multi-cast delegate base object (UObject-based, serializable).  You'll use the various
 * DECLARE_DYNAMIC_MULTICAST_DELEGATE macros to create the actual delegate type, templated to the function
 * signature the delegate is compatible with.   Then, you can create an instance of that class when you
 * want to assign functions to the delegate.
@@ -1086,7 +1086,7 @@ public:
 	TBaseDynamicMulticastDelegate() { }
 
 	/**
-	* Construction from an FMulticastScriptDelegate must be explicit.  This is really only used by SObject system internals.
+	* Construction from an FMulticastScriptDelegate must be explicit.  This is really only used by UObject system internals.
 	*
 	* @param	InScriptDelegate	The delegate to construct from by copying
 	*/
@@ -1095,9 +1095,9 @@ public:
 	{ }
 
 	/**
-	* Tests if a SObject instance and a SObject method address pair are already bound to this multi-cast delegate.
+	* Tests if a UObject instance and a UObject method address pair are already bound to this multi-cast delegate.
 	*
-	* @param	InUserObject		SObject instance
+	* @param	InUserObject		UObject instance
 	* @param	InMethodPtr			Member function address pointer
 	* @param	InFunctionName		Name of member function, without class name
 	* @return	True if the instance/method is already bound.
@@ -1106,7 +1106,7 @@ public:
 	*        automatically sets the function name string for the caller.
 	*/
 	template< class UserClass >
-	bool __Internal_IsAlreadyBound(UserClass* InUserObject, typename FDelegate::template TMethodPtrResolver< UserClass >::FMethodPtr InMethodPtr, YName InFunctionName) const
+	bool __Internal_IsAlreadyBound(UserClass* InUserObject, typename FDelegate::template TMethodPtrResolver< UserClass >::FMethodPtr InMethodPtr, FName InFunctionName) const
 	{
 		check(InUserObject != nullptr && InMethodPtr != nullptr);
 
@@ -1116,9 +1116,9 @@ public:
 	}
 
 	/**
-	* Binds a SObject instance and a SObject method address to this multi-cast delegate.
+	* Binds a UObject instance and a UObject method address to this multi-cast delegate.
 	*
-	* @param	InUserObject		SObject instance
+	* @param	InUserObject		UObject instance
 	* @param	InMethodPtr			Member function address pointer
 	* @param	InFunctionName		Name of member function, without class name
 	*
@@ -1126,7 +1126,7 @@ public:
 	*        automatically sets the function name string for the caller.
 	*/
 	template< class UserClass >
-	void __Internal_AddDynamic(UserClass* InUserObject, typename FDelegate::template TMethodPtrResolver< UserClass >::FMethodPtr InMethodPtr, YName InFunctionName)
+	void __Internal_AddDynamic(UserClass* InUserObject, typename FDelegate::template TMethodPtrResolver< UserClass >::FMethodPtr InMethodPtr, FName InFunctionName)
 	{
 		check(InUserObject != nullptr && InMethodPtr != nullptr);
 
@@ -1139,9 +1139,9 @@ public:
 	}
 
 	/**
-	* Binds a SObject instance and a SObject method address to this multi-cast delegate, but only if it hasn't been bound before.
+	* Binds a UObject instance and a UObject method address to this multi-cast delegate, but only if it hasn't been bound before.
 	*
-	* @param	InUserObject		SObject instance
+	* @param	InUserObject		UObject instance
 	* @param	InMethodPtr			Member function address pointer
 	* @param	InFunctionName		Name of member function, without class name
 	*
@@ -1149,7 +1149,7 @@ public:
 	*        automatically sets the function name string for the caller.
 	*/
 	template< class UserClass >
-	void __Internal_AddUniqueDynamic(UserClass* InUserObject, typename FDelegate::template TMethodPtrResolver< UserClass >::FMethodPtr InMethodPtr, YName InFunctionName)
+	void __Internal_AddUniqueDynamic(UserClass* InUserObject, typename FDelegate::template TMethodPtrResolver< UserClass >::FMethodPtr InMethodPtr, FName InFunctionName)
 	{
 		check(InUserObject != nullptr && InMethodPtr != nullptr);
 
@@ -1162,9 +1162,9 @@ public:
 	}
 
 	/**
-	* Unbinds a SObject instance and a SObject method address from this multi-cast delegate.
+	* Unbinds a UObject instance and a UObject method address from this multi-cast delegate.
 	*
-	* @param	InUserObject		SObject instance
+	* @param	InUserObject		UObject instance
 	* @param	InMethodPtr			Member function address pointer
 	* @param	InFunctionName		Name of member function, without class name
 	*
@@ -1172,7 +1172,7 @@ public:
 	*        automatically sets the function name string for the caller.
 	*/
 	template< class UserClass >
-	void __Internal_RemoveDynamic(UserClass* InUserObject, typename FDelegate::template TMethodPtrResolver< UserClass >::FMethodPtr InMethodPtr, YName InFunctionName)
+	void __Internal_RemoveDynamic(UserClass* InUserObject, typename FDelegate::template TMethodPtrResolver< UserClass >::FMethodPtr InMethodPtr, FName InFunctionName)
 	{
 		check(InUserObject != nullptr && InMethodPtr != nullptr);
 

@@ -9,7 +9,7 @@
 
 #include "Math/Box2D.h"
 
-YBox2D::YBox2D(const YVector2D* Points, const int32 Count)
+FBox2D::FBox2D(const YVector2D* Points, const int32 Count)
 	: Min(0.f, 0.f)
 	, Max(0.f, 0.f)
 	, bIsValid(false)
@@ -21,7 +21,7 @@ YBox2D::YBox2D(const YVector2D* Points, const int32 Count)
 }
 
 
-YBox2D::YBox2D(const TArray<YVector2D>& Points)
+FBox2D::FBox2D(const TArray<YVector2D>& Points)
 	: Min(0.f, 0.f)
 	, Max(0.f, 0.f)
 	, bIsValid(false)

@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Containers/ContainerAllocationPolicies.h"
 #include "Math/SolidAngleMathUtility.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Delegates/DelegateSettings.h"
 #include "Delegates/IDelegateInstance.h"
 
@@ -79,7 +79,7 @@ public:
 	*
 	* @return The name of the bound function, NAME_None if no name was available.
 	*/
-	YName TryGetBoundFunctionName() const
+	FName TryGetBoundFunctionName() const
 	{
 		if (IDelegateInstance* Ptr = GetDelegateInstanceProtected())
 		{
@@ -92,11 +92,11 @@ public:
 #endif
 
 	/**
-	* If this is a UFunction or SObject delegate, return the SObject.
+	* If this is a UFunction or UObject delegate, return the UObject.
 	*
 	* @return The object associated with this delegate if there is one.
 	*/
-	inline class SObject* GetUObject() const
+	inline class UObject* GetUObject() const
 	{
 		if (IDelegateInstance* Ptr = GetDelegateInstanceProtected())
 		{

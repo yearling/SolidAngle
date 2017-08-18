@@ -15,7 +15,7 @@
 //
 // Writes bitstreams.
 //
-struct CORE_API FBitWriter : public YArchive
+struct CORE_API FBitWriter : public FArchive
 {
 	friend struct FBitWriterMark;
 

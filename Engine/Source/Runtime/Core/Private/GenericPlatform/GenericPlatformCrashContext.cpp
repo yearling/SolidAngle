@@ -147,7 +147,7 @@ void FGenericCrashContext::Initialize()
 		}
 	}
 
-	const YGuid Guid = YGuid::NewGuid();
+	const FGuid Guid = FGuid::NewGuid();
 	NCachedCrashContextProperties::CrashGUIDRoot = YString::Printf(TEXT("UE4CC-%s-%s"), *NCachedCrashContextProperties::PlatformNameIni, *Guid.ToString(EGuidFormats::Digits));
 
 	// Initialize delegate for updating SecondsSinceStart, because FPlatformTime::Seconds() is not POSIX safe.
@@ -352,17 +352,17 @@ void FGenericCrashContext::SerializeAsXML( const TCHAR* Filename )
 	FFileHelper::SaveStringToFile( CommonBuffer, Filename, FFileHelper::EEncodingOptions::AutoDetect );
 }
 
-void FGenericCrashContext::AddCrashProperty( const TCHAR* PropertyName, const TCHAR* PropertyValue )
+void FGenericCrashContext::AddCrashProperty( const TCHAR* PropertFName, const TCHAR* PropertyValue )
 {
 	CommonBuffer += TEXT( "<" );
-	CommonBuffer += PropertyName;
+	CommonBuffer += PropertFName;
 	CommonBuffer += TEXT( ">" );
 
 
 	CommonBuffer += EscapeXMLString( PropertyValue );
 
 	CommonBuffer += TEXT( "</" );
-	CommonBuffer += PropertyName;
+	CommonBuffer += PropertFName;
 	CommonBuffer += TEXT( ">" );
 	CommonBuffer += LINE_TERMINATOR;
 }

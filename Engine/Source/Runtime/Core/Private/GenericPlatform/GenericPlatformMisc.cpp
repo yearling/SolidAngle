@@ -329,11 +329,11 @@ void YGenericPlatformMisc::RaiseException(uint32 ExceptionCode)
 #endif
 }
 
-bool YGenericPlatformMisc::SetStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeyName, const YString& InValue)
+bool YGenericPlatformMisc::SetStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeFName, const YString& InValue)
 {
 	check(!InStoreId.IsEmpty());
 	check(!InSectionName.IsEmpty());
-	check(!InKeyName.IsEmpty());
+	check(!InKeFName.IsEmpty());
 
 	// This assumes that FPlatformProcess::ApplicationSettingsDir() returns a user-specific directory; it doesn't on Windows, but Windows overrides this behavior to use the registry
 	const YString ConfigPath = YString(FPlatformProcess::ApplicationSettingsDir()) / InStoreId / YString(TEXT("KeyValueStore.ini"));
@@ -343,18 +343,18 @@ bool YGenericPlatformMisc::SetStoredValue(const YString& InStoreId, const YStrin
 
 	FConfigSection& Section = ConfigFile.FindOrAdd(InSectionName);
 
-	FConfigValue& KeyValue = Section.FindOrAdd(*InKeyName);
+	FConfigValue& KeyValue = Section.FindOrAdd(*InKeFName);
 	KeyValue = FConfigValue(InValue);
 
 	ConfigFile.Dirty = true;
 	return ConfigFile.Write(ConfigPath);
 }
 
-bool YGenericPlatformMisc::GetStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeyName, YString& OutValue)
+bool YGenericPlatformMisc::GetStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeFName, YString& OutValue)
 {
 	check(!InStoreId.IsEmpty());
 	check(!InSectionName.IsEmpty());
-	check(!InKeyName.IsEmpty());
+	check(!InKeFName.IsEmpty());
 
 	// This assumes that FPlatformProcess::ApplicationSettingsDir() returns a user-specific directory; it doesn't on Windows, but Windows overrides this behavior to use the registry
 	const YString ConfigPath = YString(FPlatformProcess::ApplicationSettingsDir()) / InStoreId / YString(TEXT("KeyValueStore.ini"));
@@ -365,7 +365,7 @@ bool YGenericPlatformMisc::GetStoredValue(const YString& InStoreId, const YStrin
 	const FConfigSection* const Section = ConfigFile.Find(InSectionName);
 	if(Section)
 	{
-		const FConfigValue* const KeyValue = Section->Find(*InKeyName);
+		const FConfigValue* const KeyValue = Section->Find(*InKeFName);
 		if(KeyValue)
 		{
 			OutValue = KeyValue->GetValue();
@@ -376,11 +376,11 @@ bool YGenericPlatformMisc::GetStoredValue(const YString& InStoreId, const YStrin
 	return false;
 }
 
-bool YGenericPlatformMisc::DeleteStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeyName)
+bool YGenericPlatformMisc::DeleteStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeFName)
 {	
 	check(!InStoreId.IsEmpty());
 	check(!InSectionName.IsEmpty());
-	check(!InKeyName.IsEmpty());
+	check(!InKeFName.IsEmpty());
 
 	// This assumes that FPlatformProcess::ApplicationSettingsDir() returns a user-specific directory; it doesn't on Windows, but Windows overrides this behavior to use the registry
 	const YString ConfigPath = YString(FPlatformProcess::ApplicationSettingsDir()) / InStoreId / YString(TEXT("KeyValueStore.ini"));
@@ -391,7 +391,7 @@ bool YGenericPlatformMisc::DeleteStoredValue(const YString& InStoreId, const YSt
 	FConfigSection* const Section = ConfigFile.Find(InSectionName);
 	if (Section)
 	{
-		int32 RemovedNum = Section->Remove(*InKeyName);
+		int32 RemovedNum = Section->Remove(*InKeFName);
 
 		ConfigFile.Dirty = true;
 		return ConfigFile.Write(ConfigPath) && RemovedNum == 1;
@@ -478,7 +478,7 @@ void YGenericPlatformMisc:: ClipboardPaste(class YString& Dest)
 	Dest = YString();
 }
 
-void YGenericPlatformMisc::CreateGuid(YGuid& Guid)
+void YGenericPlatformMisc::CreateGuid(FGuid& Guid)
 {
 	static uint16 IncrementCounter = 0; 
 
@@ -488,7 +488,7 @@ void YGenericPlatformMisc::CreateGuid(YGuid& Guid)
 
 	FPlatformTime::SystemTime(Year, Month, DayOfWeek, Day, Hour, Min, Sec, MSec);
 
-	Guid = YGuid(RandBits | (SequentialBits << 16), Day | (Hour << 8) | (Month << 16) | (Sec << 24), MSec | (Min << 16), Year ^ FPlatformTime::Cycles());
+	Guid = FGuid(RandBits | (SequentialBits << 16), Day | (Hour << 8) | (Month << 16) | (Sec << 24), MSec | (Min << 16), Year ^ FPlatformTime::Cycles());
 }
 
 EAppReturnType::Type YGenericPlatformMisc::MessageBoxExt( EAppMsgType::Type MsgType, const TCHAR* Text, const TCHAR* Caption )
@@ -650,9 +650,9 @@ IPlatformCompression* YGenericPlatformMisc::GetPlatformCompression()
 	return &Singleton;
 }
 
-YLinearColor YGenericPlatformMisc::GetScreenPixelColor(const struct YVector2D& InScreenPos, float InGamma)
+FLinearColor YGenericPlatformMisc::GetScreenPixelColor(const struct YVector2D& InScreenPos, float InGamma)
 { 
-	return YLinearColor::Black;
+	return FLinearColor::Black;
 }
 
 void GenericPlatformMisc_GetProjectFilePathGameDir(YString& OutGameDir)
@@ -795,11 +795,11 @@ const TCHAR* YGenericPlatformMisc::GamePersistentDownloadDir()
 	return *GamePersistentDownloadDir;
 }
 
-uint32 YGenericPlatformMisc::GetStandardPrintableKeyMap(uint32* KeyCodes, YString* KeyNames, uint32 MaxMappings, bool bMapUppercaseKeys, bool bMapLowercaseKeys)
+uint32 YGenericPlatformMisc::GetStandardPrintableKeyMap(uint32* KeyCodes, YString* KeFNames, uint32 MaxMappings, bool bMapUppercaseKeys, bool bMapLowercaseKeys)
 {
 	uint32 NumMappings = 0;
 
-#define ADDKEYMAP(KeyCode, KeyName)		if (NumMappings<MaxMappings) { KeyCodes[NumMappings]=KeyCode; KeyNames[NumMappings]=KeyName; ++NumMappings; };
+#define ADDKEYMAP(KeyCode, KeFName)		if (NumMappings<MaxMappings) { KeyCodes[NumMappings]=KeyCode; KeFNames[NumMappings]=KeFName; ++NumMappings; };
 
 	ADDKEYMAP( '0', TEXT("Zero") );
 	ADDKEYMAP( '1', TEXT("One") );
@@ -990,22 +990,22 @@ bool YGenericPlatformMisc::IsRunningOnBattery()
 	return false;
 }
 
-YGuid YGenericPlatformMisc::GetMachineId()
+FGuid YGenericPlatformMisc::GetMachineId()
 {
-	static YGuid MachineId;
+	static FGuid MachineId;
 	YString MachineIdString;
 
 	// Check to see if we already have a valid machine ID to use
-	if( !MachineId.IsValid() && (!YPlatformMisc::GetStoredValue( TEXT( "Epic Games" ), TEXT( "Unreal Engine/Identifiers" ), TEXT( "MachineId" ), MachineIdString ) || !YGuid::Parse( MachineIdString, MachineId )) )
+	if( !MachineId.IsValid() && (!YPlatformMisc::GetStoredValue( TEXT( "Epic Games" ), TEXT( "Unreal Engine/Identifiers" ), TEXT( "MachineId" ), MachineIdString ) || !FGuid::Parse( MachineIdString, MachineId )) )
 	{
 		// No valid machine ID, generate and save a new one
-		MachineId = YGuid::NewGuid();
+		MachineId = FGuid::NewGuid();
 		MachineIdString = MachineId.ToString( EGuidFormats::Digits );
 
 		if( !YPlatformMisc::SetStoredValue( TEXT( "Epic Games" ), TEXT( "Unreal Engine/Identifiers" ), TEXT( "MachineId" ), MachineIdString ) )
 		{
 			// Failed to persist the machine ID - reset it to zero to avoid returning a transient value
-			MachineId = YGuid();
+			MachineId = FGuid();
 		}
 	}
 
@@ -1015,10 +1015,10 @@ YGuid YGenericPlatformMisc::GetMachineId()
 YString YGenericPlatformMisc::GetLoginId()
 {
 	PRAGMA_DISABLE_DEPRECATION_WARNINGS
-	YGuid Id = YPlatformMisc::GetMachineId();
+	FGuid Id = YPlatformMisc::GetMachineId();
 	PRAGMA_ENABLE_DEPRECATION_WARNINGS
 	// force an empty string if we cannot determine an ID.
-	if (Id == YGuid())
+	if (Id == FGuid())
 	{
 		return YString();
 	}

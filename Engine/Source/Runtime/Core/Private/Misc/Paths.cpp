@@ -2,7 +2,7 @@
 
 // Core includes.
 #include "Misc/Paths.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Logging/LogMacros.h"
 #include "HAL/FileManager.h"
 #include "Misc/Parse.h"
@@ -358,7 +358,7 @@ const TArray<YString>& YPaths::GetEditorLocalizationPaths()
 	return Results;
 }
 
-const TArray<YString>& YPaths::GetPropertyNameLocalizationPaths()
+const TArray<YString>& YPaths::GetPropertFNameLocalizationPaths()
 {
 	static TArray<YString> Results;
 	static bool HasInitialized = false;
@@ -367,7 +367,7 @@ const TArray<YString>& YPaths::GetPropertyNameLocalizationPaths()
 	{
 		if(GConfig && GConfig->IsReadyForUse())
 		{
-			GConfig->GetArray( TEXT("Internationalization"), TEXT("PropertyNameLocalizationPaths"), Results, GEditorIni );
+			GConfig->GetArray( TEXT("Internationalization"), TEXT("PropertFNameLocalizationPaths"), Results, GEditorIni );
 			if(!Results.Num())
 			{
 				UE_LOG(LogInit, Warning, TEXT("No paths for property name localization data were specifed in the editor configuration."));
@@ -376,7 +376,7 @@ const TArray<YString>& YPaths::GetPropertyNameLocalizationPaths()
 		}
 		else
 		{
-			Results.AddUnique(TEXT("../../../Engine/Content/Localization/PropertyNames")); // Hardcoded convention.
+			Results.AddUnique(TEXT("../../../Engine/Content/Localization/PropertFNames")); // Hardcoded convention.
 		}
 	}
 
@@ -704,7 +704,7 @@ void YPaths::NormalizeFilename(YString& InPath)
 	YPlatformMisc::NormalizePath(InPath);
 }
 
-void YPaths::NormalizeDirectoryName(YString& InPath)
+void YPaths::NormalizeDirectorFName(YString& InPath)
 {
 	InPath.ReplaceInline(TEXT("\\"), TEXT("/"), ESearchCase::CaseSensitive);
 	if (InPath.EndsWith(TEXT("/"), ESearchCase::CaseSensitive) && !InPath.EndsWith(TEXT("//"), ESearchCase::CaseSensitive) && !InPath.EndsWith(TEXT(":/"), ESearchCase::CaseSensitive))
@@ -943,7 +943,7 @@ YString YPaths::CreateTempFilename( const TCHAR* Path, const TCHAR* Prefix, cons
 	YString UniqueFilename;
 	do
 	{
-		UniqueFilename = YPaths::Combine(Path, *YString::Printf(TEXT("%s%s%s"), Prefix, *YGuid::NewGuid().ToString(), Extension));
+		UniqueFilename = YPaths::Combine(Path, *YString::Printf(TEXT("%s%s%s"), Prefix, *FGuid::NewGuid().ToString(), Extension));
 	}
 	while (IFileManager::Get().FileSize(*UniqueFilename) >= 0);
 	

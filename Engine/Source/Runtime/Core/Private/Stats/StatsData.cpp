@@ -20,20 +20,20 @@ DECLARE_MEMORY_STAT( TEXT("Stat Messages"), STAT_StatMessagesMemory, STATGROUP_S
 	FStatConstants
 -----------------------------------------------------------------------------*/
 
-const YName FStatConstants::NAME_ThreadRoot = "ThreadRoot";
+const FName FStatConstants::NAME_ThreadRoot = "ThreadRoot";
 const char* FStatConstants::ThreadGroupName = STAT_GROUP_TO_FStatGroup( STATGROUP_Threads )::GetGroupName();
-const YName FStatConstants::NAME_ThreadGroup = FStatConstants::ThreadGroupName;
-const YName FStatConstants::RAW_SecondsPerCycle = FStatNameAndInfo( GET_STATYNAME( STAT_SecondsPerCycle ), true ).GetRawName();
-const YName FStatConstants::NAME_NoCategory = YName(TEXT("STATCAT_None"));
+const FName FStatConstants::NAME_ThreadGroup = FStatConstants::ThreadGroupName;
+const FName FStatConstants::RAW_SecondsPerCycle = FStatNameAndInfo( GET_STATFName( STAT_SecondsPerCycle ), true ).GetRawName();
+const FName FStatConstants::NAME_NoCategory = FName(TEXT("STATCAT_None"));
 
 const YString FStatConstants::StatsFileExtension = TEXT( ".ue4stats" );
 const YString FStatConstants::StatsFileRawExtension = TEXT( ".ue4statsraw" );
 
 const YString FStatConstants::ThreadNameMarker = TEXT( "Thread_" );
 
-const YName FStatConstants::RAW_EventWaitWithId = FStatNameAndInfo( GET_STATYNAME( STAT_EventWaitWithId ), true ).GetRawName();
-const YName FStatConstants::RAW_EventTriggerWithId = FStatNameAndInfo( GET_STATYNAME( STAT_EventTriggerWithId ), true ).GetRawName();
-const YName FStatConstants::RAW_NamedMarker = FStatNameAndInfo( GET_STATYNAME( STAT_NamedMarker ), true ).GetRawName(); 
+const FName FStatConstants::RAW_EventWaitWithId = FStatNameAndInfo( GET_STATFName( STAT_EventWaitWithId ), true ).GetRawName();
+const FName FStatConstants::RAW_EventTriggerWithId = FStatNameAndInfo( GET_STATFName( STAT_EventTriggerWithId ), true ).GetRawName();
+const FName FStatConstants::RAW_NamedMarker = FStatNameAndInfo( GET_STATFName( STAT_NamedMarker ), true ).GetRawName(); 
 
 const FStatNameAndInfo FStatConstants::AdvanceFrame = FStatNameAndInfo( NAME_AdvanceFrame, "", "", TEXT( "" ), EStatDataType::ST_int64, true, false );
 
@@ -45,7 +45,7 @@ FRawStatStackNode::FRawStatStackNode(FRawStatStackNode const& Other)
 	: Meta(Other.Meta)
 {
 	Children.Empty(Other.Children.Num());
-	for (TMap<YName, FRawStatStackNode*>::TConstIterator It(Other.Children); It; ++It)
+	for (TMap<FName, FRawStatStackNode*>::TConstIterator It(Other.Children); It; ++It)
 	{
 		Children.Add(It.Key(), new FRawStatStackNode(*It.Value()));
 	}
@@ -54,11 +54,11 @@ FRawStatStackNode::FRawStatStackNode(FRawStatStackNode const& Other)
 void FRawStatStackNode::MergeMax(FRawStatStackNode const& Other)
 {
 	check(Meta.NameAndInfo.GetRawName() == Other.Meta.NameAndInfo.GetRawName());
-	if (Meta.NameAndInfo.GetField<EStatDataType>() != EStatDataType::ST_None && Meta.NameAndInfo.GetField<EStatDataType>() != EStatDataType::ST_YName)
+	if (Meta.NameAndInfo.GetField<EStatDataType>() != EStatDataType::ST_None && Meta.NameAndInfo.GetField<EStatDataType>() != EStatDataType::ST_FName)
 	{
 		FStatsUtils::AccumulateStat(Meta, Other.Meta, EStatOperation::MaxVal);
 	}
-	for (TMap<YName, FRawStatStackNode*>::TConstIterator It(Other.Children); It; ++It)
+	for (TMap<FName, FRawStatStackNode*>::TConstIterator It(Other.Children); It; ++It)
 	{
 		FRawStatStackNode* Child = Children.FindRef(It.Key());
 		if (Child)
@@ -75,11 +75,11 @@ void FRawStatStackNode::MergeMax(FRawStatStackNode const& Other)
 void FRawStatStackNode::MergeAdd(FRawStatStackNode const& Other)
 {
 	check(Meta.NameAndInfo.GetRawName() == Other.Meta.NameAndInfo.GetRawName());
-	if (Meta.NameAndInfo.GetField<EStatDataType>() != EStatDataType::ST_None && Meta.NameAndInfo.GetField<EStatDataType>() != EStatDataType::ST_YName)
+	if (Meta.NameAndInfo.GetField<EStatDataType>() != EStatDataType::ST_None && Meta.NameAndInfo.GetField<EStatDataType>() != EStatDataType::ST_FName)
 	{
 		FStatsUtils::AccumulateStat(Meta, Other.Meta, EStatOperation::Add);
 	}
-	for (TMap<YName, FRawStatStackNode*>::TConstIterator It(Other.Children); It; ++It)
+	for (TMap<FName, FRawStatStackNode*>::TConstIterator It(Other.Children); It; ++It)
 	{
 		FRawStatStackNode* Child = Children.FindRef(It.Key());
 		if (Child)
@@ -95,11 +95,11 @@ void FRawStatStackNode::MergeAdd(FRawStatStackNode const& Other)
 
 void FRawStatStackNode::Divide(uint32 Div)
 {
-	if (Meta.NameAndInfo.GetField<EStatDataType>() != EStatDataType::ST_None && Meta.NameAndInfo.GetField<EStatDataType>() != EStatDataType::ST_YName)
+	if (Meta.NameAndInfo.GetField<EStatDataType>() != EStatDataType::ST_None && Meta.NameAndInfo.GetField<EStatDataType>() != EStatDataType::ST_FName)
 	{
 		FStatsUtils::DivideStat(Meta, Div);
 	}
-	for (TMap<YName, FRawStatStackNode*>::TIterator It(Children); It; ++It)
+	for (TMap<FName, FRawStatStackNode*>::TIterator It(Children); It; ++It)
 	{
 		It.Value()->Divide(Div);
 	}
@@ -109,7 +109,7 @@ void FRawStatStackNode::CullByCycles( int64 MinCycles )
 {
 	FRawStatStackNode* Culled = nullptr;
 	const int32 NumChildren = Children.Num();
-	for (TMap<YName, FRawStatStackNode*>::TIterator It( Children ); It; ++It)
+	for (TMap<FName, FRawStatStackNode*>::TIterator It( Children ); It; ++It)
 	{
 		FRawStatStackNode* Child = It.Value();
 		const int64 ChildCycles = Child->Meta.GetValue_Duration();
@@ -131,7 +131,7 @@ void FRawStatStackNode::CullByCycles( int64 MinCycles )
 			else
 			{
 				// Remove children.
-				for (TMap<YName, FRawStatStackNode*>::TIterator InnerIt( Child->Children ); InnerIt; ++InnerIt)
+				for (TMap<FName, FRawStatStackNode*>::TIterator InnerIt( Child->Children ); InnerIt; ++InnerIt)
 				{
 					delete InnerIt.Value();
 					InnerIt.RemoveCurrent();
@@ -153,7 +153,7 @@ void FRawStatStackNode::CullByDepth( int32 NoCullLevels )
 {
 	FRawStatStackNode* Culled = nullptr;
 	const int32 NumChildren = Children.Num();
-	for (TMap<YName, FRawStatStackNode*>::TIterator It( Children ); It; ++It)
+	for (TMap<FName, FRawStatStackNode*>::TIterator It( Children ); It; ++It)
 	{
 		FRawStatStackNode* Child = It.Value();
 		if (NoCullLevels < 1)
@@ -171,7 +171,7 @@ void FRawStatStackNode::CullByDepth( int32 NoCullLevels )
 int64 FRawStatStackNode::ChildCycles() const
 {
 	int64 Total = 0;
-	for (TMap<YName, FRawStatStackNode*>::TConstIterator It(Children); It; ++It)
+	for (TMap<FName, FRawStatStackNode*>::TConstIterator It(Children); It; ++It)
 	{
 		FRawStatStackNode const* Child = It.Value();
 		Total += FromPackedCallCountDuration_Duration(Child->Meta.GetValue_int64());
@@ -189,7 +189,7 @@ void FRawStatStackNode::AddNameHierarchy(int32 CurrentPrefixDepth)
 			TArray<FRawStatStackNode*> ChildArray;
 			Children.GenerateValueArray(ChildArray);
 			ChildArray.Sort(FStatNameComparer<FRawStatStackNode>());
-			TArray<TArray<YName> > ChildNames;
+			TArray<TArray<FName> > ChildNames;
 			ChildNames.Empty(ChildArray.Num());
 			NewChildren.Empty(ChildArray.Num());
 
@@ -197,15 +197,15 @@ void FRawStatStackNode::AddNameHierarchy(int32 CurrentPrefixDepth)
 			for (int32 Index = 0; Index < ChildArray.Num(); Index++)
 			{
 				FRawStatStackNode& Child = *ChildArray[Index];
-				new (ChildNames) TArray<YName>();
-				TArray<YName>& ParsedNames = ChildNames[Index];
+				new (ChildNames) TArray<FName>();
+				TArray<FName>& ParsedNames = ChildNames[Index];
 
 				TArray<YString> Parts;
 				Name = Child.Meta.NameAndInfo.GetRawName().ToString();
 				if (Name.StartsWith(TEXT("//")))
 				{
 					// we won't add hierarchy for grouped stats
-					new (ParsedNames) YName(Child.Meta.NameAndInfo.GetRawName());
+					new (ParsedNames) FName(Child.Meta.NameAndInfo.GetRawName());
 				}
 				else
 				{
@@ -215,7 +215,7 @@ void FRawStatStackNode::AddNameHierarchy(int32 CurrentPrefixDepth)
 					ParsedNames.Empty(Parts.Num());
 					for (int32 PartIndex = 0; PartIndex < Parts.Num(); PartIndex++)
 					{
-						new (ParsedNames) YName(*Parts[PartIndex]);
+						new (ParsedNames) FName(*Parts[PartIndex]);
 					}
 				}
 			}
@@ -268,8 +268,8 @@ void FRawStatStackNode::AddNameHierarchy(int32 CurrentPrefixDepth)
 				}
 				NewName += TEXT("..");
 				FStatMessage Group(ChildArray[StartIndex]->Meta);
-				YName NewYName(*NewName);
-				Group.NameAndInfo.SetRawName(NewYName);
+				FName NewFName(*NewName);
+				Group.NameAndInfo.SetRawName(NewFName);
 				Group.Clear();
 				FRawStatStackNode* NewNode = new FRawStatStackNode(Group);
 				NewChildren.Add(NewNode);
@@ -289,7 +289,7 @@ void FRawStatStackNode::AddNameHierarchy(int32 CurrentPrefixDepth)
 		}
 		else
 		{
-			for (TMap<YName, FRawStatStackNode*>::TIterator It(Children); It; ++It)
+			for (TMap<FName, FRawStatStackNode*>::TIterator It(Children); It; ++It)
 			{
 				FRawStatStackNode* Child = It.Value();
 				Child->AddNameHierarchy();
@@ -316,7 +316,7 @@ void FRawStatStackNode::AddSelf()
 				Children.Add(NAME_Self, new FRawStatStackNode(Self));
 			}
 		}
-		for (TMap<YName, FRawStatStackNode*>::TIterator It(Children); It; ++It)
+		for (TMap<FName, FRawStatStackNode*>::TIterator It(Children); It; ++It)
 		{
 			FRawStatStackNode* Child = It.Value();
 			Child->AddSelf();
@@ -426,7 +426,7 @@ void FRawStatStackNode::Encode(TArray<FStatMessage>& OutStats) const
 	if (Children.Num())
 	{
 		NewStat->NameAndInfo.SetField<EStatOperation>(EStatOperation::ChildrenStart);
-		for (TMap<YName, FRawStatStackNode*>::TConstIterator It(Children); It; ++It)
+		for (TMap<FName, FRawStatStackNode*>::TConstIterator It(Children); It; ++It)
 		{
 			FRawStatStackNode const* Child = It.Value();
 			Child->Encode(OutStats);
@@ -518,7 +518,7 @@ void FComplexRawStatStackNode::MergeAddAndMax( const FRawStatStackNode& Other )
 
 void FComplexRawStatStackNode::Divide(uint32 Div)
 {
-	if (ComplexStat.NameAndInfo.GetField<EStatDataType>() != EStatDataType::ST_None && ComplexStat.NameAndInfo.GetField<EStatDataType>() != EStatDataType::ST_YName)
+	if (ComplexStat.NameAndInfo.GetField<EStatDataType>() != EStatDataType::ST_None && ComplexStat.NameAndInfo.GetField<EStatDataType>() != EStatDataType::ST_FName)
 	{
 		FComplexStatUtils::DivideStat( ComplexStat, Div, EComplexStatField::IncSum, EComplexStatField::IncAve );
 	}
@@ -675,12 +675,12 @@ void FStatsThreadState::ScanForAdvance(const FStatMessagesArray& Data)
 	if (CVarSpewStatsSpam.GetValueOnAnyThread())
 	{
 		static const int32 FramesPerSpew = 300;
-		static TMap<YName, int32> Profile;
+		static TMap<FName, int32> Profile;
 		static uint64 LastFrame = GFrameCounter;
 		for (int32 Index = 0; Index < Data.Num(); Index++)
 		{
 			FStatMessage const& Item = Data[Index];
-			YName ItemName = Item.NameAndInfo.GetRawName();
+			FName ItemName = Item.NameAndInfo.GetRawName();
 			Profile.FindOrAdd(ItemName)++;
 		}
 		if (GFrameCounter > LastFrame + FramesPerSpew)
@@ -812,7 +812,7 @@ void FStatsThreadState::ToggleFindMemoryExtensiveStats()
 	UE_LOG(LogStats, Log, TEXT("bFindMemoryExtensiveStats is %s now"), bFindMemoryExtensiveStats?TEXT("enabled"):TEXT("disabled"));
 }
 
-void FStatsThreadState::ProcessNonFrameStats(FStatMessagesArray& Data, TSet<YName>* NonFrameStatsFound)
+void FStatsThreadState::ProcessNonFrameStats(FStatMessagesArray& Data, TSet<FName>* NonFrameStatsFound)
 {
 	for (int32 Index = 0; Index < Data.Num() ; Index++)
 	{
@@ -918,7 +918,7 @@ void FStatsThreadState::AddToHistoryAndEmpty(FStatPacketArray& NewData)
 				FindAndDumpMemoryExtensiveStats(Frame);
 			}
 
-			TSet<YName> NonFrameStatsFound;
+			TSet<FName> NonFrameStatsFound;
 			for (int32 PacketIndex = 0; PacketIndex < Frame.Packets.Num(); PacketIndex++)
 			{
 				ProcessNonFrameStats(Frame.Packets[PacketIndex]->StatMessages, &NonFrameStatsFound);
@@ -936,7 +936,7 @@ void FStatsThreadState::AddToHistoryAndEmpty(FStatPacketArray& NewData)
 				FThreadStats* ThreadStats = FThreadStats::GetThreadStats();
 				FStatMessagesArray* NonFrameMessages = nullptr;
 
-				for (TMap<YName, FStatMessage>::TConstIterator It(NotClearedEveryFrame); It; ++It)
+				for (TMap<FName, FStatMessage>::TConstIterator It(NotClearedEveryFrame); It; ++It)
 				{
 					if (!NonFrameStatsFound.Contains(It.Key())) // don't add stats that are updated during this frame, they would be redundant
 					{
@@ -1132,7 +1132,7 @@ void FStatsThreadState::GetInclusiveAggregateStackStats(
 	TArray<FStatMessage>& OutStats, 
 	IItemFiler* Filter /*= nullptr*/, 
 	bool bAddNonStackStats /*= true*/, 
-	TMap<YName, TArray<FStatMessage>>* OptionalOutThreadBreakdownMap /*= nullptr */) const
+	TMap<FName, TArray<FStatMessage>>* OptionalOutThreadBreakdownMap /*= nullptr */) const
 {
 	const TArray<FStatMessage>& CondensedMessages = GetCondensedHistory( TargetFrame );
 	GetInclusiveAggregateStackStats( CondensedMessages, OutStats, Filter, bAddNonStackStats, OptionalOutThreadBreakdownMap );
@@ -1143,7 +1143,7 @@ void FStatsThreadState::GetInclusiveAggregateStackStats(
 	TArray<FStatMessage>& OutStats, 
 	IItemFiler* Filter /*= nullptr*/, 
 	bool bAddNonStackStats /*= true*/, 
-	TMap<YName, TArray<FStatMessage>>* OptionalOutThreadBreakdownMap /*= nullptr */ ) const
+	TMap<FName, TArray<FStatMessage>>* OptionalOutThreadBreakdownMap /*= nullptr */ ) const
 {
 	struct FTimeInfo
 	{
@@ -1158,12 +1158,12 @@ void FStatsThreadState::GetInclusiveAggregateStackStats(
 
 		}
 	};
-	TMap<YName, FTimeInfo> Timing;
-	TMap<YName, FStatMessage> ThisFrameMetaData;
-	TMap<YName, TMap<YName, FStatMessage>> ThisFrameMetaDataPerThread;
-	TMap<YName, FStatMessage> ThreadStarts;
-	TMap<YName, FStatMessage> ThreadEnds;
-	TMap<YName, FStatMessage>* ThisFrameMetaDataPerThreadPtr = nullptr;
+	TMap<FName, FTimeInfo> Timing;
+	TMap<FName, FStatMessage> ThisFrameMetaData;
+	TMap<FName, TMap<FName, FStatMessage>> ThisFrameMetaDataPerThread;
+	TMap<FName, FStatMessage> ThreadStarts;
+	TMap<FName, FStatMessage> ThreadEnds;
+	TMap<FName, FStatMessage>* ThisFrameMetaDataPerThreadPtr = nullptr;
 	int32 Depth = 0;
 	for (int32 Index = 0; Index < CondensedMessages.Num(); Index++)
 	{
@@ -1177,7 +1177,7 @@ void FStatsThreadState::GetInclusiveAggregateStackStats(
 			{
 				if(Depth++ == 1)
 				{
-					YName LongName = Item.NameAndInfo.GetRawName();
+					FName LongName = Item.NameAndInfo.GetRawName();
 					check(ThisFrameMetaDataPerThreadPtr == nullptr);
 					ThreadStarts.Add(LongName, Item);
 					ThisFrameMetaDataPerThreadPtr = &ThisFrameMetaDataPerThread.FindOrAdd(LongName);
@@ -1187,7 +1187,7 @@ void FStatsThreadState::GetInclusiveAggregateStackStats(
 			{
 				if(--Depth == 1)
 				{
-					YName LongName = Item.NameAndInfo.GetRawName();
+					FName LongName = Item.NameAndInfo.GetRawName();
 					ThreadEnds.Add(LongName, Item);
 					check(ThisFrameMetaDataPerThreadPtr);
 					ThisFrameMetaDataPerThreadPtr = nullptr;
@@ -1197,7 +1197,7 @@ void FStatsThreadState::GetInclusiveAggregateStackStats(
 
 		if (!Filter || Filter->Keep(Item))
 		{
-			YName LongName = Item.NameAndInfo.GetRawName();
+			FName LongName = Item.NameAndInfo.GetRawName();
 
 			EStatOperation::Type Op = Item.NameAndInfo.GetField<EStatOperation>();
 			if ((Op == EStatOperation::ChildrenStart || Op == EStatOperation::ChildrenEnd ||  Op == EStatOperation::Leaf) && Item.NameAndInfo.GetFlag(EStatMetaFlags::IsCycle))
@@ -1257,22 +1257,22 @@ void FStatsThreadState::GetInclusiveAggregateStackStats(
 		}
 	}
 
-	for (TMap<YName, FStatMessage>::TConstIterator It(ThisFrameMetaData); It; ++It)
+	for (TMap<FName, FStatMessage>::TConstIterator It(ThisFrameMetaData); It; ++It)
 	{
 		OutStats.Add(It.Value());
 	}
 	
 	if(OptionalOutThreadBreakdownMap)
 	{
-		for (TMap<YName, TMap<YName, FStatMessage>> ::TConstIterator ItThread(ThisFrameMetaDataPerThread); ItThread; ++ItThread)
+		for (TMap<FName, TMap<FName, FStatMessage>> ::TConstIterator ItThread(ThisFrameMetaDataPerThread); ItThread; ++ItThread)
 		{
-			const TMap<YName, FStatMessage>& ItemNameToMeta = ItThread.Value();
-			const YName ThreadName = ItThread.Key();
+			const TMap<FName, FStatMessage>& ItemNameToMeta = ItThread.Value();
+			const FName ThreadName = ItThread.Key();
 
 			if(ItemNameToMeta.Num())
 			{
 				TArray<FStatMessage>& MetaForThread = OptionalOutThreadBreakdownMap->FindOrAdd(ThreadName);
-				for (TMap<YName, FStatMessage>::TConstIterator It(ItemNameToMeta); It; ++It)
+				for (TMap<FName, FStatMessage>::TConstIterator It(ItemNameToMeta); It; ++It)
 				{
 					MetaForThread.Add(It.Value());
 				}
@@ -1297,13 +1297,13 @@ void FStatsThreadState::GetExclusiveAggregateStackStats(
 	IItemFiler* Filter /*= nullptr*/, 
 	bool bAddNonStackStats /*= true */ ) const
 {
-	TMap<YName, FStatMessage> ThisFrameMetaData;
+	TMap<FName, FStatMessage> ThisFrameMetaData;
 	TArray<FStatMessage> ChildDurationStack;
 
 	for (int32 Index = 0; Index < CondensedMessages.Num(); Index++)
 	{
 		FStatMessage const& Item = CondensedMessages[Index];
-		YName LongName = Item.NameAndInfo.GetRawName();
+		FName LongName = Item.NameAndInfo.GetRawName();
 
 		EStatOperation::Type Op = Item.NameAndInfo.GetField<EStatOperation>();
 		if ((Op == EStatOperation::ChildrenStart || Op == EStatOperation::ChildrenEnd ||  Op == EStatOperation::Leaf) && Item.NameAndInfo.GetFlag(EStatMetaFlags::IsCycle))
@@ -1342,7 +1342,7 @@ void FStatsThreadState::GetExclusiveAggregateStackStats(
 		}
 	}
 
-	for (TMap<YName, FStatMessage>::TConstIterator It(ThisFrameMetaData); It; ++It)
+	for (TMap<FName, FStatMessage>::TConstIterator It(ThisFrameMetaData); It; ++It)
 	{
 		if (!Filter || Filter->Keep(It.Value()))
 		{
@@ -1370,12 +1370,12 @@ TArray<FStatMessage> const& FStatsThreadState::GetCondensedHistory( int64 Target
 void FStatsThreadState::GetRawStackStats(int64 TargetFrame, FRawStatStackNode& Root, TArray<FStatMessage>* OutNonStackStats) const
 {
 	const FStatPacketArray& Frame = GetStatPacketArray( TargetFrame );
-	TMap<YName, FStatMessage> ThisFrameNonStackStats;
+	TMap<FName, FStatMessage> ThisFrameNonStackStats;
 
 	for (int32 PacketIndex = 0; PacketIndex < Frame.Packets.Num(); PacketIndex++)
 	{
 		FStatPacket const& Packet = *Frame.Packets[PacketIndex];
-		const YName ThreadName = GetStatThreadName( Packet );
+		const FName ThreadName = GetStatThreadName( Packet );
 
 		FRawStatStackNode* ThreadRoot = Root.Children.FindRef(ThreadName);
 		if (!ThreadRoot)
@@ -1399,7 +1399,7 @@ void FStatsThreadState::GetRawStackStats(int64 TargetFrame, FRawStatStackNode& R
 				check(Item.NameAndInfo.GetFlag(EStatMetaFlags::DummyAlwaysOne));  // we should never be sending short names to the stats anymore
 
 				EStatOperation::Type Op = Item.NameAndInfo.GetField<EStatOperation>();
-				const YName LongName = Item.NameAndInfo.GetRawName();
+				const FName LongName = Item.NameAndInfo.GetRawName();
 				if (Op == EStatOperation::CycleScopeStart || Op == EStatOperation::CycleScopeEnd)
 				{				
 					check(Item.NameAndInfo.GetFlag(EStatMetaFlags::IsCycle));
@@ -1433,8 +1433,8 @@ void FStatsThreadState::GetRawStackStats(int64 TargetFrame, FRawStatStackNode& R
 				//	StatMarker
 				else if( Op == EStatOperation::SpecialMessageMarker )
 				{
-					//const YName EncName = Item.NameAndInfo.GetEncodedName();
-					const YName RawName = Item.NameAndInfo.GetRawName();
+					//const FName EncName = Item.NameAndInfo.GetEncodedName();
+					const FName RawName = Item.NameAndInfo.GetRawName();
 
 					const uint64 PacketEventIdAndCycles = Item.GetValue_Ptr();
 					const uint32 EventId = uint32(PacketEventIdAndCycles >> 32);
@@ -1507,17 +1507,17 @@ void FStatsThreadState::GetRawStackStats(int64 TargetFrame, FRawStatStackNode& R
 		}
 	}
 	//add up the thread totals
-	for (TMap<YName, FRawStatStackNode*>::TConstIterator ItRoot(Root.Children); ItRoot; ++ItRoot)
+	for (TMap<FName, FRawStatStackNode*>::TConstIterator ItRoot(Root.Children); ItRoot; ++ItRoot)
 	{
 		FRawStatStackNode* ThreadRoot = ItRoot.Value();
-		for (TMap<YName, FRawStatStackNode*>::TConstIterator It(ThreadRoot->Children); It; ++It)
+		for (TMap<FName, FRawStatStackNode*>::TConstIterator It(ThreadRoot->Children); It; ++It)
 		{
 			ThreadRoot->Meta.GetValue_int64() += It.Value()->Meta.GetValue_int64();
 		}
 	}
 	if (OutNonStackStats)
 	{
-		for (TMap<YName, FStatMessage>::TConstIterator It(ThisFrameNonStackStats); It; ++It)
+		for (TMap<FName, FStatMessage>::TConstIterator It(ThisFrameNonStackStats); It; ++It)
 		{
 			new (*OutNonStackStats) FStatMessage(It.Value());
 		}
@@ -1540,7 +1540,7 @@ void FStatsThreadState::UncondenseStackStats(
 	IItemFiler* Filter /*= nullptr*/, 
 	TArray<FStatMessage>* OutNonStackStats /*= nullptr */ ) const
 {
-	TMap<YName, FStatMessage> ThisFrameNonStackStats;
+	TMap<FName, FStatMessage> ThisFrameNonStackStats;
 
 	{
 		TArray<FRawStatStackNode*> Stack;
@@ -1553,7 +1553,7 @@ void FStatsThreadState::UncondenseStackStats(
 			if (!Filter || Filter->Keep(Item))
 			{
 				EStatOperation::Type Op = Item.NameAndInfo.GetField<EStatOperation>();
-				YName LongName = Item.NameAndInfo.GetRawName();
+				FName LongName = Item.NameAndInfo.GetRawName();
 				if (Op == EStatOperation::ChildrenStart || Op == EStatOperation::ChildrenEnd || Op == EStatOperation::Leaf)
 				{
 					if (LongName != FStatConstants::NAME_ThreadRoot)
@@ -1592,7 +1592,7 @@ void FStatsThreadState::UncondenseStackStats(
 	}
 	if (OutNonStackStats)
 	{
-		for (TMap<YName, FStatMessage>::TConstIterator It(ThisFrameNonStackStats); It; ++It)
+		for (TMap<FName, FStatMessage>::TConstIterator It(ThisFrameNonStackStats); It; ++It)
 		{
 			OutNonStackStats->Add(It.Value());
 		}
@@ -1616,7 +1616,7 @@ int64 FStatsThreadState::GetFastThreadFrameTimeInternal( int64 TargetFrame, int3
 			{
 				FStatMessage const& Item = Data[Index];
 				EStatOperation::Type Op = Item.NameAndInfo.GetField<EStatOperation>();
-				YName LongName = Item.NameAndInfo.GetRawName();
+				FName LongName = Item.NameAndInfo.GetRawName();
 				if (Op == EStatOperation::CycleScopeStart)
 				{
 					check(Item.NameAndInfo.GetFlag(EStatMetaFlags::IsCycle));
@@ -1628,7 +1628,7 @@ int64 FStatsThreadState::GetFastThreadFrameTimeInternal( int64 TargetFrame, int3
 			{
 				FStatMessage const& Item = Data[Index];
 				EStatOperation::Type Op = Item.NameAndInfo.GetField<EStatOperation>();
-				YName LongName = Item.NameAndInfo.GetRawName();
+				FName LongName = Item.NameAndInfo.GetRawName();
 				if (Op == EStatOperation::CycleScopeEnd)
 				{
 
@@ -1652,9 +1652,9 @@ int64 FStatsThreadState::GetFastThreadFrameTime( int64 TargetFrame, uint32 Threa
 	return GetFastThreadFrameTimeInternal( TargetFrame, ThreadID, EThreadType::Invalid );
 }
 
-YName FStatsThreadState::GetStatThreadName( const FStatPacket& Packet ) const
+FName FStatsThreadState::GetStatThreadName( const FStatPacket& Packet ) const
 {
-	YName ThreadName;
+	FName ThreadName;
 	if( Packet.ThreadType == EThreadType::Game )
 	{
 		ThreadName = NAME_GameThread;
@@ -1665,14 +1665,14 @@ YName FStatsThreadState::GetStatThreadName( const FStatPacket& Packet ) const
 	}
 	else if( Packet.ThreadType == EThreadType::Other )
 	{
-		TMap<uint32, YName>& MutableThreads = const_cast<TMap<uint32, YName>&>(Threads);
-		YName& NewThreadName = MutableThreads.FindOrAdd( Packet.ThreadId );
+		TMap<uint32, FName>& MutableThreads = const_cast<TMap<uint32, FName>&>(Threads);
+		FName& NewThreadName = MutableThreads.FindOrAdd( Packet.ThreadId );
 		if( NewThreadName == NAME_None )
 		{
 			UE_LOG( LogStats, Warning, TEXT( "There is no thread with id: %u. Please add thread metadata for this thread." ), Packet.ThreadId );
 
-			static const YName NAME_UnknownThread = TEXT( "UnknownThread" );
-			NewThreadName = YName( *FStatsUtils::BuildUniqueThreadName( Packet.ThreadId ) );
+			static const FName NAME_UnknownThread = TEXT( "UnknownThread" );
+			NewThreadName = FName( *FStatsUtils::BuildUniqueThreadName( Packet.ThreadId ) );
 			// This is an unknown thread, but still we need the metadata in the system.
 			FStartupMessages::Get().AddThreadMetadata( NAME_UnknownThread, Packet.ThreadId );
 		}
@@ -1696,8 +1696,8 @@ void FStatsThreadState::Condense(int64 TargetFrame, TArray<FStatMessage>& OutSta
 
 void FStatsThreadState::FindOrAddMetaData(FStatMessage const& Item)
 {
-	const YName LongName = Item.NameAndInfo.GetRawName();
-	const YName ShortName = Item.NameAndInfo.GetShortName();
+	const FName LongName = Item.NameAndInfo.GetRawName();
+	const FName ShortName = Item.NameAndInfo.GetShortName();
 
 	FStatMessage* Result = ShortNameToLongName.Find(ShortName);
 	if (!Result)
@@ -1706,7 +1706,7 @@ void FStatsThreadState::FindOrAddMetaData(FStatMessage const& Item)
 		FStatMessage AsSet(Item);
 		AsSet.Clear();
 
-		const YName GroupName = Item.NameAndInfo.GetGroupName();
+		const FName GroupName = Item.NameAndInfo.GetGroupName();
 
 		// Whether to add to the threads group.
 		const bool bIsThread = FStatConstants::NAME_ThreadGroup == GroupName;
@@ -1759,10 +1759,10 @@ void FStatsThreadState::FindOrAddMetaData(FStatMessage const& Item)
 	}
 }
 
-void FStatsThreadState::AddMissingStats(TArray<FStatMessage>& Dest, TSet<YName> const& EnabledItems) const
+void FStatsThreadState::AddMissingStats(TArray<FStatMessage>& Dest, TSet<FName> const& EnabledItems) const
 {
-	TSet<YName> NamesToTry(EnabledItems);
-	TMap<YName, int32> NameToIndex;
+	TSet<FName> NamesToTry(EnabledItems);
+	TMap<FName, int32> NameToIndex;
 	for (int32 Index = 0; Index < Dest.Num(); Index++)
 	{
 		NamesToTry.Remove(Dest[Index].NameAndInfo.GetShortName());
@@ -1781,14 +1781,14 @@ void FStatsThreadState::AddMissingStats(TArray<FStatMessage>& Dest, TSet<YName> 
 void FStatsThreadState::FindAndDumpMemoryExtensiveStats( FStatPacketArray &Frame )
 {
 	int32 TotalMessages = 0;
-	TMap<YName,int32> NameToCount;
+	TMap<FName,int32> NameToCount;
 
 	// Generate some data statistics.
 	for( const FStatPacket* StatPacket : Frame.Packets )
 	{
 		for( int32 MessageIndex = 0; MessageIndex < StatPacket->StatMessages.Num(); MessageIndex++)
 		{
-			const YName ShortName = StatPacket->StatMessages[MessageIndex].NameAndInfo.GetShortName();
+			const FName ShortName = StatPacket->StatMessages[MessageIndex].NameAndInfo.GetShortName();
 			NameToCount.FindOrAdd(ShortName) += 1;
 			TotalMessages++;
 		}
@@ -1837,16 +1837,16 @@ YString FStatsUtils::DebugPrint(FStatMessage const& Item)
 	case EStatDataType::ST_double:
 		Result = YString::Printf(GetStatFormatString<double>(), Item.GetValue_double());
 		break;
-	case EStatDataType::ST_YName:
-		Result = Item.GetValue_YName().ToString();
+	case EStatDataType::ST_FName:
+		Result = Item.GetValue_FName().ToString();
 		break;
 	}
 
 	Result = YString(FCString::Spc(YMath::Max<int32>(0, 14 - Result.Len()))) + Result;
 
 	const YString ShortName = Item.NameAndInfo.GetShortName().ToString();
-	const YName Group = Item.NameAndInfo.GetGroupName();
-	const YName Category = Item.NameAndInfo.GetGroupCategory();
+	const FName Group = Item.NameAndInfo.GetGroupName();
+	const FName Category = Item.NameAndInfo.GetGroupCategory();
 	YString Desc = Item.NameAndInfo.GetDescription();
 	Desc.Trim();
 
@@ -1876,7 +1876,7 @@ YString FStatsUtils::DebugPrint(FStatMessage const& Item)
 
 void FStatsUtils::AddMergeStatArray(TArray<FStatMessage>& Dest, TArray<FStatMessage> const& Src)
 {
-	TMap<YName, int32> NameToIndex;
+	TMap<FName, int32> NameToIndex;
 	for (int32 Index = 0; Index < Dest.Num(); Index++)
 	{
 		NameToIndex.Add(Dest[Index].NameAndInfo.GetRawName(), Index);
@@ -1903,7 +1903,7 @@ void FStatsUtils::AddMergeStatArray(TArray<FStatMessage>& Dest, TArray<FStatMess
 
 void FStatsUtils::MaxMergeStatArray(TArray<FStatMessage>& Dest, TArray<FStatMessage> const& Src)
 {
-	TMap<YName, int32> NameToIndex;
+	TMap<FName, int32> NameToIndex;
 	for (int32 Index = 0; Index < Dest.Num(); Index++)
 	{
 		NameToIndex.Add(Dest[Index].NameAndInfo.GetRawName(), Index);
@@ -2075,7 +2075,7 @@ YString FStatsUtils::FromEscapedFString(const TCHAR* Escaped)
 			int32 IndexEnd = Input.Find(TEXT("$"), ESearchCase::CaseSensitive);
 			if (IndexEnd == INDEX_NONE)
 			{
-				checkStats(0); // malformed escaped YName
+				checkStats(0); // malformed escaped FName
 				Result += Input;
 				break;
 			}
@@ -2145,7 +2145,7 @@ void FComplexStatUtils::AddAndMax( FComplexStatMessage& Dest, const FStatMessage
 	const EStatDataType::Type StatDataType = Dest.NameAndInfo.GetField<EStatDataType>();
 
 	// Total time.
-	if( StatDataType != EStatDataType::ST_None && StatDataType != EStatDataType::ST_YName )
+	if( StatDataType != EStatDataType::ST_None && StatDataType != EStatDataType::ST_FName )
 	{
 		if( StatDataType == EStatDataType::ST_int64 )
 		{
@@ -2158,7 +2158,7 @@ void FComplexStatUtils::AddAndMax( FComplexStatMessage& Dest, const FStatMessage
 	}
 
 	// Maximum time.
-	if( StatDataType != EStatDataType::ST_None && StatDataType != EStatDataType::ST_YName)
+	if( StatDataType != EStatDataType::ST_None && StatDataType != EStatDataType::ST_FName)
 	{
 		if( StatDataType == EStatDataType::ST_int64 )
 		{
@@ -2206,10 +2206,10 @@ void FComplexStatUtils::DivideStat( FComplexStatMessage& Dest, uint32 Div, EComp
 
 void FComplexStatUtils::MergeAddAndMaxArray( TArray<FComplexStatMessage>& Dest, const TArray<FStatMessage>& Source, EComplexStatField::Type SumIndex, EComplexStatField::Type MaxIndex )
 {
-	TMap<YName, int32> NameToIndex;
+	TMap<FName, int32> NameToIndex;
 	for( int32 Index = 0; Index < Dest.Num(); Index++ )
 	{
-		const YName RawName = Dest[Index].NameAndInfo.GetRawName();
+		const FName RawName = Dest[Index].NameAndInfo.GetRawName();
 		NameToIndex.Add( RawName, Index );
 	}
 

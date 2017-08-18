@@ -205,7 +205,7 @@ struct FBXImportOptions
 	bool bGenerateLightmapUVs;
 	bool bOneConvexHullPerUCX;
 	bool bAutoGenerateCollision;
-	YName StaticMeshLODGroup;
+	FName StaticMeshLODGroup;
 	bool bImportStaticMeshLODs;
 	// Material import options
 	class UMaterialInterface *BaseMaterial;
@@ -247,7 +247,7 @@ struct FBXImportOptions
 	*   This prefix can modify the package path for materials (i.e. TEXT("/Materials/")).
 	*   Or both (i.e. TEXT("/Materials/Mat"))
 	*/
-	YName MaterialBasePath;
+	FName MaterialBasePath;
 
 	//This data allow to override some fbx Material(point by the uint64 id) with existing unreal material asset
 	TMap<uint64, class UMaterialInterface*> OverrideMaterials;
@@ -394,13 +394,13 @@ public:
 	}
 	//Name API
 	UNREALED_API void GetAnimatedNodeNameArray(TArray<YString> &AnimatedNodeNames) const;
-	UNREALED_API void GetNodeAnimatedPropertyNameArray(const YString &NodeName, TArray<YString> &AnimatedPropertyNames) const;
-	UNREALED_API void GetCurveData(const YString& NodeName, const YString& PropertyName, int32 ChannelIndex, int32 CompositeIndex, FInterpCurveFloat& CurveData, bool bNegative) const;
-	UNREALED_API void GetBakeCurveData(const YString& NodeName, const YString& PropertyName, int32 ChannelIndex, int32 CompositeIndex, TArray<float>& CurveData, float PeriodTime, float StartTime = 0.0f, float StopTime= -1.0f, bool bNegative = false) const;
+	UNREALED_API void GetNodeAnimatedPropertFNameArray(const YString &NodeName, TArray<YString> &AnimatedPropertFNames) const;
+	UNREALED_API void GetCurveData(const YString& NodeName, const YString& PropertFName, int32 ChannelIndex, int32 CompositeIndex, FInterpCurveFloat& CurveData, bool bNegative) const;
+	UNREALED_API void GetBakeCurveData(const YString& NodeName, const YString& PropertFName, int32 ChannelIndex, int32 CompositeIndex, TArray<float>& CurveData, float PeriodTime, float StartTime = 0.0f, float StopTime= -1.0f, bool bNegative = false) const;
 
 	//Handle API
-	UNREALED_API void GetAllNodePropertyCurveHandles(const YString& NodeName, const YString& PropertyName, TArray<FFbxAnimCurveHandle> &PropertyCurveHandles) const;
-	UNREALED_API void GetCurveHandle(const YString& NodeName, const YString& PropertyName, int32 ChannelIndex, int32 CompositeIndex, FFbxAnimCurveHandle &CurveHandle) const;
+	UNREALED_API void GetAllNodePropertyCurveHandles(const YString& NodeName, const YString& PropertFName, TArray<FFbxAnimCurveHandle> &PropertyCurveHandles) const;
+	UNREALED_API void GetCurveHandle(const YString& NodeName, const YString& PropertFName, int32 ChannelIndex, int32 CompositeIndex, FFbxAnimCurveHandle &CurveHandle) const;
 	UNREALED_API void GetCurveData(const FFbxAnimCurveHandle &CurveHandle, FInterpCurveFloat& CurveData, bool bNegative) const;
 	UNREALED_API void GetBakeCurveData(const FFbxAnimCurveHandle &CurveHandle, TArray<float>& CurveData, float PeriodTime, float StartTime = 0.0f, float StopTime = -1.0f, bool bNegative = false) const;
 
@@ -520,7 +520,7 @@ public:
 	* Convert sRGB YColor to fbx linear space color
 	*/
 	static FbxDouble3   ConvertToFbxColor(YColor Color);
-	static FbxString	ConvertToFbxString(YName Name);
+	static FbxString	ConvertToFbxString(FName Name);
 	static FbxString	ConvertToFbxString(const YString& String);
 private:
 	static FbxAMatrix JointPostConversionMatrix;
@@ -534,13 +534,13 @@ struct FImportedMaterialData
 {
 public:
 	void AddImportedMaterial( FbxSurfaceMaterial& FbxMaterial, UMaterialInterface& UnrealMaterial );
-	bool IsUnique( FbxSurfaceMaterial& FbxMaterial, YName ImportedMaterialName ) const;
+	bool IsUnique( FbxSurfaceMaterial& FbxMaterial, FName ImportedMaterialName ) const;
 	UMaterialInterface* GetUnrealMaterial( const FbxSurfaceMaterial& FbxMaterial ) const;
 	void Clear();
 private:
 	/** Mapping of FBX material to Unreal material.  Some materials in FBX have the same name so we use this map to determine if materials are unique */
 	//TMap<FbxSurfaceMaterial*, TWeakObjectPtr<UMaterialInterface> > FbxToUnrealMaterialMap;
-	TSet<YName> ImportedMaterialNames;
+	TSet<FName> ImportedMaterialNames;
 };
 
 /**
@@ -660,7 +660,7 @@ public:
 	 *
 	 * @returns UObject*	the UStaticMesh object.
 	 */
-	//UNREALED_API UStaticMesh* ImportStaticMesh(UObject* InParent, FbxNode* Node, const YName& Name, EObjectFlags Flags, UFbxStaticMeshImportData* ImportData, UStaticMesh* InStaticMesh = NULL, int LODIndex = 0, void *ExistMeshDataPtr = nullptr);
+	//UNREALED_API UStaticMesh* ImportStaticMesh(UObject* InParent, FbxNode* Node, const FName& Name, EObjectFlags Flags, UFbxStaticMeshImportData* ImportData, UStaticMesh* InStaticMesh = NULL, int LODIndex = 0, void *ExistMeshDataPtr = nullptr);
 
 	/**
 	* Creates a static mesh from all the meshes in FBX scene with the given name and flags.
@@ -675,7 +675,7 @@ public:
 	*
 	* @returns UObject*	the UStaticMesh object.
 	*/
-	//UNREALED_API UStaticMesh* ImportStaticMeshAsSingle(UObject* InParent, TArray<FbxNode*>& MeshNodeArray, const YName InName, EObjectFlags Flags, UFbxStaticMeshImportData* TemplateImportData, UStaticMesh* InStaticMesh, int LODIndex = 0, void *ExistMeshDataPtr = nullptr);
+	//UNREALED_API UStaticMesh* ImportStaticMeshAsSingle(UObject* InParent, TArray<FbxNode*>& MeshNodeArray, const FName InName, EObjectFlags Flags, UFbxStaticMeshImportData* TemplateImportData, UStaticMesh* InStaticMesh, int LODIndex = 0, void *ExistMeshDataPtr = nullptr);
 
 	/**
 	 * Helper function to reorder the material array after we build the staticmesh.
@@ -690,7 +690,7 @@ public:
 	* @param MeshNodeArray	Fbx Nodes to import
 	* @param InName	the Unreal Mesh name after import
 	*/
-	//UNREALED_API bool ImportSubDSurface(USubDSurface* Out, UObject* InParent, TArray<FbxNode*>& MeshNodeArray, const YName InName, EObjectFlags Flags, UFbxStaticMeshImportData* TemplateImportData);
+	//UNREALED_API bool ImportSubDSurface(USubDSurface* Out, UObject* InParent, TArray<FbxNode*>& MeshNodeArray, const FName InName, EObjectFlags Flags, UFbxStaticMeshImportData* TemplateImportData);
 
 	void ImportStaticMeshGlobalSockets( UStaticMesh* StaticMesh );
 	void ImportStaticMeshLocalSockets( UStaticMesh* StaticMesh, TArray<FbxNode*>& MeshNodeArray);
@@ -739,7 +739,7 @@ public:
 	 *
 	 * @return The USkeletalMesh object created
 	 */
-	//USkeletalMesh* ImportSkeletalMesh(UObject* InParent, TArray<FbxNode*>& NodeArray, const YName& Name, EObjectFlags Flags, UFbxSkeletalMeshImportData* TemplateImportData, int32 LodIndex, bool* bCancelOperation = nullptr, TArray<FbxShape*> *FbxShapeArray = nullptr, FSkeletalMeshImportData* OutData = nullptr, bool bCreateRenderData = true, TArray<YName> *OrderedMaterialNames = nullptr);
+	//USkeletalMesh* ImportSkeletalMesh(UObject* InParent, TArray<FbxNode*>& NodeArray, const FName& Name, EObjectFlags Flags, UFbxSkeletalMeshImportData* TemplateImportData, int32 LodIndex, bool* bCancelOperation = nullptr, TArray<FbxShape*> *FbxShapeArray = nullptr, FSkeletalMeshImportData* OutData = nullptr, bool bCreateRenderData = true, TArray<FName> *OrderedMaterialNames = nullptr);
 
 	/**
 	 * Add to the animation set, the animations contained within the FBX scene, for the given skeletal mesh
@@ -836,7 +836,7 @@ public:
 	//help
 	ANSICHAR* MakeName(const ANSICHAR* name);
 	YString MakeString(const ANSICHAR* Name);
-	YName MakeNameForMesh(YString InName, FbxObject* FbxObject);
+	FName MakeNameForMesh(YString InName, FbxObject* FbxObject);
 
 	// meshes
 	
@@ -857,7 +857,7 @@ public:
 	 * 
 	 * @return the root bone that bind to the FBX skeletal meshes
 	 */
-	FbxNode* FindFBXMeshesByBone(const YName& RootBoneName, bool bExpandLOD, TArray<FbxNode*>& OutFBXMeshNodeArray);
+	FbxNode* FindFBXMeshesByBone(const FName& RootBoneName, bool bExpandLOD, TArray<FbxNode*>& OutFBXMeshNodeArray);
 	
 	/**
 	* Get mesh count (including static mesh and skeletal mesh, except collision models) and find collision models
@@ -967,7 +967,7 @@ private:
 	* @param BaseSkelMesh				Skeletal mesh holding the last imported material names. If null the LastImportedMaterialNames will be empty;
 	* @param OrderedMaterialNames		if not null, it will be used to fill the LastImportedMaterialNames array. except if the names are using the _skinxx workflow
 	*/
-	void FillLastImportMaterialNames(TArray<YName> &LastImportedMaterialNames, USkeletalMesh* BaseSkelMesh, TArray<YName> *OrderedMaterialNames);
+	void FillLastImportMaterialNames(TArray<FName> &LastImportedMaterialNames, USkeletalMesh* BaseSkelMesh, TArray<FName> *OrderedMaterialNames);
 
 	/**
 	* Verify that all meshes are also reference by a fbx hierarchy node. If it found some Geometry
@@ -1196,7 +1196,7 @@ protected:
 	*
 	* @returns bool*	true if import successfully.
 	*/
-	bool FillSkeletalMeshImportData(TArray<FbxNode*>& NodeArray, UFbxSkeletalMeshImportData* TemplateImportData, TArray<FbxShape*> *FbxShapeArray, FSkeletalMeshImportData* OutData, TArray<YName> &LastImportedMaterialNames);
+	bool FillSkeletalMeshImportData(TArray<FbxNode*>& NodeArray, UFbxSkeletalMeshImportData* TemplateImportData, TArray<FbxShape*> *FbxShapeArray, FSkeletalMeshImportData* OutData, TArray<FName> &LastImportedMaterialNames);
 	
 	/**
 	 * Import bones from skeletons that NodeArray bind to.
@@ -1276,7 +1276,7 @@ protected:
 	bool LinkMaterialProperty(FbxSurfaceMaterial& FbxMaterial,
 		UMaterialInstanceConstant* UnrealMaterial,
 		const char* MaterialProperty,
-		YName ParameterValue,
+		FName ParameterValue,
 		bool bSetupAsNormalMap);
 	/**
 	 * Add a basic white diffuse color if no expression is linked to diffuse input.
@@ -1292,7 +1292,7 @@ protected:
 	 */
 	void SetMaterialSkinXXOrder(FSkeletalMeshImportData& ImportData);
 	
-	void SetMaterialOrderByName(FSkeletalMeshImportData& ImportData, TArray<YName> LastImportedMaterialNames);
+	void SetMaterialOrderBFName(FSkeletalMeshImportData& ImportData, TArray<FName> LastImportedMaterialNames);
 
 	/**
 	* Make sure there is no unused material in the raw data. Unused material are material refer by node but not refer by any geometry face
@@ -1498,7 +1498,7 @@ protected:
 	/**
 	 * Fill up and verify bone names for animation 
 	 */
-	void FillAndVerifyBoneNames(USkeleton* Skeleton, TArray<FbxNode*>& SortedLinks, TArray<YName> & OutRawBoneNames, YString Filename);
+	void FillAndVerifyBoneNames(USkeleton* Skeleton, TArray<FbxNode*>& SortedLinks, TArray<FName> & OutRawBoneNames, YString Filename);
 	/**
 	 * Is valid animation data
 	 */
@@ -1517,7 +1517,7 @@ public:
 	//void SetupAnimationDataFromMesh(USkeletalMesh * SkeletalMesh, UObject* InParent, TArray<FbxNode*>& NodeArray, UFbxAnimSequenceImportData* ImportData, const YString& Filename);
 
 	/** error message handler */
-	void AddTokenizedErrorMessage(TSharedRef<FTokenizedMessage> Error, YName FbxErrorName );
+	void AddTokenizedErrorMessage(TSharedRef<FTokenizedMessage> Error, FName FbxErrorName );
 	void ClearTokenizedErrorMessages();
 	void FlushToTokenizedErrorMessage(enum EMessageSeverity::Type Severity);
 

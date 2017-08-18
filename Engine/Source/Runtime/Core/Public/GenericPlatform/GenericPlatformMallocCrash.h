@@ -40,7 +40,7 @@ struct FMallocCrashPool;
 * Simple pooled memory allocator that uses preallocated memory.
 * Instance of this class replaces GMalloc after a crash, so we can use dynamic memory allocation even if the app crashes due to OOM.
 */
-struct FGenericPlatformMallocCrash final : public YMalloc
+struct FGenericPlatformMallocCrash final : public FMalloc
 {
 	friend struct FPoolDesc;
 	friend struct FMallocCrashPool;
@@ -60,11 +60,11 @@ private:
 	};
 
 public:
-	FGenericPlatformMallocCrash(YMalloc* MainMalloc);
+	FGenericPlatformMallocCrash(FMalloc* MainMalloc);
 	virtual ~FGenericPlatformMallocCrash();
 
 	/** Creates a new instance. */
-	static CORE_API FGenericPlatformMallocCrash& Get(YMalloc* MainMalloc = nullptr);
+	static CORE_API FGenericPlatformMallocCrash& Get(FMalloc* MainMalloc = nullptr);
 
 	/**
 	* Sets as GMalloc.
@@ -147,7 +147,7 @@ protected:
 	uint32 SmallMemoryPoolOffset;
 
 	/** Previously used malloc. */
-	YMalloc* PreviousMalloc;
+	FMalloc* PreviousMalloc;
 
 	FMallocCrashPool* Pools[NUM_POOLS];
 };
@@ -156,13 +156,13 @@ protected:
 
 
 
-struct FGenericStackBasedMallocCrash : public YMalloc
+struct FGenericStackBasedMallocCrash : public FMalloc
 {
-	FGenericStackBasedMallocCrash(YMalloc* MainMalloc);
+	FGenericStackBasedMallocCrash(FMalloc* MainMalloc);
 	virtual ~FGenericStackBasedMallocCrash();
 
 	/** Creates a new instance. */
-	static CORE_API FGenericStackBasedMallocCrash& Get(YMalloc* MainMalloc = nullptr);
+	static CORE_API FGenericStackBasedMallocCrash& Get(FMalloc* MainMalloc = nullptr);
 
 	void SetAsGMalloc();
 

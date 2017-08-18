@@ -14,15 +14,15 @@
  * Boxes describe an axis-aligned extent in three dimensions. They are used for many different things in the
  * Engine and in games, such as bounding volumes, collision detection and visibility calculation.
  */
-struct YBox
+struct FBox
 {
 public:
 
 	/** Holds the box's minimum point. */
-	YVector Min;
+	FVector Min;
 
 	/** Holds the box's maximum point. */
-	YVector Max;
+	FVector Max;
 
 	/** Holds a flag indicating whether this box is valid. */
 	uint8 IsValid;
@@ -30,10 +30,10 @@ public:
 public:
 
 	/** Default constructor (no initialization). */
-	YBox() { }
+	FBox() { }
 
 	/** Creates and initializes a new box with zero extent and marks it as invalid. */
-	YBox( int32 )
+	FBox( int32 )
 	{
 		Init();
 	}
@@ -43,7 +43,7 @@ public:
 	 *
 	 * @param EForceInit Force Init Enum.
 	 */
-	explicit YBox( EForceInit )
+	explicit FBox( EForceInit )
 	{
 		Init();
 	}
@@ -54,7 +54,7 @@ public:
 	 * @param InMin The box's minimum point.
 	 * @param InMax The box's maximum point.
 	 */
-	YBox( const YVector& InMin, const YVector& InMax )
+	FBox( const FVector& InMin, const FVector& InMax )
 		: Min(InMin)
 		, Max(InMax)
 		, IsValid(1)
@@ -66,14 +66,14 @@ public:
 	 * @param Points Array of Points to create for the bounding volume.
 	 * @param Count The number of points.
 	 */
-	CORE_API YBox( const YVector* Points, int32 Count );
+	CORE_API FBox( const FVector* Points, int32 Count );
 
 	/**
 	 * Creates and initializes a new box from an array of points.
 	 *
 	 * @param Points Array of Points to create for the bounding volume.
 	 */
-	CORE_API YBox( const TArray<YVector>& Points );
+	CORE_API FBox( const TArray<FVector>& Points );
 
 public:
 
@@ -82,7 +82,7 @@ public:
 	 *
 	 * @return true if the boxes are equal, false otherwise.
 	 */
-	FORCEINLINE bool operator==( const YBox& Other ) const
+	FORCEINLINE bool operator==( const FBox& Other ) const
 	{
 		return (Min == Other.Min) && (Max == Other.Max);
 	}
@@ -93,7 +93,7 @@ public:
 	 * @param Other the point to increase the bounding volume to.
 	 * @return Reference to this bounding box after resizing to include the other point.
 	 */
-	FORCEINLINE YBox& operator+=( const YVector &Other );
+	FORCEINLINE FBox& operator+=( const FVector &Other );
 
 	/**
 	 * Gets the result of addition to this bounding volume.
@@ -101,9 +101,9 @@ public:
 	 * @param Other The other point to add to this.
 	 * @return A new bounding volume.
 	 */
-	FORCEINLINE YBox operator+( const YVector& Other ) const
+	FORCEINLINE FBox operator+( const FVector& Other ) const
 	{
-		return YBox(*this) += Other;
+		return FBox(*this) += Other;
 	}
 
 	/**
@@ -112,7 +112,7 @@ public:
 	 * @param Other the bounding volume to increase the bounding volume to.
 	 * @return Reference to this bounding volume after resizing to include the other bounding volume.
 	 */
-	FORCEINLINE YBox& operator+=( const YBox& Other );
+	FORCEINLINE FBox& operator+=( const FBox& Other );
 
 	/**
 	 * Gets the result of addition to this bounding volume.
@@ -120,9 +120,9 @@ public:
 	 * @param Other The other volume to add to this.
 	 * @return A new bounding volume.
 	 */
-	FORCEINLINE YBox operator+( const YBox& Other ) const
+	FORCEINLINE FBox operator+( const FBox& Other ) const
 	{
-		return YBox(*this) += Other;
+		return FBox(*this) += Other;
 	}
 
 	/**
@@ -131,7 +131,7 @@ public:
 	 * @param Index the index into points of the bounding volume.
 	 * @return a reference to a point of the bounding volume.
 	 */
-    FORCEINLINE YVector& operator[]( int32 Index )
+    FORCEINLINE FVector& operator[]( int32 Index )
 	{
 		check((Index >= 0) && (Index < 2));
 
@@ -151,7 +151,7 @@ public:
 	 * @param Point The point.
 	 * @return The distance.
 	 */
-	FORCEINLINE float ComputeSquaredDistanceToPoint( const YVector& Point ) const
+	FORCEINLINE float ComputeSquaredDistanceToPoint( const FVector& Point ) const
 	{
 		return ComputeSquaredDistanceFromBoxToPoint(Min, Max, Point);
 	}
@@ -162,9 +162,9 @@ public:
 	 * @param W The size to increase the volume by.
 	 * @return A new bounding box.
 	 */
-	FORCEINLINE YBox ExpandBy(float W) const
+	FORCEINLINE FBox ExpandBy(float W) const
 	{
-		return YBox(Min - YVector(W, W, W), Max + YVector(W, W, W));
+		return FBox(Min - FVector(W, W, W), Max + FVector(W, W, W));
 	}
 
 	/**
@@ -173,9 +173,9 @@ public:
 	* @param V The size to increase the volume by.
 	* @return A new bounding box.
 	*/
-	FORCEINLINE YBox ExpandBy(const YVector& V) const
+	FORCEINLINE FBox ExpandBy(const FVector& V) const
 	{
-		return YBox(Min - V, Max + V);
+		return FBox(Min - V, Max + V);
 	}
 
 	/**
@@ -185,9 +185,9 @@ public:
 	* @param Pos The size to increase the volume by in the positive direction (positive values move the bounds outwards)
 	* @return A new bounding box.
 	*/
-	YBox ExpandBy(const YVector& Neg, const YVector& Pos) const
+	FBox ExpandBy(const FVector& Neg, const FVector& Pos) const
 	{
-		return YBox(Min - Neg, Max + Pos);
+		return FBox(Min - Neg, Max + Pos);
 	}
 
 	/** 
@@ -196,9 +196,9 @@ public:
 	 * @param Offset The vector to shift the box by.
 	 * @return A new bounding box.
 	 */
-	FORCEINLINE YBox ShiftBy( const YVector& Offset ) const
+	FORCEINLINE FBox ShiftBy( const FVector& Offset ) const
 	{
-		return YBox(Min + Offset, Max + Offset);
+		return FBox(Min + Offset, Max + Offset);
 	}
 
 	/** 
@@ -207,10 +207,10 @@ public:
 	 * @param The destination point to move center of box to.
 	 * @return A new bounding box.
 	 */
-	FORCEINLINE YBox MoveTo( const YVector& Destination ) const
+	FORCEINLINE FBox MoveTo( const FVector& Destination ) const
 	{
-		const YVector Offset = Destination - GetCenter();
-		return YBox(Min + Offset, Max + Offset);
+		const FVector Offset = Destination - GetCenter();
+		return FBox(Min + Offset, Max + Offset);
 	}
 
 	/**
@@ -219,9 +219,9 @@ public:
 	 * @return The center point.
 	 * @see GetCenterAndExtents, GetExtent, GetSize, GetVolume
 	 */
-	FORCEINLINE YVector GetCenter() const
+	FORCEINLINE FVector GetCenter() const
 	{
-		return YVector((Min + Max) * 0.5f);
+		return FVector((Min + Max) * 0.5f);
 	}
 
 	/**
@@ -231,7 +231,7 @@ public:
 	 * @param Extents[out] Will contain the extent around the center.
 	 * @see GetCenter, GetExtent, GetSize, GetVolume
 	 */
-	FORCEINLINE void GetCenterAndExtents( YVector& center, YVector& Extents ) const
+	FORCEINLINE void GetCenterAndExtents( FVector& center, FVector& Extents ) const
 	{
 		Extents = GetExtent();
 		center = Min + Extents;
@@ -243,7 +243,7 @@ public:
 	 * @param Point The point in space.
 	 * @return The closest point on or inside the box.
 	 */
-	FORCEINLINE YVector GetClosestPointTo( const YVector& Point ) const;
+	FORCEINLINE FVector GetClosestPointTo( const FVector& Point ) const;
 
 	/**
 	 * Gets the extents of this box.
@@ -251,7 +251,7 @@ public:
 	 * @return The box extents.
 	 * @see GetCenter, GetCenterAndExtents, GetSize, GetVolume
 	 */
-	FORCEINLINE YVector GetExtent() const
+	FORCEINLINE FVector GetExtent() const
 	{
 		return 0.5f * (Max - Min);
 	}
@@ -262,7 +262,7 @@ public:
 	 * @param PointIndex The index of the extrema point to return.
 	 * @return A reference to the point.
 	 */
-	FORCEINLINE YVector& GetExtrema( int PointIndex )
+	FORCEINLINE FVector& GetExtrema( int PointIndex )
 	{
 		return (&Min)[PointIndex];
 	}
@@ -273,7 +273,7 @@ public:
 	 * @param PointIndex The index of extrema point to return.
 	 * @return A read-only reference to the point.
 	 */
-	FORCEINLINE const YVector& GetExtrema( int PointIndex ) const
+	FORCEINLINE const FVector& GetExtrema( int PointIndex ) const
 	{
 		return (&Min)[PointIndex];
 	}
@@ -284,7 +284,7 @@ public:
 	 * @return The box size.
 	 * @see GetCenter, GetCenterAndExtents, GetExtent, GetVolume
 	 */
-	FORCEINLINE YVector GetSize() const
+	FORCEINLINE FVector GetSize() const
 	{
 		return (Max - Min);
 	}
@@ -305,7 +305,7 @@ public:
 	 */
 	FORCEINLINE void Init()
 	{
-		Min = Max = YVector::ZeroVector;
+		Min = Max = FVector::ZeroVector;
 		IsValid = 0;
 	}
 
@@ -315,7 +315,7 @@ public:
 	 * @param Other The bounding box to intersect with.
 	 * @return true if the boxes intersect, false otherwise.
 	 */
-	FORCEINLINE bool Intersect( const YBox& other ) const;
+	FORCEINLINE bool Intersect( const FBox& other ) const;
 
 	/**
 	 * Checks whether the given bounding box intersects this bounding box in the XY plane.
@@ -323,7 +323,7 @@ public:
 	 * @param Other The bounding box to test intersection.
 	 * @return true if the boxes intersect in the XY Plane, false otherwise.
 	 */
-	FORCEINLINE bool IntersectXY( const YBox& Other ) const;
+	FORCEINLINE bool IntersectXY( const FBox& Other ) const;
 
 	/**
 	 * Returns the overlap FBox of two box
@@ -331,7 +331,7 @@ public:
 	 * @param Other The bounding box to test overlap
 	 * @return the overlap box. It can be 0 if they don't overlap
 	 */
-	CORE_API YBox Overlap( const YBox& Other ) const;
+	CORE_API FBox Overlap( const FBox& Other ) const;
 
 	/**
 	  * Gets a bounding volume transformed by an inverted FTransform object.
@@ -339,7 +339,7 @@ public:
 	  * @param M The transformation object to perform the inversely transform this box with.
 	  * @return	The transformed box.
 	  */
-	CORE_API YBox InverseTransformBy( const YTransform& M ) const;
+	CORE_API FBox InverseTransformBy( const FTransform& M ) const;
 
 	/** 
 	 * Checks whether the given location is inside this box.
@@ -348,7 +348,7 @@ public:
 	 * @return true if location is inside this volume.
 	 * @see IsInsideXY
 	 */
-	FORCEINLINE bool IsInside( const YVector& In ) const
+	FORCEINLINE bool IsInside( const FVector& In ) const
 	{
 		return ((In.X > Min.X) && (In.X < Max.X) && (In.Y > Min.Y) && (In.Y < Max.Y) && (In.Z > Min.Z) && (In.Z < Max.Z));
 	}
@@ -360,7 +360,7 @@ public:
 	 * @return true if location is inside this volume.
 	 * @see IsInsideXY
 	 */
-	FORCEINLINE bool IsInsideOrOn( const YVector& In ) const
+	FORCEINLINE bool IsInsideOrOn( const FVector& In ) const
 	{
 		return ((In.X >= Min.X) && (In.X <= Max.X) && (In.Y >= Min.Y) && (In.Y <= Max.Y) && (In.Z >= Min.Z) && (In.Z <= Max.Z));
 	}
@@ -371,7 +371,7 @@ public:
 	 * @param Other The box to test for encapsulation within the bounding volume.
 	 * @return true if box is inside this volume.
 	 */
-	FORCEINLINE bool IsInside( const YBox& Other ) const
+	FORCEINLINE bool IsInside( const FBox& Other ) const
 	{
 		return (IsInside(Other.Min) && IsInside(Other.Max));
 	}
@@ -383,7 +383,7 @@ public:
 	 * @return true if location is inside this box in the XY plane.
 	 * @see IsInside
 	 */
-	FORCEINLINE bool IsInsideXY( const YVector& In ) const
+	FORCEINLINE bool IsInsideXY( const FVector& In ) const
 	{
 		return ((In.X > Min.X) && (In.X < Max.X) && (In.Y > Min.Y) && (In.Y < Max.Y));
 	}
@@ -394,7 +394,7 @@ public:
 	 * @param Other The box to test for encapsulation within the bounding box.
 	 * @return true if box is inside this box in the XY plane.
 	 */
-	FORCEINLINE bool IsInsideXY( const YBox& Other ) const
+	FORCEINLINE bool IsInsideXY( const FBox& Other ) const
 	{
 		return (IsInsideXY(Other.Min) && IsInsideXY(Other.Max));
 	}
@@ -406,7 +406,7 @@ public:
 	 * @return The transformed box.
 	 * @see TransformProjectBy
 	 */
-	CORE_API YBox TransformBy( const YMatrix& M ) const;
+	CORE_API FBox TransformBy( const FMatrix& M ) const;
 
 	/**
 	 * Gets a bounding volume transformed by a FTransform object.
@@ -415,7 +415,7 @@ public:
 	 * @return The transformed box.
 	 * @see TransformProjectBy
 	 */
-	CORE_API YBox TransformBy( const YTransform& M ) const;
+	CORE_API FBox TransformBy( const FTransform& M ) const;
 
 	/** 
 	 * Transforms and projects a world bounding box to screen space
@@ -424,7 +424,7 @@ public:
 	 * @return The transformed box.
 	 * @see TransformBy
 	 */
-	CORE_API YBox TransformProjectBy( const YMatrix& ProjM ) const;
+	CORE_API FBox TransformProjectBy( const FMatrix& ProjM ) const;
 
 	/**
 	 * Get a textual representation of this box.
@@ -442,9 +442,9 @@ public:
 	 * @param Extent Half size of the bounding box.
 	 * @return A new axis-aligned bounding box.
 	 */
-	static YBox BuildAABB( const YVector& Origin, const YVector& Extent )
+	static FBox BuildAABB( const FVector& Origin, const FVector& Extent )
 	{
-		YBox NewBox(Origin - Extent, Origin + Extent);
+		FBox NewBox(Origin - Extent, Origin + Extent);
 
 		return NewBox;
 	}
@@ -458,12 +458,12 @@ public:
 	 * @param Box The box to serialize.
 	 * @return Reference to the Archive after serialization.
 	 */
-	friend YArchive& operator<<( YArchive& Ar, YBox& Box )
+	friend FArchive& operator<<( FArchive& Ar, FBox& Box )
 	{
 		return Ar << Box.Min << Box.Max << Box.IsValid;
 	}
 
-	bool Serialize( YArchive& Ar )
+	bool Serialize( FArchive& Ar )
 	{
 		Ar << *this;
 		return true;
@@ -474,12 +474,12 @@ public:
 /**
  * FBox specialization for TIsPODType trait.
  */
-template<> struct TIsPODType<YBox> { enum { Value = true }; };
+template<> struct TIsPODType<FBox> { enum { Value = true }; };
 
 /* FBox inline functions
  *****************************************************************************/
 
-FORCEINLINE YBox& YBox::operator+=( const YVector &Other )
+FORCEINLINE FBox& FBox::operator+=( const FVector &Other )
 {
 	if (IsValid)
 	{
@@ -501,7 +501,7 @@ FORCEINLINE YBox& YBox::operator+=( const YVector &Other )
 }
 
 
-FORCEINLINE YBox& YBox::operator+=( const YBox& Other )
+FORCEINLINE FBox& FBox::operator+=( const FBox& Other )
 {
 	if (IsValid && Other.IsValid)
 	{
@@ -522,10 +522,10 @@ FORCEINLINE YBox& YBox::operator+=( const YBox& Other )
 }
 
 
-FORCEINLINE YVector YBox::GetClosestPointTo( const YVector& Point ) const
+FORCEINLINE FVector FBox::GetClosestPointTo( const FVector& Point ) const
 {
 	// start by considering the point inside the box
-	YVector ClosestPoint = Point;
+	FVector ClosestPoint = Point;
 
 	// now clamp to inside box if it's outside
 	if (Point.X < Min.X)
@@ -561,7 +561,7 @@ FORCEINLINE YVector YBox::GetClosestPointTo( const YVector& Point ) const
 }
 
 
-FORCEINLINE bool YBox::Intersect( const YBox& Other ) const
+FORCEINLINE bool FBox::Intersect( const FBox& Other ) const
 {
 	if ((Min.X > Other.Max.X) || (Other.Min.X > Max.X))
 	{
@@ -582,7 +582,7 @@ FORCEINLINE bool YBox::Intersect( const YBox& Other ) const
 }
 
 
-FORCEINLINE bool YBox::IntersectXY( const YBox& Other ) const
+FORCEINLINE bool FBox::IntersectXY( const FBox& Other ) const
 {
 	if ((Min.X > Other.Max.X) || (Other.Min.X > Max.X))
 	{
@@ -598,7 +598,7 @@ FORCEINLINE bool YBox::IntersectXY( const YBox& Other ) const
 }
 
 
-FORCEINLINE YString YBox::ToString() const
+FORCEINLINE YString FBox::ToString() const
 {
 	return YString::Printf(TEXT("IsValid=%s, Min=(%s), Max=(%s)"), IsValid ? TEXT("true") : TEXT("false"), *Min.ToString(), *Max.ToString());
 }
@@ -608,8 +608,8 @@ FORCEINLINE YString YBox::ToString() const
 
 inline bool YMath::PointBoxIntersection
 	(
-	const YVector&	Point,
-	const YBox&		Box
+	const FVector&	Point,
+	const FBox&		Box
 	)
 {
 	if(Point.X >= Box.Min.X && Point.X <= Box.Max.X &&
@@ -622,10 +622,10 @@ inline bool YMath::PointBoxIntersection
 
 inline bool YMath::LineBoxIntersection
 	( 
-	const YBox& Box, 
-	const YVector& Start, 
-	const YVector& End, 
-	const YVector& Direction
+	const FBox& Box, 
+	const FVector& Start, 
+	const FVector& End, 
+	const FVector& Direction
 	)
 {
 	return LineBoxIntersection(Box, Start, End, Direction, Direction.Reciprocal());
@@ -633,14 +633,14 @@ inline bool YMath::LineBoxIntersection
 
 inline bool YMath::LineBoxIntersection
 	(
-	const YBox&		Box,
-	const YVector&	Start,
-	const YVector&	End,
-	const YVector&	Direction,
-	const YVector&	OneOverDirection
+	const FBox&		Box,
+	const FVector&	Start,
+	const FVector&	End,
+	const FVector&	Direction,
+	const FVector&	OneOverDirection
 	)
 {
-	YVector	Time;
+	FVector	Time;
 	bool	bStartIsOutside = false;
 
 	if(Start.X < Box.Min.X)
@@ -736,7 +736,7 @@ inline bool YMath::LineBoxIntersection
 
 		if(MaxTime >= 0.0f && MaxTime <= 1.0f)
 		{
-			const YVector Hit = Start + Direction * MaxTime;
+			const FVector Hit = Start + Direction * MaxTime;
 			const float BOX_SIDE_THRESHOLD = 0.1f;
 			if(	Hit.X > Box.Min.X - BOX_SIDE_THRESHOLD && Hit.X < Box.Max.X + BOX_SIDE_THRESHOLD &&
 				Hit.Y > Box.Min.Y - BOX_SIDE_THRESHOLD && Hit.Y < Box.Max.Y + BOX_SIDE_THRESHOLD &&
@@ -767,7 +767,7 @@ inline bool YMath::LineBoxIntersection
  *
  * @return Whether the sphere/box intersect or not.
  */
-FORCEINLINE bool YMath::SphereAABBIntersection(const YVector& SphereCenter,const float RadiusSquared,const YBox& AABB)
+FORCEINLINE bool YMath::SphereAABBIntersection(const FVector& SphereCenter,const float RadiusSquared,const FBox& AABB)
 {
 	// Accumulates the distance as we iterate axis
 	float DistSquared = 0.f;

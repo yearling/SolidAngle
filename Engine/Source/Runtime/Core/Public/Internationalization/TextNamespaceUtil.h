@@ -53,7 +53,7 @@ CORE_API YString StripPackageNamespace(const YString& InTextNamespace);
  *
  * @return The package namespace, or an empty string if the archive has no package namespace set.
  */
-CORE_API YString GetPackageNamespace(YArchive& InArchive);
+CORE_API YString GetPackageNamespace(FArchive& InArchive);
 
 #endif // USE_STABLE_LOCALIZATION_KEYS
 

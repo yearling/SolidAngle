@@ -14,7 +14,7 @@
 /**
 * A 4D homogeneous vector, 4x1 FLOATs, 16-byte aligned.
 */
-MS_ALIGN(16) struct YVector4
+MS_ALIGN(16) struct FVector4
 {
 public:
 
@@ -38,14 +38,14 @@ public:
 	* @param InVector 3D Vector to set first three components.
 	* @param InW W Coordinate.
 	*/
-	YVector4(const YVector& InVector, float InW = 1.0f);
+	FVector4(const FVector& InVector, float InW = 1.0f);
 
 	/**
 	* Creates and initializes a new vector from a color value.
 	*
 	* @param InColour Color used to set vector.
 	*/
-	YVector4(const YLinearColor& InColor);
+	FVector4(const FLinearColor& InColor);
 
 	/**
 	* Creates and initializes a new vector from the specified components.
@@ -55,7 +55,7 @@ public:
 	* @param InZ Z Coordinate.
 	* @param InW W Coordinate.
 	*/
-	explicit YVector4(float InX = 0.0f, float InY = 0.0f, float InZ = 0.0f, float InW = 1.0f);
+	explicit FVector4(float InX = 0.0f, float InY = 0.0f, float InZ = 0.0f, float InW = 1.0f);
 
 	/**
 	* Creates and initializes a new vector from the specified 2D vectors.
@@ -63,14 +63,14 @@ public:
 	* @param InXY A 2D vector holding the X- and Y-components.
 	* @param InZW A 2D vector holding the Z- and W-components.
 	*/
-	explicit YVector4(YVector2D InXY, YVector2D InZW);
+	explicit FVector4(YVector2D InXY, YVector2D InZW);
 
 	/**
 	* Creates and initializes a new vector to zero.
 	*
 	* @param EForceInit Force Init Enum.
 	*/
-	explicit YVector4(EForceInit);
+	explicit FVector4(EForceInit);
 
 public:
 
@@ -97,7 +97,7 @@ public:
 	*
 	* @return A negated copy of the vector.
 	*/
-	FORCEINLINE YVector4 operator-() const;
+	FORCEINLINE FVector4 operator-() const;
 
 	/**
 	* Gets the result of adding a vector to this.
@@ -105,7 +105,7 @@ public:
 	* @param V The vector to add.
 	* @return The result of vector addition.
 	*/
-	FORCEINLINE YVector4 operator+(const YVector4& V) const;
+	FORCEINLINE FVector4 operator+(const FVector4& V) const;
 
 	/**
 	* Adds another vector to this one.
@@ -113,7 +113,7 @@ public:
 	* @param V The other vector to add.
 	* @return Copy of the vector after addition.
 	*/
-	FORCEINLINE YVector4 operator+=(const YVector4& V);
+	FORCEINLINE FVector4 operator+=(const FVector4& V);
 
 	/**
 	* Gets the result of subtracting a vector from this.
@@ -121,7 +121,7 @@ public:
 	* @param V The vector to subtract.
 	* @return The result of vector subtraction.
 	*/
-	FORCEINLINE YVector4 operator-(const YVector4& V) const;
+	FORCEINLINE FVector4 operator-(const FVector4& V) const;
 
 	/**
 	* Gets the result of scaling this vector.
@@ -129,7 +129,7 @@ public:
 	* @param Scale The scaling factor.
 	* @return The result of vector scaling.
 	*/
-	FORCEINLINE YVector4 operator*(float Scale) const;
+	FORCEINLINE FVector4 operator*(float Scale) const;
 
 	/**
 	* Gets the result of dividing this vector.
@@ -137,7 +137,7 @@ public:
 	* @param Scale What to divide by.
 	* @return The result of division.
 	*/
-	YVector4 operator/(float Scale) const;
+	FVector4 operator/(float Scale) const;
 
 	/**
 	* Gets the result of dividing this vector.
@@ -145,7 +145,7 @@ public:
 	* @param V What to divide by.
 	* @return The result of division.
 	*/
-	YVector4 operator/(const YVector4& V) const;
+	FVector4 operator/(const FVector4& V) const;
 
 	/**
 	* Gets the result of multiplying a vector with this.
@@ -153,7 +153,7 @@ public:
 	* @param V The vector to multiply.
 	* @return The result of vector multiplication.
 	*/
-	YVector4 operator*(const YVector4& V) const;
+	FVector4 operator*(const FVector4& V) const;
 
 	/**
 	* Gets the result of multiplying a vector with another Vector (component wise).
@@ -161,7 +161,7 @@ public:
 	* @param V The vector to multiply.
 	* @return The result of vector multiplication.
 	*/
-	YVector4 operator*=(const YVector4& V);
+	FVector4 operator*=(const FVector4& V);
 
 	/**
 	* Gets the result of dividing a vector with another Vector (component wise).
@@ -169,7 +169,7 @@ public:
 	* @param V The vector to divide with.
 	* @return The result of vector multiplication.
 	*/
-	YVector4 operator/=(const YVector4& V);
+	FVector4 operator/=(const FVector4& V);
 
 	/**
 	* Gets the result of scaling this vector.
@@ -177,7 +177,7 @@ public:
 	* @param Scale The scaling factor.
 	* @return The result of vector scaling.
 	*/
-	YVector4 operator*=(float S);
+	FVector4 operator*=(float S);
 
 	/**
 	* Calculates 3D Dot product of two 4D vectors.
@@ -186,7 +186,7 @@ public:
 	* @param V2 The second vector.
 	* @return The 3D Dot product.
 	*/
-	friend FORCEINLINE float Dot3(const YVector4& V1, const YVector4& V2)
+	friend FORCEINLINE float Dot3(const FVector4& V1, const FVector4& V2)
 	{
 		return V1.X*V2.X + V1.Y*V2.Y + V1.Z*V2.Z;
 	}
@@ -198,7 +198,7 @@ public:
 	* @param V2 The second vector.
 	* @return The 4D Dot Product.
 	*/
-	friend FORCEINLINE float Dot4(const YVector4& V1, const YVector4& V2)
+	friend FORCEINLINE float Dot4(const FVector4& V1, const FVector4& V2)
 	{
 		return V1.X*V2.X + V1.Y*V2.Y + V1.Z*V2.Z + V1.W*V2.W;
 	}
@@ -210,7 +210,7 @@ public:
 	* @param V The vector to scale.
 	* @return The result of scaling.
 	*/
-	friend FORCEINLINE YVector4 operator*(float Scale, const YVector4& V)
+	friend FORCEINLINE FVector4 operator*(float Scale, const FVector4& V)
 	{
 		return V.operator*(Scale);
 	}
@@ -221,7 +221,7 @@ public:
 	* @param V The other vector.
 	* @return true if the two vectors are the same, otherwise false.
 	*/
-	bool operator==(const YVector4& V) const;
+	bool operator==(const FVector4& V) const;
 
 	/**
 	* Checks for inequality against another vector.
@@ -229,7 +229,7 @@ public:
 	* @param V The other vector.
 	* @return true if the two vectors are different, otherwise false.
 	*/
-	bool operator!=(const YVector4& V) const;
+	bool operator!=(const FVector4& V) const;
 
 	/**
 	* Calculate Cross product between this and another vector.
@@ -237,7 +237,7 @@ public:
 	* @param V The other vector.
 	* @return The Cross product.
 	*/
-	YVector4 operator^(const YVector4& V) const;
+	FVector4 operator^(const FVector4& V) const;
 
 public:
 
@@ -258,7 +258,7 @@ public:
 	* @param Tolerance Error Tolerance.
 	* @return true if the two vectors are equal within specified tolerance, otherwise false.
 	*/
-	bool Equals(const YVector4& V, float Tolerance = KINDA_SMALL_NUMBER) const;
+	bool Equals(const FVector4& V, float Tolerance = KINDA_SMALL_NUMBER) const;
 
 	/**
 	* Check if the vector is of unit length, with specified tolerance.
@@ -290,33 +290,33 @@ public:
 	* @param Tolerance Minimum squared length of vector for normalization.
 	* @return A normalized copy of the vector or a zero vector.
 	*/
-	FORCEINLINE YVector4 GetSafeNormal(float Tolerance = SMALL_NUMBER) const;
+	FORCEINLINE FVector4 GetSafeNormal(float Tolerance = SMALL_NUMBER) const;
 
 	DEPRECATED(4.7, "Deprecated due to unclear name, use GetSafeNormal instead.")
-		FORCEINLINE YVector4 SafeNormal(float Tolerance = SMALL_NUMBER) const;
+		FORCEINLINE FVector4 SafeNormal(float Tolerance = SMALL_NUMBER) const;
 
 	/**
 	* Calculates normalized version of vector without checking if it is non-zero.
 	*
 	* @return Normalized version of vector.
 	*/
-	FORCEINLINE YVector4 GetUnsafeNormal3() const;
+	FORCEINLINE FVector4 GetUnsafeNormal3() const;
 
 	DEPRECATED(4.7, "Deprecated due to unclear name, use GetUnsafeNormal3 instead.")
-		FORCEINLINE YVector4 UnsafeNormal3() const;
+		FORCEINLINE FVector4 UnsafeNormal3() const;
 
 	/**
 	* Return the YRotator orientation corresponding to the direction in which the vector points.
 	* Sets Yaw and Pitch to the proper numbers, and sets roll to zero because the roll can't be determined from a vector.
 	* @return YRotator from the Vector's direction.
 	*/
-	CORE_API YRotator ToOrientationRotator() const;
+	CORE_API FRotator ToOrientationRotator() const;
 
 	/**
 	* Return the Quaternion orientation corresponding to the direction in which the vector points.
 	* @return Quaternion from the Vector's direction.
 	*/
-	CORE_API YQuat ToOrientationQuat() const;
+	CORE_API FQuat ToOrientationQuat() const;
 
 	/**
 	* Return the YRotator orientation corresponding to the direction in which the vector points.
@@ -325,7 +325,7 @@ public:
 	* @return YRotator from the Vector's direction.
 	* @see ToOrientationRotator()
 	*/
-	CORE_API YRotator Rotation() const;
+	CORE_API FRotator Rotation() const;
 
 	/**
 	* Set all of the vectors coordinates.
@@ -372,13 +372,13 @@ public:
 	bool IsNearlyZero3(float Tolerance = KINDA_SMALL_NUMBER) const;
 
 	/** Reflect vector. */
-	YVector4 Reflect3(const YVector4& Normal) const;
+	FVector4 Reflect3(const FVector4& Normal) const;
 
 	/**
 	* Find good arbitrary axis vectors to represent U and V axes of a plane,
 	* given just the normal.
 	*/
-	void FindBestAxisVectors3(YVector4& Axis1, YVector4& Axis2) const;
+	void FindBestAxisVectors3(FVector4& Axis1, FVector4& Axis2) const;
 
 #if ENABLE_NAN_DIAGNOSTIC
 	FORCEINLINE void DiagnosticCheckNaN()
@@ -386,7 +386,7 @@ public:
 		if (ContainsNaN())
 		{
 			logOrEnsureNanError(TEXT("YVector contains NaN: %s"), *ToString());
-			*this = YVector4(YVector::ZeroVector);
+			*this = FVector4(FVector::ZeroVector);
 
 		}
 	}
@@ -403,12 +403,12 @@ public:
 	* @param V The vector being serialized.
 	* @return Reference to the Archive after serialization.
 	*/
-	friend YArchive& operator<<(YArchive& Ar, YVector4& V)
+	friend FArchive& operator<<(FArchive& Ar, FVector4& V)
 	{
 		return Ar << V.X << V.Y << V.Z << V.W;
 	}
 
-	bool Serialize(YArchive& Ar)
+	bool Serialize(FArchive& Ar)
 	{
 		Ar << *this;
 		return true;
@@ -424,7 +424,7 @@ public:
 *
 * @return The hash value from the components
 */
-FORCEINLINE uint32 GetTypeHash(const YVector4& Vector)
+FORCEINLINE uint32 GetTypeHash(const FVector4& Vector)
 {
 	// Note: this assumes there's no padding in YVector that could contain uncompared data.
 	return FCrc::MemCrc_DEPRECATED(&Vector, sizeof(Vector));
@@ -434,7 +434,7 @@ FORCEINLINE uint32 GetTypeHash(const YVector4& Vector)
 /* YVector4 inline functions
 *****************************************************************************/
 
-FORCEINLINE YVector4::YVector4(const YVector& InVector, float InW)
+FORCEINLINE FVector4::FVector4(const FVector& InVector, float InW)
 	: X(InVector.X)
 	, Y(InVector.Y)
 	, Z(InVector.Z)
@@ -444,7 +444,7 @@ FORCEINLINE YVector4::YVector4(const YVector& InVector, float InW)
 }
 
 
-FORCEINLINE YVector4::YVector4(const YLinearColor& InColor)
+FORCEINLINE FVector4::FVector4(const FLinearColor& InColor)
 	: X(InColor.R)
 	, Y(InColor.G)
 	, Z(InColor.B)
@@ -454,7 +454,7 @@ FORCEINLINE YVector4::YVector4(const YLinearColor& InColor)
 }
 
 
-FORCEINLINE YVector4::YVector4(float InX, float InY, float InZ, float InW)
+FORCEINLINE FVector4::FVector4(float InX, float InY, float InZ, float InW)
 	: X(InX)
 	, Y(InY)
 	, Z(InZ)
@@ -464,7 +464,7 @@ FORCEINLINE YVector4::YVector4(float InX, float InY, float InZ, float InW)
 }
 
 
-FORCEINLINE YVector4::YVector4(EForceInit)
+FORCEINLINE FVector4::FVector4(EForceInit)
 	: X(0.f)
 	, Y(0.f)
 	, Z(0.f)
@@ -474,7 +474,7 @@ FORCEINLINE YVector4::YVector4(EForceInit)
 }
 
 
-FORCEINLINE YVector4::YVector4(YVector2D InXY, YVector2D InZW)
+FORCEINLINE FVector4::FVector4(YVector2D InXY, YVector2D InZW)
 	: X(InXY.X)
 	, Y(InXY.Y)
 	, Z(InZW.X)
@@ -484,19 +484,19 @@ FORCEINLINE YVector4::YVector4(YVector2D InXY, YVector2D InZW)
 }
 
 
-FORCEINLINE float& YVector4::operator[](int32 ComponentIndex)
+FORCEINLINE float& FVector4::operator[](int32 ComponentIndex)
 {
 	return (&X)[ComponentIndex];
 }
 
 
-FORCEINLINE float YVector4::operator[](int32 ComponentIndex) const
+FORCEINLINE float FVector4::operator[](int32 ComponentIndex) const
 {
 	return (&X)[ComponentIndex];
 }
 
 
-FORCEINLINE void YVector4::Set(float InX, float InY, float InZ, float InW)
+FORCEINLINE void FVector4::Set(float InX, float InY, float InZ, float InW)
 {
 	X = InX;
 	Y = InY;
@@ -507,19 +507,19 @@ FORCEINLINE void YVector4::Set(float InX, float InY, float InZ, float InW)
 }
 
 
-FORCEINLINE YVector4 YVector4::operator-() const
+FORCEINLINE FVector4 FVector4::operator-() const
 {
-	return YVector4(-X, -Y, -Z, -W);
+	return FVector4(-X, -Y, -Z, -W);
 }
 
 
-FORCEINLINE YVector4 YVector4::operator+(const YVector4& V) const
+FORCEINLINE FVector4 FVector4::operator+(const FVector4& V) const
 {
-	return YVector4(X + V.X, Y + V.Y, Z + V.Z, W + V.W);
+	return FVector4(X + V.X, Y + V.Y, Z + V.Z, W + V.W);
 }
 
 
-FORCEINLINE YVector4 YVector4::operator+=(const YVector4& V)
+FORCEINLINE FVector4 FVector4::operator+=(const FVector4& V)
 {
 	X += V.X; Y += V.Y; Z += V.Z; W += V.W;
 	DiagnosticCheckNaN();
@@ -527,34 +527,34 @@ FORCEINLINE YVector4 YVector4::operator+=(const YVector4& V)
 }
 
 
-FORCEINLINE YVector4 YVector4::operator-(const YVector4& V) const
+FORCEINLINE FVector4 FVector4::operator-(const FVector4& V) const
 {
-	return YVector4(X - V.X, Y - V.Y, Z - V.Z, W - V.W);
+	return FVector4(X - V.X, Y - V.Y, Z - V.Z, W - V.W);
 }
 
 
-FORCEINLINE YVector4 YVector4::operator*(float Scale) const
+FORCEINLINE FVector4 FVector4::operator*(float Scale) const
 {
-	return YVector4(X * Scale, Y * Scale, Z * Scale, W * Scale);
+	return FVector4(X * Scale, Y * Scale, Z * Scale, W * Scale);
 }
 
 
-FORCEINLINE YVector4 YVector4::operator/(float Scale) const
+FORCEINLINE FVector4 FVector4::operator/(float Scale) const
 {
 	const float RScale = 1.f / Scale;
-	return YVector4(X * RScale, Y * RScale, Z * RScale, W * RScale);
+	return FVector4(X * RScale, Y * RScale, Z * RScale, W * RScale);
 }
 
 
-FORCEINLINE YVector4 YVector4::operator*(const YVector4& V) const
+FORCEINLINE FVector4 FVector4::operator*(const FVector4& V) const
 {
-	return YVector4(X * V.X, Y * V.Y, Z * V.Z, W * V.W);
+	return FVector4(X * V.X, Y * V.Y, Z * V.Z, W * V.W);
 }
 
 
-FORCEINLINE YVector4 YVector4::operator^(const YVector4& V) const
+FORCEINLINE FVector4 FVector4::operator^(const FVector4& V) const
 {
-	return YVector4(
+	return FVector4(
 		Y * V.Z - Z * V.Y,
 		Z * V.X - X * V.Z,
 		X * V.Y - Y * V.X,
@@ -563,37 +563,37 @@ FORCEINLINE YVector4 YVector4::operator^(const YVector4& V) const
 }
 
 
-FORCEINLINE float& YVector4::Component(int32 Index)
+FORCEINLINE float& FVector4::Component(int32 Index)
 {
 	return (&X)[Index];
 }
 
 
-FORCEINLINE bool YVector4::operator==(const YVector4& V) const
+FORCEINLINE bool FVector4::operator==(const FVector4& V) const
 {
 	return ((X == V.X) && (Y == V.Y) && (Z == V.Z) && (W == V.W));
 }
 
 
-FORCEINLINE bool YVector4::operator!=(const YVector4& V) const
+FORCEINLINE bool FVector4::operator!=(const FVector4& V) const
 {
 	return ((X != V.X) || (Y != V.Y) || (Z != V.Z) || (W != V.W));
 }
 
 
-FORCEINLINE bool YVector4::Equals(const YVector4& V, float Tolerance) const
+FORCEINLINE bool FVector4::Equals(const FVector4& V, float Tolerance) const
 {
 	return YMath::Abs(X - V.X) <= Tolerance && YMath::Abs(Y - V.Y) <= Tolerance && YMath::Abs(Z - V.Z) <= Tolerance && YMath::Abs(W - V.W) <= Tolerance;
 }
 
 
-FORCEINLINE YString YVector4::ToString() const
+FORCEINLINE YString FVector4::ToString() const
 {
 	return YString::Printf(TEXT("X=%3.3f Y=%3.3f Z=%3.3f W=%3.3f"), X, Y, Z, W);
 }
 
 
-FORCEINLINE bool YVector4::InitFromString(const YString& InSourceString)
+FORCEINLINE bool FVector4::InitFromString(const YString& InSourceString)
 {
 	X = Y = Z = 0;
 	W = 1.0f;
@@ -608,66 +608,66 @@ FORCEINLINE bool YVector4::InitFromString(const YString& InSourceString)
 }
 
 
-FORCEINLINE YVector4 YVector4::GetSafeNormal(float Tolerance) const
+FORCEINLINE FVector4 FVector4::GetSafeNormal(float Tolerance) const
 {
 	const float SquareSum = X*X + Y*Y + Z*Z;
 	if (SquareSum > Tolerance)
 	{
 		const float Scale = YMath::InvSqrt(SquareSum);
-		return YVector4(X*Scale, Y*Scale, Z*Scale, 0.0f);
+		return FVector4(X*Scale, Y*Scale, Z*Scale, 0.0f);
 	}
-	return YVector4(0.f);
+	return FVector4(0.f);
 }
 
 
-FORCEINLINE YVector4 YVector4::SafeNormal(float Tolerance) const
+FORCEINLINE FVector4 FVector4::SafeNormal(float Tolerance) const
 {
 	return GetSafeNormal(Tolerance);
 }
 
 
-FORCEINLINE YVector4 YVector4::GetUnsafeNormal3() const
+FORCEINLINE FVector4 FVector4::GetUnsafeNormal3() const
 {
 	const float Scale = YMath::InvSqrt(X*X + Y*Y + Z*Z);
-	return YVector4(X*Scale, Y*Scale, Z*Scale, 0.0f);
+	return FVector4(X*Scale, Y*Scale, Z*Scale, 0.0f);
 }
 
 
-FORCEINLINE YVector4 YVector4::UnsafeNormal3() const
+FORCEINLINE FVector4 FVector4::UnsafeNormal3() const
 {
 	return GetUnsafeNormal3();
 }
 
 
-FORCEINLINE float YVector4::Size3() const
+FORCEINLINE float FVector4::Size3() const
 {
 	return YMath::Sqrt(X*X + Y*Y + Z*Z);
 }
 
 
-FORCEINLINE float YVector4::SizeSquared3() const
+FORCEINLINE float FVector4::SizeSquared3() const
 {
 	return X*X + Y*Y + Z*Z;
 }
 
-FORCEINLINE float YVector4::Size() const
+FORCEINLINE float FVector4::Size() const
 {
 	return YMath::Sqrt(X*X + Y*Y + Z*Z + W*W);
 }
 
-FORCEINLINE float YVector4::SizeSquared() const
+FORCEINLINE float FVector4::SizeSquared() const
 {
 	return X*X + Y*Y + Z*Z + W*W;
 }
 
 
-FORCEINLINE bool YVector4::IsUnit3(float LengthSquaredTolerance) const
+FORCEINLINE bool FVector4::IsUnit3(float LengthSquaredTolerance) const
 {
 	return YMath::Abs(1.0f - SizeSquared3()) < LengthSquaredTolerance;
 }
 
 
-FORCEINLINE bool YVector4::ContainsNaN() const
+FORCEINLINE bool FVector4::ContainsNaN() const
 {
 	return (!YMath::IsFinite(X) ||
 		!YMath::IsFinite(Y) ||
@@ -676,7 +676,7 @@ FORCEINLINE bool YVector4::ContainsNaN() const
 }
 
 
-FORCEINLINE bool YVector4::IsNearlyZero3(float Tolerance) const
+FORCEINLINE bool FVector4::IsNearlyZero3(float Tolerance) const
 {
 	return
 		YMath::Abs(X) <= Tolerance
@@ -685,28 +685,28 @@ FORCEINLINE bool YVector4::IsNearlyZero3(float Tolerance) const
 }
 
 
-FORCEINLINE YVector4 YVector4::Reflect3(const YVector4& Normal) const
+FORCEINLINE FVector4 FVector4::Reflect3(const FVector4& Normal) const
 {
 	return 2.0f * Dot3(*this, Normal) * Normal - *this;
 }
 
 
-FORCEINLINE void YVector4::FindBestAxisVectors3(YVector4& Axis1, YVector4& Axis2) const
+FORCEINLINE void FVector4::FindBestAxisVectors3(FVector4& Axis1, FVector4& Axis2) const
 {
 	const float NX = YMath::Abs(X);
 	const float NY = YMath::Abs(Y);
 	const float NZ = YMath::Abs(Z);
 
 	// Find best basis vectors.
-	if (NZ>NX && NZ>NY)	Axis1 = YVector4(1, 0, 0);
-	else					Axis1 = YVector4(0, 0, 1);
+	if (NZ>NX && NZ>NY)	Axis1 = FVector4(1, 0, 0);
+	else					Axis1 = FVector4(0, 0, 1);
 
 	Axis1 = (Axis1 - *this * Dot3(Axis1, *this)).GetSafeNormal();
 	Axis2 = Axis1 ^ *this;
 }
 
 
-FORCEINLINE YVector4 YVector4::operator*=(const YVector4& V)
+FORCEINLINE FVector4 FVector4::operator*=(const FVector4& V)
 {
 	X *= V.X; Y *= V.Y; Z *= V.Z; W *= V.W;
 	DiagnosticCheckNaN();
@@ -714,7 +714,7 @@ FORCEINLINE YVector4 YVector4::operator*=(const YVector4& V)
 }
 
 
-FORCEINLINE YVector4 YVector4::operator/=(const YVector4& V)
+FORCEINLINE FVector4 FVector4::operator/=(const FVector4& V)
 {
 	X /= V.X; Y /= V.Y; Z /= V.Z; W /= V.W;
 	DiagnosticCheckNaN();
@@ -722,7 +722,7 @@ FORCEINLINE YVector4 YVector4::operator/=(const YVector4& V)
 }
 
 
-FORCEINLINE YVector4 YVector4::operator*=(float S)
+FORCEINLINE FVector4 FVector4::operator*=(float S)
 {
 	X *= S; Y *= S; Z *= S; W *= S;
 	DiagnosticCheckNaN();
@@ -730,18 +730,18 @@ FORCEINLINE YVector4 YVector4::operator*=(float S)
 }
 
 
-FORCEINLINE YVector4 YVector4::operator/(const YVector4& V) const
+FORCEINLINE FVector4 FVector4::operator/(const FVector4& V) const
 {
-	return YVector4(X / V.X, Y / V.Y, Z / V.Z, W / V.W);
+	return FVector4(X / V.X, Y / V.Y, Z / V.Z, W / V.W);
 }
 
-template <> struct TIsPODType<YVector4> { enum { Value = true }; };
+template <> struct TIsPODType<FVector4> { enum { Value = true }; };
 
 
 /* YVector inline functions
 *****************************************************************************/
 
-FORCEINLINE YVector::YVector(const YVector4& V)
+FORCEINLINE FVector::FVector(const FVector4& V)
 	: X(V.X), Y(V.Y), Z(V.Z)
 {
 	DiagnosticCheckNaN();

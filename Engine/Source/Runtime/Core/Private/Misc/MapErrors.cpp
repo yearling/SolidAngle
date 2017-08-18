@@ -2,71 +2,71 @@
 
 #include "Misc/MapErrors.h"
 	
-YName FMapErrors::MatchingLightGUID(TEXT("MatchingLightGUID"));
-YName FMapErrors::ActorLargeShadowCaster(TEXT("ActorLargeShadowCaster"));
-YName FMapErrors::NoDamageType(TEXT("NoDamageType"));
-YName FMapErrors::NonCoPlanarPolys(TEXT("NonCoPlanarPolys"));
-YName FMapErrors::SameLocation(TEXT("SameLocation"));
-YName FMapErrors::InvalidDrawscale(TEXT("InvalidDrawscale"));
-YName FMapErrors::ActorIsObselete(TEXT("ActorIsObselete"));
-YName FMapErrors::StaticPhysNone(TEXT("StaticPhysNone"));
-YName FMapErrors::VolumeActorCollisionComponentNULL(TEXT("VolumeActorCollisionComponentNULL"));
-YName FMapErrors::VolumeActorZeroRadius(TEXT("VolumeActorZeroRadius"));
-YName FMapErrors::VertexColorsNotMatchOriginalMesh(TEXT("VertexColorsNotMatchOriginalMesh"));
-YName FMapErrors::CollisionEnabledNoCollisionGeom(TEXT("CollisionEnabledNoCollisionGeom"));
-YName FMapErrors::ShadowCasterUsingBoundsScale(TEXT("ShadowCasterUsingBoundsScale"));
-YName FMapErrors::MultipleSkyLights(TEXT("MultipleSkyLights"));
-YName FMapErrors::InvalidTrace(TEXT("InvalidTrace"));
-YName FMapErrors::BrushZeroPolygons(TEXT("BrushZeroPolygons"));
-YName FMapErrors::CleanBSPMaterials(TEXT("CleanBSPMaterials"));
-YName FMapErrors::BrushComponentNull(TEXT("BrushComponentNull"));
-YName FMapErrors::PlanarBrush(TEXT("PlanarBrush"));
-YName FMapErrors::CameraAspectRatioIsZero(TEXT("CameraAspectRatioIsZero"));
-YName FMapErrors::AbstractClass(TEXT("AbstractClass"));
-YName FMapErrors::DeprecatedClass(TEXT("DeprecatedClass"));
-YName FMapErrors::FoliageMissingStaticMesh(TEXT("FoliageMissingStaticMesh"));
-YName FMapErrors::FoliageMissingClusterComponent(TEXT("FoliageMissingStaticMesh"));
-YName FMapErrors::FixedUpDeletedLayerWeightmap(TEXT("FixedUpDeletedLayerWeightmap"));
-YName FMapErrors::FixedUpIncorrectLayerWeightmap(TEXT("FixedUpIncorrectLayerWeightmap"));
-YName FMapErrors::FixedUpSharedLayerWeightmap(TEXT("FixedUpSharedLayerWeightmap"));
-YName FMapErrors::LandscapeComponentPostLoad_Warning(TEXT("LandscapeComponentPostLoad_Warning"));
-YName FMapErrors::DuplicateLevelInfo(TEXT("DuplicateLevelInfo"));
-YName FMapErrors::NoKillZ(TEXT("NoKillZ"));
-YName FMapErrors::LightComponentNull(TEXT("LightComponentNull"));
-YName FMapErrors::RebuildLighting(TEXT("RebuildLighting"));
-YName FMapErrors::StaticComponentHasInvalidLightmapSettings(TEXT("StaticComponentHasInvalidLightmapSettings"));
-YName FMapErrors::RebuildPaths(TEXT("RebuildPaths"));
-YName FMapErrors::ParticleSystemComponentNull(TEXT("ParticleSystemComponentNull"));
-YName FMapErrors::PSysCompErrorEmptyActorRef(TEXT("PSysCompErrorEmptyActorRef"));
-YName FMapErrors::PSysCompErrorEmptyMaterialRef(TEXT("PSysCompErrorEmptyMaterialRef"));
-YName FMapErrors::SkelMeshActorNoPhysAsset(TEXT("SkelMeshActorNoPhysAsset"));
-YName FMapErrors::SkeletalMeshComponent(TEXT("SkeletalMeshComponent"));
-YName FMapErrors::SkeletalMeshNull(TEXT("SkeletalMeshNull"));
-YName FMapErrors::AudioComponentNull(TEXT("AudioComponentNull"));
-YName FMapErrors::SoundCueNull(TEXT("SoundCueNull"));
-YName FMapErrors::StaticMeshNull(TEXT("StaticMeshNull"));
-YName FMapErrors::StaticMeshComponent(TEXT("StaticMeshComponent"));
-YName FMapErrors::SimpleCollisionButNonUniformScale(TEXT("SimpleCollisionButNonUniformScale"));
-YName FMapErrors::MoreMaterialsThanReferenced(TEXT("MoreMaterialsThanReferenced"));
-YName FMapErrors::ElementsWithZeroTriangles(TEXT("ElementsWithZeroTriangles"));
-YName FMapErrors::LevelStreamingVolume(TEXT("LevelStreamingVolume"));
-YName FMapErrors::NoLevelsAssociated(TEXT("NoLevelsAssociated"));
-YName FMapErrors::FilenameIsTooLongForCooking(TEXT("FilenameIsTooLongForCooking"));
-YName FMapErrors::UsingExternalObject(TEXT("UsingExternalObject"));
-YName FMapErrors::RepairedPaintedVertexColors(TEXT("RepairedPaintedVertexColors"));
-YName FMapErrors::LODActorMissingStaticMesh(TEXT("LODActorMissingStaticMesh"));
-YName FMapErrors::LODActorMissingActor(TEXT("LODActorMissingActor"));
-YName FMapErrors::LODActorNoActorFound(TEXT("LODActorNoActor"));
-YName FMapErrors::HLODSystemNotEnabled(TEXT("HLODSystemNotEnabled"));
+FName FMapErrors::MatchingLightGUID(TEXT("MatchingLightGUID"));
+FName FMapErrors::ActorLargeShadowCaster(TEXT("ActorLargeShadowCaster"));
+FName FMapErrors::NoDamageType(TEXT("NoDamageType"));
+FName FMapErrors::NonCoPlanarPolys(TEXT("NonCoPlanarPolys"));
+FName FMapErrors::SameLocation(TEXT("SameLocation"));
+FName FMapErrors::InvalidDrawscale(TEXT("InvalidDrawscale"));
+FName FMapErrors::ActorIsObselete(TEXT("ActorIsObselete"));
+FName FMapErrors::StaticPhysNone(TEXT("StaticPhysNone"));
+FName FMapErrors::VolumeActorCollisionComponentNULL(TEXT("VolumeActorCollisionComponentNULL"));
+FName FMapErrors::VolumeActorZeroRadius(TEXT("VolumeActorZeroRadius"));
+FName FMapErrors::VertexColorsNotMatchOriginalMesh(TEXT("VertexColorsNotMatchOriginalMesh"));
+FName FMapErrors::CollisionEnabledNoCollisionGeom(TEXT("CollisionEnabledNoCollisionGeom"));
+FName FMapErrors::ShadowCasterUsingBoundsScale(TEXT("ShadowCasterUsingBoundsScale"));
+FName FMapErrors::MultipleSkyLights(TEXT("MultipleSkyLights"));
+FName FMapErrors::InvalidTrace(TEXT("InvalidTrace"));
+FName FMapErrors::BrushZeroPolygons(TEXT("BrushZeroPolygons"));
+FName FMapErrors::CleanBSPMaterials(TEXT("CleanBSPMaterials"));
+FName FMapErrors::BrushComponentNull(TEXT("BrushComponentNull"));
+FName FMapErrors::PlanarBrush(TEXT("PlanarBrush"));
+FName FMapErrors::CameraAspectRatioIsZero(TEXT("CameraAspectRatioIsZero"));
+FName FMapErrors::AbstractClass(TEXT("AbstractClass"));
+FName FMapErrors::DeprecatedClass(TEXT("DeprecatedClass"));
+FName FMapErrors::FoliageMissingStaticMesh(TEXT("FoliageMissingStaticMesh"));
+FName FMapErrors::FoliageMissingClusterComponent(TEXT("FoliageMissingStaticMesh"));
+FName FMapErrors::FixedUpDeletedLayerWeightmap(TEXT("FixedUpDeletedLayerWeightmap"));
+FName FMapErrors::FixedUpIncorrectLayerWeightmap(TEXT("FixedUpIncorrectLayerWeightmap"));
+FName FMapErrors::FixedUpSharedLayerWeightmap(TEXT("FixedUpSharedLayerWeightmap"));
+FName FMapErrors::LandscapeComponentPostLoad_Warning(TEXT("LandscapeComponentPostLoad_Warning"));
+FName FMapErrors::DuplicateLevelInfo(TEXT("DuplicateLevelInfo"));
+FName FMapErrors::NoKillZ(TEXT("NoKillZ"));
+FName FMapErrors::LightComponentNull(TEXT("LightComponentNull"));
+FName FMapErrors::RebuildLighting(TEXT("RebuildLighting"));
+FName FMapErrors::StaticComponentHasInvalidLightmapSettings(TEXT("StaticComponentHasInvalidLightmapSettings"));
+FName FMapErrors::RebuildPaths(TEXT("RebuildPaths"));
+FName FMapErrors::ParticleSystemComponentNull(TEXT("ParticleSystemComponentNull"));
+FName FMapErrors::PSysCompErrorEmptyActorRef(TEXT("PSysCompErrorEmptyActorRef"));
+FName FMapErrors::PSysCompErrorEmptyMaterialRef(TEXT("PSysCompErrorEmptyMaterialRef"));
+FName FMapErrors::SkelMeshActorNoPhysAsset(TEXT("SkelMeshActorNoPhysAsset"));
+FName FMapErrors::SkeletalMeshComponent(TEXT("SkeletalMeshComponent"));
+FName FMapErrors::SkeletalMeshNull(TEXT("SkeletalMeshNull"));
+FName FMapErrors::AudioComponentNull(TEXT("AudioComponentNull"));
+FName FMapErrors::SoundCueNull(TEXT("SoundCueNull"));
+FName FMapErrors::StaticMeshNull(TEXT("StaticMeshNull"));
+FName FMapErrors::StaticMeshComponent(TEXT("StaticMeshComponent"));
+FName FMapErrors::SimpleCollisionButNonUniformScale(TEXT("SimpleCollisionButNonUniformScale"));
+FName FMapErrors::MoreMaterialsThanReferenced(TEXT("MoreMaterialsThanReferenced"));
+FName FMapErrors::ElementsWithZeroTriangles(TEXT("ElementsWithZeroTriangles"));
+FName FMapErrors::LevelStreamingVolume(TEXT("LevelStreamingVolume"));
+FName FMapErrors::NoLevelsAssociated(TEXT("NoLevelsAssociated"));
+FName FMapErrors::FilenameIsTooLongForCooking(TEXT("FilenameIsTooLongForCooking"));
+FName FMapErrors::UsingExternalObject(TEXT("UsingExternalObject"));
+FName FMapErrors::RepairedPaintedVertexColors(TEXT("RepairedPaintedVertexColors"));
+FName FMapErrors::LODActorMissingStaticMesh(TEXT("LODActorMissingStaticMesh"));
+FName FMapErrors::LODActorMissingActor(TEXT("LODActorMissingActor"));
+FName FMapErrors::LODActorNoActorFound(TEXT("LODActorNoActor"));
+FName FMapErrors::HLODSystemNotEnabled(TEXT("HLODSystemNotEnabled"));
 
 static const YString MapErrorsPath = TEXT("Shared/Editor/MapErrors");
 
-FMapErrorToken::FMapErrorToken(const YName& InErrorName)
+FMapErrorToken::FMapErrorToken(const FName& InErrorName)
 	: FDocumentationToken(MapErrorsPath, MapErrorsPath, InErrorName.ToString())
 {
 }
 
-TSharedRef<FMapErrorToken> FMapErrorToken::Create(const YName& InErrorName)
+TSharedRef<FMapErrorToken> FMapErrorToken::Create(const FName& InErrorName)
 {
 	return MakeShareable(new FMapErrorToken(InErrorName));
 }

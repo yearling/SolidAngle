@@ -189,7 +189,7 @@ private:
 	}
 };
 
-FGenericPlatformMallocCrash::FGenericPlatformMallocCrash( YMalloc* MainMalloc ) :
+FGenericPlatformMallocCrash::FGenericPlatformMallocCrash( FMalloc* MainMalloc ) :
 	CrashedThreadId( 0 ),
 	LargeMemoryPoolOffset( 0 ),
 	SmallMemoryPoolOffset( 0 ),
@@ -220,7 +220,7 @@ FGenericPlatformMallocCrash::~FGenericPlatformMallocCrash()
 {
 }
 
-FGenericPlatformMallocCrash& FGenericPlatformMallocCrash::Get( YMalloc* MainMalloc /*= nullptr*/ )
+FGenericPlatformMallocCrash& FGenericPlatformMallocCrash::Get( FMalloc* MainMalloc /*= nullptr*/ )
 {
 	static FGenericPlatformMallocCrash CrashMalloc( MainMalloc );
 	return CrashMalloc;
@@ -505,7 +505,7 @@ uint32 FGenericPlatformMallocCrash::SafePageSize()
 
 
 
-FGenericStackBasedMallocCrash::FGenericStackBasedMallocCrash(YMalloc* MainMalloc)
+FGenericStackBasedMallocCrash::FGenericStackBasedMallocCrash(FMalloc* MainMalloc)
 {
 	CurrentFreeMemPtr = (uint8*)YMemory::Malloc(MEMORYPOOL_SIZE);
 	FreeMemoryEndPtr = CurrentFreeMemPtr + MEMORYPOOL_SIZE;
@@ -515,7 +515,7 @@ FGenericStackBasedMallocCrash::~FGenericStackBasedMallocCrash()
 {
 }
 
-FGenericStackBasedMallocCrash& FGenericStackBasedMallocCrash::Get(YMalloc* MainMalloc /*= nullptr*/)
+FGenericStackBasedMallocCrash& FGenericStackBasedMallocCrash::Get(FMalloc* MainMalloc /*= nullptr*/)
 {
 	static FGenericStackBasedMallocCrash CrashMalloc(MainMalloc);
 	return CrashMalloc;

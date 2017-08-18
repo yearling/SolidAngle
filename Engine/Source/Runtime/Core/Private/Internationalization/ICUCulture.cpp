@@ -152,17 +152,17 @@ FCulture::FICUCultureImplementation::FICUCultureImplementation(const YString& Lo
 	}
 }
 
-YString FCulture::FICUCultureImplementation::GetDisplayName() const
+YString FCulture::FICUCultureImplementation::GetDisplaFName() const
 {
 	icu::UnicodeString ICUResult;
-	ICULocale.getDisplayName(ICUResult);
+	ICULocale.getDisplaFName(ICUResult);
 	return ICUUtilities::ConvertString(ICUResult);
 }
 
 YString FCulture::FICUCultureImplementation::GetEnglishName() const
 {
 	icu::UnicodeString ICUResult;
-	ICULocale.getDisplayName(icu::Locale("en"), ICUResult);
+	ICULocale.getDisplaFName(icu::Locale("en"), ICUResult);
 	return ICUUtilities::ConvertString(ICUResult);
 }
 
@@ -200,7 +200,7 @@ YString FCulture::FICUCultureImplementation::GetName() const
 YString FCulture::FICUCultureImplementation::GetNativeName() const
 {
 	icu::UnicodeString ICUResult;
-	ICULocale.getDisplayName(ICULocale, ICUResult);
+	ICULocale.getDisplaFName(ICULocale, ICUResult);
 	return ICUUtilities::ConvertString(ICUResult);
 }
 

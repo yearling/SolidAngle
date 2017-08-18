@@ -42,7 +42,7 @@ public:
 		BaseCurrencyFormattingRules.SecondaryGroupingSize = 3;
 
 		FCultureRef Culture = FCulture::Create(
-			LOCTEXT("InvariantCultureDisplayName", "Invariant Language (Invariant Country)"),	//const FText DisplayName
+			LOCTEXT("InvariantCultureDisplaFName", "Invariant Language (Invariant Country)"),	//const FText DisplaFName
 			YString(TEXT("Invariant Language (Invariant Country)")),							//const YString EnglishName
 			1033,																				//const int KeyboardLayoutId
 			1033,																				//const int LCID

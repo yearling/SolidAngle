@@ -6,10 +6,10 @@
 #include "Misc/AssertionMacros.h"
 
 // Any object that is capable of taking commands.
-class CORE_API YExec
+class CORE_API FExec
 {
 public:
-	virtual ~YExec();
+	virtual ~FExec();
 
 	/**
 	* Exec handler
@@ -20,7 +20,7 @@ public:
 	*
 	* @return	true if command was handled, false otherwise
 	*/
-	virtual bool Exec(class UWorld* InWorld, const TCHAR* Cmd, YOutputDevice& Ar) PURE_VIRTUAL(YExec::Exec, return false;)
+	virtual bool Exec(class UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar) PURE_VIRTUAL(FExec::Exec, return false;)
 };
 
 

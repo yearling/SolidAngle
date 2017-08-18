@@ -146,13 +146,13 @@ public:
 	virtual void SerializeAsXML(const TCHAR* Filename);
 
 	/** Writes a common property to the buffer. */
-	void AddCrashProperty(const TCHAR* PropertyName, const TCHAR* PropertyValue);
+	void AddCrashProperty(const TCHAR* PropertFName, const TCHAR* PropertyValue);
 
 	/** Writes a common property to the buffer. */
 	template <typename Type>
-	void AddCrashProperty(const TCHAR* PropertyName, const Type& Value)
+	void AddCrashProperty(const TCHAR* PropertFName, const Type& Value)
 	{
-		AddCrashProperty(PropertyName, *TTypeToString<Type>::ToString(Value));
+		AddCrashProperty(PropertFName, *TTypeToString<Type>::ToString(Value));
 	}
 
 	/** Escapes a specified XML string, naive implementation. */

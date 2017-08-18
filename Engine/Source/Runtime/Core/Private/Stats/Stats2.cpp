@@ -7,7 +7,7 @@
 #include "Containers/Array.h"
 #include "Misc/CString.h"
 #include "Containers/SolidAngleString.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Logging/LogMacros.h"
 #include "Misc/Parse.h"
 #include "HAL/Runnable.h"
@@ -290,7 +290,7 @@ delete "wait for render commands", and generally be on the look out for stats th
 
 sweep INC type things for dump code that calls INC in a loop instead of just calling INC_BY once
 
-FORCEINLINE_STATS void Start(YName InStatId)
+FORCEINLINE_STATS void Start(FName InStatId)
 {
 check(InStatId != NAME_None);
 
@@ -309,7 +309,7 @@ TStatIdData TStatId::TStatId_NAME_None;
 	FStartupMessages
 -----------------------------------------------------------------------------*/
 
-void FStartupMessages::AddThreadMetadata( const YName InThreadName, uint32 InThreadID )
+void FStartupMessages::AddThreadMetadata( const FName InThreadName, uint32 InThreadID )
 {
 	// Make unique name.
 	const YString ThreadName = FStatsUtils::BuildUniqueThreadName( InThreadID );
@@ -318,7 +318,7 @@ void FStartupMessages::AddThreadMetadata( const YName InThreadName, uint32 InThr
 }
 
 
-void FStartupMessages::AddMetadata( YName InStatName, const TCHAR* InStatDesc, const char* InGroupName, const char* InGroupCategory, const TCHAR* InGroupDesc, bool bShouldClearEveryFrame, EStatDataType::Type InStatType, bool bCycleStat, YPlatformMemory::EMemoryCounterRegion InMemoryRegion /*= YPlatformMemory::MCR_Invalid*/ )
+void FStartupMessages::AddMetadata( FName InStatName, const TCHAR* InStatDesc, const char* InGroupName, const char* InGroupCategory, const TCHAR* InGroupDesc, bool bShouldClearEveryFrame, EStatDataType::Type InStatType, bool bCycleStat, YPlatformMemory::EMemoryCounterRegion InMemoryRegion /*= YPlatformMemory::MCR_Invalid*/ )
 {
 	FScopeLock Lock( &CriticalSection );
 
@@ -344,12 +344,12 @@ FStartupMessages& FStartupMessages::Get()
 
 void FThreadSafeStaticStatBase::DoSetup(const char* InStatName, const TCHAR* InStatDesc, const char* InGroupName, const char* InGroupCategory, const TCHAR* InGroupDesc, bool bDefaultEnable, bool bShouldClearEveryFrame, EStatDataType::Type InStatType, bool bCycleStat, YPlatformMemory::EMemoryCounterRegion InMemoryRegion) const
 {
-	YName TempName(InStatName);
+	FName TempName(InStatName);
 
 	// send meta data, we don't use normal messages because the stats thread might not be running yet
 	FStartupMessages::Get().AddMetadata(TempName, InStatDesc, InGroupName, InGroupCategory, InGroupDesc, bShouldClearEveryFrame, InStatType, bCycleStat, InMemoryRegion);
 
-	TStatIdData const* LocalHighPerformanceEnable(IStatGroupEnableManager::Get().GetHighPerformanceEnableForStat(YName(InStatName), InGroupName, InGroupCategory, bDefaultEnable, bShouldClearEveryFrame, InStatType, InStatDesc, bCycleStat, InMemoryRegion).GetRawPointer());
+	TStatIdData const* LocalHighPerformanceEnable(IStatGroupEnableManager::Get().GetHighPerformanceEnableForStat(FName(InStatName), InGroupName, InGroupCategory, bDefaultEnable, bShouldClearEveryFrame, InStatType, InStatDesc, bCycleStat, InMemoryRegion).GetRawPointer());
 	TStatIdData const* OldHighPerformanceEnable = (TStatIdData const*)FPlatformAtomics::InterlockedCompareExchangePointer((void**)&HighPerformanceEnable, (void*)LocalHighPerformanceEnable, NULL);
 	check(!OldHighPerformanceEnable || HighPerformanceEnable == OldHighPerformanceEnable); // we are assigned two different groups?
 }
@@ -364,8 +364,8 @@ class FStatGroupEnableManager : public IStatGroupEnableManager
 {
 	struct FGroupEnable
 	{
-		TMap<YName, TStatIdData *> NamesInThisGroup;
-		TMap<YName, TStatIdData *> AlwaysEnabledNamesInThisGroup;
+		TMap<FName, TStatIdData *> NamesInThisGroup;
+		TMap<FName, TStatIdData *> AlwaysEnabledNamesInThisGroup;
 		bool DefaultEnable; 
 		bool CurrentEnable; 
 
@@ -383,7 +383,7 @@ class FStatGroupEnableManager : public IStatGroupEnableManager
 	};
 
 
-	TMap<YName, FGroupEnable> HighPerformanceEnable;
+	TMap<FName, FGroupEnable> HighPerformanceEnable;
 
 	/** Used to synchronize the access to the high performance stats groups. */
 	FCriticalSection SynchronizationObject;
@@ -398,11 +398,11 @@ class FStatGroupEnableManager : public IStatGroupEnableManager
 	FThreadSafeCounter MemoryCounter;
 
 	// these control what happens to groups that haven't been registered yet
-	TMap<YName, bool> EnableForNewGroup;
+	TMap<FName, bool> EnableForNewGroup;
 	bool EnableForNewGroups;
 	bool UseEnableForNewGroups;
 
-	void EnableStat(YName StatName, TStatIdData* DisablePtr)
+	void EnableStat(FName StatName, TStatIdData* DisablePtr)
 	{
 		// This is all complicated to ensure an atomic 8 byte write
 		static_assert(sizeof(FMinimalName) == sizeof(uint64), "FMinimalName should have the same size of uint64.");
@@ -442,7 +442,7 @@ public:
 		SET_MEMORY_STAT( STAT_StatDescMemory, MemoryUsage );
 	}
 
-	virtual void SetHighPerformanceEnableForGroup(YName Group, bool Enable) override
+	virtual void SetHighPerformanceEnableForGroup(FName Group, bool Enable) override
 	{
 		FScopeLock ScopeLock(&SynchronizationObject);
 		FThreadStats::MasterDisableChangeTagLockAdd();
@@ -517,15 +517,15 @@ public:
 		FThreadStats::MasterDisableChangeTagLockSubtract();
 	}
 
-	virtual TStatId GetHighPerformanceEnableForStat(YName StatShortName, const char* InGroup, const char* InCategory, bool bDefaultEnable, bool bShouldClearEveryFrame, EStatDataType::Type InStatType, TCHAR const* InDescription, bool bCycleStat, YPlatformMemory::EMemoryCounterRegion MemoryRegion = YPlatformMemory::MCR_Invalid) override
+	virtual TStatId GetHighPerformanceEnableForStat(FName StatShortName, const char* InGroup, const char* InCategory, bool bDefaultEnable, bool bShouldClearEveryFrame, EStatDataType::Type InStatType, TCHAR const* InDescription, bool bCycleStat, YPlatformMemory::EMemoryCounterRegion MemoryRegion = YPlatformMemory::MCR_Invalid) override
 	{
 		FScopeLock ScopeLock(&SynchronizationObject);
 
 		FStatNameAndInfo LongName(StatShortName, InGroup, InCategory, InDescription, InStatType, bShouldClearEveryFrame, bCycleStat, MemoryRegion);
 
-		YName Stat = LongName.GetEncodedName();
+		FName Stat = LongName.GetEncodedName();
 
-		YName Group(InGroup);
+		FName Group(InGroup);
 		FGroupEnable* Found = HighPerformanceEnable.Find(Group);
 		if (Found)
 		{
@@ -607,7 +607,7 @@ public:
 		return TStatId(Result);
 	}
 
-	void ListGroup(YName Group)
+	void ListGroup(FName Group)
 	{
 		FGroupEnable* Found = HighPerformanceEnable.Find(Group);
 		if (Found)
@@ -635,24 +635,24 @@ public:
 		}
 	}
 
-	YName CheckGroup(TCHAR const *& Cmd, bool Enable)
+	FName CheckGroup(TCHAR const *& Cmd, bool Enable)
 	{
 		YString MaybeGroup;
 		FParse::Token(Cmd, MaybeGroup, false);
 		MaybeGroup = YString(TEXT("STATGROUP_")) + MaybeGroup;
-		YName MaybeGroupYName(*MaybeGroup);
+		FName MaybeGroupFName(*MaybeGroup);
 
-		FGroupEnable* Found = HighPerformanceEnable.Find(MaybeGroupYName);
+		FGroupEnable* Found = HighPerformanceEnable.Find(MaybeGroupFName);
 		if (!Found)
 		{
-			EnableForNewGroup.Add(MaybeGroupYName, Enable);
+			EnableForNewGroup.Add(MaybeGroupFName, Enable);
 			ListGroups();
-			UE_LOG(LogStatGroupEnableManager, Display, TEXT("Group Not Found %s"), *MaybeGroupYName.ToString());
+			UE_LOG(LogStatGroupEnableManager, Display, TEXT("Group Not Found %s"), *MaybeGroupFName.ToString());
 			return NAME_None;
 		}
-		SetHighPerformanceEnableForGroup(MaybeGroupYName, Enable);
-		ListGroup(MaybeGroupYName);
-		return MaybeGroupYName;
+		SetHighPerformanceEnableForGroup(MaybeGroupFName, Enable);
+		ListGroup(MaybeGroupFName);
+		return MaybeGroupFName;
 	}
 
 	void StatGroupEnableManagerCommand(YString const& InCmd) override
@@ -713,7 +713,7 @@ IStatGroupEnableManager& IStatGroupEnableManager::Get()
 	FStatNameAndInfo
 -----------------------------------------------------------------------------*/
 
-YName FStatNameAndInfo::ToLongName(YName InStatName, char const* InGroup, char const* InCategory, TCHAR const* InDescription)
+FName FStatNameAndInfo::ToLongName(FName InStatName, char const* InGroup, char const* InCategory, TCHAR const* InDescription)
 {
 	YString LongName;
 	LongName.Reserve(255);
@@ -736,10 +736,10 @@ YName FStatNameAndInfo::ToLongName(YName InStatName, char const* InGroup, char c
 		LongName += InCategory;
 		LongName += TEXT("####");
 	}
-	return YName(*LongName);
+	return FName(*LongName);
 }
 
-YName FStatNameAndInfo::GetShortNameFrom(YName InLongName)
+FName FStatNameAndInfo::GetShortNameFrom(FName InLongName)
 {
 	YString Input(InLongName.ToString());
 
@@ -764,10 +764,10 @@ YName FStatNameAndInfo::GetShortNameFrom(YName InLongName)
 	{
 		Input = Input.Left(CategoryIndexEnd);
 	}
-	return YName(*Input);
+	return FName(*Input);
 }
 
-YName FStatNameAndInfo::GetGroupNameFrom(YName InLongName)
+FName FStatNameAndInfo::GetGroupNameFrom(FName InLongName)
 {
 	YString Input(InLongName.ToString());
 
@@ -777,14 +777,14 @@ YName FStatNameAndInfo::GetGroupNameFrom(YName InLongName)
 		const int32 IndexEnd = Input.Find(TEXT("//"), ESearchCase::CaseSensitive);
 		if (IndexEnd != INDEX_NONE)
 		{
-			return YName(*Input.Left(IndexEnd));
+			return FName(*Input.Left(IndexEnd));
 		}
 		checkStats(0);
 	}
 	return NAME_None;
 }
 
-YString FStatNameAndInfo::GetDescriptionFrom(YName InLongName)
+YString FStatNameAndInfo::GetDescriptionFrom(FName InLongName)
 {
 	YString Input(InLongName.ToString());
 
@@ -801,7 +801,7 @@ YString FStatNameAndInfo::GetDescriptionFrom(YName InLongName)
 	return YString();
 }
 
-YName FStatNameAndInfo::GetGroupCategoryFrom(YName InLongName)
+FName FStatNameAndInfo::GetGroupCategoryFrom(FName InLongName)
 {
 	YString Input(InLongName.ToString());
 
@@ -812,7 +812,7 @@ YName FStatNameAndInfo::GetGroupCategoryFrom(YName InLongName)
 		const int32 IndexEnd = Input.Find(TEXT("####"), ESearchCase::CaseSensitive);
 		if (IndexEnd != INDEX_NONE)
 		{
-			return YName(*Input.Left(IndexEnd));
+			return FName(*Input.Left(IndexEnd));
 		}
 		checkStats(0);
 	}

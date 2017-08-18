@@ -9,7 +9,7 @@
 #include "Containers/ContainerAllocationPolicies.h"
 #include "Containers/Array.h"
 #include "Containers/SolidAngleString.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Templates/SharedPointer.h"
 
 struct FWeakObjectPtr;
@@ -39,7 +39,7 @@ private:
 	{
 		if (FunctionName != NAME_None)
 		{
-			if (SObject* ObjectPtr = Object.Get())
+			if (UObject* ObjectPtr = Object.Get())
 			{
 				return ((UObjectTemplate*)ObjectPtr)->FindFunction(FunctionName) != nullptr;
 			}
@@ -56,7 +56,7 @@ public:
 	* @param InObject The object to call the function on.
 	* @param InFunctionName The name of the function to call.
 	*/
-	void BindUFunction(SObject* InObject, const YName& InFunctionName)
+	void BindUFunction(UObject* InObject, const FName& InFunctionName)
 	{
 		Object = InObject;
 		FunctionName = InFunctionName;
@@ -69,7 +69,7 @@ public:
 	*/
 	inline bool IsBound() const
 	{
-		return IsBound_Internal<SObject>();
+		return IsBound_Internal<UObject>();
 	}
 
 	/**
@@ -135,7 +135,7 @@ public:
 	}
 
 	/** Delegate serialization */
-	friend YArchive& operator<<(YArchive& Ar, TScriptDelegate& D)
+	friend FArchive& operator<<(FArchive& Ar, TScriptDelegate& D)
 	{
 		Ar << D.Object << D.FunctionName;
 		return Ar;
@@ -163,10 +163,10 @@ public:
 	*
 	* @return	The object
 	*/
-	SObject* GetUObject()
+	UObject* GetUObject()
 	{
-		// Downcast UObjectBase to SObject
-		return static_cast< SObject* >(Object.Get());
+		// Downcast UObjectBase to UObject
+		return static_cast< UObject* >(Object.Get());
 	}
 
 	/**
@@ -174,10 +174,10 @@ public:
 	*
 	* @return	The object
 	*/
-	const SObject* GetUObject() const
+	const UObject* GetUObject() const
 	{
-		// Downcast UObjectBase to SObject
-		return static_cast< const SObject* >(Object.Get());
+		// Downcast UObjectBase to UObject
+		return static_cast< const UObject* >(Object.Get());
 	}
 
 	/**
@@ -185,10 +185,10 @@ public:
 	*
 	* @return	The object
 	*/
-	SObject* GetUObjectEvenIfUnreachable()
+	UObject* GetUObjectEvenIfUnreachable()
 	{
-		// Downcast UObjectBase to SObject
-		return static_cast< SObject* >(Object.GetEvenIfUnreachable());
+		// Downcast UObjectBase to UObject
+		return static_cast< UObject* >(Object.GetEvenIfUnreachable());
 	}
 
 	/**
@@ -196,10 +196,10 @@ public:
 	*
 	* @return	The object
 	*/
-	const SObject* GetUObjectEvenIfUnreachable() const
+	const UObject* GetUObjectEvenIfUnreachable() const
 	{
-		// Downcast UObjectBase to SObject
-		return static_cast< const SObject* >(Object.GetEvenIfUnreachable());
+		// Downcast UObjectBase to UObject
+		return static_cast< const UObject* >(Object.GetEvenIfUnreachable());
 	}
 
 	/**
@@ -207,7 +207,7 @@ public:
 	*
 	* @return	Function name
 	*/
-	YName GetFunctionName() const
+	FName GetFunctionName() const
 	{
 		return FunctionName;
 	}
@@ -246,7 +246,7 @@ protected:
 	TWeakPtr Object;
 
 	/** Name of the function to call on the bound object */
-	YName FunctionName;
+	FName FunctionName;
 
 	// 
 	friend class FCallDelegateHelper;
@@ -299,7 +299,7 @@ public:
 	* @param	InFunctionName	Function name of the delegate to check
 	* @return	True if the delegate is already in the list.
 	*/
-	bool Contains(const SObject* InObject, YName InFunctionName) const
+	bool Contains(const UObject* InObject, FName InFunctionName) const
 	{
 		return InvocationList.ContainsByPredicate([=](const TScriptDelegate<TWeakPtr>& Delegate) {
 			return Delegate.GetFunctionName() == InFunctionName && Delegate.IsBoundToObjectEvenIfUnreachable(InObject);
@@ -357,7 +357,7 @@ public:
 	* @param	InObject		Object of the delegate to remove
 	* @param	InFunctionName	Function name of the delegate to remove
 	*/
-	void Remove(const SObject* InObject, YName InFunctionName)
+	void Remove(const UObject* InObject, FName InFunctionName)
 	{
 		// Remove the delegate
 		RemoveInternal(InObject, InFunctionName);
@@ -374,7 +374,7 @@ public:
 	*
 	* @param InObject The object to remove bindings for.
 	*/
-	void RemoveAll(SObject* Object)
+	void RemoveAll(UObject* Object)
 	{
 		for (int32 BindingIndex = InvocationList.Num() - 1; BindingIndex >= 0; --BindingIndex)
 		{
@@ -421,7 +421,7 @@ public:
 	}
 
 	/** Multi-cast delegate serialization */
-	friend YArchive& operator<<(YArchive& Ar, TMulticastScriptDelegate<TWeakPtr>& D)
+	friend FArchive& operator<<(FArchive& Ar, TMulticastScriptDelegate<TWeakPtr>& D)
 	{
 		if (Ar.IsSaving())
 		{
@@ -478,12 +478,12 @@ public:
 	* need call this function in normal circumstances.
 	* @return	List of objects bound to this delegate
 	*/
-	TArray< SObject* > GetAllObjects()
+	TArray< UObject* > GetAllObjects()
 	{
-		TArray< SObject* > OutputList;
+		TArray< UObject* > OutputList;
 		for (typename FInvocationList::TIterator CurDelegate(InvocationList); CurDelegate; ++CurDelegate)
 		{
-			SObject* CurObject = CurDelegate->GetUObject();
+			UObject* CurObject = CurDelegate->GetUObject();
 			if (CurObject != nullptr)
 			{
 				OutputList.Add(CurObject);
@@ -542,7 +542,7 @@ protected:
 	* @param	InObject		Object of the delegate to remove
 	* @param	InFunctionName	Function name of the delegate to remove
 	*/
-	void RemoveInternal(const SObject* InObject, YName InFunctionName) const
+	void RemoveInternal(const UObject* InObject, FName InFunctionName) const
 	{
 		int32 FoundDelegate = InvocationList.IndexOfByPredicate([=](const TScriptDelegate<TWeakPtr>& Delegate) {
 			return Delegate.GetFunctionName() == InFunctionName && Delegate.IsBoundToObjectEvenIfUnreachable(InObject);

@@ -106,9 +106,9 @@ public:
 struct FFileStatData
 {
 	FFileStatData()
-		: CreationTime(YDateTime::MinValue())
-		, AccessTime(YDateTime::MinValue())
-		, ModificationTime(YDateTime::MinValue())
+		: CreationTime(FDateTime::MinValue())
+		, AccessTime(FDateTime::MinValue())
+		, ModificationTime(FDateTime::MinValue())
 		, FileSize(-1)
 		, bIsDirectory(false)
 		, bIsReadOnly(false)
@@ -116,7 +116,7 @@ struct FFileStatData
 	{
 	}
 
-	FFileStatData(YDateTime InCreationTime, YDateTime InAccessTime, YDateTime InModificationTime, const int64 InFileSize, const bool InIsDirectory, const bool InIsReadOnly)
+	FFileStatData(FDateTime InCreationTime, FDateTime InAccessTime, FDateTime InModificationTime, const int64 InFileSize, const bool InIsDirectory, const bool InIsReadOnly)
 		: CreationTime(InCreationTime)
 		, AccessTime(InAccessTime)
 		, ModificationTime(InModificationTime)
@@ -128,13 +128,13 @@ struct FFileStatData
 	}
 
 	/** The time that the file or directory was originally created, or YDateTime::MinValue if the creation time is unknown */
-	YDateTime CreationTime;
+	FDateTime CreationTime;
 
 	/** The time that the file or directory was last accessed, or YDateTime::MinValue if the access time is unknown */
-	YDateTime AccessTime;
+	FDateTime AccessTime;
 
 	/** The time the the file or directory was last modified, or YDateTime::MinValue if the modification time is unknown */
-	YDateTime ModificationTime;
+	FDateTime ModificationTime;
 
 	/** Size of the file (in bytes), or -1 if the file size is unknown */
 	int64 FileSize;
@@ -247,11 +247,11 @@ public:
 	/** Attempt to change the read only status of a file. Return true if successful. **/
 	virtual bool		SetReadOnly(const TCHAR* Filename, bool bNewReadOnlyValue) = 0;
 	/** Return the modification time of a file. Returns YDateTime::MinValue() on failure **/
-	virtual YDateTime	GetTimeStamp(const TCHAR* Filename) = 0;
+	virtual FDateTime	GetTimeStamp(const TCHAR* Filename) = 0;
 	/** Sets the modification time of a file **/
-	virtual void		SetTimeStamp(const TCHAR* Filename, YDateTime DateTime) = 0;
+	virtual void		SetTimeStamp(const TCHAR* Filename, FDateTime DateTime) = 0;
 	/** Return the last access time of a file. Returns YDateTime::MinValue() on failure **/
-	virtual YDateTime	GetAccessTimeStamp(const TCHAR* Filename) = 0;
+	virtual FDateTime	GetAccessTimeStamp(const TCHAR* Filename) = 0;
 	/** For case insensitive filesystems, returns the full path of the file with the same case as in the filesystem */
 	virtual YString GetFilenameOnDisk(const TCHAR* Filename) = 0;
 
@@ -331,7 +331,7 @@ public:
 	*/
 	virtual IAsyncReadFileHandle* OpenAsyncRead(const TCHAR* Filename);
 
-	virtual void GetTimeStampPair(const TCHAR* PathA, const TCHAR* PathB, YDateTime& OutTimeStampA, YDateTime& OutTimeStampB);
+	virtual void GetTimeStampPair(const TCHAR* PathA, const TCHAR* PathB, FDateTime& OutTimeStampA, FDateTime& OutTimeStampB);
 
 	/**
 	* Call the Visit function of the visitor once for each file or directory in a directory tree. This function explores subdirectories.
@@ -403,10 +403,10 @@ public:
 	{
 	public:
 		/** Subclass fills out an archive to send to the server */
-		virtual void FillPayload(YArchive& Payload) = 0;
+		virtual void FillPayload(FArchive& Payload) = 0;
 
 		/** Subclass pulls data response from the server */
-		virtual void ProcessResponse(YArchive& Response) = 0;
+		virtual void ProcessResponse(FArchive& Response) = 0;
 	};
 
 	/**

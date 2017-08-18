@@ -12,7 +12,7 @@
  * from: http://sourceforge.net/mailarchive/message.php?msg_id=000901c26324%242181ea90%24a1e93942%40firefly
  * Updated for the fact that our FPlane uses Ax+By+Cz=D.
  */
-class YClipProjectionMatrix : public YMatrix
+class YClipProjectionMatrix : public FMatrix
 {
 public:
 	/**
@@ -21,7 +21,7 @@ public:
 	 * @param	SrcProjMat - source projection matrix to premultiply with the clip matrix
 	 * @param	Plane - clipping plane used to build the clip matrix (assumed to be in camera space)
 	 */
-	YClipProjectionMatrix( const YMatrix& SrcProjMat, const YPlane& Plane );
+	YClipProjectionMatrix( const FMatrix& SrcProjMat, const FPlane& Plane );
 
 private:
 	/** return sign of a number */
@@ -29,14 +29,14 @@ private:
 };
 
 
-FORCEINLINE YClipProjectionMatrix::YClipProjectionMatrix( const YMatrix& SrcProjMat, const YPlane& Plane ) :
-YMatrix(SrcProjMat)
+FORCEINLINE YClipProjectionMatrix::YClipProjectionMatrix( const FMatrix& SrcProjMat, const FPlane& Plane ) :
+FMatrix(SrcProjMat)
 {
 	// Calculate the clip-space corner point opposite the clipping plane
 	// as (sgn(clipPlane.x), sgn(clipPlane.y), 1, 1) and
 	// transform it into camera space by multiplying it
 	// by the inverse of the projection matrix
-	YPlane CornerPlane( 
+	FPlane CornerPlane( 
 		sgn(Plane.X) / SrcProjMat.M[0][0],
 		sgn(Plane.Y) / SrcProjMat.M[1][1],
 		1.0f,
@@ -44,7 +44,7 @@ YMatrix(SrcProjMat)
 	);
 
 	// Calculate the scaled plane vector
-	YPlane ProjPlane( Plane * (1.0f / (Plane | CornerPlane)) );
+	FPlane ProjPlane( Plane * (1.0f / (Plane | CornerPlane)) );
 
 	// use the projected space clip plane in z column 
 	// Note: (account for our negated W coefficient)

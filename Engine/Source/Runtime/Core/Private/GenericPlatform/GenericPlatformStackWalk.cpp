@@ -201,7 +201,7 @@ TArray<FProgramCounterSymbolInfo> FGenericPlatformStackWalk::GetStack(int32 Igno
 	return Stack;
 }
 
-TMap<YName, YString> FGenericPlatformStackWalk::GetSymbolMetaData()
+TMap<FName, YString> FGenericPlatformStackWalk::GetSymbolMetaData()
 {
-	return TMap<YName, YString>();
+	return TMap<FName, YString>();
 }

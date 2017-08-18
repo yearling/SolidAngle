@@ -159,7 +159,7 @@ struct CORE_API FNumberFormattingOptions
 	int32 MaximumFractionalDigits;
 	FNumberFormattingOptions& SetMaximumFractionalDigits(int32 InValue) { MaximumFractionalDigits = InValue; return *this; }
 
-	friend YArchive& operator<<(YArchive& Ar, FNumberFormattingOptions& Value);
+	friend FArchive& operator<<(FArchive& Ar, FNumberFormattingOptions& Value);
 
 	/** Get the hash code to use for the given formatting options */
 	friend uint32 GetTypeHash(const FNumberFormattingOptions& Key);
@@ -322,9 +322,9 @@ public:
 	/**
 	* Generate an FText that represents the passed number as a date and/or time in the current culture
 	*/
-	static FText AsDate(const YDateTime& DateTime, const EDateTimeStyle::Type DateStyle = EDateTimeStyle::Default, const YString& TimeZone = TEXT(""), const FCulturePtr& TargetCulture = NULL);
-	static FText AsDateTime(const YDateTime& DateTime, const EDateTimeStyle::Type DateStyle = EDateTimeStyle::Default, const EDateTimeStyle::Type TimeStyle = EDateTimeStyle::Default, const YString& TimeZone = TEXT(""), const FCulturePtr& TargetCulture = NULL);
-	static FText AsTime(const YDateTime& DateTime, const EDateTimeStyle::Type TimeStyle = EDateTimeStyle::Default, const YString& TimeZone = TEXT(""), const FCulturePtr& TargetCulture = NULL);
+	static FText AsDate(const FDateTime& DateTime, const EDateTimeStyle::Type DateStyle = EDateTimeStyle::Default, const YString& TimeZone = TEXT(""), const FCulturePtr& TargetCulture = NULL);
+	static FText AsDateTime(const FDateTime& DateTime, const EDateTimeStyle::Type DateStyle = EDateTimeStyle::Default, const EDateTimeStyle::Type TimeStyle = EDateTimeStyle::Default, const YString& TimeZone = TEXT(""), const FCulturePtr& TargetCulture = NULL);
+	static FText AsTime(const FDateTime& DateTime, const EDateTimeStyle::Type TimeStyle = EDateTimeStyle::Default, const YString& TimeZone = TEXT(""), const FCulturePtr& TargetCulture = NULL);
 	static FText AsTimespan(const YTimespan& Timespan, const FCulturePtr& TargetCulture = NULL);
 
 	/**
@@ -346,7 +346,7 @@ public:
 	/**
 	* Generate an FText representing the pass name
 	*/
-	static FText FromName(const YName& Val);
+	static FText FromName(const FName& Val);
 
 	/**
 	* Generate an FText representing the passed in string
@@ -491,7 +491,7 @@ private:
 
 	FText(YString&& InSourceString, const YString& InNamespace, const YString& InKey, uint32 InFlags = 0);
 
-	static void SerializeText(YArchive& Ar, FText& Value);
+	static void SerializeText(FArchive& Ar, FText& Value);
 
 	/**
 	* Generate an FText for a string formatted numerically.
@@ -542,7 +542,7 @@ public:
 	friend class FTextFormatData;
 	friend class FTextSnapshot;
 	friend class FTextInspector;
-	friend class YArchive;
+	friend class FArchive;
 	friend class UTextProperty;
 	friend class UGatherTextFromAssetsCommandlet;
 	friend class FFormatArgumentValue;
@@ -609,7 +609,7 @@ public:
 		UIntValue = (uint64)Value;
 	}
 
-	friend YArchive& operator<<(YArchive& Ar, FFormatArgumentValue& Value);
+	friend FArchive& operator<<(FArchive& Ar, FFormatArgumentValue& Value);
 
 	YString ToFormattedString(const bool bInRebuildText, const bool bInRebuildAsSource) const;
 	void ToFormattedString(const bool bInRebuildText, const bool bInRebuildAsSource, YString& OutResult) const;
@@ -681,7 +681,7 @@ struct CORE_API FFormatArgumentData
 
 	void ResetValue();
 
-	friend YArchive& operator<<(YArchive& Ar, FFormatArgumentData& Value);
+	friend FArchive& operator<<(FArchive& Ar, FFormatArgumentData& Value);
 
 	YString ArgumentName;
 
@@ -936,7 +936,7 @@ public:
 		Report += String;
 	}
 
-	void AppendLine(const YName& Name)
+	void AppendLine(const FName& Name)
 	{
 		AppendLine();
 		Report += Name.ToString();

@@ -645,7 +645,7 @@ public:
 	 * @param Range The range to serialize.
 	 * @return The archive.
 	 */
-	friend class YArchive& operator<<(class YArchive& Ar, TRange& Range)
+	friend class FArchive& operator<<(class FArchive& Ar, TRange& Range)
 	{
 		return Ar << Range.LowerBound << Range.UpperBound;
 	}
@@ -784,7 +784,7 @@ private:
 		enum { Value = true }; \
 	};
 
-DEFINE_RANGE_WRAPPER_STRUCT(YDateRange,   YDateTime)
+DEFINE_RANGE_WRAPPER_STRUCT(YDateRange,   FDateTime)
 DEFINE_RANGE_WRAPPER_STRUCT(YDoubleRange, double)
 DEFINE_RANGE_WRAPPER_STRUCT(YFloatRange,  float)
 DEFINE_RANGE_WRAPPER_STRUCT(YInt8Range,   int8)

@@ -28,7 +28,7 @@ struct FGenericPlatformSymbolInfo
 	* @param Ar The archive to serialize from or into.
 	* @param Info The info to serialize.
 	*/
-	friend YArchive& operator<<(YArchive& Ar, FGenericPlatformSymbolInfo& Info)
+	friend FArchive& operator<<(FArchive& Ar, FGenericPlatformSymbolInfo& Info)
 	{
 		return Ar << Info.Line << Info.Start << Info.Length << Info.PathIdx;
 	}
@@ -51,7 +51,7 @@ struct FGenericPlatformSymbolData
 	* @param Ar The archive to serialize from or into.
 	* @param Info The info to serialize.
 	*/
-	friend YArchive& operator<<(YArchive& Ar, FGenericPlatformSymbolData& Info)
+	friend FArchive& operator<<(FArchive& Ar, FGenericPlatformSymbolData& Info)
 	{
 		return Ar << Info.Start << Info.Length << Info.NameIdx << Info.SymbolInfo;
 	}
@@ -74,7 +74,7 @@ struct FGenericPlatformSymbolDatabase
 	* @param Ar The archive to serialize from or into.
 	* @param Info The info to serialize.
 	*/
-	friend YArchive& operator<<(YArchive& Ar, FGenericPlatformSymbolDatabase& Info)
+	friend FArchive& operator<<(FArchive& Ar, FGenericPlatformSymbolDatabase& Info)
 	{
 		return Ar << Info.Signature << Info.Name << Info.Symbols << Info.StringTable;
 	}

@@ -62,19 +62,19 @@ enum class EMonthOfYear
 * @see FDateRange
 * @see YTimespan
 */
-struct YDateTime
+struct FDateTime
 {
 public:
 
 	/** Default constructor (no initialization). */
-	YDateTime() { }
+	FDateTime() { }
 
 	/**
 	* Creates and initializes a new instance with the specified number of ticks.
 	*
 	* @param Ticks The ticks representing the date and time.
 	*/
-	YDateTime(int64 InTicks)
+	FDateTime(int64 InTicks)
 		: Ticks(InTicks)
 	{ }
 
@@ -89,7 +89,7 @@ public:
 	* @param Second The second (optional).
 	* @param Millisecond The millisecond (optional).
 	*/
-	CORE_API YDateTime(int32 Year, int32 Month, int32 Day, int32 Hour = 0, int32 Minute = 0, int32 Second = 0, int32 Millisecond = 0);
+	CORE_API FDateTime(int32 Year, int32 Month, int32 Day, int32 Hour = 0, int32 Minute = 0, int32 Second = 0, int32 Millisecond = 0);
 
 public:
 
@@ -99,9 +99,9 @@ public:
 	* @return A date whose value is the sum of this date and the given time span.
 	* @see YTimespan
 	*/
-	YDateTime operator+(const YTimespan& Other) const
+	FDateTime operator+(const YTimespan& Other) const
 	{
-		return YDateTime(Ticks + Other.GetTicks());
+		return FDateTime(Ticks + Other.GetTicks());
 	}
 
 	/**
@@ -110,7 +110,7 @@ public:
 	* @return This date.
 	* @see YTimespan
 	*/
-	YDateTime& operator+=(const YTimespan& Other)
+	FDateTime& operator+=(const YTimespan& Other)
 	{
 		Ticks += Other.GetTicks();
 
@@ -123,7 +123,7 @@ public:
 	* @return A time span whose value is the difference of this date and the given date.
 	* @see YTimespan
 	*/
-	YTimespan operator-(const YDateTime& Other) const
+	YTimespan operator-(const FDateTime& Other) const
 	{
 		return YTimespan(Ticks - Other.Ticks);
 	}
@@ -134,9 +134,9 @@ public:
 	* @return A date whose value is the difference of this date and the given time span.
 	* @see YTimespan
 	*/
-	YDateTime operator-(const YTimespan& Other) const
+	FDateTime operator-(const YTimespan& Other) const
 	{
-		return YDateTime(Ticks - Other.GetTicks());
+		return FDateTime(Ticks - Other.GetTicks());
 	}
 
 	/**
@@ -145,7 +145,7 @@ public:
 	* @return This date.
 	* @see YTimespan
 	*/
-	YDateTime& operator-=(const YTimespan& Other)
+	FDateTime& operator-=(const YTimespan& Other)
 	{
 		Ticks -= Other.GetTicks();
 
@@ -158,7 +158,7 @@ public:
 	* @param other The date to compare with.
 	* @return true if the dates are equal, false otherwise.
 	*/
-	bool operator==(const YDateTime& Other) const
+	bool operator==(const FDateTime& Other) const
 	{
 		return (Ticks == Other.Ticks);
 	}
@@ -169,7 +169,7 @@ public:
 	* @param other The date to compare with.
 	* @return true if the dates are not equal, false otherwise.
 	*/
-	bool operator!=(const YDateTime& Other) const
+	bool operator!=(const FDateTime& Other) const
 	{
 		return (Ticks != Other.Ticks);
 	}
@@ -180,7 +180,7 @@ public:
 	* @param other The date to compare with.
 	* @return true if this date is greater, false otherwise.
 	*/
-	bool operator>(const YDateTime& Other) const
+	bool operator>(const FDateTime& Other) const
 	{
 		return (Ticks > Other.Ticks);
 	}
@@ -191,7 +191,7 @@ public:
 	* @param other The date to compare with.
 	* @return true if this date is greater or equal, false otherwise.
 	*/
-	bool operator>=(const YDateTime& Other) const
+	bool operator>=(const FDateTime& Other) const
 	{
 		return (Ticks >= Other.Ticks);
 	}
@@ -202,7 +202,7 @@ public:
 	* @param other The date to compare with.
 	* @return true if this date is less, false otherwise.
 	*/
-	bool operator<(const YDateTime& Other) const
+	bool operator<(const FDateTime& Other) const
 	{
 		return (Ticks < Other.Ticks);
 	}
@@ -213,7 +213,7 @@ public:
 	* @param other The date to compare with.
 	* @return true if this date is less or equal, false otherwise.
 	*/
-	bool operator<=(const YDateTime& Other) const
+	bool operator<=(const FDateTime& Other) const
 	{
 		return (Ticks <= Other.Ticks);
 	}
@@ -231,7 +231,7 @@ public:
 	* @return true on success, false otherwise.
 	* @see ImportTextItem
 	*/
-	CORE_API bool ExportTextItem(YString& ValueStr, YDateTime const& DefaultValue, SObject* Parent, int32 PortFlags, SObject* ExportRootScope) const;
+	CORE_API bool ExportTextItem(YString& ValueStr, FDateTime const& DefaultValue, UObject* Parent, int32 PortFlags, UObject* ExportRootScope) const;
 
 	/**
 	* Gets the date part of this date.
@@ -240,9 +240,9 @@ public:
 	*
 	* @return A YDateTime object containing the date.
 	*/
-	YDateTime GetDate() const
+	FDateTime GetDate() const
 	{
-		return YDateTime(Ticks - (Ticks % ETimespan::TicksPerDay));
+		return FDateTime(Ticks - (Ticks % ETimespan::TicksPerDay));
 	}
 
 	/**
@@ -417,7 +417,7 @@ public:
 	* @return true on success, false otherwise.
 	* @see ExportTextItem
 	*/
-	CORE_API bool ImportTextItem(const TCHAR*& Buffer, int32 PortFlags, SObject* Parent, YOutputDevice* ErrorText);
+	CORE_API bool ImportTextItem(const TCHAR*& Buffer, int32 PortFlags, UObject* Parent, FOutputDevice* ErrorText);
 
 	/**
 	* Gets whether this date's time is in the afternoon.
@@ -447,7 +447,7 @@ public:
 	* @param Ar The archive to serialize from or into.
 	* @return true on success, false otherwise.
 	*/
-	CORE_API bool Serialize(YArchive& Ar);
+	CORE_API bool Serialize(FArchive& Ar);
 
 	/**
 	* Returns the ISO-8601 string representation of the YDateTime.
@@ -497,7 +497,7 @@ public:
 	*/
 	CORE_API int64 ToUnixTimestamp() const
 	{
-		return (Ticks - YDateTime(1970, 1, 1).Ticks) / ETimespan::TicksPerSecond;
+		return (Ticks - FDateTime(1970, 1, 1).Ticks) / ETimespan::TicksPerSecond;
 	}
 
 public:
@@ -528,9 +528,9 @@ public:
 	* @return Gregorian date and time.
 	* @see GetJulianDay
 	*/
-	static YDateTime FromJulianDay(double JulianDay)
+	static FDateTime FromJulianDay(double JulianDay)
 	{
-		return YDateTime((int64)((JulianDay - 1721425.5) * ETimespan::TicksPerDay));
+		return FDateTime((int64)((JulianDay - 1721425.5) * ETimespan::TicksPerDay));
 	}
 
 	/**
@@ -540,9 +540,9 @@ public:
 	* @return Gregorian date and time.
 	* @see ToUnixTimestamp
 	*/
-	static YDateTime FromUnixTimestamp(int64 UnixTime)
+	static FDateTime FromUnixTimestamp(int64 UnixTime)
 	{
-		return YDateTime(1970, 1, 1) + YTimespan(UnixTime * ETimespan::TicksPerSecond);
+		return FDateTime(1970, 1, 1) + YTimespan(UnixTime * ETimespan::TicksPerSecond);
 	}
 
 	/**
@@ -564,9 +564,9 @@ public:
 	*
 	* @see MinValue
 	*/
-	static YDateTime MaxValue()
+	static FDateTime MaxValue()
 	{
-		return YDateTime(3652059 * ETimespan::TicksPerDay - 1);
+		return FDateTime(3652059 * ETimespan::TicksPerDay - 1);
 	}
 
 	/**
@@ -576,9 +576,9 @@ public:
 	*
 	* @see MaxValue
 	*/
-	static YDateTime MinValue()
+	static FDateTime MinValue()
 	{
-		return YDateTime(0);
+		return FDateTime(0);
 	}
 
 	/**
@@ -591,7 +591,7 @@ public:
 	* @return Current date and time.
 	* @see Today, UtcNow
 	*/
-	static CORE_API YDateTime Now();
+	static CORE_API FDateTime Now();
 
 	/**
 	* Converts a string to a date and time.
@@ -603,7 +603,7 @@ public:
 	* @param OutDateTime Will contain the parsed date and time.
 	* @return true if the string was converted successfully, false otherwise.
 	*/
-	static CORE_API bool Parse(const YString& DateTimeString, YDateTime& OutDateTime);
+	static CORE_API bool Parse(const YString& DateTimeString, FDateTime& OutDateTime);
 
 	/**
 	* Parses a date string in ISO-8601 format.
@@ -613,7 +613,7 @@ public:
 	* @return true if the string was converted successfully, false otherwise.
 	* @see Parse, ToIso8601
 	*/
-	static CORE_API bool ParseIso8601(const TCHAR* DateTimeString, YDateTime& OutDateTime);
+	static CORE_API bool ParseIso8601(const TCHAR* DateTimeString, FDateTime& OutDateTime);
 
 	/**
 	* Parses a date string in HTTP-date format (rfc1123-date | rfc850-date | asctime-date)
@@ -624,7 +624,7 @@ public:
 	* @return true if the string was converted successfully, false otherwise.
 	* @see Parse
 	*/
-	static CORE_API bool ParseHttpDate(const YString& HttpDate, YDateTime& OutDateTime);
+	static CORE_API bool ParseHttpDate(const YString& HttpDate, FDateTime& OutDateTime);
 
 	/**
 	* Gets the local date on this computer.
@@ -634,7 +634,7 @@ public:
 	* @return Current date.
 	* @see Now, UtcNow
 	*/
-	static YDateTime Today()
+	static FDateTime Today()
 	{
 		return Now().GetDate();
 	}
@@ -650,7 +650,7 @@ public:
 	* @return Current date and time.
 	* @see Now
 	*/
-	static CORE_API YDateTime UtcNow();
+	static CORE_API FDateTime UtcNow();
 
 	/**
 	* Validates the given components of a date and time value.
@@ -679,7 +679,7 @@ public:
 	*
 	* @todo gmp: Figure out better include order in Core.h so this can be inlined.
 	*/
-	friend CORE_API YArchive& operator<<(YArchive& Ar, YDateTime& DateTime);
+	friend CORE_API FArchive& operator<<(FArchive& Ar, FDateTime& DateTime);
 
 	/**
 	* Gets the hash for the specified date and time.
@@ -687,7 +687,7 @@ public:
 	* @param DateTime The date and time to get the hash for.
 	* @return Hash value.
 	*/
-	friend CORE_API uint32 GetTypeHash(const YDateTime& DateTime);
+	friend CORE_API uint32 GetTypeHash(const FDateTime& DateTime);
 
 protected:
 

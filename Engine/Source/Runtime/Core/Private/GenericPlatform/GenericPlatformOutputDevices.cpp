@@ -90,11 +90,11 @@ YString YGenericPlatformOutputDevices::GetAbsoluteLogFilename()
 	#define WITH_LOGGING_TO_MEMORY 0
 #endif
 
-class YOutputDevice* YGenericPlatformOutputDevices::GetLog()
+class FOutputDevice* YGenericPlatformOutputDevices::GetLog()
 {
 	static struct FLogOutputDeviceInitializer
 	{
-		TUniquePtr<YOutputDevice> LogDevice;
+		TUniquePtr<FOutputDevice> LogDevice;
 		FLogOutputDeviceInitializer()
 		{
 #if WITH_LOGGING_TO_MEMORY
@@ -130,7 +130,7 @@ class YOutputDeviceError* YGenericPlatformOutputDevices::GetError()
 }
 
 
-class YFeedbackContext* YGenericPlatformOutputDevices::GetWarn()
+class FFeedbackContext* YGenericPlatformOutputDevices::GetWarn()
 {
 	static FFeedbackContextAnsi Singleton;
 	return &Singleton;

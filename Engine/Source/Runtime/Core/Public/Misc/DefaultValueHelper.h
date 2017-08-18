@@ -131,7 +131,7 @@ public:
 	 *
 	 * @return true if the conversion happened, false otherwise
 	 */
-	static bool ParseVector(const YString& Source, YVector& OutVal);
+	static bool ParseVector(const YString& Source, FVector& OutVal);
 
 	/**
 	 * Converts a string into a YVector. Accepted form: " %f, %f "
@@ -151,7 +151,7 @@ public:
 	 *
 	 * @return true if the conversion happened, false otherwise
 	 */
-	static bool ParseRotator(const YString& Source, YRotator& OutVal);
+	static bool ParseRotator(const YString& Source, FRotator& OutVal);
 
 	/**
 	 * Converts a string into a YLinearColor. 
@@ -162,7 +162,7 @@ public:
 	 *
 	 * @return true if the conversion happened, false otherwise
 	 */
-	static bool ParseLinearColor(const YString& Source, YLinearColor& OutVal);
+	static bool ParseLinearColor(const YString& Source, FLinearColor& OutVal);
 
 	/**
 	 * Converts a string into a YLinearColor. 
@@ -173,5 +173,5 @@ public:
 	 *
 	 * @return true if the conversion happened, false otherwise
 	 */
-	static bool ParseColor(const YString& Source, YColor& OutVal);
+	static bool ParseColor(const YString& Source, FColor& OutVal);
 };

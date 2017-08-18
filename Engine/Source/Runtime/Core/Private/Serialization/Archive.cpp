@@ -8,10 +8,10 @@
 #include "HAL/SolidAngleMemory.h"
 #include "Containers/Array.h"
 #include "Containers/SolidAngleString.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Logging/LogMacros.h"
 #include "Misc/Parse.h"
-#include "SObject/ObjectVersion.h"
+#include "UObject/ObjectVersion.h"
 #include "Serialization/ArchiveProxy.h"
 #include "Serialization/NameAsStringProxyArchive.h"
 #include "Misc/CommandLine.h"
@@ -30,7 +30,7 @@
 	YArchive implementation.
 -----------------------------------------------------------------------------*/
 
-YArchive::YArchive()
+FArchive::FArchive()
 {
 #if DEVIRTUALIZE_FLinkerLoad_Serialize
 	ActiveFPLB = &InlineFPLB;
@@ -44,7 +44,7 @@ YArchive::YArchive()
 	Reset();
 }
 
-YArchive::YArchive(const YArchive& ArchiveToCopy)
+FArchive::FArchive(const FArchive& ArchiveToCopy)
 {
 #if DEVIRTUALIZE_FLinkerLoad_Serialize
 	ActiveFPLB = &InlineFPLB;
@@ -62,7 +62,7 @@ YArchive::YArchive(const YArchive& ArchiveToCopy)
 	CustomVersionContainer = new FCustomVersionContainer(*ArchiveToCopy.CustomVersionContainer);
 }
 
-YArchive& YArchive::operator=(const YArchive& ArchiveToCopy)
+FArchive& FArchive::operator=(const FArchive& ArchiveToCopy)
 {
 #if DEVIRTUALIZE_FLinkerLoad_Serialize
 	ActiveFPLB = &InlineFPLB;
@@ -78,7 +78,7 @@ YArchive& YArchive::operator=(const YArchive& ArchiveToCopy)
 	return *this;
 }
 
-YArchive::~YArchive()
+FArchive::~FArchive()
 {
 	delete CustomVersionContainer;
 
@@ -88,7 +88,7 @@ YArchive::~YArchive()
 }
 
 // Resets all of the base archive members
-void YArchive::Reset()
+void FArchive::Reset()
 {
 #if DEVIRTUALIZE_FLinkerLoad_Serialize
 	ActiveFPLB->Reset();
@@ -117,7 +117,7 @@ void YArchive::Reset()
 	ArIgnoreClassGeneratedByRef			= false;
 	ArIgnoreClassRef					= false;
 	ArAllowLazyLoading					= false;
-	ArIsObjectReferenceCollector		= false;
+	ArIUObjectReferenceCollector		= false;
 	ArIsModifyingWeakAndStrongReferences= false;
 	ArIsCountingMemory					= false;
 	ArPortFlags							= 0;
@@ -142,7 +142,7 @@ void YArchive::Reset()
 	ResetCustomVersions();
 }
 
-void YArchive::CopyTrivialYArchiveStatusMembers(const YArchive& ArchiveToCopy)
+void FArchive::CopyTrivialYArchiveStatusMembers(const FArchive& ArchiveToCopy)
 {
 	ArUE4Ver                             = ArchiveToCopy.ArUE4Ver;
 	ArLicenseeUE4Ver                     = ArchiveToCopy.ArLicenseeUE4Ver;
@@ -168,7 +168,7 @@ void YArchive::CopyTrivialYArchiveStatusMembers(const YArchive& ArchiveToCopy)
 	ArIgnoreClassGeneratedByRef			 = ArchiveToCopy.ArIgnoreClassGeneratedByRef;
 	ArIgnoreClassRef                     = ArchiveToCopy.ArIgnoreClassRef;
 	ArAllowLazyLoading                   = ArchiveToCopy.ArAllowLazyLoading;
-	ArIsObjectReferenceCollector         = ArchiveToCopy.ArIsObjectReferenceCollector;
+	ArIUObjectReferenceCollector         = ArchiveToCopy.ArIUObjectReferenceCollector;
 	ArIsModifyingWeakAndStrongReferences = ArchiveToCopy.ArIsModifyingWeakAndStrongReferences;
 	ArIsCountingMemory                   = ArchiveToCopy.ArIsCountingMemory;
 	ArPortFlags                          = ArchiveToCopy.ArPortFlags;
@@ -194,13 +194,13 @@ void YArchive::CopyTrivialYArchiveStatusMembers(const YArchive& ArchiveToCopy)
  *
  * This is overridden for the specific Archive Types
  **/
-YString YArchive::GetArchiveName() const
+YString FArchive::GetArchiveName() const
 {
 	return TEXT("YArchive");
 }
 
 #if USE_STABLE_LOCALIZATION_KEYS
-void YArchive::SetBaseLocalizationNamespace(const YString& InLocalizationNamespace)
+void FArchive::SetBaseLocalizationNamespace(const YString& InLocalizationNamespace)
 {
 	if (InLocalizationNamespace.IsEmpty())
 	{
@@ -216,59 +216,59 @@ void YArchive::SetBaseLocalizationNamespace(const YString& InLocalizationNamespa
 		*LocalizationNamespacePtr = InLocalizationNamespace;
 	}
 }
-YString YArchive::GetBaseLocalizationNamespace() const
+YString FArchive::GetBaseLocalizationNamespace() const
 {
 	return LocalizationNamespacePtr ? *LocalizationNamespacePtr : YString();
 }
-void YArchive::SetLocalizationNamespace(const YString& InLocalizationNamespace)
+void FArchive::SetLocalizationNamespace(const YString& InLocalizationNamespace)
 {
 	SetBaseLocalizationNamespace(InLocalizationNamespace);
 }
-YString YArchive::GetLocalizationNamespace() const
+YString FArchive::GetLocalizationNamespace() const
 {
 	return GetBaseLocalizationNamespace();
 }
 #endif // USE_STABLE_LOCALIZATION_KEYS
 
 #if WITH_EDITOR
-YArchive::FScopeAddDebugData::FScopeAddDebugData(YArchive& InAr, const YName& DebugData) : Ar(InAr)
+FArchive::FScopeAddDebugData::FScopeAddDebugData(FArchive& InAr, const FName& DebugData) : Ar(InAr)
 {
 	Ar.PushDebugDataString(DebugData);
 }
 
-void YArchive::PushDebugDataString(const YName& DebugData)
+void FArchive::PushDebugDataString(const FName& DebugData)
 {
 }
 #endif
 
-YArchive& YArchive::operator<<( FText& Value )
+FArchive& FArchive::operator<<( FText& Value )
 {
 	FText::SerializeText(*this, Value);
 	return *this;
 }
 
-YArchive& YArchive::operator<<( class FLazyObjectPtr& LazyObjectPtr )
+FArchive& FArchive::operator<<( class FLazyObjectPtr& LazyObjectPtr )
 {
 	// The base YArchive does not implement this method. Use YArchiveUOBject instead.
 	UE_LOG(LogSerialization, Fatal, TEXT("YArchive does not support FLazyObjectPtr serialization. Use YArchiveUObject instead."));
 	return *this;
 }
 
-YArchive& YArchive::operator<<( class FAssetPtr& AssetPtr )
+FArchive& FArchive::operator<<( class FAssetPtr& AssetPtr )
 {
 	// The base YArchive does not implement this method. Use YArchiveUOBject instead.
 	UE_LOG(LogSerialization, Fatal, TEXT("YArchive does not support FAssetPtr serialization. Use YArchiveUObject instead."));
 	return *this;
 }
 
-YArchive& YArchive::operator<<(struct FStringAssetReference& Value)
+FArchive& FArchive::operator<<(struct FStringAssetReference& Value)
 {
 	// The base YArchive does not implement this method. Use YArchiveUOBject instead.
 	UE_LOG(LogSerialization, Fatal, TEXT("YArchive does not support FAssetPtr serialization. Use YArchiveUObject instead."));
 	return *this;
 }
 
-YArchive& YArchive::operator<<(struct FWeakObjectPtr& Value)
+FArchive& FArchive::operator<<(struct FWeakObjectPtr& Value)
 {
 	// The base YArchive does not implement this method. Use YArchiveUOBject instead.
 	UE_LOG(LogSerialization, Fatal, TEXT("YArchive does not support FWeakObjectPtr serialization. Use YArchiveUObject instead."));
@@ -276,7 +276,7 @@ YArchive& YArchive::operator<<(struct FWeakObjectPtr& Value)
 }
 
 #if WITH_EDITOR
-YArchive& YArchive::operator<<( bool& D )
+FArchive& FArchive::operator<<( bool& D )
 {
 	// Serialize bool as if it were UBOOL (legacy, 32 bit int).
 	uint32 OldUBoolValue;
@@ -309,7 +309,7 @@ YArchive& YArchive::operator<<( bool& D )
 }
 #endif
 
-const FCustomVersionContainer& YArchive::GetCustomVersions() const
+const FCustomVersionContainer& FArchive::GetCustomVersions() const
 {
 	if (bCustomVersionsAreReset)
 	{
@@ -330,18 +330,18 @@ const FCustomVersionContainer& YArchive::GetCustomVersions() const
 	return *CustomVersionContainer;
 }
 
-void YArchive::SetCustomVersions(const FCustomVersionContainer& NewVersions)
+void FArchive::SetCustomVersions(const FCustomVersionContainer& NewVersions)
 {
 	*CustomVersionContainer = NewVersions;
 	bCustomVersionsAreReset = false;
 }
 
-void YArchive::ResetCustomVersions()
+void FArchive::ResetCustomVersions()
 {
 	bCustomVersionsAreReset = true;
 }
 
-void YArchive::UsingCustomVersion(const YGuid& Key)
+void FArchive::UsingCustomVersion(const FGuid& Key)
 {
 	// If we're loading, we want to use the version that the archive was serialized with, not register a new one.
 	if (IsLoading())
@@ -353,10 +353,10 @@ void YArchive::UsingCustomVersion(const YGuid& Key)
 	// If this fails, you probably don't have an FCustomVersionRegistration variable defined for this GUID.
 	check(RegisteredVersion);
 
-	const_cast<FCustomVersionContainer&>(GetCustomVersions()).SetVersion(Key, RegisteredVersion->Version, RegisteredVersion->GetFriendlyName());
+	const_cast<FCustomVersionContainer&>(GetCustomVersions()).SetVersion(Key, RegisteredVersion->Version, RegisteredVersion->GetFriendlFName());
 }
 
-int32 YArchive::CustomVer(const YGuid& Key) const
+int32 FArchive::CustomVer(const FGuid& Key) const
 {
 	auto* CustomVersion = GetCustomVersions().GetVersion(Key);
 
@@ -367,9 +367,9 @@ int32 YArchive::CustomVer(const YGuid& Key) const
 	return CustomVersion ? CustomVersion->Version : -1;
 }
 
-void YArchive::SetCustomVersion(const YGuid& Key, int32 Version, YName FriendlyName)
+void FArchive::SetCustomVersion(const FGuid& Key, int32 Version, FName FriendlFName)
 {
-	const_cast<FCustomVersionContainer&>(GetCustomVersions()).SetVersion(Key, Version, FriendlyName);
+	const_cast<FCustomVersionContainer&>(GetCustomVersions()).SetVersion(Key, Version, FriendlFName);
 }
 
 YString YArchiveProxy::GetArchiveName() const
@@ -389,15 +389,15 @@ YString YArchiveProxy::GetLocalizationNamespace() const
 #endif // USE_STABLE_LOCALIZATION_KEYS
 
 /**
- * Serialize the given YName as an YString
+ * Serialize the given FName as an YString
  */
-YArchive& YNameAsStringProxyArchive::operator<<( class YName& N )
+FArchive& FNameAsStringProxyArchive::operator<<( class FName& N )
 {
 	if (IsLoading())
 	{
 		YString LoadedString;
 		InnerArchive << LoadedString;
-		N = YName(*LoadedString);
+		N = FName(*LoadedString);
 	}
 	else
 	{
@@ -473,7 +473,7 @@ public:
  * @param	bTreatBufferAsFileReader true if V is actually an YArchive, which is used when saving to read data - helps to avoid single huge allocations of source data
  * @param	bUsePlatformBitWindow use a platform specific bitwindow setting
  */
-void YArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Flags, bool bTreatBufferAsFileReader, bool bUsePlatformBitWindow )
+void FArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Flags, bool bTreatBufferAsFileReader, bool bUsePlatformBitWindow )
 {
 	if( IsLoading() )
 	{
@@ -635,7 +635,7 @@ void YArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Fla
 		// Pointer to src data if buffer is memory pointer, NULL if it's a YArchive.
 		uint8* SrcBuffer = bTreatBufferAsFileReader ? NULL : (uint8*)V;
 
-		check(!bTreatBufferAsFileReader || ((YArchive*)V)->IsLoading());
+		check(!bTreatBufferAsFileReader || ((FArchive*)V)->IsLoading());
 		check(NumChunksLeftToFinalize);
 
 		// Loop while there is work left to do based on whether we have finalized all chunks yet.
@@ -685,7 +685,7 @@ void YArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Fla
 						{
 							NewChunk.UncompressedBuffer = YMemory::Malloc(GSavingCompressionChunkSize);
 						}
-						((YArchive*)V)->Serialize(NewChunk.UncompressedBuffer, NewChunk.UncompressedSize);
+						((FArchive*)V)->Serialize(NewChunk.UncompressedBuffer, NewChunk.UncompressedSize);
 					}
 					// Advance src pointer by amount to be compressed.
 					else
@@ -796,7 +796,7 @@ void YArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Fla
 		if (bTreatBufferAsFileReader)
 		{
 			Src = (uint8*)YMemory::Malloc(GSavingCompressionChunkSize);
-			check(((YArchive*)V)->IsLoading());
+			check(((FArchive*)V)->IsLoading());
 		}
 		else
 		{
@@ -817,7 +817,7 @@ void YArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Fla
 			// read in the next chunk from the reader
 			if (bTreatBufferAsFileReader)
 			{
-				((YArchive*)V)->Serialize(Src, BytesToCompress);
+				((FArchive*)V)->Serialize(Src, BytesToCompress);
 			}
 
 			check(CompressedSize < INT_MAX);
@@ -887,7 +887,7 @@ void YArchive::SerializeCompressed( void* V, int64 Length, ECompressionFlags Fla
 	}
 }
 
-void YArchive::ByteSwap(void* V, int32 Length)
+void FArchive::ByteSwap(void* V, int32 Length)
 {
 	uint8* Ptr = (uint8*)V;
 	int32 Top = Length - 1;
@@ -898,7 +898,7 @@ void YArchive::ByteSwap(void* V, int32 Length)
 	}
 }
 
-void YArchive::SerializeIntPacked(uint32& Value)
+void FArchive::SerializeIntPacked(uint32& Value)
 {
 	if (IsLoading())
 	{
@@ -939,7 +939,7 @@ void YArchive::SerializeIntPacked(uint32& Value)
 	}
 }
 
-VARARG_BODY( void, YArchive::Logf, const TCHAR*, VARARG_NONE )
+VARARG_BODY( void, FArchive::Logf, const TCHAR*, VARARG_NONE )
 {
 	// We need to use malloc here directly as GMalloc might not be safe, e.g. if called from within GMalloc!
 	int32		BufferSize	= 1024;

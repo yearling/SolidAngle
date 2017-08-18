@@ -31,7 +31,7 @@ public:
 	/** Used to optionally update the information currently stored with the callstack */
 	typedef void(*StackTrackerUpdateFn)(const FCallStack& CallStack, void* UserData);
 	/** Used to optionally report information based on the current stack */
-	typedef void(*StackTrackerReportFn)(const FCallStack& CallStack, uint64 TotalStackCount, YOutputDevice& Ar);
+	typedef void(*StackTrackerReportFn)(const FCallStack& CallStack, uint64 TotalStackCount, FOutputDevice& Ar);
 
 	/** Constructor, initializing all member variables */
 	FStackTracker(StackTrackerUpdateFn InUpdateFn = NULL, StackTrackerReportFn InReportFn = NULL, bool bInIsEnabled = false)
@@ -54,7 +54,7 @@ public:
 	/**
 	* Dumps capture stack trace summary to the passed in log.
 	*/
-	CORE_API void DumpStackTraces(int32 StackThreshold, YOutputDevice& Ar, float SampleCountCorrectionFactor = 1.0);
+	CORE_API void DumpStackTraces(int32 StackThreshold, FOutputDevice& Ar, float SampleCountCorrectionFactor = 1.0);
 
 	/** Resets stack tracking. Deletes all user pointers passed in via CaptureStackTrace() */
 	CORE_API void ResetTracking();

@@ -4,7 +4,7 @@
 
 class UObjectBase;
 class UObjectBaseUtility;
-class	SObject;
+class	UObject;
 class		UField;
 class			UEnum;
 class			UProperty;

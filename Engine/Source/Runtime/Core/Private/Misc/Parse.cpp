@@ -3,7 +3,7 @@
 #include "Misc/Parse.h"
 #include "Misc/DateTime.h"
 #include "HAL/PlatformProcess.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "HAL/FileManager.h"
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
@@ -78,7 +78,7 @@ public:
 	}
 };
 
-void ConsoleCommandLibrary_DumpLibrary(UWorld* InWorld, YExec& SubSystem, const YString& Pattern, YOutputDevice& Ar)
+void ConsoleCommandLibrary_DumpLibrary(UWorld* InWorld, FExec& SubSystem, const YString& Pattern, FOutputDevice& Ar)
 {
 	ConsoleCommandLibrary LocalConsoleCommandLibrary(Pattern);
 
@@ -111,7 +111,7 @@ void ConsoleCommandLibrary_DumpLibrary(UWorld* InWorld, YExec& SubSystem, const 
 	}
 }
 
-void ConsoleCommandLibrary_DumpLibraryHTML(UWorld* InWorld, YExec& SubSystem, const YString& OutPath)
+void ConsoleCommandLibrary_DumpLibraryHTML(UWorld* InWorld, FExec& SubSystem, const YString& OutPath)
 {
 	const YString& Pattern(TEXT("*"));
 	ConsoleCommandLibrary LocalConsoleCommandLibrary(Pattern);
@@ -134,7 +134,7 @@ void ConsoleCommandLibrary_DumpLibraryHTML(UWorld* InWorld, YExec& SubSystem, co
 	if(FFileHelper::LoadFileToString(TemplateFile, *TemplateFilename, FFileHelper::EHashOptions::EnableVerify | FFileHelper::EHashOptions::ErrorMissingHash) )
 	{
 		// todo: do we need to create the directory?
-		YArchive* File = IFileManager::Get().CreateDebugFileWriter(*OutPath);
+		FArchive* File = IFileManager::Get().CreateDebugFileWriter(*OutPath);
 
 		if(File)
 		{
@@ -149,7 +149,7 @@ void ConsoleCommandLibrary_DumpLibraryHTML(UWorld* InWorld, YExec& SubSystem, co
 			// version
 			LazyPrintf.PushParam(TEXT("0.95"));
 			// date
-			LazyPrintf.PushParam(*YDateTime::Now().ToString());
+			LazyPrintf.PushParam(*FDateTime::Now().ToString());
 
 			YString AllData;
 
@@ -449,7 +449,7 @@ bool FParse::Value( const TCHAR* Stream, const TCHAR* Match, int64& Value )
 //
 // Get a name.
 //
-bool FParse::Value(	const TCHAR* Stream, const TCHAR* Match, YName& Name )
+bool FParse::Value(	const TCHAR* Stream, const TCHAR* Match, FName& Name )
 {
 	TCHAR TempStr[NAME_SIZE];
 
@@ -458,7 +458,7 @@ bool FParse::Value(	const TCHAR* Stream, const TCHAR* Match, YName& Name )
 		return 0;
 	}
 
-	Name = YName(TempStr);
+	Name = FName(TempStr);
 
 	return 1;
 }
@@ -570,7 +570,7 @@ bool FParse::Bool( const TCHAR* Stream, const TCHAR* Match, bool& OnOff )
 //
 // Get a globally unique identifier.
 //
-bool FParse::Value( const TCHAR* Stream, const TCHAR* Match, struct YGuid& Guid )
+bool FParse::Value( const TCHAR* Stream, const TCHAR* Match, struct FGuid& Guid )
 {
 	TCHAR Temp[256];
 	if( !FParse::Value( Stream, Match, Temp, ARRAY_COUNT(Temp) ) )

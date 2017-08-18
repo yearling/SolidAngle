@@ -14,16 +14,16 @@
 
 
 // Forward declarations.
-struct  YVector;
-struct  YVector4;
-struct  YPlane;
-struct  YBox;
-struct  YRotator;
-struct  YMatrix;
-struct  YQuat;
+struct  FVector;
+struct  FVector4;
+struct  FPlane;
+struct  FBox;
+struct  FRotator;
+struct  FMatrix;
+struct  FQuat;
 struct  YTwoVectors;
-struct  YTransform;
-class	YSphere;
+struct  FTransform;
+class	FSphere;
 struct	YVector2D;
 struct	YMath;
 
@@ -108,24 +108,24 @@ struct YMath :public YPlatformMath
 	}
 
 	// Return a uniformly distributed random unit length vector = point on the unit sphere surface.
-	static YVector				VRand();
+	static FVector				VRand();
 
 	// Return a random unit vector, uniformly distributed, within the specified cone.
 	// ConeHalfAngleRad is the half-angle of cone, in radians. Returns a normalized vector.
-	static CORE_API YVector		VRandCone(YVector const& Dir, float ConeHalfAngleRad);
+	static CORE_API FVector		VRandCone(FVector const& Dir, float ConeHalfAngleRad);
 
 	// This is a version of VrandCone that handles "squished" cones, i.e. with different angle limits in the Y and Z axes.
-	static CORE_API YVector		VRandCone(YVector const &Dir, float HorizontalConeHalfAngleRad, float VerticalConeHalfRad);
+	static CORE_API FVector		VRandCone(FVector const &Dir, float HorizontalConeHalfAngleRad, float VerticalConeHalfRad);
 
 	// Returns a random point within the passed in bounding box.
-	static CORE_API YVector		RandPointInBox(const YBox& Box);
+	static CORE_API FVector		RandPointInBox(const FBox& Box);
 
 	// Give a direction vector and a surface normal. return the vector reflected across the surface normal.
 	// Produces a result like shining a laser at a mirror.
 	// Direction: Direction Vector the ray is coming form.
 	// SurfaceNormal: A normal of the surface the ray should be reflected on.
 	// Returns Reflected vector
-	static CORE_API YVector		GetReflectionVector(const YVector& Direction, const YVector & SurfaceNormal);
+	static CORE_API FVector		GetReflectionVector(const FVector& Direction, const FVector & SurfaceNormal);
 
 	// Predicates
 
@@ -454,7 +454,7 @@ struct YMath :public YPlatformMath
 	*
 	* @return	true if 'Direction' is facing AxisX (Direction dot AxisX >= 0.f)
 	*/
-	static CORE_API bool		GetDotDistance(YVector2D &OutDotDist, const YVector& Direction, const YVector& AxisX, const YVector& AxisY, const YVector& AxisZ);
+	static CORE_API bool		GetDotDistance(YVector2D &OutDotDist, const FVector& Direction, const FVector& AxisX, const FVector& AxisY, const FVector& AxisZ);
 
 	/**
 	* Returns Azimuth and Elevation of vector 'Direction' in coordinate system O(AxisX,AxisY,AxisZ).
@@ -471,7 +471,7 @@ struct YMath :public YPlatformMath
 	* @return	YVector2D	X = Azimuth angle (in radians) (-PI, +PI)
 	*						Y = Elevation angle (in radians) (-PI/2, +PI/2)
 	*/
-	static CORE_API YVector2D	GetAzimuthAndElevation(const YVector& Direction, const YVector &AxisX, const YVector& AxisY, const YVector& AxisZ);
+	static CORE_API YVector2D	GetAzimuthAndElevation(const FVector& Direction, const FVector &AxisX, const FVector& AxisY, const FVector& AxisZ);
 
 	// Interpolation Functions
 
@@ -501,8 +501,8 @@ struct YMath :public YPlatformMath
 		return (T)(A + Alpha * (B - A));
 	}
 	// Rotator specific interpolation
-	template< class U > static YRotator Lerp(const YRotator& A, const YRotator& B, const U& Alpha);
-	template< class U > static YRotator LerpRange(const YRotator& A, const YRotator& B, const U& Alpha);
+	template< class U > static FRotator Lerp(const FRotator& A, const FRotator& B, const U& Alpha);
+	template< class U > static FRotator LerpRange(const FRotator& A, const FRotator& B, const U& Alpha);
 
 	// Performs a linear interpolation between two values, Alpha ranges from 0-1. Handles full numeric range of T 
 	template<class T>
@@ -703,14 +703,14 @@ struct YMath :public YPlatformMath
 
 	// Quat-specific interpolation
 	template<class T>
-	static YQuat				Lerp(const YQuat& A, const YQuat& B, const T& Alpha);
+	static FQuat				Lerp(const FQuat& A, const FQuat& B, const T& Alpha);
 	template<class T>
-	static YQuat				BiLerp(const YQuat& P00, const YQuat& P10, const YQuat& P01, const YQuat& P11, float FracX, float FracY);
+	static FQuat				BiLerp(const FQuat& P00, const FQuat& P10, const FQuat& P01, const FQuat& P11, float FracX, float FracY);
 
 	// In the case of quaternions, we use a bezier like approach.
 	// T - Actual 'control' orientations
 	template<class T>
-	static YQuat				CubicInterp(const YQuat& P0, const YQuat& T0, const YQuat& P1, const YQuat& T1, const T& A);
+	static FQuat				CubicInterp(const FQuat& P0, const FQuat& T0, const FQuat& P1, const FQuat& T1, const T& A);
 
 	/*
 	*	Cubic Catmull-Rom Spline interpolation. Based on http://www.cemyuksel.com/research/catmullrom_param/catmullrom.pdf
@@ -776,13 +776,13 @@ struct YMath :public YPlatformMath
 	//Special-case interpolation
 
 	// Interpolate a normal vector Current to Target, by interpolating the angle between those vectors with constant step
-	static CORE_API YVector		VInterpNormalRotationTo(const YVector& Current, const YVector& Target, float DeltaTime, float RotationSpeedDegrees);
+	static CORE_API FVector		VInterpNormalRotationTo(const FVector& Current, const FVector& Target, float DeltaTime, float RotationSpeedDegrees);
 
 	// Interpolate vector from Current to Target with constant step
-	static CORE_API YVector		VInterpConstantTo(const YVector& Current, const YVector& Target, float DeltaTime, float InterpSpeed);
+	static CORE_API FVector		VInterpConstantTo(const FVector& Current, const FVector& Target, float DeltaTime, float InterpSpeed);
 
 	// Interpolate vector from Current to Target. Scaled by distance to Target, so it has a strong start speed and ease out.
-	static CORE_API YVector		VInterpTo(const YVector& Current, const YVector& Target, float DeltaTime, float InterpSpeed);
+	static CORE_API FVector		VInterpTo(const FVector& Current, const FVector& Target, float DeltaTime, float InterpSpeed);
 
 	// Interpolate vector2D from Current to Target with constant step
 	static CORE_API YVector2D	Vector2DInterpConstantTo(const YVector2D& Current, const YVector2D& Target, float DeltaTime, float InterpSpeed);
@@ -791,10 +791,10 @@ struct YMath :public YPlatformMath
 	static CORE_API YVector2D	Vector2DInterpTo(const YVector2D& Current, const YVector2D& Target, float DeltaTime, float InterpSpeed);
 
 	/** Interpolate rotator from Current to Target with constant step */
-	static CORE_API YRotator	RInterpConstantTo(const YRotator& Current, const YRotator& Target, float DeltaTime, float InterpSpeed);
+	static CORE_API FRotator	RInterpConstantTo(const FRotator& Current, const FRotator& Target, float DeltaTime, float InterpSpeed);
 
 	/** Interpolate rotator from Current to Target. Scaled by distance to Target, so it has a strong start speed and ease out. */
-	static CORE_API YRotator	RInterpTo(const YRotator& Current, const YRotator& Target, float DeltaTime, float InterpSpeed);
+	static CORE_API FRotator	RInterpTo(const FRotator& Current, const FRotator& Target, float DeltaTime, float InterpSpeed);
 
 	/** Interpolate float from Current to Target with constant step */
 	static CORE_API float		FInterpConstantTo(float Current, float Target, float DeltaTime, float InterpSpeed);
@@ -803,7 +803,7 @@ struct YMath :public YPlatformMath
 	static CORE_API float		FInterpTo(float Current, float Target, float DeltaTime, float InterpSpeed);
 
 	// Interpolate Linear Color from Current to Target. Scaled by distance to Target, so it has a strong start speed and ease out.
-	static CORE_API YLinearColor CInterpTo(const YLinearColor& Current, const YLinearColor& Target, float DeltaTime, float InterpSpeed);
+	static CORE_API FLinearColor CInterpTo(const FLinearColor& Current, const FLinearColor& Target, float DeltaTime, float InterpSpeed);
 
 	// Simple function to creat a pulsating scalar value
 	// InCurrentTime:			Current absolute time
@@ -820,59 +820,59 @@ struct YMath :public YPlatformMath
 		// Assumes that the line and plane do indeed intersect; you mush make sure they 
 		// are NOT parallel before calling
 
-	static YVector				LinePlaneIntersection(const YVector& Point1, const YVector& Ponint2, const YVector& PlaneOrigin, const YVector& PlaneNormal);
-	static YVector				LinePlaneIntersection(const YVector& Point1, const YVector& Point2, const YPlane& Plane);
+	static FVector				LinePlaneIntersection(const FVector& Point1, const FVector& Ponint2, const FVector& PlaneOrigin, const FVector& PlaneNormal);
+	static FVector				LinePlaneIntersection(const FVector& Point1, const FVector& Point2, const FPlane& Plane);
 
 	// InOutScissorRect should be set to View.ViewRect before the call
 	// return 0: light is not visible,
 	// return 1: use scissor rect,
 	// return 2: no scissor rect needed.
-	static CORE_API uint32		ComputeProjectedSphereScissorRect(struct YIntRect& InOutSissorRect, YVector SphereOrigin, float Radius, YVector ViewOrigin, const YMatrix& ViewMatrix, const YMatrix& ProjMatrix);
+	static CORE_API uint32		ComputeProjectedSphereScissorRect(struct YIntRect& InOutSissorRect, FVector SphereOrigin, float Radius, FVector ViewOrigin, const FMatrix& ViewMatrix, const FMatrix& ProjMatrix);
 
 	// Determine if a plane and an AABB intersect
 	// p:						the plane to test
 	// AABB:					the AABB to text
 	// return :					if collision occurs 
-	static CORE_API bool		PlaneAABBIntersection(const YPlane& P, const YBox& AABB);
+	static CORE_API bool		PlaneAABBIntersection(const FPlane& P, const FBox& AABB);
 
 	// Perform a sphere vs box intersection test using Arvo's algorithm
 	// UE的实现比较慢，有一种更快的方法，可以对比一下
-	static bool					SphereAABBIntersection(const YVector& SphereCenter, const float RadiusSquared, const YBox& AABB);
+	static bool					SphereAABBIntersection(const FVector& SphereCenter, const float RadiusSquared, const FBox& AABB);
 
 	// Convert a sphere into a point plus radius squared for the test above
-	static bool					SphereAABBIntersection(const YSphere& Sphere, const YBox& AABB);
+	static bool					SphereAABBIntersection(const FSphere& Sphere, const FBox& AABB);
 
 	// Determines whether a point is inside a box
-	static bool					PointBoxIntersection(const YVector& Point, const YBox& Box);
+	static bool					PointBoxIntersection(const FVector& Point, const FBox& Box);
 
 	// Determines whether a line intersects a box
-	static bool					LineBoxIntersection(const YBox& Box, const YVector& Start, const YVector& End, const YVector& Direction);
+	static bool					LineBoxIntersection(const FBox& Box, const FVector& Start, const FVector& End, const FVector& Direction);
 	// Determines whether a line intersects a box. This overload avoid the need to do the reciprocal every time.
-	static bool					LineBoxIntersection(const YBox& Box, const YVector& Start, const YVector& End, const YVector& Direction, const YVector& OneOverDirection);
+	static bool					LineBoxIntersection(const FBox& Box, const FVector& Start, const FVector& End, const FVector& Direction, const FVector& OneOverDirection);
 
 	// Swept-Box vs Box test
-	static CORE_API bool		LineExtentBoxIntersection(const YBox& inBox, const YVector& Start, const YVector& End, const YVector& Extent, YVector& HitLocation, YVector& HitNormal, float & HitTime);
+	static CORE_API bool		LineExtentBoxIntersection(const FBox& inBox, const FVector& Start, const FVector& End, const FVector& Extent, FVector& HitLocation, FVector& HitNormal, float & HitTime);
 	
 	// Determins whether a line intersects a sphere
-	static bool					LineSphereIntersection(const YVector& Start, const YVector& Dir, float Length, const YVector& Origin, float Radius);
+	static bool					LineSphereIntersection(const FVector& Start, const FVector& Dir, float Length, const FVector& Origin, float Radius);
 
 	// Assume the cone tip is at 0,0,0 (means the SphereCenter is relative to the cone tip)
 	// Return true: one and sphere do intersect
 	// Return false: otherwise
-	static CORE_API bool		SphereConeIntersection(const YVector& SphereCenter, float SphereRadius, const YVector& ConeAxis, float ConeAngleSin, float ConeAngleCos);
+	static CORE_API bool		SphereConeIntersection(const FVector& SphereCenter, float SphereRadius, const FVector& ConeAxis, float ConeAngleSin, float ConeAngleCos);
 
 	// Find the point on line segment form LineStart to LineEnd which is closet to Point
-	static CORE_API YVector		ClosestPointOnLine(const YVector& LineStart, const YVector& LineEnd, const YVector& Point);
+	static CORE_API FVector		ClosestPointOnLine(const FVector& LineStart, const FVector& LineEnd, const FVector& Point);
 
 	/** Find the point on the infinite line between two points (LineStart, LineEnd) which is closest to Point */
-	static CORE_API YVector		ClosestPointOnInfiniteLine(const YVector& LineStart, const YVector& LineEnd, const YVector& Point);
+	static CORE_API FVector		ClosestPointOnInfiniteLine(const FVector& LineStart, const FVector& LineEnd, const FVector& Point);
 
 	// Compute intersection point of three planes. Return 1 if Valid, 0 if infinite.
-	static bool					IntersectPlanes3(YVector& I, const YPlane& P1, const YPlane& P2, const YPlane& P3);
+	static bool					IntersectPlanes3(FVector& I, const FPlane& P1, const FPlane& P2, const FPlane& P3);
 
 	// Compute intersection point and direction of line joining two planes
 	// Return 1 if valid, 0 if infinite
-	static bool					IntersectPlanes2(YVector& I, YVector& D, const YPlane& P1, const YPlane& P2);
+	static bool					IntersectPlanes2(FVector& I, FVector& D, const FPlane& P1, const FPlane& P2);
 
 	// Calculates the distance of a given Point in world space to a give line,
 	// defined by the vector coupe(Origin, Direction)
@@ -881,8 +881,8 @@ struct YMath :public YPlatformMath
 	// Origin:					point of reference used to calculate distance
 	// OutClosestPoint:			optional point that represents the closest point project onto Axis
 	// Return :					distance of Point from line defined by (Origin, Direction)
-	static CORE_API float		PointDistToLine(const YVector& Point, const YVector& Line, const YVector& Origin, YVector &OutClosestPoint);
-	static CORE_API float		PointDistToLine(const YVector& Point, const YVector& LIne, const YVector& Origin);
+	static CORE_API float		PointDistToLine(const FVector& Point, const FVector& Line, const FVector& Origin, FVector &OutClosestPoint);
+	static CORE_API float		PointDistToLine(const FVector& Point, const FVector& LIne, const FVector& Origin);
 
 	// Return closest point on a segment to a given point
 	// The idea is to project point on line formed by segment.
@@ -891,7 +891,7 @@ struct YMath :public YPlatformMath
 	// StartPoint:				StartPoint of Segment.
 	// EndPoint:				EndPont of Segment.
 	// Return:					point on the segment defined by (StartPoint, EndPoint) that is closest to Point.
-	static CORE_API YVector		ClosestPointOnSegment(const YVector& Point, const YVector& StartPoint, const YVector& EndPoint);
+	static CORE_API FVector		ClosestPointOnSegment(const FVector& Point, const FVector& StartPoint, const FVector& EndPoint);
 
 	// YVector2D version of ClosestPointOnSegment.
 	// Returns closest point on a segment to a given 2D point.
@@ -908,34 +908,34 @@ struct YMath :public YPlatformMath
 	// StartPoint:				StartPoint of Segment
 	// EndPoint:				EndPoint of Segment
 	// Return:					closest distance from Point to segment defined by (StartPoint, EndPoint)
-	static CORE_API float		PointDistToSegment(const YVector& Point, const YVector &StartPoint, const YVector &EndPoint);
+	static CORE_API float		PointDistToSegment(const FVector& Point, const FVector &StartPoint, const FVector &EndPoint);
 
 	// Return square of the distance from a point to the closest point on a segemnt.
 	// Point:					point to check distance for
 	// StartPoint:				StartPoint of Segment
 	// EndPoint:				EndPoint of Segment
 	// Return:					square of closest distance from Point to segment defined by (StartPoint, EndPoint)
-	static CORE_API float		PointDistToSegmentSquared(const YVector& Point, const YVector &StartPoint, const YVector &EndPoint);
+	static CORE_API float		PointDistToSegmentSquared(const FVector& Point, const FVector &StartPoint, const FVector &EndPoint);
 
 	// Find closest points between 2 Segments
 	// (A1, B1)					defines the first segment.
 	// (A2, B2)					defines the second segment.
 	// OutP1					Closest point on segment 1 to segment 2.
 	// OutP2					Closest point on segment 2 to segment 1.
-	static CORE_API void		SegmentDistToSegment(YVector A1, YVector B1, YVector A2, YVector B2, YVector& OutP1, YVector& OutP2);
+	static CORE_API void		SegmentDistToSegment(FVector A1, FVector B1, FVector A2, FVector B2, FVector& OutP1, FVector& OutP2);
 
 	// Find closest points between 2 Segments
 	// (A1, B1)					defines the first segment.
 	// (A2, B2)					defines the second segment.
 	// OutP1					Closest point on segment 1 to segment 2.
 	// OutP2					Closest point on segment 2 to segment 1.
-	static CORE_API void		SegmentDistToSegmentSafe(YVector A1, YVector B1, YVector A2, YVector B2, YVector& OutP1, YVector& OutP2);
+	static CORE_API void		SegmentDistToSegmentSafe(FVector A1, FVector B1, FVector A2, FVector B2, FVector& OutP1, FVector& OutP2);
 
 	// returns the time (t) of the intersection of the passed segment and a plane (could be <0 or >1)
 	// StartPoint:				Start point of segment
 	// EndPoint:				End point of segment
 	// Plane:					plane to intersect with
-	static CORE_API float		GetTForSegmentPlaneIntersect(const YVector& StartPoint, const YVector& EndPoint, const YPlane& Plane);
+	static CORE_API float		GetTForSegmentPlaneIntersect(const FVector& StartPoint, const FVector& EndPoint, const FPlane& Plane);
 
 	/**
 	* Returns true if there is an intersection between the segment specified by StartPoint and Endpoint, and
@@ -946,7 +946,7 @@ struct YMath :public YPlatformMath
 	* @param out_IntersectionPoint - out var for the point on the segment that intersects the mesh (if any)
 	* @return true if intersection occurred
 	*/
-	static CORE_API bool		SegmentPlaneIntersection(const YVector& StartPoint, const YVector& EndPoint, const YPlane& Plane, YVector& out_IntersectionPoint);
+	static CORE_API bool		SegmentPlaneIntersection(const FVector& StartPoint, const FVector& EndPoint, const FPlane& Plane, FVector& out_IntersectionPoint);
 
 	// Returns true if this is an intersection between the segment specified by StartPoint, and EndPoint
 	// And the Plane on which polygon Plane lies. If there is an intersection, the point is placed in out_IntersectionPoint
@@ -955,14 +955,14 @@ struct YMath :public YPlatformMath
 	// Plane:					plane to intersect with
 	// OutIntersectionPoint:	out var for the point on the segment that intersects the mesh(if any)
 	// Return true:				if intersection occured.
-	static CORE_API bool		SegmentIntersection2D(const YVector& SegmentStartA, const YVector& SegmentEndA, const YVector& SegmentStartB, const YVector& SegmentEndB, YVector& outIntersectionPoint);
+	static CORE_API bool		SegmentIntersection2D(const FVector& SegmentStartA, const FVector& SegmentEndA, const FVector& SegmentStartB, const FVector& SegmentEndB, FVector& outIntersectionPoint);
 
 	// Return closest point on a triangle to a point
 	// The idea is to identify the halfplanes that the point is
 	// in relative to each triangle segment "plane"
 	// Point:					point to check distance for
 	// A,B,C					counter clockwise ordering of points defining a triangle
-	static CORE_API YVector		ClosestPointOnTriangleToPoint(const YVector& Point, const YVector& A, const YVector& B, const YVector& C);
+	static CORE_API FVector		ClosestPointOnTriangleToPoint(const FVector& Point, const FVector& A, const FVector& B, const FVector& C);
 
 	/**
 	* Returns closest point on a tetrahedron to a point.
@@ -974,7 +974,7 @@ struct YMath :public YPlatformMath
 	*
 	* @return	Point on tetrahedron ABCD closest to given point
 	*/
-	static CORE_API YVector		ClosestPointOnTetrahedronToPoint(const YVector& Point, const YVector& A, const YVector& B, const YVector& C, const YVector& D);
+	static CORE_API FVector		ClosestPointOnTetrahedronToPoint(const FVector& Point, const FVector& A, const FVector& B, const FVector& C, const FVector& D);
 
 	// Find closest point on a Sphere to a Line.
 	// When line intersects Sphere, then closest point to LineOrigin is returned.
@@ -983,7 +983,7 @@ struct YMath :public YPlatformMath
 	// LineOrigin				Origin of line
 	// LineDir					Direction of line. Needs to be normalized!!
 	// OutClosestPoint			Closest point on sphere to given line.
-	static CORE_API void		SphereDistToLine(YVector SphereOrigin, float SphereRadius, YVector LineOrigin, YVector NormalizedLineDir, YVector& OutClosestPoint);
+	static CORE_API void		SphereDistToLine(FVector SphereOrigin, float SphereRadius, FVector LineOrigin, FVector NormalizedLineDir, FVector& OutClosestPoint);
 
 	// Calculates whether a Point is within a cone segment, and also what percentage within the cone(100 % is along the center line, whereas 0 % is along the edge)
 	// Point:					The Point in question
@@ -993,13 +993,13 @@ struct YMath :public YPlatformMath
 	// radiusAtEnd:				the largest radius of the cone
 	// percentageOut:			output variable the holds how much within the cone the point is(1 = on center line, 0 = on exact edge or outside cone).
 	// return true:				if the point is within the cone, false otherwise.
-	static CORE_API bool		GetDistanceWithinConeSegment(YVector Point, YVector ConeStartPoint, YVector ConeLine, float RadiusAtStart, float RadiusAtEnd, float &PercentageOut);
+	static CORE_API bool		GetDistanceWithinConeSegment(FVector Point, FVector ConeStartPoint, FVector ConeLine, float RadiusAtStart, float RadiusAtEnd, float &PercentageOut);
 	
 	// Determines whether a given set of points are coplanar, with a tolerance.Any three points or less are always coplanar.
 	// Points:					The set of points to determine coplanarity for.
 	// Tolerance:				Larger numbers means more variance is allowed.
 	// return:					Whether the points are relatively coplanar, based on the tolerance
-	static CORE_API bool		PointsAreCoplanar(const TArray<YVector> &Points, const float Tolerance = 0.1f);
+	static CORE_API bool		PointsAreCoplanar(const TArray<FVector> &Points, const float Tolerance = 0.1f);
 
 	// Converts a floating point number to the nearest integer, equidistant ties go to the value which is closest to an even value : 1.5 becomes 2, 0.5 becomes 0
 	// F:						Floating point value to convert
@@ -1104,20 +1104,20 @@ struct YMath :public YPlatformMath
 	// A, B, C:					three non - colinear points defining a triangle in CCW
 	//return Vector:			containing the three weights a, b, c such that Point = a*A + b*B + c*C
 	//	or Point = A + b*(B - A) + c*(C - A) = (1 - b - c)*A + b*B + c*C
-	static CORE_API YVector		GetBaryCentric2D(const YVector& Point, const YVector& A, const YVector& B, const YVector& C);
+	static CORE_API FVector		GetBaryCentric2D(const FVector& Point, const FVector& A, const FVector& B, const FVector& C);
 
 	// Computes the barycentric coordinates for a given point in a triangle 
 	// Point:					point to convert to barycentric coordinates(in plane of ABC)
 	// A, B, C:					three non - colinear points defining a triangle in CCW
 	//return Vector:			containing the three weights a, b, c such that Point = a*A + b*B + c*C
 	//	or Point = A + b*(B - A) + c*(C - A) = (1 - b - c)*A + b*B + c*C
-	static CORE_API YVector		ComputeBaryCentric2D(const YVector& Point, const YVector& A, const YVector& B, const YVector& C);
+	static CORE_API FVector		ComputeBaryCentric2D(const FVector& Point, const FVector& A, const FVector& B, const FVector& C);
 
 	// Computes the barycentric coordinates for a given point on a tetrahedron(3D)
 	// Point:					point to convert to barycentric coordinates
 	// A, B, C, D:				four points defining a tetrahedron
 	// return Vector:			 containing the four weights a, b, c, d such that Point = a*A + b*B + c*C + d*D
-	static CORE_API YVector4	ComputeBaryCentric3D(const YVector& Point, const YVector& A, const YVector& B, const YVector& C, const YVector& D);
+	static CORE_API FVector4	ComputeBaryCentric3D(const FVector& Point, const FVector& A, const FVector& B, const FVector& C, const FVector& D);
 
 	// Returns a smooth Hermite interpolation between 0 and 1 for the value X(where X ranges between A and B)
 	// Clamped to 0 for X <= A and 1 for X >= B.
@@ -1169,7 +1169,7 @@ struct YMath :public YPlatformMath
 
 	// Handy to apply scaling in the editor
 	// Dst in and out
-	static CORE_API void		ApplyScaleToFloat(float& Dst, const YVector& DeltaScale, float Magnitude = 1.0f);
+	static CORE_API void		ApplyScaleToFloat(float& Dst, const FVector& DeltaScale, float Magnitude = 1.0f);
 
 	// x: assumed to be in this range[0,1]
 	// return : [0,255]

@@ -25,4 +25,4 @@ struct FCompressedChunkInfo
  * @param Ar The archive to serialize from or to.
  * @param Value The value to serialize.
  */
-CORE_API YArchive& operator<<(YArchive& Ar, FCompressedChunkInfo& Value);
+CORE_API FArchive& operator<<(FArchive& Ar, FCompressedChunkInfo& Value);

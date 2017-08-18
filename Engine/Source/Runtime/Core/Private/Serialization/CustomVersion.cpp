@@ -7,7 +7,7 @@
 #include "Serialization/CustomVersion.h"
 namespace
 {
-	FCustomVersion UnusedCustomVersion(YGuid(0, 0, 0, 0xF99D40C1), 0, TEXT("Unused custom version"));
+	FCustomVersion UnusedCustomVersion(FGuid(0, 0, 0, 0xF99D40C1), 0, TEXT("Unused custom version"));
 
 	struct FEnumCustomVersion_DEPRECATED
 	{
@@ -17,11 +17,11 @@ namespace
 		FCustomVersion ToCustomVersion() const
 		{
 			// We'll invent a GUID from three zeroes and the original tag
-			return FCustomVersion(YGuid(0, 0, 0, Tag), Version, *YString::Printf(TEXT("EnumTag%u"), Tag));
+			return FCustomVersion(FGuid(0, 0, 0, Tag), Version, *YString::Printf(TEXT("EnumTag%u"), Tag));
 		}
 	};
 
-	YArchive& operator<<(YArchive& Ar, FEnumCustomVersion_DEPRECATED& Version)
+	FArchive& operator<<(FArchive& Ar, FEnumCustomVersion_DEPRECATED& Version)
 	{
 		// Serialize keys
 		Ar << Version.Tag;
@@ -32,33 +32,33 @@ namespace
 
 	struct FGuidCustomVersion_DEPRECATED
 	{
-		YGuid Key;
+		FGuid Key;
 		int32 Version;
-		YString FriendlyName;
+		YString FriendlFName;
 
 		FCustomVersion ToCustomVersion() const
 		{
 			// We'll invent a GUID from three zeroes and the original tag
-			return FCustomVersion(Key, Version, *FriendlyName);
+			return FCustomVersion(Key, Version, *FriendlFName);
 		}
 	};
 
-	YArchive& operator<<(YArchive& Ar, FGuidCustomVersion_DEPRECATED& Version)
+	FArchive& operator<<(FArchive& Ar, FGuidCustomVersion_DEPRECATED& Version)
 	{
 		Ar << Version.Key;
 		Ar << Version.Version;
-		Ar << Version.FriendlyName;
+		Ar << Version.FriendlFName;
 		return Ar;
 	}
 }
 
-const YName FCustomVersion::GetFriendlyName() const
+const FName FCustomVersion::GetFriendlFName() const
 {
-	if (FriendlyName == NAME_None)
+	if (FriendlFName == NAME_None)
 	{
-		FriendlyName = FCustomVersionContainer::GetRegistered().GetFriendlyName(Key);
+		FriendlFName = FCustomVersionContainer::GetRegistered().GetFriendlFName(Key);
 	}
-	return FriendlyName;
+	return FriendlFName;
 }
 
 const FCustomVersionContainer& FCustomVersionContainer::GetRegistered()
@@ -77,7 +77,7 @@ YString FCustomVersionContainer::ToString(const YString& Indent) const
 	for (const FCustomVersion& SomeVersion : Versions)
 	{
 		VersionsAsString += Indent;
-		VersionsAsString += YString::Printf(TEXT("Key=%s  Version=%d  Friendly Name=%s \n"), *SomeVersion.Key.ToString(), SomeVersion.Version, *SomeVersion.GetFriendlyName().ToString() );
+		VersionsAsString += YString::Printf(TEXT("Key=%s  Version=%d  Friendly Name=%s \n"), *SomeVersion.Key.ToString(), SomeVersion.Version, *SomeVersion.GetFriendlFName().ToString() );
 	}
 
 	return VersionsAsString;
@@ -90,14 +90,14 @@ FCustomVersionContainer& FCustomVersionContainer::GetInstance()
 	return Singleton;
 }
 
-YArchive& operator<<(YArchive& Ar, FCustomVersion& Version)
+FArchive& operator<<(FArchive& Ar, FCustomVersion& Version)
 {
 	Ar << Version.Key;
 	Ar << Version.Version;
 	return Ar;
 }
 
-void FCustomVersionContainer::Serialize(YArchive& Ar, ECustomVersionSerializationFormat::Type Format)
+void FCustomVersionContainer::Serialize(FArchive& Ar, ECustomVersionSerializationFormat::Type Format)
 {
 	switch (Format)
 	{
@@ -142,7 +142,7 @@ void FCustomVersionContainer::Serialize(YArchive& Ar, ECustomVersionSerializatio
 	}
 }
 
-const FCustomVersion* FCustomVersionContainer::GetVersion(YGuid Key) const
+const FCustomVersion* FCustomVersionContainer::GetVersion(FGuid Key) const
 {
 	// A testing tag was written out to a few archives during testing so we need to
 	// handle the existence of it to ensure that those archives can still be loaded.
@@ -154,18 +154,18 @@ const FCustomVersion* FCustomVersionContainer::GetVersion(YGuid Key) const
 	return Versions.Find(Key);
 }
 
-const YName FCustomVersionContainer::GetFriendlyName(YGuid Key) const
+const FName FCustomVersionContainer::GetFriendlFName(FGuid Key) const
 {
-	YName FriendlyName = NAME_Name;
+	FName FriendlFName = NAME_Name;
 	const FCustomVersion* CustomVersion = GetVersion(Key);
 	if (CustomVersion)
 	{
-		FriendlyName = CustomVersion->FriendlyName;
+		FriendlFName = CustomVersion->FriendlFName;
 	}
-	return FriendlyName;
+	return FriendlFName;
 }
 
-void FCustomVersionContainer::SetVersion(YGuid CustomKey, int32 Version, YName FriendlyName)
+void FCustomVersionContainer::SetVersion(FGuid CustomKey, int32 Version, FName FriendlFName)
 {
 	if (CustomKey == UnusedCustomVersion.Key)
 		return;
@@ -173,15 +173,15 @@ void FCustomVersionContainer::SetVersion(YGuid CustomKey, int32 Version, YName F
 	if (FCustomVersion* Found = Versions.Find(CustomKey))
 	{
 		Found->Version      = Version;
-		Found->FriendlyName = FriendlyName;
+		Found->FriendlFName = FriendlFName;
 	}
 	else
 	{
-		Versions.Add(FCustomVersion(CustomKey, Version, FriendlyName));
+		Versions.Add(FCustomVersion(CustomKey, Version, FriendlFName));
 	}
 }
 
-FCustomVersionRegistration::FCustomVersionRegistration(YGuid InKey, int32 InVersion, YName InFriendlyName)
+FCustomVersionRegistration::FCustomVersionRegistration(FGuid InKey, int32 InVersion, FName InFriendlFName)
 {
 	FCustomVersionSet& Versions = FCustomVersionContainer::GetInstance().Versions;
 
@@ -194,11 +194,11 @@ FCustomVersionRegistration::FCustomVersionRegistration(YGuid InKey, int32 InVers
 		// * Changed registration details during hotreload.
 		// * Accidentally copy-and-pasted an FCustomVersionRegistration object.
 		ensureMsgf(
-			ExistingRegistration->Version == InVersion && ExistingRegistration->GetFriendlyName() == InFriendlyName,
+			ExistingRegistration->Version == InVersion && ExistingRegistration->GetFriendlFName() == InFriendlFName,
 			TEXT("Custom version registrations cannot change between hotreloads - \"%s\" version %d is being reregistered as \"%s\" version %d"),
-			*ExistingRegistration->GetFriendlyName().ToString(),
+			*ExistingRegistration->GetFriendlFName().ToString(),
 			ExistingRegistration->Version,
-			InFriendlyName,
+			InFriendlFName,
 			InVersion
 		);
 
@@ -206,7 +206,7 @@ FCustomVersionRegistration::FCustomVersionRegistration(YGuid InKey, int32 InVers
 	}
 	else
 	{
-		Versions.Add(FCustomVersion(InKey, InVersion, InFriendlyName));
+		Versions.Add(FCustomVersion(InKey, InVersion, InFriendlFName));
 	}
 
 	Key = InKey;

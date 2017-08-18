@@ -6,7 +6,7 @@
 /** 
  * FCompressedChunkInfo serialize operator.
  */
-YArchive& operator<<( YArchive& Ar, FCompressedChunkInfo& Chunk )
+FArchive& operator<<( FArchive& Ar, FCompressedChunkInfo& Chunk )
 {
 	// The order of serialization needs to be identical to the memory layout as the async IO code is reading it in bulk.
 	// The size of the structure also needs to match what is being serialized.

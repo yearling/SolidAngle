@@ -146,7 +146,7 @@ public:
 	 * @param Bound The bound to serialize.
 	 * @return The archive.
 	 */
-	friend class YArchive& operator<<(class YArchive& Ar, TRangeBound& Bound)
+	friend class FArchive& operator<<(class FArchive& Ar, TRangeBound& Bound)
 	{
 		return Ar << (uint8&)Bound.Type << Bound.Value;
 	}
@@ -392,7 +392,7 @@ private:
 	};
 
 
-DEFINE_RANGEBOUND_WRAPPER_STRUCT(YDateRangeBound,   YDateTime)
+DEFINE_RANGEBOUND_WRAPPER_STRUCT(YDateRangeBound,   FDateTime)
 DEFINE_RANGEBOUND_WRAPPER_STRUCT(YDoubleRangeBound, double)
 DEFINE_RANGEBOUND_WRAPPER_STRUCT(YFloatRangeBound,  float)
 DEFINE_RANGEBOUND_WRAPPER_STRUCT(YInt8RangeBound,   int8)

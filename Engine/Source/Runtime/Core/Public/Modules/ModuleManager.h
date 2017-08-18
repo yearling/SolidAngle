@@ -8,7 +8,7 @@
 #include "Containers/Array.h"
 #include "Containers/SolidAngleString.h"
 #include "Containers/Map.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Templates/SharedPointer.h"
 #include "Delegates/Delegate.h"
 #include "Misc/Optional.h"
@@ -117,14 +117,14 @@ public:
 	* @param InModuleName The name of the module to abandon.  Should not include path, extension or platform/configuration info.  This is just the "module name" part of the module file name.
 	* @see IsModuleLoaded, LoadModule, LoadModuleWithFailureReason, UnloadModule
 	*/
-	void AbandonModule(const YName InModuleName);
+	void AbandonModule(const FName InModuleName);
 
 	/**
 	* Adds a module to our list of modules, unless it's already known.
 	*
 	* @param InModuleName The base name of the module file.  Should not include path, extension or platform/configuration info.  This is just the "name" part of the module file name.  Names should be globally unique.
 	*/
-	void AddModule(const YName InModuleName);
+	void AddModule(const FName InModuleName);
 
 	/**
 	* Gets the specified module.
@@ -133,7 +133,7 @@ public:
 	* @return 	The module, or nullptr if the module is not loaded.
 	* @see GetModuleChecked, GetModulePtr
 	*/
-	TSharedPtr<IModuleInterface> GetModule(const YName InModuleName);
+	TSharedPtr<IModuleInterface> GetModule(const FName InModuleName);
 
 	/**
 	* Checks whether the specified module is currently loaded.
@@ -144,7 +144,7 @@ public:
 	* @return true if module is currently loaded, false otherwise.
 	* @see AbandonModule, LoadModule, LoadModuleWithFailureReason, UnloadModule
 	*/
-	bool IsModuleLoaded(const YName InModuleName) const;
+	bool IsModuleLoaded(const FName InModuleName) const;
 
 	/**
 	* Loads the specified module.
@@ -154,7 +154,7 @@ public:
 	* @return The loaded module, or nullptr if the load operation failed.
 	* @see AbandonModule, IsModuleLoaded, LoadModuleChecked, LoadModulePtr, LoadModuleWithFailureReason, UnloadModule
 	*/
-	TSharedPtr<IModuleInterface> LoadModule(const YName InModuleName, const bool bWasReloaded = false);
+	TSharedPtr<IModuleInterface> LoadModule(const FName InModuleName, const bool bWasReloaded = false);
 
 	/**
 	* Loads the specified module, checking to ensure it exists.
@@ -164,7 +164,7 @@ public:
 	* @return The loaded module, or nullptr if the load operation failed.
 	* @see AbandonModule, IsModuleLoaded, LoadModuleChecked, LoadModulePtr, LoadModuleWithFailureReason, UnloadModule
 	*/
-	TSharedPtr<IModuleInterface> LoadModuleChecked(const YName InModuleName, const bool bWasReloaded = false);
+	TSharedPtr<IModuleInterface> LoadModuleChecked(const FName InModuleName, const bool bWasReloaded = false);
 
 	/**
 	* Loads a module in memory then calls PostLoad.
@@ -174,7 +174,7 @@ public:
 	* @return true on success, false otherwise.
 	* @see UnloadOrAbandonModuleWithCallback
 	*/
-	bool LoadModuleWithCallback(const YName InModuleName, YOutputDevice &Ar);
+	bool LoadModuleWithCallback(const FName InModuleName, FOutputDevice &Ar);
 
 	/**
 	* Loads the specified module and returns a result.
@@ -185,7 +185,7 @@ public:
 	* @return The loaded module (null if the load operation failed).
 	* @see AbandonModule, IsModuleLoaded, LoadModule, LoadModuleChecked, LoadModulePtr, UnloadModule
 	*/
-	TSharedPtr<IModuleInterface> LoadModuleWithFailureReason(const YName InModuleName, EModuleLoadResult& OutFailureReason, const bool bWasReloaded = false);
+	TSharedPtr<IModuleInterface> LoadModuleWithFailureReason(const FName InModuleName, EModuleLoadResult& OutFailureReason, const bool bWasReloaded = false);
 
 	/**
 	* Queries information about a specific module name.
@@ -195,7 +195,7 @@ public:
 	* @return true if the module was found and the OutModuleStatus is valid, false otherwise.
 	* @see QueryModules
 	*/
-	bool QueryModule(const YName InModuleName, FModuleStatus& OutModuleStatus) const;
+	bool QueryModule(const FName InModuleName, FModuleStatus& OutModuleStatus) const;
 
 	/**
 	* Queries information about all of the currently known modules.
@@ -215,7 +215,7 @@ public:
 	* @return true if module was unloaded successfully, false otherwise.
 	* @see AbandonModule, IsModuleLoaded, LoadModule, LoadModuleWithFailureReason
 	*/
-	bool UnloadModule(const YName InModuleName, bool bIsShutdown = false);
+	bool UnloadModule(const FName InModuleName, bool bIsShutdown = false);
 
 	/**
 	* Calls PreUnload then either unloads or abandons a module in memory, depending on whether the module supports unloading.
@@ -224,7 +224,7 @@ public:
 	* @param Ar The archive to receive error messages, if any.
 	* @see LoadModuleWithCallback
 	*/
-	void UnloadOrAbandonModuleWithCallback(const YName InModuleName, YOutputDevice &Ar);
+	void UnloadOrAbandonModuleWithCallback(const FName InModuleName, FOutputDevice &Ar);
 
 	/**
 	* Calls PreUnload then abandons a module in memory.
@@ -232,7 +232,7 @@ public:
 	* @param InModuleName The name of the module to unload.
 	* @see LoadModuleWithCallback
 	*/
-	void AbandonModuleWithCallback(const YName InModuleName);
+	void AbandonModuleWithCallback(const FName InModuleName);
 
 	/** Delegate that's used by the module manager to find all the valid modules in a directory matching a pattern */
 	typedef TMap<YString, YString> FModuleNamesMap;
@@ -251,7 +251,7 @@ public:
 	* @see GetModulePtr, LoadModulePtr, LoadModuleChecked
 	*/
 	template<typename TModuleInterface>
-	static TModuleInterface& GetModuleChecked(const YName ModuleName)
+	static TModuleInterface& GetModuleChecked(const FName ModuleName)
 	{
 		FModuleManager& ModuleManager = FModuleManager::Get();
 
@@ -267,7 +267,7 @@ public:
 	* @see GetModuleChecked, LoadModulePtr, LoadModuleChecked
 	*/
 	template<typename TModuleInterface>
-	static TModuleInterface* GetModulePtr(const YName ModuleName)
+	static TModuleInterface* GetModulePtr(const FName ModuleName)
 	{
 		FModuleManager& ModuleManager = FModuleManager::Get();
 
@@ -290,7 +290,7 @@ public:
 	* @see GetModulePtr, LoadModulePtr, LoadModuleChecked
 	*/
 	template<typename TModuleInterface>
-	static TModuleInterface& LoadModuleChecked(const YName ModuleName)
+	static TModuleInterface& LoadModuleChecked(const FName ModuleName)
 	{
 		FModuleManager& ModuleManager = FModuleManager::Get();
 
@@ -310,7 +310,7 @@ public:
 	* @see GetModulePtr, GetModuleChecked, LoadModuleChecked
 	*/
 	template<typename TModuleInterface>
-	static TModuleInterface* LoadModulePtr(const YName ModuleName)
+	static TModuleInterface* LoadModulePtr(const FName ModuleName)
 	{
 		FModuleManager& ModuleManager = FModuleManager::Get();
 
@@ -330,7 +330,7 @@ public:
 	* @param WildcardWithoutExtension Filename part (no path, no extension, no build config info) to search for.
 	* @param OutModules List of modules found.
 	*/
-	void FindModules(const TCHAR* WildcardWithoutExtension, TArray<YName>& OutModules) const;
+	void FindModules(const TCHAR* WildcardWithoutExtension, TArray<FName>& OutModules) const;
 
 	/**
 	* Determines if a module with the given name exists, regardless of whether it is currently loaded.
@@ -368,7 +368,7 @@ public:
 	* @param InModuleName The name of this module.
 	* @param InInitializerDelegate The delegate that will be called to initialize an instance of this module.
 	*/
-	void RegisterStaticallyLinkedModule(const YName InModuleName, const FInitializeStaticallyLinkedModule& InInitializerDelegate)
+	void RegisterStaticallyLinkedModule(const FName InModuleName, const FInitializeStaticallyLinkedModule& InInitializerDelegate)
 	{
 		StaticallyLinkedModuleInitializers.Add(InModuleName, InInitializerDelegate);
 	}
@@ -400,7 +400,7 @@ public:
 	* @param InModuleName The base name of the module file.
 	* @return true if module exists and is up to date, false otherwise.
 	*/
-	bool IsModuleUpToDate(const YName InModuleName) const;
+	bool IsModuleUpToDate(const FName InModuleName) const;
 
 	/**
 	* Determines whether the specified module contains UObjects.  The module must already be loaded into
@@ -409,7 +409,7 @@ public:
 	* @param ModuleName Name of the loaded module to check.
 	* @return True if the module was found to contain UObjects, or false if it did not (or wasn't loaded.)
 	*/
-	bool DoesLoadedModuleHaveUObjects(const YName ModuleName) const;
+	bool DoesLoadedModuleHaveUObjects(const FName ModuleName) const;
 
 	/**
 	* Gets the build configuration for compiling modules, as required by UBT.
@@ -419,13 +419,13 @@ public:
 	static const TCHAR *GetUBTConfiguration();
 
 	/** Gets the filename for a module. The return value is a full path of a module known to the module manager. */
-	YString GetModuleFilename(YName ModuleName) const;
+	YString GetModuleFilename(FName ModuleName) const;
 
 	/** Sets the filename for a module. The module is not reloaded immediately, but the new name will be used for subsequent unload/load events. */
-	void SetModuleFilename(YName ModuleName, const YString& Filename);
+	void SetModuleFilename(FName ModuleName, const YString& Filename);
 
 	/** Gets the clean filename for a module, without having added it to the module manager. */
-	static YString GetCleanModuleFilename(YName ModuleName, bool bIsGameModule);
+	static YString GetCleanModuleFilename(FName ModuleName, bool bIsGameModule);
 
 public:
 
@@ -437,7 +437,7 @@ public:
 	*
 	* @return The event delegate.
 	*/
-	DECLARE_EVENT_TwoParams(FModuleManager, FModulesChangedEvent, YName, EModuleChangeReason);
+	DECLARE_EVENT_TwoParams(FModuleManager, FModulesChangedEvent, FName, EModuleChangeReason);
 	FModulesChangedEvent& OnModulesChanged()
 	{
 		return ModulesChangedEvent;
@@ -460,7 +460,7 @@ public:
 	*
 	* @return The event delegate.
 	*/
-	DECLARE_DELEGATE_RetVal_OneParam(bool, FIsPackageLoadedCallback, YName);
+	DECLARE_DELEGATE_RetVal_OneParam(bool, FIsPackageLoadedCallback, FName);
 	FIsPackageLoadedCallback& IsPackageLoadedCallback()
 	{
 		return IsPackageLoaded;
@@ -470,7 +470,7 @@ public:
 
 	// FSelfRegisteringExec interface.
 
-	virtual bool Exec(UWorld* Inworld, const TCHAR* Cmd, YOutputDevice& Ar) override;
+	virtual bool Exec(UWorld* Inworld, const TCHAR* Cmd, FOutputDevice& Ar) override;
 
 protected:
 
@@ -535,30 +535,30 @@ protected:
 	typedef TSharedRef<FModuleInfo, ESPMode::ThreadSafe> ModuleInfoRef;
 
 	/** Type definition for maps of module names to module infos. */
-	typedef TMap<YName, ModuleInfoRef> FModuleMap;
+	typedef TMap<FName, ModuleInfoRef> FModuleMap;
 
 public:
 	/**
 	* Generates a unique file name for the specified module name by adding a random suffix and checking for file collisions.
 	*/
-	void MakeUniqueModuleFilename(const YName InModuleName, YString& UniqueSuffix, YString& UniqueModuleFileName) const;
+	void MakeUniqueModuleFilename(const FName InModuleName, YString& UniqueSuffix, YString& UniqueModuleFileName) const;
 
-	void AddModuleToModulesList(const YName InModuleName, FModuleManager::ModuleInfoRef& ModuleInfo);
+	void AddModuleToModulesList(const FName InModuleName, FModuleManager::ModuleInfoRef& ModuleInfo);
 
 	/** Clears module path cache */
 	void ResetModulePathsCache();
 
 private:
 	/** Thread safe module finding routine. */
-	ModuleInfoPtr FindModule(YName InModuleName);
-	ModuleInfoRef FindModuleChecked(YName InModuleName);
+	ModuleInfoPtr FindModule(FName InModuleName);
+	ModuleInfoRef FindModuleChecked(FName InModuleName);
 
-	FORCEINLINE TSharedPtr<const FModuleInfo, ESPMode::ThreadSafe> FindModule(YName InModuleName) const
+	FORCEINLINE TSharedPtr<const FModuleInfo, ESPMode::ThreadSafe> FindModule(FName InModuleName) const
 	{
 		return const_cast<FModuleManager*>(this)->FindModule(InModuleName);
 	}
 
-	FORCEINLINE TSharedRef<const FModuleInfo, ESPMode::ThreadSafe> FindModuleChecked(YName InModuleName) const
+	FORCEINLINE TSharedRef<const FModuleInfo, ESPMode::ThreadSafe> FindModuleChecked(FName InModuleName) const
 	{
 		return const_cast<FModuleManager*>(this)->FindModuleChecked(InModuleName);
 	}
@@ -570,27 +570,27 @@ private:
 	static void GetModuleFilenameFormat(bool bGameModule, YString& OutPrefix, YString& OutSuffix);
 
 	/** Finds modules matching a given name wildcard. */
-	void FindModulePaths(const TCHAR *NamePattern, TMap<YName, YString> &OutModulePaths, bool bCanUseCache = true) const;
+	void FindModulePaths(const TCHAR *NamePattern, TMap<FName, YString> &OutModulePaths, bool bCanUseCache = true) const;
 
 	/** Finds modules matching a given name wildcard within a given directory. */
-	void FindModulePathsInDirectory(const YString &DirectoryName, bool bIsGameDirectory, const TCHAR *NamePattern, TMap<YName, YString> &OutModulePaths) const;
+	void FindModulePathsInDirectory(const YString &DirectorFName, bool bIsGameDirectory, const TCHAR *NamePattern, TMap<FName, YString> &OutModulePaths) const;
 
 private:
 	/** Gets module with given name from Modules or creates a new one. Doesn't modify Modules. */
-	ModuleInfoRef GetOrCreateModule(YName InModuleName);
+	ModuleInfoRef GetOrCreateModule(FName InModuleName);
 
 	/** Map of all modules.  Maps the case-insensitive module name to information about that module, loaded or not. */
 	FModuleMap Modules;
 
 	/** Map of module names to a delegate that can initialize each respective statically linked module */
-	typedef TMap< YName, FInitializeStaticallyLinkedModule > FStaticallyLinkedModuleInitializerMap;
+	typedef TMap< FName, FInitializeStaticallyLinkedModule > FStaticallyLinkedModuleInitializerMap;
 	FStaticallyLinkedModuleInitializerMap StaticallyLinkedModuleInitializers;
 
 	/** True if module manager should automatically register new UObjects discovered while loading C++ modules */
 	bool bCanProcessNewlyLoadedObjects;
 
 	/** Cache of known module paths. Used for performance. Can increase editor startup times by up to 30% */
-	mutable TOptional<TMap<YName, YString>> ModulePathsCache;
+	mutable TOptional<TMap<FName, YString>> ModulePathsCache;
 
 	/** Multicast delegate that will broadcast a notification when modules are loaded, unloaded, or
 	our set of known modules changes */
@@ -600,7 +600,7 @@ private:
 	FSimpleMulticastDelegate ProcessLoadedObjectsCallback;
 
 	/** When module manager is linked against an application that supports UObjects, this delegate will be primed
-	at startup to provide information about whether a SObject package is loaded into memory. */
+	at startup to provide information about whether a UObject package is loaded into memory. */
 	FIsPackageLoadedCallback IsPackageLoaded;
 
 	/** Array of engine binaries directories. */
@@ -632,7 +632,7 @@ public:
 
 		// Register this module
 		FModuleManager::Get().RegisterStaticallyLinkedModule(
-			YName(InModuleName),	// Module name
+			FName(InModuleName),	// Module name
 			InitializerDelegate);	// Initializer delegate
 	}
 

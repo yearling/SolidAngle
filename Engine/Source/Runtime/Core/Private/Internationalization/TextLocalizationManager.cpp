@@ -154,7 +154,7 @@ void FTextLocalizationManager::FLocalizationEntryTracker::LoadFromDirectory(cons
 
 bool FTextLocalizationManager::FLocalizationEntryTracker::LoadFromFile(const YString& FilePath)
 {
-	TUniquePtr<YArchive> Reader(IFileManager::Get().CreateFileReader( *FilePath ));
+	TUniquePtr<FArchive> Reader(IFileManager::Get().CreateFileReader( *FilePath ));
 	if( !Reader )
 	{
 		return false;
@@ -169,7 +169,7 @@ bool FTextLocalizationManager::FLocalizationEntryTracker::LoadFromFile(const YSt
 	return Success;
 }
 
-void FTextLocalizationManager::FLocalizationEntryTracker::LoadFromLocalizationResource(YArchive& Archive, const YString& LocalizationResourceIdentifier)
+void FTextLocalizationManager::FLocalizationEntryTracker::LoadFromLocalizationResource(FArchive& Archive, const YString& LocalizationResourceIdentifier)
 {
 	// Read namespace count
 	uint32 NamespaceCount;
@@ -215,7 +215,7 @@ void FTextLocalizationManager::FLocalizationEntryTracker::DetectAndLogConflicts(
 		const FKeysTable& KeyTable = NamespaceEntry.Value;
 		for (const auto& KeyEntry : KeyTable)
 		{
-			const YString& KeyName = KeyEntry.Key;
+			const YString& KeFName = KeyEntry.Key;
 			const FEntryArray& EntryArray = KeyEntry.Value;
 
 			bool WasConflictDetected = false;
@@ -246,7 +246,7 @@ void FTextLocalizationManager::FLocalizationEntryTracker::DetectAndLogConflicts(
 					CollidingEntryListString += YString::Printf( TEXT("Localization Resource: (%s) Source String Hash: (%d) Localized String: (%s)"), *(Entry.LocResID), Entry.SourceStringHash, *(Entry.LocalizedString) );
 				}
 
-				UE_LOG(LogTextLocalizationManager, Warning, TEXT("Loaded localization resources contain conflicting entries for (Namespace:%s, Key:%s):\n%s"), *NamespaceName, *KeyName, *CollidingEntryListString);
+				UE_LOG(LogTextLocalizationManager, Warning, TEXT("Loaded localization resources contain conflicting entries for (Namespace:%s, Key:%s):\n%s"), *NamespaceName, *KeFName, *CollidingEntryListString);
 			}
 		}
 	}
@@ -411,7 +411,7 @@ FTextDisplayStringRef FTextLocalizationManager::GetDisplayString(const YString& 
 
 		LiveKeyTable->Add( Key, NewEntry );
 
-		NamespaceKeyLookupTable.Add(NewEntry.DisplayString, YNamespaceKeyEntry(Namespace, Key));
+		NamespaceKeyLookupTable.Add(NewEntry.DisplayString, FNamespaceKeyEntry(Namespace, Key));
 
 
 		return UnlocalizedString;
@@ -439,7 +439,7 @@ bool FTextLocalizationManager::FindNamespaceAndKeyFromDisplayString(const FTextD
 {
 	FScopeLock ScopeLock( &SynchronizationObject );
 
-	YNamespaceKeyEntry* NamespaceKeyEntry = NamespaceKeyLookupTable.Find(InDisplayString);
+	FNamespaceKeyEntry* NamespaceKeyEntry = NamespaceKeyLookupTable.Find(InDisplayString);
 
 	if (NamespaceKeyEntry)
 	{
@@ -463,7 +463,7 @@ bool FTextLocalizationManager::AddDisplayString(const FTextDisplayStringRef& Dis
 	FScopeLock ScopeLock( &SynchronizationObject );
 
 	// Try to find existing entries.
-	YNamespaceKeyEntry* ReverseLiveTableEntry = NamespaceKeyLookupTable.Find(DisplayString);
+	FNamespaceKeyEntry* ReverseLiveTableEntry = NamespaceKeyLookupTable.Find(DisplayString);
 	FDisplayStringLookupTable::FKeysTable* KeysTableForExistingNamespace = nullptr;
 	FDisplayStringLookupTable::FDisplayStringEntry* ExistingDisplayStringEntry = nullptr;
 	DisplayStringLookupTable.Find(Namespace, KeysTableForExistingNamespace, Key, ExistingDisplayStringEntry);
@@ -478,7 +478,7 @@ bool FTextLocalizationManager::AddDisplayString(const FTextDisplayStringRef& Dis
 	// Add the necessary associations in both directions.
 	FDisplayStringLookupTable::FKeysTable& KeysTableForNamespace = DisplayStringLookupTable.NamespacesTable.FindOrAdd(Namespace);
 	KeysTableForNamespace.Add(Key, FDisplayStringLookupTable::FDisplayStringEntry(false, TEXT(""), FCrc::StrCrc32(*DisplayString.Get()), DisplayString));
-	NamespaceKeyLookupTable.Add(DisplayString, YNamespaceKeyEntry(Namespace, Key));
+	NamespaceKeyLookupTable.Add(DisplayString, FNamespaceKeyEntry(Namespace, Key));
 
 	return true;
 }
@@ -488,7 +488,7 @@ bool FTextLocalizationManager::UpdateDisplayString(const FTextDisplayStringRef& 
 	FScopeLock ScopeLock( &SynchronizationObject );
 
 	// Get entry from reverse live table. Contains current namespace and key values.
-	YNamespaceKeyEntry& ReverseLiveTableEntry = NamespaceKeyLookupTable[DisplayString];
+	FNamespaceKeyEntry& ReverseLiveTableEntry = NamespaceKeyLookupTable[DisplayString];
 
 	// Copy old live table entry over as new live table entry and destroy old live table entry if the namespace or key has changed.
 	if (ReverseLiveTableEntry.Namespace != Namespace || ReverseLiveTableEntry.Key != Key)
@@ -545,7 +545,7 @@ void FTextLocalizationManager::UpdateFromLocalizationResource(const YString& Loc
 	UpdateFromLocalizations(LocalizationEntryTrackers);
 }
 
-void FTextLocalizationManager::UpdateFromLocalizationResource(YArchive& LocResArchive, const YString& LocResID)
+void FTextLocalizationManager::UpdateFromLocalizationResource(FArchive& LocResArchive, const YString& LocResID)
 {
 	TArray<FLocalizationEntryTracker> LocalizationEntryTrackers;
 
@@ -617,14 +617,14 @@ void FTextLocalizationManager::LoadLocalizationResourcesForCulture(const YString
 		EditorLocalizationPaths += YPaths::GetEditorLocalizationPaths();
 		EditorLocalizationPaths += YPaths::GetToolTipLocalizationPaths();
 
-		bool bShouldLoadLocalizedPropertyNames = true;
-		if( !GConfig->GetBool( TEXT("Internationalization"), TEXT("ShouldLoadLocalizedPropertyNames"), bShouldLoadLocalizedPropertyNames, GEditorSettingsIni ) )
+		bool bShouldLoadLocalizedPropertFNames = true;
+		if( !GConfig->GetBool( TEXT("Internationalization"), TEXT("ShouldLoadLocalizedPropertFNames"), bShouldLoadLocalizedPropertFNames, GEditorSettingsIni ) )
 		{
-			GConfig->GetBool( TEXT("Internationalization"), TEXT("ShouldLoadLocalizedPropertyNames"), bShouldLoadLocalizedPropertyNames, GEngineIni );
+			GConfig->GetBool( TEXT("Internationalization"), TEXT("ShouldLoadLocalizedPropertFNames"), bShouldLoadLocalizedPropertFNames, GEngineIni );
 		}
-		if(bShouldLoadLocalizedPropertyNames)
+		if(bShouldLoadLocalizedPropertFNames)
 		{
-			EditorLocalizationPaths += YPaths::GetPropertyNameLocalizationPaths();
+			EditorLocalizationPaths += YPaths::GetPropertFNameLocalizationPaths();
 		}
 	}
 	TArray<YString> EngineLocalizationPaths;
@@ -755,7 +755,7 @@ void FTextLocalizationManager::UpdateFromLocalizations(const TArray<FLocalizatio
 		FDisplayStringLookupTable::FKeysTable& LiveKeyTable = Namespace.Value;
 		for(auto& Key : LiveKeyTable)
 		{
-			const YString& KeyName = Key.Key;
+			const YString& KeFName = Key.Key;
 			FDisplayStringLookupTable::FDisplayStringEntry& LiveStringEntry = Key.Value;
 
 			const FLocalizationEntryTracker::FEntry* SourceEntryForUpdate = nullptr;
@@ -764,7 +764,7 @@ void FTextLocalizationManager::UpdateFromLocalizations(const TArray<FLocalizatio
 			for(const FLocalizationEntryTracker& Tracker : LocalizationEntryTrackers)
 			{
 				const FLocalizationEntryTracker::FKeysTable* const UpdateKeyTable = Tracker.Namespaces.Find(NamespaceName);
-				const FLocalizationEntryTracker::FEntryArray* const UpdateEntryArray = UpdateKeyTable ? UpdateKeyTable->Find(KeyName) : nullptr;
+				const FLocalizationEntryTracker::FEntryArray* const UpdateEntryArray = UpdateKeyTable ? UpdateKeyTable->Find(KeFName) : nullptr;
 				const FLocalizationEntryTracker::FEntry* Entry = UpdateEntryArray && UpdateEntryArray->Num() ? &((*UpdateEntryArray)[0]) : nullptr;
 				if(Entry)
 				{
@@ -809,12 +809,12 @@ void FTextLocalizationManager::UpdateFromLocalizations(const TArray<FLocalizatio
 			const FLocalizationEntryTracker::FKeysTable& NewKeyTable = Namespace.Value;
 			for(const auto& Key : NewKeyTable)
 			{
-				const YString& KeyName = Key.Key;
+				const YString& KeFName = Key.Key;
 				const FLocalizationEntryTracker::FEntryArray& NewEntryArray = Key.Value;
 				const FLocalizationEntryTracker::FEntry& NewEntry = NewEntryArray[0];
 
 				FDisplayStringLookupTable::FKeysTable& LiveKeyTable = DisplayStringLookupTable.NamespacesTable.FindOrAdd(NamespaceName);
-				FDisplayStringLookupTable::FDisplayStringEntry* const LiveStringEntry = LiveKeyTable.Find(KeyName);
+				FDisplayStringLookupTable::FDisplayStringEntry* const LiveStringEntry = LiveKeyTable.Find(KeFName);
 				// Note: Anything we find in the table has already been updated above.
 				if( !LiveStringEntry )
 				{
@@ -824,9 +824,9 @@ void FTextLocalizationManager::UpdateFromLocalizations(const TArray<FLocalizatio
 						NewEntry.SourceStringHash,								/*SourceStringHash*/
 						MakeShareable( new YString(NewEntry.LocalizedString) )	/*String*/
 						);
-					LiveKeyTable.Add( KeyName, NewLiveEntry );
+					LiveKeyTable.Add( KeFName, NewLiveEntry );
 
-					NamespaceKeyLookupTable.Add(NewLiveEntry.DisplayString, YNamespaceKeyEntry(NamespaceName, KeyName));
+					NamespaceKeyLookupTable.Add(NewLiveEntry.DisplayString, FNamespaceKeyEntry(NamespaceName, KeFName));
 				}
 			}
 		}

@@ -25,7 +25,7 @@ class Error;
 * Example: LocalToWorld = (LocalToWorld * DeltaRotation) will change rotation in local space by DeltaRotation.
 * Example: LocalToWorld = (DeltaRotation * LocalToWorld) will change rotation in world space by DeltaRotation.
 */
-MS_ALIGN(16) struct YQuat
+MS_ALIGN(16) struct FQuat
 {
 public:
 
@@ -44,19 +44,19 @@ public:
 public:
 
 	/** Identity quaternion. */
-	static CORE_API const YQuat Identity;
+	static CORE_API const FQuat Identity;
 
 public:
 
 	/** Default constructor (no initialization). */
-	FORCEINLINE YQuat() { }
+	FORCEINLINE FQuat() { }
 
 	/**
 	* Creates and initializes a new quaternion, with the W component either 0 or 1.
 	*
 	* @param EForceInit Force init enum: if equal to ForceInitToZero then W is 0, otherwise W = 1 (creating an identity transform)
 	*/
-	explicit FORCEINLINE YQuat(EForceInit);
+	explicit FORCEINLINE FQuat(EForceInit);
 
 	/**
 	* Constructor.
@@ -66,28 +66,28 @@ public:
 	* @param InZ Z component of the quaternion
 	* @param InW W component of the quaternion
 	*/
-	FORCEINLINE YQuat(float InX, float InY, float InZ, float InW);
+	FORCEINLINE FQuat(float InX, float InY, float InZ, float InW);
 
 	/**
 	* Copy constructor.
 	*
 	* @param Q A YQuat object to use to create new quaternion from.
 	*/
-	FORCEINLINE YQuat(const YQuat& Q);
+	FORCEINLINE FQuat(const FQuat& Q);
 
 	/**
 	* Creates and initializes a new quaternion from the given matrix.
 	*
 	* @param M The rotation matrix to initialize from.
 	*/
-	explicit YQuat(const YMatrix& M);
+	explicit FQuat(const FMatrix& M);
 
 	/**
 	* Creates and initializes a new quaternion from the given rotator.
 	*
 	* @param R The rotator to initialize from.
 	*/
-	explicit YQuat(const YRotator& R);
+	explicit FQuat(const FRotator& R);
 
 	/**
 	* Creates and initializes a new quaternion from the a rotation around the given axis.
@@ -95,7 +95,7 @@ public:
 	* @param Axis assumed to be a normalized vector
 	* @param Angle angle to rotate above the given axis (in radians)
 	*/
-	YQuat(YVector Axis, float AngleRad);
+	FQuat(FVector Axis, float AngleRad);
 
 public:
 
@@ -105,7 +105,7 @@ public:
 	*
 	* @return reference to this YQuat
 	*/
-	FORCEINLINE YQuat& operator=(const YQuat& Other);
+	FORCEINLINE FQuat& operator=(const FQuat& Other);
 #endif
 
 	/**
@@ -115,7 +115,7 @@ public:
 	* @param Q The Quaternion to add.
 	* @return The result of addition.
 	*/
-	FORCEINLINE YQuat operator+(const YQuat& Q) const;
+	FORCEINLINE FQuat operator+(const FQuat& Q) const;
 
 	/**
 	* Adds to this quaternion.
@@ -124,7 +124,7 @@ public:
 	* @param Other The quaternion to add to this.
 	* @return Result after addition.
 	*/
-	FORCEINLINE YQuat operator+=(const YQuat& Q);
+	FORCEINLINE FQuat operator+=(const FQuat& Q);
 
 	/**
 	* Gets the result of subtracting a Quaternion to this.
@@ -133,7 +133,7 @@ public:
 	* @param Q The Quaternion to subtract.
 	* @return The result of subtraction.
 	*/
-	FORCEINLINE YQuat operator-(const YQuat& Q) const;
+	FORCEINLINE FQuat operator-(const FQuat& Q) const;
 
 	/**
 	* Checks whether another Quaternion is equal to this, within specified tolerance.
@@ -142,7 +142,7 @@ public:
 	* @param Tolerance Error tolerance for comparison with other Quaternion.
 	* @return true if two Quaternions are equal, within specified tolerance, otherwise false.
 	*/
-	FORCEINLINE bool Equals(const YQuat& Q, float Tolerance = KINDA_SMALL_NUMBER) const;
+	FORCEINLINE bool Equals(const FQuat& Q, float Tolerance = KINDA_SMALL_NUMBER) const;
 
 	/**
 	* Checks whether this Quaternion is an Identity Quaternion.
@@ -160,7 +160,7 @@ public:
 	* @param Q The other quaternion.
 	* @return reference to this after subtraction.
 	*/
-	FORCEINLINE YQuat operator-=(const YQuat& Q);
+	FORCEINLINE FQuat operator-=(const FQuat& Q);
 
 	/**
 	* Gets the result of multiplying this by another quaternion (this * Q).
@@ -171,7 +171,7 @@ public:
 	* @param Q The Quaternion to multiply this by.
 	* @return The result of multiplication (this * Q).
 	*/
-	FORCEINLINE YQuat operator*(const YQuat& Q) const;
+	FORCEINLINE FQuat operator*(const FQuat& Q) const;
 
 	/**
 	* Multiply this by a quaternion (this = this * Q).
@@ -182,7 +182,7 @@ public:
 	* @param Q the quaternion to multiply this by.
 	* @return The result of multiplication (this * Q).
 	*/
-	FORCEINLINE YQuat operator*=(const YQuat& Q);
+	FORCEINLINE FQuat operator*=(const FQuat& Q);
 
 	/**
 	* Rotate a vector by this quaternion.
@@ -191,7 +191,7 @@ public:
 	* @return vector after rotation
 	* @see RotateVector
 	*/
-	YVector operator*(const YVector& V) const;
+	FVector operator*(const FVector& V) const;
 
 	/**
 	* Multiply this by a matrix.
@@ -202,7 +202,7 @@ public:
 	* @param M Matrix to multiply by.
 	* @return Matrix result after multiplication.
 	*/
-	YMatrix operator*(const YMatrix& M) const;
+	FMatrix operator*(const FMatrix& M) const;
 
 	/**
 	* Multiply this quaternion by a scaling factor.
@@ -210,7 +210,7 @@ public:
 	* @param Scale The scaling factor.
 	* @return a reference to this after scaling.
 	*/
-	FORCEINLINE YQuat operator*=(const float Scale);
+	FORCEINLINE FQuat operator*=(const float Scale);
 
 	/**
 	* Get the result of scaling this quaternion.
@@ -218,7 +218,7 @@ public:
 	* @param Scale The scaling factor.
 	* @return The result of scaling.
 	*/
-	FORCEINLINE YQuat operator*(const float Scale) const;
+	FORCEINLINE FQuat operator*(const float Scale) const;
 
 	/**
 	* Divide this quaternion by scale.
@@ -226,7 +226,7 @@ public:
 	* @param Scale What to divide by.
 	* @return a reference to this after scaling.
 	*/
-	FORCEINLINE YQuat operator/=(const float Scale);
+	FORCEINLINE FQuat operator/=(const float Scale);
 
 	/**
 	* Divide this quaternion by scale.
@@ -234,7 +234,7 @@ public:
 	* @param Scale What to divide by.
 	* @return new Quaternion of this after division by scale.
 	*/
-	FORCEINLINE YQuat operator/(const float Scale) const;
+	FORCEINLINE FQuat operator/(const float Scale) const;
 
 	/**
 	* Checks whether two quaternions are identical.
@@ -245,7 +245,7 @@ public:
 	* @return true if two quaternion are identical, otherwise false.
 	* @see Equals
 	*/
-	bool operator==(const YQuat& Q) const;
+	bool operator==(const FQuat& Q) const;
 
 	/**
 	* Checks whether two quaternions are not identical.
@@ -253,7 +253,7 @@ public:
 	* @param Q The other quaternion.
 	* @return true if two quaternion are not identical, otherwise false.
 	*/
-	bool operator!=(const YQuat& Q) const;
+	bool operator!=(const FQuat& Q) const;
 
 	/**
 	* Calculates dot product of two quaternions.
@@ -261,7 +261,7 @@ public:
 	* @param Q The other quaternions.
 	* @return The dot product.
 	*/
-	float operator|(const YQuat& Q) const;
+	float operator|(const FQuat& Q) const;
 
 public:
 
@@ -271,10 +271,10 @@ public:
 	* @param Euler the Euler angles
 	* @return constructed YQuat
 	*/
-	static CORE_API YQuat MakeFromEuler(const YVector& Euler);
+	static CORE_API FQuat MakeFromEuler(const FVector& Euler);
 
 	/** Convert a Quaternion into floating-point Euler angles (in degrees). */
-	CORE_API YVector Euler() const;
+	CORE_API FVector Euler() const;
 
 	/**
 	* Normalize this quaternion if it is large enough.
@@ -290,7 +290,7 @@ public:
 	*
 	* @param Tolerance Minimum squared length of quaternion for normalization.
 	*/
-	FORCEINLINE YQuat GetNormalized(float Tolerance = SMALL_NUMBER) const;
+	FORCEINLINE FQuat GetNormalized(float Tolerance = SMALL_NUMBER) const;
 
 	// Return true if this quaternion is normalized
 	bool IsNormalized() const;
@@ -316,7 +316,7 @@ public:
 	* @param Angle{out] angle of the quaternion
 	* @warning : assumes normalized quaternions.
 	*/
-	void ToAxisAndAngle(YVector& Axis, float& Angle) const;
+	void ToAxisAndAngle(FVector& Axis, float& Angle) const;
 
 	/**
 	* Get the swing and twist decomposition for a specified axis
@@ -326,7 +326,7 @@ public:
 	* @param OutTwist Twist component quaternion
 	* @warning assumes normalised quaternion and twist axis
 	*/
-	CORE_API void ToSwingTwist(const YVector& InTwistAxis, YQuat& OutSwing, YQuat& OutTwist) const;
+	CORE_API void ToSwingTwist(const FVector& InTwistAxis, FQuat& OutSwing, FQuat& OutTwist) const;
 
 	/**
 	* Rotate a vector by this quaternion.
@@ -334,7 +334,7 @@ public:
 	* @param V the vector to be rotated
 	* @return vector after rotation
 	*/
-	YVector RotateVector(YVector V) const;
+	FVector RotateVector(FVector V) const;
 
 	/**
 	* Rotate a vector by the inverse of this quaternion.
@@ -342,71 +342,71 @@ public:
 	* @param V the vector to be rotated
 	* @return vector after rotation by the inverse of this quaternion.
 	*/
-	YVector UnrotateVector(YVector V) const;
+	FVector UnrotateVector(FVector V) const;
 
 	/**
 	* @return quaternion with W=0 and V=theta*v.
 	*/
-	CORE_API YQuat Log() const;
+	CORE_API FQuat Log() const;
 
 	/**
 	* @note Exp should really only be used after Log.
 	* Assumes a quaternion with W=0 and V=theta*v (where |v| = 1).
 	* Exp(q) = (sin(theta)*v, cos(theta))
 	*/
-	CORE_API YQuat Exp() const;
+	CORE_API FQuat Exp() const;
 
 	/**
 	* @return inverse of this quaternion
 	*/
-	FORCEINLINE YQuat Inverse() const;
+	FORCEINLINE FQuat Inverse() const;
 
 	/**
 	* Enforce that the delta between this Quaternion and another one represents
 	* the shortest possible rotation angle
 	*/
-	void EnforceShortestArcWith(const YQuat& OtherQuat);
+	void EnforceShortestArcWith(const FQuat& OtherQuat);
 
 	/** Get the forward direction (X axis) after it has been rotated by this Quaternion. */
-	FORCEINLINE YVector GetAxisX() const;
+	FORCEINLINE FVector GetAxisX() const;
 
 	/** Get the right direction (Y axis) after it has been rotated by this Quaternion. */
-	FORCEINLINE YVector GetAxisY() const;
+	FORCEINLINE FVector GetAxisY() const;
 
 	/** Get the up direction (Z axis) after it has been rotated by this Quaternion. */
-	FORCEINLINE YVector GetAxisZ() const;
+	FORCEINLINE FVector GetAxisZ() const;
 
 	/** Get the forward direction (X axis) after it has been rotated by this Quaternion. */
-	FORCEINLINE YVector GetForwardVector() const;
+	FORCEINLINE FVector GetForwardVector() const;
 
 	/** Get the right direction (Y axis) after it has been rotated by this Quaternion. */
-	FORCEINLINE YVector GetRightVector() const;
+	FORCEINLINE FVector GetRightVector() const;
 
 	/** Get the up direction (Z axis) after it has been rotated by this Quaternion. */
-	FORCEINLINE YVector GetUpVector() const;
+	FORCEINLINE FVector GetUpVector() const;
 
 	/** Convert a rotation into a unit vector facing in its direction. Equivalent to GetForwardVector(). */
-	FORCEINLINE YVector Vector() const;
+	FORCEINLINE FVector Vector() const;
 
 	/** Get the YRotator representation of this Quaternion. */
-	CORE_API YRotator Rotator() const;
+	CORE_API FRotator Rotator() const;
 
 	/**
 	* Get the axis of rotation of the Quaternion.
 	* This is the axis around which rotation occurs to transform the canonical coordinate system to the target orientation.
 	* For the identity Quaternion which has no such rotation, YVector(1,0,0) is returned.
 	*/
-	FORCEINLINE YVector GetRotationAxis() const;
+	FORCEINLINE FVector GetRotationAxis() const;
 
 	/** Find the angular distance between two rotation quaternions (in radians) */
-	FORCEINLINE float AngularDistance(const YQuat& Q) const;
+	FORCEINLINE float AngularDistance(const FQuat& Q) const;
 
 	/**
 	* Serializes the vector compressed for e.g. network transmission.
 	* @param Ar Archive to serialize to/ from.
 	* @return false to allow the ordinary struct code to run (this never happens).
 	*/
-	CORE_API bool NetSerialize(YArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
+	CORE_API bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
 
 	/**
 	* Utility to check if there are any non-finite values (NaN or Inf) in this Quat.
@@ -430,7 +430,7 @@ public:
 		if (ContainsNaN())
 		{
 			logOrEnsureNanError(TEXT("YQuat contains NaN: %s"), *ToString());
-			*const_cast<YQuat*>(this) = YQuat::Identity;
+			*const_cast<FQuat*>(this) = FQuat::Identity;
 		}
 	}
 
@@ -439,7 +439,7 @@ public:
 		if (ContainsNaN())
 		{
 			logOrEnsureNanError(TEXT("%s: YQuat contains NaN: %s"), Message, *ToString());
-			*const_cast<YQuat*>(this) = YQuat::Identity;
+			*const_cast<FQuat*>(this) = FQuat::Identity;
 		}
 	}
 #else
@@ -452,7 +452,7 @@ public:
 	/**
 	* Generates the 'smallest' (geodesic) rotation between two vectors of arbitrary length.
 	*/
-	static FORCEINLINE YQuat FindBetween(const YVector& Vector1, const YVector& Vector2)
+	static FORCEINLINE FQuat FindBetween(const FVector& Vector1, const FVector& Vector2)
 	{
 		return FindBetweenVectors(Vector1, Vector2);
 	}
@@ -460,43 +460,43 @@ public:
 	/**
 	* Generates the 'smallest' (geodesic) rotation between two normals (assumed to be unit length).
 	*/
-	static CORE_API YQuat FindBetweenNormals(const YVector& Normal1, const YVector& Normal2);
+	static CORE_API FQuat FindBetweenNormals(const FVector& Normal1, const FVector& Normal2);
 
 	/**
 	* Generates the 'smallest' (geodesic) rotation between two vectors of arbitrary length.
 	*/
-	static CORE_API YQuat FindBetweenVectors(const YVector& Vector1, const YVector& Vector2);
+	static CORE_API FQuat FindBetweenVectors(const FVector& Vector1, const FVector& Vector2);
 
 	/**
 	* Error measure (angle) between two quaternions, ranged [0..1].
 	* Returns the hypersphere-angle between two quaternions; alignment shouldn't matter, though
 	* @note normalized input is expected.
 	*/
-	static FORCEINLINE float Error(const YQuat& Q1, const YQuat& Q2);
+	static FORCEINLINE float Error(const FQuat& Q1, const FQuat& Q2);
 
 	/**
 	* YQuat::Error with auto-normalization.
 	*/
-	static FORCEINLINE float ErrorAutoNormalize(const YQuat& A, const YQuat& B);
+	static FORCEINLINE float ErrorAutoNormalize(const FQuat& A, const FQuat& B);
 
 	/**
 	* Fast Linear Quaternion Interpolation.
 	* Result is NOT normalized.
 	*/
-	static FORCEINLINE YQuat FastLerp(const YQuat& A, const YQuat& B, const float Alpha);
+	static FORCEINLINE FQuat FastLerp(const FQuat& A, const FQuat& B, const float Alpha);
 
 	/**
 	* Bi-Linear Quaternion interpolation.
 	* Result is NOT normalized.
 	*/
-	static FORCEINLINE YQuat FastBilerp(const YQuat& P00, const YQuat& P10, const YQuat& P01, const YQuat& P11, float FracX, float FracY);
+	static FORCEINLINE FQuat FastBilerp(const FQuat& P00, const FQuat& P10, const FQuat& P01, const FQuat& P11, float FracX, float FracY);
 
 
 	/** Spherical interpolation. Will correct alignment. Result is NOT normalized. */
-	static CORE_API YQuat Slerp_NotNormalized(const YQuat &Quat1, const YQuat &Quat2, float Slerp);
+	static CORE_API FQuat Slerp_NotNormalized(const FQuat &Quat1, const FQuat &Quat2, float Slerp);
 
 	/** Spherical interpolation. Will correct alignment. Result is normalized. */
-	static FORCEINLINE YQuat Slerp(const YQuat &Quat1, const YQuat &Quat2, float Slerp)
+	static FORCEINLINE FQuat Slerp(const FQuat &Quat1, const FQuat &Quat2, float Slerp)
 	{
 		return Slerp_NotNormalized(Quat1, Quat2, Slerp).GetNormalized();
 	}
@@ -506,14 +506,14 @@ public:
 	* We need this for the cubic interpolation stuff so that the multiple Slerps dont go in different directions.
 	* Result is NOT normalized.
 	*/
-	static CORE_API YQuat SlerpFullPath_NotNormalized(const YQuat &quat1, const YQuat &quat2, float Alpha);
+	static CORE_API FQuat SlerpFullPath_NotNormalized(const FQuat &quat1, const FQuat &quat2, float Alpha);
 
 	/**
 	* Simpler Slerp that doesn't do any checks for 'shortest distance' etc.
 	* We need this for the cubic interpolation stuff so that the multiple Slerps dont go in different directions.
 	* Result is normalized.
 	*/
-	static FORCEINLINE YQuat SlerpFullPath(const YQuat &quat1, const YQuat &quat2, float Alpha)
+	static FORCEINLINE FQuat SlerpFullPath(const FQuat &quat1, const FQuat &quat2, float Alpha)
 	{
 		return SlerpFullPath_NotNormalized(quat1, quat2, Alpha).GetNormalized();
 	}
@@ -522,13 +522,13 @@ public:
 	* Given start and end quaternions of quat1 and quat2, and tangents at those points tang1 and tang2, calculate the point at Alpha (between 0 and 1) between them. Result is normalized.
 	* This will correct alignment by ensuring that the shortest path is taken.
 	*/
-	static CORE_API YQuat Squad(const YQuat& quat1, const YQuat& tang1, const YQuat& quat2, const YQuat& tang2, float Alpha);
+	static CORE_API FQuat Squad(const FQuat& quat1, const FQuat& tang1, const FQuat& quat2, const FQuat& tang2, float Alpha);
 
 	/**
 	* Simpler Squad that doesn't do any checks for 'shortest distance' etc.
 	* Given start and end quaternions of quat1 and quat2, and tangents at those points tang1 and tang2, calculate the point at Alpha (between 0 and 1) between them. Result is normalized.
 	*/
-	static CORE_API YQuat SquadFullPath(const YQuat& quat1, const YQuat& tang1, const YQuat& quat2, const YQuat& tang2, float Alpha);
+	static CORE_API FQuat SquadFullPath(const FQuat& quat1, const FQuat& tang1, const FQuat& quat2, const FQuat& tang2, float Alpha);
 
 	/**
 	* Calculate tangents between given points
@@ -539,7 +539,7 @@ public:
 	* @param Tension @todo document
 	* @param OutTan Out control point
 	*/
-	static CORE_API void CalcTangents(const YQuat& PrevP, const YQuat& P, const YQuat& NextP, float Tension, YQuat& OutTan);
+	static CORE_API void CalcTangents(const FQuat& PrevP, const FQuat& P, const FQuat& NextP, float Tension, FQuat& OutTan);
 
 public:
 
@@ -550,12 +550,12 @@ public:
 	* @param F Reference to the quaternion being serialized.
 	* @return Reference to the Archive after serialization.
 	*/
-	friend YArchive& operator<<(YArchive& Ar, YQuat& F)
+	friend FArchive& operator<<(FArchive& Ar, FQuat& F)
 	{
 		return Ar << F.X << F.Y << F.Z << F.W;
 	}
 
-	bool Serialize(YArchive& Ar)
+	bool Serialize(FArchive& Ar)
 	{
 		Ar << *this;
 		return true;
@@ -567,14 +567,14 @@ public:
 /* YQuat inline functions
 *****************************************************************************/
 
-inline YQuat::YQuat(const YMatrix& M)
+inline FQuat::FQuat(const FMatrix& M)
 {
 	// If Matrix is NULL, return Identity quaternion. If any of them is 0, you won't be able to construct rotation
 	// if you have two plane at least, we can reconstruct the frame using cross product, but that's a bit expensive op to do here
 	// for now, if you convert to matrix from 0 scale and convert back, you'll lose rotation. Don't do that. 
 	if (M.GetScaledAxis(EAxis::X).IsNearlyZero() || M.GetScaledAxis(EAxis::Y).IsNearlyZero() || M.GetScaledAxis(EAxis::Z).IsNearlyZero())
 	{
-		*this = YQuat::Identity;
+		*this = FQuat::Identity;
 		return;
 	}
 
@@ -583,7 +583,7 @@ inline YQuat::YQuat(const YMatrix& M)
 	// Changed to this (same as RemoveScaling) from RotDeterminant as using two different ways of checking unit length matrix caused inconsistency. 
 	if (!ensure((YMath::Abs(1.f - M.GetScaledAxis(EAxis::X).SizeSquared()) <= KINDA_SMALL_NUMBER) && (YMath::Abs(1.f - M.GetScaledAxis(EAxis::Y).SizeSquared()) <= KINDA_SMALL_NUMBER) && (YMath::Abs(1.f - M.GetScaledAxis(EAxis::Z).SizeSquared()) <= KINDA_SMALL_NUMBER)))
 	{
-		*this = YQuat::Identity;
+		*this = FQuat::Identity;
 		return;
 	}
 #endif
@@ -642,27 +642,27 @@ inline YQuat::YQuat(const YMatrix& M)
 }
 
 
-FORCEINLINE YQuat::YQuat(const YRotator& R)
+FORCEINLINE FQuat::FQuat(const FRotator& R)
 {
 	*this = R.Quaternion();
 	DiagnosticCheckNaN();
 }
 
 
-FORCEINLINE YVector YQuat::operator*(const YVector& V) const
+FORCEINLINE FVector FQuat::operator*(const FVector& V) const
 {
 	return RotateVector(V);
 }
 
 
-inline YMatrix YQuat::operator*(const YMatrix& M) const
+inline FMatrix FQuat::operator*(const FMatrix& M) const
 {
-	YMatrix Result;
-	YQuat VT, VR;
-	YQuat Inv = Inverse();
+	FMatrix Result;
+	FQuat VT, VR;
+	FQuat Inv = Inverse();
 	for (int32 I = 0; I<4; ++I)
 	{
-		YQuat VQ(M.M[I][0], M.M[I][1], M.M[I][2], M.M[I][3]);
+		FQuat VQ(M.M[I][0], M.M[I][1], M.M[I][2], M.M[I][3]);
 		VectorQuaternionMultiply(&VT, this, &VQ);
 		VectorQuaternionMultiply(&VR, &VT, &Inv);
 		Result.M[I][0] = VR.X;
@@ -678,12 +678,12 @@ inline YMatrix YQuat::operator*(const YMatrix& M) const
 /* YQuat inline functions
 *****************************************************************************/
 
-FORCEINLINE YQuat::YQuat(EForceInit ZeroOrNot)
+FORCEINLINE FQuat::FQuat(EForceInit ZeroOrNot)
 	: X(0), Y(0), Z(0), W(ZeroOrNot == ForceInitToZero ? 0.0f : 1.0f)
 { }
 
 
-FORCEINLINE YQuat::YQuat(float InX, float InY, float InZ, float InW)
+FORCEINLINE FQuat::FQuat(float InX, float InY, float InZ, float InW)
 	: X(InX)
 	, Y(InY)
 	, Z(InZ)
@@ -693,7 +693,7 @@ FORCEINLINE YQuat::YQuat(float InX, float InY, float InZ, float InW)
 }
 
 
-FORCEINLINE YQuat::YQuat(const YQuat& Q)
+FORCEINLINE FQuat::FQuat(const FQuat& Q)
 	: X(Q.X)
 	, Y(Q.Y)
 	, Z(Q.Z)
@@ -701,14 +701,14 @@ FORCEINLINE YQuat::YQuat(const YQuat& Q)
 { }
 
 
-FORCEINLINE YString YQuat::ToString() const
+FORCEINLINE YString FQuat::ToString() const
 {
 	return YString::Printf(TEXT("X=%.9f Y=%.9f Z=%.9f W=%.9f"), X, Y, Z, W);
 }
 
 
 #ifdef IMPLEMENT_ASSIGNMENT_OPERATOR_MANUALLY
-FORCEINLINE YQuat& YQuat::operator=(const YQuat& Other)
+FORCEINLINE FQuat& FQuat::operator=(const FQuat& Other)
 {
 	this->X = Other.X;
 	this->Y = Other.Y;
@@ -720,7 +720,7 @@ FORCEINLINE YQuat& YQuat::operator=(const YQuat& Other)
 #endif
 
 
-FORCEINLINE YQuat::YQuat(YVector Axis, float AngleRad)
+FORCEINLINE FQuat::FQuat(FVector Axis, float AngleRad)
 {
 	const float half_a = 0.5f * AngleRad;
 	float s, c;
@@ -735,13 +735,13 @@ FORCEINLINE YQuat::YQuat(YVector Axis, float AngleRad)
 }
 
 
-FORCEINLINE YQuat YQuat::operator+(const YQuat& Q) const
+FORCEINLINE FQuat FQuat::operator+(const FQuat& Q) const
 {
-	return YQuat(X + Q.X, Y + Q.Y, Z + Q.Z, W + Q.W);
+	return FQuat(X + Q.X, Y + Q.Y, Z + Q.Z, W + Q.W);
 }
 
 
-FORCEINLINE YQuat YQuat::operator+=(const YQuat& Q)
+FORCEINLINE FQuat FQuat::operator+=(const FQuat& Q)
 {
 	this->X += Q.X;
 	this->Y += Q.Y;
@@ -754,13 +754,13 @@ FORCEINLINE YQuat YQuat::operator+=(const YQuat& Q)
 }
 
 
-FORCEINLINE YQuat YQuat::operator-(const YQuat& Q) const
+FORCEINLINE FQuat FQuat::operator-(const FQuat& Q) const
 {
-	return YQuat(X - Q.X, Y - Q.Y, Z - Q.Z, W - Q.W);
+	return FQuat(X - Q.X, Y - Q.Y, Z - Q.Z, W - Q.W);
 }
 
 
-FORCEINLINE bool YQuat::Equals(const YQuat& Q, float Tolerance) const
+FORCEINLINE bool FQuat::Equals(const FQuat& Q, float Tolerance) const
 {
 #if PLATFORM_ENABLE_VECTORINTRINSICS
 	const VectorRegister ToleranceV = VectorLoadFloat1(&Tolerance);
@@ -776,12 +776,12 @@ FORCEINLINE bool YQuat::Equals(const YQuat& Q, float Tolerance) const
 #endif // PLATFORM_ENABLE_VECTORINTRINSICS
 }
 
-FORCEINLINE bool YQuat::IsIdentity(float Tolerance) const
+FORCEINLINE bool FQuat::IsIdentity(float Tolerance) const
 {
-	return Equals(YQuat::Identity, Tolerance);
+	return Equals(FQuat::Identity, Tolerance);
 }
 
-FORCEINLINE YQuat YQuat::operator-=(const YQuat& Q)
+FORCEINLINE FQuat FQuat::operator-=(const FQuat& Q)
 {
 	this->X -= Q.X;
 	this->Y -= Q.Y;
@@ -794,9 +794,9 @@ FORCEINLINE YQuat YQuat::operator-=(const YQuat& Q)
 }
 
 
-FORCEINLINE YQuat YQuat::operator*(const YQuat& Q) const
+FORCEINLINE FQuat FQuat::operator*(const FQuat& Q) const
 {
-	YQuat Result;
+	FQuat Result;
 	VectorQuaternionMultiply(&Result, this, &Q);
 
 	Result.DiagnosticCheckNaN();
@@ -805,7 +805,7 @@ FORCEINLINE YQuat YQuat::operator*(const YQuat& Q) const
 }
 
 
-FORCEINLINE YQuat YQuat::operator*=(const YQuat& Q)
+FORCEINLINE FQuat FQuat::operator*=(const FQuat& Q)
 {
 	/**
 	* Now this uses VectorQuaternionMultiply that is optimized per platform.
@@ -822,7 +822,7 @@ FORCEINLINE YQuat YQuat::operator*=(const YQuat& Q)
 }
 
 
-FORCEINLINE YQuat YQuat::operator*=(const float Scale)
+FORCEINLINE FQuat FQuat::operator*=(const float Scale)
 {
 	X *= Scale;
 	Y *= Scale;
@@ -835,13 +835,13 @@ FORCEINLINE YQuat YQuat::operator*=(const float Scale)
 }
 
 
-FORCEINLINE YQuat YQuat::operator*(const float Scale) const
+FORCEINLINE FQuat FQuat::operator*(const float Scale) const
 {
-	return YQuat(Scale * X, Scale * Y, Scale * Z, Scale * W);
+	return FQuat(Scale * X, Scale * Y, Scale * Z, Scale * W);
 }
 
 
-FORCEINLINE YQuat YQuat::operator/=(const float Scale)
+FORCEINLINE FQuat FQuat::operator/=(const float Scale)
 {
 	const float Recip = 1.0f / Scale;
 	X *= Recip;
@@ -855,14 +855,14 @@ FORCEINLINE YQuat YQuat::operator/=(const float Scale)
 }
 
 
-FORCEINLINE YQuat YQuat::operator/(const float Scale) const
+FORCEINLINE FQuat FQuat::operator/(const float Scale) const
 {
 	const float Recip = 1.0f / Scale;
-	return YQuat(X * Recip, Y * Recip, Z * Recip, W * Recip);
+	return FQuat(X * Recip, Y * Recip, Z * Recip, W * Recip);
 }
 
 
-FORCEINLINE bool YQuat::operator==(const YQuat& Q) const
+FORCEINLINE bool FQuat::operator==(const FQuat& Q) const
 {
 #if PLATFORM_ENABLE_VECTORINTRINSICS
 	const VectorRegister A = VectorLoadAligned(this);
@@ -874,7 +874,7 @@ FORCEINLINE bool YQuat::operator==(const YQuat& Q) const
 }
 
 
-FORCEINLINE bool YQuat::operator!=(const YQuat& Q) const
+FORCEINLINE bool FQuat::operator!=(const FQuat& Q) const
 {
 #if PLATFORM_ENABLE_VECTORINTRINSICS
 	const VectorRegister A = VectorLoadAligned(this);
@@ -886,13 +886,13 @@ FORCEINLINE bool YQuat::operator!=(const YQuat& Q) const
 }
 
 
-FORCEINLINE float YQuat::operator|(const YQuat& Q) const
+FORCEINLINE float FQuat::operator|(const FQuat& Q) const
 {
 	return X * Q.X + Y * Q.Y + Z * Q.Z + W * Q.W;
 }
 
 
-FORCEINLINE void YQuat::Normalize(float Tolerance)
+FORCEINLINE void FQuat::Normalize(float Tolerance)
 {
 #if PLATFORM_ENABLE_VECTORINTRINSICS
 	const VectorRegister Vector = VectorLoadAligned(this);
@@ -918,69 +918,69 @@ FORCEINLINE void YQuat::Normalize(float Tolerance)
 	}
 	else
 	{
-		*this = YQuat::Identity;
+		*this = FQuat::Identity;
 	}
 #endif // PLATFORM_ENABLE_VECTORINTRINSICS
 }
 
 
-FORCEINLINE YQuat YQuat::GetNormalized(float Tolerance) const
+FORCEINLINE FQuat FQuat::GetNormalized(float Tolerance) const
 {
-	YQuat Result(*this);
+	FQuat Result(*this);
 	Result.Normalize(Tolerance);
 	return Result;
 }
 
 
 
-FORCEINLINE bool YQuat::IsNormalized() const
+FORCEINLINE bool FQuat::IsNormalized() const
 {
 	return (YMath::Abs(1.f - SizeSquared()) < THRESH_QUAT_NORMALIZED);
 }
 
 
-FORCEINLINE float YQuat::Size() const
+FORCEINLINE float FQuat::Size() const
 {
 	return YMath::Sqrt(X * X + Y * Y + Z * Z + W * W);
 }
 
 
-FORCEINLINE float YQuat::SizeSquared() const
+FORCEINLINE float FQuat::SizeSquared() const
 {
 	return (X * X + Y * Y + Z * Z + W * W);
 }
 
 
-FORCEINLINE void YQuat::ToAxisAndAngle(YVector& Axis, float& Angle) const
+FORCEINLINE void FQuat::ToAxisAndAngle(FVector& Axis, float& Angle) const
 {
 	Angle = 2.f * YMath::Acos(W);
 	Axis = GetRotationAxis();
 }
 
-FORCEINLINE YVector YQuat::GetRotationAxis() const
+FORCEINLINE FVector FQuat::GetRotationAxis() const
 {
 	// Ensure we never try to sqrt a neg number
 	const float S = YMath::Sqrt(YMath::Max(1.f - (W * W), 0.f));
 
 	if (S >= 0.0001f)
 	{
-		return YVector(X / S, Y / S, Z / S);
+		return FVector(X / S, Y / S, Z / S);
 	}
 
-	return YVector(1.f, 0.f, 0.f);
+	return FVector(1.f, 0.f, 0.f);
 }
 
-float YQuat::AngularDistance(const YQuat& Q) const
+float FQuat::AngularDistance(const FQuat& Q) const
 {
 	float InnerProd = X*Q.X + Y*Q.Y + Z*Q.Z + W*Q.W;
 	return YMath::Acos((2 * InnerProd * InnerProd) - 1.f);
 }
 
 
-FORCEINLINE YVector YQuat::RotateVector(YVector V) const
+FORCEINLINE FVector FQuat::RotateVector(FVector V) const
 {
 #if WITH_DIRECTXMATH
-	YVector Result;
+	FVector Result;
 	VectorQuaternionVector3Rotate(&Result, &V, this);
 	return Result;
 
@@ -993,39 +993,39 @@ FORCEINLINE YVector YQuat::RotateVector(YVector V) const
 	// T = 2(Q x V);
 	// V' = V + w*(T) + (Q x T)
 
-	const YVector Q(X, Y, Z);
-	const YVector T = 2.f * YVector::CrossProduct(Q, V);
-	const YVector Result = V + (W * T) + YVector::CrossProduct(Q, T);
+	const FVector Q(X, Y, Z);
+	const FVector T = 2.f * FVector::CrossProduct(Q, V);
+	const FVector Result = V + (W * T) + FVector::CrossProduct(Q, T);
 	return Result;
 #endif
 }
 
-FORCEINLINE YVector YQuat::UnrotateVector(YVector V) const
+FORCEINLINE FVector FQuat::UnrotateVector(FVector V) const
 {
 #if WITH_DIRECTXMATH
-	YVector Result;
+	FVector Result;
 	VectorQuaternionVector3InverseRotate(&Result, &V, this);
 	return Result;
 #else
 	//return Inverse().RotateVector(V);
 
-	const YVector Q(-X, -Y, -Z); // Inverse
-	const YVector T = 2.f * YVector::CrossProduct(Q, V);
-	const YVector Result = V + (W * T) + YVector::CrossProduct(Q, T);
+	const FVector Q(-X, -Y, -Z); // Inverse
+	const FVector T = 2.f * FVector::CrossProduct(Q, V);
+	const FVector Result = V + (W * T) + FVector::CrossProduct(Q, T);
 	return Result;
 #endif
 }
 
 
-FORCEINLINE YQuat YQuat::Inverse() const
+FORCEINLINE FQuat FQuat::Inverse() const
 {
 	checkSlow(IsNormalized());
 
-	return YQuat(-X, -Y, -Z, W);
+	return FQuat(-X, -Y, -Z, W);
 }
 
 
-FORCEINLINE void YQuat::EnforceShortestArcWith(const YQuat& OtherQuat)
+FORCEINLINE void FQuat::EnforceShortestArcWith(const FQuat& OtherQuat)
 {
 	const float DotResult = (OtherQuat | *this);
 	const float Bias = YMath::FloatSelect(DotResult, 1.0f, -1.0f);
@@ -1037,65 +1037,65 @@ FORCEINLINE void YQuat::EnforceShortestArcWith(const YQuat& OtherQuat)
 }
 
 
-FORCEINLINE YVector YQuat::GetAxisX() const
+FORCEINLINE FVector FQuat::GetAxisX() const
 {
-	return RotateVector(YVector(1.f, 0.f, 0.f));
+	return RotateVector(FVector(1.f, 0.f, 0.f));
 }
 
 
-FORCEINLINE YVector YQuat::GetAxisY() const
+FORCEINLINE FVector FQuat::GetAxisY() const
 {
-	return RotateVector(YVector(0.f, 1.f, 0.f));
+	return RotateVector(FVector(0.f, 1.f, 0.f));
 }
 
 
-FORCEINLINE YVector YQuat::GetAxisZ() const
+FORCEINLINE FVector FQuat::GetAxisZ() const
 {
-	return RotateVector(YVector(0.f, 0.f, 1.f));
+	return RotateVector(FVector(0.f, 0.f, 1.f));
 }
 
 
-FORCEINLINE YVector YQuat::GetForwardVector() const
+FORCEINLINE FVector FQuat::GetForwardVector() const
 {
 	return GetAxisX();
 }
 
-FORCEINLINE YVector YQuat::GetRightVector() const
+FORCEINLINE FVector FQuat::GetRightVector() const
 {
 	return GetAxisY();
 }
 
-FORCEINLINE YVector YQuat::GetUpVector() const
+FORCEINLINE FVector FQuat::GetUpVector() const
 {
 	return GetAxisZ();
 }
 
-FORCEINLINE YVector YQuat::Vector() const
+FORCEINLINE FVector FQuat::Vector() const
 {
 	return GetAxisX();
 }
 
 
-FORCEINLINE float YQuat::Error(const YQuat& Q1, const YQuat& Q2)
+FORCEINLINE float FQuat::Error(const FQuat& Q1, const FQuat& Q2)
 {
 	const float cosom = YMath::Abs(Q1.X * Q2.X + Q1.Y * Q2.Y + Q1.Z * Q2.Z + Q1.W * Q2.W);
 	return (YMath::Abs(cosom) < 0.9999999f) ? YMath::Acos(cosom)*(1.f / PI) : 0.0f;
 }
 
 
-FORCEINLINE float YQuat::ErrorAutoNormalize(const YQuat& A, const YQuat& B)
+FORCEINLINE float FQuat::ErrorAutoNormalize(const FQuat& A, const FQuat& B)
 {
-	YQuat Q1 = A;
+	FQuat Q1 = A;
 	Q1.Normalize();
 
-	YQuat Q2 = B;
+	FQuat Q2 = B;
 	Q2.Normalize();
 
-	return YQuat::Error(Q1, Q2);
+	return FQuat::Error(Q1, Q2);
 }
 
 
-FORCEINLINE YQuat YQuat::FastLerp(const YQuat& A, const YQuat& B, const float Alpha)
+FORCEINLINE FQuat FQuat::FastLerp(const FQuat& A, const FQuat& B, const float Alpha)
 {
 	// To ensure the 'shortest route', we make sure the dot product between the both rotations is positive.
 	const float DotResult = (A | B);
@@ -1104,17 +1104,17 @@ FORCEINLINE YQuat YQuat::FastLerp(const YQuat& A, const YQuat& B, const float Al
 }
 
 
-FORCEINLINE YQuat YQuat::FastBilerp(const YQuat& P00, const YQuat& P10, const YQuat& P01, const YQuat& P11, float FracX, float FracY)
+FORCEINLINE FQuat FQuat::FastBilerp(const FQuat& P00, const FQuat& P10, const FQuat& P01, const FQuat& P11, float FracX, float FracY)
 {
-	return YQuat::FastLerp(
-		YQuat::FastLerp(P00, P10, FracX),
-		YQuat::FastLerp(P01, P11, FracX),
+	return FQuat::FastLerp(
+		FQuat::FastLerp(P00, P10, FracX),
+		FQuat::FastLerp(P01, P11, FracX),
 		FracY
 	);
 }
 
 
-FORCEINLINE bool YQuat::ContainsNaN() const
+FORCEINLINE bool FQuat::ContainsNaN() const
 {
 	return (!YMath::IsFinite(X) ||
 		!YMath::IsFinite(Y) ||
@@ -1124,25 +1124,25 @@ FORCEINLINE bool YQuat::ContainsNaN() const
 }
 
 
-template<> struct TIsPODType<YQuat> { enum { Value = true }; };
+template<> struct TIsPODType<FQuat> { enum { Value = true }; };
 
 /* YMath inline functions
 *****************************************************************************/
 
 template<class U>
-FORCEINLINE_DEBUGGABLE YQuat YMath::Lerp(const YQuat& A, const YQuat& B, const U& Alpha)
+FORCEINLINE_DEBUGGABLE FQuat YMath::Lerp(const FQuat& A, const FQuat& B, const U& Alpha)
 {
-	return YQuat::Slerp(A, B, Alpha);
+	return FQuat::Slerp(A, B, Alpha);
 }
 
 template<class U>
-FORCEINLINE_DEBUGGABLE YQuat YMath::BiLerp(const YQuat& P00, const YQuat& P10, const YQuat& P01, const YQuat& P11, float FracX, float FracY)
+FORCEINLINE_DEBUGGABLE FQuat YMath::BiLerp(const FQuat& P00, const FQuat& P10, const FQuat& P01, const FQuat& P11, float FracX, float FracY)
 {
-	YQuat Result;
+	FQuat Result;
 
 	Result = Lerp(
-		YQuat::Slerp_NotNormalized(P00, P10, FracX),
-		YQuat::Slerp_NotNormalized(P01, P11, FracX),
+		FQuat::Slerp_NotNormalized(P00, P10, FracX),
+		FQuat::Slerp_NotNormalized(P01, P11, FracX),
 		FracY
 	);
 
@@ -1150,8 +1150,8 @@ FORCEINLINE_DEBUGGABLE YQuat YMath::BiLerp(const YQuat& P00, const YQuat& P10, c
 }
 
 template<class U>
-FORCEINLINE_DEBUGGABLE YQuat YMath::CubicInterp(const YQuat& P0, const YQuat& T0, const YQuat& P1, const YQuat& T1, const U& A)
+FORCEINLINE_DEBUGGABLE FQuat YMath::CubicInterp(const FQuat& P0, const FQuat& T0, const FQuat& P1, const FQuat& T1, const U& A)
 {
-	return YQuat::Squad(P0, T0, P1, T1, A);
+	return FQuat::Squad(P0, T0, P1, T1, A);
 }
 

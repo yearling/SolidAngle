@@ -24,7 +24,7 @@
 DEFINE_LOG_CATEGORY_STATIC(LogTransform, Log, All);
 
 // FTransform identity
-const YTransform YTransform::Identity(YQuat(0.f,0.f,0.f,1.f), YVector::ZeroVector, YVector(1.f));
+const FTransform FTransform::Identity(FQuat(0.f,0.f,0.f,1.f), FVector::ZeroVector, FVector(1.f));
 
 
 // Replacement of Inverse of FMatrix
@@ -32,16 +32,16 @@ const YTransform YTransform::Identity(YQuat(0.f,0.f,0.f,1.f), YVector::ZeroVecto
 /**
 * Does a debugf of the contents of this BoneAtom.
 */
-void YTransform::DebugPrint() const
+void FTransform::DebugPrint() const
 {
 	UE_LOG(LogTransform, Log, TEXT("%s"), *ToHumanReadableString());
 }
 
-YString YTransform::ToHumanReadableString() const
+YString FTransform::ToHumanReadableString() const
 {
-	YQuat R(GetRotation());
-	YVector T(GetTranslation());
-	YVector S(GetScale3D());
+	FQuat R(GetRotation());
+	FVector T(GetTranslation());
+	FVector S(GetScale3D());
 
 	YString Output= YString::Printf(TEXT("Rotation: %f %f %f %f\r\n"), R.X, R.Y, R.Z, R.W);
 	Output += YString::Printf(TEXT("Translation: %f %f %f\r\n"), T.X, T.Y, T.Z);
@@ -51,16 +51,16 @@ YString YTransform::ToHumanReadableString() const
 }
 
 
-YString YTransform::ToString() const
+YString FTransform::ToString() const
 {
-	const YRotator R(Rotator());
-	const YVector T(GetTranslation());
-	const YVector S(GetScale3D());
+	const FRotator R(Rotator());
+	const FVector T(GetTranslation());
+	const FVector S(GetScale3D());
 
 	return YString::Printf(TEXT("%f,%f,%f|%f,%f,%f|%f,%f,%f"), T.X, T.Y, T.Z, R.Pitch, R.Yaw, R.Roll, S.X, S.Y, S.Z);
 }
 
-bool YTransform::InitFromString( const YString& Source )
+bool FTransform::InitFromString( const YString& Source )
 {
 	TArray<YString> ComponentStrings;
 	Source.ParseIntoArray(ComponentStrings, TEXT("|"), true);
@@ -71,33 +71,33 @@ bool YTransform::InitFromString( const YString& Source )
 	}
 
 	// Translation
-	YVector ParsedTranslation = YVector::ZeroVector;
+	FVector ParsedTranslation = FVector::ZeroVector;
 	if( !FDefaultValueHelper::ParseVector(ComponentStrings[0], ParsedTranslation) )
 	{
 		return false;
 	}
 
 	// Rotation
-	YRotator ParsedRotation = YRotator::ZeroRotator;
+	FRotator ParsedRotation = FRotator::ZeroRotator;
 	if( !FDefaultValueHelper::ParseRotator(ComponentStrings[1], ParsedRotation) )
 	{
 		return false;
 	}
 
 	// Scale
-	YVector Scale = YVector(1.f);
+	FVector Scale = FVector(1.f);
 	if( !FDefaultValueHelper::ParseVector(ComponentStrings[2], Scale) )
 	{
 		return false;
 	}
 
-	SetComponents(YQuat(ParsedRotation), ParsedTranslation, Scale);
+	SetComponents(FQuat(ParsedRotation), ParsedTranslation, Scale);
 
 	return true;
 }
 
 #define DEBUG_INVERSE_TRANSFORM 0
-YTransform YTransform::GetRelativeTransformReverse(const YTransform& Other) const
+FTransform FTransform::GetRelativeTransformReverse(const FTransform& Other) const
 {
 	// A (-1) * B = VQS(B)(VQS (A)(-1))
 	// 
@@ -105,7 +105,7 @@ YTransform YTransform::GetRelativeTransformReverse(const YTransform& Other) cons
 	// Rotation = Q(B) * Q(A)(-1)
 	// Translation = T(B)-S(B)/S(A) *[Q(B)*Q(A)(-1)*T(A)*Q(A)*Q(B)(-1)]
 	// where A = this, and B = Other
-	YTransform Result;
+	FTransform Result;
 
 	// Scale = S(B)/S(A)	
 	VectorRegister VSafeScale3D	= VectorSet_W0(GetSafeScaleReciprocal(Scale3D));
@@ -128,8 +128,8 @@ YTransform YTransform::GetRelativeTransformReverse(const YTransform& Other) cons
 	Result.DiagnosticCheckNaN_All(); 
 
 #if DEBUG_INVERSE_TRANSFORM
-	YMatrix AM = ToMatrixWithScale();
-	YMatrix BM = Other.ToMatrixWithScale();
+	FMatrix AM = ToMatrixWithScale();
+	FMatrix BM = Other.ToMatrixWithScale();
 
 	Result.DebugEqualMatrix(AM.InverseFast() *  BM);
 #endif
@@ -141,7 +141,7 @@ YTransform YTransform::GetRelativeTransformReverse(const YTransform& Other) cons
  * Set current transform and the relative to ParentTransform.
  * Equates to This = This->GetRelativeTransform(Parent), but saves the intermediate FTransform storage and copy.
  */
-void YTransform::SetToRelativeTransform(const YTransform& ParentTransform)
+void FTransform::SetToRelativeTransform(const FTransform& ParentTransform)
 {
 	// A * B(-1) = VQS(B)(-1) (VQS (A))
 	// 
@@ -150,8 +150,8 @@ void YTransform::SetToRelativeTransform(const YTransform& ParentTransform)
 	// Translation = 1/S(B) *[Q(B)(-1)*(T(A)-T(B))*Q(B)]
 	// where A = this, B = Other
 #if DEBUG_INVERSE_TRANSFORM
-	YMatrix AM = ToMatrixWithScale();
-	YMatrix BM = ParentTransform.ToMatrixWithScale();
+	FMatrix AM = ToMatrixWithScale();
+	FMatrix BM = ParentTransform.ToMatrixWithScale();
 #endif
 	
 	checkSlow(ParentTransform.IsRotationNormalized());
@@ -180,12 +180,12 @@ void YTransform::SetToRelativeTransform(const YTransform& ParentTransform)
 #endif
 }
 
-void YTransform::GetRelativeTransformUsingMatrixWithScale(YTransform* OutTransform, const YTransform* Base, const YTransform* Relative)
+void FTransform::GetRelativeTransformUsingMatrixWithScale(FTransform* OutTransform, const FTransform* Base, const FTransform* Relative)
 {
 	// the goal of using M is to get the correct orientation
 	// but for translation, we still need scale
-	YMatrix AM = Base->ToMatrixWithScale();
-	YMatrix BM = Relative->ToMatrixWithScale();
+	FMatrix AM = Base->ToMatrixWithScale();
+	FMatrix BM = Relative->ToMatrixWithScale();
 	// get combined scale
 	// Scale = S(A)/S(B)
 	static ScalarRegister STolerance(SMALL_NUMBER);
@@ -194,7 +194,7 @@ void YTransform::GetRelativeTransformUsingMatrixWithScale(YTransform* OutTransfo
 	ConstructTransformFromMatrixWithDesiredScale(AM, BM.Inverse(), VScale3D, *OutTransform);
 }
 
-YTransform YTransform::GetRelativeTransform(const YTransform& Other) const
+FTransform FTransform::GetRelativeTransform(const FTransform& Other) const
 {
 	// A * B(-1) = VQS(B)(-1) (VQS (A))
 	// 
@@ -202,11 +202,11 @@ YTransform YTransform::GetRelativeTransform(const YTransform& Other) const
 	// Rotation = Q(B)(-1) * Q(A)
 	// Translation = 1/S(B) *[Q(B)(-1)*(T(A)-T(B))*Q(B)]
 	// where A = this, B = Other
-	YTransform Result;
+	FTransform Result;
 		
 	if (Other.IsRotationNormalized() == false)
 	{
-		return YTransform::Identity;
+		return FTransform::Identity;
 	}
 
 	if (VectorAnyLesserThan(VectorMin(this->Scale3D, Other.Scale3D), GlobalVectorConstants::FloatZero))
@@ -241,8 +241,8 @@ YTransform YTransform::GetRelativeTransform(const YTransform& Other) const
 
 		Result.DiagnosticCheckNaN_All();
 #if DEBUG_INVERSE_TRANSFORM
-		YMatrix AM = ToMatrixWithScale();
-		YMatrix BM = Other.ToMatrixWithScale();
+		FMatrix AM = ToMatrixWithScale();
+		FMatrix BM = Other.ToMatrixWithScale();
 
 		Result.DebugEqualMatrix(AM *  BM.InverseFast());
 #endif
@@ -251,9 +251,9 @@ YTransform YTransform::GetRelativeTransform(const YTransform& Other) const
 	return Result;
 }
 
-bool YTransform::DebugEqualMatrix(const YMatrix& Matrix) const
+bool FTransform::DebugEqualMatrix(const FMatrix& Matrix) const
 {
-	YTransform TestResult(Matrix);
+	FTransform TestResult(Matrix);
 	if (!Equals(TestResult))
 	{
 		// see now which one isn't equal		

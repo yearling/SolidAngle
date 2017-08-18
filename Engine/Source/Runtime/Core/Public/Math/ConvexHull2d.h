@@ -9,7 +9,7 @@
 namespace ConvexHull2D
 {
 	/** Returns <0 if C is left of A-B */
-	inline float ComputeDeterminant(const YVector& A, const YVector& B, const YVector& C)
+	inline float ComputeDeterminant(const FVector& A, const FVector& B, const FVector& C)
 	{
 		const float u1 = B.X - A.X;
 		const float v1 = B.Y - A.Y;
@@ -20,7 +20,7 @@ namespace ConvexHull2D
 	}
 
 	/** Returns true if 'a' is more lower-left than 'b'. */
-	inline bool ComparePoints(const YVector& A, const YVector& B)
+	inline bool ComparePoints(const FVector& A, const FVector& B)
 	{
 		if (A.X < B.X)
 		{
@@ -50,7 +50,7 @@ namespace ConvexHull2D
 	 * This code was fixed to work with duplicated vertices and precision issues.
 	 */
 	template<typename Allocator>
-	void ComputeConvexHull(const TArray<YVector, Allocator>& Points, TArray<int32, Allocator>& OutIndices)
+	void ComputeConvexHull(const TArray<FVector, Allocator>& Points, TArray<int32, Allocator>& OutIndices)
 	{
 		if (Points.Num() == 0)
 		{
@@ -100,9 +100,9 @@ namespace ConvexHull2D
 					continue;
 				}
 
-				YVector A = Points[Hull];
-				YVector B = Points[NextPoint];
-				YVector C = Points[j];
+				FVector A = Points[Hull];
+				FVector B = Points[NextPoint];
+				FVector C = Points[j];
 				float Deter = ComputeDeterminant(A, B, C);
 
 				// 0.001 Bias is to stop floating point errors, when comparing points on a straight line; KINDA_SMALL_NUMBER was slightly too small to use.

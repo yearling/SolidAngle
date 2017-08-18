@@ -75,7 +75,7 @@
 *
 *	Limitations:
 *
-*		- Shared pointers are not compatible with Unreal objects (SObject classes)!
+*		- Shared pointers are not compatible with Unreal objects (UObject classes)!
 *		- Currently only types with that have regular destructors (no custom deleters)
 *		- Dynamically-allocated arrays are not supported yet (e.g. MakeSharable( new int32[20] ))
 *		- Implicit conversion of TSharedPtr/TSharedRef to bool is not supported yet

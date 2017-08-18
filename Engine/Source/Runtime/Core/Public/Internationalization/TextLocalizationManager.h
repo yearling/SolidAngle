@@ -53,7 +53,7 @@ private:
 		};
 		typedef TMap<YString, FEntryArray, FDefaultSetAllocator, FKeyTableKeyFuncs> FKeysTable;
 
-		struct YNamespaceTableKeyFuncs : BaseKeyFuncs<FKeysTable, YString, false>
+		struct FNamespaceTableKeyFuncs : BaseKeyFuncs<FKeysTable, YString, false>
 		{
 			static FORCEINLINE const YString& GetSetKey(const TPair<YString, FKeysTable>& Element)
 			{
@@ -68,9 +68,9 @@ private:
 				return FCrc::StrCrc32<TCHAR>(*Key);
 			}
 		};
-		typedef TMap<YString, FKeysTable, FDefaultSetAllocator, YNamespaceTableKeyFuncs> YNamespacesTable;
+		typedef TMap<YString, FKeysTable, FDefaultSetAllocator, FNamespaceTableKeyFuncs> FNamespacesTable;
 
-		YNamespacesTable Namespaces;
+		FNamespacesTable Namespaces;
 
 	public:
 		/** Loads all text localizations from all localization resource files in the specified directory. */
@@ -78,7 +78,7 @@ private:
 		/** Loads all text localizations from the specified localization resource file. */
 		bool LoadFromFile(const YString& FilePath);
 		/** Loads all text localizations from the specified localization resource archive, associating the entries with the specified identifier. */
-		void LoadFromLocalizationResource(YArchive& Archive, const YString& LocResID);
+		void LoadFromLocalizationResource(FArchive& Archive, const YString& LocResID);
 
 		/** Detects conflicts between loaded localization resources and logs them as warnings. */
 		void DetectAndLogConflicts() const;
@@ -122,7 +122,7 @@ private:
 		};
 		typedef TMap<YString, FDisplayStringEntry, FDefaultSetAllocator, FKeyTableKeyFuncs> FKeysTable;
 
-		struct YNamespaceTableKeyFuncs : BaseKeyFuncs<FKeysTable, YString, false>
+		struct FNamespaceTableKeyFuncs : BaseKeyFuncs<FKeysTable, YString, false>
 		{
 			static FORCEINLINE const YString& GetSetKey(const TPair<YString, FKeysTable>& Element)
 			{
@@ -137,9 +137,9 @@ private:
 				return FCrc::StrCrc32<TCHAR>(*Key);
 			}
 		};
-		typedef TMap<YString, FKeysTable, FDefaultSetAllocator, YNamespaceTableKeyFuncs> YNamespacesTable;
+		typedef TMap<YString, FKeysTable, FDefaultSetAllocator, FNamespaceTableKeyFuncs> FNamespacesTable;
 
-		YNamespacesTable NamespacesTable;
+		FNamespacesTable NamespacesTable;
 
 	public:
 		/** Finds the keys table for the specified namespace and the display string entry for the specified namespace and key combination. If not found, the out parameters are set to null. */
@@ -149,24 +149,24 @@ private:
 	};
 
 	/** Simple data structure containing the name of the namespace and key associated with a display string, for use in looking up namespace and key from a display string. */
-	struct YNamespaceKeyEntry
+	struct FNamespaceKeyEntry
 	{
 		YString Namespace;
 		YString Key;
 
-		YNamespaceKeyEntry(const YString& InNamespace, const YString& InKey)
+		FNamespaceKeyEntry(const YString& InNamespace, const YString& InKey)
 			: Namespace(InNamespace)
 			, Key(InKey)
 		{}
 	};
-	typedef TMap<FTextDisplayStringRef, YNamespaceKeyEntry> YNamespaceKeyLookupTable;
+	typedef TMap<FTextDisplayStringRef, FNamespaceKeyEntry> FNamespaceKeyLookupTable;
 
 private:
 	bool bIsInitialized;
 
 	FCriticalSection SynchronizationObject;
 	FDisplayStringLookupTable DisplayStringLookupTable;
-	YNamespaceKeyLookupTable NamespaceKeyLookupTable;
+	FNamespaceKeyLookupTable NamespaceKeyLookupTable;
 	TMap<FTextDisplayStringRef, uint16> LocalTextRevisions;
 	uint16 TextRevisionCounter;
 
@@ -224,7 +224,7 @@ public:
 	void UpdateFromLocalizationResource(const YString& LocalizationResourceFilePath);
 
 	/** Updates display string entries and adds new display string entries based on localizations found in a specified localization resource. */
-	void UpdateFromLocalizationResource(YArchive& LocResArchive, const YString& LocResID);
+	void UpdateFromLocalizationResource(FArchive& LocResArchive, const YString& LocResID);
 
 	/** Reloads resources for the current culture. */
 	void RefreshResources();

@@ -104,44 +104,44 @@ namespace ELogTimes
 }
 
 // An output device.
-class CORE_API YOutputDevice
+class CORE_API FOutputDevice
 {
 public:
-	YOutputDevice()
+	FOutputDevice()
 		: bSuppressEventTag(false)
 		, bAutoEmitLineTerminator(true)
 	{}
-	virtual ~YOutputDevice() {}
+	virtual ~FOutputDevice() {}
 
 #if PLATFORM_COMPILER_HAS_DEFAULTED_FUNCTIONS
 
-	YOutputDevice(YOutputDevice&&) = default;
-	YOutputDevice(const YOutputDevice&) = default;
-	YOutputDevice& operator=(YOutputDevice&&) = default;
-	YOutputDevice& operator=(const YOutputDevice&) = default;
+	FOutputDevice(FOutputDevice&&) = default;
+	FOutputDevice(const FOutputDevice&) = default;
+	FOutputDevice& operator=(FOutputDevice&&) = default;
+	FOutputDevice& operator=(const FOutputDevice&) = default;
 
 #else
 
-	FORCEINLINE YOutputDevice(YOutputDevice&& Other)
+	FORCEINLINE FOutputDevice(FOutputDevice&& Other)
 		: bSuppressEventTag(Other.bSuppressEventTag)
 		, bAutoEmitLineTerminator(Other.bAutoEmitLineTerminator)
 	{
 	}
 
-	FORCEINLINE YOutputDevice(const YOutputDevice& Other)
+	FORCEINLINE FOutputDevice(const FOutputDevice& Other)
 		: bSuppressEventTag(Other.bSuppressEventTag)
 		, bAutoEmitLineTerminator(Other.bAutoEmitLineTerminator)
 	{
 	}
 
-	FORCEINLINE YOutputDevice& operator=(YOutputDevice&& Other)
+	FORCEINLINE FOutputDevice& operator=(FOutputDevice&& Other)
 	{
 		bSuppressEventTag = Other.bSuppressEventTag;
 		bAutoEmitLineTerminator = Other.bAutoEmitLineTerminator;
 		return *this;
 	}
 
-	FORCEINLINE YOutputDevice& operator=(const YOutputDevice& Other)
+	FORCEINLINE FOutputDevice& operator=(const FOutputDevice& Other)
 	{
 		bSuppressEventTag = Other.bSuppressEventTag;
 		bAutoEmitLineTerminator = Other.bAutoEmitLineTerminator;
@@ -155,12 +155,12 @@ public:
 		static const TCHAR* VerbosityToString(ELogVerbosity::Type Verbosity);
 
 	DEPRECATED(4.12, "Please use YOutputDeviceHelper::FormatLogLine.")
-		static YString FormatLogLine(ELogVerbosity::Type Verbosity, const class YName& Category, const TCHAR* Message = nullptr, ELogTimes::Type LogTime = ELogTimes::None, const double Time = -1.0);
+		static YString FormatLogLine(ELogVerbosity::Type Verbosity, const class FName& Category, const TCHAR* Message = nullptr, ELogTimes::Type LogTime = ELogTimes::None, const double Time = -1.0);
 
 
 	// YOutputDevice interface.
-	virtual void Serialize(const TCHAR* V, ELogVerbosity::Type Verbosity, const class YName& Category) = 0;
-	virtual void Serialize(const TCHAR* V, ELogVerbosity::Type Verbosity, const class YName& Category, const double Time)
+	virtual void Serialize(const TCHAR* V, ELogVerbosity::Type Verbosity, const class FName& Category) = 0;
+	virtual void Serialize(const TCHAR* V, ELogVerbosity::Type Verbosity, const class FName& Category, const double Time)
 	{
 		Serialize(V, Verbosity, Category);
 	}
@@ -193,7 +193,7 @@ public:
 	* Dumps the contents of this output device's buffer to an archive (supported by output device that have a memory buffer)
 	* @param Ar Archive to dump the buffer to
 	*/
-	virtual void Dump(class YArchive& Ar)
+	virtual void Dump(class FArchive& Ar)
 	{
 	}
 
@@ -216,15 +216,15 @@ public:
 	// Simple text printing.
 	void Log(const TCHAR* S);
 	void Log(ELogVerbosity::Type Verbosity, const TCHAR* S);
-	void Log(const class YName& Category, ELogVerbosity::Type Verbosity, const TCHAR* Str);
+	void Log(const class FName& Category, ELogVerbosity::Type Verbosity, const TCHAR* Str);
 	void Log(const YString& S);
 	void Log(const FText& S);
 	void Log(ELogVerbosity::Type Verbosity, const YString& S);
-	void Log(const class YName& Category, ELogVerbosity::Type Verbosity, const YString& S);
+	void Log(const class FName& Category, ELogVerbosity::Type Verbosity, const YString& S);
 
 	VARARG_DECL(void, void, {}, Logf, VARARG_NONE, const TCHAR*, VARARG_NONE, VARARG_NONE);
 	VARARG_DECL(void, void, {}, Logf, VARARG_NONE, const TCHAR*, VARARG_EXTRA(ELogVerbosity::Type Verbosity), VARARG_EXTRA(Verbosity));
-	VARARG_DECL(void, void, {}, CategorizedLogf, VARARG_NONE, const TCHAR*, VARARG_EXTRA(const class YName& Category) VARARG_EXTRA(ELogVerbosity::Type Verbosity), VARARG_EXTRA(Category) VARARG_EXTRA(Verbosity));
+	VARARG_DECL(void, void, {}, CategorizedLogf, VARARG_NONE, const TCHAR*, VARARG_EXTRA(const class FName& Category) VARARG_EXTRA(ELogVerbosity::Type Verbosity), VARARG_EXTRA(Category) VARARG_EXTRA(Verbosity));
 protected:
 	/** Whether to output the 'Log: ' type front... */
 	bool bSuppressEventTag;

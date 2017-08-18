@@ -7,7 +7,7 @@
 #include "Templates/AlignOf.h"
 #include "Templates/SolidAngleTemplate.h"
 #include "Containers/SolidAngleString.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Misc/AutomationTest.h"
 
 #if WITH_DEV_AUTOMATION_TESTS
@@ -104,7 +104,7 @@ bool FPlatformVerificationTest::RunTest (const YString& Parameters)
 
 	static_assert(ALIGNOF(FTestAlign) == 16, "Align of FTestAlign is not 16.");
 
-	YName::AutoTest();
+	FName::AutoTest();
 
 	return true;
 }

@@ -17,11 +17,11 @@ struct YMath;
 
 // Constructors.
 
-FORCEINLINE YMatrix::YMatrix()
+FORCEINLINE FMatrix::FMatrix()
 {
 }
 
-FORCEINLINE YMatrix::YMatrix(const YPlane& InX, const YPlane& InY, const YPlane& InZ, const YPlane& InW)
+FORCEINLINE FMatrix::FMatrix(const FPlane& InX, const FPlane& InY, const FPlane& InZ, const FPlane& InW)
 {
 	M[0][0] = InX.X; M[0][1] = InX.Y;  M[0][2] = InX.Z;  M[0][3] = InX.W;
 	M[1][0] = InY.X; M[1][1] = InY.Y;  M[1][2] = InY.Z;  M[1][3] = InY.W;
@@ -29,7 +29,7 @@ FORCEINLINE YMatrix::YMatrix(const YPlane& InX, const YPlane& InY, const YPlane&
 	M[3][0] = InW.X; M[3][1] = InW.Y;  M[3][2] = InW.Z;  M[3][3] = InW.W;
 }
 
-FORCEINLINE YMatrix::YMatrix(const YVector& InX, const YVector& InY, const YVector& InZ, const YVector& InW)
+FORCEINLINE FMatrix::FMatrix(const FVector& InX, const FVector& InY, const FVector& InZ, const FVector& InW)
 {
 	M[0][0] = InX.X; M[0][1] = InX.Y;  M[0][2] = InX.Z;  M[0][3] = 0.0f;
 	M[1][0] = InY.X; M[1][1] = InY.Y;  M[1][2] = InY.Z;  M[1][3] = 0.0f;
@@ -38,7 +38,7 @@ FORCEINLINE YMatrix::YMatrix(const YVector& InX, const YVector& InY, const YVect
 }
 
 
-inline void YMatrix::SetIdentity()
+inline void FMatrix::SetIdentity()
 {
 	M[0][0] = 1; M[0][1] = 0;  M[0][2] = 0;  M[0][3] = 0;
 	M[1][0] = 0; M[1][1] = 1;  M[1][2] = 0;  M[1][3] = 0;
@@ -47,23 +47,23 @@ inline void YMatrix::SetIdentity()
 }
 
 
-FORCEINLINE void YMatrix::operator*=(const YMatrix& Other)
+FORCEINLINE void FMatrix::operator*=(const FMatrix& Other)
 {
 	VectorMatrixMultiply(this, this, &Other);
 }
 
 
-FORCEINLINE YMatrix YMatrix::operator*(const YMatrix& Other) const
+FORCEINLINE FMatrix FMatrix::operator*(const FMatrix& Other) const
 {
-	YMatrix Result;
+	FMatrix Result;
 	VectorMatrixMultiply(&Result, this, &Other);
 	return Result;
 }
 
 
-FORCEINLINE YMatrix	YMatrix::operator+(const YMatrix& Other) const
+FORCEINLINE FMatrix	FMatrix::operator+(const FMatrix& Other) const
 {
-	YMatrix ResultMat;
+	FMatrix ResultMat;
 
 	for (int32 X = 0; X < 4; X++)
 	{
@@ -76,14 +76,14 @@ FORCEINLINE YMatrix	YMatrix::operator+(const YMatrix& Other) const
 	return ResultMat;
 }
 
-FORCEINLINE void YMatrix::operator+=(const YMatrix& Other)
+FORCEINLINE void FMatrix::operator+=(const FMatrix& Other)
 {
 	*this = *this + Other;
 }
 
-FORCEINLINE YMatrix	YMatrix::operator*(float Other) const
+FORCEINLINE FMatrix	FMatrix::operator*(float Other) const
 {
-	YMatrix ResultMat;
+	FMatrix ResultMat;
 
 	for (int32 X = 0; X < 4; X++)
 	{
@@ -96,14 +96,14 @@ FORCEINLINE YMatrix	YMatrix::operator*(float Other) const
 	return ResultMat;
 }
 
-FORCEINLINE void YMatrix::operator*=(float Other)
+FORCEINLINE void FMatrix::operator*=(float Other)
 {
 	*this = *this*Other;
 }
 
 // Comparison operators.
 
-inline bool YMatrix::operator==(const YMatrix& Other) const
+inline bool FMatrix::operator==(const FMatrix& Other) const
 {
 	for (int32 X = 0; X < 4; X++)
 	{
@@ -120,7 +120,7 @@ inline bool YMatrix::operator==(const YMatrix& Other) const
 }
 
 // Error-tolerant comparison.
-inline bool YMatrix::Equals(const YMatrix& Other, float Tolerance/*=KINDA_SMALL_NUMBER*/) const
+inline bool FMatrix::Equals(const FMatrix& Other, float Tolerance/*=KINDA_SMALL_NUMBER*/) const
 {
 	for (int32 X = 0; X < 4; X++)
 	{
@@ -136,7 +136,7 @@ inline bool YMatrix::Equals(const YMatrix& Other, float Tolerance/*=KINDA_SMALL_
 	return true;
 }
 
-inline bool YMatrix::operator!=(const YMatrix& Other) const
+inline bool FMatrix::operator!=(const FMatrix& Other) const
 {
 	return !(*this == Other);
 }
@@ -144,9 +144,9 @@ inline bool YMatrix::operator!=(const YMatrix& Other) const
 
 // Homogeneous transform.
 
-FORCEINLINE YVector YMatrix::TransformFVector4(const YVector &P) const
+FORCEINLINE FVector FMatrix::TransformFVector4(const FVector &P) const
 {
-	YVector Result;
+	FVector Result;
 	VectorRegister VecP = VectorLoadAligned(&P);
 	VectorRegister VecR = VectorTransformVector(VecP, this);
 	VectorStoreAligned(VecR, &Result);
@@ -157,15 +157,15 @@ FORCEINLINE YVector YMatrix::TransformFVector4(const YVector &P) const
 // Transform position
 
 /** Transform a location - will take into account translation part of the YMatrix. */
-FORCEINLINE YVector YMatrix::TransformPosition(const YVector &V) const
+FORCEINLINE FVector FMatrix::TransformPosition(const FVector &V) const
 {
-	return TransformFVector4(YVector4(V.X, V.Y, V.Z, 1.0f));
+	return TransformFVector4(FVector4(V.X, V.Y, V.Z, 1.0f));
 }
 
 /** Inverts the matrix and then transforms V - correctly handles scaling in this matrix. */
-FORCEINLINE YVector YMatrix::InverseTransformPosition(const YVector &V) const
+FORCEINLINE FVector FMatrix::InverseTransformPosition(const FVector &V) const
 {
-	YMatrix InvSelf = this->InverseFast();
+	FMatrix InvSelf = this->InverseFast();
 	return InvSelf.TransformPosition(V);
 }
 
@@ -175,24 +175,24 @@ FORCEINLINE YVector YMatrix::InverseTransformPosition(const YVector &V) const
 *	Transform a direction vector - will not take into account translation part of the YMatrix.
 *	If you want to transform a surface normal (or plane) and correctly account for non-uniform scaling you should use TransformByUsingAdjointT.
 */
-FORCEINLINE YVector YMatrix::TransformVector(const YVector& V) const
+FORCEINLINE FVector FMatrix::TransformVector(const FVector& V) const
 {
-	return TransformFVector4(YVector4(V.X, V.Y, V.Z, 0.0f));
+	return TransformFVector4(FVector4(V.X, V.Y, V.Z, 0.0f));
 }
 
 /** Faster version of InverseTransformVector that assumes no scaling. WARNING: Will NOT work correctly if there is scaling in the matrix. */
-FORCEINLINE YVector YMatrix::InverseTransformVector(const YVector &V) const
+FORCEINLINE FVector FMatrix::InverseTransformVector(const FVector &V) const
 {
-	YMatrix InvSelf = this->InverseFast();
+	FMatrix InvSelf = this->InverseFast();
 	return InvSelf.TransformVector(V);
 }
 
 
 // Transpose.
 
-FORCEINLINE YMatrix YMatrix::GetTransposed() const
+FORCEINLINE FMatrix FMatrix::GetTransposed() const
 {
-	YMatrix	Result;
+	FMatrix	Result;
 
 	Result.M[0][0] = M[0][0];
 	Result.M[0][1] = M[1][0];
@@ -219,7 +219,7 @@ FORCEINLINE YMatrix YMatrix::GetTransposed() const
 
 // Determinant.
 
-inline float YMatrix::Determinant() const
+inline float FMatrix::Determinant() const
 {
 	return	M[0][0] * (
 		M[1][1] * (M[2][2] * M[3][3] - M[2][3] * M[3][2]) -
@@ -244,7 +244,7 @@ inline float YMatrix::Determinant() const
 }
 
 /** Calculate determinant of rotation 3x3 matrix */
-inline float YMatrix::RotDeterminant() const
+inline float FMatrix::RotDeterminant() const
 {
 	return
 		M[0][0] * (M[1][1] * M[2][2] - M[1][2] * M[2][1]) -
@@ -254,7 +254,7 @@ inline float YMatrix::RotDeterminant() const
 
 // Inverse.
 /** Fast path, doesn't check for nil matrices in final release builds */
-inline YMatrix YMatrix::InverseFast() const
+inline FMatrix FMatrix::InverseFast() const
 {
 	// If we're in non final release, then make sure we're not creating NaNs
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
@@ -266,15 +266,15 @@ inline YMatrix YMatrix::InverseFast() const
 		ErrorEnsure(TEXT("YMatrix::InverseFast(), trying to invert a NIL matrix, this results in NaNs! Use Inverse() instead."));
 	}
 #endif
-	YMatrix Result;
+	FMatrix Result;
 	VectorMatrixInverse(&Result, this);
 	return Result;
 }
 
 // Inverse.
-inline YMatrix YMatrix::Inverse() const
+inline FMatrix FMatrix::Inverse() const
 {
-	YMatrix Result;
+	FMatrix Result;
 
 	// Check for zero scale matrix to invert
 	if (GetScaledAxis(EAxis::X).IsNearlyZero(SMALL_NUMBER) &&
@@ -282,7 +282,7 @@ inline YMatrix YMatrix::Inverse() const
 		GetScaledAxis(EAxis::Z).IsNearlyZero(SMALL_NUMBER))
 	{
 		// just set to zero - avoids unsafe inverse of zero and duplicates what QNANs were resulting in before (scaling away all children)
-		Result = YMatrix::Identity;
+		Result = FMatrix::Identity;
 	}
 	else
 	{
@@ -290,7 +290,7 @@ inline YMatrix YMatrix::Inverse() const
 
 		if (Det == 0.0f)
 		{
-			Result = YMatrix::Identity;
+			Result = FMatrix::Identity;
 		}
 		else
 		{
@@ -301,9 +301,9 @@ inline YMatrix YMatrix::Inverse() const
 	return Result;
 }
 
-inline YMatrix YMatrix::TransposeAdjoint() const
+inline FMatrix FMatrix::TransposeAdjoint() const
 {
-	YMatrix TA;
+	FMatrix TA;
 
 	TA.M[0][0] = this->M[1][1] * this->M[2][2] - this->M[1][2] * this->M[2][1];
 	TA.M[0][1] = this->M[1][2] * this->M[2][0] - this->M[1][0] * this->M[2][2];
@@ -330,7 +330,7 @@ inline YMatrix YMatrix::TransposeAdjoint() const
 
 // NOTE: There is some compiler optimization issues with WIN64 that cause FORCEINLINE to cause a crash
 // Remove any scaling from this matrix (ie magnitude of each row is 1)
-inline void YMatrix::RemoveScaling(float Tolerance/*=SMALL_NUMBER*/)
+inline void FMatrix::RemoveScaling(float Tolerance/*=SMALL_NUMBER*/)
 {
 	// For each row, find magnitude, and if its non-zero re-scale so its unit length.
 	const float SquareSum0 = (M[0][0] * M[0][0]) + (M[0][1] * M[0][1]) + (M[0][2] * M[0][2]);
@@ -351,17 +351,17 @@ inline void YMatrix::RemoveScaling(float Tolerance/*=SMALL_NUMBER*/)
 }
 
 // Returns matrix without scale information
-inline YMatrix YMatrix::GetMatrixWithoutScale(float Tolerance/*=SMALL_NUMBER*/) const
+inline FMatrix FMatrix::GetMatrixWithoutScale(float Tolerance/*=SMALL_NUMBER*/) const
 {
-	YMatrix Result = *this;
+	FMatrix Result = *this;
 	Result.RemoveScaling(Tolerance);
 	return Result;
 }
 
 /** Remove any scaling from this matrix (ie magnitude of each row is 1) and return the 3D scale vector that was initially present. */
-inline YVector YMatrix::ExtractScaling(float Tolerance/*=SMALL_NUMBER*/)
+inline FVector FMatrix::ExtractScaling(float Tolerance/*=SMALL_NUMBER*/)
 {
-	YVector Scale3D(0, 0, 0);
+	FVector Scale3D(0, 0, 0);
 
 	// For each row, find magnitude, and if its non-zero re-scale so its unit length.
 	const float SquareSum0 = (M[0][0] * M[0][0]) + (M[0][1] * M[0][1]) + (M[0][2] * M[0][2]);
@@ -414,9 +414,9 @@ inline YVector YMatrix::ExtractScaling(float Tolerance/*=SMALL_NUMBER*/)
 }
 
 /** return a 3D scale vector calculated from this matrix (where each component is the magnitude of a row vector). */
-inline YVector YMatrix::GetScaleVector(float Tolerance/*=SMALL_NUMBER*/) const
+inline FVector FMatrix::GetScaleVector(float Tolerance/*=SMALL_NUMBER*/) const
 {
-	YVector Scale3D(1, 1, 1);
+	FVector Scale3D(1, 1, 1);
 
 	// For each row, find magnitude, and if its non-zero re-scale so its unit length.
 	for (int32 i = 0; i<3; i++)
@@ -435,18 +435,18 @@ inline YVector YMatrix::GetScaleVector(float Tolerance/*=SMALL_NUMBER*/) const
 	return Scale3D;
 }
 // Remove any translation from this matrix
-inline YMatrix YMatrix::RemoveTranslation() const
+inline FMatrix FMatrix::RemoveTranslation() const
 {
-	YMatrix Result = *this;
+	FMatrix Result = *this;
 	Result.M[3][0] = 0.0f;
 	Result.M[3][1] = 0.0f;
 	Result.M[3][2] = 0.0f;
 	return Result;
 }
 
-FORCEINLINE YMatrix YMatrix::ConcatTranslation(const YVector& Translation) const
+FORCEINLINE FMatrix FMatrix::ConcatTranslation(const FVector& Translation) const
 {
-	YMatrix Result;
+	FMatrix Result;
 
 	float* RESTRICT Dest = &Result.M[0][0];
 	const float* RESTRICT Src = &M[0][0];
@@ -473,7 +473,7 @@ FORCEINLINE YMatrix YMatrix::ConcatTranslation(const YVector& Translation) const
 }
 
 /** Returns true if any element of this matrix is not finite */
-inline bool YMatrix::ContainsNaN() const
+inline bool FMatrix::ContainsNaN() const
 {
 	for (int32 i = 0; i<4; i++)
 	{
@@ -490,7 +490,7 @@ inline bool YMatrix::ContainsNaN() const
 }
 
 /** @return the maximum magnitude of any row of the matrix. */
-inline float YMatrix::GetMaximumAxisScale() const
+inline float FMatrix::GetMaximumAxisScale() const
 {
 	const float MaxRowScaleSquared = YMath::Max(
 		GetScaledAxis(EAxis::X).SizeSquared(),
@@ -502,7 +502,7 @@ inline float YMatrix::GetMaximumAxisScale() const
 	return YMath::Sqrt(MaxRowScaleSquared);
 }
 
-inline void YMatrix::ScaleTranslation(const YVector& InScale3D)
+inline void FMatrix::ScaleTranslation(const FVector& InScale3D)
 {
 	M[3][0] *= InScale3D.X;
 	M[3][1] *= InScale3D.Y;
@@ -511,43 +511,43 @@ inline void YMatrix::ScaleTranslation(const YVector& InScale3D)
 
 // GetOrigin
 
-inline YVector YMatrix::GetOrigin() const
+inline FVector FMatrix::GetOrigin() const
 {
-	return YVector(M[3][0], M[3][1], M[3][2]);
+	return FVector(M[3][0], M[3][1], M[3][2]);
 }
 
-inline YVector YMatrix::GetScaledAxis(EAxis::Type InAxis) const
+inline FVector FMatrix::GetScaledAxis(EAxis::Type InAxis) const
 {
 	switch (InAxis)
 	{
 	case EAxis::X:
-		return YVector(M[0][0], M[0][1], M[0][2]);
+		return FVector(M[0][0], M[0][1], M[0][2]);
 
 	case EAxis::Y:
-		return YVector(M[1][0], M[1][1], M[1][2]);
+		return FVector(M[1][0], M[1][1], M[1][2]);
 
 	case EAxis::Z:
-		return YVector(M[2][0], M[2][1], M[2][2]);
+		return FVector(M[2][0], M[2][1], M[2][2]);
 
 	default:
 		ensure(0);
-		return YVector::ZeroVector;
+		return FVector::ZeroVector;
 	}
 }
 
-inline void YMatrix::GetScaledAxes(YVector &X, YVector &Y, YVector &Z) const
+inline void FMatrix::GetScaledAxes(FVector &X, FVector &Y, FVector &Z) const
 {
 	X.X = M[0][0]; X.Y = M[0][1]; X.Z = M[0][2];
 	Y.X = M[1][0]; Y.Y = M[1][1]; Y.Z = M[1][2];
 	Z.X = M[2][0]; Z.Y = M[2][1]; Z.Z = M[2][2];
 }
 
-inline YVector YMatrix::GetUnitAxis(EAxis::Type InAxis) const
+inline FVector FMatrix::GetUnitAxis(EAxis::Type InAxis) const
 {
 	return GetScaledAxis(InAxis).GetSafeNormal();
 }
 
-inline void YMatrix::GetUnitAxes(YVector &X, YVector &Y, YVector &Z) const
+inline void FMatrix::GetUnitAxes(FVector &X, FVector &Y, FVector &Z) const
 {
 	GetScaledAxes(X, Y, Z);
 	X.Normalize();
@@ -555,7 +555,7 @@ inline void YMatrix::GetUnitAxes(YVector &X, YVector &Y, YVector &Z) const
 	Z.Normalize();
 }
 
-inline void YMatrix::SetAxis(int32 i, const YVector& Axis)
+inline void FMatrix::SetAxis(int32 i, const FVector& Axis)
 {
 	checkSlow(i >= 0 && i <= 2);
 	M[i][0] = Axis.X;
@@ -563,14 +563,14 @@ inline void YMatrix::SetAxis(int32 i, const YVector& Axis)
 	M[i][2] = Axis.Z;
 }
 
-inline void YMatrix::SetOrigin(const YVector& NewOrigin)
+inline void FMatrix::SetOrigin(const FVector& NewOrigin)
 {
 	M[3][0] = NewOrigin.X;
 	M[3][1] = NewOrigin.Y;
 	M[3][2] = NewOrigin.Z;
 }
 
-inline void YMatrix::SetAxes(YVector* Axis0 /*= NULL*/, YVector* Axis1 /*= NULL*/, YVector* Axis2 /*= NULL*/, YVector* Origin /*= NULL*/)
+inline void FMatrix::SetAxes(FVector* Axis0 /*= NULL*/, FVector* Axis1 /*= NULL*/, FVector* Axis2 /*= NULL*/, FVector* Origin /*= NULL*/)
 {
 	if (Axis0 != NULL)
 	{
@@ -598,19 +598,19 @@ inline void YMatrix::SetAxes(YVector* Axis0 /*= NULL*/, YVector* Axis1 /*= NULL*
 	}
 }
 
-inline YVector YMatrix::GetColumn(int32 i) const
+inline FVector FMatrix::GetColumn(int32 i) const
 {
 	checkSlow(i >= 0 && i <= 3);
-	return YVector(M[0][i], M[1][i], M[2][i]);
+	return FVector(M[0][i], M[1][i], M[2][i]);
 }
 
-FORCEINLINE bool MakeFrustumPlane(float A, float B, float C, float D, YPlane& OutPlane)
+FORCEINLINE bool MakeFrustumPlane(float A, float B, float C, float D, FPlane& OutPlane)
 {
 	const float	LengthSquared = A * A + B * B + C * C;
 	if (LengthSquared > DELTA*DELTA)
 	{
 		const float	InvLength = YMath::InvSqrt(LengthSquared);
-		OutPlane = YPlane(-A * InvLength, -B * InvLength, -C * InvLength, D * InvLength);
+		OutPlane = FPlane(-A * InvLength, -B * InvLength, -C * InvLength, D * InvLength);
 		return 1;
 	}
 	else
@@ -618,7 +618,7 @@ FORCEINLINE bool MakeFrustumPlane(float A, float B, float C, float D, YPlane& Ou
 }
 
 // Frustum plane extraction.
-FORCEINLINE bool YMatrix::GetFrustumNearPlane(YPlane& OutPlane) const
+FORCEINLINE bool FMatrix::GetFrustumNearPlane(FPlane& OutPlane) const
 {
 	return MakeFrustumPlane(
 		M[0][2],
@@ -629,7 +629,7 @@ FORCEINLINE bool YMatrix::GetFrustumNearPlane(YPlane& OutPlane) const
 	);
 }
 
-FORCEINLINE bool YMatrix::GetFrustumFarPlane(YPlane& OutPlane) const
+FORCEINLINE bool FMatrix::GetFrustumFarPlane(FPlane& OutPlane) const
 {
 	return MakeFrustumPlane(
 		M[0][3] - M[0][2],
@@ -640,7 +640,7 @@ FORCEINLINE bool YMatrix::GetFrustumFarPlane(YPlane& OutPlane) const
 	);
 }
 
-FORCEINLINE bool YMatrix::GetFrustumLeftPlane(YPlane& OutPlane) const
+FORCEINLINE bool FMatrix::GetFrustumLeftPlane(FPlane& OutPlane) const
 {
 	return MakeFrustumPlane(
 		M[0][3] + M[0][0],
@@ -651,7 +651,7 @@ FORCEINLINE bool YMatrix::GetFrustumLeftPlane(YPlane& OutPlane) const
 	);
 }
 
-FORCEINLINE bool YMatrix::GetFrustumRightPlane(YPlane& OutPlane) const
+FORCEINLINE bool FMatrix::GetFrustumRightPlane(FPlane& OutPlane) const
 {
 	return MakeFrustumPlane(
 		M[0][3] - M[0][0],
@@ -662,7 +662,7 @@ FORCEINLINE bool YMatrix::GetFrustumRightPlane(YPlane& OutPlane) const
 	);
 }
 
-FORCEINLINE bool YMatrix::GetFrustumTopPlane(YPlane& OutPlane) const
+FORCEINLINE bool FMatrix::GetFrustumTopPlane(FPlane& OutPlane) const
 {
 	return MakeFrustumPlane(
 		M[0][3] - M[0][1],
@@ -673,7 +673,7 @@ FORCEINLINE bool YMatrix::GetFrustumTopPlane(YPlane& OutPlane) const
 	);
 }
 
-FORCEINLINE bool YMatrix::GetFrustumBottomPlane(YPlane& OutPlane) const
+FORCEINLINE bool FMatrix::GetFrustumBottomPlane(FPlane& OutPlane) const
 {
 	return MakeFrustumPlane(
 		M[0][3] + M[0][1],
@@ -688,7 +688,7 @@ FORCEINLINE bool YMatrix::GetFrustumBottomPlane(YPlane& OutPlane) const
 * Utility for mirroring this transform across a certain plane,
 * and flipping one of the axis as well.
 */
-inline void YMatrix::Mirror(EAxis::Type MirrorAxis, EAxis::Type FlipAxis)
+inline void FMatrix::Mirror(EAxis::Type MirrorAxis, EAxis::Type FlipAxis)
 {
 	if (MirrorAxis == EAxis::X)
 	{
@@ -738,19 +738,19 @@ inline void YMatrix::Mirror(EAxis::Type MirrorAxis, EAxis::Type FlipAxis)
 /**
 * Apply Scale to this matrix
 */
-inline YMatrix YMatrix::ApplyScale(float Scale)
+inline FMatrix FMatrix::ApplyScale(float Scale)
 {
-	YMatrix ScaleMatrix(
-		YPlane(Scale, 0.0f, 0.0f, 0.0f),
-		YPlane(0.0f, Scale, 0.0f, 0.0f),
-		YPlane(0.0f, 0.0f, Scale, 0.0f),
-		YPlane(0.0f, 0.0f, 0.0f, 1.0f)
+	FMatrix ScaleMatrix(
+		FPlane(Scale, 0.0f, 0.0f, 0.0f),
+		FPlane(0.0f, Scale, 0.0f, 0.0f),
+		FPlane(0.0f, 0.0f, Scale, 0.0f),
+		FPlane(0.0f, 0.0f, 0.0f, 1.0f)
 	);
 	return ScaleMatrix*(*this);
 }
 
 // Serializer.
-inline YArchive& operator<<(YArchive& Ar, YMatrix& M)
+inline FArchive& operator<<(FArchive& Ar, FMatrix& M)
 {
 	Ar << M.M[0][0] << M.M[0][1] << M.M[0][2] << M.M[0][3];
 	Ar << M.M[1][0] << M.M[1][1] << M.M[1][2] << M.M[1][3];
@@ -764,27 +764,27 @@ inline YArchive& operator<<(YArchive& Ar, YMatrix& M)
 * YPlane inline functions.
 */
 
-inline YPlane YPlane::TransformBy(const YMatrix& M) const
+inline FPlane FPlane::TransformBy(const FMatrix& M) const
 {
-	const YMatrix tmpTA = M.TransposeAdjoint();
+	const FMatrix tmpTA = M.TransposeAdjoint();
 	const float DetM = M.Determinant();
 	return this->TransformByUsingAdjointT(M, DetM, tmpTA);
 }
 
-inline YPlane YPlane::TransformByUsingAdjointT(const YMatrix& M, float DetM, const YMatrix& TA) const
+inline FPlane FPlane::TransformByUsingAdjointT(const FMatrix& M, float DetM, const FMatrix& TA) const
 {
-	YVector newNorm = TA.TransformVector(*this).GetSafeNormal();
+	FVector newNorm = TA.TransformVector(*this).GetSafeNormal();
 
 	if (DetM < 0.f)
 	{
 		newNorm *= -1.0f;
 	}
 
-	return YPlane(M.TransformPosition(*this * W), newNorm);
+	return FPlane(M.TransformPosition(*this * W), newNorm);
 }
 
 
-FORCEINLINE YBasisVectorMatrix::YBasisVectorMatrix(const YVector& XAxis, const YVector& YAxis, const YVector& ZAxis, const YVector& Origin)
+FORCEINLINE YBasisVectorMatrix::YBasisVectorMatrix(const FVector& XAxis, const FVector& YAxis, const FVector& ZAxis, const FVector& Origin)
 {
 	for (uint32 RowIndex = 0; RowIndex < 3; RowIndex++)
 	{
@@ -800,11 +800,11 @@ FORCEINLINE YBasisVectorMatrix::YBasisVectorMatrix(const YVector& XAxis, const Y
 }
 
 
-FORCEINLINE YLookAtMatrix::YLookAtMatrix(const YVector& EyePosition, const YVector& LookAtPosition, const YVector& UpVector)
+FORCEINLINE YLookAtMatrix::YLookAtMatrix(const FVector& EyePosition, const FVector& LookAtPosition, const FVector& UpVector)
 {
-	const YVector ZAxis = (LookAtPosition - EyePosition).GetSafeNormal();
-	const YVector XAxis = (UpVector ^ ZAxis).GetSafeNormal();
-	const YVector YAxis = ZAxis ^ XAxis;
+	const FVector ZAxis = (LookAtPosition - EyePosition).GetSafeNormal();
+	const FVector XAxis = (UpVector ^ ZAxis).GetSafeNormal();
+	const FVector YAxis = ZAxis ^ XAxis;
 
 	for (uint32 RowIndex = 0; RowIndex < 3; RowIndex++)
 	{

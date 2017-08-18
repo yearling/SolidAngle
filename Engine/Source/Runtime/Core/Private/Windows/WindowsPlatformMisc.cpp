@@ -786,7 +786,7 @@ void YWindowsPlatformMisc::SubmitErrorReport(const TCHAR* InErrorHist, EErrorRep
 			ReportDumpPath = YPaths::CreateTempFilename(*YPaths::GameLogDir(), ReportDumpFilename, TEXT(".txt"));
 		}
 
-		YArchive * AutoReportFile = IFileManager::Get().CreateFileWriter(*ReportDumpPath, FILEWRITE_EvenIfReadOnly);
+		FArchive * AutoReportFile = IFileManager::Get().CreateFileWriter(*ReportDumpPath, FILEWRITE_EvenIfReadOnly);
 		if (AutoReportFile != NULL)
 		{
 			TCHAR CompName[MAX_STRING_LEN];
@@ -804,7 +804,7 @@ void YWindowsPlatformMisc::SubmitErrorReport(const TCHAR* InErrorHist, EErrorRep
 			TCHAR CultureName[MAX_STRING_LEN];
 			FCString::Strncpy(CultureName, *FInternationalization::Get().GetDefaultCulture()->GetName(), MAX_STRING_LEN);
 			TCHAR SystemTime[MAX_STRING_LEN];
-			FCString::Strncpy(SystemTime, *YDateTime::Now().ToString(), MAX_STRING_LEN);
+			FCString::Strncpy(SystemTime, *FDateTime::Now().ToString(), MAX_STRING_LEN);
 			TCHAR EngineVersionStr[MAX_STRING_LEN];
 			FCString::Strncpy(EngineVersionStr, *FEngineVersion::Current().ToString(), 256);
 
@@ -1006,18 +1006,18 @@ void YWindowsPlatformMisc::PumpMessages(bool bFromMainLoop)
 	FApp::SetVolumeMultiplier(HasFocus ? 1.0f : FApp::GetUnfocusedVolumeMultiplier());
 }
 
-uint32 YWindowsPlatformMisc::GetCharKeyMap(uint32* KeyCodes, YString* KeyNames, uint32 MaxMappings)
+uint32 YWindowsPlatformMisc::GetCharKeyMap(uint32* KeyCodes, YString* KeFNames, uint32 MaxMappings)
 {
-	return YGenericPlatformMisc::GetStandardPrintableKeyMap(KeyCodes, KeyNames, MaxMappings, true, false);
+	return YGenericPlatformMisc::GetStandardPrintableKeyMap(KeyCodes, KeFNames, MaxMappings, true, false);
 }
 
-uint32 YWindowsPlatformMisc::GetKeyMap(uint32* KeyCodes, YString* KeyNames, uint32 MaxMappings)
+uint32 YWindowsPlatformMisc::GetKeyMap(uint32* KeyCodes, YString* KeFNames, uint32 MaxMappings)
 {
-#define ADDKEYMAP(KeyCode, KeyName)		if (NumMappings<MaxMappings) { KeyCodes[NumMappings]=KeyCode; KeyNames[NumMappings]=KeyName; ++NumMappings; };
+#define ADDKEYMAP(KeyCode, KeFName)		if (NumMappings<MaxMappings) { KeyCodes[NumMappings]=KeyCode; KeFNames[NumMappings]=KeFName; ++NumMappings; };
 
 	uint32 NumMappings = 0;
 
-	if (KeyCodes && KeyNames && (MaxMappings > 0))
+	if (KeyCodes && KeFNames && (MaxMappings > 0))
 	{
 		ADDKEYMAP(VK_LBUTTON, TEXT("LeftMouseButton"));
 		ADDKEYMAP(VK_RBUTTON, TEXT("RightMouseButton"));
@@ -1109,8 +1109,8 @@ uint32 YWindowsPlatformMisc::GetKeyMap(uint32* KeyCodes, YString* KeyNames, uint
 
 		static const uint32 MAX_KEY_MAPPINGS(256);
 		uint32 CharCodes[MAX_KEY_MAPPINGS];
-		YString CharKeyNames[MAX_KEY_MAPPINGS];
-		const int32 CharMappings = GetCharKeyMap(CharCodes, CharKeyNames, MAX_KEY_MAPPINGS);
+		YString CharKeFNames[MAX_KEY_MAPPINGS];
+		const int32 CharMappings = GetCharKeyMap(CharCodes, CharKeFNames, MAX_KEY_MAPPINGS);
 
 		for (int32 MappingIndex = 0; MappingIndex < CharMappings; ++MappingIndex)
 		{
@@ -1268,7 +1268,7 @@ void YWindowsPlatformMisc::ClipboardPaste(class YString& Result)
 
 PRAGMA_ENABLE_OPTIMIZATION
 
-void YWindowsPlatformMisc::CreateGuid(YGuid& Result)
+void YWindowsPlatformMisc::CreateGuid(FGuid& Result)
 {
 	verify(CoCreateGuid((GUID*)&Result) == S_OK);
 }
@@ -2087,11 +2087,11 @@ void YWindowsPlatformMisc::RaiseException(uint32 ExceptionCode)
 	::RaiseException(ExceptionCode, 0, 0, NULL);
 }
 
-bool YWindowsPlatformMisc::SetStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeyName, const YString& InValue)
+bool YWindowsPlatformMisc::SetStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeFName, const YString& InValue)
 {
 	check(!InStoreId.IsEmpty());
 	check(!InSectionName.IsEmpty());
-	check(!InKeyName.IsEmpty());
+	check(!InKeFName.IsEmpty());
 
 	YString FullRegistryKey = YString(TEXT("Software")) / InStoreId / InSectionName;
 	FullRegistryKey = FullRegistryKey.Replace(TEXT("/"), TEXT("\\")); // we use forward slashes, but the registry needs back slashes
@@ -2100,7 +2100,7 @@ bool YWindowsPlatformMisc::SetStoredValue(const YString& InStoreId, const YStrin
 	HRESULT Result = ::RegCreateKeyEx(HKEY_CURRENT_USER, *FullRegistryKey, 0, nullptr, REG_OPTION_NON_VOLATILE, KEY_WRITE, nullptr, &hKey, nullptr);
 	if (Result == ERROR_SUCCESS)
 	{
-		Result = ::RegSetValueEx(hKey, *InKeyName, 0, REG_SZ, (const BYTE*)*InValue, (InValue.Len() + 1) * sizeof(TCHAR));
+		Result = ::RegSetValueEx(hKey, *InKeFName, 0, REG_SZ, (const BYTE*)*InValue, (InValue.Len() + 1) * sizeof(TCHAR));
 		::RegCloseKey(hKey);
 	}
 
@@ -2108,32 +2108,32 @@ bool YWindowsPlatformMisc::SetStoredValue(const YString& InStoreId, const YStrin
 	{
 		TCHAR ErrorBuffer[1024];
 		::FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM, nullptr, Result, 0, ErrorBuffer, 1024, nullptr);
-		GWarn->Logf(TEXT("YWindowsPlatformMisc::SetStoredValue: ERROR: Could not store value for '%s'. Error Code %u: %s"), *InKeyName, Result, ErrorBuffer);
+		GWarn->Logf(TEXT("YWindowsPlatformMisc::SetStoredValue: ERROR: Could not store value for '%s'. Error Code %u: %s"), *InKeFName, Result, ErrorBuffer);
 		return false;
 	}
 
 	return true;
 }
 
-bool YWindowsPlatformMisc::GetStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeyName, YString& OutValue)
+bool YWindowsPlatformMisc::GetStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeFName, YString& OutValue)
 {
 	check(!InStoreId.IsEmpty());
 	check(!InSectionName.IsEmpty());
-	check(!InKeyName.IsEmpty());
+	check(!InKeFName.IsEmpty());
 
 	YString FullRegistryKey = YString(TEXT("Software")) / InStoreId / InSectionName;
 	FullRegistryKey = FullRegistryKey.Replace(TEXT("/"), TEXT("\\")); // we use forward slashes, but the registry needs back slashes
 
-	return QueryRegKey(HKEY_CURRENT_USER, *FullRegistryKey, *InKeyName, OutValue);
+	return QueryRegKey(HKEY_CURRENT_USER, *FullRegistryKey, *InKeFName, OutValue);
 }
 
-bool YWindowsPlatformMisc::DeleteStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeyName)
+bool YWindowsPlatformMisc::DeleteStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeFName)
 {
 	// Deletes values in reg keys and also deletes the owning key if it becomes empty
 
 	check(!InStoreId.IsEmpty());
 	check(!InSectionName.IsEmpty());
-	check(!InKeyName.IsEmpty());
+	check(!InKeFName.IsEmpty());
 
 	YString FullRegistryKey = YString(TEXT("Software")) / InStoreId / InSectionName;
 	FullRegistryKey = FullRegistryKey.Replace(TEXT("/"), TEXT("\\")); // we use forward slashes, but the registry needs back slashes
@@ -2142,12 +2142,12 @@ bool YWindowsPlatformMisc::DeleteStoredValue(const YString& InStoreId, const YSt
 	HRESULT Result = ::RegOpenKeyEx(HKEY_CURRENT_USER, *FullRegistryKey, 0, KEY_WRITE | KEY_READ, &hKey);
 	if (Result == ERROR_SUCCESS)
 	{
-		Result = ::RegDeleteValue(hKey, *InKeyName);
+		Result = ::RegDeleteValue(hKey, *InKeFName);
 
 		// Query for sub-keys in the open key
-		TCHAR CheckKeyName[256];
-		::DWORD CheckKeyNameLength = sizeof(CheckKeyName) / sizeof(CheckKeyName[0]);
-		HRESULT EnumResult = RegEnumKeyEx(hKey, 0, CheckKeyName, &CheckKeyNameLength, NULL, NULL, NULL, NULL);
+		TCHAR CheckKeFName[256];
+		::DWORD CheckKeFNameLength = sizeof(CheckKeFName) / sizeof(CheckKeFName[0]);
+		HRESULT EnumResult = RegEnumKeyEx(hKey, 0, CheckKeFName, &CheckKeFNameLength, NULL, NULL, NULL, NULL);
 		bool bZeroSubKeys = EnumResult != ERROR_SUCCESS;
 
 		// Query for a remaining value in the open key
@@ -2231,18 +2231,18 @@ void YWindowsPlatformMisc::PromptForRemoteDebugging(bool bIsEnsure)
 }
 #endif	//#if !UE_BUILD_SHIPPING
 
-YLinearColor YWindowsPlatformMisc::GetScreenPixelColor(const YVector2D& InScreenPos, float /*InGamma*/)
+FLinearColor YWindowsPlatformMisc::GetScreenPixelColor(const YVector2D& InScreenPos, float /*InGamma*/)
 {
 	COLORREF PixelColorRef = GetPixel(GetDC(HWND_DESKTOP), InScreenPos.X, InScreenPos.Y);
 
-	YColor sRGBScreenColor(
+	FColor sRGBScreenColor(
 		(PixelColorRef & 0xFF),
 		((PixelColorRef & 0xFF00) >> 8),
 		((PixelColorRef & 0xFF0000) >> 16),
 		255);
 
 	// Assume the screen color is coming in as sRGB space
-	return YLinearColor(sRGBScreenColor);
+	return FLinearColor(sRGBScreenColor);
 }
 
 /**

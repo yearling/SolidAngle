@@ -93,7 +93,7 @@ namespace
 {
 	void JemallocStatsPrintCallback(void *UserData, const char *String)
 	{
-		YOutputDevice* Ar = reinterpret_cast< YOutputDevice* >(UserData);
+		FOutputDevice* Ar = reinterpret_cast< FOutputDevice* >(UserData);
 
 		check(Ar);
 		if (Ar)
@@ -106,7 +106,7 @@ namespace
 	}
 }
 
-void FMallocJemalloc::DumpAllocatorStats( YOutputDevice& Ar ) 
+void FMallocJemalloc::DumpAllocatorStats( FOutputDevice& Ar ) 
 {
 	MEM_TIME(Ar.Logf( TEXT("Seconds     % 5.3f"), MemTime ));
 	

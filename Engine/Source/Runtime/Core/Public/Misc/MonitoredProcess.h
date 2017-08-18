@@ -163,7 +163,7 @@ private:
 	bool Canceling;
 
 	// Holds the time at which the process ended. */
-	YDateTime EndTime;
+	FDateTime EndTime;
 
 	// Whether the window of the process should be hidden. */
 	bool Hidden;
@@ -184,7 +184,7 @@ private:
 	int ReturnCode;
 
 	// Holds the time at which the process started. */
-	YDateTime StartTime;
+	FDateTime StartTime;
 
 	// Holds the monitoring thread object. */
 	FRunnableThread* Thread;

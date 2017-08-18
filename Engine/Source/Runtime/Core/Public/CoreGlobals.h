@@ -2,7 +2,7 @@
 
 #include "CoreTypes.h"
 #include "Containers/SolidAngleString.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Logging/LogMacros.h"
 #include "HAL/PlatformTLS.h"
 
@@ -56,7 +56,7 @@ extern CORE_API FConfigCacheIni* GConfig;
 extern CORE_API ITransaction* GUndo;
 extern CORE_API YOutputDeviceConsole* GLogConsole;
 CORE_API extern class YOutputDeviceError*			GError;
-CORE_API extern class YFeedbackContext*				GWarn;
+CORE_API extern class FFeedbackContext*				GWarn;
 
 
 extern CORE_API TCHAR GErrorHist[16384];
@@ -247,7 +247,7 @@ extern CORE_API TCHAR GInternalGameName[64];
 extern CORE_API const TCHAR* GForeignEngineDir;
 
 /** Exec handler for game debugging tool, allowing commands like "editactor" */
-extern CORE_API YExec* GDebugToolExec;
+extern CORE_API FExec* GDebugToolExec;
 
 /** Whether we're currently in the async loading code path or not */
 extern CORE_API bool(*IsAsyncLoading)();
@@ -352,7 +352,7 @@ extern CORE_API bool GEmitDrawEvents;
 extern CORE_API bool GShouldSuspendRenderingThread;
 
 /** Determines what kind of trace should occur, NAME_None for none. */
-extern CORE_API YName GCurrentTraceName;
+extern CORE_API FName GCurrentTraceName;
 
 /** How to print the time in log output. */
 extern CORE_API ELogTimes::Type GPrintLogTimes;
@@ -371,9 +371,9 @@ extern CORE_API bool GIsDemoMode;
 
 /** Name of the core package. */
 //@Package name transition, remove the double checks 
-extern CORE_API YName GLongCorePackageName;
+extern CORE_API FName GLongCorePackageName;
 //@Package name transition, remove the double checks 
-extern CORE_API YName GLongCoreUObjectPackageName;
+extern CORE_API FName GLongCoreUObjectPackageName;
 
 /** Whether or not a unit test is currently being run. */
 extern CORE_API bool GIsAutomationTesting;

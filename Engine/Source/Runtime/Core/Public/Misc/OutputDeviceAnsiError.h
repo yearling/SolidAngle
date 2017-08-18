@@ -17,7 +17,7 @@ public:
 	* @param	Data	Text to log
 	* @param	Event	Event name used for suppression purposes
 	*/
-	virtual void Serialize(const TCHAR* Msg, ELogVerbosity::Type Verbosity, const class YName& Category) override;
+	virtual void Serialize(const TCHAR* Msg, ELogVerbosity::Type Verbosity, const class FName& Category) override;
 
 	virtual bool CanBeUsedOnAnyThread() const override
 	{

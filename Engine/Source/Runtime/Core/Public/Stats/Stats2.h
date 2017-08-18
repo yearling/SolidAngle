@@ -9,7 +9,7 @@
 #include "Containers/Array.h"
 #include "Containers/SolidAngleString.h"
 #include "HAL/PlatformTime.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Containers/LockFreeList.h"
 #include "Containers/ChunkedArray.h"
 #include "Delegates/Delegate.h"
@@ -61,7 +61,7 @@ public:
 };
 
 // Pass a console command directly to the stats system, return true if it is known command, false means it might be a stats command
-CORE_API bool DirectStatsCommand(const TCHAR* Cmd, bool bBlockForCompletion = false, YOutputDevice* Ar = nullptr);
+CORE_API bool DirectStatsCommand(const TCHAR* Cmd, bool bBlockForCompletion = false, FOutputDevice* Ar = nullptr);
 
 /** Helper struct that contains method available even when the stats are disabled. */
 struct CORE_API FStats
@@ -145,7 +145,7 @@ struct TStatId
 		return StatIdPtr;
 	}
 
-	FORCEINLINE YName GetName() const
+	FORCEINLINE FName GetName() const
 	{
 		return MinimalNameToName(StatIdPtr->Name);
 	}
@@ -157,7 +157,7 @@ struct TStatId
 
 	/**
 	* @return a stat description as an ansi string.
-	* StatIdPtr must point to a valid YName pointer.
+	* StatIdPtr must point to a valid FName pointer.
 	* @see FStatGroupEnableManager::GetHighPerformanceEnableForStat
 	*/
 	FORCEINLINE const ANSICHAR* GetStatDescriptionANSI() const
@@ -167,7 +167,7 @@ struct TStatId
 
 	/**
 	* @return a stat description as a wide string.
-	* StatIdPtr must point to a valid YName pointer.
+	* StatIdPtr must point to a valid FName pointer.
 	* @see FStatGroupEnableManager::GetHighPerformanceEnableForStat
 	*/
 	FORCEINLINE const WIDECHAR* GetStatDescriptionWIDE() const
@@ -221,8 +221,8 @@ struct EStatDataType
 		ST_int64,
 		/** double. */
 		ST_double,
-		/** YName. */
-		ST_YName,
+		/** FName. */
+		ST_FName,
 		/** Memory pointer, stored as uint64. */
 		ST_Ptr,
 
@@ -298,8 +298,8 @@ struct EStatMetaFlags
 		IsPackedCCAndDuration = 0x10,
 		/** if true, then this stat is cleared every frame. */
 		ShouldClearEveryFrame = 0x20,
-		/** used only on disk on on the wire, indicates that we serialized the YName string. */
-		SendingYName = 0x40,
+		/** used only on disk on on the wire, indicates that we serialized the FName string. */
+		SendingFName = 0x40,
 
 		Num = 0x80,
 		Mask = 0xff,
@@ -374,12 +374,12 @@ FORCEINLINE uint32 FromPackedCallCountDuration_Duration(int64 Both)
 }
 
 /**
-* Helper class that stores an YName and all meta information in 8 bytes. Kindof icky.
+* Helper class that stores an FName and all meta information in 8 bytes. Kindof icky.
 */
 class FStatNameAndInfo
 {
 	/**
-	* An YName, but the high bits of the Number are used for other fields.
+	* An FName, but the high bits of the Number are used for other fields.
 	*/
 	FMinimalName NameAndInfo;
 public:
@@ -398,15 +398,15 @@ public:
 	}
 
 	/**
-	* Build from a raw YName
+	* Build from a raw FName
 	*/
-	FORCEINLINE_STATS FStatNameAndInfo(YName Other, bool bAlreadyHasMeta)
+	FORCEINLINE_STATS FStatNameAndInfo(FName Other, bool bAlreadyHasMeta)
 		: NameAndInfo(NameToMinimalName(Other))
 	{
 		if (!bAlreadyHasMeta)
 		{
 			int32 Number = NameAndInfo.Number;
-			// ok, you can't have numbered stat YNames too large
+			// ok, you can't have numbered stat FNames too large
 			checkStats(!(Number >> EStatAllFields::StartShift));
 			Number |= EStatMetaFlags::DummyAlwaysOne << (EStatMetaFlags::Shift + EStatAllFields::StartShift);
 			NameAndInfo.Number = Number;
@@ -417,11 +417,11 @@ public:
 	/**
 	* Build with stat metadata
 	*/
-	FORCEINLINE_STATS FStatNameAndInfo(YName InStatName, char const* InGroup, char const* InCategory, TCHAR const* InDescription, EStatDataType::Type InStatType, bool bShouldClearEveryFrame, bool bCycleStat, YPlatformMemory::EMemoryCounterRegion MemoryRegion = YPlatformMemory::MCR_Invalid)
+	FORCEINLINE_STATS FStatNameAndInfo(FName InStatName, char const* InGroup, char const* InCategory, TCHAR const* InDescription, EStatDataType::Type InStatType, bool bShouldClearEveryFrame, bool bCycleStat, YPlatformMemory::EMemoryCounterRegion MemoryRegion = YPlatformMemory::MCR_Invalid)
 		: NameAndInfo(NameToMinimalName(ToLongName(InStatName, InGroup, InCategory, InDescription)))
 	{
 		int32 Number = NameAndInfo.Number;
-		// ok, you can't have numbered stat YNames too large
+		// ok, you can't have numbered stat FNames too large
 		checkStats(!(Number >> EStatAllFields::StartShift));
 		Number |= (EStatMetaFlags::DummyAlwaysOne | EStatMetaFlags::HasLongNameAndMetaInfo) << (EStatMetaFlags::Shift + EStatAllFields::StartShift);
 		NameAndInfo.Number = Number;
@@ -458,9 +458,9 @@ public:
 	/**
 	* Internal use by FStatsThreadState to force an update to the long name
 	*/
-	FORCEINLINE_STATS void SetRawName(YName RawName)
+	FORCEINLINE_STATS void SetRawName(FName RawName)
 	{
-		// ok, you can't have numbered stat YNames too large
+		// ok, you can't have numbered stat FNames too large
 		checkStats(!(RawName.GetNumber() >> EStatAllFields::StartShift));
 		CheckInvariants();
 		int32 Number = NameAndInfo.Number;
@@ -470,10 +470,10 @@ public:
 	}
 
 	/**
-	* The encoded YName with the correct, original Number
+	* The encoded FName with the correct, original Number
 	* The original number usually is 0
 	*/
-	FORCEINLINE_STATS YName GetRawName() const
+	FORCEINLINE_STATS FName GetRawName() const
 	{
 		CheckInvariants();
 		FMinimalName Result(NameAndInfo);
@@ -484,10 +484,10 @@ public:
 	}
 
 	/**
-	* The encoded YName with the encoded, new Number
+	* The encoded FName with the encoded, new Number
 	* The number contains all encoded metadata
 	*/
-	FORCEINLINE_STATS YName GetEncodedName() const
+	FORCEINLINE_STATS FName GetEncodedName() const
 	{
 		CheckInvariants();
 		return MinimalNameToName(NameAndInfo);
@@ -496,7 +496,7 @@ public:
 	/**
 	* Expensive! Extracts the shortname if this is a long name or just returns the name
 	*/
-	FORCEINLINE_STATS YName GetShortName() const
+	FORCEINLINE_STATS FName GetShortName() const
 	{
 		CheckInvariants();
 		return GetShortNameFrom(GetRawName());
@@ -505,7 +505,7 @@ public:
 	/**
 	* Expensive! Extracts the group name if this is a long name or just returns none
 	*/
-	FORCEINLINE_STATS YName GetGroupName() const
+	FORCEINLINE_STATS FName GetGroupName() const
 	{
 		CheckInvariants();
 		return GetGroupNameFrom(GetRawName());
@@ -514,7 +514,7 @@ public:
 	/**
 	* Expensive! Extracts the group category if this is a long name or just returns none
 	*/
-	FORCEINLINE_STATS YName GetGroupCategory() const
+	FORCEINLINE_STATS FName GetGroupCategory() const
 	{
 		CheckInvariants();
 		return GetGroupCategoryFrom(GetRawName());
@@ -609,13 +609,13 @@ public:
 	* @param InGroup, Group name
 	* @param InCategory, Category name
 	* @param InDescription, Description
-	* @return the packed YName
+	* @return the packed FName
 	*/
-	CORE_API static YName ToLongName(YName InStatName, char const* InGroup, char const* InCategory, TCHAR const* InDescription);
-	CORE_API static YName GetShortNameFrom(YName InLongName);
-	CORE_API static YName GetGroupNameFrom(YName InLongName);
-	CORE_API static YName GetGroupCategoryFrom(YName InLongName);
-	CORE_API static YString GetDescriptionFrom(YName InLongName);
+	CORE_API static FName ToLongName(FName InStatName, char const* InGroup, char const* InCategory, TCHAR const* InDescription);
+	CORE_API static FName GetShortNameFrom(FName InLongName);
+	CORE_API static FName GetGroupNameFrom(FName InLongName);
+	CORE_API static FName GetGroupCategoryFrom(FName InLongName);
+	CORE_API static YString GetDescriptionFrom(FName InLongName);
 };
 
 
@@ -631,10 +631,10 @@ private:
 	uint64	Ptr;
 	/** ST_int64 and IsPackedCCAndDuration. */
 	uint32	CCAndDuration[2];
-	/** For YName. */
+	/** For FName. */
 	CORE_API const YString GetName() const
 	{
-		return YName::SafeString((int32)Cycles);
+		return FName::SafeString((int32)Cycles);
 	}
 };
 
@@ -680,7 +680,7 @@ struct FStatMessage
 	/**
 	* Build a meta data message
 	*/
-	FStatMessage(YName InStatName, EStatDataType::Type InStatType, char const* InGroup, char const* InCategory, TCHAR const* InDescription, bool bShouldClearEveryFrame, bool bCycleStat, YPlatformMemory::EMemoryCounterRegion MemoryRegion = YPlatformMemory::MCR_Invalid)
+	FStatMessage(FName InStatName, EStatDataType::Type InStatType, char const* InGroup, char const* InCategory, TCHAR const* InDescription, bool bShouldClearEveryFrame, bool bCycleStat, YPlatformMemory::EMemoryCounterRegion MemoryRegion = YPlatformMemory::MCR_Invalid)
 		: NameAndInfo(InStatName, InGroup, InCategory, InDescription, InStatType, bShouldClearEveryFrame, bCycleStat, MemoryRegion)
 	{
 		NameAndInfo.SetField<EStatOperation>(EStatOperation::SetLongName);
@@ -694,7 +694,7 @@ struct FStatMessage
 	/**
 	* Clock operation
 	*/
-	FORCEINLINE_STATS FStatMessage(YName InStatName, EStatOperation::Type InStatOperation)
+	FORCEINLINE_STATS FStatMessage(FName InStatName, EStatOperation::Type InStatOperation)
 		: NameAndInfo(InStatName, true)
 	{
 		NameAndInfo.SetField<EStatOperation>(InStatOperation);
@@ -715,7 +715,7 @@ struct FStatMessage
 	/**
 	* int64 operation
 	*/
-	FORCEINLINE_STATS FStatMessage(YName InStatName, EStatOperation::Type InStatOperation, int64 Value, bool bIsCycle)
+	FORCEINLINE_STATS FStatMessage(FName InStatName, EStatOperation::Type InStatOperation, int64 Value, bool bIsCycle)
 		: NameAndInfo(InStatName, true)
 	{
 		NameAndInfo.SetField<EStatOperation>(InStatOperation);
@@ -727,7 +727,7 @@ struct FStatMessage
 	/**
 	* double operation
 	*/
-	FORCEINLINE_STATS FStatMessage(YName InStatName, EStatOperation::Type InStatOperation, double Value, bool)
+	FORCEINLINE_STATS FStatMessage(FName InStatName, EStatOperation::Type InStatOperation, double Value, bool)
 		: NameAndInfo(InStatName, true)
 	{
 		NameAndInfo.SetField<EStatOperation>(InStatOperation);
@@ -739,11 +739,11 @@ struct FStatMessage
 	/**
 	* name operation
 	*/
-	FORCEINLINE_STATS FStatMessage(YName InStatName, EStatOperation::Type InStatOperation, YName Value, bool)
+	FORCEINLINE_STATS FStatMessage(FName InStatName, EStatOperation::Type InStatOperation, FName Value, bool)
 		: NameAndInfo(InStatName, true)
 	{
 		NameAndInfo.SetField<EStatOperation>(InStatOperation);
-		checkStats(NameAndInfo.GetField<EStatDataType>() == EStatDataType::ST_YName);
+		checkStats(NameAndInfo.GetField<EStatDataType>() == EStatDataType::ST_FName);
 		checkStats(NameAndInfo.GetFlag(EStatMetaFlags::IsCycle) == false);
 		GetValue_FMinimalName() = NameToMinimalName(Value);
 	}
@@ -751,7 +751,7 @@ struct FStatMessage
 	/**
 	* Ptr operation
 	*/
-	FORCEINLINE_STATS FStatMessage(YName InStatName, EStatOperation::Type InStatOperation, uint64 Value, bool)
+	FORCEINLINE_STATS FStatMessage(FName InStatName, EStatOperation::Type InStatOperation, uint64 Value, bool)
 		: NameAndInfo(InStatName, true)
 	{
 		NameAndInfo.SetField<EStatOperation>(InStatOperation);
@@ -828,19 +828,19 @@ struct FStatMessage
 	FORCEINLINE_STATS FMinimalName& GetValue_FMinimalName()
 	{
 		static_assert(sizeof(FMinimalName) <= DATA_SIZE && ALIGNOF(FMinimalName) <= DATA_ALIGN, "Bad data for stat message.");
-		checkStats(NameAndInfo.GetField<EStatDataType>() == EStatDataType::ST_YName);
+		checkStats(NameAndInfo.GetField<EStatDataType>() == EStatDataType::ST_FName);
 		return *(FMinimalName*)&StatData;
 	}
 
 	FORCEINLINE_STATS FMinimalName GetValue_FMinimalName() const
 	{
-		checkStats(NameAndInfo.GetField<EStatDataType>() == EStatDataType::ST_YName);
+		checkStats(NameAndInfo.GetField<EStatDataType>() == EStatDataType::ST_FName);
 		return *(FMinimalName const*)&StatData;
 	}
 
-	FORCEINLINE_STATS YName GetValue_YName() const
+	FORCEINLINE_STATS FName GetValue_FName() const
 	{
-		checkStats(NameAndInfo.GetField<EStatDataType>() == EStatDataType::ST_YName);
+		checkStats(NameAndInfo.GetField<EStatDataType>() == EStatDataType::ST_FName);
 		return MinimalNameToName(*(FMinimalName const*)&StatData);
 	}
 };
@@ -1028,7 +1028,7 @@ struct TStatMessage
 		return Value;
 	}
 
-	FORCEINLINE_STATS YName GetShortName() const
+	FORCEINLINE_STATS FName GetShortName() const
 	{
 		return NameAndInfo.GetShortName();
 	}
@@ -1337,7 +1337,7 @@ public:
 	}
 
 	/** Clock operation. **/
-	static FORCEINLINE_STATS void AddMessage(YName InStatName, EStatOperation::Type InStatOperation)
+	static FORCEINLINE_STATS void AddMessage(FName InStatName, EStatOperation::Type InStatOperation)
 	{
 		checkStats((InStatOperation == EStatOperation::CycleScopeStart || InStatOperation == EStatOperation::CycleScopeEnd));
 		FThreadStats* ThreadStats = GetThreadStats();
@@ -1373,7 +1373,7 @@ public:
 
 	/** Any non-clock operation with an ordinary payload. **/
 	template<typename TValue>
-	static FORCEINLINE_STATS void AddMessage(YName InStatName, EStatOperation::Type InStatOperation, TValue Value, bool bIsCycle = false)
+	static FORCEINLINE_STATS void AddMessage(FName InStatName, EStatOperation::Type InStatOperation, TValue Value, bool bIsCycle = false)
 	{
 		if (!InStatName.IsNone() && WillEverCollectData() && IsThreadingReady())
 		{
@@ -1392,7 +1392,7 @@ public:
 
 	/** Pseudo-Memory operation. */
 	template<typename TValue>
-	FORCEINLINE_STATS void AddMemoryMessage(YName InStatName, TValue Value)
+	FORCEINLINE_STATS void AddMemoryMessage(FName InStatName, TValue Value)
 	{
 		AddStatMessage(FStatMessage(InStatName, EStatOperation::Memory, Value, false));
 	}
@@ -1513,7 +1513,7 @@ public:
 class FCycleCounter
 {
 	/** Name of the stat, usually a short name **/
-	YName StatId;
+	FName StatId;
 
 public:
 
@@ -1532,9 +1532,9 @@ public:
 			if (GCycleStatsShouldEmitNamedEvents > 0)
 			{
 #if	PLATFORM_USES_ANSI_STRING_FOR_EXTERNAL_PROFILING
-				YPlatformMisc::BeginNamedEvent(YColor(0), InStatId.GetStatDescriptionANSI());
+				YPlatformMisc::BeginNamedEvent(FColor(0), InStatId.GetStatDescriptionANSI());
 #else
-				YPlatformMisc::BeginNamedEvent(YColor(0), InStatId.GetStatDescriptionWIDE());
+				YPlatformMisc::BeginNamedEvent(FColor(0), InStatId.GetStatDescriptionWIDE());
 #endif // PLATFORM_USES_ANSI_STRING_FOR_EXTERNAL_PROFILING
 			}
 		}
@@ -1600,10 +1600,10 @@ class FStartupMessages
 
 public:
 	/** Adds a thread metadata. */
-	CORE_API void AddThreadMetadata(const YName InThreadYName, uint32 InThreadID);
+	CORE_API void AddThreadMetadata(const FName InThreadFName, uint32 InThreadID);
 
 	/** Adds a regular metadata. */
-	CORE_API void AddMetadata(YName InStatName, const TCHAR* InStatDesc, const char* InGroupName, const char* InGroupCategory, const TCHAR* InGroupDesc, bool bShouldClearEveryFrame, EStatDataType::Type InStatType, bool bCycleStat, YPlatformMemory::EMemoryCounterRegion InMemoryRegion = YPlatformMemory::MCR_Invalid);
+	CORE_API void AddMetadata(FName InStatName, const TCHAR* InStatDesc, const char* InGroupName, const char* InGroupCategory, const TCHAR* InGroupDesc, bool bShouldClearEveryFrame, EStatDataType::Type InStatType, bool bCycleStat, YPlatformMemory::EMemoryCounterRegion InMemoryRegion = YPlatformMemory::MCR_Invalid);
 
 	/** Access the singleton. */
 	CORE_API static FStartupMessages& Get();
@@ -1630,9 +1630,9 @@ public:
 	* @param InCategory, the category the group belongs to
 	* @param bDefaultEnable, If this is the first time this group has been set up, this sets the default enable value for this group.
 	* @param bShouldClearEveryFrame, If this is true, this is a memory counter or an accumulator
-	* @return a pointer to a YName (valid forever) that determines if this group is active
+	* @return a pointer to a FName (valid forever) that determines if this group is active
 	*/
-	virtual TStatId GetHighPerformanceEnableForStat(YName StatShortName, const char* InGroup, const char* InCategory, bool bDefaultEnable, bool bShouldClearEveryFrame, EStatDataType::Type InStatType, TCHAR const* InDescription, bool bCycleStat, YPlatformMemory::EMemoryCounterRegion MemoryRegion = YPlatformMemory::MCR_Invalid) = 0;
+	virtual TStatId GetHighPerformanceEnableForStat(FName StatShortName, const char* InGroup, const char* InCategory, bool bDefaultEnable, bool bShouldClearEveryFrame, EStatDataType::Type InStatType, TCHAR const* InDescription, bool bCycleStat, YPlatformMemory::EMemoryCounterRegion MemoryRegion = YPlatformMemory::MCR_Invalid) = 0;
 
 	/**
 	* Enables or disabled a particular group of stats
@@ -1640,7 +1640,7 @@ public:
 	* @param Group, group to look up
 	* @param Enable, this should be true if we want to collect stats for this group
 	*/
-	virtual void SetHighPerformanceEnableForGroup(YName Group, bool Enable) = 0;
+	virtual void SetHighPerformanceEnableForGroup(FName Group, bool Enable) = 0;
 
 	/**
 	* Enables or disabled all groups of stats
@@ -1687,7 +1687,7 @@ struct FThreadSafeStaticStatInner : public FThreadSafeStaticStatBase
 		}
 		return *(TStatId*)(&HighPerformanceEnable);
 	}
-	FORCEINLINE YName GetStatYName() const
+	FORCEINLINE FName GetStatFName() const
 	{
 		return GetStatId().GetName();
 	}
@@ -1700,9 +1700,9 @@ struct FThreadSafeStaticStatInner<TStatData, false>
 	{
 		return TStatId();
 	}
-	FORCEINLINE YName GetStatYName() const
+	FORCEINLINE FName GetStatFName() const
 	{
-		return YName();
+		return FName();
 	}
 };
 
@@ -1772,7 +1772,7 @@ struct FStat_##StatName\
 };
 
 #define GET_STATID(Stat) (StatPtr_##Stat.GetStatId())
-#define GET_STATYNAME(Stat) (StatPtr_##Stat.GetStatYName())
+#define GET_STATFName(Stat) (StatPtr_##Stat.GetStatFName())
 #define GET_STATDESCRIPTION(Stat) (FStat_##Stat::GetDescription())
 
 #define STAT_GROUP_TO_FStatGroup(Group) FStatGroup_##Group
@@ -1805,9 +1805,9 @@ Local
 	DECLARE_STAT(CounterName,StatId,GroupId,EStatDataType::ST_int64, false, false, YPlatformMemory::MCR_Invalid); \
 	static DEFINE_STAT(StatId)
 
-/** YName stat that allows sending a string based data. */
-#define DECLARE_YNAME_STAT(CounterName,StatId,GroupId) \
-	DECLARE_STAT(CounterName,StatId,GroupId,EStatDataType::ST_YName, false, false, YPlatformMemory::MCR_Invalid); \
+/** FName stat that allows sending a string based data. */
+#define DECLARE_FName_STAT(CounterName,StatId,GroupId) \
+	DECLARE_STAT(CounterName,StatId,GroupId,EStatDataType::ST_FName, false, false, YPlatformMemory::MCR_Invalid); \
 	static DEFINE_STAT(StatId)
 
 /** This is a fake stat, mostly used to implement memory message or other custom stats that don't easily fit into the system. */
@@ -1843,9 +1843,9 @@ Extern
 	DECLARE_STAT(CounterName,StatId,GroupId,EStatDataType::ST_int64, false, false, YPlatformMemory::MCR_Invalid); \
 	extern API DEFINE_STAT(StatId);
 
-/** YName stat that allows sending a string based data. */
-#define DECLARE_YName_STAT_EXTERN(CounterName,StatId,GroupId, API) \
-	DECLARE_STAT(CounterName,StatId,GroupId,EStatDataType::ST_YName, false, false, YPlatformMemory::MCR_Invalid); \
+/** FName stat that allows sending a string based data. */
+#define DECLARE_FName_STAT_EXTERN(CounterName,StatId,GroupId, API) \
+	DECLARE_STAT(CounterName,StatId,GroupId,EStatDataType::ST_FName, false, false, YPlatformMemory::MCR_Invalid); \
 	extern API DEFINE_STAT(StatId);
 
 /** This is a fake stat, mostly used to implement memory message or other custom stats that don't easily fit into the system. */
@@ -1890,130 +1890,130 @@ Extern
 
 #define SET_CYCLE_COUNTER(Stat,Cycles) \
 {\
-	FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::Set, int64(Cycles), true);\
+	FThreadStats::AddMessage(GET_STATFName(Stat), EStatOperation::Set, int64(Cycles), true);\
 }
 
 #define INC_DWORD_STAT(Stat) \
 {\
-	FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::Add, int64(1));\
+	FThreadStats::AddMessage(GET_STATFName(Stat), EStatOperation::Add, int64(1));\
 }
 #define INC_FLOAT_STAT_BY(Stat, Amount) \
 {\
 	if (Amount != 0.0f) \
-		FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::Add, double(Amount));\
+		FThreadStats::AddMessage(GET_STATFName(Stat), EStatOperation::Add, double(Amount));\
 }
 #define INC_DWORD_STAT_BY(Stat, Amount) \
 {\
 	if (Amount != 0) \
-		FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::Add, int64(Amount));\
+		FThreadStats::AddMessage(GET_STATFName(Stat), EStatOperation::Add, int64(Amount));\
 }
-#define INC_DWORD_STAT_YName_BY(StatYName, Amount) \
+#define INC_DWORD_STAT_FName_BY(StatFName, Amount) \
 {\
 	if (Amount != 0) \
-		FThreadStats::AddMessage(StatYName, EStatOperation::Add, int64(Amount));\
+		FThreadStats::AddMessage(StatFName, EStatOperation::Add, int64(Amount));\
 }
 #define INC_MEMORY_STAT_BY(Stat, Amount) \
 {\
 	if (Amount != 0) \
-		FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::Add, int64(Amount));\
+		FThreadStats::AddMessage(GET_STATFName(Stat), EStatOperation::Add, int64(Amount));\
 }
 #define DEC_DWORD_STAT(Stat) \
 {\
-	FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::Subtract, int64(1));\
+	FThreadStats::AddMessage(GET_STATFName(Stat), EStatOperation::Subtract, int64(1));\
 }
 #define DEC_FLOAT_STAT_BY(Stat,Amount) \
 {\
 	if (Amount != 0.0f) \
-		FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::Subtract, double(Amount));\
+		FThreadStats::AddMessage(GET_STATFName(Stat), EStatOperation::Subtract, double(Amount));\
 }
 #define DEC_DWORD_STAT_BY(Stat,Amount) \
 {\
 	if (Amount != 0) \
-		FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::Subtract, int64(Amount));\
+		FThreadStats::AddMessage(GET_STATFName(Stat), EStatOperation::Subtract, int64(Amount));\
 }
-#define DEC_DWORD_STAT_YName_BY(StatYName,Amount) \
+#define DEC_DWORD_STAT_FName_BY(StatFName,Amount) \
 {\
 	if (Amount != 0) \
- 		FThreadStats::AddMessage(StatYName, EStatOperation::Subtract, int64(Amount));\
+ 		FThreadStats::AddMessage(StatFName, EStatOperation::Subtract, int64(Amount));\
 }
 #define DEC_MEMORY_STAT_BY(Stat,Amount) \
 {\
 	if (Amount != 0) \
-		FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::Subtract, int64(Amount));\
+		FThreadStats::AddMessage(GET_STATFName(Stat), EStatOperation::Subtract, int64(Amount));\
 }
 #define SET_MEMORY_STAT(Stat,Value) \
 {\
-	FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::Set, int64(Value));\
+	FThreadStats::AddMessage(GET_STATFName(Stat), EStatOperation::Set, int64(Value));\
 }
 #define SET_DWORD_STAT(Stat,Value) \
 {\
-	FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::Set, int64(Value));\
+	FThreadStats::AddMessage(GET_STATFName(Stat), EStatOperation::Set, int64(Value));\
 }
 #define SET_FLOAT_STAT(Stat,Value) \
 {\
-	FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::Set, double(Value));\
+	FThreadStats::AddMessage(GET_STATFName(Stat), EStatOperation::Set, double(Value));\
 }
 #define STAT_ADD_CUSTOMMESSAGE_NAME(Stat,Value) \
 {\
-	FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::SpecialMessageMarker, YName(Value));\
+	FThreadStats::AddMessage(GET_STATFName(Stat), EStatOperation::SpecialMessageMarker, FName(Value));\
 }
 #define STAT_ADD_CUSTOMMESSAGE_PTR(Stat,Value) \
 {\
-	FThreadStats::AddMessage(GET_STATYNAME(Stat), EStatOperation::SpecialMessageMarker, uint64(Value));\
+	FThreadStats::AddMessage(GET_STATFName(Stat), EStatOperation::SpecialMessageMarker, uint64(Value));\
 }
 
-#define SET_CYCLE_COUNTER_YName(Stat,Cycles) \
+#define SET_CYCLE_COUNTER_FName(Stat,Cycles) \
 {\
 	FThreadStats::AddMessage(Stat, EStatOperation::Set, int64(Cycles), true);\
 }
 
-#define INC_DWORD_STAT_YName(Stat) \
+#define INC_DWORD_STAT_FName(Stat) \
 {\
 	FThreadStats::AddMessage(Stat, EStatOperation::Add, int64(1));\
 }
-#define INC_FLOAT_STAT_BY_YName(Stat, Amount) \
+#define INC_FLOAT_STAT_BY_FName(Stat, Amount) \
 {\
 	if (Amount != 0.0f) \
 		FThreadStats::AddMessage(Stat, EStatOperation::Add, double(Amount));\
 }
-#define INC_DWORD_STAT_BY_YName(Stat, Amount) \
+#define INC_DWORD_STAT_BY_FName(Stat, Amount) \
 {\
 	if (Amount != 0) \
 		FThreadStats::AddMessage(Stat, EStatOperation::Add, int64(Amount));\
 }
-#define INC_MEMORY_STAT_BY_YName(Stat, Amount) \
+#define INC_MEMORY_STAT_BY_FName(Stat, Amount) \
 {\
 	if (Amount != 0) \
 		FThreadStats::AddMessage(Stat, EStatOperation::Add, int64(Amount));\
 }
-#define DEC_DWORD_STAT_YName(Stat) \
+#define DEC_DWORD_STAT_FName(Stat) \
 {\
 	FThreadStats::AddMessage(Stat, EStatOperation::Subtract, int64(1));\
 }
-#define DEC_FLOAT_STAT_BY_YName(Stat,Amount) \
+#define DEC_FLOAT_STAT_BY_FName(Stat,Amount) \
 {\
 	if (Amount != 0.0f) \
 		FThreadStats::AddMessage(Stat, EStatOperation::Subtract, double(Amount));\
 }
-#define DEC_DWORD_STAT_BY_YName(Stat,Amount) \
+#define DEC_DWORD_STAT_BY_FName(Stat,Amount) \
 {\
 	if (Amount != 0) \
 		FThreadStats::AddMessage(Stat, EStatOperation::Subtract, int64(Amount));\
 }
-#define DEC_MEMORY_STAT_BY_YName(Stat,Amount) \
+#define DEC_MEMORY_STAT_BY_FName(Stat,Amount) \
 {\
 	if (Amount != 0) \
 		FThreadStats::AddMessage(Stat, EStatOperation::Subtract, int64(Amount));\
 }
-#define SET_MEMORY_STAT_YName(Stat,Value) \
+#define SET_MEMORY_STAT_FName(Stat,Value) \
 {\
 	FThreadStats::AddMessage(Stat, EStatOperation::Set, int64(Value));\
 }
-#define SET_DWORD_STAT_YName(Stat,Value) \
+#define SET_DWORD_STAT_FName(Stat,Value) \
 {\
 	FThreadStats::AddMessage(Stat, EStatOperation::Set, int64(Value));\
 }
-#define SET_FLOAT_STAT_YName(Stat,Value) \
+#define SET_FLOAT_STAT_FName(Stat,Value) \
 {\
 	FThreadStats::AddMessage(Stat, EStatOperation::Set, double(Value));\
 }
@@ -2100,7 +2100,7 @@ DECLARE_STATS_GROUP(TEXT("UObjects"), STATGROUP_UObjects, STATCAT_Advanced);
 DECLARE_STATS_GROUP(TEXT("User"), STATGROUP_User, STATCAT_Advanced);
 
 DECLARE_CYCLE_STAT_EXTERN(TEXT("FrameTime"), STAT_FrameTime, STATGROUP_Engine, CORE_API);
-DECLARE_YName_STAT_EXTERN(TEXT("NamedMarker"), STAT_NamedMarker, STATGROUP_StatSystem, CORE_API);
+DECLARE_FName_STAT_EXTERN(TEXT("NamedMarker"), STAT_NamedMarker, STATGROUP_StatSystem, CORE_API);
 DECLARE_FLOAT_COUNTER_STAT_EXTERN(TEXT("Seconds Per Cycle"), STAT_SecondsPerCycle, STATGROUP_Engine, CORE_API);
 
 #endif

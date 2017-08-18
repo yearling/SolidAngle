@@ -108,7 +108,7 @@ public:
 	 *
 	 * @return Reference to the Archive after serialization.
 	 */
-	friend YArchive& operator<<( YArchive& Ar, FInterpCurvePoint& Point )
+	friend FArchive& operator<<( FArchive& Ar, FInterpCurvePoint& Point )
 	{
 		Ar << Point.InVal << Point.OutVal;
 		Ar << Point.ArriveTangent << Point.LeaveTangent;
@@ -187,9 +187,9 @@ inline void AutoCalcTangent( const T& PrevP, const T& P, const T& NextP, const U
  * This actually returns the control point not a tangent. This is expected by the CubicInterp function for Quaternions
  */
 template< class U > 
-inline void AutoCalcTangent( const YQuat& PrevP, const YQuat& P, const YQuat& NextP, const U& Tension, YQuat& OutTan  )
+inline void AutoCalcTangent( const FQuat& PrevP, const FQuat& P, const FQuat& NextP, const U& Tension, FQuat& OutTan  )
 {
-	YQuat::CalcTangents(PrevP, P, NextP, Tension, OutTan);
+	FQuat::CalcTangents(PrevP, P, NextP, Tension, OutTan);
 }
 
 
@@ -281,12 +281,12 @@ inline void ComputeCurveTangent( float PrevTime, const float& PrevPoint,
 
 
 /** Computes a tangent for the specified control point.  Special case for YVector types; supports clamping. */
-inline void ComputeCurveTangent( float PrevTime, const YVector& PrevPoint,
-									float CurTime, const YVector& CurPoint,
-									float NextTime, const YVector& NextPoint,
+inline void ComputeCurveTangent( float PrevTime, const FVector& PrevPoint,
+									float CurTime, const FVector& CurPoint,
+									float NextTime, const FVector& NextPoint,
 									float Tension,
 									bool bWantClamping,
-									YVector& OutTangent )
+									FVector& OutTangent )
 {
 	ComputeClampableFloatVectorCurveTangent(
 		PrevTime, PrevPoint,
@@ -357,7 +357,7 @@ void CORE_API CurveVector2DFindIntervalBounds( const FInterpCurvePoint<YVector2D
  * @param CurrentMin Input and Output could be updated if needs new interval minimum bound
  * @param CurrentMax  Input and Output could be updated if needs new interval maximmum bound
  */
-void CORE_API CurveVectorFindIntervalBounds( const FInterpCurvePoint<YVector>& Start, const FInterpCurvePoint<YVector>& End, YVector& CurrentMin, YVector& CurrentMax );
+void CORE_API CurveVectorFindIntervalBounds( const FInterpCurvePoint<FVector>& Start, const FInterpCurvePoint<FVector>& End, FVector& CurrentMin, FVector& CurrentMax );
 
 
 /**
@@ -379,7 +379,7 @@ void CORE_API CurveTwoVectorsFindIntervalBounds(const FInterpCurvePoint<YTwoVect
  * @param CurrentMin Input and Output could be updated if needs new interval minimum bound
  * @param CurrentMax  Input and Output could be updated if needs new interval maximmum bound
  */
-void CORE_API CurveLinearColorFindIntervalBounds( const FInterpCurvePoint<YLinearColor>& Start, const FInterpCurvePoint<YLinearColor>& End, YLinearColor& CurrentMin, YLinearColor& CurrentMax );
+void CORE_API CurveLinearColorFindIntervalBounds( const FInterpCurvePoint<FLinearColor>& Start, const FInterpCurvePoint<FLinearColor>& End, FLinearColor& CurrentMin, FLinearColor& CurrentMax );
 
 
 template< class T, class U > 
@@ -402,7 +402,7 @@ void CurveFindIntervalBounds( const FInterpCurvePoint<YVector2D>& Start, const F
 
 
 template< class U > 
-inline void CurveFindIntervalBounds( const FInterpCurvePoint<YVector>& Start, const FInterpCurvePoint<YVector>& End, YVector& CurrentMin, YVector& CurrentMax, const U& Dummy )
+inline void CurveFindIntervalBounds( const FInterpCurvePoint<FVector>& Start, const FInterpCurvePoint<FVector>& End, FVector& CurrentMin, FVector& CurrentMax, const U& Dummy )
 {
 	CurveVectorFindIntervalBounds(Start, End, CurrentMin, CurrentMax);
 }
@@ -416,7 +416,7 @@ inline void CurveFindIntervalBounds( const FInterpCurvePoint<YTwoVectors>& Start
 
 
 template< class U > 
-inline void CurveFindIntervalBounds( const FInterpCurvePoint<YLinearColor>& Start, const FInterpCurvePoint<YLinearColor>& End, YLinearColor& CurrentMin, YLinearColor& CurrentMax, const U& Dummy )
+inline void CurveFindIntervalBounds( const FInterpCurvePoint<FLinearColor>& Start, const FInterpCurvePoint<FLinearColor>& End, FLinearColor& CurrentMin, FLinearColor& CurrentMax, const U& Dummy )
 {
 	CurveLinearColorFindIntervalBounds(Start, End, CurrentMin, CurrentMax);
 }
@@ -424,7 +424,7 @@ inline void CurveFindIntervalBounds( const FInterpCurvePoint<YLinearColor>& Star
 // Native implementation of NOEXPORT FInterpCurvePoint structures
 typedef FInterpCurvePoint<float> FInterpCurvePointFloat;
 typedef FInterpCurvePoint<YVector2D> FInterpCurvePointVector2D;
-typedef FInterpCurvePoint<YVector> FInterpCurvePointVector;
-typedef FInterpCurvePoint<YQuat> FInterpCurvePointQuat;
+typedef FInterpCurvePoint<FVector> FInterpCurvePointVector;
+typedef FInterpCurvePoint<FQuat> FInterpCurvePointQuat;
 typedef FInterpCurvePoint<YTwoVectors> FInterpCurvePointTwoVectors;
-typedef FInterpCurvePoint<YLinearColor> FInterpCurvePointLinearColor;
+typedef FInterpCurvePoint<FLinearColor> FInterpCurvePointLinearColor;

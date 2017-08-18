@@ -117,7 +117,7 @@ void FStackTracker::CaptureStackTrace(int32 EntriesToIgnore, void* UserData, int
 /**
  * Dumps capture stack trace summary to the passed in log.
  */
-void FStackTracker::DumpStackTraces(int32 StackThreshold, YOutputDevice& Ar, float SampleCountCorrectionFactor)
+void FStackTracker::DumpStackTraces(int32 StackThreshold, FOutputDevice& Ar, float SampleCountCorrectionFactor)
 {
 	check(SampleCountCorrectionFactor > 0.0f);
 	// Avoid distorting results while we log them.

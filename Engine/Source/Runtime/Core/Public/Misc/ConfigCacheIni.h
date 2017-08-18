@@ -11,7 +11,7 @@ Config cache.
 #include "Containers/SolidAngleString.h"
 #include "Containers/Map.h"
 #include "Math/Color.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Logging/LogMacros.h"
 #include "Math/Vector2D.h"
 #include "Delegates/Delegate.h"
@@ -93,7 +93,7 @@ public:
 	bool operator==(const FConfigValue& Other) const { return (SavedValue.Compare(Other.SavedValue) == 0); }
 	bool operator!=(const FConfigValue& Other) const { return !(FConfigValue::operator==(Other)); }
 
-	friend YArchive& operator<<(YArchive& Ar, FConfigValue& ConfigSection)
+	friend FArchive& operator<<(FArchive& Ar, FConfigValue& ConfigSection)
 	{
 		Ar << ConfigSection.SavedValue;
 
@@ -160,7 +160,7 @@ private:
 #endif
 };
 
-typedef TMultiMap<YName, FConfigValue> FConfigSectionMap;
+typedef TMultiMap<FName, FConfigValue> FConfigSectionMap;
 
 // One section in a config file.
 class FConfigSection : public FConfigSectionMap
@@ -171,18 +171,18 @@ public:
 	bool operator!=(const FConfigSection& Other) const;
 
 	// process the '+' and '.' commands, takingf into account ArrayOfStruct unique keys
-	void HandleAddCommand(YName Key, const YString& Value, bool bAppendValueIfNotArrayOfStructsKeyUsed);
+	void HandleAddCommand(FName Key, const YString& Value, bool bAppendValueIfNotArrayOfStructsKeyUsed);
 
 	template<typename Allocator>
-	void MultiFind(const YName Key, TArray<FConfigValue, Allocator>& OutValues, const bool bMaintainOrder = false) const
+	void MultiFind(const FName Key, TArray<FConfigValue, Allocator>& OutValues, const bool bMaintainOrder = false) const
 	{
 		FConfigSectionMap::MultiFind(Key, OutValues, bMaintainOrder);
 	}
 
 	template<typename Allocator>
-	void MultiFind(const YName Key, TArray<YString, Allocator>& OutValues, const bool bMaintainOrder = false) const
+	void MultiFind(const FName Key, TArray<YString, Allocator>& OutValues, const bool bMaintainOrder = false) const
 	{
-		for (const TPair<YName, FConfigValue>& Pair : Pairs)
+		for (const TPair<FName, FConfigValue>& Pair : Pairs)
 		{
 			if (Pair.Key == Key)
 			{
@@ -197,7 +197,7 @@ public:
 	}
 
 	// look for "array of struct" keys for overwriting single entries of an array
-	TMap<YName, YString> ArrayOfStructKeys;
+	TMap<FName, YString> ArrayOfStructKeys;
 };
 
 /**
@@ -288,7 +288,7 @@ public:
 	bool Dirty, NoSave;
 
 	/** The name of this config file */
-	YName Name;
+	FName Name;
 
 	// The collection of source files which were used to generate this file.
 	FConfigFileHierarchy SourceIniHierarchy;
@@ -318,7 +318,7 @@ public:
 	CORE_API void CombineFromBuffer(const YString& Buffer);
 	CORE_API void Read(const YString& Filename);
 	CORE_API bool Write(const YString& Filename, bool bDoRemoteWrite = true, const YString& InitialText = YString());
-	CORE_API void Dump(YOutputDevice& Ar);
+	CORE_API void Dump(FOutputDevice& Ar);
 
 	CORE_API bool GetString(const TCHAR* Section, const TCHAR* Key, YString& Value) const;
 	CORE_API bool GetText(const TCHAR* Section, const TCHAR* Key, FText& Value) const;
@@ -358,7 +358,7 @@ public:
 	/**
 	* Update a single property in the config file, for the section that is specified.
 	*/
-	CORE_API bool UpdateSinglePropertyInSection(const TCHAR* DiskFilename, const TCHAR* PropertyName, const TCHAR* SectionName);
+	CORE_API bool UpdateSinglePropertyInSection(const TCHAR* DiskFilename, const TCHAR* PropertFName, const TCHAR* SectionName);
 
 
 	/**
@@ -372,13 +372,13 @@ public:
 	static bool ShouldExportQuotedString(const YString& PropertyValue);
 
 	/** Generate a correctly escaped line to add to the config file for the given property */
-	static YString GenerateExportedPropertyLine(const YString& PropertyName, const YString& PropertyValue);
+	static YString GenerateExportedPropertyLine(const YString& PropertFName, const YString& PropertyValue);
 
 private:
 
 	// This holds per-object config class names, with their ArrayOfStructKeys. Since the POC sections are all unique,
 	// we can't track it just in that section. This is expected to be empty/small
-	TMap<YString, TMap<YName, YString> > PerObjectConfigArrayOfStructKeys;
+	TMap<YString, TMap<FName, YString> > PerObjectConfigArrayOfStructKeys;
 
 	/**
 	* Save the source hierarchy which was loaded out to a backup file so we can check future changes in the base/default configs
@@ -392,9 +392,9 @@ private:
 	* @param InCompletePropertyToProcess - The complete property which we need to process for saving.
 	* @param OutText - The stream we are processing the array to
 	* @param SectionName - The section name the array property is being written to
-	* @param PropertyName - The property name of the array
+	* @param PropertFName - The property name of the array
 	*/
-	void ProcessPropertyAndWriteForDefaults(const TArray<FConfigValue>& InCompletePropertyToProcess, YString& OutText, const YString& SectionName, const YString& PropertyName);
+	void ProcessPropertyAndWriteForDefaults(const TArray<FConfigValue>& InCompletePropertyToProcess, YString& OutText, const YString& SectionName, const YString& PropertFName);
 
 };
 
@@ -486,8 +486,8 @@ public:
 	*
 	* NOTE: The function naming is weird because you can't apparently have an overridden function differnt only by template type params
 	*/
-	//virtual void Parse1ToNSectionOYNames(const TCHAR* Section, const TCHAR* KeyOne, const TCHAR* KeyN, TMap<YName, TArray<YName> >& OutMap, const YString& Filename);
-	virtual void Parse1ToNSectionOYNames(const TCHAR * Section, const TCHAR * KeyOne, const TCHAR * KeyN, TMap<YName, TArray<YName>>& OutMap, const YString & Filename);
+	//virtual void Parse1ToNSectionOFNames(const TCHAR* Section, const TCHAR* KeyOne, const TCHAR* KeyN, TMap<FName, TArray<FName> >& OutMap, const YString& Filename);
+	virtual void Parse1ToNSectionOFNames(const TCHAR * Section, const TCHAR * KeyOne, const TCHAR * KeyN, TMap<FName, TArray<FName>>& OutMap, const YString & Filename);
 	FConfigFile* FindConfigFile(const YString& Filename);
 	FConfigFile* Find(const YString& InFilename, bool CreateIfNotFound);
 	void Flush(bool Read, const YString& Filename = TEXT(""));
@@ -545,14 +545,14 @@ public:
 	* @param Ar the device to write to
 	* @param IniName An optional ini name to restrict the writing to (Engine or WrangleContent) - meant to be used with "final" .ini files (not Default*)
 	*/
-	void Dump(YOutputDevice& Ar, const TCHAR* IniName = NULL);
+	void Dump(FOutputDevice& Ar, const TCHAR* IniName = NULL);
 
 	/**
 	* Dumps memory stats for each file in the config cache to the specified archive.
 	*
 	* @param	Ar	the output device to dump the results to
 	*/
-	virtual void ShowMemoryUsage(YOutputDevice& Ar);
+	virtual void ShowMemoryUsage(FOutputDevice& Ar);
 
 	/**
 	* USed to get the max memory usage for the FConfigCacheIni
@@ -626,7 +626,7 @@ public:
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
-		YColor&				Value,
+		FColor&				Value,
 		const YString&	Filename
 	);
 	bool GetVector2D(
@@ -638,21 +638,21 @@ public:
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
-		YVector&			Value,
+		FVector&			Value,
 		const YString&	Filename
 	);
 	bool GetVector4
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
-		YVector4&			Value,
+		FVector4&			Value,
 		const YString&	Filename
 	);
 	bool GetRotator
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
-		YRotator&			Value,
+		FRotator&			Value,
 		const YString&	Filename
 	);
 
@@ -708,7 +708,7 @@ public:
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
-		YColor				Value,
+		FColor				Value,
 		const YString&	Filename
 	);
 	void SetVector2D(
@@ -720,21 +720,21 @@ public:
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
-		YVector				Value,
+		FVector				Value,
 		const YString&	Filename
 	);
 	void SetVector4
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
-		const YVector4&		Value,
+		const FVector4&		Value,
 		const YString&	Filename
 	);
 	void SetRotator
 	(
 		const TCHAR*		Section,
 		const TCHAR*		Key,
-		YRotator			Value,
+		FRotator			Value,
 		const YString&	Filename
 	);
 

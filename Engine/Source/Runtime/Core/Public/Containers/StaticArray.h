@@ -58,7 +58,7 @@ public:
 	}
 
 	/** Serializer. */
-	friend YArchive& operator<<(YArchive& Ar,TStaticArray& StaticArray)
+	friend FArchive& operator<<(FArchive& Ar,TStaticArray& StaticArray)
 	{
 		for(uint32 Index = 0;Index < NumElements;++Index)
 		{

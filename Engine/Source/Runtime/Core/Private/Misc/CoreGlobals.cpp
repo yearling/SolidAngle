@@ -29,12 +29,12 @@ IMPLEMENT_MODULE( FCoreModule, Core );
 	Global variables.
 -----------------------------------------------------------------------------*/
 
-CORE_API YFeedbackContext*	GWarn						= nullptr;		/* User interaction and non critical warnings */
+CORE_API FFeedbackContext*	GWarn						= nullptr;		/* User interaction and non critical warnings */
 FConfigCacheIni*				GConfig						= nullptr;		/* Configuration database cache */
 ITransaction*				GUndo						= nullptr;		/* Transaction tracker, non-NULL when a transaction is in progress */
 YOutputDeviceConsole*		GLogConsole					= nullptr;		/* Console log hook */
-CORE_API YMalloc*			GMalloc						= nullptr;		/* Memory allocator */
-CORE_API YMalloc**			GFixedMallocLocationPtr = nullptr;		/* Memory allocator pointer location when PLATFORM_USES_FIXED_GMalloc_CLASS is true */
+CORE_API FMalloc*			GMalloc						= nullptr;		/* Memory allocator */
+CORE_API FMalloc**			GFixedMallocLocationPtr = nullptr;		/* Memory allocator pointer location when PLATFORM_USES_FIXED_GMalloc_CLASS is true */
 
 class UPropertyWindowManager*	GPropertyWindowManager	= nullptr;		/* Manages and tracks property editing windows */
 
@@ -76,9 +76,9 @@ CORE_API const FText GNone	= LOCTEXT("None",	"None");
 bool GForceLoadEditorOnly = false;
 
 /** Name of the core package					**/
-YName GLongCorePackageName(TEXT("/Script/Core"));
+FName GLongCorePackageName(TEXT("/Script/Core"));
 /** Name of the core package					**/
-YName GLongCoreUObjectPackageName(TEXT("/Script/CoreUObject"));
+FName GLongCoreUObjectPackageName(TEXT("/Script/CoreUObject"));
 
 /** Disable loading of objects not contained within script files; used during script compilation */
 bool GVerifyObjectReferencesOnly = false;
@@ -194,7 +194,7 @@ static void appNoop()
 }
 
 /** Exec handler for game debugging tool, allowing commands like "editactor", ...							*/
-YExec*					GDebugToolExec					= NULL;
+FExec*					GDebugToolExec					= NULL;
 /** Whether we're currently in the async loading codepath or not											*/
 static bool IsAsyncLoadingCoreInternal()
 {
@@ -264,7 +264,7 @@ bool					GEmitDrawEvents					= false;
 /** Whether we want the rendering thread to be suspended, used e.g. for tracing.							*/
 bool					GShouldSuspendRenderingThread	= false;
 /** Determines what kind of trace should occur, NAME_None for none.											*/
-YName					GCurrentTraceName				= NAME_None;
+FName					GCurrentTraceName				= NAME_None;
 /** How to print the time in log output																		*/
 ELogTimes::Type			GPrintLogTimes					= ELogTimes::None;
 /** How to print the category in log output. */

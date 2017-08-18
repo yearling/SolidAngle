@@ -26,7 +26,7 @@ public:
 	virtual void SetMessageHandler( const TSharedRef< FGenericApplicationMessageHandler >& InMessageHandler ) = 0;
 
 	/** Exec handler to allow console commands to be passed through for debugging */
-    virtual bool Exec( UWorld* InWorld, const TCHAR* Cmd, YOutputDevice& Ar ) = 0;
+    virtual bool Exec( UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar ) = 0;
 
 	/**
 	 * IForceFeedbackSystem pass through functions

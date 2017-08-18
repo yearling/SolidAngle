@@ -16,9 +16,9 @@ struct CORE_API YGenericPlatformOutputDevices
 	/** Add output devices which can vary depending on platform, configuration, command line parameters. */
 	static void							SetupOutputDevices();
 	static YString						GetAbsoluteLogFilename();
-	static YOutputDevice*				GetLog();
+	static FOutputDevice*				GetLog();
 
-	static YOutputDevice*				GetEventLog()
+	static FOutputDevice*				GetEventLog()
 	{
 		return nullptr; // normally only used for dedicated servers
 	}
@@ -29,5 +29,5 @@ struct CORE_API YGenericPlatformOutputDevices
 	}
 
 	static YOutputDeviceError*			GetError();
-	static YFeedbackContext*			GetWarn();
+	static FFeedbackContext*			GetWarn();
 };

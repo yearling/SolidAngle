@@ -1,6 +1,6 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
-#include "SObject/SolidAngleNames.h"
+#include "UObject/SolidAngleNames.h"
 #include "Misc/AssertionMacros.h"
 #include "Misc/MessageDialog.h"
 #include "Math/NumericLimits.h"
@@ -11,10 +11,10 @@
 #include "Misc/CString.h"
 #include "Misc/Crc.h"
 #include "Containers/SolidAngleString.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Logging/LogMacros.h"
 #include "Misc/ByteSwap.h"
-#include "SObject/ObjectVersion.h"
+#include "UObject/ObjectVersion.h"
 #include "HAL/ThreadSafeCounter.h"
 #include "Misc/ScopeLock.h"
 #include "Containers/Set.h"
@@ -27,7 +27,7 @@
 DEFINE_LOG_CATEGORY_STATIC(LogUnrealNames, Log, All);
 
 /*-----------------------------------------------------------------------------
-	YName helpers. 
+	FName helpers. 
 -----------------------------------------------------------------------------*/
 #if !UE_BUILD_SHIPPING && !UE_BUILD_TEST
 	void CallNameCreationHook();
@@ -37,52 +37,52 @@ DEFINE_LOG_CATEGORY_STATIC(LogUnrealNames, Log, All);
 	}
 #endif
 
-// Get the size of a YNameEntry without the union buffer included
-static const int32 NameEntryWithoutUnionSize = sizeof(YNameEntry) - (NAME_SIZE * sizeof(TCHAR));
+// Get the size of a FNameEntry without the union buffer included
+static const int32 NameEntryWithoutUnionSize = sizeof(FNameEntry) - (NAME_SIZE * sizeof(TCHAR));
 
 template<typename TCharType>
-YNameEntry* AllocateNameEntry( const void* Name, NAME_INDEX Index);
+FNameEntry* AllocateNameEntry( const void* Name, NAME_INDEX Index);
 
 /**
-* Helper function that can be used inside the debuggers watch window. E.g. "DebugYName(Class->Name.Index)". 
+* Helper function that can be used inside the debuggers watch window. E.g. "DebugFName(Class->Name.Index)". 
 *
 * @param	Index	Name index to look up string for
 * @return			Associated name
 */
-const TCHAR* DebugYName(int32 Index)
+const TCHAR* DebugFName(int32 Index)
 {
 	// Hardcoded static array. This function is only used inside the debugger so it should be fine to return it.
 	static TCHAR TempName[256];
-	FCString::Strcpy(TempName, *YName::SafeString(Index));
+	FCString::Strcpy(TempName, *FName::SafeString(Index));
 	return TempName;
 }
 
 /**
-* Helper function that can be used inside the debuggers watch window. E.g. "DebugYName(Class->Name.Index, Class->Name.Number)". 
+* Helper function that can be used inside the debuggers watch window. E.g. "DebugFName(Class->Name.Index, Class->Name.Number)". 
 *
 * @param	Index	Name index to look up string for
-* @param	Number	Internal instance number of the YName to print (which is 1 more than the printed number)
+* @param	Number	Internal instance number of the FName to print (which is 1 more than the printed number)
 * @return			Associated name
 */
-const TCHAR* DebugYName(int32 Index, int32 Number)
+const TCHAR* DebugFName(int32 Index, int32 Number)
 {
 	// Hardcoded static array. This function is only used inside the debugger so it should be fine to return it.
 	static TCHAR TempName[256];
-	FCString::Strcpy(TempName, *YName::SafeString(Index, Number));
+	FCString::Strcpy(TempName, *FName::SafeString(Index, Number));
 	return TempName;
 }
 
 /**
- * Helper function that can be used inside the debuggers watch window. E.g. "DebugYName(Class->Name)". 
+ * Helper function that can be used inside the debuggers watch window. E.g. "DebugFName(Class->Name)". 
  *
  * @param	Name	Name to look up string for
  * @return			Associated name
  */
-const TCHAR* DebugYName(YName& Name)
+const TCHAR* DebugFName(FName& Name)
 {
 	// Hardcoded static array. This function is only used inside the debugger so it should be fine to return it.
 	static TCHAR TempName[256];
-	FCString::Strcpy(TempName, *YName::SafeString(Name.GetDisplayIndex(), Name.GetNumber()));
+	FCString::Strcpy(TempName, *FName::SafeString(Name.GetDisplayIndex(), Name.GetNumber()));
 	return TempName;
 }
 
@@ -99,14 +99,14 @@ static uint16 GetRawNonCasePreservingHash(const TCharType* Source)
 }
 
 /*-----------------------------------------------------------------------------
-	YNameEntry
+	FNameEntry
 -----------------------------------------------------------------------------*/
 
 
 /**
  * @return YString of name portion minus number.
  */
-YString YNameEntry::GetPlainNameString() const
+YString FNameEntry::GetPlainNameString() const
 {
 	if( IsWide() )
 	{
@@ -123,7 +123,7 @@ YString YNameEntry::GetPlainNameString() const
  *
  * @param	String	String to append this name to
  */
-void YNameEntry::AppendNameToString( YString& String ) const
+void FNameEntry::AppendNameToString( YString& String ) const
 {
 	if( IsWide() )
 	{
@@ -135,7 +135,7 @@ void YNameEntry::AppendNameToString( YString& String ) const
 	}
 }
 
-void YNameEntry::AppendNameToPathString(YString& String) const
+void FNameEntry::AppendNameToPathString(YString& String) const
 {
 	if (IsWide())
 	{
@@ -150,7 +150,7 @@ void YNameEntry::AppendNameToPathString(YString& String) const
 /**
  * @return length of name
  */
-int32 YNameEntry::GetNameLength() const
+int32 FNameEntry::GetNameLength() const
 {
 	if( IsWide() )
 	{
@@ -168,7 +168,7 @@ int32 YNameEntry::GetNameLength() const
  * @param	InName	Name to compare to
  * @return	true if equal, false otherwise
  */
-bool YNameEntry::IsEqual( const ANSICHAR* InName, const ENameCase CompareMethod ) const
+bool FNameEntry::IsEqual( const ANSICHAR* InName, const ENameCase CompareMethod ) const
 {
 	if( IsWide() )
 	{
@@ -187,7 +187,7 @@ bool YNameEntry::IsEqual( const ANSICHAR* InName, const ENameCase CompareMethod 
  * @param	InName	Name to compare to
  * @return	true if equal, false otherwise
  */
-bool YNameEntry::IsEqual( const WIDECHAR* InName, const ENameCase CompareMethod ) const
+bool FNameEntry::IsEqual( const WIDECHAR* InName, const ENameCase CompareMethod ) const
 {
 	if( !IsWide() )
 	{
@@ -201,31 +201,31 @@ bool YNameEntry::IsEqual( const WIDECHAR* InName, const ENameCase CompareMethod 
 }
 
 /**
- * Returns the size in bytes for YNameEntry structure. This is != sizeof(YNameEntry) as we only allocated as needed.
+ * Returns the size in bytes for FNameEntry structure. This is != sizeof(FNameEntry) as we only allocated as needed.
  *
  * @param	Name	Name to determine size for
- * @return	required size of YNameEntry structure to hold this string (might be wide or ansi)
+ * @return	required size of FNameEntry structure to hold this string (might be wide or ansi)
  */
-int32 YNameEntry::GetSize( const TCHAR* Name )
+int32 FNameEntry::GetSize( const TCHAR* Name )
 {
-	return YNameEntry::GetSize( FCString::Strlen( Name ), FCString::IsPureAnsi( Name ) );
+	return FNameEntry::GetSize( FCString::Strlen( Name ), FCString::IsPureAnsi( Name ) );
 }
 
 /**
- * Returns the size in bytes for YNameEntry structure. This is != sizeof(YNameEntry) as we only allocated as needed.
+ * Returns the size in bytes for FNameEntry structure. This is != sizeof(FNameEntry) as we only allocated as needed.
  *
  * @param	Length			Length of name
  * @param	bIsPureAnsi		Whether name is pure ANSI or not
- * @return	required size of YNameEntry structure to hold this string (might be wide or ansi)
+ * @return	required size of FNameEntry structure to hold this string (might be wide or ansi)
  */
-int32 YNameEntry::GetSize( int32 Length, bool bIsPureAnsi )
+int32 FNameEntry::GetSize( int32 Length, bool bIsPureAnsi )
 {
-	// Add size required for string to the base size used by the YNameEntry
+	// Add size required for string to the base size used by the FNameEntry
 	int32 Size = NameEntryWithoutUnionSize + (Length + 1) * (bIsPureAnsi ? sizeof(ANSICHAR) : sizeof(TCHAR));
 	return Size;
 }
 
-YNameEntrySerialized::YNameEntrySerialized(const YNameEntry& NameEntry)
+FNameEntrySerialized::FNameEntrySerialized(const FNameEntry& NameEntry)
 {
 	if (NameEntry.IsWide())
 	{
@@ -244,10 +244,10 @@ YNameEntrySerialized::YNameEntrySerialized(const YNameEntry& NameEntry)
 }
 
 /*-----------------------------------------------------------------------------
-	YName statics.
+	FName statics.
 -----------------------------------------------------------------------------*/
 
-TNameEntryArray& YName::GetNames()
+TNameEntryArray& FName::GetNames()
 {
 	// NOTE: The reason we initialize to NULL here is due to an issue with static initialization of variables with
 	// constructors/destructors across DLL boundaries, where a function called from a statically constructed object
@@ -263,13 +263,13 @@ TNameEntryArray& YName::GetNames()
 	return *Names;
 }
 
-YNameEntry*** YName::GetNameTableForDebuggerVisualizers_MT()
+FNameEntry*** FName::GetNameTableForDebuggerVisualizers_MT()
 {
 	return GetNames().GetRootBlockForDebuggerVisualizers();
 }
 
 
-FCriticalSection* YName::GetCriticalSection()
+FCriticalSection* FName::GetCriticalSection()
 {
 	static FCriticalSection*	CriticalSection = NULL;
 	if( CriticalSection == NULL )
@@ -280,18 +280,18 @@ FCriticalSection* YName::GetCriticalSection()
 	return CriticalSection;
 }
 
-YString YName::NameToDisplayString( const YString& InDisplayName, const bool bIsBool )
+YString FName::NameToDisplayString( const YString& InDisplaFName, const bool bIsBool )
 {
 	// Copy the characters out so that we can modify the string in place
-	const TArray< TCHAR >& Chars = InDisplayName.GetCharArray();
+	const TArray< TCHAR >& Chars = InDisplaFName.GetCharArray();
 
 	// This is used to indicate that we are in a run of uppercase letter and/or digits.  The code attempts to keep
 	// these characters together as breaking them up often looks silly (i.e. "Draw Scale 3 D" as opposed to "Draw Scale 3D"
 	bool bInARun = false;
 	bool bWasSpace = false;
 	bool bWasOpenParen = false;
-	YString OutDisplayName;
-	OutDisplayName.GetCharArray().Reserve(Chars.Num());
+	YString OutDisplaFName;
+	OutDisplaFName.GetCharArray().Reserve(Chars.Num());
 	for( int32 CharIndex = 0 ; CharIndex < Chars.Num() ; ++CharIndex )
 	{
 		TCHAR ch = Chars[CharIndex];
@@ -314,9 +314,9 @@ YString YName::NameToDisplayString( const YString& InDisplayName, const bool bIs
 		// If the current character is upper case or a digit, and the previous character wasn't, then we need to insert a space if there wasn't one previously
 		if( (bUpperCase || bIsDigit) && !bInARun && !bWasOpenParen)
 		{
-			if( !bWasSpace && OutDisplayName.Len() > 0 )
+			if( !bWasSpace && OutDisplaFName.Len() > 0 )
 			{
-				OutDisplayName += TEXT( ' ' );
+				OutDisplaFName += TEXT( ' ' );
 				bWasSpace = true;
 			}
 			bInARun = true;
@@ -336,7 +336,7 @@ YString YName::NameToDisplayString( const YString& InDisplayName, const bool bIs
 		}
 
 		// If this is the first character in the string, then it will always be upper-case
-		if( OutDisplayName.Len() == 0 )
+		if( OutDisplaFName.Len() == 0 )
 		{
 			ch = FChar::ToUpper( ch );
 		}
@@ -393,33 +393,33 @@ YString YName::NameToDisplayString( const YString& InDisplayName, const bool bIs
 		bWasSpace = ( ch == TEXT( ' ' ) ? true : false );
 		bWasOpenParen = ( ch == TEXT( '(' ) ? true : false );
 
-		OutDisplayName += ch;
+		OutDisplaFName += ch;
 	}
 
-	return OutDisplayName;
+	return OutDisplaFName;
 }
 
 
 // Static variables.
-YNameEntry*	YName::NameHashHead[YNameDefs::NameHashBucketCount];
-YNameEntry*	YName::NameHashTail[YNameDefs::NameHashBucketCount];
-int32		YName::NameEntryMemorySize;
-int32		YName::NumAnsiNames;
-int32		YName::NumWideNames;
+FNameEntry*	FName::NameHashHead[FNameDefs::NameHashBucketCount];
+FNameEntry*	FName::NameHashTail[FNameDefs::NameHashBucketCount];
+int32		FName::NameEntryMemorySize;
+int32		FName::NumAnsiNames;
+int32		FName::NumWideNames;
 
 
 /*-----------------------------------------------------------------------------
-	YName implementation.
+	FName implementation.
 -----------------------------------------------------------------------------*/
 
 /**
- * Create an YName. If FindType is YName_Find, and the string part of the name 
+ * Create an FName. If FindType is FName_Find, and the string part of the name 
  * doesn't already exist, then the name will be NAME_None
  *
  * @param Name Value for the string portion of the name
  * @param FindType Action to take (see EFindName)
  */
-YName::YName(const WIDECHAR* Name, EFindName FindType)
+FName::FName(const WIDECHAR* Name, EFindName FindType)
 {
 	if (Name)
 	{
@@ -427,11 +427,11 @@ YName::YName(const WIDECHAR* Name, EFindName FindType)
 	}
 	else
 	{
-		*this = YName(NAME_None);
+		*this = FName(NAME_None);
 	}
 }
 
-YName::YName(const ANSICHAR* Name, EFindName FindType)
+FName::FName(const ANSICHAR* Name, EFindName FindType)
 {
 	if (Name)
 	{
@@ -439,56 +439,56 @@ YName::YName(const ANSICHAR* Name, EFindName FindType)
 	}
 	else
 	{
-		*this = YName(NAME_None);
+		*this = FName(NAME_None);
 	}
 }
 
 /**
- * Create an YName. If FindType is YName_Find, and the string part of the name 
+ * Create an FName. If FindType is FName_Find, and the string part of the name 
  * doesn't already exist, then the name will be NAME_None
  *
  * @param Name Value for the string portion of the name
  * @param Number Value for the number portion of the name
  * @param FindType Action to take (see EFindName)
  */
-YName::YName( const TCHAR* Name, int32 InNumber, EFindName FindType )
+FName::FName( const TCHAR* Name, int32 InNumber, EFindName FindType )
 {
 	Init(Name, InNumber, FindType);
 }
 
-YName::YName(const YNameEntrySerialized& LoadedEntry)
+FName::FName(const FNameEntrySerialized& LoadedEntry)
 {
 	if (LoadedEntry.bWereHashesLoaded)
 	{
 		// Since the name table can change sizes we need to mask the raw hash to the current size so we don't access out of bounds
-		const uint16 NonCasePreservingHash = LoadedEntry.NonCasePreservingHash & (YNameDefs::NameHashBucketCount - 1);
-		const uint16 CasePreservingHash = LoadedEntry.CasePreservingHash & (YNameDefs::NameHashBucketCount - 1);
+		const uint16 NonCasePreservingHash = LoadedEntry.NonCasePreservingHash & (FNameDefs::NameHashBucketCount - 1);
+		const uint16 CasePreservingHash = LoadedEntry.CasePreservingHash & (FNameDefs::NameHashBucketCount - 1);
 		if (LoadedEntry.IsWide())
 		{
-			Init(LoadedEntry.GetWideName(), NAME_NO_NUMBER_INTERNAL, YName_Add, NonCasePreservingHash, CasePreservingHash);
+			Init(LoadedEntry.GetWideName(), NAME_NO_NUMBER_INTERNAL, FName_Add, NonCasePreservingHash, CasePreservingHash);
 		}
 		else
 		{
-			Init(LoadedEntry.GetAnsiName(), NAME_NO_NUMBER_INTERNAL, YName_Add, NonCasePreservingHash, CasePreservingHash);
+			Init(LoadedEntry.GetAnsiName(), NAME_NO_NUMBER_INTERNAL, FName_Add, NonCasePreservingHash, CasePreservingHash);
 		}
 	}
 	else
 	{
 		if (LoadedEntry.IsWide())
 		{
-			Init(LoadedEntry.GetWideName(), NAME_NO_NUMBER_INTERNAL, YName_Add, false);
+			Init(LoadedEntry.GetWideName(), NAME_NO_NUMBER_INTERNAL, FName_Add, false);
 		}
 		else
 		{
-			Init(LoadedEntry.GetAnsiName(), NAME_NO_NUMBER_INTERNAL, YName_Add, false);
+			Init(LoadedEntry.GetAnsiName(), NAME_NO_NUMBER_INTERNAL, FName_Add, false);
 		}
 	}
 }
 
-YName::YName( EName HardcodedIndex, const TCHAR* Name )
+FName::FName( EName HardcodedIndex, const TCHAR* Name )
 {
 	check(HardcodedIndex >= 0);
-	Init(Name, NAME_NO_NUMBER_INTERNAL, YName_Add, false, HardcodedIndex);
+	Init(Name, NAME_NO_NUMBER_INTERNAL, FName_Add, false, HardcodedIndex);
 }
 
 /**
@@ -497,7 +497,7 @@ YName::YName( EName HardcodedIndex, const TCHAR* Name )
  * @param	Other	Name to compare this against
  * @return	< 0 is this < Other, 0 if this == Other, > 0 if this > Other
  */
-int32 YName::Compare( const YName& Other ) const
+int32 FName::Compare( const FName& Other ) const
 {
 	// Names match, check whether numbers match.
 	if( GetComparisonIndexFast() == Other.GetComparisonIndexFast() )
@@ -508,8 +508,8 @@ int32 YName::Compare( const YName& Other ) const
 	else
 	{
 		TNameEntryArray& Names = GetNames();
-		const YNameEntry* const ThisEntry = GetComparisonNameEntry();
-		const YNameEntry* const OtherEntry = Other.GetComparisonNameEntry();
+		const FNameEntry* const ThisEntry = GetComparisonNameEntry();
+		const FNameEntry* const OtherEntry = Other.GetComparisonNameEntry();
 
 		// Ansi/Wide mismatch, convert to wide
 		if( ThisEntry->IsWide() != OtherEntry->IsWide() )
@@ -531,18 +531,18 @@ int32 YName::Compare( const YName& Other ) const
 }
 
 template <typename TCharType>
-uint16 YName::GetCasePreservingHash(const TCharType* Source)
+uint16 FName::GetCasePreservingHash(const TCharType* Source)
 {
-	return GetRawCasePreservingHash(Source) & (YNameDefs::NameHashBucketCount - 1);
+	return GetRawCasePreservingHash(Source) & (FNameDefs::NameHashBucketCount - 1);
 }
 
 template <typename TCharType>
-uint16 YName::GetNonCasePreservingHash(const TCharType* Source)
+uint16 FName::GetNonCasePreservingHash(const TCharType* Source)
 {
-	return GetRawNonCasePreservingHash(Source) & (YNameDefs::NameHashBucketCount - 1);
+	return GetRawNonCasePreservingHash(Source) & (FNameDefs::NameHashBucketCount - 1);
 }
 
-void YName::Init(const WIDECHAR* InName, int32 InNumber, EFindName FindType, bool bSplitName, int32 HardcodeIndex)
+void FName::Init(const WIDECHAR* InName, int32 InNumber, EFindName FindType, bool bSplitName, int32 HardcodeIndex)
 {
 	const bool bIsPureAnsi = TCString<WIDECHAR>::IsPureAnsi(InName);
 	// Switch to ANSI if possible to save memory
@@ -556,24 +556,24 @@ void YName::Init(const WIDECHAR* InName, int32 InNumber, EFindName FindType, boo
 	}
 }
 
-void YName::Init(const WIDECHAR* InName, int32 InNumber, EFindName FindType, const uint16 NonCasePreservingHash, const uint16 CasePreservingHash)
+void FName::Init(const WIDECHAR* InName, int32 InNumber, EFindName FindType, const uint16 NonCasePreservingHash, const uint16 CasePreservingHash)
 {
 	// Since this comes from the FLinkerLoad we know that it is not pure ansi
 	InitInternal<WIDECHAR>(InName, InNumber, FindType, -1, NonCasePreservingHash, CasePreservingHash);
 }
 
-void YName::Init(const ANSICHAR* InName, int32 InNumber, EFindName FindType, bool bSplitName, int32 HardcodeIndex)
+void FName::Init(const ANSICHAR* InName, int32 InNumber, EFindName FindType, bool bSplitName, int32 HardcodeIndex)
 {
 	InitInternal_HashSplit<ANSICHAR>(InName, InNumber, FindType, bSplitName, HardcodeIndex);
 }
 
-void YName::Init(const ANSICHAR* InName, int32 InNumber, EFindName FindType, const uint16 NonCasePreservingHash, const uint16 CasePreservingHash)
+void FName::Init(const ANSICHAR* InName, int32 InNumber, EFindName FindType, const uint16 NonCasePreservingHash, const uint16 CasePreservingHash)
 {
 	InitInternal<ANSICHAR>(InName, InNumber, FindType, -1, NonCasePreservingHash, CasePreservingHash);
 }
 
 template <typename TCharType>
-void YName::InitInternal_HashSplit(const TCharType* InName, int32 InNumber, const EFindName FindType, bool bSplitName, const int32 HardcodeIndex)
+void FName::InitInternal_HashSplit(const TCharType* InName, int32 InNumber, const EFindName FindType, bool bSplitName, const int32 HardcodeIndex)
 {
 	TCharType TempBuffer[NAME_SIZE];
 	int32 TempNumber;
@@ -598,7 +598,7 @@ void YName::InitInternal_HashSplit(const TCharType* InName, int32 InNumber, cons
 }
 
 template <typename TCharType>
-void YName::InitInternal(const TCharType* InName, int32 InNumber, const EFindName FindType, const int32 HardcodeIndex, const uint16 NonCasePreservingHash, const uint16 CasePreservingHash)
+void FName::InitInternal(const TCharType* InName, int32 InNumber, const EFindName FindType, const int32 HardcodeIndex, const uint16 NonCasePreservingHash, const uint16 CasePreservingHash)
 {
 	check(TCString<TCharType>::Strlen(InName)<=NAME_SIZE);
 
@@ -660,36 +660,36 @@ void YName::InitInternal(const TCharType* InName, int32 InNumber, const EFindNam
 template <typename TCharType> void IncrementNameCount();
 template <> void IncrementNameCount<ANSICHAR>()
 {
-	YName::NumAnsiNames++;
+	FName::NumAnsiNames++;
 }
 template <> void IncrementNameCount<WIDECHAR>()
 {
-	YName::NumWideNames++;
+	FName::NumWideNames++;
 }
 
 template <typename TCharType>
-struct YNameInitHelper
+struct FNameInitHelper
 {
 };
 
 template <>
-struct YNameInitHelper<ANSICHAR>
+struct FNameInitHelper<ANSICHAR>
 {
 	static const bool IsAnsi = true;
 
-	static const ANSICHAR* GetNameString(const YNameEntry* const NameEntry)
+	static const ANSICHAR* GetNameString(const FNameEntry* const NameEntry)
 	{
 		return NameEntry->GetAnsiName();
 	}
 
-	static void SetNameString(YNameEntry* const DestNameEntry, const ANSICHAR* SrcName)
+	static void SetNameString(FNameEntry* const DestNameEntry, const ANSICHAR* SrcName)
 	{
 		// Can't rely on the template override for static arrays since the safe crt version of strcpy will fill in
 		// the remainder of the array of NAME_SIZE with 0xfd.  So, we have to pass in the length of the dynamically allocated array instead.
 		FCStringAnsi::Strcpy(const_cast<ANSICHAR*>(DestNameEntry->GetAnsiName()), DestNameEntry->GetNameLength()+1, SrcName);
 	}
 
-	static void SetNameString(YNameEntry* const DestNameEntry, const ANSICHAR* SrcName, const int32 NameLength)
+	static void SetNameString(FNameEntry* const DestNameEntry, const ANSICHAR* SrcName, const int32 NameLength)
 	{
 		// Can't rely on the template override for static arrays since the safe crt version of strcpy will fill in
 		// the remainder of the array of NAME_SIZE with 0xfd.  So, we have to pass in the length of the dynamically allocated array instead.
@@ -703,30 +703,30 @@ struct YNameInitHelper<ANSICHAR>
 
 	static int32 GetSize(int32 Length)
 	{
-		// Add size required for string to the base size used by the YNameEntry
+		// Add size required for string to the base size used by the FNameEntry
 		int32 Size = NameEntryWithoutUnionSize + (Length + 1) * sizeof(ANSICHAR);
 		return Size;
 	}
 };
 
 template <>
-struct YNameInitHelper<WIDECHAR>
+struct FNameInitHelper<WIDECHAR>
 {
 	static const bool IsAnsi = false;
 
-	static const WIDECHAR* GetNameString(const YNameEntry* const NameEntry)
+	static const WIDECHAR* GetNameString(const FNameEntry* const NameEntry)
 	{
 		return NameEntry->GetWideName();
 	}
 
-	static void SetNameString(YNameEntry* const DestNameEntry, const WIDECHAR* SrcName)
+	static void SetNameString(FNameEntry* const DestNameEntry, const WIDECHAR* SrcName)
 	{
 		// Can't rely on the template override for static arrays since the safe crt version of strcpy will fill in
 		// the remainder of the array of NAME_SIZE with 0xfd.  So, we have to pass in the length of the dynamically allocated array instead.
 		FCStringWide::Strcpy(const_cast<WIDECHAR*>(DestNameEntry->GetWideName()), DestNameEntry->GetNameLength()+1, SrcName);
 	}
 
-	static void SetNameString(YNameEntry* const DestNameEntry, const WIDECHAR* SrcName, const int32 NameLength)
+	static void SetNameString(FNameEntry* const DestNameEntry, const WIDECHAR* SrcName, const int32 NameLength)
 	{
 		// Can't rely on the template override for static arrays since the safe crt version of strcpy will fill in
 		// the remainder of the array of NAME_SIZE with 0xfd.  So, we have to pass in the length of the dynamically allocated array instead.
@@ -740,14 +740,14 @@ struct YNameInitHelper<WIDECHAR>
 
 	static int32 GetSize(int32 Length)
 	{
-		// Add size required for string to the base size used by the YNameEntry
+		// Add size required for string to the base size used by the FNameEntry
 		int32 Size = NameEntryWithoutUnionSize + (Length + 1) * sizeof(TCHAR);
 		return Size;
 	}
 };
 
 template <typename TCharType>
-bool YName::InitInternal_FindOrAdd(const TCharType* InName, const EFindName FindType, const int32 HardcodeIndex, const uint16 NonCasePreservingHash, const uint16 CasePreservingHash, int32& OutComparisonIndex, int32& OutDisplayIndex)
+bool FName::InitInternal_FindOrAdd(const TCharType* InName, const EFindName FindType, const int32 HardcodeIndex, const uint16 NonCasePreservingHash, const uint16 CasePreservingHash, int32& OutComparisonIndex, int32& OutDisplayIndex)
 {
 	const bool bWasFoundOrAdded = InitInternal_FindOrAddNameEntry<TCharType>(InName, FindType, ENameCase::IgnoreCase, NonCasePreservingHash, OutComparisonIndex);
 	
@@ -755,10 +755,10 @@ bool YName::InitInternal_FindOrAdd(const TCharType* InName, const EFindName Find
 	if(bWasFoundOrAdded && HardcodeIndex < 0)
 	{
 		TNameEntryArray& Names = GetNames();
-		const YNameEntry* const NameEntry = Names[OutComparisonIndex];
+		const FNameEntry* const NameEntry = Names[OutComparisonIndex];
 
 		// If the string we got back doesn't match the case of the string we provided, also add a case variant version for display purposes
-		if(TCString<TCharType>::Strcmp(InName, YNameInitHelper<TCharType>::GetNameString(NameEntry)) != 0)
+		if(TCString<TCharType>::Strcmp(InName, FNameInitHelper<TCharType>::GetNameString(NameEntry)) != 0)
 		{
 			if(!InitInternal_FindOrAddNameEntry<TCharType>(InName, FindType, ENameCase::CaseSensitive, CasePreservingHash, OutDisplayIndex))
 			{
@@ -781,13 +781,13 @@ bool YName::InitInternal_FindOrAdd(const TCharType* InName, const EFindName Find
 }
 
 template <typename TCharType>
-bool YName::InitInternal_FindOrAddNameEntry(const TCharType* InName, const EFindName FindType, const ENameCase ComparisonMode, const uint16 iHash, int32& OutIndex)
+bool FName::InitInternal_FindOrAddNameEntry(const TCharType* InName, const EFindName FindType, const ENameCase ComparisonMode, const uint16 iHash, int32& OutIndex)
 {
 	CallNameCreationHook();
 	if (OutIndex < 0)
 	{
 		// Try to find the name in the hash.
-		for( YNameEntry* Hash=NameHashHead[iHash]; Hash; Hash=Hash->HashNext )
+		for( FNameEntry* Hash=NameHashHead[iHash]; Hash; Hash=Hash->HashNext )
 		{
 			YPlatformMisc::Prefetch( Hash->HashNext );
 			// Compare the passed in string
@@ -797,10 +797,10 @@ bool YName::InitInternal_FindOrAddNameEntry(const TCharType* InName, const EFind
 				OutIndex = Hash->GetIndex();
 
 				// Check to see if the caller wants to replace the contents of the
-				// YName with the specified value. This is useful for compiling
+				// FName with the specified value. This is useful for compiling
 				// script classes where the file name is lower case but the class
 				// was intended to be uppercase.
-				if (FindType == YName_Replace_Not_Safe_For_Threading)
+				if (FindType == FName_Replace_Not_Safe_For_Threading)
 				{
 					check(IsInGameThread());
 
@@ -808,7 +808,7 @@ bool YName::InitInternal_FindOrAddNameEntry(const TCharType* InName, const EFind
 					// copy happens if it is longer
 					check(TCString<TCharType>::Strlen(InName) == Hash->GetNameLength());
 
-					YNameInitHelper<TCharType>::SetNameString(Hash, InName);
+					FNameInitHelper<TCharType>::SetNameString(Hash, InName);
 				}
 				check(OutIndex >= 0);
 				return true;
@@ -816,7 +816,7 @@ bool YName::InitInternal_FindOrAddNameEntry(const TCharType* InName, const EFind
 		}
 
 		// Didn't find name.
-		if( FindType==YName_Find )
+		if( FindType==FName_Find )
 		{
 			// Not found.
 			return false;
@@ -827,20 +827,20 @@ bool YName::InitInternal_FindOrAddNameEntry(const TCharType* InName, const EFind
 	if (OutIndex < 0)
 	{
 		// Try to find the name in the hash. AGAIN...we might have been adding from a different thread and we just missed it
-		for( YNameEntry* Hash=NameHashHead[iHash]; Hash; Hash=Hash->HashNext )
+		for( FNameEntry* Hash=NameHashHead[iHash]; Hash; Hash=Hash->HashNext )
 		{
 			// Compare the passed in string
 			if( Hash->IsEqual( InName, ComparisonMode ) )
 			{
 				// Found it in the hash.
 				OutIndex = Hash->GetIndex();
-				check(FindType == YName_Add);  // if this was a replace, well it isn't safe for threading. Find should have already been handled
+				check(FindType == FName_Add);  // if this was a replace, well it isn't safe for threading. Find should have already been handled
 				return true;
 			}
 		}
 	}
-	YNameEntry* OldHashHead=NameHashHead[iHash];
-	YNameEntry* OldHashTail=NameHashTail[iHash];
+	FNameEntry* OldHashHead=NameHashHead[iHash];
+	FNameEntry* OldHashTail=NameHashTail[iHash];
 	TNameEntryArray& Names = GetNames();
 	if (OutIndex < 0)
 	{
@@ -850,7 +850,7 @@ bool YName::InitInternal_FindOrAddNameEntry(const TCharType* InName, const EFind
 	{
 		check(OutIndex < Names.Num());
 	}
-	YNameEntry* NewEntry = AllocateNameEntry<TCharType>(InName, OutIndex);
+	FNameEntry* NewEntry = AllocateNameEntry<TCharType>(InName, OutIndex);
 	if (FPlatformAtomics::InterlockedCompareExchangePointer((void**)&Names[OutIndex], NewEntry, nullptr) != nullptr) // we use an atomic operation to check for unexpected concurrency, verify alignment, etc
 	{
 		UE_LOG(LogUnrealNames, Fatal, TEXT("Hardcoded name '%s' at index %i was duplicated (or unexpected concurrency). Existing entry is '%s'."), *NewEntry->GetPlainNameString(), NewEntry->GetIndex(), *Names[OutIndex]->GetPlainNameString() );
@@ -881,38 +881,38 @@ bool YName::InitInternal_FindOrAddNameEntry(const TCharType* InName, const EFind
 	return true;
 }
 
-const YNameEntry* YName::GetComparisonNameEntry() const
+const FNameEntry* FName::GetComparisonNameEntry() const
 {
 	TNameEntryArray& Names = GetNames();
 	const NAME_INDEX Index = GetComparisonIndex();
 	return Names[Index];
 }
 
-const YNameEntry* YName::GetDisplayNameEntry() const
+const FNameEntry* FName::GetDisplaFNameEntry() const
 {
 	TNameEntryArray& Names = GetNames();
 	const NAME_INDEX Index = GetDisplayIndex();
 	return Names[Index];
 }
 
-YString YName::ToString() const
+YString FName::ToString() const
 {
 	YString Out;	
 	ToString(Out);
 	return Out;
 }
 
-void YName::ToString(YString& Out) const
+void FName::ToString(YString& Out) const
 {
 	// a version of ToString that saves at least one string copy
-	const YNameEntry* const NameEntry = GetDisplayNameEntry();
+	const FNameEntry* const NameEntry = GetDisplaFNameEntry();
 	Out.Empty( NameEntry->GetNameLength() + 6);
 	AppendString(Out);
 }
 
-void YName::AppendString(YString& Out) const
+void FName::AppendString(YString& Out) const
 {
-	const YNameEntry* const NameEntry = GetDisplayNameEntry();
+	const FNameEntry* const NameEntry = GetDisplaFNameEntry();
 	NameEntry->AppendNameToString( Out );
 	if (GetNumber() != NAME_NO_NUMBER_INTERNAL)
 	{
@@ -923,23 +923,23 @@ void YName::AppendString(YString& Out) const
 
 
 /*-----------------------------------------------------------------------------
-	YName subsystem.
+	FName subsystem.
 -----------------------------------------------------------------------------*/
 
-void YName::StaticInit()
+void FName::StaticInit()
 {
 	check(IsInGameThread());
 	/** Global instance used to initialize the GCRCTable. It used to be initialized in appInit() */
 	//@todo: Massive workaround for static init order without needing to use a function call for every use of GCRCTable
-	// This ASSUMES that YName::StaticINit is going to be called BEFORE ANY use of GCRCTable
+	// This ASSUMES that FName::StaticINit is going to be called BEFORE ANY use of GCRCTable
 	FCrc::Init();
 
 	check(GetIsInitialized() == false);
-	check((YNameDefs::NameHashBucketCount&(YNameDefs::NameHashBucketCount-1)) == 0);
+	check((FNameDefs::NameHashBucketCount&(FNameDefs::NameHashBucketCount-1)) == 0);
 	GetIsInitialized() = 1;
 
 	// Init the name hash.
-	for (int32 HashIndex = 0; HashIndex < YNameDefs::NameHashBucketCount; HashIndex++)
+	for (int32 HashIndex = 0; HashIndex < FNameDefs::NameHashBucketCount; HashIndex++)
 	{
 		NameHashHead[HashIndex] = nullptr;
 		NameHashTail[HashIndex] = nullptr;
@@ -954,18 +954,18 @@ void YName::StaticInit()
 
 	{
 		// Register all hardcoded names.
-		#define REGISTER_NAME(num,namestr) YName Temp_##namestr(EName(num), TEXT(#namestr));
-		#include "SObject/SolidAngleNames.inl"
+		#define REGISTER_NAME(num,namestr) FName Temp_##namestr(EName(num), TEXT(#namestr));
+		#include "UObject/SolidAngleNames.inl"
 		#undef REGISTER_NAME
 	}
 
 #if DO_CHECK
 	// Verify no duplicate names.
-	for (int32 HashIndex = 0; HashIndex < YNameDefs::NameHashBucketCount; HashIndex++)
+	for (int32 HashIndex = 0; HashIndex < FNameDefs::NameHashBucketCount; HashIndex++)
 	{
-		for (YNameEntry* Hash = NameHashHead[HashIndex]; Hash; Hash = Hash->HashNext)
+		for (FNameEntry* Hash = NameHashHead[HashIndex]; Hash; Hash = Hash->HashNext)
 		{
-			for (YNameEntry* Other = Hash->HashNext; Other; Other = Other->HashNext)
+			for (FNameEntry* Other = Hash->HashNext; Other; Other = Other->HashNext)
 			{
 				if (FCString::Stricmp(*Hash->GetPlainNameString(), *Other->GetPlainNameString()) == 0)
 				{
@@ -1002,35 +1002,35 @@ void YName::StaticInit()
 #endif
 }
 
-bool& YName::GetIsInitialized()
+bool& FName::GetIsInitialized()
 {
 	static bool bIsInitialized = false;
 	return bIsInitialized;
 }
 
-void YName::DisplayHash( YOutputDevice& Ar )
+void FName::DisplayHash( FOutputDevice& Ar )
 {
 	int32 UsedBins=0, NameCount=0, MemUsed = 0;
-	for( int32 i=0; i<YNameDefs::NameHashBucketCount; i++ )
+	for( int32 i=0; i<FNameDefs::NameHashBucketCount; i++ )
 	{
 		if( NameHashHead[i] != NULL ) UsedBins++;
-		for( YNameEntry *Hash = NameHashHead[i]; Hash; Hash=Hash->HashNext )
+		for( FNameEntry *Hash = NameHashHead[i]; Hash; Hash=Hash->HashNext )
 		{
 			NameCount++;
 			// Count how much memory this entry is using
-			MemUsed += YNameEntry::GetSize( Hash->GetNameLength(), Hash->IsWide() );
+			MemUsed += FNameEntry::GetSize( Hash->GetNameLength(), Hash->IsWide() );
 		}
 	}
-	Ar.Logf( TEXT("Hash: %i names, %i/%i hash bins, Mem in bytes %i"), NameCount, UsedBins, YNameDefs::NameHashBucketCount, MemUsed);
+	Ar.Logf( TEXT("Hash: %i names, %i/%i hash bins, Mem in bytes %i"), NameCount, UsedBins, FNameDefs::NameHashBucketCount, MemUsed);
 }
 
-bool YName::SplitNameWithCheck(const WIDECHAR* OldName, WIDECHAR* NewName, int32 NewNameLen, int32& NewNumber)
+bool FName::SplitNameWithCheck(const WIDECHAR* OldName, WIDECHAR* NewName, int32 NewNameLen, int32& NewNumber)
 {
 	return SplitNameWithCheckImpl<WIDECHAR>(OldName, NewName, NewNameLen, NewNumber);
 }
 
 template <typename TCharType>
-bool YName::SplitNameWithCheckImpl(const TCharType* OldName, TCharType* NewName, int32 NewNameLen, int32& NewNumber)
+bool FName::SplitNameWithCheckImpl(const TCharType* OldName, TCharType* NewName, int32 NewNameLen, int32& NewNumber)
 {
 	bool bSucceeded = false;
 	const int32 OldNameLength = TCString<TCharType>::Strlen(OldName);
@@ -1080,7 +1080,7 @@ bool YName::SplitNameWithCheckImpl(const TCharType* OldName, TCharType* NewName,
 	return bSucceeded;
 }
 
-bool YName::IsValidXName(const YString& InName, const YString& InInvalidChars, FText* OutReason, const FText* InErrorCtx)
+bool FName::IsValidXName(const YString& InName, const YString& InInvalidChars, FText* OutReason, const FText* InErrorCtx)
 {
 	if (InName.IsEmpty() || InInvalidChars.IsEmpty())
 	{
@@ -1114,15 +1114,15 @@ bool YName::IsValidXName(const YString& InName, const YString& InInvalidChars, F
 	return true;
 }
 
-void YName::AutoTest()
+void FName::AutoTest()
 {
-	const YName AutoTest_1("AutoTest_1");
-	const YName autoTest_1("autoTest_1");
-	const YName autoTeSt_1("autoTeSt_1");
-	const YName AutoTest1Find("autoTEST_1", EFindName::YName_Find);
-	const YName AutoTest_2(TEXT("AutoTest_2"));
-	const YName AutoTestB_2(TEXT("AutoTestB_2"));
-	const YName NullName(static_cast<ANSICHAR*>(nullptr));
+	const FName AutoTest_1("AutoTest_1");
+	const FName autoTest_1("autoTest_1");
+	const FName autoTeSt_1("autoTeSt_1");
+	const FName AutoTest1Find("autoTEST_1", EFindName::FName_Find);
+	const FName AutoTest_2(TEXT("AutoTest_2"));
+	const FName AutoTestB_2(TEXT("AutoTestB_2"));
+	const FName NullName(static_cast<ANSICHAR*>(nullptr));
 
 	check(AutoTest_1 != AutoTest_2);
 	check(AutoTest_1 == autoTest_1);
@@ -1143,15 +1143,15 @@ void YName::AutoTest()
 }
 
 /*-----------------------------------------------------------------------------
-	YNameEntry implementation.
+	FNameEntry implementation.
 -----------------------------------------------------------------------------*/
 
-YArchive& operator<<( YArchive& Ar, YNameEntry& E )
+FArchive& operator<<( FArchive& Ar, FNameEntry& E )
 {
 	if( Ar.IsLoading() )
 	{
 		// for optimization reasons, we want to keep pure Ansi strings as Ansi for initializing the name entry
-		// (and later the YName) to stop copying in and out of TCHARs
+		// (and later the FName) to stop copying in and out of TCHARs
 		int32 StringLen;
 		Ar << StringLen;
 
@@ -1186,19 +1186,19 @@ YArchive& operator<<( YArchive& Ar, YNameEntry& E )
 	else
 	{
 		// Convert to our serialized type
-		YNameEntrySerialized EntrySerialized(E);
+		FNameEntrySerialized EntrySerialized(E);
 		Ar << EntrySerialized;
 	}
 
 	return Ar;
 }
 
-YArchive& operator<<(YArchive& Ar, YNameEntrySerialized& E)
+FArchive& operator<<(FArchive& Ar, FNameEntrySerialized& E)
 {
 	if (Ar.IsLoading())
 	{
 		// for optimization reasons, we want to keep pure Ansi strings as Ansi for initializing the name entry
-		// (and later the YName) to stop copying in and out of TCHARs
+		// (and later the FName) to stop copying in and out of TCHARs
 		int32 StringLen;
 		Ar << StringLen;
 
@@ -1249,16 +1249,16 @@ YArchive& operator<<(YArchive& Ar, YNameEntrySerialized& E)
 }
 
 /**
- * Pooled allocator for YNameEntry structures. Doesn't have to worry about freeing memory as those
+ * Pooled allocator for FNameEntry structures. Doesn't have to worry about freeing memory as those
  * never go away. It simply uses 64K chunks and allocates new ones as space runs out. This reduces
  * allocation overhead significantly (only minor waste on 64k boundaries) and also greatly helps
  * with fragmentation as 50-100k allocations turn into tens of allocations.
  */
-class YNameEntryPoolAllocator
+class FNameEntryPoolAllocator
 {
 public:
 	/** Initializes all member variables. */
-	YNameEntryPoolAllocator()
+	FNameEntryPoolAllocator()
 	{
 		TotalAllocatedPages	= 0;
 		CurrentPoolStart	= NULL;
@@ -1267,17 +1267,17 @@ public:
 	}
 
 	/**
-	 * Allocates the requested amount of bytes and casts them to a YNameEntry pointer.
+	 * Allocates the requested amount of bytes and casts them to a FNameEntry pointer.
 	 *
 	 * @param   Size  Size in bytes to allocate
-	 * @return  Allocation of passed in size cast to a YNameEntry pointer.
+	 * @return  Allocation of passed in size cast to a FNameEntry pointer.
 	 */
-	YNameEntry* Allocate( int32 Size )
+	FNameEntry* Allocate( int32 Size )
 	{
 		check(ThreadGuard.Increment() == 1);
 		// Some platforms need all of the name entries to be aligned to 4 bytes, so by
 		// aligning the size here the next allocation will be aligned to 4
-		Size = Align( Size, ALIGNOF(YNameEntry) );
+		Size = Align( Size, ALIGNOF(FNameEntry) );
 
 		// Allocate a new pool if current one is exhausted. We don't worry about a little bit
 		// of waste at the end given the relative size of pool to average and max allocation.
@@ -1287,7 +1287,7 @@ public:
 		}
 		check( CurrentPoolEnd - CurrentPoolStart >= Size );
 		// Return current pool start as allocation and increment by size.
-		YNameEntry* NameEntry = (YNameEntry*) CurrentPoolStart;
+		FNameEntry* NameEntry = (FNameEntry*) CurrentPoolStart;
 		CurrentPoolStart += Size;
 		check(ThreadGuard.Decrement() == 0);
 		return NameEntry;
@@ -1334,18 +1334,18 @@ private:
 };
 
 /** Global allocator for name entries. */
-YNameEntryPoolAllocator GNameEntryPoolAllocator;
+FNameEntryPoolAllocator GNameEntryPoolAllocator;
 
 template<typename TCharType>
-YNameEntry* AllocateNameEntry(const void* Name, NAME_INDEX Index)
+FNameEntry* AllocateNameEntry(const void* Name, NAME_INDEX Index)
 {
 	const SIZE_T NameLen  = TCString<TCharType>::Strlen((TCharType*)Name);
-	int32 NameEntrySize	  = YNameInitHelper<TCharType>::GetSize( NameLen );
-	YNameEntry* NameEntry = GNameEntryPoolAllocator.Allocate( NameEntrySize );
-	YName::NameEntryMemorySize += NameEntrySize;
-	NameEntry->Index      = (Index << NAME_INDEX_SHIFT) | (YNameInitHelper<TCharType>::GetIndexShiftValue());
+	int32 NameEntrySize	  = FNameInitHelper<TCharType>::GetSize( NameLen );
+	FNameEntry* NameEntry = GNameEntryPoolAllocator.Allocate( NameEntrySize );
+	FName::NameEntryMemorySize += NameEntrySize;
+	NameEntry->Index      = (Index << NAME_INDEX_SHIFT) | (FNameInitHelper<TCharType>::GetIndexShiftValue());
 	NameEntry->HashNext   = nullptr;
-	YNameInitHelper<TCharType>::SetNameString(NameEntry, (TCharType*)Name, NameLen);
+	FNameInitHelper<TCharType>::SetNameString(NameEntry, (TCharType*)Name, NameLen);
 	IncrementNameCount<TCharType>();
 	return NameEntry;
 }
@@ -1354,50 +1354,50 @@ YNameEntry* AllocateNameEntry(const void* Name, NAME_INDEX Index)
 #if !UE_BUILD_SHIPPING && !UE_BUILD_TEST
 
 #include "Containers/StackTracker.h"
-static TAutoConsoleVariable<int32> CVarLogGameThreadYNameChurn(
-	TEXT("LogGameThreadYNameChurn.Enable"),
+static TAutoConsoleVariable<int32> CVarLogGameThreadFNameChurn(
+	TEXT("LogGameThreadFNameChurn.Enable"),
 	0,
-	TEXT("If > 0, then collect sample game thread YName create, periodically print a report of the worst offenders."));
+	TEXT("If > 0, then collect sample game thread FName create, periodically print a report of the worst offenders."));
 
-static TAutoConsoleVariable<int32> CVarLogGameThreadYNameChurn_PrintFrequency(
-	TEXT("LogGameThreadYNameChurn.PrintFrequency"),
+static TAutoConsoleVariable<int32> CVarLogGameThreadFNameChurn_PrintFrequency(
+	TEXT("LogGameThreadFNameChurn.PrintFrequency"),
 	300,
 	TEXT("Number of frames between churn reports."));
 
-static TAutoConsoleVariable<int32> CVarLogGameThreadYNameChurn_Threshhold(
-	TEXT("LogGameThreadYNameChurn.Threshhold"),
+static TAutoConsoleVariable<int32> CVarLogGameThreadFNameChurn_Threshhold(
+	TEXT("LogGameThreadFNameChurn.Threshhold"),
 	10,
-	TEXT("Minimum average number of YName creations per frame to include in the report."));
+	TEXT("Minimum average number of FName creations per frame to include in the report."));
 
-static TAutoConsoleVariable<int32> CVarLogGameThreadYNameChurn_SampleFrequency(
-	TEXT("LogGameThreadYNameChurn.SampleFrequency"),
+static TAutoConsoleVariable<int32> CVarLogGameThreadFNameChurn_SampleFrequency(
+	TEXT("LogGameThreadFNameChurn.SampleFrequency"),
 	1,
-	TEXT("Number of YName creates per sample. This is used to prevent churn sampling from slowing the game down too much."));
+	TEXT("Number of FName creates per sample. This is used to prevent churn sampling from slowing the game down too much."));
 
-static TAutoConsoleVariable<int32> CVarLogGameThreadYNameChurn_StackIgnore(
-	TEXT("LogGameThreadYNameChurn.StackIgnore"),
+static TAutoConsoleVariable<int32> CVarLogGameThreadFNameChurn_StackIgnore(
+	TEXT("LogGameThreadFNameChurn.StackIgnore"),
 	4,
 	TEXT("Number of items to discard from the top of a stack frame."));
 
-static TAutoConsoleVariable<int32> CVarLogGameThreadYNameChurn_RemoveAliases(
-	TEXT("LogGameThreadYNameChurn.RemoveAliases"),
+static TAutoConsoleVariable<int32> CVarLogGameThreadFNameChurn_RemoveAliases(
+	TEXT("LogGameThreadFNameChurn.RemoveAliases"),
 	1,
 	TEXT("If > 0 then remove aliases from the counting process. This essentialy merges addresses that have the same human readable string. It is slower."));
 
-static TAutoConsoleVariable<int32> CVarLogGameThreadYNameChurn_StackLen(
-	TEXT("LogGameThreadYNameChurn.StackLen"),
+static TAutoConsoleVariable<int32> CVarLogGameThreadFNameChurn_StackLen(
+	TEXT("LogGameThreadFNameChurn.StackLen"),
 	3,
 	TEXT("Maximum number of stack frame items to keep. This improves aggregation because calls that originate from multiple places but end up in the same place will be accounted together."));
 
 
-struct FSampleYNameChurn
+struct FSampleFNameChurn
 {
-	FStackTracker GGameThreadYNameChurnTracker;
+	FStackTracker GGameThreadFNameChurnTracker;
 	bool bEnabled;
 	int32 CountDown;
 	uint64 DumpFrame;
 
-	FSampleYNameChurn()
+	FSampleFNameChurn()
 		: bEnabled(false)
 		, CountDown(MAX_int32)
 		, DumpFrame(0)
@@ -1406,23 +1406,23 @@ struct FSampleYNameChurn
 
 	void NameCreationHook()
 	{
-		bool bNewEnabled = CVarLogGameThreadYNameChurn.GetValueOnGameThread() > 0;
+		bool bNewEnabled = CVarLogGameThreadFNameChurn.GetValueOnGameThread() > 0;
 		if (bNewEnabled != bEnabled)
 		{
 			check(IsInGameThread());
 			bEnabled = bNewEnabled;
 			if (bEnabled)
 			{
-				CountDown = CVarLogGameThreadYNameChurn_SampleFrequency.GetValueOnGameThread();
-				DumpFrame = GFrameCounter + CVarLogGameThreadYNameChurn_PrintFrequency.GetValueOnGameThread();
-				GGameThreadYNameChurnTracker.ResetTracking();
-				GGameThreadYNameChurnTracker.ToggleTracking(true, true);
+				CountDown = CVarLogGameThreadFNameChurn_SampleFrequency.GetValueOnGameThread();
+				DumpFrame = GFrameCounter + CVarLogGameThreadFNameChurn_PrintFrequency.GetValueOnGameThread();
+				GGameThreadFNameChurnTracker.ResetTracking();
+				GGameThreadFNameChurnTracker.ToggleTracking(true, true);
 			}
 			else
 			{
-				GGameThreadYNameChurnTracker.ToggleTracking(false, true);
+				GGameThreadFNameChurnTracker.ToggleTracking(false, true);
 				DumpFrame = 0;
-				GGameThreadYNameChurnTracker.ResetTracking();
+				GGameThreadFNameChurnTracker.ResetTracking();
 			}
 		}
 		else if (bEnabled)
@@ -1431,7 +1431,7 @@ struct FSampleYNameChurn
 			check(DumpFrame);
 			if (--CountDown <= 0)
 			{
-				CountDown = CVarLogGameThreadYNameChurn_SampleFrequency.GetValueOnGameThread();
+				CountDown = CVarLogGameThreadFNameChurn_SampleFrequency.GetValueOnGameThread();
 				CollectSample();
 				if (GFrameCounter > DumpFrame)
 				{
@@ -1444,25 +1444,25 @@ struct FSampleYNameChurn
 	void CollectSample()
 	{
 		check(IsInGameThread());
-		GGameThreadYNameChurnTracker.CaptureStackTrace(CVarLogGameThreadYNameChurn_StackIgnore.GetValueOnGameThread(), nullptr, CVarLogGameThreadYNameChurn_StackLen.GetValueOnGameThread(), CVarLogGameThreadYNameChurn_RemoveAliases.GetValueOnGameThread() > 0);
+		GGameThreadFNameChurnTracker.CaptureStackTrace(CVarLogGameThreadFNameChurn_StackIgnore.GetValueOnGameThread(), nullptr, CVarLogGameThreadFNameChurn_StackLen.GetValueOnGameThread(), CVarLogGameThreadFNameChurn_RemoveAliases.GetValueOnGameThread() > 0);
 	}
 	void PrintResultsAndReset()
 	{
-		DumpFrame = GFrameCounter + CVarLogGameThreadYNameChurn_PrintFrequency.GetValueOnGameThread();
+		DumpFrame = GFrameCounter + CVarLogGameThreadFNameChurn_PrintFrequency.GetValueOnGameThread();
 		YOutputDeviceRedirector* Log = YOutputDeviceRedirector::Get();
-		float SampleAndFrameCorrection = float(CVarLogGameThreadYNameChurn_SampleFrequency.GetValueOnGameThread()) / float(CVarLogGameThreadYNameChurn_PrintFrequency.GetValueOnGameThread());
-		GGameThreadYNameChurnTracker.DumpStackTraces(CVarLogGameThreadYNameChurn_Threshhold.GetValueOnGameThread(), *Log, SampleAndFrameCorrection);
-		GGameThreadYNameChurnTracker.ResetTracking();
+		float SampleAndFrameCorrection = float(CVarLogGameThreadFNameChurn_SampleFrequency.GetValueOnGameThread()) / float(CVarLogGameThreadFNameChurn_PrintFrequency.GetValueOnGameThread());
+		GGameThreadFNameChurnTracker.DumpStackTraces(CVarLogGameThreadFNameChurn_Threshhold.GetValueOnGameThread(), *Log, SampleAndFrameCorrection);
+		GGameThreadFNameChurnTracker.ResetTracking();
 	}
 };
 
-FSampleYNameChurn GGameThreadYNameChurnTracker;
+FSampleFNameChurn GGameThreadFNameChurnTracker;
 
 void CallNameCreationHook()
 {
 	if (GIsRunning && IsInGameThread())
 	{
-		GGameThreadYNameChurnTracker.NameCreationHook();
+		GGameThreadFNameChurnTracker.NameCreationHook();
 	}
 }
 

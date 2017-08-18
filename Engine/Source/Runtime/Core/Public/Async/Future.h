@@ -243,9 +243,9 @@ public:
 	* @return true if the result is available, false otherwise.
 	* @see Wait, WaitUntil
 	*/
-	bool WaitUntil(const YDateTime& Time) const
+	bool WaitUntil(const FDateTime& Time) const
 	{
-		return WaitFor(Time - YDateTime::UtcNow());
+		return WaitFor(Time - FDateTime::UtcNow());
 	}
 
 protected:

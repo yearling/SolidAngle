@@ -7,7 +7,7 @@
 /**
 * Output device wrapping any kind of YArchive.  Note: Works in any build configuration.
 */
-class CORE_API YOutputDeviceArchiveWrapper : public YOutputDevice
+class CORE_API YOutputDeviceArchiveWrapper : public FOutputDevice
 {
 public:
 	/**
@@ -15,7 +15,7 @@ public:
 	*
 	* @param InArchive	Archive to use, must not be nullptr.  Does not take ownership of the archive, clean up or delete the archive independently!
 	*/
-	YOutputDeviceArchiveWrapper(YArchive* InArchive)
+	YOutputDeviceArchiveWrapper(FArchive* InArchive)
 		: LogAr(InArchive)
 	{
 		check(InArchive);
@@ -23,9 +23,9 @@ public:
 
 	// YOutputDevice interface
 	virtual void Flush() override;
-	virtual void Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class YName& Category) override;
+	virtual void Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category) override;
 	// End of YOutputDevice interface
 
 private:
-	YArchive* LogAr;
+	FArchive* LogAr;
 };

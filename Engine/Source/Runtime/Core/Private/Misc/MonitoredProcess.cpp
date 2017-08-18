@@ -47,7 +47,7 @@ YTimespan FMonitoredProcess::GetDuration() const
 {
 	if (IsRunning())
 	{
-		return (YDateTime::UtcNow() - StartTime);
+		return (FDateTime::UtcNow() - StartTime);
 	}
 
 	return (EndTime - StartTime);
@@ -126,7 +126,7 @@ void FMonitoredProcess::ProcessOutput( const YString& Output )
 uint32 FMonitoredProcess::Run()
 {
 	// monitor the process
-	StartTime = YDateTime::UtcNow();
+	StartTime = FDateTime::UtcNow();
 	{
 		do
 		{
@@ -145,7 +145,7 @@ uint32 FMonitoredProcess::Run()
 		}
 		while (FPlatformProcess::IsProcRunning(ProcessHandle));
 	}
-	EndTime = YDateTime::UtcNow();
+	EndTime = FDateTime::UtcNow();
 
 	// close output pipes
 	FPlatformProcess::ClosePipe(ReadPipe, WritePipe);

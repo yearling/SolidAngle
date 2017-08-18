@@ -6,12 +6,12 @@
 /**
 * Implements a basic sphere.
 */
-class YSphere
+class FSphere
 {
 public:
 
 	/** The sphere's center point. */
-	YVector Center;
+	FVector Center;
 
 	/** The sphere's radius. */
 	float W;
@@ -19,14 +19,14 @@ public:
 public:
 
 	/** Default constructor (no initialization). */
-	YSphere() { }
+	FSphere() { }
 
 	/**
 	* Creates and initializes a new sphere.
 	*
 	* @param int32 Passing int32 sets up zeroed sphere.
 	*/
-	YSphere(int32)
+	FSphere(int32)
 		: Center(0.0f, 0.0f, 0.0f)
 		, W(0)
 	{ }
@@ -37,7 +37,7 @@ public:
 	* @param InV Center of sphere.
 	* @param InW Radius of sphere.
 	*/
-	YSphere(YVector InV, float InW)
+	FSphere(FVector InV, float InW)
 		: Center(InV)
 		, W(InW)
 	{ }
@@ -47,7 +47,7 @@ public:
 	*
 	* @param EForceInit Force Init Enum.
 	*/
-	explicit FORCEINLINE		YSphere(EForceInit)
+	explicit FORCEINLINE		FSphere(EForceInit)
 		: Center(ForceInit)
 		, W(0.0f)
 	{ }
@@ -58,7 +58,7 @@ public:
 	* @param Pts Pointer to list of points this sphere must contain.
 	* @param Count How many points are in the list.
 	*/
-	CORE_API					YSphere(const YVector* Pts, int32 Count);
+	CORE_API					FSphere(const FVector* Pts, int32 Count);
 
 public:
 
@@ -69,7 +69,7 @@ public:
 	* @param Tolerance Error Tolerance.
 	* @return true if spheres are equal within specified tolerance, otherwise false.
 	*/
-	bool						Equals(const YSphere& Sphere, float Tolerance = KINDA_SMALL_NUMBER) const
+	bool						Equals(const FSphere& Sphere, float Tolerance = KINDA_SMALL_NUMBER) const
 	{
 		return Center.Equals(Sphere.Center, Tolerance) && YMath::Abs(W - Sphere.W) <= Tolerance;
 	}
@@ -81,7 +81,7 @@ public:
 	* @param Tolerance Error Tolerance.
 	* @return true if sphere is inside another, otherwise false.
 	*/
-	bool						IsInside(const YSphere& Other, float Tolerance = KINDA_SMALL_NUMBER) const
+	bool						IsInside(const FSphere& Other, float Tolerance = KINDA_SMALL_NUMBER) const
 	{
 		if (W > Other.W + Tolerance)
 		{
@@ -97,7 +97,7 @@ public:
 	* @param In The location to test for inside the bounding volume.
 	* @return true if location is inside this volume.
 	*/
-	bool						IsInside(const YVector& In, float Tolerance = KINDA_SMALL_NUMBER) const
+	bool						IsInside(const FVector& In, float Tolerance = KINDA_SMALL_NUMBER) const
 	{
 		return (Center - In).SizeSquared() <= YMath::Square(W + Tolerance);
 	}
@@ -109,7 +109,7 @@ public:
 	* @param  Tolerance Error tolerance.
 	* @return true if spheres intersect, false otherwise.
 	*/
-	FORCEINLINE bool			Intersects(const YSphere& Other, float Tolerance = KINDA_SMALL_NUMBER) const
+	FORCEINLINE bool			Intersects(const FSphere& Other, float Tolerance = KINDA_SMALL_NUMBER) const
 	{
 		return (Center - Other.Center).SizeSquared() <= YMath::Square(YMath::Max(0.f, Other.W + W + Tolerance));
 	}
@@ -120,7 +120,7 @@ public:
 	* @param M Matrix to transform by.
 	* @return Result of transformation.
 	*/
-	CORE_API YSphere			TransformBy(const YMatrix& M) const;
+	CORE_API FSphere			TransformBy(const FMatrix& M) const;
 
 	/**
 	* Get result of Transforming sphere with Transform.
@@ -128,7 +128,7 @@ public:
 	* @param M Transform information.
 	* @return Result of transformation.
 	*/
-	CORE_API YSphere			TransformBy(const YTransform& M) const;
+	CORE_API FSphere			TransformBy(const FTransform& M) const;
 
 	/**
 	* Get volume of the current sphere
@@ -143,7 +143,7 @@ public:
 	* @param Other the bounding volume to increase the bounding volume to.
 	* @return Reference to this bounding volume after resizing to include the other bounding volume.
 	*/
-	CORE_API YSphere& operator+=(const YSphere& Other);
+	CORE_API FSphere& operator+=(const FSphere& Other);
 
 	/**
 	* Gets the result of addition to this bounding volume.
@@ -151,9 +151,9 @@ public:
 	* @param Other The other volume to add to this.
 	* @return A new bounding volume.
 	*/
-	YSphere operator+(const YSphere& Other) const
+	FSphere operator+(const FSphere& Other) const
 	{
-		return YSphere(*this) += Other;
+		return FSphere(*this) += Other;
 	}
 
 public:
@@ -165,7 +165,7 @@ public:
 	* @param Sphere The sphere to serialize.
 	* @return The archive.
 	*/
-	friend YArchive& operator<<(YArchive& Ar, YSphere& Sphere)
+	friend FArchive& operator<<(FArchive& Ar, FSphere& Sphere)
 	{
 		Ar << Sphere.Center << Sphere.W;
 
@@ -179,7 +179,7 @@ public:
 /**
 * Converts a sphere into a point plus radius squared for the test above
 */
-FORCEINLINE bool YMath::SphereAABBIntersection(const YSphere& Sphere, const YBox& AABB)
+FORCEINLINE bool YMath::SphereAABBIntersection(const FSphere& Sphere, const FBox& AABB)
 {
 	float RadiusSquared = YMath::Square(Sphere.W);
 	// If the distance is less than or equal to the radius, they intersect

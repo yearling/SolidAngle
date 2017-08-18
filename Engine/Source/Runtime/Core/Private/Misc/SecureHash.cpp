@@ -528,14 +528,14 @@ namespace Lex
 
 FMD5Hash FMD5Hash::HashFile(const TCHAR* InFilename, TArray<uint8>* Buffer)
 {
-	YArchive* Ar = IFileManager::Get().CreateFileReader(InFilename);
+	FArchive* Ar = IFileManager::Get().CreateFileReader(InFilename);
 	FMD5Hash Result = HashFileFromArchive( Ar, Buffer );
 	delete Ar;
 
 	return Result;
 }
 
-FMD5Hash FMD5Hash::HashFileFromArchive( YArchive* Ar, TArray<uint8>* Buffer)
+FMD5Hash FMD5Hash::HashFileFromArchive( FArchive* Ar, TArray<uint8>* Buffer)
 {
 	FMD5Hash Hash;
 	if (Ar)
@@ -601,7 +601,7 @@ TMap<YString, uint8*> FSHA1::ScriptSHAHashMap;
 #define _R3(v,w,x,y,z,i) { z+=(((w|x)&y)|(w&x))+SHABLK(i)+0x8F1BBCDC+ROL32(v,5); w=ROL32(w,30); }
 #define _R4(v,w,x,y,z,i) { z+=(w^x^y)+SHABLK(i)+0xCA62C1D6+ROL32(v,5); w=ROL32(w,30); }
 
-YArchive& operator<<( YArchive& Ar, FSHAHash& G )
+FArchive& operator<<( FArchive& Ar, FSHAHash& G )
 {
 	Ar.Serialize(&G.Hash, sizeof(G.Hash));
 	return Ar;

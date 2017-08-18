@@ -30,11 +30,11 @@ public:
 
 /**
 * A macro to override Verbosity of the Category within the scope
-* @param CategoryName, category to declare
+* @param CategorFName, category to declare
 * @param ScopeVerbosity, verbosity to override
 **/
 #if NO_LOGGING
 #define LOG_SCOPE_VERBOSITY_OVERRIDE(...)
 #else
-#define LOG_SCOPE_VERBOSITY_OVERRIDE(CategoryName, ScopeVerbosity) FLogScopedVerbosityOverride LogCategory##CategoryName##Override(&CategoryName, ScopeVerbosity)
+#define LOG_SCOPE_VERBOSITY_OVERRIDE(CategorFName, ScopeVerbosity) FLogScopedVerbosityOverride LogCategory##CategorFName##Override(&CategorFName, ScopeVerbosity)
 #endif

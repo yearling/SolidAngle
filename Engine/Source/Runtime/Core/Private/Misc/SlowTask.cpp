@@ -4,7 +4,7 @@
 #include "HAL/PlatformTime.h"
 #include "Misc/FeedbackContext.h"
 
-FSlowTask::FSlowTask(float InAmountOfWork, const FText& InDefaultMessage, bool bInEnabled, YFeedbackContext& InContext)
+FSlowTask::FSlowTask(float InAmountOfWork, const FText& InDefaultMessage, bool bInEnabled, FFeedbackContext& InContext)
 	: DefaultMessage(InDefaultMessage)
 	, FrameMessage()
 	, TotalAmountOfWork(InAmountOfWork)

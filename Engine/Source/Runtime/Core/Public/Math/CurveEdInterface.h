@@ -23,7 +23,7 @@ public:
 	 * @param	bIsSubCurveHidden	Is the curve hidden?
 	 * @return						The color associated to the given sub-curve index.
 	 */
-	virtual YColor	GetSubCurveButtonColor(int32 SubCurveIndex, bool bIsSubCurveHidden) const { return  bIsSubCurveHidden ? YColor( 32,  0,  0) : YColor(255,  0,  0); }
+	virtual FColor	GetSubCurveButtonColor(int32 SubCurveIndex, bool bIsSubCurveHidden) const { return  bIsSubCurveHidden ? FColor( 32,  0,  0) : FColor(255,  0,  0); }
 
 	/** Get the input value for the Key with the specified index. KeyIndex must be within range ie >=0 and < NumKeys. */
 	virtual float	GetKeyIn(int32 KeyIndex) { return 0.f; }
@@ -43,7 +43,7 @@ public:
 	 * @param[in]	CurveColor	The color of the curve
 	 * @return					The color that is associated the given key at the given sub-curve
 	 */
-	virtual YColor	GetKeyColor(int32 SubIndex, int32 KeyIndex, const YColor& CurveColor) { return CurveColor; }
+	virtual FColor	GetKeyColor(int32 SubIndex, int32 KeyIndex, const FColor& CurveColor) { return CurveColor; }
 
 	/** Evaluate a subcurve at an arbitary point. Outside the keyframe range, curves are assumed to continue their end values. */
 	virtual float	EvalSub(int32 SubIndex, float InVal) { return 0.f; }

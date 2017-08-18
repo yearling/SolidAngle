@@ -28,11 +28,11 @@ DECLARE_LOG_CATEGORY_EXTERN(LogProfiledFile, Log, All);
 
 extern bool bSuppressProfiledFileLog;
 
-#define PROFILERFILE_LOG(CategoryName, Verbosity, Format, ...) \
+#define PROFILERFILE_LOG(CategorFName, Verbosity, Format, ...) \
 	if (!bSuppressProfiledFileLog) \
 	{ \
 		bSuppressProfiledFileLog = true; \
-		UE_LOG(CategoryName, Verbosity, Format, ##__VA_ARGS__); \
+		UE_LOG(CategorFName, Verbosity, Format, ##__VA_ARGS__); \
 		bSuppressProfiledFileLog = false; \
 	}
 
@@ -351,16 +351,16 @@ public:
 		OpStat->Duration += FPlatformTime::Seconds() * 1000.0 - OpStat->LastOpTime;
 		return Result;
 	}
-	virtual YDateTime	GetTimeStamp(const TCHAR* Filename) override
+	virtual FDateTime	GetTimeStamp(const TCHAR* Filename) override
 	{
 		StatsType* FileStat = CreateStat(Filename);
 		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::GetTimeStamp);
 		double OpStartTime = FPlatformTime::Seconds();
-		YDateTime Result = LowerLevel->GetTimeStamp(Filename);
+		FDateTime Result = LowerLevel->GetTimeStamp(Filename);
 		OpStat->Duration += FPlatformTime::Seconds() * 1000 - OpStat->LastOpTime;
 		return Result;
 	}
-	virtual void		SetTimeStamp(const TCHAR* Filename, YDateTime DateTime) override
+	virtual void		SetTimeStamp(const TCHAR* Filename, FDateTime DateTime) override
 	{
 		StatsType* FileStat = CreateStat(Filename);
 		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::SetTimeStamp);
@@ -368,12 +368,12 @@ public:
 		LowerLevel->SetTimeStamp(Filename, DateTime);
 		OpStat->Duration += FPlatformTime::Seconds() * 1000 - OpStat->LastOpTime;
 	}
-	virtual YDateTime	GetAccessTimeStamp(const TCHAR* Filename) override
+	virtual FDateTime	GetAccessTimeStamp(const TCHAR* Filename) override
 	{
 		StatsType* FileStat = CreateStat(Filename);
 		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::GetTimeStamp);
 		double OpStartTime = FPlatformTime::Seconds();
-		YDateTime Result = LowerLevel->GetAccessTimeStamp(Filename);
+		FDateTime Result = LowerLevel->GetAccessTimeStamp(Filename);
 		OpStat->Duration += FPlatformTime::Seconds() * 1000 - OpStat->LastOpTime;
 		return Result;
 	}
@@ -626,15 +626,15 @@ public:
 	{
 		return LowerLevel->SetReadOnly(Filename, bNewReadOnlyValue);
 	}
-	virtual YDateTime	GetTimeStamp(const TCHAR* Filename) override
+	virtual FDateTime	GetTimeStamp(const TCHAR* Filename) override
 	{
 		return LowerLevel->GetTimeStamp(Filename);
 	}
-	virtual void		SetTimeStamp(const TCHAR* Filename, YDateTime DateTime) override
+	virtual void		SetTimeStamp(const TCHAR* Filename, FDateTime DateTime) override
 	{
 		LowerLevel->SetTimeStamp(Filename, DateTime);
 	}
-	virtual YDateTime	GetAccessTimeStamp(const TCHAR* Filename) override
+	virtual FDateTime	GetAccessTimeStamp(const TCHAR* Filename) override
 	{
 		return LowerLevel->GetAccessTimeStamp(Filename);
 	}

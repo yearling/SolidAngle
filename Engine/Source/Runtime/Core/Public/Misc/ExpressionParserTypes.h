@@ -155,13 +155,13 @@ private:
 };
 
 /** Helper macro to define the necessary template specialization for a particular expression node type */
-/** Variable length arguments are passed the YGuid constructor. Must be unique per type */
+/** Variable length arguments are passed the FGuid constructor. Must be unique per type */
 #define DEFINE_EXPRESSION_NODE_TYPE(TYPE, ...) \
 template<> struct TGetExpressionNodeTypeId<TYPE>\
 {\
-	static const YGuid& GetTypeId()\
+	static const FGuid& GetTypeId()\
 	{\
-		static YGuid Global(__VA_ARGS__);\
+		static FGuid Global(__VA_ARGS__);\
 		return Global;\
 	}\
 };
@@ -193,7 +193,7 @@ public:
 	FExpressionNode& operator=(FExpressionNode&& In);
 
 	/** Get the type identifier of this node */
-	const YGuid& GetTypeId() const;
+	const FGuid& GetTypeId() const;
 
 	/** Cast this node to the specified type. Will return nullptr if the types do not match. */
 	template<typename T>
@@ -205,14 +205,14 @@ public:
 private:
 
 	/** The maximum size of type we will allow allocation on the stack (for efficiency). Anything larger will be allocated on the heap. */
-	static const uint32 MaxStackAllocationSize = 64 - sizeof(YGuid);
+	static const uint32 MaxStackAllocationSize = 64 - sizeof(FGuid);
 
 	/** Helper accessor to the data interface. Returns null for empty containers. */
 	Impl::IExpressionNodeStorage* GetData();
 	const Impl::IExpressionNodeStorage* GetData() const;
 
 	/** TypeID - 16 bytes */
-	YGuid TypeId;
+	FGuid TypeId;
 	uint8 InlineBytes[MaxStackAllocationSize];
 };
 
@@ -252,9 +252,9 @@ struct FCompiledToken : FExpressionToken
 /** Struct used to identify a function for a specific operator overload */
 struct FOperatorFunctionID
 {
-	YGuid OperatorType;
-	YGuid LeftOperandType;
-	YGuid RightOperandType;
+	FGuid OperatorType;
+	FGuid LeftOperandType;
+	FGuid RightOperandType;
 
 	friend bool operator==(const FOperatorFunctionID& A, const FOperatorFunctionID& B)
 	{
@@ -489,23 +489,23 @@ public:
 public:
 
 	/** Retrieve the corresponding grouping token for the specified open group type, or nullptr if it's not a group token */
-	const YGuid* GetGrouping(const YGuid& TypeId) const;
+	const FGuid* GetGrouping(const FGuid& TypeId) const;
 
 	/** Check if this grammar defines a pre-unary operator for the specified symbol */
-	bool HasPreUnaryOperator(const YGuid& TypeId) const;
+	bool HasPreUnaryOperator(const FGuid& TypeId) const;
 	
 	/** Check if this grammar defines a post-unary operator for the specified symbol */
-	bool HasPostUnaryOperator(const YGuid& TypeId) const;
+	bool HasPostUnaryOperator(const FGuid& TypeId) const;
 
 	/** Get the binary operator precedence for the specified symbol, if any */
-	const int* GetBinaryOperatorPrecedence(const YGuid& TypeId) const;
+	const int* GetBinaryOperatorPrecedence(const FGuid& TypeId) const;
 
 private:
 
-	TMap<YGuid, YGuid>	Groupings;
-	TSet<YGuid>			PreUnaryOperators;
-	TSet<YGuid>			PostUnaryOperators;
-	TMap<YGuid, int32>	BinaryOperators;
+	TMap<FGuid, FGuid>	Groupings;
+	TSet<FGuid>			PreUnaryOperators;
+	TSet<FGuid>			PostUnaryOperators;
+	TMap<FGuid, int32>	BinaryOperators;
 };
 
 #include "Misc/ExpressionParserTypes.inl"

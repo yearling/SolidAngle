@@ -16,8 +16,8 @@ class FContextSupplier;
 class SBuildProgressWidget;
 
 /** A context for displaying modal warning messages. */
-class CORE_API YFeedbackContext
-	: public YOutputDevice
+class CORE_API FFeedbackContext
+	: public FOutputDevice
 {
 public:
 
@@ -79,9 +79,9 @@ public:
 
 	bool	TreatWarningsAsErrors;
 
-	YFeedbackContext();
+	FFeedbackContext();
 
-	virtual ~YFeedbackContext();
+	virtual ~FFeedbackContext();
 
 	/** Gets warnings history */
 	void GetWarnings(TArray<YString>& OutWarnings) const
@@ -121,8 +121,8 @@ public:
 	}
 
 private:
-	YFeedbackContext(const YFeedbackContext&);
-	YFeedbackContext& operator=(const YFeedbackContext&);
+	FFeedbackContext(const FFeedbackContext&);
+	FFeedbackContext& operator=(const FFeedbackContext&);
 
 	/** Warnings history */
 	TArray<YString> Warnings;

@@ -11,7 +11,7 @@
 /**
  * Implements a rectangular 2D Box.
  */
-struct YBox2D
+struct FBox2D
 {
 public:
 	/** Holds the box's minimum point. */
@@ -26,14 +26,14 @@ public:
 public:
 
 	/** Default constructor (no initialization). */
-	YBox2D() { }
+	FBox2D() { }
 
 	/**
 	 * Creates and initializes a new box.
 	 *
 	 * The box extents are initialized to zero and the box is marked as invalid.
 	 */
-	YBox2D( int32 )
+	FBox2D( int32 )
 	{
 		Init();
 	}
@@ -45,7 +45,7 @@ public:
 	 *
 	 * @param EForceInit Force Init Enum.
 	 */
-	explicit YBox2D( EForceInit )
+	explicit FBox2D( EForceInit )
 	{
 		Init();
 	}
@@ -56,7 +56,7 @@ public:
 	 * @param InMin The box's minimum point.
 	 * @param InMax The box's maximum point.
 	 */
-	YBox2D( const YVector2D& InMin, const YVector2D& InMax )
+	FBox2D( const YVector2D& InMin, const YVector2D& InMax )
 		: Min(InMin)
 		, Max(InMax)
 		, bIsValid(true)
@@ -68,14 +68,14 @@ public:
 	 * @param Points Array of Points to create for the bounding volume.
 	 * @param Count The number of points.
 	 */
-	CORE_API YBox2D( const YVector2D* Points, const int32 Count );
+	CORE_API FBox2D( const YVector2D* Points, const int32 Count );
 
 	/**
 	 * Creates and initializes a new box from an array of points.
 	 *
 	 * @param Points Array of Points to create for the bounding volume.
 	 */
-	CORE_API YBox2D( const TArray<YVector2D>& Points );
+	CORE_API FBox2D( const TArray<YVector2D>& Points );
 
 public:
 
@@ -85,7 +85,7 @@ public:
 	 * @param Other The other box to compare with.
 	 * @return true if the boxes are equal, false otherwise.
 	 */
-	bool operator==( const YBox2D& Other ) const
+	bool operator==( const FBox2D& Other ) const
 	{
 		return (Min == Other.Min) && (Max == Other.Max);
 	}
@@ -96,7 +96,7 @@ public:
 	 * @param Other The point to increase the bounding volume to.
 	 * @return Reference to this bounding box after resizing to include the other point.
 	 */
-	FORCEINLINE YBox2D& operator+=( const YVector2D &Other );
+	FORCEINLINE FBox2D& operator+=( const YVector2D &Other );
 
 	/**
 	 * Gets the result of addition to this bounding volume.
@@ -104,9 +104,9 @@ public:
 	 * @param Other The other point to add to this.
 	 * @return A new bounding volume.
 	 */
-	YBox2D operator+( const YVector2D& Other ) const
+	FBox2D operator+( const YVector2D& Other ) const
 	{
-		return YBox2D(*this) += Other;
+		return FBox2D(*this) += Other;
 	}
 
 	/**
@@ -115,7 +115,7 @@ public:
 	 * @param Other The bounding volume to increase the bounding volume to.
 	 * @return Reference to this bounding volume after resizing to include the other bounding volume.
 	 */
-	FORCEINLINE YBox2D& operator+=( const YBox2D& Other );
+	FORCEINLINE FBox2D& operator+=( const FBox2D& Other );
 
 	/**
 	 * Gets the result of addition to this bounding volume.
@@ -123,9 +123,9 @@ public:
 	 * @param Other The other volume to add to this.
 	 * @return A new bounding volume.
 	 */
-	YBox2D operator+( const YBox2D& Other ) const
+	FBox2D operator+( const FBox2D& Other ) const
 	{
-		return YBox2D(*this) += Other;
+		return FBox2D(*this) += Other;
 	}
 
 	/**
@@ -186,9 +186,9 @@ public:
 	 * @param W The size to increase volume by.
 	 * @return A new bounding box increased in size.
 	 */
-	YBox2D ExpandBy( const float W ) const
+	FBox2D ExpandBy( const float W ) const
 	{
-		return YBox2D(Min - YVector2D(W, W), Max + YVector2D(W, W));
+		return FBox2D(Min - YVector2D(W, W), Max + YVector2D(W, W));
 	}
 
 	/**
@@ -273,7 +273,7 @@ public:
 	 * @param other bounding box to test intersection
 	 * @return true if boxes intersect, false otherwise.
 	 */
-	FORCEINLINE bool Intersect( const YBox2D & other ) const;
+	FORCEINLINE bool Intersect( const FBox2D & other ) const;
 
 	/**
 	 * Checks whether the given point is inside this box.
@@ -292,7 +292,7 @@ public:
 	 * @param Other The box to test for encapsulation within the bounding volume.
 	 * @return true if box is inside this volume, false otherwise.
 	 */
-	bool IsInside( const YBox2D& Other ) const
+	bool IsInside( const FBox2D& Other ) const
 	{
 		return (IsInside(Other.Min) && IsInside(Other.Max));
 	}
@@ -303,9 +303,9 @@ public:
 	 * @param The offset vector to shift by.
 	 * @return A new shifted bounding box.
 	 */
-	YBox2D ShiftBy( const YVector2D& Offset ) const
+	FBox2D ShiftBy( const YVector2D& Offset ) const
 	{
-		return YBox2D(Min + Offset, Max + Offset);
+		return FBox2D(Min + Offset, Max + Offset);
 	}
 
 	/**
@@ -325,7 +325,7 @@ public:
 	 *
 	 * @return Reference to the Archive after serialization.
 	 */
-	friend YArchive& operator<<( YArchive& Ar, YBox2D& Box )
+	friend FArchive& operator<<( FArchive& Ar, FBox2D& Box )
 	{
 		return Ar << Box.Min << Box.Max << Box.bIsValid;
 	}
@@ -335,7 +335,7 @@ public:
 /* FBox2D inline functions
  *****************************************************************************/
 
-FORCEINLINE YBox2D& YBox2D::operator+=( const YVector2D &Other )
+FORCEINLINE FBox2D& FBox2D::operator+=( const YVector2D &Other )
 {
 	if (bIsValid)
 	{
@@ -356,7 +356,7 @@ FORCEINLINE YBox2D& YBox2D::operator+=( const YVector2D &Other )
 }
 
 
-FORCEINLINE YBox2D& YBox2D::operator+=( const YBox2D& Other )
+FORCEINLINE FBox2D& FBox2D::operator+=( const FBox2D& Other )
 {
 	if (bIsValid && Other.bIsValid)
 	{
@@ -375,7 +375,7 @@ FORCEINLINE YBox2D& YBox2D::operator+=( const YBox2D& Other )
 }
 
 
-FORCEINLINE YVector2D YBox2D::GetClosestPointTo( const YVector2D& Point ) const
+FORCEINLINE YVector2D FBox2D::GetClosestPointTo( const YVector2D& Point ) const
 {
 	// start by considering the point inside the box
 	YVector2D ClosestPoint = Point;
@@ -404,7 +404,7 @@ FORCEINLINE YVector2D YBox2D::GetClosestPointTo( const YVector2D& Point ) const
 }
 
 
-FORCEINLINE bool YBox2D::Intersect( const YBox2D & Other ) const
+FORCEINLINE bool FBox2D::Intersect( const FBox2D & Other ) const
 {
 	if ((Min.X > Other.Max.X) || (Other.Min.X > Max.X))
 	{
@@ -420,7 +420,7 @@ FORCEINLINE bool YBox2D::Intersect( const YBox2D & Other ) const
 }
 
 
-FORCEINLINE YString YBox2D::ToString() const
+FORCEINLINE YString FBox2D::ToString() const
 {
 	return YString::Printf(TEXT("bIsValid=%s, Min=(%s), Max=(%s)"), bIsValid ? TEXT("true") : TEXT("false"), *Min.ToString(), *Max.ToString());
 }

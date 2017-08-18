@@ -11,7 +11,7 @@
 #include "Math/Plane.h"
 #include "Math/Rotator.h"
 #include "Math/Axis.h"
-#include "SObject/ObjectVersion.h"
+#include "UObject/ObjectVersion.h"
 
 /**
 * 4x4 matrix of floating point values.
@@ -20,7 +20,7 @@
 * opposed to Res = Mat1 * Mat2.
 * Matrix elements are accessed with M[RowIndex][ColumnIndex].
 */
-struct YMatrix
+struct FMatrix
 {
 public:
 	union
@@ -29,17 +29,17 @@ public:
 	};
 
 	//Identity matrix
-	MS_ALIGN(16) static CORE_API const YMatrix Identity GCC_ALIGN(16);
+	MS_ALIGN(16) static CORE_API const FMatrix Identity GCC_ALIGN(16);
 
 	// Constructors.
-	FORCEINLINE YMatrix();
+	FORCEINLINE FMatrix();
 
 	/**
 	* Constructor.
 	*
 	* @param EForceInit Force Init Enum.
 	*/
-	explicit FORCEINLINE YMatrix(EForceInit)
+	explicit FORCEINLINE FMatrix(EForceInit)
 	{
 		YMemory::Memzero(this, sizeof(*this));
 	}
@@ -52,7 +52,7 @@ public:
 	* @param InZ Z plane
 	* @param InW W plane
 	*/
-	FORCEINLINE YMatrix(const YPlane& InX, const YPlane& InY, const YPlane& InZ, const YPlane& InW);
+	FORCEINLINE FMatrix(const FPlane& InX, const FPlane& InY, const FPlane& InZ, const FPlane& InW);
 
 	/**
 	* Constructor.
@@ -62,7 +62,7 @@ public:
 	* @param InZ Z vector
 	* @param InW W vector
 	*/
-	FORCEINLINE YMatrix(const YVector& InX, const YVector& InY, const YVector& InZ, const YVector& InW);
+	FORCEINLINE FMatrix(const FVector& InX, const FVector& InY, const FVector& InZ, const FVector& InW);
 
 	// Set this to the identity matrix
 	inline void SetIdentity();
@@ -73,7 +73,7 @@ public:
 	* @param Other The matrix to multiply this by.
 	* @return The result of multiplication.
 	*/
-	FORCEINLINE YMatrix operator* (const YMatrix& Other) const;
+	FORCEINLINE FMatrix operator* (const FMatrix& Other) const;
 
 	/**
 	* Multiply this by a matrix.
@@ -81,7 +81,7 @@ public:
 	* @param Other the matrix to multiply by this.
 	* @return reference to this after multiply.
 	*/
-	FORCEINLINE void operator*=(const YMatrix& Other);
+	FORCEINLINE void operator*=(const FMatrix& Other);
 
 	/**
 	* Gets the result of adding a matrix to this.
@@ -89,7 +89,7 @@ public:
 	* @param Other The Matrix to add.
 	* @return The result of addition.
 	*/
-	FORCEINLINE YMatrix operator+ (const YMatrix& Other) const;
+	FORCEINLINE FMatrix operator+ (const FMatrix& Other) const;
 
 	/**
 	* Adds to this matrix.
@@ -97,12 +97,12 @@ public:
 	* @param Other The matrix to add to this.
 	* @return Reference to this after addition.
 	*/
-	FORCEINLINE void operator+=(const YMatrix& Other);
+	FORCEINLINE void operator+=(const FMatrix& Other);
 
 	/**
 	* This isn't applying SCALE, just multiplying float to all members - i.e. weighting
 	*/
-	FORCEINLINE YMatrix operator* (float Other) const;
+	FORCEINLINE FMatrix operator* (float Other) const;
 
 	/**
 	* Multiply this matrix by a weighting factor.
@@ -118,7 +118,7 @@ public:
 	* @param Other The other matrix.
 	* @return true if two matrix are identical, otherwise false.
 	*/
-	inline bool operator==(const YMatrix& Other) const;
+	inline bool operator==(const FMatrix& Other) const;
 
 	/**
 	* Checks whether another Matrix is equal to this, within specified tolerance.
@@ -127,7 +127,7 @@ public:
 	* @param Tolerance Error Tolerance.
 	* @return true if two Matrix are equal, within specified tolerance, otherwise false.
 	*/
-	inline bool Equals(const YMatrix& Other, float Tolerance = KINDA_SMALL_NUMBER) const;
+	inline bool Equals(const FMatrix& Other, float Tolerance = KINDA_SMALL_NUMBER) const;
 
 	/**
 	* Checks whether another Matrix is not equal to this, within specified tolerance.
@@ -135,32 +135,32 @@ public:
 	* @param Other The other Matrix.
 	* @return true if two Matrix are not equal, within specified tolerance, otherwise false.
 	*/
-	inline bool operator!=(const YMatrix& Other) const;
+	inline bool operator!=(const FMatrix& Other) const;
 
 	// Homogeneous transform.
-	FORCEINLINE YVector TransformFVector4(const YVector& V) const;
+	FORCEINLINE FVector TransformFVector4(const FVector& V) const;
 
 	/** Transform a location - will take into account translation part of the YMatrix. */
-	FORCEINLINE YVector TransformPosition(const YVector &V) const;
+	FORCEINLINE FVector TransformPosition(const FVector &V) const;
 
 	/** Inverts the matrix and then transforms V - correctly handles scaling in this matrix. */
-	FORCEINLINE YVector InverseTransformPosition(const YVector &V) const;
+	FORCEINLINE FVector InverseTransformPosition(const FVector &V) const;
 
 	/**
 	*	Transform a direction vector - will not take into account translation part of the YMatrix.
 	*	If you want to transform a surface normal (or plane) and correctly account for non-uniform scaling you should use TransformByUsingAdjointT.
 	*/
-	FORCEINLINE YVector TransformVector(const YVector& V) const;
+	FORCEINLINE FVector TransformVector(const FVector& V) const;
 
 	/**
 	*	Transform a direction vector by the inverse of this matrix - will not take into account translation part.
 	*	If you want to transform a surface normal (or plane) and correctly account for non-uniform scaling you should use TransformByUsingAdjointT with adjoint of matrix inverse.
 	*/
-	FORCEINLINE YVector InverseTransformVector(const YVector &V) const;
+	FORCEINLINE FVector InverseTransformVector(const FVector &V) const;
 
 	// Transpose.
 
-	FORCEINLINE YMatrix GetTransposed() const;
+	FORCEINLINE FMatrix GetTransposed() const;
 
 	// @return determinant of this matrix.
 
@@ -170,46 +170,46 @@ public:
 	inline float RotDeterminant() const;
 
 	/** Fast path, doesn't check for nil matrices in final release builds */
-	inline YMatrix InverseFast() const;
+	inline FMatrix InverseFast() const;
 
 	/** Fast path, and handles nil matrices. */
-	inline YMatrix Inverse() const;
+	inline FMatrix Inverse() const;
 
-	inline YMatrix TransposeAdjoint() const;
+	inline FMatrix TransposeAdjoint() const;
 
 	// NOTE: There is some compiler optimization issues with WIN64 that cause FORCEINLINE to cause a crash
 	// Remove any scaling from this matrix (ie magnitude of each row is 1) with error Tolerance
 	inline void RemoveScaling(float Tolerance = SMALL_NUMBER);
 
 	// Returns matrix after RemoveScaling with error Tolerance
-	inline YMatrix GetMatrixWithoutScale(float Tolerance = SMALL_NUMBER) const;
+	inline FMatrix GetMatrixWithoutScale(float Tolerance = SMALL_NUMBER) const;
 
 	/** Remove any scaling from this matrix (ie magnitude of each row is 1) and return the 3D scale vector that was initially present with error Tolerance */
-	inline YVector ExtractScaling(float Tolerance = SMALL_NUMBER);
+	inline FVector ExtractScaling(float Tolerance = SMALL_NUMBER);
 
 	/** return a 3D scale vector calculated from this matrix (where each component is the magnitude of a row vector) with error Tolerance. */
-	inline YVector GetScaleVector(float Tolerance = SMALL_NUMBER) const;
+	inline FVector GetScaleVector(float Tolerance = SMALL_NUMBER) const;
 
 	// Remove any translation from this matrix
-	inline YMatrix RemoveTranslation() const;
+	inline FMatrix RemoveTranslation() const;
 
 	/** Returns a matrix with an additional translation concatenated. */
-	inline YMatrix ConcatTranslation(const YVector& Translation) const;
+	inline FMatrix ConcatTranslation(const FVector& Translation) const;
 
 	/** Returns true if any element of this matrix is NaN */
 	inline bool ContainsNaN() const;
 
 	/** Scale the translation part of the matrix by the supplied vector. */
-	inline void ScaleTranslation(const YVector& Scale3D);
+	inline void ScaleTranslation(const FVector& Scale3D);
 
 	/** @return the maximum magnitude of any row of the matrix. */
 	inline float GetMaximumAxisScale() const;
 
 	/** Apply Scale to this matrix **/
-	inline YMatrix ApplyScale(float Scale);
+	inline FMatrix ApplyScale(float Scale);
 
 	// @return the origin of the co-ordinate system
-	inline YVector GetOrigin() const;
+	inline FVector GetOrigin() const;
 
 	/**
 	* get axis of this matrix scaled by the scale of the matrix
@@ -217,7 +217,7 @@ public:
 	* @param i index into the axis of the matrix
 	* @ return vector of the axis
 	*/
-	inline YVector GetScaledAxis(EAxis::Type Axis) const;
+	inline FVector GetScaledAxis(EAxis::Type Axis) const;
 
 	/**
 	* get axes of this matrix scaled by the scale of the matrix
@@ -226,7 +226,7 @@ public:
 	* @param Y axes returned to this param
 	* @param Z axes returned to this param
 	*/
-	inline void GetScaledAxes(YVector &X, YVector &Y, YVector &Z) const;
+	inline void GetScaledAxes(FVector &X, FVector &Y, FVector &Z) const;
 
 	/**
 	* get unit length axis of this matrix
@@ -234,7 +234,7 @@ public:
 	* @param i index into the axis of the matrix
 	* @return vector of the axis
 	*/
-	inline YVector GetUnitAxis(EAxis::Type Axis) const;
+	inline FVector GetUnitAxis(EAxis::Type Axis) const;
 
 	/**
 	* get unit length axes of this matrix
@@ -243,7 +243,7 @@ public:
 	* @param Y axes returned to this param
 	* @param Z axes returned to this param
 	*/
-	inline void GetUnitAxes(YVector &X, YVector &Y, YVector &Z) const;
+	inline void GetUnitAxes(FVector &X, FVector &Y, FVector &Z) const;
 
 	/**
 	* set an axis of this matrix
@@ -251,10 +251,10 @@ public:
 	* @param i index into the axis of the matrix
 	* @param Axis vector of the axis
 	*/
-	inline void SetAxis(int32 i, const YVector& Axis);
+	inline void SetAxis(int32 i, const FVector& Axis);
 
 	// Set the origin of the coordinate system to the given vector
-	inline void SetOrigin(const YVector& NewOrigin);
+	inline void SetOrigin(const FVector& NewOrigin);
 
 	/**
 	* Update the axes of the matrix if any value is NULL do not update that axis
@@ -264,7 +264,7 @@ public:
 	* @param Axis2 set matrix row 2
 	* @param Origin set matrix row 3
 	*/
-	inline void SetAxes(YVector* Axis0 = NULL, YVector* Axis1 = NULL, YVector* Axis2 = NULL, YVector* Origin = NULL);
+	inline void SetAxes(FVector* Axis0 = NULL, FVector* Axis1 = NULL, FVector* Axis2 = NULL, FVector* Origin = NULL);
 
 
 	/**
@@ -273,36 +273,36 @@ public:
 	* @param i index into the column of the matrix
 	* @return vector of the column
 	*/
-	inline YVector GetColumn(int32 i) const;
+	inline FVector GetColumn(int32 i) const;
 
 	/** @return rotator representation of this matrix */
-	CORE_API YRotator Rotator() const;
+	CORE_API FRotator Rotator() const;
 
 	/**
 	* Transform a rotation matrix into a quaternion.
 	*
 	* @warning rotation part will need to be unit length for this to be right!
 	*/
-	CORE_API YQuat ToQuat() const;
+	CORE_API FQuat ToQuat() const;
 
 	// Frustum plane extraction.
 	/** @param OutPlane the near plane of the Frustum of this matrix */
-	FORCEINLINE bool GetFrustumNearPlane(YPlane& OutPlane) const;
+	FORCEINLINE bool GetFrustumNearPlane(FPlane& OutPlane) const;
 
 	/** @param OutPlane the far plane of the Frustum of this matrix */
-	FORCEINLINE bool GetFrustumFarPlane(YPlane& OutPlane) const;
+	FORCEINLINE bool GetFrustumFarPlane(FPlane& OutPlane) const;
 
 	/** @param OutPlane the left plane of the Frustum of this matrix */
-	FORCEINLINE bool GetFrustumLeftPlane(YPlane& OutPlane) const;
+	FORCEINLINE bool GetFrustumLeftPlane(FPlane& OutPlane) const;
 
 	/** @param OutPlane the right plane of the Frustum of this matrix */
-	FORCEINLINE bool GetFrustumRightPlane(YPlane& OutPlane) const;
+	FORCEINLINE bool GetFrustumRightPlane(FPlane& OutPlane) const;
 
 	/** @param OutPlane the top plane of the Frustum of this matrix */
-	FORCEINLINE bool GetFrustumTopPlane(YPlane& OutPlane) const;
+	FORCEINLINE bool GetFrustumTopPlane(FPlane& OutPlane) const;
 
 	/** @param OutPlane the bottom plane of the Frustum of this matrix */
-	FORCEINLINE bool GetFrustumBottomPlane(YPlane& OutPlane) const;
+	FORCEINLINE bool GetFrustumBottomPlane(FPlane& OutPlane) const;
 
 	/**
 	* Utility for mirroring this transform across a certain plane, and flipping one of the axis as well.
@@ -329,9 +329,9 @@ public:
 	* @param M Reference to the matrix being serialized.
 	* @return Reference to the Archive after serialization.
 	*/
-	friend CORE_API YArchive& operator<<(YArchive& Ar, YMatrix& M);
+	friend CORE_API FArchive& operator<<(FArchive& Ar, FMatrix& M);
 
-	bool Serialize(YArchive& Ar)
+	bool Serialize(FArchive& Ar)
 	{
 		if (Ar.UE4Ver() >= VER_UE4_ADDED_NATIVE_SERIALIZATION_FOR_IMMUTABLE_STRUCTURES)
 		{
@@ -393,7 +393,7 @@ public:
 	*
 	* @param InMatrix YMatrix reference
 	*/
-	TMatrix(const YMatrix& InMatrix);
+	TMatrix(const FMatrix& InMatrix);
 };
 
 
@@ -402,7 +402,7 @@ FORCEINLINE TMatrix<NumRows, NumColumns>::TMatrix() { }
 
 
 template<uint32 NumRows, uint32 NumColumns>
-FORCEINLINE TMatrix<NumRows, NumColumns>::TMatrix(const YMatrix& InMatrix)
+FORCEINLINE TMatrix<NumRows, NumColumns>::TMatrix(const FMatrix& InMatrix)
 {
 	for (uint32 RowIndex = 0; (RowIndex < NumRows) && (RowIndex < 4); RowIndex++)
 	{
@@ -414,24 +414,24 @@ FORCEINLINE TMatrix<NumRows, NumColumns>::TMatrix(const YMatrix& InMatrix)
 }
 
 
-struct YBasisVectorMatrix : YMatrix
+struct YBasisVectorMatrix : FMatrix
 {
 	// Create Basis matrix from 3 axis vectors and the origin
-	YBasisVectorMatrix(const YVector& XAxis, const YVector& YAxis, const YVector& ZAxis, const YVector& Origin);
+	YBasisVectorMatrix(const FVector& XAxis, const FVector& YAxis, const FVector& ZAxis, const FVector& Origin);
 };
 
 
-struct YLookAtMatrix : YMatrix
+struct YLookAtMatrix : FMatrix
 {
 	/**
 	* Creates a view matrix given an eye position, a position to look at, and an up vector.
 	* This does the same thing as D3DXMatrixLookAtLH.
 	*/
-	YLookAtMatrix(const YVector& EyePosition, const YVector& LookAtPosition, const YVector& UpVector);
+	YLookAtMatrix(const FVector& EyePosition, const FVector& LookAtPosition, const FVector& UpVector);
 };
 
 
-template <> struct TIsPODType<YMatrix> { enum { Value = true }; };
+template <> struct TIsPODType<FMatrix> { enum { Value = true }; };
 
 
 // very high quality 4x4 matrix inverse

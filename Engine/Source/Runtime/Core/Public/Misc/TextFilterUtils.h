@@ -3,7 +3,7 @@
 
 #include "CoreTypes.h"
 #include "Containers/SolidAngleString.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 
 /** Defines the comparison operators that can be used for a complex (key->value) comparison */
 enum class ETextFilterComparisonOperation : uint8
@@ -45,7 +45,7 @@ public:
 	FTextFilterString(const TCHAR* InString);
 
 	/** Construct from a name */
-	FTextFilterString(const YName& InName);
+	FTextFilterString(const FName& InName);
 
 	/** Move and copy assignment */
 	FTextFilterString& operator=(const FTextFilterString& Other);
@@ -66,10 +66,10 @@ public:
 		return InternalString;
 	}
 
-	/** Get the internal uppercase string of this filter string as an YName */
-	FORCEINLINE YName AsName() const
+	/** Get the internal uppercase string of this filter string as an FName */
+	FORCEINLINE FName AsName() const
 	{
-		return YName(*InternalString);
+		return FName(*InternalString);
 	}
 
 	/** Is the internal string empty? */

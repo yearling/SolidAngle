@@ -52,7 +52,7 @@ extern CORE_API int32 GMallocBinned2AllocExtra = DEFAULT_GMallocBinned2AllocExtr
 //
 // Optimized virtual memory allocator.
 //
-class CORE_API YMallocBinned2 final : public YMalloc
+class CORE_API YMallocBinned2 final : public FMalloc
 {
 	struct Private;
 

@@ -71,9 +71,9 @@ FText FTokenizedMessage::GetSeverityText( EMessageSeverity::Type InSeverity )
 	}
 }
 
-YName FTokenizedMessage::GetSeverityIconName(EMessageSeverity::Type InSeverity)
+FName FTokenizedMessage::GetSeverityIconName(EMessageSeverity::Type InSeverity)
 {
-	YName SeverityIconName;
+	FName SeverityIconName;
 	switch (InSeverity)
 	{
 	case EMessageSeverity::CriticalError:		

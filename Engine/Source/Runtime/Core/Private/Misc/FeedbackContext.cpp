@@ -3,18 +3,18 @@
 #include "Misc/FeedbackContext.h"
 #include "HAL/PlatformTime.h"
 
-YFeedbackContext::YFeedbackContext()
+FFeedbackContext::FFeedbackContext()
 	: TreatWarningsAsErrors(0)
 	, ScopeStack(MakeShareable(new FSlowTaskStack))
 {
 }
 
-YFeedbackContext::~YFeedbackContext()
+FFeedbackContext::~FFeedbackContext()
 {
 	ensureMsgf(LegacyAPIScopes.Num() == 0, TEXT("EndSlowTask has not been called for %d outstanding tasks"), LegacyAPIScopes.Num());
 }
 
-void YFeedbackContext::RequestUpdateUI(bool bForceUpdate)
+void FFeedbackContext::RequestUpdateUI(bool bForceUpdate)
 {
 	// Only update a maximum of 5 times a second
 	static double MinUpdateTimeS = 0.2;
@@ -29,7 +29,7 @@ void YFeedbackContext::RequestUpdateUI(bool bForceUpdate)
 	}
 }
 
-void YFeedbackContext::UpdateUI()
+void FFeedbackContext::UpdateUI()
 {
 	ensure(IsInGameThread());
 
@@ -40,7 +40,7 @@ void YFeedbackContext::UpdateUI()
 }
 
 /**** Begin legacy API ****/
-void YFeedbackContext::BeginSlowTask( const FText& Task, bool ShowProgressDialog, bool bShowCancelButton )
+void FFeedbackContext::BeginSlowTask( const FText& Task, bool ShowProgressDialog, bool bShowCancelButton )
 {
 	ensure(IsInGameThread());
 
@@ -54,7 +54,7 @@ void YFeedbackContext::BeginSlowTask( const FText& Task, bool ShowProgressDialog
 	LegacyAPIScopes.Add(MoveTemp(NewScope));
 }
 
-void YFeedbackContext::UpdateProgress( int32 Numerator, int32 Denominator )
+void FFeedbackContext::UpdateProgress( int32 Numerator, int32 Denominator )
 {
 	ensure(IsInGameThread());
 
@@ -67,7 +67,7 @@ void YFeedbackContext::UpdateProgress( int32 Numerator, int32 Denominator )
 	}
 }
 
-void YFeedbackContext::StatusUpdate( int32 Numerator, int32 Denominator, const FText& StatusText )
+void FFeedbackContext::StatusUpdate( int32 Numerator, int32 Denominator, const FText& StatusText )
 {
 	ensure(IsInGameThread());
 
@@ -82,7 +82,7 @@ void YFeedbackContext::StatusUpdate( int32 Numerator, int32 Denominator, const F
 	}
 }
 
-void YFeedbackContext::StatusForceUpdate( int32 Numerator, int32 Denominator, const FText& StatusText )
+void FFeedbackContext::StatusForceUpdate( int32 Numerator, int32 Denominator, const FText& StatusText )
 {
 	ensure(IsInGameThread());
 
@@ -94,7 +94,7 @@ void YFeedbackContext::StatusForceUpdate( int32 Numerator, int32 Denominator, co
 	}
 }
 
-void YFeedbackContext::EndSlowTask()
+void FFeedbackContext::EndSlowTask()
 {
 	ensure(IsInGameThread());
 
@@ -104,7 +104,7 @@ void YFeedbackContext::EndSlowTask()
 }
 /**** End legacy API ****/
 
-bool YFeedbackContext::IsPlayingInEditor() const
+bool FFeedbackContext::IsPlayingInEditor() const
 {
 	return GIsPlayInEditorWorld;
 }

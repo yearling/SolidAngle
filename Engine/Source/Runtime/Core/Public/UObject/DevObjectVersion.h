@@ -2,15 +2,15 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Misc/Guid.h"
 #include "Serialization/CustomVersion.h"
-//#include "LoadTimesObjectVersion.h"
+//#include "LoadTimeUObjectVersion.h"
 
 class CORE_API FDevVersionRegistration :  public FCustomVersionRegistration
 {
 public:
-	FDevVersionRegistration(YGuid InKey, int32 Version, YName InFriendlyName);
+	FDevVersionRegistration(FGuid InKey, int32 Version, FName InFriendlFName);
 
 	/** Dumps all registered versions to log */
 	static void DumpVersionsToLog();

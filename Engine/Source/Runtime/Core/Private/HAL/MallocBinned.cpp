@@ -672,9 +672,9 @@ struct YMallocBinned::Private
 	}
 };
 
-void YMallocBinned::GetAllocatorStats( YGenericMemoryStats& out_Stats )
+void YMallocBinned::GetAllocatorStats( FGenericMemoryStats& out_Stats )
 {
-	YMalloc::GetAllocatorStats( out_Stats );
+	FMalloc::GetAllocatorStats( out_Stats );
 
 #if	STATS
 	SIZE_T	LocalOsCurrent = 0;
@@ -721,19 +721,19 @@ void YMallocBinned::GetAllocatorStats( YGenericMemoryStats& out_Stats )
 
 void YMallocBinned::InitializeStatsMetadata()
 {
-	YMalloc::InitializeStatsMetadata();
+	FMalloc::InitializeStatsMetadata();
 
 	// Initialize stats metadata here instead of UpdateStats.
 	// Mostly to avoid dead-lock when stats malloc profiler is enabled.
-	GET_STATYNAME(STAT_Binned_OsCurrent);
-	GET_STATYNAME(STAT_Binned_OsPeak);
-	GET_STATYNAME(STAT_Binned_WasteCurrent);
-	GET_STATYNAME(STAT_Binned_WastePeak);
-	GET_STATYNAME(STAT_Binned_UsedCurrent);
-	GET_STATYNAME(STAT_Binned_UsedPeak);
-	GET_STATYNAME(STAT_Binned_CurrentAllocs);
-	GET_STATYNAME(STAT_Binned_TotalAllocs);
-	GET_STATYNAME(STAT_Binned_SlackCurrent);
+	GET_STATFName(STAT_Binned_OsCurrent);
+	GET_STATFName(STAT_Binned_OsPeak);
+	GET_STATFName(STAT_Binned_WasteCurrent);
+	GET_STATFName(STAT_Binned_WastePeak);
+	GET_STATFName(STAT_Binned_UsedCurrent);
+	GET_STATFName(STAT_Binned_UsedPeak);
+	GET_STATFName(STAT_Binned_CurrentAllocs);
+	GET_STATFName(STAT_Binned_TotalAllocs);
+	GET_STATFName(STAT_Binned_SlackCurrent);
 }
 
 YMallocBinned::YMallocBinned(uint32 InPageSize, uint64 AddressLimit)
@@ -1124,7 +1124,7 @@ bool YMallocBinned::ValidateHeap()
 
 void YMallocBinned::UpdateStats()
 {
-	YMalloc::UpdateStats();
+	FMalloc::UpdateStats();
 #if STATS
 	SIZE_T	LocalOsCurrent = 0;
 	SIZE_T	LocalOsPeak = 0;
@@ -1166,7 +1166,7 @@ void YMallocBinned::UpdateStats()
 #endif
 }
 
-void YMallocBinned::DumpAllocatorStats( class YOutputDevice& Ar )
+void YMallocBinned::DumpAllocatorStats( class FOutputDevice& Ar )
 {
 	FBufferedOutputDevice BufferedOutput;
 	{
@@ -1178,24 +1178,24 @@ void YMallocBinned::DumpAllocatorStats( class YOutputDevice& Ar )
 		Private::UpdateSlackStat(*this);
 #if !NO_LOGGING
 		// This is all of the memory including stuff too big for the pools
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "Allocator Stats for %s:" ), GetDescriptiveName() );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "Allocator Stats for %s:" ), GetDescriptiveName() );
 		// Waste is the total overhead of the memory system
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "Current Memory %.2f MB used, plus %.2f MB waste" ), UsedCurrent / (1024.0f * 1024.0f), (OsCurrent - UsedCurrent) / (1024.0f * 1024.0f) );
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "Peak Memory %.2f MB used, plus %.2f MB waste" ), UsedPeak / (1024.0f * 1024.0f), (OsPeak - UsedPeak) / (1024.0f * 1024.0f) );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "Current Memory %.2f MB used, plus %.2f MB waste" ), UsedCurrent / (1024.0f * 1024.0f), (OsCurrent - UsedCurrent) / (1024.0f * 1024.0f) );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "Peak Memory %.2f MB used, plus %.2f MB waste" ), UsedPeak / (1024.0f * 1024.0f), (OsPeak - UsedPeak) / (1024.0f * 1024.0f) );
 
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "Current OS Memory %.2f MB, peak %.2f MB" ), OsCurrent / (1024.0f * 1024.0f), OsPeak / (1024.0f * 1024.0f) );
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "Current Waste %.2f MB, peak %.2f MB" ), WasteCurrent / (1024.0f * 1024.0f), WastePeak / (1024.0f * 1024.0f) );
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "Current Used %.2f MB, peak %.2f MB" ), UsedCurrent / (1024.0f * 1024.0f), UsedPeak / (1024.0f * 1024.0f) );
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "Current Slack %.2f MB" ), SlackCurrent / (1024.0f * 1024.0f) );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "Current OS Memory %.2f MB, peak %.2f MB" ), OsCurrent / (1024.0f * 1024.0f), OsPeak / (1024.0f * 1024.0f) );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "Current Waste %.2f MB, peak %.2f MB" ), WasteCurrent / (1024.0f * 1024.0f), WastePeak / (1024.0f * 1024.0f) );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "Current Used %.2f MB, peak %.2f MB" ), UsedCurrent / (1024.0f * 1024.0f), UsedPeak / (1024.0f * 1024.0f) );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "Current Slack %.2f MB" ), SlackCurrent / (1024.0f * 1024.0f) );
 
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "Allocs      % 6i Current / % 6i Total" ), CurrentAllocs, TotalAllocs );
-		MEM_TIME( BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "Seconds     % 5.3f" ), MemTime ) );
-		MEM_TIME( BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "MSec/Allc   % 5.5f" ), 1000.0 * MemTime / MemAllocs ) );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "Allocs      % 6i Current / % 6i Total" ), CurrentAllocs, TotalAllocs );
+		MEM_TIME( BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "Seconds     % 5.3f" ), MemTime ) );
+		MEM_TIME( BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "MSec/Allc   % 5.5f" ), 1000.0 * MemTime / MemAllocs ) );
 
 		// This is the memory tracked inside individual allocation pools
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "" ) );
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "Block Size Num Pools Max Pools Cur Allocs Total Allocs Min Req Max Req Mem Used Mem Slack Mem Waste Efficiency" ) );
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "---------- --------- --------- ---------- ------------ ------- ------- -------- --------- --------- ----------" ) );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "" ) );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "Block Size Num Pools Max Pools Cur Allocs Total Allocs Min Req Max Req Mem Used Mem Slack Mem Waste Efficiency" ) );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "---------- --------- --------- ---------- ------------ ------- ------- -------- --------- --------- ----------" ) );
 
 		uint32 TotalMemory = 0;
 		uint32 TotalWaste = 0;
@@ -1228,7 +1228,7 @@ void YMallocBinned::DumpAllocatorStats( class YOutputDevice& Ar )
 			// Memory that is reserved in active pools and ready for future use
 			uint32 MemSlack = MemAllocated - MemUsed - PoolMemWaste;
 
-			BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "% 10i % 9i % 9i % 10i % 12i % 7i % 7i % 7iK % 8iK % 8iK % 9.2f%%" ),
+			BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "% 10i % 9i % 9i % 10i % 12i % 7i % 7i % 7iK % 8iK % 8iK % 9.2f%%" ),
 										  Table->BlockSize,
 										  Table->NumActivePools,
 										  Table->MaxActivePools,
@@ -1249,10 +1249,10 @@ void YMallocBinned::DumpAllocatorStats( class YOutputDevice& Ar )
 			TotalPools += Table->NumActivePools;
 		}
 
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "" ) );
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "%iK allocated in pools (with %iK slack and %iK waste). Efficiency %.2f%%" ), TotalMemory, TotalSlack, TotalWaste, TotalMemory ? 100.0f * (TotalMemory - TotalWaste) / TotalMemory : 100.0f );
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "Allocations %i Current / %i Total (in %i pools)" ), TotalActiveRequests, TotalTotalRequests, TotalPools );
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "" ) );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "" ) );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "%iK allocated in pools (with %iK slack and %iK waste). Efficiency %.2f%%" ), TotalMemory, TotalSlack, TotalWaste, TotalMemory ? 100.0f * (TotalMemory - TotalWaste) / TotalMemory : 100.0f );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "Allocations %i Current / %i Total (in %i pools)" ), TotalActiveRequests, TotalTotalRequests, TotalPools );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "" ) );
 #endif
 #endif
 	}

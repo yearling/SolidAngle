@@ -9,7 +9,7 @@
 
 /** Combined rotation and translation matrix */
 class YRotationTranslationMatrix
-	: public YMatrix
+	: public FMatrix
 {
 public:
 
@@ -19,17 +19,17 @@ public:
 	* @param Rot rotation
 	* @param Origin translation to apply
 	*/
-	YRotationTranslationMatrix(const YRotator& Rot, const YVector& Origin);
+	YRotationTranslationMatrix(const FRotator& Rot, const FVector& Origin);
 
 	/** Matrix factory. Return an YMatrix so we don't have type conversion issues in expressions. */
-	static YMatrix Make(const YRotator& Rot, const YVector& Origin)
+	static FMatrix Make(const FRotator& Rot, const FVector& Origin)
 	{
 		return YRotationTranslationMatrix(Rot, Origin);
 	}
 };
 
 
-FORCEINLINE YRotationTranslationMatrix::YRotationTranslationMatrix(const YRotator& Rot, const YVector& Origin)
+FORCEINLINE YRotationTranslationMatrix::YRotationTranslationMatrix(const FRotator& Rot, const FVector& Origin)
 {
 #if PLATFORM_ENABLE_VECTORINTRINSICS
 

@@ -2,12 +2,12 @@
 
 #include "Misc/Guid.h"
 #include "Misc/Parse.h"
-#include "SObject/PropertyPortFlags.h"
+#include "UObject/PropertyPortFlags.h"
 
 /* YGuid interface
  *****************************************************************************/
 
-bool YGuid::ExportTextItem( YString& ValueStr, YGuid const& DefaultValue, SObject* Parent, int32 PortFlags, class SObject* ExportRootScope ) const
+bool FGuid::ExportTextItem( YString& ValueStr, FGuid const& DefaultValue, UObject* Parent, int32 PortFlags, class UObject* ExportRootScope ) const
 {
 	if (0 != (PortFlags & EPropertyPortFlags::PPF_ExportCpp))
 	{
@@ -20,7 +20,7 @@ bool YGuid::ExportTextItem( YString& ValueStr, YGuid const& DefaultValue, SObjec
 }
 
 
-bool YGuid::ImportTextItem( const TCHAR*& Buffer, int32 PortFlags, class SObject* Parent, YOutputDevice* ErrorText )
+bool FGuid::ImportTextItem( const TCHAR*& Buffer, int32 PortFlags, class UObject* Parent, FOutputDevice* ErrorText )
 {
 	if (FPlatformString::Strlen(Buffer) < 32)
 	{
@@ -38,7 +38,7 @@ bool YGuid::ImportTextItem( const TCHAR*& Buffer, int32 PortFlags, class SObject
 }
 
 
-YString YGuid::ToString( EGuidFormats Format ) const
+YString FGuid::ToString( EGuidFormats Format ) const
 {
 	switch (Format)
 	{
@@ -66,16 +66,16 @@ YString YGuid::ToString( EGuidFormats Format ) const
 /* YGuid static interface
  *****************************************************************************/
 
-YGuid YGuid::NewGuid()
+FGuid FGuid::NewGuid()
 {
-	YGuid Result(0, 0, 0, 0);
+	FGuid Result(0, 0, 0, 0);
 	YPlatformMisc::CreateGuid(Result);
 
 	return Result;
 }
 
 
-bool YGuid::Parse( const YString& GuidString, YGuid& OutGuid )
+bool FGuid::Parse( const YString& GuidString, FGuid& OutGuid )
 {
 	if (GuidString.Len() == 32)
 	{
@@ -111,7 +111,7 @@ bool YGuid::Parse( const YString& GuidString, YGuid& OutGuid )
 }
 
 
-bool YGuid::ParseExact( const YString& GuidString, EGuidFormats Format, YGuid& OutGuid )
+bool FGuid::ParseExact( const YString& GuidString, EGuidFormats Format, FGuid& OutGuid )
 {
 	YString NormalizedGuidString;
 
@@ -250,7 +250,7 @@ bool YGuid::ParseExact( const YString& GuidString, EGuidFormats Format, YGuid& O
 		}
 	}
 
-	OutGuid = YGuid(
+	OutGuid = FGuid(
 		FParse::HexNumber(*NormalizedGuidString.Mid(0, 8)),
 		FParse::HexNumber(*NormalizedGuidString.Mid(8, 8)),
 		FParse::HexNumber(*NormalizedGuidString.Mid(16, 8)),

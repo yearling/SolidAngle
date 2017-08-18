@@ -281,7 +281,7 @@ public:
 	* @param Point The point to serialize.
 	* @return Reference to the Archive after serialization.
 	*/
-	friend YArchive& operator<<(YArchive& Ar, YIntPoint& Point)
+	friend FArchive& operator<<(FArchive& Ar, YIntPoint& Point)
 	{
 		return Ar << Point.X << Point.Y;
 	}
@@ -292,7 +292,7 @@ public:
 	* @param Ar The archive to serialize into.
 	* @return true on success, false otherwise.
 	*/
-	bool Serialize(YArchive& Ar)
+	bool Serialize(FArchive& Ar)
 	{
 		Ar << *this;
 		return true;

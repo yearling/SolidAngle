@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Templates/SharedPointer.h"
 #include "Logging/TokenizedMessage.h"
 
@@ -15,154 +15,154 @@
 struct CORE_API FFbxErrors
 {
 	/** Generic */
-	static YName Generic_ImportingNewObjectFailed;
+	static FName Generic_ImportingNewObjectFailed;
 
-	static YName Generic_ReimportingObjectFailed;
+	static FName Generic_ReimportingObjectFailed;
 
-	static YName Generic_LoadingSceneFailed;
+	static FName Generic_LoadingSceneFailed;
 
-	static YName Generic_InvalidCharacterInName;
+	static FName Generic_InvalidCharacterInName;
 
-	static YName Generic_SameNameAssetExists;
+	static FName Generic_SameNameAssetExists;
 
-	static YName Generic_SameNameAssetOverriding;
+	static FName Generic_SameNameAssetOverriding;
 
-	static YName Generic_CannotDeleteReferenced;
+	static FName Generic_CannotDeleteReferenced;
 
-	static YName Generic_FBXFileParseFailed;
+	static FName Generic_FBXFileParseFailed;
 
-	static YName Generic_MeshNotFound;
+	static FName Generic_MeshNotFound;
 
-	static YName Generic_CannotDetectImportType;
+	static FName Generic_CannotDetectImportType;
 
 	/** Mesh Generic **/
 
-	static YName Generic_Mesh_NoGeometry;
+	static FName Generic_Mesh_NoGeometry;
 
-	static YName Generic_Mesh_SmallGeometry;
+	static FName Generic_Mesh_SmallGeometry;
 
-	static YName Generic_Mesh_TriangulationFailed;
+	static FName Generic_Mesh_TriangulationFailed;
 
-	static YName Generic_Mesh_ConvertSmoothingGroupFailed;
+	static FName Generic_Mesh_ConvertSmoothingGroupFailed;
 
-	static YName Generic_Mesh_UnsupportingSmoothingGroup;
+	static FName Generic_Mesh_UnsupportingSmoothingGroup;
 
-	static YName Generic_Mesh_MaterialIndexInconsistency;
+	static FName Generic_Mesh_MaterialIndexInconsistency;
 
-	static YName Generic_Mesh_MeshNotFound;
+	static FName Generic_Mesh_MeshNotFound;
 
-	static YName Generic_Mesh_NoSmoothingGroup;
+	static FName Generic_Mesh_NoSmoothingGroup;
 
-	static YName Generic_Mesh_LOD_InvalidIndex;
+	static FName Generic_Mesh_LOD_InvalidIndex;
 
-	static YName Generic_Mesh_LOD_NoFileSelected;
+	static FName Generic_Mesh_LOD_NoFileSelected;
 
-	static YName Generic_Mesh_LOD_MultipleFilesSelected;
+	static FName Generic_Mesh_LOD_MultipleFilesSelected;
 
-	static YName Generic_Mesh_SkinxxNameError;
+	static FName Generic_Mesh_SkinxxNameError;
 
 	/** Static Mesh **/
-	static YName StaticMesh_TooManyMaterials;
+	static FName StaticMesh_TooManyMaterials;
 
-	static YName StaticMesh_UVSetLayoutProblem;
+	static FName StaticMesh_UVSetLayoutProblem;
 
-	static YName StaticMesh_NoTriangles;
+	static FName StaticMesh_NoTriangles;
 
-	static YName StaticMesh_BuildError;
+	static FName StaticMesh_BuildError;
 
-	static YName StaticMesh_AllTrianglesDegenerate;
+	static FName StaticMesh_AllTrianglesDegenerate;
 
 	/** SkeletalMesh **/
-	static YName SkeletalMesh_DifferentRoots;
+	static FName SkeletalMesh_DifferentRoots;
 
-	static YName SkeletalMesh_DuplicateBones;
+	static FName SkeletalMesh_DuplicateBones;
 
-	static YName SkeletalMesh_NoInfluences;
+	static FName SkeletalMesh_NoInfluences;
 
-	static YName SkeletalMesh_TooManyInfluences;
+	static FName SkeletalMesh_TooManyInfluences;
 
-	static YName SkeletalMesh_RestoreSortingMismatchedStrips;
+	static FName SkeletalMesh_RestoreSortingMismatchedStrips;
 
-	static YName SkeletalMesh_RestoreSortingNoSectionMatch;
+	static FName SkeletalMesh_RestoreSortingNoSectionMatch;
 
-	static YName SkeletalMesh_RestoreSortingForSectionNumber;
+	static FName SkeletalMesh_RestoreSortingForSectionNumber;
 
-	static YName SkeletalMesh_NoMeshFoundOnRoot;
+	static FName SkeletalMesh_NoMeshFoundOnRoot;
 	
-	static YName SkeletalMesh_ImportSubDSurface;
+	static FName SkeletalMesh_ImportSubDSurface;
 
-	static YName SkeletalMesh_InvalidRoot;
+	static FName SkeletalMesh_InvalidRoot;
 
-	static YName SkeletalMesh_InvalidBone;
+	static FName SkeletalMesh_InvalidBone;
 
-	static YName SkeletalMesh_InvalidNode;
+	static FName SkeletalMesh_InvalidNode;
 
-	static YName SkeletalMesh_NoWeightsOnDeformer;
+	static FName SkeletalMesh_NoWeightsOnDeformer;
 
-	static YName SkeletalMesh_NoBindPoseInScene;
+	static FName SkeletalMesh_NoBindPoseInScene;
 
-	static YName SkeletalMesh_NoAssociatedCluster;
+	static FName SkeletalMesh_NoAssociatedCluster;
 
-	static YName SkeletalMesh_NoBoneFound;
+	static FName SkeletalMesh_NoBoneFound;
 
-	static YName SkeletalMesh_InvalidBindPose;
+	static FName SkeletalMesh_InvalidBindPose;
 
-	static YName SkeletalMesh_MultipleRoots;
+	static FName SkeletalMesh_MultipleRoots;
 
-	static YName SkeletalMesh_BonesAreMissingFromBindPose;
+	static FName SkeletalMesh_BonesAreMissingFromBindPose;
 
-	static YName SkeletalMesh_VertMissingInfluences;
+	static FName SkeletalMesh_VertMissingInfluences;
 
-	static YName SkeletalMesh_SectionWithNoTriangle;
+	static FName SkeletalMesh_SectionWithNoTriangle;
 
-	static YName SkeletalMesh_TooManyVertices;
+	static FName SkeletalMesh_TooManyVertices;
 
-	static YName SkeletalMesh_FailedToCreatePhyscisAsset;
+	static FName SkeletalMesh_FailedToCreatePhyscisAsset;
 
-	static YName SkeletalMesh_SkeletonRecreateError;
+	static FName SkeletalMesh_SkeletonRecreateError;
 
-	static YName SkeletalMesh_ExceedsMaxBoneCount;
+	static FName SkeletalMesh_ExceedsMaxBoneCount;
 
-	static YName SkeletalMesh_NoUVSet;
+	static FName SkeletalMesh_NoUVSet;
 
-	static YName SkeletalMesh_LOD_MissingBone;
+	static FName SkeletalMesh_LOD_MissingBone;
 
-	static YName SkeletalMesh_LOD_FailedToImport;
+	static FName SkeletalMesh_LOD_FailedToImport;
 
-	static YName SkeletalMesh_LOD_RootNameIncorrect;
+	static FName SkeletalMesh_LOD_RootNameIncorrect;
 
-	static YName SkeletalMesh_LOD_BonesDoNotMatch;
+	static FName SkeletalMesh_LOD_BonesDoNotMatch;
 
-	static YName SkeletalMesh_LOD_IncorrectParent;
+	static FName SkeletalMesh_LOD_IncorrectParent;
 
-	static YName SkeletalMesh_LOD_HasSoftVerts;
+	static FName SkeletalMesh_LOD_HasSoftVerts;
 
-	static YName SkeletalMesh_LOD_MissingSocketBone;
+	static FName SkeletalMesh_LOD_MissingSocketBone;
 
-	static YName SkeletalMesh_LOD_MissingMorphTarget;
+	static FName SkeletalMesh_LOD_MissingMorphTarget;
 
-	static YName SkeletalMesh_FillImportDataFailed;
+	static FName SkeletalMesh_FillImportDataFailed;
 
-	static YName SkeletalMesh_InvalidPosition;
+	static FName SkeletalMesh_InvalidPosition;
 
 	/** Animation **/
-	static YName Animation_CouldNotFindRootTrack;
+	static FName Animation_CouldNotFindRootTrack;
 
-	static YName Animation_CouldNotBuildSkeleton;
+	static FName Animation_CouldNotBuildSkeleton;
 
-	static YName Animation_CouldNotFindTrack;
+	static FName Animation_CouldNotFindTrack;
 
-	static YName Animation_ZeroLength;
+	static FName Animation_ZeroLength;
 
-	static YName Animation_RootTrackMismatch;
+	static FName Animation_RootTrackMismatch;
 
-	static YName Animation_DuplicatedBone;
+	static FName Animation_DuplicatedBone;
 
-	static YName Animation_MissingBones;
+	static FName Animation_MissingBones;
 
-	static YName Animation_InvalidData;
+	static FName Animation_InvalidData;
 
-	static YName Animation_TransformError;
+	static FName Animation_TransformError;
 };
 
 /**
@@ -172,12 +172,12 @@ class FFbxErrorToken : public FDocumentationToken
 {
 public:
 	/** Factory method, tokens can only be constructed as shared refs */
-	CORE_API static TSharedRef<FFbxErrorToken> Create( const YName& InErrorName )
+	CORE_API static TSharedRef<FFbxErrorToken> Create( const FName& InErrorName )
 	{
 		return MakeShareable(new FFbxErrorToken(InErrorName));
 	}
 
 private:
 	/** Private constructor */
-	CORE_API FFbxErrorToken( const YName& InErrorName );
+	CORE_API FFbxErrorToken( const FName& InErrorName );
 };

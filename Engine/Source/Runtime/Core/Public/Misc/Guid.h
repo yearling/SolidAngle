@@ -57,12 +57,12 @@ enum class EGuidFormats
 /**
 * Implements a globally unique identifier.
 */
-struct YGuid
+struct FGuid
 {
 public:
 
 	/** Default constructor. */
-	YGuid()
+	FGuid()
 		: A(0)
 		, B(0)
 		, C(0)
@@ -77,7 +77,7 @@ public:
 	* @param InC The third component.
 	* @param InD The fourth component.
 	*/
-	YGuid(uint32 InA, uint32 InB, uint32 InC, uint32 InD)
+	FGuid(uint32 InA, uint32 InB, uint32 InC, uint32 InD)
 		: A(InA), B(InB), C(InC), D(InD)
 	{ }
 
@@ -90,7 +90,7 @@ public:
 	* @param Y The second GUID to compare.
 	* @return true if the GUIDs are equal, false otherwise.
 	*/
-	friend bool operator==(const YGuid& X, const YGuid& Y)
+	friend bool operator==(const FGuid& X, const FGuid& Y)
 	{
 		return ((X.A ^ Y.A) | (X.B ^ Y.B) | (X.C ^ Y.C) | (X.D ^ Y.D)) == 0;
 	}
@@ -102,7 +102,7 @@ public:
 	* @param Y The second GUID to compare.
 	* @return true if the GUIDs are not equal, false otherwise.
 	*/
-	friend bool operator!=(const YGuid& X, const YGuid& Y)
+	friend bool operator!=(const FGuid& X, const FGuid& Y)
 	{
 		return ((X.A ^ Y.A) | (X.B ^ Y.B) | (X.C ^ Y.C) | (X.D ^ Y.D)) != 0;
 	}
@@ -114,7 +114,7 @@ public:
 	* @param Y The second GUID to compare.
 	* @return true if the first GUID is less than the second one.
 	*/
-	friend bool operator<(const YGuid& X, const YGuid& Y)
+	friend bool operator<(const FGuid& X, const FGuid& Y)
 	{
 		return	((X.A < Y.A) ? true : ((X.A > Y.A) ? false :
 			((X.B < Y.B) ? true : ((X.B > Y.B) ? false :
@@ -172,12 +172,12 @@ public:
 	* @param Ar The archive to serialize from or into.
 	* @param G The GUID to serialize.
 	*/
-	friend YArchive& operator<<(YArchive& Ar, YGuid& G)
+	friend FArchive& operator<<(FArchive& Ar, FGuid& G)
 	{
 		return Ar << G.A << G.B << G.C << G.D;
 	}
 
-	bool Serialize(YArchive& Ar)
+	bool Serialize(FArchive& Ar)
 	{
 		Ar << *this;
 		return true;
@@ -196,7 +196,7 @@ public:
 	* @return true on success, false otherwise.
 	* @see ImportTextItem
 	*/
-	CORE_API bool ExportTextItem(YString& ValueStr, YGuid const& DefaultValue, SObject* Parent, int32 PortFlags, class SObject* ExportRootScope) const;
+	CORE_API bool ExportTextItem(YString& ValueStr, FGuid const& DefaultValue, UObject* Parent, int32 PortFlags, class UObject* ExportRootScope) const;
 
 	/**
 	* Imports the GUIDs value from a text buffer.
@@ -208,7 +208,7 @@ public:
 	* @return true on success, false otherwise.
 	* @see ExportTextItem
 	*/
-	CORE_API bool ImportTextItem(const TCHAR*& Buffer, int32 PortFlags, class SObject* Parent, YOutputDevice* ErrorText);
+	CORE_API bool ImportTextItem(const TCHAR*& Buffer, int32 PortFlags, class UObject* Parent, FOutputDevice* ErrorText);
 
 	/**
 	* Invalidates the GUID.
@@ -259,9 +259,9 @@ public:
 	* @param Guid The GUID to calculate the hash for.
 	* @return The hash.
 	*/
-	friend uint32 GetTypeHash(const YGuid& Guid)
+	friend uint32 GetTypeHash(const FGuid& Guid)
 	{
-		return FCrc::MemCrc_DEPRECATED(&Guid, sizeof(YGuid));
+		return FCrc::MemCrc_DEPRECATED(&Guid, sizeof(FGuid));
 	}
 
 public:
@@ -271,7 +271,7 @@ public:
 	*
 	* @return A new GUID.
 	*/
-	static CORE_API YGuid NewGuid();
+	static CORE_API FGuid NewGuid();
 
 	/**
 	* Converts a string to a GUID.
@@ -281,7 +281,7 @@ public:
 	* @return true if the string was converted successfully, false otherwise.
 	* @see ParseExact, ToString
 	*/
-	static CORE_API bool Parse(const YString& GuidString, YGuid& OutGuid);
+	static CORE_API bool Parse(const YString& GuidString, FGuid& OutGuid);
 
 	/**
 	* Converts a string with the specified format to a GUID.
@@ -292,7 +292,7 @@ public:
 	* @return true if the string was converted successfully, false otherwise.
 	* @see Parse, ToString
 	*/
-	static CORE_API bool ParseExact(const YString& GuidString, EGuidFormats Format, YGuid& OutGuid);
+	static CORE_API bool ParseExact(const YString& GuidString, EGuidFormats Format, FGuid& OutGuid);
 
 	//private:
 public:
@@ -310,4 +310,4 @@ public:
 	uint32 D;
 };
 
-template <> struct TIsPODType<YGuid> { enum { Value = true }; };
+template <> struct TIsPODType<FGuid> { enum { Value = true }; };

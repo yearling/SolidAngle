@@ -60,7 +60,7 @@ public:
 	T& operator*() { return *Obj; }
 	const T& operator*() const { return *Obj; }
 
-	friend YArchive& operator<<(YArchive& Ar, TUniqueObj& P)
+	friend FArchive& operator<<(FArchive& Ar, TUniqueObj& P)
 	{
 		Ar << *P.Obj;
 		return Ar;

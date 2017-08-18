@@ -112,9 +112,9 @@ public:
 	*
 	* @return Random unit vector.
 	*/
-	YVector GetUnitVector() const
+	FVector GetUnitVector() const
 	{
-		YVector Result;
+		FVector Result;
 		float L;
 
 		do
@@ -187,7 +187,7 @@ public:
 	*
 	* @return Random unit vector.
 	*/
-	FORCEINLINE YVector VRand() const
+	FORCEINLINE FVector VRand() const
 	{
 		return GetUnitVector();
 	}
@@ -199,7 +199,7 @@ public:
 	* @param ConeHalfAngleRad Half-angle of cone, in radians.
 	* @return Normalized vector within the specified cone.
 	*/
-	FORCEINLINE YVector VRandCone(YVector const& Dir, float ConeHalfAngleRad)
+	FORCEINLINE FVector VRandCone(FVector const& Dir, float ConeHalfAngleRad)
 	{
 		if (ConeHalfAngleRad > 0.f)
 		{
@@ -217,12 +217,12 @@ public:
 			Phi = YMath::Fmod(Phi, ConeHalfAngleRad);
 
 			// get axes we need to rotate around
-			YMatrix const DirMat = YRotationMatrix(Dir.Rotation());
+			FMatrix const DirMat = YRotationMatrix(Dir.Rotation());
 			// note the axis translation, since we want the variation to be around X
-			YVector const DirZ = DirMat.GetUnitAxis(EAxis::X);
-			YVector const DirY = DirMat.GetUnitAxis(EAxis::Y);
+			FVector const DirZ = DirMat.GetUnitAxis(EAxis::X);
+			FVector const DirY = DirMat.GetUnitAxis(EAxis::Y);
 
-			YVector Result = Dir.RotateAngleAxis(Phi * 180.f / PI, DirY);
+			FVector Result = Dir.RotateAngleAxis(Phi * 180.f / PI, DirY);
 			Result = Result.RotateAngleAxis(Theta * 180.f / PI, DirZ);
 
 			// ensure it's a unit vector (might not have been passed in that way)
@@ -244,7 +244,7 @@ public:
 	* @param VerticalConeHalfAngleRad Vertical half-angle of cone, in radians.
 	* @return Normalized vector within the specified cone.
 	*/
-	FORCEINLINE YVector VRandCone(YVector const& Dir, float HorizontalConeHalfAngleRad, float VerticalConeHalfAngleRad)
+	FORCEINLINE FVector VRandCone(FVector const& Dir, float HorizontalConeHalfAngleRad, float VerticalConeHalfAngleRad)
 	{
 		if ((VerticalConeHalfAngleRad > 0.f) && (HorizontalConeHalfAngleRad > 0.f))
 		{
@@ -267,12 +267,12 @@ public:
 			Phi = YMath::Fmod(Phi, ConeHalfAngleRad);
 
 			// get axes we need to rotate around
-			YMatrix const DirMat = YRotationMatrix(Dir.Rotation());
+			FMatrix const DirMat = YRotationMatrix(Dir.Rotation());
 			// note the axis translation, since we want the variation to be around X
-			YVector const DirZ = DirMat.GetUnitAxis(EAxis::X);
-			YVector const DirY = DirMat.GetUnitAxis(EAxis::Y);
+			FVector const DirZ = DirMat.GetUnitAxis(EAxis::X);
+			FVector const DirY = DirMat.GetUnitAxis(EAxis::Y);
 
-			YVector Result = Dir.RotateAngleAxis(Phi * 180.f / PI, DirY);
+			FVector Result = Dir.RotateAngleAxis(Phi * 180.f / PI, DirY);
 			Result = Result.RotateAngleAxis(Theta * 180.f / PI, DirZ);
 
 			// ensure it's a unit vector (might not have been passed in that way)
@@ -297,7 +297,7 @@ public:
 	* @return true on success, false otherwise.
 	* @see ImportTextItem
 	*/
-	CORE_API bool ExportTextItem(YString& ValueStr, YRandomStream const& DefaultValue, class SObject* Parent, int32 PortFlags, class SObject* ExportRootScope) const;
+	CORE_API bool ExportTextItem(YString& ValueStr, YRandomStream const& DefaultValue, class UObject* Parent, int32 PortFlags, class UObject* ExportRootScope) const;
 
 protected:
 

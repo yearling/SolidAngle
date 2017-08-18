@@ -12,16 +12,16 @@
 struct YOrientedBox
 {
 	/** Holds the center of the box. */
-	YVector Center;
+	FVector Center;
 
 	/** Holds the x-axis vector of the box. Must be a unit vector. */
-	YVector AxisX;
+	FVector AxisX;
 	
 	/** Holds the y-axis vector of the box. Must be a unit vector. */
-	YVector AxisY;
+	FVector AxisY;
 	
 	/** Holds the z-axis vector of the box. Must be a unit vector. */
-	YVector AxisZ;
+	FVector AxisZ;
 
 	/** Holds the extent of the box along its x-axis. */
 	float ExtentX;
@@ -56,21 +56,21 @@ public:
 	 *
 	 * @param Verts The array to fill in with the vertices.
 	 */
-	FORCEINLINE void CalcVertices(YVector* Verts) const;
+	FORCEINLINE void CalcVertices(FVector* Verts) const;
 
 	/**
 	 * Finds the projection interval of the box when projected onto Axis.
 	 *
 	 * @param Axis The unit vector defining the axis to project the box onto.
 	 */
-	FORCEINLINE FFloatInterval Project(const YVector& Axis) const;
+	FORCEINLINE FFloatInterval Project(const FVector& Axis) const;
 };
 
 
 /* FOrientedBox inline functions
  *****************************************************************************/
 
-FORCEINLINE void YOrientedBox::CalcVertices( YVector* Verts ) const
+FORCEINLINE void YOrientedBox::CalcVertices( FVector* Verts ) const
 {
 	static const float Signs[] = { -1.0f, 1.0f };
 
@@ -87,7 +87,7 @@ FORCEINLINE void YOrientedBox::CalcVertices( YVector* Verts ) const
 }
 
 
-FORCEINLINE FFloatInterval YOrientedBox::Project( const YVector& Axis ) const
+FORCEINLINE FFloatInterval YOrientedBox::Project( const FVector& Axis ) const
 {
 	static const float Signs[] = {-1.0f, 1.0f};
 

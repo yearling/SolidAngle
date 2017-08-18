@@ -6,12 +6,12 @@
 #include "Misc/AssertionMacros.h"
 #include "Serialization/Archive.h"
 #include "Containers/SolidAngleString.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 
 /**
  * Base class for serializing arbitrary data in memory.
  */
-class YMemoryArchive : public YArchive
+class YMemoryArchive : public FArchive
 {
 public:
 	/**
@@ -31,16 +31,16 @@ public:
 		return Offset;
 	}
 
-	using YArchive::operator<<; // For visibility of the overloads we don't override
+	using FArchive::operator<<; // For visibility of the overloads we don't override
 
-	virtual YArchive& operator<<( class YName& N ) override
+	virtual FArchive& operator<<( class FName& N ) override
 	{
-		// Serialize the YName as a string
+		// Serialize the FName as a string
 		if (IsLoading())
 		{
 			YString StringName;
 			*this << StringName;
-			N = YName(*StringName);
+			N = FName(*StringName);
 		}
 		else
 		{
@@ -50,7 +50,7 @@ public:
 		return *this;
 	}
 
-	virtual YArchive& operator<<( class SObject*& Res ) override
+	virtual FArchive& operator<<( class UObject*& Res ) override
 	{
 		// Not supported through this archive
 		check(0);
@@ -61,7 +61,7 @@ protected:
 
 	/** Marked as protected to avoid instantiating this class directly */
 	YMemoryArchive()
-		: YArchive(), Offset(0)
+		: FArchive(), Offset(0)
 	{
 	}
 

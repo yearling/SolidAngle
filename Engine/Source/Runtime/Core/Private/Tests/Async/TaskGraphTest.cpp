@@ -61,9 +61,9 @@ bool FTaskGraphTest::RunTest(const YString& Parameters)
 		TGraphTask<FTaskGraphTestTask>::CreateTask().ConstructAndDispatchWhenReady();
 	}
 
-	YDateTime StartTime = YDateTime::UtcNow();
+	FDateTime StartTime = FDateTime::UtcNow();
 
-	while ((CompletedTasks < NumTasks) &&((YDateTime::UtcNow() - StartTime) < MaxWaitTime))
+	while ((CompletedTasks < NumTasks) &&((FDateTime::UtcNow() - StartTime) < MaxWaitTime))
 	{
 		FPlatformProcess::Sleep(0.0f);
 	}

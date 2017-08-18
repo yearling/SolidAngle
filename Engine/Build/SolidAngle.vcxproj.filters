@@ -1617,6 +1617,9 @@
     <ClInclude Include="..\Source\Runtime\Core\Private\HAL\PThreadRunnableThread.h">
       <Filter>Source\Runtime\Core\Private\HAL</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\MemoryArchive.h">
+      <Filter>Source\Runtime\Core\Public\Serialization</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\Core\Private\GenericPlatform\GenericPlatformMath.cpp">

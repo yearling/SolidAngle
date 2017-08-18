@@ -39,7 +39,7 @@ void YOutputDeviceMemory::TearDown()
 	// Dump on exit
 #if DUMP_LOG_ON_EXIT
 	const YString LogFileName = YPlatformOutputDevices::GetAbsoluteLogFilename();
-	YArchive* LogFile = IFileManager::Get().CreateFileWriter(*LogFileName, FILEWRITE_AllowRead);
+	FArchive* LogFile = IFileManager::Get().CreateFileWriter(*LogFileName, FILEWRITE_AllowRead);
 	if (LogFile)
 	{
 		Dump(*LogFile);
@@ -54,14 +54,14 @@ void YOutputDeviceMemory::Flush()
 	// Do nothing, buffer is always flushed
 }
 
-void YOutputDeviceMemory::Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class YName& Category, const double Time)
+void YOutputDeviceMemory::Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category, const double Time)
 {
 #if !NO_LOGGING
 	YOutputDeviceHelper::FormatCastAndSerializeLine(ArchiveProxy, Data, Verbosity, Category, Time, bSuppressEventTag, bAutoEmitLineTerminator);
 #endif
 }
 
-void YOutputDeviceMemory::Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class YName& Category)
+void YOutputDeviceMemory::Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category)
 {
 	Serialize(Data, Verbosity, Category, -1.0);
 }
@@ -104,7 +104,7 @@ void YOutputDeviceMemory::SerializeToBuffer(ANSICHAR* Data, int32 Length)
 	}
 }
 
-void YOutputDeviceMemory::Dump(YArchive& Ar)
+void YOutputDeviceMemory::Dump(FArchive& Ar)
 {
 	const int32 BufferCapacity = Buffer.Num(); // Never changes
 

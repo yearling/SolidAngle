@@ -10,11 +10,11 @@
 /**
 * YMalloc proxy that synchronizes access, making the used malloc thread safe.
 */
-class FMallocThreadSafeProxy : public YMalloc
+class FMallocThreadSafeProxy : public FMalloc
 {
 private:
 	/** Malloc we're based on, aka using under the hood							*/
-	YMalloc*			UsedMalloc;
+	FMalloc*			UsedMalloc;
 	/** Object used for synchronization via a scoped lock						*/
 	FCriticalSection	SynchronizationObject;
 
@@ -25,7 +25,7 @@ public:
 	*
 	* @param	InMalloc					YMalloc that is going to be used for actual allocations
 	*/
-	FMallocThreadSafeProxy(YMalloc* InMalloc)
+	FMallocThreadSafeProxy(FMalloc* InMalloc)
 		: UsedMalloc(InMalloc)
 	{}
 
@@ -68,14 +68,14 @@ public:
 	}
 
 	/** Writes allocator stats from the last update into the specified destination. */
-	virtual void GetAllocatorStats(YGenericMemoryStats& out_Stats) override
+	virtual void GetAllocatorStats(FGenericMemoryStats& out_Stats) override
 	{
 		FScopeLock ScopeLock(&SynchronizationObject);
 		UsedMalloc->GetAllocatorStats(out_Stats);
 	}
 
 	/** Dumps allocator stats to an output device. */
-	virtual void DumpAllocatorStats(class YOutputDevice& Ar) override
+	virtual void DumpAllocatorStats(class FOutputDevice& Ar) override
 	{
 		FScopeLock ScopeLock(&SynchronizationObject);
 		UsedMalloc->DumpAllocatorStats(Ar);
@@ -90,7 +90,7 @@ public:
 		return(UsedMalloc->ValidateHeap());
 	}
 
-	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, YOutputDevice& Ar) override
+	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar) override
 	{
 		FScopeLock ScopeLock(&SynchronizationObject);
 		return UsedMalloc->Exec(InWorld, Cmd, Ar);

@@ -11,9 +11,9 @@
 /**
 * Memory output device. Logs only into pre-allocated memory buffer.
 */
-class CORE_API YOutputDeviceMemory : public YOutputDevice
+class CORE_API YOutputDeviceMemory : public FOutputDevice
 {
-	class YOutputDeviceMemoryProxyArchive : public YArchive
+	class YOutputDeviceMemoryProxyArchive : public FArchive
 	{
 		YOutputDeviceMemory& OutputDevice;
 	public:
@@ -36,7 +36,7 @@ public:
 	YOutputDeviceMemory(int32 InPreserveSize = 256 * 1024, int32 InBufferSize = 2048 * 1024);
 
 	/** Dumps the contents of the buffer to an archive */
-	virtual void Dump(YArchive& Ar) override;
+	virtual void Dump(FArchive& Ar) override;
 
 	//~ Begin YOutputDevice Interface.
 	/**
@@ -52,8 +52,8 @@ public:
 	*/
 	virtual void Flush() override;
 
-	virtual void Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class YName& Category, const double Time) override;
-	virtual void Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class YName& Category) override;
+	virtual void Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category, const double Time) override;
+	virtual void Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category) override;
 	virtual bool CanBeUsedOnAnyThread() const override
 	{
 		return true;

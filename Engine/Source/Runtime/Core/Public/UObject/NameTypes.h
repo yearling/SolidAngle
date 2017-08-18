@@ -10,16 +10,16 @@
 #include "Containers/SolidAngleString.h"
 #include "HAL/CriticalSection.h"
 #include "Containers/StringConv.h"
-#include "SObject/SolidAngleNames.h"
+#include "UObject/SolidAngleNames.h"
 
 /*----------------------------------------------------------------------------
 Definitions.
 ----------------------------------------------------------------------------*/
 
 /**
-* Do we want to support case-variants for YName?
-* This will add an extra NAME_INDEX variable to YName, but means that ToString() will return you the exact same
-* string that YName::Init was called with (which is useful if your YNames are shown to the end user)
+* Do we want to support case-variants for FName?
+* This will add an extra NAME_INDEX variable to FName, but means that ToString() will return you the exact same
+* string that FName::Init was called with (which is useful if your FNames are shown to the end user)
 * Currently this is enabled for the Editor and any Programs (such as UHT), but not the Runtime
 */
 #ifndef WITH_CASE_PRESERVING_NAME
@@ -43,7 +43,7 @@ zero'd memory initialization will still make NAME_None as expected */
 #define NAME_INTERNAL_TO_EXTERNAL(x) (x - 1)
 #define NAME_EXTERNAL_TO_INTERNAL(x) (x + 1)
 
-/** Special value for an YName with no number */
+/** Special value for an FName with no number */
 #define NAME_NO_NUMBER NAME_INTERNAL_TO_EXTERNAL(NAME_NO_NUMBER_INTERNAL)
 
 
@@ -53,7 +53,7 @@ zero'd memory initialization will still make NAME_None as expected */
 /** this is the character used to separate a subobject root from its subobjects in a path name, as a char */
 #define SUBOBJECT_DELIMITER_CHAR		':'
 
-/** These are the characters that cannot be used in general YNames */
+/** These are the characters that cannot be used in general FNames */
 #define INVALID_NAME_CHARACTERS			TEXT("\"' ,\n\r\t")
 
 /** These characters cannot be used in object names */
@@ -74,14 +74,14 @@ enum class ENameCase : uint8
 	IgnoreCase,
 };
 
-namespace YNameDefs
+namespace FNameDefs
 {
 #if !WITH_EDITORONLY_DATA
 	// Use a modest bucket count on consoles
 	static const uint32 NameHashBucketCount = 65536;
 #else
 	// On PC platform we use a large number of name hash buckets to accommodate the editor's
-	// use of YNames to store asset path and content tags
+	// use of FNames to store asset path and content tags
 	static const uint32 NameHashBucketCount = 65536;
 #endif
 }
@@ -93,19 +93,19 @@ enum ELinkerNameTableConstructor { ENAME_LinkerConstructor };
 enum EFindName
 {
 	/** Find a name; return 0 if it doesn't exist. */
-	YName_Find,
+	FName_Find,
 
 	/** Find a name or add it if it doesn't exist. */
-	YName_Add,
+	FName_Add,
 
 	/** Finds a name and replaces it. Adds it if missing. This is only used by UHT and is generally not safe for threading.
 	* All this really is used for is correcting the case of names. In MT conditions you might get a half-changed name.
 	*/
-	YName_Replace_Not_Safe_For_Threading,
+	FName_Replace_Not_Safe_For_Threading,
 };
 
 /*----------------------------------------------------------------------------
-YNameEntry.
+FNameEntry.
 ----------------------------------------------------------------------------*/
 
 /**
@@ -119,7 +119,7 @@ YNameEntry.
 /**
 * A global name, as stored in the global name table.
 */
-struct YNameEntry
+struct FNameEntry
 {
 private:
 	/** Index of name in hash. */
@@ -127,7 +127,7 @@ private:
 
 public:
 	/** Pointer to the next entry in this hash bin's linked list. */
-	YNameEntry*		HashNext;
+	FNameEntry*		HashNext;
 
 protected:
 	/** Name, variable-sized - note that AllocateNameEntry only allocates memory as needed. */
@@ -144,14 +144,14 @@ protected:
 	*
 	* Only callable from the serialization version of this class
 	*/
-	YNameEntry(enum ELinkerNameTableConstructor)
+	FNameEntry(enum ELinkerNameTableConstructor)
 	{
 		Index = NAME_WIDE_MASK;
 	}
 
 public:
 	/** Default constructor doesn't do anything. AllocateNameEntry is responsible for work. */
-	YNameEntry()
+	FNameEntry()
 	{}
 
 	/**
@@ -165,7 +165,7 @@ public:
 	}
 
 	/**
-	* Returns index of name in hash passed to YNameEntry via AllocateNameEntry. The lower bits
+	* Returns index of name in hash passed to FNameEntry via AllocateNameEntry. The lower bits
 	* are used for internal state, which is why we need to shift.
 	*
 	* @return Index of name in hash
@@ -244,47 +244,47 @@ public:
 	static CORE_API int32 GetSize(const TCHAR* Name);
 
 	/**
-	* Returns the size in bytes for YNameEntry structure. This is != sizeof(YNameEntry) as we only allocated as needed.
+	* Returns the size in bytes for FNameEntry structure. This is != sizeof(FNameEntry) as we only allocated as needed.
 	*
 	* @param	Length			Length of name
 	* @param	bIsPureAnsi		Whether name is pure ANSI or not
-	* @return	required size of YNameEntry structure to hold this string (might be wide or ansi)
+	* @return	required size of FNameEntry structure to hold this string (might be wide or ansi)
 	*/
 	static int32 GetSize(int32 Length, bool bIsPureAnsi);
 
 	// Functions.
-	friend CORE_API YArchive& operator<<(YArchive& Ar, YNameEntry& E);
-	friend CORE_API YArchive& operator<<(YArchive& Ar, YNameEntry* E)
+	friend CORE_API FArchive& operator<<(FArchive& Ar, FNameEntry& E);
+	friend CORE_API FArchive& operator<<(FArchive& Ar, FNameEntry* E)
 	{
 		return Ar << *E;
 	}
 
 	// Friend for access to Flags.
 	template<typename TCharType>
-	friend YNameEntry* AllocateNameEntry(const void* Name, NAME_INDEX Index);
+	friend FNameEntry* AllocateNameEntry(const void* Name, NAME_INDEX Index);
 };
 
 /**
 *  This struct is only used during loading/saving and is not part of the runtime costs
 */
-struct YNameEntrySerialized :
-	public YNameEntry
+struct FNameEntrySerialized :
+	public FNameEntry
 {
 	uint16 NonCasePreservingHash;
 	uint16 CasePreservingHash;
 	bool bWereHashesLoaded;
 
-	YNameEntrySerialized(const YNameEntry& NameEntry);
-	YNameEntrySerialized(enum ELinkerNameTableConstructor) :
-		YNameEntry(ENAME_LinkerConstructor),
+	FNameEntrySerialized(const FNameEntry& NameEntry);
+	FNameEntrySerialized(enum ELinkerNameTableConstructor) :
+		FNameEntry(ENAME_LinkerConstructor),
 		NonCasePreservingHash(0),
 		CasePreservingHash(0),
 		bWereHashesLoaded(false)
 	{
 	}
 
-	friend CORE_API YArchive& operator<<(YArchive& Ar, YNameEntrySerialized& E);
-	friend CORE_API YArchive& operator<<(YArchive& Ar, YNameEntrySerialized* E)
+	friend CORE_API FArchive& operator<<(FArchive& Ar, FNameEntrySerialized& E);
+	friend CORE_API FArchive& operator<<(FArchive& Ar, FNameEntrySerialized* E)
 	{
 		return Ar << *E;
 	}
@@ -292,7 +292,7 @@ struct YNameEntrySerialized :
 
 /**
 * Simple array type that can be expanded without invalidating existing entries.
-* This is critical to thread safe YNames.
+* This is critical to thread safe FNames.
 * @param ElementType Type of the pointer we are storing in the array
 * @param MaxTotalElements absolute maximum number of elements this array can ever hold
 * @param ElementsPerChunk how many elements to allocate in a chunk
@@ -445,11 +445,11 @@ public:
 
 // Typedef for the threadsafe master name table. 
 // CAUTION: If you change those constants, you probably need to update the debug visualizers.
-typedef TStaticIndirectArrayThreadSafeRead<YNameEntry, 2 * 1024 * 1024 /* 2M unique YNames */, 16384 /* allocated in 64K/128K chunks */ > TNameEntryArray;
+typedef TStaticIndirectArrayThreadSafeRead<FNameEntry, 2 * 1024 * 1024 /* 2M unique FNames */, 16384 /* allocated in 64K/128K chunks */ > TNameEntryArray;
 
 /**
 * The minimum amount of data required to reconstruct a name
-* This is smaller than YName, but you lose the case-preserving behavior
+* This is smaller than FName, but you lose the case-preserving behavior
 */
 struct CORE_API FMinimalName
 {
@@ -479,8 +479,8 @@ struct CORE_API FMinimalName
 
 /**
 * The full amount of data required to reconstruct a case-preserving name
-* This will be the same size as YName when WITH_CASE_PRESERVING_NAME is 1, and is used to store an YName in cases where
-* the size of YName must be constant between build configurations (eg, blueprint bytecode)
+* This will be the same size as FName when WITH_CASE_PRESERVING_NAME is 1, and is used to store an FName in cases where
+* the size of FName must be constant between build configurations (eg, blueprint bytecode)
 */
 struct CORE_API FScriptName
 {
@@ -518,7 +518,7 @@ struct CORE_API FScriptName
 * an index into a table of unique strings and an instance number.
 * Names are case-insensitive, but case-preserving (when WITH_CASE_PRESERVING_NAME is 1)
 */
-class CORE_API YName
+class CORE_API FName
 {
 public:
 
@@ -551,7 +551,7 @@ public:
 	/** Returns the pure name string without any trailing numbers */
 	YString GetPlainNameString() const
 	{
-		return GetDisplayNameEntry()->GetPlainNameString();
+		return GetDisplaFNameEntry()->GetPlainNameString();
 	}
 
 	/**
@@ -559,7 +559,7 @@ public:
 	*/
 	FORCEINLINE ANSICHAR const* GetPlainANSIString() const
 	{
-		return GetDisplayNameEntry()->GetAnsiName();
+		return GetDisplaFNameEntry()->GetAnsiName();
 	}
 
 	/**
@@ -567,52 +567,52 @@ public:
 	*/
 	FORCEINLINE WIDECHAR const* GetPlainWIDEString() const
 	{
-		return GetDisplayNameEntry()->GetWideName();
+		return GetDisplaFNameEntry()->GetWideName();
 	}
 
-	const YNameEntry* GetComparisonNameEntry() const;
-	const YNameEntry* GetDisplayNameEntry() const;
+	const FNameEntry* GetComparisonNameEntry() const;
+	const FNameEntry* GetDisplaFNameEntry() const;
 
 	/**
-	* Converts an YName to a readable format
+	* Converts an FName to a readable format
 	*
 	* @return String representation of the name
 	*/
 	YString ToString() const;
 
 	/**
-	* Converts an YName to a readable format, in place
+	* Converts an FName to a readable format, in place
 	*
 	* @param Out String to fill with the string representation of the name
 	*/
 	void ToString(YString& Out) const;
 
 	/**
-	* Converts an YName to a readable format, in place, appending to an existing string (ala GetFullName)
+	* Converts an FName to a readable format, in place, appending to an existing string (ala GetFullName)
 	*
 	* @param Out String to append with the string representation of the name
 	*/
 	void AppendString(YString& Out) const;
 
 	/**
-	* Check to see if this YName matches the other YName, potentially also checking for any case variations
+	* Check to see if this FName matches the other FName, potentially also checking for any case variations
 	*/
-	FORCEINLINE bool IsEqual(const YName& Other, const ENameCase CompareMethod = ENameCase::IgnoreCase, const bool bCompareNumber = true) const
+	FORCEINLINE bool IsEqual(const FName& Other, const ENameCase CompareMethod = ENameCase::IgnoreCase, const bool bCompareNumber = true) const
 	{
 		return ((CompareMethod == ENameCase::IgnoreCase) ? GetComparisonIndexFast() == Other.GetComparisonIndexFast() : GetDisplayIndexFast() == Other.GetDisplayIndexFast())
 			&& (!bCompareNumber || GetNumber() == Other.GetNumber());
 	}
 
-	FORCEINLINE bool operator==(const YName& Other) const
+	FORCEINLINE bool operator==(const FName& Other) const
 	{
 #if WITH_CASE_PRESERVING_NAME
 		return GetComparisonIndexFast() == Other.GetComparisonIndexFast() && GetNumber() == Other.GetNumber();
 #else
-		static_assert(sizeof(CompositeComparisonValue) == sizeof(*this), "ComparisonValue does not cover the entire YName state");
+		static_assert(sizeof(CompositeComparisonValue) == sizeof(*this), "ComparisonValue does not cover the entire FName state");
 		return CompositeComparisonValue == Other.CompositeComparisonValue;
 #endif
 	}
-	FORCEINLINE bool operator!=(const YName& Other) const
+	FORCEINLINE bool operator!=(const FName& Other) const
 	{
 		return !(*this == Other);
 	}
@@ -620,7 +620,7 @@ public:
 	/**
 	* Comparison operator used for sorting alphabetically.
 	*/
-	FORCEINLINE bool operator<(const YName& Other) const
+	FORCEINLINE bool operator<(const FName& Other) const
 	{
 		return Compare(Other) < 0;
 	}
@@ -628,7 +628,7 @@ public:
 	/**
 	* Comparison operator used for sorting alphabetically.
 	*/
-	FORCEINLINE bool operator>(const YName& Other) const
+	FORCEINLINE bool operator>(const FName& Other) const
 	{
 		return Compare(Other) > 0;
 	}
@@ -667,7 +667,7 @@ public:
 	static bool IsValidXName(const YString& InName, const YString& InInvalidChars, class FText* OutReason = nullptr, const class FText* InErrorCtx = nullptr);
 
 	/**
-	* Checks to see that a YName follows the rules that Unreal requires.
+	* Checks to see that a FName follows the rules that Unreal requires.
 	*
 	* @param	InInvalidChars	The set of invalid characters that the name cannot contain
 	* @param	OutReason		If the check fails, this string is filled in with the reason why.
@@ -681,7 +681,7 @@ public:
 	}
 
 	/**
-	* Takes an YName and checks to see that it follows the rules that Unreal requires.
+	* Takes an FName and checks to see that it follows the rules that Unreal requires.
 	*
 	* @param	OutReason		If the check fails, this string is filled in with the reason why.
 	* @param	InInvalidChars	The set of invalid characters that the name cannot contain
@@ -694,7 +694,7 @@ public:
 	}
 
 	/**
-	* Takes an YName and checks to see that it follows the rules that Unreal requires for object names.
+	* Takes an FName and checks to see that it follows the rules that Unreal requires for object names.
 	*
 	* @param	OutReason		If the check fails, this string is filled in with the reason why.
 	*
@@ -706,7 +706,7 @@ public:
 	}
 
 	/**
-	* Takes an YName and checks to see that it follows the rules that Unreal requires for package or group names.
+	* Takes an FName and checks to see that it follows the rules that Unreal requires for package or group names.
 	*
 	* @param	OutReason		If the check fails, this string is filled in with the reason why.
 	* @param	bIsGroupName	if true, check legality for a group name, else check legality for a package name
@@ -720,7 +720,7 @@ public:
 
 #ifdef IMPLEMENT_ASSIGNMENT_OPERATOR_MANUALLY
 	// Assignment operator
-	FORCEINLINE YName& operator=(const YName& Other)
+	FORCEINLINE FName& operator=(const FName& Other)
 	{
 		this->ComparisonIndex = Other.ComparisonIndex;
 #if WITH_CASE_PRESERVING_NAME
@@ -738,14 +738,14 @@ public:
 	* @param	Other	Name to compare this against
 	* @return	< 0 is this < Other, 0 if this == Other, > 0 if this > Other
 	*/
-	int32 Compare(const YName& Other) const;
+	int32 Compare(const FName& Other) const;
 
 	/**
-	* Create an YName with a hardcoded string index.
+	* Create an FName with a hardcoded string index.
 	*
 	* @param N The hardcoded value the string portion of the name will have. The number portion will be NAME_NO_NUMBER
 	*/
-	FORCEINLINE YName(EName N)
+	FORCEINLINE FName(EName N)
 		: ComparisonIndex(N)
 #if WITH_CASE_PRESERVING_NAME
 		, DisplayIndex(N)
@@ -756,12 +756,12 @@ public:
 	}
 
 	/**
-	* Create an YName with a hardcoded string index and (instance).
+	* Create an FName with a hardcoded string index and (instance).
 	*
 	* @param N The hardcoded value the string portion of the name will have
 	* @param InNumber The hardcoded value for the number portion of the name
 	*/
-	FORCEINLINE YName(EName N, int32 InNumber)
+	FORCEINLINE FName(EName N, int32 InNumber)
 		: ComparisonIndex(N)
 #if WITH_CASE_PRESERVING_NAME
 		, DisplayIndex(N)
@@ -769,18 +769,18 @@ public:
 		, Number(InNumber)
 	{
 		// If this fires the enum was out of bounds - did you pass an index instead?
-		// If you want to clone an YName with a new number, YName( const YName& Other, int32 InNumber ) is the thing you want
+		// If you want to clone an FName with a new number, FName( const FName& Other, int32 InNumber ) is the thing you want
 		check(N < NAME_MaxHardcodedNameIndex);
 		check(InNumber >= 0 && InNumber <= 0xffffff);
 	}
 
 	/**
-	* Create an YName from an existing string, but with a different instance.
+	* Create an FName from an existing string, but with a different instance.
 	*
-	* @param Other The YName to take the string values from
+	* @param Other The FName to take the string values from
 	* @param InNumber The hardcoded value for the number portion of the name
 	*/
-	FORCEINLINE YName(const YName& Other, int32 InNumber)
+	FORCEINLINE FName(const FName& Other, int32 InNumber)
 		: ComparisonIndex(Other.ComparisonIndex)
 #if WITH_CASE_PRESERVING_NAME
 		, DisplayIndex(Other.DisplayIndex)
@@ -790,10 +790,10 @@ public:
 	}
 
 	/**
-	* Create an YName from its component parts
+	* Create an FName from its component parts
 	* Only call this if you *really* know what you're doing
 	*/
-	FORCEINLINE YName(const NAME_INDEX InComparisonIndex, const NAME_INDEX InDisplayIndex, const int32 InNumber)
+	FORCEINLINE FName(const NAME_INDEX InComparisonIndex, const NAME_INDEX InDisplayIndex, const int32 InNumber)
 		: ComparisonIndex(InComparisonIndex)
 #if WITH_CASE_PRESERVING_NAME
 		, DisplayIndex(InDisplayIndex)
@@ -805,7 +805,7 @@ public:
 	/**
 	* Default constructor, initialized to None
 	*/
-	FORCEINLINE YName()
+	FORCEINLINE FName()
 		: ComparisonIndex(0)
 #if WITH_CASE_PRESERVING_NAME
 		, DisplayIndex(0)
@@ -817,48 +817,48 @@ public:
 	/**
 	* Scary no init constructor, used for something obscure in UObjectBase
 	*/
-	explicit YName(ENoInit)
+	explicit FName(ENoInit)
 	{
 	}
 
 	/**
-	* Create an YName. If FindType is YName_Find, and the string part of the name
+	* Create an FName. If FindType is FName_Find, and the string part of the name
 	* doesn't already exist, then the name will be NAME_None
 	*
 	* @param Name			Value for the string portion of the name
 	* @param FindType		Action to take (see EFindName)
 	*/
-	YName(const WIDECHAR* Name, EFindName FindType = YName_Add);
-	YName(const ANSICHAR* Name, EFindName FindType = YName_Add);
+	FName(const WIDECHAR* Name, EFindName FindType = FName_Add);
+	FName(const ANSICHAR* Name, EFindName FindType = FName_Add);
 
 	// Deprecated bUnused
-	DEPRECATED(4.12, "Removed bUnused from YName") YName(const WIDECHAR* Name, EFindName FindType, bool bUnused) : YName(Name, FindType) { }
-	DEPRECATED(4.12, "Removed bUnused from YName") YName(const ANSICHAR* Name, EFindName FindType, bool bUnused) : YName(Name, FindType) { }
+	DEPRECATED(4.12, "Removed bUnused from FName") FName(const WIDECHAR* Name, EFindName FindType, bool bUnused) : FName(Name, FindType) { }
+	DEPRECATED(4.12, "Removed bUnused from FName") FName(const ANSICHAR* Name, EFindName FindType, bool bUnused) : FName(Name, FindType) { }
 
 	/**
-	* Create an YName. If FindType is YName_Find, and the string part of the name
+	* Create an FName. If FindType is FName_Find, and the string part of the name
 	* doesn't already exist, then the name will be NAME_None
 	*
 	* @param Name Value for the string portion of the name
 	* @param Number Value for the number portion of the name
 	* @param FindType Action to take (see EFindName)
 	*/
-	YName(const TCHAR* Name, int32 InNumber, EFindName FindType = YName_Add);
+	FName(const TCHAR* Name, int32 InNumber, EFindName FindType = FName_Add);
 
 	/**
-	* Constructor used by FLinkerLoad when loading its name table; Creates an YName with an instance
-	* number of 0 that does not attempt to split the YName into string and number portions. Also,
+	* Constructor used by FLinkerLoad when loading its name table; Creates an FName with an instance
+	* number of 0 that does not attempt to split the FName into string and number portions. Also,
 	* this version skips calculating the hashes of the names if possible
 	*/
-	YName(const YNameEntrySerialized& LoadedEntry);
+	FName(const FNameEntrySerialized& LoadedEntry);
 
 	/**
-	* Create an YName with a hardcoded string index.
+	* Create an FName with a hardcoded string index.
 	*
 	* @param HardcodedIndex	The hardcoded value the string portion of the name will have.
 	* @param Name				The hardcoded name to initialize
 	*/
-	explicit YName(EName HardcodedIndex, const TCHAR* Name);
+	explicit FName(EName HardcodedIndex, const TCHAR* Name);
 
 	/**
 	* Equality operator.
@@ -869,9 +869,9 @@ public:
 	template <typename CharType>
 	bool operator==(const CharType* Other) const
 	{
-		// Find name entry associated with this YName.
+		// Find name entry associated with this FName.
 		check(Other);
-		const YNameEntry* const Entry = GetComparisonNameEntry();
+		const FNameEntry* const Entry = GetComparisonNameEntry();
 
 		// Temporary buffer to hold split name in case passed in name is of Name_Number format.
 		WIDECHAR TempBuffer[NAME_SIZE];
@@ -922,13 +922,13 @@ public:
 	static uint16 GetNonCasePreservingHash(const TCharType* Source);
 
 	static void StaticInit();
-	static void DisplayHash(class YOutputDevice& Ar);
+	static void DisplayHash(class FOutputDevice& Ar);
 	static YString SafeString(int32 InDisplayIndex, int32 InstanceNumber = NAME_NO_NUMBER_INTERNAL)
 	{
 		TNameEntryArray& Names = GetNames();
 		return GetIsInitialized()
 			? (Names.IsValidIndex(InDisplayIndex) && Names[InDisplayIndex])
-			? YName(InDisplayIndex, InDisplayIndex, InstanceNumber).ToString()
+			? FName(InDisplayIndex, InDisplayIndex, InstanceNumber).ToString()
 			: YString(TEXT("*INVALID*"))
 			: YString(TEXT("*UNINITIALIZED*"));
 	}
@@ -948,7 +948,7 @@ public:
 	*/
 	static int32 GetNameTableMemorySize()
 	{
-		return GetNameEntryMemorySize() + (GetMaxNames() * sizeof(YNameEntry*)) + sizeof(NameHashHead) + sizeof(NameHashTail);
+		return GetNameEntryMemorySize() + (GetMaxNames() * sizeof(FNameEntry*)) + sizeof(NameHashHead) + sizeof(NameHashTail);
 	}
 
 	/**
@@ -965,7 +965,7 @@ public:
 	{
 		return NumWideNames;
 	}
-	static YNameEntry const* GetEntry(int i)
+	static FNameEntry const* GetEntry(int i)
 	{
 		return GetNames()[i];
 	}
@@ -973,7 +973,7 @@ public:
 
 	/**
 	* Helper function to split an old-style name (Class_Number, ie Rocket_17) into
-	* the component parts usable by new-style YNames. Only use results if this function
+	* the component parts usable by new-style FNames. Only use results if this function
 	* returns true.
 	*
 	* @param OldName		Old-style name
@@ -986,20 +986,20 @@ public:
 	static bool SplitNameWithCheck(const WIDECHAR* OldName, WIDECHAR* NewName, int32 NewNameLen, int32& NewNumber);
 
 	/** Singleton to retrieve a table of all names (multithreaded) for debug visualizers. */
-	static YNameEntry*** GetNameTableForDebuggerVisualizers_MT();
-	/** Run autotest on YNames. */
+	static FNameEntry*** GetNameTableForDebuggerVisualizers_MT();
+	/** Run autotest on FNames. */
 	static void AutoTest();
 
 	/**
 	* Takes a string and breaks it down into a human readable string.
 	* For example - "bCreateSomeStuff" becomes "Create Some Stuff?" and "DrawScale3D" becomes "Draw Scale 3D".
 	*
-	* @param	InDisplayName	[In, Out] The name to sanitize
+	* @param	InDisplaFName	[In, Out] The name to sanitize
 	* @param	bIsBool				True if the name is a bool
 	*
 	* @return	the sanitized version of the display name
 	*/
-	static YString NameToDisplayString(const YString& InDisplayName, const bool bIsBool);
+	static YString NameToDisplayString(const YString& InDisplaFName, const bool bIsBool);
 
 private:
 
@@ -1017,16 +1017,16 @@ private:
 			uint32			Number;
 		};
 
-		// Used to perform a single comparison in YName::operator==
+		// Used to perform a single comparison in FName::operator==
 #if !WITH_CASE_PRESERVING_NAME
 		uint64 CompositeComparisonValue;
 #endif
 	};
 
 	/** Name hash head - used to iterate the single-linked list.		*/
-	static YNameEntry*						NameHashHead[YNameDefs::NameHashBucketCount];
+	static FNameEntry*						NameHashHead[FNameDefs::NameHashBucketCount];
 	/** Name hash tail - insert new entries after this - NON ATOMIC!	*/
-	static YNameEntry*						NameHashTail[YNameDefs::NameHashBucketCount];
+	static FNameEntry*						NameHashTail[FNameDefs::NameHashBucketCount];
 	/** Size of all name entries.								*/
 	static int32							NameEntryMemorySize;
 	/** Number of ANSI names in name table.						*/
@@ -1042,11 +1042,11 @@ private:
 	*/
 	static bool& GetIsInitialized();
 
-	friend const TCHAR* DebugYName(int32);
-	friend const TCHAR* DebugYName(int32, int32);
-	friend const TCHAR* DebugYName(YName&);
+	friend const TCHAR* DebugFName(int32);
+	friend const TCHAR* DebugFName(int32, int32);
+	friend const TCHAR* DebugFName(FName&);
 	template<typename TCharType>
-	friend YNameEntry* AllocateNameEntry(const void* Name, NAME_INDEX Index);
+	friend FNameEntry* AllocateNameEntry(const void* Name, NAME_INDEX Index);
 	/** Used to increment the correct counter based upon TCharType */
 	template <typename TCharType> friend void IncrementNameCount();
 
@@ -1057,7 +1057,7 @@ private:
 	* @param InNumber Number part of the name/number pair
 	* @param FindType Operation to perform on names
 	* @param bSplitName If true, this function will attempt to split a number off of the string portion (turning Rocket_17 to Rocket and number 17)
-	* @param HardcodeIndex If >= 0, this represents a hardcoded YName and so automatically gets this index
+	* @param HardcodeIndex If >= 0, this represents a hardcoded FName and so automatically gets this index
 	*/
 	void Init(const WIDECHAR* InName, int32 InNumber, EFindName FindType, bool bSplitName = true, int32 HardcodeIndex = -1);
 	/**
@@ -1072,7 +1072,7 @@ private:
 	* @param InNumber		Number part of the name/number pair
 	* @param FindType		Operation to perform on names
 	* @param bSplitName	If true, this function will attempt to split a number off of the string portion (turning Rocket_17 to Rocket and number 17)
-	* @param HardcodeIndex If >= 0, this represents a hardcoded YName and so automatically gets this index
+	* @param HardcodeIndex If >= 0, this represents a hardcoded FName and so automatically gets this index
 	*/
 	void Init(const ANSICHAR* InName, int32 InNumber, EFindName FindType, bool bSplitName = true, int32 HardcodeIndex = -1);
 	/**
@@ -1084,7 +1084,7 @@ private:
 	void InitInternal(const TCharType* InName, int32 InNumber, const EFindName FindType, const int32 HardcodeIndex, const uint16 NonCasePreservingHash, const uint16 CasePreservingHash);
 
 	/**
-	* Version of InitInternal that calculates the hash after splitting the string. Used by runtime YName construction
+	* Version of InitInternal that calculates the hash after splitting the string. Used by runtime FName construction
 	*/
 	template <typename TCharType>
 	void InitInternal_HashSplit(const TCharType* InName, int32 InNumber, const EFindName FindType, bool bSplitName, const int32 HardcodeIndex);
@@ -1117,65 +1117,65 @@ private:
 
 };
 
-template<> struct TIsZeroConstructType<class YName> { enum { Value = true }; };
-Expose_TNameOf(YName)
+template<> struct TIsZeroConstructType<class FName> { enum { Value = true }; };
+Expose_TNameOf(FName)
 
 
-inline uint32 GetTypeHash(const YName N)
+inline uint32 GetTypeHash(const FName N)
 {
 	return N.GetComparisonIndex() + N.GetNumber();
 }
 
 
-FORCEINLINE FMinimalName NameToMinimalName(const YName& InName)
+FORCEINLINE FMinimalName NameToMinimalName(const FName& InName)
 {
 	return FMinimalName(InName.GetComparisonIndex(), InName.GetNumber());
 }
 
-FORCEINLINE YName MinimalNameToName(const FMinimalName& InName)
+FORCEINLINE FName MinimalNameToName(const FMinimalName& InName)
 {
-	return YName(InName.Index, InName.Index, InName.Number);
+	return FName(InName.Index, InName.Index, InName.Number);
 }
 
 
-FORCEINLINE FScriptName NameToScriptName(const YName& InName)
+FORCEINLINE FScriptName NameToScriptName(const FName& InName)
 {
 	return FScriptName(InName.GetComparisonIndex(), InName.GetDisplayIndex(), InName.GetNumber());
 }
 
-FORCEINLINE YName ScriptNameToName(const FScriptName& InName)
+FORCEINLINE FName ScriptNameToName(const FScriptName& InName)
 {
-	return YName(InName.ComparisonIndex, InName.DisplayIndex, InName.Number);
+	return FName(InName.ComparisonIndex, InName.DisplayIndex, InName.Number);
 }
 
 
 /**
-* Equality operator with CharType* on left hand side and YName on right hand side
+* Equality operator with CharType* on left hand side and FName on right hand side
 *
-* @param	LHS		CharType to compare to YName
-* @param	RHS		YName to compare to CharType
+* @param	LHS		CharType to compare to FName
+* @param	RHS		FName to compare to CharType
 * @return True if strings match, false otherwise.
 */
 template <typename CharType>
-inline bool operator==(const CharType *LHS, const YName &RHS)
+inline bool operator==(const CharType *LHS, const FName &RHS)
 {
 	return RHS == LHS;
 }
 
 /**
-* Inequality operator with CharType* on left hand side and YName on right hand side
+* Inequality operator with CharType* on left hand side and FName on right hand side
 *
-* @param	LHS		CharType to compare to YName
-* @param	RHS		YName to compare to CharType
+* @param	LHS		CharType to compare to FName
+* @param	RHS		FName to compare to CharType
 * @return True if strings don't match, false otherwise.
 */
 template <typename CharType>
-inline bool operator!=(const CharType *LHS, const YName &RHS)
+inline bool operator!=(const CharType *LHS, const FName &RHS)
 {
 	return RHS != LHS;
 }
 
-/** YNames act like PODs. */
-template <> struct TIsPODType<YName> { enum { Value = true }; };
+/** FNames act like PODs. */
+template <> struct TIsPODType<FName> { enum { Value = true }; };
 
 

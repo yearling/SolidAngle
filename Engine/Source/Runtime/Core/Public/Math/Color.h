@@ -27,7 +27,7 @@ enum class EGammaSpace
 /**
 * A linear, 32-bit/component floating point RGBA color.
 */
-struct YLinearColor
+struct FLinearColor
 {
 	float	R,
 		G,
@@ -40,49 +40,49 @@ struct YLinearColor
 	/** Static lookup table used for FColor -> FLinearColor conversion. sRGB */
 	static float sRGBToLinearTable[256];
 
-	FORCEINLINE YLinearColor() {}
-	FORCEINLINE explicit YLinearColor(EForceInit)
+	FORCEINLINE FLinearColor() {}
+	FORCEINLINE explicit FLinearColor(EForceInit)
 		: R(0), G(0), B(0), A(0)
 	{}
-	FORCEINLINE YLinearColor(float InR, float InG, float InB, float InA = 1.0f) : R(InR), G(InG), B(InB), A(InA) {}
+	FORCEINLINE FLinearColor(float InR, float InG, float InB, float InA = 1.0f) : R(InR), G(InG), B(InB), A(InA) {}
 
 	/**
 	* Converts an FColor which is assumed to be in sRGB space, into linear color space.
 	* @param Color The sRGB color that needs to be converted into linear space.
 	*/
-	CORE_API YLinearColor(const YColor& Color);
+	CORE_API FLinearColor(const FColor& Color);
 
-	CORE_API YLinearColor(const YVector& Vector);
+	CORE_API FLinearColor(const FVector& Vector);
 
-	CORE_API explicit YLinearColor(const YFloat16Color& C);
+	CORE_API explicit FLinearColor(const YFloat16Color& C);
 
 	// Serializer.
 
-	friend YArchive& operator<<(YArchive& Ar, YLinearColor& Color)
+	friend FArchive& operator<<(FArchive& Ar, FLinearColor& Color)
 	{
 		return Ar << Color.R << Color.G << Color.B << Color.A;
 	}
 
-	bool Serialize(YArchive& Ar)
+	bool Serialize(FArchive& Ar)
 	{
 		Ar << *this;
 		return true;
 	}
 
 	// Conversions.
-	CORE_API YColor ToRGBE() const;
+	CORE_API FColor ToRGBE() const;
 
 	/**
 	* Converts an FColor coming from an observed sRGB output, into a linear color.
 	* @param Color The sRGB color that needs to be converted into linear space.
 	*/
-	CORE_API static YLinearColor FromSRGBColor(const YColor& Color);
+	CORE_API static FLinearColor FromSRGBColor(const FColor& Color);
 
 	/**
 	* Converts an FColor coming from an observed Pow(1/2.2) output, into a linear color.
 	* @param Color The Pow(1/2.2) color that needs to be converted into linear space.
 	*/
-	CORE_API static YLinearColor FromPow22Color(const YColor& Color);
+	CORE_API static FLinearColor FromPow22Color(const FColor& Color);
 
 	// Operators.
 
@@ -96,16 +96,16 @@ struct YLinearColor
 		return (&R)[Index];
 	}
 
-	FORCEINLINE YLinearColor operator+(const YLinearColor& ColorB) const
+	FORCEINLINE FLinearColor operator+(const FLinearColor& ColorB) const
 	{
-		return YLinearColor(
+		return FLinearColor(
 			this->R + ColorB.R,
 			this->G + ColorB.G,
 			this->B + ColorB.B,
 			this->A + ColorB.A
 		);
 	}
-	FORCEINLINE YLinearColor& operator+=(const YLinearColor& ColorB)
+	FORCEINLINE FLinearColor& operator+=(const FLinearColor& ColorB)
 	{
 		R += ColorB.R;
 		G += ColorB.G;
@@ -114,16 +114,16 @@ struct YLinearColor
 		return *this;
 	}
 
-	FORCEINLINE YLinearColor operator-(const YLinearColor& ColorB) const
+	FORCEINLINE FLinearColor operator-(const FLinearColor& ColorB) const
 	{
-		return YLinearColor(
+		return FLinearColor(
 			this->R - ColorB.R,
 			this->G - ColorB.G,
 			this->B - ColorB.B,
 			this->A - ColorB.A
 		);
 	}
-	FORCEINLINE YLinearColor& operator-=(const YLinearColor& ColorB)
+	FORCEINLINE FLinearColor& operator-=(const FLinearColor& ColorB)
 	{
 		R -= ColorB.R;
 		G -= ColorB.G;
@@ -132,16 +132,16 @@ struct YLinearColor
 		return *this;
 	}
 
-	FORCEINLINE YLinearColor operator*(const YLinearColor& ColorB) const
+	FORCEINLINE FLinearColor operator*(const FLinearColor& ColorB) const
 	{
-		return YLinearColor(
+		return FLinearColor(
 			this->R * ColorB.R,
 			this->G * ColorB.G,
 			this->B * ColorB.B,
 			this->A * ColorB.A
 		);
 	}
-	FORCEINLINE YLinearColor& operator*=(const YLinearColor& ColorB)
+	FORCEINLINE FLinearColor& operator*=(const FLinearColor& ColorB)
 	{
 		R *= ColorB.R;
 		G *= ColorB.G;
@@ -150,9 +150,9 @@ struct YLinearColor
 		return *this;
 	}
 
-	FORCEINLINE YLinearColor operator*(float Scalar) const
+	FORCEINLINE FLinearColor operator*(float Scalar) const
 	{
-		return YLinearColor(
+		return FLinearColor(
 			this->R * Scalar,
 			this->G * Scalar,
 			this->B * Scalar,
@@ -160,7 +160,7 @@ struct YLinearColor
 		);
 	}
 
-	FORCEINLINE YLinearColor& operator*=(float Scalar)
+	FORCEINLINE FLinearColor& operator*=(float Scalar)
 	{
 		R *= Scalar;
 		G *= Scalar;
@@ -169,16 +169,16 @@ struct YLinearColor
 		return *this;
 	}
 
-	FORCEINLINE YLinearColor operator/(const YLinearColor& ColorB) const
+	FORCEINLINE FLinearColor operator/(const FLinearColor& ColorB) const
 	{
-		return YLinearColor(
+		return FLinearColor(
 			this->R / ColorB.R,
 			this->G / ColorB.G,
 			this->B / ColorB.B,
 			this->A / ColorB.A
 		);
 	}
-	FORCEINLINE YLinearColor& operator/=(const YLinearColor& ColorB)
+	FORCEINLINE FLinearColor& operator/=(const FLinearColor& ColorB)
 	{
 		R /= ColorB.R;
 		G /= ColorB.G;
@@ -187,17 +187,17 @@ struct YLinearColor
 		return *this;
 	}
 
-	FORCEINLINE YLinearColor operator/(float Scalar) const
+	FORCEINLINE FLinearColor operator/(float Scalar) const
 	{
 		const float	InvScalar = 1.0f / Scalar;
-		return YLinearColor(
+		return FLinearColor(
 			this->R * InvScalar,
 			this->G * InvScalar,
 			this->B * InvScalar,
 			this->A * InvScalar
 		);
 	}
-	FORCEINLINE YLinearColor& operator/=(float Scalar)
+	FORCEINLINE FLinearColor& operator/=(float Scalar)
 	{
 		const float	InvScalar = 1.0f / Scalar;
 		R *= InvScalar;
@@ -208,9 +208,9 @@ struct YLinearColor
 	}
 
 	// clamped in 0..1 range
-	FORCEINLINE YLinearColor GetClamped(float InMin = 0.0f, float InMax = 1.0f) const
+	FORCEINLINE FLinearColor GetClamped(float InMin = 0.0f, float InMax = 1.0f) const
 	{
-		YLinearColor Ret;
+		FLinearColor Ret;
 
 		Ret.R = YMath::Clamp(R, InMin, InMax);
 		Ret.G = YMath::Clamp(G, InMin, InMax);
@@ -221,24 +221,24 @@ struct YLinearColor
 	}
 
 	/** Comparison operators */
-	FORCEINLINE bool operator==(const YLinearColor& ColorB) const
+	FORCEINLINE bool operator==(const FLinearColor& ColorB) const
 	{
 		return this->R == ColorB.R && this->G == ColorB.G && this->B == ColorB.B && this->A == ColorB.A;
 	}
-	FORCEINLINE bool operator!=(const YLinearColor& Other) const
+	FORCEINLINE bool operator!=(const FLinearColor& Other) const
 	{
 		return this->R != Other.R || this->G != Other.G || this->B != Other.B || this->A != Other.A;
 	}
 
 	// Error-tolerant comparison.
-	FORCEINLINE bool Equals(const YLinearColor& ColorB, float Tolerance = KINDA_SMALL_NUMBER) const
+	FORCEINLINE bool Equals(const FLinearColor& ColorB, float Tolerance = KINDA_SMALL_NUMBER) const
 	{
 		return YMath::Abs(this->R - ColorB.R) < Tolerance && YMath::Abs(this->G - ColorB.G) < Tolerance && YMath::Abs(this->B - ColorB.B) < Tolerance && YMath::Abs(this->A - ColorB.A) < Tolerance;
 	}
 
-	CORE_API YLinearColor CopyWithNewOpacity(float NewOpacicty) const
+	CORE_API FLinearColor CopyWithNewOpacity(float NewOpacicty) const
 	{
-		YLinearColor NewCopy = *this;
+		FLinearColor NewCopy = *this;
 		NewCopy.A = NewOpacicty;
 		return NewCopy;
 	}
@@ -246,22 +246,22 @@ struct YLinearColor
 	/**
 	* Converts byte hue-saturation-brightness to floating point red-green-blue.
 	*/
-	static CORE_API YLinearColor FGetHSV(uint8 H, uint8 S, uint8 V);
+	static CORE_API FLinearColor FGetHSV(uint8 H, uint8 S, uint8 V);
 
 	/**
 	* Makes a random but quite nice color.
 	*/
-	static CORE_API YLinearColor MakeRandomColor();
+	static CORE_API FLinearColor MakeRandomColor();
 
 	/**
 	* Converts temperature in Kelvins of a black body radiator to RGB chromaticity.
 	*/
-	static CORE_API YLinearColor MakeFromColorTemperature(float Temp);
+	static CORE_API FLinearColor MakeFromColorTemperature(float Temp);
 
 	/**
 	* Euclidean distance between two points.
 	*/
-	static inline float Dist(const YLinearColor &V1, const YLinearColor &V2)
+	static inline float Dist(const FLinearColor &V1, const FLinearColor &V2)
 	{
 		return YMath::Sqrt(YMath::Square(V2.R - V1.R) + YMath::Square(V2.G - V1.G) + YMath::Square(V2.B - V1.B) + YMath::Square(V2.A - V1.A));
 	}
@@ -274,13 +274,13 @@ struct YLinearColor
 	* @param	OutPoints		Receives the output samples.
 	* @return					Path length.
 	*/
-	static CORE_API float EvaluateBezier(const YLinearColor* ControlPoints, int32 NumPoints, TArray<YLinearColor>& OutPoints);
+	static CORE_API float EvaluateBezier(const FLinearColor* ControlPoints, int32 NumPoints, TArray<FLinearColor>& OutPoints);
 
 	/** Converts a linear space RGB color to an HSV color */
-	CORE_API YLinearColor LinearRGBToHSV() const;
+	CORE_API FLinearColor LinearRGBToHSV() const;
 
 	/** Converts an HSV color to a linear space RGB color */
-	CORE_API YLinearColor HSVToLinearRGB() const;
+	CORE_API FLinearColor HSVToLinearRGB() const;
 
 	/**
 	* Linearly interpolates between two colors by the specified progress amount.  The interpolation is performed in HSV color space
@@ -292,13 +292,13 @@ struct YLinearColor
 	* @param	Progress	Scalar interpolation amount (usually between 0.0 and 1.0 inclusive)
 	* @return	The interpolated color in linear RGB space along with the interpolated alpha value
 	*/
-	static CORE_API YLinearColor LerpUsingHSV(const YLinearColor& From, const YLinearColor& To, const float Progress);
+	static CORE_API FLinearColor LerpUsingHSV(const FLinearColor& From, const FLinearColor& To, const float Progress);
 
 	/** Quantizes the linear color and returns the result as a FColor.  This bypasses the SRGB conversion. */
-	CORE_API YColor Quantize() const;
+	CORE_API FColor Quantize() const;
 
 	/** Quantizes the linear color and returns the result as a FColor with optional sRGB conversion and quality as goal. */
-	CORE_API YColor ToYColor(const bool bSRGB) const;
+	CORE_API FColor ToYColor(const bool bSRGB) const;
 
 	/**
 	* Returns a desaturated color, with 0 meaning no desaturation and 1 == full desaturation
@@ -306,7 +306,7 @@ struct YLinearColor
 	* @param	Desaturation	Desaturation factor in range [0..1]
 	* @return	Desaturated color
 	*/
-	CORE_API YLinearColor Desaturate(float Desaturation) const;
+	CORE_API FLinearColor Desaturate(float Desaturation) const;
 
 	/** Computes the perceptually weighted luminance value of a color. */
 	CORE_API float ComputeLuminance() const;
@@ -369,17 +369,17 @@ struct YLinearColor
 	}
 
 	// Common colors.	
-	static CORE_API const YLinearColor White;
-	static CORE_API const YLinearColor Gray;
-	static CORE_API const YLinearColor Black;
-	static CORE_API const YLinearColor Transparent;
-	static CORE_API const YLinearColor Red;
-	static CORE_API const YLinearColor Green;
-	static CORE_API const YLinearColor Blue;
-	static CORE_API const YLinearColor Yellow;
+	static CORE_API const FLinearColor White;
+	static CORE_API const FLinearColor Gray;
+	static CORE_API const FLinearColor Black;
+	static CORE_API const FLinearColor Transparent;
+	static CORE_API const FLinearColor Red;
+	static CORE_API const FLinearColor Green;
+	static CORE_API const FLinearColor Blue;
+	static CORE_API const FLinearColor Yellow;
 };
 
-FORCEINLINE YLinearColor operator*(float Scalar, const YLinearColor& Color)
+FORCEINLINE FLinearColor operator*(float Scalar, const FLinearColor& Color)
 {
 	return Color.operator*(Scalar);
 }
@@ -388,7 +388,7 @@ FORCEINLINE YLinearColor operator*(float Scalar, const YLinearColor& Color)
 //	FColor
 //
 
-struct YColor
+struct FColor
 {
 public:
 	// Variables.
@@ -409,13 +409,13 @@ public:
 	const uint32& DWColor(void) const { return *((uint32*)this); }
 
 	// Constructors.
-	FORCEINLINE YColor() {}
-	FORCEINLINE explicit YColor(EForceInit)
+	FORCEINLINE FColor() {}
+	FORCEINLINE explicit FColor(EForceInit)
 	{
 		// put these into the body for proper ordering with INTEL vs non-INTEL_BYTE_ORDER
 		R = G = B = A = 0;
 	}
-	FORCEINLINE YColor(uint8 InR, uint8 InG, uint8 InB, uint8 InA = 255)
+	FORCEINLINE FColor(uint8 InR, uint8 InG, uint8 InB, uint8 InA = 255)
 	{
 		// put these into the body for proper ordering with INTEL vs non-INTEL_BYTE_ORDER
 		R = InR;
@@ -425,35 +425,35 @@ public:
 
 	}
 
-	FORCEINLINE explicit YColor(uint32 InColor)
+	FORCEINLINE explicit FColor(uint32 InColor)
 	{
 		DWColor() = InColor;
 	}
 
 	// Serializer.
-	friend YArchive& operator<< (YArchive &Ar, YColor &Color)
+	friend FArchive& operator<< (FArchive &Ar, FColor &Color)
 	{
 		return Ar << Color.DWColor();
 	}
 
-	bool Serialize(YArchive& Ar)
+	bool Serialize(FArchive& Ar)
 	{
 		Ar << *this;
 		return true;
 	}
 
 	// Operators.
-	FORCEINLINE bool operator==(const YColor &C) const
+	FORCEINLINE bool operator==(const FColor &C) const
 	{
 		return DWColor() == C.DWColor();
 	}
 
-	FORCEINLINE bool operator!=(const YColor& C) const
+	FORCEINLINE bool operator!=(const FColor& C) const
 	{
 		return DWColor() != C.DWColor();
 	}
 
-	FORCEINLINE void operator+=(const YColor& C)
+	FORCEINLINE void operator+=(const FColor& C)
 	{
 		R = (uint8)YMath::Min((int32)R + (int32)C.R, 255);
 		G = (uint8)YMath::Min((int32)G + (int32)C.G, 255);
@@ -461,7 +461,7 @@ public:
 		A = (uint8)YMath::Min((int32)A + (int32)C.A, 255);
 	}
 
-	CORE_API YLinearColor FromRGBE() const;
+	CORE_API FLinearColor FromRGBE() const;
 
 	/**
 	* Creates a color value from the given hexadecimal string.
@@ -472,30 +472,30 @@ public:
 	* @return The corresponding color value.
 	* @see ToHex
 	*/
-	static CORE_API YColor FromHex(const YString& HexString);
+	static CORE_API FColor FromHex(const YString& HexString);
 
 	/**
 	* Makes a random but quite nice color.
 	*/
-	static CORE_API YColor MakeRandomColor();
+	static CORE_API FColor MakeRandomColor();
 
 	/**
 	* Makes a color red->green with the passed in scalar (e.g. 0 is red, 1 is green)
 	*/
-	static CORE_API YColor MakeRedToGreenColorFromScalar(float Scalar);
+	static CORE_API FColor MakeRedToGreenColorFromScalar(float Scalar);
 
 	/**
 	* Converts temperature in Kelvins of a black body radiator to RGB chromaticity.
 	*/
-	static CORE_API YColor MakeFromColorTemperature(float Temp);
+	static CORE_API FColor MakeFromColorTemperature(float Temp);
 
 	/**
 	*	@return a new FColor based of this color with the new alpha value.
 	*	Usage: const FColor& MyColor = FColorList::Green.WithAlpha(128);
 	*/
-	YColor WithAlpha(uint8 Alpha) const
+	FColor WithAlpha(uint8 Alpha) const
 	{
-		return YColor(R, G, B, Alpha);
+		return FColor(R, G, B, Alpha);
 	}
 
 	/**
@@ -503,9 +503,9 @@ public:
 	*
 	* @return The linear color representation.
 	*/
-	FORCEINLINE YLinearColor ReinterpretAsLinear() const
+	FORCEINLINE FLinearColor ReinterpretAsLinear() const
 	{
-		return YLinearColor(R / 255.f, G / 255.f, B / 255.f, A / 255.f);
+		return FLinearColor(R / 255.f, G / 255.f, B / 255.f, A / 255.f);
 	}
 
 	/**
@@ -586,20 +586,20 @@ public:
 	}
 
 	/** Some pre-inited colors, useful for debug code */
-	static CORE_API const YColor White;
-	static CORE_API const YColor Black;
-	static CORE_API const YColor Transparent;
-	static CORE_API const YColor Red;
-	static CORE_API const YColor Green;
-	static CORE_API const YColor Blue;
-	static CORE_API const YColor Yellow;
-	static CORE_API const YColor Cyan;
-	static CORE_API const YColor Magenta;
-	static CORE_API const YColor Orange;
-	static CORE_API const YColor Purple;
-	static CORE_API const YColor Turquoise;
-	static CORE_API const YColor Silver;
-	static CORE_API const YColor Emerald;
+	static CORE_API const FColor White;
+	static CORE_API const FColor Black;
+	static CORE_API const FColor Transparent;
+	static CORE_API const FColor Red;
+	static CORE_API const FColor Green;
+	static CORE_API const FColor Blue;
+	static CORE_API const FColor Yellow;
+	static CORE_API const FColor Cyan;
+	static CORE_API const FColor Magenta;
+	static CORE_API const FColor Orange;
+	static CORE_API const FColor Purple;
+	static CORE_API const FColor Turquoise;
+	static CORE_API const FColor Silver;
+	static CORE_API const FColor Emerald;
 
 private:
 	/**
@@ -609,29 +609,29 @@ private:
 	* Note: Do not implement or make public.  We don't want people needlessly and implicitly converting between
 	* FLinearColor and FColor.  It's not a free conversion.
 	*/
-	explicit YColor(const YLinearColor& LinearColor);
+	explicit FColor(const FLinearColor& LinearColor);
 };
 
 
-FORCEINLINE uint32 GetTypeHash(const YColor& Color)
+FORCEINLINE uint32 GetTypeHash(const FColor& Color)
 {
 	return Color.DWColor();
 }
 
 
-FORCEINLINE uint32 GetTypeHash(const YLinearColor& LinearColor)
+FORCEINLINE uint32 GetTypeHash(const FLinearColor& LinearColor)
 {
 	// Note: this assumes there's no padding in FLinearColor that could contain uncompared data.
-	return FCrc::MemCrc_DEPRECATED(&LinearColor, sizeof(YLinearColor));
+	return FCrc::MemCrc_DEPRECATED(&LinearColor, sizeof(FLinearColor));
 }
 
 
 /** Computes a brightness and a fixed point color from a floating point color. */
-extern CORE_API void ComputeAndFixedColorAndIntensity(const YLinearColor& InLinearColor, YColor& OutColor, float& OutIntensity);
+extern CORE_API void ComputeAndFixedColorAndIntensity(const FLinearColor& InLinearColor, FColor& OutColor, float& OutIntensity);
 
 // These act like a POD
-template <> struct TIsPODType<YColor> { enum { Value = true }; };
-template <> struct TIsPODType<YLinearColor> { enum { Value = true }; };
+template <> struct TIsPODType<FColor> { enum { Value = true }; };
+template <> struct TIsPODType<FLinearColor> { enum { Value = true }; };
 
 
 /**

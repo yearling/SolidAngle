@@ -2,8 +2,8 @@
 
 #include "Internationalization/Text.h"
 #include "Misc/Parse.h"
-#include "SObject/ObjectVersion.h"
-#include "SObject/DebugSerializationFlags.h"
+#include "UObject/ObjectVersion.h"
+#include "UObject/DebugSerializationFlags.h"
 #include "Internationalization/Culture.h"
 #include "Internationalization/Internationalization.h"
 
@@ -15,7 +15,7 @@
 #include "Internationalization/TextNamespaceUtil.h"
 #include "Internationalization/FastDecimalFormat.h"
 
-#include "SObject/EditorObjectVersion.h"
+#include "UObject/EditorObjectVersion.h"
 
 //DEFINE_STAT(STAT_TextFormat);
 
@@ -104,7 +104,7 @@ FNumberFormattingOptions::FNumberFormattingOptions()
 
 }
 
-YArchive& operator<<(YArchive& Ar, FNumberFormattingOptions& Value)
+FArchive& operator<<(FArchive& Ar, FNumberFormattingOptions& Value)
 {
 	Ar << Value.UseGrouping;
 
@@ -603,7 +603,7 @@ bool FText::FindText( const YString& Namespace, const YString& Key, FText& OutTe
 	return false;
 }
 
-void FText::SerializeText(YArchive& Ar, FText& Value)
+void FText::SerializeText(FArchive& Ar, FText& Value)
 {
 	//When duplicating, the CDO is used as the template, then values for the instance are assigned.
 	//If we don't duplicate the string, the CDO and the instance are both pointing at the same thing.
@@ -808,7 +808,7 @@ FText FText::CreateChronologicalText(TSharedRef<ITextData, ESPMode::ThreadSafe> 
 	return NewText;
 }
 
-FText FText::FromName( const YName& Val) 
+FText FText::FromName( const FName& Val) 
 {
 	return FText::FromString(Val.ToString());
 }
@@ -949,7 +949,7 @@ bool FText::IdenticalTo( const FText& Other ) const
 	return TextData == Other.TextData || TextData->GetLocalizedString() == Other.TextData->GetLocalizedString();
 }
 
-YArchive& operator<<(YArchive& Ar, FFormatArgumentValue& Value)
+FArchive& operator<<(FArchive& Ar, FFormatArgumentValue& Value)
 {
 	int8 TypeAsInt8 = Value.Type;
 	Ar << TypeAsInt8;
@@ -1054,7 +1054,7 @@ void FFormatArgumentData::ResetValue()
 	ArgumentValueGender = ETextGender::Masculine;
 }
 
-YArchive& operator<<(YArchive& Ar, FFormatArgumentData& Value)
+FArchive& operator<<(FArchive& Ar, FFormatArgumentData& Value)
 {
 	Ar.UsingCustomVersion(FEditorObjectVersion::GUID);
 
@@ -1331,7 +1331,7 @@ bool FTextStringHelper::ReadFromString_ComplexText(const TCHAR* Buffer, FText& O
 					// We may assign a new key when importing if we don't have the correct package namespace in order to avoid identity conflicts when instancing (which duplicates without any special flags)
 					// This can happen if an asset was duplicated (and keeps the same keys) but later both assets are instanced into the same world (causing them to both take the worlds package id, and conflict with each other)
 					NamespaceString = FullNamespace;
-					KeyString = YGuid::NewGuid().ToString();
+					KeyString = FGuid::NewGuid().ToString();
 				}
 			}
 #endif // USE_STABLE_LOCALIZATION_KEYS
@@ -1385,7 +1385,7 @@ bool FTextStringHelper::ReadFromString_ComplexText(const TCHAR* Buffer, FText& O
 					// We may assign a new key when importing if we don't have the correct package namespace in order to avoid identity conflicts when instancing (which duplicates without any special flags)
 					// This can happen if an asset was duplicated (and keeps the same keys) but later both assets are instanced into the same world (causing them to both take the worlds package id, and conflict with each other)
 					NamespaceString = FullNamespace;
-					KeyString = YGuid::NewGuid().ToString();
+					KeyString = FGuid::NewGuid().ToString();
 				}
 
 				OutValue = FInternationalization::ForUseOnlyByLocMacroAndGraphNodeTextLiterals_CreateText(*SourceString, *NamespaceString, *KeyString);

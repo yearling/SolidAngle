@@ -374,7 +374,7 @@ FExpressionNode& FExpressionNode::operator=(FExpressionNode&& In)
 			SrcData->Reseat(InlineBytes);
 
 			// Empty the RHS
-			In.TypeId = YGuid();
+			In.TypeId = FGuid();
 			SrcData->~IExpressionNodeStorage();
 		}
 	}
@@ -382,7 +382,7 @@ FExpressionNode& FExpressionNode::operator=(FExpressionNode&& In)
 	return *this;
 }
 
-const YGuid& FExpressionNode::GetTypeId() const
+const FGuid& FExpressionNode::GetTypeId() const
 {
 	return TypeId;
 }
@@ -406,22 +406,22 @@ FExpressionNode FExpressionNode::Copy() const
 	return FExpressionNode();
 }
 
-const YGuid* FExpressionGrammar::GetGrouping(const YGuid& TypeId) const
+const FGuid* FExpressionGrammar::GetGrouping(const FGuid& TypeId) const
 {
 	return Groupings.Find(TypeId);
 }
 
-bool FExpressionGrammar::HasPreUnaryOperator(const YGuid& InTypeId) const
+bool FExpressionGrammar::HasPreUnaryOperator(const FGuid& InTypeId) const
 {
 	return PreUnaryOperators.Contains(InTypeId);
 }
 
-bool FExpressionGrammar::HasPostUnaryOperator(const YGuid& InTypeId) const
+bool FExpressionGrammar::HasPostUnaryOperator(const FGuid& InTypeId) const
 {
 	return PostUnaryOperators.Contains(InTypeId);
 }
 
-const int* FExpressionGrammar::GetBinaryOperatorPrecedence(const YGuid& InTypeId) const
+const int* FExpressionGrammar::GetBinaryOperatorPrecedence(const FGuid& InTypeId) const
 {
 	return BinaryOperators.Find(InTypeId);
 }
@@ -460,7 +460,7 @@ struct FExpressionCompiler
 		int32 Precedence;
 	};
 
-	TOptional<FExpressionError> CompileGroup(const FExpressionToken* GroupStart, const YGuid* StopAt)
+	TOptional<FExpressionError> CompileGroup(const FExpressionToken* GroupStart, const FGuid* StopAt)
 	{
 		enum class EState { PreUnary, PostUnary, Binary };
 
@@ -476,7 +476,7 @@ struct FExpressionCompiler
 			auto& Token = Tokens[CurrentTokenIndex];
 			const auto& TypeId = Token.Node.GetTypeId();
 
-			if (const YGuid* GroupingEnd = Grammar.GetGrouping(TypeId))
+			if (const FGuid* GroupingEnd = Grammar.GetGrouping(TypeId))
 			{
 				// Ignore this token
 				CurrentTokenIndex++;

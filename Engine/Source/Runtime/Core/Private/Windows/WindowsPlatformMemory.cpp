@@ -71,7 +71,7 @@ void YWindowsPlatformMemory::Init()
 // Set rather to use BinnedMalloc2 for binned malloc, can be overridden below
 #define USE_MALLOC_BINNED2 (1)
 
-YMalloc* YWindowsPlatformMemory::BaseAllocator()
+FMalloc* YWindowsPlatformMemory::BaseAllocator()
 {
 #if ENABLE_WIN_ALLOC_TRACKING
 	// This allows tracking of allocations that don't happen within the engine's wrappers.
@@ -191,7 +191,7 @@ YPlatformMemoryStats YWindowsPlatformMemory::GetStats()
 	return MemoryStats;
 }
 
-void YWindowsPlatformMemory::GetStatsForMallocProfiler(YGenericMemoryStats& out_Stats)
+void YWindowsPlatformMemory::GetStatsForMallocProfiler(FGenericMemoryStats& out_Stats)
 {
 #if	STATS
 	YGenericPlatformMemory::GetStatsForMallocProfiler(out_Stats);

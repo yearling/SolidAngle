@@ -20,7 +20,7 @@ enum class EByteOrderMark : int8
 /**
 * File output device (Note: Only works if ALLOW_LOG_FILE && !NO_LOGGING is true, otherwise Serialize does nothing).
 */
-class CORE_API YOutputDeviceFile : public YOutputDevice
+class CORE_API YOutputDeviceFile : public FOutputDevice
 {
 public:
 	/**
@@ -54,8 +54,8 @@ public:
 	*/
 	void Flush() override;
 
-	virtual void Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class YName& Category, const double Time) override;
-	virtual void Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class YName& Category) override;
+	virtual void Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category, const double Time) override;
+	virtual void Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category) override;
 	virtual bool CanBeUsedOnAnyThread() const override
 	{
 		return true;
@@ -73,7 +73,7 @@ private:
 	/** Writes to a file on a separate thread */
 	FAsyncWriter* AsyncWriter;
 	/** Archive used by the async writer */
-	YArchive* WriterArchive;
+	FArchive* WriterArchive;
 
 	TCHAR Filename[1024];
 	bool Opened;

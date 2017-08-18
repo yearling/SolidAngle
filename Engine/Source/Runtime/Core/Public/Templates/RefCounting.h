@@ -180,7 +180,7 @@ public:
 		InPtr.Reference = OldReference;
 	}
 
-	friend YArchive& operator<<(YArchive& Ar, TRefCountPtr& Ptr)
+	friend FArchive& operator<<(FArchive& Ar, TRefCountPtr& Ptr)
 	{
 		ReferenceType PtrReference = Ptr.Reference;
 		Ar << PtrReference;

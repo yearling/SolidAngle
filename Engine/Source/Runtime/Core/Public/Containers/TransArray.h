@@ -194,7 +194,7 @@ public:
 		}
 	}
 
-	friend YArchive& operator<<( YArchive& Ar, TTransArray& A )
+	friend FArchive& operator<<( FArchive& Ar, TTransArray& A )
 	{
 		Ar << A.Owner;
 		Ar << (Super&)A;
@@ -207,7 +207,7 @@ protected:
 	{
 		new (TPtr) T;
 	}
-	static void SerializeItem( YArchive& Ar, void* TPtr )
+	static void SerializeItem( FArchive& Ar, void* TPtr )
 	{
 		Ar << *(T*)TPtr;
 	}

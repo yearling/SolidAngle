@@ -11,18 +11,18 @@ IModularFeatures& IModularFeatures::Get()
 }
 
 
-int32 FModularFeatures::GetModularFeatureImplementationCount( const YName Type )
+int32 FModularFeatures::GetModularFeatureImplementationCount( const FName Type )
 {
 	return ModularFeaturesMap.Num( Type );
 }
 
 
-IModularFeature* FModularFeatures::GetModularFeatureImplementation( const YName Type, const int32 Index )
+IModularFeature* FModularFeatures::GetModularFeatureImplementation( const FName Type, const int32 Index )
 {
 	IModularFeature* ModularFeature = nullptr;
 
 	int32 CurrentIndex = 0;
-	for( TMultiMap< YName, class IModularFeature* >::TConstKeyIterator It( ModularFeaturesMap, Type ); It; ++It )
+	for( TMultiMap< FName, class IModularFeature* >::TConstKeyIterator It( ModularFeaturesMap, Type ); It; ++It )
 	{
 		if( Index == CurrentIndex )
 		{
@@ -38,14 +38,14 @@ IModularFeature* FModularFeatures::GetModularFeatureImplementation( const YName 
 }
 
 
-void FModularFeatures::RegisterModularFeature( const YName Type, IModularFeature* ModularFeature )
+void FModularFeatures::RegisterModularFeature( const FName Type, IModularFeature* ModularFeature )
 {
 	ModularFeaturesMap.AddUnique( Type, ModularFeature );
 	ModularFeatureRegisteredEvent.Broadcast( Type, ModularFeature );
 }
 
 
-void FModularFeatures::UnregisterModularFeature( const YName Type, IModularFeature* ModularFeature )
+void FModularFeatures::UnregisterModularFeature( const FName Type, IModularFeature* ModularFeature )
 {
 	ModularFeaturesMap.RemoveSingle( Type, ModularFeature );
 	ModularFeatureUnregisteredEvent.Broadcast( Type, ModularFeature );

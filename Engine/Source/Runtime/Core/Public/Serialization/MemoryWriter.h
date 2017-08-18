@@ -7,7 +7,7 @@
 #include "HAL/SolidAngleMemory.h"
 #include "Math/NumericLimits.h"
 #include "Containers/SolidAngleString.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Logging/LogMacros.h"
 #include "CoreGlobals.h"
 #include "Serialization/MemoryArchive.h"
@@ -18,7 +18,7 @@
 class YMemoryWriter : public YMemoryArchive
 {
 public:
-	YMemoryWriter( TArray<uint8>& InBytes, bool bIsPersistent = false, bool bSetOffset = false, const YName InArchiveName = NAME_None )
+	YMemoryWriter( TArray<uint8>& InBytes, bool bIsPersistent = false, bool bSetOffset = false, const FName InArchiveName = NAME_None )
 	: YMemoryArchive()
 	, Bytes(InBytes)
 	, ArchiveName(InArchiveName)
@@ -71,6 +71,6 @@ protected:
 	TArray<uint8>&	Bytes;
 
 	/** Archive name, used to debugging, by default set to NAME_None. */
-	const YName ArchiveName;
+	const FName ArchiveName;
 };
 

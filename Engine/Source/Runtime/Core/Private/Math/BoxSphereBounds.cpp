@@ -13,13 +13,13 @@
 /* FBoxSphereBounds interface
  *****************************************************************************/
 
-YBoxSphereBounds YBoxSphereBounds::TransformBy(const YMatrix& M) const
+YBoxSphereBounds YBoxSphereBounds::TransformBy(const FMatrix& M) const
 {
 #if ENABLE_NAN_DIAGNOSTIC
 	if (M.ContainsNaN())
 	{
 		logOrEnsureNanError(TEXT("Input Matrix contains NaN/Inf! %s"), *M.ToString());
-		(const_cast<YMatrix*>(&M))->SetIdentity();
+		(const_cast<FMatrix*>(&M))->SetIdentity();
 	}
 #endif
 
@@ -55,13 +55,13 @@ YBoxSphereBounds YBoxSphereBounds::TransformBy(const YMatrix& M) const
 	return Result;
 }
 
-YBoxSphereBounds YBoxSphereBounds::TransformBy(const YTransform& M) const
+YBoxSphereBounds YBoxSphereBounds::TransformBy(const FTransform& M) const
 {
 #if ENABLE_NAN_DIAGNOSTIC
 	M.DiagnosticCheckNaN_All();
 #endif
 
-	const YMatrix Mat = M.ToMatrixWithScale();
+	const FMatrix Mat = M.ToMatrixWithScale();
 	YBoxSphereBounds Result = TransformBy(Mat);
 	return Result;
 }

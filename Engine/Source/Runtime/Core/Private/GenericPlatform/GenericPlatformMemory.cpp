@@ -5,7 +5,7 @@
 #include "Misc/AssertionMacros.h"
 #include "Math/SolidAngleMathUtility.h"
 #include "Containers/StringConv.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Logging/LogMacros.h"
 #include "Stats/Stats.h"
 #include "Containers/Ticker.h"
@@ -160,7 +160,7 @@ void YGenericPlatformMemory::OnOutOfMemory(uint64 Size, uint32 Alignment)
 	UE_LOG(LogMemory, Fatal, TEXT("Ran out of memory allocating %llu bytes with alignment %u"), Size, Alignment);
 }
 
-YMalloc* YGenericPlatformMemory::BaseAllocator()
+FMalloc* YGenericPlatformMemory::BaseAllocator()
 {
 	return new FMallocAnsi();
 }
@@ -171,7 +171,7 @@ YPlatformMemoryStats YGenericPlatformMemory::GetStats()
 	return YPlatformMemoryStats();
 }
 
-void YGenericPlatformMemory::GetStatsForMallocProfiler(YGenericMemoryStats& out_Stats)
+void YGenericPlatformMemory::GetStatsForMallocProfiler(FGenericMemoryStats& out_Stats)
 {
 #if	STATS
 	YPlatformMemoryStats Stats = YPlatformMemory::GetStats();
@@ -219,27 +219,27 @@ void YGenericPlatformMemory::BinnedFreeToOS(void* Ptr, SIZE_T Size)
 	UE_LOG(LogMemory, Error, TEXT("YGenericPlatformMemory::BinnedFreeToOS not implemented on this platform"));
 }
 
-void YGenericPlatformMemory::DumpStats(class YOutputDevice& Ar)
+void YGenericPlatformMemory::DumpStats(class FOutputDevice& Ar)
 {
 	const float InvMB = 1.0f / 1024.0f / 1024.0f;
 	YPlatformMemoryStats MemoryStats = YPlatformMemory::GetStats();
 #if !NO_LOGGING
-	const YName CategoryName(LogMemory.GetCategoryName());
+	const FName CategorFName(LogMemory.GetCategorFName());
 #else
-	const YName CategoryName(TEXT("LogMemory"));
+	const FName CategorFName(TEXT("LogMemory"));
 #endif
-	Ar.CategorizedLogf(CategoryName, ELogVerbosity::Log, TEXT("Platform Memory Stats for %s"), ANSI_TO_TCHAR(FPlatformProperties::PlatformName()));
-	Ar.CategorizedLogf(CategoryName, ELogVerbosity::Log, TEXT("Process Physical Memory: %.2f MB used, %.2f MB peak"), MemoryStats.UsedPhysical*InvMB, MemoryStats.PeakUsedPhysical*InvMB);
-	Ar.CategorizedLogf(CategoryName, ELogVerbosity::Log, TEXT("Process Virtual Memory: %.2f MB used, %.2f MB peak"), MemoryStats.UsedVirtual*InvMB, MemoryStats.PeakUsedVirtual*InvMB);
+	Ar.CategorizedLogf(CategorFName, ELogVerbosity::Log, TEXT("Platform Memory Stats for %s"), ANSI_TO_TCHAR(FPlatformProperties::PlatformName()));
+	Ar.CategorizedLogf(CategorFName, ELogVerbosity::Log, TEXT("Process Physical Memory: %.2f MB used, %.2f MB peak"), MemoryStats.UsedPhysical*InvMB, MemoryStats.PeakUsedPhysical*InvMB);
+	Ar.CategorizedLogf(CategorFName, ELogVerbosity::Log, TEXT("Process Virtual Memory: %.2f MB used, %.2f MB peak"), MemoryStats.UsedVirtual*InvMB, MemoryStats.PeakUsedVirtual*InvMB);
 
-	Ar.CategorizedLogf(CategoryName, ELogVerbosity::Log, TEXT("Physical Memory: %.2f MB used,  %.2f MB free, %.2f MB total"),
+	Ar.CategorizedLogf(CategorFName, ELogVerbosity::Log, TEXT("Physical Memory: %.2f MB used,  %.2f MB free, %.2f MB total"),
 		(MemoryStats.TotalPhysical - MemoryStats.AvailablePhysical)*InvMB, MemoryStats.AvailablePhysical*InvMB, MemoryStats.TotalPhysical*InvMB);
-	Ar.CategorizedLogf(CategoryName, ELogVerbosity::Log, TEXT("Virtual Memory: %.2f MB used,  %.2f MB free, %.2f MB total"),
+	Ar.CategorizedLogf(CategorFName, ELogVerbosity::Log, TEXT("Virtual Memory: %.2f MB used,  %.2f MB free, %.2f MB total"),
 		(MemoryStats.TotalVirtual - MemoryStats.AvailableVirtual)*InvMB, MemoryStats.AvailablePhysical*InvMB, MemoryStats.TotalVirtual*InvMB);
 
 }
 
-void YGenericPlatformMemory::DumpPlatformAndAllocatorStats(class YOutputDevice& Ar)
+void YGenericPlatformMemory::DumpPlatformAndAllocatorStats(class FOutputDevice& Ar)
 {
 	YPlatformMemory::DumpStats(Ar);
 	GMalloc->DumpAllocatorStats(Ar);

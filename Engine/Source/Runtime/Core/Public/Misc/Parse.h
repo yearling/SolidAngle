@@ -15,11 +15,11 @@ struct CORE_API FParse
 	*/
 	static bool Command(const TCHAR** Stream, const TCHAR* Match, bool bParseMightTriggerExecution = true);
 	/** Parses a name. */
-	static bool Value(const TCHAR* Stream, const TCHAR* Match, YName& Name);
+	static bool Value(const TCHAR* Stream, const TCHAR* Match, FName& Name);
 	/** Parses a uint32. */
 	static bool Value(const TCHAR* Stream, const TCHAR* Match, uint32& Value);
 	/** Parses a globally unique identifier. */
-	static bool Value(const TCHAR* Stream, const TCHAR* Match, struct YGuid& Guid);
+	static bool Value(const TCHAR* Stream, const TCHAR* Match, struct FGuid& Guid);
 	/** Parses a string from a text string. */
 	static bool Value(const TCHAR* Stream, const TCHAR* Match, TCHAR* Value, int32 MaxLen, bool bShouldStopOnComma = true);
 	/** Parses a byte. */
@@ -111,7 +111,7 @@ struct CORE_API FParse
 
 #if !UE_BUILD_SHIPPING
 /** Needed for the console command "DumpConsoleCommands" */
-CORE_API void ConsoleCommandLibrary_DumpLibrary(class UWorld* InWorld, YExec& SubSystem, const YString& Pattern, YOutputDevice& Ar);
+CORE_API void ConsoleCommandLibrary_DumpLibrary(class UWorld* InWorld, FExec& SubSystem, const YString& Pattern, FOutputDevice& Ar);
 /** Needed for the console command "Help" */
-CORE_API void ConsoleCommandLibrary_DumpLibraryHTML(class UWorld* InWorld, YExec& SubSystem, const YString& OutPath);
+CORE_API void ConsoleCommandLibrary_DumpLibraryHTML(class UWorld* InWorld, FExec& SubSystem, const YString& OutPath);
 #endif // !UE_BUILD_SHIPPING

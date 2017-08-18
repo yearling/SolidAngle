@@ -11,10 +11,10 @@ struct YTwoVectors
 public:
 
 	/** Holds the first vector. */
-	YVector	v1;
+	FVector	v1;
 
 	/** Holds the second vector. */
-	YVector	v2;
+	FVector	v2;
 
 public:
 
@@ -27,7 +27,7 @@ public:
 	* @param In1 The first Vector.
 	* @param In2 The second Vector.
 	*/
-	FORCEINLINE	YTwoVectors(YVector In1, YVector In2);
+	FORCEINLINE	YTwoVectors(FVector In1, FVector In2);
 
 	/**
 	* Constructor.
@@ -213,12 +213,12 @@ public:
 	* @param TwoVectors The two-vector to serialize.
 	* @return Reference to the Archive after serialization.
 	*/
-	friend YArchive& operator<<(YArchive& Ar, YTwoVectors& TwoVectors)
+	friend FArchive& operator<<(FArchive& Ar, YTwoVectors& TwoVectors)
 	{
 		return Ar << TwoVectors.v1 << TwoVectors.v2;
 	}
 
-	bool Serialize(YArchive& Ar)
+	bool Serialize(FArchive& Ar)
 	{
 		Ar << *this;
 		return true;
@@ -241,7 +241,7 @@ FORCEINLINE	YTwoVectors::YTwoVectors() :
 { }
 
 
-FORCEINLINE YTwoVectors::YTwoVectors(YVector In1, YVector In2)
+FORCEINLINE YTwoVectors::YTwoVectors(FVector In1, FVector In2)
 	: v1(In1)
 	, v2(In2)
 { }
@@ -256,8 +256,8 @@ FORCEINLINE YTwoVectors::YTwoVectors(EForceInit)
 FORCEINLINE YTwoVectors YTwoVectors::operator+(const YTwoVectors& V) const
 {
 	return YTwoVectors(
-		YVector(v1 + V.v1),
-		YVector(v2 + V.v2)
+		FVector(v1 + V.v1),
+		FVector(v2 + V.v2)
 	);
 }
 
@@ -265,8 +265,8 @@ FORCEINLINE YTwoVectors YTwoVectors::operator+(const YTwoVectors& V) const
 FORCEINLINE YTwoVectors YTwoVectors::operator-(const YTwoVectors& V) const
 {
 	return YTwoVectors(
-		YVector(v1 - V.v1),
-		YVector(v2 - V.v2)
+		FVector(v1 - V.v1),
+		FVector(v2 - V.v2)
 	);
 }
 
@@ -274,8 +274,8 @@ FORCEINLINE YTwoVectors YTwoVectors::operator-(const YTwoVectors& V) const
 FORCEINLINE YTwoVectors YTwoVectors::operator*(float Scale) const
 {
 	return YTwoVectors(
-		YVector(v1 * Scale),
-		YVector(v2 * Scale)
+		FVector(v1 * Scale),
+		FVector(v2 * Scale)
 	);
 }
 
@@ -285,8 +285,8 @@ FORCEINLINE YTwoVectors YTwoVectors::operator/(float Scale) const
 	const float RScale = 1.f / Scale;
 
 	return YTwoVectors(
-		YVector(v1 * RScale),
-		YVector(v2 * RScale)
+		FVector(v1 * RScale),
+		FVector(v2 * RScale)
 	);
 }
 
@@ -294,8 +294,8 @@ FORCEINLINE YTwoVectors YTwoVectors::operator/(float Scale) const
 FORCEINLINE YTwoVectors YTwoVectors::operator*(const YTwoVectors& V) const
 {
 	return YTwoVectors(
-		YVector(v1 * V.v1),
-		YVector(v2 * V.v2)
+		FVector(v1 * V.v1),
+		FVector(v2 * V.v2)
 	);
 }
 
@@ -303,8 +303,8 @@ FORCEINLINE YTwoVectors YTwoVectors::operator*(const YTwoVectors& V) const
 FORCEINLINE YTwoVectors YTwoVectors::operator/(const YTwoVectors& V) const
 {
 	return YTwoVectors(
-		YVector(v1 / V.v1),
-		YVector(v2 / V.v2)
+		FVector(v1 / V.v1),
+		FVector(v2 / V.v2)
 	);
 }
 
@@ -330,8 +330,8 @@ FORCEINLINE bool YTwoVectors::Equals(const YTwoVectors& V, float Tolerance) cons
 FORCEINLINE YTwoVectors YTwoVectors::operator-() const
 {
 	return YTwoVectors(
-		YVector(-v1),
-		YVector(-v2)
+		FVector(-v1),
+		FVector(-v2)
 	);
 }
 

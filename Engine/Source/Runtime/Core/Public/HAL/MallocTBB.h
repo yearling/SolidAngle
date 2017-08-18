@@ -11,7 +11,7 @@
 * TBB 64-bit scalable memory allocator.
 */
 class TMallocTBB
-	: public YMalloc
+	: public FMalloc
 {
 public:
 

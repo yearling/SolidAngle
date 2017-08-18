@@ -59,7 +59,7 @@ YString TextNamespaceUtil::StripPackageNamespace(const YString& InTextNamespace)
 
 #if USE_STABLE_LOCALIZATION_KEYS
 
-YString TextNamespaceUtil::GetPackageNamespace(YArchive& InArchive)
+YString TextNamespaceUtil::GetPackageNamespace(FArchive& InArchive)
 {
 	return InArchive.GetLocalizationNamespace();
 }

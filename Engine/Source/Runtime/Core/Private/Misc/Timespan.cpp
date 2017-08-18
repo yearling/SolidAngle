@@ -3,12 +3,12 @@
 #include "Misc/Timespan.h"
 #include "Templates/TypeHash.h"
 #include "Containers/SolidAngleString.h"
-#include "SObject/PropertyPortFlags.h"
+#include "UObject/PropertyPortFlags.h"
 
 /* YTimespan interface
  *****************************************************************************/
 
-bool YTimespan::ExportTextItem(YString& ValueStr, YTimespan const& DefaultValue, SObject* Parent, int32 PortFlags, SObject* ExportRootScope) const
+bool YTimespan::ExportTextItem(YString& ValueStr, YTimespan const& DefaultValue, UObject* Parent, int32 PortFlags, UObject* ExportRootScope) const
 {
 	if (0 != (PortFlags & EPropertyPortFlags::PPF_ExportCpp))
 	{
@@ -22,14 +22,14 @@ bool YTimespan::ExportTextItem(YString& ValueStr, YTimespan const& DefaultValue,
 }
 
 
-bool YTimespan::ImportTextItem(const TCHAR*& Buffer, int32 PortFlags, SObject* Parent, YOutputDevice* ErrorText)
+bool YTimespan::ImportTextItem(const TCHAR*& Buffer, int32 PortFlags, UObject* Parent, FOutputDevice* ErrorText)
 {
 	// @todo gmp: implement YTimespan::ImportTextItem
 	return false;
 }
 
 
-bool YTimespan::Serialize(YArchive& Ar)
+bool YTimespan::Serialize(FArchive& Ar)
 {
 	Ar << *this;
 
@@ -175,7 +175,7 @@ bool YTimespan::Parse(const YString& TimespanString, YTimespan& OutTimespan)
 /* YTimespan friend functions
  *****************************************************************************/
 
-YArchive& operator<<(YArchive& Ar, YTimespan& Timespan)
+FArchive& operator<<(FArchive& Ar, YTimespan& Timespan)
 {
 	return Ar << Timespan.Ticks;
 }

@@ -54,7 +54,7 @@ TArray<YString> FWindowsPlatformProcess::DllDirectories;
 void FWindowsPlatformProcess::AddDllDirectory(const TCHAR* Directory)
 {
 	YString NormalizedDirectory = Directory;
-	YPaths::NormalizeDirectoryName(NormalizedDirectory);
+	YPaths::NormalizeDirectorFName(NormalizedDirectory);
 	YPaths::MakePlatformFilename(NormalizedDirectory);
 	DllDirectories.AddUnique(NormalizedDirectory);
 }

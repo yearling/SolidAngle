@@ -69,7 +69,7 @@ public:
 	virtual IConsoleVariable* FindConsoleVariable(const TCHAR* Name) const override;
 	virtual void ForEachConsoleObjectThatStartsWith(const FConsoleObjectVisitor& Visitor, const TCHAR* ThatStartsWith) const override;
 	virtual void ForEachConsoleObjectThatContains(const FConsoleObjectVisitor& Visitor, const TCHAR* ThatContains) const override;
-	virtual bool ProcessUserConsoleInput(const TCHAR* InInput, YOutputDevice& Ar, UWorld* InWorld) override;
+	virtual bool ProcessUserConsoleInput(const TCHAR* InInput, FOutputDevice& Ar, UWorld* InWorld) override;
 	virtual void AddConsoleHistoryEntry(const TCHAR* Input) override;
 	virtual void GetConsoleHistory(TArray<YString>& Out) override;
 	virtual bool IsNameRegistered(const TCHAR* Name) const override;

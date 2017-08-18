@@ -86,7 +86,7 @@ public:
 	 *
 	 * @return Reference to the Archive after serialization.
 	 */
-	friend YArchive& operator<<( YArchive& Ar, YFloat16& V )
+	friend FArchive& operator<<( FArchive& Ar, YFloat16& V )
 	{
 		return Ar << V.Encoded;
 	}

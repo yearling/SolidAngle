@@ -10,7 +10,7 @@
 
 /** Rotation and translation matrix using quaternion rotation */
 class YQuatRotationTranslationMatrix
-	: public YMatrix
+	: public FMatrix
 {
 public:
 
@@ -19,10 +19,10 @@ public:
 	* @param Q rotation
 	* @param Origin translation to apply
 	*/
-	YQuatRotationTranslationMatrix(const YQuat& Q, const YVector& Origin);
+	YQuatRotationTranslationMatrix(const FQuat& Q, const FVector& Origin);
 
 	/** Matrix factory. Return an FMatrix so we don't have type conversion issues in expressions. */
-	static YMatrix Make(const YQuat& Q, const YVector& Origin)
+	static FMatrix Make(const FQuat& Q, const FVector& Origin)
 	{
 		return YQuatRotationTranslationMatrix(Q, Origin);
 	}
@@ -39,20 +39,20 @@ public:
 	*
 	* @param Q rotation
 	*/
-	YQuatRotationMatrix(const YQuat& Q)
-		: YQuatRotationTranslationMatrix(Q, YVector::ZeroVector)
+	YQuatRotationMatrix(const FQuat& Q)
+		: YQuatRotationTranslationMatrix(Q, FVector::ZeroVector)
 	{
 	}
 
 	/** Matrix factory. Return an FMatrix so we don't have type conversion issues in expressions. */
-	static YMatrix Make(const YQuat& Q)
+	static FMatrix Make(const FQuat& Q)
 	{
 		return YQuatRotationMatrix(Q);
 	}
 };
 
 
-FORCEINLINE YQuatRotationTranslationMatrix::YQuatRotationTranslationMatrix(const YQuat& Q, const YVector& Origin)
+FORCEINLINE YQuatRotationTranslationMatrix::YQuatRotationTranslationMatrix(const FQuat& Q, const FVector& Origin)
 {
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST) && WITH_EDITORONLY_DATA
 	// Make sure Quaternion is normalized

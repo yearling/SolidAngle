@@ -12,7 +12,7 @@ YArchiveSaveCompressedProxy.
 /**
 * YArchive Proxy to transparently write out compressed data to an array.
 */
-class CORE_API YArchiveSaveCompressedProxy : public YArchive
+class CORE_API YArchiveSaveCompressedProxy : public FArchive
 {
 public:
 	/**

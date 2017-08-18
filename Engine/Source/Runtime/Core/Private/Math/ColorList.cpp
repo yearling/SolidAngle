@@ -12,9 +12,9 @@ DEFINE_LOG_CATEGORY_STATIC(LogColorList, Log, All);
 /** Global instance of color list helper class. */
 YColorList GColorList;
 
-const YColor& YColorList::GetFColorByName( const TCHAR* ColorName ) const
+const FColor& YColorList::GetFColorBFName( const TCHAR* ColorName ) const
 {
-	const YColor* Color = ColorsMap.FindRef( ColorName );
+	const FColor* Color = ColorsMap.FindRef( ColorName );
 
 	if( Color != NULL )
 	{
@@ -24,7 +24,7 @@ const YColor& YColorList::GetFColorByName( const TCHAR* ColorName ) const
 	return White;
 }
 
-const YColor& YColorList::GetFColorByIndex( int32 ColorIndex ) const
+const FColor& YColorList::GetFColorByIndex( int32 ColorIndex ) const
 {
 	if( ColorsLookup.IsValidIndex( ColorIndex ) == true )
 	{
@@ -34,28 +34,28 @@ const YColor& YColorList::GetFColorByIndex( int32 ColorIndex ) const
 	return White;
 }
 
-const YLinearColor YColorList::GetFLinearColorByName( const TCHAR* ColorName ) const
+const FLinearColor YColorList::GetFLinearColorBFName( const TCHAR* ColorName ) const
 {
-	const YColor* Color = ColorsMap.FindRef( ColorName );
+	const FColor* Color = ColorsMap.FindRef( ColorName );
 
 	if( Color != NULL )
 	{
-		return YLinearColor( *Color );
+		return FLinearColor( *Color );
 	}
 
-	return YLinearColor::White;
+	return FLinearColor::White;
 }
 
 bool YColorList::IsValidColorName( const TCHAR* ColorName ) const
 {
-	const YColor* Color = ColorsMap.FindRef( ColorName );
+	const FColor* Color = ColorsMap.FindRef( ColorName );
 	return Color != NULL ? true : false;
 }
 
 
 int32 YColorList::GetColorIndex( const TCHAR* ColorName ) const
 {
-	const YColor& Color = GetFColorByName( ColorName );
+	const FColor& Color = GetFColorBFName( ColorName );
 	int32 ColorIndex = 0;
 	ColorsLookup.Find( &Color, ColorIndex );
 	return ColorIndex;
@@ -67,7 +67,7 @@ const YString& YColorList::GetColorNameByIndex( int32 ColorIndex ) const
 
 	if( ColorsLookup.IsValidIndex( ColorIndex ) == true )
 	{
-		const YColor& Color = *ColorsLookup[ ColorIndex ];
+		const FColor& Color = *ColorsLookup[ ColorIndex ];
 		const YString& ColorName = *ColorsMap.FindKey( &Color );
 		return ColorName;
 	}
@@ -182,7 +182,7 @@ void YColorList::CreateColorMap()
 	ColorsLookup.Shrink();
 }
 
-void YColorList::InitializeColor( const TCHAR* ColorName, const YColor* ColorPtr, int32& CurrentIndex )
+void YColorList::InitializeColor( const TCHAR* ColorName, const FColor* ColorPtr, int32& CurrentIndex )
 {
 	ColorsMap.Add( ColorName, ColorPtr );
 	ColorsLookup.Add( ColorPtr );
@@ -194,7 +194,7 @@ void YColorList::LogColors()
 {
 	for( TColorsMap::TIterator It(ColorsMap); It; ++It )
 	{
-		const YColor* ColorPtr = It.Value();
+		const FColor* ColorPtr = It.Value();
 		const YString& ColorName = It.Key();
 
 		int32 ColorIndex = 0;
@@ -205,102 +205,102 @@ void YColorList::LogColors()
 }
 
 // Common colors declarations.
-const YColor YColorList::White            ( 255, 255, 255, 255 );
-const YColor YColorList::Red              ( 255,   0,   0, 255 );
-const YColor YColorList::Green            (   0, 255,   0, 255 );
-const YColor YColorList::Blue             (   0,   0, 255, 255 );
-const YColor YColorList::Magenta          ( 255,   0, 255, 255 );
-const YColor YColorList::Cyan             (   0, 255, 255, 255 );
-const YColor YColorList::Yellow           ( 255, 255,   0, 255 );
-const YColor YColorList::Black            (   0,   0,   0, 255 );
-const YColor YColorList::Aquamarine       ( 112, 219, 147, 255 );
-const YColor YColorList::BakerChocolate   (  92,  51,  23, 255 );
-const YColor YColorList::BlueViolet       ( 159,  95, 159, 255 );
-const YColor YColorList::Brass            ( 181, 166,  66, 255 );
-const YColor YColorList::BrightGold       ( 217, 217,  25, 255 );
-const YColor YColorList::Brown            ( 166,  42,  42, 255 );
-const YColor YColorList::Bronze           ( 140, 120,  83, 255 );
-const YColor YColorList::BronzeII         ( 166, 125,  61, 255 );
-const YColor YColorList::CadetBlue        (  95, 159, 159, 255 );
-const YColor YColorList::CoolCopper       ( 217, 135,  25, 255 );
-const YColor YColorList::Copper           ( 184, 115,  51, 255 );
-const YColor YColorList::Coral            ( 255, 127,   0, 255 );
-const YColor YColorList::CornFlowerBlue   (  66,  66, 111, 255 );
-const YColor YColorList::DarkBrown        (  92,  64,  51, 255 );
-const YColor YColorList::DarkGreen        (  47,  79,  47, 255 );
-const YColor YColorList::DarkGreenCopper  (  74, 118, 110, 255 );
-const YColor YColorList::DarkOliveGreen   (  79,  79,  47, 255 );
-const YColor YColorList::DarkOrchid       ( 153,  50, 205, 255 );
-const YColor YColorList::DarkPurple       ( 135,  31, 120, 255 );
-const YColor YColorList::DarkSlateBlue    ( 107,  35, 142, 255 );
-const YColor YColorList::DarkSlateGrey    (  47,  79,  79, 255 );
-const YColor YColorList::DarkTan          ( 151, 105,  79, 255 );
-const YColor YColorList::DarkTurquoise    ( 112, 147, 219, 255 );
-const YColor YColorList::DarkWood         ( 133,  94,  66, 255 );
-const YColor YColorList::DimGrey          (  84,  84,  84, 255 );
-const YColor YColorList::DustyRose        ( 133,  99,  99, 255 );
-const YColor YColorList::Feldspar         ( 209, 146, 117, 255 );
-const YColor YColorList::Firebrick        ( 142,  35,  35, 255 );
-const YColor YColorList::ForestGreen      (  35, 142,  35, 255 );
-const YColor YColorList::Gold             ( 205, 127,  50, 255 );
-const YColor YColorList::Goldenrod        ( 219, 219, 112, 255 );
-const YColor YColorList::Grey             ( 192, 192, 192, 255 );
-const YColor YColorList::GreenCopper      (  82, 127, 118, 255 );
-const YColor YColorList::GreenYellow      ( 147, 219, 112, 255 );
-const YColor YColorList::HunterGreen      (  33,  94,  33, 255 );
-const YColor YColorList::IndianRed        (  78,  47,  47, 255 );
-const YColor YColorList::Khaki            ( 159, 159,  95, 255 );
-const YColor YColorList::LightBlue        ( 192, 217, 217, 255 );
-const YColor YColorList::LightGrey        ( 168, 168, 168, 255 );
-const YColor YColorList::LightSteelBlue   ( 143, 143, 189, 255 );
-const YColor YColorList::LightWood        ( 233, 194, 166, 255 );
-const YColor YColorList::LimeGreen        (  50, 205,  50, 255 );
-const YColor YColorList::MandarianOrange  ( 228, 120,  51, 255 );
-const YColor YColorList::Maroon           ( 142,  35, 107, 255 );
-const YColor YColorList::MediumAquamarine (  50, 205, 153, 255 );
-const YColor YColorList::MediumBlue       (  50,  50, 205, 255 );
-const YColor YColorList::MediumForestGreen( 107, 142,  35, 255 );
-const YColor YColorList::MediumGoldenrod  ( 234, 234, 174, 255 );
-const YColor YColorList::MediumOrchid     ( 147, 112, 219, 255 );
-const YColor YColorList::MediumSeaGreen   (  66, 111,  66, 255 );
-const YColor YColorList::MediumSlateBlue  ( 127,   0, 255, 255 );
-const YColor YColorList::MediumSpringGreen( 127, 255,   0, 255 );
-const YColor YColorList::MediumTurquoise  ( 112, 219, 219, 255 );
-const YColor YColorList::MediumVioletRed  ( 219, 112, 147, 255 );
-const YColor YColorList::MediumWood       ( 166, 128, 100, 255 );
-const YColor YColorList::MidnightBlue     (  47,  47,  79, 255 );
-const YColor YColorList::NavyBlue         (  35,  35, 142, 255 );
-const YColor YColorList::NeonBlue         (  77,  77, 255, 255 );
-const YColor YColorList::NeonPink         ( 255, 110, 199, 255 );
-const YColor YColorList::NewMidnightBlue  (   0,   0, 156, 255 );
-const YColor YColorList::NewTan           ( 235, 199, 158, 255 );
-const YColor YColorList::OldGold          ( 207, 181,  59, 255 );
-const YColor YColorList::Orange           ( 255, 127,   0, 255 );
-const YColor YColorList::OrangeRed        ( 255,  36,   0, 255 );
-const YColor YColorList::Orchid           ( 219, 112, 219, 255 );
-const YColor YColorList::PaleGreen        ( 143, 188, 143, 255 );
-const YColor YColorList::Pink             ( 188, 143, 143, 255 );
-const YColor YColorList::Plum             ( 234, 173, 234, 255 );
-const YColor YColorList::Quartz           ( 217, 217, 243, 255 );
-const YColor YColorList::RichBlue         (  89,  89, 171, 255 );
-const YColor YColorList::Salmon           ( 111,  66,  66, 255 );
-const YColor YColorList::Scarlet          ( 140,  23,  23, 255 );
-const YColor YColorList::SeaGreen         (  35, 142, 104, 255 );
-const YColor YColorList::SemiSweetChocolate(107,  66,  38, 255 );
-const YColor YColorList::Sienna           ( 142, 107,  35, 255 );
-const YColor YColorList::Silver           ( 230, 232, 250, 255 );
-const YColor YColorList::SkyBlue          (  50, 153, 204, 255 );
-const YColor YColorList::SlateBlue        (   0, 127, 255, 255 );
-const YColor YColorList::SpicyPink        ( 255,  28, 174, 255 );
-const YColor YColorList::SpringGreen      (   0, 255, 127, 255 );
-const YColor YColorList::SteelBlue        (  35, 107, 142, 255 );
-const YColor YColorList::SummerSky        (  56, 176, 222, 255 );
-const YColor YColorList::Tan              ( 219, 147, 112, 255 );
-const YColor YColorList::Thistle          ( 216, 191, 216, 255 );
-const YColor YColorList::Turquoise        ( 173, 234, 234, 255 );
-const YColor YColorList::VeryDarkBrown    (  92,  64,  51, 255 );
-const YColor YColorList::VeryLightGrey    ( 205, 205, 205, 255 );
-const YColor YColorList::Violet           (  79,  47,  79, 255 );
-const YColor YColorList::VioletRed        ( 204,  50, 153, 255 );
-const YColor YColorList::Wheat            ( 216, 216, 191, 255 );
-const YColor YColorList::YellowGreen      ( 153, 204,  50, 255 );
+const FColor YColorList::White            ( 255, 255, 255, 255 );
+const FColor YColorList::Red              ( 255,   0,   0, 255 );
+const FColor YColorList::Green            (   0, 255,   0, 255 );
+const FColor YColorList::Blue             (   0,   0, 255, 255 );
+const FColor YColorList::Magenta          ( 255,   0, 255, 255 );
+const FColor YColorList::Cyan             (   0, 255, 255, 255 );
+const FColor YColorList::Yellow           ( 255, 255,   0, 255 );
+const FColor YColorList::Black            (   0,   0,   0, 255 );
+const FColor YColorList::Aquamarine       ( 112, 219, 147, 255 );
+const FColor YColorList::BakerChocolate   (  92,  51,  23, 255 );
+const FColor YColorList::BlueViolet       ( 159,  95, 159, 255 );
+const FColor YColorList::Brass            ( 181, 166,  66, 255 );
+const FColor YColorList::BrightGold       ( 217, 217,  25, 255 );
+const FColor YColorList::Brown            ( 166,  42,  42, 255 );
+const FColor YColorList::Bronze           ( 140, 120,  83, 255 );
+const FColor YColorList::BronzeII         ( 166, 125,  61, 255 );
+const FColor YColorList::CadetBlue        (  95, 159, 159, 255 );
+const FColor YColorList::CoolCopper       ( 217, 135,  25, 255 );
+const FColor YColorList::Copper           ( 184, 115,  51, 255 );
+const FColor YColorList::Coral            ( 255, 127,   0, 255 );
+const FColor YColorList::CornFlowerBlue   (  66,  66, 111, 255 );
+const FColor YColorList::DarkBrown        (  92,  64,  51, 255 );
+const FColor YColorList::DarkGreen        (  47,  79,  47, 255 );
+const FColor YColorList::DarkGreenCopper  (  74, 118, 110, 255 );
+const FColor YColorList::DarkOliveGreen   (  79,  79,  47, 255 );
+const FColor YColorList::DarkOrchid       ( 153,  50, 205, 255 );
+const FColor YColorList::DarkPurple       ( 135,  31, 120, 255 );
+const FColor YColorList::DarkSlateBlue    ( 107,  35, 142, 255 );
+const FColor YColorList::DarkSlateGrey    (  47,  79,  79, 255 );
+const FColor YColorList::DarkTan          ( 151, 105,  79, 255 );
+const FColor YColorList::DarkTurquoise    ( 112, 147, 219, 255 );
+const FColor YColorList::DarkWood         ( 133,  94,  66, 255 );
+const FColor YColorList::DimGrey          (  84,  84,  84, 255 );
+const FColor YColorList::DustyRose        ( 133,  99,  99, 255 );
+const FColor YColorList::Feldspar         ( 209, 146, 117, 255 );
+const FColor YColorList::Firebrick        ( 142,  35,  35, 255 );
+const FColor YColorList::ForestGreen      (  35, 142,  35, 255 );
+const FColor YColorList::Gold             ( 205, 127,  50, 255 );
+const FColor YColorList::Goldenrod        ( 219, 219, 112, 255 );
+const FColor YColorList::Grey             ( 192, 192, 192, 255 );
+const FColor YColorList::GreenCopper      (  82, 127, 118, 255 );
+const FColor YColorList::GreenYellow      ( 147, 219, 112, 255 );
+const FColor YColorList::HunterGreen      (  33,  94,  33, 255 );
+const FColor YColorList::IndianRed        (  78,  47,  47, 255 );
+const FColor YColorList::Khaki            ( 159, 159,  95, 255 );
+const FColor YColorList::LightBlue        ( 192, 217, 217, 255 );
+const FColor YColorList::LightGrey        ( 168, 168, 168, 255 );
+const FColor YColorList::LightSteelBlue   ( 143, 143, 189, 255 );
+const FColor YColorList::LightWood        ( 233, 194, 166, 255 );
+const FColor YColorList::LimeGreen        (  50, 205,  50, 255 );
+const FColor YColorList::MandarianOrange  ( 228, 120,  51, 255 );
+const FColor YColorList::Maroon           ( 142,  35, 107, 255 );
+const FColor YColorList::MediumAquamarine (  50, 205, 153, 255 );
+const FColor YColorList::MediumBlue       (  50,  50, 205, 255 );
+const FColor YColorList::MediumForestGreen( 107, 142,  35, 255 );
+const FColor YColorList::MediumGoldenrod  ( 234, 234, 174, 255 );
+const FColor YColorList::MediumOrchid     ( 147, 112, 219, 255 );
+const FColor YColorList::MediumSeaGreen   (  66, 111,  66, 255 );
+const FColor YColorList::MediumSlateBlue  ( 127,   0, 255, 255 );
+const FColor YColorList::MediumSpringGreen( 127, 255,   0, 255 );
+const FColor YColorList::MediumTurquoise  ( 112, 219, 219, 255 );
+const FColor YColorList::MediumVioletRed  ( 219, 112, 147, 255 );
+const FColor YColorList::MediumWood       ( 166, 128, 100, 255 );
+const FColor YColorList::MidnightBlue     (  47,  47,  79, 255 );
+const FColor YColorList::NavyBlue         (  35,  35, 142, 255 );
+const FColor YColorList::NeonBlue         (  77,  77, 255, 255 );
+const FColor YColorList::NeonPink         ( 255, 110, 199, 255 );
+const FColor YColorList::NewMidnightBlue  (   0,   0, 156, 255 );
+const FColor YColorList::NewTan           ( 235, 199, 158, 255 );
+const FColor YColorList::OldGold          ( 207, 181,  59, 255 );
+const FColor YColorList::Orange           ( 255, 127,   0, 255 );
+const FColor YColorList::OrangeRed        ( 255,  36,   0, 255 );
+const FColor YColorList::Orchid           ( 219, 112, 219, 255 );
+const FColor YColorList::PaleGreen        ( 143, 188, 143, 255 );
+const FColor YColorList::Pink             ( 188, 143, 143, 255 );
+const FColor YColorList::Plum             ( 234, 173, 234, 255 );
+const FColor YColorList::Quartz           ( 217, 217, 243, 255 );
+const FColor YColorList::RichBlue         (  89,  89, 171, 255 );
+const FColor YColorList::Salmon           ( 111,  66,  66, 255 );
+const FColor YColorList::Scarlet          ( 140,  23,  23, 255 );
+const FColor YColorList::SeaGreen         (  35, 142, 104, 255 );
+const FColor YColorList::SemiSweetChocolate(107,  66,  38, 255 );
+const FColor YColorList::Sienna           ( 142, 107,  35, 255 );
+const FColor YColorList::Silver           ( 230, 232, 250, 255 );
+const FColor YColorList::SkyBlue          (  50, 153, 204, 255 );
+const FColor YColorList::SlateBlue        (   0, 127, 255, 255 );
+const FColor YColorList::SpicyPink        ( 255,  28, 174, 255 );
+const FColor YColorList::SpringGreen      (   0, 255, 127, 255 );
+const FColor YColorList::SteelBlue        (  35, 107, 142, 255 );
+const FColor YColorList::SummerSky        (  56, 176, 222, 255 );
+const FColor YColorList::Tan              ( 219, 147, 112, 255 );
+const FColor YColorList::Thistle          ( 216, 191, 216, 255 );
+const FColor YColorList::Turquoise        ( 173, 234, 234, 255 );
+const FColor YColorList::VeryDarkBrown    (  92,  64,  51, 255 );
+const FColor YColorList::VeryLightGrey    ( 205, 205, 205, 255 );
+const FColor YColorList::Violet           (  79,  47,  79, 255 );
+const FColor YColorList::VioletRed        ( 204,  50, 153, 255 );
+const FColor YColorList::Wheat            ( 216, 216, 191, 255 );
+const FColor YColorList::YellowGreen      ( 153, 204,  50, 255 );

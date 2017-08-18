@@ -19,7 +19,7 @@ public:
 	* Constructor
 	* @param	InLogName	the name of the log to use
 	*/
-	CORE_API FMessageLog(const YName& InLogName);
+	CORE_API FMessageLog(const FName& InLogName);
 
 	/**
 	* Destructor
@@ -95,7 +95,7 @@ public:
 	* Delegate to retrieve a log interface.
 	* This allows systems that implement IMessageLog to receive messages.
 	*/
-	DECLARE_DELEGATE_RetVal_OneParam(TSharedRef<class IMessageLog>, FGetLog, const YName&);
+	DECLARE_DELEGATE_RetVal_OneParam(TSharedRef<class IMessageLog>, FGetLog, const FName&);
 	CORE_API static FGetLog& OnGetLog() { return GetLog; }
 
 	/**

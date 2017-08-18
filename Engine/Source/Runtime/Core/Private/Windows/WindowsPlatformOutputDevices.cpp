@@ -45,7 +45,7 @@ class YOutputDeviceError*			YWindowsPlatformOutputDevices::GetError()
 	return &Singleton;
 }
 
-class YOutputDevice*				YWindowsPlatformOutputDevices::GetEventLog()
+class FOutputDevice*				YWindowsPlatformOutputDevices::GetEventLog()
 {
 #if WANTS_WINDOWS_EVENT_LOGGING
 	static FOutputDeviceEventLog Singleton;
@@ -62,7 +62,7 @@ class YOutputDeviceConsole*			YWindowsPlatformOutputDevices::GetLogConsole()
 }
 
 
-class YFeedbackContext*				YWindowsPlatformOutputDevices::GetWarn()
+class FFeedbackContext*				YWindowsPlatformOutputDevices::GetWarn()
 {
 #if WITH_EDITOR
 	static FFeedbackContextWindows Singleton;
@@ -81,7 +81,7 @@ FOutputDeviceWindowsError::FOutputDeviceWindowsError()
 {
 }
 
-void FOutputDeviceWindowsError::Serialize( const TCHAR* Msg, ELogVerbosity::Type Verbosity, const class YName& Category )
+void FOutputDeviceWindowsError::Serialize( const TCHAR* Msg, ELogVerbosity::Type Verbosity, const class FName& Category )
 {
 	YPlatformMisc::DebugBreak();
    
@@ -148,8 +148,8 @@ void FOutputDeviceWindowsError::HandleError()
 
 	// Dump the error and flush the log.
 #if !NO_LOGGING
-	extern void OutputMultiLineCallstack(const ANSICHAR* File, int32 Line, const YName& LogName, const TCHAR* Heading, TCHAR* Message, ELogVerbosity::Type Verbosity);
-	OutputMultiLineCallstack(__FILE__, __LINE__, LogWindows.GetCategoryName(), TEXT("=== Critical error: ==="), GErrorHist, ELogVerbosity::Error);
+	extern void OutputMultiLineCallstack(const ANSICHAR* File, int32 Line, const FName& LogName, const TCHAR* Heading, TCHAR* Message, ELogVerbosity::Type Verbosity);
+	OutputMultiLineCallstack(__FILE__, __LINE__, LogWindows.GetCategorFName(), TEXT("=== Critical error: ==="), GErrorHist, ELogVerbosity::Error);
 #endif
 	GLog->PanicFlushThreadedLogs();
 
@@ -313,7 +313,7 @@ bool YOutputDeviceConsoleWindows::IsShown()
 	return ConsoleHandle != NULL;
 }
 
-void YOutputDeviceConsoleWindows::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class YName& Category, const double Time )
+void YOutputDeviceConsoleWindows::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category, const double Time )
 {
 	if( ConsoleHandle )
 	{
@@ -363,7 +363,7 @@ void YOutputDeviceConsoleWindows::Serialize( const TCHAR* Data, ELogVerbosity::T
 	}
 }
 
-void YOutputDeviceConsoleWindows::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class YName& Category )
+void YOutputDeviceConsoleWindows::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category )
 {
 	Serialize( Data, Verbosity, Category, -1.0 );
 }

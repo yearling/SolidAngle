@@ -253,7 +253,7 @@ public:
 	/**
 	* Returns a list of property name localization paths
 	*/
-	static const TArray<YString>& GetPropertyNameLocalizationPaths();
+	static const TArray<YString>& GetPropertFNameLocalizationPaths();
 
 	/**
 	* Returns a list of tool tip localization paths
@@ -362,7 +362,7 @@ public:
 	static bool IsSamePath(const YString& PathA, const YString& PathB);
 
 	/** Normalize all / and \ to TEXT("/") and remove any trailing TEXT("/") if the character before that is not a TEXT("/") or a colon */
-	static void NormalizeDirectoryName(YString& InPath);
+	static void NormalizeDirectorFName(YString& InPath);
 
 	/**
 	* Takes a fully pathed string and eliminates relative pathing (eg: annihilates ".." with the adjacent directory).
@@ -387,7 +387,7 @@ public:
 	/**
 	* Make fully standard "Unreal" pathname:
 	*    - Normalizes path separators [NormalizeFilename]
-	*    - Removes extraneous separators  [NormalizeDirectoryName, as well removing adjacent separators]
+	*    - Removes extraneous separators  [NormalizeDirectorFName, as well removing adjacent separators]
 	*    - Collapses internal ..'s
 	*    - Makes relative to Engine\Binaries\<Platform> (will ALWAYS start with ..\..\..)
 	*/

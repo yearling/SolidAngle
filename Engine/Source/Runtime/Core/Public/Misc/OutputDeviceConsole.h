@@ -10,7 +10,7 @@
 * This class servers as the base class for console window output.
 */
 class CORE_API YOutputDeviceConsole
-	: public YOutputDevice
+	: public FOutputDevice
 {
 public:
 

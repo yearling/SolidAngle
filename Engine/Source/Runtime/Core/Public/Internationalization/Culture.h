@@ -18,7 +18,7 @@ public:
 	static FCulturePtr Create(const YString& LocaleName);
 #else
 	static FCulturePtr Create(
-		const FText& InDisplayName,
+		const FText& InDisplaFName,
 		const YString& InEnglishName,
 		const int InKeyboardLayoutId,
 		const int InLCID,
@@ -33,7 +33,7 @@ public:
 	);
 #endif
 
-	const YString& GetDisplayName() const;
+	const YString& GetDisplaFName() const;
 
 	const YString& GetEnglishName() const;
 
@@ -107,7 +107,7 @@ protected:
 	FCulture(const YString& LocaleName);
 #else
 	FCulture(
-		const FText& InDisplayName,
+		const FText& InDisplaFName,
 		const YString& InEnglishName,
 		const int InKeyboardLayoutId,
 		const int InLCID,
@@ -127,7 +127,7 @@ private:
 	friend class FText;
 #endif
 
-	YString CachedDisplayName;
+	YString CachedDisplaFName;
 	YString CachedEnglishName;
 	YString CachedName;
 	YString CachedNativeName;

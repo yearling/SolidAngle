@@ -16,7 +16,7 @@ The types declared in this file are for internal use only.
 #include "Templates/RemoveReference.h"
 #include "Delegates/Tuple.h"
 #include "Delegates/DelegateInstanceInterface.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 
 class FDelegateBase;
 class FDelegateHandle;
@@ -28,7 +28,7 @@ enum class ESPMode;
 /**
 * Implements a delegate binding for UFunctions.
 *
-* @params UserClass Must be an SObject derived class.
+* @params UserClass Must be an UObject derived class.
 */
 template <class UserClass, typename FuncType, typename... VarTypes>
 class TBaseUFunctionDelegateInstance;
@@ -44,10 +44,10 @@ private:
 	typedef TBaseUFunctionDelegateInstance<UserClass, RetValType(ParamTypes...), VarTypes...> UnwrappedThisType;
 
 	//!!FIXME by zyx
-	//static_assert(TPointerIsConvertibleFromTo<UserClass, const UObjectBase>::Value, "You cannot use UFunction delegates with non SObject classes.");
+	//static_assert(TPointerIsConvertibleFromTo<UserClass, const UObjectBase>::Value, "You cannot use UFunction delegates with non UObject classes.");
 
 public:
-	TBaseUFunctionDelegateInstance(UserClass* InUserObject, const YName& InFunctionName, VarTypes... Vars)
+	TBaseUFunctionDelegateInstance(UserClass* InUserObject, const FName& InFunctionName, VarTypes... Vars)
 		: FunctionName(InFunctionName)
 		, UserObjectPtr(InUserObject)
 		, Payload(Vars...)
@@ -65,7 +65,7 @@ public:
 
 #if USE_DELEGATE_TRYGETBOUNDFUNCTIONNAME
 
-	virtual YName TryGetBoundFunctionName() const override
+	virtual FName TryGetBoundFunctionName() const override
 	{
 		return FunctionName;
 	}
@@ -73,7 +73,7 @@ public:
 #endif
 
 	// Deprecated
-	virtual YName GetFunctionName() const override
+	virtual FName GetFunctionName() const override
 	{
 		return FunctionName;
 	}
@@ -96,9 +96,9 @@ public:
 		return EDelegateInstanceType::UFunction;
 	}
 
-	virtual SObject* GetUObject() const override
+	virtual UObject* GetUObject() const override
 	{
-		return (SObject*)UserObjectPtr.Get();
+		return (UObject*)UserObjectPtr.Get();
 	}
 
 	// Deprecated
@@ -162,7 +162,7 @@ public:
 	* @param InFunctionName The name of the function call.
 	* @return The new delegate.
 	*/
-	FORCEINLINE static void Create(FDelegateBase& Base, UserClass* InUserObject, const YName& InFunctionName, VarTypes... Vars)
+	FORCEINLINE static void Create(FDelegateBase& Base, UserClass* InUserObject, const FName& InFunctionName, VarTypes... Vars)
 	{
 		new (Base) UnwrappedThisType(InUserObject, InFunctionName, Vars...);
 	}
@@ -174,7 +174,7 @@ public:
 	//UFunction* CachedFunction;
 
 	// Holds the name of the function to call.
-	YName FunctionName;
+	FName FunctionName;
 
 	// The user object to call the function on.
 	TWeakObjectPtr<UserClass> UserObjectPtr;
@@ -194,10 +194,10 @@ public:
 	/**
 	* Creates and initializes a new instance.
 	*
-	* @param InUserObject The SObject to call the function on.
+	* @param InUserObject The UObject to call the function on.
 	* @param InFunctionName The name of the function call.
 	*/
-	TBaseUFunctionDelegateInstance(UserClass* InUserObject, const YName& InFunctionName, VarTypes... Vars)
+	TBaseUFunctionDelegateInstance(UserClass* InUserObject, const FName& InFunctionName, VarTypes... Vars)
 		: Super(InUserObject, InFunctionName, Vars...)
 	{
 	}
@@ -253,7 +253,7 @@ public:
 
 #if USE_DELEGATE_TRYGETBOUNDFUNCTIONNAME
 
-	virtual YName TryGetBoundFunctionName() const override
+	virtual FName TryGetBoundFunctionName() const override
 	{
 		return NAME_None;
 	}
@@ -261,7 +261,7 @@ public:
 #endif
 
 	// Deprecated
-	virtual YName GetFunctionName() const override
+	virtual FName GetFunctionName() const override
 	{
 		return NAME_None;
 	}
@@ -284,7 +284,7 @@ public:
 		return SPMode == ESPMode::ThreadSafe ? EDelegateInstanceType::ThreadSafeSharedPointerMethod : EDelegateInstanceType::SharedPointerMethod;
 	}
 
-	virtual SObject* GetUObject() const override
+	virtual UObject* GetUObject() const override
 	{
 		return nullptr;
 	}
@@ -485,7 +485,7 @@ public:
 
 #if USE_DELEGATE_TRYGETBOUNDFUNCTIONNAME
 
-	virtual YName TryGetBoundFunctionName() const override
+	virtual FName TryGetBoundFunctionName() const override
 	{
 		return NAME_None;
 	}
@@ -493,7 +493,7 @@ public:
 #endif
 
 	// Deprecated
-	virtual YName GetFunctionName() const override
+	virtual FName GetFunctionName() const override
 	{
 		return NAME_None;
 	}
@@ -516,7 +516,7 @@ public:
 		return EDelegateInstanceType::RawMethod;
 	}
 
-	virtual SObject* GetUObject() const override
+	virtual UObject* GetUObject() const override
 	{
 		return nullptr;
 	}
@@ -654,7 +654,7 @@ public:
 
 
 /**
-* Implements a delegate binding for SObject methods.
+* Implements a delegate binding for UObject methods.
 */
 template <bool bConst, class UserClass, typename FuncType, typename... VarTypes>
 class TBaseUObjectMethodDelegateInstance;
@@ -670,7 +670,7 @@ private:
 	typedef TBaseUObjectMethodDelegateInstance<bConst, UserClass, RetValType(ParamTypes...), VarTypes...> UnwrappedThisType;
 
 	//!!FIXME by zyx
-	//static_assert(TPointerIsConvertibleFromTo<UserClass, const UObjectBase>::Value, "You cannot use SObject method delegates with raw pointers.");
+	//static_assert(TPointerIsConvertibleFromTo<UserClass, const UObjectBase>::Value, "You cannot use UObject method delegates with raw pointers.");
 
 public:
 	typedef typename TMemFunPtrType<bConst, UserClass, RetValType(ParamTypes..., VarTypes...)>::Type FMethodPtr;
@@ -681,7 +681,7 @@ public:
 		, Payload(Vars...)
 		, Handle(FDelegateHandle::GenerateNewHandle)
 	{
-		// NOTE: SObject delegates are allowed to have a null incoming object pointer.  SObject weak pointers can expire,
+		// NOTE: UObject delegates are allowed to have a null incoming object pointer.  UObject weak pointers can expire,
 		//       an it is possible for a copy of a delegate instance to end up with a null pointer.
 		checkSlow(MethodPtr != nullptr);
 	}
@@ -690,7 +690,7 @@ public:
 
 #if USE_DELEGATE_TRYGETBOUNDFUNCTIONNAME
 
-	virtual YName TryGetBoundFunctionName() const override
+	virtual FName TryGetBoundFunctionName() const override
 	{
 		return NAME_None;
 	}
@@ -698,7 +698,7 @@ public:
 #endif
 
 	// Deprecated
-	virtual YName GetFunctionName() const override
+	virtual FName GetFunctionName() const override
 	{
 		return NAME_None;
 	}
@@ -721,9 +721,9 @@ public:
 		return EDelegateInstanceType::UObjectMethod;
 	}
 
-	virtual SObject* GetUObject() const override
+	virtual UObject* GetUObject() const override
 	{
-		return (SObject*)UserObject.Get();
+		return (UObject*)UserObject.Get();
 	}
 
 	// Deprecated
@@ -792,7 +792,7 @@ public:
 public:
 
 	/**
-	* Creates a new SObject delegate binding for the given user object and method pointer.
+	* Creates a new UObject delegate binding for the given user object and method pointer.
 	*
 	* @param InUserObject User's object that contains the class method.
 	* @param InFunc Member function pointer to your class method.
@@ -896,7 +896,7 @@ public:
 
 #if USE_DELEGATE_TRYGETBOUNDFUNCTIONNAME
 
-	virtual YName TryGetBoundFunctionName() const override
+	virtual FName TryGetBoundFunctionName() const override
 	{
 		return NAME_None;
 	}
@@ -904,7 +904,7 @@ public:
 #endif
 
 	// Deprecated
-	virtual YName GetFunctionName() const override
+	virtual FName GetFunctionName() const override
 	{
 		return NAME_None;
 	}
@@ -927,7 +927,7 @@ public:
 		return EDelegateInstanceType::Raw;
 	}
 
-	virtual SObject* GetUObject() const override
+	virtual UObject* GetUObject() const override
 	{
 		return nullptr;
 	}
@@ -1069,7 +1069,7 @@ public:
 
 #if USE_DELEGATE_TRYGETBOUNDFUNCTIONNAME
 
-	virtual YName TryGetBoundFunctionName() const override
+	virtual FName TryGetBoundFunctionName() const override
 	{
 		return NAME_None;
 	}
@@ -1077,7 +1077,7 @@ public:
 #endif
 
 	// Deprecated
-	virtual YName GetFunctionName() const override
+	virtual FName GetFunctionName() const override
 	{
 		return NAME_None;
 	}
@@ -1106,7 +1106,7 @@ public:
 		return EDelegateInstanceType::Functor;
 	}
 
-	virtual SObject* GetUObject() const override
+	virtual UObject* GetUObject() const override
 	{
 		return nullptr;
 	}

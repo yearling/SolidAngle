@@ -38,7 +38,7 @@ struct FScopedSlowTask : FSlowTask
 	 * @param		InDefaultMessage		A message to display to the user to describe the purpose of the scope
 	 * @param		bInEnabled				When false, this scope will have no effect. Allows for proper scoped objects that are conditionally disabled.
 	 */
-	FORCEINLINE FScopedSlowTask(float InAmountOfWork, const FText& InDefaultMessage = FText(), bool bInEnabled = true, YFeedbackContext& InContext = *GWarn)
+	FORCEINLINE FScopedSlowTask(float InAmountOfWork, const FText& InDefaultMessage = FText(), bool bInEnabled = true, FFeedbackContext& InContext = *GWarn)
 		: FSlowTask(InAmountOfWork, InDefaultMessage, bInEnabled, InContext)
 	{
 		Initialize();

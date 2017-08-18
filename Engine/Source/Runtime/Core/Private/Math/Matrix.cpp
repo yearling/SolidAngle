@@ -2,7 +2,7 @@
 
 #include "Math/Matrix.h"
 
-void YMatrix::ErrorEnsure(const TCHAR* Message)
+void FMatrix::ErrorEnsure(const TCHAR* Message)
 {
 	UE_LOG(LogUnrealMath, Error, TEXT("FMatrix::InverseFast(), trying to invert a NIL matrix, this results in NaNs! Use Inverse() instead."));
 	ensureMsgf(false, TEXT("FMatrix::InverseFast(), trying to invert a NIL matrix, this results in NaNs! Use Inverse() instead."));

@@ -21,7 +21,7 @@ DEFINE_LOG_CATEGORY_STATIC(LogModuleManager, Log, All);
 
 int32 FModuleManager::FModuleInfo::CurrentLoadOrder = 1;
 
-FModuleManager::ModuleInfoPtr FModuleManager::FindModule(YName InModuleName)
+FModuleManager::ModuleInfoPtr FModuleManager::FindModule(FName InModuleName)
 {
 	FModuleManager::ModuleInfoPtr Result = nullptr;
 
@@ -34,7 +34,7 @@ FModuleManager::ModuleInfoPtr FModuleManager::FindModule(YName InModuleName)
 	return Result;
 }
 
-FModuleManager::ModuleInfoRef FModuleManager::FindModuleChecked(YName InModuleName)
+FModuleManager::ModuleInfoRef FModuleManager::FindModuleChecked(FName InModuleName)
 {
 	FScopeLock Lock(&ModulesCriticalSection);
 	return Modules.FindChecked(InModuleName);
@@ -88,15 +88,15 @@ FModuleManager::~FModuleManager()
 }
 
 
-void FModuleManager::FindModules(const TCHAR* WildcardWithoutExtension, TArray<YName>& OutModules) const
+void FModuleManager::FindModules(const TCHAR* WildcardWithoutExtension, TArray<FName>& OutModules) const
 {
 	// @todo plugins: Try to convert existing use cases to use plugins, and get rid of this function
 #if !IS_MONOLITHIC
 
-	TMap<YName, YString> ModulePaths;
+	TMap<FName, YString> ModulePaths;
 	FindModulePaths(WildcardWithoutExtension, ModulePaths);
 
-	for(TMap<YName, YString>::TConstIterator Iter(ModulePaths); Iter; ++Iter)
+	for(TMap<FName, YString>::TConstIterator Iter(ModulePaths); Iter; ++Iter)
 	{
 		if(CheckModuleCompatibility(*Iter.Value()))
 		{
@@ -118,12 +118,12 @@ void FModuleManager::FindModules(const TCHAR* WildcardWithoutExtension, TArray<Y
 
 bool FModuleManager::ModuleExists(const TCHAR* ModuleName) const
 {
-	TArray<YName> Names;
+	TArray<FName> Names;
 	FindModules(ModuleName, Names);
 	return Names.Num() > 0;
 }
 
-bool FModuleManager::IsModuleLoaded( const YName InModuleName ) const
+bool FModuleManager::IsModuleLoaded( const FName InModuleName ) const
 {
 	// Do we even know about this module?
 	TSharedPtr<const FModuleInfo, ESPMode::ThreadSafe> ModuleInfoPtr = FindModule(InModuleName);
@@ -144,9 +144,9 @@ bool FModuleManager::IsModuleLoaded( const YName InModuleName ) const
 }
 
 
-bool FModuleManager::IsModuleUpToDate(const YName InModuleName) const
+bool FModuleManager::IsModuleUpToDate(const FName InModuleName) const
 {
-	TMap<YName, YString> ModulePathMap;
+	TMap<FName, YString> ModulePathMap;
 	FindModulePaths(*InModuleName.ToString(), ModulePathMap);
 
 	if (ModulePathMap.Num() != 1)
@@ -154,14 +154,14 @@ bool FModuleManager::IsModuleUpToDate(const YName InModuleName) const
 		return false;
 	}
 
-	return CheckModuleCompatibility(*TMap<YName, YString>::TConstIterator(ModulePathMap).Value());
+	return CheckModuleCompatibility(*TMap<FName, YString>::TConstIterator(ModulePathMap).Value());
 }
 
-bool FindNewestModuleFile(TArray<YString>& FilesToSearch, const YDateTime& NewerThan, const YString& ModuleFileSearchDirectory, const YString& Prefix, const YString& Suffix, YString& OutFilename)
+bool FindNewestModuleFile(TArray<YString>& FilesToSearch, const FDateTime& NewerThan, const YString& ModuleFileSearchDirectory, const YString& Prefix, const YString& Suffix, YString& OutFilename)
 {
 	// Figure out what the newest module file is
 	bool bFound = false;
-	YDateTime NewestFoundFileTime = NewerThan;
+	FDateTime NewestFoundFileTime = NewerThan;
 
 	for (const auto& FoundFile : FilesToSearch)
 	{
@@ -180,7 +180,7 @@ bool FindNewestModuleFile(TArray<YString>& FilesToSearch, const YDateTime& Newer
 		}
 
 		// Check the time stamp for this file
-		const YDateTime FoundFileTime = IFileManager::Get().GetTimeStamp(*FoundFilePath);
+		const FDateTime FoundFileTime = IFileManager::Get().GetTimeStamp(*FoundFilePath);
 		if (ensure(FoundFileTime != -1.0))
 		{
 			// Was this file modified more recently than our others?
@@ -200,7 +200,7 @@ bool FindNewestModuleFile(TArray<YString>& FilesToSearch, const YDateTime& Newer
 	return bFound;
 }
 
-void FModuleManager::AddModuleToModulesList(const YName InModuleName, FModuleManager::ModuleInfoRef& InModuleInfo)
+void FModuleManager::AddModuleToModulesList(const FName InModuleName, FModuleManager::ModuleInfoRef& InModuleInfo)
 {
 	{
 		FScopeLock Lock(&ModulesCriticalSection);
@@ -213,7 +213,7 @@ void FModuleManager::AddModuleToModulesList(const YName InModuleName, FModuleMan
 	FModuleManager::Get().ModulesChangedEvent.Broadcast(InModuleName, EModuleChangeReason::PluginDirectoryChanged);
 }
 
-void FModuleManager::AddModule(const YName InModuleName)
+void FModuleManager::AddModule(const FName InModuleName)
 {
 	// Do we already know about this module?  If not, we'll create information for this module now.
 	if (!((ensureMsgf(InModuleName != NAME_None, TEXT("FModuleManager::AddModule() was called with an invalid module name (empty string or 'None'.)  This is not allowed.")) &&
@@ -233,7 +233,7 @@ void FModuleManager::AddModule(const YName InModuleName)
 #if !IS_MONOLITHIC
 	YString ModuleNameString = InModuleName.ToString();
 
-	TMap<YName, YString> ModulePathMap;
+	TMap<FName, YString> ModulePathMap;
 	FindModulePaths(*ModuleNameString, ModulePathMap);
 
 	if (ModulePathMap.Num() != 1)
@@ -241,7 +241,7 @@ void FModuleManager::AddModule(const YName InModuleName)
 		return;
 	}
 
-	YString ModuleFilename = MoveTemp(TMap<YName, YString>::TConstIterator(ModulePathMap).Value());
+	YString ModuleFilename = MoveTemp(TMap<FName, YString>::TConstIterator(ModulePathMap).Value());
 
 	const int32 MatchPos = ModuleFilename.Find(ModuleNameString, ESearchCase::IgnoreCase, ESearchDir::FromEnd);
 	if (!ensureMsgf(MatchPos != INDEX_NONE, TEXT("Could not find module name '%s' in module filename '%s'"), InModuleName, *ModuleFilename))
@@ -284,8 +284,8 @@ void FModuleManager::AddModule(const YName InModuleName)
 	// In some cases, sadly, modules may be loaded before appInit() is called.  We can't cleanly support rolling files for those modules.
 
 	// First, check to see if the module we added already exists on disk
-	const YDateTime OriginalModuleFileTime = IFileManager::Get().GetTimeStamp(*ModuleInfo->OriginalFilename);
-	if (OriginalModuleFileTime == YDateTime::MinValue())
+	const FDateTime OriginalModuleFileTime = IFileManager::Get().GetTimeStamp(*ModuleInfo->OriginalFilename);
+	if (OriginalModuleFileTime == FDateTime::MinValue())
 	{
 		return;
 	}
@@ -321,7 +321,7 @@ void FModuleManager::AddModule(const YName InModuleName)
 }
 
 
-TSharedPtr<IModuleInterface> FModuleManager::LoadModule( const YName InModuleName, bool bWasReloaded )
+TSharedPtr<IModuleInterface> FModuleManager::LoadModule( const FName InModuleName, bool bWasReloaded )
 {
 	// FModuleManager is not thread-safe
 	ensure(IsInGameThread());
@@ -336,7 +336,7 @@ TSharedPtr<IModuleInterface> FModuleManager::LoadModule( const YName InModuleNam
 }
 
 
-TSharedPtr<IModuleInterface> FModuleManager::LoadModuleChecked( const YName InModuleName, const bool bWasReloaded )
+TSharedPtr<IModuleInterface> FModuleManager::LoadModuleChecked( const FName InModuleName, const bool bWasReloaded )
 {
 	TSharedPtr<IModuleInterface> Module = LoadModule(InModuleName, bWasReloaded);
 	checkf(Module.IsValid(), *InModuleName.ToString());
@@ -345,7 +345,7 @@ TSharedPtr<IModuleInterface> FModuleManager::LoadModuleChecked( const YName InMo
 }
 
 
-TSharedPtr<IModuleInterface> FModuleManager::LoadModuleWithFailureReason(const YName InModuleName, EModuleLoadResult& OutFailureReason, bool bWasReloaded /*=false*/)
+TSharedPtr<IModuleInterface> FModuleManager::LoadModuleWithFailureReason(const FName InModuleName, EModuleLoadResult& OutFailureReason, bool bWasReloaded /*=false*/)
 {
 	DECLARE_SCOPE_CYCLE_COUNTER(TEXT("Module Load"), STAT_ModuleLoad, STATGROUP_LoadTime);
 
@@ -538,7 +538,7 @@ TSharedPtr<IModuleInterface> FModuleManager::LoadModuleWithFailureReason(const Y
 }
 
 
-bool FModuleManager::UnloadModule( const YName InModuleName, bool bIsShutdown )
+bool FModuleManager::UnloadModule( const FName InModuleName, bool bIsShutdown )
 {
 	// Do we even know about this module?
 	ModuleInfoPtr ModuleInfoPtr = FindModule(InModuleName);
@@ -600,7 +600,7 @@ bool FModuleManager::UnloadModule( const YName InModuleName, bool bIsShutdown )
 }
 
 
-void FModuleManager::AbandonModule( const YName InModuleName )
+void FModuleManager::AbandonModule( const FName InModuleName )
 {
 	// Do we even know about this module?
 	ModuleInfoPtr ModuleInfoPtr = FindModule(InModuleName);
@@ -633,10 +633,10 @@ void FModuleManager::UnloadModulesAtShutdown()
 
 	struct FModulePair
 	{
-		YName ModuleName;
+		FName ModuleName;
 		int32 LoadOrder;
 		TSharedPtr<IModuleInterface> Module;
-		FModulePair(YName InModuleName, int32 InLoadOrder, TSharedPtr<IModuleInterface> InModule)
+		FModulePair(FName InModuleName, int32 InLoadOrder, TSharedPtr<IModuleInterface> InModule)
 			: ModuleName(InModuleName)
 			, LoadOrder(InLoadOrder)
 			, Module(InModule)
@@ -683,7 +683,7 @@ void FModuleManager::UnloadModulesAtShutdown()
 }
 
 
-TSharedPtr<IModuleInterface> FModuleManager::GetModule( const YName InModuleName )
+TSharedPtr<IModuleInterface> FModuleManager::GetModule( const FName InModuleName )
 {
 	// Do we even know about this module?
 	ModuleInfoPtr ModuleInfo = FindModule(InModuleName);
@@ -697,7 +697,7 @@ TSharedPtr<IModuleInterface> FModuleManager::GetModule( const YName InModuleName
 }
 
 
-bool FModuleManager::Exec( UWorld* Inworld, const TCHAR* Cmd, YOutputDevice& Ar )
+bool FModuleManager::Exec( UWorld* Inworld, const TCHAR* Cmd, FOutputDevice& Ar )
 {
 #if !UE_BUILD_SHIPPING
 	if ( FParse::Command( &Cmd, TEXT( "Module" ) ) )
@@ -743,7 +743,7 @@ bool FModuleManager::Exec( UWorld* Inworld, const TCHAR* Cmd, YOutputDevice& Ar 
 			const YString ModuleNameStr = FParse::Token( Cmd, 0 );
 			if( !ModuleNameStr.IsEmpty() )
 			{
-				const YName ModuleName( *ModuleNameStr );
+				const FName ModuleName( *ModuleNameStr );
 				if( !IsModuleLoaded( ModuleName ) )
 				{
 					Ar.Logf( TEXT( "Loading module" ) );
@@ -769,7 +769,7 @@ bool FModuleManager::Exec( UWorld* Inworld, const TCHAR* Cmd, YOutputDevice& Ar 
 			const YString ModuleNameStr = FParse::Token( Cmd, 0 );
 			if( !ModuleNameStr.IsEmpty() )
 			{
-				const YName ModuleName( *ModuleNameStr );
+				const FName ModuleName( *ModuleNameStr );
 
 				if( IsModuleLoaded( ModuleName ) )
 				{
@@ -796,7 +796,7 @@ bool FModuleManager::Exec( UWorld* Inworld, const TCHAR* Cmd, YOutputDevice& Ar 
 			const YString ModuleNameStr = FParse::Token( Cmd, 0 );
 			if( !ModuleNameStr.IsEmpty() )
 			{
-				const YName ModuleName( *ModuleNameStr );
+				const FName ModuleName( *ModuleNameStr );
 
 				if( IsModuleLoaded( ModuleName ) )
 				{
@@ -825,7 +825,7 @@ bool FModuleManager::Exec( UWorld* Inworld, const TCHAR* Cmd, YOutputDevice& Ar 
 }
 
 
-bool FModuleManager::QueryModule( const YName InModuleName, FModuleStatus& OutModuleStatus ) const
+bool FModuleManager::QueryModule( const FName InModuleName, FModuleStatus& OutModuleStatus ) const
 {
 	// Do we even know about this module?
 	TSharedPtr<const FModuleInfo, ESPMode::ThreadSafe> ModuleInfoPtr = FindModule(InModuleName);
@@ -853,7 +853,7 @@ void FModuleManager::QueryModules( TArray< FModuleStatus >& OutModuleStatuses ) 
 {
 	OutModuleStatuses.Reset();
 	FScopeLock Lock(&ModulesCriticalSection);
-	for (const TPair<YName, ModuleInfoRef>& ModuleIt : Modules)
+	for (const TPair<FName, ModuleInfoRef>& ModuleIt : Modules)
 	{
 		const FModuleInfo& CurModule = *ModuleIt.Value;
 
@@ -872,13 +872,13 @@ void FModuleManager::QueryModules( TArray< FModuleStatus >& OutModuleStatuses ) 
 }
 
 
-YString FModuleManager::GetModuleFilename(YName ModuleName) const
+YString FModuleManager::GetModuleFilename(FName ModuleName) const
 {
 	return FindModuleChecked(ModuleName)->Filename;
 }
 
 
-void FModuleManager::SetModuleFilename(YName ModuleName, const YString& Filename)
+void FModuleManager::SetModuleFilename(FName ModuleName, const YString& Filename)
 {
 	auto Module = FindModuleChecked(ModuleName);
 	Module->Filename = Filename;
@@ -890,7 +890,7 @@ void FModuleManager::SetModuleFilename(YName ModuleName, const YString& Filename
 }
 
 
-YString FModuleManager::GetCleanModuleFilename(YName ModuleName, bool bGameModule)
+YString FModuleManager::GetCleanModuleFilename(FName ModuleName, bool bGameModule)
 {
 	YString Prefix, Suffix;
 	GetModuleFilenameFormat(bGameModule, Prefix, Suffix);
@@ -952,7 +952,7 @@ void FModuleManager::ResetModulePathsCache()
 	ModulePathsCache.Reset();
 }
 
-void FModuleManager::FindModulePaths(const TCHAR* NamePattern, TMap<YName, YString> &OutModulePaths, bool bCanUseCache /*= true*/) const
+void FModuleManager::FindModulePaths(const TCHAR* NamePattern, TMap<FName, YString> &OutModulePaths, bool bCanUseCache /*= true*/) const
 {
 	if (!ModulePathsCache)
 	{
@@ -966,7 +966,7 @@ void FModuleManager::FindModulePaths(const TCHAR* NamePattern, TMap<YName, YStri
 		// Try to use cache first
 		if (const YString* ModulePathPtr = ModulePathsCache->Find(NamePattern))
 		{
-			OutModulePaths.Add(YName(NamePattern), *ModulePathPtr);
+			OutModulePaths.Add(FName(NamePattern), *ModulePathPtr);
 			return;
 		}
 	}
@@ -988,28 +988,28 @@ void FModuleManager::FindModulePaths(const TCHAR* NamePattern, TMap<YName, YStri
 }
 
 
-void FModuleManager::FindModulePathsInDirectory(const YString& InDirectoryName, bool bIsGameDirectory, const TCHAR* NamePattern, TMap<YName, YString> &OutModulePaths) const
+void FModuleManager::FindModulePathsInDirectory(const YString& InDirectorFName, bool bIsGameDirectory, const TCHAR* NamePattern, TMap<FName, YString> &OutModulePaths) const
 {
 	if(QueryModulesDelegate.IsBound())
 	{
 		// Find all the directories to search through, including the base directory
-		TArray<YString> SearchDirectoryNames;
-		IFileManager::Get().FindFilesRecursive(SearchDirectoryNames, *InDirectoryName, TEXT("*"), false, true);
-		SearchDirectoryNames.Insert(InDirectoryName, 0);
+		TArray<YString> SearchDirectorFNames;
+		IFileManager::Get().FindFilesRecursive(SearchDirectorFNames, *InDirectorFName, TEXT("*"), false, true);
+		SearchDirectorFNames.Insert(InDirectorFName, 0);
 
 		// Find the modules in each directory
-		for(const YString& SearchDirectoryName: SearchDirectoryNames)
+		for(const YString& SearchDirectorFName: SearchDirectorFNames)
 		{
 			// Use the delegate to query all the modules in this directory
 			TMap<YString, YString> ValidModules;
-			QueryModulesDelegate.Execute(SearchDirectoryName, bIsGameDirectory, ValidModules);
+			QueryModulesDelegate.Execute(SearchDirectorFName, bIsGameDirectory, ValidModules);
 
 			// Fill the output map with modules that match the wildcard
 			for(const TPair<YString, YString>& Pair: ValidModules)
 			{
 				if(Pair.Key.MatchesWildcard(NamePattern))
 				{
-					OutModulePaths.Add(YName(*Pair.Key), *YPaths::Combine(*SearchDirectoryName, *Pair.Value));
+					OutModulePaths.Add(FName(*Pair.Key), *YPaths::Combine(*SearchDirectorFName, *Pair.Value));
 				}
 			}
 		}
@@ -1022,7 +1022,7 @@ void FModuleManager::FindModulePathsInDirectory(const YString& InDirectoryName, 
 
 		// Find all the files
 		TArray<YString> FullFileNames;
-		IFileManager::Get().FindFilesRecursive(FullFileNames, *InDirectoryName, *(ModulePrefix + NamePattern + ModuleSuffix), true, false);
+		IFileManager::Get().FindFilesRecursive(FullFileNames, *InDirectorFName, *(ModulePrefix + NamePattern + ModuleSuffix), true, false);
 
 		// Parse all the matching module names
 		for (int32 Idx = 0; Idx < FullFileNames.Num(); Idx++)
@@ -1043,7 +1043,7 @@ void FModuleManager::FindModulePathsInDirectory(const YString& InDirectoryName, 
 				YString ModuleName = FileName.Mid(ModulePrefix.Len(), FileName.Len() - ModulePrefix.Len() - ModuleSuffix.Len());
 				if (!ModuleName.EndsWith("-Debug") && !ModuleName.EndsWith("-Shipping") && !ModuleName.EndsWith("-Test") && !ModuleName.EndsWith("-DebugGame"))
 				{
-					OutModulePaths.Add(YName(*ModuleName), FullFileName);
+					OutModulePaths.Add(FName(*ModuleName), FullFileName);
 				}
 			}
 		}
@@ -1051,7 +1051,7 @@ void FModuleManager::FindModulePathsInDirectory(const YString& InDirectoryName, 
 }
 
 
-void FModuleManager::UnloadOrAbandonModuleWithCallback(const YName InModuleName, YOutputDevice &Ar)
+void FModuleManager::UnloadOrAbandonModuleWithCallback(const FName InModuleName, FOutputDevice &Ar)
 {
 	auto Module = FindModuleChecked(InModuleName);
 	
@@ -1077,7 +1077,7 @@ void FModuleManager::UnloadOrAbandonModuleWithCallback(const YName InModuleName,
 }
 
 
-void FModuleManager::AbandonModuleWithCallback(const YName InModuleName)
+void FModuleManager::AbandonModuleWithCallback(const FName InModuleName)
 {
 	auto Module = FindModuleChecked(InModuleName);
 	
@@ -1090,7 +1090,7 @@ void FModuleManager::AbandonModuleWithCallback(const YName InModuleName)
 }
 
 
-bool FModuleManager::LoadModuleWithCallback( const YName InModuleName, YOutputDevice &Ar )
+bool FModuleManager::LoadModuleWithCallback( const FName InModuleName, FOutputDevice &Ar )
 {
 	TSharedPtr<IModuleInterface> LoadedModule = LoadModule( InModuleName, true );
 	bool bWasSuccessful = IsModuleLoaded( InModuleName );
@@ -1108,7 +1108,7 @@ bool FModuleManager::LoadModuleWithCallback( const YName InModuleName, YOutputDe
 }
 
 
-void FModuleManager::MakeUniqueModuleFilename( const YName InModuleName, YString& UniqueSuffix, YString& UniqueModuleFileName ) const
+void FModuleManager::MakeUniqueModuleFilename( const FName InModuleName, YString& UniqueSuffix, YString& UniqueModuleFileName ) const
 {
 	auto Module = FindModuleChecked(InModuleName);
 
@@ -1212,7 +1212,7 @@ YString FModuleManager::GetGameBinariesDirectory() const
 	return YString();
 }
 
-bool FModuleManager::DoesLoadedModuleHaveUObjects( const YName ModuleName ) const
+bool FModuleManager::DoesLoadedModuleHaveUObjects( const FName ModuleName ) const
 {
 	if (IsModuleLoaded(ModuleName) && IsPackageLoaded.IsBound())
 	{
@@ -1222,7 +1222,7 @@ bool FModuleManager::DoesLoadedModuleHaveUObjects( const YName ModuleName ) cons
 	return false;
 }
 
-FModuleManager::ModuleInfoRef FModuleManager::GetOrCreateModule(YName InModuleName)
+FModuleManager::ModuleInfoRef FModuleManager::GetOrCreateModule(FName InModuleName)
 {
 	check(IsInGameThread());
 	ensureMsgf(InModuleName != NAME_None, TEXT("FModuleManager::AddModule() was called with an invalid module name (empty string or 'None'.)  This is not allowed."));
@@ -1238,7 +1238,7 @@ FModuleManager::ModuleInfoRef FModuleManager::GetOrCreateModule(YName InModuleNa
 #if !IS_MONOLITHIC
 	YString ModuleNameString = InModuleName.ToString();
 
-	TMap<YName, YString> ModulePathMap;
+	TMap<FName, YString> ModulePathMap;
 	FindModulePaths(*ModuleNameString, ModulePathMap);
 
 	if (ModulePathMap.Num() != 1)
@@ -1247,7 +1247,7 @@ FModuleManager::ModuleInfoRef FModuleManager::GetOrCreateModule(YName InModuleNa
 	}
 
 	// Add this module to the set of modules that we know about
-	ModuleInfo->OriginalFilename = TMap<YName, YString>::TConstIterator(ModulePathMap).Value();
+	ModuleInfo->OriginalFilename = TMap<FName, YString>::TConstIterator(ModulePathMap).Value();
 	ModuleInfo->Filename = ModuleInfo->OriginalFilename;
 
 	// When iterating on code during development, it's possible there are multiple rolling versions of this
@@ -1260,8 +1260,8 @@ FModuleManager::ModuleInfoRef FModuleManager::GetOrCreateModule(YName InModuleNa
 	// In some cases, sadly, modules may be loaded before appInit() is called.  We can't cleanly support rolling files for those modules.
 
 	// First, check to see if the module we added already exists on disk
-	const YDateTime OriginalModuleFileTime = IFileManager::Get().GetTimeStamp(*ModuleInfo->OriginalFilename);
-	if (OriginalModuleFileTime == YDateTime::MinValue())
+	const FDateTime OriginalModuleFileTime = IFileManager::Get().GetTimeStamp(*ModuleInfo->OriginalFilename);
+	if (OriginalModuleFileTime == FDateTime::MinValue())
 	{
 		return ModuleInfo;
 	}
@@ -1292,7 +1292,7 @@ FModuleManager::ModuleInfoRef FModuleManager::GetOrCreateModule(YName InModuleNa
 
 	// Figure out what the newest module file is
 	int32 NewestFoundFileIndex = INDEX_NONE;
-	YDateTime NewestFoundFileTime = OriginalModuleFileTime;
+	FDateTime NewestFoundFileTime = OriginalModuleFileTime;
 
 	for (int32 CurFileIndex = 0; CurFileIndex < FoundFiles.Num(); ++CurFileIndex)
 	{
@@ -1313,7 +1313,7 @@ FModuleManager::ModuleInfoRef FModuleManager::GetOrCreateModule(YName InModuleNa
 
 
 		// Check the time stamp for this file
-		const YDateTime FoundFileTime = IFileManager::Get().GetTimeStamp(*FoundFilePath);
+		const FDateTime FoundFileTime = IFileManager::Get().GetTimeStamp(*FoundFilePath);
 		if (ensure(FoundFileTime != -1.0))
 		{
 			// Was this file modified more recently than our others?

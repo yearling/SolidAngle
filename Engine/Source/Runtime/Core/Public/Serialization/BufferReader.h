@@ -12,7 +12,7 @@
 * Similar to YMemoryReader, but able to internally
 * manage the memory for the buffer.
 */
-class FBufferReaderBase : public YArchive
+class FBufferReaderBase : public FArchive
 {
 public:
 	/**

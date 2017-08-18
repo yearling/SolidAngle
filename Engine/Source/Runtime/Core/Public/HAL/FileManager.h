@@ -72,14 +72,14 @@ public:
 	virtual bool IsSandboxEnabled() const = 0;
 
 	/** Creates file reader archive. */
-	virtual YArchive* CreateFileReader(const TCHAR* Filename, uint32 ReadFlags = 0) = 0;
+	virtual FArchive* CreateFileReader(const TCHAR* Filename, uint32 ReadFlags = 0) = 0;
 
 	/** Creates file writer archive. */
-	virtual YArchive* CreateFileWriter(const TCHAR* Filename, uint32 WriteFlags = 0) = 0;
+	virtual FArchive* CreateFileWriter(const TCHAR* Filename, uint32 WriteFlags = 0) = 0;
 
 	// If you're writing to a debug file, you should use CreateDebugFileWriter, and wrap the calling code in #if ALLOW_DEBUG_FILES.
 #if ALLOW_DEBUG_FILES
-	virtual YArchive* CreateDebugFileWriter(const TCHAR* Filename, uint32 WriteFlags = 0) = 0;
+	virtual FArchive* CreateDebugFileWriter(const TCHAR* Filename, uint32 WriteFlags = 0) = 0;
 #endif
 
 	/** Checks if a file is read-only. */
@@ -165,22 +165,22 @@ public:
 	/**
 	* @return the modification time of the given file (or YDateTime::MinValue() on failure)
 	*/
-	virtual YDateTime GetTimeStamp(const TCHAR* Path) = 0;
+	virtual FDateTime GetTimeStamp(const TCHAR* Path) = 0;
 
 	/**
 	* @return the modification time of the given file (or YDateTime::MinValue() on failure)
 	*/
-	virtual void GetTimeStampPair(const TCHAR* PathA, const TCHAR* PathB, YDateTime& OutTimeStampA, YDateTime& OutTimeStampB) = 0;
+	virtual void GetTimeStampPair(const TCHAR* PathA, const TCHAR* PathB, FDateTime& OutTimeStampA, FDateTime& OutTimeStampB) = 0;
 
 	/**
 	* Sets the modification time of the given file
 	*/
-	virtual bool SetTimeStamp(const TCHAR* Path, YDateTime TimeStamp) = 0;
+	virtual bool SetTimeStamp(const TCHAR* Path, FDateTime TimeStamp) = 0;
 
 	/**
 	* @return the last access time of the given file (or YDateTime::MinValue() on failure)
 	*/
-	virtual YDateTime GetAccessTimeStamp(const TCHAR* Filename) = 0;
+	virtual FDateTime GetAccessTimeStamp(const TCHAR* Filename) = 0;
 
 	/**
 	* Converts passed in filename to use a relative path.

@@ -61,7 +61,7 @@ public:
 	*
 	* @param V Vector to copy from.
 	*/
-	explicit FORCEINLINE YVector2D(const YVector& V);
+	explicit FORCEINLINE YVector2D(const FVector& V);
 
 public:
 
@@ -471,14 +471,14 @@ public:
 	* @param V Vector being serialized.
 	* @return Reference to Archive after serialization.
 	*/
-	friend YArchive& operator<<(YArchive& Ar, YVector2D& V)
+	friend FArchive& operator<<(FArchive& Ar, YVector2D& V)
 	{
 		// @warning BulkSerialize: YVector2D is serialized as memory dump
 		// See TArray::BulkSerialize for detailed description of implied limitations.
 		return Ar << V.X << V.Y;
 	}
 
-	bool Serialize(YArchive& Ar)
+	bool Serialize(FArchive& Ar)
 	{
 		Ar << *this;
 		return true;
@@ -512,10 +512,10 @@ public:
 	* Network serialization function.
 	* YVectors NetSerialize without quantization (ie exact values are serialized).
 	*/
-	CORE_API bool NetSerialize(YArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
+	CORE_API bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
 
 	/** Converts spherical coordinates on the unit sphere into a Cartesian unit length vector. */
-	inline YVector SphericalToUnitCartesian() const;
+	inline FVector SphericalToUnitCartesian() const;
 };
 
 /**

@@ -123,7 +123,7 @@ public:
 #endif
 
 	/** Serializer. */
-	FORCEINLINE friend YArchive& operator<<(YArchive& Ar, TPair& Pair)
+	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, TPair& Pair)
 	{
 		return Ar << Pair.Key << Pair.Value;
 	}
@@ -354,7 +354,7 @@ public:
 	}
 
 	/** Tracks the container's memory use through an archive. */
-	FORCEINLINE void CountBytes(YArchive& Ar)
+	FORCEINLINE void CountBytes(FArchive& Ar)
 	{
 		Pairs.CountBytes(Ar);
 	}
@@ -578,7 +578,7 @@ public:
 	}
 
 	/** Serializer. */
-	FORCEINLINE friend YArchive& operator<<(YArchive& Ar, TMapBase& Map)
+	FORCEINLINE friend FArchive& operator<<(FArchive& Ar, TMapBase& Map)
 	{
 		return Ar << Map.Pairs;
 	}
@@ -587,7 +587,7 @@ public:
 	* Describes the map's contents through an output device.
 	* @param Ar - The output device to describe the map's contents through.
 	*/
-	void Dump(YOutputDevice& Ar)
+	void Dump(FOutputDevice& Ar)
 	{
 		Pairs.Dump(Ar);
 	}

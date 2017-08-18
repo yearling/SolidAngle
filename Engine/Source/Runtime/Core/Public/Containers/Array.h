@@ -1088,7 +1088,7 @@ public:
 	* @param A Array to serialize.
 	* @returns Passing the given archive.
 	*/
-	friend YArchive& operator<<(YArchive& Ar, TArray& A)
+	friend FArchive& operator<<(FArchive& Ar, TArray& A)
 	{
 		A.CountBytes(Ar);
 		if (sizeof(ElementType) == 1)
@@ -1149,7 +1149,7 @@ public:
 	*
 	* @param Ar	YArchive to bulk serialize this TArray to/from
 	*/
-	void BulkSerialize(YArchive& Ar, bool bForcePerElementSerialization = false)
+	void BulkSerialize(FArchive& Ar, bool bForcePerElementSerialization = false)
 	{
 		int32 ElementSize = sizeof(ElementType);
 		// Serialize element size to detect mismatch across platforms.
@@ -1195,7 +1195,7 @@ public:
 	*
 	* @param Ar Archive to count for.
 	*/
-	void CountBytes(YArchive& Ar)
+	void CountBytes(FArchive& Ar)
 	{
 		Ar.CountBytes(ArrayNum * sizeof(ElementType), ArrayMax * sizeof(ElementType));
 	}
@@ -2099,7 +2099,7 @@ public:
 
 	/**
 	* Searches for the first entry of the specified type, will only work with
-	* TArray<SObject*>. Optionally return the item's index, and can specify
+	* TArray<UObject*>. Optionally return the item's index, and can specify
 	* the start index.
 	*
 	* @param Item (Optional output) If it's not null, then it will point to

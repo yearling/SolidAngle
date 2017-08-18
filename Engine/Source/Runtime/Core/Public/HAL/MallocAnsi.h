@@ -25,7 +25,7 @@
 // ANSI C memory allocator.
 //
 class FMallocAnsi
-	: public YMalloc
+	: public FMalloc
 {
 
 public:

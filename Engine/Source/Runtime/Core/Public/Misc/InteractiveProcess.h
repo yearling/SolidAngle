@@ -205,10 +205,10 @@ private:
 	int ReturnCode;
 
 	// Holds the time at which the process started. */
-	YDateTime StartTime;
+	FDateTime StartTime;
 
 	// Holds the time at which the process ended. */
-	YDateTime EndTime;
+	FDateTime EndTime;
 
 	// Holds messages to be written to pipe when ready */
 	TQueue<YString> MessagesToProcess;

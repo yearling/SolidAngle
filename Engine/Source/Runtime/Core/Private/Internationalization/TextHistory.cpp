@@ -1,7 +1,7 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #include "Internationalization/TextHistory.h"
-#include "SObject/ObjectVersion.h"
+#include "UObject/ObjectVersion.h"
 #include "Internationalization/ITextData.h"
 #include "Internationalization/Culture.h"
 #include "Internationalization/Internationalization.h"
@@ -9,7 +9,7 @@
 
 #include "Internationalization/TextFormatter.h"
 #include "Internationalization/TextNamespaceUtil.h"
-#include "SObject/PropertyPortFlags.h"
+#include "UObject/PropertyPortFlags.h"
 
 ///////////////////////////////////////
 // FTextHistory
@@ -54,7 +54,7 @@ bool FTextHistory::GetHistoricNumericData(const FText& InText, FHistoricTextNume
 	return false;
 }
 
-void FTextHistory::SerializeForDisplayString(YArchive& Ar, FTextDisplayStringPtr& InOutDisplayString)
+void FTextHistory::SerializeForDisplayString(FArchive& Ar, FTextDisplayStringPtr& InOutDisplayString)
 {
 	if(Ar.IsLoading())
 	{
@@ -127,7 +127,7 @@ const YString* FTextHistory_Base::GetSourceString() const
 	return &SourceString;
 }
 
-void FTextHistory_Base::Serialize( YArchive& Ar )
+void FTextHistory_Base::Serialize( FArchive& Ar )
 {
 	// If I serialize out the Namespace and Key HERE, then we can load it up.
 	if(Ar.IsSaving())
@@ -137,7 +137,7 @@ void FTextHistory_Base::Serialize( YArchive& Ar )
 	}
 }
 
-void FTextHistory_Base::SerializeForDisplayString(YArchive& Ar, FTextDisplayStringPtr& InOutDisplayString)
+void FTextHistory_Base::SerializeForDisplayString(FArchive& Ar, FTextDisplayStringPtr& InOutDisplayString)
 {
 	if(Ar.IsLoading())
 	{
@@ -165,7 +165,7 @@ void FTextHistory_Base::SerializeForDisplayString(YArchive& Ar, FTextDisplayStri
 					// We may assign a new key when loading if we don't have the correct package namespace in order to avoid identity conflicts when instancing (which duplicates without any special flags)
 					// This can happen if an asset was duplicated (and keeps the same keys) but later both assets are instanced into the same world (causing them to both take the worlds package id, and conflict with each other)
 					Namespace = FullNamespace;
-					Key = YGuid::NewGuid().ToString();
+					Key = FGuid::NewGuid().ToString();
 				}
 			}
 		}
@@ -203,7 +203,7 @@ void FTextHistory_Base::SerializeForDisplayString(YArchive& Ar, FTextDisplayStri
 						// We may assign a new key when saving if we don't have the correct package namespace in order to avoid identity conflicts when instancing (which duplicates without any special flags)
 						// This can happen if an asset was duplicated (and keeps the same keys) but later both assets are instanced into the same world (causing them to both take the worlds package id, and conflict with each other)
 						Namespace = FullNamespace;
-						Key = YGuid::NewGuid().ToString();
+						Key = FGuid::NewGuid().ToString();
 					}
 				}
 			}
@@ -213,7 +213,7 @@ void FTextHistory_Base::SerializeForDisplayString(YArchive& Ar, FTextDisplayStri
 		// If this has no key, give it a GUID for a key
 		if (!bFoundNamespaceAndKey && GIsEditor && (Ar.IsPersistent() && !Ar.HasAnyPortFlags(PPF_Duplicate)))
 		{
-			Key = YGuid::NewGuid().ToString();
+			Key = FGuid::NewGuid().ToString();
 			if (!FTextLocalizationManager::Get().AddDisplayString(InOutDisplayString.ToSharedRef(), Namespace, Key))
 			{
 				// Could not add display string, reset namespace and key.
@@ -265,7 +265,7 @@ FText FTextHistory_NamedFormat::ToText(bool bInAsSource) const
 	return FTextFormatter::Format(FTextFormat(SourceFmt), FFormatNamedArguments(Arguments), true, bInAsSource);
 }
 
-void FTextHistory_NamedFormat::Serialize( YArchive& Ar )
+void FTextHistory_NamedFormat::Serialize( FArchive& Ar )
 {
 	if(Ar.IsSaving())
 	{
@@ -339,7 +339,7 @@ FText FTextHistory_OrderedFormat::ToText(bool bInAsSource) const
 	return FTextFormatter::Format(FTextFormat(SourceFmt), FFormatOrderedArguments(Arguments), true, bInAsSource);
 }
 
-void FTextHistory_OrderedFormat::Serialize( YArchive& Ar )
+void FTextHistory_OrderedFormat::Serialize( FArchive& Ar )
 {
 	if(Ar.IsSaving())
 	{
@@ -420,7 +420,7 @@ FText FTextHistory_ArgumentDataFormat::ToText(bool bInAsSource) const
 	return FTextFormatter::Format(FTextFormat(SourceFmt), TArray<FFormatArgumentData>(Arguments), true, bInAsSource);
 }
 
-void FTextHistory_ArgumentDataFormat::Serialize( YArchive& Ar )
+void FTextHistory_ArgumentDataFormat::Serialize( FArchive& Ar )
 {
 	if(Ar.IsSaving())
 	{
@@ -518,7 +518,7 @@ FTextHistory_FormatNumber& FTextHistory_FormatNumber::operator=(FTextHistory_For
 	return *this;
 }
 
-void FTextHistory_FormatNumber::Serialize(YArchive& Ar)
+void FTextHistory_FormatNumber::Serialize(FArchive& Ar)
 {
 	Ar << SourceValue;
 
@@ -610,7 +610,7 @@ FText FTextHistory_AsNumber::ToText(bool bInAsSource) const
 	return FText();
 }
 
-void FTextHistory_AsNumber::Serialize( YArchive& Ar )
+void FTextHistory_AsNumber::Serialize( FArchive& Ar )
 {
 	if(Ar.IsSaving())
 	{
@@ -670,7 +670,7 @@ FText FTextHistory_AsPercent::ToText(bool bInAsSource) const
 	return FText();
 }
 
-void FTextHistory_AsPercent::Serialize( YArchive& Ar )
+void FTextHistory_AsPercent::Serialize( FArchive& Ar )
 {
 	if(Ar.IsSaving())
 	{
@@ -747,7 +747,7 @@ PRAGMA_ENABLE_DEPRECATION_WARNINGS
 	return FText();
 }
 
-void FTextHistory_AsCurrency::Serialize( YArchive& Ar )
+void FTextHistory_AsCurrency::Serialize( FArchive& Ar )
 {
 	if(Ar.IsSaving())
 	{
@@ -766,7 +766,7 @@ void FTextHistory_AsCurrency::Serialize( YArchive& Ar )
 ///////////////////////////////////////
 // FTextHistory_AsDate
 
-FTextHistory_AsDate::FTextHistory_AsDate(YDateTime InSourceDateTime, const EDateTimeStyle::Type InDateStyle, YString InTimeZone, FCulturePtr InTargetCulture)
+FTextHistory_AsDate::FTextHistory_AsDate(FDateTime InSourceDateTime, const EDateTimeStyle::Type InDateStyle, YString InTimeZone, FCulturePtr InTargetCulture)
 	: SourceDateTime(MoveTemp(InSourceDateTime))
 	, DateStyle(InDateStyle)
 	, TimeZone(MoveTemp(InTimeZone))
@@ -796,7 +796,7 @@ FTextHistory_AsDate& FTextHistory_AsDate::operator=(FTextHistory_AsDate&& Other)
 	return *this;
 }
 
-void FTextHistory_AsDate::Serialize(YArchive& Ar)
+void FTextHistory_AsDate::Serialize(FArchive& Ar)
 {
 	if(Ar.IsSaving())
 	{
@@ -841,7 +841,7 @@ FText FTextHistory_AsDate::ToText(bool bInAsSource) const
 ///////////////////////////////////////
 // FTextHistory_AsTime
 
-FTextHistory_AsTime::FTextHistory_AsTime(YDateTime InSourceDateTime, const EDateTimeStyle::Type InTimeStyle, YString InTimeZone, FCulturePtr InTargetCulture)
+FTextHistory_AsTime::FTextHistory_AsTime(FDateTime InSourceDateTime, const EDateTimeStyle::Type InTimeStyle, YString InTimeZone, FCulturePtr InTargetCulture)
 	: SourceDateTime(MoveTemp(InSourceDateTime))
 	, TimeStyle(InTimeStyle)
 	, TimeZone(MoveTemp(InTimeZone))
@@ -871,7 +871,7 @@ FTextHistory_AsTime& FTextHistory_AsTime::operator=(FTextHistory_AsTime&& Other)
 	return *this;
 }
 
-void FTextHistory_AsTime::Serialize(YArchive& Ar)
+void FTextHistory_AsTime::Serialize(FArchive& Ar)
 {
 	if(Ar.IsSaving())
 	{
@@ -914,7 +914,7 @@ FText FTextHistory_AsTime::ToText(bool bInAsSource) const
 ///////////////////////////////////////
 // FTextHistory_AsDateTime
 
-FTextHistory_AsDateTime::FTextHistory_AsDateTime(YDateTime InSourceDateTime, const EDateTimeStyle::Type InDateStyle, const EDateTimeStyle::Type InTimeStyle, YString InTimeZone, FCulturePtr InTargetCulture)
+FTextHistory_AsDateTime::FTextHistory_AsDateTime(FDateTime InSourceDateTime, const EDateTimeStyle::Type InDateStyle, const EDateTimeStyle::Type InTimeStyle, YString InTimeZone, FCulturePtr InTargetCulture)
 	: SourceDateTime(MoveTemp(InSourceDateTime))
 	, DateStyle(InDateStyle)
 	, TimeStyle(InTimeStyle)
@@ -947,7 +947,7 @@ FTextHistory_AsDateTime& FTextHistory_AsDateTime::operator=(FTextHistory_AsDateT
 	return *this;
 }
 
-void FTextHistory_AsDateTime::Serialize(YArchive& Ar)
+void FTextHistory_AsDateTime::Serialize(FArchive& Ar)
 {
 	if(Ar.IsSaving())
 	{

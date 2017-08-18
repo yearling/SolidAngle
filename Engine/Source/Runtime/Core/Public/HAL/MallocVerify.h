@@ -40,11 +40,11 @@ public:
  * A verifying proxy malloc that takes a malloc to be used and checks that the caller
  * is passing valid pointers.
  */
-class FMallocVerifyProxy : public YMalloc
+class FMallocVerifyProxy : public FMalloc
 {
 private:
 	/** Malloc we're based on, aka using under the hood */
-	YMalloc* UsedMalloc;
+	FMalloc* UsedMalloc;
 
 	/* Verifier object */
 	FMallocVerify Verify;
@@ -53,7 +53,7 @@ private:
 	FCriticalSection VerifyCritical;
 
 public:
-	explicit FMallocVerifyProxy(YMalloc* InMalloc)
+	explicit FMallocVerifyProxy(FMalloc* InMalloc)
 		: UsedMalloc(InMalloc)
 	{
 	}
@@ -89,12 +89,12 @@ public:
 		UsedMalloc->InitializeStatsMetadata();
 	}
 
-	virtual void GetAllocatorStats(YGenericMemoryStats& OutStats) override
+	virtual void GetAllocatorStats(FGenericMemoryStats& OutStats) override
 	{
 		UsedMalloc->GetAllocatorStats(OutStats);
 	}
 
-	virtual void DumpAllocatorStats(YOutputDevice& Ar) override
+	virtual void DumpAllocatorStats(FOutputDevice& Ar) override
 	{
 		UsedMalloc->DumpAllocatorStats(Ar);
 	}
@@ -104,7 +104,7 @@ public:
 		return UsedMalloc->ValidateHeap();
 	}
 
-	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, YOutputDevice& Ar) override
+	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar) override
 	{
 		return UsedMalloc->Exec(InWorld, Cmd, Ar);
 	}

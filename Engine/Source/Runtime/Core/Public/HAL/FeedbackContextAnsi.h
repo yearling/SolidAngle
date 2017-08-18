@@ -18,12 +18,12 @@ FFeedbackContextAnsi.
 //
 // Feedback context.
 //
-class FFeedbackContextAnsi : public YFeedbackContext
+class FFeedbackContextAnsi : public FFeedbackContext
 {
 public:
 	// Variables.
 	FContextSupplier*	Context;
-	YOutputDevice*		AuxOut;
+	FOutputDevice*		AuxOut;
 
 	// Local functions.
 	void LocalPrint(const TCHAR* Str)
@@ -41,11 +41,11 @@ public:
 
 	// Constructor.
 	FFeedbackContextAnsi()
-		: YFeedbackContext()
+		: FFeedbackContext()
 		, Context(nullptr)
 		, AuxOut(nullptr)
 	{}
-	void Serialize(const TCHAR* V, ELogVerbosity::Type Verbosity, const class YName& Category) override
+	void Serialize(const TCHAR* V, ELogVerbosity::Type Verbosity, const class FName& Category) override
 	{
 		if (Verbosity == ELogVerbosity::Error || Verbosity == ELogVerbosity::Warning || Verbosity == ELogVerbosity::Display)
 		{

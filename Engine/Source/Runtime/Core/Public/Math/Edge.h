@@ -5,7 +5,7 @@
 struct YEdge
 {
 	/** Holds the edge vertices. */
-	YVector Vertex[2];
+	FVector Vertex[2];
 
 	/** Holds a temporary variable used when creating arrays of unique edges. */
 	int32 Count;
@@ -21,7 +21,7 @@ public:
 	* @param V1 The first vertex.
 	* @param V2 The second vertex.
 	*/
-	YEdge(YVector V1, YVector V2)
+	YEdge(FVector V1, FVector V2)
 	{
 		Vertex[0] = V1;
 		Vertex[1] = V2;

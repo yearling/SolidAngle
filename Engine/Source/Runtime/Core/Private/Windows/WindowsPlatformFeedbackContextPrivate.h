@@ -10,13 +10,13 @@
 #include "Misc/OutputDeviceConsole.h"
 
 class FContextSupplier;
-class YName;
+class FName;
 class FText;
 
 /**
  * Feedback context implementation for windows.
  */
-class CORE_API FFeedbackContextWindows : public YFeedbackContext
+class CORE_API FFeedbackContextWindows : public FFeedbackContext
 {
 	/** Context information for warning and error messages */
 	FContextSupplier*	Context;
@@ -26,10 +26,10 @@ public:
 
 	// Constructor.
 	FFeedbackContextWindows()
-	: YFeedbackContext()
+	: FFeedbackContext()
 	, Context( NULL )
 	{}
-	void Serialize( const TCHAR* V, ELogVerbosity::Type Verbosity, const class YName& Category )
+	void Serialize( const TCHAR* V, ELogVerbosity::Type Verbosity, const class FName& Category )
 	{
 		// if we set the color for warnings or errors, then reset at the end of the function
 		// note, we have to set the colors directly without using the standard SET_WARN_COLOR macro

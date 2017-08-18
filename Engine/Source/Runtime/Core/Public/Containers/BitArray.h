@@ -43,7 +43,7 @@ class FScriptBitArray;
 * Serializer (predefined for no friend injection in gcc 411)
 */
 template<typename Allocator>
-YArchive& operator<<(YArchive& Ar, TBitArray<Allocator>& BitArray);
+FArchive& operator<<(FArchive& Ar, TBitArray<Allocator>& BitArray);
 
 /** Used to read/write a bit in the array as a bool. */
 class FBitReference
@@ -257,7 +257,7 @@ public:
 	/**
 	* Serializer
 	*/
-	friend YArchive& operator<<(YArchive& Ar, TBitArray& BitArray)
+	friend FArchive& operator<<(FArchive& Ar, TBitArray& BitArray)
 	{
 		// serialize number of bits
 		Ar << BitArray.NumBits;
@@ -482,7 +482,7 @@ public:
 	}
 
 	/** Tracks the container's memory use through an archive. */
-	void CountBytes(YArchive& Ar)
+	void CountBytes(FArchive& Ar)
 	{
 		Ar.CountBytes(
 			YMath::DivideAndRoundUp(NumBits, NumBitsPerDWORD) * sizeof(uint32),

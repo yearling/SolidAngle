@@ -147,7 +147,7 @@ public:
 	*
 	* @param Ar	YArchive to bulk serialize this TArray to/from
 	*/
-	void BulkSerialize(YArchive& Ar)
+	void BulkSerialize(FArchive& Ar)
 	{
 		Super::BulkSerialize(Ar);
 	}
@@ -157,7 +157,7 @@ public:
 	* @param Ar - archive to serialize to
 	* @param ResourceArray - resource array data to serialize
 	*/
-	friend YArchive& operator<<(YArchive& Ar,TResourceArray<ElementType,Alignment>& ResourceArray)
+	friend FArchive& operator<<(FArchive& Ar,TResourceArray<ElementType,Alignment>& ResourceArray)
 	{
 		return Ar << *(Super*)&ResourceArray;
 	}	

@@ -14,7 +14,7 @@
 	#endif
 #endif
 
-class YName;
+class FName;
 
 #if WANTS_WINDOWS_EVENT_LOGGING
 
@@ -65,7 +65,7 @@ public:
 	}
 
 
-	virtual void Serialize(const TCHAR* Buffer, ELogVerbosity::Type Verbosity, const class YName& Category) override
+	virtual void Serialize(const TCHAR* Buffer, ELogVerbosity::Type Verbosity, const class FName& Category) override
 	{
 		if (EventLog != NULL)
 		{
@@ -133,7 +133,7 @@ public:
 	 * @param	Data	Text to log
 	 * @param	Event	Event name used for suppression purposes
 	 */
-	virtual void Serialize( const TCHAR* Msg, ELogVerbosity::Type Verbosity, const class YName& Category ) override;
+	virtual void Serialize( const TCHAR* Msg, ELogVerbosity::Type Verbosity, const class FName& Category ) override;
 
 	/**
 	 * Error handling function that is being called from within the system wide global
@@ -191,8 +191,8 @@ public:
 	 * @param Data	Text to display
 	 * @param Event	Event type, used for filtering/ suppression
 	 */
-	virtual void Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class YName& Category, const double Time ) override;
-	virtual void Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class YName& Category ) override;
+	virtual void Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category, const double Time ) override;
+	virtual void Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category ) override;
 
 	void SetColor( const TCHAR* Color );
 };

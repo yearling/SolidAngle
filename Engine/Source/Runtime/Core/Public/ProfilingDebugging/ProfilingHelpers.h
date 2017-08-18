@@ -55,7 +55,7 @@ CORE_API void SendDataToPCViaUnrealConsole(const YString& NotifyType, const YStr
 * @param ProfilingType this is the type of profiling file this is
 *
 **/
-CORE_API YString CreateProfileFilename(const YString& InFileExtension, bool bIncludeDateForDirectoryName);
+CORE_API YString CreateProfileFilename(const YString& InFileExtension, bool bIncludeDateForDirectorFName);
 
 /**
 * This will generate the profiling file name that will work with limited filename sizes on consoles.
@@ -63,12 +63,12 @@ CORE_API YString CreateProfileFilename(const YString& InFileExtension, bool bInc
 *
 *
 **/
-CORE_API YString CreateProfileFilename(const YString& InFilename, const YString& InFileExtension, bool bIncludeDateForDirectoryName);
+CORE_API YString CreateProfileFilename(const YString& InFilename, const YString& InFileExtension, bool bIncludeDateForDirectorFName);
 
 /**
 * This will create the directories and the file name all in one function
 **/
-CORE_API YString CreateProfileDirectoryAndFilename(const YString& InSubDirectoryName, const YString& InFileExtension);
+CORE_API YString CreateProfileDirectoryAndFilename(const YString& InSubDirectorFName, const YString& InFileExtension);
 
 #if WITH_ENGINE
 /** Delegate type for getting current map name */

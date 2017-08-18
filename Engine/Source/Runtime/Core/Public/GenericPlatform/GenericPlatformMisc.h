@@ -401,12 +401,12 @@ struct CORE_API YGenericPlatformMisc
 	{
 	}
 
-	FORCEINLINE static uint32 GetKeyMap(uint32* KeyCodes, YString* KeyNames, uint32 MaxMappings)
+	FORCEINLINE static uint32 GetKeyMap(uint32* KeyCodes, YString* KeFNames, uint32 MaxMappings)
 	{
 		return 0;
 	}
 
-	FORCEINLINE static uint32 GetCharKeyMap(uint32* KeyCodes, YString* KeyNames, uint32 MaxMappings)
+	FORCEINLINE static uint32 GetCharKeyMap(uint32* KeyCodes, YString* KeFNames, uint32 MaxMappings)
 	{
 		return 0;
 	}
@@ -427,18 +427,18 @@ protected:
 	* @param bMapUppercaseKeys If true, will map A, B, C, etc to EKeys::A, EKeys::B, EKeys::C
 	* @param bMapLowercaseKeys If true, will map a, b, c, etc to EKeys::A, EKeys::B, EKeys::C
 	*/
-	static uint32 GetStandardPrintableKeyMap(uint32* KeyCodes, YString* KeyNames, uint32 MaxMappings, bool bMapUppercaseKeys, bool bMapLowercaseKeys);
+	static uint32 GetStandardPrintableKeyMap(uint32* KeyCodes, YString* KeFNames, uint32 MaxMappings, bool bMapUppercaseKeys, bool bMapLowercaseKeys);
 
 public:
 
 	/**
 	* Platform specific function for adding a named event that can be viewed in PIX
 	*/
-	FORCEINLINE static void BeginNamedEvent(const struct YColor& Color, const TCHAR* Text)
+	FORCEINLINE static void BeginNamedEvent(const struct FColor& Color, const TCHAR* Text)
 	{
 	}
 
-	FORCEINLINE static void BeginNamedEvent(const struct YColor& Color, const ANSICHAR* Text)
+	FORCEINLINE static void BeginNamedEvent(const struct FColor& Color, const ANSICHAR* Text)
 	{
 	}
 
@@ -455,11 +455,11 @@ public:
 	*
 	*  @param	InStoreId			The name used to identify the store you want to use (eg, MyGame)
 	*	@param	InSectionName		The section that this key->value pair is placed within (can contain / separators, eg UserDetails/AccountInfo)
-	*	@param	InKeyName			The name of the key to set the value for
+	*	@param	InKeFName			The name of the key to set the value for
 	*	@param	InValue				The value to set
 	*	@return	bool				true if the value was set correctly, false if not
 	*/
-	static bool SetStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeyName, const YString& InValue);
+	static bool SetStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeFName, const YString& InValue);
 
 	/**
 	*	Get the value for the given section and key from the platform specific key->value store
@@ -467,11 +467,11 @@ public:
 	*
 	*  @param	InStoreId			The name used to identify the store you want to use (eg, MyGame)
 	*	@param	InSectionName		The section that this key->value pair is placed within (can contain / separators, eg UserDetails/AccountInfo)
-	*	@param	InKeyName			The name of the key to get the value for
+	*	@param	InKeFName			The name of the key to get the value for
 	*	@param	OutValue			The value found
 	*	@return	bool				true if the entry was found (and OutValue contains the result), false if not
 	*/
-	static bool GetStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeyName, YString& OutValue);
+	static bool GetStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeFName, YString& OutValue);
 
 	/**
 	*	Deletes value for the given section and key in the platform specific key->value store
@@ -479,10 +479,10 @@ public:
 	*
 	*  @param	InStoreId			The name used to identify the store you want to use (eg, MyGame)
 	*	@param	InSectionName		The section that this key->value pair is placed within (can contain / separators, eg UserDetails/AccountInfo)
-	*	@param	InKeyName			The name of the key to set the value for
+	*	@param	InKeFName			The name of the key to set the value for
 	*	@return	bool				true if the value was deleted correctly, false if not found or couldn't delete
 	*/
-	static bool DeleteStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeyName);
+	static bool DeleteStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeFName);
 
 	/** Sends a message to a remote tool, and debugger consoles */
 	static void LowLevelOutputDebugString(const TCHAR *Message);
@@ -536,7 +536,7 @@ public:
 	static void ClipboardPaste(class YString& Dest);
 
 	/** Create a new globally unique identifier. **/
-	static void CreateGuid(struct YGuid& Result);
+	static void CreateGuid(struct FGuid& Result);
 
 	/**
 	* Show a message box if possible, otherwise print a message and return the default
@@ -814,7 +814,7 @@ public:
 	*	@param	Out			The output device to utilize
 	*	@return	bool		true if command was processed, false if not
 	*/
-	static bool Exec(class UWorld* InWorld, const TCHAR* Cmd, YOutputDevice& Out)
+	static bool Exec(class UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Out)
 	{
 		return false;
 	}
@@ -829,7 +829,7 @@ public:
 	* @param	InGamma			Optional gamma correction to apply to the screen color
 	* @return					The color of the pixel displayed at the chosen location
 	*/
-	static struct YLinearColor GetScreenPixelColor(const struct YVector2D& InScreenPos, float InGamma = 1.0f);
+	static struct FLinearColor GetScreenPixelColor(const struct YVector2D& InScreenPos, float InGamma = 1.0f);
 
 #if !UE_BUILD_SHIPPING
 	static void SetShouldPromptForRemoteDebugging(bool bInShouldPrompt)
@@ -962,7 +962,7 @@ public:
 	* This is NOT based on a machine fingerprint.
 	*/
 	DEPRECATED(4.14, "GetMachineId is deprecated. Use GetLoginId instead.")
-		static YGuid GetMachineId();
+		static FGuid GetMachineId();
 
 	/**
 	* Returns a unique string associated with the login account of the current machine.

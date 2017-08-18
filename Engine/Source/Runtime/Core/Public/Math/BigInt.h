@@ -1003,7 +1003,7 @@ public:
 	/**
 	* Serialization.
 	*/
-	friend YArchive& operator<<(YArchive& Ar, BigInt& Value)
+	friend FArchive& operator<<(FArchive& Ar, BigInt& Value)
 	{
 		for (int32 Index = 0; Index < NumWords; ++Index)
 		{
@@ -1230,7 +1230,7 @@ struct FSignatureBase
 		Data = 0;
 	}
 
-	void Serialize(YArchive& Ar)
+	void Serialize(FArchive& Ar)
 	{
 		Ar << Data;
 	}
@@ -1258,7 +1258,7 @@ struct FSignatureBase
 	/**
 	* Serialization.
 	*/
-	friend YArchive& operator<<(YArchive& Ar, FSignatureBase& Value)
+	friend FArchive& operator<<(FArchive& Ar, FSignatureBase& Value)
 	{
 		Value.Serialize(Ar);
 		return Ar;

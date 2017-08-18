@@ -56,11 +56,11 @@ public:
 		return GetLowLevel().IsSandboxEnabled();
 	}
 
-	YArchive* CreateFileReader(const TCHAR* Filename, uint32 ReadFlags = 0) override;
-	YArchive* CreateFileWriter(const TCHAR* Filename, uint32 WriteFlags = 0) override;
+	FArchive* CreateFileReader(const TCHAR* Filename, uint32 ReadFlags = 0) override;
+	FArchive* CreateFileWriter(const TCHAR* Filename, uint32 WriteFlags = 0) override;
 
 #if ALLOW_DEBUG_FILES
-	YArchive* CreateDebugFileWriter(const TCHAR* Filename, uint32 WriteFlags = 0) override
+	FArchive* CreateDebugFileWriter(const TCHAR* Filename, uint32 WriteFlags = 0) override
 	{
 		return CreateFileWriter(Filename, WriteFlags);
 	}
@@ -74,10 +74,10 @@ public:
 	void FindFiles(TArray<YString>& Result, const TCHAR* Filename, bool Files, bool Directories) override;
 	void FindFilesRecursive(TArray<YString>& FileNames, const TCHAR* StartDirectory, const TCHAR* Filename, bool Files, bool Directories, bool bClearFileNames = true) override;
 	double GetFileAgeSeconds(const TCHAR* Filename) override;
-	YDateTime GetTimeStamp(const TCHAR* Filename) override;
-	YDateTime GetAccessTimeStamp(const TCHAR* Filename) override;
-	void GetTimeStampPair(const TCHAR* PathA, const TCHAR* PathB, YDateTime& OutTimeStampA, YDateTime& OutTimeStampB);
-	bool SetTimeStamp(const TCHAR* Filename, YDateTime Timestamp) override;
+	FDateTime GetTimeStamp(const TCHAR* Filename) override;
+	FDateTime GetAccessTimeStamp(const TCHAR* Filename) override;
+	void GetTimeStampPair(const TCHAR* PathA, const TCHAR* PathB, FDateTime& OutTimeStampA, FDateTime& OutTimeStampB);
+	bool SetTimeStamp(const TCHAR* Filename, FDateTime Timestamp) override;
 	virtual YString GetFilenameOnDisk(const TCHAR* Filename) override;
 
 	virtual uint32	Copy(const TCHAR* Dest, const TCHAR* Src, bool Replace = 1, bool EvenIfReadOnly = 0, bool Attributes = 0, FCopyProgress* Progress = nullptr, EFileRead ReadFlags = FILEREAD_None, EFileWrite WriteFlags = FILEWRITE_None) override;
@@ -197,7 +197,7 @@ private:
 YArchiveFileReaderGeneric
 -----------------------------------------------------------------------------*/
 
-class CORE_API YArchiveFileReaderGeneric : public YArchive
+class CORE_API YArchiveFileReaderGeneric : public FArchive
 {
 public:
 	YArchiveFileReaderGeneric(IFileHandle* InHandle, const TCHAR* InFilename, int64 InSize);
@@ -252,7 +252,7 @@ protected:
 YArchiveFileWriterGeneric
 -----------------------------------------------------------------------------*/
 
-class YArchiveFileWriterGeneric : public YArchive
+class YArchiveFileWriterGeneric : public FArchive
 {
 public:
 	YArchiveFileWriterGeneric(IFileHandle* InHandle, const TCHAR* InFilename, int64 InPos);

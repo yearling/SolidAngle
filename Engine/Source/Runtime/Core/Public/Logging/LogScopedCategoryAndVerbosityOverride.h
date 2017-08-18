@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 
 /**
 * Helper class that uses thread local storage to set up the default category and verbosity for the low level logging functions.
@@ -17,12 +17,12 @@ public:
 	struct FOverride
 	{
 		ELogVerbosity::Type Verbosity;
-		YName Category;
+		FName Category;
 		FOverride()
 			: Verbosity(ELogVerbosity::Log)
 		{
 		}
-		FOverride(YName InCategory, ELogVerbosity::Type InVerbosity)
+		FOverride(FName InCategory, ELogVerbosity::Type InVerbosity)
 			: Verbosity(InVerbosity)
 			, Category(InCategory)
 		{
@@ -38,7 +38,7 @@ private:
 	FOverride Backup;
 public:
 	/** Back up the existing category and varbosity pair, then sets them.*/
-	FLogScopedCategoryAndVerbosityOverride(YName Category, ELogVerbosity::Type Verbosity);
+	FLogScopedCategoryAndVerbosityOverride(FName Category, ELogVerbosity::Type Verbosity);
 
 	/** Restore the category and verbosity overrides to the previous value.*/
 	~FLogScopedCategoryAndVerbosityOverride();

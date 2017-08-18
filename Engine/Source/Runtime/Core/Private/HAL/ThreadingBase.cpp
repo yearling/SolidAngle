@@ -2,7 +2,7 @@
 
 
 #include "HAL/ThreadingBase.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Stats/Stats.h"
 #include "Misc/CoreStats.h"
 #include "Misc/EventPool.h"
@@ -350,7 +350,7 @@ FRunnableThread* FRunnableThread::Create(
 #if	STATS
 	if( NewThread )
 	{
-		FStartupMessages::Get().AddThreadMetadata( YName( *NewThread->GetThreadName() ), NewThread->GetThreadID() );
+		FStartupMessages::Get().AddThreadMetadata( FName( *NewThread->GetThreadName() ), NewThread->GetThreadID() );
 	}
 #endif // STATS
 

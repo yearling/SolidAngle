@@ -19,7 +19,7 @@ YOutputDeviceAnsiError::YOutputDeviceAnsiError()
  * @param	Data	Text to log
  * @param	Event	Event name used for suppression purposes
  */
-void YOutputDeviceAnsiError::Serialize( const TCHAR* Msg, ELogVerbosity::Type Verbosity, const class YName& Category )
+void YOutputDeviceAnsiError::Serialize( const TCHAR* Msg, ELogVerbosity::Type Verbosity, const class FName& Category )
 {
 	// Display the error and exit.
 	YPlatformMisc::LocalPrint( TEXT("\nappError called: \n") );

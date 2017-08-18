@@ -454,7 +454,7 @@ protected:
 	}
 
 private:
-	friend class YNamedTaskThread;
+	friend class FNamedTaskThread;
 	friend class FTaskThreadBase;
 	friend class FTaskThreadAnyThread;
 	friend class FGraphEvent;

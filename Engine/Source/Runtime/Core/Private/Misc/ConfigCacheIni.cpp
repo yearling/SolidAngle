@@ -214,7 +214,7 @@ static YString ExtractPropertyValue(const YString& FullStructValue, const YStrin
 	return TEXT("");
 }
 
-void FConfigSection::HandleAddCommand(YName Key, const YString& Value, bool bAppendValueIfNotArrayOfStructsKeyUsed)
+void FConfigSection::HandleAddCommand(FName Key, const YString& Value, bool bAppendValueIfNotArrayOfStructsKeyUsed)
 {
 	YString* StructKey = ArrayOfStructKeys.Find(Key);
 	bool bHandledWithKey = false;
@@ -265,13 +265,13 @@ void FConfigSection::HandleAddCommand(YName Key, const YString& Value, bool bApp
 }
 
 // Look through the file's per object config ArrayOfStruct keys and see if this section matches
-static void FixupArrayOfStructKeysForSection(FConfigSection* Section, const YString& SectionName, const TMap<YString, TMap<YName, YString> >& PerObjectConfigKeys)
+static void FixupArrayOfStructKeysForSection(FConfigSection* Section, const YString& SectionName, const TMap<YString, TMap<FName, YString> >& PerObjectConfigKeys)
 {
-	for (TMap<YString, TMap<YName, YString> >::TConstIterator It(PerObjectConfigKeys); It; ++It)
+	for (TMap<YString, TMap<FName, YString> >::TConstIterator It(PerObjectConfigKeys); It; ++It)
 	{
 		if (SectionName.EndsWith(It.Key()))
 		{
-			for (TMap<YName, YString>::TConstIterator It2(It.Value()); It2; ++It2)
+			for (TMap<FName, YString>::TConstIterator It2(It.Value()); It2; ++It2)
 			{
 				Section->ArrayOfStructKeys.Add(It2.Key(), It2.Value());
 			}
@@ -531,7 +531,7 @@ void FConfigFile::CombineFromBuffer(const YString& Buffer)
 				else if (Cmd == '*')
 				{
 					// track a key to show uniqueness for arrays of structs
-					TMap<YName, YString>& POCKeys = PerObjectConfigArrayOfStructKeys.FindOrAdd(CurrentSectionName);
+					TMap<FName, YString>& POCKeys = PerObjectConfigArrayOfStructKeys.FindOrAdd(CurrentSectionName);
 					POCKeys.Add(Start, ProcessedValue);
 				}
 				else
@@ -620,7 +620,7 @@ void FConfigFile::ProcessInputFileContents(const YString& Contents)
 			// Ignore any lines that don't contain a key-value pair
 			if (Value)
 			{
-				// Terminate the propertyname, advancing past the =
+				// Terminate the propertFName, advancing past the =
 				*Value++ = 0;
 
 				// strip leading whitespace from the property name
@@ -775,16 +775,16 @@ bool FConfigFile::ShouldExportQuotedString(const YString& PropertyValue)
 	return false;
 }
 
-YString FConfigFile::GenerateExportedPropertyLine(const YString& PropertyName, const YString& PropertyValue)
+YString FConfigFile::GenerateExportedPropertyLine(const YString& PropertFName, const YString& PropertyValue)
 {
 	const bool bShouldQuote = ShouldExportQuotedString(PropertyValue);
 	if (bShouldQuote)
 	{
-		return YString::Printf(TEXT("%s=\"%s\"") LINE_TERMINATOR, *PropertyName, *PropertyValue.ReplaceCharWithEscapedChar());
+		return YString::Printf(TEXT("%s=\"%s\"") LINE_TERMINATOR, *PropertFName, *PropertyValue.ReplaceCharWithEscapedChar());
 	}
 	else
 	{
-		return YString::Printf(TEXT("%s=%s") LINE_TERMINATOR, *PropertyName, *PropertyValue);
+		return YString::Printf(TEXT("%s=%s") LINE_TERMINATOR, *PropertFName, *PropertyValue);
 	}
 }
 
@@ -907,7 +907,7 @@ static bool LoadIniFileHierarchy(const FConfigFileHierarchy& HierarchyToLoad, FC
 	}
 #endif
 
-	TArray<YDateTime> TimestampsOfInis;
+	TArray<FDateTime> TimestampsOfInis;
 
 	// Traverse ini list back to front, merging along the way.
 	for (auto& HierarchyIt : HierarchyToLoad)
@@ -983,12 +983,12 @@ static bool LoadIniFileHierarchy(const FConfigFileHierarchy& HierarchyToLoad, FC
 *
 * @param InConfigFile		- The config file which we are looking for a match in
 * @param InSectionName		- The name of the section we want to look for a match in.
-* @param InPropertyName	- The name of the property we are looking to match
+* @param InPropertFName	- The name of the property we are looking to match
 * @param InPropertyValue	- The value of the property which, if found, we are checking a match
 *
 * @return True if a property was found in the InConfigFile which matched the SectionName, Property Name and Value.
 */
-bool DoesConfigPropertyValueMatch(FConfigFile* InConfigFile, const YString& InSectionName, const YName& InPropertyName, const YString& InPropertyValue)
+bool DoesConfigPropertyValueMatch(FConfigFile* InConfigFile, const YString& InSectionName, const FName& InPropertFName, const YString& InPropertyValue)
 {
 	bool bFoundAMatch = false;
 
@@ -1001,7 +1001,7 @@ bool DoesConfigPropertyValueMatch(FConfigFile* InConfigFile, const YString& InSe
 		if (Section)
 		{
 			// Start Array check, if the property is in an array, we need to iterate over all properties.
-			for (FConfigSection::TConstKeyIterator It(*Section, InPropertyName); It && !bFoundAMatch; ++It)
+			for (FConfigSection::TConstKeyIterator It(*Section, InPropertFName); It && !bFoundAMatch; ++It)
 			{
 				const YString& PropertyValue = It.Value().GetSavedValue();
 				bFoundAMatch = PropertyValue == InPropertyValue;
@@ -1042,19 +1042,19 @@ bool DoesConfigPropertyValueMatch(FConfigFile* InConfigFile, const YString& InSe
 *
 * @param InConfigFile		- The config file which we want to check had overridden values
 * @param InSectionName		- The name of the section which we are checking for a match
-* @param InPropertyName		- The name of the property which we are checking for a match
+* @param InPropertFName		- The name of the property which we are checking for a match
 * @param InPropertyValue	- The value of the property which we are checking for a match
 *
 * @return True if a commandline option was set that matches the input parameters
 */
-bool PropertySetFromCommandlineOption(const FConfigFile* InConfigFile, const YString& InSectionName, const YName& InPropertyName, const YString& InPropertyValue)
+bool PropertySetFromCommandlineOption(const FConfigFile* InConfigFile, const YString& InSectionName, const FName& InPropertFName, const YString& InPropertyValue)
 {
 	bool bFromCommandline = false;
 
 #if ALLOW_INI_OVERRIDE_FROM_COMMANDLINE
 	for (const FConfigCommandlineOverride& CommandlineOverride : InConfigFile->CommandlineOptions)
 	{
-		if (CommandlineOverride.PropertyKey.Equals(InPropertyName.ToString(), ESearchCase::IgnoreCase) &&
+		if (CommandlineOverride.PropertyKey.Equals(InPropertFName.ToString(), ESearchCase::IgnoreCase) &&
 			CommandlineOverride.PropertyValue.Equals(InPropertyValue, ESearchCase::IgnoreCase) &&
 			CommandlineOverride.Section.Equals(InSectionName, ESearchCase::IgnoreCase) &&
 			CommandlineOverride.BaseFileName.Equals(YPaths::GetBaseFilename(InConfigFile->Name.ToString()), ESearchCase::IgnoreCase))
@@ -1105,15 +1105,15 @@ bool FConfigFile::Write(const YString& Filename, bool bDoRemoteWrite/* = true*/,
 		// if none we do not want to make any changes to the destination file on this round.
 		bool bWroteASectionProperty = false;
 
-		TSet< YName > PropertiesAddedLookup;
+		TSet< FName > PropertiesAddedLookup;
 
 		for (FConfigSection::TConstIterator It2(Section); It2; ++It2)
 		{
-			const YName PropertyName = It2.Key();
+			const FName PropertFName = It2.Key();
 			const YString& PropertyValue = It2.Value().GetSavedValue();
 
 			// Check if the we've already processed a property of this name. If it was part of an array we may have already written it out.
-			if (!PropertiesAddedLookup.Contains(PropertyName))
+			if (!PropertiesAddedLookup.Contains(PropertFName))
 			{
 				// Check for an array of differing size. This will trigger a full writeout.
 				// This also catches the case where the property doesn't exist in the source in non-array cases
@@ -1123,17 +1123,17 @@ bool FConfigFile::Write(const YString& Filename, bool bDoRemoteWrite/* = true*/,
 					if (SourceSection)
 					{
 						TArray<FConfigValue> SourceMatchingProperties;
-						SourceSection->MultiFind(PropertyName, SourceMatchingProperties);
+						SourceSection->MultiFind(PropertFName, SourceMatchingProperties);
 
 						TArray<FConfigValue> DestMatchingProperties;
-						Section.MultiFind(PropertyName, DestMatchingProperties);
+						Section.MultiFind(PropertFName, DestMatchingProperties);
 
 						bDifferentNumberOfElements = SourceMatchingProperties.Num() != DestMatchingProperties.Num();
 					}
 				}
 
 				// check whether the option we are attempting to write out, came from the commandline as a temporary override.
-				const bool bOptionIsFromCommandline = PropertySetFromCommandlineOption(this, SectionName, PropertyName, PropertyValue);
+				const bool bOptionIsFromCommandline = PropertySetFromCommandlineOption(this, SectionName, PropertFName, PropertyValue);
 
 				// If we are writing to a default config file and this property is an array, we need to be careful to remove those from higher up the hierarchy
 				const YString AbsoluteFilename = YPaths::ConvertRelativePathToFull(Filename);
@@ -1142,7 +1142,7 @@ bool FConfigFile::Write(const YString& Filename, bool bDoRemoteWrite/* = true*/,
 				const bool bIsADefaultIniWrite = !AbsoluteFilename.Contains(AbsoluteGameGeneratedConfigDir) && !AbsoluteFilename.Contains(AbsoluteGameAgnosticGeneratedConfigDir);
 
 				// Check if the property matches the source configs. We do not wanna write it out if so.
-				if ((bIsADefaultIniWrite || bDifferentNumberOfElements || !DoesConfigPropertyValueMatch(SourceConfigFile, SectionName, PropertyName, PropertyValue)) && !bOptionIsFromCommandline)
+				if ((bIsADefaultIniWrite || bDifferentNumberOfElements || !DoesConfigPropertyValueMatch(SourceConfigFile, SectionName, PropertFName, PropertyValue)) && !bOptionIsFromCommandline)
 				{
 					// If this is the first property we are writing of this section, then print the section name
 					if (!bWroteASectionProperty)
@@ -1159,21 +1159,21 @@ bool FConfigFile::Write(const YString& Filename, bool bDoRemoteWrite/* = true*/,
 
 					// Write out our property, if it is an array we need to write out the entire array.
 					TArray<FConfigValue> CompletePropertyToWrite;
-					Section.MultiFind(PropertyName, CompletePropertyToWrite, true);
+					Section.MultiFind(PropertFName, CompletePropertyToWrite, true);
 
 					if (bIsADefaultIniWrite)
 					{
-						ProcessPropertyAndWriteForDefaults(CompletePropertyToWrite, Text, SectionName, PropertyName.ToString());
+						ProcessPropertyAndWriteForDefaults(CompletePropertyToWrite, Text, SectionName, PropertFName.ToString());
 					}
 					else
 					{
 						for (const FConfigValue& ConfigValue : CompletePropertyToWrite)
 						{
-							Text += GenerateExportedPropertyLine(PropertyName.ToString(), ConfigValue.GetSavedValue());
+							Text += GenerateExportedPropertyLine(PropertFName.ToString(), ConfigValue.GetSavedValue());
 						}
 					}
 
-					PropertiesAddedLookup.Add(PropertyName);
+					PropertiesAddedLookup.Add(PropertFName);
 				}
 			}
 		}
@@ -1233,17 +1233,17 @@ void FConfigFile::AddMissingProperties(const FConfigFile& InSourceFile)
 
 			for (FConfigSection::TConstIterator SourcePropertyIt(SourceSection); SourcePropertyIt; ++SourcePropertyIt)
 			{
-				const YName SourcePropertyName = SourcePropertyIt.Key();
+				const FName SourcePropertFName = SourcePropertyIt.Key();
 
 				// If we don't already have this property, go ahead and add it now
-				if (DestSection->Find(SourcePropertyName) == nullptr)
+				if (DestSection->Find(SourcePropertFName) == nullptr)
 				{
 					TArray<FConfigValue> Results;
-					SourceSection.MultiFind(SourcePropertyName, Results, true);
+					SourceSection.MultiFind(SourcePropertFName, Results, true);
 					for (const FConfigValue& Result : Results)
 					{
 
-						DestSection->Add(SourcePropertyName, Result.GetSavedValue());
+						DestSection->Add(SourcePropertFName, Result.GetSavedValue());
 						Dirty = true;
 					}
 				}
@@ -1254,34 +1254,34 @@ void FConfigFile::AddMissingProperties(const FConfigFile& InSourceFile)
 
 
 
-void FConfigFile::Dump(YOutputDevice& Ar)
+void FConfigFile::Dump(FOutputDevice& Ar)
 {
 	Ar.Logf(TEXT("FConfigFile::Dump"));
 
 	for (TMap<YString, FConfigSection>::TIterator It(*this); It; ++It)
 	{
 		Ar.Logf(TEXT("[%s]"), *It.Key());
-		TArray<YName> KeyNames;
+		TArray<FName> KeFNames;
 
 		FConfigSection& Section = It.Value();
-		Section.GetKeys(KeyNames);
-		for (TArray<YName>::TConstIterator KeyNameIt(KeyNames); KeyNameIt; ++KeyNameIt)
+		Section.GetKeys(KeFNames);
+		for (TArray<FName>::TConstIterator KeFNameIt(KeFNames); KeFNameIt; ++KeFNameIt)
 		{
-			const YName KeyName = *KeyNameIt;
+			const FName KeFName = *KeFNameIt;
 
 			TArray<FConfigValue> Values;
-			Section.MultiFind(KeyName, Values, true);
+			Section.MultiFind(KeFName, Values, true);
 
 			if (Values.Num() > 1)
 			{
 				for (int32 ValueIndex = 0; ValueIndex < Values.Num(); ValueIndex++)
 				{
-					Ar.Logf(TEXT("	%s[%i]=%s"), *KeyName.ToString(), ValueIndex, *Values[ValueIndex].GetValue().ReplaceCharWithEscapedChar());
+					Ar.Logf(TEXT("	%s[%i]=%s"), *KeFName.ToString(), ValueIndex, *Values[ValueIndex].GetValue().ReplaceCharWithEscapedChar());
 				}
 			}
 			else
 			{
-				Ar.Logf(TEXT("	%s=%s"), *KeyName.ToString(), *Values[0].GetValue().ReplaceCharWithEscapedChar());
+				Ar.Logf(TEXT("	%s=%s"), *KeFName.ToString(), *Values[0].GetValue().ReplaceCharWithEscapedChar());
 			}
 		}
 
@@ -1404,9 +1404,9 @@ void FConfigFile::SaveSourceToBackupFile()
 
 		for (FConfigSection::TConstIterator PropertyIterator(Section); PropertyIterator; ++PropertyIterator)
 		{
-			const YName PropertyName = PropertyIterator.Key();
+			const FName PropertFName = PropertyIterator.Key();
 			const YString& PropertyValue = PropertyIterator.Value().GetSavedValue();
-			Text += FConfigFile::GenerateExportedPropertyLine(PropertyName.ToString(), PropertyValue);
+			Text += FConfigFile::GenerateExportedPropertyLine(PropertFName.ToString(), PropertyValue);
 		}
 		Text += LINE_TERMINATOR;
 	}
@@ -1446,13 +1446,13 @@ void FConfigFile::ProcessSourceAndCheckAgainstBackup()
 }
 
 
-void FConfigFile::ProcessPropertyAndWriteForDefaults(const TArray< FConfigValue >& InCompletePropertyToProcess, YString& OutText, const YString& SectionName, const YString& PropertyName)
+void FConfigFile::ProcessPropertyAndWriteForDefaults(const TArray< FConfigValue >& InCompletePropertyToProcess, YString& OutText, const YString& SectionName, const YString& PropertFName)
 {
 	// Only process against a hierarchy if this config file has one.
 	if (SourceIniHierarchy.Num() > 0)
 	{
 		// Handle array elements from the configs hierarchy.
-		if (PropertyName.StartsWith(TEXT("+")) || InCompletePropertyToProcess.Num() > 1)
+		if (PropertFName.StartsWith(TEXT("+")) || InCompletePropertyToProcess.Num() > 1)
 		{
 			// Build a config file out of this default configs hierarchy.
 			FConfigCacheIni Hierarchy(EConfigCacheType::Temporary);
@@ -1477,12 +1477,12 @@ void FConfigFile::ProcessPropertyAndWriteForDefaults(const TArray< FConfigValue 
 			// Note.	This compensates for an issue where strings in the hierarchy have a slightly different format
 			//			to how the config system wishes to serialize them.
 			TArray<YString> ArrayProperties;
-			Hierarchy.GetArray(*SectionName, *PropertyName.Replace(TEXT("+"), TEXT("")), ArrayProperties, *LastFileInHierarchy);
+			Hierarchy.GetArray(*SectionName, *PropertFName.Replace(TEXT("+"), TEXT("")), ArrayProperties, *LastFileInHierarchy);
 
 			for (const YString& NextElement : ArrayProperties)
 			{
-				YString PropertyNameWithRemoveOp = PropertyName.Replace(TEXT("+"), TEXT("-"));
-				OutText += GenerateExportedPropertyLine(PropertyNameWithRemoveOp, NextElement);
+				YString PropertFNameWithRemoveOp = PropertFName.Replace(TEXT("+"), TEXT("-"));
+				OutText += GenerateExportedPropertyLine(PropertFNameWithRemoveOp, NextElement);
 			}
 		}
 	}
@@ -1490,7 +1490,7 @@ void FConfigFile::ProcessPropertyAndWriteForDefaults(const TArray< FConfigValue 
 	// Write the properties out to a file.
 	for (const FConfigValue& PropertyIt : InCompletePropertyToProcess)
 	{
-		OutText += GenerateExportedPropertyLine(PropertyName, PropertyIt.GetSavedValue());
+		OutText += GenerateExportedPropertyLine(PropertFName, PropertyIt.GetSavedValue());
 	}
 }
 
@@ -1625,7 +1625,7 @@ bool FConfigCacheIni::AreFileOperationsDisabled()
 * NOTE: The function naming is weird because you can't apparently have an overridden function differnt only by template type params
 */
 
-void FConfigCacheIni::Parse1ToNSectionOYNames(const TCHAR* Section, const TCHAR* KeyOne, const TCHAR* KeyN, TMap<YName, TArray<YName> >& OutMap, const YString& Filename)
+void FConfigCacheIni::Parse1ToNSectionOFNames(const TCHAR* Section, const TCHAR* KeyOne, const TCHAR* KeyN, TMap<FName, TArray<FName> >& OutMap, const YString& Filename)
 {
 	// find the config file object
 	FConfigFile* ConfigFile = Find(Filename, 0);
@@ -1641,28 +1641,28 @@ void FConfigCacheIni::Parse1ToNSectionOYNames(const TCHAR* Section, const TCHAR*
 		return;
 	}
 
-	TArray<YName>* WorkingList = nullptr;
+	TArray<FName>* WorkingList = nullptr;
 	for (FConfigSectionMap::TIterator It(*ConfigSection); It; ++It)
 	{
 		// is the current key the 1 key?
 		if (It.Key().ToString().StartsWith(KeyOne))
 		{
-			const YName KeyName(*It.Value().GetValue());
+			const FName KeFName(*It.Value().GetValue());
 
 			// look for existing set in the map
-			WorkingList = OutMap.Find(KeyName);
+			WorkingList = OutMap.Find(KeFName);
 
 			// make a new one if it wasn't there
 			if (WorkingList == nullptr)
 			{
-				WorkingList = &OutMap.Add(KeyName, TArray<YName>());
+				WorkingList = &OutMap.Add(KeFName, TArray<FName>());
 			}
 		}
 		// is the current key the N key?
 		else if (It.Key().ToString().StartsWith(KeyN) && WorkingList != nullptr)
 		{
 			// if so, add it to the N list for the current 1 key
-			WorkingList->Add(YName(*It.Value().GetValue()));
+			WorkingList->Add(FName(*It.Value().GetValue()));
 		}
 		// if it's neither, then reset
 		else
@@ -2123,7 +2123,7 @@ void FConfigCacheIni::Exit()
 	Flush(1);
 }
 
-void FConfigCacheIni::Dump(YOutputDevice& Ar, const TCHAR* BaseIniName)
+void FConfigCacheIni::Dump(FOutputDevice& Ar, const TCHAR* BaseIniName)
 {
 	if (BaseIniName == nullptr)
 	{
@@ -2293,7 +2293,7 @@ bool FConfigCacheIni::GetColor
 (
 	const TCHAR*		Section,
 	const TCHAR*		Key,
-	YColor&			Value,
+	FColor&			Value,
 	const YString&	Filename
 )
 {
@@ -2324,7 +2324,7 @@ bool FConfigCacheIni::GetVector
 (
 	const TCHAR*		Section,
 	const TCHAR*		Key,
-	YVector&			Value,
+	FVector&			Value,
 	const YString&	Filename
 )
 {
@@ -2340,7 +2340,7 @@ bool FConfigCacheIni::GetVector4
 (
 	const TCHAR*		Section,
 	const TCHAR*		Key,
-	YVector4&			Value,
+	FVector4&			Value,
 	const YString&	Filename
 )
 {
@@ -2356,7 +2356,7 @@ bool FConfigCacheIni::GetRotator
 (
 	const TCHAR*		Section,
 	const TCHAR*		Key,
-	YRotator&			Value,
+	FRotator&			Value,
 	const YString&	Filename
 )
 {
@@ -2471,7 +2471,7 @@ void FConfigCacheIni::SetColor
 (
 	const TCHAR*		Section,
 	const TCHAR*		Key,
-	const YColor		Value,
+	const FColor		Value,
 	const YString&	Filename
 )
 {
@@ -2491,7 +2491,7 @@ void FConfigCacheIni::SetVector
 (
 	const TCHAR*		Section,
 	const TCHAR*		Key,
-	const YVector		 Value,
+	const FVector		 Value,
 	const YString&	Filename
 )
 {
@@ -2502,7 +2502,7 @@ void FConfigCacheIni::SetVector4
 (
 	const TCHAR*		Section,
 	const TCHAR*		Key,
-	const YVector4&	 Value,
+	const FVector4&	 Value,
 	const YString&	Filename
 )
 {
@@ -2513,7 +2513,7 @@ void FConfigCacheIni::SetRotator
 (
 	const TCHAR*		Section,
 	const TCHAR*		Key,
-	const YRotator		Value,
+	const FRotator		Value,
 	const YString&	Filename
 )
 {
@@ -2524,7 +2524,7 @@ void FConfigCacheIni::SetRotator
 /**
 * Archive for counting config file memory usage.
 */
-class YArchiveCountConfigMem : public YArchive
+class YArchiveCountConfigMem : public FArchive
 {
 public:
 	YArchiveCountConfigMem()
@@ -2610,7 +2610,7 @@ struct FConfigMemoryData
 *
 * @param	Ar	the output device to dump the results to
 */
-void FConfigCacheIni::ShowMemoryUsage(YOutputDevice& Ar)
+void FConfigCacheIni::ShowMemoryUsage(FOutputDevice& Ar)
 {
 	FConfigMemoryData ConfigCacheMemoryData;
 
@@ -3334,13 +3334,13 @@ public:
 	*
 	* @Param InIniFilename - The disk location of the file we wish to edit.
 	* @Param InSectionName - The section the property belongs to.
-	* @Param InPropertyName - The name of the property that has been edited.
+	* @Param InPropertFName - The name of the property that has been edited.
 	* @Param InPropertyValue - The new value of the property that has been edited.
 	*/
-	FSinglePropertyConfigHelper(const YString& InIniFilename, const YString& InSectionName, const YString& InPropertyName, const YString& InPropertyValue)
+	FSinglePropertyConfigHelper(const YString& InIniFilename, const YString& InSectionName, const YString& InPropertFName, const YString& InPropertyValue)
 		: IniFilename(InIniFilename)
 		, SectionName(InSectionName)
-		, PropertyName(InPropertyName)
+		, PropertFName(InPropertFName)
 		, PropertyValue(InPropertyValue)
 	{
 		// Split the file into the necessary parts.
@@ -3396,9 +3396,9 @@ private:
 			bool bWrotePropertyOnPass = false;
 			while (Ptr != nullptr && FParse::Line(&Ptr, SectionLine, true))
 			{
-				if (SectionLine.StartsWith(YString::Printf(TEXT("%s="), *PropertyName)))
+				if (SectionLine.StartsWith(YString::Printf(TEXT("%s="), *PropertFName)))
 				{
-					UpdatedSection += FConfigFile::GenerateExportedPropertyLine(PropertyName, PropertyValue);
+					UpdatedSection += FConfigFile::GenerateExportedPropertyLine(PropertFName, PropertyValue);
 					bWrotePropertyOnPass = true;
 				}
 				else
@@ -3478,7 +3478,7 @@ private:
 		// Make sure we dont leave much whitespace, and append the property name/value entry
 		ClearTrailingWhitespace(PreText);
 		PreText += LINE_TERMINATOR;
-		PreText += FConfigFile::GenerateExportedPropertyLine(PropertyName, PropertyValue);
+		PreText += FConfigFile::GenerateExportedPropertyLine(PropertFName, PropertyValue);
 		PreText += LINE_TERMINATOR;
 	}
 
@@ -3491,7 +3491,7 @@ private:
 	YString SectionName;
 
 	// The name of the property that has been changed
-	YString PropertyName;
+	YString PropertFName;
 
 	// The new value, in string format, of the property that has been changed
 	YString PropertyValue;
@@ -3511,7 +3511,7 @@ private:
 };
 
 
-bool FConfigFile::UpdateSinglePropertyInSection(const TCHAR* DiskFilename, const TCHAR* PropertyName, const TCHAR* SectionName)
+bool FConfigFile::UpdateSinglePropertyInSection(const TCHAR* DiskFilename, const TCHAR* PropertFName, const TCHAR* SectionName)
 {
 	// Result of whether the file has been updated on disk.
 	bool bSuccessfullyUpdatedFile = false;
@@ -3519,10 +3519,10 @@ bool FConfigFile::UpdateSinglePropertyInSection(const TCHAR* DiskFilename, const
 	YString PropertyValue;
 	if (const FConfigSection* LocalSection = this->Find(SectionName))
 	{
-		if (const FConfigValue* ConfigValue = LocalSection->Find(PropertyName))
+		if (const FConfigValue* ConfigValue = LocalSection->Find(PropertFName))
 		{
 			PropertyValue = ConfigValue->GetSavedValue();
-			FSinglePropertyConfigHelper SinglePropertyConfigHelper(DiskFilename, SectionName, PropertyName, PropertyValue);
+			FSinglePropertyConfigHelper SinglePropertyConfigHelper(DiskFilename, SectionName, PropertFName, PropertyValue);
 			bSuccessfullyUpdatedFile = SinglePropertyConfigHelper.UpdateConfigFile();
 		}
 	}

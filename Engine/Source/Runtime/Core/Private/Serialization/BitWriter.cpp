@@ -48,7 +48,7 @@ FBitWriter::FBitWriter(void)
  */
 void FBitWriter::Reset(void)
 {
-	YArchive::Reset();
+	FArchive::Reset();
 	Num = 0;
 	YMemory::Memzero(Buffer.GetData(), Buffer.Num());
 	ArIsPersistent = ArIsSaving = 1;

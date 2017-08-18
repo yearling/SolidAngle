@@ -27,7 +27,7 @@ YOutputDeviceRedirector* YOutputDeviceRedirector::Get()
  *
  * @param OutputDevice	output device to add
  */
-void YOutputDeviceRedirector::AddOutputDevice( YOutputDevice* OutputDevice )
+void YOutputDeviceRedirector::AddOutputDevice( FOutputDevice* OutputDevice )
 {
 	FScopeLock ScopeLock( &SynchronizationObject );
 
@@ -42,7 +42,7 @@ void YOutputDeviceRedirector::AddOutputDevice( YOutputDevice* OutputDevice )
  *
  * @param OutputDevice	output device to remove
  */
-void YOutputDeviceRedirector::RemoveOutputDevice( YOutputDevice* OutputDevice )
+void YOutputDeviceRedirector::RemoveOutputDevice( FOutputDevice* OutputDevice )
 {
 	FScopeLock ScopeLock( &SynchronizationObject );
 	OutputDevices.Remove( OutputDevice );
@@ -54,7 +54,7 @@ void YOutputDeviceRedirector::RemoveOutputDevice( YOutputDevice* OutputDevice )
  * @param	OutputDevice	output device to check the list against
  * @return	true if messages are currently redirected to the the passed in output device, false otherwise
  */
-bool YOutputDeviceRedirector::IsRedirectingTo( YOutputDevice* OutputDevice )
+bool YOutputDeviceRedirector::IsRedirectingTo( FOutputDevice* OutputDevice )
 {
 	FScopeLock ScopeLock( &SynchronizationObject );
 
@@ -73,7 +73,7 @@ void YOutputDeviceRedirector::UnsynchronizedFlushThreadedLogs( bool bUseAllDevic
 
 		for( int32 OutputDeviceIndex=0; OutputDeviceIndex<OutputDevices.Num(); OutputDeviceIndex++ )
 		{
-			YOutputDevice* OutputDevice = OutputDevices[OutputDeviceIndex];
+			FOutputDevice* OutputDevice = OutputDevices[OutputDeviceIndex];
 			if( OutputDevice->CanBeUsedOnAnyThread() || bUseAllDevices )
 			{
 				OutputDevice->Serialize( *BufferedLine.Data, BufferedLine.Verbosity, BufferedLine.Category, BufferedLine.Time );
@@ -108,7 +108,7 @@ void YOutputDeviceRedirector::PanicFlushThreadedLogs()
 	// Flush devices.
 	for (int32 OutputDeviceIndex = 0; OutputDeviceIndex<OutputDevices.Num(); OutputDeviceIndex++)
 	{
-		YOutputDevice* OutputDevice = OutputDevices[OutputDeviceIndex];
+		FOutputDevice* OutputDevice = OutputDevices[OutputDeviceIndex];
 		if (OutputDevice->CanBeUsedOnAnyThread())
 		{
 			OutputDevice->Flush();
@@ -122,7 +122,7 @@ void YOutputDeviceRedirector::PanicFlushThreadedLogs()
  * Serializes the current backlog to the specified output device.
  * @param OutputDevice	- Output device that will receive the current backlog
  */
-void YOutputDeviceRedirector::SerializeBacklog( YOutputDevice* OutputDevice )
+void YOutputDeviceRedirector::SerializeBacklog( FOutputDevice* OutputDevice )
 {
 	FScopeLock ScopeLock( &SynchronizationObject );
 
@@ -163,7 +163,7 @@ void YOutputDeviceRedirector::SetCurrentThreadAsMasterThread()
 	MasterThreadID = YPlatformTLS::GetCurrentThreadId();
 }
 
-void YOutputDeviceRedirector::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class YName& Category, const double Time )
+void YOutputDeviceRedirector::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category, const double Time )
 {
 	const double RealTime = Time == -1.0f ? FPlatformTime::Seconds() - GStartTime : Time;
 
@@ -206,7 +206,7 @@ void YOutputDeviceRedirector::Serialize( const TCHAR* Data, ELogVerbosity::Type 
 	}
 }
 
-void YOutputDeviceRedirector::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class YName& Category )
+void YOutputDeviceRedirector::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category )
 {
 	Serialize( Data, Verbosity, Category, -1.0 );
 }

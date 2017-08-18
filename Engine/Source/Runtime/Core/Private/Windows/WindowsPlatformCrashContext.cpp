@@ -160,7 +160,7 @@ int32 ReportCrashUsingCrashReportClient(FWindowsPlatformCrashContext& InContext,
 #if !NO_LOGGING
 			if (!bHasLogFile)
 			{
-				YArchive* LogFile = IFileManager::Get().CreateFileWriter(*LogSrcAbsolute, FILEWRITE_AllowRead);
+				FArchive* LogFile = IFileManager::Get().CreateFileWriter(*LogSrcAbsolute, FILEWRITE_AllowRead);
 				if (LogFile)
 				{
 					YPlatformOutputDevices::GetLog()->Dump(*LogFile);

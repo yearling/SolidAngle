@@ -35,7 +35,7 @@ static UTF8BOMType UTF8BOM = { 0xEF, 0xBB, 0xBF };
 * Used by crash handling code to check for hangs. 
 * [] tags identify which thread owns a variable or function
 */
-class CORE_API FAsyncWriter : public FRunnable, public YArchive
+class CORE_API FAsyncWriter : public FRunnable, public FArchive
 {
 	enum EConstants
 	{
@@ -48,7 +48,7 @@ class CORE_API FAsyncWriter : public FRunnable, public YArchive
 	FThreadSafeCounter StopTaskCounter;
 
 	/** Writer archive */
-	YArchive& Ar;
+	FArchive& Ar;
 	/** Data ring buffer */
 	TArray<uint8> Buffer;
 	/** [WRITER THREAD] Position where the unserialized data starts in the buffer */
@@ -123,7 +123,7 @@ class CORE_API FAsyncWriter : public FRunnable, public YArchive
 
 public:
 
-	FAsyncWriter(YArchive& InAr)
+	FAsyncWriter(FArchive& InAr)
 		: Thread(nullptr)
 		, Ar(InAr)
 		, BufferStartPos(0)
@@ -333,7 +333,7 @@ void YOutputDeviceFile::CreateBackupCopy(const TCHAR* Filename)
 {
 	if (IFileManager::Get().FileSize(Filename) > 0)
 	{
-		YString SystemTime = YDateTime::Now().ToString();
+		YString SystemTime = FDateTime::Now().ToString();
 		YString Name, Extension;
 		YString(Filename).Split(TEXT("."), &Name, &Extension, ESearchCase::CaseSensitive, ESearchDir::FromEnd);
 		YString BackupFilename = YString::Printf(TEXT("%s%s%s.%s"), *Name, BACKUP_LOG_FILENAME_POSTFIX, *SystemTime, *Extension);
@@ -366,7 +366,7 @@ bool YOutputDeviceFile::CreateWriter(uint32 MaxAttempts)
 	uint32 WriteFlags = FILEWRITE_AllowRead | (Opened ? FILEWRITE_Append : 0);
 
 	// Open log file.
-	YArchive* Ar = IFileManager::Get().CreateFileWriter(Filename, WriteFlags);
+	FArchive* Ar = IFileManager::Get().CreateFileWriter(Filename, WriteFlags);
 
 	// If that failed, append an _2 and try again (unless we don't want extra copies). This 
 	// happens in the case of running a server and client on same computer for example.
@@ -404,7 +404,7 @@ bool YOutputDeviceFile::CreateWriter(uint32 MaxAttempts)
  * @param	Data	Text to log
  * @param	Event	Event name used for suppression purposes
  */
-void YOutputDeviceFile::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class YName& Category, const double Time )
+void YOutputDeviceFile::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category, const double Time )
 {
 #if ALLOW_LOG_FILE && !NO_LOGGING
 	static bool Entry = false;
@@ -469,7 +469,7 @@ void YOutputDeviceFile::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbos
 #endif
 }
 
-void YOutputDeviceFile::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class YName& Category )
+void YOutputDeviceFile::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category )
 {
 	Serialize(Data, Verbosity, Category, -1.0);
 }

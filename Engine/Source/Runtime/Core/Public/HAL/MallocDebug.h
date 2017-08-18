@@ -9,7 +9,7 @@
 class FOutputDevice;
 
 // Debug memory allocator.
-class FMallocDebug : public YMalloc
+class FMallocDebug : public FMalloc
 {
 	// Tags.
 	enum { MEM_PreTag  = 0xf0ed1cee };
@@ -171,7 +171,7 @@ public:
 	 *
 	 * @param Ar	[in] Output device
 	 */
-	virtual void DumpAllocatorStats( YOutputDevice& Ar ) override
+	virtual void DumpAllocatorStats( FOutputDevice& Ar ) override
 	{
 		Ar.Logf( TEXT( "Total Allocation Size: %u" ), TotalAllocationSize );
 		Ar.Logf( TEXT( "Total Waste Size: %u" ), TotalWasteSize );
@@ -211,7 +211,7 @@ public:
 		return( true );
 	}
 
-	virtual bool Exec( UWorld* InWorld, const TCHAR* Cmd, YOutputDevice& Ar ) override
+	virtual bool Exec( UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar ) override
 	{
 		return false;
 	}

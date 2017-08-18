@@ -17,7 +17,7 @@ CORE_API void appBitsCpy( uint8* Dest, int32 DestBit, uint8* Src, int32 SrcBit, 
 //
 // Reads bitstreams.
 //
-struct CORE_API FBitReader : public YArchive
+struct CORE_API FBitReader : public FArchive
 {
 	friend struct FBitReaderMark;
 

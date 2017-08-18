@@ -7,7 +7,7 @@
 #include "Internationalization/Text.h"
 #include "Misc/FeedbackContext.h"
 
-bool FFeedbackContextMarkup::ParseCommand(const YString& Line, YFeedbackContext* Warn)
+bool FFeedbackContextMarkup::ParseCommand(const YString& Line, FFeedbackContext* Warn)
 {
 	const TCHAR *Text = *Line;
 	if(ReadToken(Text, TEXT("@progress")))
@@ -35,7 +35,7 @@ bool FFeedbackContextMarkup::ParseCommand(const YString& Line, YFeedbackContext*
 	return false;
 }
 
-bool FFeedbackContextMarkup::PipeProcessOutput(const FText& Description, const YString& URL, const YString& Params, YFeedbackContext* Warn, int32* OutExitCode)
+bool FFeedbackContextMarkup::PipeProcessOutput(const FText& Description, const YString& URL, const YString& Params, FFeedbackContext* Warn, int32* OutExitCode)
 {
 	bool bRes;
 

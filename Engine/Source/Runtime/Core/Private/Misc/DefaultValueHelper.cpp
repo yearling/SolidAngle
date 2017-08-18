@@ -500,7 +500,7 @@ bool FDefaultValueHelper::StringFromCppString(const YString& Source, const YStri
 
 ////////////////////////////////////////////////////////
 
-bool FDefaultValueHelper::ParseVector(const YString& Source, YVector& OutVal)
+bool FDefaultValueHelper::ParseVector(const YString& Source, FVector& OutVal)
 {
 	const bool bHasWhitespace = HasWhitespaces(Source);
 	const YString NoWhitespace = bHasWhitespace ? RemoveWhitespaces(Source) : YString();
@@ -537,7 +537,7 @@ bool FDefaultValueHelper::ParseVector(const YString& Source, YVector& OutVal)
 		return false;
 	}
 	
-	OutVal = YVector( 
+	OutVal = FVector( 
 		FCString::Atof(Start),
 		FCString::Atof(FirstComma + 1),
 		FCString::Atof(SecondComma + 1) );
@@ -576,12 +576,12 @@ bool FDefaultValueHelper::ParseVector2D(const YString& Source, YVector2D& OutVal
 }
 
 
-bool FDefaultValueHelper::ParseRotator(const YString& Source, YRotator& OutVal)
+bool FDefaultValueHelper::ParseRotator(const YString& Source, FRotator& OutVal)
 {
-	YVector Vector;
+	FVector Vector;
 	if( ParseVector( Source, Vector ) )
 	{
-		OutVal = YRotator(Vector.X, Vector.Y, Vector.Z);
+		OutVal = FRotator(Vector.X, Vector.Y, Vector.Z);
 		return true;
 	}
 	return false;
@@ -642,7 +642,7 @@ bool FDefaultValueHelper::ParseDouble(const YString& Source, double& OutVal)
 }
 
 
-bool FDefaultValueHelper::ParseLinearColor(const YString& Source, YLinearColor& OutVal)
+bool FDefaultValueHelper::ParseLinearColor(const YString& Source, FLinearColor& OutVal)
 {
 	const bool bHasWhitespace = HasWhitespaces(Source);
 	const YString NoWhitespace = bHasWhitespace ? RemoveWhitespaces(Source) : YString();
@@ -680,7 +680,7 @@ bool FDefaultValueHelper::ParseLinearColor(const YString& Source, YLinearColor& 
 	}
 
 	const float Alpha = ( NULL != ThirdComma ) ? FCString::Atof( ThirdComma + 1 ) : 1.0f;
-	OutVal = YLinearColor( 
+	OutVal = FLinearColor( 
 		FCString::Atof( Start ), 
 		FCString::Atof( FirstComma + 1 ), 
 		FCString::Atof( SecondComma + 1 ),
@@ -689,7 +689,7 @@ bool FDefaultValueHelper::ParseLinearColor(const YString& Source, YLinearColor& 
 	return true;
 }
 
-bool FDefaultValueHelper::ParseColor(const YString& Source, YColor& OutVal)
+bool FDefaultValueHelper::ParseColor(const YString& Source, FColor& OutVal)
 {
 	const bool bHasWhitespace = HasWhitespaces(Source);
 	const YString NoWhitespace = bHasWhitespace ? RemoveWhitespaces(Source) : YString();
@@ -727,7 +727,7 @@ bool FDefaultValueHelper::ParseColor(const YString& Source, YColor& OutVal)
 	}
 
 	const uint8 Alpha = ( NULL != ThirdComma ) ? FCString::Atoi( ThirdComma + 1 ) : 255;
-	OutVal = YColor( 
+	OutVal = FColor( 
 		FCString::Atoi( Start ), 
 		FCString::Atoi( FirstComma + 1 ), 
 		FCString::Atoi( SecondComma + 1 ),

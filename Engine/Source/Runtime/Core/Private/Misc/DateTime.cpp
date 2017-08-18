@@ -3,19 +3,19 @@
 #include "Misc/DateTime.h"
 #include "HAL/PlatformTime.h"
 #include "Templates/TypeHash.h"
-#include "SObject/PropertyPortFlags.h"
+#include "UObject/PropertyPortFlags.h"
 
 /* YDateTime constants
  *****************************************************************************/
 
-const int32 YDateTime::DaysPerMonth[] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-const int32 YDateTime::DaysToMonth[] = { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 };
+const int32 FDateTime::DaysPerMonth[] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+const int32 FDateTime::DaysToMonth[] = { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 };
 
 
 /* YDateTime structors
  *****************************************************************************/
 
-YDateTime::YDateTime( int32 Year, int32 Month, int32 Day, int32 Hour, int32 Minute, int32 Second, int32 Millisecond )
+FDateTime::FDateTime( int32 Year, int32 Month, int32 Day, int32 Hour, int32 Minute, int32 Second, int32 Millisecond )
 {
 	check(Validate(Year, Month, Day, Hour, Minute, Second, Millisecond));
 
@@ -47,7 +47,7 @@ YDateTime::YDateTime( int32 Year, int32 Month, int32 Day, int32 Hour, int32 Minu
 /* YDateTime interface
  *****************************************************************************/
 
-bool YDateTime::ExportTextItem( YString& ValueStr, YDateTime const& DefaultValue, SObject* Parent, int32 PortFlags, SObject* ExportRootScope ) const
+bool FDateTime::ExportTextItem( YString& ValueStr, FDateTime const& DefaultValue, UObject* Parent, int32 PortFlags, UObject* ExportRootScope ) const
 {
 	if (0 != (PortFlags & EPropertyPortFlags::PPF_ExportCpp))
 	{
@@ -61,7 +61,7 @@ bool YDateTime::ExportTextItem( YString& ValueStr, YDateTime const& DefaultValue
 }
 
 
-void YDateTime::GetDate( int32& OutYear, int32& OutMonth, int32& OutDay ) const
+void FDateTime::GetDate( int32& OutYear, int32& OutMonth, int32& OutDay ) const
 {
 	// Based on FORTRAN code in:
 	// Fliegel, H. F. and van Flandern, T. C.,
@@ -86,7 +86,7 @@ void YDateTime::GetDate( int32& OutYear, int32& OutMonth, int32& OutDay ) const
 }
 
 
-int32 YDateTime::GetDay() const
+int32 FDateTime::GetDay() const
 {
 	int32 Year, Month, Day;
 	GetDate(Year, Month, Day);
@@ -95,14 +95,14 @@ int32 YDateTime::GetDay() const
 }
 
 
-EDayOfWeek YDateTime::GetDayOfWeek() const
+EDayOfWeek FDateTime::GetDayOfWeek() const
 {
 	// January 1, 0001 was a Monday
 	return static_cast<EDayOfWeek>((Ticks / ETimespan::TicksPerDay) % 7);
 }
 
 
-int32 YDateTime::GetDayOfYear() const
+int32 FDateTime::GetDayOfYear() const
 {
 	int32 Year, Month, Day;
 	GetDate(Year, Month, Day);
@@ -116,7 +116,7 @@ int32 YDateTime::GetDayOfYear() const
 }
 
 
-int32 YDateTime::GetHour12() const
+int32 FDateTime::GetHour12() const
 {
 	int32 Hour = GetHour();
 
@@ -134,7 +134,7 @@ int32 YDateTime::GetHour12() const
 }
 
 
-int32 YDateTime::GetMonth() const
+int32 FDateTime::GetMonth() const
 {
 	int32 Year, Month, Day;
 	GetDate(Year, Month, Day);
@@ -143,7 +143,7 @@ int32 YDateTime::GetMonth() const
 }
 
 
-int32 YDateTime::GetYear() const
+int32 FDateTime::GetYear() const
 {
 	int32 Year, Month, Day;
 	GetDate(Year, Month, Day);
@@ -152,7 +152,7 @@ int32 YDateTime::GetYear() const
 }
 
 
-bool YDateTime::ImportTextItem( const TCHAR*& Buffer, int32 PortFlags, SObject* Parent, YOutputDevice* ErrorText )
+bool FDateTime::ImportTextItem( const TCHAR*& Buffer, int32 PortFlags, UObject* Parent, FOutputDevice* ErrorText )
 {
 	if (FPlatformString::Strlen(Buffer) < 19)
 	{
@@ -170,7 +170,7 @@ bool YDateTime::ImportTextItem( const TCHAR*& Buffer, int32 PortFlags, SObject* 
 }
 
 
-bool YDateTime::Serialize( YArchive& Ar )
+bool FDateTime::Serialize( FArchive& Ar )
 {
 	Ar << *this;
 
@@ -178,12 +178,12 @@ bool YDateTime::Serialize( YArchive& Ar )
 }
 
 
-YString YDateTime::ToIso8601() const
+YString FDateTime::ToIso8601() const
 {
 	return ToString(TEXT("%Y-%m-%dT%H:%M:%S.%sZ"));
 }
 
-YString YDateTime::ToHttpDate() const
+YString FDateTime::ToHttpDate() const
 {
 	YString DayStr;
 	switch (GetDayOfWeek())
@@ -218,13 +218,13 @@ YString YDateTime::ToHttpDate() const
 	return YString::Printf(TEXT("%s, %02d %s %d %s GMT"), *DayStr, GetDay(), *MonthStr, GetYear(), *Time);
 }
 
-YString YDateTime::ToString() const
+YString FDateTime::ToString() const
 {
 	return ToString(TEXT("%Y.%m.%d-%H.%M.%S"));
 }
 
 
-YString YDateTime::ToString( const TCHAR* Format ) const
+YString FDateTime::ToString( const TCHAR* Format ) const
 {
 	YString Result;
 
@@ -268,7 +268,7 @@ YString YDateTime::ToString( const TCHAR* Format ) const
 /* YDateTime static interface
  *****************************************************************************/
 
-int32 YDateTime::DaysInMonth( int32 Year, int32 Month )
+int32 FDateTime::DaysInMonth( int32 Year, int32 Month )
 {
 	check((Month >= 1) && (Month <= 12));
 
@@ -281,7 +281,7 @@ int32 YDateTime::DaysInMonth( int32 Year, int32 Month )
 }
 
 
-int32 YDateTime::DaysInYear( int32 Year )
+int32 FDateTime::DaysInYear( int32 Year )
 {
 	if (IsLeapYear(Year))
 	{
@@ -292,7 +292,7 @@ int32 YDateTime::DaysInYear( int32 Year )
 }
 
 
-bool YDateTime::IsLeapYear( int32 Year )
+bool FDateTime::IsLeapYear( int32 Year )
 {
 	if ((Year % 4) == 0)
 	{
@@ -303,18 +303,18 @@ bool YDateTime::IsLeapYear( int32 Year )
 }
 
 
-YDateTime YDateTime::Now()
+FDateTime FDateTime::Now()
 {
 	int32 Year, Month, Day, DayOfWeek;
 	int32 Hour, Minute, Second, Millisecond;
 
 	FPlatformTime::SystemTime(Year, Month, DayOfWeek, Day, Hour, Minute, Second, Millisecond);
 
-	return YDateTime(Year, Month, Day, Hour, Minute, Second, Millisecond);
+	return FDateTime(Year, Month, Day, Hour, Minute, Second, Millisecond);
 }
 
 
-bool YDateTime::Parse( const YString& DateTimeString, YDateTime& OutDateTime )
+bool FDateTime::Parse( const YString& DateTimeString, FDateTime& OutDateTime )
 {
 	// first replace -, : and . with space
 	YString FixedString = DateTimeString.Replace(TEXT("-"), TEXT(" "));
@@ -347,13 +347,13 @@ bool YDateTime::Parse( const YString& DateTimeString, YDateTime& OutDateTime )
 	}
 
 	// convert the tokens to numbers
-	OutDateTime.Ticks = YDateTime(Year, Month, Day, Hour, Minute, Second, Millisecond).Ticks;
+	OutDateTime.Ticks = FDateTime(Year, Month, Day, Hour, Minute, Second, Millisecond).Ticks;
 
 	return true;
 }
 
 
-bool YDateTime::ParseIso8601( const TCHAR* DateTimeString, YDateTime& OutDateTime )
+bool FDateTime::ParseIso8601( const TCHAR* DateTimeString, FDateTime& OutDateTime )
 {
 	// DateOnly: YYYY-MM-DD
 	// DateTime: YYYY-mm-ddTHH:MM:SS(.ssss)(Z|+th:tm|-th:tm)
@@ -473,7 +473,7 @@ bool YDateTime::ParseIso8601( const TCHAR* DateTimeString, YDateTime& OutDateTim
 		return false;
 	}
 
-	YDateTime Final(Year, Month, Day, Hour, Minute, Second, Millisecond);
+	FDateTime Final(Year, Month, Day, Hour, Minute, Second, Millisecond);
 
 	// adjust for the timezone (bringing the DateTime into UTC)
 	int32 TzOffsetMinutes = (TzHour < 0) ? TzHour * 60 - TzMinute : TzHour * 60 + TzMinute;
@@ -507,7 +507,7 @@ bool YDateTime::ParseIso8601( const TCHAR* DateTimeString, YDateTime& OutDateTim
  *				  | "May" | "Jun" | "Jul" | "Aug"
  *				  | "Sep" | "Oct" | "Nov" | "Dec"
  */
-bool YDateTime::ParseHttpDate(const YString& HttpDate, YDateTime& OutDateTime)
+bool FDateTime::ParseHttpDate(const YString& HttpDate, FDateTime& OutDateTime)
 {
 	auto ParseTime = [](const YString& Time, int32& Hour, int32& Minute, int32& Second) -> bool
 	{
@@ -779,7 +779,7 @@ bool YDateTime::ParseHttpDate(const YString& HttpDate, YDateTime& OutDateTime)
 			if (Validate(Year, Month, Day, Hour, Minute, Second, Millisecond))
 			{
 				// convert the tokens to numbers
-				OutDateTime = YDateTime(Year, Month, Day, Hour, Minute, Second, Millisecond);
+				OutDateTime = FDateTime(Year, Month, Day, Hour, Minute, Second, Millisecond);
 				return true;
 			}
 		}
@@ -788,18 +788,18 @@ bool YDateTime::ParseHttpDate(const YString& HttpDate, YDateTime& OutDateTime)
 	return false;
 }
 
-YDateTime YDateTime::UtcNow()
+FDateTime FDateTime::UtcNow()
 {
 	int32 Year, Month, Day, DayOfWeek;
 	int32 Hour, Minute, Second, Millisecond;
 
 	FPlatformTime::UtcTime(Year, Month, DayOfWeek, Day, Hour, Minute, Second, Millisecond);
 
-	return YDateTime(Year, Month, Day, Hour, Minute, Second, Millisecond);
+	return FDateTime(Year, Month, Day, Hour, Minute, Second, Millisecond);
 }
 
 
-bool YDateTime::Validate( int32 Year, int32 Month, int32 Day, int32 Hour, int32 Minute, int32 Second, int32 Millisecond )
+bool FDateTime::Validate( int32 Year, int32 Month, int32 Day, int32 Hour, int32 Minute, int32 Second, int32 Millisecond )
 {
 	return (Year >= 1) && (Year <= 9999) &&
 		(Month >= 1) && (Month <= 12) &&
@@ -814,12 +814,12 @@ bool YDateTime::Validate( int32 Year, int32 Month, int32 Day, int32 Hour, int32 
 /* YDateTime friend functions
  *****************************************************************************/
 
-YArchive& operator<<( YArchive& Ar, YDateTime& DateTime )
+FArchive& operator<<( FArchive& Ar, FDateTime& DateTime )
 {
 	return Ar << DateTime.Ticks;
 }
 
-uint32 GetTypeHash(const YDateTime& DateTime)
+uint32 GetTypeHash(const FDateTime& DateTime)
 {
 	return GetTypeHash(DateTime.Ticks);
 }

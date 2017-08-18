@@ -7,7 +7,7 @@
 #include "Containers/Array.h"
 #include "Containers/SolidAngleString.h"
 #include "Misc/Parse.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "CoreGlobals.h"
 #include "Delegates/Delegate.h"
 #include "Misc/Guid.h"
@@ -202,7 +202,7 @@ public:
 	* @return Instance identifier, or an invalid GUID if there is no local instance.
 	* @see GetSessionId
 	*/
-	FORCEINLINE static YGuid GetInstanceId()
+	FORCEINLINE static FGuid GetInstanceId()
 	{
 		return InstanceId;
 	}
@@ -230,7 +230,7 @@ public:
 	* @return Session identifier, or an invalid GUID if there is no local instance.
 	* @see GetInstanceId
 	*/
-	FORCEINLINE static YGuid GetSessionId()
+	FORCEINLINE static FGuid GetSessionId()
 	{
 		return SessionId;
 	}
@@ -296,7 +296,7 @@ public:
 	* @param InInstanceId The instance ID to check.
 	* @return true if the ID identifies this instance, false otherwise.
 	*/
-	FORCEINLINE static bool IsThisInstance(const YGuid& InInstanceId)
+	FORCEINLINE static bool IsThisInstance(const FGuid& InInstanceId)
 	{
 		return (InInstanceId == InstanceId);
 	};
@@ -616,10 +616,10 @@ public:
 private:
 
 	/** Holds the instance identifier. */
-	static YGuid InstanceId;
+	static FGuid InstanceId;
 
 	/** Holds the session identifier. */
-	static YGuid SessionId;
+	static FGuid SessionId;
 
 	/** Holds the session name. */
 	static YString SessionName;
@@ -669,13 +669,13 @@ private:
 
 
 /** Called to determine the result of IsServerForOnlineSubsystems() */
-DECLARE_DELEGATE_RetVal_OneParam(bool, FQueryIsRunningServer, YName);
+DECLARE_DELEGATE_RetVal_OneParam(bool, FQueryIsRunningServer, FName);
 
 
 /**
 * @return true if there is a running game world that is a server (including listen servers), false otherwise
 */
-CORE_API bool IsServerForOnlineSubsystems(YName WorldContextHandle);
+CORE_API bool IsServerForOnlineSubsystems(FName WorldContextHandle);
 
 /**
 * Sets the delegate used for IsServerForOnlineSubsystems

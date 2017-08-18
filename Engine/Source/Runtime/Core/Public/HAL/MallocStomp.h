@@ -24,7 +24,7 @@
 * - Read or writes off the beginning of an allocation.
 * - Read or writes after freeing an allocation.
 */
-class FMallocStomp : public YMalloc
+class FMallocStomp : public FMalloc
 {
 private:
 #if PLATFORM_64BITS
@@ -113,7 +113,7 @@ public:
 	*
 	* @param Ar	[in] Output device
 	*/
-	virtual void DumpAllocatorStats(YOutputDevice& Ar) override
+	virtual void DumpAllocatorStats(FOutputDevice& Ar) override
 	{
 		// No meaningful stats to dump.
 	}
@@ -128,7 +128,7 @@ public:
 		return true;
 	}
 
-	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, YOutputDevice& Ar) override
+	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar) override
 	{
 		return false;
 	}

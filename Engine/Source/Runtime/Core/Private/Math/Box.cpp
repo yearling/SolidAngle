@@ -13,7 +13,7 @@
 /* FBox structors
  *****************************************************************************/
 
-YBox::YBox(const YVector* Points, int32 Count)
+FBox::FBox(const FVector* Points, int32 Count)
 	: Min(0, 0, 0)
 	, Max(0, 0, 0)
 	, IsValid(0)
@@ -25,7 +25,7 @@ YBox::YBox(const YVector* Points, int32 Count)
 }
 
 
-YBox::YBox(const TArray<YVector>& Points)
+FBox::FBox(const TArray<FVector>& Points)
 	: Min(0, 0, 0)
 	, Max(0, 0, 0)
 	, IsValid(0)
@@ -40,15 +40,15 @@ YBox::YBox(const TArray<YVector>& Points)
 /* FBox interface
  *****************************************************************************/
 
-YBox YBox::TransformBy(const YMatrix& M) const
+FBox FBox::TransformBy(const FMatrix& M) const
 {
 	// if we are not valid, return another invalid box.
 	if (!IsValid)
 	{
-		return YBox(0);
+		return FBox(0);
 	}
 
-	YBox NewBox;
+	FBox NewBox;
 
 	const VectorRegister VecMin = VectorLoadFloat3(&Min);
 	const VectorRegister VecMax = VectorLoadFloat3(&Max);
@@ -82,30 +82,30 @@ YBox YBox::TransformBy(const YMatrix& M) const
 	return NewBox;
 }
 
-YBox YBox::TransformBy(const YTransform& M) const
+FBox FBox::TransformBy(const FTransform& M) const
 {
 	return TransformBy(M.ToMatrixWithScale());
 }
 
-YBox YBox::InverseTransformBy(const YTransform& M) const
+FBox FBox::InverseTransformBy(const FTransform& M) const
 {
-	YVector Vertices[8] = 
+	FVector Vertices[8] = 
 	{
-		YVector(Min),
-		YVector(Min.X, Min.Y, Max.Z),
-		YVector(Min.X, Max.Y, Min.Z),
-		YVector(Max.X, Min.Y, Min.Z),
-		YVector(Max.X, Max.Y, Min.Z),
-		YVector(Max.X, Min.Y, Max.Z),
-		YVector(Min.X, Max.Y, Max.Z),
-		YVector(Max)
+		FVector(Min),
+		FVector(Min.X, Min.Y, Max.Z),
+		FVector(Min.X, Max.Y, Min.Z),
+		FVector(Max.X, Min.Y, Min.Z),
+		FVector(Max.X, Max.Y, Min.Z),
+		FVector(Max.X, Min.Y, Max.Z),
+		FVector(Min.X, Max.Y, Max.Z),
+		FVector(Max)
 	};
 
-	YBox NewBox(0);
+	FBox NewBox(0);
 
 	for (int32 VertexIndex = 0; VertexIndex < ARRAY_COUNT(Vertices); VertexIndex++)
 	{
-		YVector4 ProjectedVertex = M.InverseTransformPosition(Vertices[VertexIndex]);
+		FVector4 ProjectedVertex = M.InverseTransformPosition(Vertices[VertexIndex]);
 		NewBox += ProjectedVertex;
 	}
 
@@ -113,42 +113,42 @@ YBox YBox::InverseTransformBy(const YTransform& M) const
 }
 
 
-YBox YBox::TransformProjectBy(const YMatrix& ProjM) const
+FBox FBox::TransformProjectBy(const FMatrix& ProjM) const
 {
-	YVector Vertices[8] = 
+	FVector Vertices[8] = 
 	{
-		YVector(Min),
-		YVector(Min.X, Min.Y, Max.Z),
-		YVector(Min.X, Max.Y, Min.Z),
-		YVector(Max.X, Min.Y, Min.Z),
-		YVector(Max.X, Max.Y, Min.Z),
-		YVector(Max.X, Min.Y, Max.Z),
-		YVector(Min.X, Max.Y, Max.Z),
-		YVector(Max)
+		FVector(Min),
+		FVector(Min.X, Min.Y, Max.Z),
+		FVector(Min.X, Max.Y, Min.Z),
+		FVector(Max.X, Min.Y, Min.Z),
+		FVector(Max.X, Max.Y, Min.Z),
+		FVector(Max.X, Min.Y, Max.Z),
+		FVector(Min.X, Max.Y, Max.Z),
+		FVector(Max)
 	};
 
-	YBox NewBox(0);
+	FBox NewBox(0);
 
 	for (int32 VertexIndex = 0; VertexIndex < ARRAY_COUNT(Vertices); VertexIndex++)
 	{
-		YVector4 ProjectedVertex = ProjM.TransformPosition(Vertices[VertexIndex]);
-		NewBox += ((YVector)ProjectedVertex) / ProjectedVertex.W;
+		FVector4 ProjectedVertex = ProjM.TransformPosition(Vertices[VertexIndex]);
+		NewBox += ((FVector)ProjectedVertex) / ProjectedVertex.W;
 	}
 
 	return NewBox;
 }
 
-YBox YBox::Overlap( const YBox& Other ) const
+FBox FBox::Overlap( const FBox& Other ) const
 {
 	if(Intersect(Other) == false)
 	{
-		static YBox EmptyBox(ForceInit);
+		static FBox EmptyBox(ForceInit);
 		return EmptyBox;
 	}
 
 	// otherwise they overlap
 	// so find overlapping box
-	YVector MinVector, MaxVector;
+	FVector MinVector, MaxVector;
 
 	MinVector.X = YMath::Max(Min.X, Other.Min.X);
 	MaxVector.X = YMath::Min(Max.X, Other.Max.X);
@@ -159,5 +159,5 @@ YBox YBox::Overlap( const YBox& Other ) const
 	MinVector.Z = YMath::Max(Min.Z, Other.Min.Z);
 	MaxVector.Z = YMath::Min(Max.Z, Other.Max.Z);
 
-	return YBox(MinVector, MaxVector);
+	return FBox(MinVector, MaxVector);
 }

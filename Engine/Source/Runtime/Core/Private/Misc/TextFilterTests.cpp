@@ -3,7 +3,7 @@
 #include "CoreTypes.h"
 #include "Containers/Array.h"
 #include "Containers/SolidAngleString.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Containers/Map.h"
 #include "Internationalization/Text.h"
 #include "Misc/AutomationTest.h"
@@ -45,7 +45,7 @@ namespace TextFilterTests
 			}
 			return false;
 		}
-		virtual bool TestComplexExpression(const YName& InKey, const FTextFilterString& InValue, const ETextFilterComparisonOperation InComparisonOperation, const ETextFilterTextComparisonMode InTextComparisonMode) const override
+		virtual bool TestComplexExpression(const FName& InKey, const FTextFilterString& InValue, const ETextFilterComparisonOperation InComparisonOperation, const ETextFilterTextComparisonMode InTextComparisonMode) const override
 		{
 			const YString* ItemValue = KeyValuePairs.Find(InKey);
 			if (ItemValue)
@@ -60,13 +60,13 @@ namespace TextFilterTests
 		{
 			OutStrings = InItem->BasicStrings;
 		}
-		static bool TestItemComplexExpression(const FTestFilterItem* InItem, const YName& InKey, const FTextFilterString& InValue, ETextFilterComparisonOperation InComparisonOperation, ETextFilterTextComparisonMode InTextComparisonMode)
+		static bool TestItemComplexExpression(const FTestFilterItem* InItem, const FName& InKey, const FTextFilterString& InValue, ETextFilterComparisonOperation InComparisonOperation, ETextFilterTextComparisonMode InTextComparisonMode)
 		{
 			return InItem->TestComplexExpression(InKey, InValue, InComparisonOperation, InTextComparisonMode);
 		}
 
 		TArray<YString> BasicStrings;
-		TMap<YName, YString> KeyValuePairs;
+		TMap<FName, YString> KeyValuePairs;
 	};
 
 	struct ITestFilterExpression

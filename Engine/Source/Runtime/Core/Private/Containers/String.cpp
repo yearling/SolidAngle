@@ -485,7 +485,7 @@ YString YString::FormatAsNumber( int32 InNumber )
  * @param	Ar				Archive to serialize with
  * @param	MinCharacters	Minimum number of characters to serialize.
  */
-void YString::SerializeAsANSICharArray( YArchive& Ar, int32 MinCharacters ) const
+void YString::SerializeAsANSICharArray( FArchive& Ar, int32 MinCharacters ) const
 {
 	int32	Length = YMath::Max( Len(), MinCharacters );
 	Ar << Length;
@@ -1204,7 +1204,7 @@ VARARG_BODY( YString, YString::Printf, const TCHAR*, VARARG_NONE )
 	return ResultString;
 }
 
-YArchive& operator<<( YArchive& Ar, YString& A )
+FArchive& operator<<( FArchive& Ar, YString& A )
 {
 	// > 0 for ANSICHAR, < 0 for UCS2CHAR serialization
 

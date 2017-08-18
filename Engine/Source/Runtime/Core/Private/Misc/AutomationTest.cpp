@@ -14,7 +14,7 @@
 
 DEFINE_LOG_CATEGORY_STATIC(LogAutomationTest, Warning, All);
 
-void FAutomationTestFramework::FAutomationTestFeedbackContext::Serialize( const TCHAR* V, ELogVerbosity::Type Verbosity, const class YName& Category )
+void FAutomationTestFramework::FAutomationTestFeedbackContext::Serialize( const TCHAR* V, ELogVerbosity::Type Verbosity, const class FName& Category )
 {
 	if (FAutomationTestFramework::Get().CachedContext)
 	{
@@ -167,7 +167,7 @@ bool FAutomationTestFramework::RunSmokeTests()
 					FAutomationTestExecutionInfo& CurExecutionInfo = OutExecutionInfoMap.Add( TestCommand, FAutomationTestExecutionInfo() );
 
 					int32 RoleIndex = 0;  //always default to "local" role index.  Only used for multi-participant tests
-					StartTestByName( TestCommand, RoleIndex );
+					StartTestBFName( TestCommand, RoleIndex );
 					const bool CurTestSuccessful = StopTest(CurExecutionInfo);
 
 					bAllSuccessful = bAllSuccessful && CurTestSuccessful;
@@ -209,7 +209,7 @@ void FAutomationTestFramework::ResetTests()
 	IFileManager::Get().DeleteDirectory(*YPaths::AutomationTransientDir(), bEnsureExists, bDeleteEntireTree);
 }
 
-void FAutomationTestFramework::StartTestByName( const YString& InTestToRun, const int32 InRoleIndex )
+void FAutomationTestFramework::StartTestBFName( const YString& InTestToRun, const int32 InRoleIndex )
 {
 	if (GIsAutomationTesting)
 	{
@@ -333,7 +333,7 @@ void FAutomationTestFramework::LoadTestModules( )
 		//Load any engine level modules.
 		for( int32 EngineModuleId = 0; EngineModuleId < EngineTestModules.Num(); ++EngineModuleId)
 		{
-			const YName ModuleName = YName(*EngineTestModules[EngineModuleId]);
+			const FName ModuleName = FName(*EngineTestModules[EngineModuleId]);
 			//Make sure that there is a name available.  This can happen if a name is left blank in the Engine.ini
 			if (ModuleName == NAME_None || ModuleName == TEXT("None"))
 			{
@@ -353,7 +353,7 @@ void FAutomationTestFramework::LoadTestModules( )
 			GConfig->GetArray( TEXT("/Script/Engine.AutomationTestSettings"), TEXT("EditorTestModules"), EditorTestModules, GEngineIni);
 			for( int32 EditorModuleId = 0; EditorModuleId < EditorTestModules.Num(); ++EditorModuleId )
 			{
-				const YName ModuleName = YName(*EditorTestModules[EditorModuleId]);
+				const FName ModuleName = FName(*EditorTestModules[EditorModuleId]);
 				//Make sure that there is a name available.  This can happen if a name is left blank in the Engine.ini
 				if (ModuleName == NAME_None || ModuleName == TEXT("None"))
 				{

@@ -2,28 +2,28 @@
 #include "CoreTypes.h"
 #include "Containers/ContainersFwd.h"
 // Basic types
-class YName;
-class YExec;
-class YArchive;
-class YOutputDevice;
-class YFeedbackContext;
-struct YDateTime;
-struct YGuid;
+class FName;
+class FExec;
+class FArchive;
+class FOutputDevice;
+class FFeedbackContext;
+struct FDateTime;
+struct FGuid;
 
 // Math
-class YSphere;
-struct YBox;
-struct YBox2D;
-struct YColor;
+class FSphere;
+struct FBox;
+struct FBox2D;
+struct FColor;
 struct YMath;
-struct YMatrix;
-struct YPlane;
-struct YQuat;
-struct YRotator;
-struct YTransform;
-struct YVector;
+struct FMatrix;
+struct FPlane;
+struct FQuat;
+struct FRotator;
+struct FTransform;
+struct FVector;
 struct YVector2D;
-struct YVector4;
+struct FVector4;
 struct YBoxSphereBounds;
 struct YIntPoint;
 struct YIntRect;
@@ -34,10 +34,10 @@ class IConsoleVariable;
 class FRunnableThread;
 class FEvent;
 class FPlatformFile;
-class YMalloc;
+class FMalloc;
 class FFileHandle;
 class FAutomationTestBase;
-struct YGenericMemoryStats;
+struct FGenericMemoryStats;
 class FSHAHash;
 class FScriptArray;
 class FThreadSafeCounter;
@@ -53,4 +53,4 @@ class FTextFilterString;
 enum class ETextFilterTextComparisonMode : uint8;
 enum class ETextFilterComparisonOperation : uint8;
 
-class SObject;
+class UObject;

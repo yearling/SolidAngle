@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "HAL/SolidAngleMemory.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 
 class FFixedUObjectArray;
 
@@ -39,6 +39,6 @@ class FFixedUObjectArray;
 // in DLL builds, these are done per-module, otherwise we just need one in the application
 // visual studio cannot find cross dll data for visualizers, so these provide access
 #define PER_MODULE_BOILERPLATE \
-	YNameEntry*** GFNameTableForDebuggerVisualizers_MT = YName::GetNameTableForDebuggerVisualizers_MT(); \
+	FNameEntry*** GFNameTableForDebuggerVisualizers_MT = FName::GetNameTableForDebuggerVisualizers_MT(); \
 	FFixedUObjectArray*& GObjectArrayForDebugVisualizers = GCoreObjectArrayForDebugVisualizers; \
 	REPLACEMENT_OPERATOR_NEW_AND_DELETE

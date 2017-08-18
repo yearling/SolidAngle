@@ -16,9 +16,9 @@
 class IInputDeviceModule : public IModuleInterface, public IModularFeature
 {
 public:
-	static YName GetModularFeatureName()
+	static FName GetModularFeatureName()
 	{
-		static YName FeatureName = YName(TEXT("InputDevice"));
+		static FName FeatureName = FName(TEXT("InputDevice"));
 		return FeatureName;
 	}
 

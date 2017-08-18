@@ -4,7 +4,7 @@
 #include "Math/SolidAngleMathUtility.h"
 #include "Math/Vector.h"
 #include "Math/Vector4.h"
-#include "SObject/ObjectVersion.h"
+#include "UObject/ObjectVersion.h"
 
 /**
 * Structure for three dimensional planes.
@@ -12,8 +12,8 @@
 * Stores the coeffecients as Xx+Yy+Zz=W.
 * Note that this is different from many other Plane classes that use Xx+Yy+Zz+W=0.
 */
-MS_ALIGN(16) struct YPlane
-	: public YVector
+MS_ALIGN(16) struct FPlane
+	: public FVector
 {
 public:
 
@@ -23,21 +23,21 @@ public:
 public:
 
 	/** Default constructor (no initialization). */
-	FORCEINLINE YPlane();
+	FORCEINLINE FPlane();
 
 	/**
 	* Copy Constructor.
 	*
 	* @param P Plane to copy from.
 	*/
-	FORCEINLINE YPlane(const YPlane& P);
+	FORCEINLINE FPlane(const FPlane& P);
 
 	/**
 	* Constructor.
 	*
 	* @param V 4D vector to set up plane.
 	*/
-	FORCEINLINE YPlane(const YVector4& V);
+	FORCEINLINE FPlane(const FVector4& V);
 
 	/**
 	* Constructor.
@@ -47,7 +47,7 @@ public:
 	* @param InZ Z-coefficient.
 	* @param InW W-coefficient.
 	*/
-	FORCEINLINE YPlane(float InX, float InY, float InZ, float InW);
+	FORCEINLINE FPlane(float InX, float InY, float InZ, float InW);
 
 	/**
 	* Constructor.
@@ -55,7 +55,7 @@ public:
 	* @param InNormal Plane Normal Vector.
 	* @param InW Plane W-coefficient.
 	*/
-	FORCEINLINE YPlane(YVector InNormal, float InW);
+	FORCEINLINE FPlane(FVector InNormal, float InW);
 
 	/**
 	* Constructor.
@@ -63,7 +63,7 @@ public:
 	* @param InBase Base point in plane.
 	* @param InNormal Plane Normal Vector.
 	*/
-	FORCEINLINE YPlane(YVector InBase, const YVector &InNormal);
+	FORCEINLINE FPlane(FVector InBase, const FVector &InNormal);
 
 	/**
 	* Constructor.
@@ -72,14 +72,14 @@ public:
 	* @param B Second point in the plane.
 	* @param C Third point in the plane.
 	*/
-	YPlane(YVector A, YVector B, YVector C);
+	FPlane(FVector A, FVector B, FVector C);
 
 	/**
 	* Constructor
 	*
 	* @param EForceInit Force Init Enum.
 	*/
-	explicit FORCEINLINE YPlane(EForceInit);
+	explicit FORCEINLINE FPlane(EForceInit);
 
 	// Functions.
 
@@ -89,14 +89,14 @@ public:
 	* @param P The other point.
 	* @return >0: point is in front of the plane, <0: behind, =0: on the plane.
 	*/
-	FORCEINLINE float PlaneDot(const YVector &P) const;
+	FORCEINLINE float PlaneDot(const FVector &P) const;
 
 	/**
 	* Get a flipped version of the plane.
 	*
 	* @return A flipped version of the plane.
 	*/
-	YPlane Flip() const;
+	FPlane Flip() const;
 
 	/**
 	* Get the result of transforming the plane by a Matrix.
@@ -104,7 +104,7 @@ public:
 	* @param M The matrix to transform plane with.
 	* @return The result of transform.
 	*/
-	YPlane TransformBy(const YMatrix& M) const;
+	FPlane TransformBy(const FMatrix& M) const;
 
 	/**
 	* You can optionally pass in the matrices transpose-adjoint, which save it recalculating it.
@@ -116,7 +116,7 @@ public:
 	* @param TA Transpose-adjoint of Matrix.
 	* @return The result of transform.
 	*/
-	YPlane TransformByUsingAdjointT(const YMatrix& M, float DetM, const YMatrix& TA) const;
+	FPlane TransformByUsingAdjointT(const FMatrix& M, float DetM, const FMatrix& TA) const;
 
 	/**
 	* Check if two planes are identical.
@@ -124,7 +124,7 @@ public:
 	* @param V The other plane.
 	* @return true if planes are identical, otherwise false.
 	*/
-	bool operator==(const YPlane& V) const;
+	bool operator==(const FPlane& V) const;
 
 	/**
 	* Check if two planes are different.
@@ -132,7 +132,7 @@ public:
 	* @param V The other plane.
 	* @return true if planes are different, otherwise false.
 	*/
-	bool operator!=(const YPlane& V) const;
+	bool operator!=(const FPlane& V) const;
 
 	/**
 	* Checks whether two planes are equal within specified tolerance.
@@ -141,7 +141,7 @@ public:
 	* @param Tolerance Error Tolerance.
 	* @return true if the two planes are equal within specified tolerance, otherwise false.
 	*/
-	bool Equals(const YPlane& V, float Tolerance = KINDA_SMALL_NUMBER) const;
+	bool Equals(const FPlane& V, float Tolerance = KINDA_SMALL_NUMBER) const;
 
 	/**
 	* Calculates dot product of two planes.
@@ -149,7 +149,7 @@ public:
 	* @param V The other plane.
 	* @return The dot product.
 	*/
-	FORCEINLINE float operator|(const YPlane& V) const;
+	FORCEINLINE float operator|(const FPlane& V) const;
 
 	/**
 	* Gets result of adding a plane to this.
@@ -157,7 +157,7 @@ public:
 	* @param V The other plane.
 	* @return The result of adding a plane to this.
 	*/
-	YPlane operator+(const YPlane& V) const;
+	FPlane operator+(const FPlane& V) const;
 
 	/**
 	* Gets result of subtracting a plane from this.
@@ -165,7 +165,7 @@ public:
 	* @param V The other plane.
 	* @return The result of subtracting a plane from this.
 	*/
-	YPlane operator-(const YPlane& V) const;
+	FPlane operator-(const FPlane& V) const;
 
 	/**
 	* Gets result of dividing a plane.
@@ -173,7 +173,7 @@ public:
 	* @param Scale What to divide by.
 	* @return The result of division.
 	*/
-	YPlane operator/(float Scale) const;
+	FPlane operator/(float Scale) const;
 
 	/**
 	* Gets result of scaling a plane.
@@ -181,7 +181,7 @@ public:
 	* @param Scale The scaling factor.
 	* @return The result of scaling.
 	*/
-	YPlane operator*(float Scale) const;
+	FPlane operator*(float Scale) const;
 
 	/**
 	* Gets result of multiplying a plane with this.
@@ -189,7 +189,7 @@ public:
 	* @param V The other plane.
 	* @return The result of multiplying a plane with this.
 	*/
-	YPlane operator*(const YPlane& V);
+	FPlane operator*(const FPlane& V);
 
 	/**
 	* Add another plane to this.
@@ -197,7 +197,7 @@ public:
 	* @param V The other plane.
 	* @return Copy of plane after addition.
 	*/
-	YPlane operator+=(const YPlane& V);
+	FPlane operator+=(const FPlane& V);
 
 	/**
 	* Subtract another plane from this.
@@ -205,7 +205,7 @@ public:
 	* @param V The other plane.
 	* @return Copy of plane after subtraction.
 	*/
-	YPlane operator-=(const YPlane& V);
+	FPlane operator-=(const FPlane& V);
 
 	/**
 	* Scale this plane.
@@ -213,7 +213,7 @@ public:
 	* @param Scale The scaling factor.
 	* @return Copy of plane after scaling.
 	*/
-	YPlane operator*=(float Scale);
+	FPlane operator*=(float Scale);
 
 	/**
 	* Multiply another plane with this.
@@ -221,7 +221,7 @@ public:
 	* @param V The other plane.
 	* @return Copy of plane after multiplication.
 	*/
-	YPlane operator*=(const YPlane& V);
+	FPlane operator*=(const FPlane& V);
 
 	/**
 	* Divide this plane.
@@ -229,7 +229,7 @@ public:
 	* @param V What to divide by.
 	* @return Copy of plane after division.
 	*/
-	YPlane operator/=(float V);
+	FPlane operator/=(float V);
 
 	/**
 	* Serializer.
@@ -238,12 +238,12 @@ public:
 	* @param P Plane to serialize.
 	* @return Reference to Archive after serialization.
 	*/
-	friend YArchive& operator<<(YArchive& Ar, YPlane &P)
+	friend FArchive& operator<<(FArchive& Ar, FPlane &P)
 	{
-		return Ar << (YVector&)P << P.W;
+		return Ar << (FVector&)P << P.W;
 	}
 
-	bool Serialize(YArchive& Ar)
+	bool Serialize(FArchive& Ar)
 	{
 		if (Ar.UE4Ver() >= VER_UE4_ADDED_NATIVE_SERIALIZATION_FOR_IMMUTABLE_STRUCTURES)
 		{
@@ -259,13 +259,13 @@ public:
 	* @return false to allow the ordinary struct code to run (this never happens).
 	*/
 
-	bool NetSerialize(YArchive& Ar, class UPackageMap*, bool& bOutSuccess)
+	bool NetSerialize(FArchive& Ar, class UPackageMap*, bool& bOutSuccess)
 	{
 		if (Ar.IsLoading())
 		{
 			int16 iX, iY, iZ, iW;
 			Ar << iX << iY << iZ << iW;
-			*this = YPlane(iX, iY, iZ, iW);
+			*this = FPlane(iX, iY, iZ, iW);
 		}
 		else
 		{
@@ -282,11 +282,11 @@ public:
 /* YLinearColor inline functions
 *****************************************************************************/
 
-inline YVector YMath::LinePlaneIntersection
+inline FVector YMath::LinePlaneIntersection
 (
-	const YVector &Point1,
-	const YVector &Point2,
-	const YPlane  &Plane
+	const FVector &Point1,
+	const FVector &Point2,
+	const FPlane  &Plane
 )
 {
 	return
@@ -295,14 +295,14 @@ inline YVector YMath::LinePlaneIntersection
 		*	((Plane.W - (Point1 | Plane)) / ((Point2 - Point1) | Plane));
 }
 
-inline bool YMath::IntersectPlanes3(YVector& I, const YPlane& P1, const YPlane& P2, const YPlane& P3)
+inline bool YMath::IntersectPlanes3(FVector& I, const FPlane& P1, const FPlane& P2, const FPlane& P3)
 {
 	// Compute determinant, the triple product P1|(P2^P3)==(P1^P2)|P3.
 	const float Det = (P1 ^ P2) | P3;
 	if (Square(Det) < Square(0.001f))
 	{
 		// Degenerate.
-		I = YVector::ZeroVector;
+		I = FVector::ZeroVector;
 		return 0;
 	}
 	else
@@ -313,7 +313,7 @@ inline bool YMath::IntersectPlanes3(YVector& I, const YPlane& P1, const YPlane& 
 	return 1;
 }
 
-inline bool YMath::IntersectPlanes2(YVector& I, YVector& D, const YPlane& P1, const YPlane& P2)
+inline bool YMath::IntersectPlanes2(FVector& I, FVector& D, const FPlane& P1, const FPlane& P2)
 {
 	// Compute line direction, perpendicular to both plane normals.
 	D = P1 ^ P2;
@@ -321,7 +321,7 @@ inline bool YMath::IntersectPlanes2(YVector& I, YVector& D, const YPlane& P1, co
 	if (DD < Square(0.001f))
 	{
 		// Parallel or nearly parallel planes.
-		D = I = YVector::ZeroVector;
+		D = I = FVector::ZeroVector;
 		return 0;
 	}
 	else
@@ -336,22 +336,22 @@ inline bool YMath::IntersectPlanes2(YVector& I, YVector& D, const YPlane& P1, co
 /* YVector inline functions
 *****************************************************************************/
 
-inline YVector YVector::MirrorByPlane(const YPlane& Plane) const
+inline FVector FVector::MirrorByPlane(const FPlane& Plane) const
 {
 	return *this - Plane * (2.f * Plane.PlaneDot(*this));
 }
 
-inline YVector YVector::PointPlaneProject(const YVector& Point, const YPlane& Plane)
+inline FVector FVector::PointPlaneProject(const FVector& Point, const FPlane& Plane)
 {
 	//Find the distance of X from the plane
 	//Add the distance back along the normal from the point
 	return Point - Plane.PlaneDot(Point) * Plane;
 }
 
-inline YVector YVector::PointPlaneProject(const YVector& Point, const YVector& A, const YVector& B, const YVector& C)
+inline FVector FVector::PointPlaneProject(const FVector& Point, const FVector& A, const FVector& B, const FVector& C)
 {
 	//Compute the plane normal from ABC
-	YPlane Plane(A, B, C);
+	FPlane Plane(A, B, C);
 
 	//Find the distance of X from the plane
 	//Add the distance back along the normal from the point
@@ -361,150 +361,150 @@ inline YVector YVector::PointPlaneProject(const YVector& Point, const YVector& A
 /* YPlane inline functions
 *****************************************************************************/
 
-FORCEINLINE YPlane::YPlane()
+FORCEINLINE FPlane::FPlane()
 {}
 
 
-FORCEINLINE YPlane::YPlane(const YPlane& P)
-	: YVector(P)
+FORCEINLINE FPlane::FPlane(const FPlane& P)
+	: FVector(P)
 	, W(P.W)
 {}
 
 
-FORCEINLINE YPlane::YPlane(const YVector4& V)
-	: YVector(V)
+FORCEINLINE FPlane::FPlane(const FVector4& V)
+	: FVector(V)
 	, W(V.W)
 {}
 
 
-FORCEINLINE YPlane::YPlane(float InX, float InY, float InZ, float InW)
-	: YVector(InX, InY, InZ)
+FORCEINLINE FPlane::FPlane(float InX, float InY, float InZ, float InW)
+	: FVector(InX, InY, InZ)
 	, W(InW)
 {}
 
 
-FORCEINLINE YPlane::YPlane(YVector InNormal, float InW)
-	: YVector(InNormal), W(InW)
+FORCEINLINE FPlane::FPlane(FVector InNormal, float InW)
+	: FVector(InNormal), W(InW)
 {}
 
 
-FORCEINLINE YPlane::YPlane(YVector InBase, const YVector &InNormal)
-	: YVector(InNormal)
+FORCEINLINE FPlane::FPlane(FVector InBase, const FVector &InNormal)
+	: FVector(InNormal)
 	, W(InBase | InNormal)
 {}
 
 
-FORCEINLINE YPlane::YPlane(YVector A, YVector B, YVector C)
-	: YVector(((B - A) ^ (C - A)).GetSafeNormal())
+FORCEINLINE FPlane::FPlane(FVector A, FVector B, FVector C)
+	: FVector(((B - A) ^ (C - A)).GetSafeNormal())
 {
-	W = A | (YVector)(*this);
+	W = A | (FVector)(*this);
 }
 
 
-FORCEINLINE YPlane::YPlane(EForceInit)
-	: YVector(ForceInit), W(0.f)
+FORCEINLINE FPlane::FPlane(EForceInit)
+	: FVector(ForceInit), W(0.f)
 {}
 
 
-FORCEINLINE float YPlane::PlaneDot(const YVector &P) const
+FORCEINLINE float FPlane::PlaneDot(const FVector &P) const
 {
 	return X * P.X + Y * P.Y + Z * P.Z - W;
 }
 
 
-FORCEINLINE YPlane YPlane::Flip() const
+FORCEINLINE FPlane FPlane::Flip() const
 {
-	return YPlane(-X, -Y, -Z, -W);
+	return FPlane(-X, -Y, -Z, -W);
 }
 
-FORCEINLINE bool YPlane::operator==(const YPlane& V) const
+FORCEINLINE bool FPlane::operator==(const FPlane& V) const
 {
 	return (X == V.X) && (Y == V.Y) && (Z == V.Z) && (W == V.W);
 }
 
 
-FORCEINLINE bool YPlane::operator!=(const YPlane& V) const
+FORCEINLINE bool FPlane::operator!=(const FPlane& V) const
 {
 	return (X != V.X) || (Y != V.Y) || (Z != V.Z) || (W != V.W);
 }
 
 
-FORCEINLINE bool YPlane::Equals(const YPlane& V, float Tolerance) const
+FORCEINLINE bool FPlane::Equals(const FPlane& V, float Tolerance) const
 {
 	return (YMath::Abs(X - V.X) < Tolerance) && (YMath::Abs(Y - V.Y) < Tolerance) && (YMath::Abs(Z - V.Z) < Tolerance) && (YMath::Abs(W - V.W) < Tolerance);
 }
 
 
-FORCEINLINE float YPlane::operator|(const YPlane& V) const
+FORCEINLINE float FPlane::operator|(const FPlane& V) const
 {
 	return X * V.X + Y * V.Y + Z * V.Z + W * V.W;
 }
 
 
-FORCEINLINE YPlane YPlane::operator+(const YPlane& V) const
+FORCEINLINE FPlane FPlane::operator+(const FPlane& V) const
 {
-	return YPlane(X + V.X, Y + V.Y, Z + V.Z, W + V.W);
+	return FPlane(X + V.X, Y + V.Y, Z + V.Z, W + V.W);
 }
 
 
-FORCEINLINE YPlane YPlane::operator-(const YPlane& V) const
+FORCEINLINE FPlane FPlane::operator-(const FPlane& V) const
 {
-	return YPlane(X - V.X, Y - V.Y, Z - V.Z, W - V.W);
+	return FPlane(X - V.X, Y - V.Y, Z - V.Z, W - V.W);
 }
 
 
-FORCEINLINE YPlane YPlane::operator/(float Scale) const
+FORCEINLINE FPlane FPlane::operator/(float Scale) const
 {
 	const float RScale = 1.f / Scale;
-	return YPlane(X * RScale, Y * RScale, Z * RScale, W * RScale);
+	return FPlane(X * RScale, Y * RScale, Z * RScale, W * RScale);
 }
 
 
-FORCEINLINE YPlane YPlane::operator*(float Scale) const
+FORCEINLINE FPlane FPlane::operator*(float Scale) const
 {
-	return YPlane(X * Scale, Y * Scale, Z * Scale, W * Scale);
+	return FPlane(X * Scale, Y * Scale, Z * Scale, W * Scale);
 }
 
 
-FORCEINLINE YPlane YPlane::operator*(const YPlane& V)
+FORCEINLINE FPlane FPlane::operator*(const FPlane& V)
 {
-	return YPlane(X * V.X, Y * V.Y, Z * V.Z, W * V.W);
+	return FPlane(X * V.X, Y * V.Y, Z * V.Z, W * V.W);
 }
 
 
-FORCEINLINE YPlane YPlane::operator+=(const YPlane& V)
+FORCEINLINE FPlane FPlane::operator+=(const FPlane& V)
 {
 	X += V.X; Y += V.Y; Z += V.Z; W += V.W;
 	return *this;
 }
 
 
-FORCEINLINE YPlane YPlane::operator-=(const YPlane& V)
+FORCEINLINE FPlane FPlane::operator-=(const FPlane& V)
 {
 	X -= V.X; Y -= V.Y; Z -= V.Z; W -= V.W;
 	return *this;
 }
 
 
-FORCEINLINE YPlane YPlane::operator*=(float Scale)
+FORCEINLINE FPlane FPlane::operator*=(float Scale)
 {
 	X *= Scale; Y *= Scale; Z *= Scale; W *= Scale;
 	return *this;
 }
 
 
-FORCEINLINE YPlane YPlane::operator*=(const YPlane& V)
+FORCEINLINE FPlane FPlane::operator*=(const FPlane& V)
 {
 	X *= V.X; Y *= V.Y; Z *= V.Z; W *= V.W;
 	return *this;
 }
 
 
-FORCEINLINE YPlane YPlane::operator/=(float V)
+FORCEINLINE FPlane FPlane::operator/=(float V)
 {
 	const float RV = 1.f / V;
 	X *= RV; Y *= RV; Z *= RV; W *= RV;
 	return *this;
 }
 
-template <> struct TIsPODType<YPlane> { enum { Value = true }; };
+template <> struct TIsPODType<FPlane> { enum { Value = true }; };

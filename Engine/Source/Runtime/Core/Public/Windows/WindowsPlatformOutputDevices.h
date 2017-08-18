@@ -5,18 +5,18 @@
 #include "CoreTypes.h"
 #include "GenericPlatform/GenericPlatformOutputDevices.h"
 
-class YOutputDevice;
+class FOutputDevice;
 class YOutputDeviceConsole;
 class YOutputDeviceError;
-class YFeedbackContext;
+class FFeedbackContext;
 
 struct CORE_API YWindowsPlatformOutputDevices
 	: public YGenericPlatformOutputDevices
 {
-	static YOutputDevice*			GetEventLog();
+	static FOutputDevice*			GetEventLog();
 	static YOutputDeviceConsole*	GetLogConsole();
 	static YOutputDeviceError*		GetError();
-	static YFeedbackContext*		GetWarn();
+	static FFeedbackContext*		GetWarn();
 };
 
 

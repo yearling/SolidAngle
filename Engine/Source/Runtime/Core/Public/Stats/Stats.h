@@ -4,7 +4,7 @@
 
 #include "CoreTypes.h"
 #include "Math/Color.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Delegates/Delegate.h"
 #include "HAL/PlatformTime.h"
 #include "HAL/ThreadSingleton.h"
@@ -403,7 +403,7 @@ FORCEINLINE void StatsMasterEnableSubtract(int32 Value = 1)
 #define DECLARE_DWORD_COUNTER_STAT(CounterName,StatId,GroupId)
 #define DECLARE_FLOAT_ACCUMULATOR_STAT(CounterName,StatId,GroupId)
 #define DECLARE_DWORD_ACCUMULATOR_STAT(CounterName,StatId,GroupId)
-#define DECLARE_YName_STAT(CounterName,StatId,GroupId, API)
+#define DECLARE_FName_STAT(CounterName,StatId,GroupId, API)
 #define DECLARE_PTR_STAT(CounterName,StatId,GroupId)
 #define DECLARE_MEMORY_STAT(CounterName,StatId,GroupId)
 #define DECLARE_MEMORY_STAT_POOL(CounterName,StatId,GroupId,Pool)
@@ -412,7 +412,7 @@ FORCEINLINE void StatsMasterEnableSubtract(int32 Value = 1)
 #define DECLARE_DWORD_COUNTER_STAT_EXTERN(CounterName,StatId,GroupId, API)
 #define DECLARE_FLOAT_ACCUMULATOR_STAT_EXTERN(CounterName,StatId,GroupId, API)
 #define DECLARE_DWORD_ACCUMULATOR_STAT_EXTERN(CounterName,StatId,GroupId, API)
-#define DECLARE_YName_STAT_EXTERN(CounterName,StatId,GroupId, API)
+#define DECLARE_FName_STAT_EXTERN(CounterName,StatId,GroupId, API)
 #define DECLARE_PTR_STAT_EXTERN(CounterName,StatId,GroupId, API)
 #define DECLARE_MEMORY_STAT_EXTERN(CounterName,StatId,GroupId, API)
 #define DECLARE_MEMORY_STAT_POOL_EXTERN(CounterName,StatId,GroupId,Pool, API)
@@ -425,12 +425,12 @@ FORCEINLINE void StatsMasterEnableSubtract(int32 Value = 1)
 #define INC_DWORD_STAT(StatId)
 #define INC_FLOAT_STAT_BY(StatId,Amount)
 #define INC_DWORD_STAT_BY(StatId,Amount)
-#define INC_DWORD_STAT_YName_BY(StatId,Amount)
+#define INC_DWORD_STAT_FName_BY(StatId,Amount)
 #define INC_MEMORY_STAT_BY(StatId,Amount)
 #define DEC_DWORD_STAT(StatId)
 #define DEC_FLOAT_STAT_BY(StatId,Amount)
 #define DEC_DWORD_STAT_BY(StatId,Amount)
-#define DEC_DWORD_STAT_YName_BY(StatId,Amount)
+#define DEC_DWORD_STAT_FName_BY(StatId,Amount)
 #define DEC_MEMORY_STAT_BY(StatId,Amount)
 #define SET_MEMORY_STAT(StatId,Value)
 #define SET_DWORD_STAT(StatId,Value)
@@ -438,21 +438,21 @@ FORCEINLINE void StatsMasterEnableSubtract(int32 Value = 1)
 #define STAT_ADD_CUSTOMMESSAGE_NAME(StatId,Value)
 #define STAT_ADD_CUSTOMMESSAGE_PTR(StatId,Value)
 
-#define SET_CYCLE_COUNTER_YName(Stat,Cycles)
-#define INC_DWORD_STAT_YName(Stat)
-#define INC_FLOAT_STAT_BY_YName(Stat, Amount)
-#define INC_DWORD_STAT_BY_YName(Stat, Amount)
-#define INC_MEMORY_STAT_BY_YName(Stat, Amount)
-#define DEC_DWORD_STAT_YName(Stat)
-#define DEC_FLOAT_STAT_BY_YName(Stat,Amount)
-#define DEC_DWORD_STAT_BY_YName(Stat,Amount)
-#define DEC_MEMORY_STAT_BY_YName(Stat,Amount)
-#define SET_MEMORY_STAT_YName(Stat,Value)
-#define SET_DWORD_STAT_YName(Stat,Value)
-#define SET_FLOAT_STAT_YName(Stat,Value)
+#define SET_CYCLE_COUNTER_FName(Stat,Cycles)
+#define INC_DWORD_STAT_FName(Stat)
+#define INC_FLOAT_STAT_BY_FName(Stat, Amount)
+#define INC_DWORD_STAT_BY_FName(Stat, Amount)
+#define INC_MEMORY_STAT_BY_FName(Stat, Amount)
+#define DEC_DWORD_STAT_FName(Stat)
+#define DEC_FLOAT_STAT_BY_FName(Stat,Amount)
+#define DEC_DWORD_STAT_BY_FName(Stat,Amount)
+#define DEC_MEMORY_STAT_BY_FName(Stat,Amount)
+#define SET_MEMORY_STAT_FName(Stat,Value)
+#define SET_DWORD_STAT_FName(Stat,Value)
+#define SET_FLOAT_STAT_FName(Stat,Value)
 
 #define GET_STATID(Stat) (TStatId())
-#define GET_STATYNAME(Stat) (YName())
+#define GET_STATFName(Stat) (FName())
 #define GET_STATDESCRIPTION(Stat) (nullptr)
 
 #endif
@@ -476,14 +476,14 @@ struct FDynamicStats
 	static TStatId CreateStatId(const YString& StatNameOrDescription)
 	{
 #if	STATS
-		return CreateStatId<TStatGroup>(YName(*StatNameOrDescription));
+		return CreateStatId<TStatGroup>(FName(*StatNameOrDescription));
 #endif // STATS
 
 		return TStatId();
 	}
 
 	template< typename TStatGroup >
-	static TStatId CreateStatId(const YName StatNameOrDescription)
+	static TStatId CreateStatId(const FName StatNameOrDescription)
 	{
 #if	STATS
 		FStartupMessages::Get().AddMetadata(StatNameOrDescription, nullptr,

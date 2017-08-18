@@ -49,21 +49,21 @@ namespace
 		return 0;
 	}
 
-	FORCEINLINE YDateTime WindowsFileTimeToUEDateTime(const FILETIME& InFileTime)
+	FORCEINLINE FDateTime WindowsFileTimeToUEDateTime(const FILETIME& InFileTime)
 	{
 		// This roundabout conversion clamps the precision of the returned time value to match that of time_t (1 second precision)
 		// This avoids issues when sending files over the network via cook-on-the-fly
 		SYSTEMTIME SysTime;
 		if (FileTimeToSystemTime(&InFileTime, &SysTime))
 		{
-			return YDateTime(SysTime.wYear, SysTime.wMonth, SysTime.wDay, SysTime.wHour, SysTime.wMinute, SysTime.wSecond);
+			return FDateTime(SysTime.wYear, SysTime.wMonth, SysTime.wDay, SysTime.wHour, SysTime.wMinute, SysTime.wSecond);
 		}
 
 		// Failed to convert
-		return YDateTime::MinValue();
+		return FDateTime::MinValue();
 	}
 
-	FORCEINLINE FILETIME UEDateTimeToWindowsFileTime(const YDateTime& InDateTime)
+	FORCEINLINE FILETIME UEDateTimeToWindowsFileTime(const FDateTime& InDateTime)
 	{
 		// This roundabout conversion clamps the precision of the returned time value to match that of time_t (1 second precision)
 		// This avoids issues when sending files over the network via cook-on-the-fly
@@ -527,7 +527,7 @@ protected:
 	virtual YString NormalizeDirectory(const TCHAR* Directory)
 	{
 		YString Result(Directory);
-		YPaths::NormalizeDirectoryName(Result);
+		YPaths::NormalizeDirectorFName(Result);
 		if (Result.StartsWith(TEXT("//")))
 		{
 			Result = YString(TEXT("\\\\")) + Result.RightChop(2);
@@ -582,7 +582,7 @@ public:
 		return !!SetFileAttributesW(*NormalizeFilename(Filename), bNewReadOnlyValue ? FILE_ATTRIBUTE_READONLY : FILE_ATTRIBUTE_NORMAL);
 	}
 
-	virtual YDateTime GetTimeStamp(const TCHAR* Filename) override
+	virtual FDateTime GetTimeStamp(const TCHAR* Filename) override
 	{
 		WIN32_FILE_ATTRIBUTE_DATA Info;
 		if (GetFileAttributesExW(*NormalizeFilename(Filename), GetFileExInfoStandard, &Info))
@@ -590,10 +590,10 @@ public:
 			return WindowsFileTimeToUEDateTime(Info.ftLastWriteTime);
 		}
 
-		return YDateTime::MinValue();
+		return FDateTime::MinValue();
 	}
 
-	virtual void SetTimeStamp(const TCHAR* Filename, YDateTime DateTime) override
+	virtual void SetTimeStamp(const TCHAR* Filename, FDateTime DateTime) override
 	{
 		HANDLE Handle = CreateFileW(*NormalizeFilename(Filename), FILE_WRITE_ATTRIBUTES, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, nullptr);
 		if (Handle != INVALID_HANDLE_VALUE)
@@ -611,7 +611,7 @@ public:
 		}
 	}
 
-	virtual YDateTime GetAccessTimeStamp(const TCHAR* Filename) override
+	virtual FDateTime GetAccessTimeStamp(const TCHAR* Filename) override
 	{
 		WIN32_FILE_ATTRIBUTE_DATA Info;
 		if (GetFileAttributesExW(*NormalizeFilename(Filename), GetFileExInfoStandard, &Info))
@@ -619,7 +619,7 @@ public:
 			return WindowsFileTimeToUEDateTime(Info.ftLastAccessTime);
 		}
 
-		return YDateTime::MinValue();
+		return FDateTime::MinValue();
 	}
 
 	virtual YString GetFilenameOnDisk(const TCHAR* Filename) override

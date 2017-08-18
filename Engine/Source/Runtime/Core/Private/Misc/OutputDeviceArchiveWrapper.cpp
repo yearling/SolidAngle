@@ -8,7 +8,7 @@ void YOutputDeviceArchiveWrapper::Flush()
 	LogAr->Flush();
 }
 
-void YOutputDeviceArchiveWrapper::Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class YName& Category)
+void YOutputDeviceArchiveWrapper::Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category)
 {
 	if (Verbosity != ELogVerbosity::SetColor)
 	{

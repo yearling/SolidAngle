@@ -6,7 +6,7 @@
 #include "Misc/OutputDevice.h"
 #include "Containers/Array.h"
 #include "Containers/SolidAngleString.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 
 /*-----------------------------------------------------------------------------
 YOutputDeviceRedirector.
@@ -16,12 +16,12 @@ YOutputDeviceRedirector.
 struct FBufferedLine
 {
 	const YString Data;
-	const YName Category;
+	const FName Category;
 	const double Time;
 	const ELogVerbosity::Type Verbosity;
 
 	/** Initialization constructor. */
-	FBufferedLine(const TCHAR* InData, const class YName& InCategory, ELogVerbosity::Type InVerbosity, const double InTime = -1)
+	FBufferedLine(const TCHAR* InData, const class FName& InCategory, ELogVerbosity::Type InVerbosity, const double InTime = -1)
 		: Data(InData)
 		, Category(InCategory)
 		, Time(InTime)
@@ -32,7 +32,7 @@ struct FBufferedLine
 /**
 * Class used for output redirection to allow logs to show
 */
-class CORE_API YOutputDeviceRedirector : public YOutputDevice
+class CORE_API YOutputDeviceRedirector : public FOutputDevice
 {
 private:
 	/** A FIFO of lines logged by non-master threads. */
@@ -42,7 +42,7 @@ private:
 	TArray<FBufferedLine> BacklogLines;
 
 	/** Array of output devices to redirect to */
-	TArray<YOutputDevice*> OutputDevices;
+	TArray<FOutputDevice*> OutputDevices;
 
 	/** The master thread ID.  Logging from other threads will be buffered for processing by the master thread. */
 	uint32 MasterThreadID;
@@ -75,14 +75,14 @@ public:
 	*
 	* @param OutputDevice	output device to add
 	*/
-	void AddOutputDevice(YOutputDevice* OutputDevice);
+	void AddOutputDevice(FOutputDevice* OutputDevice);
 
 	/**
 	* Removes an output device from the chain of redirections.
 	*
 	* @param OutputDevice	output device to remove
 	*/
-	void RemoveOutputDevice(YOutputDevice* OutputDevice);
+	void RemoveOutputDevice(FOutputDevice* OutputDevice);
 
 	/**
 	* Returns whether an output device is currently in the list of redirectors.
@@ -90,7 +90,7 @@ public:
 	* @param	OutputDevice	output device to check the list against
 	* @return	true if messages are currently redirected to the the passed in output device, false otherwise
 	*/
-	bool IsRedirectingTo(YOutputDevice* OutputDevice);
+	bool IsRedirectingTo(FOutputDevice* OutputDevice);
 
 	/** Flushes lines buffered by secondary threads. */
 	virtual void FlushThreadedLogs();
@@ -105,7 +105,7 @@ public:
 	* Serializes the current backlog to the specified output device.
 	* @param OutputDevice	- Output device that will receive the current backlog
 	*/
-	virtual void SerializeBacklog(YOutputDevice* OutputDevice);
+	virtual void SerializeBacklog(FOutputDevice* OutputDevice);
 
 	/**
 	* Enables or disables the backlog.
@@ -125,7 +125,7 @@ public:
 	* @param	Data	Text to log
 	* @param	Event	Event name used for suppression purposes
 	*/
-	virtual void Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class YName& Category, const double Time) override;
+	virtual void Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category, const double Time) override;
 
 	/**
 	* Serializes the passed in data via all current output devices.
@@ -133,7 +133,7 @@ public:
 	* @param	Data	Text to log
 	* @param	Event	Event name used for suppression purposes
 	*/
-	virtual void Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class YName& Category) override;
+	virtual void Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category) override;
 
 	/**
 	* Passes on the flush request to all current output devices.

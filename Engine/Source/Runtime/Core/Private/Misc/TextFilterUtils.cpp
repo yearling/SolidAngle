@@ -185,7 +185,7 @@ FTextFilterString::FTextFilterString(const TCHAR* InString)
 	UppercaseInternalString();
 }
 
-FTextFilterString::FTextFilterString(const YName& InName)
+FTextFilterString::FTextFilterString(const FName& InName)
 	: InternalString()
 {
 	InName.AppendString(InternalString);

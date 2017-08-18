@@ -14,14 +14,14 @@ static FCriticalSection					MsgLogfStaticBufferGuard;
 /** Increased from 4096 to fix crashes in the renderthread without autoreporter. */
 static TCHAR							MsgLogfStaticBuffer[8192];
 
-VARARG_BODY(void, FMsg::Logf, const TCHAR*, VARARG_EXTRA(const ANSICHAR* File) VARARG_EXTRA(int32 Line) VARARG_EXTRA(const class YName& Category) VARARG_EXTRA(ELogVerbosity::Type Verbosity))
+VARARG_BODY(void, FMsg::Logf, const TCHAR*, VARARG_EXTRA(const ANSICHAR* File) VARARG_EXTRA(int32 Line) VARARG_EXTRA(const class FName& Category) VARARG_EXTRA(ELogVerbosity::Type Verbosity))
 {
 #if !NO_LOGGING
 	if (Verbosity != ELogVerbosity::Fatal)
 	{
 		// SetColour is routed to GWarn just like the other verbosities and handled in the 
 		// device that does the actual printing.
-		YOutputDevice* LogDevice = NULL;
+		FOutputDevice* LogDevice = NULL;
 		switch (Verbosity)
 		{
 		case ELogVerbosity::Error:
@@ -63,14 +63,14 @@ VARARG_BODY(void, FMsg::Logf, const TCHAR*, VARARG_EXTRA(const ANSICHAR* File) V
 #endif
 }
 
-VARARG_BODY(void, FMsg::Logf_Internal, const TCHAR*, VARARG_EXTRA(const ANSICHAR* File) VARARG_EXTRA(int32 Line) VARARG_EXTRA(const class YName& Category) VARARG_EXTRA(ELogVerbosity::Type Verbosity))
+VARARG_BODY(void, FMsg::Logf_Internal, const TCHAR*, VARARG_EXTRA(const ANSICHAR* File) VARARG_EXTRA(int32 Line) VARARG_EXTRA(const class FName& Category) VARARG_EXTRA(ELogVerbosity::Type Verbosity))
 {
 #if !NO_LOGGING
 	if (Verbosity != ELogVerbosity::Fatal)
 	{
 		// SetColour is routed to GWarn just like the other verbosities and handled in the 
 		// device that does the actual printing.
-		YOutputDevice* LogDevice = NULL;
+		FOutputDevice* LogDevice = NULL;
 		switch (Verbosity)
 		{
 		case ELogVerbosity::Error:

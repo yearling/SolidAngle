@@ -40,7 +40,7 @@ struct CORE_API FReleaseObjectVersion
 	};
 
 	// The GUID for this custom version number
-	const static YGuid GUID;
+	const static FGuid GUID;
 
 private:
 	FReleaseObjectVersion() {}

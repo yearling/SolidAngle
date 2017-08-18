@@ -184,7 +184,7 @@ FExpressionResult TOperatorJumpTable<ContextType>::ExecBinary(const FExpressionT
 template<typename ContextType>
 FExpressionResult TOperatorJumpTable<ContextType>::ExecPreUnary(const FExpressionToken& Operator, const FExpressionToken& R, const ContextType* Context) const
 {
-	FOperatorFunctionID ID = { Operator.Node.GetTypeId(), YGuid(), R.Node.GetTypeId() };
+	FOperatorFunctionID ID = { Operator.Node.GetTypeId(), FGuid(), R.Node.GetTypeId() };
 	if (const auto* Func = PreUnaryOps.Find(ID))
 	{
 		return (*Func)(R.Node, Context);
@@ -199,7 +199,7 @@ FExpressionResult TOperatorJumpTable<ContextType>::ExecPreUnary(const FExpressio
 template<typename ContextType>
 FExpressionResult TOperatorJumpTable<ContextType>::ExecPostUnary(const FExpressionToken& Operator, const FExpressionToken& L, const ContextType* Context) const
 {
-	FOperatorFunctionID ID = { Operator.Node.GetTypeId(), L.Node.GetTypeId(), YGuid() };
+	FOperatorFunctionID ID = { Operator.Node.GetTypeId(), L.Node.GetTypeId(), FGuid() };
 	if (const auto* Func = PostUnaryOps.Find(ID))
 	{
 		return (*Func)(L.Node, Context);
@@ -219,7 +219,7 @@ void TOperatorJumpTable<ContextType>::MapPreUnary(FuncType InFunc)
 
 	FOperatorFunctionID ID = {
 		TGetExpressionNodeTypeId<OperatorType>::GetTypeId(),
-		YGuid(),
+		FGuid(),
 		TGetExpressionNodeTypeId<OperandType>::GetTypeId()
 	};
 
@@ -235,7 +235,7 @@ void TOperatorJumpTable<ContextType>::MapPostUnary(FuncType InFunc)
 	FOperatorFunctionID ID = {
 		TGetExpressionNodeTypeId<OperatorType>::GetTypeId(),
 		TGetExpressionNodeTypeId<OperandType>::GetTypeId(),
-		YGuid()
+		FGuid()
 	};
 
 	PostUnaryOps.Add(ID, Impl::WrapUnaryFunction<OperandType, ContextType>(InFunc));

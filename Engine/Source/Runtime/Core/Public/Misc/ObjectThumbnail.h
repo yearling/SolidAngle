@@ -5,7 +5,7 @@
 #include "CoreTypes.h"
 #include "Containers/Array.h"
 #include "Containers/Map.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 
 /**
  * Thumbnail compression interface for packages.  The engine registers a class that can compress and
@@ -141,7 +141,7 @@ public:
 	const TArray< uint8 >& GetUncompressedImageData() const;
 
 	/** Serializer */
-	void Serialize( YArchive& Ar );
+	void Serialize( FArchive& Ar );
 	
 	/** Compress image data. */
 	void CompressImageData();
@@ -154,24 +154,24 @@ public:
 	 *
 	 * @param	Ar	the YArchiveCountMem (or similar) archive that will store the results of the memory usage calculation.
 	 */
-	void CountBytes( YArchive& Ar ) const;
+	void CountBytes( FArchive& Ar ) const;
 
 	/**
 	 * Calculates the amount of memory used by the compressed bytes array.
 	 *
 	 * @param	Ar	the YArchiveCountMem (or similar) archive that will store the results of the memory usage calculation.
 	 */
-	void CountImageBytes_Compressed( YArchive& Ar ) const;
+	void CountImageBytes_Compressed( FArchive& Ar ) const;
 
 	/**
 	 * Calculates the amount of memory used by the uncompressed bytes array.
 	 *
 	 * @param	Ar	the YArchiveCountMem (or similar) archive that will store the results of the memory usage calculation.
 	 */
-	void CountImageBytes_Uncompressed( YArchive& Ar ) const;
+	void CountImageBytes_Uncompressed( FArchive& Ar ) const;
 
 	/** I/O operator */
-	friend YArchive& operator<<( YArchive& Ar, FObjectThumbnail& Thumb )
+	friend FArchive& operator<<( FArchive& Ar, FObjectThumbnail& Thumb )
 	{
 		if ( Ar.IsCountingMemory() )
 		{
@@ -184,7 +184,7 @@ public:
 		return Ar;
 	}
 
-	friend YArchive& operator<<( YArchive& Ar, const FObjectThumbnail& Thumb )
+	friend FArchive& operator<<( FArchive& Ar, const FObjectThumbnail& Thumb )
 	{
 		Thumb.CountBytes(Ar);
 		return Ar;
@@ -233,14 +233,14 @@ private:
 
 
 /** Maps an object's full name to a thumbnail */
-typedef TMap< YName, FObjectThumbnail > FThumbnailMap;
+typedef TMap< FName, FObjectThumbnail > FThumbnailMap;
 
 
 /** Wraps an object's full name and thumbnail */
 struct CORE_API FObjectFullNameAndThumbnail
 {
 	/** Full name of the object */
-	YName ObjectFullName;
+	FName ObjectFullName;
 	
 	/** Thumbnail data */
 	const FObjectThumbnail* ObjectThumbnail;
@@ -256,7 +256,7 @@ struct CORE_API FObjectFullNameAndThumbnail
 	{ }
 
 	/** Constructor */
-	FObjectFullNameAndThumbnail( const YName InFullName, const FObjectThumbnail* InThumbnail )
+	FObjectFullNameAndThumbnail( const FName InFullName, const FObjectThumbnail* InThumbnail )
 		: ObjectFullName( InFullName ),
 		  ObjectThumbnail( InThumbnail ),
 		  FileOffset( 0 )
@@ -267,10 +267,10 @@ struct CORE_API FObjectFullNameAndThumbnail
 	 *
 	 * @param	Ar	the YArchiveCountMem (or similar) archive that will store the results of the memory usage calculation.
 	 */
-	void CountBytes( YArchive& Ar ) const;
+	void CountBytes( FArchive& Ar ) const;
 
 	/** I/O operator */
-	friend YArchive& operator<<( YArchive& Ar, FObjectFullNameAndThumbnail& NameThumbPair )
+	friend FArchive& operator<<( FArchive& Ar, FObjectFullNameAndThumbnail& NameThumbPair )
 	{
 		if ( Ar.IsCountingMemory() )
 		{
@@ -283,7 +283,7 @@ struct CORE_API FObjectFullNameAndThumbnail
 		return Ar;
 	}
 
-	friend YArchive& operator<<( YArchive& Ar, const FObjectFullNameAndThumbnail& NameThumbPair )
+	friend FArchive& operator<<( FArchive& Ar, const FObjectFullNameAndThumbnail& NameThumbPair )
 	{
 		NameThumbPair.CountBytes(Ar);
 		return Ar;

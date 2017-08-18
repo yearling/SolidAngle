@@ -9,7 +9,7 @@
 
 /** Inverse Rotation matrix */
 class FInverseRotationMatrix
-	: public YMatrix
+	: public FMatrix
 {
 public:
 	/**
@@ -17,26 +17,26 @@ public:
 	 *
 	 * @param Rot rotation
 	 */
-	FInverseRotationMatrix(const YRotator& Rot);
+	FInverseRotationMatrix(const FRotator& Rot);
 };
 
 
-FORCEINLINE FInverseRotationMatrix::FInverseRotationMatrix(const YRotator& Rot)
-	: YMatrix(
-		YMatrix( // Yaw
-		YPlane(+YMath::Cos(Rot.Yaw * PI / 180.f), -YMath::Sin(Rot.Yaw * PI / 180.f), 0.0f, 0.0f),
-		YPlane(+YMath::Sin(Rot.Yaw * PI / 180.f), +YMath::Cos(Rot.Yaw * PI / 180.f), 0.0f, 0.0f),
-		YPlane(0.0f, 0.0f, 1.0f, 0.0f),
-		YPlane(0.0f, 0.0f, 0.0f, 1.0f)) *
-		YMatrix( // Pitch
-		YPlane(+YMath::Cos(Rot.Pitch * PI / 180.f), 0.0f, -YMath::Sin(Rot.Pitch * PI / 180.f), 0.0f),
-		YPlane(0.0f, 1.0f, 0.0f, 0.0f),
-		YPlane(+YMath::Sin(Rot.Pitch * PI / 180.f), 0.0f, +YMath::Cos(Rot.Pitch * PI / 180.f), 0.0f),
-		YPlane(0.0f, 0.0f, 0.0f, 1.0f)) *
-		YMatrix( // Roll
-		YPlane(1.0f, 0.0f, 0.0f, 0.0f),
-		YPlane(0.0f, +YMath::Cos(Rot.Roll * PI / 180.f), +YMath::Sin(Rot.Roll * PI / 180.f), 0.0f),
-		YPlane(0.0f, -YMath::Sin(Rot.Roll * PI / 180.f), +YMath::Cos(Rot.Roll * PI / 180.f), 0.0f),
-		YPlane(0.0f, 0.0f, 0.0f, 1.0f))
+FORCEINLINE FInverseRotationMatrix::FInverseRotationMatrix(const FRotator& Rot)
+	: FMatrix(
+		FMatrix( // Yaw
+		FPlane(+YMath::Cos(Rot.Yaw * PI / 180.f), -YMath::Sin(Rot.Yaw * PI / 180.f), 0.0f, 0.0f),
+		FPlane(+YMath::Sin(Rot.Yaw * PI / 180.f), +YMath::Cos(Rot.Yaw * PI / 180.f), 0.0f, 0.0f),
+		FPlane(0.0f, 0.0f, 1.0f, 0.0f),
+		FPlane(0.0f, 0.0f, 0.0f, 1.0f)) *
+		FMatrix( // Pitch
+		FPlane(+YMath::Cos(Rot.Pitch * PI / 180.f), 0.0f, -YMath::Sin(Rot.Pitch * PI / 180.f), 0.0f),
+		FPlane(0.0f, 1.0f, 0.0f, 0.0f),
+		FPlane(+YMath::Sin(Rot.Pitch * PI / 180.f), 0.0f, +YMath::Cos(Rot.Pitch * PI / 180.f), 0.0f),
+		FPlane(0.0f, 0.0f, 0.0f, 1.0f)) *
+		FMatrix( // Roll
+		FPlane(1.0f, 0.0f, 0.0f, 0.0f),
+		FPlane(0.0f, +YMath::Cos(Rot.Roll * PI / 180.f), +YMath::Sin(Rot.Roll * PI / 180.f), 0.0f),
+		FPlane(0.0f, -YMath::Sin(Rot.Roll * PI / 180.f), +YMath::Cos(Rot.Roll * PI / 180.f), 0.0f),
+		FPlane(0.0f, 0.0f, 0.0f, 1.0f))
 	)
 { }

@@ -21,7 +21,7 @@ public:
 	{}
 
 	/** Console commands **/
-	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, YOutputDevice& Ar) override
+	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar) override
 	{
 		if (FParse::Command(&Cmd, TEXT("LogFileDump")))
 		{
@@ -55,7 +55,7 @@ bool FLoggedPlatformFile::Initialize(IPlatformFile* Inner, const TCHAR* CommandL
 }
 
 #if !UE_BUILD_SHIPPING
-void FLoggedPlatformFile::HandleDumpCommand(const TCHAR* Cmd, YOutputDevice& Ar)
+void FLoggedPlatformFile::HandleDumpCommand(const TCHAR* Cmd, FOutputDevice& Ar)
 {
 	FScopeLock LogFileLock(&LogFileCritical);
 	bSuppressFileLog = true;

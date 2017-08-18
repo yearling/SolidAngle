@@ -42,9 +42,9 @@ public:
 	/** Ctor. initialize from a uniform scale. */
 	explicit FScale(float InScale) :Scale(InScale) {}
 	/** Ctor. initialize from an YVector defining the 3D scale. */
-	explicit FScale(const YVector& InScale) :Scale(InScale) {}
+	explicit FScale(const FVector& InScale) :Scale(InScale) {}
 	/** Access to the underlying YVector that stores the scale. */
-	const YVector& GetVector() const { return Scale; }
+	const FVector& GetVector() const { return Scale; }
 	/** Concatenate two scales. */
 	const FScale Concatenate(const FScale& RHS) const
 	{
@@ -53,15 +53,15 @@ public:
 	/** Invert the scale. */
 	const FScale Inverse() const
 	{
-		return FScale(YVector(1.0f / Scale.X, 1.0f / Scale.Y, 1.0f / Scale.Z));
+		return FScale(FVector(1.0f / Scale.X, 1.0f / Scale.Y, 1.0f / Scale.Z));
 	}
 private:
 	/** Underlying storage of the 3D scale. */
-	YVector Scale;
+	FVector Scale;
 };
 
 /** Specialization for converting a FMatrix to an FRotator. It uses a non-standard explicit conversion function. */
-template<> template<> inline YRotator TransformConverter<YRotator>::Convert<YMatrix>(const YMatrix& Transform)
+template<> template<> inline FRotator TransformConverter<FRotator>::Convert<FMatrix>(const FMatrix& Transform)
 {
 	return Transform.Rotator();
 }
@@ -89,7 +89,7 @@ inline auto ToMatrix(const TransformType& Transform) -> decltype(Transform.ToMat
  * @param Scale Uniform Scale
  * @return Matrix that represents the uniform Scale space.
  */
-inline const YMatrix& ToMatrix(const YMatrix& Transform)
+inline const FMatrix& ToMatrix(const FMatrix& Transform)
 {
 	return Transform;
 }
@@ -100,7 +100,7 @@ inline const YMatrix& ToMatrix(const YMatrix& Transform)
  * @param Scale Uniform Scale
  * @return Matrix that represents the uniform Scale space.
  */
-inline YMatrix ToMatrix(float Scale)
+inline FMatrix ToMatrix(float Scale)
 {
 	return YScaleMatrix(Scale);
 }
@@ -111,7 +111,7 @@ inline YMatrix ToMatrix(float Scale)
  * @param Scale Non-uniform Scale
  * @return Matrix that represents the non-uniform Scale space.
  */
-inline YMatrix ToMatrix(const FScale& Scale)
+inline FMatrix ToMatrix(const FScale& Scale)
 {
 	return YScaleMatrix(Scale.GetVector());
 }
@@ -122,7 +122,7 @@ inline YMatrix ToMatrix(const FScale& Scale)
  * @param Translation Translation
  * @return Matrix that represents the translated space.
  */
-inline YMatrix ToMatrix(const YVector& Translation)
+inline FMatrix ToMatrix(const FVector& Translation)
 {
 	return YTranslationMatrix(Translation);
 }
@@ -133,7 +133,7 @@ inline YMatrix ToMatrix(const YVector& Translation)
  * @param Rotation Rotation
  * @return Matrix that represents the rotated space.
  */
-inline YMatrix ToMatrix(const YRotator& Rotation)
+inline FMatrix ToMatrix(const FRotator& Rotation)
 {
 	return YRotationMatrix(Rotation);
 }
@@ -144,7 +144,7 @@ inline YMatrix ToMatrix(const YRotator& Rotation)
  * @param Rotation Rotation
  * @return Matrix that represents the rotated space.
  */
-inline YMatrix ToMatrix(const YQuat& Rotation)
+inline FMatrix ToMatrix(const FQuat& Rotation)
 {
 	return YRotationMatrix::Make(Rotation);
 }
@@ -156,7 +156,7 @@ inline YMatrix ToMatrix(const YQuat& Rotation)
  * a new instance.
  */
 template<>
-struct TransformConverter<YMatrix>
+struct TransformConverter<FMatrix>
 {
 	template<typename OtherTransformType>
 	static auto Convert(const OtherTransformType& Transform) -> decltype(ToMatrix(Transform))
@@ -168,34 +168,34 @@ struct TransformConverter<YMatrix>
 /** concatenation rules for basic UE4 types. */
 template<> struct ConcatenateRules<float        , FScale       > { typedef FScale ResultType; };
 template<> struct ConcatenateRules<FScale       , float        > { typedef FScale ResultType; };
-template<> struct ConcatenateRules<float        , YVector      > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<YVector      , float        > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<float        , YRotator     > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<YRotator     , float        > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<float        , YQuat        > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<YQuat        , float        > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<float        , YMatrix      > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<YMatrix      , float        > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<FScale       , YVector      > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<YVector      , FScale       > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<FScale       , YRotator     > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<YRotator     , FScale       > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<FScale       , YQuat        > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<YQuat        , FScale       > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<FScale       , YMatrix      > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<YMatrix      , FScale       > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<YVector      , YRotator     > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<YRotator     , YVector      > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<YVector      , YQuat        > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<YQuat        , YVector      > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<YVector      , YMatrix      > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<YMatrix      , YVector      > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<YRotator     , YQuat        > { typedef YQuat ResultType; };
-template<> struct ConcatenateRules<YQuat        , YRotator     > { typedef YQuat ResultType; };
-template<> struct ConcatenateRules<YRotator     , YMatrix      > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<YMatrix      , YRotator     > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<YQuat        , YMatrix      > { typedef YMatrix ResultType; };
-template<> struct ConcatenateRules<YMatrix      , YQuat        > { typedef YMatrix ResultType; };
+template<> struct ConcatenateRules<float        , FVector      > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<FVector      , float        > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<float        , FRotator     > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<FRotator     , float        > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<float        , FQuat        > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<FQuat        , float        > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<float        , FMatrix      > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<FMatrix      , float        > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<FScale       , FVector      > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<FVector      , FScale       > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<FScale       , FRotator     > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<FRotator     , FScale       > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<FScale       , FQuat        > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<FQuat        , FScale       > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<FScale       , FMatrix      > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<FMatrix      , FScale       > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<FVector      , FRotator     > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<FRotator     , FVector      > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<FVector      , FQuat        > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<FQuat        , FVector      > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<FVector      , FMatrix      > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<FMatrix      , FVector      > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<FRotator     , FQuat        > { typedef FQuat ResultType; };
+template<> struct ConcatenateRules<FQuat        , FRotator     > { typedef FQuat ResultType; };
+template<> struct ConcatenateRules<FRotator     , FMatrix      > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<FMatrix      , FRotator     > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<FQuat        , FMatrix      > { typedef FMatrix ResultType; };
+template<> struct ConcatenateRules<FMatrix      , FQuat        > { typedef FMatrix ResultType; };
 
 //////////////////////////////////////////////////////////////////////////
 // Concatenate overloads. 
@@ -211,7 +211,7 @@ template<> struct ConcatenateRules<YMatrix      , YQuat        > { typedef YMatr
  * @param RHS rotation that goes from space B to space C.
  * @return a new rotation representing the transformation from the input space of LHS to the output space of RHS.
  */
-inline YMatrix Concatenate(const YMatrix& LHS, const YMatrix& RHS)
+inline FMatrix Concatenate(const FMatrix& LHS, const FMatrix& RHS)
 {
 	return LHS * RHS;
 }
@@ -226,7 +226,7 @@ inline YMatrix Concatenate(const YMatrix& LHS, const YMatrix& RHS)
  * @param RHS rotation that goes from space B to space C.
  * @return a new rotation representing the transformation from the input space of LHS to the output space of RHS.
  */
-inline YQuat Concatenate(const YQuat& LHS, const YQuat& RHS)
+inline FQuat Concatenate(const FQuat& LHS, const FQuat& RHS)
 {
 	return RHS * LHS;
 }
@@ -238,10 +238,10 @@ inline YQuat Concatenate(const YQuat& LHS, const YQuat& RHS)
  * @param RHS rotation that goes from space B to space C.
  * @return a new rotation representing the transformation from the input space of LHS to the output space of RHS.
  */
-inline YRotator Concatenate(const YRotator& LHS, const YRotator& RHS)
+inline FRotator Concatenate(const FRotator& LHS, const FRotator& RHS)
 {
 	//@todo implement a more efficient way to do this.
-	return TransformCast<YRotator>(Concatenate(TransformCast<YMatrix>(LHS), TransformCast<YMatrix>(RHS)));
+	return TransformCast<FRotator>(Concatenate(TransformCast<FMatrix>(LHS), TransformCast<FMatrix>(RHS)));
 }
 
 /**
@@ -251,7 +251,7 @@ inline YRotator Concatenate(const YRotator& LHS, const YRotator& RHS)
  * @param RHS Translation that goes from space B to space C.
  * @return a new Translation representing the transformation from the input space of LHS to the output space of RHS.
  */
-inline YVector Concatenate(const YVector& LHS, const YVector& RHS)
+inline FVector Concatenate(const FVector& LHS, const FVector& RHS)
 {
 	return LHS + RHS;
 }
@@ -270,7 +270,7 @@ inline YVector Concatenate(const YVector& LHS, const YVector& RHS)
  * @param Transform Input transform from space A to space B.
  * @return Inverted transform from space B to space A.
  */
-inline YMatrix Inverse(const YMatrix& Transform)
+inline FMatrix Inverse(const FMatrix& Transform)
 {
 	return Transform.Inverse();
 }
@@ -282,10 +282,10 @@ inline YMatrix Inverse(const YMatrix& Transform)
  * @param Transform Input transform from space A to space B.
  * @return Inverted transform from space B to space A.
  */
-inline YRotator Inverse(const YRotator& Transform)
+inline FRotator Inverse(const FRotator& Transform)
 {
-	YVector EulerAngles = Transform.Euler();
-	return YRotator::MakeFromEuler(YVector(-EulerAngles.Z, -EulerAngles.Y, -EulerAngles.X));
+	FVector EulerAngles = Transform.Euler();
+	return FRotator::MakeFromEuler(FVector(-EulerAngles.Z, -EulerAngles.Y, -EulerAngles.X));
 }
 
 /**
@@ -295,7 +295,7 @@ inline YRotator Inverse(const YRotator& Transform)
  * @param Transform Input transform from space A to space B.
  * @return Inverted transform from space B to space A.
  */
-inline YQuat Inverse(const YQuat& Transform)
+inline FQuat Inverse(const FQuat& Transform)
 {
 	return Transform.Inverse();
 }
@@ -307,7 +307,7 @@ inline YQuat Inverse(const YQuat& Transform)
  * @param Transform Input transform from space A to space B.
  * @return Inverted transform from space B to space A.
  */
-inline YVector Inverse(const YVector& Transform)
+inline FVector Inverse(const FVector& Transform)
 {
 	return -Transform;
 }
@@ -322,7 +322,7 @@ inline YVector Inverse(const YVector& Transform)
 /**
  * Specialization for FMatrix as it's member function is called something slightly different.
  */
-inline YVector TransformPoint(const YMatrix& Transform, const YVector& Point)
+inline FVector TransformPoint(const FMatrix& Transform, const FVector& Point)
 {
 	return Transform.TransformPosition(Point);
 }
@@ -330,7 +330,7 @@ inline YVector TransformPoint(const YMatrix& Transform, const YVector& Point)
 /**
  * Specialization for FQuat as it's member function is called something slightly different.
  */
-inline YVector TransformPoint(const YQuat& Transform, const YVector& Point)
+inline FVector TransformPoint(const FQuat& Transform, const FVector& Point)
 {
 	return Transform.RotateVector(Point);
 }
@@ -338,7 +338,7 @@ inline YVector TransformPoint(const YQuat& Transform, const YVector& Point)
 /**
  * Specialization for FQuat as it's member function is called something slightly different.
  */
-inline YVector TransformVector(const YQuat& Transform, const YVector& Vector)
+inline FVector TransformVector(const FQuat& Transform, const FVector& Vector)
 {
 	return Transform.RotateVector(Vector);
 }
@@ -346,7 +346,7 @@ inline YVector TransformVector(const YQuat& Transform, const YVector& Vector)
 /**
  * Specialization for FRotator as it's member function is called something slightly different.
  */
-inline YVector TransformPoint(const YRotator& Transform, const YVector& Point)
+inline FVector TransformPoint(const FRotator& Transform, const FVector& Point)
 {
 	return Transform.RotateVector(Point);
 }
@@ -354,7 +354,7 @@ inline YVector TransformPoint(const YRotator& Transform, const YVector& Point)
 /**
  * Specialization for FRotator as it's member function is called something slightly different.
  */
-inline YVector TransformVector(const YRotator& Transform, const YVector& Vector)
+inline FVector TransformVector(const FRotator& Transform, const FVector& Vector)
 {
 	return Transform.RotateVector(Vector);
 }
@@ -362,7 +362,7 @@ inline YVector TransformVector(const YRotator& Transform, const YVector& Vector)
 /**
  * Specialization for YVector Translation.
  */
-inline YVector TransformPoint(const YVector& Transform, const YVector& Point)
+inline FVector TransformPoint(const FVector& Transform, const FVector& Point)
 {
 	return Transform + Point;
 }
@@ -370,7 +370,7 @@ inline YVector TransformPoint(const YVector& Transform, const YVector& Point)
 /**
  * Specialization for YVector Translation (does nothing).
  */
-inline const YVector& TransformVector(const YVector& Transform, const YVector& Vector)
+inline const FVector& TransformVector(const FVector& Transform, const FVector& Vector)
 {
 	return Vector;
 }
@@ -378,7 +378,7 @@ inline const YVector& TransformVector(const YVector& Transform, const YVector& V
 /**
  * Specialization for Scale.
  */
-inline YVector TransformPoint(const FScale& Transform, const YVector& Point)
+inline FVector TransformPoint(const FScale& Transform, const FVector& Point)
 {
 	return Transform.GetVector() * Point;
 }
@@ -386,7 +386,7 @@ inline YVector TransformPoint(const FScale& Transform, const YVector& Point)
 /**
  * Specialization for Scale.
  */
-inline YVector TransformVector(const FScale& Transform, const YVector& Vector)
+inline FVector TransformVector(const FScale& Transform, const FVector& Vector)
 {
 	return Transform.GetVector() * Vector;
 }

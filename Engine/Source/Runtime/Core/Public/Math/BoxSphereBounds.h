@@ -16,10 +16,10 @@
 struct YBoxSphereBounds
 {
 	/** Holds the origin of the bounding box and sphere. */
-	YVector	Origin;
+	FVector	Origin;
 
 	/** Holds the extent of the bounding box. */
-	YVector BoxExtent;
+	FVector BoxExtent;
 
 	/** Holds the radius of the bounding sphere. */
 	float SphereRadius;
@@ -49,7 +49,7 @@ public:
 	 * @param InBoxExtent half size of box.
 	 * @param InSphereRadius radius of the sphere.
 	 */
-	YBoxSphereBounds( const YVector& InOrigin, const YVector& InBoxExtent, float InSphereRadius )
+	YBoxSphereBounds( const FVector& InOrigin, const FVector& InBoxExtent, float InSphereRadius )
 		: Origin(InOrigin)
 		, BoxExtent(InBoxExtent)
 		, SphereRadius(InSphereRadius)
@@ -63,7 +63,7 @@ public:
 	 * @param Box The bounding box.
 	 * @param Sphere The bounding sphere.
 	 */
-	YBoxSphereBounds( const YBox& Box, const YSphere& Sphere )
+	YBoxSphereBounds( const FBox& Box, const FSphere& Sphere )
 	{
 		Box.GetCenterAndExtents(Origin,BoxExtent);
 		SphereRadius = YMath::Min(BoxExtent.Size(), (Sphere.Center - Origin).Size() + Sphere.W);
@@ -78,7 +78,7 @@ public:
 	 *
 	 * @param Box The bounding box.
 	 */
-	YBoxSphereBounds( const YBox& Box )
+	YBoxSphereBounds( const FBox& Box )
 	{
 		Box.GetCenterAndExtents(Origin,BoxExtent);
 		SphereRadius = BoxExtent.Size();
@@ -89,10 +89,10 @@ public:
 	/**
 	 * Creates and initializes a new instance for the given sphere.
 	 */
-	YBoxSphereBounds( const YSphere& Sphere )
+	YBoxSphereBounds( const FSphere& Sphere )
 	{
 		Origin = Sphere.Center;
-		BoxExtent = YVector(Sphere.W);
+		BoxExtent = FVector(Sphere.W);
 		SphereRadius = Sphere.W;
 
 		DiagnosticCheckNaN();
@@ -106,7 +106,7 @@ public:
 	 * @param Points The points to be considered for the bounding box.
 	 * @param NumPoints Number of points in the Points array.
 	 */
-	YBoxSphereBounds( const YVector* Points, uint32 NumPoints );
+	YBoxSphereBounds( const FVector* Points, uint32 NumPoints );
 
 
 public:
@@ -128,10 +128,10 @@ public:
 	 * @param Point The point.
 	 * @return The distance.
 	 */
-	FORCEINLINE float ComputeSquaredDistanceFromBoxToPoint( const YVector& Point ) const
+	FORCEINLINE float ComputeSquaredDistanceFromBoxToPoint( const FVector& Point ) const
 	{
-		YVector Mins = Origin - BoxExtent;
-		YVector Maxs = Origin + BoxExtent;
+		FVector Mins = Origin - BoxExtent;
+		FVector Maxs = Origin + BoxExtent;
 
 		return ::ComputeSquaredDistanceFromBoxToPoint(Mins, Maxs, Point);
 	}
@@ -166,9 +166,9 @@ public:
 	 *
 	 * @return The bounding box.
 	 */
-	FORCEINLINE YBox GetBox() const
+	FORCEINLINE FBox GetBox() const
 	{
-		return YBox(Origin - BoxExtent,Origin + BoxExtent);
+		return FBox(Origin - BoxExtent,Origin + BoxExtent);
 	}
 
 	/**
@@ -177,7 +177,7 @@ public:
 	 * @param Extrema 1 for positive extrema from the origin, else negative
 	 * @return The boxes extrema
 	 */
-	YVector GetBoxExtrema( uint32 Extrema ) const
+	FVector GetBoxExtrema( uint32 Extrema ) const
 	{
 		if (Extrema)
 		{
@@ -192,9 +192,9 @@ public:
 	 *
 	 * @return The bounding sphere.
 	 */
-	FORCEINLINE YSphere GetSphere() const
+	FORCEINLINE FSphere GetSphere() const
 	{
-		return YSphere(Origin,SphereRadius);
+		return FSphere(Origin,SphereRadius);
 	}
 
 	/**
@@ -214,7 +214,7 @@ public:
 	 * @param M The matrix.
 	 * @return The transformed volume.
 	 */
-	CORE_API YBoxSphereBounds TransformBy( const YMatrix& M ) const;
+	CORE_API YBoxSphereBounds TransformBy( const FMatrix& M ) const;
 
 	/**
 	 * Gets a bounding volume transformed by a FTransform object.
@@ -222,7 +222,7 @@ public:
 	 * @param M The FTransform object.
 	 * @return The transformed volume.
 	 */
-	CORE_API YBoxSphereBounds TransformBy( const YTransform& M ) const;
+	CORE_API YBoxSphereBounds TransformBy( const FTransform& M ) const;
 
 	/**
 	 * Get a textual representation of this bounding box.
@@ -238,7 +238,7 @@ public:
 	 */
 	friend YBoxSphereBounds Union( const YBoxSphereBounds& A,const YBoxSphereBounds& B )
 	{
-		YBox BoundingBox(0);
+		FBox BoundingBox(0);
 
 		BoundingBox += (A.Origin - A.BoxExtent);
 		BoundingBox += (A.Origin + A.BoxExtent);
@@ -260,12 +260,12 @@ public:
 		if (Origin.ContainsNaN())
 		{
 			logOrEnsureNanError(TEXT("Origin contains NaN: %s"), *Origin.ToString());
-			const_cast<YBoxSphereBounds*>(this)->Origin = YVector::ZeroVector;
+			const_cast<YBoxSphereBounds*>(this)->Origin = FVector::ZeroVector;
 		}
 		if (BoxExtent.ContainsNaN())
 		{
 			logOrEnsureNanError(TEXT("BoxExtent contains NaN: %s"), *BoxExtent.ToString());
-			const_cast<YBoxSphereBounds*>(this)->BoxExtent = YVector::ZeroVector;
+			const_cast<YBoxSphereBounds*>(this)->BoxExtent = FVector::ZeroVector;
 		}
 		if (YMath::IsNaN(SphereRadius) || !YMath::IsFinite(SphereRadius))
 		{
@@ -291,7 +291,7 @@ public:
 	 * @param Bounds The bounding volume to serialize.
 	 * @return The archive..
 	 */
-	friend YArchive& operator<<( YArchive& Ar, YBoxSphereBounds& Bounds )
+	friend FArchive& operator<<( FArchive& Ar, YBoxSphereBounds& Bounds )
 	{
 		return Ar << Bounds.Origin << Bounds.BoxExtent << Bounds.SphereRadius;
 	}
@@ -301,9 +301,9 @@ public:
 /* FBoxSphereBounds inline functions
  *****************************************************************************/
 
-FORCEINLINE YBoxSphereBounds::YBoxSphereBounds( const YVector* Points, uint32 NumPoints )
+FORCEINLINE YBoxSphereBounds::YBoxSphereBounds( const FVector* Points, uint32 NumPoints )
 {
-	YBox BoundingBox(0);
+	FBox BoundingBox(0);
 
 	// find an axis aligned bounding box for the points.
 	for (uint32 PointIndex = 0; PointIndex < NumPoints; PointIndex++)
@@ -327,7 +327,7 @@ FORCEINLINE YBoxSphereBounds::YBoxSphereBounds( const YVector* Points, uint32 Nu
 
 FORCEINLINE YBoxSphereBounds YBoxSphereBounds::operator+( const YBoxSphereBounds& Other ) const
 {
-	YBox BoundingBox(0);
+	FBox BoundingBox(0);
 
 	BoundingBox += (this->Origin - this->BoxExtent);
 	BoundingBox += (this->Origin + this->BoxExtent);

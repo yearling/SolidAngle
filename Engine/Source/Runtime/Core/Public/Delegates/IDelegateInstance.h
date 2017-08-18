@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreTypes.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Delegates/DelegateSettings.h"
 
 /**
@@ -23,7 +23,7 @@ namespace EDelegateInstanceType
 		/** UFunction delegate */
 		UFunction,
 
-		/** Member function pointer to method in SObject-based class */
+		/** Member function pointer to method in UObject-based class */
 		UObjectMethod,
 
 		/** Raw C++ static function pointer */
@@ -104,7 +104,7 @@ public:
 	*
 	* @return The name of the bound function, NAME_None if no name was available.
 	*/
-	virtual YName TryGetBoundFunctionName() const = 0;
+	virtual FName TryGetBoundFunctionName() const = 0;
 
 #endif
 
@@ -115,14 +115,14 @@ public:
 	*
 	* @return Name of the function, or NAME_None if not bound to a UFunction.
 	*/
-	virtual YName GetFunctionName() const = 0;
+	virtual FName GetFunctionName() const = 0;
 
 	/**
-	* Returns the SObject that this delegate instance is bound to.
+	* Returns the UObject that this delegate instance is bound to.
 	*
-	* @return Pointer to the SObject, or nullptr if not bound to a SObject.
+	* @return Pointer to the UObject, or nullptr if not bound to a UObject.
 	*/
-	virtual SObject* GetUObject() const = 0;
+	virtual UObject* GetUObject() const = 0;
 
 	/**
 	* Returns raw pointer to the delegate method.

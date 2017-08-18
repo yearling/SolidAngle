@@ -314,7 +314,7 @@ const TCHAR* IPlatformFile::GetPhysicalTypeName()
 	return TEXT("PhysicalFile");
 }
 
-void IPlatformFile::GetTimeStampPair(const TCHAR* PathA, const TCHAR* PathB, YDateTime& OutTimeStampA, YDateTime& OutTimeStampB)
+void IPlatformFile::GetTimeStampPair(const TCHAR* PathA, const TCHAR* PathB, FDateTime& OutTimeStampA, FDateTime& OutTimeStampB)
 {
 	if (GetLowerLevel())
 	{
@@ -452,10 +452,10 @@ bool IPlatformFile::CopyDirectoryTree(const TCHAR* DestinationDirectory, const T
 	check(Source);
 
 	YString DestDir(DestinationDirectory);
-	YPaths::NormalizeDirectoryName(DestDir);
+	YPaths::NormalizeDirectorFName(DestDir);
 
 	YString SourceDir(Source);
-	YPaths::NormalizeDirectoryName(SourceDir);
+	YPaths::NormalizeDirectorFName(SourceDir);
 
 	// Does Source dir exist?
 	if (!DirectoryExists(*SourceDir))
@@ -539,7 +539,7 @@ YString IPlatformFile::ConvertToAbsolutePathForExternalAppForWrite( const TCHAR*
 bool IPlatformFile::CreateDirectoryTree(const TCHAR* Directory)
 {
 	YString LocalFilename(Directory);
-	YPaths::NormalizeDirectoryName(LocalFilename);
+	YPaths::NormalizeDirectorFName(LocalFilename);
 	const TCHAR* LocalPath = *LocalFilename;
 	int32 CreateCount = 0;
 	const int32 MaxCharacters = MAX_UNREAL_FILENAME_LENGTH - 1;

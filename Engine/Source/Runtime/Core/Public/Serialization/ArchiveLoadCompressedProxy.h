@@ -12,7 +12,7 @@ YArchiveLoadCompressedProxy.
 /**
 * YArchive Proxy to transparently load compressed data from an array.
 */
-class CORE_API YArchiveLoadCompressedProxy : public YArchive
+class CORE_API YArchiveLoadCompressedProxy : public FArchive
 {
 public:
 	/**

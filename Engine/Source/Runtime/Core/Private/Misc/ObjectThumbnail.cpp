@@ -27,7 +27,7 @@ const TArray< uint8 >& FObjectThumbnail::GetUncompressedImageData() const
 }
 
 
-void FObjectThumbnail::Serialize( YArchive& Ar )
+void FObjectThumbnail::Serialize( FArchive& Ar )
 {
 	Ar << ImageWidth;
 	Ar << ImageHeight;
@@ -82,7 +82,7 @@ void FObjectThumbnail::DecompressImageData()
 }
 
 
-void FObjectThumbnail::CountBytes( YArchive& Ar ) const
+void FObjectThumbnail::CountBytes( FArchive& Ar ) const
 {
 	SIZE_T StaticSize = sizeof(FObjectThumbnail);
 	Ar.CountBytes(StaticSize, Align(StaticSize, ALIGNOF(FObjectThumbnail)));
@@ -93,19 +93,19 @@ void FObjectThumbnail::CountBytes( YArchive& Ar ) const
 }
 
 
-void FObjectThumbnail::CountImageBytes_Compressed( YArchive& Ar ) const
+void FObjectThumbnail::CountImageBytes_Compressed( FArchive& Ar ) const
 {
 	const_cast<FObjectThumbnail*>(this)->CompressedImageData.CountBytes(Ar);
 }
 
 
-void FObjectThumbnail::CountImageBytes_Uncompressed( YArchive& Ar ) const
+void FObjectThumbnail::CountImageBytes_Uncompressed( FArchive& Ar ) const
 {
 	const_cast<FObjectThumbnail*>(this)->ImageData.CountBytes(Ar);
 }
 
 
-void FObjectFullNameAndThumbnail::CountBytes( YArchive& Ar ) const
+void FObjectFullNameAndThumbnail::CountBytes( FArchive& Ar ) const
 {
 	SIZE_T StaticSize = sizeof(FObjectFullNameAndThumbnail);
 	Ar.CountBytes(StaticSize, Align(StaticSize, ALIGNOF(FObjectFullNameAndThumbnail)));

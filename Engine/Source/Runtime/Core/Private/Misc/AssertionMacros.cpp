@@ -88,7 +88,7 @@ void StaticFailDebug(const TCHAR* Error, const ANSICHAR* File, int32 Line, const
 	FCString::Strncat(GErrorHist, TEXT("\r\n\r\n"), ARRAY_COUNT(GErrorHist));
 }
 
-void OutputMultiLineCallstack(const ANSICHAR* File, int32 Line, const YName& LogName, const TCHAR* Heading, TCHAR* Message, ELogVerbosity::Type Verbosity)
+void OutputMultiLineCallstack(const ANSICHAR* File, int32 Line, const FName& LogName, const TCHAR* Heading, TCHAR* Message, ELogVerbosity::Type Verbosity)
 {
 	const bool bWriteUATMarkers = FParse::Param(FCommandLine::Get(), TEXT("CrashForUAT")) && FParse::Param(FCommandLine::Get(), TEXT("stdout"));
 
@@ -243,7 +243,7 @@ void YDebug::EnsureFailed(const ANSICHAR* Expr, const ANSICHAR* File, int32 Line
 
 		// Dump the error and flush the log.
 #if !NO_LOGGING
-		OutputMultiLineCallstack(__FILE__, __LINE__, LogOutputDevice.GetCategoryName(), TEXT("=== Handled ensure: ==="), ErrorMsg, ELogVerbosity::Error);
+		OutputMultiLineCallstack(__FILE__, __LINE__, LogOutputDevice.GetCategorFName(), TEXT("=== Handled ensure: ==="), ErrorMsg, ELogVerbosity::Error);
 #endif
 		GLog->Flush();
 

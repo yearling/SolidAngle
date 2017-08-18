@@ -121,9 +121,9 @@ void SendDataToPCViaUnrealConsole( const YString& NotifyType, const YString& Ful
 }
 
 
-YString CreateProfileFilename(const YString& InFileExtension, bool bIncludeDateForDirectoryName)
+YString CreateProfileFilename(const YString& InFileExtension, bool bIncludeDateForDirectorFName)
 {
-	return CreateProfileFilename(TEXT(""), InFileExtension, bIncludeDateForDirectoryName);
+	return CreateProfileFilename(TEXT(""), InFileExtension, bIncludeDateForDirectorFName);
 }
 
 /** 
@@ -133,7 +133,7 @@ YString CreateProfileFilename(const YString& InFileExtension, bool bIncludeDateF
  * @param ProfilingType this is the type of profiling file this is
  * 
  **/
-YString CreateProfileFilename( const YString& InFilename, const YString& InFileExtension, bool bIncludeDateForDirectoryName )
+YString CreateProfileFilename( const YString& InFilename, const YString& InFileExtension, bool bIncludeDateForDirectorFName )
 {
 	YString Retval;
 
@@ -162,7 +162,7 @@ YString CreateProfileFilename( const YString& InFilename, const YString& InFileE
 	if( bSetProfilingSessionFolderName == false )
 	{
 		// now create the string
-		FolderName = YString::Printf(TEXT("%s-%s-%s"), *MapNameStr, *PlatformStr, *YDateTime::Now().ToString(TEXT("%m.%d-%H.%M.%S")));
+		FolderName = YString::Printf(TEXT("%s-%s-%s"), *MapNameStr, *PlatformStr, *FDateTime::Now().ToString(TEXT("%m.%d-%H.%M.%S")));
 		FolderName = FolderName.Right(MaxFilenameLen);
 
 		ProfilingSessionFolderName = FolderName;
@@ -182,7 +182,7 @@ YString CreateProfileFilename( const YString& InFilename, const YString& InFileE
 	YString NameOfProfile;
 	if (InFilename.IsEmpty())
 	{
-		NameOfProfile = YString::Printf(TEXT("%s-%s-%s"), *MapNameStr, *PlatformStr, *YDateTime::Now().ToString(TEXT("%d-%H.%M.%S")));
+		NameOfProfile = YString::Printf(TEXT("%s-%s-%s"), *MapNameStr, *PlatformStr, *FDateTime::Now().ToString(TEXT("%d-%H.%M.%S")));
 	}
 	else
 	{
@@ -194,7 +194,7 @@ YString CreateProfileFilename( const YString& InFilename, const YString& InFileE
 	FileNameWithExtension = FileNameWithExtension.Right(MaxFilenameLen);
 
 	YString Filename;
-	if( bIncludeDateForDirectoryName == true )
+	if( bIncludeDateForDirectorFName == true )
 	{
 		Filename = FolderName / FileNameWithExtension;
 	}
@@ -211,7 +211,7 @@ YString CreateProfileFilename( const YString& InFilename, const YString& InFileE
 
 
 
-YString CreateProfileDirectoryAndFilename( const YString& InSubDirectoryName, const YString& InFileExtension )
+YString CreateProfileDirectoryAndFilename( const YString& InSubDirectorFName, const YString& InFileExtension )
 {
 	YString MapNameStr;
 #if WITH_ENGINE
@@ -222,12 +222,12 @@ YString CreateProfileDirectoryAndFilename( const YString& InSubDirectoryName, co
 
 
 	// create Profiling dir and sub dir
-	const YString PathName = (YPaths::ProfilingDir() + InSubDirectoryName + TEXT("/"));
+	const YString PathName = (YPaths::ProfilingDir() + InSubDirectorFName + TEXT("/"));
 	IFileManager::Get().MakeDirectory( *PathName );
 	//UE_LOG(LogProfilingDebugging, Warning, TEXT( "CreateProfileDirectoryAndFilename: %s"), *PathName );
 
 	// create the directory name of this profile
-	YString NameOfProfile = YString::Printf(TEXT("%s-%s-%s"), *MapNameStr, *PlatformStr, *YDateTime::Now().ToString(TEXT("%m.%d-%H.%M")));	
+	YString NameOfProfile = YString::Printf(TEXT("%s-%s-%s"), *MapNameStr, *PlatformStr, *FDateTime::Now().ToString(TEXT("%m.%d-%H.%M")));	
 	NameOfProfile = NameOfProfile.Right(MaxFilenameLen);
 
 	IFileManager::Get().MakeDirectory( *(PathName+NameOfProfile) );

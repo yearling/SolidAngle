@@ -447,14 +447,14 @@ public:
 	}
 
 	/** Tracks the container's memory use through an archive. */
-	void CountBytes(YArchive& Ar)
+	void CountBytes(FArchive& Ar)
 	{
 		Data.CountBytes(Ar);
 		AllocationFlags.CountBytes(Ar);
 	}
 
 	/** Serializer. */
-	friend YArchive& operator<<(YArchive& Ar, TSparseArray& Array)
+	friend FArchive& operator<<(FArchive& Ar, TSparseArray& Array)
 	{
 		Array.CountBytes(Ar);
 		if (Ar.IsLoading())

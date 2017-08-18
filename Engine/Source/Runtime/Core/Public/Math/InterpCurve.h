@@ -121,7 +121,7 @@ public:
 	 *
 	 * @return Reference to the Archive after serialization.
 	 */
-	friend YArchive& operator<<( YArchive& Ar, FInterpCurve& Curve )
+	friend FArchive& operator<<( FArchive& Ar, FInterpCurve& Curve )
 	{
 		// NOTE: This is not used often for FInterpCurves.  Most of the time these are serialized
 		//   as inline struct properties in UnClass.cpp!
@@ -727,7 +727,7 @@ void FInterpCurve<T>::CalcBounds(T& OutMin, T& OutMax, const T& Default) const
 
 DEFINE_INTERPCURVE_WRAPPER_STRUCT(FInterpCurveFloat,       float)
 DEFINE_INTERPCURVE_WRAPPER_STRUCT(FInterpCurveVector2D,    YVector2D)
-DEFINE_INTERPCURVE_WRAPPER_STRUCT(FInterpCurveVector,      YVector)
-DEFINE_INTERPCURVE_WRAPPER_STRUCT(FInterpCurveQuat,        YQuat)
+DEFINE_INTERPCURVE_WRAPPER_STRUCT(FInterpCurveVector,      FVector)
+DEFINE_INTERPCURVE_WRAPPER_STRUCT(FInterpCurveQuat,        FQuat)
 DEFINE_INTERPCURVE_WRAPPER_STRUCT(FInterpCurveTwoVectors,  YTwoVectors)
-DEFINE_INTERPCURVE_WRAPPER_STRUCT(FInterpCurveLinearColor, YLinearColor)
+DEFINE_INTERPCURVE_WRAPPER_STRUCT(FInterpCurveLinearColor, FLinearColor)

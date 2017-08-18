@@ -7,7 +7,7 @@
 #include "GenericPlatform/GenericPlatformMisc.h"
 
 class GenericApplication;
-struct YGuid;
+struct FGuid;
 struct YVector2D;
 class IPlatformChunkInstall;
 
@@ -84,8 +84,8 @@ struct CORE_API YWindowsPlatformMisc
 	}
 
 	static void PumpMessages(bool bFromMainLoop);
-	static uint32 GetKeyMap(uint32* KeyCodes, YString* KeyNames, uint32 MaxMappings);
-	static uint32 GetCharKeyMap(uint32* KeyCodes, YString* KeyNames, uint32 MaxMappings);
+	static uint32 GetKeyMap(uint32* KeyCodes, YString* KeFNames, uint32 MaxMappings);
+	static uint32 GetCharKeyMap(uint32* KeyCodes, YString* KeFNames, uint32 MaxMappings);
 	static void SetUTF8Output();
 	static void LocalPrint(const TCHAR *Message);
 	static void RequestExit(bool Force);
@@ -93,7 +93,7 @@ struct CORE_API YWindowsPlatformMisc
 	static const TCHAR* GetSystemErrorMessage(TCHAR* OutBuffer, int32 BufferCount, int32 Error);
 	static void ClipboardCopy(const TCHAR* Str);
 	static void ClipboardPaste(class YString& Dest);
-	static void CreateGuid(struct YGuid& Result);
+	static void CreateGuid(struct FGuid& Result);
 	static EAppReturnType::Type MessageBoxExt(EAppMsgType::Type MsgType, const TCHAR* Text, const TCHAR* Caption);
 	static void PreventScreenSaver();
 	static bool CommandLineCommands();
@@ -106,9 +106,9 @@ struct CORE_API YWindowsPlatformMisc
 
 	static uint32 GetLastError();
 	static void RaiseException(uint32 ExceptionCode);
-	static bool SetStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeyName, const YString& InValue);
-	static bool GetStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeyName, YString& OutValue);
-	static bool DeleteStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeyName);
+	static bool SetStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeFName, const YString& InValue);
+	static bool GetStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeFName, YString& OutValue);
+	static bool DeleteStoredValue(const YString& InStoreId, const YString& InSectionName, const YString& InKeFName);
 
 	static bool CoInitialize();
 	static void CoUninitialize();
@@ -167,7 +167,7 @@ struct CORE_API YWindowsPlatformMisc
 	*
 	* @return					The color of the pixel displayed at the chosen location
 	*/
-	static struct YLinearColor GetScreenPixelColor(const YVector2D& InScreenPos, float InGamma = 1.0f);
+	static struct FLinearColor GetScreenPixelColor(const YVector2D& InScreenPos, float InGamma = 1.0f);
 
 #if !UE_BUILD_SHIPPING
 	static void PromptForRemoteDebugging(bool bIsEnsure);

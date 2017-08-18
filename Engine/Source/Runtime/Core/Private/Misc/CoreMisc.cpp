@@ -47,7 +47,7 @@ FSelfRegisteringExec::~FSelfRegisteringExec()
 	verify( GetRegisteredExecs().Remove( this ) == 1 );
 }
 
-bool FSelfRegisteringExec::StaticExec( UWorld* InWorld, const TCHAR* Cmd, YOutputDevice& Ar )
+bool FSelfRegisteringExec::StaticExec( UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar )
 {
 	const TArray<FSelfRegisteringExec*>& RegisteredExecs = GetRegisteredExecs();
 	for(int32 ExecIndex = 0;ExecIndex < RegisteredExecs.Num();++ExecIndex)
@@ -67,11 +67,11 @@ TArray<FSelfRegisteringExec*>& FSelfRegisteringExec::GetRegisteredExecs()
 	return *RegisteredExecs;
 }
 
-FStaticSelfRegisteringExec::FStaticSelfRegisteringExec(bool (*InStaticExecFunc)(UWorld* Inworld, const TCHAR* Cmd,YOutputDevice& Ar))
+FStaticSelfRegisteringExec::FStaticSelfRegisteringExec(bool (*InStaticExecFunc)(UWorld* Inworld, const TCHAR* Cmd,FOutputDevice& Ar))
 :	StaticExecFunc(InStaticExecFunc)
 {}
 
-bool FStaticSelfRegisteringExec::Exec( UWorld* InWorld, const TCHAR* Cmd, YOutputDevice& Ar )
+bool FStaticSelfRegisteringExec::Exec( UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar )
 {
 	return (*StaticExecFunc)( InWorld, Cmd,Ar);
 }
@@ -160,7 +160,7 @@ FTicker& FTicker::GetCoreTicker()
 
 FQueryIsRunningServer GIsServerDelegate;
 
-bool IsServerForOnlineSubsystems(YName WorldContextHandle)
+bool IsServerForOnlineSubsystems(FName WorldContextHandle)
 {
 	if (GIsServerDelegate.IsBound())
 	{

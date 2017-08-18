@@ -223,7 +223,7 @@ enum EUnrealEngineObjectUE4Version
 	VER_UE4_WORLD_LEVEL_INFO_LOD_LIST,
 	// CharacterMovement variable naming refactor
 	VER_UE4_CHARACTER_MOVEMENT_VARIABLE_RENAMING_1,
-	// YName properties containing sound names converted to FSlateSound properties
+	// FName properties containing sound names converted to FSlateSound properties
 	VER_UE4_FSLATESOUND_CONVERSION,
 	// Added ZOrder to a world tile description
 	VER_UE4_WORLD_LEVEL_INFO_ZORDER,
@@ -330,7 +330,7 @@ enum EUnrealEngineObjectUE4Version
 	VER_UE4_FTEXT_HISTORY,
 	// Shift comments to the left to contain expressions properly
 	VER_UE4_FIX_MATERIAL_COMMENTS,
-	// Bone names stored as YName means that we can't guarantee the correct case on export, now we store a separate string for export purposes only
+	// Bone names stored as FName means that we can't guarantee the correct case on export, now we store a separate string for export purposes only
 	VER_UE4_STORE_BONE_EXPORT_NAMES,
 	// changed mesh emitter initial orientation to distribution
 	VER_UE4_MESH_EMITTER_INITIAL_ORIENTATION_DISTRIBUTION,
@@ -342,7 +342,7 @@ enum EUnrealEngineObjectUE4Version
 	VER_UE4_DEPRECATED_MOVEMENTCOMPONENT_MODIFIED_SPEEDS,
 	// rename CanBeCharacterBase
 	VER_UE4_RENAME_CANBECHARACTERBASE,
-	// Change GameplayTagContainers to have FGameplayTags instead of YNames; Required to fix-up native serialization
+	// Change GameplayTagContainers to have FGameplayTags instead of FNames; Required to fix-up native serialization
 	VER_UE4_GAMEPLAY_TAG_CONTAINER_TAG_TYPE_CHANGE,
 	// Change from UInstancedFoliageSettings to UFoliageType, and change the api from being keyed on UStaticMesh* to UFoliageType*
 	VER_UE4_FOLIAGE_SETTINGS_TYPE,
@@ -354,7 +354,7 @@ enum EUnrealEngineObjectUE4Version
 	VER_UE4_ADD_LB_WEIGHTBLEND,
 	// Add root component to an foliage actor, all foliage cluster components will be attached to a root
 	VER_UE4_ADD_ROOTCOMPONENT_TO_FOLIAGEACTOR,
-	// FMaterialInstanceBasePropertyOverrides didn't use proper SObject serialize
+	// FMaterialInstanceBasePropertyOverrides didn't use proper UObject serialize
 	VER_UE4_FIX_MATERIAL_PROPERTY_OVERRIDE_SERIALIZE,
 	// Addition of linear color sampler. color sample type is changed to linear sampler if source texture !sRGB
 	VER_UE4_ADD_LINEAR_COLOR_SAMPLER,
@@ -391,8 +391,8 @@ enum EUnrealEngineObjectUE4Version
 	// Rename USpringArmComponent::bUseControllerViewRotation to bUsePawnViewRotation,
 	// Rename UCameraComponent::bUseControllerViewRotation to bUsePawnViewRotation (and change the default value)
 	VER_UE4_RENAME_CAMERA_COMPONENT_VIEW_ROTATION,
-	// Changed YName to be case preserving
-	VER_UE4_CASE_PRESERVING_YName,
+	// Changed FName to be case preserving
+	VER_UE4_CASE_PRESERVING_FName,
 	// Rename USpringArmComponent::bUsePawnViewRotation to bUsePawnControlRotation
 	// Rename UCameraComponent::bUsePawnViewRotation to bUsePawnControlRotation
 	VER_UE4_RENAME_CAMERA_COMPONENT_CONTROL_ROTATION,
@@ -519,7 +519,7 @@ enum EUnrealEngineObjectUE4Version
 	VER_UE4_NEW_LIGHTMASS_PRIMITIVE_SETTING,
 	// Deprecate NoZSpring property on spring nodes to be replaced with TranslateZ property
 	VER_UE4_REPLACE_SPRING_NOZ_PROPERTY,
-	// Keep enums tight and serialize their values as pairs of YName and value. Don't insert dummy values.
+	// Keep enums tight and serialize their values as pairs of FName and value. Don't insert dummy values.
 	VER_UE4_TIGHTLY_PACKED_ENUMS,
 	// Changed Asset import data to serialize file meta data as JSON
 	VER_UE4_ASSET_IMPORT_DATA_AS_JSON,
@@ -637,7 +637,7 @@ enum EUnrealEngineObjectLicenseeUE4Version
 #define VER_LATEST_ENGINE_LICENSEEUE4   PREPROCESSOR_ENUM_PROTECT(VER_LIC_AUTOMATIC_VERSION)
 
 // Minimum package version that contains legal bytecode
-#define VER_MIN_SCRIPTVM_UE4									(VER_UE4_CASE_PRESERVING_YName)
+#define VER_MIN_SCRIPTVM_UE4									(VER_UE4_CASE_PRESERVING_FName)
 #define VER_MIN_SCRIPTVM_LICENSEEUE4							(VER_LIC_NONE)
 
 // Version access.

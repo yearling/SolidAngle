@@ -55,7 +55,7 @@ public:
 	void DoWork()
 	{
 		check( Data.Num() );
-		YArchive& Ar = *Outer->File;
+		FArchive& Ar = *Outer->File;
 
 		// Seek to the end of the file.
 		const int64 TotalSize = Ar.TotalSize();
@@ -184,7 +184,7 @@ void FStatsLoadedState::AdvanceFrameForLoad( TArray<FStatMessage>& CondensedMess
 	FStastsWriteStream
 -----------------------------------------------------------------------------*/
 
-void FStatsWriteStream::WriteMetadata( YArchive& Ar )
+void FStatsWriteStream::WriteMetadata( FArchive& Ar )
 {
 	const FStatsThreadState& Stats = FStatsThreadState::GetLocalState();
 	for (const auto& It : Stats.ShortNameToLongName)
@@ -194,7 +194,7 @@ void FStatsWriteStream::WriteMetadata( YArchive& Ar )
 	}
 }
 
-void FStatsWriteStream::WriteCondensedMessages( YArchive& Ar, int64 TargetFrame )
+void FStatsWriteStream::WriteCondensedMessages( FArchive& Ar, int64 TargetFrame )
 {
 	const FStatsThreadState& Stats = FStatsThreadState::GetLocalState();
 	const TArray<FStatMessage>& Data = Stats.GetCondensedHistory( TargetFrame );
@@ -284,7 +284,7 @@ FText IStatsWriteFile::GetFileMetaDesc() const
 void IStatsWriteFile::WriteHeader()
 {
 	YMemoryWriter MemoryWriter( OutData, false, true );
-	YArchive& Ar = File ? *File : MemoryWriter;
+	FArchive& Ar = File ? *File : MemoryWriter;
 
 	uint32 Magic = EStatMagicWithHeader::MAGIC;
 	// Serialize magic value.
@@ -302,7 +302,7 @@ void IStatsWriteFile::WriteHeader()
 
 void IStatsWriteFile::Finalize()
 {
-	YArchive& Ar = *File;
+	FArchive& Ar = *File;
 
 	// Write dummy compression size, so we can detect the end of the file.
 	FCompressedStatsData::WriteEndOfCompressedData( Ar );
@@ -316,23 +316,23 @@ void IStatsWriteFile::Finalize()
 
 	const FStatsThreadState& Stats = FStatsThreadState::GetLocalState();
 
-	// Add YNames from the stats metadata.
+	// Add FNames from the stats metadata.
 	for (const auto& It : Stats.ShortNameToLongName)
 	{
 		const FStatMessage& StatMessage = It.Value;
-		YNamesSent.Add( StatMessage.NameAndInfo.GetRawName().GetComparisonIndex() );
+		FNamesSent.Add( StatMessage.NameAndInfo.GetRawName().GetComparisonIndex() );
 	}
 
 	// Create a copy of names.
-	TSet<int32> YNamesToSent = YNamesSent;
-	YNamesSent.Empty( YNamesSent.Num() );
+	TSet<int32> FNamesToSent = FNamesSent;
+	FNamesSent.Empty( FNamesSent.Num() );
 
-	// Serialize YNames.
-	Header.YNameTableOffset = Ar.Tell();
-	Header.NumYNames = YNamesToSent.Num();
-	for (const int32 It : YNamesToSent)
+	// Serialize FNames.
+	Header.FNameTableOffset = Ar.Tell();
+	Header.NumFNames = FNamesToSent.Num();
+	for (const int32 It : FNamesToSent)
 	{
-		WriteYName( Ar, FStatNameAndInfo( YName( It, It, 0 ), false ) );
+		WriteFName( Ar, FStatNameAndInfo( FName( It, It, 0 ), false ) );
 	}
 
 	// Serialize metadata messages.
@@ -341,20 +341,20 @@ void IStatsWriteFile::Finalize()
 	WriteMetadata( Ar );
 
 	// Verify data.
-	TSet<int32> BMinA = YNamesSent.Difference( YNamesToSent );
+	TSet<int32> BMinA = FNamesSent.Difference( FNamesToSent );
 	struct FLocal
 	{
-		static TArray<YName> GetYNameArray( const TSet<int32>& NameIndices )
+		static TArray<FName> GetFNameArray( const TSet<int32>& NameIndices )
 		{
-			TArray<YName> Result;
+			TArray<FName> Result;
 			for (const int32 NameIndex : NameIndices)
 			{
-				new(Result)YName( NameIndex, NameIndex, 0 );
+				new(Result)FName( NameIndex, NameIndex, 0 );
 			}
 			return Result;
 		}
 	};
-	TArray<YName> BMinANames = FLocal::GetYNameArray( BMinA );
+	TArray<FName> BMinANames = FLocal::GetFNameArray( BMinA );
 
 	// Seek to the position just after a magic value of the file and write out proper header.
 	Ar.Seek( sizeof( uint32 ) );
@@ -456,7 +456,7 @@ void FRawStatsWriteFile::WriteRawStatPacket( const FStatPacket* StatPacket )
 	SendTask();
 }
 
-void FRawStatsWriteFile::WriteStatPacket( YArchive& Ar, FStatPacket& StatPacket )
+void FRawStatsWriteFile::WriteStatPacket( FArchive& Ar, FStatPacket& StatPacket )
 {
 	Ar << StatPacket.Frame;
 	Ar << StatPacket.ThreadId;
@@ -615,14 +615,14 @@ bool FStatsReadFile::PrepareLoading()
 
 	// Read metadata.
 	TArray<FStatMessage> MetadataMessages;
-	Stream.ReadYNamesAndMetadataMessages( *Reader, MetadataMessages );
+	Stream.ReadFNamesAndMetadataMessages( *Reader, MetadataMessages );
 	State.ProcessMetaDataOnly( MetadataMessages );
 
-	// Find all SObject metadata messages.
+	// Find all UObject metadata messages.
 	for (const FStatMessage& Meta : MetadataMessages)
 	{
-		const YName EncName = Meta.NameAndInfo.GetEncodedName();
-		const YName RawName = Meta.NameAndInfo.GetRawName();
+		const FName EncName = Meta.NameAndInfo.GetEncodedName();
+		const FName RawName = Meta.NameAndInfo.GetRawName();
 		const YString Desc = FStatNameAndInfo::GetShortNameFrom( RawName ).GetPlainNameString();
 		const bool bContainsUObject = Desc.Contains( TEXT( "/" ) );
 		if (bContainsUObject)
@@ -860,7 +860,7 @@ void FStatsReadFile::ProcessStats()
 			int32 CurrentStatMessageIndex = 0;
 
 			// Raw stats callstack for this file.
-			TMap<YName, FStackState> StackStates;
+			TMap<FName, FStackState> StackStates;
 
 			// Read all stats messages for all frames, decode callstacks.
 			const int32 FirstFrame = 0;
@@ -876,14 +876,14 @@ void FStatsReadFile::ProcessStats()
 				for (int32 PacketIndex = 0; PacketIndex < Frame.Packets.Num(); PacketIndex++)
 				{
 					const FStatPacket& StatPacket = *Frame.Packets[PacketIndex];
-					const YName& ThreadYName = State.Threads.FindChecked( StatPacket.ThreadId );
+					const FName& ThreadFName = State.Threads.FindChecked( StatPacket.ThreadId );
 
-					FStackState* StackState = StackStates.Find( ThreadYName );
+					FStackState* StackState = StackStates.Find( ThreadFName );
 					if (!StackState)
 					{
-						StackState = &StackStates.Add( ThreadYName );
-						StackState->Stack.Add( ThreadYName );
-						StackState->Current = ThreadYName;
+						StackState = &StackStates.Add( ThreadFName );
+						StackState->Stack.Add( ThreadFName );
+						StackState->Current = ThreadFName;
 					}
 
 					const FStatMessagesArray& Data = StatPacket.StatMessages;
@@ -894,7 +894,7 @@ void FStatsReadFile::ProcessStats()
 
 						const FStatMessage& Message = Data[Index];
 						const EStatOperation::Type Op = Message.NameAndInfo.GetField<EStatOperation>();
-						const YName RawName = Message.NameAndInfo.GetRawName();
+						const FName RawName = Message.NameAndInfo.GetRawName();
 
 						if (Op == EStatOperation::CycleScopeStart || Op == EStatOperation::CycleScopeEnd || Op == EStatOperation::Memory || Op == EStatOperation::SpecialMessageMarker)
 						{
@@ -923,9 +923,9 @@ void FStatsReadFile::ProcessStats()
 									const FStatMessage& SequenceTagMessage = Data[Index];
 									const uint32 SequenceTag = SequenceTagMessage.GetValue_int64();
 
-									//ThreadStats->AddMemoryMessage( GET_STATYNAME( STAT_Memory_AllocPtr ), (uint64)(UPTRINT)Ptr | (uint64)EMemoryOperation::Alloc );
-									//ThreadStats->AddMemoryMessage( GET_STATYNAME( STAT_Memory_AllocSize ), Size );
-									//ThreadStats->AddMemoryMessage( GET_STATYNAME( STAT_Memory_OperationSequenceTag ), (int64)SequenceTag );
+									//ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_AllocPtr ), (uint64)(UPTRINT)Ptr | (uint64)EMemoryOperation::Alloc );
+									//ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_AllocSize ), Size );
+									//ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_OperationSequenceTag ), (int64)SequenceTag );
 									ProcessMemoryOperation( MemOp, Ptr, 0, AllocSize, SequenceTag, *StackState );
 								}
 								else if (MemOp == EMemoryOperation::Realloc)
@@ -947,10 +947,10 @@ void FStatsReadFile::ProcessStats()
 									const FStatMessage& SequenceTagMessage = Data[Index];
 									const uint32 SequenceTag = SequenceTagMessage.GetValue_int64();
 
-									//ThreadStats->AddMemoryMessage( GET_STATYNAME( STAT_Memory_FreePtr ), (uint64)(UPTRINT)OldPtr | (uint64)EMemoryOperation::Realloc );
-									//ThreadStats->AddMemoryMessage( GET_STATYNAME( STAT_Memory_AllocPtr ), (uint64)(UPTRINT)NewPtr | (uint64)EMemoryOperation::Realloc );
-									//ThreadStats->AddMemoryMessage( GET_STATYNAME( STAT_Memory_AllocSize ), NewSize );
-									//ThreadStats->AddMemoryMessage( GET_STATYNAME( STAT_Memory_OperationSequenceTag ), (int64)SequenceTag );
+									//ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_FreePtr ), (uint64)(UPTRINT)OldPtr | (uint64)EMemoryOperation::Realloc );
+									//ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_AllocPtr ), (uint64)(UPTRINT)NewPtr | (uint64)EMemoryOperation::Realloc );
+									//ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_AllocSize ), NewSize );
+									//ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_OperationSequenceTag ), (int64)SequenceTag );
 									ProcessMemoryOperation( MemOp, OldPtr, NewPtr, ReallocSize, SequenceTag, *StackState );
 								}
 								else if (MemOp == EMemoryOperation::Free)
@@ -960,8 +960,8 @@ void FStatsReadFile::ProcessStats()
 									const FStatMessage& SequenceTagMessage = Data[Index];
 									const uint32 SequenceTag = SequenceTagMessage.GetValue_int64();
 
-									//ThreadStats->AddMemoryMessage( GET_STATYNAME( STAT_Memory_FreePtr ), (uint64)(UPTRINT)Ptr | (uint64)EMemoryOperation::Free );	// 16 bytes total				
-									//ThreadStats->AddMemoryMessage( GET_STATYNAME( STAT_Memory_OperationSequenceTag ), (int64)SequenceTag );
+									//ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_FreePtr ), (uint64)(UPTRINT)Ptr | (uint64)EMemoryOperation::Free );	// 16 bytes total				
+									//ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_OperationSequenceTag ), (int64)SequenceTag );
 									ProcessMemoryOperation( MemOp, Ptr, 0, 0, SequenceTag, *StackState );
 								}
 								else
@@ -974,8 +974,8 @@ void FStatsReadFile::ProcessStats()
 							{
 								if (StackState->Stack.Num() > 1)
 								{
-									const YName ScopeStart = StackState->Stack.Pop();
-									const YName ScopeEnd = Message.NameAndInfo.GetRawName();
+									const FName ScopeStart = StackState->Stack.Pop();
+									const FName ScopeEnd = Message.NameAndInfo.GetRawName();
 
 									check( ScopeStart == ScopeEnd );
 
@@ -989,10 +989,10 @@ void FStatsReadFile::ProcessStats()
 								}
 								else
 								{
-									const YName ShortName = Message.NameAndInfo.GetShortName();
+									const FName ShortName = Message.NameAndInfo.GetShortName();
 
 									UE_LOG( LogStats, Warning, TEXT( "Broken cycle scope end %s/%s, current %s" ),
-											*ThreadYName.ToString(),
+											*ThreadFName.ToString(),
 											*ShortName.ToString(),
 											*StackState->Current.ToString() );
 
@@ -1000,8 +1000,8 @@ void FStatsReadFile::ProcessStats()
 									// Rollback to the thread node.
 									StackState->bIsBrokenCallstack = true;
 									StackState->Stack.Empty();
-									StackState->Stack.Add( ThreadYName );
-									StackState->Current = ThreadYName;
+									StackState->Stack.Add( ThreadFName );
+									StackState->Current = ThreadFName;
 
 									//?ProcessCycleScopeEndOperation( Message, *StackState );
 								}

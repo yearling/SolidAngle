@@ -26,7 +26,7 @@ void FUProjectDictionary::Refresh()
 
 	// Get the normalized path to the root directory
 	YString NormalizedRootDir = YPaths::ConvertRelativePathToFull(RootDir);
-	YPaths::NormalizeDirectoryName(NormalizedRootDir);
+	YPaths::NormalizeDirectorFName(NormalizedRootDir);
 	YString NormalizedRootDirPrefix = NormalizedRootDir / TEXT("");
 
 	// Add all the project root directories to ProjectRootDirs
@@ -40,11 +40,11 @@ void FUProjectDictionary::Refresh()
 				YString Entry = YString(Line).Trim();
 				if(!Entry.IsEmpty() && !Entry.StartsWith(";"))
 				{
-					YString DirectoryName = YPaths::ConvertRelativePathToFull(RootDir, Entry);
-					YPaths::NormalizeDirectoryName(DirectoryName);
-					if (DirectoryName.StartsWith(NormalizedRootDirPrefix) || DirectoryName == NormalizedRootDir)
+					YString DirectorFName = YPaths::ConvertRelativePathToFull(RootDir, Entry);
+					YPaths::NormalizeDirectorFName(DirectorFName);
+					if (DirectorFName.StartsWith(NormalizedRootDirPrefix) || DirectorFName == NormalizedRootDir)
 					{
-						ProjectRootDirs.AddUnique(DirectoryName);
+						ProjectRootDirs.AddUnique(DirectorFName);
 					}
 					else
 					{

@@ -42,7 +42,7 @@ public:
 	static bool OverrideCurrentVersionChangelist(int32 NewChangelist, int32 NewCompatibleChangelist);
 
 	/** Serialization function */
-	friend CORE_API void operator<<(class YArchive &Ar, FEngineVersion &Version);
+	friend CORE_API void operator<<(class FArchive &Ar, FEngineVersion &Version);
 
 	/** Returns the branch name corresponding to this version. */
 	const YString GetBranch() const

@@ -285,7 +285,7 @@ public:
 	* @return true on success, false otherwise.
 	* @see ImportTextItem
 	*/
-	CORE_API bool ExportTextItem(YString& ValueStr, YTimespan const& DefaultValue, SObject* Parent, int32 PortFlags, SObject* ExportRootScope) const;
+	CORE_API bool ExportTextItem(YString& ValueStr, YTimespan const& DefaultValue, UObject* Parent, int32 PortFlags, UObject* ExportRootScope) const;
 
 	/**
 	* Gets the days component of this time span.
@@ -451,7 +451,7 @@ public:
 	* @return true on success, false otherwise.
 	* @see ExportTextItem
 	*/
-	CORE_API bool ImportTextItem(const TCHAR*& Buffer, int32 PortFlags, SObject* Parent, YOutputDevice* ErrorText);
+	CORE_API bool ImportTextItem(const TCHAR*& Buffer, int32 PortFlags, UObject* Parent, FOutputDevice* ErrorText);
 
 	/**
 	* Check whether this time span is zero.
@@ -470,7 +470,7 @@ public:
 	* @param Ar The archive to serialize from or into.
 	* @return true on success, false otherwise.
 	*/
-	CORE_API bool Serialize(YArchive& Ar);
+	CORE_API bool Serialize(FArchive& Ar);
 
 	/**
 	* Returns the string representation of this time span using a default format.
@@ -616,7 +616,7 @@ public:
 
 public:
 
-	friend class SObject;
+	friend class UObject;
 
 	/**
 	* Serializes the given time span from or into the specified archive.
@@ -627,7 +627,7 @@ public:
 	*
 	* @todo gmp: Figure out better include order in Core.h so this can be inlined.
 	*/
-	friend CORE_API YArchive& operator<<(YArchive& Ar, YTimespan& Timespan);
+	friend CORE_API FArchive& operator<<(FArchive& Ar, YTimespan& Timespan);
 
 	/**
 	* Gets the hash for the specified time span.

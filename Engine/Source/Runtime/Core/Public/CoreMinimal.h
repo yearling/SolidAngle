@@ -13,7 +13,7 @@ Forward declarations
 ----------------------------------------------------------------------------*/
 
 #include "CoreFwd.h"
-#include "SObject/SObjectHierarchyFwd.h"
+#include "UObject/UObjectHierarchyFwd.h"
 #include "Containers/ContainersFwd.h"
 
 /*----------------------------------------------------------------------------
@@ -74,8 +74,8 @@ Commonly used headers
 #include "Misc/Timespan.h"
 #include "HAL/CriticalSection.h"
 #include "Containers/StringConv.h"
-#include "SObject/SolidAngleNames.h"
-#include "SObject/NameTypes.h"
+#include "UObject/SolidAngleNames.h"
+#include "UObject/NameTypes.h"
 #include "Misc/Parse.h"
 #include "Math/Color.h"
 #include "Templates/AlignmentTemplates.h"
@@ -104,8 +104,8 @@ Commonly used headers
 #include "CoreGlobals.h"
 #include "Templates/SharedPointer.h"
 #include "Internationalization/CulturePointer.h"
-#include "SObject/AutoPointer.h"
-#include "SObject/WeakObjectPtrTemplates.h"
+#include "UObject/AutoPointer.h"
+#include "UObject/WeakObjectPtrTemplates.h"
 #include "Delegates/DelegateSettings.h"
 #include "Delegates/IDelegateInstance.h"
 #include "Delegates/DelegateBase.h"
@@ -113,7 +113,7 @@ Commonly used headers
 #include "Delegates/IntegerSequence.h"
 #include "Delegates/Tuple.h"
 #include "Templates/TypeWrapper.h"
-#include "SObject/ScriptDelegates.h"
+#include "UObject/ScriptDelegates.h"
 #include "Delegates/Delegate.h"
 #include "Internationalization/TextLocalizationManager.h"
 #include "Misc/Optional.h"
@@ -128,7 +128,7 @@ Commonly used headers
 #include "Math/VectorRegister.h"
 #include "Math/TwoVectors.h"
 #include "Math/Edge.h"
-#include "SObject/ObjectVersion.h"
+#include "UObject/ObjectVersion.h"
 #include "Math/Plane.h"
 #include "Math/Sphere.h"
 #include "Math/CapsuleShape.h"

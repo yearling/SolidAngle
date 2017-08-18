@@ -571,6 +571,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\BufferReader.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\CompressedChunkInfo.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\CustomVersion.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\MemoryArchive.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\MemoryReader.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\MemoryWriter.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Serialization\NameAsStringProxyArchive.h" />

@@ -55,10 +55,10 @@ void DoGamethreadHook(int32 Index)
 }
 #endif
 
-class FMallocPurgatoryProxy : public YMalloc
+class FMallocPurgatoryProxy : public FMalloc
 {
 	/** Malloc we're based on, aka using under the hood							*/
-	YMalloc*			UsedMalloc;
+	FMalloc*			UsedMalloc;
 	enum
 	{
 		PURGATORY_STOMP_CHECKS_FRAMES = 4, // we want to allow several frames since it is theoretically possible for something to be blocked mid-allocation for many frames.
@@ -77,7 +77,7 @@ public:
 	*
 	* @param	InMalloc					YMalloc that is going to be used for actual allocations
 	*/
-	FMallocPurgatoryProxy(YMalloc* InMalloc)
+	FMallocPurgatoryProxy(FMalloc* InMalloc)
 		: UsedMalloc(InMalloc)
 	{}
 
@@ -156,13 +156,13 @@ public:
 	}
 
 	/** Writes allocator stats from the last update into the specified destination. */
-	virtual void GetAllocatorStats(YGenericMemoryStats& out_Stats) override
+	virtual void GetAllocatorStats(FGenericMemoryStats& out_Stats) override
 	{
 		UsedMalloc->GetAllocatorStats(out_Stats);
 	}
 
 	/** Dumps allocator stats to an output device. */
-	virtual void DumpAllocatorStats(class YOutputDevice& Ar) override
+	virtual void DumpAllocatorStats(class FOutputDevice& Ar) override
 	{
 		UsedMalloc->DumpAllocatorStats(Ar);
 	}
@@ -175,7 +175,7 @@ public:
 		return(UsedMalloc->ValidateHeap());
 	}
 
-	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, YOutputDevice& Ar) override
+	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar) override
 	{
 		return UsedMalloc->Exec(InWorld, Cmd, Ar);
 	}
@@ -230,8 +230,8 @@ void YMemory::EnablePurgatoryTests()
 	bOnce = true;
 	while (true)
 	{
-		YMalloc* LocalGMalloc = GMalloc;
-		YMalloc* Proxy = new FMallocPurgatoryProxy(LocalGMalloc);
+		FMalloc* LocalGMalloc = GMalloc;
+		FMalloc* Proxy = new FMallocPurgatoryProxy(LocalGMalloc);
 		if (FPlatformAtomics::InterlockedCompareExchangePointer((void**)&GMalloc, Proxy, LocalGMalloc) == LocalGMalloc)
 		{
 			UE_LOG(LogConsoleResponse, Display, TEXT("Purgatory proxy is now on."));
@@ -257,8 +257,8 @@ void YMemory::EnablePoisonTests()
 	bOnce = true;
 	while (true)
 	{
-		YMalloc* LocalGMalloc = GMalloc;
-		YMalloc* Proxy = new FMallocPoisonProxy(LocalGMalloc);
+		FMalloc* LocalGMalloc = GMalloc;
+		FMalloc* Proxy = new FMallocPoisonProxy(LocalGMalloc);
 		if (FPlatformAtomics::InterlockedCompareExchangePointer((void**)&GMalloc, Proxy, LocalGMalloc) == LocalGMalloc)
 		{
 			UE_LOG(LogConsoleResponse, Display, TEXT("Poison proxy is now on."));

@@ -82,7 +82,7 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 	 *
 	 * @return Reference to the Archive after serialization.
 	 */
-	friend YArchive& operator<<(YArchive& Ar, FTAlphaBlend& AlphaBlend)
+	friend FArchive& operator<<(FArchive& Ar, FTAlphaBlend& AlphaBlend)
 	{
 		return Ar << AlphaBlend.AlphaIn << AlphaBlend.AlphaOut << AlphaBlend.AlphaTarget << AlphaBlend.BlendTime << AlphaBlend.BlendTimeToGo << AlphaBlend.BlendType;
 	}

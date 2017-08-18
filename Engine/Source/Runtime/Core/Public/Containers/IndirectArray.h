@@ -186,13 +186,13 @@ public:
 	}
 
 	/**
-	* Special serialize function passing the owning SObject along as required
+	* Special serialize function passing the owning UObject along as required
 	* by FUnytpedBulkData serialization.
 	*
 	* @param Ar Archive to serialize with.
-	* @param Owner SObject this structure is serialized within.
+	* @param Owner UObject this structure is serialized within.
 	*/
-	void Serialize(YArchive& Ar, SObject* Owner)
+	void Serialize(FArchive& Ar, UObject* Owner)
 	{
 		CountBytes(Ar);
 		if (Ar.IsLoading())
@@ -229,7 +229,7 @@ public:
 	* @param A Array to serialize.
 	* @returns Passing down serializing archive.
 	*/
-	friend YArchive& operator<<(YArchive& Ar, TIndirectArray& A)
+	friend FArchive& operator<<(FArchive& Ar, TIndirectArray& A)
 	{
 		A.CountBytes(Ar);
 		if (Ar.IsLoading())
@@ -261,7 +261,7 @@ public:
 	*
 	* @param Ar Archive to count for.
 	*/
-	void CountBytes(YArchive& Ar)
+	void CountBytes(FArchive& Ar)
 	{
 		Array.CountBytes(Ar);
 	}

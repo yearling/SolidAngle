@@ -5,7 +5,7 @@
 #include "Math/SolidAngleMathUtility.h"
 #include "Containers/Array.h"
 #include "Containers/SolidAngleString.h"
-#include "SObject/NameTypes.h"
+#include "UObject/NameTypes.h"
 #include "Logging/LogCategory.h"
 #include "Logging/LogMacros.h"
 #include "Misc/Parse.h"
@@ -48,20 +48,20 @@ static FLogCategoryBase BootGlobalVerbosity(TEXT("BootGlobal"), ELogVerbosity::A
 class FLogSuppressionImplementation: public FLogSuppressionInterface, private FSelfRegisteringExec
 {
 	/** Associates a category pointer with the name of the category **/
-	TMap<FLogCategoryBase*, YName> Associations;
+	TMap<FLogCategoryBase*, FName> Associations;
 	/** Associates a category name with a set of category pointers; the inverse of the above.  **/
-	TMultiMap<YName, FLogCategoryBase*> ReverseAssociations;
+	TMultiMap<FName, FLogCategoryBase*> ReverseAssociations;
 	/** Set of verbosity and break values that were set at boot time. **/
-	TMap<YName, uint8> BootAssociations;
+	TMap<FName, uint8> BootAssociations;
 	/** For a given category stores the last non-zero verbosity...to support toggling without losing the specific verbosity level **/
-	TMap<YName, uint8> ToggleAssociations;
+	TMap<FName, uint8> ToggleAssociations;
 
 	/**
 	 * Process a "[cat] only" string command to the logging suppression system
 	 * @param CmdString, string to process
 	 * @return true if CmdString was a "[cat] only" string command, false otherwise
 	 */
-	bool ProcessLogOnly(const YString& CmdString, YOutputDevice& Ar)
+	bool ProcessLogOnly(const YString& CmdString, FOutputDevice& Ar)
 	{
 		TArray<YString> CommandParts;
 		CmdString.ParseIntoArrayWS(CommandParts);
@@ -70,18 +70,18 @@ class FLogSuppressionImplementation: public FLogSuppressionInterface, private FS
 			return false;
 		}
 		
-		static YName NAME_Only(TEXT("only"));
-		if (NAME_Only != YName(*CommandParts[1]))
+		static FName NAME_Only(TEXT("only"));
+		if (NAME_Only != FName(*CommandParts[1]))
 		{
 			return false;
 		}
 		
-		YName LogCategory = YName(*CommandParts[0]);
+		FName LogCategory = FName(*CommandParts[0]);
 		static const YString OfYString = YString(" off");
 		static const YString OnString = YString(" Verbose");
 		for (auto It : Associations)
 		{
-			YName Name = It.Value;
+			FName Name = It.Value;
 			if (Name == LogCategory)
 			{
 				ProcessCmdString(Name.ToString() + OnString);
@@ -110,8 +110,8 @@ class FLogSuppressionImplementation: public FLogSuppressionInterface, private FS
 		// e.g., Set specific filter  : `log logshaders verbose
 		// e.g., Combo command        : `log global none, log logshaders verbose
 
-		static YName NAME_BootGlobal(TEXT("BootGlobal"));
-		static YName NAME_Reset(TEXT("Reset"));
+		static FName NAME_BootGlobal(TEXT("BootGlobal"));
+		static FName NAME_Reset(TEXT("Reset"));
 		YString Cmds = CmdString;
 		Cmds = Cmds.Trim().TrimQuotes();
 		Cmds.Trim();
@@ -131,7 +131,7 @@ class FLogSuppressionImplementation: public FLogSuppressionInterface, private FS
 			{
 				continue;
 			}
-			YName Category(*CommandParts[0]);
+			FName Category(*CommandParts[0]);
 			if (Category == NAME_Global && FromBoot)
 			{
 				Category = NAME_BootGlobal; // the boot time global is a special one, since we want things like "log global none, log logshaders verbose"
@@ -158,7 +158,7 @@ class FLogSuppressionImplementation: public FLogSuppressionInterface, private FS
 			}
 			else
 			{
-				for (TMultiMap<YName, FLogCategoryBase*>::TKeyIterator It(ReverseAssociations, Category); It; ++It)
+				for (TMultiMap<FName, FLogCategoryBase*>::TKeyIterator It(ReverseAssociations, Category); It; ++It)
 				{
 					checkSlow(!(It.Value()->Verbosity & ELogVerbosity::BreakOnLog)); // this bit is factored out of this variable, always
 					Value = It.Value()->Verbosity | (It.Value()->DebugBreakOnLog ? ELogVerbosity::BreakOnLog : 0);
@@ -172,7 +172,7 @@ class FLogSuppressionImplementation: public FLogSuppressionInterface, private FS
 				{
 					if (Category == NAME_Reset)
 					{
-						for (TMap<FLogCategoryBase*, YName>::TIterator It(Associations); It; ++It)
+						for (TMap<FLogCategoryBase*, FName>::TIterator It(Associations); It; ++It)
 						{
 							FLogCategoryBase* Verb = It.Key();
 							Verb->ResetFromDefault();
@@ -214,17 +214,17 @@ class FLogSuppressionImplementation: public FLogSuppressionInterface, private FS
 				// now we have the current value, lets change it!
 				for (int32 PartIndex = 1; PartIndex < CommandParts.Num(); PartIndex++)
 				{
-					YName CmdToken = YName(*CommandParts[PartIndex]);
-					static YName NAME_Verbose(TEXT("Verbose"));
-					static YName NAME_VeryVerbose(TEXT("VeryVerbose"));
-					static YName NAME_All(TEXT("All"));
-					static YName NAME_Default(TEXT("Default"));
-					static YName NAME_On(TEXT("On"));
-					static YName NAME_Off(TEXT("Off"));
-					static YName NAME_Break(TEXT("Break"));
-					static YName NAME_Fatal(TEXT("Fatal"));
-					static YName NAME_Log(TEXT("Log"));
-					static YName NAME_Display(TEXT("Display"));
+					FName CmdToken = FName(*CommandParts[PartIndex]);
+					static FName NAME_Verbose(TEXT("Verbose"));
+					static FName NAME_VeryVerbose(TEXT("VeryVerbose"));
+					static FName NAME_All(TEXT("All"));
+					static FName NAME_Default(TEXT("Default"));
+					static FName NAME_On(TEXT("On"));
+					static FName NAME_Off(TEXT("Off"));
+					static FName NAME_Break(TEXT("Break"));
+					static FName NAME_Fatal(TEXT("Fatal"));
+					static FName NAME_Log(TEXT("Log"));
+					static FName NAME_Display(TEXT("Display"));
 					if (CmdToken == NAME_None)
 					{
 						Value &= ~ELogVerbosity::VerbosityMask;
@@ -342,7 +342,7 @@ class FLogSuppressionImplementation: public FLogSuppressionInterface, private FS
 		static bool bOldGlobalBreakValue = false;
 		bool bForceBreak = (!GlobalVerbosity.DebugBreakOnLog) != !bOldGlobalBreakValue;
 		bOldGlobalBreakValue = GlobalVerbosity.DebugBreakOnLog;
-		for (TMap<FLogCategoryBase*, YName>::TIterator It(Associations); It; ++It)
+		for (TMap<FLogCategoryBase*, FName>::TIterator It(Associations); It; ++It)
 		{
 			FLogCategoryBase* Verb = It.Key();
 			uint8 NewVerbosity = Verb->Verbosity;
@@ -376,10 +376,10 @@ class FLogSuppressionImplementation: public FLogSuppressionInterface, private FS
 	 * Called twice typically. Once when a log category is constructed, and then once after we have processed the command line.
 	 * The second call is needed to make sure the default is set correctly when it is changed on the command line or config file.
 	 **/
-	void SetupSuppress(FLogCategoryBase* Destination, YName NameYName)
+	void SetupSuppress(FLogCategoryBase* Destination, FName NameFName)
 	{
 		// now maybe this was set at boot, in which case we override what it had
-		uint8* Boot = BootAssociations.Find(NameYName);
+		uint8* Boot = BootAssociations.Find(NameFName);
 		if (Boot)
 		{
 			Destination->DefaultVerbosity = *Boot;
@@ -388,7 +388,7 @@ class FLogSuppressionImplementation: public FLogSuppressionInterface, private FS
 		else
 		{
 			// see if we had a boot global override
-			static YName NAME_BootGlobal(TEXT("BootGlobal"));
+			static FName NAME_BootGlobal(TEXT("BootGlobal"));
 			Boot = BootAssociations.Find(NAME_BootGlobal);
 			if (Boot)
 			{
@@ -401,7 +401,7 @@ class FLogSuppressionImplementation: public FLogSuppressionInterface, private FS
 		if (Destination->Verbosity)
 		{
 			// currently on, store this in the pending and clear it
-			ToggleAssociations.Add(NameYName, Destination->Verbosity);
+			ToggleAssociations.Add(NameFName, Destination->Verbosity);
 		}
 	}
 
@@ -409,21 +409,21 @@ public:
 
 	virtual void AssociateSuppress(FLogCategoryBase* Destination)
 	{
-		YName NameYName(Destination->CategoryYName);
+		FName NameFName(Destination->CategoryFName);
 		check(Destination);
 		check(!Associations.Find(Destination)); // should not have this address already registered
-		Associations.Add(Destination, NameYName);
+		Associations.Add(Destination, NameFName);
 		bool bFoundExisting = false;
-		for (TMultiMap<YName, FLogCategoryBase*>::TKeyIterator It(ReverseAssociations, NameYName); It; ++It)
+		for (TMultiMap<FName, FLogCategoryBase*>::TKeyIterator It(ReverseAssociations, NameFName); It; ++It)
 		{
 			if (It.Value() == Destination)
 			{
-				UE_LOG(LogHAL, Fatal,TEXT("Log suppression category %s was somehow declared twice with the same data."), *NameYName.ToString());
+				UE_LOG(LogHAL, Fatal,TEXT("Log suppression category %s was somehow declared twice with the same data."), *NameFName.ToString());
 			}
 			// if it is registered, it better be the same
 			if (It.Value()->CompileTimeVerbosity != Destination->CompileTimeVerbosity)
 			{
-				UE_LOG(LogHAL, Fatal,TEXT("Log suppression category %s is defined multiple times with different compile time verbosity."), *NameYName.ToString());
+				UE_LOG(LogHAL, Fatal,TEXT("Log suppression category %s is defined multiple times with different compile time verbosity."), *NameFName.ToString());
 			}
 			// we take whatever the existing one has to keep them in sync always
 			checkSlow(!(It.Value()->Verbosity & ELogVerbosity::BreakOnLog)); // this bit is factored out of this variable, always
@@ -432,16 +432,16 @@ public:
 			Destination->DefaultVerbosity = It.Value()->DefaultVerbosity;
 			bFoundExisting = true;
 		}
-		ReverseAssociations.Add(NameYName, Destination);
+		ReverseAssociations.Add(NameFName, Destination);
 		if (bFoundExisting)
 		{
 			return; // in no case is there anything more to do...we want to match the other ones
 		}
-		SetupSuppress(Destination, NameYName); // this might be done again later if this is being set up before appInit is called
+		SetupSuppress(Destination, NameFName); // this might be done again later if this is being set up before appInit is called
 	}
 	virtual void DisassociateSuppress(FLogCategoryBase* Destination)
 	{
-		YName* Name = Associations.Find(Destination);
+		FName* Name = Associations.Find(Destination);
 		if (Name)
 		{
 			verify(ReverseAssociations.Remove(*Name, Destination)==1);
@@ -509,14 +509,14 @@ public:
 #endif // !UE_BUILD_SHIPPING
 
 		// and then the compiled in defaults are overridden with those
-		for (TMultiMap<YName, FLogCategoryBase*>::TIterator It(ReverseAssociations); It; ++It)
+		for (TMultiMap<FName, FLogCategoryBase*>::TIterator It(ReverseAssociations); It; ++It)
 		{
 			SetupSuppress(It.Value(), It.Key());
 		}
 	}
 
 	/** Console commands, see embeded usage statement **/
-	virtual bool Exec( UWorld* Inworld, const TCHAR* Cmd, YOutputDevice& Ar )
+	virtual bool Exec( UWorld* Inworld, const TCHAR* Cmd, FOutputDevice& Ar )
 	{
 		if(FParse::Command(&Cmd,TEXT("LOG")))
 		{
@@ -525,7 +525,7 @@ public:
 				TArray<FLogCategoryPtrs> Found;
 
 				YString Cat(FParse::Token(Cmd, 0));
-				for (TMap<FLogCategoryBase*, YName>::TIterator It(Associations); It; ++It)
+				for (TMap<FLogCategoryBase*, FName>::TIterator It(Associations); It; ++It)
 				{
 					FLogCategoryBase* Verb = It.Key();
 					YString Name = It.Value().ToString();
@@ -553,18 +553,18 @@ public:
 						return true;
 					}
 
-					TMap<YName, uint8> OldValues;
-					for (TMap<FLogCategoryBase*, YName>::TIterator It(Associations); It; ++It)
+					TMap<FName, uint8> OldValues;
+					for (TMap<FLogCategoryBase*, FName>::TIterator It(Associations); It; ++It)
 					{
 						FLogCategoryBase* Verb = It.Key();
-						YName Name = It.Value();
+						FName Name = It.Value();
 						OldValues.Add(Name, Verb->Verbosity);
 					}
 					ProcessCmdString(Rest);
-					for (TMap<FLogCategoryBase*, YName>::TIterator It(Associations); It; ++It)
+					for (TMap<FLogCategoryBase*, FName>::TIterator It(Associations); It; ++It)
 					{
 						FLogCategoryBase* Verb = It.Key();
-						YName Name = It.Value();
+						FName Name = It.Value();
 						uint8 OldValue = OldValues.FindRef(Name);
 						if (Verb->Verbosity != OldValue)
 						{

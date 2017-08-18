@@ -10,7 +10,7 @@
  * Scale matrix.
  */
 class YScaleMatrix
-	: public YMatrix
+	: public FMatrix
 {
 public:
 
@@ -22,16 +22,16 @@ public:
 	/**
 	 * @param Scale Non-uniform scale to apply to matrix.
 	 */
-	YScaleMatrix( const YVector& Scale );
+	YScaleMatrix( const FVector& Scale );
 
 	/** Matrix factory. Return an FMatrix so we don't have type conversion issues in expressions. */
-	static YMatrix Make(float Scale)
+	static FMatrix Make(float Scale)
 	{
 		return YScaleMatrix(Scale);
 	}
 
 	/** Matrix factory. Return an FMatrix so we don't have type conversion issues in expressions. */
-	static YMatrix Make(const YVector& Scale)
+	static FMatrix Make(const FVector& Scale)
 	{
 		return YScaleMatrix(Scale);
 	}
@@ -42,20 +42,20 @@ public:
  *****************************************************************************/
 
 FORCEINLINE YScaleMatrix::YScaleMatrix( float Scale )
-	: YMatrix(
-		YPlane(Scale,	0.0f,	0.0f,	0.0f),
-		YPlane(0.0f,	Scale,	0.0f,	0.0f),
-		YPlane(0.0f,	0.0f,	Scale,	0.0f),
-		YPlane(0.0f,	0.0f,	0.0f,	1.0f)
+	: FMatrix(
+		FPlane(Scale,	0.0f,	0.0f,	0.0f),
+		FPlane(0.0f,	Scale,	0.0f,	0.0f),
+		FPlane(0.0f,	0.0f,	Scale,	0.0f),
+		FPlane(0.0f,	0.0f,	0.0f,	1.0f)
 	)
 { }
 
 
-FORCEINLINE YScaleMatrix::YScaleMatrix( const YVector& Scale )
-	: YMatrix(
-		YPlane(Scale.X,	0.0f,		0.0f,		0.0f),
-		YPlane(0.0f,	Scale.Y,	0.0f,		0.0f),
-		YPlane(0.0f,	0.0f,		Scale.Z,	0.0f),
-		YPlane(0.0f,	0.0f,		0.0f,		1.0f)
+FORCEINLINE YScaleMatrix::YScaleMatrix( const FVector& Scale )
+	: FMatrix(
+		FPlane(Scale.X,	0.0f,		0.0f,		0.0f),
+		FPlane(0.0f,	Scale.Y,	0.0f,		0.0f),
+		FPlane(0.0f,	0.0f,		Scale.Z,	0.0f),
+		FPlane(0.0f,	0.0f,		0.0f,		1.0f)
 	)
 { }

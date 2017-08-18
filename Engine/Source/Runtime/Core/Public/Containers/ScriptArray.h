@@ -111,7 +111,7 @@ public:
 		, ArrayMax(0)
 	{
 	}
-	void CountBytes(YArchive& Ar, int32 NumBytesPerElement)
+	void CountBytes(FArchive& Ar, int32 NumBytesPerElement)
 	{
 		Ar.CountBytes(ArrayNum*NumBytesPerElement, ArrayMax*NumBytesPerElement);
 	}

@@ -13,7 +13,7 @@ FMessageLog::FMessageSelectionChanged FMessageLog::MessageSelectionChanged;
 class FBasicMessageLog : public IMessageLog, public TSharedFromThis<FBasicMessageLog>
 {
 public:
-	FBasicMessageLog( const YName& InLogName )
+	FBasicMessageLog( const FName& InLogName )
 		: LogName( InLogName )
 	{
 	}
@@ -74,10 +74,10 @@ private:
 
 private:
 	/** The name of this log */
-	YName LogName;
+	FName LogName;
 };
 
-FMessageLog::FMessageLog( const YName& InLogName )
+FMessageLog::FMessageLog( const FName& InLogName )
 	: bSuppressLoggingToOutputLog(false)
 {
 	if(GetLog.IsBound())

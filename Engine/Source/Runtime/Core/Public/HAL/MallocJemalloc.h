@@ -16,7 +16,7 @@
 // http://www.canonware.com/jemalloc/
 //
 class FMallocJemalloc
-	: public YMalloc
+	: public FMalloc
 {
 public:
 
@@ -34,7 +34,7 @@ public:
 	virtual void* Malloc(SIZE_T Size, uint32 Alignment) override;
 	virtual void* Realloc(void* Ptr, SIZE_T NewSize, uint32 Alignment) override;
 	virtual void Free(void* Ptr) override;
-	virtual void DumpAllocatorStats(YOutputDevice& Ar) override;
+	virtual void DumpAllocatorStats(FOutputDevice& Ar) override;
 	virtual bool GetAllocationSize(void *Original, SIZE_T &SizeOut) override;
 	virtual bool IsInternallyThreadSafe() const override { return true; }
 	virtual const TCHAR* GetDescriptiveName() override { return TEXT("jemalloc"); }

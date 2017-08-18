@@ -134,7 +134,7 @@ struct FMD5Hash
 	}
 
 	/** Serialise this hash */
-	friend YArchive& operator<<(YArchive& Ar, FMD5Hash& Hash)
+	friend FArchive& operator<<(FArchive& Ar, FMD5Hash& Hash)
 	{
 		Ar << Hash.bIsValid;
 		if (Hash.bIsValid)
@@ -147,7 +147,7 @@ struct FMD5Hash
 
 	/** Hash the specified file contents (using the optionally supplied scratch buffer) */
 	CORE_API static FMD5Hash HashFile(const TCHAR* InFilename, TArray<uint8>* Buffer = nullptr);
-	CORE_API static FMD5Hash HashFileFromArchive(YArchive* Ar, TArray<uint8>* ScratchPad = nullptr);
+	CORE_API static FMD5Hash HashFileFromArchive(FArchive* Ar, TArray<uint8>* ScratchPad = nullptr);
 
 	const uint8* GetBytes() const { return Bytes; }
 	const int32 GetSize() const { return sizeof(Bytes); }
@@ -210,7 +210,7 @@ public:
 		return YMemory::Memcmp(&X.Hash, &Y.Hash, sizeof(X.Hash)) != 0;
 	}
 
-	friend CORE_API YArchive& operator<<(YArchive& Ar, FSHAHash& G);
+	friend CORE_API FArchive& operator<<(FArchive& Ar, FSHAHash& G);
 };
 
 class CORE_API FSHA1

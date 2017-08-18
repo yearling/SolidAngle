@@ -120,7 +120,7 @@ public:
 	}
 
 	// Serializer.
-	friend YArchive& operator<<(YArchive& Ar, SelfType& P)
+	friend FArchive& operator<<(FArchive& Ar, SelfType& P)
 	{
 		if (Ar.IsLoading())
 		{

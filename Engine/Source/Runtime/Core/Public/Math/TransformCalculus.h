@@ -451,7 +451,7 @@ inline float Inverse(float Scale)
 /**
  * Specialization for uniform Scale.
  */
-inline YVector TransformPoint(float Transform, const YVector& Point)
+inline FVector TransformPoint(float Transform, const FVector& Point)
 {
 	return Transform * Point;
 }
@@ -459,7 +459,7 @@ inline YVector TransformPoint(float Transform, const YVector& Point)
 /**
  * Specialization for uniform Scale.
  */
-inline YVector TransformVector(float Transform, const YVector& Vector)
+inline FVector TransformVector(float Transform, const FVector& Vector)
 {
 	return Transform * Vector;
 }

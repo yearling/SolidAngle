@@ -14,20 +14,20 @@ class YDualQuat
 public:
 
 	/** rotation or real part */
-	YQuat R;
+	FQuat R;
 	/** half trans or dual part */
-	YQuat D;
+	FQuat D;
 
 	// Constructors
-	YDualQuat(const YQuat &InR, const YQuat &InD)
+	YDualQuat(const FQuat &InR, const FQuat &InD)
 		: R(InR)
 		, D(InD)
 	{}
 
-	YDualQuat(const YTransform &T)
+	YDualQuat(const FTransform &T)
 	{
-		YVector V = T.GetTranslation()*0.5f;
-		*this = YDualQuat(YQuat(0, 0, 0, 1), YQuat(V.X, V.Y, V.Z, 0.f)) * YDualQuat(T.GetRotation(), YQuat(0, 0, 0, 0));
+		FVector V = T.GetTranslation()*0.5f;
+		*this = YDualQuat(FQuat(0, 0, 0, 1), FQuat(V.X, V.Y, V.Z, 0.f)) * YDualQuat(T.GetRotation(), FQuat(0, 0, 0, 0));
 	}
 
 	/** Dual quat addition */
@@ -56,9 +56,9 @@ public:
 	}
 
 	/** Convert dual quat to transform */
-	YTransform AsFTransform(YVector Scale = YVector(1.0f, 1.0f, 1.0f))
+	FTransform AsFTransform(FVector Scale = FVector(1.0f, 1.0f, 1.0f))
 	{
-		YQuat TQ = D*YQuat(-R.X, -R.Y, -R.Z, R.W);
-		return YTransform(R, YVector(TQ.X, TQ.Y, TQ.Z)*2.0f, Scale);
+		FQuat TQ = D*FQuat(-R.X, -R.Y, -R.Z, R.W);
+		return FTransform(R, FVector(TQ.X, TQ.Y, TQ.Z)*2.0f, Scale);
 	}
 };

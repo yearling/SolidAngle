@@ -1,15 +1,15 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 /*=============================================================================
-UObjectBase.h: Unreal SObject base class
+UObjectBase.h: Unreal UObject base class
 =============================================================================*/
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Stats/Stats.h"
-#include "SObject/ObjectMacros.h"
-#include "SObject/UObjectGlobals.h"
+#include "UObject/ObjectMacros.h"
+#include "UObject/UObjectGlobals.h"
 
 DECLARE_DWORD_COUNTER_STAT_EXTERN(TEXT("STAT_UObjectsStatGroupTester"), STAT_UObjectsStatGroupTester, STATGROUP_UObjects, COREUOBJECT_API);
 
@@ -46,7 +46,7 @@ public:
 	* @param	InOuter				outer for this object
 	* @param	InName				name of the new object
 	*/
-	UObjectBase(UClass* InClass, EObjectFlags InFlags, EInternalObjectFlags InInternalFlags, SObject *InOuter, YName InName);
+	UObjectBase(UClass* InClass, EObjectFlags InFlags, EInternalObjectFlags InInternalFlags, UObject *InOuter, FName InName);
 
 	/**
 	* Final destructor, removes the object from the object array, and indirectly, from any annotations
@@ -54,18 +54,18 @@ public:
 	virtual ~UObjectBase();
 
 	/**
-	* Emit GC tokens for UObjectBase, this might be SObject::StaticClass or Default__Class
+	* Emit GC tokens for UObjectBase, this might be UObject::StaticClass or Default__Class
 	**/
 	static void EmitBaseReferences(UClass *RootClass);
 
 protected:
 	/**
-	* Just change the YName and Outer and rehash into name hash tables. For use by higher level rename functions.
+	* Just change the FName and Outer and rehash into name hash tables. For use by higher level rename functions.
 	*
 	* @param NewName	new name for this object
 	* @param NewOuter	new outer for this object, if NULL, outer will be unchanged
 	*/
-	void LowLevelRename(YName NewName, SObject *NewOuter = NULL);
+	void LowLevelRename(FName NewName, UObject *NewOuter = NULL);
 
 	/** Force any base classes to be registered first */
 	virtual void RegisterDependencies() {}
@@ -87,7 +87,7 @@ private:
 	* @param Name name to assign to this uobject
 	* @param InSetInternalFlags Internal object flags to be set on the object once it's been added to the array
 	*/
-	void AddObject(YName Name, EInternalObjectFlags InSetInternalFlags);
+	void AddObject(FName Name, EInternalObjectFlags InSetInternalFlags);
 public:
 	/**
 	* Checks to see if the object appears to be valid
@@ -116,11 +116,11 @@ public:
 	{
 		return ClassPrivate;
 	}
-	FORCEINLINE SObject* GetOuter() const
+	FORCEINLINE UObject* GetOuter() const
 	{
 		return OuterPrivate;
 	}
-	FORCEINLINE YName GetYName() const
+	FORCEINLINE FName GetFName() const
 	{
 		return NamePrivate;
 	}
@@ -161,7 +161,7 @@ protected:
 	**/
 	FORCEINLINE void SetFlagsTo(EObjectFlags NewFlags)
 	{
-		checkfSlow((NewFlags & ~RF_AllFlags) == 0, TEXT("%s flagged as 0x%x but is trying to set flags to RF_AllFlags"), *GetYName().ToString(), (int)ObjectFlags);
+		checkfSlow((NewFlags & ~RF_AllFlags) == 0, TEXT("%s flagged as 0x%x but is trying to set flags to RF_AllFlags"), *GetFName().ToString(), (int)ObjectFlags);
 		ObjectFlags = NewFlags;
 	}
 public:
@@ -172,14 +172,14 @@ public:
 	**/
 	FORCEINLINE EObjectFlags GetFlags() const
 	{
-		checkfSlow((ObjectFlags & ~RF_AllFlags) == 0, TEXT("%s flagged as RF_AllFlags"), *GetYName().ToString());
+		checkfSlow((ObjectFlags & ~RF_AllFlags) == 0, TEXT("%s flagged as RF_AllFlags"), *GetFName().ToString());
 		return ObjectFlags;
 	}
 
 	/**
 	*	Atomically adds the specified flags.
 	*	Do not use unless you know what you are doing.
-	*	Designed to be used only by parallel GC and SObject loading thread.
+	*	Designed to be used only by parallel GC and UObject loading thread.
 	*/
 	FORCENOINLINE void AtomicallySetFlags(EObjectFlags FlagsToAdd)
 	{
@@ -195,7 +195,7 @@ public:
 	/**
 	*	Atomically clears the specified flags.
 	*	Do not use unless you know what you are doing.
-	*	Designed to be used only by parallel GC and SObject loading thread.
+	*	Designed to be used only by parallel GC and UObject loading thread.
 	*/
 	FORCENOINLINE void AtomicallyClearFlags(EObjectFlags FlagsToClear)
 	{
@@ -221,10 +221,10 @@ private:
 	UClass*							ClassPrivate;
 
 	/** Name of this object */
-	YName							NamePrivate;
+	FName							NamePrivate;
 
 	/** Object this object resides in. */
-	SObject*						OuterPrivate;
+	UObject*						OuterPrivate;
 
 
 	/** Stat id of this object, 0 if nobody asked for it yet */
@@ -248,10 +248,10 @@ namespace Internal
 }
 
 /**
-* Checks to see if the SObject subsystem is fully bootstrapped and ready to go.
+* Checks to see if the UObject subsystem is fully bootstrapped and ready to go.
 * If true, then all objects are registered and auto registration of natives is over, forever.
 *
-* @return true if the SObject subsystem is initialized.
+* @return true if the UObject subsystem is initialized.
 */
 FORCEINLINE bool UObjectInitialized() { return Internal::GObjInitialized; }
 
@@ -311,15 +311,15 @@ struct TClassCompiledInDefer : public FFieldCompiledInInfo
 /**
 * Stashes the singleton function that builds a compiled in class. Later, this is executed.
 */
-COREUOBJECT_API void UObjectCompiledInDefer(class UClass *(*InRegister)(), class UClass *(*InStaticClass)(), const TCHAR* Name, bool bDynamic, const TCHAR* DynamicPathName, void(*InInitSearchableValues)(TMap<YName, YName>&));
+COREUOBJECT_API void UObjectCompiledInDefer(class UClass *(*InRegister)(), class UClass *(*InStaticClass)(), const TCHAR* Name, bool bDynamic, const TCHAR* DynamicPathName, void(*InInitSearchableValues)(TMap<FName, FName>&));
 
 struct FCompiledInDefer
 {
-	FCompiledInDefer(class UClass *(*InRegister)(), class UClass *(*InStaticClass)(), const TCHAR* Name, bool bDynamic, const TCHAR* DynamicPackageName = nullptr, const TCHAR* DynamicPathName = nullptr, void(*InInitSearchableValues)(TMap<YName, YName>&) = nullptr)
+	FCompiledInDefer(class UClass *(*InRegister)(), class UClass *(*InStaticClass)(), const TCHAR* Name, bool bDynamic, const TCHAR* DynamicPackageName = nullptr, const TCHAR* DynamicPathName = nullptr, void(*InInitSearchableValues)(TMap<FName, FName>&) = nullptr)
 	{
 		if (bDynamic)
 		{
-			GetConvertedDynamicPackageNameToTypeName().Add(YName(DynamicPackageName), YName(Name));
+			GetConvertedDynamicPackageNameToTypeName().Add(FName(DynamicPackageName), FName(Name));
 		}
 		UObjectCompiledInDefer(InRegister, InStaticClass, Name, bDynamic, DynamicPathName, InInitSearchableValues);
 	}
@@ -328,7 +328,7 @@ struct FCompiledInDefer
 /**
 * Stashes the singleton function that builds a compiled in struct (StaticStruct). Later, this is executed.
 */
-COREUOBJECT_API void UObjectCompiledInDeferStruct(class UScriptStruct *(*InRegister)(), const TCHAR* PackageName, const YName PathName, bool bDynamic);
+COREUOBJECT_API void UObjectCompiledInDeferStruct(class UScriptStruct *(*InRegister)(), const TCHAR* PackageName, const FName PathName, bool bDynamic);
 
 struct FCompiledInDeferStruct
 {
@@ -336,7 +336,7 @@ struct FCompiledInDeferStruct
 	{
 		if (bDynamic)
 		{
-			GetConvertedDynamicPackageNameToTypeName().Add(YName(DynamicPackageName), YName(Name));
+			GetConvertedDynamicPackageNameToTypeName().Add(FName(DynamicPackageName), FName(Name));
 		}
 		UObjectCompiledInDeferStruct(InRegister, PackageName, DynamicPathName, bDynamic);
 	}
@@ -345,12 +345,12 @@ struct FCompiledInDeferStruct
 /**
 * Either call the passed in singleton, or if this is hot reload, find the existing struct
 */
-COREUOBJECT_API class UScriptStruct *GetStaticStruct(class UScriptStruct *(*InRegister)(), SObject* StructOuter, const TCHAR* StructName, SIZE_T Size, uint32 Crc);
+COREUOBJECT_API class UScriptStruct *GetStaticStruct(class UScriptStruct *(*InRegister)(), UObject* StructOuter, const TCHAR* StructName, SIZE_T Size, uint32 Crc);
 
 /**
 * Stashes the singleton function that builds a compiled in enum. Later, this is executed.
 */
-COREUOBJECT_API void UObjectCompiledInDeferEnum(class UEnum *(*InRegister)(), const TCHAR* PackageName, const YName PathName, bool bDynamic);
+COREUOBJECT_API void UObjectCompiledInDeferEnum(class UEnum *(*InRegister)(), const TCHAR* PackageName, const FName PathName, bool bDynamic);
 
 struct FCompiledInDeferEnum
 {
@@ -358,7 +358,7 @@ struct FCompiledInDeferEnum
 	{
 		if (bDynamic)
 		{
-			GetConvertedDynamicPackageNameToTypeName().Add(YName(DynamicPackageName), YName(Name));
+			GetConvertedDynamicPackageNameToTypeName().Add(FName(DynamicPackageName), FName(Name));
 		}
 		UObjectCompiledInDeferEnum(InRegister, PackageName, DynamicPathName, bDynamic);
 	}
@@ -367,26 +367,26 @@ struct FCompiledInDeferEnum
 /**
 * Either call the passed in singleton, or if this is hot reload, find the existing enum
 */
-COREUOBJECT_API class UEnum *GetStaticEnum(class UEnum *(*InRegister)(), SObject* EnumOuter, const TCHAR* EnumName);
+COREUOBJECT_API class UEnum *GetStaticEnum(class UEnum *(*InRegister)(), UObject* EnumOuter, const TCHAR* EnumName);
 
-COREUOBJECT_API class UScriptStruct* FindExistingStructIfHotReloadOrDynamic(SObject* Outer, const TCHAR* StructName, SIZE_T Size, uint32 Crc, bool bIsDynamic);
-COREUOBJECT_API class UEnum* FindExistingEnumIfHotReloadOrDynamic(SObject* Outer, const TCHAR* EnumName, SIZE_T Size, uint32 Crc, bool bIsDynamic);
+COREUOBJECT_API class UScriptStruct* FindExistingStructIfHotReloadOrDynamic(UObject* Outer, const TCHAR* StructName, SIZE_T Size, uint32 Crc, bool bIsDynamic);
+COREUOBJECT_API class UEnum* FindExistingEnumIfHotReloadOrDynamic(UObject* Outer, const TCHAR* EnumName, SIZE_T Size, uint32 Crc, bool bIsDynamic);
 
-/** Must be called after a module has been loaded that contains SObject classes */
+/** Must be called after a module has been loaded that contains UObject classes */
 COREUOBJECT_API void ProcessNewlyLoadedUObjects();
 
 #if WITH_HOT_RELOAD
 /** Map of duplicated CDOs for reinstancing during hot-reload purposes. */
-COREUOBJECT_API TMap<SObject*, SObject*>& GetDuplicatedCDOMap();
+COREUOBJECT_API TMap<UObject*, UObject*>& GetDuplicatedCDOMap();
 #endif // WITH_HOT_RELOAD
 
 /**
-* Final phase of SObject initialization. all auto register objects are added to the main data structures.
+* Final phase of UObject initialization. all auto register objects are added to the main data structures.
 */
 void UObjectBaseInit();
 
 /**
-* Final phase of SObject shutdown
+* Final phase of UObject shutdown
 */
 void UObjectBaseShutdown();
 

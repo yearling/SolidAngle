@@ -7,7 +7,7 @@
 struct YPlatformMemoryStats;
 
 /** Holds generic memory stats, internally implemented as a map. */
-struct YGenericMemoryStats;
+struct FGenericMemoryStats;
 
 /**
 * Struct used to hold common memory constants for all platforms.
@@ -189,11 +189,11 @@ struct CORE_API YGenericPlatformMemory
 
 		enum Limits
 		{
-			MaxSharedMemoryName = 128
+			MaxSharedMemorFName = 128
 		};
 
 		/** Name of the region */
-		TCHAR			Name[MaxSharedMemoryName];
+		TCHAR			Name[MaxSharedMemorFName];
 
 		/** Access mode for the region */
 		uint32			AccessMode;
@@ -226,7 +226,7 @@ struct CORE_API YGenericPlatformMemory
 	/**
 	* @return the default allocator.
 	*/
-	static YMalloc*				BaseAllocator();
+	static FMalloc*				BaseAllocator();
 
 	/**
 	* @return platform specific current memory statistics.
@@ -236,7 +236,7 @@ struct CORE_API YGenericPlatformMemory
 	/**
 	* Writes all platform specific current memory statistics in the format usable by the malloc profiler.
 	*/
-	static void					GetStatsForMallocProfiler(YGenericMemoryStats& out_Stats);
+	static void					GetStatsForMallocProfiler(FGenericMemoryStats& out_Stats);
 
 	/**
 	* @return platform specific memory constants.
@@ -283,10 +283,10 @@ struct CORE_API YGenericPlatformMemory
 	static void					GPUFree(void* Original) { };
 
 	/** Dumps basic platform memory statistics into the specified output device. */
-	static void					DumpStats(YOutputDevice& Ar);
+	static void					DumpStats(FOutputDevice& Ar);
 
 	/** Dumps basic platform memory statistics and allocator specific statistics into the specified output device. */
-	static void					DumpPlatformAndAllocatorStats(YOutputDevice& Ar);
+	static void					DumpPlatformAndAllocatorStats(FOutputDevice& Ar);
 
 	/** @name Memory functions */
 

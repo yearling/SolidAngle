@@ -22,7 +22,7 @@
  */
 bool FFileHelper::LoadFileToArray( TArray<uint8>& Result, const TCHAR* Filename, uint32 Flags )
 {
-	YArchive* Reader = IFileManager::Get().CreateFileReader( Filename, Flags );
+	FArchive* Reader = IFileManager::Get().CreateFileReader( Filename, Flags );
 	if( !Reader )
 	{
 		if (!(Flags & FILEREAD_Silent))
@@ -103,7 +103,7 @@ void FFileHelper::BufferToString( YString& Result, const uint8* Buffer, int32 Si
  */
 bool FFileHelper::LoadFileToString( YString& Result, const TCHAR* Filename, uint32 VerifyFlags )
 {
-	TUniquePtr<YArchive> Reader( IFileManager::Get().CreateFileReader( Filename ) );
+	TUniquePtr<FArchive> Reader( IFileManager::Get().CreateFileReader( Filename ) );
 	if( !Reader )
 	{
 		return 0;
@@ -142,7 +142,7 @@ bool FFileHelper::LoadFileToString( YString& Result, const TCHAR* Filename, uint
  */
 bool FFileHelper::SaveArrayToFile(TArrayView<const uint8> Array, const TCHAR* Filename, IFileManager* FileManager /*= &IFileManager::Get()*/, uint32 WriteFlags)
 {
-	YArchive* Ar = FileManager->CreateFileWriter( Filename, WriteFlags );
+	FArchive* Ar = FileManager->CreateFileWriter( Filename, WriteFlags );
 	if( !Ar )
 	{
 		return 0;
@@ -159,7 +159,7 @@ bool FFileHelper::SaveArrayToFile(TArrayView<const uint8> Array, const TCHAR* Fi
 bool FFileHelper::SaveStringToFile( const YString& String, const TCHAR* Filename,  EEncodingOptions::Type EncodingOptions, IFileManager* FileManager /*= &IFileManager::Get()*/, uint32 WriteFlags )
 {
 	// max size of the string is a UCS2CHAR for each character and some UNICODE magic 
-	auto Ar = TUniquePtr<YArchive>( FileManager->CreateFileWriter( Filename, WriteFlags ) );
+	auto Ar = TUniquePtr<FArchive>( FileManager->CreateFileWriter( Filename, WriteFlags ) );
 	if( !Ar )
 		return false;
 
@@ -243,7 +243,7 @@ bool FFileHelper::GenerateNextBitmapFilename( const YString& Pattern, const YStr
  *
  * @return true if success
  */
-bool FFileHelper::CreateBitmap( const TCHAR* Pattern, int32 SourceWidth, int32 SourceHeight, const YColor* Data, struct YIntRect* SubRectangle, IFileManager* FileManager /*= &IFileManager::Get()*/, YString* OutFilename /*= NULL*/, bool bInWriteAlpha /*= false*/ )
+bool FFileHelper::CreateBitmap( const TCHAR* Pattern, int32 SourceWidth, int32 SourceHeight, const FColor* Data, struct YIntRect* SubRectangle, IFileManager* FileManager /*= &IFileManager::Get()*/, YString* OutFilename /*= NULL*/, bool bInWriteAlpha /*= false*/ )
 {
 #if ALLOW_DEBUG_FILES
 	YIntRect Src(0, 0, SourceWidth, SourceHeight);
@@ -273,7 +273,7 @@ bool FFileHelper::CreateBitmap( const TCHAR* Pattern, int32 SourceWidth, int32 S
 		}
 	}
 
-	YArchive* Ar = FileManager->CreateDebugFileWriter( *File );
+	FArchive* Ar = FileManager->CreateDebugFileWriter( *File );
 	if( Ar )
 	{
 		// Types.
@@ -424,7 +424,7 @@ bool FFileHelper::LoadANSITextFileToStrings(const TCHAR* InFilename, IFileManage
 {
 	IFileManager* FileManager = (InFileManager != NULL) ? InFileManager : &IFileManager::Get();
 	// Read and parse the file, adding the pawns and their sounds to the list
-	YArchive* TextFile = FileManager->CreateFileReader(InFilename, 0);
+	FArchive* TextFile = FileManager->CreateFileReader(InFilename, 0);
 	if (TextFile != NULL)
 	{
 		// get the size of the file
@@ -511,8 +511,8 @@ void FMaintenance::DeleteOldLogs()
 		{
 			bool operator()(const YString& A, const YString& B) const
 			{
-				const YDateTime TimestampA = IFileManager::Get().GetTimeStamp(*A);
-				const YDateTime TimestampB = IFileManager::Get().GetTimeStamp(*B);
+				const FDateTime TimestampA = IFileManager::Get().GetTimeStamp(*A);
+				const FDateTime TimestampB = IFileManager::Get().GetTimeStamp(*B);
 				return TimestampB < TimestampA;
 			}
 		};
@@ -551,8 +551,8 @@ void FMaintenance::DeleteOldLogs()
 		for (const YString& Dir : Directories)
 		{
 			const YString CrashContextDirectory = YPaths::GameLogDir() / Dir;
-			const YDateTime DirectoryAccessTime = IFileManager::Get().GetTimeStamp( *CrashContextDirectory );
-			if (YDateTime::Now() - DirectoryAccessTime > YTimespan::FromDays( PurgeLogsDays ))
+			const FDateTime DirectoryAccessTime = IFileManager::Get().GetTimeStamp( *CrashContextDirectory );
+			if (FDateTime::Now() - DirectoryAccessTime > YTimespan::FromDays( PurgeLogsDays ))
 			{
 				UE_LOG( LogStreaming, Log, TEXT( "Deleting old crash context %s" ), *Dir );
 				IFileManager::Get().DeleteDirectory( *CrashContextDirectory, false, true );

@@ -1399,7 +1399,7 @@ public:
 	*
 	* @return Reference to the Archive after serialization.
 	*/
-	friend CORE_API YArchive& operator<<(YArchive& Ar, YString& S);
+	friend CORE_API FArchive& operator<<(FArchive& Ar, YString& S);
 
 
 	/**
@@ -1594,7 +1594,7 @@ public:
 	* @param	Ar				Archive to serialize with
 	* @param	MinCharacters	Minimum number of characters to serialize.
 	*/
-	void SerializeAsANSICharArray(YArchive& Ar, int32 MinCharacters = 0) const;
+	void SerializeAsANSICharArray(FArchive& Ar, int32 MinCharacters = 0) const;
 
 
 	/** Converts an integer to a string. */
@@ -1989,7 +1989,7 @@ Special archivers.
 //
 // String output device.
 //
-class YStringOutputDevice : public YString, public YOutputDevice
+class YStringOutputDevice : public YString, public FOutputDevice
 {
 public:
 	YStringOutputDevice(const TCHAR* OutputDeviceName = TEXT("")) :
@@ -1997,7 +1997,7 @@ public:
 	{
 		bAutoEmitLineTerminator = false;
 	}
-	virtual void Serialize(const TCHAR* InData, ELogVerbosity::Type Verbosity, const class YName& Category) override
+	virtual void Serialize(const TCHAR* InData, ELogVerbosity::Type Verbosity, const class FName& Category) override
 	{
 		YString::operator+=((TCHAR*)InData);
 		if (bAutoEmitLineTerminator)
@@ -2017,27 +2017,27 @@ public:
 
 	FORCEINLINE YStringOutputDevice(YStringOutputDevice&& Other)
 		: YString((YString&&)Other)
-		, YOutputDevice((YOutputDevice&&)Other)
+		, FOutputDevice((FOutputDevice&&)Other)
 	{
 	}
 
 	FORCEINLINE YStringOutputDevice(const YStringOutputDevice& Other)
 		: YString((const YString&)Other)
-		, YOutputDevice((const YOutputDevice&)Other)
+		, FOutputDevice((const FOutputDevice&)Other)
 	{
 	}
 
 	FORCEINLINE YStringOutputDevice& operator=(YStringOutputDevice&& Other)
 	{
 		(YString&)*this = (YString&&)Other;
-		(YOutputDevice&)*this = (YOutputDevice&&)Other;
+		(FOutputDevice&)*this = (FOutputDevice&&)Other;
 		return *this;
 	}
 
 	FORCEINLINE YStringOutputDevice& operator=(const YStringOutputDevice& Other)
 	{
 		(YString&)*this = (const YString&)Other;
-		(YOutputDevice&)*this = (const YOutputDevice&)Other;
+		(FOutputDevice&)*this = (const FOutputDevice&)Other;
 		return *this;
 	}
 
@@ -2063,7 +2063,7 @@ public:
 		, LineCount(0)
 	{}
 
-	virtual void Serialize(const TCHAR* InData, ELogVerbosity::Type Verbosity, const class YName& Category) override
+	virtual void Serialize(const TCHAR* InData, ELogVerbosity::Type Verbosity, const class FName& Category) override
 	{
 		Super::Serialize(InData, Verbosity, Category);
 		int32 TermLength = FCString::Strlen(LINE_TERMINATOR);

@@ -18,7 +18,7 @@ class CORE_API FLocalTimestampDirectoryVisitor
 public:
 
 	/** Relative paths to local files and their timestamps. */
-	TMap<YString, YDateTime> FileTimes;
+	TMap<YString, FDateTime> FileTimes;
 
 	/**
 	 * Creates and initializes a new instance.
