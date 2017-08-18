@@ -6,7 +6,7 @@
 #include "Misc/Paths.h"
 #include "Misc/AutomationTest.h"
 
-FString YPaths::GameProjectFilePath;
+FString FPaths::GameProjectFilePath;
 
 #if WITH_DEV_AUTOMATION_TESTS
 
@@ -19,7 +19,7 @@ bool FPathTests::RunTest( const FString& Parameters )
 		static void Run(FString Path, const TCHAR* Result)
 		{
 			// Run test
-			bool bValid = YPaths::CollapseRelativeDirectories(Path);
+			bool bValid = FPaths::CollapseRelativeDirectories(Path);
 
 			if (Result)
 			{

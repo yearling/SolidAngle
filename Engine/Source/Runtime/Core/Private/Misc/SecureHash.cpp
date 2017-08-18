@@ -878,7 +878,7 @@ void FSHA1::InitializeFileHashesFromBuffer(uint8* Buffer, int32 BufferSize, bool
 bool FSHA1::GetFileSHAHash(const TCHAR* Pathname, uint8 Hash[20], bool bIsFullPackageHash)
 {
 	// look for this file in the hash
-	uint8** HashData = (bIsFullPackageHash ? FullFileSHAHashMap : ScriptSHAHashMap).Find(YPaths::GetCleanFilename(Pathname).ToLower());
+	uint8** HashData = (bIsFullPackageHash ? FullFileSHAHashMap : ScriptSHAHashMap).Find(FPaths::GetCleanFilename(Pathname).ToLower());
 
 	// do we want a copy?
 	if (HashData && Hash)

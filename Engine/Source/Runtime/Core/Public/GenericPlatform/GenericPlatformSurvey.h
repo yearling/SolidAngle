@@ -43,8 +43,8 @@ struct FSynthBenchmarkStat
 		, Confidence(0)
 		, Weight(InWeight)
 	{
-		//		check(InDesc);
-		//		check(InValueType);
+//		check(InDesc);
+//		check(InValueType);
 	}
 
 	// Computes the linear performance index (>0), around 100 with good hardware but higher numbers are possible
@@ -57,7 +57,7 @@ struct FSynthBenchmarkStat
 	// @param InConfidence 0..100
 	void SetMeasuredTime(const FTimeSample& TimeSample, float InConfidence = 90)
 	{
-		//		check(InConfidence >= 0.0f && InConfidence <= 100.0f);
+//		check(InConfidence >= 0.0f && InConfidence <= 100.0f);
 		MeasuredTotalTime = TimeSample.TotalTime;
 		MeasuredNormalizedTime = TimeSample.NormalizedTime;
 		Confidence = InConfidence;
@@ -115,7 +115,7 @@ private:
 };
 
 
-struct FSynthBenchmarkResults
+struct FSynthBenchmarkResults 
 {
 	FSynthBenchmarkStat CPUStats[2];
 	FSynthBenchmarkStat GPUStats[7];
@@ -130,7 +130,7 @@ struct FSynthBenchmarkResults
 	float ComputeTotalGPUTime() const
 	{
 		float Ret = 0.0f;
-		for (uint32 i = 0; i < sizeof(GPUStats) / sizeof(GPUStats[0]); ++i)
+		for(uint32 i = 0; i < sizeof(GPUStats) / sizeof(GPUStats[0]); ++i)
 		{
 			Ret += GPUStats[i].GetMeasuredTotalTime();
 		}
@@ -140,7 +140,7 @@ struct FSynthBenchmarkResults
 };
 
 
-struct FHardwareDisplay
+struct FHardwareDisplay	
 {
 	static const uint32 MaxStringLength = 260;
 
@@ -153,7 +153,7 @@ struct FHardwareDisplay
 };
 
 
-struct FGPUAdpater
+struct FGPUAdpater	
 {
 	static const uint32 MaxStringLength = 260;
 
@@ -169,8 +169,8 @@ struct FGPUAdpater
 
 struct FHardwareSurveyResults
 {
-	static const int32 MaxDisplayCount = 8;
-	static const int32 MaxStringLength = FHardwareDisplay::MaxStringLength;
+	static const int32 MaxDisplayCount = 8; 
+	static const int32 MaxStringLength = FHardwareDisplay::MaxStringLength; 
 
 	TCHAR Platform[MaxStringLength];
 
@@ -188,8 +188,8 @@ struct FHardwareSurveyResults
 	float GPUPerformanceIndex;
 	float RAMPerformanceIndex;
 
-	uint32 bIsLaptopComputer : 1;
-	uint32 bIsRemoteSession : 1;
+	uint32 bIsLaptopComputer:1;
+	uint32 bIsRemoteSession:1;
 
 	uint32 CPUCount;
 	float CPUClockGHz;
@@ -218,14 +218,14 @@ struct FHardwareSurveyResults
 struct CORE_API FGenericPlatformSurvey
 {
 	/**
-	* Attempt to get hardware survey results now.
-	* If they aren't available the survey will be started/ticked until complete.
-	*
-	* @param OutResults	The struct that receives the results if available.
-	* @param bWait			If true, the function won't return until the results are available or the survey fails. Defaults to false.
-	* @return				True if the results were available, false otherwise.
-	*/
-	static bool GetSurveyResults(FHardwareSurveyResults& OutResults, bool bWait = false)
+	 * Attempt to get hardware survey results now.
+	 * If they aren't available the survey will be started/ticked until complete.
+	 *
+	 * @param OutResults	The struct that receives the results if available.
+	 * @param bWait			If true, the function won't return until the results are available or the survey fails. Defaults to false.
+	 * @return				True if the results were available, false otherwise.
+	 */
+	static bool GetSurveyResults( FHardwareSurveyResults& OutResults, bool bWait = false )
 	{
 		return false;
 	}

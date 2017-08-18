@@ -9,53 +9,53 @@
 class FString;
 
 /**
-* This is the Windows version of a critical section. It uses an aggregate
-* CRITICAL_SECTION to implement its locking.
-*/
+ * This is the Windows version of a critical section. It uses an aggregate
+ * CRITICAL_SECTION to implement its locking.
+ */
 class FWindowsCriticalSection
 {
 	/**
-	* The windows specific critical section
-	*/
+	 * The windows specific critical section
+	 */
 	Windows::CRITICAL_SECTION CriticalSection;
 
 public:
 
 	/**
-	* Constructor that initializes the aggregated critical section
-	*/
+	 * Constructor that initializes the aggregated critical section
+	 */
 	FORCEINLINE FWindowsCriticalSection()
 	{
 		CA_SUPPRESS(28125);
 		Windows::InitializeCriticalSection(&CriticalSection);
-		Windows::SetCriticalSectionSpinCount(&CriticalSection, 4000);
+		Windows::SetCriticalSectionSpinCount(&CriticalSection,4000);
 	}
 
 	/**
-	* Destructor cleaning up the critical section
-	*/
+	 * Destructor cleaning up the critical section
+	 */
 	FORCEINLINE ~FWindowsCriticalSection()
 	{
 		Windows::DeleteCriticalSection(&CriticalSection);
 	}
 
 	/**
-	* Locks the critical section
-	*/
+	 * Locks the critical section
+	 */
 	FORCEINLINE void Lock()
 	{
 		// Spin first before entering critical section, causing ring-0 transition and context switch.
-		if (Windows::TryEnterCriticalSection(&CriticalSection) == 0)
+		if(Windows::TryEnterCriticalSection(&CriticalSection) == 0 )
 		{
 			Windows::EnterCriticalSection(&CriticalSection);
 		}
 	}
 
 	/**
-	* Attempt to take a lock and returns whether or not a lock was taken.
-	*
-	* @return true if a lock was taken, false otherwise.
-	*/
+	 * Attempt to take a lock and returns whether or not a lock was taken.
+	 *
+	 * @return true if a lock was taken, false otherwise.
+	 */
 	FORCEINLINE bool TryLock()
 	{
 		if (Windows::TryEnterCriticalSection(&CriticalSection))
@@ -66,8 +66,8 @@ public:
 	}
 
 	/**
-	* Releases the lock on the critical section
-	*/
+	 * Releases the lock on the critical section
+	 */
 	FORCEINLINE void Unlock()
 	{
 		Windows::LeaveCriticalSection(&CriticalSection);
@@ -89,10 +89,10 @@ public:
 	~FWindowsSystemWideCriticalSection();
 
 	/**
-	* Does the calling thread have ownership of the system-wide critical section?
-	*
-	* @return True if obtained. WARNING: Returns true for an owned but previously abandoned locks so shared resources can be in undetermined states. You must handle shared data robustly.
-	*/
+	 * Does the calling thread have ownership of the system-wide critical section?
+	 *
+	 * @return True if obtained. WARNING: Returns true for an owned but previously abandoned locks so shared resources can be in undetermined states. You must handle shared data robustly.
+	 */
 	bool IsValid() const;
 
 	/** Releases system-wide critical section if it is currently owned */

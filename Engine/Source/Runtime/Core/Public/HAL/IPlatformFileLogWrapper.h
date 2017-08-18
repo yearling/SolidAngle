@@ -13,23 +13,23 @@
 #include "HAL/PlatformTime.h"
 #include "Templates/ScopedPointer.h"
 #include "Misc/ScopeLock.h"
-#include "Templates/UniquePtr.h"
+#include "UniquePtr.h"
 
 class FLoggedPlatformFile;
 class IAsyncReadFileHandle;
 
 /**
-* Wrapper to log the low level file system
+ * Wrapper to log the low level file system
 **/
 DECLARE_LOG_CATEGORY_EXTERN(LogPlatformFile, Log, All);
 
 extern bool bSuppressFileLog;
 
-#define FILE_LOG(CategorFName, Verbosity, Format, ...) \
+#define FILE_LOG(CategoryName, Verbosity, Format, ...) \
 	if (!bSuppressFileLog) \
 	{ \
 		bSuppressFileLog = true; \
-		UE_LOG(CategorFName, Verbosity, Format, ##__VA_ARGS__); \
+		UE_LOG(CategoryName, Verbosity, Format, ##__VA_ARGS__); \
 		bSuppressFileLog = false; \
 	}
 

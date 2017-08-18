@@ -11,7 +11,7 @@
 #include "Internationalization/Internationalization.h"
 #include "Serialization/MemoryWriter.h"
 #include "Serialization/MemoryReader.h"
-#include "Templates/UniquePtr.h"
+#include "UniquePtr.h"
 
 #if	STATS
 
@@ -222,9 +222,9 @@ IStatsWriteFile::IStatsWriteFile()
 
 void IStatsWriteFile::Start( const FString& InFilename )
 {
-	const FString PathName = *(YPaths::ProfilingDir() + TEXT( "UnrealStats/" ));
+	const FString PathName = *(FPaths::ProfilingDir() + TEXT( "UnrealStats/" ));
 	const FString Filename = PathName + InFilename;
-	const FString Path = YPaths::GetPath( Filename );
+	const FString Path = FPaths::GetPath( Filename );
 	IFileManager::Get().MakeDirectory( *Path, true );
 
 	const FString TempFilename = Filename + STATSFILE_TEMPORARY_FILENAME_SUFFIX;
@@ -283,7 +283,7 @@ FText IStatsWriteFile::GetFileMetaDesc() const
 
 void IStatsWriteFile::WriteHeader()
 {
-	YMemoryWriter MemoryWriter( OutData, false, true );
+	FMemoryWriter MemoryWriter( OutData, false, true );
 	FArchive& Ar = File ? *File : MemoryWriter;
 
 	uint32 Magic = EStatMagicWithHeader::MAGIC;
@@ -403,7 +403,7 @@ void FStatsWriteFile::WriteFrame( int64 TargetFrame )
 
 	SCOPE_CYCLE_COUNTER( STAT_StreamFile );
 
-	YMemoryWriter Ar( OutData, false, true );
+	FMemoryWriter Ar( OutData, false, true );
 
 	WriteCondensedMessages( Ar, TargetFrame );
 
@@ -449,7 +449,7 @@ void FRawStatsWriteFile::SetDataDelegate( bool bSet )
 
 void FRawStatsWriteFile::WriteRawStatPacket( const FStatPacket* StatPacket )
 {
-	YMemoryWriter Ar( OutData, false, true );
+	FMemoryWriter Ar( OutData, false, true );
 
 	// Write stat packet.
 	WriteStatPacket( Ar, (FStatPacket&)*StatPacket );
@@ -732,7 +732,7 @@ void FStatsReadFile::ReadRawStats()
 			break;
 		}
 
-		YMemoryReader MemoryReader( DestArray, true );
+		FMemoryReader MemoryReader( DestArray, true );
 
 		FStatPacket* StatPacket = new FStatPacket();
 		Stream.ReadStatPacket( MemoryReader, *StatPacket );
@@ -809,7 +809,7 @@ void FStatsReadFile::ReadRegularStats()
 		*Reader << UncompressedData;
 
 		// Read all messages from the uncompressed buffer.
-		YMemoryReader MemoryReader( DestArray, true );
+		FMemoryReader MemoryReader( DestArray, true );
 		while (MemoryReader.Tell() < MemoryReader.TotalSize())
 		{
 			// Read the message.
@@ -923,9 +923,9 @@ void FStatsReadFile::ProcessStats()
 									const FStatMessage& SequenceTagMessage = Data[Index];
 									const uint32 SequenceTag = SequenceTagMessage.GetValue_int64();
 
-									//ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_AllocPtr ), (uint64)(UPTRINT)Ptr | (uint64)EMemoryOperation::Alloc );
-									//ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_AllocSize ), Size );
-									//ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_OperationSequenceTag ), (int64)SequenceTag );
+									//ThreadStats->AddMemoryMessage( GET_STATFNAME( STAT_Memory_AllocPtr ), (uint64)(UPTRINT)Ptr | (uint64)EMemoryOperation::Alloc );
+									//ThreadStats->AddMemoryMessage( GET_STATFNAME( STAT_Memory_AllocSize ), Size );
+									//ThreadStats->AddMemoryMessage( GET_STATFNAME( STAT_Memory_OperationSequenceTag ), (int64)SequenceTag );
 									ProcessMemoryOperation( MemOp, Ptr, 0, AllocSize, SequenceTag, *StackState );
 								}
 								else if (MemOp == EMemoryOperation::Realloc)
@@ -947,10 +947,10 @@ void FStatsReadFile::ProcessStats()
 									const FStatMessage& SequenceTagMessage = Data[Index];
 									const uint32 SequenceTag = SequenceTagMessage.GetValue_int64();
 
-									//ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_FreePtr ), (uint64)(UPTRINT)OldPtr | (uint64)EMemoryOperation::Realloc );
-									//ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_AllocPtr ), (uint64)(UPTRINT)NewPtr | (uint64)EMemoryOperation::Realloc );
-									//ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_AllocSize ), NewSize );
-									//ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_OperationSequenceTag ), (int64)SequenceTag );
+									//ThreadStats->AddMemoryMessage( GET_STATFNAME( STAT_Memory_FreePtr ), (uint64)(UPTRINT)OldPtr | (uint64)EMemoryOperation::Realloc );
+									//ThreadStats->AddMemoryMessage( GET_STATFNAME( STAT_Memory_AllocPtr ), (uint64)(UPTRINT)NewPtr | (uint64)EMemoryOperation::Realloc );
+									//ThreadStats->AddMemoryMessage( GET_STATFNAME( STAT_Memory_AllocSize ), NewSize );
+									//ThreadStats->AddMemoryMessage( GET_STATFNAME( STAT_Memory_OperationSequenceTag ), (int64)SequenceTag );
 									ProcessMemoryOperation( MemOp, OldPtr, NewPtr, ReallocSize, SequenceTag, *StackState );
 								}
 								else if (MemOp == EMemoryOperation::Free)
@@ -960,8 +960,8 @@ void FStatsReadFile::ProcessStats()
 									const FStatMessage& SequenceTagMessage = Data[Index];
 									const uint32 SequenceTag = SequenceTagMessage.GetValue_int64();
 
-									//ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_FreePtr ), (uint64)(UPTRINT)Ptr | (uint64)EMemoryOperation::Free );	// 16 bytes total				
-									//ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_OperationSequenceTag ), (int64)SequenceTag );
+									//ThreadStats->AddMemoryMessage( GET_STATFNAME( STAT_Memory_FreePtr ), (uint64)(UPTRINT)Ptr | (uint64)EMemoryOperation::Free );	// 16 bytes total				
+									//ThreadStats->AddMemoryMessage( GET_STATFNAME( STAT_Memory_OperationSequenceTag ), (int64)SequenceTag );
 									ProcessMemoryOperation( MemOp, Ptr, 0, 0, SequenceTag, *StackState );
 								}
 								else

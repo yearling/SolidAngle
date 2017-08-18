@@ -1,4 +1,7 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
+
 #include "CoreTypes.h"
 #include "GenericPlatform/GenericPlatformMemory.h"
 #include "WindowsSystemIncludes.h"
@@ -8,16 +11,16 @@ class FMalloc;
 struct FGenericMemoryStats;
 
 /**
-*	Windows implementation of the FGenericPlatformMemoryStats.
-*	At this moment it's just the same as the FGenericPlatformMemoryStats.
-*	Can be extended as shown in the following example.
-*/
-struct YPlatformMemoryStats
-	: public YGenericPlatformMemoryStats
+ *	Windows implementation of the FGenericPlatformMemoryStats.
+ *	At this moment it's just the same as the FGenericPlatformMemoryStats.
+ *	Can be extended as shown in the following example.
+ */
+struct FPlatformMemoryStats
+	: public FGenericPlatformMemoryStats
 {
 	/** Default constructor, clears all variables. */
-	YPlatformMemoryStats()
-		: YGenericPlatformMemoryStats()
+	FPlatformMemoryStats()
+		: FGenericPlatformMemoryStats()
 		, WindowsSpecificMemoryStat(0)
 	{ }
 
@@ -29,8 +32,8 @@ struct YPlatformMemoryStats
 /**
 * Windows implementation of the memory OS functions
 **/
-struct CORE_API YWindowsPlatformMemory
-	: public YGenericPlatformMemory
+struct CORE_API FWindowsPlatformMemory
+	: public FGenericPlatformMemory
 {
 	enum EMemoryCounterRegion
 	{
@@ -42,21 +45,21 @@ struct CORE_API YWindowsPlatformMemory
 		MCR_StreamingPool, // amount of texture pool available for streaming.
 		MCR_UsedStreamingPool, // amount of texture pool used for streaming.
 		MCR_GPUDefragPool, // presized pool of memory that can be defragmented.
-		MCR_SamplePlatformSpecifcMemoryRegion,
+		MCR_SamplePlatformSpecifcMemoryRegion, 
 		MCR_MAX
 	};
 
 	/**
-	* Windows representation of a shared memory region
-	*/
-	struct FWindowsSharedMemoryRegion : public YSharedMemoryRegion
+	 * Windows representation of a shared memory region
+	 */
+	struct FWindowsSharedMemoryRegion : public FSharedMemoryRegion
 	{
 		/** Returns the handle to file mapping object. */
 		Windows::HANDLE GetMapping() const { return Mapping; }
 
 		FWindowsSharedMemoryRegion(const FString& InName, uint32 InAccessMode, void* InAddress, SIZE_T InSize, Windows::HANDLE InMapping)
-			: YSharedMemoryRegion(InName, InAccessMode, InAddress, InSize)
-			, Mapping(InMapping)
+			:	FSharedMemoryRegion(InName, InAccessMode, InAddress, InSize)
+			,	Mapping(InMapping)
 		{}
 
 	protected:
@@ -65,9 +68,9 @@ struct CORE_API YWindowsPlatformMemory
 		Windows::HANDLE				Mapping;
 	};
 
-	//~ Begin YGenericPlatformMemory Interface
-	static void					Init();
-	static uint32				GetBackMemoryPoolSize()
+	//~ Begin FGenericPlatformMemory Interface
+	static void Init();
+	static uint32 GetBackMemoryPoolSize()
 	{
 		/**
 		* Value determined by series of tests on Fortnite with limited process memory.
@@ -79,21 +82,21 @@ struct CORE_API YWindowsPlatformMemory
 		return 32 * 1024 * 1024;
 	}
 
-	static class FMalloc*		BaseAllocator();
-	static YPlatformMemoryStats GetStats();
-	static void					GetStatsForMallocProfiler(FGenericMemoryStats& out_Stats);
-	static const YPlatformMemoryConstants& GetConstants();
-	static bool					PageProtect(void* const Ptr, const SIZE_T Size, const bool bCanRead, const bool bCanWrite);
-	static void*				BinnedAllocFromOS(SIZE_T Size);
-	static void					BinnedFreeToOS(void* Ptr, SIZE_T Size);
-	static YSharedMemoryRegion* MapNamedSharedMemoryRegion(const FString& InName, bool bCreate, uint32 AccessMode, SIZE_T Size);
-	static bool					UnmapNamedSharedMemoryRegion(YSharedMemoryRegion * MemoryRegion);
+	static class FMalloc* BaseAllocator();
+	static FPlatformMemoryStats GetStats();
+	static void GetStatsForMallocProfiler( FGenericMemoryStats& out_Stats );
+	static const FPlatformMemoryConstants& GetConstants();
+	static bool PageProtect(void* const Ptr, const SIZE_T Size, const bool bCanRead, const bool bCanWrite);
+	static void* BinnedAllocFromOS( SIZE_T Size );
+	static void BinnedFreeToOS( void* Ptr, SIZE_T Size );
+	static FSharedMemoryRegion* MapNamedSharedMemoryRegion(const FString& InName, bool bCreate, uint32 AccessMode, SIZE_T Size);
+	static bool UnmapNamedSharedMemoryRegion(FSharedMemoryRegion * MemoryRegion);
 protected:
 	friend struct FGenericStatsUpdater;
 
-	static void InternalUpdateStats(const YPlatformMemoryStats& MemoryStats);
-	//~ End YGenericPlatformMemory Interface
+	static void InternalUpdateStats( const FPlatformMemoryStats& MemoryStats );
+	//~ End FGenericPlatformMemory Interface
 };
 
 
-typedef YWindowsPlatformMemory YPlatformMemory;
+typedef FWindowsPlatformMemory FPlatformMemory;

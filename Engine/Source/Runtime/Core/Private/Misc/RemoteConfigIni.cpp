@@ -266,7 +266,7 @@ FRemoteConfig* FRemoteConfig::Get()
 bool FRemoteConfig::IsRemoteFile(const TCHAR* Filename)
 {
 	FString IniFileName(Filename);
-	FString BaseFilename = YPaths::GetBaseFilename(IniFileName);
+	FString BaseFilename = FPaths::GetBaseFilename(IniFileName);
 
 	if (!bHasCachedFilenames && GConfig->FindConfigFile(GEngineIni))
 	{
@@ -425,7 +425,7 @@ FString FRemoteConfig::ReplaceIniSpecialCharWithChar(const FString& Str)
 FString FRemoteConfig::GenerateRemotePath(const TCHAR* Filename)
 {
 	FString IniFileName(Filename);
-	FString BaseFilename = YPaths::GetBaseFilename(IniFileName);
+	FString BaseFilename = FPaths::GetBaseFilename(IniFileName);
 	FString PathPrefix = GConfig->GetStr(TEXT("RemoteConfiguration"), TEXT("ConfigPathPrefix"), GEngineIni);
 	FString PathSuffix = GConfig->GetStr(TEXT("RemoteConfiguration"), TEXT("ConfigPathSuffix"), GEngineIni);
 	FString UserName = FPlatformProcess::UserName(false);

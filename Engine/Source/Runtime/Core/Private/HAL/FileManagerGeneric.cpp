@@ -16,7 +16,7 @@
 #include "Misc/CommandLine.h"
 #include "Misc/Paths.h"
 #include "Misc/SecureHash.h"
-#include "Templates/UniquePtr.h"
+#include "UniquePtr.h"
 #include <time.h>
 
 DEFINE_LOG_CATEGORY_STATIC( LogFileManager, Log, All );
@@ -32,12 +32,12 @@ void FFileManagerGeneric::ProcessCommandLineOptions()
 #if !UE_BUILD_SHIPPING
 	if( FParse::Param( FCommandLine::Get(),TEXT( "CLEANSCREENSHOTS" ) ) )
 	{
-		DeleteDirectory( *YPaths::ScreenShotDir(), false, true );
+		DeleteDirectory( *FPaths::ScreenShotDir(), false, true );
 	}
 
 	if( FParse::Param( FCommandLine::Get(),TEXT( "CLEANLOGS" ) ) )
 	{
-		DeleteDirectory( *YPaths::GameLogDir(), false, true );
+		DeleteDirectory( *FPaths::GameLogDir(), false, true );
 	}
 #endif
 }
@@ -53,22 +53,22 @@ FArchive* FFileManagerGeneric::CreateFileReader( const TCHAR* InFilename, uint32
 		}
 		return NULL;
 	}
-	return new YArchiveFileReaderGeneric( Handle, InFilename, Handle->Size() );
+	return new FArchiveFileReaderGeneric( Handle, InFilename, Handle->Size() );
 }
 
 /**
 * Dummy archive that doesn't actually write anything
 * it just updates the file pos when seeking
 */
-class YArchiveFileWriterDummy : public FArchive
+class FArchiveFileWriterDummy : public FArchive
 {
 public:
-	YArchiveFileWriterDummy()
+	FArchiveFileWriterDummy()
 		:	Pos( 0 )
 	{
 		ArIsSaving = ArIsPersistent = true;
 	}
-	virtual ~YArchiveFileWriterDummy()
+	virtual ~FArchiveFileWriterDummy()
 	{
 		Close();
 	}
@@ -84,7 +84,7 @@ public:
 	{
 		Pos += Length;
 	}
-	virtual FString GetArchiveName() const override { return TEXT( "YArchiveFileWriterDummy" ); }
+	virtual FString GetArchiveName() const override { return TEXT( "FArchiveFileWriterDummy" ); }
 protected:
 	int64             Pos;
 };
@@ -96,9 +96,9 @@ FArchive* FFileManagerGeneric::CreateFileWriter( const TCHAR* Filename, uint32 F
 	if( FSHA1::GetFileSHAHash( Filename, NULL ) && FileSize( Filename ) != -1 )
 	{
 		UE_LOG( LogFileManager, Log, TEXT( "Can't write to signed game file: %s" ),Filename );
-		return new YArchiveFileWriterDummy();
+		return new FArchiveFileWriterDummy();
 	}
-	MakeDirectory( *YPaths::GetPath(Filename), true );
+	MakeDirectory( *FPaths::GetPath(Filename), true );
 
 	if( Flags & FILEWRITE_EvenIfReadOnly )
 	{
@@ -114,7 +114,7 @@ FArchive* FFileManagerGeneric::CreateFileWriter( const TCHAR* Filename, uint32 F
 		}
 		return NULL;
 	}
-	return new YArchiveFileWriterGeneric( Handle, Filename, Handle->Tell() );
+	return new FArchiveFileWriterGeneric( Handle, Filename, Handle->Tell() );
 }
 
 
@@ -126,7 +126,7 @@ int64 FFileManagerGeneric::FileSize( const TCHAR* Filename )
 uint32 FFileManagerGeneric::Copy( const TCHAR* Dest, const TCHAR* Src, bool Replace, bool EvenIfReadOnly, bool Attributes, FCopyProgress* Progress, EFileRead ReadFlags, EFileWrite WriteFlags)
 {
 	uint32	Result = COPY_OK;
-	if( YPaths::ConvertRelativePathToFull(Dest) == YPaths::ConvertRelativePathToFull(Src) )
+	if( FPaths::ConvertRelativePathToFull(Dest) == FPaths::ConvertRelativePathToFull(Src) )
 	{
 		Result = COPY_Fail;
 	}
@@ -144,7 +144,7 @@ uint32 FFileManagerGeneric::Copy( const TCHAR* Dest, const TCHAR* Src, bool Repl
 		{
 			GetLowLevel().SetReadOnly(Dest, false );
 		}
-		MakeDirectory( *YPaths::GetPath(Dest), true );
+		MakeDirectory( *FPaths::GetPath(Dest), true );
 		EPlatformFileRead PlatformFileRead = (ReadFlags & FILEREAD_AllowWrite) ? EPlatformFileRead::AllowWrite : EPlatformFileRead::None;
 		EPlatformFileWrite PlatformFileWrite = (WriteFlags & FILEWRITE_AllowRead) ? EPlatformFileWrite::AllowRead : EPlatformFileWrite::None;
 		if( !GetLowLevel().CopyFile(Dest, Src, PlatformFileRead, PlatformFileWrite) )
@@ -288,7 +288,7 @@ bool FFileManagerGeneric::IsReadOnly( const TCHAR* Filename )
 
 bool FFileManagerGeneric::Move( const TCHAR* Dest, const TCHAR* Src, bool Replace, bool EvenIfReadOnly, bool Attributes, bool bDoNotRetryOrError )
 {
-	MakeDirectory( *YPaths::GetPath(Dest), true );
+	MakeDirectory( *FPaths::GetPath(Dest), true );
 	// Retry on failure, unless the file wasn't there anyway.
 	if( GetLowLevel().FileExists( Dest ) && !GetLowLevel().DeleteFile( Dest ) && !bDoNotRetryOrError )
 	{
@@ -399,19 +399,19 @@ void FFileManagerGeneric::FindFiles( TArray<FString>& Result, const TCHAR* InFil
 		virtual bool Visit( const TCHAR* FilenameOrDirectory, bool bIsDirectory )
 		{
 			if (((bIsDirectory && bDirectories) || (!bIsDirectory && bFiles))
-				&& YPaths::GetCleanFilename(FilenameOrDirectory).MatchesWildcard(WildCard))
+				&& FPaths::GetCleanFilename(FilenameOrDirectory).MatchesWildcard(WildCard))
 			{
-				new( Result ) FString( YPaths::GetCleanFilename(FilenameOrDirectory) );
+				new( Result ) FString( FPaths::GetCleanFilename(FilenameOrDirectory) );
 			}
 			return true;
 		}
 	};
 	FString Filename( InFilename );
-	YPaths::NormalizeFilename( Filename );
-	const FString CleanFilename = YPaths::GetCleanFilename(Filename);
+	FPaths::NormalizeFilename( Filename );
+	const FString CleanFilename = FPaths::GetCleanFilename(Filename);
 	const bool bFindAllFiles = CleanFilename == TEXT("*") || CleanFilename == TEXT("*.*");
 	FFileMatch FileMatch( Result, bFindAllFiles ? TEXT("*") : CleanFilename, Files, Directories );
-	GetLowLevel().IterateDirectory( *YPaths::GetPath(Filename), FileMatch );
+	GetLowLevel().IterateDirectory( *FPaths::GetPath(Filename), FileMatch );
 }
 
 void FFileManagerGeneric::FindFiles(TArray<FString>& FoundFiles, const TCHAR* Directory, const TCHAR* FileExtension)
@@ -430,7 +430,7 @@ void FFileManagerGeneric::FindFiles(TArray<FString>& FoundFiles, const TCHAR* Di
 		return;
 	}
 
-	YPaths::NormalizeDirectorFName(RootDir);
+	FPaths::NormalizeDirectoryName(RootDir);
 
 	// Don't modify the ExtStr if the user supplied the form "*.EXT" or "*" or "*.*" or "Name.*"
 	if (!ExtStr.Contains(TEXT("*")))
@@ -521,11 +521,11 @@ FString FFileManagerGeneric::DefaultConvertToRelativePath( const TCHAR* Filename
 {
 	//default to the full absolute path of this file
 	FString RelativePath( Filename );
-	YPaths::NormalizeFilename(RelativePath);
+	FPaths::NormalizeFilename(RelativePath);
 
 	// See whether it is a relative path.
 	FString RootDirectory( FPlatformMisc::RootDir() );
-	YPaths::NormalizeFilename(RootDirectory);
+	FPaths::NormalizeFilename(RootDirectory);
 
 	//the default relative directory it to the app root which is 3 directories up from the starting directory
 	int32 NumberOfDirectoriesToGoUp = 3;
@@ -539,7 +539,7 @@ FString FFileManagerGeneric::DefaultConvertToRelativePath( const TCHAR* Filename
 		if( RelativePath.StartsWith( RootDirectory ) )
 		{
 			FString BinariesDir = FString(FPlatformProcess::BaseDir());
-			YPaths::MakePathRelativeTo( RelativePath, *BinariesDir );
+			FPaths::MakePathRelativeTo( RelativePath, *BinariesDir );
 			break;
 		}
 		int32 PositionOfNextSlash = RootDirectory.Find( TEXT("/"), ESearchCase::CaseSensitive, ESearchDir::FromEnd, CurrentSlashPosition );
@@ -605,7 +605,7 @@ void FFileManagerGeneric::FindFilesRecursiveInternal( TArray<FString>& FileNames
 	}
 }
 
-YArchiveFileReaderGeneric::YArchiveFileReaderGeneric( IFileHandle* InHandle, const TCHAR* InFilename, int64 InSize )
+FArchiveFileReaderGeneric::FArchiveFileReaderGeneric( IFileHandle* InHandle, const TCHAR* InFilename, int64 InSize )
 	: Filename( InFilename )
 	, Size( InSize )
 	, Pos( 0 )
@@ -617,7 +617,7 @@ YArchiveFileReaderGeneric::YArchiveFileReaderGeneric( IFileHandle* InHandle, con
 }
 
 
-void YArchiveFileReaderGeneric::Seek( int64 InPos )
+void FArchiveFileReaderGeneric::Seek( int64 InPos )
 {
 	checkf(InPos >= 0, TEXT("Attempted to seek to a negative location (%lld/%lld), file: %s. The file is most likely corrupt."), InPos, Size, *Filename);
 	checkf(InPos <= Size, TEXT("Attempted to seek past the end of file (%lld/%lld), file: %s. The file is most likely corrupt."), InPos, Size, *Filename);
@@ -632,12 +632,12 @@ void YArchiveFileReaderGeneric::Seek( int64 InPos )
 	BufferCount = 0;
 }
 
-YArchiveFileReaderGeneric::~YArchiveFileReaderGeneric()
+FArchiveFileReaderGeneric::~FArchiveFileReaderGeneric()
 {
 	Close();
 }
 
-void YArchiveFileReaderGeneric::ReadLowLevel( uint8* Dest, int64 CountToRead, int64& OutBytesRead )
+void FArchiveFileReaderGeneric::ReadLowLevel( uint8* Dest, int64 CountToRead, int64& OutBytesRead )
 {
 	if( Handle->Read( Dest, CountToRead ) )
 	{
@@ -649,23 +649,23 @@ void YArchiveFileReaderGeneric::ReadLowLevel( uint8* Dest, int64 CountToRead, in
 	}
 }
 
-bool YArchiveFileReaderGeneric::SeekLowLevel( int64 InPos )
+bool FArchiveFileReaderGeneric::SeekLowLevel( int64 InPos )
 {
 	return Handle->Seek( InPos );
 }
 
-void YArchiveFileReaderGeneric::CloseLowLevel()
+void FArchiveFileReaderGeneric::CloseLowLevel()
 {
 	Handle.Reset();
 }
 
-bool YArchiveFileReaderGeneric::Close()
+bool FArchiveFileReaderGeneric::Close()
 {
 	CloseLowLevel();
 	return !ArIsError;
 }
 
-bool YArchiveFileReaderGeneric::InternalPrecache( int64 PrecacheOffset, int64 PrecacheSize )
+bool FArchiveFileReaderGeneric::InternalPrecache( int64 PrecacheOffset, int64 PrecacheSize )
 {
 	// Only precache at current position and avoid work if precaching same offset twice.
 	if( Pos == PrecacheOffset &&( !BufferBase || !BufferCount || BufferBase != Pos ) )
@@ -697,7 +697,7 @@ bool YArchiveFileReaderGeneric::InternalPrecache( int64 PrecacheOffset, int64 Pr
 	return true;
 }
 
-void YArchiveFileReaderGeneric::Serialize( void* V, int64 Length )
+void FArchiveFileReaderGeneric::Serialize( void* V, int64 Length )
 {
 	while( Length>0 )
 	{
@@ -745,7 +745,7 @@ void YArchiveFileReaderGeneric::Serialize( void* V, int64 Length )
 	}
 }
 
-YArchiveFileWriterGeneric::YArchiveFileWriterGeneric( IFileHandle* InHandle, const TCHAR* InFilename, int64 InPos )
+FArchiveFileWriterGeneric::FArchiveFileWriterGeneric( IFileHandle* InHandle, const TCHAR* InFilename, int64 InPos )
 	: Filename( InFilename )
 	, Pos( InPos )
 	, BufferCount( 0 )
@@ -755,35 +755,35 @@ YArchiveFileWriterGeneric::YArchiveFileWriterGeneric( IFileHandle* InHandle, con
 	ArIsSaving = ArIsPersistent = true;
 }
 
-YArchiveFileWriterGeneric::~YArchiveFileWriterGeneric()
+FArchiveFileWriterGeneric::~FArchiveFileWriterGeneric()
 {
 	Close();
 }
 
-bool YArchiveFileWriterGeneric::CloseLowLevel()
+bool FArchiveFileWriterGeneric::CloseLowLevel()
 {
 	Handle.Reset();
 	return true;
 }
 
-bool YArchiveFileWriterGeneric::SeekLowLevel( int64 InPos )
+bool FArchiveFileWriterGeneric::SeekLowLevel( int64 InPos )
 {
 	return Handle->Seek( InPos );
 }
 
-int64 YArchiveFileWriterGeneric::TotalSize()
+int64 FArchiveFileWriterGeneric::TotalSize()
 {
 	// Make sure that all data is written before looking at file size.
 	Flush();
 	return Handle->Size();
 }
 
-bool YArchiveFileWriterGeneric::WriteLowLevel( const uint8* Src, int64 CountToWrite )
+bool FArchiveFileWriterGeneric::WriteLowLevel( const uint8* Src, int64 CountToWrite )
 {
 	return Handle->Write( Src, CountToWrite );
 }
 
-void YArchiveFileWriterGeneric::Seek( int64 InPos )
+void FArchiveFileWriterGeneric::Seek( int64 InPos )
 {
 	Flush();
 	if( !SeekLowLevel( InPos ) )
@@ -794,7 +794,7 @@ void YArchiveFileWriterGeneric::Seek( int64 InPos )
 	Pos = InPos;
 }
 
-bool YArchiveFileWriterGeneric::Close()
+bool FArchiveFileWriterGeneric::Close()
 {
 	Flush();
 	if( !CloseLowLevel() )
@@ -805,7 +805,7 @@ bool YArchiveFileWriterGeneric::Close()
 	return !ArIsError;
 }
 
-void YArchiveFileWriterGeneric::Serialize( void* V, int64 Length )
+void FArchiveFileWriterGeneric::Serialize( void* V, int64 Length )
 {
 	Pos += Length;
 	if ( Length >= ARRAY_COUNT(Buffer) )
@@ -838,7 +838,7 @@ void YArchiveFileWriterGeneric::Serialize( void* V, int64 Length )
 	}
 }
 
-void YArchiveFileWriterGeneric::Flush()
+void FArchiveFileWriterGeneric::Flush()
 {
 	if( BufferCount )
 	{
@@ -852,7 +852,7 @@ void YArchiveFileWriterGeneric::Flush()
 	}
 }
 
-void YArchiveFileWriterGeneric::LogWriteError(const TCHAR* Message)
+void FArchiveFileWriterGeneric::LogWriteError(const TCHAR* Message)
 {
 	// Prevent re-entry if logging causes another log error leading to a stack overflow
 	if (!bLoggingError)

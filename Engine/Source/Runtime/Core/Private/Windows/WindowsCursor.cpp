@@ -67,7 +67,7 @@ FWindowsCursor::FWindowsCursor()
 			break;
 
 		case EMouseCursor::GrabHand:
-			CursorHandle = LoadCursorFromFile((LPCTSTR)*(FString( FPlatformProcess::BaseDir() ) / FString::Printf( TEXT("%sEditor/Slate/Cursor/grabhand.cur"), *YPaths::EngineContentDir() )));
+			CursorHandle = LoadCursorFromFile((LPCTSTR)*(FString( FPlatformProcess::BaseDir() ) / FString::Printf( TEXT("%sEditor/Slate/Cursor/grabhand.cur"), *FPaths::EngineContentDir() )));
 			if (CursorHandle == NULL)
 			{
 				// Failed to load file, fall back
@@ -76,7 +76,7 @@ FWindowsCursor::FWindowsCursor()
 			break;
 
 		case EMouseCursor::GrabHandClosed:
-			CursorHandle = LoadCursorFromFile((LPCTSTR)*(FString( FPlatformProcess::BaseDir() ) / FString::Printf( TEXT("%sEditor/Slate/Cursor/grabhand_closed.cur"), *YPaths::EngineContentDir() )));
+			CursorHandle = LoadCursorFromFile((LPCTSTR)*(FString( FPlatformProcess::BaseDir() ) / FString::Printf( TEXT("%sEditor/Slate/Cursor/grabhand_closed.cur"), *FPaths::EngineContentDir() )));
 			if (CursorHandle == NULL)
 			{
 				// Failed to load file, fall back
@@ -89,7 +89,7 @@ FWindowsCursor::FWindowsCursor()
 			break;
 
 		case EMouseCursor::EyeDropper:
-			CursorHandle = LoadCursorFromFile((LPCTSTR)*(FString( FPlatformProcess::BaseDir() ) / FString::Printf( TEXT("%sEditor/Slate/Icons/eyedropper.cur"), *YPaths::EngineContentDir() )));
+			CursorHandle = LoadCursorFromFile((LPCTSTR)*(FString( FPlatformProcess::BaseDir() ) / FString::Printf( TEXT("%sEditor/Slate/Icons/eyedropper.cur"), *FPaths::EngineContentDir() )));
 			break;
 
 			// NOTE: For custom app cursors, use:

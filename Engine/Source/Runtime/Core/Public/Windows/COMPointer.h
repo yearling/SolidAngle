@@ -15,13 +15,13 @@ public:
 	typedef T PointerType;
 
 public:
-	TComPtr() : RawPointer(nullptr)
+	TComPtr() :	RawPointer(nullptr)
 	{
 	}
 
 	TComPtr(PointerType* const Source) : RawPointer(Source)
 	{
-		if (RawPointer)
+		if(RawPointer)
 		{
 			RawPointer->AddRef();
 		}
@@ -29,20 +29,20 @@ public:
 
 	TComPtr(const TComPtr<PointerType>& Source) : RawPointer(Source.RawPointer)
 	{
-		if (RawPointer)
+		if(RawPointer)
 		{
 			RawPointer->AddRef();
 		}
 	}
 
 	TComPtr(TComPtr<PointerType>&& Source) : RawPointer(Source.RawPointer)
-	{
+	{	
 		Source.RawPointer = nullptr;
-	}
+	}	
 
-	TComPtr<PointerType>& operator=(PointerType* const Source)
+	TComPtr<PointerType>& operator=(PointerType* const Source) 
 	{
-		if (RawPointer != Source)
+		if(RawPointer != Source)
 		{
 			if (Source)
 			{
@@ -57,9 +57,9 @@ public:
 		return *this;
 	}
 
-	TComPtr<PointerType>& operator=(const TComPtr<PointerType>& Source)
+	TComPtr<PointerType>& operator=(const TComPtr<PointerType>& Source) 
 	{
-		if (RawPointer != Source.RawPointer)
+		if(RawPointer != Source.RawPointer)
 		{
 			if (Source.RawPointer)
 			{
@@ -74,11 +74,11 @@ public:
 		return *this;
 	}
 
-	TComPtr<PointerType>& operator=(TComPtr<PointerType>&& Source)
-	{
-		if (RawPointer != Source.RawPointer)
+	TComPtr<PointerType>& operator=(TComPtr<PointerType>&& Source) 
+	{			
+		if(RawPointer != Source.RawPointer)
 		{
-			if (RawPointer)
+			if(RawPointer)
 			{
 				RawPointer->Release();
 			}
@@ -88,9 +88,9 @@ public:
 		return *this;
 	}
 
-	~TComPtr()
+	~TComPtr() 
 	{
-		if (RawPointer)
+		if(RawPointer)
 		{
 			RawPointer->Release();
 		}
@@ -101,12 +101,12 @@ public:
 		return &(RawPointer);
 	}
 
-	PointerType* operator->() const
+	PointerType* operator->() const 
 	{
 		check(RawPointer != nullptr);
 		return RawPointer;
 	}
-
+	
 	bool operator==(PointerType* const InRawPointer) const
 	{
 		return RawPointer == InRawPointer;
@@ -124,7 +124,7 @@ public:
 
 	void Reset()
 	{
-		if (RawPointer)
+		if(RawPointer)
 		{
 			RawPointer->Release();
 			RawPointer = nullptr;
@@ -134,7 +134,7 @@ public:
 	// Set the pointer without adding a reference.
 	void Attach(PointerType* InRawPointer)
 	{
-		if (RawPointer)
+		if(RawPointer)
 		{
 			RawPointer->Release();
 		}
@@ -149,7 +149,7 @@ public:
 
 	HRESULT FromQueryInterface(REFIID riid, IUnknown* Unknown)
 	{
-		if (RawPointer)
+		if(RawPointer)
 		{
 			RawPointer->Release();
 			RawPointer = nullptr;

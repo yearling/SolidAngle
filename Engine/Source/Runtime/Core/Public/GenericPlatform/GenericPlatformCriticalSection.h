@@ -16,10 +16,10 @@ public:
 	~FSystemWideCriticalSectionNotImplemented() {}
 
 	/**
-	* Does the calling thread have ownership of the system-wide critical section?
-	*
-	* @return True if the system-wide lock is obtained.
-	*/
+	 * Does the calling thread have ownership of the system-wide critical section?
+	 *
+	 * @return True if the system-wide lock is obtained.
+	 */
 	bool IsValid() const { return false; }
 
 	/** Releases system-wide critical section if it is currently owned */

@@ -9,8 +9,8 @@
 
 /** Governs when malloc that poisons the allocations is enabled. */
 #if !defined(UE_USE_MALLOC_FILL_BYTES)
-// PoisonProxy is dangerous with binned/binned2 at this point (see UE-37243).
-#define UE_USE_MALLOC_FILL_BYTES ((UE_BUILD_DEBUG || UE_BUILD_DEVELOPMENT) && !WITH_EDITORONLY_DATA && !PLATFORM_USES_FIXED_GMalloc_CLASS)
+	// PoisonProxy is dangerous with binned/binned2 at this point (see UE-37243).
+	#define UE_USE_MALLOC_FILL_BYTES ((UE_BUILD_DEBUG || UE_BUILD_DEVELOPMENT) && !WITH_EDITORONLY_DATA && !PLATFORM_USES_FIXED_GMalloc_CLASS)
 #endif // !defined(UE_USE_MALLOC_FILL_BYTES)
 
 /** Value that a freed memory block will be filled with when UE_USE_MALLOC_FILL_BYTES is defined. */
@@ -20,8 +20,8 @@
 #define UE_DEBUG_FILL_NEW (0xcd)
 
 /**
-* YMalloc proxy that poisons new and freed allocations, helping to catch code that relies on uninitialized or freed memory.
-*/
+ * FMalloc proxy that poisons new and freed allocations, helping to catch code that relies on uninitialized or freed memory.
+ */
 class FMallocPoisonProxy : public FMalloc
 {
 private:
@@ -29,7 +29,7 @@ private:
 	FMalloc* UsedMalloc;
 
 public:
-	// YMalloc interface begin
+	// FMalloc interface begin
 	explicit FMallocPoisonProxy(FMalloc* InMalloc)
 		: UsedMalloc(InMalloc)
 	{
@@ -44,7 +44,7 @@ public:
 	virtual void* Malloc(SIZE_T Size, uint32 Alignment) override
 	{
 		IncrementTotalMallocCalls();
-		void* Result = UsedMalloc->Malloc(Size, Alignment);
+		void* Result=UsedMalloc->Malloc(Size, Alignment);
 		if (LIKELY(Result != nullptr && Size > 0))
 		{
 			FMemory::Memset(Result, UE_DEBUG_FILL_NEW, Size);
@@ -88,14 +88,14 @@ public:
 		}
 	}
 
-	virtual void GetAllocatorStats(FGenericMemoryStats& out_Stats) override
+	virtual void GetAllocatorStats( FGenericMemoryStats& out_Stats ) override
 	{
-		UsedMalloc->GetAllocatorStats(out_Stats);
+		UsedMalloc->GetAllocatorStats( out_Stats );
 	}
 
-	virtual void DumpAllocatorStats(class FOutputDevice& Ar) override
+	virtual void DumpAllocatorStats( class FOutputDevice& Ar ) override
 	{
-		UsedMalloc->DumpAllocatorStats(Ar);
+		UsedMalloc->DumpAllocatorStats( Ar );
 	}
 
 	virtual bool ValidateHeap() override
@@ -103,25 +103,25 @@ public:
 		return UsedMalloc->ValidateHeap();
 	}
 
-	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar) override
+	virtual bool Exec( UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar ) override
 	{
 		return UsedMalloc->Exec(InWorld, Cmd, Ar);
 	}
 
 	virtual bool GetAllocationSize(void *Original, SIZE_T &SizeOut) override
 	{
-		return UsedMalloc->GetAllocationSize(Original, SizeOut);
+		return UsedMalloc->GetAllocationSize(Original,SizeOut);
 	}
 
 	virtual const TCHAR* GetDescriptiveName() override
-	{
-		return UsedMalloc->GetDescriptiveName();
+	{ 
+		return UsedMalloc->GetDescriptiveName(); 
 	}
 
 	virtual void Trim() override
 	{
 		UsedMalloc->Trim();
 	}
-	// YMalloc interface end
+	// FMalloc interface end
 };
 

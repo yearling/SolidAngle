@@ -14,13 +14,13 @@
 #include "Misc/App.h"
 #include "HAL/FeedbackContextAnsi.h"
 #include "Misc/OutputDeviceConsole.h"
-#include "Templates/UniquePtr.h"
+#include "UniquePtr.h"
 
-void YGenericPlatformOutputDevices::SetupOutputDevices()
+void FGenericPlatformOutputDevices::SetupOutputDevices()
 {
 	check(GLog);
 
-	GLog->AddOutputDevice(YPlatformOutputDevices::GetLog());
+	GLog->AddOutputDevice(FPlatformOutputDevices::GetLog());
 
 	bool bHasConsole = !FParse::Param(FCommandLine::Get(), TEXT("NOCONSOLE"));
 	if (bHasConsole)
@@ -35,21 +35,21 @@ void YGenericPlatformOutputDevices::SetupOutputDevices()
 		// Only need to do this if it's actually going to go to a different place than GLogConsole
 		if(!bHasConsole || FPlatformMisc::HasSeparateChannelForDebugOutput())
 		{
-			GLog->AddOutputDevice(new YOutputDeviceDebug());
+			GLog->AddOutputDevice(new FOutputDeviceDebug());
 		}
 	}
 
-	GLog->AddOutputDevice(YPlatformOutputDevices::GetEventLog());
+	GLog->AddOutputDevice(FPlatformOutputDevices::GetEventLog());
 };
 
 
-FString YGenericPlatformOutputDevices::GetAbsoluteLogFilename()
+FString FGenericPlatformOutputDevices::GetAbsoluteLogFilename()
 {
 	static TCHAR		Filename[1024] = { 0 };
 
 	if (!Filename[0])
 	{
-		FCString::Strcpy(Filename, ARRAY_COUNT(Filename), *YPaths::GameLogDir());
+		FCString::Strcpy(Filename, ARRAY_COUNT(Filename), *FPaths::GameLogDir());
 		FString LogFilename;
 		if (!FParse::Value(FCommandLine::Get(), TEXT("LOG="), LogFilename))
 		{
@@ -59,7 +59,7 @@ FString YGenericPlatformOutputDevices::GetAbsoluteLogFilename()
 			}
 		}
 
-		FString Extension(YPaths::GetExtension(LogFilename));
+		FString Extension(FPaths::GetExtension(LogFilename));
 		if (Extension != TEXT("log") && Extension != TEXT("txt"))
 		{
 			// Ignoring the specified log filename because it doesn't have a .log extension			
@@ -90,7 +90,7 @@ FString YGenericPlatformOutputDevices::GetAbsoluteLogFilename()
 	#define WITH_LOGGING_TO_MEMORY 0
 #endif
 
-class FOutputDevice* YGenericPlatformOutputDevices::GetLog()
+class FOutputDevice* FGenericPlatformOutputDevices::GetLog()
 {
 	static struct FLogOutputDeviceInitializer
 	{
@@ -107,13 +107,13 @@ class FOutputDevice* YGenericPlatformOutputDevices::GetLog()
 #endif
 				 )
 			{
-				LogDevice = MakeUnique<YOutputDeviceMemory>();
+				LogDevice = MakeUnique<FOutputDeviceMemory>();
 			}
 #endif // !IS_PROGRAM && !WITH_EDITORONLY_DATA
 #endif // WITH_LOGGING_TO_MEMORY
 			if (!LogDevice)
 			{
-				LogDevice = MakeUnique<YOutputDeviceFile>();
+				LogDevice = MakeUnique<FOutputDeviceFile>();
 			}
 		}
 
@@ -123,14 +123,14 @@ class FOutputDevice* YGenericPlatformOutputDevices::GetLog()
 }
 
 
-class FOutputDeviceError* YGenericPlatformOutputDevices::GetError()
+class FOutputDeviceError* FGenericPlatformOutputDevices::GetError()
 {
-	static YOutputDeviceAnsiError Singleton;
+	static FOutputDeviceAnsiError Singleton;
 	return &Singleton;
 }
 
 
-class FFeedbackContext* YGenericPlatformOutputDevices::GetWarn()
+class FFeedbackContext* FGenericPlatformOutputDevices::GetWarn()
 {
 	static FFeedbackContextAnsi Singleton;
 	return &Singleton;

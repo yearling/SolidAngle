@@ -1,3 +1,5 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
@@ -6,13 +8,13 @@
 struct FLogCategoryBase;
 
 /*-----------------------------------------------------------------------------
-FLogScopedVerbosityOverride
+	FLogScopedVerbosityOverride
 -----------------------------------------------------------------------------*/
-/**
-* Helper class that allows setting scoped verbosity for log category.
-* Saved what was previous verbosity for the category, and recovers it when it goes out of scope.
-* Use Macro LOG_SCOPE_VERBOSITY_OVERRIDE for this
-**/
+/** 
+ * Helper class that allows setting scoped verbosity for log category. 
+ * Saved what was previous verbosity for the category, and recovers it when it goes out of scope. 
+ * Use Macro LOG_SCOPE_VERBOSITY_OVERRIDE for this
+ **/
 class CORE_API FLogScopedVerbosityOverride
 {
 private:
@@ -28,13 +30,13 @@ public:
 	~FLogScopedVerbosityOverride();
 };
 
-/**
-* A macro to override Verbosity of the Category within the scope
-* @param CategorFName, category to declare
-* @param ScopeVerbosity, verbosity to override
-**/
+/** 
+ * A macro to override Verbosity of the Category within the scope
+ * @param CategoryName, category to declare
+ * @param ScopeVerbosity, verbosity to override
+ **/
 #if NO_LOGGING
-#define LOG_SCOPE_VERBOSITY_OVERRIDE(...)
+	#define LOG_SCOPE_VERBOSITY_OVERRIDE(...)
 #else
-#define LOG_SCOPE_VERBOSITY_OVERRIDE(CategorFName, ScopeVerbosity) FLogScopedVerbosityOverride LogCategory##CategorFName##Override(&CategorFName, ScopeVerbosity)
+	#define LOG_SCOPE_VERBOSITY_OVERRIDE(CategoryName, ScopeVerbosity) FLogScopedVerbosityOverride LogCategory##CategoryName##Override(&CategoryName, ScopeVerbosity)
 #endif

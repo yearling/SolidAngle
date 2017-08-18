@@ -14,7 +14,7 @@
 #include "Misc/DateTime.h"
 #include "GenericPlatform/GenericPlatformFile.h"
 #include "HAL/IPlatformFileLogWrapper.h"
-#include "Templates/UniquePtr.h"
+#include "UniquePtr.h"
 
 class IAsyncReadFileHandle;
 
@@ -32,12 +32,12 @@ public:
 	{
 		FlushCache();
 	}
-
+	
 	virtual ~FCachedFileHandle()
 	{
 	}
 
-
+	
 	virtual int64		Tell() override
 	{
 		return FilePos;
@@ -49,7 +49,7 @@ public:
 		{
 			return false;
 		}
-		FilePos = NewPosition;
+		FilePos=NewPosition;
 		return true;
 	}
 
@@ -74,11 +74,11 @@ public:
 		if (BytesToRead > BufferCacheSize) // reading more than we cache
 		{
 			// if the file position is within the cache, copy out the remainder of the cache
-			int32 CacheIndex = GetCacheIndex(FilePos);
+			int32 CacheIndex=GetCacheIndex(FilePos);
 			if (CacheIndex < CacheCount)
 			{
-				int64 CopyBytes = CacheEnd[CacheIndex] - FilePos;
-				FMemory::Memcpy(Destination, BufferCache[CacheIndex] + (FilePos - CacheStart[CacheIndex]), CopyBytes);
+				int64 CopyBytes = CacheEnd[CacheIndex]-FilePos;
+				FMemory::Memcpy(Destination, BufferCache[CacheIndex]+(FilePos-CacheStart[CacheIndex]), CopyBytes);
 				FilePos += CopyBytes;
 				BytesToRead -= CopyBytes;
 				Destination += CopyBytes;
@@ -96,26 +96,26 @@ public:
 		else
 		{
 			Result = true;
-
-			while (BytesToRead && Result)
+			
+			while (BytesToRead && Result) 
 			{
-				uint32 CacheIndex = GetCacheIndex(FilePos);
+				uint32 CacheIndex=GetCacheIndex(FilePos);
 				if (CacheIndex > CacheCount)
 				{
 					// need to update the cache
-					uint64 AlignedFilePos = FilePos&BufferSizeMask; // Aligned Version
-					uint64 SizeToRead = FMath::Min<uint64>(BufferCacheSize, FileSize - AlignedFilePos);
+					uint64 AlignedFilePos=FilePos&BufferSizeMask; // Aligned Version
+					uint64 SizeToRead=FMath::Min<uint64>(BufferCacheSize, FileSize-AlignedFilePos);
 					InnerSeek(AlignedFilePos);
 					Result = InnerRead(BufferCache[CurrentCache], SizeToRead);
 
 					if (Result)
 					{
 						CacheStart[CurrentCache] = AlignedFilePos;
-						CacheEnd[CurrentCache] = AlignedFilePos + SizeToRead;
+						CacheEnd[CurrentCache] = AlignedFilePos+SizeToRead;
 						CacheIndex = CurrentCache;
 						// move to next cache for update
 						CurrentCache++;
-						CurrentCache %= CacheCount;
+						CurrentCache%=CacheCount;
 					}
 				}
 
@@ -124,8 +124,8 @@ public:
 				{
 					// Analyzer doesn't see this - if this code ever changes make sure there are no buffer overruns!
 					CA_ASSUME(CacheIndex < CacheCount);
-					uint64 CorrectedBytesToRead = FMath::Min<uint64>(BytesToRead, CacheEnd[CacheIndex] - FilePos);
-					FMemory::Memcpy(Destination, BufferCache[CacheIndex] + (FilePos - CacheStart[CacheIndex]), CorrectedBytesToRead);
+					uint64 CorrectedBytesToRead=FMath::Min<uint64>(BytesToRead, CacheEnd[CacheIndex]-FilePos);
+					FMemory::Memcpy(Destination, BufferCache[CacheIndex]+(FilePos-CacheStart[CacheIndex]), CorrectedBytesToRead);
 					FilePos += CorrectedBytesToRead;
 					Destination += CorrectedBytesToRead;
 					BytesToRead -= CorrectedBytesToRead;
@@ -167,19 +167,19 @@ public:
 private:
 
 	static const uint32 BufferCacheSize = 64 * 1024; // Seems to be the magic number for best perf
-	static const uint64 BufferSizeMask = ~((uint64)BufferCacheSize - 1);
-	static const uint32	CacheCount = 2;
+	static const uint64 BufferSizeMask  = ~((uint64)BufferCacheSize-1);
+	static const uint32	CacheCount		= 2;
 
 	bool InnerSeek(uint64 Pos)
 	{
-		if (Pos == TellPos)
+		if (Pos==TellPos) 
 		{
 			return true;
 		}
-		bool bOk = FileHandle->Seek(Pos);
+		bool bOk=FileHandle->Seek(Pos);
 		if (bOk)
 		{
-			TellPos = Pos;
+			TellPos=Pos;
 		}
 		return bOk;
 	}
@@ -194,18 +194,18 @@ private:
 	}
 	int32 GetCacheIndex(int64 Pos) const
 	{
-		for (uint32 i = 0; i < ARRAY_COUNT(CacheStart); ++i)
+		for (uint32 i=0; i<ARRAY_COUNT(CacheStart); ++i)
 		{
-			if (Pos >= CacheStart[i] && Pos < CacheEnd[i])
+			if (Pos >= CacheStart[i] && Pos < CacheEnd[i]) 
 			{
 				return i;
 			}
 		}
-		return CacheCount + 1;
+		return CacheCount+1;
 	}
-	void FlushCache()
+	void FlushCache() 
 	{
-		for (uint32 i = 0; i < CacheCount; ++i)
+		for (uint32 i=0; i<CacheCount; ++i)
 		{
 			CacheStart[i] = CacheEnd[i] = -1;
 		}
@@ -320,7 +320,7 @@ public:
 	}
 	virtual IFileHandle*	OpenRead(const TCHAR* Filename, bool bAllowWrite) override
 	{
-		IFileHandle* InnerHandle = LowerLevel->OpenRead(Filename, bAllowWrite);
+		IFileHandle* InnerHandle=LowerLevel->OpenRead(Filename, bAllowWrite);
 		if (!InnerHandle)
 		{
 			return nullptr;
@@ -329,7 +329,7 @@ public:
 	}
 	virtual IFileHandle*	OpenWrite(const TCHAR* Filename, bool bAppend = false, bool bAllowRead = false) override
 	{
-		IFileHandle* InnerHandle = LowerLevel->OpenWrite(Filename, bAppend, bAllowRead);
+		IFileHandle* InnerHandle=LowerLevel->OpenWrite(Filename, bAppend, bAllowRead);
 		if (!InnerHandle)
 		{
 			return nullptr;
@@ -384,11 +384,11 @@ public:
 	{
 		return LowerLevel->CopyDirectoryTree(DestinationDirectory, Source, bOverwriteAllExisting);
 	}
-	virtual FString		ConvertToAbsolutePathForExternalAppForRead(const TCHAR* Filename) override
+	virtual FString		ConvertToAbsolutePathForExternalAppForRead( const TCHAR* Filename ) override
 	{
 		return LowerLevel->ConvertToAbsolutePathForExternalAppForRead(Filename);
 	}
-	virtual FString		ConvertToAbsolutePathForExternalAppForWrite(const TCHAR* Filename) override
+	virtual FString		ConvertToAbsolutePathForExternalAppForWrite( const TCHAR* Filename ) override
 	{
 		return LowerLevel->ConvertToAbsolutePathForExternalAppForWrite(Filename);
 	}

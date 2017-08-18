@@ -372,17 +372,17 @@ void FArchive::SetCustomVersion(const FGuid& Key, int32 Version, FName FriendlFN
 	const_cast<FCustomVersionContainer&>(GetCustomVersions()).SetVersion(Key, Version, FriendlFName);
 }
 
-FString YArchiveProxy::GetArchiveName() const
+FString FArchiveProxy::GetArchiveName() const
 {
 	return InnerArchive.GetArchiveName();
 }
 
 #if USE_STABLE_LOCALIZATION_KEYS
-void YArchiveProxy::SetLocalizationNamespace(const FString& InLocalizationNamespace)
+void FArchiveProxy::SetLocalizationNamespace(const FString& InLocalizationNamespace)
 {
 	InnerArchive.SetLocalizationNamespace(InLocalizationNamespace);
 }
-FString YArchiveProxy::GetLocalizationNamespace() const
+FString FArchiveProxy::GetLocalizationNamespace() const
 {
 	return InnerArchive.GetLocalizationNamespace();
 }

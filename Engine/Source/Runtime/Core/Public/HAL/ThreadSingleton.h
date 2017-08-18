@@ -1,3 +1,5 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
@@ -8,8 +10,8 @@
 template <typename FuncType> class TFunctionRef;
 
 /**
-* Thread singleton initializer.
-*/
+ * Thread singleton initializer.
+ */
 class FThreadSingletonInitializer
 {
 public:
@@ -17,20 +19,20 @@ public:
 	/**
 	* @return an instance of a singleton for the current thread.
 	*/
-	static CORE_API FTlsAutoCleanup* Get(TFunctionRef<FTlsAutoCleanup*()> CreateInstance, uint32& TlsSlot);
+	static CORE_API FTlsAutoCleanup* Get( TFunctionRef<FTlsAutoCleanup*()> CreateInstance, uint32& TlsSlot );
 };
 
 
 /**
-* This a special version of singleton. It means that there is created only one instance for each thread.
-* Calling Get() method is thread-safe.
-*/
+ * This a special version of singleton. It means that there is created only one instance for each thread.
+ * Calling Get() method is thread-safe.
+ */
 template < class T >
 class TThreadSingleton : public FTlsAutoCleanup
 {
 	/**
-	* @return TLS slot that holds a TThreadSingleton.
-	*/
+	 * @return TLS slot that holds a TThreadSingleton.
+	 */
 	static uint32& GetTlsSlot()
 	{
 		static uint32 TlsSlot = 0xFFFFFFFF;
@@ -45,8 +47,8 @@ protected:
 	{}
 
 	/**
-	* @return a new instance of the thread singleton.
-	*/
+	 * @return a new instance of the thread singleton.
+	 */
 	static FTlsAutoCleanup* CreateInstance()
 	{
 		return new T();
@@ -58,11 +60,11 @@ protected:
 public:
 
 	/**
-	*	@return an instance of a singleton for the current thread.
-	*/
+	 *	@return an instance of a singleton for the current thread.
+	 */
 	FORCEINLINE static T& Get()
 	{
-		return *(T*)FThreadSingletonInitializer::Get([]() { return (FTlsAutoCleanup*)new T(); }, T::GetTlsSlot()); //-V572
+		return *(T*)FThreadSingletonInitializer::Get( [](){ return (FTlsAutoCleanup*)new T(); }, T::GetTlsSlot() ); //-V572
 	}
 };
 

@@ -12,7 +12,7 @@ YArchiveLoadCompressedProxy.
 /**
 * YArchive Proxy to transparently load compressed data from an array.
 */
-class CORE_API YArchiveLoadCompressedProxy : public FArchive
+class CORE_API FArchiveLoadCompressedProxy : public FArchive
 {
 public:
 	/**
@@ -21,10 +21,10 @@ public:
 	* @param	InCompressedData	Array of bytes that is holding compressed data
 	* @param	InCompressionFlags	Compression flags that were used to compress data
 	*/
-	YArchiveLoadCompressedProxy(const TArray<uint8>& InCompressedData, ECompressionFlags InCompressionFlags);
+	FArchiveLoadCompressedProxy(const TArray<uint8>& InCompressedData, ECompressionFlags InCompressionFlags);
 
 	/** Destructor, freeing temporary memory. */
-	virtual ~YArchiveLoadCompressedProxy();
+	virtual ~FArchiveLoadCompressedProxy();
 
 	/**
 	* Serializes data from archive. This function is called recursively and determines where to serialize

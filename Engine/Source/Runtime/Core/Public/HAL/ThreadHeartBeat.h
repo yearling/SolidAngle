@@ -1,3 +1,4 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 #pragma once
 
 #include "CoreTypes.h"
@@ -8,9 +9,9 @@
 #include "HAL/ThreadSafeBool.h"
 
 /**
-* Thread heartbeat check class.
-* Used by crash handling code to check for hangs.
-*/
+ * Thread heartbeat check class.
+ * Used by crash handling code to check for hangs.
+ */
 class CORE_API FThreadHeartBeat : public FRunnable
 {
 	static FThreadHeartBeat* Singleton;
@@ -69,13 +70,13 @@ public:
 	uint32 CheckHeartBeat();
 	/** Called by a thread when it's no longer expecting to be ticked */
 	void KillHeartBeat();
-	/**
-	* Suspend heartbeat measuring for the current thread if the thread has already had a heartbeat
-	*/
+	/** 
+	 * Suspend heartbeat measuring for the current thread if the thread has already had a heartbeat 
+	 */
 	void SuspendHeartBeat();
-	/**
-	* Resume heartbeat measuring for the current thread
-	*/
+	/** 
+	 * Resume heartbeat measuring for the current thread 
+	 */
 	void ResumeHeartBeat();
 
 	/**

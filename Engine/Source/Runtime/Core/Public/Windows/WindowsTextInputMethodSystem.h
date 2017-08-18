@@ -22,7 +22,7 @@ class FTSFActivationProxy
 	, public ITfActiveLanguageProfileNotifySink
 {
 public:
-	FTSFActivationProxy(FWindowsTextInputMethodSystem* InOwner)
+	FTSFActivationProxy(FWindowsTextInputMethodSystem* InOwner) 
 		: TSFProfileCookie(TF_INVALID_COOKIE)
 		, TSFLanguageCookie(TF_INVALID_COOKIE)
 		, Owner(InOwner)

@@ -38,7 +38,7 @@ void* FMallocStomp::Malloc(SIZE_T Size, uint32 Alignment)
 	// Note: can't implement BinnedAllocFromOS as a mmap call. See Free() for the reason.
 	void *FullAllocationPointer = mmap(nullptr, AllocFullPageSize + PageSize, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
 #else
-	void *FullAllocationPointer = YPlatformMemory::BinnedAllocFromOS(AllocFullPageSize + PageSize);
+	void *FullAllocationPointer = FPlatformMemory::BinnedAllocFromOS(AllocFullPageSize + PageSize);
 #endif // PLATFORM_LINUX || PLATFORM_MAC
 
 	void *ReturnedPointer = nullptr;
@@ -54,7 +54,7 @@ void* FMallocStomp::Malloc(SIZE_T Size, uint32 Alignment)
 		*AllocDataPtr = AllocData;
 
 		// Page protect the first page, this will cause the exception in case the is an underrun.
-		YPlatformMemory::PageProtect(FullAllocationPointer, PageSize, false, false);
+		FPlatformMemory::PageProtect(FullAllocationPointer, PageSize, false, false);
 	}
 	else
 	{
@@ -65,7 +65,7 @@ void* FMallocStomp::Malloc(SIZE_T Size, uint32 Alignment)
 		*AllocDataPtr = AllocData;
 
 		// Page protect the last page, this will cause the exception in case the is an overrun.
-		YPlatformMemory::PageProtect(reinterpret_cast<void*>(reinterpret_cast<uint8*>(FullAllocationPointer) + AllocFullPageSize), PageSize, false, false);
+		FPlatformMemory::PageProtect(reinterpret_cast<void*>(reinterpret_cast<uint8*>(FullAllocationPointer) + AllocFullPageSize), PageSize, false, false);
 	}
 
 	return ReturnedPointer;
@@ -120,7 +120,7 @@ void FMallocStomp::Free(void* InPtr)
 	// why we can do it.
 	munmap(AllocDataPtr->FullAllocationPointer, AllocDataPtr->FullSize);
 #else
-	YPlatformMemory::BinnedFreeToOS(AllocDataPtr->FullAllocationPointer, AllocDataPtr->FullSize);
+	FPlatformMemory::BinnedFreeToOS(AllocDataPtr->FullAllocationPointer, AllocDataPtr->FullSize);
 #endif // PLATFORM_LINUX || PLATFORM_MAC
 }
 

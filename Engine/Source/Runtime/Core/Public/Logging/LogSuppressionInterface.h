@@ -1,9 +1,11 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
 
 /*-----------------------------------------------------------------------------
-Log Suppression
+	Log Suppression
 -----------------------------------------------------------------------------*/
 
 /** Interface to the log suppression system **/

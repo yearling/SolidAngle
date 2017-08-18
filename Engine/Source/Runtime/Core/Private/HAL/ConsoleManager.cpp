@@ -282,7 +282,7 @@ void OnCVarChange(T& Dst, const T& Src, EConsoleVariableFlags Flags)
 	ConsoleManager.OnCVarChanged();
 }
 
-// T: int32, float, YString
+// T: int32, float, FString
 template <class T>
 class FConsoleVariable : public FConsoleVariableBase
 {
@@ -314,7 +314,7 @@ public:
 	virtual class TConsoleVariableData<float>* AsVariableFloat() { return 0; }
 	virtual class TConsoleVariableData<FString>* AsVariableString() { return 0; }
 
-//private: // ----------------------------------------------------
+private: // ----------------------------------------------------
 
 	TConsoleVariableData<T> Data;
 
@@ -372,7 +372,7 @@ template<> TConsoleVariableData<float>* FConsoleVariable<float>::AsVariableFloat
 	return &Data; 
 }
 
-// specialization for YString
+// specialization for FString
 
 template<> void FConsoleVariable<FString>::Set(const TCHAR* InValue, EConsoleVariableFlags SetBy)
 {
@@ -963,7 +963,7 @@ void FConsoleManager::LoadHistoryIfNeeded()
 
 	FConfigFile Ini;
 
-	FString ConfigPath = YPaths::GeneratedConfigDir() + TEXT("ConsoleHistory.ini");
+	FString ConfigPath = FPaths::GeneratedConfigDir() + TEXT("ConsoleHistory.ini");
 	ProcessIniContents(*ConfigPath, *ConfigPath, &Ini, false, false);
 
 	const FString History = TEXT("History");
@@ -990,7 +990,7 @@ void FConsoleManager::SaveHistory()
 
 	FConfigFile Ini;
 
-	FString ConfigPath = YPaths::GeneratedConfigDir() + TEXT("ConsoleHistory.ini");
+	FString ConfigPath = FPaths::GeneratedConfigDir() + TEXT("ConsoleHistory.ini");
 
 	FConfigSection& Section = Ini.Add(TEXT("ConsoleHistory"));
 

@@ -7,7 +7,7 @@
 #include "CoreGlobals.h"
 
 
-void YWindowsPlatformAtomics::HandleAtomicsFailure( const TCHAR* InFormat, ... )
+void FWindowsPlatformAtomics::HandleAtomicsFailure( const TCHAR* InFormat, ... )
 {	
 	TCHAR TempStr[1024];
 	va_list Ptr;

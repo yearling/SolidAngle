@@ -1,3 +1,5 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
@@ -6,13 +8,13 @@
 
 
 /**
-* Windows implementation of the Time OS functions.
-*
-* Please see following UDN post about using rdtsc on processors that support
-* result being invariant across cores.
-*
-* https://udn.epicgames.com/lists/showpost.php?id=46794&list=unprog3
-*/
+ * Windows implementation of the Time OS functions.
+ *
+ * Please see following UDN post about using rdtsc on processors that support
+ * result being invariant across cores.
+ *
+ * https://udn.epicgames.com/lists/showpost.php?id=46794&list=unprog3
+ */
 struct CORE_API FWindowsPlatformTime
 	: public FGenericPlatformTime
 {
@@ -42,11 +44,11 @@ struct CORE_API FWindowsPlatformTime
 	}
 
 
-	static void SystemTime(int32& Year, int32& Month, int32& DayOfWeek, int32& Day, int32& Hour, int32& Min, int32& Sec, int32& MSec);
-	static void UtcTime(int32& Year, int32& Month, int32& DayOfWeek, int32& Day, int32& Hour, int32& Min, int32& Sec, int32& MSec);
+	static void SystemTime( int32& Year, int32& Month, int32& DayOfWeek, int32& Day, int32& Hour, int32& Min, int32& Sec, int32& MSec );
+	static void UtcTime( int32& Year, int32& Month, int32& DayOfWeek, int32& Day, int32& Hour, int32& Min, int32& Sec, int32& MSec );
 
-	static bool UpdateCPUTime(float DeltaTime);
-	static FCPUTime GetCPUTime();
+	static bool UpdateCPUTime( float DeltaTime );
+	static FCPUTime GetCPUTime();	
 
 protected:
 

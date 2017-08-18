@@ -25,8 +25,8 @@ void FUProjectDictionary::Refresh()
 	IFileManager::Get().FindFiles(ProjectDirsFiles, *(RootDir / FString(TEXT("*.uprojectdirs"))), true, false);
 
 	// Get the normalized path to the root directory
-	FString NormalizedRootDir = YPaths::ConvertRelativePathToFull(RootDir);
-	YPaths::NormalizeDirectorFName(NormalizedRootDir);
+	FString NormalizedRootDir = FPaths::ConvertRelativePathToFull(RootDir);
+	FPaths::NormalizeDirectoryName(NormalizedRootDir);
 	FString NormalizedRootDirPrefix = NormalizedRootDir / TEXT("");
 
 	// Add all the project root directories to ProjectRootDirs
@@ -40,8 +40,8 @@ void FUProjectDictionary::Refresh()
 				FString Entry = FString(Line).Trim();
 				if(!Entry.IsEmpty() && !Entry.StartsWith(";"))
 				{
-					FString DirectorFName = YPaths::ConvertRelativePathToFull(RootDir, Entry);
-					YPaths::NormalizeDirectorFName(DirectorFName);
+					FString DirectorFName = FPaths::ConvertRelativePathToFull(RootDir, Entry);
+					FPaths::NormalizeDirectoryName(DirectorFName);
 					if (DirectorFName.StartsWith(NormalizedRootDirPrefix) || DirectorFName == NormalizedRootDir)
 					{
 						ProjectRootDirs.AddUnique(DirectorFName);
@@ -72,7 +72,7 @@ void FUProjectDictionary::Refresh()
 			// Add all the projects to the dictionary
 			for(const FString& ProjectFile: ProjectFiles)
 			{
-				FString ShortName = YPaths::GetBaseFilename(ProjectFile);
+				FString ShortName = FPaths::GetBaseFilename(ProjectFile);
 				FString FullProjectFile = ProjectRootDir / ProjectDir / ProjectFile;
 				ShortProjectNameDictionary.Add(ShortName, FullProjectFile);
 			}
@@ -82,7 +82,7 @@ void FUProjectDictionary::Refresh()
 
 bool FUProjectDictionary::IsForeignProject(const FString& InProjectFileName) const
 {
-	FString ProjectFileName = YPaths::ConvertRelativePathToFull(InProjectFileName);
+	FString ProjectFileName = FPaths::ConvertRelativePathToFull(InProjectFileName);
 
 	// Check if it's already in the project dictionary
 	for(TMap<FString, FString>::TConstIterator Iter(ShortProjectNameDictionary); Iter; ++Iter)
@@ -94,7 +94,7 @@ bool FUProjectDictionary::IsForeignProject(const FString& InProjectFileName) con
 	}
 
 	// If not, it may be a new project. Check if its parent directory is a project root dir.
-	FString ProjectRootDir = YPaths::GetPath(YPaths::GetPath(ProjectFileName));
+	FString ProjectRootDir = FPaths::GetPath(FPaths::GetPath(ProjectFileName));
 	if(ProjectRootDirs.Contains(ProjectRootDir))
 	{
 		return false;
@@ -110,7 +110,7 @@ FString FUProjectDictionary::GetRelativeProjectPathForGame(const TCHAR* InGameNa
 	if (ProjectFile != NULL)
 	{
 		FString RelativePath = *ProjectFile;
-		YPaths::MakePathRelativeTo(RelativePath, *BaseDir);
+		FPaths::MakePathRelativeTo(RelativePath, *BaseDir);
 		return RelativePath;
 	}
 	return TEXT("");
@@ -125,7 +125,7 @@ TArray<FString> FUProjectDictionary::GetProjectPaths() const
 
 FUProjectDictionary& FUProjectDictionary::GetDefault()
 {
-	static FUProjectDictionary DefaultDictionary(YPaths::RootDir());
+	static FUProjectDictionary DefaultDictionary(FPaths::RootDir());
 
 #if !NO_LOGGING
 	static bool bHaveLoggedProjects = false;

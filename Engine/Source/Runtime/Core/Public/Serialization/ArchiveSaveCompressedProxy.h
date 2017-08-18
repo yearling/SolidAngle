@@ -12,7 +12,7 @@ YArchiveSaveCompressedProxy.
 /**
 * YArchive Proxy to transparently write out compressed data to an array.
 */
-class CORE_API YArchiveSaveCompressedProxy : public FArchive
+class CORE_API FArchiveSaveCompressedProxy : public FArchive
 {
 public:
 	/**
@@ -21,10 +21,10 @@ public:
 	* @param	InCompressedData [ref]	Array of bytes that is going to hold compressed data
 	* @param	InCompressionFlags		Compression flags to use for compressing data
 	*/
-	YArchiveSaveCompressedProxy(TArray<uint8>& InCompressedData, ECompressionFlags InCompressionFlags);
+	FArchiveSaveCompressedProxy(TArray<uint8>& InCompressedData, ECompressionFlags InCompressionFlags);
 
 	/** Destructor, flushing array if needed. Also frees temporary memory. */
-	virtual ~YArchiveSaveCompressedProxy();
+	virtual ~FArchiveSaveCompressedProxy();
 
 	/**
 	* Flushes tmp data to array.

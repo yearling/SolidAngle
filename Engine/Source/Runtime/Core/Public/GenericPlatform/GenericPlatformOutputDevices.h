@@ -9,9 +9,9 @@ class FOutputDeviceConsole;
 class FOutputDeviceError;
 
 /**
-* Generic implementation for most platforms
-*/
-struct CORE_API YGenericPlatformOutputDevices
+ * Generic implementation for most platforms
+ */
+struct CORE_API FGenericPlatformOutputDevices
 {
 	/** Add output devices which can vary depending on platform, configuration, command line parameters. */
 	static void							SetupOutputDevices();

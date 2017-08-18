@@ -1,3 +1,5 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
@@ -13,9 +15,9 @@
 
 #define BINNED2_MAX_CACHED_OS_FREES (64)
 #if PLATFORM_64BITS
-#define BINNED2_MAX_CACHED_OS_FREES_BYTE_LIMIT (64*1024*1024)
+	#define BINNED2_MAX_CACHED_OS_FREES_BYTE_LIMIT (64*1024*1024)
 #else
-#define BINNED2_MAX_CACHED_OS_FREES_BYTE_LIMIT (16*1024*1024)
+	#define BINNED2_MAX_CACHED_OS_FREES_BYTE_LIMIT (16*1024*1024)
 #endif
 
 #define BINNED2_LARGE_ALLOC					65536		// Alignment of OS-allocated pointer - pool-allocated pointers will have a non-aligned pointer
@@ -34,17 +36,17 @@
 
 #define BINNED2_ALLOW_RUNTIME_TWEAKING 0
 #if BINNED2_ALLOW_RUNTIME_TWEAKING
-extern CORE_API int32 GMallocBinned2PerThreadCaches;
-extern CORE_API int32 GMallocBinned2BundleSize = DEFAULT_GMallocBinned2BundleSize;
-extern CORE_API int32 GMallocBinned2BundleCount = DEFAULT_GMallocBinned2BundleCount;
-extern CORE_API int32 GMallocBinned2MaxBundlesBeforeRecycle = BINNED2_MAX_GMallocBinned2MaxBundlesBeforeRecycle;
-extern CORE_API int32 GMallocBinned2AllocExtra = DEFAULT_GMallocBinned2AllocExtra;
+	extern CORE_API int32 GMallocBinned2PerThreadCaches;
+	extern CORE_API int32 GMallocBinned2BundleSize = DEFAULT_GMallocBinned2BundleSize;
+	extern CORE_API int32 GMallocBinned2BundleCount = DEFAULT_GMallocBinned2BundleCount;
+	extern CORE_API int32 GMallocBinned2MaxBundlesBeforeRecycle = BINNED2_MAX_GMallocBinned2MaxBundlesBeforeRecycle;
+	extern CORE_API int32 GMallocBinned2AllocExtra = DEFAULT_GMallocBinned2AllocExtra;
 #else
-#define GMallocBinned2PerThreadCaches DEFAULT_GMallocBinned2PerThreadCaches
-#define GMallocBinned2BundleSize DEFAULT_GMallocBinned2BundleSize
-#define GMallocBinned2BundleCount DEFAULT_GMallocBinned2BundleCount
-#define GMallocBinned2MaxBundlesBeforeRecycle BINNED2_MAX_GMallocBinned2MaxBundlesBeforeRecycle
-#define GMallocBinned2AllocExtra DEFAULT_GMallocBinned2AllocExtra
+	#define GMallocBinned2PerThreadCaches DEFAULT_GMallocBinned2PerThreadCaches
+	#define GMallocBinned2BundleSize DEFAULT_GMallocBinned2BundleSize
+	#define GMallocBinned2BundleCount DEFAULT_GMallocBinned2BundleCount
+	#define GMallocBinned2MaxBundlesBeforeRecycle BINNED2_MAX_GMallocBinned2MaxBundlesBeforeRecycle
+	#define GMallocBinned2AllocExtra DEFAULT_GMallocBinned2AllocExtra
 #endif
 
 
@@ -52,319 +54,319 @@ extern CORE_API int32 GMallocBinned2AllocExtra = DEFAULT_GMallocBinned2AllocExtr
 //
 // Optimized virtual memory allocator.
 //
-class CORE_API YMallocBinned2 final : public FMalloc
+class CORE_API FMallocBinned2 final : public FMalloc
 {
 	struct Private;
 
-// Forward declares.
-struct FPoolInfo;
-struct PoolHashBucket;
+	// Forward declares.
+	struct FPoolInfo;
+	struct PoolHashBucket;
 
-/** Information about a piece of free memory. */
-struct FFreeBlock
-{
-	enum
+	/** Information about a piece of free memory. */
+	struct FFreeBlock
 	{
-		CANARY_VALUE = 0xe3
+		enum
+		{
+			CANARY_VALUE = 0xe3
+		};
+
+		FORCEINLINE FFreeBlock(uint32 InPageSize, uint32 InBlockSize, uint32 InPoolIndex)
+			: BlockSize(InBlockSize)
+			, PoolIndex(InPoolIndex)
+			, Canary(CANARY_VALUE)
+			, NextFreeBlock(nullptr)
+		{
+			check(InPoolIndex < MAX_uint8 && InBlockSize <= MAX_uint16);
+			NumFreeBlocks = InPageSize / InBlockSize;
+			if (NumFreeBlocks * InBlockSize + BINNED2_MINIMUM_ALIGNMENT > InPageSize)
+			{
+				NumFreeBlocks--;
+			}
+			check(NumFreeBlocks * InBlockSize + BINNED2_MINIMUM_ALIGNMENT <= InPageSize);
+		}
+
+		FORCEINLINE uint32 GetNumFreeRegularBlocks() const
+		{
+			return NumFreeBlocks;
+		}
+		FORCEINLINE bool IsCanaryOk() const
+		{
+			return Canary == FFreeBlock::CANARY_VALUE;
+		}
+
+		FORCEINLINE void CanaryTest() const
+		{
+			if (!IsCanaryOk())
+			{
+				CanaryFail();
+			}
+			//checkSlow(PoolIndex == BoundSizeToPoolIndex(BlockSize));
+		}
+		void CanaryFail() const;
+
+		FORCEINLINE void* AllocateRegularBlock()
+		{
+			--NumFreeBlocks;
+			if (IsAligned(this, BINNED2_LARGE_ALLOC))
+			{
+				return (uint8*)this + BINNED2_LARGE_ALLOC - (NumFreeBlocks + 1) * BlockSize;
+			}
+			return (uint8*)this + (NumFreeBlocks)* BlockSize;
+		}
+
+		uint16 BlockSize;				// Size of the blocks that this list points to
+		uint8 PoolIndex;				// Index of this pool
+		uint8 Canary;					// Constant value of 0xe3
+		uint32 NumFreeBlocks;          // Number of consecutive free blocks here, at least 1.
+		void*  NextFreeBlock;          // Next free block in another pool
 	};
 
-	FORCEINLINE FFreeBlock(uint32 InPageSize, uint32 InBlockSize, uint32 InPoolIndex)
-		: BlockSize(InBlockSize)
-		, PoolIndex(InPoolIndex)
-		, Canary(CANARY_VALUE)
-		, NextFreeBlock(nullptr)
+	struct FPoolList
 	{
-		check(InPoolIndex < MAX_uint8 && InBlockSize <= MAX_uint16);
-		NumFreeBlocks = InPageSize / InBlockSize;
-		if (NumFreeBlocks * InBlockSize + BINNED2_MINIMUM_ALIGNMENT > InPageSize)
-		{
-			NumFreeBlocks--;
-		}
-		check(NumFreeBlocks * InBlockSize + BINNED2_MINIMUM_ALIGNMENT <= InPageSize);
-	}
+		FPoolList();
 
-	FORCEINLINE uint32 GetNumFreeRegularBlocks() const
-	{
-		return NumFreeBlocks;
-	}
-	FORCEINLINE bool IsCanaryOk() const
-	{
-		return Canary == FFreeBlock::CANARY_VALUE;
-	}
+		bool IsEmpty() const;
 
-	FORCEINLINE void CanaryTest() const
-	{
-		if (!IsCanaryOk())
-		{
-			CanaryFail();
-		}
-		//checkSlow(PoolIndex == BoundSizeToPoolIndex(BlockSize));
-	}
-	void CanaryFail() const;
+		      FPoolInfo& GetFrontPool();
+		const FPoolInfo& GetFrontPool() const;
 
-	FORCEINLINE void* AllocateRegularBlock()
-	{
-		--NumFreeBlocks;
-		if (IsAligned(this, BINNED2_LARGE_ALLOC))
-		{
-			return (uint8*)this + BINNED2_LARGE_ALLOC - (NumFreeBlocks + 1) * BlockSize;
-		}
-		return (uint8*)this + (NumFreeBlocks)* BlockSize;
-	}
+		void LinkToFront(FPoolInfo* Pool);
 
-	uint16 BlockSize;				// Size of the blocks that this list points to
-	uint8 PoolIndex;				// Index of this pool
-	uint8 Canary;					// Constant value of 0xe3
-	uint32 NumFreeBlocks;          // Number of consecutive free blocks here, at least 1.
-	void*  NextFreeBlock;          // Next free block in another pool
-};
+		FPoolInfo& PushNewPoolToFront(FMallocBinned2& Allocator, uint32 InBytes, uint32 InPoolIndex);
 
-struct FPoolList
-{
-	FPoolList();
+		void ValidateActivePools();
+		void ValidateExhaustedPools();
 
-	bool IsEmpty() const;
-
-	FPoolInfo& GetFrontPool();
-	const FPoolInfo& GetFrontPool() const;
-
-	void LinkToFront(FPoolInfo* Pool);
-
-	FPoolInfo& PushNewPoolToFront(YMallocBinned2& Allocator, uint32 InBytes, uint32 InPoolIndex);
-
-	void ValidateActivePools();
-	void ValidateExhaustedPools();
-
-private:
-	FPoolInfo* Front;
-};
-
-/** Pool table. */
-struct FPoolTable
-{
-	FPoolList ActivePools;
-	FPoolList ExhaustedPools;
-	uint32    BlockSize;
-
-	FPoolTable();
-};
-
-struct FPtrToPoolMapping
-{
-	FPtrToPoolMapping()
-		: PtrToPoolPageBitShift(0)
-		, HashKeyShift(0)
-		, PoolMask(0)
-		, MaxHashBuckets(0)
-	{
-	}
-	explicit FPtrToPoolMapping(uint32 InPageSize, uint64 InNumPoolsPerPage, uint64 AddressLimit)
-	{
-		Init(InPageSize, InNumPoolsPerPage, AddressLimit);
-	}
-
-	void Init(uint32 InPageSize, uint64 InNumPoolsPerPage, uint64 AddressLimit)
-	{
-		uint64 PoolPageToPoolBitShift = FPlatformMath::CeilLogTwo(InNumPoolsPerPage);
-
-		PtrToPoolPageBitShift = FPlatformMath::CeilLogTwo(InPageSize);
-		HashKeyShift = PtrToPoolPageBitShift + PoolPageToPoolBitShift;
-		PoolMask = (1ull << PoolPageToPoolBitShift) - 1;
-		MaxHashBuckets = AddressLimit >> HashKeyShift;
-	}
-
-	FORCEINLINE void GetHashBucketAndPoolIndices(const void* InPtr, uint32& OutBucketIndex, UPTRINT& OutBucketCollision, uint32& OutPoolIndex) const
-	{
-		OutBucketCollision = (UPTRINT)InPtr >> HashKeyShift;
-		OutBucketIndex = uint32(OutBucketCollision & (MaxHashBuckets - 1));
-		OutPoolIndex = ((UPTRINT)InPtr >> PtrToPoolPageBitShift) & PoolMask;
-	}
-
-	FORCEINLINE uint64 GetMaxHashBuckets() const
-	{
-		return MaxHashBuckets;
-	}
-
-private:
-	/** Shift to apply to a pointer to get the reference from the indirect tables */
-	uint64 PtrToPoolPageBitShift;
-
-	/** Shift required to get required hash table key. */
-	uint64 HashKeyShift;
-
-	/** Used to mask off the bits that have been used to lookup the indirect table */
-	uint64 PoolMask;
-
-	// PageSize dependent constants
-	uint64 MaxHashBuckets;
-};
-
-FPtrToPoolMapping PtrToPoolMapping;
-
-// Pool tables for different pool sizes
-FPoolTable SmallPoolTables[BINNED2_SMALL_POOL_COUNT];
-
-PoolHashBucket* HashBuckets;
-PoolHashBucket* HashBucketFreeList;
-uint64 NumPoolsPerPage;
-
-TCachedOSPageAllocator<BINNED2_MAX_CACHED_OS_FREES, BINNED2_MAX_CACHED_OS_FREES_BYTE_LIMIT> CachedOSPageAllocator;
-
-FCriticalSection Mutex;
-
-FORCEINLINE static bool IsOSAllocation(const void* Ptr)
-{
-	return IsAligned(Ptr, BINNED2_LARGE_ALLOC);
-}
-
-struct FBundleNode
-{
-	FBundleNode* NextNodeInCurrentBundle;
-	union
-	{
-		FBundleNode* NextBundle;
-		int32 Count;
+	private:
+		FPoolInfo* Front;
 	};
-};
 
-struct FBundle
-{
-	FORCEINLINE FBundle()
+	/** Pool table. */
+	struct FPoolTable
 	{
-		Reset();
-	}
+		FPoolList ActivePools;
+		FPoolList ExhaustedPools;
+		uint32    BlockSize;
 
-	FORCEINLINE void Reset()
+		FPoolTable();
+	};
+
+	struct FPtrToPoolMapping
 	{
-		Head = nullptr;
-		Count = 0;
-	}
-
-	FORCEINLINE void PushHead(FBundleNode* Node)
-	{
-		Node->NextNodeInCurrentBundle = Head;
-		Node->NextBundle = nullptr;
-		Head = Node;
-		Count++;
-	}
-
-	FORCEINLINE FBundleNode* PopHead()
-	{
-		FBundleNode* Result = Head;
-
-		Count--;
-		Head = Head->NextNodeInCurrentBundle;
-		return Result;
-	}
-
-	FBundleNode* Head;
-	uint32       Count;
-};
-static_assert(sizeof(FBundleNode) <= BINNED2_MINIMUM_ALIGNMENT, "Bundle nodes must fit into the smallest block size");
-
-struct FFreeBlockList
-{
-	// return true if we actually pushed it
-	FORCEINLINE bool PushToFront(void* InPtr, uint32 InPoolIndex, uint32 InBlockSize)
-	{
-		checkSlow(InPtr);
-
-		if (PartialBundle.Count >= (uint32)GMallocBinned2BundleCount || PartialBundle.Count * InBlockSize >= (uint32)GMallocBinned2BundleSize)
+		FPtrToPoolMapping()
+			: PtrToPoolPageBitShift(0)
+			, HashKeyShift(0)
+			, PoolMask(0)
+			, MaxHashBuckets(0)
 		{
-			if (FullBundle.Head)
+		}
+		explicit FPtrToPoolMapping(uint32 InPageSize, uint64 InNumPoolsPerPage, uint64 AddressLimit)
+		{
+			Init(InPageSize, InNumPoolsPerPage, AddressLimit);
+		}
+
+		void Init(uint32 InPageSize, uint64 InNumPoolsPerPage, uint64 AddressLimit)
+		{
+			uint64 PoolPageToPoolBitShift = FPlatformMath::CeilLogTwo(InNumPoolsPerPage);
+
+			PtrToPoolPageBitShift = FPlatformMath::CeilLogTwo(InPageSize);
+			HashKeyShift          = PtrToPoolPageBitShift + PoolPageToPoolBitShift;
+			PoolMask              = (1ull << PoolPageToPoolBitShift) - 1;
+			MaxHashBuckets        = AddressLimit >> HashKeyShift;
+		}
+
+		FORCEINLINE void GetHashBucketAndPoolIndices(const void* InPtr, uint32& OutBucketIndex, UPTRINT& OutBucketCollision, uint32& OutPoolIndex) const
+		{
+			OutBucketCollision = (UPTRINT)InPtr >> HashKeyShift;
+			OutBucketIndex = uint32(OutBucketCollision & (MaxHashBuckets - 1));
+			OutPoolIndex   = ((UPTRINT)InPtr >> PtrToPoolPageBitShift) & PoolMask;
+		}
+
+		FORCEINLINE uint64 GetMaxHashBuckets() const
+		{
+			return MaxHashBuckets;
+		}
+
+	private:
+		/** Shift to apply to a pointer to get the reference from the indirect tables */
+		uint64 PtrToPoolPageBitShift;
+
+		/** Shift required to get required hash table key. */
+		uint64 HashKeyShift;
+
+		/** Used to mask off the bits that have been used to lookup the indirect table */
+		uint64 PoolMask;
+
+		// PageSize dependent constants
+		uint64 MaxHashBuckets;
+	};
+
+	FPtrToPoolMapping PtrToPoolMapping;
+
+	// Pool tables for different pool sizes
+	FPoolTable SmallPoolTables[BINNED2_SMALL_POOL_COUNT];
+
+	PoolHashBucket* HashBuckets;
+	PoolHashBucket* HashBucketFreeList;
+	uint64 NumPoolsPerPage;
+
+	TCachedOSPageAllocator<BINNED2_MAX_CACHED_OS_FREES, BINNED2_MAX_CACHED_OS_FREES_BYTE_LIMIT> CachedOSPageAllocator;
+
+	FCriticalSection Mutex;
+
+	FORCEINLINE static bool IsOSAllocation(const void* Ptr)
+	{
+		return IsAligned(Ptr, BINNED2_LARGE_ALLOC);
+	}
+
+	struct FBundleNode
+	{
+		FBundleNode* NextNodeInCurrentBundle;
+		union
+		{
+			FBundleNode* NextBundle;
+			int32 Count;
+		};
+	};
+
+	struct FBundle
+	{
+		FORCEINLINE FBundle()
+		{
+			Reset();
+		}
+
+		FORCEINLINE void Reset()
+		{
+			Head = nullptr;
+			Count = 0;
+		}
+
+		FORCEINLINE void PushHead(FBundleNode* Node)
+		{
+			Node->NextNodeInCurrentBundle = Head;
+			Node->NextBundle = nullptr;
+			Head = Node;
+			Count++;
+		}
+
+		FORCEINLINE FBundleNode* PopHead()
+		{
+			FBundleNode* Result = Head;
+
+			Count--;
+			Head = Head->NextNodeInCurrentBundle;
+			return Result;
+		}
+
+		FBundleNode* Head;
+		uint32       Count;
+	};
+	static_assert(sizeof(FBundleNode) <= BINNED2_MINIMUM_ALIGNMENT, "Bundle nodes must fit into the smallest block size");
+
+	struct FFreeBlockList
+	{
+		// return true if we actually pushed it
+		FORCEINLINE bool PushToFront(void* InPtr, uint32 InPoolIndex, uint32 InBlockSize)
+		{
+			checkSlow(InPtr);
+
+			if (PartialBundle.Count >= (uint32)GMallocBinned2BundleCount || PartialBundle.Count * InBlockSize >= (uint32)GMallocBinned2BundleSize)
+			{
+				if (FullBundle.Head)
+				{
+					return false;
+				}
+				FullBundle = PartialBundle;
+				PartialBundle.Reset();
+			}
+			PartialBundle.PushHead((FBundleNode*)InPtr);
+			return true;
+		}
+		FORCEINLINE bool CanPushToFront(uint32 InPoolIndex, uint32 InBlockSize)
+		{
+			if (FullBundle.Head && (PartialBundle.Count >= (uint32)GMallocBinned2BundleCount || PartialBundle.Count * InBlockSize >= (uint32)GMallocBinned2BundleSize))
 			{
 				return false;
 			}
-			FullBundle = PartialBundle;
-			PartialBundle.Reset();
+			return true;
 		}
-		PartialBundle.PushHead((FBundleNode*)InPtr);
-		return true;
-	}
-	FORCEINLINE bool CanPushToFront(uint32 InPoolIndex, uint32 InBlockSize)
-	{
-		if (FullBundle.Head && (PartialBundle.Count >= (uint32)GMallocBinned2BundleCount || PartialBundle.Count * InBlockSize >= (uint32)GMallocBinned2BundleSize))
+		FORCEINLINE void* PopFromFront(uint32 InPoolIndex)
 		{
-			return false;
-		}
-		return true;
-	}
-	FORCEINLINE void* PopFromFront(uint32 InPoolIndex)
-	{
-		if (!PartialBundle.Head)
-		{
-			if (FullBundle.Head)
+			if (!PartialBundle.Head)
 			{
-				PartialBundle = FullBundle;
-				FullBundle.Reset();
+				if (FullBundle.Head)
+				{
+					PartialBundle = FullBundle;
+					FullBundle.Reset();
+				}
 			}
+			return PartialBundle.Head ? PartialBundle.PopHead() : nullptr;
 		}
-		return PartialBundle.Head ? PartialBundle.PopHead() : nullptr;
-	}
 
-	// tries to recycle the full bundle, if that fails, it is returned for freeing
-	FBundleNode* RecyleFull(uint32 InPoolIndex);
-	bool ObtainPartial(uint32 InPoolIndex);
-	FBundleNode* PopBundles(uint32 InPoolIndex);
-private:
-	FBundle PartialBundle;
-	FBundle FullBundle;
-};
+		// tries to recycle the full bundle, if that fails, it is returned for freeing
+		FBundleNode* RecyleFull(uint32 InPoolIndex);
+		bool ObtainPartial(uint32 InPoolIndex);
+		FBundleNode* PopBundles(uint32 InPoolIndex);
+	private:
+		FBundle PartialBundle;
+		FBundle FullBundle;
+	};
 
-struct FPerThreadFreeBlockLists
-{
-	FORCEINLINE static FPerThreadFreeBlockLists* Get()
+	struct FPerThreadFreeBlockLists
 	{
-		return YMallocBinned2::Binned2TlsSlot ? (FPerThreadFreeBlockLists*)FPlatformTLS::GetTlsValue(YMallocBinned2::Binned2TlsSlot) : nullptr;
-	}
-	static void SetTLS();
-	static void ClearTLS();
+		FORCEINLINE static FPerThreadFreeBlockLists* Get()
+		{
+			return FMallocBinned2::Binned2TlsSlot ? (FPerThreadFreeBlockLists*)FPlatformTLS::GetTlsValue(FMallocBinned2::Binned2TlsSlot) : nullptr;
+		}
+		static void SetTLS();
+		static void ClearTLS();
 
-	FORCEINLINE void* Malloc(uint32 InPoolIndex)
-	{
-		return FreeLists[InPoolIndex].PopFromFront(InPoolIndex);
-	}
-	// return true if the pointer was pushed
-	FORCEINLINE bool Free(void* InPtr, uint32 InPoolIndex, uint32 InBlockSize)
-	{
-		return FreeLists[InPoolIndex].PushToFront(InPtr, InPoolIndex, InBlockSize);
-	}
-	// return true if a pointer can be pushed
-	FORCEINLINE bool CanFree(uint32 InPoolIndex, uint32 InBlockSize)
-	{
-		return FreeLists[InPoolIndex].CanPushToFront(InPoolIndex, InBlockSize);
-	}
-	// returns a bundle that needs to be freed if it can't be recycled
-	FBundleNode* RecycleFullBundle(uint32 InPoolIndex)
-	{
-		return FreeLists[InPoolIndex].RecyleFull(InPoolIndex);
-	}
-	// returns true if we have anything to pop
-	bool ObtainRecycledPartial(uint32 InPoolIndex)
-	{
-		return FreeLists[InPoolIndex].ObtainPartial(InPoolIndex);
-	}
-	FBundleNode* PopBundles(uint32 InPoolIndex)
-	{
-		return FreeLists[InPoolIndex].PopBundles(InPoolIndex);
-	}
-private:
-	FFreeBlockList FreeLists[BINNED2_SMALL_POOL_COUNT];
-};
+		FORCEINLINE void* Malloc(uint32 InPoolIndex)
+		{
+			return FreeLists[InPoolIndex].PopFromFront(InPoolIndex);
+		}
+		// return true if the pointer was pushed
+		FORCEINLINE bool Free(void* InPtr, uint32 InPoolIndex, uint32 InBlockSize)
+		{
+			return FreeLists[InPoolIndex].PushToFront(InPtr, InPoolIndex, InBlockSize);
+		}		
+		// return true if a pointer can be pushed
+		FORCEINLINE bool CanFree(uint32 InPoolIndex, uint32 InBlockSize)
+		{
+			return FreeLists[InPoolIndex].CanPushToFront(InPoolIndex, InBlockSize);
+		}
+		// returns a bundle that needs to be freed if it can't be recycled
+		FBundleNode* RecycleFullBundle(uint32 InPoolIndex)
+		{
+			return FreeLists[InPoolIndex].RecyleFull(InPoolIndex);
+		}
+		// returns true if we have anything to pop
+		bool ObtainRecycledPartial(uint32 InPoolIndex)
+		{
+			return FreeLists[InPoolIndex].ObtainPartial(InPoolIndex);
+		}
+		FBundleNode* PopBundles(uint32 InPoolIndex)
+		{
+			return FreeLists[InPoolIndex].PopBundles(InPoolIndex);
+		}
+	private:
+		FFreeBlockList FreeLists[BINNED2_SMALL_POOL_COUNT];
+	};
 
-static FORCEINLINE FFreeBlock* GetPoolHeaderFromPointer(void* Ptr)
-{
-	return (FFreeBlock*)AlignDown(Ptr, BINNED2_LARGE_ALLOC);
-}
+	static FORCEINLINE FFreeBlock* GetPoolHeaderFromPointer(void* Ptr)
+	{
+		return (FFreeBlock*)AlignDown(Ptr, BINNED2_LARGE_ALLOC);
+	}
 
 public:
 
 
-	YMallocBinned2();
+	FMallocBinned2();
 
-	virtual ~YMallocBinned2();
+	virtual ~FMallocBinned2();
 
-	// YMalloc interface.
+	// FMalloc interface.
 	virtual bool IsInternallyThreadSafe() const override;
 	FORCEINLINE virtual void* Malloc(SIZE_T Size, uint32 Alignment) override
 	{
@@ -485,7 +487,7 @@ public:
 	virtual void SetupTLSCachesOnCurrentThread() override;
 	virtual void ClearAndDisableTLSCachesOnCurrentThread() override;
 	virtual const TCHAR* GetDescriptiveName() override;
-	// End YMalloc interface.
+	// End FMalloc interface.
 
 	void FlushCurrentThreadCache();
 	void* MallocExternal(SIZE_T Size, uint32 Alignment);
@@ -494,14 +496,14 @@ public:
 	bool GetAllocationSizeExternal(void* Ptr, SIZE_T& SizeOut);
 
 	static uint16 SmallBlockSizesReversed[BINNED2_SMALL_POOL_COUNT]; // this is reversed to get the smallest elements on our main cache line
-	static YMallocBinned2* MallocBinned2;
+	static FMallocBinned2* MallocBinned2;
 	static uint32 Binned2TlsSlot;
 	static uint32 PageSize;
 	static uint32 OsAllocationGranularity;
 	// Mapping of sizes to small table indices
 	static uint8 MemSizeToIndex[1 + (BINNED2_MAX_SMALL_POOL_SIZE >> BINNED2_MINIMUM_ALIGNMENT_SHIFT)];
 
-	FORCEINLINE uint32 BoundSizeToPoolIndex(SIZE_T Size)
+	FORCEINLINE uint32 BoundSizeToPoolIndex(SIZE_T Size) 
 	{
 		auto Index = ((Size + BINNED2_MINIMUM_ALIGNMENT - 1) >> BINNED2_MINIMUM_ALIGNMENT_SHIFT);
 		checkSlow(Index >= 0 && Index <= (BINNED2_MAX_SMALL_POOL_SIZE >> BINNED2_MINIMUM_ALIGNMENT_SHIFT)); // and it should be in the table
@@ -517,9 +519,9 @@ public:
 
 #define BINNED2_INLINE (1)
 #if BINNED2_INLINE // during development, it helps with iteration time to not include these here, but rather in the .cpp
-#if PLATFORM_USES_FIXED_GMalloc_CLASS && !FORCE_ANSI_ALLOCATOR && USE_MALLOC_BINNED2
-#define YMemory_INLINE_FUNCTION_DECORATOR  FORCEINLINE
-#define YMemory_INLINE_GMalloc (YMallocBinned2::MallocBinned2)
-#include "FMemory.inl"
-#endif
+	#if PLATFORM_USES_FIXED_GMalloc_CLASS && !FORCE_ANSI_ALLOCATOR && USE_MALLOC_BINNED2
+		#define FMEMORY_INLINE_FUNCTION_DECORATOR  FORCEINLINE
+		#define FMEMORY_INLINE_GMalloc (FMallocBinned2::MallocBinned2)
+		#include "FMemory.inl"
+	#endif
 #endif

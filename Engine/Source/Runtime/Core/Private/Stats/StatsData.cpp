@@ -23,7 +23,7 @@ DECLARE_MEMORY_STAT( TEXT("Stat Messages"), STAT_StatMessagesMemory, STATGROUP_S
 const FName FStatConstants::NAME_ThreadRoot = "ThreadRoot";
 const char* FStatConstants::ThreadGroupName = STAT_GROUP_TO_FStatGroup( STATGROUP_Threads )::GetGroupName();
 const FName FStatConstants::NAME_ThreadGroup = FStatConstants::ThreadGroupName;
-const FName FStatConstants::RAW_SecondsPerCycle = FStatNameAndInfo( GET_STATFName( STAT_SecondsPerCycle ), true ).GetRawName();
+const FName FStatConstants::RAW_SecondsPerCycle = FStatNameAndInfo( GET_STATFNAME( STAT_SecondsPerCycle ), true ).GetRawName();
 const FName FStatConstants::NAME_NoCategory = FName(TEXT("STATCAT_None"));
 
 const FString FStatConstants::StatsFileExtension = TEXT( ".ue4stats" );
@@ -31,9 +31,9 @@ const FString FStatConstants::StatsFileRawExtension = TEXT( ".ue4statsraw" );
 
 const FString FStatConstants::ThreadNameMarker = TEXT( "Thread_" );
 
-const FName FStatConstants::RAW_EventWaitWithId = FStatNameAndInfo( GET_STATFName( STAT_EventWaitWithId ), true ).GetRawName();
-const FName FStatConstants::RAW_EventTriggerWithId = FStatNameAndInfo( GET_STATFName( STAT_EventTriggerWithId ), true ).GetRawName();
-const FName FStatConstants::RAW_NamedMarker = FStatNameAndInfo( GET_STATFName( STAT_NamedMarker ), true ).GetRawName(); 
+const FName FStatConstants::RAW_EventWaitWithId = FStatNameAndInfo( GET_STATFNAME( STAT_EventWaitWithId ), true ).GetRawName();
+const FName FStatConstants::RAW_EventTriggerWithId = FStatNameAndInfo( GET_STATFNAME( STAT_EventTriggerWithId ), true ).GetRawName();
+const FName FStatConstants::RAW_NamedMarker = FStatNameAndInfo( GET_STATFNAME( STAT_NamedMarker ), true ).GetRawName(); 
 
 const FStatNameAndInfo FStatConstants::AdvanceFrame = FStatNameAndInfo( NAME_AdvanceFrame, "", "", TEXT( "" ), EStatDataType::ST_int64, true, false );
 
@@ -1728,7 +1728,7 @@ void FStatsThreadState::FindOrAddMetaData(FStatMessage const& Item)
 		if (Item.NameAndInfo.GetFlag(EStatMetaFlags::IsMemory) && ShortName.ToString().StartsWith(TEXT("MCR_")))
 		{
 			// this is a pool size
-			YPlatformMemory::EMemoryCounterRegion Region = YPlatformMemory::EMemoryCounterRegion(Item.NameAndInfo.GetField<EMemoryRegion>());
+			FPlatformMemory::EMemoryCounterRegion Region = FPlatformMemory::EMemoryCounterRegion(Item.NameAndInfo.GetField<EMemoryRegion>());
 			if (MemoryPoolToCapacityLongName.Contains(Region))
 			{
 				UE_LOG(LogStats, Warning, TEXT("MetaData mismatch. Did you assign a memory pool capacity two different ways? %s vs %s"), *LongName.ToString(), *MemoryPoolToCapacityLongName[Region].ToString());
@@ -2075,7 +2075,7 @@ FString FStatsUtils::FromEscapedFString(const TCHAR* Escaped)
 			int32 IndexEnd = Input.Find(TEXT("$"), ESearchCase::CaseSensitive);
 			if (IndexEnd == INDEX_NONE)
 			{
-				checkStats(0); // malformed escaped FName
+				checkStats(0); // malformed escaped fname
 				Result += Input;
 				break;
 			}

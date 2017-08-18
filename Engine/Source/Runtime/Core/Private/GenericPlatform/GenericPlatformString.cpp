@@ -9,12 +9,12 @@
 
 DEFINE_LOG_CATEGORY_STATIC(LogGenericPlatformString, Log, All);
 
-template <> const TCHAR* YGenericPlatformString::GetEncodingTypeName<ANSICHAR>() { return TEXT("ANSICHAR"); }
-template <> const TCHAR* YGenericPlatformString::GetEncodingTypeName<WIDECHAR>() { return TEXT("WIDECHAR"); }
-template <> const TCHAR* YGenericPlatformString::GetEncodingTypeName<UCS2CHAR>() { return TEXT("UCS2CHAR"); }
+template <> const TCHAR* FGenericPlatformString::GetEncodingTypeName<ANSICHAR>() { return TEXT("ANSICHAR"); }
+template <> const TCHAR* FGenericPlatformString::GetEncodingTypeName<WIDECHAR>() { return TEXT("WIDECHAR"); }
+template <> const TCHAR* FGenericPlatformString::GetEncodingTypeName<UCS2CHAR>() { return TEXT("UCS2CHAR"); }
 
 
-void* YGenericPlatformString::Memcpy(void* Dest, const void* Src, SIZE_T Count)
+void* FGenericPlatformString::Memcpy(void* Dest, const void* Src, SIZE_T Count)
 {
 	return FMemory::Memcpy(Dest, Src, Count);
 }
@@ -30,7 +30,7 @@ namespace
 }
 
 template <typename DestEncoding, typename SourceEncoding>
-void YGenericPlatformString::LogBogusChars(const SourceEncoding* Src, int32 SrcSize)
+void FGenericPlatformString::LogBogusChars(const SourceEncoding* Src, int32 SrcSize)
 {
 	FString SrcStr;
 	bool    bFoundBogusChars = false;
@@ -71,10 +71,10 @@ void YGenericPlatformString::LogBogusChars(const SourceEncoding* Src, int32 SrcS
 }
 
 #if !UE_BUILD_DOCS
-template CORE_API void YGenericPlatformString::LogBogusChars<ANSICHAR, WIDECHAR>(const WIDECHAR* Src, int32 SrcSize);
-template CORE_API void YGenericPlatformString::LogBogusChars<ANSICHAR, UCS2CHAR>(const UCS2CHAR* Src, int32 SrcSize);
-template CORE_API void YGenericPlatformString::LogBogusChars<WIDECHAR, ANSICHAR>(const ANSICHAR* Src, int32 SrcSize);
-template CORE_API void YGenericPlatformString::LogBogusChars<WIDECHAR, UCS2CHAR>(const UCS2CHAR* Src, int32 SrcSize);
-template CORE_API void YGenericPlatformString::LogBogusChars<UCS2CHAR, ANSICHAR>(const ANSICHAR* Src, int32 SrcSize);
-template CORE_API void YGenericPlatformString::LogBogusChars<UCS2CHAR, WIDECHAR>(const WIDECHAR* Src, int32 SrcSize);
+template CORE_API void FGenericPlatformString::LogBogusChars<ANSICHAR, WIDECHAR>(const WIDECHAR* Src, int32 SrcSize);
+template CORE_API void FGenericPlatformString::LogBogusChars<ANSICHAR, UCS2CHAR>(const UCS2CHAR* Src, int32 SrcSize);
+template CORE_API void FGenericPlatformString::LogBogusChars<WIDECHAR, ANSICHAR>(const ANSICHAR* Src, int32 SrcSize);
+template CORE_API void FGenericPlatformString::LogBogusChars<WIDECHAR, UCS2CHAR>(const UCS2CHAR* Src, int32 SrcSize);
+template CORE_API void FGenericPlatformString::LogBogusChars<UCS2CHAR, ANSICHAR>(const ANSICHAR* Src, int32 SrcSize);
+template CORE_API void FGenericPlatformString::LogBogusChars<UCS2CHAR, WIDECHAR>(const WIDECHAR* Src, int32 SrcSize);
 #endif

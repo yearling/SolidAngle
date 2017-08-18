@@ -58,10 +58,10 @@ void FMalloc::InitializeStatsMetadata()
 {
 	// Initialize stats metadata here instead of UpdateStats.
 	// Mostly to avoid dead-lock when stats malloc profiler is enabled.
-	GET_STATFName(STAT_MallocCalls);
-	GET_STATFName(STAT_ReallocCalls);
-	GET_STATFName(STAT_FreeCalls);
-	GET_STATFName(STAT_TotalAllocatorCalls);
+	GET_STATFNAME(STAT_MallocCalls);
+	GET_STATFNAME(STAT_ReallocCalls);
+	GET_STATFNAME(STAT_FreeCalls);
+	GET_STATFNAME(STAT_TotalAllocatorCalls);
 }
 
 

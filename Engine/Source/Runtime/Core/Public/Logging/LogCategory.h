@@ -10,11 +10,11 @@ struct CORE_API FLogCategoryBase
 {
 	/**
 	* Constructor, registers with the log suppression system and sets up the default values.
-	* @param CategorFName, name of the category
+	* @param CategoryName, name of the category
 	* @param InDefaultVerbosity, default verbosity for the category, may ignored and overrridden by many other mechanisms
 	* @param InCompileTimeVerbosity, mostly used to keep the working verbosity in bounds, macros elsewhere actually do the work of stripping compiled out things.
 	**/
-	FLogCategoryBase(const TCHAR *CategorFName, ELogVerbosity::Type InDefaultVerbosity, ELogVerbosity::Type InCompileTimeVerbosity);
+	FLogCategoryBase(const TCHAR *CategoryName, ELogVerbosity::Type InDefaultVerbosity, ELogVerbosity::Type InCompileTimeVerbosity);
 
 	/** Destructor, unregisters from the log suppression system **/
 	~FLogCategoryBase();
@@ -29,7 +29,7 @@ struct CORE_API FLogCategoryBase
 	}
 	/** Called just after a logging statement being allow to print. Checks a few things and maybe breaks into the debugger. **/
 	void PostTrigger(ELogVerbosity::Type VerbosityLevel);
-	FORCEINLINE FName GetCategorFName() const
+	FORCEINLINE FName GetCategoryName() const
 	{
 		return CategoryFName;
 	}
@@ -69,8 +69,8 @@ struct FLogCategory : public FLogCategoryBase
 		CompileTimeVerbosity = InCompileTimeVerbosity
 	};
 
-	FORCEINLINE FLogCategory(const TCHAR *CategorFName)
-		: FLogCategoryBase(CategorFName, ELogVerbosity::Type(InDefaultVerbosity), ELogVerbosity::Type(CompileTimeVerbosity))
+	FORCEINLINE FLogCategory(const TCHAR *CategoryName)
+		: FLogCategoryBase(CategoryName, ELogVerbosity::Type(InDefaultVerbosity), ELogVerbosity::Type(CompileTimeVerbosity))
 	{
 	}
 };

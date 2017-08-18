@@ -22,7 +22,7 @@ DEFINE_STAT(STAT_Binned_TotalAllocs);
 DEFINE_STAT(STAT_Binned_SlackCurrent);
 
 /** Information about a piece of free memory. 8 bytes */
-struct YMallocBinned::FFreeMem
+struct FMallocBinned::FFreeMem
 {
 	/** Next or MemLastPool[], always in order by pool. */
 	FFreeMem*	Next;
@@ -31,7 +31,7 @@ struct YMallocBinned::FFreeMem
 };
 
 // Memory pool info. 32 bytes.
-struct YMallocBinned::FPoolInfo
+struct FMallocBinned::FPoolInfo
 {
 	/** Number of allocated elements in this pool, when counts down to zero can free the entire pool. */
 	uint16			Taken;		// 2
@@ -99,7 +99,7 @@ struct YMallocBinned::FPoolInfo
 };
 
 /** Hash table struct for retrieving allocation book keeping information */
-struct YMallocBinned::PoolHashBucket
+struct FMallocBinned::PoolHashBucket
 {
 	UPTRINT			Key;
 	FPoolInfo*		FirstPool;
@@ -136,7 +136,7 @@ struct YMallocBinned::PoolHashBucket
 	}
 };
 
-struct YMallocBinned::Private
+struct FMallocBinned::Private
 {
 	/** Default alignment for binned allocator */
 	enum { DEFAULT_BINNED_ALLOCATOR_ALIGNMENT = sizeof(FFreeMem) };
@@ -150,7 +150,7 @@ struct YMallocBinned::Private
 	static CA_NO_RETURN void OutOfMemory(uint64 Size, uint32 Alignment=0)
 	{
 		// this is expected not to return
-		YPlatformMemory::OnOutOfMemory(Size, Alignment);
+		FPlatformMemory::OnOutOfMemory(Size, Alignment);
 	}
 
 	static FORCEINLINE void TrackStats(FPoolTable* Table, SIZE_T Size)
@@ -169,12 +169,12 @@ struct YMallocBinned::Private
 	/** 
 	 * Create a 64k page of FPoolInfo structures for tracking allocations
 	 */
-	static FPoolInfo* CreateIndirect(YMallocBinned& Allocator)
+	static FPoolInfo* CreateIndirect(FMallocBinned& Allocator)
 	{
 		uint64 IndirectPoolBlockSizeBytes = Allocator.IndirectPoolBlockSize * sizeof(FPoolInfo);
 
 		checkSlow(IndirectPoolBlockSizeBytes <= Allocator.PageSize);
-		FPoolInfo* Indirect = (FPoolInfo*)YPlatformMemory::BinnedAllocFromOS(IndirectPoolBlockSizeBytes);
+		FPoolInfo* Indirect = (FPoolInfo*)FPlatformMemory::BinnedAllocFromOS(IndirectPoolBlockSizeBytes);
 		if( !Indirect )
 		{
 			OutOfMemory(IndirectPoolBlockSizeBytes);
@@ -192,12 +192,12 @@ struct YMallocBinned::Private
 	* NOTE: This function requires a mutex across threads, but its is the callers responsibility to 
 	* acquire the mutex before calling
 	*/
-	static FORCEINLINE FPoolInfo* GetPoolInfo(YMallocBinned& Allocator, UPTRINT Ptr)
+	static FORCEINLINE FPoolInfo* GetPoolInfo(FMallocBinned& Allocator, UPTRINT Ptr)
 	{
 		if (!Allocator.HashBuckets)
 		{
 			// Init tables.
-			Allocator.HashBuckets = (PoolHashBucket*)YPlatformMemory::BinnedAllocFromOS(Align(Allocator.MaxHashBuckets * sizeof(PoolHashBucket), Allocator.PageSize));
+			Allocator.HashBuckets = (PoolHashBucket*)FPlatformMemory::BinnedAllocFromOS(Align(Allocator.MaxHashBuckets * sizeof(PoolHashBucket), Allocator.PageSize));
 
 			for (uint32 i = 0; i < Allocator.MaxHashBuckets; ++i) 
 			{
@@ -234,7 +234,7 @@ struct YMallocBinned::Private
 		return &NewBucket->FirstPool[PoolIndex];
 	}
 
-	static FORCEINLINE FPoolInfo* FindPoolInfo(YMallocBinned& Allocator, UPTRINT Ptr1, UPTRINT& AllocationBase)
+	static FORCEINLINE FPoolInfo* FindPoolInfo(FMallocBinned& Allocator, UPTRINT Ptr1, UPTRINT& AllocationBase)
 	{
 		uint16  NextStep = 0;
 		UPTRINT Ptr      = Ptr1 &~ ((UPTRINT)Allocator.PageSize - 1);
@@ -253,7 +253,7 @@ struct YMallocBinned::Private
 		return nullptr;
 	}
 
-	static FORCEINLINE FPoolInfo* FindPoolInfoInternal(YMallocBinned& Allocator, UPTRINT Ptr, uint16& JumpOffset)
+	static FORCEINLINE FPoolInfo* FindPoolInfoInternal(FMallocBinned& Allocator, UPTRINT Ptr, uint16& JumpOffset)
 	{
 		checkSlow(Allocator.HashBuckets);
 
@@ -284,7 +284,7 @@ struct YMallocBinned::Private
 	/**
 	 *	Returns a newly created and initialized PoolHashBucket for use.
 	 */
-	static FORCEINLINE PoolHashBucket* CreateHashBucket(YMallocBinned& Allocator) 
+	static FORCEINLINE PoolHashBucket* CreateHashBucket(FMallocBinned& Allocator) 
 	{
 		PoolHashBucket* Bucket = AllocateHashBucket(Allocator);
 		InitializeHashBucket(Allocator, Bucket);
@@ -295,7 +295,7 @@ struct YMallocBinned::Private
 	 *	Initializes bucket with valid parameters
 	 *	@param bucket pointer to be initialized
 	 */
-	static FORCEINLINE void InitializeHashBucket(YMallocBinned& Allocator, PoolHashBucket* Bucket)
+	static FORCEINLINE void InitializeHashBucket(FMallocBinned& Allocator, PoolHashBucket* Bucket)
 	{
 		if (!Bucket->FirstPool)
 		{
@@ -306,13 +306,13 @@ struct YMallocBinned::Private
 	/**
 	 * Allocates a hash bucket from the free list of hash buckets
 	*/
-	static PoolHashBucket* AllocateHashBucket(YMallocBinned& Allocator)
+	static PoolHashBucket* AllocateHashBucket(FMallocBinned& Allocator)
 	{
 		if (!Allocator.HashBucketFreeList) 
 		{
 			const uint32 PageSize = Allocator.PageSize;
 
-			Allocator.HashBucketFreeList = (PoolHashBucket*)YPlatformMemory::BinnedAllocFromOS(PageSize);
+			Allocator.HashBucketFreeList = (PoolHashBucket*)FPlatformMemory::BinnedAllocFromOS(PageSize);
 			BINNED_PEAK_STATCOUNTER(Allocator.OsPeak,    BINNED_ADD_STATCOUNTER(Allocator.OsCurrent,    PageSize));
 			BINNED_PEAK_STATCOUNTER(Allocator.WastePeak, BINNED_ADD_STATCOUNTER(Allocator.WasteCurrent, PageSize));
 			
@@ -335,7 +335,7 @@ struct YMallocBinned::Private
 		return Free;
 	}
 
-	static FPoolInfo* AllocatePoolMemory(YMallocBinned& Allocator, FPoolTable* Table, uint32 PoolSize, uint16 TableIndex)
+	static FPoolInfo* AllocatePoolMemory(FMallocBinned& Allocator, FPoolTable* Table, uint32 PoolSize, uint16 TableIndex)
 	{
 		const uint32 PageSize = Allocator.PageSize;
 
@@ -396,7 +396,7 @@ struct YMallocBinned::Private
 		return Pool;
 	}
 
-	static FORCEINLINE FFreeMem* AllocateBlockFromPool(YMallocBinned& Allocator, FPoolTable* Table, FPoolInfo* Pool, uint32 Alignment)
+	static FORCEINLINE FFreeMem* AllocateBlockFromPool(FMallocBinned& Allocator, FPoolTable* Table, FPoolInfo* Pool, uint32 Alignment)
 	{
 		// Pick first available block and unlink it.
 		Pool->Taken++;
@@ -423,7 +423,7 @@ struct YMallocBinned::Private
 	* Releases memory back to the system. This is not protected from multi-threaded access and it's
 	* the callers responsibility to Lock AccessGuard before calling this.
 	*/
-	static void FreeInternal(YMallocBinned& Allocator, void* Ptr)
+	static void FreeInternal(FMallocBinned& Allocator, void* Ptr)
 	{
 		MEM_TIME(MemTime -= FPlatformTime::Seconds());
 		BINNED_DECREMENT_STATCOUNTER(Allocator.CurrentAllocs);
@@ -502,7 +502,7 @@ struct YMallocBinned::Private
 		MEM_TIME(MemTime += FPlatformTime::Seconds());
 	}
 
-	static void PushFreeLockless(YMallocBinned& Allocator, void* Ptr)
+	static void PushFreeLockless(FMallocBinned& Allocator, void* Ptr)
 	{
 #ifdef USE_LOCKFREE_DELETE
 		Allocator.PendingFreeList->Push(Ptr);
@@ -518,7 +518,7 @@ struct YMallocBinned::Private
 	* Clear and Process the list of frees to be deallocated. It's the callers
 	* responsibility to Lock AccessGuard before calling this
 	*/
-	static void FlushPendingFrees(YMallocBinned& Allocator)
+	static void FlushPendingFrees(FMallocBinned& Allocator)
 	{
 #ifdef USE_LOCKFREE_DELETE
 		if (!Allocator.PendingFreeList && !Allocator.bDoneFreeListInit)
@@ -543,7 +543,7 @@ struct YMallocBinned::Private
 #endif
 	}
 
-	static FORCEINLINE void OSFree(YMallocBinned& Allocator, void* Ptr, SIZE_T Size)
+	static FORCEINLINE void OSFree(FMallocBinned& Allocator, void* Ptr, SIZE_T Size)
 	{
 #ifdef CACHE_FREED_OS_ALLOCS
 #ifdef USE_FINE_GRAIN_LOCKS
@@ -551,7 +551,7 @@ struct YMallocBinned::Private
 #endif
 		if (Size > MAX_CACHED_OS_FREES_BYTE_LIMIT / 4)
 		{
-			YPlatformMemory::BinnedFreeToOS(Ptr, Size);
+			FPlatformMemory::BinnedFreeToOS(Ptr, Size);
 			return;
 		}
 
@@ -566,18 +566,18 @@ struct YMallocBinned::Private
 			{
 				FMemory::Memmove(&Allocator.FreedPageBlocks[0], &Allocator.FreedPageBlocks[1], sizeof(FFreePageBlock) * Allocator.FreedPageBlocksNum);
 			}
-			YPlatformMemory::BinnedFreeToOS(FreePtr, FreeSize);
+			FPlatformMemory::BinnedFreeToOS(FreePtr, FreeSize);
 		}
 		Allocator.FreedPageBlocks[Allocator.FreedPageBlocksNum].Ptr      = Ptr;
 		Allocator.FreedPageBlocks[Allocator.FreedPageBlocksNum].ByteSize = Size;
 		Allocator.CachedTotal += Size;
 		++Allocator.FreedPageBlocksNum;
 #else
-		YPlatformMemory::BinnedFreeToOS(Ptr, Size);
+		FPlatformMemory::BinnedFreeToOS(Ptr, Size);
 #endif
 	}
 
-	static FORCEINLINE void* OSAlloc(YMallocBinned& Allocator, SIZE_T NewSize, SIZE_T& OutActualSize)
+	static FORCEINLINE void* OSAlloc(FMallocBinned& Allocator, SIZE_T NewSize, SIZE_T& OutActualSize)
 	{
 #ifdef CACHE_FREED_OS_ALLOCS
 		{
@@ -622,22 +622,22 @@ struct YMallocBinned::Private
 			};
 		}
 		OutActualSize = NewSize;
-		void* Ptr = YPlatformMemory::BinnedAllocFromOS(NewSize);
+		void* Ptr = FPlatformMemory::BinnedAllocFromOS(NewSize);
 		if (!Ptr)
 		{
 			//Are we holding on to much mem? Release it all.
 			FlushAllocCache(Allocator);
-			Ptr = YPlatformMemory::BinnedAllocFromOS(NewSize);
+			Ptr = FPlatformMemory::BinnedAllocFromOS(NewSize);
 		}
 		return Ptr;
 #else
 		(void)OutActualSize;
-		return YPlatformMemory::BinnedAllocFromOS(NewSize);
+		return FPlatformMemory::BinnedAllocFromOS(NewSize);
 #endif
 	}
 
 #ifdef CACHE_FREED_OS_ALLOCS
-	static void FlushAllocCache(YMallocBinned& Allocator)
+	static void FlushAllocCache(FMallocBinned& Allocator)
 	{
 #ifdef USE_FINE_GRAIN_LOCKS
 		FScopeLock MainLock(&Allocator.AccessGuard);
@@ -645,7 +645,7 @@ struct YMallocBinned::Private
 		for (int i = 0, n = Allocator.FreedPageBlocksNum; i<n; ++i) 
 		{
 			//Remove allocs
-			YPlatformMemory::BinnedFreeToOS(Allocator.FreedPageBlocks[i].Ptr, Allocator.FreedPageBlocks[i].ByteSize);
+			FPlatformMemory::BinnedFreeToOS(Allocator.FreedPageBlocks[i].Ptr, Allocator.FreedPageBlocks[i].ByteSize);
 			Allocator.FreedPageBlocks[i].Ptr = nullptr;
 			Allocator.FreedPageBlocks[i].ByteSize = 0;
 		}
@@ -654,7 +654,7 @@ struct YMallocBinned::Private
 	}
 #endif
 
-	static void UpdateSlackStat(YMallocBinned& Allocator)
+	static void UpdateSlackStat(FMallocBinned& Allocator)
 	{
 	#if	STATS
 		SIZE_T LocalWaste = Allocator.WasteCurrent;
@@ -672,7 +672,7 @@ struct YMallocBinned::Private
 	}
 };
 
-void YMallocBinned::GetAllocatorStats( FGenericMemoryStats& out_Stats )
+void FMallocBinned::GetAllocatorStats( FGenericMemoryStats& out_Stats )
 {
 	FMalloc::GetAllocatorStats( out_Stats );
 
@@ -719,24 +719,24 @@ void YMallocBinned::GetAllocatorStats( FGenericMemoryStats& out_Stats )
 #endif // STATS
 }
 
-void YMallocBinned::InitializeStatsMetadata()
+void FMallocBinned::InitializeStatsMetadata()
 {
 	FMalloc::InitializeStatsMetadata();
 
 	// Initialize stats metadata here instead of UpdateStats.
 	// Mostly to avoid dead-lock when stats malloc profiler is enabled.
-	GET_STATFName(STAT_Binned_OsCurrent);
-	GET_STATFName(STAT_Binned_OsPeak);
-	GET_STATFName(STAT_Binned_WasteCurrent);
-	GET_STATFName(STAT_Binned_WastePeak);
-	GET_STATFName(STAT_Binned_UsedCurrent);
-	GET_STATFName(STAT_Binned_UsedPeak);
-	GET_STATFName(STAT_Binned_CurrentAllocs);
-	GET_STATFName(STAT_Binned_TotalAllocs);
-	GET_STATFName(STAT_Binned_SlackCurrent);
+	GET_STATFNAME(STAT_Binned_OsCurrent);
+	GET_STATFNAME(STAT_Binned_OsPeak);
+	GET_STATFNAME(STAT_Binned_WasteCurrent);
+	GET_STATFNAME(STAT_Binned_WastePeak);
+	GET_STATFNAME(STAT_Binned_UsedCurrent);
+	GET_STATFNAME(STAT_Binned_UsedPeak);
+	GET_STATFNAME(STAT_Binned_CurrentAllocs);
+	GET_STATFNAME(STAT_Binned_TotalAllocs);
+	GET_STATFNAME(STAT_Binned_SlackCurrent);
 }
 
-YMallocBinned::YMallocBinned(uint32 InPageSize, uint64 AddressLimit)
+FMallocBinned::FMallocBinned(uint32 InPageSize, uint64 AddressLimit)
 	:	TableAddressLimit(AddressLimit)
 #ifdef USE_LOCKFREE_DELETE
 	,	PendingFreeList(nullptr)
@@ -842,11 +842,11 @@ YMallocBinned::YMallocBinned(uint32 InPageSize, uint64 AddressLimit)
 	check(MAX_POOLED_ALLOCATION_SIZE - 1 == PoolTable[POOL_COUNT - 1].BlockSize);
 }
 
-YMallocBinned::~YMallocBinned()
+FMallocBinned::~FMallocBinned()
 {
 }
 
-bool YMallocBinned::IsInternallyThreadSafe() const
+bool FMallocBinned::IsInternallyThreadSafe() const
 { 
 #ifdef USE_INTERNAL_LOCKS
 	return true;
@@ -855,7 +855,7 @@ bool YMallocBinned::IsInternallyThreadSafe() const
 #endif
 }
 
-void* YMallocBinned::Malloc(SIZE_T Size, uint32 Alignment)
+void* FMallocBinned::Malloc(SIZE_T Size, uint32 Alignment)
 {
 #ifdef USE_COARSE_GRAIN_LOCKS
 	FScopeLock ScopedLock(&AccessGuard);
@@ -963,7 +963,7 @@ void* YMallocBinned::Malloc(SIZE_T Size, uint32 Alignment)
 	return Free;
 }
 
-void* YMallocBinned::Realloc( void* Ptr, SIZE_T NewSize, uint32 Alignment )
+void* FMallocBinned::Realloc( void* Ptr, SIZE_T NewSize, uint32 Alignment )
 {
 	// Handle DEFAULT_ALIGNMENT for binned allocator.
 	if (Alignment == DEFAULT_ALIGNMENT)
@@ -1041,7 +1041,7 @@ void* YMallocBinned::Realloc( void* Ptr, SIZE_T NewSize, uint32 Alignment )
 	return NewPtr;
 }
 
-void YMallocBinned::Free( void* Ptr )
+void FMallocBinned::Free( void* Ptr )
 {
 	if( !Ptr )
 	{
@@ -1051,7 +1051,7 @@ void YMallocBinned::Free( void* Ptr )
 	Private::PushFreeLockless(*this, Ptr);
 }
 
-bool YMallocBinned::GetAllocationSize(void *Original, SIZE_T &SizeOut)
+bool FMallocBinned::GetAllocationSize(void *Original, SIZE_T &SizeOut)
 {
 	if (!Original)
 	{
@@ -1090,7 +1090,7 @@ bool YMallocBinned::GetAllocationSize(void *Original, SIZE_T &SizeOut)
 	return true;
 }
 
-bool YMallocBinned::ValidateHeap()
+bool FMallocBinned::ValidateHeap()
 {
 #ifdef USE_COARSE_GRAIN_LOCKS
 	FScopeLock ScopedLock(&AccessGuard);
@@ -1122,7 +1122,7 @@ bool YMallocBinned::ValidateHeap()
 	return( true );
 }
 
-void YMallocBinned::UpdateStats()
+void FMallocBinned::UpdateStats()
 {
 	FMalloc::UpdateStats();
 #if STATS
@@ -1166,7 +1166,7 @@ void YMallocBinned::UpdateStats()
 #endif
 }
 
-void YMallocBinned::DumpAllocatorStats( class FOutputDevice& Ar )
+void FMallocBinned::DumpAllocatorStats( class FOutputDevice& Ar )
 {
 	FBufferedOutputDevice BufferedOutput;
 	{
@@ -1178,24 +1178,24 @@ void YMallocBinned::DumpAllocatorStats( class FOutputDevice& Ar )
 		Private::UpdateSlackStat(*this);
 #if !NO_LOGGING
 		// This is all of the memory including stuff too big for the pools
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "Allocator Stats for %s:" ), GetDescriptiveName() );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "Allocator Stats for %s:" ), GetDescriptiveName() );
 		// Waste is the total overhead of the memory system
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "Current Memory %.2f MB used, plus %.2f MB waste" ), UsedCurrent / (1024.0f * 1024.0f), (OsCurrent - UsedCurrent) / (1024.0f * 1024.0f) );
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "Peak Memory %.2f MB used, plus %.2f MB waste" ), UsedPeak / (1024.0f * 1024.0f), (OsPeak - UsedPeak) / (1024.0f * 1024.0f) );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "Current Memory %.2f MB used, plus %.2f MB waste" ), UsedCurrent / (1024.0f * 1024.0f), (OsCurrent - UsedCurrent) / (1024.0f * 1024.0f) );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "Peak Memory %.2f MB used, plus %.2f MB waste" ), UsedPeak / (1024.0f * 1024.0f), (OsPeak - UsedPeak) / (1024.0f * 1024.0f) );
 
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "Current OS Memory %.2f MB, peak %.2f MB" ), OsCurrent / (1024.0f * 1024.0f), OsPeak / (1024.0f * 1024.0f) );
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "Current Waste %.2f MB, peak %.2f MB" ), WasteCurrent / (1024.0f * 1024.0f), WastePeak / (1024.0f * 1024.0f) );
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "Current Used %.2f MB, peak %.2f MB" ), UsedCurrent / (1024.0f * 1024.0f), UsedPeak / (1024.0f * 1024.0f) );
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "Current Slack %.2f MB" ), SlackCurrent / (1024.0f * 1024.0f) );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "Current OS Memory %.2f MB, peak %.2f MB" ), OsCurrent / (1024.0f * 1024.0f), OsPeak / (1024.0f * 1024.0f) );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "Current Waste %.2f MB, peak %.2f MB" ), WasteCurrent / (1024.0f * 1024.0f), WastePeak / (1024.0f * 1024.0f) );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "Current Used %.2f MB, peak %.2f MB" ), UsedCurrent / (1024.0f * 1024.0f), UsedPeak / (1024.0f * 1024.0f) );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "Current Slack %.2f MB" ), SlackCurrent / (1024.0f * 1024.0f) );
 
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "Allocs      % 6i Current / % 6i Total" ), CurrentAllocs, TotalAllocs );
-		MEM_TIME( BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "Seconds     % 5.3f" ), MemTime ) );
-		MEM_TIME( BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "MSec/Allc   % 5.5f" ), 1000.0 * MemTime / MemAllocs ) );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "Allocs      % 6i Current / % 6i Total" ), CurrentAllocs, TotalAllocs );
+		MEM_TIME( BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "Seconds     % 5.3f" ), MemTime ) );
+		MEM_TIME( BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "MSec/Allc   % 5.5f" ), 1000.0 * MemTime / MemAllocs ) );
 
 		// This is the memory tracked inside individual allocation pools
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "" ) );
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "Block Size Num Pools Max Pools Cur Allocs Total Allocs Min Req Max Req Mem Used Mem Slack Mem Waste Efficiency" ) );
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "---------- --------- --------- ---------- ------------ ------- ------- -------- --------- --------- ----------" ) );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "" ) );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "Block Size Num Pools Max Pools Cur Allocs Total Allocs Min Req Max Req Mem Used Mem Slack Mem Waste Efficiency" ) );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "---------- --------- --------- ---------- ------------ ------- ------- -------- --------- --------- ----------" ) );
 
 		uint32 TotalMemory = 0;
 		uint32 TotalWaste = 0;
@@ -1228,7 +1228,7 @@ void YMallocBinned::DumpAllocatorStats( class FOutputDevice& Ar )
 			// Memory that is reserved in active pools and ready for future use
 			uint32 MemSlack = MemAllocated - MemUsed - PoolMemWaste;
 
-			BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "% 10i % 9i % 9i % 10i % 12i % 7i % 7i % 7iK % 8iK % 8iK % 9.2f%%" ),
+			BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "% 10i % 9i % 9i % 10i % 12i % 7i % 7i % 7iK % 8iK % 8iK % 9.2f%%" ),
 										  Table->BlockSize,
 										  Table->NumActivePools,
 										  Table->MaxActivePools,
@@ -1249,10 +1249,10 @@ void YMallocBinned::DumpAllocatorStats( class FOutputDevice& Ar )
 			TotalPools += Table->NumActivePools;
 		}
 
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "" ) );
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "%iK allocated in pools (with %iK slack and %iK waste). Efficiency %.2f%%" ), TotalMemory, TotalSlack, TotalWaste, TotalMemory ? 100.0f * (TotalMemory - TotalWaste) / TotalMemory : 100.0f );
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "Allocations %i Current / %i Total (in %i pools)" ), TotalActiveRequests, TotalTotalRequests, TotalPools );
-		BufferedOutput.CategorizedLogf( LogMemory.GetCategorFName(), ELogVerbosity::Log, TEXT( "" ) );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "" ) );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "%iK allocated in pools (with %iK slack and %iK waste). Efficiency %.2f%%" ), TotalMemory, TotalSlack, TotalWaste, TotalMemory ? 100.0f * (TotalMemory - TotalWaste) / TotalMemory : 100.0f );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "Allocations %i Current / %i Total (in %i pools)" ), TotalActiveRequests, TotalTotalRequests, TotalPools );
+		BufferedOutput.CategorizedLogf( LogMemory.GetCategoryName(), ELogVerbosity::Log, TEXT( "" ) );
 #endif
 #endif
 	}
@@ -1260,7 +1260,7 @@ void YMallocBinned::DumpAllocatorStats( class FOutputDevice& Ar )
 	BufferedOutput.RedirectTo( Ar );
 }
 
-const TCHAR* YMallocBinned::GetDescriptiveName()
+const TCHAR* FMallocBinned::GetDescriptiveName()
 {
 	return TEXT("binned");
 }

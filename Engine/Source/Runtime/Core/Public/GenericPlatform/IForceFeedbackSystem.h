@@ -1,13 +1,15 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
-#include "GenericPlatform/IInputInterface.h"
+#include "IInputInterface.h"
 
 
 /**
-* Interface for the force feedback system.
-*
-* Note: This class is deprecated and will be removed in favor of IInputInterface
-*/
+ * Interface for the force feedback system.
+ *
+ * Note: This class is deprecated and will be removed in favor of IInputInterface
+ */
 class IForceFeedbackSystem
 	: public IInputInterface
 {

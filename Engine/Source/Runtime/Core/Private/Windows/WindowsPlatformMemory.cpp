@@ -11,31 +11,32 @@
 #include "Stats/Stats.h"
 #include "GenericPlatform/GenericPlatformMemoryPoolStats.h"
 
-#include "HAL/MallocTBB.h"
-#include "HAL/MallocAnsi.h"
-#include "HAL/MallocStomp.h"
-#include "HAL/MemoryMisc.h"
-#include "HAL/MallocBinned.h"
-#include "HAL/MallocBinned2.h"
+#include "MallocTBB.h"
+#include "MallocAnsi.h"
+#include "MallocStomp.h"
+#include "GenericPlatformMemoryPoolStats.h"
+#include "MemoryMisc.h"
+#include "MallocBinned.h"
+#include "MallocBinned2.h"
 #include "Windows/WindowsHWrapper.h"
 
 #if ENABLE_WIN_ALLOC_TRACKING
 #include <crtdbg.h>
 #endif // ENABLE_WIN_ALLOC_TRACKING
 
-#include "Windows/AllowWindowsPlatformTypes.h"
+#include "AllowWindowsPlatformTypes.h"
 #include <Psapi.h>
 #pragma comment(lib, "psapi.lib")
 
-DECLARE_MEMORY_STAT(TEXT("Windows Specific Memory Stat"), STAT_WindowsSpecificMemoryStat, STATGROUP_MemoryPlatform);
+DECLARE_MEMORY_STAT(TEXT("Windows Specific Memory Stat"),	STAT_WindowsSpecificMemoryStat, STATGROUP_MemoryPlatform);
 
 #if ENABLE_WIN_ALLOC_TRACKING
 // This allows tracking of allocations that don't happen within the engine's wrappers.
 // You will probably want to set conditional breakpoints here to capture specific allocations
 // which aren't related to static initialization, they will happen on the CRT anyway.
 int WindowsAllocHook(int nAllocType, void *pvData,
-	size_t nSize, int nBlockUse, long lRequest,
-	const unsigned char * szFileName, int nLine)
+				  size_t nSize, int nBlockUse, long lRequest,
+				  const unsigned char * szFileName, int nLine )
 {
 	return true;
 }
@@ -43,35 +44,35 @@ int WindowsAllocHook(int nAllocType, void *pvData,
 
 
 
-void YWindowsPlatformMemory::Init()
+void FWindowsPlatformMemory::Init()
 {
-	YGenericPlatformMemory::Init();
+	FGenericPlatformMemory::Init();
 
 #if PLATFORM_32BITS
-	const int64 GB(1024 * 1024 * 1024);
-	SET_MEMORY_STAT(MCR_Physical, 2 * GB); //2Gb of physical memory on win32
+	const int64 GB(1024*1024*1024);
+	SET_MEMORY_STAT(MCR_Physical, 2*GB); //2Gb of physical memory on win32
 #endif
 
-	const YPlatformMemoryConstants& MemoryConstants = YPlatformMemory::GetConstants();
+	const FPlatformMemoryConstants& MemoryConstants = FPlatformMemory::GetConstants();
 #if PLATFORM_32BITS	
-	UE_LOG(LogMemory, Log, TEXT("Memory total: Physical=%.1fGB (%dGB approx) Virtual=%.1fGB"),
-		float(MemoryConstants.TotalPhysical / 1024.0 / 1024.0 / 1024.0),
-		MemoryConstants.TotalPhysicalGB,
-		float(MemoryConstants.TotalVirtual / 1024.0 / 1024.0 / 1024.0));
+	UE_LOG(LogMemory, Log, TEXT("Memory total: Physical=%.1fGB (%dGB approx) Virtual=%.1fGB"), 
+		float(MemoryConstants.TotalPhysical/1024.0/1024.0/1024.0),
+		MemoryConstants.TotalPhysicalGB, 
+		float(MemoryConstants.TotalVirtual/1024.0/1024.0/1024.0) );
 #else
 	// Logging virtual memory size for 64bits is pointless.
-	UE_LOG(LogMemory, Log, TEXT("Memory total: Physical=%.1fGB (%dGB approx)"),
-		float(MemoryConstants.TotalPhysical / 1024.0 / 1024.0 / 1024.0),
-		MemoryConstants.TotalPhysicalGB);
+	UE_LOG(LogMemory, Log, TEXT("Memory total: Physical=%.1fGB (%dGB approx)"), 
+		float(MemoryConstants.TotalPhysical/1024.0/1024.0/1024.0),
+		MemoryConstants.TotalPhysicalGB );
 #endif //PLATFORM_32BITS
 
-	DumpStats(*GLog);
+	DumpStats( *GLog );
 }
 
 // Set rather to use BinnedMalloc2 for binned malloc, can be overridden below
 #define USE_MALLOC_BINNED2 (1)
 
-FMalloc* YWindowsPlatformMemory::BaseAllocator()
+FMalloc* FWindowsPlatformMemory::BaseAllocator()
 {
 #if ENABLE_WIN_ALLOC_TRACKING
 	// This allows tracking of allocations that don't happen within the engine's wrappers.
@@ -100,7 +101,7 @@ FMalloc* YWindowsPlatformMemory::BaseAllocator()
 	{
 		AllocatorToUse = EMemoryAllocatorToUse::Binned;
 	}
-
+	
 #if !UE_BUILD_SHIPPING
 	// If not shipping, allow overriding with command line options, this happens very early so we need to use windows functions
 	const TCHAR* CommandLine = ::GetCommandLineW();
@@ -131,58 +132,56 @@ FMalloc* YWindowsPlatformMemory::BaseAllocator()
 	case EMemoryAllocatorToUse::Stomp:
 		return new FMallocStomp();
 #endif
-#if PLATFORM_SUPPORTS_TBB && TBB_ALLOCATOR_ALLOWED
 	case EMemoryAllocatorToUse::TBB:
-		return new TMallocTBB();
-#endif
+		return new FMallocTBB();
 	case EMemoryAllocatorToUse::Binned2:
-		return new YMallocBinned2();
-
+		return new FMallocBinned2();
+		
 	default:	// intentional fall-through
 	case EMemoryAllocatorToUse::Binned:
-		return new YMallocBinned((uint32)(GetConstants().PageSize&MAX_uint32), (uint64)MAX_uint32 + 1);
+		return new FMallocBinned((uint32)(GetConstants().PageSize&MAX_uint32), (uint64)MAX_uint32 + 1);
 	}
 }
 
-YPlatformMemoryStats YWindowsPlatformMemory::GetStats()
+FPlatformMemoryStats FWindowsPlatformMemory::GetStats()
 {
 	/**
-	*	GlobalMemoryStatusEx
-	*	MEMORYSTATUSEX
-	*		ullTotalPhys
-	*		ullAvailPhys
-	*		ullTotalVirtual
-	*		ullAvailVirtual
-	*
-	*	GetProcessMemoryInfo
-	*	PROCESS_MEMORY_COUNTERS
-	*		WorkingSetSize
-	*		UsedVirtual
-	*		PeakUsedVirtual
-	*
-	*	GetPerformanceInfo
-	*		PPERFORMANCE_INFORMATION
-	*		PageSize
-	*/
+	 *	GlobalMemoryStatusEx 
+	 *	MEMORYSTATUSEX 
+	 *		ullTotalPhys
+	 *		ullAvailPhys
+	 *		ullTotalVirtual
+	 *		ullAvailVirtual
+	 *		
+	 *	GetProcessMemoryInfo
+	 *	PROCESS_MEMORY_COUNTERS
+	 *		WorkingSetSize
+	 *		UsedVirtual
+	 *		PeakUsedVirtual
+	 *		
+	 *	GetPerformanceInfo
+	 *		PPERFORMANCE_INFORMATION 
+	 *		PageSize
+	 */
 
 	// This method is slow, do not call it too often.
 	// #TODO Should be executed only on the background thread.
 
-	YPlatformMemoryStats MemoryStats;
+	FPlatformMemoryStats MemoryStats;
 
 	// Gather platform memory stats.
 	MEMORYSTATUSEX MemoryStatusEx;
-	YPlatformMemory::Memzero(&MemoryStatusEx, sizeof(MemoryStatusEx));
-	MemoryStatusEx.dwLength = sizeof(MemoryStatusEx);
-	::GlobalMemoryStatusEx(&MemoryStatusEx);
+	FPlatformMemory::Memzero( &MemoryStatusEx, sizeof( MemoryStatusEx ) );
+	MemoryStatusEx.dwLength = sizeof( MemoryStatusEx );
+	::GlobalMemoryStatusEx( &MemoryStatusEx );
 
 	PROCESS_MEMORY_COUNTERS ProcessMemoryCounters;
-	YPlatformMemory::Memzero(&ProcessMemoryCounters, sizeof(ProcessMemoryCounters));
-	::GetProcessMemoryInfo(::GetCurrentProcess(), &ProcessMemoryCounters, sizeof(ProcessMemoryCounters));
+	FPlatformMemory::Memzero( &ProcessMemoryCounters, sizeof( ProcessMemoryCounters ) );
+	::GetProcessMemoryInfo( ::GetCurrentProcess(), &ProcessMemoryCounters, sizeof(ProcessMemoryCounters) );
 
 	MemoryStats.AvailablePhysical = MemoryStatusEx.ullAvailPhys;
 	MemoryStats.AvailableVirtual = MemoryStatusEx.ullAvailVirtual;
-
+	
 	MemoryStats.UsedPhysical = ProcessMemoryCounters.WorkingSetSize;
 	MemoryStats.PeakUsedPhysical = ProcessMemoryCounters.PeakWorkingSetSize;
 	MemoryStats.UsedVirtual = ProcessMemoryCounters.PagefileUsage;
@@ -191,32 +190,32 @@ YPlatformMemoryStats YWindowsPlatformMemory::GetStats()
 	return MemoryStats;
 }
 
-void YWindowsPlatformMemory::GetStatsForMallocProfiler(FGenericMemoryStats& out_Stats)
+void FWindowsPlatformMemory::GetStatsForMallocProfiler( FGenericMemoryStats& out_Stats )
 {
 #if	STATS
-	YGenericPlatformMemory::GetStatsForMallocProfiler(out_Stats);
+	FGenericPlatformMemory::GetStatsForMallocProfiler( out_Stats );
 
-	YPlatformMemoryStats Stats = GetStats();
+	FPlatformMemoryStats Stats = GetStats();
 
 	// Windows specific stats.
-	out_Stats.Add(GET_STATDESCRIPTION(STAT_WindowsSpecificMemoryStat), Stats.WindowsSpecificMemoryStat);
+	out_Stats.Add( GET_STATDESCRIPTION( STAT_WindowsSpecificMemoryStat ), Stats.WindowsSpecificMemoryStat );
 #endif // STATS
 }
 
-const YPlatformMemoryConstants& YWindowsPlatformMemory::GetConstants()
+const FPlatformMemoryConstants& FWindowsPlatformMemory::GetConstants()
 {
-	static YPlatformMemoryConstants MemoryConstants;
+	static FPlatformMemoryConstants MemoryConstants;
 
-	if (MemoryConstants.TotalPhysical == 0)
+	if( MemoryConstants.TotalPhysical == 0 )
 	{
 		// Gather platform memory constants.
 		MEMORYSTATUSEX MemoryStatusEx;
-		YPlatformMemory::Memzero(&MemoryStatusEx, sizeof(MemoryStatusEx));
-		MemoryStatusEx.dwLength = sizeof(MemoryStatusEx);
-		::GlobalMemoryStatusEx(&MemoryStatusEx);
+		FPlatformMemory::Memzero( &MemoryStatusEx, sizeof( MemoryStatusEx ) );
+		MemoryStatusEx.dwLength = sizeof( MemoryStatusEx );
+		::GlobalMemoryStatusEx( &MemoryStatusEx );
 
 		SYSTEM_INFO SystemInfo;
-		YPlatformMemory::Memzero(&SystemInfo, sizeof(SystemInfo));
+		FPlatformMemory::Memzero( &SystemInfo, sizeof( SystemInfo ) );
 		::GetSystemInfo(&SystemInfo);
 
 		MemoryConstants.TotalPhysical = MemoryStatusEx.ullTotalPhys;
@@ -226,10 +225,10 @@ const YPlatformMemoryConstants& YWindowsPlatformMemory::GetConstants()
 		MemoryConstants.TotalPhysicalGB = (MemoryConstants.TotalPhysical + 1024 * 1024 * 1024 - 1) / 1024 / 1024 / 1024;
 	}
 
-	return MemoryConstants;
+	return MemoryConstants;	
 }
 
-bool YWindowsPlatformMemory::PageProtect(void* const Ptr, const SIZE_T Size, const bool bCanRead, const bool bCanWrite)
+bool FWindowsPlatformMemory::PageProtect(void* const Ptr, const SIZE_T Size, const bool bCanRead, const bool bCanWrite)
 {
 	DWORD flOldProtect;
 	uint32 ProtectMode = 0;
@@ -251,30 +250,30 @@ bool YWindowsPlatformMemory::PageProtect(void* const Ptr, const SIZE_T Size, con
 	}
 	return VirtualProtect(Ptr, Size, ProtectMode, &flOldProtect) != 0;
 }
-void* YWindowsPlatformMemory::BinnedAllocFromOS(SIZE_T Size)
+void* FWindowsPlatformMemory::BinnedAllocFromOS( SIZE_T Size )
 {
-	return VirtualAlloc(NULL, Size, MEM_COMMIT, PAGE_READWRITE);
+	return VirtualAlloc( NULL, Size, MEM_COMMIT, PAGE_READWRITE );
 }
 
-void YWindowsPlatformMemory::BinnedFreeToOS(void* Ptr, SIZE_T Size)
+void FWindowsPlatformMemory::BinnedFreeToOS( void* Ptr, SIZE_T Size )
 {
 	CA_SUPPRESS(6001)
-		// Windows maintains the size of allocation internally, so Size is unused
-		verify(VirtualFree(Ptr, 0, MEM_RELEASE) != 0);
+	// Windows maintains the size of allocation internally, so Size is unused
+	verify(VirtualFree( Ptr, 0, MEM_RELEASE ) != 0);
 }
 
-YPlatformMemory::YSharedMemoryRegion* YWindowsPlatformMemory::MapNamedSharedMemoryRegion(const FString& InName, bool bCreate, uint32 AccessMode, SIZE_T Size)
+FPlatformMemory::FSharedMemoryRegion* FWindowsPlatformMemory::MapNamedSharedMemoryRegion(const FString& InName, bool bCreate, uint32 AccessMode, SIZE_T Size)
 {
 	FString Name(TEXT("Global\\"));
 	Name += InName;
 
 	DWORD OpenMappingAccess = FILE_MAP_READ;
 	check(AccessMode != 0);
-	if (AccessMode == YPlatformMemory::ESharedMemoryAccess::Write)
+	if (AccessMode == FPlatformMemory::ESharedMemoryAccess::Write)
 	{
 		OpenMappingAccess = FILE_MAP_WRITE;
 	}
-	else if (AccessMode == (YPlatformMemory::ESharedMemoryAccess::Write | YPlatformMemory::ESharedMemoryAccess::Read))
+	else if (AccessMode == (FPlatformMemory::ESharedMemoryAccess::Write | FPlatformMemory::ESharedMemoryAccess::Read))
 	{
 		OpenMappingAccess = FILE_MAP_ALL_ACCESS;
 	}
@@ -284,18 +283,18 @@ YPlatformMemory::YSharedMemoryRegion* YWindowsPlatformMemory::MapNamedSharedMemo
 	{
 		DWORD CreateMappingAccess = PAGE_READONLY;
 		check(AccessMode != 0);
-		if (AccessMode == YPlatformMemory::ESharedMemoryAccess::Write)
+		if (AccessMode == FPlatformMemory::ESharedMemoryAccess::Write)
 		{
 			CreateMappingAccess = PAGE_WRITECOPY;
 		}
-		else if (AccessMode == (YPlatformMemory::ESharedMemoryAccess::Write | YPlatformMemory::ESharedMemoryAccess::Read))
+		else if (AccessMode == (FPlatformMemory::ESharedMemoryAccess::Write | FPlatformMemory::ESharedMemoryAccess::Read))
 		{
 			CreateMappingAccess = PAGE_READWRITE;
 		}
 
-		DWORD MaxSizeHigh =
+		DWORD MaxSizeHigh = 
 #if PLATFORM_64BITS
-		(Size >> 32);
+			(Size >> 32);
 #else
 			0;
 #endif // PLATFORM_64BITS
@@ -311,10 +310,10 @@ YPlatformMemory::YSharedMemoryRegion* YWindowsPlatformMemory::MapNamedSharedMemo
 		if (Mapping == NULL)
 		{
 			DWORD ErrNo = GetLastError();
-			UE_LOG(LogHAL, Warning, TEXT("CreateFileMapping(file=INVALID_HANDLE_VALUE, security=NULL, protect=0x%x, MaxSizeHigh=%d, MaxSizeLow=%d, name='%s') failed with GetLastError() = %d"),
+			UE_LOG(LogHAL, Warning, TEXT("CreateFileMapping(file=INVALID_HANDLE_VALUE, security=NULL, protect=0x%x, MaxSizeHigh=%d, MaxSizeLow=%d, name='%s') failed with GetLastError() = %d"), 
 				CreateMappingAccess, MaxSizeHigh, MaxSizeLow, *Name,
 				ErrNo
-			);
+				);
 		}
 	}
 	else
@@ -324,10 +323,10 @@ YPlatformMemory::YSharedMemoryRegion* YWindowsPlatformMemory::MapNamedSharedMemo
 		if (Mapping == NULL)
 		{
 			DWORD ErrNo = GetLastError();
-			UE_LOG(LogHAL, Warning, TEXT("OpenFileMapping(access=0x%x, inherit=false, name='%s') failed with GetLastError() = %d"),
+			UE_LOG(LogHAL, Warning, TEXT("OpenFileMapping(access=0x%x, inherit=false, name='%s') failed with GetLastError() = %d"), 
 				OpenMappingAccess, *Name,
 				ErrNo
-			);
+				);
 		}
 	}
 
@@ -340,10 +339,10 @@ YPlatformMemory::YSharedMemoryRegion* YWindowsPlatformMemory::MapNamedSharedMemo
 	if (Ptr == NULL)
 	{
 		DWORD ErrNo = GetLastError();
-		UE_LOG(LogHAL, Warning, TEXT("MapViewOfFile(mapping=0x%x, access=0x%x, OffsetHigh=0, OffsetLow=0, NumBytes=%u) failed with GetLastError() = %d"),
+		UE_LOG(LogHAL, Warning, TEXT("MapViewOfFile(mapping=0x%x, access=0x%x, OffsetHigh=0, OffsetLow=0, NumBytes=%u) failed with GetLastError() = %d"), 
 			Mapping, OpenMappingAccess, Size,
 			ErrNo
-		);
+			);
 
 		CloseHandle(Mapping);
 		return NULL;
@@ -352,23 +351,23 @@ YPlatformMemory::YSharedMemoryRegion* YWindowsPlatformMemory::MapNamedSharedMemo
 	return new FWindowsSharedMemoryRegion(Name, AccessMode, Ptr, Size, Mapping);
 }
 
-bool YWindowsPlatformMemory::UnmapNamedSharedMemoryRegion(YSharedMemoryRegion * MemoryRegion)
+bool FWindowsPlatformMemory::UnmapNamedSharedMemoryRegion(FSharedMemoryRegion * MemoryRegion)
 {
 	bool bAllSucceeded = true;
 
 	if (MemoryRegion)
 	{
-		FWindowsSharedMemoryRegion * WindowsRegion = static_cast< FWindowsSharedMemoryRegion* >(MemoryRegion);
+		FWindowsSharedMemoryRegion * WindowsRegion = static_cast< FWindowsSharedMemoryRegion* >( MemoryRegion );
 
 		if (!UnmapViewOfFile(WindowsRegion->GetAddress()))
 		{
 			bAllSucceeded = false;
 
 			int ErrNo = GetLastError();
-			UE_LOG(LogHAL, Warning, TEXT("UnmapViewOfFile(address=%p) failed with GetLastError() = %d"),
+			UE_LOG(LogHAL, Warning, TEXT("UnmapViewOfFile(address=%p) failed with GetLastError() = %d"), 
 				WindowsRegion->GetAddress(),
 				ErrNo
-			);
+				);
 		}
 
 		if (!CloseHandle(WindowsRegion->GetMapping()))
@@ -376,10 +375,10 @@ bool YWindowsPlatformMemory::UnmapNamedSharedMemoryRegion(YSharedMemoryRegion * 
 			bAllSucceeded = false;
 
 			int ErrNo = GetLastError();
-			UE_LOG(LogHAL, Warning, TEXT("CloseHandle(handle=0x%x) failed with GetLastError() = %d"),
+			UE_LOG(LogHAL, Warning, TEXT("CloseHandle(handle=0x%x) failed with GetLastError() = %d"), 
 				WindowsRegion->GetMapping(),
 				ErrNo
-			);
+				);
 		}
 
 		// delete the region
@@ -389,10 +388,10 @@ bool YWindowsPlatformMemory::UnmapNamedSharedMemoryRegion(YSharedMemoryRegion * 
 	return bAllSucceeded;
 }
 
-void YWindowsPlatformMemory::InternalUpdateStats(const YPlatformMemoryStats& MemoryStats)
+void FWindowsPlatformMemory::InternalUpdateStats( const FPlatformMemoryStats& MemoryStats )
 {
 	// Windows specific stats.
-	SET_MEMORY_STAT(STAT_WindowsSpecificMemoryStat, MemoryStats.WindowsSpecificMemoryStat);
+	SET_MEMORY_STAT( STAT_WindowsSpecificMemoryStat, MemoryStats.WindowsSpecificMemoryStat );
 }
 
 #include "Windows/HideWindowsPlatformTypes.h"

@@ -8,8 +8,8 @@
 #if PLATFORM_SUPPORTS_NAMED_PIPES
 
 /**
-* Wrapper for platform named pipe communication.
-*/
+ * Wrapper for platform named pipe communication.
+ */
 class CORE_API FGenericPlatformNamedPipe
 {
 public:

@@ -1,5 +1,8 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
+
 /*=============================================================================================
-GenericPlatformFile.h: Generic platform file interfaces
+	GenericPlatformFile.h: Generic platform file interfaces
 ==============================================================================================*/
 
 #pragma once
@@ -17,7 +20,7 @@ class IAsyncReadFileHandle;
 enum EAsyncIOPriority
 {
 	AIOP_MIN = 0,
-	AIOP_Precache = AIOP_MIN,
+	AIOP_Precache = AIOP_MIN, 
 	AIOP_Low,
 	AIOP_BelowNormal,
 	AIOP_Normal,
@@ -28,8 +31,8 @@ enum EAsyncIOPriority
 };
 
 /**
-* Enum for platform file read flags
-*/
+ * Enum for platform file read flags
+ */
 enum class EPlatformFileRead : uint8
 {
 	None = 0x0,
@@ -39,8 +42,8 @@ enum class EPlatformFileRead : uint8
 ENUM_CLASS_FLAGS(EPlatformFileRead);
 
 /**
-* Enum for platform file write flags
-*/
+ * Enum for platform file write flags
+ */
 enum class EPlatformFileWrite : uint8
 {
 	None = 0x0,
@@ -49,8 +52,8 @@ enum class EPlatformFileWrite : uint8
 
 ENUM_CLASS_FLAGS(EPlatformFileWrite);
 
-/**
-* File handle interface.
+/** 
+ * File handle interface. 
 **/
 class CORE_API IFileHandle
 {
@@ -62,33 +65,33 @@ public:
 
 	/** Return the current write or read position. **/
 	virtual int64		Tell() = 0;
-	/**
-	* Change the current write or read position.
-	* @param NewPosition	new write or read position
-	* @return				true if the operation completed successfully.
+	/** 
+	 * Change the current write or read position. 
+	 * @param NewPosition	new write or read position
+	 * @return				true if the operation completed successfully.
 	**/
 	virtual bool		Seek(int64 NewPosition) = 0;
 
-	/**
-	* Change the current write or read position, relative to the end of the file.
-	* @param NewPositionRelativeToEnd	new write or read position, relative to the end of the file should be <=0!
-	* @return							true if the operation completed successfully.
+	/** 
+	 * Change the current write or read position, relative to the end of the file.
+	 * @param NewPositionRelativeToEnd	new write or read position, relative to the end of the file should be <=0!
+	 * @return							true if the operation completed successfully.
 	**/
 	virtual bool		SeekFromEnd(int64 NewPositionRelativeToEnd = 0) = 0;
 
-	/**
-	* Read bytes from the file.
-	* @param Destination	Buffer to holds the results, should be at least BytesToRead in size.
-	* @param BytesToRead	Number of bytes to read into the destination.
-	* @return				true if the operation completed successfully.
+	/** 
+	 * Read bytes from the file.
+	 * @param Destination	Buffer to holds the results, should be at least BytesToRead in size.
+	 * @param BytesToRead	Number of bytes to read into the destination.
+	 * @return				true if the operation completed successfully.
 	**/
 	virtual bool		Read(uint8* Destination, int64 BytesToRead) = 0;
 
-	/**
-	* Write bytes to the file.
-	* @param Source		Buffer to write, should be at least BytesToWrite in size.
-	* @param BytesToWrite	Number of bytes to write.
-	* @return				true if the operation completed successfully.
+	/** 
+	 * Write bytes to the file.
+	 * @param Source		Buffer to write, should be at least BytesToWrite in size.
+	 * @param BytesToWrite	Number of bytes to write.
+	 * @return				true if the operation completed successfully.
 	**/
 	virtual bool		Write(const uint8* Source, int64 BytesToWrite) = 0;
 
@@ -101,8 +104,8 @@ public:
 
 
 /**
-* Contains the information that's returned from stat'ing a file or directory
-*/
+ * Contains the information that's returned from stat'ing a file or directory 
+ */
 struct FFileStatData
 {
 	FFileStatData()
@@ -116,7 +119,7 @@ struct FFileStatData
 	{
 	}
 
-	FFileStatData(FDateTime InCreationTime, FDateTime InAccessTime, FDateTime InModificationTime, const int64 InFileSize, const bool InIsDirectory, const bool InIsReadOnly)
+	FFileStatData(FDateTime InCreationTime, FDateTime InAccessTime,	FDateTime InModificationTime, const int64 InFileSize, const bool InIsDirectory, const bool InIsReadOnly)
 		: CreationTime(InCreationTime)
 		, AccessTime(InAccessTime)
 		, ModificationTime(InModificationTime)
@@ -127,13 +130,13 @@ struct FFileStatData
 	{
 	}
 
-	/** The time that the file or directory was originally created, or YDateTime::MinValue if the creation time is unknown */
+	/** The time that the file or directory was originally created, or FDateTime::MinValue if the creation time is unknown */
 	FDateTime CreationTime;
 
-	/** The time that the file or directory was last accessed, or YDateTime::MinValue if the access time is unknown */
+	/** The time that the file or directory was last accessed, or FDateTime::MinValue if the access time is unknown */
 	FDateTime AccessTime;
 
-	/** The time the the file or directory was last modified, or YDateTime::MinValue if the modification time is unknown */
+	/** The time the the file or directory was last modified, or FDateTime::MinValue if the modification time is unknown */
 	FDateTime ModificationTime;
 
 	/** Size of the file (in bytes), or -1 if the file size is unknown */
@@ -164,44 +167,44 @@ public:
 	virtual ~IPlatformFile() {}
 
 	/**
-	*	Set whether the sandbox is enabled or not
-	*
-	*	@param	bInEnabled		true to enable the sandbox, false to disable it
-	*/
+	 *	Set whether the sandbox is enabled or not
+	 *
+	 *	@param	bInEnabled		true to enable the sandbox, false to disable it
+	 */
 	virtual void SetSandboxEnabled(bool bInEnabled)
 	{
 	}
 
 	/**
-	*	Returns whether the sandbox is enabled or not
-	*
-	*	@return	bool			true if enabled, false if not
-	*/
+	 *	Returns whether the sandbox is enabled or not
+	 *
+	 *	@return	bool			true if enabled, false if not
+	 */
 	virtual bool IsSandboxEnabled() const
 	{
 		return false;
 	}
 
 	/**
-	* Checks if this platform file should be used even though it was not asked to be.
-	* i.e. pak files exist on disk so we should use a pak file
-	*/
+	 * Checks if this platform file should be used even though it was not asked to be.
+	 * i.e. pak files exist on disk so we should use a pak file
+	 */
 	virtual bool ShouldBeUsed(IPlatformFile* Inner, const TCHAR* CmdLine) const
 	{
 		return false;
 	}
 
 	/**
-	* Initializes platform file.
-	*
-	* @param Inner Platform file to wrap by this file.
-	* @param CmdLine Command line to parse.
-	* @return true if the initialization was successful, false otherise. */
+	 * Initializes platform file.
+	 *
+	 * @param Inner Platform file to wrap by this file.
+	 * @param CmdLine Command line to parse.
+	 * @return true if the initialization was successful, false otherise. */
 	virtual bool		Initialize(IPlatformFile* Inner, const TCHAR* CmdLine) = 0;
 
 	/**
-	* Performs initialization of the platform file after it has become the active (FPlatformFileManager.GetPlatformFile() will return this
-	*/
+	 * Performs initialization of the platform file after it has become the active (FPlatformFileManager.GetPlatformFile() will return this
+	 */
 	virtual void		InitializeAfterSetActive() { }
 
 	/**
@@ -210,8 +213,8 @@ public:
 	virtual void		InitializeNewAsyncIO() { }
 
 	/**
-	* Identifies any platform specific paths that are guaranteed to be local (i.e. cache, scratch space)
-	*/
+	 * Identifies any platform specific paths that are guaranteed to be local (i.e. cache, scratch space)
+	 */
 	virtual void		AddLocalDirectories(TArray<FString> &LocalDirectories)
 	{
 		if (GetLowerLevel())
@@ -246,22 +249,22 @@ public:
 	virtual bool		MoveFile(const TCHAR* To, const TCHAR* From) = 0;
 	/** Attempt to change the read only status of a file. Return true if successful. **/
 	virtual bool		SetReadOnly(const TCHAR* Filename, bool bNewReadOnlyValue) = 0;
-	/** Return the modification time of a file. Returns YDateTime::MinValue() on failure **/
+	/** Return the modification time of a file. Returns FDateTime::MinValue() on failure **/
 	virtual FDateTime	GetTimeStamp(const TCHAR* Filename) = 0;
 	/** Sets the modification time of a file **/
 	virtual void		SetTimeStamp(const TCHAR* Filename, FDateTime DateTime) = 0;
-	/** Return the last access time of a file. Returns YDateTime::MinValue() on failure **/
+	/** Return the last access time of a file. Returns FDateTime::MinValue() on failure **/
 	virtual FDateTime	GetAccessTimeStamp(const TCHAR* Filename) = 0;
 	/** For case insensitive filesystems, returns the full path of the file with the same case as in the filesystem */
 	virtual FString GetFilenameOnDisk(const TCHAR* Filename) = 0;
 
 	/** Attempt to open a file for reading.
-	*
-	* @param Filename file to be opened
-	* @param bAllowWrite (applies to certain platforms only) whether this file is allowed to be written to by other processes. This flag is needed to open files that are currently being written to as well.
-	*
-	* @return If successful will return a non-nullptr pointer. Close the file by delete'ing the handle.
-	*/
+	 *
+	 * @param Filename file to be opened
+	 * @param bAllowWrite (applies to certain platforms only) whether this file is allowed to be written to by other processes. This flag is needed to open files that are currently being written to as well.
+	 *
+	 * @return If successful will return a non-nullptr pointer. Close the file by delete'ing the handle.
+	 */
 	virtual IFileHandle*	OpenRead(const TCHAR* Filename, bool bAllowWrite = false) = 0;
 	/** Attempt to open a file for writing. If successful will return a non-nullptr pointer. Close the file by delete'ing the handle. **/
 	virtual IFileHandle*	OpenWrite(const TCHAR* Filename, bool bAppend = false, bool bAllowRead = false) = 0;
@@ -280,11 +283,11 @@ public:
 	class FDirectoryVisitor
 	{
 	public:
-		/**
-		* Callback for a single file or a directory in a directory iteration.
-		* @param FilenameOrDirectory		If bIsDirectory is true, this is a directory (with no trailing path delimiter), otherwise it is a file name.
-		* @param bIsDirectory				true if FilenameOrDirectory is a directory.
-		* @return							true if the iteration should continue.
+		/** 
+		 * Callback for a single file or a directory in a directory iteration.
+		 * @param FilenameOrDirectory		If bIsDirectory is true, this is a directory (with no trailing path delimiter), otherwise it is a file name.
+		 * @param bIsDirectory				true if FilenameOrDirectory is a directory.
+		 * @return							true if the iteration should continue.
 		**/
 		virtual bool Visit(const TCHAR* FilenameOrDirectory, bool bIsDirectory) = 0;
 	};
@@ -293,28 +296,28 @@ public:
 	class FDirectoryStatVisitor
 	{
 	public:
-		/**
-		* Callback for a single file or a directory in a directory iteration.
-		* @param FilenameOrDirectory		If bIsDirectory is true, this is a directory (with no trailing path delimiter), otherwise it is a file name.
-		* @param StatData					The stat data for the file or directory.
-		* @return							true if the iteration should continue.
+		/** 
+		 * Callback for a single file or a directory in a directory iteration.
+		 * @param FilenameOrDirectory		If bIsDirectory is true, this is a directory (with no trailing path delimiter), otherwise it is a file name.
+		 * @param StatData					The stat data for the file or directory.
+		 * @return							true if the iteration should continue.
 		**/
 		virtual bool Visit(const TCHAR* FilenameOrDirectory, const FFileStatData& StatData) = 0;
 	};
 
-	/**
-	* Call the Visit function of the visitor once for each file or directory in a single directory. This function does not explore subdirectories.
-	* @param Directory		The directory to iterate the contents of.
-	* @param Visitor		Visitor to call for each element of the directory
-	* @return				false if the directory did not exist or if the visitor returned false.
+	/** 
+	 * Call the Visit function of the visitor once for each file or directory in a single directory. This function does not explore subdirectories.
+	 * @param Directory		The directory to iterate the contents of.
+	 * @param Visitor		Visitor to call for each element of the directory
+	 * @return				false if the directory did not exist or if the visitor returned false.
 	**/
 	virtual bool		IterateDirectory(const TCHAR* Directory, FDirectoryVisitor& Visitor) = 0;
 
-	/**
-	* Call the Visit function of the visitor once for each file or directory in a single directory. This function does not explore subdirectories.
-	* @param Directory		The directory to iterate the contents of.
-	* @param Visitor		Visitor to call for each element of the directory
-	* @return				false if the directory did not exist or if the visitor returned false.
+	/** 
+	 * Call the Visit function of the visitor once for each file or directory in a single directory. This function does not explore subdirectories.
+	 * @param Directory		The directory to iterate the contents of.
+	 * @param Visitor		Visitor to call for each element of the directory
+	 * @return				false if the directory did not exist or if the visitor returned false.
 	**/
 	virtual bool		IterateDirectoryStat(const TCHAR* Directory, FDirectoryStatVisitor& Visitor) = 0;
 
@@ -333,72 +336,72 @@ public:
 
 	virtual void GetTimeStampPair(const TCHAR* PathA, const TCHAR* PathB, FDateTime& OutTimeStampA, FDateTime& OutTimeStampB);
 
-	/**
-	* Call the Visit function of the visitor once for each file or directory in a directory tree. This function explores subdirectories.
-	* @param Directory		The directory to iterate the contents of, recursively.
-	* @param Visitor		Visitor to call for each element of the directory and each element of all subdirectories.
-	* @return				false if the directory did not exist or if the visitor returned false.
+	/** 
+	 * Call the Visit function of the visitor once for each file or directory in a directory tree. This function explores subdirectories.
+	 * @param Directory		The directory to iterate the contents of, recursively.
+	 * @param Visitor		Visitor to call for each element of the directory and each element of all subdirectories.
+	 * @return				false if the directory did not exist or if the visitor returned false.
 	**/
 	virtual bool IterateDirectoryRecursively(const TCHAR* Directory, FDirectoryVisitor& Visitor);
 
-	/**
-	* Call the Visit function of the visitor once for each file or directory in a directory tree. This function explores subdirectories.
-	* @param Directory		The directory to iterate the contents of, recursively.
-	* @param Visitor		Visitor to call for each element of the directory and each element of all subdirectories.
-	* @return				false if the directory did not exist or if the visitor returned false.
+	/** 
+	 * Call the Visit function of the visitor once for each file or directory in a directory tree. This function explores subdirectories.
+	 * @param Directory		The directory to iterate the contents of, recursively.
+	 * @param Visitor		Visitor to call for each element of the directory and each element of all subdirectories.
+	 * @return				false if the directory did not exist or if the visitor returned false.
 	**/
 	virtual bool IterateDirectoryStatRecursively(const TCHAR* Directory, FDirectoryStatVisitor& Visitor);
 
-	/**
-	* Delete all files and subdirectories in a directory, then delete the directory itself
-	* @param Directory		The directory to delete.
-	* @return				true if the directory was deleted or did not exist.
+	/** 
+	 * Delete all files and subdirectories in a directory, then delete the directory itself
+	 * @param Directory		The directory to delete.
+	 * @return				true if the directory was deleted or did not exist.
 	**/
 	virtual bool DeleteDirectoryRecursively(const TCHAR* Directory);
 
 	/** Create a directory, including any parent directories and return true if the directory was created or already existed. **/
 	virtual bool CreateDirectoryTree(const TCHAR* Directory);
 
-	/**
-	* Copy a file. This will fail if the destination file already exists.
-	* @param To				File to copy to.
-	* @param From				File to copy from.
-	* @param ReadFlags			Source file read options.
-	* @param WriteFlags		Destination file write options.
-	* @return			true if the file was copied sucessfully.
+	/** 
+	 * Copy a file. This will fail if the destination file already exists.
+	 * @param To				File to copy to.
+	 * @param From				File to copy from.
+	 * @param ReadFlags			Source file read options.
+	 * @param WriteFlags		Destination file write options.
+	 * @return			true if the file was copied sucessfully.
 	**/
 	virtual bool CopyFile(const TCHAR* To, const TCHAR* From, EPlatformFileRead ReadFlags = EPlatformFileRead::None, EPlatformFileWrite WriteFlags = EPlatformFileWrite::None);
 
-	/**
-	* Copy a file or a hierarchy of files (directory).
-	* @param DestinationDirectory			Target path (either absolute or relative) to copy to - always a directory! (e.g. "/home/dest/").
-	* @param Source						Source file (or directory) to copy (e.g. "/home/source/stuff").
-	* @param bOverwriteAllExisting			Whether to overwrite everything that exists at target
-	* @return								true if operation completed successfully.
-	*/
+	/** 
+	 * Copy a file or a hierarchy of files (directory).
+	 * @param DestinationDirectory			Target path (either absolute or relative) to copy to - always a directory! (e.g. "/home/dest/").
+	 * @param Source						Source file (or directory) to copy (e.g. "/home/source/stuff").
+	 * @param bOverwriteAllExisting			Whether to overwrite everything that exists at target
+	 * @return								true if operation completed successfully.
+	 */
 	virtual bool CopyDirectoryTree(const TCHAR* DestinationDirectory, const TCHAR* Source, bool bOverwriteAllExisting);
 
 	/**
-	* Converts passed in filename to use an absolute path (for reading).
-	*
-	* @param	Filename	filename to convert to use an absolute path, safe to pass in already using absolute path
-	*
-	* @return	filename using absolute path
-	*/
-	virtual FString ConvertToAbsolutePathForExternalAppForRead(const TCHAR* Filename);
+	 * Converts passed in filename to use an absolute path (for reading).
+	 *
+	 * @param	Filename	filename to convert to use an absolute path, safe to pass in already using absolute path
+	 * 
+	 * @return	filename using absolute path
+	 */
+	virtual FString ConvertToAbsolutePathForExternalAppForRead( const TCHAR* Filename );
 
 	/**
-	* Converts passed in filename to use an absolute path (for writing)
-	*
-	* @param	Filename	filename to convert to use an absolute path, safe to pass in already using absolute path
-	*
-	* @return	filename using absolute path
-	*/
-	virtual FString ConvertToAbsolutePathForExternalAppForWrite(const TCHAR* Filename);
+	 * Converts passed in filename to use an absolute path (for writing)
+	 *
+	 * @param	Filename	filename to convert to use an absolute path, safe to pass in already using absolute path
+	 * 
+	 * @return	filename using absolute path
+	 */
+	virtual FString ConvertToAbsolutePathForExternalAppForWrite( const TCHAR* Filename );
 
 	/**
-	* Helper class to send/receive data to the file server function
-	*/
+	 * Helper class to send/receive data to the file server function
+	 */
 	class IFileServerMessageHandler
 	{
 	public:
@@ -410,13 +413,13 @@ public:
 	};
 
 	/**
-	* Sends a message to the file server, and will block until it's complete. Will return
-	* immediately if the file manager doesn't support talking to a server.
-	*
-	* @param Message	The string message to send to the server
-	*
-	* @return			true if the message was sent to server and it returned success, or false if there is no server, or the command failed
-	*/
+	 * Sends a message to the file server, and will block until it's complete. Will return 
+	 * immediately if the file manager doesn't support talking to a server.
+	 *
+	 * @param Message	The string message to send to the server
+	 *
+	 * @return			true if the message was sent to server and it returned success, or false if there is no server, or the command failed
+	 */
 	virtual bool SendMessageToServer(const TCHAR* Message, IFileServerMessageHandler* Handler)
 	{
 		// by default, IPlatformFile's can't talk to a server

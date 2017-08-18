@@ -15,7 +15,7 @@
  * @param	InCompressedData	Array of bytes that is holding compressed data
  * @param	InCompressionFlags	Compression flags that were used to compress data
  */
-YArchiveLoadCompressedProxy::YArchiveLoadCompressedProxy( const TArray<uint8>& InCompressedData, ECompressionFlags InCompressionFlags )
+FArchiveLoadCompressedProxy::FArchiveLoadCompressedProxy( const TArray<uint8>& InCompressedData, ECompressionFlags InCompressionFlags )
 :	CompressedData(InCompressedData)
 ,	CompressionFlags(InCompressionFlags)
 {
@@ -33,7 +33,7 @@ YArchiveLoadCompressedProxy::YArchiveLoadCompressedProxy( const TArray<uint8>& I
 }
 
 /** Destructor, freeing temporary memory. */
-YArchiveLoadCompressedProxy::~YArchiveLoadCompressedProxy()
+FArchiveLoadCompressedProxy::~FArchiveLoadCompressedProxy()
 {
 	// Free temporary memory allocated.
 	FMemory::Free( TmpDataStart );
@@ -45,7 +45,7 @@ YArchiveLoadCompressedProxy::~YArchiveLoadCompressedProxy()
 /**
  * Flushes tmp data to array.
  */
-void YArchiveLoadCompressedProxy::DecompressMoreData()
+void FArchiveLoadCompressedProxy::DecompressMoreData()
 {
 	// This will call Serialize so we need to indicate that we want to serialize from array.
 	bShouldSerializeFromArray = true;
@@ -62,7 +62,7 @@ void YArchiveLoadCompressedProxy::DecompressMoreData()
  * @param	InData	Pointer to serialize to
  * @param	Count	Number of bytes to read
  */
-void YArchiveLoadCompressedProxy::Serialize( void* InData, int64 Count )
+void FArchiveLoadCompressedProxy::Serialize( void* InData, int64 Count )
 {
 	uint8* DstData = (uint8*) InData;
 	// If counter > 1 it means we're calling recursively and therefore need to write to compressed data.
@@ -107,7 +107,7 @@ void YArchiveLoadCompressedProxy::Serialize( void* InData, int64 Count )
  * Seeks to the passed in position in the stream. This archive only supports forward seeking
  * and implements it by serializing data till it reaches the position.
  */
-void YArchiveLoadCompressedProxy::Seek( int64 InPos )
+void FArchiveLoadCompressedProxy::Seek( int64 InPos )
 {
 	int64 CurrentPos = Tell();
 	int64 Difference = InPos - CurrentPos;
@@ -120,7 +120,7 @@ void YArchiveLoadCompressedProxy::Seek( int64 InPos )
 /**
  * @return current position in uncompressed stream in bytes.
  */
-int64 YArchiveLoadCompressedProxy::Tell()
+int64 FArchiveLoadCompressedProxy::Tell()
 {
 	return RawBytesSerialized;
 }

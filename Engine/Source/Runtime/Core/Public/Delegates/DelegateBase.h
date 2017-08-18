@@ -12,14 +12,14 @@
 struct FWeakObjectPtr;
 
 #if !defined(_WIN32) || defined(_WIN64)
-// Let delegates store up to 32 bytes which are 16-byte aligned before we heap allocate
-typedef TAlignedBytes<16, 16> AlignedInlineDelegateType;
-typedef TInlineAllocator<2> DelegateAllocatorType;
+	// Let delegates store up to 32 bytes which are 16-byte aligned before we heap allocate
+	typedef TAlignedBytes<16, 16> AlignedInlineDelegateType;
+	typedef TInlineAllocator<2> DelegateAllocatorType;
 #else
-// ... except on Win32, because we can't pass 16-byte aligned types by value, as some delegates are
-// so we'll just keep it heap-allocated, which are always sufficiently aligned.
-typedef TAlignedBytes<16, 8> AlignedInlineDelegateType;
-typedef FHeapAllocator DelegateAllocatorType;
+	// ... except on Win32, because we can't pass 16-byte aligned types by value, as some delegates are
+	// so we'll just keep it heap-allocated, which are always sufficiently aligned.
+	typedef TAlignedBytes<16, 8> AlignedInlineDelegateType;
+	typedef FHeapAllocator DelegateAllocatorType;
 #endif
 
 
@@ -29,8 +29,8 @@ template <typename ObjectPtrType>
 class FMulticastDelegateBase;
 
 /**
-* Base class for unicast delegates.
-*/
+ * Base class for unicast delegates.
+ */
 class FDelegateBase
 {
 	friend class FMulticastDelegateBase<FWeakObjectPtr>;
@@ -38,18 +38,18 @@ class FDelegateBase
 public:
 
 	/**
-	* Creates and initializes a new instance.
-	*
-	* @param InDelegateInstance The delegate instance to assign.
-	*/
+	 * Creates and initializes a new instance.
+	 *
+	 * @param InDelegateInstance The delegate instance to assign.
+	 */
 	explicit FDelegateBase()
 		: DelegateSize(0)
 	{
 	}
 
 	/**
-	* Move constructor.
-	*/
+	 * Move constructor.
+	 */
 	FDelegateBase(FDelegateBase&& Other)
 	{
 		DelegateAllocator.MoveToEmpty(Other.DelegateAllocator);
@@ -58,8 +58,8 @@ public:
 	}
 
 	/**
-	* Move assignment.
-	*/
+	 * Move assignment.
+	 */
 	FDelegateBase& operator=(FDelegateBase&& Other)
 	{
 		Unbind();
@@ -72,13 +72,13 @@ public:
 #if USE_DELEGATE_TRYGETBOUNDFUNCTIONNAME
 
 	/**
-	* Tries to return the name of a bound function.  Returns NAME_None if the delegate is unbound or
-	* a binding name is unavailable.
-	*
-	* Note: Only intended to be used to aid debugging of delegates.
-	*
-	* @return The name of the bound function, NAME_None if no name was available.
-	*/
+	 * Tries to return the name of a bound function.  Returns NAME_None if the delegate is unbound or
+	 * a binding name is unavailable.
+	 *
+	 * Note: Only intended to be used to aid debugging of delegates.
+	 *
+	 * @return The name of the bound function, NAME_None if no name was available.
+	 */
 	FName TryGetBoundFunctionName() const
 	{
 		if (IDelegateInstance* Ptr = GetDelegateInstanceProtected())
@@ -92,11 +92,11 @@ public:
 #endif
 
 	/**
-	* If this is a UFunction or UObject delegate, return the UObject.
-	*
-	* @return The object associated with this delegate if there is one.
-	*/
-	inline class UObject* GetUObject() const
+	 * If this is a UFunction or UObject delegate, return the UObject.
+	 *
+	 * @return The object associated with this delegate if there is one.
+	 */
+	inline class UObject* GetUObject( ) const
 	{
 		if (IDelegateInstance* Ptr = GetDelegateInstanceProtected())
 		{
@@ -107,23 +107,23 @@ public:
 	}
 
 	/**
-	* Checks to see if the user object bound to this delegate is still valid.
-	*
-	* @return True if the user object is still valid and it's safe to execute the function call.
-	*/
-	inline bool IsBound() const
+	 * Checks to see if the user object bound to this delegate is still valid.
+	 *
+	 * @return True if the user object is still valid and it's safe to execute the function call.
+	 */
+	inline bool IsBound( ) const
 	{
 		IDelegateInstance* Ptr = GetDelegateInstanceProtected();
 
 		return Ptr && Ptr->IsSafeToExecute();
 	}
 
-	/**
-	* Checks to see if this delegate is bound to the given user object.
-	*
-	* @return True if this delegate is bound to InUserObject, false otherwise.
-	*/
-	inline bool IsBoundToObject(void const* InUserObject) const
+	/** 
+	 * Checks to see if this delegate is bound to the given user object.
+	 *
+	 * @return True if this delegate is bound to InUserObject, false otherwise.
+	 */
+	inline bool IsBoundToObject( void const* InUserObject ) const
 	{
 		if (!InUserObject)
 		{
@@ -136,9 +136,9 @@ public:
 	}
 
 	/**
-	* Unbinds this delegate
-	*/
-	inline void Unbind()
+	 * Unbinds this delegate
+	 */
+	inline void Unbind( )
 	{
 		if (IDelegateInstance* Ptr = GetDelegateInstanceProtected())
 		{
@@ -149,22 +149,22 @@ public:
 	}
 
 	/**
-	* Gets the delegate instance.
-	*
-	* @return The delegate instance.
-	* @see SetDelegateInstance
-	*/
+	 * Gets the delegate instance.
+	 *
+	 * @return The delegate instance.
+	 * @see SetDelegateInstance
+	 */
 	DEPRECATED(4.11, "GetDelegateInstance has been deprecated - calls to IDelegateInstance::GetUObject() and IDelegateInstance::GetHandle() should call the same functions on the delegate.  Other calls should be reconsidered.")
-		FORCEINLINE IDelegateInstance* GetDelegateInstance() const
+	FORCEINLINE IDelegateInstance* GetDelegateInstance( ) const
 	{
 		return GetDelegateInstanceProtected();
 	}
 
 	/**
-	* Gets a handle to the delegate.
-	*
-	* @return The delegate instance.
-	*/
+	 * Gets a handle to the delegate.
+	 *
+	 * @return The delegate instance.
+	 */
 	inline FDelegateHandle GetHandle() const
 	{
 		FDelegateHandle Result;
@@ -178,12 +178,12 @@ public:
 
 protected:
 	/**
-	* Gets the delegate instance.  Not intended for use by user code.
-	*
-	* @return The delegate instance.
-	* @see SetDelegateInstance
-	*/
-	FORCEINLINE IDelegateInstance* GetDelegateInstanceProtected() const
+	 * Gets the delegate instance.  Not intended for use by user code.
+	 *
+	 * @return The delegate instance.
+	 * @see SetDelegateInstance
+	 */
+	FORCEINLINE IDelegateInstance* GetDelegateInstanceProtected( ) const
 	{
 		return DelegateSize ? (IDelegateInstance*)DelegateAllocator.GetAllocation() : nullptr;
 	}

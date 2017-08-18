@@ -1,9 +1,11 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
 #include "Misc/OutputDevice.h"
 
-class CORE_API YOutputDeviceDebug : public FOutputDevice
+class CORE_API FOutputDeviceDebug : public FOutputDevice
 {
 public:
 	/**

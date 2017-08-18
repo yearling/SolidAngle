@@ -9,7 +9,7 @@
 /**
 * Path helpers for retrieving game dir, engine dir, etc.
 */
-class CORE_API YPaths
+class CORE_API FPaths
 {
 public:
 
@@ -362,7 +362,7 @@ public:
 	static bool IsSamePath(const FString& PathA, const FString& PathB);
 
 	/** Normalize all / and \ to TEXT("/") and remove any trailing TEXT("/") if the character before that is not a TEXT("/") or a colon */
-	static void NormalizeDirectorFName(FString& InPath);
+	static void NormalizeDirectoryName(FString& InPath);
 
 	/**
 	* Takes a fully pathed string and eliminates relative pathing (eg: annihilates ".." with the adjacent directory).

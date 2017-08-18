@@ -1,9 +1,9 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 /*================================================================================
-DelegateInstancesImpl.inl: Inline implementation of delegate bindings.
+	DelegateInstancesImpl.inl: Inline implementation of delegate bindings.
 
-The types declared in this file are for internal use only.
+	The types declared in this file are for internal use only. 
 ================================================================================*/
 
 #pragma once
@@ -23,38 +23,37 @@ class FDelegateHandle;
 enum class ESPMode;
 
 /* Macros for function parameter and delegate payload lists
-*****************************************************************************/
+ *****************************************************************************/
 
 /**
-* Implements a delegate binding for UFunctions.
-*
-* @params UserClass Must be an UObject derived class.
-*/
+ * Implements a delegate binding for UFunctions.
+ *
+ * @params UserClass Must be an UObject derived class.
+ */
 template <class UserClass, typename FuncType, typename... VarTypes>
 class TBaseUFunctionDelegateInstance;
 
 template <class UserClass, typename WrappedRetValType, typename... ParamTypes, typename... VarTypes>
-class TBaseUFunctionDelegateInstance<UserClass, WrappedRetValType(ParamTypes...), VarTypes...> : public IBaseDelegateInstance<typename TUnwrapType<WrappedRetValType>::Type(ParamTypes...)>
+class TBaseUFunctionDelegateInstance<UserClass, WrappedRetValType (ParamTypes...), VarTypes...> : public IBaseDelegateInstance<typename TUnwrapType<WrappedRetValType>::Type (ParamTypes...)>
 {
 public:
 	typedef typename TUnwrapType<WrappedRetValType>::Type RetValType;
 
 private:
-	typedef IBaseDelegateInstance<RetValType(ParamTypes...)>                                  Super;
-	typedef TBaseUFunctionDelegateInstance<UserClass, RetValType(ParamTypes...), VarTypes...> UnwrappedThisType;
+	typedef IBaseDelegateInstance<RetValType (ParamTypes...)>                                  Super;
+	typedef TBaseUFunctionDelegateInstance<UserClass, RetValType (ParamTypes...), VarTypes...> UnwrappedThisType;
 
-	//!!FIXME by zyx
-	//static_assert(TPointerIsConvertibleFromTo<UserClass, const UObjectBase>::Value, "You cannot use UFunction delegates with non UObject classes.");
+	static_assert(TPointerIsConvertibleFromTo<UserClass, const UObjectBase>::Value, "You cannot use UFunction delegates with non UObject classes.");
 
 public:
 	TBaseUFunctionDelegateInstance(UserClass* InUserObject, const FName& InFunctionName, VarTypes... Vars)
-		: FunctionName(InFunctionName)
+		: FunctionName (InFunctionName)
 		, UserObjectPtr(InUserObject)
-		, Payload(Vars...)
-		, Handle(FDelegateHandle::GenerateNewHandle)
+		, Payload      (Vars...)
+		, Handle       (FDelegateHandle::GenerateNewHandle)
 	{
 		check(InFunctionName != NAME_None);
-
+		
 		if (InUserObject != nullptr)
 		{
 			CachedFunction = UserObjectPtr->FindFunctionChecked(InFunctionName);
@@ -73,19 +72,19 @@ public:
 #endif
 
 	// Deprecated
-	virtual FName GetFunctionName() const override
+	virtual FName GetFunctionName( ) const override
 	{
 		return FunctionName;
 	}
 
 	// Deprecated
-	virtual const void* GetRawMethodPtr() const override
+	virtual const void* GetRawMethodPtr( ) const override
 	{
 		return nullptr;
 	}
 
 	// Deprecated
-	virtual const void* GetRawUserObject() const override
+	virtual const void* GetRawUserObject( ) const override
 	{
 		return UserObjectPtr.Get();
 	}
@@ -96,23 +95,23 @@ public:
 		return EDelegateInstanceType::UFunction;
 	}
 
-	virtual UObject* GetUObject() const override
+	virtual UObject* GetUObject( ) const override
 	{
 		return (UObject*)UserObjectPtr.Get();
 	}
 
 	// Deprecated
-	virtual bool HasSameObject(const void* InUserObject) const override
+	virtual bool HasSameObject( const void* InUserObject ) const override
 	{
 		return (UserObjectPtr.Get() == InUserObject);
 	}
 
-	virtual bool IsCompactable() const override
+	virtual bool IsCompactable( ) const override
 	{
 		return !UserObjectPtr.Get(true);
 	}
 
-	virtual bool IsSafeToExecute() const override
+	virtual bool IsSafeToExecute( ) const override
 	{
 		return UserObjectPtr.IsValid();
 	}
@@ -128,7 +127,7 @@ public:
 
 	virtual RetValType Execute(ParamTypes... Params) const override
 	{
-		typedef TPayload<RetValType(ParamTypes..., VarTypes...)> FParmsWithPayload;
+		typedef TPayload<RetValType (ParamTypes..., VarTypes...)> FParmsWithPayload;
 
 		checkSlow(IsSafeToExecute());
 
@@ -144,24 +143,24 @@ public:
 	}
 
 	// Deprecated
-	virtual bool IsSameFunction(const Super& Other) const override
+	virtual bool IsSameFunction( const Super& Other ) const override
 	{
 		// NOTE: Payload data is not currently considered when comparing delegate instances.
 		// See the comment in multi-cast delegate's Remove() method for more information.
 		return ((Other.GetType() == EDelegateInstanceType::UFunction) &&
-			(Other.GetRawUserObject() == GetRawUserObject()) &&
-			(Other.GetFunctionName() == GetFunctionName()));
+				(Other.GetRawUserObject() == GetRawUserObject()) &&
+				(Other.GetFunctionName() == GetFunctionName()));
 	}
 
 public:
 
 	/**
-	* Creates a new UFunction delegate binding for the given user object and function name.
-	*
-	* @param InObject The user object to call the function on.
-	* @param InFunctionName The name of the function call.
-	* @return The new delegate.
-	*/
+	 * Creates a new UFunction delegate binding for the given user object and function name.
+	 *
+	 * @param InObject The user object to call the function on.
+	 * @param InFunctionName The name of the function call.
+	 * @return The new delegate.
+	 */
 	FORCEINLINE static void Create(FDelegateBase& Base, UserClass* InUserObject, const FName& InFunctionName, VarTypes... Vars)
 	{
 		new (Base) UnwrappedThisType(InUserObject, InFunctionName, Vars...);
@@ -170,8 +169,7 @@ public:
 public:
 
 	// Holds the cached UFunction to call.
-	//!!FIXME by zyx
-	//UFunction* CachedFunction;
+	UFunction* CachedFunction;
 
 	// Holds the name of the function to call.
 	FName FunctionName;
@@ -186,17 +184,17 @@ public:
 };
 
 template <class UserClass, typename... ParamTypes, typename... VarTypes>
-class TBaseUFunctionDelegateInstance<UserClass, void(ParamTypes...), VarTypes...> : public TBaseUFunctionDelegateInstance<UserClass, TTypeWrapper<void>(ParamTypes...), VarTypes...>
+class TBaseUFunctionDelegateInstance<UserClass, void (ParamTypes...), VarTypes...> : public TBaseUFunctionDelegateInstance<UserClass, TTypeWrapper<void> (ParamTypes...), VarTypes...>
 {
-	typedef TBaseUFunctionDelegateInstance<UserClass, TTypeWrapper<void>(ParamTypes...), VarTypes...> Super;
+	typedef TBaseUFunctionDelegateInstance<UserClass, TTypeWrapper<void> (ParamTypes...), VarTypes...> Super;
 
 public:
 	/**
-	* Creates and initializes a new instance.
-	*
-	* @param InUserObject The UObject to call the function on.
-	* @param InFunctionName The name of the function call.
-	*/
+	 * Creates and initializes a new instance.
+	 *
+	 * @param InUserObject The UObject to call the function on.
+	 * @param InFunctionName The name of the function call.
+	 */
 	TBaseUFunctionDelegateInstance(UserClass* InUserObject, const FName& InFunctionName, VarTypes... Vars)
 		: Super(InUserObject, InFunctionName, Vars...)
 	{
@@ -217,32 +215,32 @@ public:
 
 
 /* Delegate binding types
-*****************************************************************************/
+ *****************************************************************************/
 
 /**
-* Implements a delegate binding for shared pointer member functions.
-*/
+ * Implements a delegate binding for shared pointer member functions.
+ */
 template <bool bConst, class UserClass, ESPMode SPMode, typename FuncType, typename... VarTypes>
 class TBaseSPMethodDelegateInstance;
 
 template <bool bConst, class UserClass, ESPMode SPMode, typename WrappedRetValType, typename... ParamTypes, typename... VarTypes>
-class TBaseSPMethodDelegateInstance<bConst, UserClass, SPMode, WrappedRetValType(ParamTypes...), VarTypes...> : public IBaseDelegateInstance<typename TUnwrapType<WrappedRetValType>::Type(ParamTypes...)>
+class TBaseSPMethodDelegateInstance<bConst, UserClass, SPMode, WrappedRetValType (ParamTypes...), VarTypes...> : public IBaseDelegateInstance<typename TUnwrapType<WrappedRetValType>::Type (ParamTypes...)>
 {
 public:
 	typedef typename TUnwrapType<WrappedRetValType>::Type RetValType;
 
 private:
-	typedef IBaseDelegateInstance<RetValType(ParamTypes...)>                                                 Super;
-	typedef TBaseSPMethodDelegateInstance<bConst, UserClass, SPMode, RetValType(ParamTypes...), VarTypes...> UnwrappedThisType;
+	typedef IBaseDelegateInstance<RetValType (ParamTypes...)>                                                 Super;
+	typedef TBaseSPMethodDelegateInstance<bConst, UserClass, SPMode, RetValType (ParamTypes...), VarTypes...> UnwrappedThisType;
 
 public:
-	typedef typename TMemFunPtrType<bConst, UserClass, RetValType(ParamTypes..., VarTypes...)>::Type FMethodPtr;
+	typedef typename TMemFunPtrType<bConst, UserClass, RetValType (ParamTypes..., VarTypes...)>::Type FMethodPtr;
 
 	TBaseSPMethodDelegateInstance(const TSharedPtr<UserClass, SPMode>& InUserObject, FMethodPtr InMethodPtr, VarTypes... Vars)
 		: UserObject(InUserObject)
-		, MethodPtr(InMethodPtr)
-		, Payload(Vars...)
-		, Handle(FDelegateHandle::GenerateNewHandle)
+		, MethodPtr (InMethodPtr)
+		, Payload   (Vars...)
+		, Handle    (FDelegateHandle::GenerateNewHandle)
 	{
 		// NOTE: Shared pointer delegates are allowed to have a null incoming object pointer.  Weak pointers can expire,
 		//       an it is possible for a copy of a delegate instance to end up with a null pointer.
@@ -335,11 +333,11 @@ public:
 	}
 
 	// Deprecated
-	virtual bool IsSameFunction(const Super& InOtherDelegate) const override
+	virtual bool IsSameFunction( const Super& InOtherDelegate ) const override
 	{
 		// NOTE: Payload data is not currently considered when comparing delegate instances.
 		// See the comment in multi-cast delegate's Remove() method for more information.
-		if ((InOtherDelegate.GetType() == EDelegateInstanceType::SharedPointerMethod) ||
+		if ((InOtherDelegate.GetType() == EDelegateInstanceType::SharedPointerMethod) || 
 			(InOtherDelegate.GetType() == EDelegateInstanceType::ThreadSafeSharedPointerMethod) ||
 			(InOtherDelegate.GetType() == EDelegateInstanceType::RawMethod))
 		{
@@ -352,26 +350,26 @@ public:
 public:
 
 	/**
-	* Creates a new shared pointer delegate binding for the given user object and method pointer.
-	*
-	* @param InUserObjectRef Shared reference to the user's object that contains the class method.
-	* @param InFunc Member function pointer to your class method.
-	* @return The new delegate.
-	*/
+	 * Creates a new shared pointer delegate binding for the given user object and method pointer.
+	 *
+	 * @param InUserObjectRef Shared reference to the user's object that contains the class method.
+	 * @param InFunc Member function pointer to your class method.
+	 * @return The new delegate.
+	 */
 	FORCEINLINE static void Create(FDelegateBase& Base, const TSharedPtr<UserClass, SPMode>& InUserObjectRef, FMethodPtr InFunc, VarTypes... Vars)
 	{
 		new (Base) UnwrappedThisType(InUserObjectRef, InFunc, Vars...);
 	}
 
 	/**
-	* Creates a new shared pointer delegate binding for the given user object and method pointer.
-	*
-	* This overload requires that the supplied object derives from TSharedFromThis.
-	*
-	* @param InUserObject  The user's object that contains the class method.  Must derive from TSharedFromThis.
-	* @param InFunc  Member function pointer to your class method.
-	* @return The new delegate.
-	*/
+	 * Creates a new shared pointer delegate binding for the given user object and method pointer.
+	 *
+	 * This overload requires that the supplied object derives from TSharedFromThis.
+	 *
+	 * @param InUserObject  The user's object that contains the class method.  Must derive from TSharedFromThis.
+	 * @param InFunc  Member function pointer to your class method.
+	 * @return The new delegate.
+	 */
 	FORCEINLINE static void Create(FDelegateBase& Base, UserClass* InUserObject, FMethodPtr InFunc, VarTypes... Vars)
 	{
 		// We expect the incoming InUserObject to derived from TSharedFromThis.
@@ -382,17 +380,17 @@ public:
 protected:
 
 	/**
-	* Internal, inlined and non-virtual version of GetRawUserObject interface.
-	*/
-	FORCEINLINE const void* GetRawUserObjectInternal() const
+	 * Internal, inlined and non-virtual version of GetRawUserObject interface.
+	 */
+	FORCEINLINE const void* GetRawUserObjectInternal( ) const
 	{
 		return UserObject.Pin().Get();
 	}
 
 	/**
-	* Internal, inlined and non-virtual version of GetRawMethod interface.
-	*/
-	FORCEINLINE const void* GetRawMethodPtrInternal() const
+	 * Internal, inlined and non-virtual version of GetRawMethod interface.
+	 */
+	FORCEINLINE const void* GetRawMethodPtrInternal( ) const
 	{
 		return *(const void**)&MethodPtr;
 	}
@@ -411,17 +409,17 @@ protected:
 };
 
 template <bool bConst, class UserClass, ESPMode SPMode, typename... ParamTypes, typename... VarTypes>
-class TBaseSPMethodDelegateInstance<bConst, UserClass, SPMode, void(ParamTypes...), VarTypes...> : public TBaseSPMethodDelegateInstance<bConst, UserClass, SPMode, TTypeWrapper<void>(ParamTypes...), VarTypes...>
+class TBaseSPMethodDelegateInstance<bConst, UserClass, SPMode, void (ParamTypes...), VarTypes...> : public TBaseSPMethodDelegateInstance<bConst, UserClass, SPMode, TTypeWrapper<void> (ParamTypes...), VarTypes...>
 {
-	typedef TBaseSPMethodDelegateInstance<bConst, UserClass, SPMode, TTypeWrapper<void>(ParamTypes...), VarTypes...> Super;
+	typedef TBaseSPMethodDelegateInstance<bConst, UserClass, SPMode, TTypeWrapper<void> (ParamTypes...), VarTypes...> Super;
 
 public:
 	/**
-	* Creates and initializes a new instance.
-	*
-	* @param InUserObject A shared reference to an arbitrary object (templated) that hosts the member function.
-	* @param InMethodPtr C++ member function pointer for the method to bind.
-	*/
+	 * Creates and initializes a new instance.
+	 *
+	 * @param InUserObject A shared reference to an arbitrary object (templated) that hosts the member function.
+	 * @param InMethodPtr C++ member function pointer for the method to bind.
+	 */
 	TBaseSPMethodDelegateInstance(const TSharedPtr<UserClass, SPMode>& InUserObject, typename Super::FMethodPtr InMethodPtr, VarTypes... Vars)
 		: Super(InUserObject, InMethodPtr, Vars...)
 	{
@@ -444,38 +442,37 @@ public:
 
 
 /**
-* Implements a delegate binding for C++ member functions.
-*/
+ * Implements a delegate binding for C++ member functions.
+ */
 template <bool bConst, class UserClass, typename FuncType, typename... VarTypes>
 class TBaseRawMethodDelegateInstance;
 
 template <bool bConst, class UserClass, typename WrappedRetValType, typename... ParamTypes, typename... VarTypes>
-class TBaseRawMethodDelegateInstance<bConst, UserClass, WrappedRetValType(ParamTypes...), VarTypes...> : public IBaseDelegateInstance<typename TUnwrapType<WrappedRetValType>::Type(ParamTypes...)>
+class TBaseRawMethodDelegateInstance<bConst, UserClass, WrappedRetValType (ParamTypes...), VarTypes...> : public IBaseDelegateInstance<typename TUnwrapType<WrappedRetValType>::Type (ParamTypes...)>
 {
 public:
 	typedef typename TUnwrapType<WrappedRetValType>::Type RetValType;
 
 private:
-	//!!FIXME by zyx
-	//static_assert(!TPointerIsConvertibleFromTo<UserClass, const UObjectBase>::Value, "You cannot use raw method delegates with UObjects.");
+	static_assert(!TPointerIsConvertibleFromTo<UserClass, const UObjectBase>::Value, "You cannot use raw method delegates with UObjects.");
 
-	typedef IBaseDelegateInstance<RetValType(ParamTypes...)>                                          Super;
-	typedef TBaseRawMethodDelegateInstance<bConst, UserClass, RetValType(ParamTypes...), VarTypes...> UnwrappedThisType;
+	typedef IBaseDelegateInstance<RetValType (ParamTypes...)>                                          Super;
+	typedef TBaseRawMethodDelegateInstance<bConst, UserClass, RetValType (ParamTypes...), VarTypes...> UnwrappedThisType;
 
 public:
-	typedef typename TMemFunPtrType<bConst, UserClass, RetValType(ParamTypes..., VarTypes...)>::Type FMethodPtr;
+	typedef typename TMemFunPtrType<bConst, UserClass, RetValType (ParamTypes..., VarTypes...)>::Type FMethodPtr;
 
 	/**
-	* Creates and initializes a new instance.
-	*
-	* @param InUserObject An arbitrary object (templated) that hosts the member function.
-	* @param InMethodPtr C++ member function pointer for the method to bind.
-	*/
+	 * Creates and initializes a new instance.
+	 *
+	 * @param InUserObject An arbitrary object (templated) that hosts the member function.
+	 * @param InMethodPtr C++ member function pointer for the method to bind.
+	 */
 	TBaseRawMethodDelegateInstance(UserClass* InUserObject, FMethodPtr InMethodPtr, VarTypes... Vars)
 		: UserObject(InUserObject)
-		, MethodPtr(InMethodPtr)
-		, Payload(Vars...)
-		, Handle(FDelegateHandle::GenerateNewHandle)
+		, MethodPtr (InMethodPtr)
+		, Payload   (Vars...)
+		, Handle    (FDelegateHandle::GenerateNewHandle)
 	{
 		// Non-expirable delegates must always have a non-null object pointer on creation (otherwise they could never execute.)
 		check(InUserObject != nullptr && MethodPtr != nullptr);
@@ -493,41 +490,41 @@ public:
 #endif
 
 	// Deprecated
-	virtual FName GetFunctionName() const override
+	virtual FName GetFunctionName( ) const override
 	{
 		return NAME_None;
 	}
 
 	// Deprecated
-	virtual const void* GetRawMethodPtr() const override
+	virtual const void* GetRawMethodPtr( ) const override
 	{
 		return GetRawMethodPtrInternal();
 	}
 
 	// Deprecated
-	virtual const void* GetRawUserObject() const override
+	virtual const void* GetRawUserObject( ) const override
 	{
 		return GetRawUserObjectInternal();
 	}
 
 	// Deprecated
-	virtual EDelegateInstanceType::Type GetType() const override
+	virtual EDelegateInstanceType::Type GetType( ) const override
 	{
 		return EDelegateInstanceType::RawMethod;
 	}
 
-	virtual UObject* GetUObject() const override
+	virtual UObject* GetUObject( ) const override
 	{
 		return nullptr;
 	}
 
 	// Deprecated
-	virtual bool HasSameObject(const void* InUserObject) const override
+	virtual bool HasSameObject( const void* InUserObject ) const override
 	{
 		return UserObject == InUserObject;
 	}
 
-	virtual bool IsSafeToExecute() const override
+	virtual bool IsSafeToExecute( ) const override
 	{
 		// We never know whether or not it is safe to deference a C++ pointer, but we have to
 		// trust the user in this case.  Prefer using a shared-pointer based delegate type instead!
@@ -565,11 +562,11 @@ public:
 	}
 
 	// Deprecated
-	virtual bool IsSameFunction(const Super& InOtherDelegate) const override
+	virtual bool IsSameFunction( const Super& InOtherDelegate ) const override
 	{
 		// NOTE: Payload data is not currently considered when comparing delegate instances.
 		// See the comment in multi-cast delegate's Remove() method for more information.
-		if ((InOtherDelegate.GetType() == EDelegateInstanceType::RawMethod) ||
+		if ((InOtherDelegate.GetType() == EDelegateInstanceType::RawMethod) || 
 			(InOtherDelegate.GetType() == EDelegateInstanceType::UObjectMethod) ||
 			(InOtherDelegate.GetType() == EDelegateInstanceType::SharedPointerMethod) ||
 			(InOtherDelegate.GetType() == EDelegateInstanceType::ThreadSafeSharedPointerMethod))
@@ -583,12 +580,12 @@ public:
 public:
 
 	/**
-	* Creates a new raw method delegate binding for the given user object and function pointer.
-	*
-	* @param InUserObject User's object that contains the class method.
-	* @param InFunc Member function pointer to your class method.
-	* @return The new delegate.
-	*/
+	 * Creates a new raw method delegate binding for the given user object and function pointer.
+	 *
+	 * @param InUserObject User's object that contains the class method.
+	 * @param InFunc Member function pointer to your class method.
+	 * @return The new delegate.
+	 */
 	FORCEINLINE static void Create(FDelegateBase& Base, UserClass* InUserObject, FMethodPtr InFunc, VarTypes... Vars)
 	{
 		new (Base) UnwrappedThisType(InUserObject, InFunc, Vars...);
@@ -597,17 +594,17 @@ public:
 protected:
 
 	/**
-	* Internal, inlined and non-virtual version of GetRawUserObject interface.
-	*/
-	FORCEINLINE const void* GetRawUserObjectInternal() const
+	 * Internal, inlined and non-virtual version of GetRawUserObject interface.
+	 */
+	FORCEINLINE const void* GetRawUserObjectInternal( ) const
 	{
 		return UserObject;
 	}
 
 	/**
-	* Internal, inlined and non-virtual version of GetRawMethodPtr interface.
-	*/
-	FORCEINLINE const void* GetRawMethodPtrInternal() const
+	 * Internal, inlined and non-virtual version of GetRawMethodPtr interface.
+	 */
+	FORCEINLINE const void* GetRawMethodPtrInternal( ) const
 	{
 		return *(const void**)&MethodPtr;
 	}
@@ -626,17 +623,17 @@ protected:
 };
 
 template <bool bConst, class UserClass, typename... ParamTypes, typename... VarTypes>
-class TBaseRawMethodDelegateInstance<bConst, UserClass, void(ParamTypes...), VarTypes...> : public TBaseRawMethodDelegateInstance<bConst, UserClass, TTypeWrapper<void>(ParamTypes...), VarTypes...>
+class TBaseRawMethodDelegateInstance<bConst, UserClass, void (ParamTypes...), VarTypes...> : public TBaseRawMethodDelegateInstance<bConst, UserClass, TTypeWrapper<void> (ParamTypes...), VarTypes...>
 {
-	typedef TBaseRawMethodDelegateInstance<bConst, UserClass, TTypeWrapper<void>(ParamTypes...), VarTypes...> Super;
+	typedef TBaseRawMethodDelegateInstance<bConst, UserClass, TTypeWrapper<void> (ParamTypes...), VarTypes...> Super;
 
 public:
 	/**
-	* Creates and initializes a new instance.
-	*
-	* @param InUserObject An arbitrary object (templated) that hosts the member function.
-	* @param InMethodPtr C++ member function pointer for the method to bind.
-	*/
+	 * Creates and initializes a new instance.
+	 *
+	 * @param InUserObject An arbitrary object (templated) that hosts the member function.
+	 * @param InMethodPtr C++ member function pointer for the method to bind.
+	 */
 	TBaseRawMethodDelegateInstance(UserClass* InUserObject, typename Super::FMethodPtr InMethodPtr, VarTypes... Vars)
 		: Super(InUserObject, InMethodPtr, Vars...)
 	{
@@ -654,32 +651,31 @@ public:
 
 
 /**
-* Implements a delegate binding for UObject methods.
-*/
+ * Implements a delegate binding for UObject methods.
+ */
 template <bool bConst, class UserClass, typename FuncType, typename... VarTypes>
 class TBaseUObjectMethodDelegateInstance;
 
 template <bool bConst, class UserClass, typename WrappedRetValType, typename... ParamTypes, typename... VarTypes>
-class TBaseUObjectMethodDelegateInstance<bConst, UserClass, WrappedRetValType(ParamTypes...), VarTypes...> : public IBaseDelegateInstance<typename TUnwrapType<WrappedRetValType>::Type(ParamTypes...)>
+class TBaseUObjectMethodDelegateInstance<bConst, UserClass, WrappedRetValType (ParamTypes...), VarTypes...> : public IBaseDelegateInstance<typename TUnwrapType<WrappedRetValType>::Type (ParamTypes...)>
 {
 public:
 	typedef typename TUnwrapType<WrappedRetValType>::Type RetValType;
 
 private:
-	typedef IBaseDelegateInstance<RetValType(ParamTypes...)>                                              Super;
-	typedef TBaseUObjectMethodDelegateInstance<bConst, UserClass, RetValType(ParamTypes...), VarTypes...> UnwrappedThisType;
+	typedef IBaseDelegateInstance<RetValType (ParamTypes...)>                                              Super;
+	typedef TBaseUObjectMethodDelegateInstance<bConst, UserClass, RetValType (ParamTypes...), VarTypes...> UnwrappedThisType;
 
-	//!!FIXME by zyx
-	//static_assert(TPointerIsConvertibleFromTo<UserClass, const UObjectBase>::Value, "You cannot use UObject method delegates with raw pointers.");
+	static_assert(TPointerIsConvertibleFromTo<UserClass, const UObjectBase>::Value, "You cannot use UObject method delegates with raw pointers.");
 
 public:
-	typedef typename TMemFunPtrType<bConst, UserClass, RetValType(ParamTypes..., VarTypes...)>::Type FMethodPtr;
+	typedef typename TMemFunPtrType<bConst, UserClass, RetValType (ParamTypes..., VarTypes...)>::Type FMethodPtr;
 
 	TBaseUObjectMethodDelegateInstance(UserClass* InUserObject, FMethodPtr InMethodPtr, VarTypes... Vars)
 		: UserObject(InUserObject)
-		, MethodPtr(InMethodPtr)
-		, Payload(Vars...)
-		, Handle(FDelegateHandle::GenerateNewHandle)
+		, MethodPtr (InMethodPtr)
+		, Payload   (Vars...)
+		, Handle    (FDelegateHandle::GenerateNewHandle)
 	{
 		// NOTE: UObject delegates are allowed to have a null incoming object pointer.  UObject weak pointers can expire,
 		//       an it is possible for a copy of a delegate instance to end up with a null pointer.
@@ -698,46 +694,46 @@ public:
 #endif
 
 	// Deprecated
-	virtual FName GetFunctionName() const override
+	virtual FName GetFunctionName( ) const override
 	{
 		return NAME_None;
 	}
 
 	// Deprecated
-	virtual const void* GetRawMethodPtr() const override
+	virtual const void* GetRawMethodPtr( ) const override
 	{
 		return GetRawMethodPtrInternal();
 	}
 
 	// Deprecated
-	virtual const void* GetRawUserObject() const override
+	virtual const void* GetRawUserObject( ) const override
 	{
 		return GetRawUserObjectInternal();
 	}
 
 	// Deprecated
-	virtual EDelegateInstanceType::Type GetType() const override
+	virtual EDelegateInstanceType::Type GetType( ) const override
 	{
 		return EDelegateInstanceType::UObjectMethod;
 	}
 
-	virtual UObject* GetUObject() const override
+	virtual UObject* GetUObject( ) const override
 	{
 		return (UObject*)UserObject.Get();
 	}
 
 	// Deprecated
-	virtual bool HasSameObject(const void* InUserObject) const override
+	virtual bool HasSameObject( const void* InUserObject ) const override
 	{
 		return (UserObject.Get() == InUserObject);
 	}
 
-	virtual bool IsCompactable() const override
+	virtual bool IsCompactable( ) const override
 	{
 		return !UserObject.Get(true);
 	}
 
-	virtual bool IsSafeToExecute() const override
+	virtual bool IsSafeToExecute( ) const override
 	{
 		return !!UserObject.Get();
 	}
@@ -776,11 +772,11 @@ public:
 	}
 
 	// Deprecated
-	virtual bool IsSameFunction(const Super& InOtherDelegate) const override
+	virtual bool IsSameFunction( const Super& InOtherDelegate ) const override
 	{
 		// NOTE: Payload data is not currently considered when comparing delegate instances.
 		// See the comment in multi-cast delegate's Remove() method for more information.
-		if ((InOtherDelegate.GetType() == EDelegateInstanceType::UObjectMethod) ||
+		if ((InOtherDelegate.GetType() == EDelegateInstanceType::UObjectMethod) || 
 			(InOtherDelegate.GetType() == EDelegateInstanceType::RawMethod))
 		{
 			return (GetRawMethodPtrInternal() == InOtherDelegate.GetRawMethodPtr()) && (UserObject.Get() == InOtherDelegate.GetRawUserObject());
@@ -792,12 +788,12 @@ public:
 public:
 
 	/**
-	* Creates a new UObject delegate binding for the given user object and method pointer.
-	*
-	* @param InUserObject User's object that contains the class method.
-	* @param InFunc Member function pointer to your class method.
-	* @return The new delegate.
-	*/
+	 * Creates a new UObject delegate binding for the given user object and method pointer.
+	 *
+	 * @param InUserObject User's object that contains the class method.
+	 * @param InFunc Member function pointer to your class method.
+	 * @return The new delegate.
+	 */
 	FORCEINLINE static void Create(FDelegateBase& Base, UserClass* InUserObject, FMethodPtr InFunc, VarTypes... Vars)
 	{
 		new (Base) UnwrappedThisType(InUserObject, InFunc, Vars...);
@@ -806,17 +802,17 @@ public:
 protected:
 
 	/**
-	* Internal, inlined and non-virtual version of GetRawUserObject interface.
-	*/
-	FORCEINLINE const void* GetRawUserObjectInternal() const
+	 * Internal, inlined and non-virtual version of GetRawUserObject interface.
+	 */
+	FORCEINLINE const void* GetRawUserObjectInternal( ) const
 	{
 		return UserObject.Get();
 	}
 
 	/**
-	* Internal, inlined and non-virtual version of GetRawMethodPtr interface.
-	*/
-	FORCEINLINE const void* GetRawMethodPtrInternal() const
+	 * Internal, inlined and non-virtual version of GetRawMethodPtr interface.
+	 */
+	FORCEINLINE const void* GetRawMethodPtrInternal( ) const
 	{
 		return *(const void**)&MethodPtr;
 	}
@@ -835,17 +831,17 @@ protected:
 };
 
 template <bool bConst, class UserClass, typename... ParamTypes, typename... VarTypes>
-class TBaseUObjectMethodDelegateInstance<bConst, UserClass, void(ParamTypes...), VarTypes...> : public TBaseUObjectMethodDelegateInstance<bConst, UserClass, TTypeWrapper<void>(ParamTypes...), VarTypes...>
+class TBaseUObjectMethodDelegateInstance<bConst, UserClass, void (ParamTypes...), VarTypes...> : public TBaseUObjectMethodDelegateInstance<bConst, UserClass, TTypeWrapper<void> (ParamTypes...), VarTypes...>
 {
-	typedef TBaseUObjectMethodDelegateInstance<bConst, UserClass, TTypeWrapper<void>(ParamTypes...), VarTypes...> Super;
+	typedef TBaseUObjectMethodDelegateInstance<bConst, UserClass, TTypeWrapper<void> (ParamTypes...), VarTypes...> Super;
 
 public:
 	/**
-	* Creates and initializes a new instance.
-	*
-	* @param InUserObject An arbitrary object (templated) that hosts the member function.
-	* @param InMethodPtr C++ member function pointer for the method to bind.
-	*/
+	 * Creates and initializes a new instance.
+	 *
+	 * @param InUserObject An arbitrary object (templated) that hosts the member function.
+	 * @param InMethodPtr C++ member function pointer for the method to bind.
+	 */
 	TBaseUObjectMethodDelegateInstance(UserClass* InUserObject, typename Super::FMethodPtr InMethodPtr, VarTypes... Vars)
 		: Super(InUserObject, InMethodPtr, Vars...)
 	{
@@ -867,27 +863,27 @@ public:
 
 
 /**
-* Implements a delegate binding for regular C++ functions.
-*/
+ * Implements a delegate binding for regular C++ functions.
+ */
 template <typename FuncType, typename... VarTypes>
 class TBaseStaticDelegateInstance;
 
 template <typename WrappedRetValType, typename... ParamTypes, typename... VarTypes>
-class TBaseStaticDelegateInstance<WrappedRetValType(ParamTypes...), VarTypes...> : public IBaseDelegateInstance<typename TUnwrapType<WrappedRetValType>::Type(ParamTypes...)>
+class TBaseStaticDelegateInstance<WrappedRetValType (ParamTypes...), VarTypes...> : public IBaseDelegateInstance<typename TUnwrapType<WrappedRetValType>::Type (ParamTypes...)>
 {
 public:
 	typedef typename TUnwrapType<WrappedRetValType>::Type RetValType;
 
-	typedef IBaseDelegateInstance<RetValType(ParamTypes...)>                    Super;
-	typedef TBaseStaticDelegateInstance<RetValType(ParamTypes...), VarTypes...> UnwrappedThisType;
+	typedef IBaseDelegateInstance<RetValType (ParamTypes...)>                    Super;
+	typedef TBaseStaticDelegateInstance<RetValType (ParamTypes...), VarTypes...> UnwrappedThisType;
 
 public:
-	typedef RetValType(*FFuncPtr)(ParamTypes..., VarTypes...);
+	typedef RetValType (*FFuncPtr)(ParamTypes..., VarTypes...);
 
 	TBaseStaticDelegateInstance(FFuncPtr InStaticFuncPtr, VarTypes... Vars)
 		: StaticFuncPtr(InStaticFuncPtr)
-		, Payload(Vars...)
-		, Handle(FDelegateHandle::GenerateNewHandle)
+		, Payload      (Vars...)
+		, Handle       (FDelegateHandle::GenerateNewHandle)
 	{
 		check(StaticFuncPtr != nullptr);
 	}
@@ -904,42 +900,42 @@ public:
 #endif
 
 	// Deprecated
-	virtual FName GetFunctionName() const override
+	virtual FName GetFunctionName( ) const override
 	{
 		return NAME_None;
 	}
 
 	// Deprecated
-	virtual const void* GetRawMethodPtr() const override
+	virtual const void* GetRawMethodPtr( ) const override
 	{
 		return *(const void**)&StaticFuncPtr;
 	}
 
 	// Deprecated
-	virtual const void* GetRawUserObject() const override
+	virtual const void* GetRawUserObject( ) const override
 	{
 		return nullptr;
 	}
 
 	// Deprecated
-	virtual EDelegateInstanceType::Type GetType() const override
+	virtual EDelegateInstanceType::Type GetType( ) const override
 	{
 		return EDelegateInstanceType::Raw;
 	}
 
-	virtual UObject* GetUObject() const override
+	virtual UObject* GetUObject( ) const override
 	{
 		return nullptr;
 	}
 
 	// Deprecated
-	virtual bool HasSameObject(const void* UserObject) const override
+	virtual bool HasSameObject( const void* UserObject ) const override
 	{
 		// Raw Delegates aren't bound to an object so they can never match
 		return false;
 	}
 
-	virtual bool IsSafeToExecute() const override
+	virtual bool IsSafeToExecute( ) const override
 	{
 		// Static functions are always safe to execute!
 		return true;
@@ -968,7 +964,7 @@ public:
 	}
 
 	// Deprecated
-	virtual bool IsSameFunction(const Super& InOtherDelegate) const override
+	virtual bool IsSameFunction( const Super& InOtherDelegate ) const override
 	{
 		// NOTE: Payload data is not currently considered when comparing delegate instances.
 		// See the comment in multi-cast delegate's Remove() method for more information.
@@ -986,11 +982,11 @@ public:
 public:
 
 	/**
-	* Creates a new static function delegate binding for the given function pointer.
-	*
-	* @param InFunc Static function pointer.
-	* @return The new delegate.
-	*/
+	 * Creates a new static function delegate binding for the given function pointer.
+	 *
+	 * @param InFunc Static function pointer.
+	 * @return The new delegate.
+	 */
 	FORCEINLINE static void Create(FDelegateBase& Base, FFuncPtr InFunc, VarTypes... Vars)
 	{
 		new (Base) UnwrappedThisType(InFunc, Vars...);
@@ -1009,16 +1005,16 @@ private:
 };
 
 template <typename... ParamTypes, typename... VarTypes>
-class TBaseStaticDelegateInstance<void(ParamTypes...), VarTypes...> : public TBaseStaticDelegateInstance<TTypeWrapper<void>(ParamTypes...), VarTypes...>
+class TBaseStaticDelegateInstance<void (ParamTypes...), VarTypes...> : public TBaseStaticDelegateInstance<TTypeWrapper<void> (ParamTypes...), VarTypes...>
 {
-	typedef TBaseStaticDelegateInstance<TTypeWrapper<void>(ParamTypes...), VarTypes...> Super;
+	typedef TBaseStaticDelegateInstance<TTypeWrapper<void> (ParamTypes...), VarTypes...> Super;
 
 public:
 	/**
-	* Creates and initializes a new instance.
-	*
-	* @param InStaticFuncPtr C++ function pointer.
-	*/
+	 * Creates and initializes a new instance.
+	 *
+	 * @param InStaticFuncPtr C++ function pointer.
+	 */
 	TBaseStaticDelegateInstance(typename Super::FFuncPtr InStaticFuncPtr, VarTypes... Vars)
 		: Super(InStaticFuncPtr, Vars...)
 	{
@@ -1033,8 +1029,8 @@ public:
 };
 
 /**
-* Implements a delegate binding for C++ functors, e.g. lambdas.
-*/
+ * Implements a delegate binding for C++ functors, e.g. lambdas.
+ */
 template <typename FuncType, typename FunctorType, typename... VarTypes>
 class TBaseFunctorDelegateInstance;
 
@@ -1054,14 +1050,14 @@ public:
 	TBaseFunctorDelegateInstance(const FunctorType& InFunctor, VarTypes... Vars)
 		: Functor(InFunctor)
 		, Payload(Vars...)
-		, Handle(FDelegateHandle::GenerateNewHandle)
+		, Handle (FDelegateHandle::GenerateNewHandle)
 	{
 	}
 
 	TBaseFunctorDelegateInstance(FunctorType&& InFunctor, VarTypes... Vars)
 		: Functor(MoveTemp(InFunctor))
 		, Payload(Vars...)
-		, Handle(FDelegateHandle::GenerateNewHandle)
+		, Handle (FDelegateHandle::GenerateNewHandle)
 	{
 	}
 
@@ -1150,11 +1146,11 @@ public:
 
 public:
 	/**
-	* Creates a new static function delegate binding for the given function pointer.
-	*
-	* @param InFunctor C++ functor
-	* @return The new delegate.
-	*/
+	 * Creates a new static function delegate binding for the given function pointer.
+	 *
+	 * @param InFunctor C++ functor
+	 * @return The new delegate.
+	 */
 	FORCEINLINE static void Create(FDelegateBase& Base, const FunctorType& InFunctor, VarTypes... Vars)
 	{
 		new (Base) UnwrappedThisType(InFunctor, Vars...);
@@ -1182,10 +1178,10 @@ class TBaseFunctorDelegateInstance<void(ParamTypes...), FunctorType, VarTypes...
 
 public:
 	/**
-	* Creates and initializes a new instance.
-	*
-	* @param InFunctor C++ functor
-	*/
+	 * Creates and initializes a new instance.
+	 *
+	 * @param InFunctor C++ functor
+	 */
 	TBaseFunctorDelegateInstance(const FunctorType& InFunctor, VarTypes... Vars)
 		: Super(InFunctor, Vars...)
 	{

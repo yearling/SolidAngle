@@ -382,8 +382,8 @@ private:
 		TArray<uint8> InData, OutData;
 		for( int32 i=0; i<Codecs.Num(); i++ )
 		{
-			YMemoryReader Reader(InData);
-			YMemoryWriter Writer(OutData);
+			FMemoryReader Reader(InData);
+			FMemoryWriter Writer(OutData);
 			(Codecs[First + Step*i]->*Func)( *(i ? &Reader : &In), *(i<Codecs.Num()-1 ? &Writer : &Out) );
 			if( i<Codecs.Num()-1 )
 			{

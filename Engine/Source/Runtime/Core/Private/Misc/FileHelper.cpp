@@ -254,7 +254,7 @@ bool FFileHelper::CreateBitmap( const TCHAR* Pattern, int32 SourceWidth, int32 S
 
 	FString File;
 	// if the Pattern already has a .bmp extension, then use that the file to write to
-	if (YPaths::GetExtension(Pattern) == TEXT("bmp"))
+	if (FPaths::GetExtension(Pattern) == TEXT("bmp"))
 	{
 		File = Pattern;
 	}
@@ -501,10 +501,10 @@ void FMaintenance::DeleteOldLogs()
 	{
 		// get a list of files in the log dir
 		TArray<FString> Files;
-		IFileManager::Get().FindFiles(Files, *FString::Printf(TEXT("%s*.*"), *YPaths::GameLogDir()), true, false);
+		IFileManager::Get().FindFiles(Files, *FString::Printf(TEXT("%s*.*"), *FPaths::GameLogDir()), true, false);
 		for (FString& Filename : Files)
 		{
-			Filename = YPaths::GameLogDir() / Filename;
+			Filename = FPaths::GameLogDir() / Filename;
 		}
 
 		struct FSortByDateNewestFirst
@@ -523,7 +523,7 @@ void FMaintenance::DeleteOldLogs()
 		for (int32 FileIndex = Files.Num() - 1; FileIndex >= 0; --FileIndex)
 		{
 			const FString& Filename = Files[FileIndex];
-			if (YOutputDeviceFile::IsBackupCopy(*Filename) && IFileManager::Get().GetFileAgeSeconds(*Filename) > MaxFileAgeSeconds)
+			if (FOutputDeviceFile::IsBackupCopy(*Filename) && IFileManager::Get().GetFileAgeSeconds(*Filename) > MaxFileAgeSeconds)
 			{
 				UE_LOG(LogStreaming, Log, TEXT("Deleting old log file %s"), *Filename);
 				IFileManager::Get().Delete(*Filename);
@@ -536,7 +536,7 @@ void FMaintenance::DeleteOldLogs()
 		{
 			for (int32 FileIndex = Files.Num() - 1; FileIndex >= 0 && Files.Num() > MaxLogFilesOnDisk; --FileIndex)
 			{
-				if (YOutputDeviceFile::IsBackupCopy(*Files[FileIndex]))
+				if (FOutputDeviceFile::IsBackupCopy(*Files[FileIndex]))
 				{
 					IFileManager::Get().Delete(*Files[FileIndex]);
 					Files.RemoveAt(FileIndex);
@@ -546,11 +546,11 @@ void FMaintenance::DeleteOldLogs()
 
 		// Remove old UE4 crash contexts
 		TArray<FString> Directories;
-		IFileManager::Get().FindFiles( Directories, *FString::Printf( TEXT( "%s/UE4CC*" ), *YPaths::GameLogDir() ), false, true );
+		IFileManager::Get().FindFiles( Directories, *FString::Printf( TEXT( "%s/UE4CC*" ), *FPaths::GameLogDir() ), false, true );
 
 		for (const FString& Dir : Directories)
 		{
-			const FString CrashContextDirectory = YPaths::GameLogDir() / Dir;
+			const FString CrashContextDirectory = FPaths::GameLogDir() / Dir;
 			const FDateTime DirectoryAccessTime = IFileManager::Get().GetTimeStamp( *CrashContextDirectory );
 			if (FDateTime::Now() - DirectoryAccessTime > FTimespan::FromDays( PurgeLogsDays ))
 			{

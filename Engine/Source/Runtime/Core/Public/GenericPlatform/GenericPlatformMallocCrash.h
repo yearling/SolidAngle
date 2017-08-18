@@ -22,12 +22,12 @@ struct FPtrInfo
 	uint8 Padding[4];
 #endif
 
-	FPtrInfo() :
+	FPtrInfo():
 		Size(0),
 		Ptr(0)
 	{}
 
-	FPtrInfo(void* NewPtr) :
+	FPtrInfo( void* NewPtr ):
 		Size(0),
 		Ptr((uint8*)NewPtr)
 	{}
@@ -37,9 +37,9 @@ struct FPoolDesc;
 struct FMallocCrashPool;
 
 /**
-* Simple pooled memory allocator that uses preallocated memory.
-* Instance of this class replaces GMalloc after a crash, so we can use dynamic memory allocation even if the app crashes due to OOM.
-*/
+ * Simple pooled memory allocator that uses preallocated memory.
+ * Instance of this class replaces GMalloc after a crash, so we can use dynamic memory allocation even if the app crashes due to OOM.
+ */
 struct FGenericPlatformMallocCrash final : public FMalloc
 {
 	friend struct FPoolDesc;
@@ -55,38 +55,38 @@ private:
 		NUM_POOLS = 14,
 		MAX_NUM_ALLOCS_IN_POOL = 2048,
 
-		MEM_TAG = 0xfe,
+		MEM_TAG     = 0xfe,
 		MEM_WIPETAG = 0xcd,
 	};
 
 public:
-	FGenericPlatformMallocCrash(FMalloc* MainMalloc);
+	FGenericPlatformMallocCrash( FMalloc* MainMalloc );
 	virtual ~FGenericPlatformMallocCrash();
 
 	/** Creates a new instance. */
-	static CORE_API FGenericPlatformMallocCrash& Get(FMalloc* MainMalloc = nullptr);
+	static CORE_API FGenericPlatformMallocCrash& Get( FMalloc* MainMalloc = nullptr );
 
 	/**
-	* Sets as GMalloc.
-	* This method locks to the thread that crashed.
-	* Any next calls to this method or GMalloc from other threads will dead-lock those threads,
-	* but this is ok, because we are shutting down.
-	* This also fixes a lot of potential issues of using dynamic allocation during crash dumping.
-	*
-	* @warning
-	* This is not super safe, may interfere with other allocations, ie. replacing vtable during running
-	* the code from the previous malloc will probably crash other threads.
-	*/
+	 * Sets as GMalloc.
+	 * This method locks to the thread that crashed.
+	 * Any next calls to this method or GMalloc from other threads will dead-lock those threads,
+	 * but this is ok, because we are shutting down.
+	 * This also fixes a lot of potential issues of using dynamic allocation during crash dumping.
+	 * 
+	 * @warning
+	 * This is not super safe, may interfere with other allocations, ie. replacing vtable during running 
+	 * the code from the previous malloc will probably crash other threads.
+	 */
 	void SetAsGMalloc();
 
-	// YMalloc interface.
-	virtual void* Malloc(SIZE_T Size, uint32 Alignment) override;
+	// FMalloc interface.
+	virtual void* Malloc( SIZE_T Size, uint32 Alignment ) override;
 
-	virtual void* Realloc(void* Ptr, SIZE_T NewSize, uint32 Alignment) override;
+	virtual void* Realloc( void* Ptr, SIZE_T NewSize, uint32 Alignment ) override;
 
-	virtual void Free(void* /*Ptr*/) override;
+	virtual void Free( void* /*Ptr*/ ) override;
 
-	virtual bool GetAllocationSize(void *Original, SIZE_T &SizeOut) override;
+	virtual bool GetAllocationSize( void *Original, SIZE_T &SizeOut ) override;
 
 	virtual bool IsInternallyThreadSafe() const override
 	{
@@ -101,7 +101,7 @@ public:
 
 	virtual const TCHAR * GetDescriptiveName() override
 	{
-		return TEXT("MallocCrash");
+		return TEXT( "MallocCrash" );
 	}
 
 	CORE_API void PrintPoolsUsage();
@@ -113,18 +113,18 @@ protected:
 	bool IsPtrInLargePool(void* Ptr) const;
 	bool IsPtrInSmallPool(void* Ptr) const;
 
-	const FPoolDesc& GetPoolDesc(uint32 Index) const;
+	const FPoolDesc& GetPoolDesc( uint32 Index ) const;
 	uint32 GetSmallPoolTotalSize() const;
 
 	void InitializeSmallPools();
-	FMallocCrashPool* FindPoolFromSize(uint32 AllocationSize) const;
-	uint8* AllocateFromSmallPool(uint32 AllocationSize);
+	FMallocCrashPool* FindPoolFromSize( uint32 AllocationSize ) const;
+	uint8* AllocateFromSmallPool( uint32 AllocationSize );
 
 	static uint32 GetAllocationSize(void *Original);
 
 	/**
-	* @return page size, if page size is not initialized, returns 64k.
-	*/
+	 * @return page size, if page size is not initialized, returns 64k.
+	 */
 	static uint32 SafePageSize();
 
 protected:

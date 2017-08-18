@@ -19,7 +19,7 @@
 CORE_API void DoGamethreadHook(int32 Index);
 #else
 FORCEINLINE void DoGamethreadHook(int32 Index)
-{
+{ 
 }
 #endif
 
@@ -58,7 +58,7 @@ struct CORE_API FScopedMallocTimer
 		FPlatformAtomics::InterlockedAdd((volatile int64*)&GTotalMisses[InIndex], 1);
 	}
 	static void Spew();
-};
+}; 
 #else
 struct FScopedMallocTimer
 {
@@ -71,103 +71,103 @@ struct FScopedMallocTimer
 	FORCEINLINE void Hit(int32 InIndex)
 	{
 	}
-};
+}; 
 #endif
 
 
 
 
 /*-----------------------------------------------------------------------------
-FMemory.
+	FMemory.
 -----------------------------------------------------------------------------*/
 
 struct CORE_API FMemory
 {
-	/** @name Memory functions (wrapper for YPlatformMemory) */
+	/** @name Memory functions (wrapper for FPlatformMemory) */
 
-	static FORCEINLINE void* Memmove(void* Dest, const void* Src, SIZE_T Count)
+	static FORCEINLINE void* Memmove( void* Dest, const void* Src, SIZE_T Count )
 	{
-		return YPlatformMemory::Memmove(Dest, Src, Count);
+		return FPlatformMemory::Memmove( Dest, Src, Count );
 	}
 
-	static FORCEINLINE int32 Memcmp(const void* Buf1, const void* Buf2, SIZE_T Count)
+	static FORCEINLINE int32 Memcmp( const void* Buf1, const void* Buf2, SIZE_T Count )
 	{
-		return YPlatformMemory::Memcmp(Buf1, Buf2, Count);
+		return FPlatformMemory::Memcmp( Buf1, Buf2, Count );
 	}
 
 	static FORCEINLINE void* Memset(void* Dest, uint8 Char, SIZE_T Count)
 	{
-		return YPlatformMemory::Memset(Dest, Char, Count);
+		return FPlatformMemory::Memset( Dest, Char, Count );
 	}
 
-	template< class T >
-	static FORCEINLINE void Memset(T& Src, uint8 ValueToSet)
+	template< class T > 
+	static FORCEINLINE void Memset( T& Src, uint8 ValueToSet )
 	{
-		static_assert(!TIsPointer<T>::Value, "For pointers use the three parameters function");
-		Memset(&Src, ValueToSet, sizeof(T));
+		static_assert( !TIsPointer<T>::Value, "For pointers use the three parameters function");
+		Memset( &Src, ValueToSet, sizeof( T ) );
 	}
 
 	static FORCEINLINE void* Memzero(void* Dest, SIZE_T Count)
 	{
-		return YPlatformMemory::Memzero(Dest, Count);
+		return FPlatformMemory::Memzero( Dest, Count );
 	}
 
-	template< class T >
-	static FORCEINLINE void Memzero(T& Src)
+	template< class T > 
+	static FORCEINLINE void Memzero( T& Src )
 	{
-		static_assert(!TIsPointer<T>::Value, "For pointers use the two parameters function");
-		Memzero(&Src, sizeof(T));
+		static_assert( !TIsPointer<T>::Value, "For pointers use the two parameters function");
+		Memzero( &Src, sizeof( T ) );
 	}
 
 	static FORCEINLINE void* Memcpy(void* Dest, const void* Src, SIZE_T Count)
 	{
-		return YPlatformMemory::Memcpy(Dest, Src, Count);
+		return FPlatformMemory::Memcpy(Dest,Src,Count);
 	}
 
-	template< class T >
-	static FORCEINLINE void Memcpy(T& Dest, const T& Src)
+	template< class T > 
+	static FORCEINLINE void Memcpy( T& Dest, const T& Src )
 	{
-		static_assert(!TIsPointer<T>::Value, "For pointers use the three parameters function");
-		Memcpy(&Dest, &Src, sizeof(T));
+		static_assert( !TIsPointer<T>::Value, "For pointers use the three parameters function");
+		Memcpy( &Dest, &Src, sizeof( T ) );
 	}
 
 	static FORCEINLINE void* BigBlockMemcpy(void* Dest, const void* Src, SIZE_T Count)
 	{
-		return YPlatformMemory::BigBlockMemcpy(Dest, Src, Count);
+		return FPlatformMemory::BigBlockMemcpy(Dest,Src,Count);
 	}
 
 	static FORCEINLINE void* StreamingMemcpy(void* Dest, const void* Src, SIZE_T Count)
 	{
-		return YPlatformMemory::StreamingMemcpy(Dest, Src, Count);
+		return FPlatformMemory::StreamingMemcpy(Dest,Src,Count);
 	}
 
-	static FORCEINLINE void Memswap(void* Ptr1, void* Ptr2, SIZE_T Size)
+	static FORCEINLINE void Memswap( void* Ptr1, void* Ptr2, SIZE_T Size )
 	{
-		YPlatformMemory::Memswap(Ptr1, Ptr2, Size);
+		FPlatformMemory::Memswap(Ptr1,Ptr2,Size);
 	}
 
 	template< class T >
 	DEPRECATED(4.8, "Please use Memset.")
-		static FORCEINLINE void MemSet(T& Src, uint8 ValueToSet)
+	static FORCEINLINE void MemSet( T& Src, uint8 ValueToSet )
 	{
-		static_assert(!TIsPointer<T>::Value, "For pointers use the three parameters function");
-		FMemory::Memset(&Src, ValueToSet, sizeof(T));
+		static_assert( !TIsPointer<T>::Value, "For pointers use the three parameters function");
+		FMemory::Memset( &Src, ValueToSet, sizeof( T ) );
 	}
 
-	template< class T >
+	template< class T > 
 	DEPRECATED(4.8, "Please use Memzero.")
-		static FORCEINLINE void MemZero(T& Src)
+	static FORCEINLINE void MemZero( T& Src )
 	{
-		static_assert(!TIsPointer<T>::Value, "For pointers use the two parameters function");
-		FMemory::Memset(&Src, 0, sizeof(T));
+		static_assert( !TIsPointer<T>::Value, "For pointers use the two parameters function");
+		FMemory::Memset( &Src, 0, sizeof( T ) );
 	}
 
 	template< class T >
 	DEPRECATED(4.8, "Please use Memcpy.")
-		static FORCEINLINE void MemCopy(T& Dest, const T& Src)
+	static FORCEINLINE void MemCopy( T& Dest, const T& Src )
 	{
-		static_assert(!TIsPointer<T>::Value, "For pointers use the three parameters function");
-		FMemory::Memcpy(&Dest, &Src, sizeof(T));
+		static_assert( !TIsPointer<T>::Value, "For pointers use the three parameters function");
+		FMemory::Memcpy( &Dest, &Src, sizeof( T ) );
 	}
 
 	//
@@ -224,12 +224,12 @@ struct CORE_API FMemory
 	static void GPUFree(void* Original);
 
 	/**
-	* A helper function that will perform a series of random heap allocations to test
-	* the internal validity of the heap. Note, this function will "leak" memory, but another call
-	* will clean up previously allocated blocks before returning. This will help to A/B testing
-	* where you call it in a good state, do something to corrupt memory, then call this again
-	* and hopefully freeing some pointers will trigger a crash.
-	*/
+	 * A helper function that will perform a series of random heap allocations to test
+	 * the internal validity of the heap. Note, this function will "leak" memory, but another call
+	 * will clean up previously allocated blocks before returning. This will help to A/B testing
+	 * where you call it in a good state, do something to corrupt memory, then call this again
+	 * and hopefully freeing some pointers will trigger a crash.
+	 */
 	static void TestMemory();
 	/**
 	* Called once main is started and we have -purgatorymallocproxy.
@@ -251,17 +251,17 @@ private:
 	static SIZE_T QuantizeSizeExternal(SIZE_T Count, uint32 Alignment = DEFAULT_ALIGNMENT);
 };
 
-#define INLINE_YMemory_OPERATION (0) // untested, but should work. Inlines FMemory::Malloc, etc
+#define INLINE_FMEMORY_OPERATION (0) // untested, but should work. Inlines FMemory::Malloc, etc
 
-#if INLINE_YMemory_OPERATION
-#if PLATFORM_USES_FIXED_GMalloc_CLASS
-#error "PLATFORM_USES_FIXED_GMalloc_CLASS and INLINE_YMemory_OPERATION are not compatible. PLATFORM_USES_FIXED_GMalloc_CLASS is inlined below."
-#endif
+#if INLINE_FMEMORY_OPERATION
+	#if PLATFORM_USES_FIXED_GMalloc_CLASS
+		#error "PLATFORM_USES_FIXED_GMalloc_CLASS and INLINE_FMEMORY_OPERATION are not compatible. PLATFORM_USES_FIXED_GMalloc_CLASS is inlined below."
+	#endif
 
-#define YMemory_INLINE_FUNCTION_DECORATOR FORCEINLINE
-#include "FMemory.inl"
+	#define FMEMORY_INLINE_FUNCTION_DECORATOR FORCEINLINE
+	#include "FMemory.inl"
 #endif
 
 #if PLATFORM_USES_FIXED_GMalloc_CLASS && !FORCE_ANSI_ALLOCATOR && USE_MALLOC_BINNED2
-#include "MallocBinned2.h"
+	#include "MallocBinned2.h"
 #endif

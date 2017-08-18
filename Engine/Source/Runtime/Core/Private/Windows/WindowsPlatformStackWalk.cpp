@@ -452,8 +452,8 @@ bool FWindowsPlatformStackWalk::UploadLocalSymbols()
 
 #if WITH_EDITOR
 	// Get Unreal Engine Editor directory for detecting non-game editor binaries.
-	FString EnginePath = YPaths::ConvertRelativePathToFull( YPaths::EngineDir() );
-	YPaths::MakePlatformFilename( EnginePath );
+	FString EnginePath = FPaths::ConvertRelativePathToFull( FPaths::EngineDir() );
+	FPaths::MakePlatformFilename( EnginePath );
 #endif
 
 	// Upload all locally built modules.
@@ -700,13 +700,13 @@ FString FWindowsPlatformStackWalk::GetDownstreamStorage()
 	FString DownstreamStorage;
 	if (GConfig->GetString(CrashReporterSettings, TEXT("DownstreamStorage"), DownstreamStorage, GEditorPerProjectIni) && !DownstreamStorage.IsEmpty())
 	{
-		DownstreamStorage = YPaths::ConvertRelativePathToFull(YPaths::RootDir(), DownstreamStorage);
+		DownstreamStorage = FPaths::ConvertRelativePathToFull(FPaths::RootDir(), DownstreamStorage);
 	}
 	else 
 	{
-		DownstreamStorage = YPaths::ConvertRelativePathToFull(YPaths::EngineIntermediateDir(), TEXT("Symbols"));
+		DownstreamStorage = FPaths::ConvertRelativePathToFull(FPaths::EngineIntermediateDir(), TEXT("Symbols"));
 	}
-	YPaths::MakePlatformFilename(DownstreamStorage);
+	FPaths::MakePlatformFilename(DownstreamStorage);
 	return DownstreamStorage;
 }
 

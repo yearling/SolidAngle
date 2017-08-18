@@ -48,7 +48,7 @@ const FString FGenericCrashContext::EngineModeExDirty = TEXT("Dirty");
 const FString FGenericCrashContext::EngineModeExVanilla = TEXT("Vanilla");
 
 bool FGenericCrashContext::bIsInitialized = false;
-YPlatformMemoryStats FGenericCrashContext::CrashMemoryStats = YPlatformMemoryStats();
+FPlatformMemoryStats FGenericCrashContext::CrashMemoryStats = FPlatformMemoryStats();
 int32 FGenericCrashContext::StaticCrashContextIndex = 0;
 
 namespace NCachedCrashContextProperties
@@ -295,10 +295,10 @@ void FGenericCrashContext::SerializeContentToBuffer()
 		AddCrashProperty( TEXT( "Misc.AppDiskNumberOfFreeBytes" ), AppDiskNumberOfFreeBytes );
 	}*/
 
-	// YPlatformMemory::GetConstants is called in the GCreateMalloc, so we can assume it is always valid.
+	// FPlatformMemory::GetConstants is called in the GCreateMalloc, so we can assume it is always valid.
 	{
 		// Add memory stats.
-		const YPlatformMemoryConstants& MemConstants = YPlatformMemory::GetConstants();
+		const FPlatformMemoryConstants& MemConstants = FPlatformMemory::GetConstants();
 
 		AddCrashProperty( TEXT( "MemoryStats.TotalPhysical" ), (uint64)MemConstants.TotalPhysical );
 		AddCrashProperty( TEXT( "MemoryStats.TotalVirtual" ), (uint64)MemConstants.TotalVirtual );
@@ -312,9 +312,9 @@ void FGenericCrashContext::SerializeContentToBuffer()
 	AddCrashProperty( TEXT( "MemoryStats.PeakUsedPhysical" ), (uint64)CrashMemoryStats.PeakUsedPhysical );
 	AddCrashProperty( TEXT( "MemoryStats.UsedVirtual" ), (uint64)CrashMemoryStats.UsedVirtual );
 	AddCrashProperty( TEXT( "MemoryStats.PeakUsedVirtual" ), (uint64)CrashMemoryStats.PeakUsedVirtual );
-	AddCrashProperty( TEXT( "MemoryStats.bIsOOM" ), (int32)YPlatformMemory::bIsOOM );
-	AddCrashProperty( TEXT( "MemoryStats.OOMAllocationSize"), (uint64)YPlatformMemory::OOMAllocationSize );
-	AddCrashProperty( TEXT( "MemoryStats.OOMAllocationAlignment"), (int32)YPlatformMemory::OOMAllocationAlignment );
+	AddCrashProperty( TEXT( "MemoryStats.bIsOOM" ), (int32)FPlatformMemory::bIsOOM );
+	AddCrashProperty( TEXT( "MemoryStats.OOMAllocationSize"), (uint64)FPlatformMemory::OOMAllocationSize );
+	AddCrashProperty( TEXT( "MemoryStats.OOMAllocationAlignment"), (int32)FPlatformMemory::OOMAllocationAlignment );
 
 	//Architecture
 	//CrashedModuleName
@@ -352,17 +352,17 @@ void FGenericCrashContext::SerializeAsXML( const TCHAR* Filename )
 	FFileHelper::SaveStringToFile( CommonBuffer, Filename, FFileHelper::EEncodingOptions::AutoDetect );
 }
 
-void FGenericCrashContext::AddCrashProperty( const TCHAR* PropertFName, const TCHAR* PropertyValue )
+void FGenericCrashContext::AddCrashProperty( const TCHAR* PropertyName, const TCHAR* PropertyValue )
 {
 	CommonBuffer += TEXT( "<" );
-	CommonBuffer += PropertFName;
+	CommonBuffer += PropertyName;
 	CommonBuffer += TEXT( ">" );
 
 
 	CommonBuffer += EscapeXMLString( PropertyValue );
 
 	CommonBuffer += TEXT( "</" );
-	CommonBuffer += PropertFName;
+	CommonBuffer += PropertyName;
 	CommonBuffer += TEXT( ">" );
 	CommonBuffer += LINE_TERMINATOR;
 }
@@ -450,7 +450,7 @@ const TCHAR* FGenericCrashContext::GetCrashConfigFilePath()
 	static FString CrashConfigFilePath;
 	if (CrashConfigFilePath.IsEmpty())
 	{
-		CrashConfigFilePath = YPaths::Combine(*YPaths::GameLogDir(), *NCachedCrashContextProperties::CrashGUIDRoot, FGenericCrashContext::CrashConfigFileNameW);
+		CrashConfigFilePath = FPaths::Combine(*FPaths::GameLogDir(), *NCachedCrashContextProperties::CrashGUIDRoot, FGenericCrashContext::CrashConfigFileNameW);
 	}
 	return *CrashConfigFilePath;
 }

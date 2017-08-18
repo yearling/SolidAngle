@@ -73,7 +73,7 @@ private:
 
 
 /**
-* Utility class to store a counter and a time value in seconds. Implementation will be stripped out in
+* Utility class to store a counter and a time value in seconds. Implementation will be stripped out in 
 * STATS disabled builds, although it will waste a small amount of memory unless stripped by the linker.
 *
 * Useful when timing reentrant functions.
@@ -143,8 +143,8 @@ public:
 typedef TKeyValuePair<double, uint32> FTotalTimeAndCount;
 
 /**
-*	Utility class to log time passed in seconds, adding cumulative stats to passed in variable.
-*/
+ *	Utility class to log time passed in seconds, adding cumulative stats to passed in variable. 
+ */
 struct FScopeLogTime
 {
 	enum EScopeLogTimeUnits
@@ -154,14 +154,14 @@ struct FScopeLogTime
 	};
 
 	/**
-	* Initialization constructor.
-	*
-	* @param InName - String that will be displayed in the log
-	* @param InGlobal - Pointer to the variable that holds the cumulative stats
-	*
-	*/
-	CORE_API FScopeLogTime(const WIDECHAR* InName, FTotalTimeAndCount* InCumulative = nullptr, EScopeLogTimeUnits InUnits = ScopeLog_Milliseconds);
-	CORE_API FScopeLogTime(const ANSICHAR* InName, FTotalTimeAndCount* InCumulative = nullptr, EScopeLogTimeUnits InUnits = ScopeLog_Milliseconds);
+	 * Initialization constructor.
+	 *
+	 * @param InName - String that will be displayed in the log
+	 * @param InGlobal - Pointer to the variable that holds the cumulative stats
+	 *
+	 */
+	CORE_API FScopeLogTime( const WIDECHAR* InName, FTotalTimeAndCount* InCumulative = nullptr, EScopeLogTimeUnits InUnits = ScopeLog_Milliseconds );
+	CORE_API FScopeLogTime( const ANSICHAR* InName, FTotalTimeAndCount* InCumulative = nullptr, EScopeLogTimeUnits InUnits = ScopeLog_Milliseconds );
 
 	/** Destructor. */
 	CORE_API ~FScopeLogTime();

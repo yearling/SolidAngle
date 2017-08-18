@@ -1,10 +1,10 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
-#include "Windows/WindowsPlatformCrashContext.h"
-#include "HAL/PlatformMallocCrash.h"
-#include "HAL/ExceptionHandling.h"
-#include "Misc/EngineVersion.h"
-#include "Misc/EngineBuildSettings.h"
+#include "WindowsPlatformCrashContext.h"
+#include "PlatformMallocCrash.h"
+#include "ExceptionHandling.h"
+#include "EngineVersion.h"
+#include "EngineBuildSettings.h"
 #include "HAL/ExceptionHandling.h"
 #include "HAL/ThreadHeartBeat.h"
 #include "HAL/PlatformProcess.h"
@@ -18,10 +18,10 @@
 #include "Misc/CoreDelegates.h"
 #include "Misc/OutputDeviceRedirector.h"
 #include "Templates/ScopedPointer.h"
-#include "Windows/WindowsPlatformStackWalk.h"
-#include "Windows/WindowsHWrapper.h"
-#include "Windows/AllowWindowsPlatformTypes.h"
-#include "Templates/UniquePtr.h"
+#include "WindowsPlatformStackWalk.h"
+#include "WindowsHWrapper.h"
+#include "AllowWindowsPlatformTypes.h"
+#include "UniquePtr.h"
 
 #include <strsafe.h>
 #include <dbghelp.h>
@@ -137,33 +137,33 @@ int32 ReportCrashUsingCrashReportClient(FWindowsPlatformCrashContext& InContext,
 		InContext.GetUniqueCrashName(CrashGUID, FGenericCrashContext::CrashGUIDLength);
 		const FString AppName = FString::Printf(TEXT("UE4-%s"), FApp::GetGameName());
 
-		FString CrashFolder = YPaths::Combine(*YPaths::GameLogDir(), CrashGUID);
+		FString CrashFolder = FPaths::Combine(*FPaths::GameLogDir(), CrashGUID);
 		FString CrashFolderAbsolute = IFileManager::Get().ConvertToAbsolutePathForExternalAppForWrite(*CrashFolder);
 		if (IFileManager::Get().MakeDirectory(*CrashFolderAbsolute, true))
 		{
 			// Save crash context
-			const FString CrashContextXMLPath = YPaths::Combine(*CrashFolderAbsolute, FPlatformCrashContext::CrashContextRuntimeXMLNameW);
+			const FString CrashContextXMLPath = FPaths::Combine(*CrashFolderAbsolute, FPlatformCrashContext::CrashContextRuntimeXMLNameW);
 			InContext.SerializeAsXML(*CrashContextXMLPath);
 
 			// Save mindump
-			const FString MinidumpFileName = YPaths::Combine(*CrashFolderAbsolute, *FGenericCrashContext::UE4MinidumpName);
+			const FString MinidumpFileName = FPaths::Combine(*CrashFolderAbsolute, *FGenericCrashContext::UE4MinidumpName);
 			WriteMinidump(InContext, *MinidumpFileName, ExceptionInfo, bIsEnsure);
 
 			// Copy log
-			const FString LogSrcAbsolute = YPlatformOutputDevices::GetAbsoluteLogFilename();
+			const FString LogSrcAbsolute = FPlatformOutputDevices::GetAbsoluteLogFilename();
 
 			// Flush out the log
 			GLog->Flush();
 
 			// If we have a memory only log, make sure it's dumped to file before we attach it to the report
-			bool bHasLogFile = !YPlatformOutputDevices::GetLog()->IsMemoryOnly();
+			bool bHasLogFile = !FPlatformOutputDevices::GetLog()->IsMemoryOnly();
 #if !NO_LOGGING
 			if (!bHasLogFile)
 			{
 				FArchive* LogFile = IFileManager::Get().CreateFileWriter(*LogSrcAbsolute, FILEWRITE_AllowRead);
 				if (LogFile)
 				{
-					YPlatformOutputDevices::GetLog()->Dump(*LogFile);
+					FPlatformOutputDevices::GetLog()->Dump(*LogFile);
 					LogFile->Flush();
 					delete LogFile;
 					bHasLogFile = true;
@@ -172,8 +172,8 @@ int32 ReportCrashUsingCrashReportClient(FWindowsPlatformCrashContext& InContext,
 #endif
 			if (bHasLogFile)
 			{
-				FString LogFilename = YPaths::GetCleanFilename(LogSrcAbsolute);
-				const FString LogDstAbsolute = YPaths::Combine(*CrashFolderAbsolute, *LogFilename);
+				FString LogFilename = FPaths::GetCleanFilename(LogSrcAbsolute);
+				const FString LogDstAbsolute = FPaths::Combine(*CrashFolderAbsolute, *LogFilename);
 				const bool bReplace = true;
 				const bool bEvenIfReadOnly = false;
 				const bool bAttributes = false;
@@ -185,17 +185,17 @@ int32 ReportCrashUsingCrashReportClient(FWindowsPlatformCrashContext& InContext,
 			const TCHAR* CrashConfigSrcPath = FWindowsPlatformCrashContext::GetCrashConfigFilePath();
 			if (IFileManager::Get().FileExists(CrashConfigSrcPath))
 			{
-				FString CrashConfigFilename = YPaths::GetCleanFilename(CrashConfigSrcPath);
-				const FString CrashConfigDstAbsolute = YPaths::Combine(*CrashFolderAbsolute, *CrashConfigFilename);
+				FString CrashConfigFilename = FPaths::GetCleanFilename(CrashConfigSrcPath);
+				const FString CrashConfigDstAbsolute = FPaths::Combine(*CrashFolderAbsolute, *CrashConfigFilename);
 				static_cast<void>(IFileManager::Get().Copy(*CrashConfigDstAbsolute, CrashConfigSrcPath));	// best effort, so don't care about result: couldn't copy -> tough, no config
 			}
 
 			// If present, include the crash video
-			const FString CrashVideoPath = YPaths::GameLogDir() / TEXT("CrashVideo.avi");
+			const FString CrashVideoPath = FPaths::GameLogDir() / TEXT("CrashVideo.avi");
 			if (IFileManager::Get().FileExists(*CrashVideoPath))
 			{
-				FString CrashVideoFilename = YPaths::GetCleanFilename(CrashVideoPath);
-				const FString CrashVideoDstAbsolute = YPaths::Combine(*CrashFolderAbsolute, *CrashVideoFilename);
+				FString CrashVideoFilename = FPaths::GetCleanFilename(CrashVideoPath);
+				const FString CrashVideoDstAbsolute = FPaths::Combine(*CrashFolderAbsolute, *CrashVideoFilename);
 				static_cast<void>(IFileManager::Get().Copy(*CrashVideoDstAbsolute, *CrashVideoPath));	// best effort, so don't care about result: couldn't copy -> tough, no video
 			}
 
@@ -230,14 +230,14 @@ int32 ReportCrashUsingCrashReportClient(FWindowsPlatformCrashContext& InContext,
 				CrashReportClientArguments += FString(TEXT(" -DebugSymbols=")) + DownstreamStorage;
 			}
 
-			FString CrashClientPath = YPaths::Combine(*YPaths::EngineDir(), TEXT("Binaries"), FPlatformProcess::GetBinariesSubdirectory(), CrashReportClientExeName);
+			FString CrashClientPath = FPaths::Combine(*FPaths::EngineDir(), TEXT("Binaries"), FPlatformProcess::GetBinariesSubdirectory(), CrashReportClientExeName);
 			bCrashReporterRan = FPlatformProcess::CreateProc(*CrashClientPath, *CrashReportClientArguments, true, false, false, NULL, 0, NULL, NULL).IsValid();
 		}
 
 		if (!bCrashReporterRan && !bNoDialog)
 		{
 			UE_LOG(LogWindows, Log, TEXT("Could not start %s"), CrashReportClientExeName);
-			YPlatformMemory::DumpStats(*GWarn);
+			FPlatformMemory::DumpStats(*GWarn);
 			FText MessageTitle(FText::Format(
 				NSLOCTEXT("MessageDialog", "AppHasCrashed", "The {0} {1} has crashed and will close"),
 				FText::FromString(AppName),
@@ -318,14 +318,14 @@ void NewReportEnsure( const TCHAR* ErrorMessage )
 	EnsureLock.Unlock();
 }
 
-#include "Windows/HideWindowsPlatformTypes.h"
+#include "HideWindowsPlatformTypes.h"
 
 // Original code below
 
-#include "Windows/AllowWindowsPlatformTypes.h"
+#include "AllowWindowsPlatformTypes.h"
 	#include <ErrorRep.h>
 	#include <DbgHelp.h>
-#include "Windows/HideWindowsPlatformTypes.h"
+#include "HideWindowsPlatformTypes.h"
 
 #pragma comment(lib, "Faultrep.lib")
 
@@ -333,10 +333,10 @@ void NewReportEnsure( const TCHAR* ErrorMessage )
  * Creates an info string describing the given exception record.
  * See MSDN docs on EXCEPTION_RECORD.
  */
-#include "Windows/AllowWindowsPlatformTypes.h"
+#include "AllowWindowsPlatformTypes.h"
 void CreateExceptionInfoString(EXCEPTION_RECORD* ExceptionRecord)
 {
-	// #CrashReport: 2014-08-18 Fix YString usage?
+	// #CrashReport: 2014-08-18 Fix FString usage?
 	FString ErrorString = TEXT("Unhandled Exception: ");
 
 #define HANDLE_CASE(x) case x: ErrorString += TEXT(#x); break;
@@ -546,7 +546,7 @@ private:
 
 };
 
-#include "Windows/HideWindowsPlatformTypes.h"
+#include "HideWindowsPlatformTypes.h"
 
 TUniquePtr<FCrashReportingThread> GCrashReportingThread = MakeUnique<FCrashReportingThread>();
 

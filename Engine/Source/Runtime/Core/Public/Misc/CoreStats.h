@@ -16,8 +16,8 @@ DECLARE_MEMORY_STAT_EXTERN(TEXT("Precomputed Light Volume Memory"), STAT_Precomp
 DECLARE_MEMORY_STAT_EXTERN(TEXT("SkeletalMesh Vertex Memory"), STAT_SkeletalMeshVertexMemory, STATGROUP_Memory, CORE_API);
 DECLARE_MEMORY_STAT_EXTERN(TEXT("SkeletalMesh Index Memory"), STAT_SkeletalMeshIndexMemory, STATGROUP_Memory, CORE_API);
 DECLARE_MEMORY_STAT_EXTERN(TEXT("SkeletalMesh M.BlurSkinning Memory"), STAT_SkeletalMeshMotionBlurSkinningMemory, STATGROUP_Memory, CORE_API);
-DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("VertexShader Memory"), STAT_VertexShaderMemory, STATGROUP_Memory, YPlatformMemory::MCR_Physical, CORE_API);
-DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("PixelShader Memory"), STAT_PixelShaderMemory, STATGROUP_Memory, YPlatformMemory::MCR_Physical, CORE_API);
+DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("VertexShader Memory"), STAT_VertexShaderMemory, STATGROUP_Memory, FPlatformMemory::MCR_Physical, CORE_API);
+DECLARE_MEMORY_STAT_POOL_EXTERN(TEXT("PixelShader Memory"), STAT_PixelShaderMemory, STATGROUP_Memory, FPlatformMemory::MCR_Physical, CORE_API);
 DECLARE_MEMORY_STAT_EXTERN(TEXT("Navigation Memory"), STAT_NavigationMemory, STATGROUP_Memory, CORE_API);
 /** PhysX memory tracking needs PHYSX_MEMORY_STATS enabled */
 DECLARE_MEMORY_STAT_EXTERN(TEXT("PhysX Memory Used"), STAT_MemoryPhysXTotalAllocationSize, STATGROUP_Memory, CORE_API);

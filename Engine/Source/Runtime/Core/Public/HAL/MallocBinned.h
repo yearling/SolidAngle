@@ -1,3 +1,5 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
@@ -23,12 +25,12 @@
 #endif
 
 #if defined CACHE_FREED_OS_ALLOCS
-#define MAX_CACHED_OS_FREES (64)
-#if PLATFORM_64BITS
-#define MAX_CACHED_OS_FREES_BYTE_LIMIT (64*1024*1024)
-#else
-#define MAX_CACHED_OS_FREES_BYTE_LIMIT (16*1024*1024)
-#endif
+	#define MAX_CACHED_OS_FREES (64)
+	#if PLATFORM_64BITS
+		#define MAX_CACHED_OS_FREES_BYTE_LIMIT (64*1024*1024)
+	#else
+		#define MAX_CACHED_OS_FREES_BYTE_LIMIT (16*1024*1024)
+	#endif
 #endif
 
 #if defined USE_INTERNAL_LOCKS && !defined USE_COARSE_GRAIN_LOCKS
@@ -75,21 +77,21 @@ typedef int32 BINNED_STAT_TYPE;
 #endif
 
 /** Malloc binned allocator specific stats. */
-DECLARE_MEMORY_STAT_EXTERN(TEXT("Binned Os Current"), STAT_Binned_OsCurrent, STATGROUP_MemoryAllocator, CORE_API);
-DECLARE_MEMORY_STAT_EXTERN(TEXT("Binned Os Peak"), STAT_Binned_OsPeak, STATGROUP_MemoryAllocator, CORE_API);
-DECLARE_MEMORY_STAT_EXTERN(TEXT("Binned Waste Current"), STAT_Binned_WasteCurrent, STATGROUP_MemoryAllocator, CORE_API);
-DECLARE_MEMORY_STAT_EXTERN(TEXT("Binned Waste Peak"), STAT_Binned_WastePeak, STATGROUP_MemoryAllocator, CORE_API);
-DECLARE_MEMORY_STAT_EXTERN(TEXT("Binned Used Current"), STAT_Binned_UsedCurrent, STATGROUP_MemoryAllocator, CORE_API);
-DECLARE_MEMORY_STAT_EXTERN(TEXT("Binned Used Peak"), STAT_Binned_UsedPeak, STATGROUP_MemoryAllocator, CORE_API);
-DECLARE_DWORD_COUNTER_STAT_EXTERN(TEXT("Binned Current Allocs"), STAT_Binned_CurrentAllocs, STATGROUP_MemoryAllocator, CORE_API);
-DECLARE_DWORD_COUNTER_STAT_EXTERN(TEXT("Binned Total Allocs"), STAT_Binned_TotalAllocs, STATGROUP_MemoryAllocator, CORE_API);
-DECLARE_MEMORY_STAT_EXTERN(TEXT("Binned Slack Current"), STAT_Binned_SlackCurrent, STATGROUP_MemoryAllocator, CORE_API);
+DECLARE_MEMORY_STAT_EXTERN(TEXT("Binned Os Current"),		STAT_Binned_OsCurrent,STATGROUP_MemoryAllocator, CORE_API);
+DECLARE_MEMORY_STAT_EXTERN(TEXT("Binned Os Peak"),			STAT_Binned_OsPeak,STATGROUP_MemoryAllocator, CORE_API);
+DECLARE_MEMORY_STAT_EXTERN(TEXT("Binned Waste Current"),	STAT_Binned_WasteCurrent,STATGROUP_MemoryAllocator, CORE_API);
+DECLARE_MEMORY_STAT_EXTERN(TEXT("Binned Waste Peak"),		STAT_Binned_WastePeak,STATGROUP_MemoryAllocator, CORE_API);
+DECLARE_MEMORY_STAT_EXTERN(TEXT("Binned Used Current"),		STAT_Binned_UsedCurrent,STATGROUP_MemoryAllocator, CORE_API);
+DECLARE_MEMORY_STAT_EXTERN(TEXT("Binned Used Peak"),		STAT_Binned_UsedPeak,STATGROUP_MemoryAllocator, CORE_API);
+DECLARE_DWORD_COUNTER_STAT_EXTERN(TEXT("Binned Current Allocs"),	STAT_Binned_CurrentAllocs,STATGROUP_MemoryAllocator, CORE_API);
+DECLARE_DWORD_COUNTER_STAT_EXTERN(TEXT("Binned Total Allocs"),		STAT_Binned_TotalAllocs,STATGROUP_MemoryAllocator, CORE_API);
+DECLARE_MEMORY_STAT_EXTERN(TEXT("Binned Slack Current"),	STAT_Binned_SlackCurrent,STATGROUP_MemoryAllocator, CORE_API);
 
 
 //
 // Optimized virtual memory allocator.
 //
-class YMallocBinned : public FMalloc
+class FMallocBinned : public FMalloc
 {
 	struct Private;
 
@@ -100,7 +102,7 @@ private:
 
 	/** Maximum allocation for the pooled allocator */
 	enum { EXTENDED_PAGE_POOL_ALLOCATION_COUNT = 2 };
-	enum { MAX_POOLED_ALLOCATION_SIZE = 32768 + 1 };
+	enum { MAX_POOLED_ALLOCATION_SIZE   = 32768+1 };
 
 	// Forward declares.
 	struct FFreeMem;
@@ -115,7 +117,7 @@ private:
 		void*				Ptr;
 		SIZE_T				ByteSize;
 
-		FFreePageBlock()
+		FFreePageBlock() 
 		{
 			Ptr = nullptr;
 			ByteSize = 0;
@@ -180,7 +182,7 @@ private:
 
 #ifdef USE_LOCKFREE_DELETE
 	/** We can't call the constructor to TLockFreePointerList in the BinnedMalloc constructor
-	* as it attempts to allocate memory. We push this back and initialize it later but we
+	* as it attempts to allocate memory. We push this back and initialize it later but we 
 	* set aside the memory before hand
 	*/
 	uint8							PendingFreeListMemory[sizeof(TLockFreePointerList<void>)];
@@ -193,7 +195,7 @@ private:
 	FCriticalSection	AccessGuard;
 
 	// PageSize dependent constants
-	uint64 MaxHashBuckets;
+	uint64 MaxHashBuckets; 
 	uint64 MaxHashBucketBits;
 	uint64 MaxHashBucketWaste;
 	uint64 MaxBookKeepingOverhead;
@@ -212,7 +214,7 @@ private:
 	FPoolTable  PoolTable[POOL_COUNT];
 	FPoolTable	OsTable;
 	FPoolTable	PagePoolTable[EXTENDED_PAGE_POOL_ALLOCATION_COUNT];
-	FPoolTable* MemSizeToPoolTable[MAX_POOLED_ALLOCATION_SIZE + EXTENDED_PAGE_POOL_ALLOCATION_COUNT];
+	FPoolTable* MemSizeToPoolTable[MAX_POOLED_ALLOCATION_SIZE+EXTENDED_PAGE_POOL_ALLOCATION_COUNT];
 
 	PoolHashBucket* HashBuckets;
 	PoolHashBucket* HashBucketFreeList;
@@ -240,64 +242,64 @@ private:
 #endif
 
 public:
-	// YMalloc interface.
+	// FMalloc interface.
 	// InPageSize - First parameter is page size, all allocs from BinnedAllocFromOS() MUST be aligned to this size
 	// AddressLimit - Second parameter is estimate of the range of addresses expected to be returns by BinnedAllocFromOS(). Binned
 	// Malloc will adjust its internal structures to make lookups for memory allocations O(1) for this range. 
 	// It is ok to go outside this range, lookups will just be a little slower
-	YMallocBinned(uint32 InPageSize, uint64 AddressLimit);
+	FMallocBinned(uint32 InPageSize, uint64 AddressLimit);
 
 	virtual void InitializeStatsMetadata() override;
 
-	virtual ~YMallocBinned();
+	virtual ~FMallocBinned();
 
 	/**
-	* Returns if the allocator is guaranteed to be thread-safe and therefore
-	* doesn't need a unnecessary thread-safety wrapper around it.
-	*/
+	 * Returns if the allocator is guaranteed to be thread-safe and therefore
+	 * doesn't need a unnecessary thread-safety wrapper around it.
+	 */
 	virtual bool IsInternallyThreadSafe() const override;
 
-	/**
-	* Malloc
-	*/
-	virtual void* Malloc(SIZE_T Size, uint32 Alignment) override;
+	/** 
+	 * Malloc
+	 */
+	virtual void* Malloc( SIZE_T Size, uint32 Alignment ) override;
+
+	/** 
+	 * Realloc
+	 */
+	virtual void* Realloc( void* Ptr, SIZE_T NewSize, uint32 Alignment ) override;
+
+	/** 
+	 * Free
+	 */
+	virtual void Free( void* Ptr ) override;
 
 	/**
-	* Realloc
-	*/
-	virtual void* Realloc(void* Ptr, SIZE_T NewSize, uint32 Alignment) override;
-
-	/**
-	* Free
-	*/
-	virtual void Free(void* Ptr) override;
-
-	/**
-	* If possible determine the size of the memory allocated at the given address
-	*
-	* @param Original - Pointer to memory we are checking the size of
-	* @param SizeOut - If possible, this value is set to the size of the passed in pointer
-	* @return true if succeeded
-	*/
+	 * If possible determine the size of the memory allocated at the given address
+	 *
+	 * @param Original - Pointer to memory we are checking the size of
+	 * @param SizeOut - If possible, this value is set to the size of the passed in pointer
+	 * @return true if succeeded
+	 */
 	virtual bool GetAllocationSize(void *Original, SIZE_T &SizeOut) override;
 
 	/**
-	* Validates the allocator's heap
-	*/
+	 * Validates the allocator's heap
+	 */
 	virtual bool ValidateHeap() override;
 
 	/** Called once per frame, gathers and sets all memory allocator statistics into the corresponding stats. MUST BE THREAD SAFE. */
 	virtual void UpdateStats() override;
 
 	/** Writes allocator stats from the last update into the specified destination. */
-	virtual void GetAllocatorStats(FGenericMemoryStats& out_Stats) override;
+	virtual void GetAllocatorStats( FGenericMemoryStats& out_Stats ) override;
 
 	/**
-	* Dumps allocator stats to an output device. Subclasses should override to add additional info
-	*
-	* @param Ar	[in] Output device
-	*/
-	virtual void DumpAllocatorStats(class FOutputDevice& Ar) override;
+	 * Dumps allocator stats to an output device. Subclasses should override to add additional info
+	 *
+	 * @param Ar	[in] Output device
+	 */
+	virtual void DumpAllocatorStats( class FOutputDevice& Ar ) override;
 
 	virtual const TCHAR* GetDescriptiveName() override;
 };

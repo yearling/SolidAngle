@@ -112,7 +112,7 @@ const TCHAR* FGenericPlatformProcess::ShaderDir()
 {
 	if (Generic_ShaderDir.Len() == 0)
 	{
-		Generic_ShaderDir = YPaths::Combine(*(YPaths::EngineDir()), TEXT("Shaders"));
+		Generic_ShaderDir = FPaths::Combine(*(FPaths::EngineDir()), TEXT("Shaders"));
 	}
 	return *Generic_ShaderDir;
 }
@@ -134,7 +134,7 @@ void FGenericPlatformProcess::SetShaderDir(const TCHAR*Where)
  */
 const FString FGenericPlatformProcess::ShaderWorkingDir()
 {
-	return (YPaths::GameIntermediateDir() / TEXT("Shaders/tmp/"));
+	return (FPaths::GameIntermediateDir() / TEXT("Shaders/tmp/"));
 }
 
 /**
@@ -146,7 +146,7 @@ void FGenericPlatformProcess::CleanShaderWorkingDir()
 	FString ShaderWorkingDirectory =  FPlatformProcess::ShaderWorkingDir();
 	IFileManager::Get().DeleteDirectory(*ShaderWorkingDirectory, false, true);
 
-	FString LegacyShaderWorkingDirectory = YPaths::GameIntermediateDir() / TEXT("Shaders/WorkingDirectory/");
+	FString LegacyShaderWorkingDirectory = FPaths::GameIntermediateDir() / TEXT("Shaders/WorkingDirectory/");
 	IFileManager::Get().DeleteDirectory(*LegacyShaderWorkingDirectory, false, true);
 }
 
@@ -180,7 +180,7 @@ const TCHAR* FGenericPlatformProcess::GetBinariesSubdirectory()
 
 const FString FGenericPlatformProcess::GetModulesDirectory()
 {
-	return YPaths::Combine(*YPaths::EngineDir(), TEXT("Binaries"), FPlatformProcess::GetBinariesSubdirectory());
+	return FPaths::Combine(*FPaths::EngineDir(), TEXT("Binaries"), FPlatformProcess::GetBinariesSubdirectory());
 }
 
 void FGenericPlatformProcess::LaunchURL( const TCHAR* URL, const TCHAR* Parms, FString* Error )

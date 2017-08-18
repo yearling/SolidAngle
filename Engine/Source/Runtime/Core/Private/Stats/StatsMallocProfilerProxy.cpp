@@ -18,7 +18,7 @@ DECLARE_PTR_STAT( TEXT( "Memory Alloc Ptr" ), STAT_Memory_AllocPtr, STATGROUP_Me
 DECLARE_PTR_STAT( TEXT( "Memory Realloc Ptr" ), STAT_Memory_ReallocPtr, STATGROUP_MemoryProfiler );
 DECLARE_MEMORY_STAT( TEXT( "Memory Alloc Size" ), STAT_Memory_AllocSize, STATGROUP_MemoryProfiler );
 DECLARE_MEMORY_STAT( TEXT( "Memory Operation Sequence Tag" ), STAT_Memory_OperationSequenceTag, STATGROUP_MemoryProfiler );
-DECLARE_FName_STAT( TEXT( "Memory Snapshot" ), STAT_Memory_Snapshot, STATGROUP_MemoryProfiler );
+DECLARE_FNAME_STAT( TEXT( "Memory Snapshot" ), STAT_Memory_Snapshot, STATGROUP_MemoryProfiler );
 
 /** Stats for memory usage by the profiler. */
 DECLARE_DWORD_COUNTER_STAT( TEXT( "Profiler AllocPtr Calls" ), STAT_Memory_AllocPtr_Calls, STATGROUP_StatSystem );
@@ -85,18 +85,18 @@ void FStatsMallocProfilerProxy::InitializeStatsMetadata()
 	// Initialize the memory messages metadata.
 	// Malloc profiler proxy needs to be disabled otherwise it will hit infinite recursion in DoSetup.
 	// Needs to be changed if we want to support boot time memory profiling.
-	const FName NameAllocPtr = GET_STATFName(STAT_Memory_AllocPtr);
-	const FName NameReallocPtr = GET_STATFName(STAT_Memory_ReallocPtr);
-	const FName NameFreePtr = GET_STATFName(STAT_Memory_FreePtr);
-	const FName NameAllocSize = GET_STATFName(STAT_Memory_AllocSize);
-	const FName NameOperationSequenceTag = GET_STATFName(STAT_Memory_OperationSequenceTag);
+	const FName NameAllocPtr = GET_STATFNAME(STAT_Memory_AllocPtr);
+	const FName NameReallocPtr = GET_STATFNAME(STAT_Memory_ReallocPtr);
+	const FName NameFreePtr = GET_STATFNAME(STAT_Memory_FreePtr);
+	const FName NameAllocSize = GET_STATFNAME(STAT_Memory_AllocSize);
+	const FName NameOperationSequenceTag = GET_STATFNAME(STAT_Memory_OperationSequenceTag);
 
-	GET_STATFName(STAT_Memory_AllocPtr_Calls);
-	GET_STATFName(STAT_Memory_ReallocPtr_Calls);
-	GET_STATFName(STAT_Memory_FreePtr_Calls);
+	GET_STATFNAME(STAT_Memory_AllocPtr_Calls);
+	GET_STATFNAME(STAT_Memory_ReallocPtr_Calls);
+	GET_STATFNAME(STAT_Memory_FreePtr_Calls);
 
-	GET_STATFName(STAT_Memory_AllocPtr_Mem);
-	GET_STATFName(STAT_Memory_FreePtr_Mem);
+	GET_STATFNAME(STAT_Memory_AllocPtr_Mem);
+	GET_STATFNAME(STAT_Memory_FreePtr_Mem);
 }
 
 void FStatsMallocProfilerProxy::TrackAlloc( void* Ptr, int64 Size, int32 SequenceTag )
@@ -127,9 +127,9 @@ void FStatsMallocProfilerProxy::TrackAlloc( void* Ptr, int64 Size, int32 Sequenc
 #endif // UE_BUILD_DEBUG
 
 			// 48 bytes per allocation.
-			ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_AllocPtr ), (uint64)(UPTRINT)Ptr | (uint64)EMemoryOperation::Alloc );
-			ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_AllocSize ), Size );
-			ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_OperationSequenceTag ), (int64)SequenceTag );
+			ThreadStats->AddMemoryMessage( GET_STATFNAME( STAT_Memory_AllocPtr ), (uint64)(UPTRINT)Ptr | (uint64)EMemoryOperation::Alloc );
+			ThreadStats->AddMemoryMessage( GET_STATFNAME( STAT_Memory_AllocSize ), Size );
+			ThreadStats->AddMemoryMessage( GET_STATFNAME( STAT_Memory_OperationSequenceTag ), (int64)SequenceTag );
 			AllocPtrCalls.Increment();
 		}
 	}
@@ -155,8 +155,8 @@ void FStatsMallocProfilerProxy::TrackFree( void* Ptr, int32 SequenceTag )
 			if( ThreadStats->MemoryMessageScope == 0 )
 			{
 				// 32 bytes per free.
-				ThreadStats->AddMemoryMessage( GET_STATFName(STAT_Memory_FreePtr), (uint64)(UPTRINT)Ptr | (uint64)EMemoryOperation::Free );	// 16 bytes total				
-				ThreadStats->AddMemoryMessage( GET_STATFName(STAT_Memory_OperationSequenceTag), (int64)SequenceTag );	
+				ThreadStats->AddMemoryMessage( GET_STATFNAME(STAT_Memory_FreePtr), (uint64)(UPTRINT)Ptr | (uint64)EMemoryOperation::Free );	// 16 bytes total				
+				ThreadStats->AddMemoryMessage( GET_STATFNAME(STAT_Memory_OperationSequenceTag), (int64)SequenceTag );	
 				FreePtrCalls.Increment();
 			}
 		}	
@@ -173,10 +173,10 @@ void FStatsMallocProfilerProxy::TrackRealloc( void* OldPtr, void* NewPtr, int64 
 			if (ThreadStats->MemoryMessageScope == 0)
 			{
 				// 64 bytes per reallocation. 80 for Free/Alloc
-				ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_FreePtr ), (uint64)(UPTRINT)OldPtr | (uint64)EMemoryOperation::Realloc );
-				ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_AllocPtr ), (uint64)(UPTRINT)NewPtr | (uint64)EMemoryOperation::Realloc );
-				ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_AllocSize ), NewSize );
-				ThreadStats->AddMemoryMessage( GET_STATFName( STAT_Memory_OperationSequenceTag ), (int64)SequenceTag );
+				ThreadStats->AddMemoryMessage( GET_STATFNAME( STAT_Memory_FreePtr ), (uint64)(UPTRINT)OldPtr | (uint64)EMemoryOperation::Realloc );
+				ThreadStats->AddMemoryMessage( GET_STATFNAME( STAT_Memory_AllocPtr ), (uint64)(UPTRINT)NewPtr | (uint64)EMemoryOperation::Realloc );
+				ThreadStats->AddMemoryMessage( GET_STATFNAME( STAT_Memory_AllocSize ), NewSize );
+				ThreadStats->AddMemoryMessage( GET_STATFNAME( STAT_Memory_OperationSequenceTag ), (int64)SequenceTag );
 				ReallocPtrCalls.Increment();
 			}
 		}

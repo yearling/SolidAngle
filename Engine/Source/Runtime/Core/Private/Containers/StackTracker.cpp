@@ -24,7 +24,7 @@ void FStackTracker::CaptureStackTrace(int32 EntriesToIgnore, void* UserData, int
 
 		// Capture callstack and create CRC.
 		int32 Size = (MAX_BACKTRACE_DEPTH + EntriesToIgnore) * sizeof(uint64);
-		uint64* FullBackTrace = static_cast<uint64*>(YMemory_Alloca(Size));
+		uint64* FullBackTrace = static_cast<uint64*>(FMemory_Alloca(Size));
 
 		FMemory::Memzero(FullBackTrace, Size);
 

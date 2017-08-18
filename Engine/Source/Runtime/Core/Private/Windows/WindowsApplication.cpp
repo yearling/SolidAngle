@@ -16,10 +16,10 @@
 #include "IInputDevice.h"
 #include "IHapticDevice.h"
 #include "HAL/ThreadHeartBeat.h"
-#include "Templates/UniquePtr.h"
+#include "UniquePtr.h"
 
 #if WITH_EDITOR
-#include "Modules/ModuleManager.h"
+#include "ModuleManager.h"
 //#include "Developer/SourceCodeAccess/Public/ISourceCodeAccessModule.h"
 #endif
 

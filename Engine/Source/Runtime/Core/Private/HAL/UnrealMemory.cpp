@@ -75,7 +75,7 @@ public:
 	* Constructor for thread safe proxy malloc that takes a malloc to be used and a
 	* synchronization object used via FScopeLock as a parameter.
 	*
-	* @param	InMalloc					YMalloc that is going to be used for actual allocations
+	* @param	InMalloc					FMalloc that is going to be used for actual allocations
 	*/
 	FMallocPurgatoryProxy(FMalloc* InMalloc)
 		: UsedMalloc(InMalloc)
@@ -312,7 +312,7 @@ FConsoleCommandDelegate::CreateStatic(&FMemory::EnablePoisonTests)
 /** Helper function called on first allocation to create and initialize GMalloc */
 void FMemory::GCreateMalloc()
 {
-	GMalloc = YPlatformMemory::BaseAllocator();
+	GMalloc = FPlatformMemory::BaseAllocator();
 	// Setup malloc crash as soon as possible.
 	FPlatformMallocCrash::Get( GMalloc );
 
@@ -441,7 +441,7 @@ void FMemory::FreeExternal(void* Original)
 	if (Original)
 	{
 		GMalloc->Free(Original);
-	}
+}
 }
 
 SIZE_T FMemory::GetAllocSizeExternal(void* Original)
@@ -473,7 +473,7 @@ void FMemory::Trim()
 		GCreateMalloc();
 		CA_ASSUME(GMalloc != NULL);	// Don't want to assert, but suppress static analysis warnings about potentially NULL GMalloc
 	}
-	QUICK_SCOPE_CYCLE_COUNTER(STAT_YMemory_Trim);
+	QUICK_SCOPE_CYCLE_COUNTER(STAT_FMemory_Trim);
 	GMalloc->Trim();
 }
 
@@ -497,17 +497,17 @@ void FMemory::ClearAndDisableTLSCachesOnCurrentThread()
 
 void* FMemory::GPUMalloc(SIZE_T Count, uint32 Alignment /* = DEFAULT_ALIGNMENT */)
 {
-	return YPlatformMemory::GPUMalloc(Count, Alignment);
+	return FPlatformMemory::GPUMalloc(Count, Alignment);
 }
 
 void* FMemory::GPURealloc(void* Original, SIZE_T Count, uint32 Alignment /* = DEFAULT_ALIGNMENT */)
 {
-	return YPlatformMemory::GPURealloc(Original, Count, Alignment);
+	return FPlatformMemory::GPURealloc(Original, Count, Alignment);
 }
 
 void FMemory::GPUFree(void* Original)
 {
-	return YPlatformMemory::GPUFree(Original);
+	return FPlatformMemory::GPUFree(Original);
 }
 
 void FMemory::TestMemory()
@@ -578,6 +578,6 @@ void FUseSystemMallocForNew::operator delete[](void* Ptr)
 	FMemory::SystemFree(Ptr);
 }
 
-#if !INLINE_YMemory_OPERATION && !PLATFORM_USES_FIXED_GMalloc_CLASS
+#if !INLINE_FMEMORY_OPERATION && !PLATFORM_USES_FIXED_GMalloc_CLASS
 #include "HAL/FMemory.inl"
 #endif

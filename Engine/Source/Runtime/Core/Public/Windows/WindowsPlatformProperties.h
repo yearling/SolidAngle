@@ -7,11 +7,11 @@
 
 
 /**
-* Implements Windows platform properties.
-*/
+ * Implements Windows platform properties.
+ */
 template<bool HAS_EDITOR_DATA, bool IS_DEDICATED_SERVER, bool IS_CLIENT_ONLY>
-struct YWindowsPlatformProperties
-	: public YGenericPlatformProperties
+struct FWindowsPlatformProperties
+	: public FGenericPlatformProperties
 {
 	static FORCEINLINE bool HasEditorOnlyData()
 	{
@@ -44,12 +44,12 @@ struct YWindowsPlatformProperties
 		{
 			return "WindowsServer";
 		}
-
+		
 		if (HAS_EDITOR_DATA)
 		{
 			return "Windows";
 		}
-
+		
 		if (IS_CLIENT_ONLY)
 		{
 			return "WindowsClient";
@@ -87,7 +87,7 @@ struct YWindowsPlatformProperties
 	{
 		return true;
 	}
-
+	
 	static FORCEINLINE bool HasFixedResolution()
 	{
 		return false;

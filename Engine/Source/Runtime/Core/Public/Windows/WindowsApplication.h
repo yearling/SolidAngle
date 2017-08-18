@@ -9,9 +9,9 @@
 
 #include "WindowsHWrapper.h"
 #include "AllowWindowsPlatformTypes.h"
-#include <Ole2.h>
-#include <oleidl.h>
-#include <ShObjIdl.h>
+	#include <Ole2.h>
+	#include <oleidl.h>
+	#include <ShObjIdl.h>
 #include "HideWindowsPlatformTypes.h"
 #include "GenericPlatform/IForceFeedbackSystem.h"
 #include "WindowsTextInputMethodSystem.h"
@@ -66,46 +66,46 @@ namespace ETaskbarProgressState
 
 
 /**
-* Allows access to task bar lists.
-*
-* This class can be used to change the appearance of a window's entry in the windows task bar,
-* such as setting an overlay icon or showing a progress indicator.
-*/
+ * Allows access to task bar lists.
+ *
+ * This class can be used to change the appearance of a window's entry in the windows task bar,
+ * such as setting an overlay icon or showing a progress indicator.
+ */
 class CORE_API FTaskbarList
 {
 public:
 
 	/**
-	* Create and initialize a new task bar list.
-	*
-	* @return The new task bar list.
-	*/
+	 * Create and initialize a new task bar list.
+	 *
+	 * @return The new task bar list.
+	 */
 	static TSharedRef<FTaskbarList> Create();
 
 	/**
-	* Sets the overlay icon of a task bar entry.
-	*
-	* @param NativeWindow The native window to change the overlay icon for.
-	* @param Icon The overlay icon to set.
-	* @param Description The overlay icon's description text.
-	*/
+	 * Sets the overlay icon of a task bar entry.
+	 *
+	 * @param NativeWindow The native window to change the overlay icon for.
+	 * @param Icon The overlay icon to set.
+	 * @param Description The overlay icon's description text.
+	 */
 	void SetOverlayIcon(const TSharedRef<FGenericWindow>& NativeWindow, HICON Icon, FText Description);
 
 	/**
-	* Sets the progress state of a task bar entry.
-	*
-	* @param NativeWindow The native window to change the progress state for.
-	* @param State The new progress state.
-	*/
+	 * Sets the progress state of a task bar entry.
+	 *
+	 * @param NativeWindow The native window to change the progress state for.
+	 * @param State The new progress state.
+	 */
 	void SetProgressState(const TSharedRef<FGenericWindow>& NativeWindow, ETaskbarProgressState::Type State);
 
 	/**
-	* Sets the progress value of a task bar entry.
-	*
-	* @param NativeWindow The native window to change the progress value for.
-	* @param Current The current progress value.
-	* @param Total The total progress value.
-	*/
+	 * Sets the progress value of a task bar entry.
+	 *
+	 * @param NativeWindow The native window to change the progress value for.
+	 * @param Current The current progress value.
+	 * @param Total The total progress value.
+	 */
 	void SetProgressValue(const TSharedRef<FGenericWindow>& NativeWindow, uint64 Current, uint64 Total);
 
 	/** Destructor. */
@@ -128,15 +128,15 @@ private:
 
 struct FDeferredWindowsMessage
 {
-	FDeferredWindowsMessage(const TSharedPtr<FWindowsWindow>& InNativeWindow, HWND InHWnd, uint32 InMessage, WPARAM InWParam, LPARAM InLParam, int32 InX = 0, int32 InY = 0, uint32 InRawInputFlags = 0)
-		: NativeWindow(InNativeWindow)
-		, hWND(InHWnd)
-		, Message(InMessage)
-		, wParam(InWParam)
-		, lParam(InLParam)
-		, X(InX)
-		, Y(InY)
-		, RawInputFlags(InRawInputFlags)
+	FDeferredWindowsMessage( const TSharedPtr<FWindowsWindow>& InNativeWindow, HWND InHWnd, uint32 InMessage, WPARAM InWParam, LPARAM InLParam, int32 InX=0, int32 InY=0, uint32 InRawInputFlags = 0 )
+		: NativeWindow( InNativeWindow )
+		, hWND( InHWnd )
+		, Message( InMessage )
+		, wParam( InWParam )
+		, lParam( InLParam )
+		, X( InX )
+		, Y( InY )
+		, RawInputFlags( InRawInputFlags )
 	{ }
 
 	/** Native window that received the message */
@@ -176,8 +176,8 @@ struct FDragDropOLEData
 	enum EWindowsOLEDataType
 	{
 		None = 0,
-		Text = 1 << 0,
-		Files = 1 << 1,
+		Text = 1<<0,
+		Files = 1<<1,
 	};
 
 	FDragDropOLEData()
@@ -260,29 +260,29 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 
 
 /**
-* Interface for classes that handle Windows events.
-*/
+ * Interface for classes that handle Windows events.
+ */
 class IWindowsMessageHandler
 {
 public:
 
 	/**
-	* Processes a Windows message.
-	*
-	* @param hwnd Handle to the window that received the message.
-	* @param msg The message.
-	* @param wParam Additional message information.
-	* @param lParam Additional message information.
-	* @param OutResult Will contain the result if the message was handled.
-	* @return true if the message was handled, false otherwise.
-	*/
+	 * Processes a Windows message.
+	 *
+	 * @param hwnd Handle to the window that received the message.
+	 * @param msg The message.
+	 * @param wParam Additional message information.
+	 * @param lParam Additional message information.
+	 * @param OutResult Will contain the result if the message was handled.
+	 * @return true if the message was handled, false otherwise.
+	 */
 	virtual bool ProcessMessage(HWND hwnd, uint32 msg, WPARAM wParam, LPARAM lParam, int32& OutResult) = 0;
 };
 
 
 /**
-* Windows-specific application implementation.
-*/
+ * Windows-specific application implementation.
+ */
 class CORE_API FWindowsApplication
 	: public GenericApplication
 	, public IForceFeedbackSystem
@@ -290,81 +290,81 @@ class CORE_API FWindowsApplication
 public:
 
 	/**
-	* Static: Creates a new Win32 application
-	*
-	* @param InstanceHandle Win32 instance handle.
-	* @param IconHandle Win32 application icon handle.
-	* @return New application object.
-	*/
-	static FWindowsApplication* CreateWindowsApplication(const HINSTANCE InstanceHandle, const HICON IconHandle);
+	 * Static: Creates a new Win32 application
+	 *
+	 * @param InstanceHandle Win32 instance handle.
+	 * @param IconHandle Win32 application icon handle.
+	 * @return New application object.
+	 */
+	static FWindowsApplication* CreateWindowsApplication( const HINSTANCE InstanceHandle, const HICON IconHandle );
 
 	/** Virtual destructor. */
 	virtual ~FWindowsApplication();
 
-public:
+public:	
 
 	/** Called by a window when an OLE Drag and Drop operation occurred on a non-game thread */
-	void DeferDragDropOperation(const FDeferredWindowsDragDropOperation& DeferredDragDropOperation);
+	void DeferDragDropOperation( const FDeferredWindowsDragDropOperation& DeferredDragDropOperation );
 
 	TSharedPtr<FTaskbarList> GetTaskbarList();
 
 	/** Invoked by a window when an OLE Drag and Drop first enters it. */
-	HRESULT OnOLEDragEnter(const HWND HWnd, const FDragDropOLEData& OLEData, ::DWORD KeyState, POINTL CursorPosition, ::DWORD *CursorEffect);
+	HRESULT OnOLEDragEnter( const HWND HWnd, const FDragDropOLEData& OLEData, ::DWORD KeyState, POINTL CursorPosition, ::DWORD *CursorEffect);
 
 	/** Invoked by a window when an OLE Drag and Drop moves over the window. */
-	HRESULT OnOLEDragOver(const HWND HWnd, ::DWORD KeyState, POINTL CursorPosition, ::DWORD *CursorEffect);
+	HRESULT OnOLEDragOver( const HWND HWnd, ::DWORD KeyState, POINTL CursorPosition, ::DWORD *CursorEffect);
 
 	/** Invoked by a window when an OLE Drag and Drop exits the window. */
-	HRESULT OnOLEDragOut(const HWND HWnd);
+	HRESULT OnOLEDragOut( const HWND HWnd );
 
 	/** Invoked by a window when an OLE Drag and Drop is dropped onto the window. */
-	HRESULT OnOLEDrop(const HWND HWnd, const FDragDropOLEData& OLEData, ::DWORD KeyState, POINTL CursorPosition, ::DWORD *CursorEffect);
+	HRESULT OnOLEDrop( const HWND HWnd, const FDragDropOLEData& OLEData, ::DWORD KeyState, POINTL CursorPosition, ::DWORD *CursorEffect);
 
 	/**
-	* Adds a Windows message handler with the application instance.
-	*
-	* @param MessageHandler The message handler to register.
-	* @see RemoveMessageHandler
-	*/
+	 * Adds a Windows message handler with the application instance.
+	 *
+	 * @param MessageHandler The message handler to register.
+	 * @see RemoveMessageHandler
+	 */
 	virtual void AddMessageHandler(IWindowsMessageHandler& InMessageHandler);
 
 	/**
-	* Removes a Windows message handler with the application instance.
-	*
-	* @param MessageHandler The message handler to register.
-	* @see AddMessageHandler
-	*/
+	 * Removes a Windows message handler with the application instance.
+	 *
+	 * @param MessageHandler The message handler to register.
+	 * @see AddMessageHandler
+	 */
 	virtual void RemoveMessageHandler(IWindowsMessageHandler& InMessageHandler);
 
 public:
 
 	// GenericApplication overrides
 
-	virtual void SetMessageHandler(const TSharedRef< class FGenericApplicationMessageHandler >& InMessageHandler) override;
-	virtual void PollGameDeviceState(const float TimeDelta) override;
-	virtual void PumpMessages(const float TimeDelta) override;
-	virtual void ProcessDeferredEvents(const float TimeDelta) override;
+	virtual void SetMessageHandler( const TSharedRef< class FGenericApplicationMessageHandler >& InMessageHandler ) override;
+	virtual void PollGameDeviceState( const float TimeDelta ) override;
+	virtual void PumpMessages( const float TimeDelta ) override;
+	virtual void ProcessDeferredEvents( const float TimeDelta ) override;
 	virtual TSharedRef< FGenericWindow > MakeWindow() override;
-	virtual void InitializeWindow(const TSharedRef< FGenericWindow >& Window, const TSharedRef< FGenericWindowDefinition >& InDefinition, const TSharedPtr< FGenericWindow >& InParent, const bool bShowImmediately) override;
-	virtual void SetCapture(const TSharedPtr< FGenericWindow >& InWindow) override;
-	virtual void* GetCapture(void) const override;
-	virtual void SetHighPrecisionMouseMode(const bool Enable, const TSharedPtr< FGenericWindow >& InWindow) override;
+	virtual void InitializeWindow( const TSharedRef< FGenericWindow >& Window, const TSharedRef< FGenericWindowDefinition >& InDefinition, const TSharedPtr< FGenericWindow >& InParent, const bool bShowImmediately ) override;
+	virtual void SetCapture( const TSharedPtr< FGenericWindow >& InWindow ) override;
+	virtual void* GetCapture( void ) const override;
+	virtual void SetHighPrecisionMouseMode( const bool Enable, const TSharedPtr< FGenericWindow >& InWindow ) override;
 	virtual bool IsUsingHighPrecisionMouseMode() const override { return bUsingHighPrecisionMouseInput; }
 	virtual bool IsMouseAttached() const override { return bIsMouseAttached; }
 	virtual bool IsGamepadAttached() const override;
 	virtual FModifierKeysState GetModifierKeys() const override;
 	virtual bool IsCursorDirectlyOverSlateWindow() const override;
-	virtual FPlatformRect GetWorkArea(const FPlatformRect& CurrentWindow) const override;
-	virtual bool TryCalculatePopupWindowPosition(const FPlatformRect& InAnchor, const FVector2D& InSize, const EPopUpOrientation::Type Orientation, /*OUT*/ FVector2D* const CalculatedPopUpPosition) const override;
-	virtual void GetInitialDisplayMetrics(FDisplayMetrics& OutDisplayMetrics) const override;
+	virtual FPlatformRect GetWorkArea( const FPlatformRect& CurrentWindow ) const override;
+	virtual bool TryCalculatePopupWindowPosition( const FPlatformRect& InAnchor, const FVector2D& InSize, const EPopUpOrientation::Type Orientation, /*OUT*/ FVector2D* const CalculatedPopUpPosition ) const override;
+	virtual void GetInitialDisplayMetrics( FDisplayMetrics& OutDisplayMetrics ) const override;
 	virtual EWindowTitleAlignment::Type GetWindowTitleAlignment() const override;
 	virtual EWindowTransparency GetWindowTransparencySupport() const override;
 	virtual void DestroyApplication() override;
 
 	DEPRECATED(4.7, "Please use GetInputInterface()")
-		virtual IForceFeedbackSystem* GetForceFeedbackSystem() override
+	virtual IForceFeedbackSystem* GetForceFeedbackSystem() override
 	{
-		return this;
+		return this; 
 	}
 
 	virtual IForceFeedbackSystem* DEPRECATED_GetForceFeedbackSystem() override
@@ -388,7 +388,7 @@ public:
 
 	// IInputInterface overrides
 
-	virtual void SetForceFeedbackChannelValue(int32 ControllerId, FForceFeedbackChannelType ChannelType, float Value) override;
+	virtual void SetForceFeedbackChannelValue (int32 ControllerId, FForceFeedbackChannelType ChannelType, float Value) override;
 	virtual void SetForceFeedbackChannelValues(int32 ControllerId, const FForceFeedbackValues &Values) override;
 	virtual void SetHapticFeedbackValues(int32 ControllerId, int32 Hand, const FHapticFeedbackValues& Values) override;
 	virtual void SetLightColor(int32 ControllerId, FColor Color) override { }
@@ -399,10 +399,10 @@ protected:
 	static LRESULT CALLBACK AppWndProc(HWND hwnd, uint32 msg, WPARAM wParam, LPARAM lParam);
 
 	/** Processes a single Windows message. */
-	int32 ProcessMessage(HWND hwnd, uint32 msg, WPARAM wParam, LPARAM lParam);
+	int32 ProcessMessage( HWND hwnd, uint32 msg, WPARAM wParam, LPARAM lParam );
 
 	/** Processes a deferred Windows message. */
-	int32 ProcessDeferredMessage(const FDeferredWindowsMessage& DeferredMessage);
+	int32 ProcessDeferredMessage( const FDeferredWindowsMessage& DeferredMessage );
 
 	/** Processes deferred drag and drop operations. */
 	void ProcessDeferredDragDropOperation(const FDeferredWindowsDragDropOperation& Op);
@@ -410,22 +410,22 @@ protected:
 private:
 
 	/** Hidden constructor. */
-	FWindowsApplication(const HINSTANCE HInstance, const HICON IconHandle);
+	FWindowsApplication( const HINSTANCE HInstance, const HICON IconHandle );
 
 	/** Registers the Windows class for windows and assigns the application instance and icon */
-	static bool RegisterClass(const HINSTANCE HInstance, const HICON HIcon);
+	static bool RegisterClass( const HINSTANCE HInstance, const HICON HIcon );
 
 	/**  @return  True if a windows message is related to user input from the keyboard */
-	static bool IsKeyboardInputMessage(uint32 msg);
+	static bool IsKeyboardInputMessage( uint32 msg );
 
 	/**  @return  True if a windows message is related to user input from the mouse */
-	static bool IsMouseInputMessage(uint32 msg);
+	static bool IsMouseInputMessage( uint32 msg );
 
 	/**  @return  True if a windows message is related to user input (mouse, keyboard) */
-	static bool IsInputMessage(uint32 msg);
+	static bool IsInputMessage( uint32 msg );
 
 	/** Defers a Windows message for later processing. */
-	void DeferMessage(TSharedPtr<FWindowsWindow>& NativeWindow, HWND InHWnd, uint32 InMessage, WPARAM InWParam, LPARAM InLParam, int32 MouseX = 0, int32 MouseY = 0, uint32 RawInputFlags = 0);
+	void DeferMessage( TSharedPtr<FWindowsWindow>& NativeWindow, HWND InHWnd, uint32 InMessage, WPARAM InWParam, LPARAM InLParam, int32 MouseX = 0, int32 MouseY = 0, uint32 RawInputFlags = 0 );
 
 	/** Checks a key code for release of the Shift key. */
 	void CheckForShiftUpEvents(const int32 KeyCode);
@@ -495,9 +495,9 @@ private:
 	bool ModifierKeyState[EModifierKey::Count];
 
 	int32 bAllowedToDeferMessageProcessing;
-
+	
 	FAutoConsoleVariableRef CVarDeferMessageProcessing;
-
+	
 	/** True if we are in the middle of a windows modal size loop */
 	bool bInModalSizeLoop;
 

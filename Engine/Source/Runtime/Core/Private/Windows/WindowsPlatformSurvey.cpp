@@ -32,7 +32,7 @@ THIRD_PARTY_INCLUDES_START
 	#include <subauth.h>
 THIRD_PARTY_INCLUDES_END
 
-//#include "SynthBenchmark.h"
+#include "SynthBenchmark.h"
 
 #ifndef PROCESSOR_POWER_INFORMATION
 typedef struct _PROCESSOR_POWER_INFORMATION {  
@@ -132,14 +132,14 @@ void FWindowsPlatformSurvey::BeginSurveyHardware()
 	FString OutputFilepath = GetDxDiagOutputFilepath();
 
 	// Make sure the directory exists before we run dxdiag.  It won't create a directory for us (it will instead just silently do nothing.)
-	IFileManager::Get().MakeDirectory(*YPaths::GetPath(OutputFilepath), true);
+	IFileManager::Get().MakeDirectory(*FPaths::GetPath(OutputFilepath), true);
 
 	// Delete existing output file
 	IFileManager::Get().Delete(*OutputFilepath);
 
 	// Convert paths passed to CreateProc() to Windows format
-	YPaths::MakePlatformFilename(DxDiagFilepath);
-	YPaths::MakePlatformFilename(OutputFilepath);
+	FPaths::MakePlatformFilename(DxDiagFilepath);
+	FPaths::MakePlatformFilename(OutputFilepath);
 
 	// Run dxdiag as a external process, outputting to a text file
 	FString ProcessArgs = FString::Printf(TEXT("/t %s"), *OutputFilepath);
@@ -402,9 +402,9 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 	// Get CPU count from SystemInfo
 	OutResults.CPUCount = SystemInfo.dwNumberOfProcessors;
 
-	//ISynthBenchmark::Get().Run(OutResults.SynthBenchmark, true, 5.f);
+	ISynthBenchmark::Get().Run(OutResults.SynthBenchmark, true, 5.f);
 
-	//ISynthBenchmark::Get().GetRHIDisplay(OutResults.RHIAdpater);
+	ISynthBenchmark::Get().GetRHIDisplay(OutResults.RHIAdpater);
 
 	// Get CPU speed
 	if (OutResults.CPUCount > 0)
@@ -450,7 +450,7 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 	if (CPUBrand.Len() == 0)
 	{
 		OutResults.ErrorCount++;
-		WriteFStringToResults(OutResults.LastSurveyError, TEXT("FWindowsPlatformSurvey::TickSurveyHardware() failed to get processor brand from YWindowsPlatformMisc::GetCPUVendor()"));
+		WriteFStringToResults(OutResults.LastSurveyError, TEXT("FWindowsPlatformSurvey::TickSurveyHardware() failed to get processor brand from FWindowsPlatformMisc::GetCPUVendor()"));
 		WriteFStringToResults(OutResults.LastSurveyErrorDetail, TEXT(""));
 	}
 
@@ -648,8 +648,8 @@ void FWindowsPlatformSurvey::TickSurveyHardware( FHardwareSurveyResults& OutResu
 
 FString FWindowsPlatformSurvey::GetDxDiagOutputFilepath()
 {
-	FString RelativePath = YPaths::Combine(*YPaths::GameSavedDir(), TEXT( "HardwareSurvey" ), TEXT("dxdiag.txt"));
-	return YPaths::ConvertRelativePathToFull(RelativePath);
+	FString RelativePath = FPaths::Combine(*FPaths::GameSavedDir(), TEXT( "HardwareSurvey" ), TEXT("dxdiag.txt"));
+	return FPaths::ConvertRelativePathToFull(RelativePath);
 }
 
 bool FWindowsPlatformSurvey::GetSubComponentIndex( IProvideWinSATResultsInfo* WinSATResults, FHardwareSurveyResults& OutSurveyResults, int32 SubComponent, float& OutSubComponentIndex ) 
@@ -693,16 +693,16 @@ void GetOSVersionLabels(const SYSTEM_INFO& SystemInfo, FHardwareSurveyResults& O
 {
 	FString OSVersionLabel;
 	FString OSSubVersionLabel;
-	const int32 ErrorCode = YWindowsOSVersionHelper::GetOSVersions( OSVersionLabel, OSSubVersionLabel );
+	const int32 ErrorCode = FWindowsOSVersionHelper::GetOSVersions( OSVersionLabel, OSSubVersionLabel );
 
-	if( ErrorCode & YWindowsOSVersionHelper::ERROR_GETPRODUCTINFO_FAILED )
+	if( ErrorCode & FWindowsOSVersionHelper::ERROR_GETPRODUCTINFO_FAILED )
 	{
 		OutResults.ErrorCount++;
 		WriteFStringToResults( OutResults.LastSurveyError, TEXT( "Failed to get GetProductInfo() function from GetProcAddress()." ) );
 		WriteFStringToResults( OutResults.LastSurveyErrorDetail, TEXT( "" ) );
 	}
 
-	if( ErrorCode & YWindowsOSVersionHelper::ERROR_UNKNOWNVERSION )
+	if( ErrorCode & FWindowsOSVersionHelper::ERROR_UNKNOWNVERSION )
 	{
 		OSVERSIONINFOEX OsVersionInfo = {0};
 		OsVersionInfo.dwOSVersionInfoSize = sizeof( OSVERSIONINFOEX );
@@ -718,7 +718,7 @@ void GetOSVersionLabels(const SYSTEM_INFO& SystemInfo, FHardwareSurveyResults& O
 		WriteFStringToResults( OutResults.LastSurveyErrorDetail, FString::Printf( TEXT( "dwMajorVersion: %d  dwMinorVersion: %d" ), OsVersionInfo.dwMajorVersion, OsVersionInfo.dwMinorVersion ) );
 	}
 
-	if( ErrorCode & YWindowsOSVersionHelper::ERROR_GETVERSIONEX_FAILED )
+	if( ErrorCode & FWindowsOSVersionHelper::ERROR_GETVERSIONEX_FAILED )
 	{
 		const uint32 LastError = FPlatformMisc::GetLastError();
 		UE_LOG( LogWindows, Warning, TEXT( "FWindowsPlatformSurvey::GetOSVersionLabel() failed to get Windows version info from GetVersionEx()" ) );

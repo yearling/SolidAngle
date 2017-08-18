@@ -9,6 +9,6 @@
 class CORE_API FOutputDeviceError : public FOutputDevice
 {
 public:
-	virtual void HandleError() = 0;
+	virtual void HandleError()=0;
 };
 

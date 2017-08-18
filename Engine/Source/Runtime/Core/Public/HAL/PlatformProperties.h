@@ -1,3 +1,4 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 #pragma once
 
 #include "CoreTypes.h"
@@ -5,7 +6,7 @@
 
 #if PLATFORM_WINDOWS
 #include "Windows/WindowsPlatformProperties.h"
-typedef YWindowsPlatformProperties<WITH_EDITORONLY_DATA, UE_SERVER, !WITH_SERVER_CODE> FPlatformProperties;
+typedef FWindowsPlatformProperties<WITH_EDITORONLY_DATA, UE_SERVER, !WITH_SERVER_CODE> FPlatformProperties;
 #elif PLATFORM_PS4
 #include "PS4/PS4Properties.h"
 typedef FPS4PlatformProperties FPlatformProperties;

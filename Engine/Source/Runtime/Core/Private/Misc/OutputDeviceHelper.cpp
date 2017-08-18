@@ -6,7 +6,7 @@
 #include "Containers/StringConv.h"
 #include "CoreGlobals.h"
 
-const TCHAR* YOutputDeviceHelper::VerbosityToString(ELogVerbosity::Type Verbosity)
+const TCHAR* FOutputDeviceHelper::VerbosityToString(ELogVerbosity::Type Verbosity)
 {
 	switch (Verbosity & ELogVerbosity::VerbosityMask)
 	{
@@ -30,7 +30,7 @@ const TCHAR* YOutputDeviceHelper::VerbosityToString(ELogVerbosity::Type Verbosit
 	return TEXT("UknownVerbosity");
 }
 
-FString YOutputDeviceHelper::FormatLogLine( ELogVerbosity::Type Verbosity, const class FName& Category, const TCHAR* Message /*= nullptr*/, ELogTimes::Type LogTime /*= ELogTimes::None*/, const double Time /*= -1.0*/ )
+FString FOutputDeviceHelper::FormatLogLine( ELogVerbosity::Type Verbosity, const class FName& Category, const TCHAR* Message /*= nullptr*/, ELogTimes::Type LogTime /*= ELogTimes::None*/, const double Time /*= -1.0*/ )
 {
 	const bool bShowCategory = GPrintLogCategory && Category != NAME_None;
 	FString Format;
@@ -85,7 +85,7 @@ FString YOutputDeviceHelper::FormatLogLine( ELogVerbosity::Type Verbosity, const
 	return Format;
 }
 
-void YOutputDeviceHelper::FormatCastAndSerializeLine(FArchive& Output, const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category, const double Time, bool bSuppressEventTag, bool bAutoEmitLineTerminator)
+void FOutputDeviceHelper::FormatCastAndSerializeLine(FArchive& Output, const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category, const double Time, bool bSuppressEventTag, bool bAutoEmitLineTerminator)
 {
 	// First gather all strings to serialize (prefix, data, terminator) including their size before and after conversion
 	// then allocate the conversion buffer only once and serialize only once

@@ -243,7 +243,7 @@ void FDebug::EnsureFailed(const ANSICHAR* Expr, const ANSICHAR* File, int32 Line
 
 		// Dump the error and flush the log.
 #if !NO_LOGGING
-		OutputMultiLineCallstack(__FILE__, __LINE__, LogOutputDevice.GetCategorFName(), TEXT("=== Handled ensure: ==="), ErrorMsg, ELogVerbosity::Error);
+		OutputMultiLineCallstack(__FILE__, __LINE__, LogOutputDevice.GetCategoryName(), TEXT("=== Handled ensure: ==="), ErrorMsg, ELogVerbosity::Error);
 #endif
 		GLog->Flush();
 

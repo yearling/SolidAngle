@@ -11,7 +11,7 @@
 /**
  * Archive for reading arbitrary data from the specified memory location
  */
-class YMemoryReader final : public YMemoryArchive
+class FMemoryReader final : public FMemoryArchive
 {
 public:
 	/**
@@ -44,8 +44,8 @@ public:
 		}
 	}
 
-	YMemoryReader( const TArray<uint8>& InBytes, bool bIsPersistent = false )
-	: YMemoryArchive()
+	FMemoryReader( const TArray<uint8>& InBytes, bool bIsPersistent = false )
+	: FMemoryArchive()
 	, Bytes(InBytes)
 	, LimitSize(INT64_MAX)
 	{

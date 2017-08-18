@@ -7,9 +7,9 @@
 #include "HAL/ThreadSafeCounter.h"
 #include "Stats/Stats.h"
 #include "Async/AsyncWork.h"
-#include "Templates/UniquePtr.h"
+#include "UniquePtr.h"
 
-#include "Async/AsyncFileHandle.h"
+#include "AsyncFileHandle.h"
 
 class FGenericBaseRequest;
 class FGenericAsyncReadFileHandle;
@@ -452,10 +452,10 @@ bool IPlatformFile::CopyDirectoryTree(const TCHAR* DestinationDirectory, const T
 	check(Source);
 
 	FString DestDir(DestinationDirectory);
-	YPaths::NormalizeDirectorFName(DestDir);
+	FPaths::NormalizeDirectoryName(DestDir);
 
 	FString SourceDir(Source);
-	YPaths::NormalizeDirectorFName(SourceDir);
+	FPaths::NormalizeDirectoryName(SourceDir);
 
 	// Does Source dir exist?
 	if (!DirectoryExists(*SourceDir))
@@ -528,18 +528,18 @@ bool IPlatformFile::CopyDirectoryTree(const TCHAR* DestinationDirectory, const T
 
 FString IPlatformFile::ConvertToAbsolutePathForExternalAppForRead( const TCHAR* Filename )
 {
-	return YPaths::ConvertRelativePathToFull(Filename);
+	return FPaths::ConvertRelativePathToFull(Filename);
 }
 
 FString IPlatformFile::ConvertToAbsolutePathForExternalAppForWrite( const TCHAR* Filename )
 {
-	return YPaths::ConvertRelativePathToFull(Filename);
+	return FPaths::ConvertRelativePathToFull(Filename);
 }
 
 bool IPlatformFile::CreateDirectoryTree(const TCHAR* Directory)
 {
 	FString LocalFilename(Directory);
-	YPaths::NormalizeDirectorFName(LocalFilename);
+	FPaths::NormalizeDirectoryName(LocalFilename);
 	const TCHAR* LocalPath = *LocalFilename;
 	int32 CreateCount = 0;
 	const int32 MaxCharacters = MAX_UNREAL_FILENAME_LENGTH - 1;
@@ -549,7 +549,7 @@ bool IPlatformFile::CreateDirectoryTree(const TCHAR* Directory)
 		if (((*LocalPath) == TEXT('/')) || (*LocalPath== 0))
 		{
 			*Ptr = 0;
-			if ((Ptr != Full) && !YPaths::IsDrive( Full ))
+			if ((Ptr != Full) && !FPaths::IsDrive( Full ))
 			{
 				if (!CreateDirectory(Full) && !DirectoryExists(Full))
 				{

@@ -1238,7 +1238,7 @@ struct FHUDGroupManager
 
 			// Copy the total stats stack to the history stats stack and clear all nodes' data and set data type to none.
 			// Called to maintain the hierarchy.
-			AggregatedHierarchyHistory.CopFNameHierarchy( TotalHierarchyInclusive );
+			AggregatedHierarchyHistory.CopyNameHierarchy( TotalHierarchyInclusive );
 
 			// Copy flat-stack stats
 			AggregatedFlatHistory.Reset( TotalAggregateInclusive.Num() );

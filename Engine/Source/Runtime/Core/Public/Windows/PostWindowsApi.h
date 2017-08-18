@@ -1,3 +1,5 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 // Re-enable warnings
 THIRD_PARTY_INCLUDES_END
 
@@ -31,18 +33,18 @@ THIRD_PARTY_INCLUDES_END
 
 // Undefine all the atomics. AllowWindowsPlatformAtomics/HideWindowsPlatformAtomics temporarily defining these macros.
 #if !PLATFORM_XBOXONE
-#undef InterlockedIncrement
-#undef InterlockedDecrement
-#undef InterlockedAdd
-#undef InterlockedExchange
-#undef InterlockedExchangeAdd
-#undef InterlockedCompareExchange
-#undef InterlockedCompareExchangePointer
-#undef InterlockedExchange64
-#undef InterlockedExchangeAdd64
-#undef InterlockedCompareExchange64
-#undef InterlockedIncrement64
-#undef InterlockedDecrement64
+	#undef InterlockedIncrement
+	#undef InterlockedDecrement
+	#undef InterlockedAdd
+	#undef InterlockedExchange
+	#undef InterlockedExchangeAdd
+	#undef InterlockedCompareExchange
+	#undef InterlockedCompareExchangePointer
+	#undef InterlockedExchange64
+	#undef InterlockedExchangeAdd64
+	#undef InterlockedCompareExchange64
+	#undef InterlockedIncrement64
+	#undef InterlockedDecrement64
 #endif
 
 // Restore any previously defined macros
@@ -57,5 +59,5 @@ THIRD_PARTY_INCLUDES_END
 
 // Make sure version is high enough for API to be defined. For CRITICAL_SECTION
 #if !defined(_XTL_) && (_WIN32_WINNT < 0x0403)
-#error SetCriticalSectionSpinCount requires _WIN32_WINNT >= 0x0403
+	#error SetCriticalSectionSpinCount requires _WIN32_WINNT >= 0x0403
 #endif

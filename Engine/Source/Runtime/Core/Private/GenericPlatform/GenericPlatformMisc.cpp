@@ -175,7 +175,7 @@ FString FSHA256Signature::ToString() const
 	return LocalHashStr;
 }
 
-/* YGenericPlatformMisc interface
+/* FGenericPlatformMisc interface
  *****************************************************************************/
 
 #if !UE_BUILD_SHIPPING
@@ -318,7 +318,7 @@ void FGenericPlatformMisc::HandleIOFailure( const TCHAR* Filename )
 void FGenericPlatformMisc::RaiseException(uint32 ExceptionCode)
 {
 	/** This is the last place to gather memory stats before exception. */
-	FGenericCrashContext::CrashMemoryStats = YPlatformMemory::GetStats();
+	FGenericCrashContext::CrashMemoryStats = FPlatformMemory::GetStats();
 
 #if HACK_HEADER_GENERATOR && !PLATFORM_EXCEPTIONS_DISABLED
 	// We want Unreal Header Tool to throw an exception but in normal runtime code 
@@ -329,11 +329,11 @@ void FGenericPlatformMisc::RaiseException(uint32 ExceptionCode)
 #endif
 }
 
-bool FGenericPlatformMisc::SetStoredValue(const FString& InStoreId, const FString& InSectionName, const FString& InKeFName, const FString& InValue)
+bool FGenericPlatformMisc::SetStoredValue(const FString& InStoreId, const FString& InSectionName, const FString& InKeyName, const FString& InValue)
 {
 	check(!InStoreId.IsEmpty());
 	check(!InSectionName.IsEmpty());
-	check(!InKeFName.IsEmpty());
+	check(!InKeyName.IsEmpty());
 
 	// This assumes that FPlatformProcess::ApplicationSettingsDir() returns a user-specific directory; it doesn't on Windows, but Windows overrides this behavior to use the registry
 	const FString ConfigPath = FString(FPlatformProcess::ApplicationSettingsDir()) / InStoreId / FString(TEXT("KeyValueStore.ini"));
@@ -343,18 +343,18 @@ bool FGenericPlatformMisc::SetStoredValue(const FString& InStoreId, const FStrin
 
 	FConfigSection& Section = ConfigFile.FindOrAdd(InSectionName);
 
-	FConfigValue& KeyValue = Section.FindOrAdd(*InKeFName);
+	FConfigValue& KeyValue = Section.FindOrAdd(*InKeyName);
 	KeyValue = FConfigValue(InValue);
 
 	ConfigFile.Dirty = true;
 	return ConfigFile.Write(ConfigPath);
 }
 
-bool FGenericPlatformMisc::GetStoredValue(const FString& InStoreId, const FString& InSectionName, const FString& InKeFName, FString& OutValue)
+bool FGenericPlatformMisc::GetStoredValue(const FString& InStoreId, const FString& InSectionName, const FString& InKeyName, FString& OutValue)
 {
 	check(!InStoreId.IsEmpty());
 	check(!InSectionName.IsEmpty());
-	check(!InKeFName.IsEmpty());
+	check(!InKeyName.IsEmpty());
 
 	// This assumes that FPlatformProcess::ApplicationSettingsDir() returns a user-specific directory; it doesn't on Windows, but Windows overrides this behavior to use the registry
 	const FString ConfigPath = FString(FPlatformProcess::ApplicationSettingsDir()) / InStoreId / FString(TEXT("KeyValueStore.ini"));
@@ -365,7 +365,7 @@ bool FGenericPlatformMisc::GetStoredValue(const FString& InStoreId, const FStrin
 	const FConfigSection* const Section = ConfigFile.Find(InSectionName);
 	if(Section)
 	{
-		const FConfigValue* const KeyValue = Section->Find(*InKeFName);
+		const FConfigValue* const KeyValue = Section->Find(*InKeyName);
 		if(KeyValue)
 		{
 			OutValue = KeyValue->GetValue();
@@ -376,11 +376,11 @@ bool FGenericPlatformMisc::GetStoredValue(const FString& InStoreId, const FStrin
 	return false;
 }
 
-bool FGenericPlatformMisc::DeleteStoredValue(const FString& InStoreId, const FString& InSectionName, const FString& InKeFName)
+bool FGenericPlatformMisc::DeleteStoredValue(const FString& InStoreId, const FString& InSectionName, const FString& InKeyName)
 {	
 	check(!InStoreId.IsEmpty());
 	check(!InSectionName.IsEmpty());
-	check(!InKeFName.IsEmpty());
+	check(!InKeyName.IsEmpty());
 
 	// This assumes that FPlatformProcess::ApplicationSettingsDir() returns a user-specific directory; it doesn't on Windows, but Windows overrides this behavior to use the registry
 	const FString ConfigPath = FString(FPlatformProcess::ApplicationSettingsDir()) / InStoreId / FString(TEXT("KeyValueStore.ini"));
@@ -391,7 +391,7 @@ bool FGenericPlatformMisc::DeleteStoredValue(const FString& InStoreId, const FSt
 	FConfigSection* const Section = ConfigFile.Find(InSectionName);
 	if (Section)
 	{
-		int32 RemovedNum = Section->Remove(*InKeFName);
+		int32 RemovedNum = Section->Remove(*InKeyName);
 
 		ConfigFile.Dirty = true;
 		return ConfigFile.Write(ConfigPath) && RemovedNum == 1;
@@ -525,12 +525,12 @@ const TCHAR* FGenericPlatformMisc::RootDir()
 	static FString Path;
 	if (Path.Len() == 0)
 	{
-		FString TempPath = YPaths::EngineDir();
+		FString TempPath = FPaths::EngineDir();
 		int32 chopPos = TempPath.Find(TEXT("/Engine"));
 		if (chopPos != INDEX_NONE)
 		{
 			TempPath = TempPath.Left(chopPos + 1);
-			TempPath = YPaths::ConvertRelativePathToFull(TempPath);
+			TempPath = FPaths::ConvertRelativePathToFull(TempPath);
 			Path = TempPath;
 		}
 		else
@@ -658,8 +658,8 @@ FLinearColor FGenericPlatformMisc::GetScreenPixelColor(const struct FVector2D& I
 void GenericPlatformMisc_GetProjectFilePathGameDir(FString& OutGameDir)
 {
 	// Here we derive the game path from the project file location.
-	FString BasePath = YPaths::GetPath(YPaths::GetProjectFilePath());
-	YPaths::NormalizeFilename(BasePath);
+	FString BasePath = FPaths::GetPath(FPaths::GetProjectFilePath());
+	FPaths::NormalizeFilename(BasePath);
 	BasePath = FFileManagerGeneric::DefaultConvertToRelativePath(*BasePath);
 	if(!BasePath.EndsWith("/")) BasePath += TEXT("/");
 	OutGameDir = BasePath;
@@ -693,7 +693,7 @@ const TCHAR* FGenericPlatformMisc::GameDir()
 		}
 		else
 		{
-			if (YPaths::IsProjectFilePathSet())
+			if (FPaths::IsProjectFilePathSet())
 			{
 				GenericPlatformMisc_GetProjectFilePathGameDir(GameDir);
 			}
@@ -715,8 +715,8 @@ const TCHAR* FGenericPlatformMisc::GameDir()
 						if (GameProjectFile.IsEmpty() == false)
 						{
 							// We found a project folder for the game
-							YPaths::SetProjectFilePath(GameProjectFile);
-							GameDir = YPaths::GetPath(GameProjectFile);
+							FPaths::SetProjectFilePath(GameProjectFile);
+							GameDir = FPaths::GetPath(GameProjectFile);
 							if (GameDir.EndsWith(TEXT("/")) == false)
 							{
 								GameDir += TEXT("/");
@@ -734,20 +734,20 @@ const TCHAR* FGenericPlatformMisc::GameDir()
 
 					// Determine a relative path that includes the game folder itself, if possible...
 					FString LocalBaseDir = FString(FPlatformProcess::BaseDir());
-					FString LocalRootDir = YPaths::RootDir();
+					FString LocalRootDir = FPaths::RootDir();
 					FString BaseToRoot = LocalRootDir;
-					YPaths::MakePathRelativeTo(BaseToRoot, *LocalBaseDir);
+					FPaths::MakePathRelativeTo(BaseToRoot, *LocalBaseDir);
 					FString LocalGameDir = LocalBaseDir / TEXT("../../");
-					YPaths::CollapseRelativeDirectories(LocalGameDir);
-					YPaths::MakePathRelativeTo(LocalGameDir, *(YPaths::RootDir()));
+					FPaths::CollapseRelativeDirectories(LocalGameDir);
+					FPaths::MakePathRelativeTo(LocalGameDir, *(FPaths::RootDir()));
 					LocalGameDir = BaseToRoot / LocalGameDir;
 					if (LocalGameDir.EndsWith(TEXT("/")) == false)
 					{
 						LocalGameDir += TEXT("/");
 					}
 
-					FString CheckLocal = YPaths::ConvertRelativePathToFull(LocalGameDir);
-					FString CheckGame = YPaths::ConvertRelativePathToFull(GameDir);
+					FString CheckLocal = FPaths::ConvertRelativePathToFull(LocalGameDir);
+					FString CheckGame = FPaths::ConvertRelativePathToFull(GameDir);
 					if (CheckLocal == CheckGame)
 					{
 						GameDir = LocalGameDir;
@@ -763,8 +763,8 @@ const TCHAR* FGenericPlatformMisc::GameDir()
 			else
 			{
 				// Get a writable engine directory
-				GameDir = YPaths::EngineUserDir();
-				YPaths::NormalizeFilename(GameDir);
+				GameDir = FPaths::EngineUserDir();
+				FPaths::NormalizeFilename(GameDir);
 				GameDir = FFileManagerGeneric::DefaultConvertToRelativePath(*GameDir);
 				if(!GameDir.EndsWith(TEXT("/"))) GameDir += TEXT("/");
 			}
@@ -776,7 +776,7 @@ const TCHAR* FGenericPlatformMisc::GameDir()
 
 FString FGenericPlatformMisc::CloudDir()
 {
-	return YPaths::GameSavedDir() + TEXT("Cloud/");
+	return FPaths::GameSavedDir() + TEXT("Cloud/");
 }
 
 const TCHAR* FGenericPlatformMisc::GamePersistentDownloadDir()
@@ -795,11 +795,11 @@ const TCHAR* FGenericPlatformMisc::GamePersistentDownloadDir()
 	return *GamePersistentDownloadDir;
 }
 
-uint32 FGenericPlatformMisc::GetStandardPrintableKeyMap(uint32* KeyCodes, FString* KeFNames, uint32 MaxMappings, bool bMapUppercaseKeys, bool bMapLowercaseKeys)
+uint32 FGenericPlatformMisc::GetStandardPrintableKeyMap(uint32* KeyCodes, FString* KeyNames, uint32 MaxMappings, bool bMapUppercaseKeys, bool bMapLowercaseKeys)
 {
 	uint32 NumMappings = 0;
 
-#define ADDKEYMAP(KeyCode, KeFName)		if (NumMappings<MaxMappings) { KeyCodes[NumMappings]=KeyCode; KeFNames[NumMappings]=KeFName; ++NumMappings; };
+#define ADDKEYMAP(KeyCode, KeyName)		if (NumMappings<MaxMappings) { KeyCodes[NumMappings]=KeyCode; KeyNames[NumMappings]=KeyName; ++NumMappings; };
 
 	ADDKEYMAP( '0', TEXT("Zero") );
 	ADDKEYMAP( '1', TEXT("One") );

@@ -8,7 +8,7 @@
 
 
 #ifndef ALPHA_BLENDED_WINDOWS
-#define ALPHA_BLENDED_WINDOWS IS_PROGRAM || WITH_EDITOR
+	#define ALPHA_BLENDED_WINDOWS IS_PROGRAM || WITH_EDITOR
 #endif
 
 
@@ -50,7 +50,7 @@ struct CORE_API FGenericWindowDefinition
 {
 	/** Window type */
 	EWindowType Type;
-
+	
 	/** The initially desired horizontal screen position */
 	float XDesiredPositionOnScreen;
 	/** The initially desired vertical screen position */

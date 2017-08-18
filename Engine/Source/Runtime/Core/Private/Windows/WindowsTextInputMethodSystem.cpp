@@ -26,7 +26,7 @@ namespace
 		const int32 StringNeededSizeTCHARs = static_cast<int32>(StringNeededSizeBytes) / sizeof(TCHAR);
 		OutStringBuffer.SetNumUninitialized(StringNeededSizeTCHARs + 1); // +1 for null
 
-		// Get directly into the string buffer, and then null terminate the YString
+		// Get directly into the string buffer, and then null terminate the FString
 		::ImmGetCompositionString(IMMContext, StringType, OutStringBuffer.GetData(), StringNeededSizeBytes);
 		OutStringBuffer[StringNeededSizeTCHARs] = 0;
 

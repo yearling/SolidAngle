@@ -1,3 +1,4 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 #pragma once
 
 #include "CoreTypes.h"
@@ -40,7 +41,7 @@ public:
 	~FScopedNamedEvent()
 	{
 		FPlatformMisc::EndNamedEvent();
-	}
+	}	
 };
 
 //lightweight scoped named event separate from stats system.  Will be available in test builds.  

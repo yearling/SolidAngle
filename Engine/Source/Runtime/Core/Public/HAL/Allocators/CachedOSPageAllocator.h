@@ -1,8 +1,10 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
 
-struct YCachedOSPageAllocator
+struct FCachedOSPageAllocator
 {
 protected:
 	struct FFreePageBlock
@@ -10,9 +12,9 @@ protected:
 		void*  Ptr;
 		SIZE_T ByteSize;
 
-		FFreePageBlock()
+		FFreePageBlock() 
 		{
-			Ptr = nullptr;
+			Ptr      = nullptr;
 			ByteSize = 0;
 		}
 	};
@@ -23,11 +25,11 @@ protected:
 };
 
 template <uint32 NumCacheBlocks, uint32 CachedByteLimit>
-struct TCachedOSPageAllocator : private YCachedOSPageAllocator
+struct TCachedOSPageAllocator : private FCachedOSPageAllocator
 {
 	TCachedOSPageAllocator()
 		: FreedPageBlocksNum(0)
-		, CachedTotal(0)
+		, CachedTotal       (0)
 	{
 	}
 

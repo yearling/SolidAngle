@@ -141,7 +141,7 @@ public:
 
 		if (FPlatformProcess::SupportsMultithreading())
 		{
-			FString WriterName = FString::Printf(TEXT("FAsyncWriter_%s"), *YPaths::GetBaseFilename(Ar.GetArchiveName()));
+			FString WriterName = FString::Printf(TEXT("FAsyncWriter_%s"), *FPaths::GetBaseFilename(Ar.GetArchiveName()));
 			Thread = FRunnableThread::Create(this, *WriterName, 0, TPri_BelowNormal);
 		}
 	}
@@ -260,7 +260,7 @@ public:
  * @param InFilename		Filename to use, can be NULL
  * @param bInDisableBackup	If true, existing files will not be backed up
  */
-YOutputDeviceFile::YOutputDeviceFile( const TCHAR* InFilename, bool bInDisableBackup  )
+FOutputDeviceFile::FOutputDeviceFile( const TCHAR* InFilename, bool bInDisableBackup  )
 : AsyncWriter(nullptr)
 , WriterArchive(nullptr)
 , Opened(false)
@@ -281,12 +281,12 @@ YOutputDeviceFile::YOutputDeviceFile( const TCHAR* InFilename, bool bInDisableBa
 * Destructor to perform teardown
 *
 */
-YOutputDeviceFile::~YOutputDeviceFile()
+FOutputDeviceFile::~FOutputDeviceFile()
 {
 	TearDown();
 }
 
-void YOutputDeviceFile::SetFilename(const TCHAR* InFilename)
+void FOutputDeviceFile::SetFilename(const TCHAR* InFilename)
 {
 	// Close any existing file.
 	TearDown();
@@ -299,7 +299,7 @@ void YOutputDeviceFile::SetFilename(const TCHAR* InFilename)
  * as we have to call "delete" which cannot be done for static/ global
  * objects.
  */
-void YOutputDeviceFile::TearDown()
+void FOutputDeviceFile::TearDown()
 {
 	if (AsyncWriter)
 	{
@@ -318,7 +318,7 @@ void YOutputDeviceFile::TearDown()
  * Flush the write cache so the file isn't truncated in case we crash right
  * after calling this function.
  */
-void YOutputDeviceFile::Flush()
+void FOutputDeviceFile::Flush()
 {
 	if (AsyncWriter)
 	{
@@ -329,7 +329,7 @@ void YOutputDeviceFile::Flush()
 /** if the passed in file exists, makes a timestamped backup copy
  * @param Filename the name of the file to check
  */
-void YOutputDeviceFile::CreateBackupCopy(const TCHAR* Filename)
+void FOutputDeviceFile::CreateBackupCopy(const TCHAR* Filename)
 {
 	if (IFileManager::Get().FileSize(Filename) > 0)
 	{
@@ -341,12 +341,12 @@ void YOutputDeviceFile::CreateBackupCopy(const TCHAR* Filename)
 	}
 }
 
-bool YOutputDeviceFile::IsBackupCopy(const TCHAR* Filename)
+bool FOutputDeviceFile::IsBackupCopy(const TCHAR* Filename)
 {
 	return Filename != nullptr && FCString::Stristr(const_cast<TCHAR*>(Filename), BACKUP_LOG_FILENAME_POSTFIX) != nullptr;
 }
 
-void YOutputDeviceFile::WriteByteOrderMarkToArchive(EByteOrderMark ByteOrderMark)
+void FOutputDeviceFile::WriteByteOrderMarkToArchive(EByteOrderMark ByteOrderMark)
 {
 	switch (ByteOrderMark)
 	{
@@ -361,7 +361,7 @@ void YOutputDeviceFile::WriteByteOrderMarkToArchive(EByteOrderMark ByteOrderMark
 	}
 }
 
-bool YOutputDeviceFile::CreateWriter(uint32 MaxAttempts)
+bool FOutputDeviceFile::CreateWriter(uint32 MaxAttempts)
 {
 	uint32 WriteFlags = FILEWRITE_AllowRead | (Opened ? FILEWRITE_Append : 0);
 
@@ -372,8 +372,8 @@ bool YOutputDeviceFile::CreateWriter(uint32 MaxAttempts)
 	// happens in the case of running a server and client on same computer for example.
 	if (!bDisableBackup && !Ar)
 	{
-		FString FilenamePart = YPaths::GetBaseFilename(Filename, false) + "_";
-		FString ExtensionPart = YPaths::GetExtension(Filename, true);
+		FString FilenamePart = FPaths::GetBaseFilename(Filename, false) + "_";
+		FString ExtensionPart = FPaths::GetExtension(Filename, true);
 		FString FinalFilename;
 		uint32 FileIndex = 2;
 		do
@@ -404,7 +404,7 @@ bool YOutputDeviceFile::CreateWriter(uint32 MaxAttempts)
  * @param	Data	Text to log
  * @param	Event	Event name used for suppression purposes
  */
-void YOutputDeviceFile::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category, const double Time )
+void FOutputDeviceFile::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category, const double Time )
 {
 #if ALLOW_LOG_FILE && !NO_LOGGING
 	static bool Entry = false;
@@ -415,7 +415,7 @@ void YOutputDeviceFile::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbos
 			// Make log filename.
 			if( !Filename[0] )
 			{
-				FCString::Strcpy(Filename, *YPlatformOutputDevices::GetAbsoluteLogFilename());
+				FCString::Strcpy(Filename, *FPlatformOutputDevices::GetAbsoluteLogFilename());
 			}
 
 			// if the file already exists, create a backup as we are going to overwrite it
@@ -444,7 +444,7 @@ void YOutputDeviceFile::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbos
 
 		if (AsyncWriter && Verbosity != ELogVerbosity::SetColor)
 		{
-			YOutputDeviceHelper::FormatCastAndSerializeLine(*AsyncWriter, Data, Verbosity, Category, Time, bSuppressEventTag, bAutoEmitLineTerminator);
+			FOutputDeviceHelper::FormatCastAndSerializeLine(*AsyncWriter, Data, Verbosity, Category, Time, bSuppressEventTag, bAutoEmitLineTerminator);
 
 			static bool GForceLogFlush = false;
 			static bool GTestedCmdLine = false;
@@ -469,13 +469,13 @@ void YOutputDeviceFile::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbos
 #endif
 }
 
-void YOutputDeviceFile::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category )
+void FOutputDeviceFile::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category )
 {
 	Serialize(Data, Verbosity, Category, -1.0);
 }
 
 
-void YOutputDeviceFile::WriteRaw( const TCHAR* C )
+void FOutputDeviceFile::WriteRaw( const TCHAR* C )
 {
 	AsyncWriter->Serialize((uint8*)const_cast<TCHAR*>(C), FCString::Strlen(C)*sizeof(TCHAR));
 }

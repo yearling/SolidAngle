@@ -55,7 +55,7 @@ bool FWindowsPlatformNamedPipe::Create(const FString& PipeName, bool bAsServer, 
 		{
 			OpenModeFlags |= FILE_FLAG_OVERLAPPED;
 		}
-		//FPlatformMisc::LowLevelOutputDebugStringf(*YString::Printf(TEXT("*** %s: Create Pipe\n"), *Name));
+		//FPlatformMisc::LowLevelOutputDebugStringf(*FString::Printf(TEXT("*** %s: Create Pipe\n"), *Name));
 		Pipe = CreateNamedPipe(*Name, OpenModeFlags, PIPE_TYPE_BYTE | PIPE_WAIT, 1, 0, 0, 0, NULL);				
 	}
 	else
@@ -132,7 +132,7 @@ bool FWindowsPlatformNamedPipe::Destroy()
 			return false;
 	}
 
-	//FPlatformMisc::LowLevelOutputDebugStringf(*YString::Printf(TEXT("*** %s: Closing connection\n"), *Name));
+	//FPlatformMisc::LowLevelOutputDebugStringf(*FString::Printf(TEXT("*** %s: Closing connection\n"), *Name));
 	if (bFlushBuffers)
 	{
 		VerifyWinResult(FlushFileBuffers(Pipe), TEXT("Flushing File Buffers"));
@@ -158,7 +158,7 @@ bool FWindowsPlatformNamedPipe::OpenConnection()
 {
 	check(bIsServer);
 	check(State == State_Created);
-	//FPlatformMisc::LowLevelOutputDebugStringf(*YString::Printf(TEXT("*** %s: Opening connection\n"), *Name));
+	//FPlatformMisc::LowLevelOutputDebugStringf(*FString::Printf(TEXT("*** %s: Opening connection\n"), *Name));
 
 	uint32 Result = Windows::ConnectNamedPipe(Pipe, &Overlapped);
 	if (!bUseOverlapped)
@@ -378,14 +378,14 @@ bool FWindowsPlatformNamedPipe::WriteBytes(int32 NumBytes, const void* Data)
 			break;
 	}
 
-	//FPlatformMisc::LowLevelOutputDebugStringf(*YString::Printf(TEXT("*** %s: Writing %d bytes\n"), *Name, NumBytes));
+	//FPlatformMisc::LowLevelOutputDebugStringf(*FString::Printf(TEXT("*** %s: Writing %d bytes\n"), *Name, NumBytes));
 
 	uint64 WrittenBytes = 0;
 	Windows::LPDWORD WrittenBytesPtr = bUseOverlapped ? NULL : (Windows::LPDWORD)&WrittenBytes;
 	BOOL Result = Windows::WriteFile(Pipe, Data, NumBytes, WrittenBytesPtr, &Overlapped);
 	if (!bUseOverlapped)
 	{
-		//FPlatformMisc::LowLevelOutputDebugStringf(*YString::Printf(TEXT("\t\tActually wrote %d bytes\n"), WrittenBytes));
+		//FPlatformMisc::LowLevelOutputDebugStringf(*FString::Printf(TEXT("\t\tActually wrote %d bytes\n"), WrittenBytes));
 		if (!Result)
 		{
 			uint32 LastError = GetLastError();
@@ -455,14 +455,14 @@ bool FWindowsPlatformNamedPipe::ReadBytes(int32 NumBytes, void* OutData)
 	}
 
 
-	//FPlatformMisc::LowLevelOutputDebugStringf(*YString::Printf(TEXT("*** %s: Reading %d bytes\n"), *Name, NumBytes));
+	//FPlatformMisc::LowLevelOutputDebugStringf(*FString::Printf(TEXT("*** %s: Reading %d bytes\n"), *Name, NumBytes));
 
 	Windows::DWORD ReadBytes = 0;
 	Windows::LPDWORD ReadBytesPtr = bUseOverlapped ? NULL : &ReadBytes;
 	BOOL Result = Windows::ReadFile(Pipe, OutData, NumBytes, ReadBytesPtr, &Overlapped);
 	if (!bUseOverlapped)
 	{
-		//FPlatformMisc::LowLevelOutputDebugStringf(*YString::Printf(TEXT("\t\tActually read %d bytes\n"), ReadBytes));
+		//FPlatformMisc::LowLevelOutputDebugStringf(*FString::Printf(TEXT("\t\tActually read %d bytes\n"), ReadBytes));
 		if (!Result)
 		{
 			uint32 LastError = GetLastError();

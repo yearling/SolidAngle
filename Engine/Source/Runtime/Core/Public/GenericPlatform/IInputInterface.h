@@ -84,8 +84,8 @@ struct FHapticFeedbackValues
 
 
 /**
-* Interface for the input interface.
-*/
+ * Interface for the input interface.
+ */
 class IInputInterface
 {
 public:
@@ -102,7 +102,7 @@ public:
 	* @param Value strength or speed of feedback, 0.0f to 1.0f. 0.0f will disable
 	*/
 	DEPRECATED(4.7, "Please use SetForceFeedbackChannel()")
-		void SetChannelValue(int32 ControllerId, FForceFeedbackChannelType ChannelType, float Value) { SetForceFeedbackChannelValue(ControllerId, ChannelType, Value); }
+	void SetChannelValue(int32 ControllerId, FForceFeedbackChannelType ChannelType, float Value) { SetForceFeedbackChannelValue(ControllerId, ChannelType, Value); }
 	virtual void SetForceFeedbackChannelValue(int32 ControllerId, FForceFeedbackChannelType ChannelType, float Value) = 0;
 
 	/**
@@ -113,7 +113,7 @@ public:
 	* @param FForceFeedbackChannelValues strength or speed of feedback for all channels
 	*/
 	DEPRECATED(4.7, "Please use SetForceFeedbackChannelValues()")
-		void SetChannelValues(int32 ControllerId, const FForceFeedbackValues &Values) { SetForceFeedbackChannelValues(ControllerId, Values); }
+	void SetChannelValues(int32 ControllerId, const FForceFeedbackValues &Values) { SetForceFeedbackChannelValues(ControllerId, Values); }
 	virtual void SetForceFeedbackChannelValues(int32 ControllerId, const FForceFeedbackValues &Values) = 0;
 
 	/**
@@ -127,7 +127,7 @@ public:
 	virtual void SetHapticFeedbackValues(int32 ControllerId, int32 Hand, const FHapticFeedbackValues& Values) {}
 
 	/*
-	* Sets the controller for the given controller.  Ignored if controller does not support a color.
-	*/
+	 * Sets the controller for the given controller.  Ignored if controller does not support a color.
+	 */
 	virtual void SetLightColor(int32 ControllerId, struct FColor Color) = 0;
 };

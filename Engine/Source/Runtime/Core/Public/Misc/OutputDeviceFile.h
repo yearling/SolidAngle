@@ -1,3 +1,5 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
@@ -8,7 +10,7 @@
 
 class FAsyncWriter;
 
-/** Used by YOutputDeviceFile to write to a file on a separate thread */
+/** Used by FOutputDeviceFile to write to a file on a separate thread */
 class FAsyncWriter;
 
 enum class EByteOrderMark : int8
@@ -20,7 +22,7 @@ enum class EByteOrderMark : int8
 /**
 * File output device (Note: Only works if ALLOW_LOG_FILE && !NO_LOGGING is true, otherwise Serialize does nothing).
 */
-class CORE_API YOutputDeviceFile : public FOutputDevice
+class CORE_API FOutputDeviceFile : public FOutputDevice
 {
 public:
 	/**
@@ -29,18 +31,18 @@ public:
 	* @param InFilename	Filename to use, can be nullptr
 	* @param bDisableBackup If true, existing files will not be backed up
 	*/
-	YOutputDeviceFile(const TCHAR* InFilename = nullptr, bool bDisableBackup = false);
+	FOutputDeviceFile(const TCHAR* InFilename = nullptr, bool bDisableBackup = false);
 
 	/**
 	* Destructor to perform teardown
 	*
 	*/
-	~YOutputDeviceFile();
+	~FOutputDeviceFile();
 
 	/** Sets the filename that the output device writes to.  If the output device was already writing to a file, closes that file. */
 	void SetFilename(const TCHAR* InFilename);
 
-	//~ Begin YOutputDevice Interface.
+	//~ Begin FOutputDevice Interface.
 	/**
 	* Closes output device and cleans up. This can't happen in the destructor
 	* as we have to call "delete" which cannot be done for static/ global
@@ -60,7 +62,7 @@ public:
 	{
 		return true;
 	}
-	//~ End YOutputDevice Interface.
+	//~ End FOutputDevice Interface.
 
 	/** Creates a backup copy of a log file if it already exists */
 	static void CreateBackupCopy(const TCHAR* Filename);

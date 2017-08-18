@@ -10,8 +10,8 @@
 #include "Delegates/DelegateBase.h"
 
 /**
-* Abstract base class for multicast delegates.
-*/
+ * Abstract base class for multicast delegates.
+ */
 typedef TArray<FDelegateBase, TInlineAllocator<1> > TInvocationList;
 
 template<typename ObjectPtrType>
@@ -24,7 +24,7 @@ public:
 	}
 
 	/** Removes all functions from this delegate's invocation list. */
-	void Clear()
+	void Clear( )
 	{
 		for (FDelegateBase& DelegateBaseRef : InvocationList)
 		{
@@ -35,11 +35,11 @@ public:
 	}
 
 	/**
-	* Checks to see if any functions are bound to this multi-cast delegate.
-	*
-	* @return true if any functions are bound, false otherwise.
-	*/
-	inline bool IsBound() const
+	 * Checks to see if any functions are bound to this multi-cast delegate.
+	 *
+	 * @return true if any functions are bound, false otherwise.
+	 */
+	inline bool IsBound( ) const
 	{
 		for (const FDelegateBase& DelegateBaseRef : InvocationList)
 		{
@@ -51,12 +51,12 @@ public:
 		return false;
 	}
 
-	/**
-	* Checks to see if any functions are bound to the given user object.
-	*
-	* @return	True if any functions are bound to InUserObject, false otherwise.
-	*/
-	inline bool IsBoundToObject(void const* InUserObject) const
+	/** 
+	 * Checks to see if any functions are bound to the given user object.
+	 *
+	 * @return	True if any functions are bound to InUserObject, false otherwise.
+	 */
+	inline bool IsBoundToObject( void const* InUserObject ) const
 	{
 		for (const FDelegateBase& DelegateBaseRef : InvocationList)
 		{
@@ -71,12 +71,12 @@ public:
 	}
 
 	/**
-	* Removes all functions from this multi-cast delegate's invocation list that are bound to the specified UserObject.
-	* Note that the order of the delegates may not be preserved!
-	*
-	* @param InUserObject The object to remove all delegates for.
-	*/
-	void RemoveAll(const void* InUserObject)
+	 * Removes all functions from this multi-cast delegate's invocation list that are bound to the specified UserObject.
+	 * Note that the order of the delegates may not be preserved!
+	 *
+	 * @param InUserObject The object to remove all delegates for.
+	 */
+	void RemoveAll( const void* InUserObject )
 	{
 		for (int32 InvocationListIndex = InvocationList.Num() - 1; InvocationListIndex >= 0; --InvocationListIndex)
 		{
@@ -95,7 +95,7 @@ public:
 protected:
 
 	/** Hidden default constructor. */
-	inline FMulticastDelegateBase()
+	inline FMulticastDelegateBase( )
 		: CompactionThreshold(2)
 		, InvocationListLockCount(0)
 	{ }
@@ -103,10 +103,10 @@ protected:
 protected:
 
 	/**
-	* Adds the given delegate instance to the invocation list.
-	*
-	* @param NewDelegateBaseRef The delegate instance to add.
-	*/
+	 * Adds the given delegate instance to the invocation list.
+	 *
+	 * @param NewDelegateBaseRef The delegate instance to add.
+	 */
 	inline FDelegateHandle AddInternal(FDelegateBase&& NewDelegateBaseRef)
 	{
 		FDelegateHandle Result = NewDelegateBaseRef.GetHandle();
@@ -115,11 +115,11 @@ protected:
 	}
 
 	/**
-	* Removes any expired or deleted functions from the invocation list.
-	*
-	* @see RequestCompaction
-	*/
-	void CompactInvocationList()
+	 * Removes any expired or deleted functions from the invocation list.
+	 *
+	 * @see RequestCompaction
+	 */
+	void CompactInvocationList( )
 	{
 		if ((InvocationList.Num() < CompactionThreshold) || (InvocationListLockCount != 0))
 		{
@@ -142,31 +142,31 @@ protected:
 	}
 
 	/**
-	* Gets a read-only reference to the invocation list.
-	*
-	* @return The invocation list.
-	*/
-	inline const TInvocationList& GetInvocationList() const
+	 * Gets a read-only reference to the invocation list.
+	 *
+	 * @return The invocation list.
+	 */
+	inline const TInvocationList& GetInvocationList( ) const
 	{
 		return InvocationList;
 	}
 
 	/** Increments the lock counter for the invocation list. */
-	inline void LockInvocationList() const
+	inline void LockInvocationList( ) const
 	{
 		++InvocationListLockCount;
 	}
 
 	/** Decrements the lock counter for the invocation list. */
-	inline void UnlockInvocationList() const
+	inline void UnlockInvocationList( ) const
 	{
 		--InvocationListLockCount;
 	}
 
 protected:
 	/**
-	* Helper function for derived classes of FMulticastDelegateBase to get at the delegate instance.
-	*/
+	 * Helper function for derived classes of FMulticastDelegateBase to get at the delegate instance.
+	 */
 	static FORCEINLINE IDelegateInstance* GetDelegateInstanceProtectedHelper(const FDelegateBase& Base)
 	{
 		return Base.GetDelegateInstanceProtected();

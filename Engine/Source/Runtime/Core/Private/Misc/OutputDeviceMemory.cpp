@@ -14,31 +14,31 @@
 
 #define DUMP_LOG_ON_EXIT (!NO_LOGGING && PLATFORM_DESKTOP && (!UE_BUILD_SHIPPING || USE_LOGGING_IN_SHIPPING))
 
-YOutputDeviceMemory::YOutputDeviceMemory(int32 InPreserveSize /*= 256 * 1024*/, int32 InBufferSize /*= 2048 * 1024*/)
+FOutputDeviceMemory::FOutputDeviceMemory(int32 InPreserveSize /*= 256 * 1024*/, int32 InBufferSize /*= 2048 * 1024*/)
 : ArchiveProxy(*this)
 , BufferStartPos(0)
 , BufferLength(0)
 , PreserveSize(InPreserveSize)
 {
 #if DUMP_LOG_ON_EXIT
-	const FString LogFileName = YPlatformOutputDevices::GetAbsoluteLogFilename();
-	YOutputDeviceFile::CreateBackupCopy(*LogFileName);
+	const FString LogFileName = FPlatformOutputDevices::GetAbsoluteLogFilename();
+	FOutputDeviceFile::CreateBackupCopy(*LogFileName);
 	IFileManager::Get().Delete(*LogFileName);
 #endif // DUMP_LOG_ON_EXIT
 
-	checkf(InBufferSize >= InPreserveSize * 2, TEXT("YOutputDeviceMemory buffer size should be >= 2x PreserveSize"));
+	checkf(InBufferSize >= InPreserveSize * 2, TEXT("FOutputDeviceMemory buffer size should be >= 2x PreserveSize"));
 
 	Buffer.AddUninitialized(InBufferSize);
 	Logf(TEXT("Log file open, %s"), FPlatformTime::StrTimestamp());
 }
 
-void YOutputDeviceMemory::TearDown() 
+void FOutputDeviceMemory::TearDown() 
 {
 	Logf(TEXT("Log file closed, %s"), FPlatformTime::StrTimestamp());
 
 	// Dump on exit
 #if DUMP_LOG_ON_EXIT
-	const FString LogFileName = YPlatformOutputDevices::GetAbsoluteLogFilename();
+	const FString LogFileName = FPlatformOutputDevices::GetAbsoluteLogFilename();
 	FArchive* LogFile = IFileManager::Get().CreateFileWriter(*LogFileName, FILEWRITE_AllowRead);
 	if (LogFile)
 	{
@@ -49,24 +49,24 @@ void YOutputDeviceMemory::TearDown()
 #endif // DUMP_LOG_ON_EXIT
 }
 
-void YOutputDeviceMemory::Flush()
+void FOutputDeviceMemory::Flush()
 {
 	// Do nothing, buffer is always flushed
 }
 
-void YOutputDeviceMemory::Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category, const double Time)
+void FOutputDeviceMemory::Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category, const double Time)
 {
 #if !NO_LOGGING
-	YOutputDeviceHelper::FormatCastAndSerializeLine(ArchiveProxy, Data, Verbosity, Category, Time, bSuppressEventTag, bAutoEmitLineTerminator);
+	FOutputDeviceHelper::FormatCastAndSerializeLine(ArchiveProxy, Data, Verbosity, Category, Time, bSuppressEventTag, bAutoEmitLineTerminator);
 #endif
 }
 
-void YOutputDeviceMemory::Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category)
+void FOutputDeviceMemory::Serialize(const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category)
 {
 	Serialize(Data, Verbosity, Category, -1.0);
 }
 
-void YOutputDeviceMemory::SerializeToBuffer(ANSICHAR* Data, int32 Length)
+void FOutputDeviceMemory::SerializeToBuffer(ANSICHAR* Data, int32 Length)
 {	
 	const int32 BufferCapacity = Buffer.Num(); // Never changes
 
@@ -104,7 +104,7 @@ void YOutputDeviceMemory::SerializeToBuffer(ANSICHAR* Data, int32 Length)
 	}
 }
 
-void YOutputDeviceMemory::Dump(FArchive& Ar)
+void FOutputDeviceMemory::Dump(FArchive& Ar)
 {
 	const int32 BufferCapacity = Buffer.Num(); // Never changes
 

@@ -60,7 +60,7 @@ FModuleManager& FModuleManager::Get()
 
 			ModuleManager = new FModuleManager();
 
-			//temp workaround for IPlatformFile being used for YPaths::DirectoryExists before main() sets up the commandline.
+			//temp workaround for IPlatformFile being used for FPaths::DirectoryExists before main() sets up the commandline.
 #if PLATFORM_DESKTOP
 		// Ensure that dependency dlls can be found in restricted sub directories
 			const TCHAR* RestrictedFolderNames[] = { TEXT("NoRedist"), TEXT("NotForLicensees"), TEXT("CarefullyRedist") };
@@ -68,7 +68,7 @@ FModuleManager& FModuleManager::Get()
 			for (const TCHAR* RestrictedFolderName : RestrictedFolderNames)
 			{
 				FString RestrictedFolder = ModuleDir / RestrictedFolderName;
-				if (YPaths::DirectoryExists(RestrictedFolder))
+				if (FPaths::DirectoryExists(RestrictedFolder))
 				{
 					ModuleManager->AddBinariesDirectory(*RestrictedFolder, false);
 				}
@@ -188,7 +188,7 @@ bool FindNewestModuleFile(TArray<FString>& FilesToSearch, const FDateTime& Newer
 			{
 				bFound = true;
 				NewestFoundFileTime = FoundFileTime;
-				OutFilename = YPaths::GetCleanFilename(FoundFilePath);
+				OutFilename = FPaths::GetCleanFilename(FoundFilePath);
 			}
 		}
 		else
@@ -300,7 +300,7 @@ void FModuleManager::AddModule(const FName InModuleName)
 		return;
 	}
 
-	const FString ModuleFileSearchDirectory = YPaths::GetPath(ModuleFileSearchString);
+	const FString ModuleFileSearchDirectory = FPaths::GetPath(ModuleFileSearchString);
 
 	FString NewestModuleFilename;
 	bool bFoundNewestFile = FindNewestModuleFile(FoundFiles, OriginalModuleFileTime, ModuleFileSearchDirectory, Prefix, Suffix, NewestModuleFilename);
@@ -439,13 +439,13 @@ TSharedPtr<IModuleInterface> FModuleManager::LoadModuleWithFailureReason(const F
 			}
 
 			// Determine which file to load for this module.
-			const FString ModuleFileToLoad = YPaths::ConvertRelativePathToFull(ModuleInfo->Filename);
+			const FString ModuleFileToLoad = FPaths::ConvertRelativePathToFull(ModuleInfo->Filename);
 
 			// Clear the handle and set it again below if the module is successfully loaded
 			ModuleInfo->Handle = NULL;
 
 			// Skip this check if file manager has not yet been initialized
-			if (YPaths::FileExists(ModuleFileToLoad))
+			if (FPaths::FileExists(ModuleFileToLoad))
 			{
 				if (CheckModuleCompatibility(*ModuleFileToLoad))
 				{
@@ -837,7 +837,7 @@ bool FModuleManager::QueryModule( const FName InModuleName, FModuleStatus& OutMo
 	}
 
 	OutModuleStatus.Name = InModuleName.ToString();
-	OutModuleStatus.FilePath = YPaths::ConvertRelativePathToFull(ModuleInfoPtr->Filename);
+	OutModuleStatus.FilePath = FPaths::ConvertRelativePathToFull(ModuleInfoPtr->Filename);
 	OutModuleStatus.bIsLoaded = ModuleInfoPtr->Module.IsValid();
 
 	if( OutModuleStatus.bIsLoaded )
@@ -859,7 +859,7 @@ void FModuleManager::QueryModules( TArray< FModuleStatus >& OutModuleStatuses ) 
 
 		FModuleStatus ModuleStatus;
 		ModuleStatus.Name = ModuleIt.Key.ToString();
-		ModuleStatus.FilePath = YPaths::ConvertRelativePathToFull(CurModule.Filename);
+		ModuleStatus.FilePath = FPaths::ConvertRelativePathToFull(CurModule.Filename);
 		ModuleStatus.bIsLoaded = CurModule.Module.IsValid();
 
 		if( ModuleStatus.bIsLoaded  )
@@ -925,7 +925,7 @@ void FModuleManager::GetModuleFilenameFormat(bool bGameModule, FString& OutPrefi
 	}
 
 	// Get the base name for modules of this application
-	OutPrefix = FPlatformProcess::GetModulePrefix() + YPaths::GetBaseFilename(FPlatformProcess::ExecutableName());
+	OutPrefix = FPlatformProcess::GetModulePrefix() + FPaths::GetBaseFilename(FPlatformProcess::ExecutableName());
 	if (OutPrefix.Contains(TEXT("-"), ESearchCase::CaseSensitive))
 	{
 		OutPrefix = OutPrefix.Left(OutPrefix.Find(TEXT("-"), ESearchCase::CaseSensitive) + 1);
@@ -1009,7 +1009,7 @@ void FModuleManager::FindModulePathsInDirectory(const FString& InDirectorFName, 
 			{
 				if(Pair.Key.MatchesWildcard(NamePattern))
 				{
-					OutModulePaths.Add(FName(*Pair.Key), *YPaths::Combine(*SearchDirectorFName, *Pair.Value));
+					OutModulePaths.Add(FName(*Pair.Key), *FPaths::Combine(*SearchDirectorFName, *Pair.Value));
 				}
 			}
 		}
@@ -1037,7 +1037,7 @@ void FModuleManager::FindModulePathsInDirectory(const FString& InDirectorFName, 
 			}
 		#endif
 		
-			FString FileName = YPaths::GetCleanFilename(FullFileName);
+			FString FileName = FPaths::GetCleanFilename(FullFileName);
 			if (FileName.StartsWith(ModulePrefix) && FileName.EndsWith(ModuleSuffix))
 			{
 				FString ModuleName = FileName.Mid(ModulePrefix.Len(), FileName.Len() - ModulePrefix.Len() - ModuleSuffix.Len());
@@ -1181,8 +1181,8 @@ void FModuleManager::AddBinariesDirectory(const TCHAR *InDirectory, bool bIsGame
 	const TCHAR* RestrictedFolderNames[] = { TEXT("NoRedist"), TEXT("NotForLicensees"), TEXT("CarefullyRedist") };
 	for (const TCHAR* RestrictedFolderName : RestrictedFolderNames)
 	{
-		FString RestrictedFolder = YPaths::Combine(InDirectory, RestrictedFolderName);
-		if (YPaths::DirectoryExists(RestrictedFolder))
+		FString RestrictedFolder = FPaths::Combine(InDirectory, RestrictedFolderName);
+		if (FPaths::DirectoryExists(RestrictedFolder))
 		{
 			AddBinariesDirectory(*RestrictedFolder, bIsGameDirectory);
 		}
@@ -1279,7 +1279,7 @@ FModuleManager::ModuleInfoRef FModuleManager::GetOrCreateModule(FName InModuleNa
 	const FString Suffix = ModuleInfo->OriginalFilename.Right(ModuleInfo->OriginalFilename.Len() - SuffixPos);
 
 	const FString ModuleFileSearchString = FString::Printf(TEXT("%s-*%s"), *Prefix, *Suffix);
-	const FString ModuleFileSearchDirectory = YPaths::GetPath(ModuleFileSearchString);
+	const FString ModuleFileSearchDirectory = FPaths::GetPath(ModuleFileSearchString);
 
 	// Search for module files
 	TArray<FString> FoundFiles;

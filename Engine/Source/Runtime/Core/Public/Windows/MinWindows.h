@@ -1,12 +1,14 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
 
 #if defined(_WINDOWS_) && !defined(UE4_MINIMAL_WINDOWS_INCLUDE)
-#pragma message ( " " )
-#pragma message ( "You have included windows.h before MinWindows.h" )
-#pragma message ( "All useless stuff from the windows headers won't be excluded !!!" )
-#pragma message ( " " )
+	#pragma message ( " " )
+	#pragma message ( "You have included windows.h before MinWindows.h" )
+	#pragma message ( "All useless stuff from the windows headers won't be excluded !!!" )
+	#pragma message ( " " )
 #endif // _WINDOWS_
 
 #define UE4_MINIMAL_WINDOWS_INCLUDE

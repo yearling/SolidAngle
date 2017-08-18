@@ -9,7 +9,7 @@
 #include "Misc/App.h"
 
 /** Constructor, initializing member variables */
-YOutputDeviceAnsiError::YOutputDeviceAnsiError()
+FOutputDeviceAnsiError::FOutputDeviceAnsiError()
 :	ErrorPos(0)
 {}
 
@@ -19,7 +19,7 @@ YOutputDeviceAnsiError::YOutputDeviceAnsiError()
  * @param	Data	Text to log
  * @param	Event	Event name used for suppression purposes
  */
-void YOutputDeviceAnsiError::Serialize( const TCHAR* Msg, ELogVerbosity::Type Verbosity, const class FName& Category )
+void FOutputDeviceAnsiError::Serialize( const TCHAR* Msg, ELogVerbosity::Type Verbosity, const class FName& Category )
 {
 	// Display the error and exit.
 	FPlatformMisc::LocalPrint( TEXT("\nappError called: \n") );
@@ -70,7 +70,7 @@ void YOutputDeviceAnsiError::Serialize( const TCHAR* Msg, ELogVerbosity::Type Ve
  * Error handling function that is being called from within the system wide global
  * error handler, e.g. using structured exception handling on the PC.
  */
-void YOutputDeviceAnsiError::HandleError()
+void FOutputDeviceAnsiError::HandleError()
 {
 	GIsGuarded			= 0;
 	GIsRunning			= 0;

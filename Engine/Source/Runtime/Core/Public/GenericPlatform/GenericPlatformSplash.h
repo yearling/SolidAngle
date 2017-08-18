@@ -1,17 +1,19 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
 #include "Containers/ContainersFwd.h"
 
 /**
-* SplashTextType defines the types of text on the splash screen
-*/
+ * SplashTextType defines the types of text on the splash screen
+ */
 namespace SplashTextType
 {
 	enum Type
 	{
 		/** Startup progress text */
-		StartupProgress = 0,
+		StartupProgress	= 0,
 
 		/** Version information text line 1 */
 		VersionInfo1,
@@ -32,8 +34,8 @@ namespace SplashTextType
 class FString;
 
 /**
-* Generic implementation for most platforms
-*/
+ * Generic implementation for most platforms
+ */
 struct CORE_API FGenericPlatformSplash
 {
 	/** Show the splash screen. */
@@ -43,19 +45,19 @@ struct CORE_API FGenericPlatformSplash
 	FORCEINLINE static void Hide() { }
 
 	/**
-	* Sets the text displayed on the splash screen (for startup/loading progress)
-	*
-	* @param	InType		Type of text to change
-	* @param	InText		Text to display
-	*/
-	FORCEINLINE static void SetSplashText(const SplashTextType::Type InType, const TCHAR* InText)
+	 * Sets the text displayed on the splash screen (for startup/loading progress)
+	 *
+	 * @param	InType		Type of text to change
+	 * @param	InText		Text to display
+	 */
+	FORCEINLINE static void SetSplashText( const SplashTextType::Type InType, const TCHAR* InText )
 	{
 
 	}
 
 	/**
-	* Return whether the splash screen is being shown or not
-	*/
+	 * Return whether the splash screen is being shown or not
+	 */
 	FORCEINLINE static bool IsShown()
 	{
 		return true;

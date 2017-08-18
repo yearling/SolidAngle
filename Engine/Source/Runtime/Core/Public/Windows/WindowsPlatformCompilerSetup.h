@@ -12,12 +12,12 @@
 * Future-proofing the min version check so we keep bumping it whenever we upgrade.
 */
 #if defined(_MSC_VER) && _MSC_VER > 1919 
-#pragma message("Detected compiler newer than Visual Studio 2017, please update min version checking in WindowsPlatformCompilerSetup.h")
+	#pragma message("Detected compiler newer than Visual Studio 2017, please update min version checking in WindowsPlatformCompilerSetup.h")
 #endif
 
 /**
-* We require at least Visual Studio 2013 to compile
-*/
+ * We require at least Visual Studio 2013 to compile
+ */
 static_assert(_MSC_VER >= 1800, "Visual Studio 2013 or later is required to compile on Windows platform");
 #endif // UNREAL_CODE_ANALYZER
 

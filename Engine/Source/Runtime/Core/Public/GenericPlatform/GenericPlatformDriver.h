@@ -22,7 +22,7 @@ public:
 	// constructor
 	FMultiInt()
 	{
-		for (uint32 i = 0; i < Size; ++i)
+		for(uint32 i = 0; i < Size; ++i)
 		{
 			Value[i] = 0;
 		}
@@ -53,10 +53,10 @@ public:
 		{
 			const TCHAR* p = In;
 
-			while (!IsSeparator(*p))
+			while(!IsSeparator(*p))
 			{
 				// '.' separates numbers
-				if (*p == TCHAR('.'))
+				if(*p == TCHAR('.'))
 				{
 					++NumberCount;
 				}
@@ -69,18 +69,18 @@ public:
 		// parse the data
 		{
 			const TCHAR* p = In;
-			for (uint32 i = 0; i < NumberCount; ++i)
+			for(uint32 i = 0; i < NumberCount; ++i)
 			{
 				Value[Size - NumberCount + i] = FCString::Atoi(p);
 
 				// go to next '.', operator or end
-				while (!IsSeparator(*p) && *p != TCHAR('.'))
+				while(!IsSeparator(*p) && *p != TCHAR('.'))
 				{
 					++p;
 				}
 
 				// jump over '.'
-				if (*p == TCHAR('.'))
+				if(*p == TCHAR('.'))
 				{
 					++p;
 				}
@@ -93,15 +93,15 @@ public:
 	// the base comparison operator, we derive the others from it
 	bool operator>(const FMultiInt<TSize>& rhs) const
 	{
-		for (uint32 i = 0; i < Size; ++i)
+		for(uint32 i = 0 ; i < Size; ++i)
 		{
-			if (Value[i] > rhs.Value[i])
+			if(Value[i] > rhs.Value[i])
 			{
-				return true;
+				return true; 
 			}
-			if (Value[i] < rhs.Value[i])
+			if(Value[i] < rhs.Value[i])
 			{
-				return false;
+				return false; 
 			}
 		}
 
@@ -167,30 +167,30 @@ enum EComparisonOp
 // @param In pointer is advanced to be after the data
 inline EComparisonOp ParseComparisonOp(const TCHAR*& In)
 {
-	if (In[0] == '=' && In[1] == '=')
+	if(In[0] == '=' && In[1] == '=')
 	{
 		In += 2;
 		return ECO_Equal;
 	}
-	if (In[0] == '!' && In[1] == '=')
+	if(In[0] == '!' && In[1] == '=')
 	{
 		In += 2;
 		return ECO_NotEqual;
 	}
-	if (*In == '>')
+	if(*In == '>')
 	{
 		++In;
-		if (*In == '=')
+		if(*In == '=')
 		{
 			++In;
 			return ECO_LargerThan;
 		}
 		return ECO_Larger;
 	}
-	if (*In == '<')
+	if(*In == '<')
 	{
 		++In;
-		if (*In == '=')
+		if(*In == '=')
 		{
 			++In;
 			return ECO_SmallerThan;
@@ -204,14 +204,14 @@ inline EComparisonOp ParseComparisonOp(const TCHAR*& In)
 // general comparison with the comparison operator given as enum
 template <class T> bool Compare(const T& A, EComparisonOp Op, const T& B)
 {
-	switch (Op)
+	switch(Op)
 	{
-	case ECO_Equal:			return A == B;
-	case ECO_NotEqual:		return A != B;
-	case ECO_Larger:		return A >  B;
-	case ECO_LargerThan:	return A >= B;
-	case ECO_Smaller:		return A <  B;
-	case ECO_SmallerThan:	return A <= B;
+		case ECO_Equal:			return A == B;
+		case ECO_NotEqual:		return A != B;
+		case ECO_Larger:		return A >  B;
+		case ECO_LargerThan:	return A >= B;
+		case ECO_Smaller:		return A <  B;
+		case ECO_SmallerThan:	return A <= B;
 	}
 	check(0);
 	return false;
@@ -227,13 +227,13 @@ inline bool CompareStringOp(const TCHAR* InOpWithMultiInt, const TCHAR* CurrentM
 	EComparisonOp Op = ParseComparisonOp(p);
 
 	// it makes sense to compare for equal if there is no operator
-	if (Op == ECO_Unknown)
+	if(Op == ECO_Unknown)
 	{
 		Op = ECO_Equal;
 	}
 
 	FMultiInt<6> A, B;
-
+		
 	A.GetValue(CurrentMultiInt);
 	B.Parse(p);
 
@@ -259,7 +259,7 @@ struct FGPUDriverInfo
 	// e.g. "9.18.13.4788"(NVIDIA) first number is Windows version (e.g. 7:Vista, 6:XP, 4:Me, 9:Win8(1), 10:Win7), last 5 have the UserDriver version encoded
 	// also called technical version number (https://wiki.mozilla.org/Blocklisting/Blocked_Graphics_Drivers)
 	// TEXT("Unknown") if driver detection failed
-	FString InternalDriverVersion;
+	FString InternalDriverVersion;	
 	// e.g. "Catalyst 15.7.1"(AMD) or "Crimson 15.7.1"(AMD) or "347.88"(NVIDIA)
 	// also called commercial version number (https://wiki.mozilla.org/Blocklisting/Blocked_Graphics_Drivers)
 	FString UserDriverVersion;
@@ -273,7 +273,7 @@ struct FGPUDriverInfo
 			&& (InternalDriverVersion != TEXT("Unknown"))		// if driver detection code fails
 			&& (InternalDriverVersion != TEXT(""));				// if running on non Windows platform we don't fill in the driver version, later we need to check for the OS as well.
 	}
-
+	
 	// set VendorId
 	void SetAMD() { VendorId = 0x1002; }
 	// set VendorId
@@ -292,7 +292,7 @@ struct FGPUDriverInfo
 		// we use the internal version, not the user version to avoid problem where the name was altered 
 		const FString& FullVersion = InternalDriverVersion;
 
-		if (IsNVIDIA())
+		if(IsNVIDIA())
 		{
 			// on the internal driver number: https://forums.geforce.com/default/topic/378546/confusion-over-driver-version-numbers/
 			//   The first 7 shows u that is a Vista driver, 6 that is an XP and 4 that is Me
@@ -310,11 +310,11 @@ struct FGPUDriverInfo
 			RightPart.InsertAt(3, TEXT("."));
 			return RightPart;
 		}
-		else if (IsAMD())
+		else if(IsAMD())
 		{
 			// examples for AMD: "13.12" "15.101.1007" "13.351"
 		}
-		else if (IsIntel())
+		else if(IsIntel())
 		{
 		}
 		return FullVersion;
@@ -336,10 +336,10 @@ struct FBlackListEntry
 		ensure(!DriverVersionString.IsEmpty());
 
 		// later:
-		//		FParse::Value(In, TEXT("DeviceId="), DeviceId);
-		//		FParse::Value(In, TEXT("OS="), OS);
-		//		FParse::Value(In, TEXT("API="), API);
-		//		ensure(API == TEXT("DX11"));
+//		FParse::Value(In, TEXT("DeviceId="), DeviceId);
+//		FParse::Value(In, TEXT("OS="), OS);
+//		FParse::Value(In, TEXT("API="), API);
+//		ensure(API == TEXT("DX11"));
 
 		FParse::Value(In, TEXT("Reason="), Reason);
 		ensure(!Reason.IsEmpty());
@@ -358,9 +358,9 @@ struct FBlackListEntry
 	}
 
 	/**
-	* Returns true if the latest version of the driver is blacklisted by this entry,
-	* i.e. the comparison op is > or >=.
-	*/
+	 * Returns true if the latest version of the driver is blacklisted by this entry,
+	 * i.e. the comparison op is > or >=.
+	 */
 	bool IsLatestBlacklisted() const
 	{
 		bool bLatestBlacklisted = false;
@@ -400,7 +400,7 @@ struct FGPUHardware
 			check(A.Value[0] == 98 && A.Value[1] == 34);
 			A.GetValue(TEXT("\t 98\t.\t34\t"));
 			check(A.Value[0] == 98 && A.Value[1] == 34);
-
+		
 			check(FMultiInt<2>(TEXT("3.07")) == FMultiInt<2>(TEXT("3.07")));
 			check(FMultiInt<2>(TEXT("3.05")) < FMultiInt<2>(TEXT("3.07")));
 			check(FMultiInt<2>(TEXT("3.05")) <= FMultiInt<2>(TEXT("3.07")));
@@ -413,7 +413,7 @@ struct FGPUHardware
 			check(FMultiInt<2>(TEXT("4.05")) >= FMultiInt<2>(TEXT("3.07")));
 			check(FMultiInt<2>(TEXT("2.05")) < FMultiInt<2>(TEXT("3.07")));
 			check(FMultiInt<2>(TEXT("2.05")) <= FMultiInt<2>(TEXT("3.07")));
-
+			
 			check(Compare(10, ECO_Equal, 10));
 			check(Compare(10, ECO_NotEqual, 20));
 			check(Compare(20, ECO_Larger, 10));
@@ -462,8 +462,8 @@ struct FGPUHardware
 			}
 		}
 #endif// !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
-	}
-
+	}	
+	
 	// @return a driver version intended to be shown to the user e.g. "15.30.1025.1001 12/17/2015 (Crimson Edition 15.12)"
 	FString GetSuggestedDriverVersion() const
 	{
@@ -471,7 +471,7 @@ struct FGPUHardware
 
 		FString Ret;
 
-		if (Section)
+		if(Section)
 		{
 			GConfig->GetString(Section, TEXT("SuggestedDriverVersion"), Ret, GHardwareIni);
 		}
@@ -484,22 +484,22 @@ struct FGPUHardware
 	{
 		const TCHAR* Section = GetVendorSectionName();
 
-		if (Section)
+		if(Section)
 		{
 			TArray<FString> BlacklistStrings;
 			GConfig->GetArray(GetVendorSectionName(), TEXT("Blacklist"), BlacklistStrings, GHardwareIni);
 
-			for (int32 i = 0; i < BlacklistStrings.Num(); ++i)
+			for(int32 i = 0; i < BlacklistStrings.Num(); ++i)
 			{
 				FBlackListEntry Entry;
 
 				const TCHAR* Line = *BlacklistStrings[i];
-
+			
 				ensure(Line[0] == TCHAR('('));
 
 				Entry.LoadFromINIString(&Line[1]);
 
-				if (Entry.Test(DriverInfo))
+				if(Entry.Test(DriverInfo))
 				{
 					return Entry;
 				}
@@ -510,24 +510,24 @@ struct FGPUHardware
 	}
 
 	/**
-	* Returns true if the latest version of the driver has been blacklisted.
-	*/
+	 * Returns true if the latest version of the driver has been blacklisted.
+	 */
 	bool IsLatestBlacklisted() const
 	{
 		bool bLatestBlacklisted = false;
 		const TCHAR* Section = GetVendorSectionName();
 
-		if (Section)
+		if(Section)
 		{
 			TArray<FString> BlacklistStrings;
 			GConfig->GetArray(GetVendorSectionName(), TEXT("Blacklist"), BlacklistStrings, GHardwareIni);
 
-			for (int32 i = 0; !bLatestBlacklisted && i < BlacklistStrings.Num(); ++i)
+			for(int32 i = 0; !bLatestBlacklisted && i < BlacklistStrings.Num(); ++i)
 			{
 				FBlackListEntry Entry;
 
 				const TCHAR* Line = *BlacklistStrings[i];
-
+			
 				ensure(Line[0] == TCHAR('('));
 
 				Entry.LoadFromINIString(&Line[1]);
@@ -542,15 +542,15 @@ struct FGPUHardware
 	// @return 0 if not found
 	const TCHAR* GetVendorSectionName() const
 	{
-		if (DriverInfo.IsNVIDIA())
+		if(DriverInfo.IsNVIDIA())
 		{
 			return TEXT("GPU_NVIDIA");
 		}
-		if (DriverInfo.IsAMD())
+		if(DriverInfo.IsAMD())
 		{
 			return TEXT("GPU_AMD");
 		}
-		else if (DriverInfo.IsIntel())
+		else if(DriverInfo.IsIntel())
 		{
 			return TEXT("GPU_0x8086");
 		}

@@ -15,24 +15,24 @@
 #include "HAL/PlatformTime.h"
 #include "Templates/ScopedPointer.h"
 #include "Misc/ScopeLock.h"
-#include "Templates/UniquePtr.h"
+#include "UniquePtr.h"
 
 class IAsyncReadFileHandle;
 
 #if !UE_BUILD_SHIPPING
 
 /**
-* Wrapper to log the low level file system
+ * Wrapper to log the low level file system
 **/
 DECLARE_LOG_CATEGORY_EXTERN(LogProfiledFile, Log, All);
 
 extern bool bSuppressProfiledFileLog;
 
-#define PROFILERFILE_LOG(CategorFName, Verbosity, Format, ...) \
+#define PROFILERFILE_LOG(CategoryName, Verbosity, Format, ...) \
 	if (!bSuppressProfiledFileLog) \
 	{ \
 		bSuppressProfiledFileLog = true; \
-		UE_LOG(CategorFName, Verbosity, Format, ##__VA_ARGS__); \
+		UE_LOG(CategoryName, Verbosity, Format, ##__VA_ARGS__); \
 		bSuppressProfiledFileLog = false; \
 	}
 
@@ -44,8 +44,8 @@ struct FProfiledFileStatsBase
 	double Duration;
 
 	FProfiledFileStatsBase()
-		: StartTime(0.0)
-		, Duration(0.0)
+		: StartTime( 0.0 )
+		, Duration( 0.0 )
 	{
 	}
 };
@@ -89,10 +89,10 @@ struct FProfiledFileStatsOp : public FProfiledFileStatsBase
 	/** The last time this operation was executed */
 	double LastOpTime;
 
-	FProfiledFileStatsOp(FProfiledFileStatsOp::EOpType InType)
-		: Type(InType)
-		, Bytes(0)
-		, LastOpTime(0.0)
+	FProfiledFileStatsOp( FProfiledFileStatsOp::EOpType InType )
+		: Type( InType )
+		, Bytes( 0 )
+		, LastOpTime( 0.0 )
 	{}
 };
 
@@ -104,22 +104,22 @@ struct FProfiledFileStatsFileBase : public FProfiledFileStatsBase
 	TArray< TSharedPtr< FProfiledFileStatsOp > > Children;
 	FCriticalSection SynchronizationObject;
 
-	FProfiledFileStatsFileBase(const TCHAR* Filename)
-		: Name(Filename)
+	FProfiledFileStatsFileBase( const TCHAR* Filename )
+	: Name( Filename )
 	{}
 };
 
 struct FProfiledFileStatsFileDetailed : public FProfiledFileStatsFileBase
 {
-	FProfiledFileStatsFileDetailed(const TCHAR* Filename)
-		: FProfiledFileStatsFileBase(Filename)
+	FProfiledFileStatsFileDetailed( const TCHAR* Filename )
+	: FProfiledFileStatsFileBase( Filename )
 	{}
 
-	FORCEINLINE FProfiledFileStatsOp* CreateOpStat(FProfiledFileStatsOp::EOpType Type)
+	FORCEINLINE FProfiledFileStatsOp* CreateOpStat( FProfiledFileStatsOp::EOpType Type )
 	{
 		FScopeLock ScopeLock(&SynchronizationObject);
-		TSharedPtr< FProfiledFileStatsOp > Stat(new FProfiledFileStatsOp(Type));
-		Children.Add(Stat);
+		TSharedPtr< FProfiledFileStatsOp > Stat( new FProfiledFileStatsOp( Type ) );
+		Children.Add( Stat );
 		Stat->StartTime = FPlatformTime::Seconds() * 1000.0;
 		Stat->LastOpTime = Stat->StartTime;
 		return Stat.Get();
@@ -128,21 +128,21 @@ struct FProfiledFileStatsFileDetailed : public FProfiledFileStatsFileBase
 
 struct FProfiledFileStatsFileSimple : public FProfiledFileStatsFileBase
 {
-	FProfiledFileStatsFileSimple(const TCHAR* Filename)
-		: FProfiledFileStatsFileBase(Filename)
+	FProfiledFileStatsFileSimple( const TCHAR* Filename )
+	: FProfiledFileStatsFileBase( Filename )
 	{
-		for (uint8 TypeIndex = 0; TypeIndex < (uint8)FProfiledFileStatsOp::EOpType::Count; TypeIndex++)
+		for( uint8 TypeIndex = 0; TypeIndex < (uint8)FProfiledFileStatsOp::EOpType::Count; TypeIndex++ )
 		{
-			TSharedPtr< FProfiledFileStatsOp > Stat(new FProfiledFileStatsOp(FProfiledFileStatsOp::EOpType(TypeIndex)));
-			Children.Add(Stat);
+			TSharedPtr< FProfiledFileStatsOp > Stat( new FProfiledFileStatsOp( FProfiledFileStatsOp::EOpType( TypeIndex ) ) );
+			Children.Add( Stat );
 		}
 	}
 
-	FORCEINLINE FProfiledFileStatsOp* CreateOpStat(FProfiledFileStatsOp::EOpType Type)
+	FORCEINLINE FProfiledFileStatsOp* CreateOpStat( FProfiledFileStatsOp::EOpType Type )
 	{
-		TSharedPtr< FProfiledFileStatsOp > Stat = Children[(uint8)Type];
+		TSharedPtr< FProfiledFileStatsOp > Stat = Children[ (uint8)Type ];
 		Stat->LastOpTime = FPlatformTime::Seconds() * 1000.0;
-		if (Stat->StartTime == 0.0)
+		if( Stat->StartTime == 0.0 )
 		{
 			Stat->StartTime = Stat->LastOpTime;
 		}
@@ -168,28 +168,28 @@ public:
 
 	virtual int64		Tell() override
 	{
-		FProfiledFileStatsOp* Stat(FileStats->CreateOpStat(FProfiledFileStatsOp::EOpType::Tell));
+		FProfiledFileStatsOp* Stat( FileStats->CreateOpStat( FProfiledFileStatsOp::EOpType::Tell ) );
 		int64 Result = FileHandle->Tell();
 		Stat->Duration += FPlatformTime::Seconds() * 1000.0 - Stat->LastOpTime;
 		return Result;
 	}
 	virtual bool		Seek(int64 NewPosition) override
 	{
-		FProfiledFileStatsOp* Stat(FileStats->CreateOpStat(FProfiledFileStatsOp::EOpType::Seek));
+		FProfiledFileStatsOp* Stat( FileStats->CreateOpStat( FProfiledFileStatsOp::EOpType::Seek ) );
 		bool Result = FileHandle->Seek(NewPosition);
 		Stat->Duration += FPlatformTime::Seconds() * 1000.0 - Stat->LastOpTime;
 		return Result;
 	}
 	virtual bool		SeekFromEnd(int64 NewPositionRelativeToEnd) override
 	{
-		FProfiledFileStatsOp* Stat(FileStats->CreateOpStat(FProfiledFileStatsOp::EOpType::Seek));
+		FProfiledFileStatsOp* Stat( FileStats->CreateOpStat( FProfiledFileStatsOp::EOpType::Seek ) );
 		bool Result = FileHandle->SeekFromEnd(NewPositionRelativeToEnd);
 		Stat->Duration += FPlatformTime::Seconds() * 1000.0 - Stat->LastOpTime;
 		return Result;
 	}
 	virtual bool		Read(uint8* Destination, int64 BytesToRead) override
 	{
-		FProfiledFileStatsOp* Stat(FileStats->CreateOpStat(FProfiledFileStatsOp::EOpType::Read));
+		FProfiledFileStatsOp* Stat( FileStats->CreateOpStat( FProfiledFileStatsOp::EOpType::Read ) );
 		bool Result = FileHandle->Read(Destination, BytesToRead);
 		Stat->Duration += FPlatformTime::Seconds() * 1000.0 - Stat->LastOpTime;
 		Stat->Bytes += BytesToRead;
@@ -197,7 +197,7 @@ public:
 	}
 	virtual bool		Write(const uint8* Source, int64 BytesToWrite) override
 	{
-		FProfiledFileStatsOp* Stat(FileStats->CreateOpStat(FProfiledFileStatsOp::EOpType::Write));
+		FProfiledFileStatsOp* Stat( FileStats->CreateOpStat( FProfiledFileStatsOp::EOpType::Write ) );
 		bool Result = FileHandle->Write(Source, BytesToWrite);
 		Stat->Duration += FPlatformTime::Seconds() * 1000.0 - Stat->LastOpTime;
 		Stat->Bytes += BytesToWrite;
@@ -205,7 +205,7 @@ public:
 	}
 	virtual int64		Size() override
 	{
-		FProfiledFileStatsOp* Stat(FileStats->CreateOpStat(FProfiledFileStatsOp::EOpType::Size));
+		FProfiledFileStatsOp* Stat( FileStats->CreateOpStat( FProfiledFileStatsOp::EOpType::Size ) );
 		int64 Result = FileHandle->Size();
 		Stat->Duration += FPlatformTime::Seconds() * 1000.0 - Stat->LastOpTime;
 		return Result;
@@ -235,7 +235,7 @@ public:
 
 	virtual bool ShouldBeUsed(IPlatformFile* Inner, const TCHAR* CmdLine) const override
 	{
-		return FParse::Param(CmdLine, GetName());
+		return FParse::Param( CmdLine, GetName() );
 	}
 
 	virtual bool Initialize(IPlatformFile* Inner, const TCHAR* CommandLineParam) override
@@ -270,24 +270,24 @@ public:
 template <class StatsType>
 class TProfiledPlatformFile : public FProfiledPlatformFile
 {
-	FORCEINLINE StatsType* CreateStat(const TCHAR* Filename)
+	FORCEINLINE StatsType* CreateStat( const TCHAR* Filename )
 	{
-		FString Path(Filename);
+		FString Path( Filename );
 		FScopeLock ScopeLock(&SynchronizationObject);
 
-		TSharedPtr< FProfiledFileStatsFileBase >* ExistingStat = Stats.Find(Path);
-		if (ExistingStat != nullptr)
+		TSharedPtr< FProfiledFileStatsFileBase >* ExistingStat = Stats.Find( Path );
+		if( ExistingStat != nullptr )
 		{
 			return (StatsType*)(ExistingStat->Get());
 		}
 		else
 		{
-			TSharedPtr< StatsType > Stat(new StatsType(*Path));
-			Stats.Add(Path, Stat);
+			TSharedPtr< StatsType > Stat( new StatsType( *Path ) );
+			Stats.Add( Path, Stat );
 			Stat->StartTime = FPlatformTime::Seconds() * 1000.0;
-
+			
 			return Stat.Get();
-		}
+		}		
 	}
 
 public:
@@ -305,56 +305,56 @@ public:
 	}
 	virtual bool		FileExists(const TCHAR* Filename) override
 	{
-		StatsType* FileStat = CreateStat(Filename);
-		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::Exists);
+		StatsType* FileStat = CreateStat( Filename );
+		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat( FProfiledFileStatsOp::EOpType::Exists );
 		bool Result = LowerLevel->FileExists(Filename);
 		OpStat->Duration += FPlatformTime::Seconds() * 1000.0 - OpStat->LastOpTime;
 		return Result;
 	}
 	virtual int64		FileSize(const TCHAR* Filename) override
 	{
-		StatsType* FileStat = CreateStat(Filename);
-		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::Size);
+		StatsType* FileStat = CreateStat( Filename );
+		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat( FProfiledFileStatsOp::EOpType::Size );
 		int64 Result = LowerLevel->FileSize(Filename);
 		OpStat->Duration += FPlatformTime::Seconds() * 1000.0 - OpStat->LastOpTime;
 		return Result;
 	}
 	virtual bool		DeleteFile(const TCHAR* Filename) override
 	{
-		StatsType* FileStat = CreateStat(Filename);
-		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::Delete);
+		StatsType* FileStat = CreateStat( Filename );
+		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat( FProfiledFileStatsOp::EOpType::Delete );
 		bool Result = LowerLevel->DeleteFile(Filename);
 		OpStat->Duration += FPlatformTime::Seconds() * 1000.0 - OpStat->LastOpTime;
 		return Result;
 	}
 	virtual bool		IsReadOnly(const TCHAR* Filename) override
 	{
-		StatsType* FileStat = CreateStat(Filename);
-		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::IsReadOnly);
+		StatsType* FileStat = CreateStat( Filename );
+		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat( FProfiledFileStatsOp::EOpType::IsReadOnly );
 		bool Result = LowerLevel->IsReadOnly(Filename);
 		OpStat->Duration += FPlatformTime::Seconds() * 1000.0 - OpStat->LastOpTime;
 		return Result;
 	}
 	virtual bool		MoveFile(const TCHAR* To, const TCHAR* From) override
 	{
-		StatsType* FileStat = CreateStat(From);
-		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::Move);
+		StatsType* FileStat = CreateStat( From );
+		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat( FProfiledFileStatsOp::EOpType::Move );
 		bool Result = LowerLevel->MoveFile(To, From);
 		OpStat->Duration += FPlatformTime::Seconds() * 1000.0 - OpStat->LastOpTime;
 		return Result;
 	}
 	virtual bool		SetReadOnly(const TCHAR* Filename, bool bNewReadOnlyValue) override
 	{
-		StatsType* FileStat = CreateStat(Filename);
-		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::SetReadOnly);
+		StatsType* FileStat = CreateStat( Filename );
+		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat( FProfiledFileStatsOp::EOpType::SetReadOnly );
 		bool Result = LowerLevel->SetReadOnly(Filename, bNewReadOnlyValue);
 		OpStat->Duration += FPlatformTime::Seconds() * 1000.0 - OpStat->LastOpTime;
 		return Result;
 	}
 	virtual FDateTime	GetTimeStamp(const TCHAR* Filename) override
 	{
-		StatsType* FileStat = CreateStat(Filename);
-		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::GetTimeStamp);
+		StatsType* FileStat = CreateStat( Filename );
+		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat( FProfiledFileStatsOp::EOpType::GetTimeStamp );
 		double OpStartTime = FPlatformTime::Seconds();
 		FDateTime Result = LowerLevel->GetTimeStamp(Filename);
 		OpStat->Duration += FPlatformTime::Seconds() * 1000 - OpStat->LastOpTime;
@@ -362,16 +362,16 @@ public:
 	}
 	virtual void		SetTimeStamp(const TCHAR* Filename, FDateTime DateTime) override
 	{
-		StatsType* FileStat = CreateStat(Filename);
-		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::SetTimeStamp);
+		StatsType* FileStat = CreateStat( Filename );
+		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat( FProfiledFileStatsOp::EOpType::SetTimeStamp );
 		double OpStartTime = FPlatformTime::Seconds();
 		LowerLevel->SetTimeStamp(Filename, DateTime);
 		OpStat->Duration += FPlatformTime::Seconds() * 1000 - OpStat->LastOpTime;
 	}
 	virtual FDateTime	GetAccessTimeStamp(const TCHAR* Filename) override
 	{
-		StatsType* FileStat = CreateStat(Filename);
-		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::GetTimeStamp);
+		StatsType* FileStat = CreateStat( Filename );
+		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat( FProfiledFileStatsOp::EOpType::GetTimeStamp );
 		double OpStartTime = FPlatformTime::Seconds();
 		FDateTime Result = LowerLevel->GetAccessTimeStamp(Filename);
 		OpStat->Duration += FPlatformTime::Seconds() * 1000 - OpStat->LastOpTime;
@@ -380,7 +380,7 @@ public:
 	virtual FString	GetFilenameOnDisk(const TCHAR* Filename) override
 	{
 		StatsType* FileStat = CreateStat(Filename);
-		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::GetFilenameOnDisk);
+		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat( FProfiledFileStatsOp::EOpType::GetFilenameOnDisk );
 		double OpStartTime = FPlatformTime::Seconds();
 		FString Result = LowerLevel->GetFilenameOnDisk(Filename);
 		OpStat->Duration += FPlatformTime::Seconds() * 1000 - OpStat->LastOpTime;
@@ -388,41 +388,41 @@ public:
 	}
 	virtual IFileHandle*	OpenRead(const TCHAR* Filename, bool bAllowWrite = false) override
 	{
-		StatsType* FileStat = CreateStat(Filename);
-		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::OpenRead);
+		StatsType* FileStat = CreateStat( Filename );
+		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat( FProfiledFileStatsOp::EOpType::OpenRead );
 		IFileHandle* Result = LowerLevel->OpenRead(Filename, bAllowWrite);
 		OpStat->Duration += FPlatformTime::Seconds() * 1000.0 - OpStat->LastOpTime;
-		return Result ? (new TProfiledFileHandle< StatsType >(Result, Filename, FileStat)) : Result;
+		return Result ? (new TProfiledFileHandle< StatsType >( Result, Filename, FileStat )) : Result;
 	}
 	virtual IFileHandle*	OpenWrite(const TCHAR* Filename, bool bAppend = false, bool bAllowRead = false) override
 	{
-		StatsType* FileStat = CreateStat(Filename);
-		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::OpenWrite);
+		StatsType* FileStat = CreateStat( Filename );
+		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat( FProfiledFileStatsOp::EOpType::OpenWrite );
 		IFileHandle* Result = LowerLevel->OpenWrite(Filename, bAppend, bAllowRead);
 		OpStat->Duration += FPlatformTime::Seconds() * 1000.0 - OpStat->LastOpTime;
-		return Result ? (new TProfiledFileHandle< StatsType >(Result, Filename, FileStat)) : Result;
+		return Result ? (new TProfiledFileHandle< StatsType >( Result, Filename, FileStat )) : Result;
 	}
 
 	virtual bool		DirectoryExists(const TCHAR* Directory) override
 	{
-		StatsType* FileStat = CreateStat(Directory);
-		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::Exists);
+		StatsType* FileStat = CreateStat( Directory );
+		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat( FProfiledFileStatsOp::EOpType::Exists );
 		bool Result = LowerLevel->DirectoryExists(Directory);
 		OpStat->Duration += FPlatformTime::Seconds() * 1000.0 - OpStat->LastOpTime;
 		return Result;
 	}
 	virtual bool		CreateDirectory(const TCHAR* Directory) override
 	{
-		StatsType* FileStat = CreateStat(Directory);
-		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::Create);
+		StatsType* FileStat = CreateStat( Directory );
+		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat( FProfiledFileStatsOp::EOpType::Create );
 		bool Result = LowerLevel->CreateDirectory(Directory);
 		OpStat->Duration += FPlatformTime::Seconds() * 1000.0 - OpStat->LastOpTime;
 		return Result;
 	}
 	virtual bool		DeleteDirectory(const TCHAR* Directory) override
 	{
-		StatsType* FileStat = CreateStat(Directory);
-		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::Delete);
+		StatsType* FileStat = CreateStat( Directory );
+		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat( FProfiledFileStatsOp::EOpType::Delete );
 		bool Result = LowerLevel->DeleteDirectory(Directory);
 		OpStat->Duration += FPlatformTime::Seconds() * 1000.0 - OpStat->LastOpTime;
 		return Result;
@@ -430,8 +430,8 @@ public:
 
 	virtual FFileStatData GetStatData(const TCHAR* FilenameOrDirectory) override
 	{
-		StatsType* FileStat = CreateStat(FilenameOrDirectory);
-		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::GetStatData);
+		StatsType* FileStat = CreateStat( FilenameOrDirectory );
+		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat( FProfiledFileStatsOp::EOpType::GetStatData );
 		FFileStatData Result = LowerLevel->GetStatData(FilenameOrDirectory);
 		OpStat->Duration += FPlatformTime::Seconds() * 1000.0 - OpStat->LastOpTime;
 		return Result;
@@ -439,51 +439,51 @@ public:
 
 	virtual bool		IterateDirectory(const TCHAR* Directory, IPlatformFile::FDirectoryVisitor& Visitor) override
 	{
-		StatsType* FileStat = CreateStat(Directory);
-		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::Iterate);
-		bool Result = LowerLevel->IterateDirectory(Directory, Visitor);
+		StatsType* FileStat = CreateStat( Directory );
+		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat( FProfiledFileStatsOp::EOpType::Iterate );
+		bool Result = LowerLevel->IterateDirectory( Directory, Visitor );
 		OpStat->Duration += FPlatformTime::Seconds() * 1000.0 - OpStat->LastOpTime;
 		return Result;
 	}
 	virtual bool		IterateDirectoryRecursively(const TCHAR* Directory, IPlatformFile::FDirectoryVisitor& Visitor) override
 	{
-		StatsType* FileStat = CreateStat(Directory);
-		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::Iterate);
-		bool Result = LowerLevel->IterateDirectoryRecursively(Directory, Visitor);
+		StatsType* FileStat = CreateStat( Directory );
+		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat( FProfiledFileStatsOp::EOpType::Iterate );
+		bool Result = LowerLevel->IterateDirectoryRecursively( Directory, Visitor );
 		OpStat->Duration += FPlatformTime::Seconds() * 1000.0 - OpStat->LastOpTime;
 		return Result;
 	}
 
 	virtual bool		IterateDirectoryStat(const TCHAR* Directory, IPlatformFile::FDirectoryStatVisitor& Visitor) override
 	{
-		StatsType* FileStat = CreateStat(Directory);
-		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::IterateStat);
-		bool Result = LowerLevel->IterateDirectoryStat(Directory, Visitor);
+		StatsType* FileStat = CreateStat( Directory );
+		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat( FProfiledFileStatsOp::EOpType::IterateStat );
+		bool Result = LowerLevel->IterateDirectoryStat( Directory, Visitor );
 		OpStat->Duration += FPlatformTime::Seconds() * 1000.0 - OpStat->LastOpTime;
 		return Result;
 	}
 	virtual bool		IterateDirectoryStatRecursively(const TCHAR* Directory, IPlatformFile::FDirectoryStatVisitor& Visitor) override
 	{
-		StatsType* FileStat = CreateStat(Directory);
-		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::IterateStat);
-		bool Result = LowerLevel->IterateDirectoryStatRecursively(Directory, Visitor);
+		StatsType* FileStat = CreateStat( Directory );
+		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat( FProfiledFileStatsOp::EOpType::IterateStat );
+		bool Result = LowerLevel->IterateDirectoryStatRecursively( Directory, Visitor );
 		OpStat->Duration += FPlatformTime::Seconds() * 1000.0 - OpStat->LastOpTime;
 		return Result;
 	}
 
 	virtual bool		DeleteDirectoryRecursively(const TCHAR* Directory) override
 	{
-		StatsType* FileStat = CreateStat(Directory);
-		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::Delete);
-		bool Result = LowerLevel->DeleteDirectoryRecursively(Directory);
+		StatsType* FileStat = CreateStat( Directory );
+		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat( FProfiledFileStatsOp::EOpType::Delete );
+		bool Result = LowerLevel->DeleteDirectoryRecursively( Directory );
 		OpStat->Duration += FPlatformTime::Seconds() * 1000.0 - OpStat->LastOpTime;
 		return Result;
 	}
 	virtual bool		CopyFile(const TCHAR* To, const TCHAR* From, EPlatformFileRead ReadFlags = EPlatformFileRead::None, EPlatformFileWrite WriteFlags = EPlatformFileWrite::None) override
 	{
-		StatsType* FileStat = CreateStat(From);
-		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat(FProfiledFileStatsOp::EOpType::Copy);
-		bool Result = LowerLevel->CopyFile(To, From, ReadFlags, WriteFlags);
+		StatsType* FileStat = CreateStat( From );
+		FProfiledFileStatsOp* OpStat = FileStat->CreateOpStat( FProfiledFileStatsOp::EOpType::Copy );
+		bool Result = LowerLevel->CopyFile( To, From, ReadFlags, WriteFlags);
 		OpStat->Duration += FPlatformTime::Seconds() * 1000.0 - OpStat->LastOpTime;
 		return Result;
 	}
@@ -665,7 +665,7 @@ public:
 	{
 		return LowerLevel->DeleteDirectory(Directory);
 	}
-
+	
 	virtual FFileStatData GetStatData(const TCHAR* FilenameOrDirectory) override
 	{
 		return LowerLevel->GetStatData(FilenameOrDirectory);
@@ -673,29 +673,29 @@ public:
 
 	virtual bool		IterateDirectory(const TCHAR* Directory, IPlatformFile::FDirectoryVisitor& Visitor) override
 	{
-		return LowerLevel->IterateDirectory(Directory, Visitor);
+		return LowerLevel->IterateDirectory( Directory, Visitor );
 	}
 	virtual bool		IterateDirectoryRecursively(const TCHAR* Directory, IPlatformFile::FDirectoryVisitor& Visitor) override
 	{
-		return LowerLevel->IterateDirectoryRecursively(Directory, Visitor);
+		return LowerLevel->IterateDirectoryRecursively( Directory, Visitor );
 	}
 
 	virtual bool		IterateDirectoryStat(const TCHAR* Directory, IPlatformFile::FDirectoryStatVisitor& Visitor) override
 	{
-		return LowerLevel->IterateDirectoryStat(Directory, Visitor);
+		return LowerLevel->IterateDirectoryStat( Directory, Visitor );
 	}
 	virtual bool		IterateDirectoryStatRecursively(const TCHAR* Directory, IPlatformFile::FDirectoryStatVisitor& Visitor) override
 	{
-		return LowerLevel->IterateDirectoryStatRecursively(Directory, Visitor);
+		return LowerLevel->IterateDirectoryStatRecursively( Directory, Visitor );
 	}
 
 	virtual bool		DeleteDirectoryRecursively(const TCHAR* Directory) override
 	{
-		return LowerLevel->DeleteDirectoryRecursively(Directory);
+		return LowerLevel->DeleteDirectoryRecursively( Directory );
 	}
 	virtual bool		CopyFile(const TCHAR* To, const TCHAR* From, EPlatformFileRead ReadFlags = EPlatformFileRead::None, EPlatformFileWrite WriteFlags = EPlatformFileWrite::None) override
 	{
-		return LowerLevel->CopyFile(To, From, ReadFlags, WriteFlags);
+		return LowerLevel->CopyFile( To, From, ReadFlags, WriteFlags );
 	}
 	virtual IAsyncReadFileHandle* OpenAsyncRead(const TCHAR* Filename) override
 	{

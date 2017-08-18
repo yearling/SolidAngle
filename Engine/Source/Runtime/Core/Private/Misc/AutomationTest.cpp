@@ -206,7 +206,7 @@ void FAutomationTestFramework::ResetTests()
 	bool bEnsureExists = false;
 	bool bDeleteEntireTree = true;
 	//make sure all transient files are deleted successfully
-	IFileManager::Get().DeleteDirectory(*YPaths::AutomationTransientDir(), bEnsureExists, bDeleteEntireTree);
+	IFileManager::Get().DeleteDirectory(*FPaths::AutomationTransientDir(), bEnsureExists, bDeleteEntireTree);
 }
 
 void FAutomationTestFramework::StartTestBFName( const FString& InTestToRun, const int32 InRoleIndex )
@@ -460,7 +460,7 @@ bool FAutomationTestFramework::ShouldTestContent(const FString& Path) const
 		return true;
 	}
 
-	FString DevelopersPath = YPaths::GameDevelopersDir().LeftChop(1);
+	FString DevelopersPath = FPaths::GameDevelopersDir().LeftChop(1);
 	return bDeveloperDirectoryIncluded || !Path.StartsWith(DevelopersPath);
 }
 

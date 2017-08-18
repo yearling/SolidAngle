@@ -1,3 +1,6 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
+
 /*=============================================================================================
 GenericPlatformCompression.h: Generic platform compress and decompress.
 ==============================================================================================*/
@@ -18,12 +21,12 @@ public:
 	virtual ~IPlatformCompression() {}
 
 	/**
-	* Gets the bit window for compressor for this platform.
-	*
-	* @return Compression bit window.
-	*/
+	 * Gets the bit window for compressor for this platform.
+	 *
+	 * @return Compression bit window.
+	 */
 	virtual int32 GetCompressionBitWindow() const = 0;
-
+	
 	/**
 	* Thread-safe abstract compression routine to query memory requirements for a compression operation.
 	* @param	Flags						Flags to control what method to use and optionally control memory vs speed
@@ -68,15 +71,15 @@ class CORE_API FGenericPlatformCompression : public IPlatformCompression
 {
 public:
 	/**
-	* Gets the bit window for compressor for this platform.
-	*
-	* @return Compression bit window.
-	*/
+	 * Gets the bit window for compressor for this platform.
+	 *
+	 * @return Compression bit window.
+	 */
 	virtual int32 GetCompressionBitWindow() const override
 	{
 		return DEFAULT_ZLIB_BIT_WINDOW;
 	}
-
+	
 	/**
 	* Thread-safe abstract compression routine to query memory requirements for a compression operation.
 	* @param	Flags						Flags to control what method to use and optionally control memory vs speed

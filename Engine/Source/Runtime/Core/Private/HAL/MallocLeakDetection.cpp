@@ -265,8 +265,8 @@ void FMallocLeakDetection::CheckpointLinearFit()
 		Callstack.NumCheckPoints++;
 		Callstack.SumOfFramesNumbers += FrameNum;
 		Callstack.SumOfFramesNumbersSquared += FrameNum2;
-		Callstack.SumOYMemory += float(Callstack.Size);
-		Callstack.SumOYMemoryTimesFrameNumber += float(Callstack.Size) * FrameNum;
+		Callstack.SumOfMemory += float(Callstack.Size);
+		Callstack.SumOfMemoryTimesFrameNumber += float(Callstack.Size) * FrameNum;
 		Callstack.GetLinearFit();
 	}
 }
@@ -289,8 +289,8 @@ void FMallocLeakDetection::FCallstackTrack::GetLinearFit()
 	AtAInv[1][0] = -Det * SumOfFramesNumbers;
 	AtAInv[1][1] = Det * float(NumCheckPoints);
 
-	Baseline = AtAInv[0][0] * SumOYMemory + AtAInv[0][1] * SumOYMemoryTimesFrameNumber;
-	BytesPerFrame = AtAInv[1][0] * SumOYMemory + AtAInv[1][1] * SumOYMemoryTimesFrameNumber;
+	Baseline = AtAInv[0][0] * SumOfMemory + AtAInv[0][1] * SumOfMemoryTimesFrameNumber;
+	BytesPerFrame = AtAInv[1][0] * SumOfMemory + AtAInv[1][1] * SumOfMemoryTimesFrameNumber;
 }
 
 #define LOG_OUTPUT(Format, ...) \
@@ -368,24 +368,24 @@ int32 FMallocLeakDetection::DumpPotentialLeakers(const FMallocLeakReportOptions&
 	{
 		FOutputDevice* ReportAr = nullptr;
 		FArchive* FileAr = nullptr;
-		YOutputDeviceArchiveWrapper* FileArWrapper = nullptr;
+		FOutputDeviceArchiveWrapper* FileArWrapper = nullptr;
 
 		if (Options.OutputFile && FCString::Strlen(Options.OutputFile))
 		{
-			const FString PathName = *(YPaths::ProfilingDir() + TEXT("memreports/"));
+			const FString PathName = *(FPaths::ProfilingDir() + TEXT("memreports/"));
 			IFileManager::Get().MakeDirectory(*PathName);
 
 			FString FilePath = PathName + CreateProfileFilename(Options.OutputFile, TEXT(".leaks"), true);
 
 			FileAr = IFileManager::Get().CreateDebugFileWriter(*FilePath);
-			FileArWrapper = new YOutputDeviceArchiveWrapper(FileAr);
+			FileArWrapper = new FOutputDeviceArchiveWrapper(FileAr);
 			ReportAr = FileArWrapper;
 
 			//UE_LOG(LogConsoleResponse, Log, TEXT("MemReportDeferred: saving to %s"), *FilePath);
 		}
 
 		const float InvToMb = 1.0 / (1024 * 1024);
-		YPlatformMemoryStats MemoryStats = YPlatformMemory::GetStats();
+		FPlatformMemoryStats MemoryStats = FPlatformMemory::GetStats();
 
 		LOG_OUTPUT(TEXT("Current Time: %s, Current Frame %d"), *FDateTime::Now().ToString(TEXT("%m.%d-%H.%M.%S")), GFrameCounter);
 
@@ -525,24 +525,24 @@ int32 FMallocLeakDetection::DumpOpenCallstacks(const FMallocLeakReportOptions& O
 	
 	FOutputDevice* ReportAr = nullptr;
 	FArchive* FileAr = nullptr;
-	YOutputDeviceArchiveWrapper* FileArWrapper = nullptr;
+	FOutputDeviceArchiveWrapper* FileArWrapper = nullptr;
 
 	if (Options.OutputFile && FCString::Strlen(Options.OutputFile))
 	{
-		const FString PathName = *(YPaths::ProfilingDir() + TEXT("memreports/"));
+		const FString PathName = *(FPaths::ProfilingDir() + TEXT("memreports/"));
 		IFileManager::Get().MakeDirectory(*PathName);
 		
 		FString FilePath = PathName + CreateProfileFilename(Options.OutputFile, TEXT(".allocs"), true);
 
 		FileAr = IFileManager::Get().CreateDebugFileWriter(*FilePath);
-		FileArWrapper = new YOutputDeviceArchiveWrapper(FileAr);
+		FileArWrapper = new FOutputDeviceArchiveWrapper(FileAr);
 		ReportAr = FileArWrapper;
 
 		//UE_LOG(LogConsoleResponse, Log, TEXT("MemReportDeferred: saving to %s"), *FilePath);
 	}
 
 	const float InvToMb = 1.0 / (1024 * 1024);
-	YPlatformMemoryStats MemoryStats = YPlatformMemory::GetStats();
+	FPlatformMemoryStats MemoryStats = FPlatformMemory::GetStats();
 
 	LOG_OUTPUT(TEXT("Current Time: %s, Current Frame %d"), *FDateTime::Now().ToString(TEXT("%m.%d-%H.%M.%S")), GFrameCounter);
 

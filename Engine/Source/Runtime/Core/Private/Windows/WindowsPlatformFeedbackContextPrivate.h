@@ -45,7 +45,7 @@ public:
 			{
 				Prefix = Context->GetContext() + TEXT(" : ");
 			}
-			FString Format = Prefix + YOutputDeviceHelper::FormatLogLine(Verbosity, Category, V);
+			FString Format = Prefix + FOutputDeviceHelper::FormatLogLine(Verbosity, Category, V);
 
 			if(Verbosity == ELogVerbosity::Error)
 			{

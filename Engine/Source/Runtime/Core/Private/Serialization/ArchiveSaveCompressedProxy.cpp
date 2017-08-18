@@ -16,7 +16,7 @@
  * @param	InCompressedData [ref]	Array of bytes that is going to hold compressed data
  * @param	InCompressionFlags		Compression flags to use for compressing data
  */
-YArchiveSaveCompressedProxy::YArchiveSaveCompressedProxy( TArray<uint8>& InCompressedData, ECompressionFlags InCompressionFlags )
+FArchiveSaveCompressedProxy::FArchiveSaveCompressedProxy( TArray<uint8>& InCompressedData, ECompressionFlags InCompressionFlags )
 :	CompressedData(InCompressedData)
 ,	CompressionFlags(InCompressionFlags)
 {
@@ -34,7 +34,7 @@ YArchiveSaveCompressedProxy::YArchiveSaveCompressedProxy( TArray<uint8>& InCompr
 }
 
 /** Destructor, flushing array if needed. Also frees temporary memory. */
-YArchiveSaveCompressedProxy::~YArchiveSaveCompressedProxy()
+FArchiveSaveCompressedProxy::~FArchiveSaveCompressedProxy()
 {
 	// Flush is required to write out remaining tmp data to array.
 	Flush();
@@ -48,7 +48,7 @@ YArchiveSaveCompressedProxy::~YArchiveSaveCompressedProxy()
 /**
  * Flushes tmp data to array.
  */
-void YArchiveSaveCompressedProxy::Flush()
+void FArchiveSaveCompressedProxy::Flush()
 {
 	if( TmpData - TmpDataStart > 0 )
 	{
@@ -68,7 +68,7 @@ void YArchiveSaveCompressedProxy::Flush()
  * @param	Data	Pointer to serialize to
  * @param	Count	Number of bytes to read
  */
-void YArchiveSaveCompressedProxy::Serialize( void* InData, int64 Count )
+void FArchiveSaveCompressedProxy::Serialize( void* InData, int64 Count )
 {
 	uint8* SrcData = (uint8*) InData;
 	// If counter > 1 it means we're calling recursively and therefore need to write to compressed data.
@@ -115,7 +115,7 @@ void YArchiveSaveCompressedProxy::Serialize( void* InData, int64 Count )
  * 
  * @param	InPos	Position to seek to
  */
-void YArchiveSaveCompressedProxy::Seek( int64 InPos )
+void FArchiveSaveCompressedProxy::Seek( int64 InPos )
 {
 	// Support setting position in array.
 	if( bShouldSerializeToArray )
@@ -131,7 +131,7 @@ void YArchiveSaveCompressedProxy::Seek( int64 InPos )
 /**
  * @return current position in uncompressed stream in bytes
  */
-int64 YArchiveSaveCompressedProxy::Tell()
+int64 FArchiveSaveCompressedProxy::Tell()
 {
 	// If we're serializing to array, return position in array.
 	if( bShouldSerializeToArray )

@@ -24,7 +24,7 @@ class FName;
  * Output device that writes to Windows Event Log
  */
 class FOutputDeviceEventLog
-	: public FOutputDevicer
+	: public FOutputDevice
 {
 	/** Handle to the event log object */
 	HANDLE EventLog;
@@ -145,7 +145,7 @@ public:
 /**
  * Windows implementation of console log window, utilizing the Win32 console API
  */
-class CORE_API YOutputDeviceConsoleWindows : public FOutputDeviceConsole
+class CORE_API FOutputDeviceConsoleWindows : public FOutputDeviceConsole
 {
 private:
 	/** Handle to the console log window */
@@ -166,8 +166,8 @@ public:
 	/** 
 	 * Constructor, setting console control handler.
 	 */
-	YOutputDeviceConsoleWindows();
-	~YOutputDeviceConsoleWindows();
+	FOutputDeviceConsoleWindows();
+	~FOutputDeviceConsoleWindows();
 
 	/**
 	 * Shows or hides the console window. 

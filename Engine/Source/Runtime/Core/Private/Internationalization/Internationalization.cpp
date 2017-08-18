@@ -232,7 +232,7 @@ void FInternationalization::GetCulturesWithAvailableLocalization(const TArray<FS
 				if(bIsDirectory)
 				{
 					// UE localization resource folders use "en-US" style while ICU uses "en_US"
-					const FString LocalizationFolder = YPaths::GetCleanFilename(FilenameOrDirectory);
+					const FString LocalizationFolder = FPaths::GetCleanFilename(FilenameOrDirectory);
 					const FString CanonicalName = FCulture::GetCanonicalName(LocalizationFolder);
 					LocalizationFolders.AddUnique(CanonicalName);
 				}

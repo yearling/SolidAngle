@@ -163,8 +163,8 @@ bool FApp::IsEngineInstalled()
 	if (EngineInstalledState == -1)
 	{
 		bool bIsInstalledEngine = IsInstalled();
-		FString InstalledBuildFile = YPaths::RootDir() / TEXT("Engine/Build/InstalledBuild.txt");
-		YPaths::NormalizeFilename(InstalledBuildFile);
+		FString InstalledBuildFile = FPaths::RootDir() / TEXT("Engine/Build/InstalledBuild.txt");
+		FPaths::NormalizeFilename(InstalledBuildFile);
 		bIsInstalledEngine |= IFileManager::Get().FileExists(*InstalledBuildFile);
 		// Allow commandline options to disable/enable installed engine behavior
 		if (bIsInstalledEngine)

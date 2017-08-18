@@ -30,7 +30,7 @@ THIRD_PARTY_INCLUDES_END
 #define MEM_TIME(st)
 
 
-void* TMallocTBB::Malloc( SIZE_T Size, uint32 Alignment )
+void* FMallocTBB::Malloc( SIZE_T Size, uint32 Alignment )
 {
 	IncrementTotalMallocCalls();
 
@@ -61,7 +61,7 @@ void* TMallocTBB::Malloc( SIZE_T Size, uint32 Alignment )
 	return NewPtr;
 }
 
-void* TMallocTBB::Realloc( void* Ptr, SIZE_T NewSize, uint32 Alignment )
+void* FMallocTBB::Realloc( void* Ptr, SIZE_T NewSize, uint32 Alignment )
 {
 	IncrementTotalReallocCalls();
 
@@ -101,7 +101,7 @@ void* TMallocTBB::Realloc( void* Ptr, SIZE_T NewSize, uint32 Alignment )
 	return NewPtr;
 }
 
-void TMallocTBB::Free( void* Ptr )
+void FMallocTBB::Free( void* Ptr )
 {
 	if( !Ptr )
 	{
@@ -117,7 +117,7 @@ void TMallocTBB::Free( void* Ptr )
 	MEM_TIME(MemTime += FPlatformTime::Seconds())
 }
 
-bool TMallocTBB::GetAllocationSize(void *Original, SIZE_T &SizeOut)
+bool FMallocTBB::GetAllocationSize(void *Original, SIZE_T &SizeOut)
 {
 	SizeOut = scalable_msize(Original);
 	return true;

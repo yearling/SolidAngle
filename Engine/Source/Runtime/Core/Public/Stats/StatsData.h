@@ -395,7 +395,7 @@ struct FComplexRawStatStackNode
 	/** Copy constructor. */
 	explicit FComplexRawStatStackNode(FRawStatStackNode const& Other);
 
-	void CopFNameHierarchy( const FRawStatStackNode& Other )	
+	void CopyNameHierarchy( const FRawStatStackNode& Other )	
 	{
 		DeleteAllChildrenNodes();
 
@@ -620,7 +620,7 @@ public:
 	mutable TMap<uint32, FEventData> EventsHistory;
 
 	/** Map from memory pool to long name**/
-	TMap<YPlatformMemory::EMemoryCounterRegion, FName> MemoryPoolToCapacityLongName;
+	TMap<FPlatformMemory::EMemoryCounterRegion, FName> MemoryPoolToCapacityLongName;
 
 	/** Defines the groups. the group called "Groups" can be used to enumerate the groups. **/
 	TMultiMap<FName, FName> Groups;
@@ -903,8 +903,8 @@ struct FGameThreadHudData
 	TIndirectArray<FHudGroup> HudGroups;
 	TArray<FName> GroupNames;
 	TArray<FString> GroupDescriptions;
-	TMap<YPlatformMemory::EMemoryCounterRegion, int64> PoolCapacity;
-	TMap<YPlatformMemory::EMemoryCounterRegion, FString> PoolAbbreviation;
+	TMap<FPlatformMemory::EMemoryCounterRegion, int64> PoolCapacity;
+	TMap<FPlatformMemory::EMemoryCounterRegion, FString> PoolAbbreviation;
 	FString RootFilter;
 
 	/** Whether to display minimal stats for the raw stats mode. */

@@ -222,7 +222,7 @@ FString CreateProfileDirectoryAndFilename( const FString& InSubDirectorFName, co
 
 
 	// create Profiling dir and sub dir
-	const FString PathName = (YPaths::ProfilingDir() + InSubDirectorFName + TEXT("/"));
+	const FString PathName = (FPaths::ProfilingDir() + InSubDirectorFName + TEXT("/"));
 	IFileManager::Get().MakeDirectory( *PathName );
 	//UE_LOG(LogProfilingDebugging, Warning, TEXT( "CreateProfileDirectoryAndFilename: %s"), *PathName );
 

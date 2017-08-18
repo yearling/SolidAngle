@@ -128,7 +128,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;_DEBUG;_CONSOLE;UE_IS_ENGINE_MODULE=1;CORE_API=__declspec(dllexport);MALLOC_LEAKDETECTION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Source\;..\Source\Runtime\Core\Public\;..\Source\Runtime\Core\Private\;..\Source\Runtime\InputDevice\Public\;..\Source\ThirdParty\IntelTBB\tbb-2017_U5\include;..\Source\Runtime\Core\Public\Templates;..\Source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Source\;..\Source\Runtime\Core\Public\;..\Source\Runtime\Core\Private\;..\Source\Runtime\InputDevice\Public\;..\Source\ThirdParty\IntelTBB\tbb-2017_U5\include;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\Core\Public\Windows;..\Source\Runtime\Core\Public\HAL;..\Source\Runtime\Core\Public\Misc;..\Source\Runtime\Core\Public\Async;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\Core\Public\GenericPlatform;..\Source\Runtime\SynthBenchmark\Public;..\Source\;%(AdditionalIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FloatingPointModel>Fast</FloatingPointModel>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <BrowseInformation>true</BrowseInformation>
@@ -178,7 +178,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;CORE_API=__declspec(dllexport);WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Source\;..\Source\Runtime\Core\Public\;..\Source\Runtime\Core\Private\;..\Source\Runtime\InputDevice\Public\;..\Source\ThirdParty\IntelTBB\tbb-2017_U5\include;..\Source\Runtime\Core\Public\Templates;..\Source\ThirdParty\IntelTBB\tbb-2017_U5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Source\;..\Source\Runtime\Core\Public\;..\Source\Runtime\Core\Private\;..\Source\Runtime\InputDevice\Public\;..\Source\ThirdParty\IntelTBB\tbb-2017_U5\include;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\Core\Public\Windows;..\Source\Runtime\Core\Public\HAL;..\Source\Runtime\Core\Public\Misc;..\Source\Runtime\Core\Public\Async;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\Core\Public\GenericPlatform;..\Source\Runtime\SynthBenchmark\Public;..\Source\ThirdParty\IntelTBB\tbb-2017_U5\include;%(AdditionalIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <BrowseInformation>true</BrowseInformation>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -463,8 +463,8 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Unrealmathsse.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\UnrealMathUtility.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\UnrealMathVectorCommon.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\UnrealMathVectorConstants.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\UnrealPlatformMathSSE.h" />
-    <ClInclude Include="..\Source\Runtime\Core\Public\Math\UnrealVectorConstant.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Vector.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Vector2D.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Vector2DHalf.h" />
@@ -679,11 +679,13 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsSystemIncludes.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsTextInputMethodSystem.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsWindow.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Resources\Windows\ModuleVersionResource.h" />
     <ClInclude Include="..\Source\Runtime\InputDevice\Public\IHapticDevice.h" />
     <ClInclude Include="..\Source\Runtime\InputDevice\Public\IInputDevice.h" />
     <ClInclude Include="..\Source\Runtime\InputDevice\Public\IInputDeviceModule.h" />
     <ClInclude Include="..\Source\Runtime\Launch\Resources\Version.h" />
     <ClInclude Include="..\Source\Runtime\Launch\Resources\Windows\resource.h" />
+    <ClInclude Include="..\Source\Runtime\SynthBenchmark\Public\SynthBenchmark.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\Core\Private\Async\Async.cpp" />
@@ -736,7 +738,7 @@
     <ClCompile Include="..\Source\Runtime\Core\Private\HAL\PThreadRunnableThread.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\HAL\ThreadHeartBeat.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\HAL\ThreadingBase.cpp" />
-    <ClCompile Include="..\Source\Runtime\Core\Private\HAL\SolidAngleMemory.cpp" />
+    <ClCompile Include="..\Source\Runtime\Core\Private\HAL\UnrealMemory.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\Culture.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\FastDecimalFormat.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Internationalization\ICUCulture.cpp" />
@@ -877,6 +879,9 @@
     <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsTextInputMethodSystem.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Windows\WindowsWindow.cpp" />
     <ClCompile Include="..\Source\Runtime\Core\Private\Windows\XInputInterface.cpp" />
+    <ClCompile Include="..\Source\Runtime\SynthBenchmark\Private\FractalBenchmark.cpp" />
+    <ClCompile Include="..\Source\Runtime\SynthBenchmark\Private\RayIntersectBenchmark.cpp" />
+    <ClCompile Include="..\Source\Runtime\SynthBenchmark\Private\SynthBenchmarkPrivate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Source\Runtime\ClassDiagram\MemoryClassDiagram.cd" />
@@ -890,6 +895,7 @@
     <None Include="..\Source\Runtime\Core\Public\Misc\ExpressionParserTypes.inl" />
     <None Include="..\Source\Runtime\Core\Public\Templates\SharedPointerTesting.inl" />
     <None Include="..\Source\Runtime\Core\Public\UObject\UnrealNames.inl" />
+    <None Include="..\Source\Runtime\Core\Resources\Windows\ModuleVersionResource.rc.inl" />
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

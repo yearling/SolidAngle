@@ -196,8 +196,8 @@ FGenericPlatformMallocCrash::FGenericPlatformMallocCrash( FMalloc* MainMalloc ) 
 	PreviousMalloc( MainMalloc )
 {
 	const uint32 LargeMemoryPoolSize = Align(LARGE_MEMORYPOOL_SIZE,SafePageSize());
-	LargeMemoryPool = (uint8*)YPlatformMemory::BinnedAllocFromOS( LargeMemoryPoolSize );
-	SmallMemoryPool = (uint8*)YPlatformMemory::BinnedAllocFromOS( (SIZE_T)GetSmallPoolTotalSize() );
+	LargeMemoryPool = (uint8*)FPlatformMemory::BinnedAllocFromOS( LargeMemoryPoolSize );
+	SmallMemoryPool = (uint8*)FPlatformMemory::BinnedAllocFromOS( (SIZE_T)GetSmallPoolTotalSize() );
 	if( !SmallMemoryPool || !LargeMemoryPool )
 	{
 		FPlatformMisc::LowLevelOutputDebugString( TEXT( "Memory pools allocations failed, exiting...\n" ) );
@@ -491,7 +491,7 @@ uint32 FGenericPlatformMallocCrash::GetAllocationSize( void *Original )
 
 uint32 FGenericPlatformMallocCrash::SafePageSize()
 {
-	const uint32 PageSize = (uint32)YPlatformMemory::GetStats().PageSize;
+	const uint32 PageSize = (uint32)FPlatformMemory::GetStats().PageSize;
 	if( PageSize == 0 )
 	{
 		return 65536u;

@@ -14,14 +14,14 @@ FLocalTimestampDirectoryVisitor::FLocalTimestampDirectoryVisitor( IPlatformFile&
 	for (int32 DirIndex = 0; DirIndex < InDirectoriesToIgnore.Num(); DirIndex++)
 	{
 		FString DirToIgnore = InDirectoriesToIgnore[DirIndex];
-		YPaths::MakeStandardFilename(DirToIgnore);
+		FPaths::MakeStandardFilename(DirToIgnore);
 		DirectoriesToIgnore.Add(DirToIgnore);
 	}
 
 	for (int32 DirIndex = 0; DirIndex < InDirectoriesToNotRecurse.Num(); DirIndex++)
 	{
 		FString DirToNotRecurse = InDirectoriesToNotRecurse[DirIndex];
-		YPaths::MakeStandardFilename(DirToNotRecurse);
+		FPaths::MakeStandardFilename(DirToNotRecurse);
 		DirectoriesToNotRecurse.Add(DirToNotRecurse);
 	}
 }
@@ -34,7 +34,7 @@ bool FLocalTimestampDirectoryVisitor::Visit(const TCHAR* FilenameOrDirectory, bo
 {
 	// make sure all paths are "standardized" so the other end can match up with it's own standardized paths
 	FString RelativeFilename = FilenameOrDirectory;
-	YPaths::MakeStandardFilename(RelativeFilename);
+	FPaths::MakeStandardFilename(RelativeFilename);
 
 	// cache files and optionally directories
 	if (!bIsDirectory)

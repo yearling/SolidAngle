@@ -19,8 +19,8 @@
 #include "Misc/App.h"
 
 #include "HAL/FeedbackContextAnsi.h"
-#include "Windows/WindowsPlatformOutputDevicesPrivate.h"
-#include "Windows/WindowsPlatformFeedbackContextPrivate.h"
+#include "WindowsPlatformOutputDevicesPrivate.h"
+#include "WindowsPlatformFeedbackContextPrivate.h"
 #include "HAL/ThreadHeartBeat.h"
 
 #include "Windows/WindowsHWrapper.h"
@@ -36,16 +36,16 @@ namespace OutputDeviceConstants
 
 
 //////////////////////////////////
-// YWindowsPlatformOutputDevices
+// FWindowsPlatformOutputDevices
 //////////////////////////////////
 
-class FOutputDeviceError*			YWindowsPlatformOutputDevices::GetError()
+class FOutputDeviceError*			FWindowsPlatformOutputDevices::GetError()
 {
 	static FOutputDeviceWindowsError Singleton;
 	return &Singleton;
 }
 
-class FOutputDevice*				YWindowsPlatformOutputDevices::GetEventLog()
+class FOutputDevice*				FWindowsPlatformOutputDevices::GetEventLog()
 {
 #if WANTS_WINDOWS_EVENT_LOGGING
 	static FOutputDeviceEventLog Singleton;
@@ -55,14 +55,14 @@ class FOutputDevice*				YWindowsPlatformOutputDevices::GetEventLog()
 #endif //WANTS_WINDOWS_EVENT_LOGGING
 }
 
-class FOutputDeviceConsole*			YWindowsPlatformOutputDevices::GetLogConsole()
+class FOutputDeviceConsole*			FWindowsPlatformOutputDevices::GetLogConsole()
 {
 	// this is a slightly different kind of singleton that gives ownership to the caller and should not be called more than once
-	return new YOutputDeviceConsoleWindows();
+	return new FOutputDeviceConsoleWindows();
 }
 
 
-class FFeedbackContext*				YWindowsPlatformOutputDevices::GetWarn()
+class FFeedbackContext*				FWindowsPlatformOutputDevices::GetWarn()
 {
 #if WITH_EDITOR
 	static FFeedbackContextWindows Singleton;
@@ -149,7 +149,7 @@ void FOutputDeviceWindowsError::HandleError()
 	// Dump the error and flush the log.
 #if !NO_LOGGING
 	extern void OutputMultiLineCallstack(const ANSICHAR* File, int32 Line, const FName& LogName, const TCHAR* Heading, TCHAR* Message, ELogVerbosity::Type Verbosity);
-	OutputMultiLineCallstack(__FILE__, __LINE__, LogWindows.GetCategorFName(), TEXT("=== Critical error: ==="), GErrorHist, ELogVerbosity::Error);
+	OutputMultiLineCallstack(__FILE__, __LINE__, LogWindows.GetCategoryName(), TEXT("=== Critical error: ==="), GErrorHist, ELogVerbosity::Error);
 #endif
 	GLog->PanicFlushThreadedLogs();
 
@@ -172,14 +172,14 @@ void FOutputDeviceWindowsError::HandleError()
 // FOutputDeviceConsoleWindows
 ////////////////////////////////////////
 
-YOutputDeviceConsoleWindows::YOutputDeviceConsoleWindows()
+FOutputDeviceConsoleWindows::FOutputDeviceConsoleWindows()
 	: ConsoleHandle(0)
 	, OverrideColorSet(false)
 	, bIsAttached(false)
 {
 }
 
-YOutputDeviceConsoleWindows::~YOutputDeviceConsoleWindows()
+FOutputDeviceConsoleWindows::~FOutputDeviceConsoleWindows()
 {
 	SaveToINI();
 
@@ -188,7 +188,7 @@ YOutputDeviceConsoleWindows::~YOutputDeviceConsoleWindows()
 	//FreeConsole();
 }
 
-void YOutputDeviceConsoleWindows::SaveToINI()
+void FOutputDeviceConsoleWindows::SaveToINI()
 {
 	if (GConfig && !IniFilename.IsEmpty())
 	{
@@ -214,7 +214,7 @@ void YOutputDeviceConsoleWindows::SaveToINI()
 	}
 }
 
-void YOutputDeviceConsoleWindows::Show( bool ShowWindow )
+void FOutputDeviceConsoleWindows::Show( bool ShowWindow )
 {
 	if( ShowWindow )
 	{
@@ -308,12 +308,12 @@ void YOutputDeviceConsoleWindows::Show( bool ShowWindow )
 	}
 }
 
-bool YOutputDeviceConsoleWindows::IsShown()
+bool FOutputDeviceConsoleWindows::IsShown()
 {
 	return ConsoleHandle != NULL;
 }
 
-void YOutputDeviceConsoleWindows::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category, const double Time )
+void FOutputDeviceConsoleWindows::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category, const double Time )
 {
 	if( ConsoleHandle )
 	{
@@ -344,7 +344,7 @@ void YOutputDeviceConsoleWindows::Serialize( const TCHAR* Data, ELogVerbosity::T
 					}
 				}
 				TCHAR OutputString[MAX_SPRINTF]=TEXT(""); //@warning: this is safe as FCString::Sprintf only use 1024 characters max
-				FCString::Sprintf(OutputString,TEXT("%s%s"),*YOutputDeviceHelper::FormatLogLine(Verbosity, Category, Data, GPrintLogTimes,RealTime),LINE_TERMINATOR);
+				FCString::Sprintf(OutputString,TEXT("%s%s"),*FOutputDeviceHelper::FormatLogLine(Verbosity, Category, Data, GPrintLogTimes,RealTime),LINE_TERMINATOR);
 				uint32 Written;
 				WriteConsole( ConsoleHandle, OutputString, FCString::Strlen(OutputString), (::DWORD*)&Written, NULL );
 
@@ -363,12 +363,12 @@ void YOutputDeviceConsoleWindows::Serialize( const TCHAR* Data, ELogVerbosity::T
 	}
 }
 
-void YOutputDeviceConsoleWindows::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category )
+void FOutputDeviceConsoleWindows::Serialize( const TCHAR* Data, ELogVerbosity::Type Verbosity, const class FName& Category )
 {
 	Serialize( Data, Verbosity, Category, -1.0 );
 }
 
-void YOutputDeviceConsoleWindows::SetColor( const TCHAR* Color )
+void FOutputDeviceConsoleWindows::SetColor( const TCHAR* Color )
 {
 	// here we can change the color of the text to display, it's in the format:
 	// ForegroundRed | ForegroundGreen | ForegroundBlue | ForegroundBright | BackgroundRed | BackgroundGreen | BackgroundBlue | BackgroundBright
@@ -402,7 +402,7 @@ void YOutputDeviceConsoleWindows::SetColor( const TCHAR* Color )
 	}
 }
 
-bool YOutputDeviceConsoleWindows::IsAttached()
+bool FOutputDeviceConsoleWindows::IsAttached()
 {
 	if (ConsoleHandle != NULL)
 	{

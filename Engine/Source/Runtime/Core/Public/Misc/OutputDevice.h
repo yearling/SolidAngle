@@ -1,3 +1,5 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
@@ -7,10 +9,10 @@
 #include "Misc/VarArgs.h"
 
 #if !PLATFORM_DESKTOP
-// don't support colorized text on consoles
-#define SET_WARN_COLOR(Color)
-#define SET_WARN_COLOR_AND_BACKGROUND(Color, Bkgrnd)
-#define CLEAR_WARN_COLOR() 
+	// don't support colorized text on consoles
+	#define SET_WARN_COLOR(Color)
+	#define SET_WARN_COLOR_AND_BACKGROUND(Color, Bkgrnd)
+	#define CLEAR_WARN_COLOR() 
 #else
 
 /*-----------------------------------------------------------------------------
@@ -86,8 +88,8 @@ using namespace OutputDeviceColor;
 #endif
 
 /**
-* Enum that defines how the log times are to be displayed.
-*/
+ * Enum that defines how the log times are to be displayed.
+ */
 namespace ELogTimes
 {
 	enum Type
@@ -108,10 +110,10 @@ class CORE_API FOutputDevice
 {
 public:
 	FOutputDevice()
-		: bSuppressEventTag(false)
-		, bAutoEmitLineTerminator(true)
+		 : bSuppressEventTag      (false)
+		 , bAutoEmitLineTerminator(true)
 	{}
-	virtual ~FOutputDevice() {}
+	virtual ~FOutputDevice(){}
 
 #if PLATFORM_COMPILER_HAS_DEFAULTED_FUNCTIONS
 
@@ -123,27 +125,27 @@ public:
 #else
 
 	FORCEINLINE FOutputDevice(FOutputDevice&& Other)
-		: bSuppressEventTag(Other.bSuppressEventTag)
-		, bAutoEmitLineTerminator(Other.bAutoEmitLineTerminator)
+		 : bSuppressEventTag      (Other.bSuppressEventTag)
+		 , bAutoEmitLineTerminator(Other.bAutoEmitLineTerminator)
 	{
 	}
 
 	FORCEINLINE FOutputDevice(const FOutputDevice& Other)
-		: bSuppressEventTag(Other.bSuppressEventTag)
-		, bAutoEmitLineTerminator(Other.bAutoEmitLineTerminator)
+		 : bSuppressEventTag      (Other.bSuppressEventTag)
+		 , bAutoEmitLineTerminator(Other.bAutoEmitLineTerminator)
 	{
 	}
 
 	FORCEINLINE FOutputDevice& operator=(FOutputDevice&& Other)
 	{
-		bSuppressEventTag = Other.bSuppressEventTag;
+		bSuppressEventTag       = Other.bSuppressEventTag;
 		bAutoEmitLineTerminator = Other.bAutoEmitLineTerminator;
 		return *this;
 	}
 
 	FORCEINLINE FOutputDevice& operator=(const FOutputDevice& Other)
 	{
-		bSuppressEventTag = Other.bSuppressEventTag;
+		bSuppressEventTag       = Other.bSuppressEventTag;
 		bAutoEmitLineTerminator = Other.bAutoEmitLineTerminator;
 		return *this;
 	}
@@ -151,18 +153,18 @@ public:
 #endif
 
 	// static helpers
-	DEPRECATED(4.12, "Please use YOutputDeviceHelper::VerbosityToString.")
-		static const TCHAR* VerbosityToString(ELogVerbosity::Type Verbosity);
+	DEPRECATED(4.12, "Please use FOutputDeviceHelper::VerbosityToString.")
+	static const TCHAR* VerbosityToString(ELogVerbosity::Type Verbosity);
 
-	DEPRECATED(4.12, "Please use YOutputDeviceHelper::FormatLogLine.")
-		static FString FormatLogLine(ELogVerbosity::Type Verbosity, const class FName& Category, const TCHAR* Message = nullptr, ELogTimes::Type LogTime = ELogTimes::None, const double Time = -1.0);
+	DEPRECATED(4.12, "Please use FOutputDeviceHelper::FormatLogLine.")
+	static FString FormatLogLine(ELogVerbosity::Type Verbosity, const class FName& Category, const TCHAR* Message = nullptr, ELogTimes::Type LogTime = ELogTimes::None, const double Time = -1.0);
 
 
-	// YOutputDevice interface.
-	virtual void Serialize(const TCHAR* V, ELogVerbosity::Type Verbosity, const class FName& Category) = 0;
-	virtual void Serialize(const TCHAR* V, ELogVerbosity::Type Verbosity, const class FName& Category, const double Time)
+	// FOutputDevice interface.
+	virtual void Serialize( const TCHAR* V, ELogVerbosity::Type Verbosity, const class FName& Category ) = 0;
+	virtual void Serialize( const TCHAR* V, ELogVerbosity::Type Verbosity, const class FName& Category, const double Time )
 	{
-		Serialize(V, Verbosity, Category);
+		Serialize( V, Verbosity, Category );
 	}
 
 	virtual void Flush()
@@ -170,10 +172,10 @@ public:
 	}
 
 	/**
-	* Closes output device and cleans up. This can't happen in the destructor
-	* as we might have to call "delete" which cannot be done for static/ global
-	* objects.
-	*/
+	 * Closes output device and cleans up. This can't happen in the destructor
+	 * as we might have to call "delete" which cannot be done for static/ global
+	 * objects.
+	 */
 	virtual void TearDown()
 	{
 	}
@@ -182,17 +184,17 @@ public:
 	{
 		bSuppressEventTag = bInSuppressEventTag;
 	}
-	FORCEINLINE bool GetSuppressEventTag() const { return bSuppressEventTag; }
+	FORCEINLINE bool GetSuppressEventTag() const	{	return bSuppressEventTag;	}
 	void SetAutoEmitLineTerminator(bool bInAutoEmitLineTerminator)
 	{
 		bAutoEmitLineTerminator = bInAutoEmitLineTerminator;
 	}
-	FORCEINLINE bool GetAutoEmitLineTerminator() const { return bAutoEmitLineTerminator; }
+	FORCEINLINE bool GetAutoEmitLineTerminator() const	{	return bAutoEmitLineTerminator;	}
 
-	/**
-	* Dumps the contents of this output device's buffer to an archive (supported by output device that have a memory buffer)
-	* @param Ar Archive to dump the buffer to
-	*/
+	/** 
+	 * Dumps the contents of this output device's buffer to an archive (supported by output device that have a memory buffer) 
+	 * @param Ar Archive to dump the buffer to
+	 */
 	virtual void Dump(class FArchive& Ar)
 	{
 	}
@@ -206,25 +208,25 @@ public:
 	}
 
 	/**
-	* @return whether this output device can be used on any thread.
-	*/
+	 * @return whether this output device can be used on any thread.
+	 */
 	virtual bool CanBeUsedOnAnyThread() const
 	{
 		return false;
 	}
 
 	// Simple text printing.
-	void Log(const TCHAR* S);
-	void Log(ELogVerbosity::Type Verbosity, const TCHAR* S);
-	void Log(const class FName& Category, ELogVerbosity::Type Verbosity, const TCHAR* Str);
-	void Log(const FString& S);
-	void Log(const FText& S);
-	void Log(ELogVerbosity::Type Verbosity, const FString& S);
-	void Log(const class FName& Category, ELogVerbosity::Type Verbosity, const FString& S);
+	void Log( const TCHAR* S );
+	void Log( ELogVerbosity::Type Verbosity, const TCHAR* S );
+	void Log( const class FName& Category, ELogVerbosity::Type Verbosity, const TCHAR* Str );
+	void Log( const FString& S );
+	void Log( const FText& S );
+	void Log( ELogVerbosity::Type Verbosity, const FString& S );
+	void Log( const class FName& Category, ELogVerbosity::Type Verbosity, const FString& S );
 
-	VARARG_DECL(void, void, {}, Logf, VARARG_NONE, const TCHAR*, VARARG_NONE, VARARG_NONE);
-	VARARG_DECL(void, void, {}, Logf, VARARG_NONE, const TCHAR*, VARARG_EXTRA(ELogVerbosity::Type Verbosity), VARARG_EXTRA(Verbosity));
-	VARARG_DECL(void, void, {}, CategorizedLogf, VARARG_NONE, const TCHAR*, VARARG_EXTRA(const class FName& Category) VARARG_EXTRA(ELogVerbosity::Type Verbosity), VARARG_EXTRA(Category) VARARG_EXTRA(Verbosity));
+	VARARG_DECL( void, void, {}, Logf, VARARG_NONE, const TCHAR*, VARARG_NONE, VARARG_NONE );
+	VARARG_DECL( void, void, {}, Logf, VARARG_NONE, const TCHAR*, VARARG_EXTRA(ELogVerbosity::Type Verbosity), VARARG_EXTRA(Verbosity) );
+	VARARG_DECL( void, void, {}, CategorizedLogf, VARARG_NONE, const TCHAR*, VARARG_EXTRA(const class FName& Category) VARARG_EXTRA(ELogVerbosity::Type Verbosity), VARARG_EXTRA(Category) VARARG_EXTRA(Verbosity) );
 protected:
 	/** Whether to output the 'Log: ' type front... */
 	bool bSuppressEventTag;

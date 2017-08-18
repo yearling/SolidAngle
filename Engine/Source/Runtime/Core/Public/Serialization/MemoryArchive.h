@@ -11,7 +11,7 @@
 /**
  * Base class for serializing arbitrary data in memory.
  */
-class YMemoryArchive : public FArchive
+class FMemoryArchive : public FArchive
 {
 public:
 	/**
@@ -60,7 +60,7 @@ public:
 protected:
 
 	/** Marked as protected to avoid instantiating this class directly */
-	YMemoryArchive()
+	FMemoryArchive()
 		: FArchive(), Offset(0)
 	{
 	}

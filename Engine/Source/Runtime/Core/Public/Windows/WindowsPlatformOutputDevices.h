@@ -10,8 +10,8 @@ class FOutputDeviceConsole;
 class FOutputDeviceError;
 class FFeedbackContext;
 
-struct CORE_API YWindowsPlatformOutputDevices
-	: public YGenericPlatformOutputDevices
+struct CORE_API FWindowsPlatformOutputDevices
+	: public FGenericPlatformOutputDevices
 {
 	static FOutputDevice*			GetEventLog();
 	static FOutputDeviceConsole*	GetLogConsole();
@@ -20,4 +20,4 @@ struct CORE_API YWindowsPlatformOutputDevices
 };
 
 
-typedef YWindowsPlatformOutputDevices YPlatformOutputDevices;
+typedef FWindowsPlatformOutputDevices FPlatformOutputDevices;

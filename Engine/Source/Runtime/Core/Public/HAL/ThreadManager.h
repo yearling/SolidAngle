@@ -7,8 +7,8 @@
 #include "HAL/CriticalSection.h"
 
 /**
-* Manages runnables and runnable threads.
-*/
+ * Manages runnables and runnable threads.
+ */
 class CORE_API FThreadManager
 {
 	/** List of thread objects to be ticked. */
@@ -41,9 +41,9 @@ public:
 	const FString& GetThreadName(uint32 ThreadId);
 
 	/**
-	* Access to the singleton object.
-	*
-	* @return Thread manager object.
-	*/
+	 * Access to the singleton object.
+	 *
+	 * @return Thread manager object.
+	 */
 	static FThreadManager& Get();
 };

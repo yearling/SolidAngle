@@ -517,22 +517,22 @@ protected:
 	virtual FString NormalizeFilename(const TCHAR* Filename)
 	{
 		FString Result(Filename);
-		YPaths::NormalizeFilename(Result);
+		FPaths::NormalizeFilename(Result);
 		if (Result.StartsWith(TEXT("//")))
 		{
 			Result = FString(TEXT("\\\\")) + Result.RightChop(2);
 		}
-		return YPaths::ConvertRelativePathToFull(Result);
+		return FPaths::ConvertRelativePathToFull(Result);
 	}
 	virtual FString NormalizeDirectory(const TCHAR* Directory)
 	{
 		FString Result(Directory);
-		YPaths::NormalizeDirectorFName(Result);
+		FPaths::NormalizeDirectoryName(Result);
 		if (Result.StartsWith(TEXT("//")))
 		{
 			Result = FString(TEXT("\\\\")) + Result.RightChop(2);
 		}
-		return YPaths::ConvertRelativePathToFull(Result);
+		return FPaths::ConvertRelativePathToFull(Result);
 	}
 public:
 	virtual bool FileExists(const TCHAR* Filename) override

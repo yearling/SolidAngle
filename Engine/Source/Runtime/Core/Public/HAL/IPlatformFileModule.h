@@ -7,17 +7,17 @@
 #include "Modules/ModuleInterface.h"
 
 /**
-* Platform File Module Interface
-*/
+ * Platform File Module Interface
+ */
 class IPlatformFileModule
 	: public IModuleInterface
 {
 public:
 
 	/**
-	* Creates a platform file instance.
-	*
-	* @return Platform file instance.
-	*/
+	 * Creates a platform file instance.
+	 *
+	 * @return Platform file instance.
+	 */
 	virtual IPlatformFile* GetPlatformFile() = 0;
 };

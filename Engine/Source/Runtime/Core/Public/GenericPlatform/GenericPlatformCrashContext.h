@@ -6,11 +6,11 @@
 #include "HAL/PlatformMemory.h"
 #include "Containers/UnrealString.h"
 
-/**
-* Symbol information associated with a program counter.
-* YString version.
-* To be used by external tools.
-*/
+/** 
+ * Symbol information associated with a program counter. 
+ * FString version.
+ * To be used by external tools.
+ */
 struct CORE_API FProgramCounterSymbolInfoEx
 {
 	/** Module name. */
@@ -35,7 +35,7 @@ struct CORE_API FProgramCounterSymbolInfoEx
 	uint64	ProgramCounter;
 
 	/** Default constructor. */
-	FProgramCounterSymbolInfoEx(FString InModuleName, FString InFunctionName, FString InFilename, uint32 InLineNumber, uint64 InSymbolDisplacement, uint64 InOffsetInModule, uint64 InProgramCounter);
+	FProgramCounterSymbolInfoEx( FString InModuleName, FString InFunctionName, FString InFilename, uint32 InLineNumber, uint64 InSymbolDisplacement, uint64 InOffsetInModule, uint64 InProgramCounter );
 };
 
 
@@ -66,9 +66,9 @@ enum class ECrashDumpMode : int32
 };
 
 /**
-*	Contains a runtime crash's properties that are common for all platforms.
-*	This may change in the future.
-*/
+ *	Contains a runtime crash's properties that are common for all platforms.
+ *	This may change in the future.
+ */
 struct CORE_API FGenericCrashContext
 {
 public:
@@ -77,8 +77,8 @@ public:
 	* We can't gather memory stats in crash handling function, so we gather them just before raising
 	* exception and use in crash reporting.
 	*/
-	static YPlatformMemoryStats CrashMemoryStats;
-
+	static FPlatformMemoryStats CrashMemoryStats;
+	
 	static const ANSICHAR* CrashContextRuntimeXMLNameA;
 	static const TCHAR* CrashContextRuntimeXMLNameW;
 
@@ -106,8 +106,8 @@ public:
 	static void Initialize();
 
 	/**
-	* @return true, if the generic crash context has been initialized.
-	*/
+	 * @return true, if the generic crash context has been initialized.
+	 */
 	static bool IsInitalized()
 	{
 		return bIsInitialized;
@@ -120,46 +120,46 @@ public:
 	void SerializeContentToBuffer();
 
 	/**
-	* @return the buffer containing serialized data.
-	*/
+	 * @return the buffer containing serialized data.
+	 */
 	const FString& GetBuffer() const
 	{
 		return CommonBuffer;
 	}
 
 	/**
-	* @return a globally unique crash name.
-	*/
+	 * @return a globally unique crash name.
+	 */
 	void GetUniqueCrashName(TCHAR* GUIDBuffer, int32 BufferSize) const;
 
 	/**
-	* @return whether this crash is a full memory minidump
-	*/
+	 * @return whether this crash is a full memory minidump
+	 */
 	const bool IsFullCrashDump() const;
 
 	/**
-	* @return whether this crash is a full memory minidump if the crash context is for an ensure
-	*/
+	 * @return whether this crash is a full memory minidump if the crash context is for an ensure
+	 */
 	const bool IsFullCrashDumpOnEnsure() const;
 
 	/** Serializes crash's informations to the specified filename. Should be overridden for platforms where using FFileHelper is not safe, all POSIX platforms. */
-	virtual void SerializeAsXML(const TCHAR* Filename);
+	virtual void SerializeAsXML( const TCHAR* Filename );
 
 	/** Writes a common property to the buffer. */
-	void AddCrashProperty(const TCHAR* PropertFName, const TCHAR* PropertyValue);
+	void AddCrashProperty( const TCHAR* PropertyName, const TCHAR* PropertyValue );
 
 	/** Writes a common property to the buffer. */
 	template <typename Type>
-	void AddCrashProperty(const TCHAR* PropertFName, const Type& Value)
+	void AddCrashProperty( const TCHAR* PropertyName, const Type& Value )
 	{
-		AddCrashProperty(PropertFName, *TTypeToString<Type>::ToString(Value));
+		AddCrashProperty( PropertyName, *TTypeToString<Type>::ToString( Value ) );
 	}
 
 	/** Escapes a specified XML string, naive implementation. */
-	static FString EscapeXMLString(const FString& Text);
+	static FString EscapeXMLString( const FString& Text );
 
 	/** Unescapes a specified XML string, naive implementation. */
-	static FString UnescapeXMLString(const FString& Text);
+	static FString UnescapeXMLString( const FString& Text );
 
 	/** Helper to get the standard string for the crash type based on crash event bool values. */
 	static const TCHAR* GetCrashTypeString(bool InIsEnsure, bool InIsAssert);
@@ -171,8 +171,8 @@ public:
 	static const TCHAR* GetCrashConfigFilePath();
 
 	/**
-	* @return whether this crash is a non-crash event
-	*/
+	 * @return whether this crash is a non-crash event
+	 */
 	bool GetIsEnsure() const { return bIsEnsure; }
 
 protected:
@@ -188,8 +188,8 @@ private:
 	/** Writes footer to the buffer. */
 	void AddFooter();
 
-	void BeginSection(const TCHAR* SectionName);
-	void EndSection(const TCHAR* SectionName);
+	void BeginSection( const TCHAR* SectionName );
+	void EndSection( const TCHAR* SectionName );
 
 	/** Called once when GConfig is initialized. Opportunity to cache values from config. */
 	static void InitializeFromConfig();
@@ -207,7 +207,7 @@ private:
 	int32 CrashContextIndex;
 
 	// FNoncopyable
-	FGenericCrashContext(const FGenericCrashContext&);
+	FGenericCrashContext( const FGenericCrashContext& );
 	FGenericCrashContext& operator=(const FGenericCrashContext&);
 };
 

@@ -767,7 +767,7 @@ public:
 	* @param GeneratedConfigDir The location where generated config files are made.
 	* @return true if the final ini was created successfully.
 	*/
-	static bool LoadGlobalIniFile(FString& FinalIniFilename, const TCHAR* BaseIniName, const TCHAR* Platform = NULL, bool bForceReload = false, bool bRequireDefaultIni = false, bool bAllowGeneratedIniWhenCooked = true, const TCHAR* GeneratedConfigDir = *YPaths::GeneratedConfigDir());
+	static bool LoadGlobalIniFile(FString& FinalIniFilename, const TCHAR* BaseIniName, const TCHAR* Platform = NULL, bool bForceReload = false, bool bRequireDefaultIni = false, bool bAllowGeneratedIniWhenCooked = true, const TCHAR* GeneratedConfigDir = *FPaths::GeneratedConfigDir());
 
 	/**
 	* Load an ini file directly into an FConfigFile, and nothing is written to GConfig or disk.

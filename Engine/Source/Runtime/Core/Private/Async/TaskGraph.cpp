@@ -3052,7 +3052,7 @@ static void TaskGraphBenchmark(const TArray<FString>& Args)
 		StartTime = FPlatformTime::Seconds();
 
 		static bool Output[1000];
-		YPlatformMemory::Memzero(Output, 1000);
+		FPlatformMemory::Memzero(Output, 1000);
 
 		ParallelFor(1000, 
 			[](int32 Index)

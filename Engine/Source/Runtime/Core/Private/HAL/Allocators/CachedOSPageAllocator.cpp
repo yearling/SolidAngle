@@ -1,10 +1,12 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #include "HAL/Allocators/CachedOSPageAllocator.h"
 #include "HAL/UnrealMemory.h"
 #include "Logging/LogMacros.h"
 #include "CoreGlobals.h"
 
 
-void* YCachedOSPageAllocator::AllocateImpl(SIZE_T Size, FFreePageBlock* First, FFreePageBlock* Last, uint32& FreedPageBlocksNum, uint32& CachedTotal)
+void* FCachedOSPageAllocator::AllocateImpl(SIZE_T Size, FFreePageBlock* First, FFreePageBlock* Last, uint32& FreedPageBlocksNum, uint32& CachedTotal)
 {
 	if (First != Last)
 	{
@@ -48,7 +50,7 @@ void* YCachedOSPageAllocator::AllocateImpl(SIZE_T Size, FFreePageBlock* First, F
 			return Result;
 		}
 
-		if (void* Ptr = YPlatformMemory::BinnedAllocFromOS(Size))
+		if (void* Ptr = FPlatformMemory::BinnedAllocFromOS(Size))
 		{
 			return Ptr;
 		}
@@ -56,7 +58,7 @@ void* YCachedOSPageAllocator::AllocateImpl(SIZE_T Size, FFreePageBlock* First, F
 		// Are we holding on to much mem? Release it all.
 		for (FFreePageBlock* Block = First; Block != Last; ++Block)
 		{
-			YPlatformMemory::BinnedFreeToOS(Block->Ptr, Block->ByteSize);
+			FPlatformMemory::BinnedFreeToOS(Block->Ptr, Block->ByteSize);
 			Block->Ptr      = nullptr;
 			Block->ByteSize = 0;
 		}
@@ -64,14 +66,14 @@ void* YCachedOSPageAllocator::AllocateImpl(SIZE_T Size, FFreePageBlock* First, F
 		CachedTotal        = 0;
 	}
 
-	return YPlatformMemory::BinnedAllocFromOS(Size);
+	return FPlatformMemory::BinnedAllocFromOS(Size);
 }
 
-void YCachedOSPageAllocator::FreeImpl(void* Ptr, SIZE_T Size, uint32 NumCacheBlocks, uint32 CachedByteLimit, FFreePageBlock* First, uint32& FreedPageBlocksNum, uint32& CachedTotal)
+void FCachedOSPageAllocator::FreeImpl(void* Ptr, SIZE_T Size, uint32 NumCacheBlocks, uint32 CachedByteLimit, FFreePageBlock* First, uint32& FreedPageBlocksNum, uint32& CachedTotal)
 {
 	if (Size > CachedByteLimit / 4)
 	{
-		YPlatformMemory::BinnedFreeToOS(Ptr, Size);
+		FPlatformMemory::BinnedFreeToOS(Ptr, Size);
 		return;
 	}
 
@@ -86,7 +88,7 @@ void YCachedOSPageAllocator::FreeImpl(void* Ptr, SIZE_T Size, uint32 NumCacheBlo
 		{
 			FMemory::Memmove(First, First + 1, sizeof(FFreePageBlock) * FreedPageBlocksNum);
 		}
-		YPlatformMemory::BinnedFreeToOS(FreePtr, FreeSize);
+		FPlatformMemory::BinnedFreeToOS(FreePtr, FreeSize);
 	}
 
 	First[FreedPageBlocksNum].Ptr      = Ptr;
@@ -96,7 +98,7 @@ void YCachedOSPageAllocator::FreeImpl(void* Ptr, SIZE_T Size, uint32 NumCacheBlo
 	++FreedPageBlocksNum;
 }
 
-void YCachedOSPageAllocator::FreeAllImpl(FFreePageBlock* First, uint32& FreedPageBlocksNum, uint32& CachedTotal)
+void FCachedOSPageAllocator::FreeAllImpl(FFreePageBlock* First, uint32& FreedPageBlocksNum, uint32& CachedTotal)
 {
 	while (FreedPageBlocksNum)
 	{
@@ -109,6 +111,6 @@ void YCachedOSPageAllocator::FreeAllImpl(FFreePageBlock* First, uint32& FreedPag
 		{
 			FMemory::Memmove(First, First + 1, sizeof(FFreePageBlock)* FreedPageBlocksNum);
 		}
-		YPlatformMemory::BinnedFreeToOS(FreePtr, FreeSize);
+		FPlatformMemory::BinnedFreeToOS(FreePtr, FreeSize);
 	}
 }

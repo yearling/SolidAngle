@@ -15,14 +15,14 @@ bool FGenericPlatformSymbolication::LoadSymbolDatabaseForBinary(FString SourceFo
 {
 	bool bOk = false;
 	
-	FString ModuleName = YPaths::GetBaseFilename(Binary);
+	FString ModuleName = FPaths::GetBaseFilename(Binary);
 	FString InputFile = (SourceFolder / ModuleName) + TEXT(".udebugsymbols");
 	if (IFileManager::Get().FileSize(*InputFile) > 0)
 	{
 		TArray<uint8> DataBuffer;
 		if(FFileHelper::LoadFileToArray(DataBuffer, *InputFile))
 		{
-			YArchiveLoadCompressedProxy DataArchive(DataBuffer, (ECompressionFlags)(COMPRESS_Default));
+			FArchiveLoadCompressedProxy DataArchive(DataBuffer, (ECompressionFlags)(COMPRESS_Default));
 			DataArchive << OutDatabase;
 			if(!DataArchive.GetError())
 			{
@@ -41,11 +41,11 @@ bool FGenericPlatformSymbolication::SaveSymbolDatabaseForBinary(FString TargetFo
 {
 	bool bOk = false;
 	
-	FString ModuleName = YPaths::GetBaseFilename(Name);
+	FString ModuleName = FPaths::GetBaseFilename(Name);
 	FString OutputFile = (TargetFolder / ModuleName) + TEXT(".udebugsymbols");
 
 	TArray<uint8> DataBuffer;
-	YArchiveSaveCompressedProxy DataArchive(DataBuffer, (ECompressionFlags)(COMPRESS_ZLIB|COMPRESS_BiasSpeed));
+	FArchiveSaveCompressedProxy DataArchive(DataBuffer, (ECompressionFlags)(COMPRESS_ZLIB|COMPRESS_BiasSpeed));
 	DataArchive << Database;
 	DataArchive.Flush();
 	if(!DataArchive.GetError())

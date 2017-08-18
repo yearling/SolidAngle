@@ -676,7 +676,7 @@ public:
 	FORCEINLINE_STATS FStatNameAndInfo ReadFName( FArchive& Ar, bool bHasFNameMap )
 	{
 		// If we read the whole FNames translation map, we don't want to add the FName again.
-		// This is a bit tricky, even if we have the FName translation map, we still need to read the YString.
+		// This is a bit tricky, even if we have the FName translation map, we still need to read the FString.
 		// CAUTION!! This is considered to be thread safe in this case.
 		int32 Index = 0;
 		Ar << Index;

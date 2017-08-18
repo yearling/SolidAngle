@@ -1,7 +1,9 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #ifdef WINDOWS_PLATFORM_TYPES_GUARD
-#undef WINDOWS_PLATFORM_TYPES_GUARD
+	#undef WINDOWS_PLATFORM_TYPES_GUARD
 #else
-#error Mismatched HideWindowsPLatformTypes.h detected.
+	#error Mismatched HideWindowsPLatformTypes.h detected.
 #endif
 
 #undef INT
@@ -10,11 +12,11 @@
 #undef FLOAT
 
 #ifdef TRUE
-#undef TRUE
+	#undef TRUE
 #endif
 
 #ifdef FALSE
-#undef FALSE
+	#undef FALSE
 #endif
 
 #pragma warning( pop )

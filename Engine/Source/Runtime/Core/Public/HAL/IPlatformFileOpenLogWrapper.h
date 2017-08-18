@@ -59,17 +59,17 @@ public:
 				PlatformStr.ParseIntoArray(PlatformNames, TEXT("+"), true);
 			}
 
-			for (int32 Platform = 0; Platform < PlatformNames.Num(); ++Platform)
+			for (int32 Platform = 0;Platform < PlatformNames.Num(); ++Platform)
 			{
-				LogFileDirectory = YPaths::Combine(FPlatformMisc::GameDir(), TEXT("Build"), *PlatformNames[Platform], TEXT("FileOpenOrder"));
+				LogFileDirectory = FPaths::Combine( FPlatformMisc::GameDir(), TEXT( "Build" ), *PlatformNames[Platform], TEXT("FileOpenOrder"));
 #if WITH_EDITOR
-				LogFilePath = YPaths::Combine(*LogFileDirectory, TEXT("EditorOpenOrder.log"));
+				LogFilePath = FPaths::Combine( *LogFileDirectory, TEXT("EditorOpenOrder.log"));
 #else 
-				LogFilePath = YPaths::Combine(*LogFileDirectory, TEXT("GameOpenOrder.log"));
+				LogFilePath = FPaths::Combine( *LogFileDirectory, TEXT("GameOpenOrder.log"));
 #endif
 				Inner->CreateDirectoryTree(*LogFileDirectory);
 				auto* FileHandle = Inner->OpenWrite(*LogFilePath, false, false);
-				if (FileHandle)
+				if (FileHandle) 
 				{
 					LogOutput.Add(FileHandle);
 				}
@@ -77,11 +77,11 @@ public:
 		}
 		else
 		{
-			LogFileDirectory = YPaths::Combine(FPlatformMisc::GameDir(), TEXT("Build"), StringCast<TCHAR>(FPlatformProperties::PlatformName()).Get(), TEXT("FileOpenOrder"));
+			LogFileDirectory = FPaths::Combine( FPlatformMisc::GameDir(), TEXT( "Build" ), StringCast<TCHAR>(FPlatformProperties::PlatformName()).Get(), TEXT("FileOpenOrder"));
 #if WITH_EDITOR
-			LogFilePath = YPaths::Combine(*LogFileDirectory, TEXT("EditorOpenOrder.log"));
+			LogFilePath = FPaths::Combine( *LogFileDirectory, TEXT("EditorOpenOrder.log"));
 #else 
-			LogFilePath = YPaths::Combine(*LogFileDirectory, TEXT("GameOpenOrder.log"));
+			LogFilePath = FPaths::Combine( *LogFileDirectory, TEXT("GameOpenOrder.log"));
 #endif
 			Inner->CreateDirectoryTree(*LogFileDirectory);
 			auto* FileHandle = Inner->OpenWrite(*LogFilePath, false, false);
@@ -189,27 +189,27 @@ public:
 	}
 	virtual bool		IterateDirectory(const TCHAR* Directory, IPlatformFile::FDirectoryVisitor& Visitor) override
 	{
-		return LowerLevel->IterateDirectory(Directory, Visitor);
+		return LowerLevel->IterateDirectory( Directory, Visitor );
 	}
 	virtual bool		IterateDirectoryRecursively(const TCHAR* Directory, IPlatformFile::FDirectoryVisitor& Visitor) override
 	{
-		return LowerLevel->IterateDirectoryRecursively(Directory, Visitor);
+		return LowerLevel->IterateDirectoryRecursively( Directory, Visitor );
 	}
 	virtual bool		IterateDirectoryStat(const TCHAR* Directory, IPlatformFile::FDirectoryStatVisitor& Visitor) override
 	{
-		return LowerLevel->IterateDirectoryStat(Directory, Visitor);
+		return LowerLevel->IterateDirectoryStat( Directory, Visitor );
 	}
 	virtual bool		IterateDirectoryStatRecursively(const TCHAR* Directory, IPlatformFile::FDirectoryStatVisitor& Visitor) override
 	{
-		return LowerLevel->IterateDirectoryStatRecursively(Directory, Visitor);
+		return LowerLevel->IterateDirectoryStatRecursively( Directory, Visitor );
 	}
 	virtual bool		DeleteDirectoryRecursively(const TCHAR* Directory) override
 	{
-		return LowerLevel->DeleteDirectoryRecursively(Directory);
+		return LowerLevel->DeleteDirectoryRecursively( Directory );
 	}
 	virtual bool		CopyFile(const TCHAR* To, const TCHAR* From, EPlatformFileRead ReadFlags = EPlatformFileRead::None, EPlatformFileWrite WriteFlags = EPlatformFileWrite::None) override
 	{
-		return LowerLevel->CopyFile(To, From, ReadFlags, WriteFlags);
+		return LowerLevel->CopyFile( To, From, ReadFlags, WriteFlags);
 	}
 	virtual bool		CreateDirectoryTree(const TCHAR* Directory) override
 	{
@@ -219,11 +219,11 @@ public:
 	{
 		return LowerLevel->CopyDirectoryTree(DestinationDirectory, Source, bOverwriteAllExisting);
 	}
-	virtual FString		ConvertToAbsolutePathForExternalAppForRead(const TCHAR* Filename) override
+	virtual FString		ConvertToAbsolutePathForExternalAppForRead( const TCHAR* Filename ) override
 	{
 		return LowerLevel->ConvertToAbsolutePathForExternalAppForRead(Filename);
 	}
-	virtual FString		ConvertToAbsolutePathForExternalAppForWrite(const TCHAR* Filename) override
+	virtual FString		ConvertToAbsolutePathForExternalAppForWrite( const TCHAR* Filename ) override
 	{
 		return LowerLevel->ConvertToAbsolutePathForExternalAppForWrite(Filename);
 	}

@@ -19,7 +19,7 @@
 #include "CoreGlobals.h"
 #include "Stats/Stats.h"
 #include "Misc/CoreStats.h"
-#include "Runtime/Core/Resource//Windows/ModuleVersionResource.h"
+#include "Runtime/Core/Resources/Windows/ModuleVersionResource.h"
 #include "Windows/WindowsHWrapper.h"
 
 #include "Windows/AllowWindowsPlatformTypes.h"
@@ -54,8 +54,8 @@ TArray<FString> FWindowsPlatformProcess::DllDirectories;
 void FWindowsPlatformProcess::AddDllDirectory(const TCHAR* Directory)
 {
 	FString NormalizedDirectory = Directory;
-	YPaths::NormalizeDirectorFName(NormalizedDirectory);
-	YPaths::MakePlatformFilename(NormalizedDirectory);
+	FPaths::NormalizeDirectoryName(NormalizedDirectory);
+	FPaths::MakePlatformFilename(NormalizedDirectory);
 	DllDirectories.AddUnique(NormalizedDirectory);
 }
 
@@ -720,7 +720,7 @@ void FWindowsPlatformProcess::CleanFileCache()
 		// get shader path, and convert it to the userdirectory
 		FString ShaderDir = FString(FPlatformProcess::BaseDir()) / FPlatformProcess::ShaderDir();
 		FString UserShaderDir = IFileManager::Get().ConvertToAbsolutePathForExternalAppForWrite(*ShaderDir);
-		YPaths::CollapseRelativeDirectories(ShaderDir);
+		FPaths::CollapseRelativeDirectories(ShaderDir);
 
 		// make sure we don't delete from the source directory
 		if (ShaderDir != UserShaderDir)
@@ -788,7 +788,7 @@ const TCHAR* FWindowsPlatformProcess::BaseDir()
 			Result[StringLength] = 0;
 
 			FString CollapseResult(Result);
-			YPaths::CollapseRelativeDirectories(CollapseResult);
+			FPaths::CollapseRelativeDirectories(CollapseResult);
 			FCString::Strcpy(Result, *CollapseResult);
 		}
 	}
@@ -934,8 +934,8 @@ const TCHAR* FWindowsPlatformProcess::ExecutableName(bool bRemoveExtension)
 			// Remove all of the path information by finding the base filename
 			FString FileName = Result;
 			FString FileNameWithExt = Result;
-			FCString::Strncpy( Result, *( YPaths::GetBaseFilename(FileName) ), ARRAY_COUNT(Result) );
-			FCString::Strncpy( ResultWithExt, *( YPaths::GetCleanFilename(FileNameWithExt) ), ARRAY_COUNT(ResultWithExt) );
+			FCString::Strncpy( Result, *( FPaths::GetBaseFilename(FileName) ), ARRAY_COUNT(Result) );
+			FCString::Strncpy( ResultWithExt, *( FPaths::GetCleanFilename(FileNameWithExt) ), ARRAY_COUNT(ResultWithExt) );
 		}
 		// If the call failed, zero out the memory to be safe
 		else
@@ -1370,10 +1370,10 @@ void *FWindowsPlatformProcess::LoadLibraryWithSearchPaths(const FString& FileNam
 {
 	// Make sure the initial module exists. If we can't find it from the path we're given, it's probably a system dll.
 	FString FullFileName = FileName;
-	if (YPaths::FileExists(*FullFileName))
+	if (FPaths::FileExists(*FullFileName))
 	{
 		// Convert it to a full path, since LoadLibrary will try to resolve it against the executable directory (which may not be the same as the working dir)
-		FullFileName = YPaths::ConvertRelativePathToFull(FullFileName);
+		FullFileName = FPaths::ConvertRelativePathToFull(FullFileName);
 
 		// Create a list of files which we've already checked for imports. Don't add the initial file to this list to improve the resolution of dependencies for direct circular dependencies of this
 		// module; by allowing the module to be visited twice, any mutually depended on DLLs will be visited first.
@@ -1428,9 +1428,9 @@ bool FWindowsPlatformProcess::ResolveImport(const FString& Name, const TArray<FS
 	for(int Idx = 0; Idx < SearchPaths.Num(); Idx++)
 	{
 		FString FileName = SearchPaths[Idx] / Name;
-		if(YPaths::FileExists(FileName))
+		if(FPaths::FileExists(FileName))
 		{
-			OutFileName = YPaths::ConvertRelativePathToFull(FileName);
+			OutFileName = FPaths::ConvertRelativePathToFull(FileName);
 			return true;
 		}
 	}

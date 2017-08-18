@@ -1,4 +1,4 @@
-#pragma once
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 //=====================================================================================================================
 // Implementation of a minimal subset of the Windows API required for inline function definitions and platform-specific
@@ -7,6 +7,8 @@
 // Win32 API functions are declared in the "Windows" namespace to avoid conflicts if the real Windows.h is included 
 // later, but are mapped to the same imported symbols by the linker due to C-style linkage.
 //=====================================================================================================================
+
+#pragma once
 
 #include "CoreTypes.h"
 

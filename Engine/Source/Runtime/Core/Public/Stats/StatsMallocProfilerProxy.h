@@ -39,7 +39,7 @@ public:
 	/**
 	 * Default constructor
 	 * 
-	 * @param	InMalloc - YMalloc that is going to be used for actual allocations
+	 * @param	InMalloc - FMalloc that is going to be used for actual allocations
 	 */
 	FStatsMallocProfilerProxy( FMalloc* InMalloc);
 

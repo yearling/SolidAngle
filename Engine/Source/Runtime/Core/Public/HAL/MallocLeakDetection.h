@@ -62,8 +62,8 @@ class CORE_API FMallocLeakDetection
 		uint32 NumCheckPoints;
 		float SumOfFramesNumbers;
 		float SumOfFramesNumbersSquared;
-		float SumOYMemory;
-		float SumOYMemoryTimesFrameNumber;
+		float SumOfMemory;
+		float SumOfMemoryTimesFrameNumber;
 
 		// least square line results
 		float Baseline;

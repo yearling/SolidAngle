@@ -67,17 +67,17 @@ bool FConfigValue::ExpandValue(const FString& InCollapsedValue, FString& OutExpa
 	NumReplacements += OutExpandedValue.ReplaceInline(TEXT("%GAME%"), FApp::GetGameName(), ESearchCase::CaseSensitive);
 
 	// Replace %GAMEDIR% with the game directory.
-	NumReplacements += OutExpandedValue.ReplaceInline(TEXT("%GAMEDIR%"), *YPaths::GameDir(), ESearchCase::CaseSensitive);
+	NumReplacements += OutExpandedValue.ReplaceInline(TEXT("%GAMEDIR%"), *FPaths::GameDir(), ESearchCase::CaseSensitive);
 
 	// Replace %ENGINEUSERDIR% with the user's engine directory.
-	NumReplacements += OutExpandedValue.ReplaceInline(TEXT("%ENGINEUSERDIR%"), *YPaths::EngineUserDir(), ESearchCase::CaseSensitive);
+	NumReplacements += OutExpandedValue.ReplaceInline(TEXT("%ENGINEUSERDIR%"), *FPaths::EngineUserDir(), ESearchCase::CaseSensitive);
 
 	// Replace %ENGINEVERSIONAGNOSTICUSERDIR% with the user's engine agnostic directory.
-	NumReplacements += OutExpandedValue.ReplaceInline(TEXT("%ENGINEVERSIONAGNOSTICUSERDIR%"), *YPaths::EngineVersionAgnosticUserDir(), ESearchCase::CaseSensitive);
+	NumReplacements += OutExpandedValue.ReplaceInline(TEXT("%ENGINEVERSIONAGNOSTICUSERDIR%"), *FPaths::EngineVersionAgnosticUserDir(), ESearchCase::CaseSensitive);
 
 	// Replace %APPSETTINGSDIR% with the application settings directory.
 	FString AppSettingsDir = FPlatformProcess::ApplicationSettingsDir();
-	YPaths::NormalizeFilename(AppSettingsDir);
+	FPaths::NormalizeFilename(AppSettingsDir);
 	NumReplacements += OutExpandedValue.ReplaceInline(TEXT("%APPSETTINGSDIR%"), *AppSettingsDir, ESearchCase::CaseSensitive);
 
 	return NumReplacements > 0;
@@ -101,9 +101,9 @@ bool FConfigValue::CollapseValue(const FString& InExpandedValue, FString& OutCol
 		{
 			NumReplacements += OutCollapsedValue.ReplaceInline(*InPath, InReplacement, ESearchCase::CaseSensitive);
 		}
-		else if (YPaths::IsRelative(InPath))
+		else if (FPaths::IsRelative(InPath))
 		{
-			const FString AbsolutePath = YPaths::ConvertRelativePathToFull(InPath);
+			const FString AbsolutePath = FPaths::ConvertRelativePathToFull(InPath);
 			if (OutCollapsedValue.StartsWith(AbsolutePath, ESearchCase::CaseSensitive))
 			{
 				NumReplacements += OutCollapsedValue.ReplaceInline(*AbsolutePath, InReplacement, ESearchCase::CaseSensitive);
@@ -112,17 +112,17 @@ bool FConfigValue::CollapseValue(const FString& InExpandedValue, FString& OutCol
 	};
 
 	// Replace the game directory with %GAMEDIR%.
-	ExpandPathValueInline(YPaths::GameDir(), TEXT("%GAMEDIR%"));
+	ExpandPathValueInline(FPaths::GameDir(), TEXT("%GAMEDIR%"));
 
 	// Replace the user's engine directory with %ENGINEUSERDIR%.
-	ExpandPathValueInline(YPaths::EngineUserDir(), TEXT("%ENGINEUSERDIR%"));
+	ExpandPathValueInline(FPaths::EngineUserDir(), TEXT("%ENGINEUSERDIR%"));
 
 	// Replace the user's engine agnostic directory with %ENGINEVERSIONAGNOSTICUSERDIR%.
-	ExpandPathValueInline(YPaths::EngineVersionAgnosticUserDir(), TEXT("%ENGINEVERSIONAGNOSTICUSERDIR%"));
+	ExpandPathValueInline(FPaths::EngineVersionAgnosticUserDir(), TEXT("%ENGINEVERSIONAGNOSTICUSERDIR%"));
 
 	// Replace the application settings directory with %APPSETTINGSDIR%.
 	FString AppSettingsDir = FPlatformProcess::ApplicationSettingsDir();
-	YPaths::NormalizeFilename(AppSettingsDir);
+	FPaths::NormalizeFilename(AppSettingsDir);
 	ExpandPathValueInline(AppSettingsDir, TEXT("%APPSETTINGSDIR%"));
 
 	// Note: We deliberately don't replace the game name with %GAME% here, as the game name may exist in many places (including paths)
@@ -815,7 +815,7 @@ static void OverrideFromCommandline(FConfigFile* File, const FString& Filename)
 	// for example:
 	//		-ini:Engine:[/Script/Engine.Engine]:bSmoothFrameRate=False,[TextureStreaming]:PoolSize=100
 	//			(will update the cache after the final combined engine.ini)
-	if (FParse::Value(FCommandLine::Get(), *FString::Printf(TEXT("%s%s"), *CommandlineOverrideSpecifiers::IniSwitchIdentifier, *YPaths::GetBaseFilename(Filename)), Settings, false))
+	if (FParse::Value(FCommandLine::Get(), *FString::Printf(TEXT("%s%s"), *CommandlineOverrideSpecifiers::IniSwitchIdentifier, *FPaths::GetBaseFilename(Filename)), Settings, false))
 	{
 		// break apart on the commas
 		TArray<FString> SettingPairs;
@@ -836,7 +836,7 @@ static void OverrideFromCommandline(FConfigFile* File, const FString& Filename)
 
 				// Create the commandline override object
 				FConfigCommandlineOverride& CommandlineOption = File->CommandlineOptions[File->CommandlineOptions.Emplace()];
-				CommandlineOption.BaseFileName = *YPaths::GetBaseFilename(Filename);
+				CommandlineOption.BaseFileName = *FPaths::GetBaseFilename(Filename);
 				CommandlineOption.Section = SectionAndKey.Left(SectionNameEndIndex);
 
 				// Remove commandline syntax from the section name.
@@ -1057,7 +1057,7 @@ bool PropertySetFromCommandlineOption(const FConfigFile* InConfigFile, const FSt
 		if (CommandlineOverride.PropertyKey.Equals(InPropertFName.ToString(), ESearchCase::IgnoreCase) &&
 			CommandlineOverride.PropertyValue.Equals(InPropertyValue, ESearchCase::IgnoreCase) &&
 			CommandlineOverride.Section.Equals(InSectionName, ESearchCase::IgnoreCase) &&
-			CommandlineOverride.BaseFileName.Equals(YPaths::GetBaseFilename(InConfigFile->Name.ToString()), ESearchCase::IgnoreCase))
+			CommandlineOverride.BaseFileName.Equals(FPaths::GetBaseFilename(InConfigFile->Name.ToString()), ESearchCase::IgnoreCase))
 		{
 			bFromCommandline = true;
 		}
@@ -1136,9 +1136,9 @@ bool FConfigFile::Write(const FString& Filename, bool bDoRemoteWrite/* = true*/,
 				const bool bOptionIsFromCommandline = PropertySetFromCommandlineOption(this, SectionName, PropertFName, PropertyValue);
 
 				// If we are writing to a default config file and this property is an array, we need to be careful to remove those from higher up the hierarchy
-				const FString AbsoluteFilename = YPaths::ConvertRelativePathToFull(Filename);
-				const FString AbsoluteGameGeneratedConfigDir = YPaths::ConvertRelativePathToFull(YPaths::GeneratedConfigDir());
-				const FString AbsoluteGameAgnosticGeneratedConfigDir = YPaths::ConvertRelativePathToFull(YPaths::Combine(*YPaths::GameAgnosticSavedDir(), TEXT("Config")) + TEXT("/"));
+				const FString AbsoluteFilename = FPaths::ConvertRelativePathToFull(Filename);
+				const FString AbsoluteGameGeneratedConfigDir = FPaths::ConvertRelativePathToFull(FPaths::GeneratedConfigDir());
+				const FString AbsoluteGameAgnosticGeneratedConfigDir = FPaths::ConvertRelativePathToFull(FPaths::Combine(*FPaths::GameAgnosticSavedDir(), TEXT("Config")) + TEXT("/"));
 				const bool bIsADefaultIniWrite = !AbsoluteFilename.Contains(AbsoluteGameGeneratedConfigDir) && !AbsoluteFilename.Contains(AbsoluteGameAgnosticGeneratedConfigDir);
 
 				// Check if the property matches the source configs. We do not wanna write it out if so.
@@ -1392,7 +1392,7 @@ void FConfigFile::SaveSourceToBackupFile()
 {
 	FString Text;
 
-	FString BetweenRunsDir = (YPaths::GameIntermediateDir() / TEXT("Config/CoalescedSourceConfigs/"));
+	FString BetweenRunsDir = (FPaths::GameIntermediateDir() / TEXT("Config/CoalescedSourceConfigs/"));
 	FString Filename = FString::Printf(TEXT("%s%s.ini"), *BetweenRunsDir, *Name.ToString());
 
 	for (TMap<FString, FConfigSection>::TIterator SectionIterator(*SourceConfigFile); SectionIterator; ++SectionIterator)
@@ -1422,7 +1422,7 @@ void FConfigFile::ProcessSourceAndCheckAgainstBackup()
 {
 	if (!FPlatformProperties::RequiresCookedData())
 	{
-		FString BetweenRunsDir = (YPaths::GameIntermediateDir() / TEXT("Config/CoalescedSourceConfigs/"));
+		FString BetweenRunsDir = (FPaths::GameIntermediateDir() / TEXT("Config/CoalescedSourceConfigs/"));
 		FString BackupFilename = FString::Printf(TEXT("%s%s.ini"), *BetweenRunsDir, *Name.ToString());
 
 		FConfigFile BackupFile;
@@ -2133,7 +2133,7 @@ void FConfigCacheIni::Dump(FOutputDevice& Ar, const TCHAR* BaseIniName)
 
 	for (TIterator It(*this); It; ++It)
 	{
-		if (BaseIniName == nullptr || YPaths::GetBaseFilename(It.Key()) == BaseIniName)
+		if (BaseIniName == nullptr || FPaths::GetBaseFilename(It.Key()) == BaseIniName)
 		{
 			Ar.Logf(TEXT("FileName: %s"), *It.Key());
 			FConfigFile& File = It.Value();
@@ -2790,7 +2790,7 @@ static bool GenerateDestIniFile(FConfigFile& DestConfigFile, const FString& Dest
 			if (SectionName == TEXT("IniVersion") || SectionName == TEXT("Engine.Engine"))
 			{
 				bIsLegacyConfigSystem = true;
-				UE_LOG(LogInit, Warning, TEXT("%s is out of date. It will be regenerated."), *YPaths::ConvertRelativePathToFull(DestIniFilename));
+				UE_LOG(LogInit, Warning, TEXT("%s is out of date. It will be regenerated."), *FPaths::ConvertRelativePathToFull(DestIniFilename));
 				break;
 			}
 		}
@@ -2888,7 +2888,7 @@ static FString GetSourceIniFilename(const TCHAR* ConfigDir, const TCHAR* Prefix,
 		IniFilename = FString(ConfigDir) / FString::Printf(TEXT("%s%s.ini"), Prefix, BaseIniName);
 	}
 
-	YPaths::MakeStandardFilename(IniFilename);
+	FPaths::MakeStandardFilename(IniFilename);
 	return IniFilename;
 }
 
@@ -2975,9 +2975,9 @@ static void GetSourceIniHierarchyFilenames(const TCHAR* InBaseIniName, const TCH
 
 	// [[[[ GLOBAL USER OVERRIDES ]]]]
 	// <AppData>/UE4/EngineConfig/User* ini
-	OutHierarchy.Add(EConfigFileHierarchy::UserSettingsDir_EngineDir_User, FIniFilename(YPaths::Combine(FPlatformProcess::UserSettingsDir(), *FString::Printf(TEXT("Unreal Engine/Engine/Config/User%s.ini"), InBaseIniName)), false));
+	OutHierarchy.Add(EConfigFileHierarchy::UserSettingsDir_EngineDir_User, FIniFilename(FPaths::Combine(FPlatformProcess::UserSettingsDir(), *FString::Printf(TEXT("Unreal Engine/Engine/Config/User%s.ini"), InBaseIniName)), false));
 	// <Documents>/UE4/EngineConfig/User* ini
-	OutHierarchy.Add(EConfigFileHierarchy::UserDir_User, FIniFilename(YPaths::Combine(FPlatformProcess::UserDir(), *FString::Printf(TEXT("Unreal Engine/Engine/Config/User%s.ini"), InBaseIniName)), false));
+	OutHierarchy.Add(EConfigFileHierarchy::UserDir_User, FIniFilename(FPaths::Combine(FPlatformProcess::UserDir(), *FString::Printf(TEXT("Unreal Engine/Engine/Config/User%s.ini"), InBaseIniName)), false));
 
 	// [[[[ PROJECT USER OVERRIDES ]]]]
 	// Game/Config/User* ini (Checkpointed here at the end)
@@ -3021,7 +3021,7 @@ static FString GetDestIniFilename(const TCHAR* BaseIniName, const TCHAR* Platfor
 	}
 
 	// standardize it!
-	YPaths::MakeStandardFilename(IniFilename);
+	FPaths::MakeStandardFilename(IniFilename);
 	return IniFilename;
 }
 
@@ -3043,7 +3043,7 @@ void FConfigCacheIni::InitializeConfigSystem()
 		// Now check and see if our game is correct if this is a game agnostic binary
 		if (GIsGameAgnosticExe && !bEngineConfigCreated)
 		{
-			const FText AbsolutePath = FText::FromString(IFileManager::Get().ConvertToAbsolutePathForExternalAppForRead(*YPaths::GetPath(GEngineIni)));
+			const FText AbsolutePath = FText::FromString(IFileManager::Get().ConvertToAbsolutePathForExternalAppForRead(*FPaths::GetPath(GEngineIni)));
 			//@todo this is too early to localize
 			const FText Message = FText::Format(NSLOCTEXT("Core", "FirstCmdArgMustBeGameName", "'{0}' must exist and contain a DefaultEngine.ini."), AbsolutePath);
 			if (!GIsBuildMachine)
@@ -3071,7 +3071,7 @@ void FConfigCacheIni::InitializeConfigSystem()
 	FConfigCacheIni::LoadGlobalIniFile(GEditorPerProjectIni, TEXT("EditorPerProjectUserSettings"));
 
 	// Project agnostic editor ini files
-	static const FString EditorSettingsDir = YPaths::Combine(*YPaths::GameAgnosticSavedDir(), TEXT("Config")) + TEXT("/");
+	static const FString EditorSettingsDir = FPaths::Combine(*FPaths::GameAgnosticSavedDir(), TEXT("Config")) + TEXT("/");
 	FConfigCacheIni::LoadGlobalIniFile(GEditorSettingsIni, TEXT("EditorSettings"), nullptr, false, false, true, *EditorSettingsDir);
 	FConfigCacheIni::LoadGlobalIniFile(GEditorLayoutIni, TEXT("EditorLayout"), nullptr, false, false, true, *EditorSettingsDir);
 	FConfigCacheIni::LoadGlobalIniFile(GEditorKeyBindingsIni, TEXT("EditorKeyBindings"), nullptr, false, false, true, *EditorSettingsDir);
@@ -3132,7 +3132,7 @@ bool FConfigCacheIni::LoadGlobalIniFile(FString& FinalIniFilename, const TCHAR* 
 
 
 	// calculate the source ini file name,
-	GetSourceIniHierarchyFilenames(BaseIniName, Platform, *YPaths::EngineConfigDir(), *YPaths::SourceConfigDir(), NewConfigFile.SourceIniHierarchy, bRequireDefaultIni);
+	GetSourceIniHierarchyFilenames(BaseIniName, Platform, *FPaths::EngineConfigDir(), *FPaths::SourceConfigDir(), NewConfigFile.SourceIniHierarchy, bRequireDefaultIni);
 
 	// Keep a record of the original settings
 	NewConfigFile.SourceConfigFile = new FConfigFile();
@@ -3164,28 +3164,28 @@ void FConfigCacheIni::LoadLocalIniFile(FConfigFile& ConfigFile, const TCHAR* Ini
 {
 	DECLARE_SCOPE_CYCLE_COUNTER(TEXT("FConfigCacheIni::LoadLocalIniFile"), STAT_FConfigCacheIni_LoadLocalIniFile, STATGROUP_LoadTime);
 
-	LoadExternalIniFile(ConfigFile, IniName, *YPaths::EngineConfigDir(), *YPaths::SourceConfigDir(), bGenerateDestIni, Platform, bForceReload);
+	LoadExternalIniFile(ConfigFile, IniName, *FPaths::EngineConfigDir(), *FPaths::SourceConfigDir(), bGenerateDestIni, Platform, bForceReload);
 
 
 	// if bGenerateDestIni is false, that means the .ini is a ready-to-go .ini file, and just needs to be loaded into the FConfigFile
 	/*if (!bGenerateDestIni)
 	{
 	// generate path to the .ini file (not a Default ini, IniName is the complete name of the file, without path)
-	YString SourceIniFilename = YString::Printf(TEXT("%s%s.ini"), *YPaths::SourceConfigDir(), IniName);
+	YString SourceIniFilename = YString::Printf(TEXT("%s%s.ini"), *FPaths::SourceConfigDir(), IniName);
 
 	// load the .ini file straight up
 	LoadAnIniFile(*SourceIniFilename, ConfigFile);
 	}
 	else
 	{
-	GetSourceIniHierarchyFilenames( IniName, Platform, *YPaths::EngineConfigDir(), *YPaths::SourceConfigDir(), ConfigFile.SourceIniHierarchy, false );
+	GetSourceIniHierarchyFilenames( IniName, Platform, *FPaths::EngineConfigDir(), *FPaths::SourceConfigDir(), ConfigFile.SourceIniHierarchy, false );
 
 	// Keep a record of the original settings
 	ConfigFile.SourceConfigFile = new FConfigFile();
 
 	// now generate and make sure it's up to date (using IniName as a Base for an ini filename)
 	const bool bAllowGeneratedINIs = true;
-	GenerateDestIniFile(ConfigFile, GetDestIniFilename(IniName, Platform, *YPaths::GeneratedConfigDir()), ConfigFile.SourceIniHierarchy, bAllowGeneratedINIs, true);
+	GenerateDestIniFile(ConfigFile, GetDestIniFilename(IniName, Platform, *FPaths::GeneratedConfigDir()), ConfigFile.SourceIniHierarchy, bAllowGeneratedINIs, true);
 	}
 	ConfigFile.Name = IniName;*/
 }
@@ -3216,14 +3216,14 @@ void FConfigCacheIni::LoadExternalIniFile(FConfigFile& ConfigFile, const TCHAR* 
 
 		// now generate and make sure it's up to date (using IniName as a Base for an ini filename)
 		const bool bAllowGeneratedINIs = true;
-		GenerateDestIniFile(ConfigFile, GetDestIniFilename(IniName, Platform, *YPaths::GeneratedConfigDir()), ConfigFile.SourceIniHierarchy, bAllowGeneratedINIs, true);
+		GenerateDestIniFile(ConfigFile, GetDestIniFilename(IniName, Platform, *FPaths::GeneratedConfigDir()), ConfigFile.SourceIniHierarchy, bAllowGeneratedINIs, true);
 	}
 	ConfigFile.Name = IniName;
 }
 
 void FConfigCacheIni::LoadConsoleVariablesFromINI()
 {
-	FString ConsoleVariablesPath = YPaths::EngineDir() + TEXT("Config/ConsoleVariables.ini");
+	FString ConsoleVariablesPath = FPaths::EngineDir() + TEXT("Config/ConsoleVariables.ini");
 
 #if !(UE_BUILD_SHIPPING || UE_BUILD_TEST)
 	// First we read from "../../../Engine/Config/ConsoleVariables.ini" [Startup] section if it exists
@@ -3284,7 +3284,7 @@ void FConfigFile::UpdateSections(const TCHAR* DiskFilename, const TCHAR* IniRoot
 	{
 		// get the standard ini files
 		SourceIniHierarchy.Empty();
-		GetSourceIniHierarchyFilenames(IniRootName, nullptr, *YPaths::EngineConfigDir(), *YPaths::SourceConfigDir(), SourceIniHierarchy, false);
+		GetSourceIniHierarchyFilenames(IniRootName, nullptr, *FPaths::EngineConfigDir(), *FPaths::SourceConfigDir(), SourceIniHierarchy, false);
 
 		// now chop off this file and any after it
 		for (auto& HierarchyFileIt : SourceIniHierarchy)

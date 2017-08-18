@@ -5,10 +5,10 @@
 #include "Logging/LogSuppressionInterface.h"
 #include "Misc/OutputDeviceRedirector.h"
 
-FLogCategoryBase::FLogCategoryBase(const TCHAR *CategorFName, ELogVerbosity::Type InDefaultVerbosity, ELogVerbosity::Type InCompileTimeVerbosity)
+FLogCategoryBase::FLogCategoryBase(const TCHAR *CategoryName, ELogVerbosity::Type InDefaultVerbosity, ELogVerbosity::Type InCompileTimeVerbosity)
 	: DefaultVerbosity(InDefaultVerbosity)
 	, CompileTimeVerbosity(InCompileTimeVerbosity)
-	, CategoryFName(CategorFName)
+	, CategoryFName(CategoryName)
 {
 	ResetFromDefault();
 	if (CompileTimeVerbosity > ELogVerbosity::NoLogging)

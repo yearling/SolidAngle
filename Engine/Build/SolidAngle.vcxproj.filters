@@ -175,6 +175,21 @@
     <Filter Include="Source\Runtime\Core\Public\UObject">
       <UniqueIdentifier>{378fe5c9-d9bc-4c5c-a20d-bafb0419b3a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Runtime\Core\Resources">
+      <UniqueIdentifier>{c1ea65d0-4939-4141-84d1-5a979cfacc67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\Core\Resources\Windows">
+      <UniqueIdentifier>{5a85c1a9-dec3-4911-9a40-42e29dca042d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\SynthBenchmark">
+      <UniqueIdentifier>{250a1d61-3f5a-4468-9578-4d419ec2c3f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\SynthBenchmark\Public">
+      <UniqueIdentifier>{d35fbe29-d808-441f-b90b-cb53106fa1c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Runtime\SynthBenchmark\Private">
+      <UniqueIdentifier>{18e18ed6-bdd7-4476-aacd-4fabd2f096ce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\core\Public\HAL\Platform.h">
@@ -1557,9 +1572,6 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\UnrealPlatformMathSSE.h">
       <Filter>Source\Runtime\Core\Public\Math</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\Math\UnrealVectorConstant.h">
-      <Filter>Source\Runtime\Core\Public\Math</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\UnrealMathUtility.h">
       <Filter>Source\Runtime\Core\Public\Math</Filter>
     </ClInclude>
@@ -1632,6 +1644,15 @@
       <Filter>Source\Runtime\Core\Public\Async</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\UnrealMath.h">
+      <Filter>Source\Runtime\Core\Public\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Resources\Windows\ModuleVersionResource.h">
+      <Filter>Source\Runtime\Core\Resources\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SynthBenchmark\Public\SynthBenchmark.h">
+      <Filter>Source\Runtime\SynthBenchmark\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Math\UnrealMathVectorConstants.h">
       <Filter>Source\Runtime\Core\Public\Math</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1790,9 +1811,6 @@
       <Filter>Source\Runtime\Core\Private\HAL</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Runtime\Core\Private\HAL\FileManagerGeneric.cpp">
-      <Filter>Source\Runtime\Core\Private\HAL</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Runtime\Core\Private\HAL\SolidAngleMemory.cpp">
       <Filter>Source\Runtime\Core\Private\HAL</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Runtime\Core\Private\Logging\LogMacros.cpp">
@@ -2209,6 +2227,18 @@
     <ClCompile Include="..\Source\Runtime\Core\Private\Serialization\BitWriter.cpp">
       <Filter>Source\Runtime\Core\Private\Serialization</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Core\Private\HAL\UnrealMemory.cpp">
+      <Filter>Source\Runtime\Core\Private\HAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SynthBenchmark\Private\RayIntersectBenchmark.cpp">
+      <Filter>Source\Runtime\SynthBenchmark\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SynthBenchmark\Private\SynthBenchmarkPrivate.cpp">
+      <Filter>Source\Runtime\SynthBenchmark\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SynthBenchmark\Private\FractalBenchmark.cpp">
+      <Filter>Source\Runtime\SynthBenchmark\Private</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Source\Runtime\Core\Public\Delegates\DelegateSignatureImpl.inl">
@@ -2244,6 +2274,9 @@
     <None Include="ClassDiagram.cd" />
     <None Include="..\Source\Runtime\Core\Public\UObject\UnrealNames.inl">
       <Filter>Source\Runtime\Core\Public\UObject</Filter>
+    </None>
+    <None Include="..\Source\Runtime\Core\Resources\Windows\ModuleVersionResource.rc.inl">
+      <Filter>Source\Runtime\Core\Resources\Windows</Filter>
     </None>
   </ItemGroup>
 </Project>

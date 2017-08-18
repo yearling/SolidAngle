@@ -77,7 +77,7 @@ class FLogSuppressionImplementation: public FLogSuppressionInterface, private FS
 		}
 		
 		FName LogCategory = FName(*CommandParts[0]);
-		static const FString OfYString = FString(" off");
+		static const FString OffString = FString(" off");
 		static const FString OnString = FString(" Verbose");
 		for (auto It : Associations)
 		{
@@ -86,11 +86,11 @@ class FLogSuppressionImplementation: public FLogSuppressionInterface, private FS
 			{
 				ProcessCmdString(Name.ToString() + OnString);
 				FLogCategoryBase* Verb = It.Key;
-				Ar.Logf(TEXT("%s is now %s"), *CommandParts[0], YOutputDeviceHelper::VerbosityToString(Verb ? ELogVerbosity::Type(Verb->Verbosity) : ELogVerbosity::Verbose));
+				Ar.Logf(TEXT("%s is now %s"), *CommandParts[0], FOutputDeviceHelper::VerbosityToString(Verb ? ELogVerbosity::Type(Verb->Verbosity) : ELogVerbosity::Verbose));
 			}
 			else
 			{
-				ProcessCmdString(Name.ToString() + OfYString);
+				ProcessCmdString(Name.ToString() + OffString);
 			}
 		}
 
@@ -539,7 +539,7 @@ public:
 
 				for (TArray<FLogCategoryPtrs>::TConstIterator It = Found.CreateConstIterator(); It; ++It)
 				{
-					Ar.Logf(TEXT("%-40s  %-12s  %s"), *It->Name, YOutputDeviceHelper::VerbosityToString(It->Verbosity), It->Postfix ? TEXT(" - DebugBreak") : TEXT(""));
+					Ar.Logf(TEXT("%-40s  %-12s  %s"), *It->Name, FOutputDeviceHelper::VerbosityToString(It->Verbosity), It->Postfix ? TEXT(" - DebugBreak") : TEXT(""));
 				}
 			}
 			else
@@ -568,7 +568,7 @@ public:
 						uint8 OldValue = OldValues.FindRef(Name);
 						if (Verb->Verbosity != OldValue)
 						{
-							Ar.Logf(TEXT("%-40s  %-12s  %s"), *Name.ToString(), YOutputDeviceHelper::VerbosityToString(ELogVerbosity::Type(Verb->Verbosity)), Verb->DebugBreakOnLog ? TEXT(" - DebugBreak") : TEXT(""));
+							Ar.Logf(TEXT("%-40s  %-12s  %s"), *Name.ToString(), FOutputDeviceHelper::VerbosityToString(ELogVerbosity::Type(Verb->Verbosity)), Verb->DebugBreakOnLog ? TEXT(" - DebugBreak") : TEXT(""));
 						}
 					}
 				}

@@ -6,26 +6,26 @@
 
 bool FEngineBuildSettings::IsInternalBuild()
 {
-	static bool bIsInternalBuild = YPaths::FileExists( YPaths::EngineDir() / TEXT("Build/NotForLicensees/EpicInternal.txt") );
+	static bool bIsInternalBuild = FPaths::FileExists( FPaths::EngineDir() / TEXT("Build/NotForLicensees/EpicInternal.txt") );
 	return bIsInternalBuild;
 }
 
 
 bool FEngineBuildSettings::IsPerforceBuild()
 {
-	static bool bIsPerforceBuild = YPaths::FileExists(YPaths::EngineDir() / TEXT("Build/PerforceBuild.txt"));
+	static bool bIsPerforceBuild = FPaths::FileExists(FPaths::EngineDir() / TEXT("Build/PerforceBuild.txt"));
 	return bIsPerforceBuild;
 }
 
 
 bool FEngineBuildSettings::IsSourceDistribution()
 {
-	return IsSourceDistribution( YPaths::RootDir() );
+	return IsSourceDistribution( FPaths::RootDir() );
 }
 
 
 bool FEngineBuildSettings::IsSourceDistribution(const FString& RootDir)
 {
-	static bool bIsSourceDistribution = YPaths::FileExists(RootDir / TEXT("Engine/Build/SourceDistribution.txt"));
+	static bool bIsSourceDistribution = FPaths::FileExists(RootDir / TEXT("Engine/Build/SourceDistribution.txt"));
 	return bIsSourceDistribution;
 }

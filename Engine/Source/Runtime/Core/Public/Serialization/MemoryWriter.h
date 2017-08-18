@@ -15,11 +15,11 @@
 /**
  * Archive for storing arbitrary data to the specified memory location
  */
-class YMemoryWriter : public YMemoryArchive
+class FMemoryWriter : public FMemoryArchive
 {
 public:
-	YMemoryWriter( TArray<uint8>& InBytes, bool bIsPersistent = false, bool bSetOffset = false, const FName InArchiveName = NAME_None )
-	: YMemoryArchive()
+	FMemoryWriter( TArray<uint8>& InBytes, bool bIsPersistent = false, bool bSetOffset = false, const FName InArchiveName = NAME_None )
+	: FMemoryArchive()
 	, Bytes(InBytes)
 	, ArchiveName(InArchiveName)
 	{

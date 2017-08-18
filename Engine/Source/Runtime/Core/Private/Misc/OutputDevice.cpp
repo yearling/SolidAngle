@@ -12,12 +12,12 @@ DEFINE_LOG_CATEGORY(LogOutputDevice);
 
 const TCHAR* FOutputDevice::VerbosityToString(ELogVerbosity::Type Verbosity)
 {
-	return YOutputDeviceHelper::VerbosityToString(Verbosity);
+	return FOutputDeviceHelper::VerbosityToString(Verbosity);
 }
 
 FString FOutputDevice::FormatLogLine( ELogVerbosity::Type Verbosity, const class FName& Category, const TCHAR* Message /*= nullptr*/, ELogTimes::Type LogTime /*= ELogTimes::None*/, const double Time /*= -1.0*/ )
 {
-	return YOutputDeviceHelper::FormatLogLine(Verbosity, Category, Message, LogTime, Time);
+	return FOutputDeviceHelper::FormatLogLine(Verbosity, Category, Message, LogTime, Time);
 }
 
 void FOutputDevice::Log( ELogVerbosity::Type Verbosity, const TCHAR* Str )

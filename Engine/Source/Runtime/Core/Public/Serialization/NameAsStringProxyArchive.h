@@ -8,7 +8,7 @@
 /**
  * Implements a proxy archive that serializes FNames as string data.
  */
-struct FNameAsStringProxyArchive : public YArchiveProxy
+struct FNameAsStringProxyArchive : public FArchiveProxy
 {
 	/**
 	 * Creates and initializes a new instance.
@@ -16,7 +16,7 @@ struct FNameAsStringProxyArchive : public YArchiveProxy
 	 * @param InInnerArchive The inner archive to proxy.
 	 */
 	 FNameAsStringProxyArchive(FArchive& InInnerArchive)
-		 :	YArchiveProxy(InInnerArchive)
+		 :	FArchiveProxy(InInnerArchive)
 	 { }
 
 	 CORE_API virtual FArchive& operator<<(class FName& N);

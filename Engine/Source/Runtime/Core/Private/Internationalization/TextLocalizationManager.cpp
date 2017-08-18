@@ -89,13 +89,13 @@ void EndInitTextLocalization()
 					TArray<FString> LocalizationPaths;
 					if(ShouldLoadEditor)
 					{
-						LocalizationPaths += YPaths::GetEditorLocalizationPaths();
+						LocalizationPaths += FPaths::GetEditorLocalizationPaths();
 					}
 					if(ShouldLoadGame)
 					{
-						LocalizationPaths += YPaths::GetGameLocalizationPaths();
+						LocalizationPaths += FPaths::GetGameLocalizationPaths();
 					}
-					LocalizationPaths += YPaths::GetEngineLocalizationPaths();
+					LocalizationPaths += FPaths::GetEngineLocalizationPaths();
 
 					// Validate the locale has data or fallback to one that does.
 					TArray< FCultureRef > AvailableCultures;
@@ -148,7 +148,7 @@ void FTextLocalizationManager::FLocalizationEntryTracker::LoadFromDirectory(cons
 
 	for (const FString& ResourceFileName : ResourceFileNames)
 	{
-		LoadFromFile( YPaths::ConvertRelativePathToFull(DirectoryPath / ResourceFileName) );
+		LoadFromFile( FPaths::ConvertRelativePathToFull(DirectoryPath / ResourceFileName) );
 	}
 }
 
@@ -609,13 +609,13 @@ void FTextLocalizationManager::LoadLocalizationResourcesForCulture(const FString
 	TArray<FString> GameLocalizationPaths;
 	if(ShouldLoadGame || GIsEditor)
 	{
-		GameLocalizationPaths += YPaths::GetGameLocalizationPaths();
+		GameLocalizationPaths += FPaths::GetGameLocalizationPaths();
 	}
 	TArray<FString> EditorLocalizationPaths;
 	if(ShouldLoadEditor)
 	{
-		EditorLocalizationPaths += YPaths::GetEditorLocalizationPaths();
-		EditorLocalizationPaths += YPaths::GetToolTipLocalizationPaths();
+		EditorLocalizationPaths += FPaths::GetEditorLocalizationPaths();
+		EditorLocalizationPaths += FPaths::GetToolTipLocalizationPaths();
 
 		bool bShouldLoadLocalizedPropertFNames = true;
 		if( !GConfig->GetBool( TEXT("Internationalization"), TEXT("ShouldLoadLocalizedPropertFNames"), bShouldLoadLocalizedPropertFNames, GEditorSettingsIni ) )
@@ -624,11 +624,11 @@ void FTextLocalizationManager::LoadLocalizationResourcesForCulture(const FString
 		}
 		if(bShouldLoadLocalizedPropertFNames)
 		{
-			EditorLocalizationPaths += YPaths::GetPropertFNameLocalizationPaths();
+			EditorLocalizationPaths += FPaths::GetPropertFNameLocalizationPaths();
 		}
 	}
 	TArray<FString> EngineLocalizationPaths;
-	EngineLocalizationPaths += YPaths::GetEngineLocalizationPaths();
+	EngineLocalizationPaths += FPaths::GetEngineLocalizationPaths();
 
 	// Gather any additional paths that are unknown to the UE4 core (such as plugins)
 	TArray<FString> AdditionalLocalizationPaths;
@@ -656,7 +656,7 @@ void FTextLocalizationManager::LoadLocalizationResourcesForCulture(const FString
 				if(bIsDirectory)
 				{
 					// UE localization resource folders use "en-US" style while ICU uses "en_US".
-					const FString LocalizationFolder = YPaths::GetCleanFilename(FilenameOrDirectory);
+					const FString LocalizationFolder = FPaths::GetCleanFilename(FilenameOrDirectory);
 					const FString CanonicalName = FCulture::GetCanonicalName(LocalizationFolder);
 					CultureToDirectoryMap.Add(CanonicalName, LocalizationFolder);
 				}

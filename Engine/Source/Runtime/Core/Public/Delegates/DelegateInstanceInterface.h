@@ -1,3 +1,5 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "Misc/AssertionMacros.h"
@@ -18,22 +20,22 @@ template <typename RetType, typename... Args>
 struct IBaseDelegateInstanceCommon<RetType(Args...)> : public IDelegateInstance
 {
 	/**
-	* Emplaces a copy of the delegate instance into the FDelegateBase.
-	*/
+	 * Emplaces a copy of the delegate instance into the FDelegateBase.
+	 */
 	virtual void CreateCopy(FDelegateBase& Base) = 0;
 
 	/**
-	* Returns true if this delegate points to exactly the same object and method as the specified delegate,
-	* even if the delegate objects themselves are different.  Also, the delegate types *must* be compatible.
-	*
-	* @param  InOtherDelegate
-	* @return  True if delegates match
-	*/
-	virtual bool IsSameFunction(const IBaseDelegateInstance<RetType(Args...)>& InOtherDelegate) const = 0;
+	 * Returns true if this delegate points to exactly the same object and method as the specified delegate,
+	 * even if the delegate objects themselves are different.  Also, the delegate types *must* be compatible.
+	 *
+	 * @param  InOtherDelegate
+	 * @return  True if delegates match
+	 */
+	virtual bool IsSameFunction( const IBaseDelegateInstance<RetType(Args...)>& InOtherDelegate ) const = 0;
 
 	/**
-	* Execute the delegate.  If the function pointer is not valid, an error will occur.
-	*/
+	 * Execute the delegate.  If the function pointer is not valid, an error will occur.
+	 */
 	virtual RetType Execute(Args...) const = 0;
 };
 
@@ -46,10 +48,10 @@ template <typename... Args>
 struct IBaseDelegateInstance<void(Args...)> : public IBaseDelegateInstanceCommon<void(Args...)>
 {
 	/**
-	* Execute the delegate, but only if the function pointer is still valid
-	*
-	* @return  Returns true if the function was executed
-	*/
+	 * Execute the delegate, but only if the function pointer is still valid
+	 *
+	 * @return  Returns true if the function was executed
+	 */
 	// NOTE: Currently only delegates with no return value support ExecuteIfSafe()
 	virtual bool ExecuteIfSafe(Args...) const = 0;
 };
@@ -60,13 +62,13 @@ struct TMemFunPtrType;
 template <typename Class, typename RetType, typename... Args>
 struct TMemFunPtrType<false, Class, RetType(Args...)>
 {
-	typedef RetType(Class::* Type)(Args...);
+	typedef RetType (Class::* Type)(Args...);
 };
 
 template <typename Class, typename RetType, typename... Args>
 struct TMemFunPtrType<true, Class, RetType(Args...)>
 {
-	typedef RetType(Class::* Type)(Args...) const;
+	typedef RetType (Class::* Type)(Args...) const;
 };
 
 template <typename FuncType>
@@ -152,7 +154,7 @@ class TMemberFunctionCaller
 
 public:
 	TMemberFunctionCaller(T* InObj, MemFunPtrType InMemFunPtr)
-		: Obj(InObj)
+		: Obj      (InObj)
 		, MemFunPtr(InMemFunPtr)
 	{
 	}

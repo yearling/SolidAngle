@@ -53,18 +53,18 @@ bool IsDirectoryEmpty(const TCHAR* InDirectory)
 
 FString ProjectSpecificIniPath(const TCHAR* InLeaf)
 {
-	return YPaths::GeneratedConfigDir() / ANSI_TO_TCHAR(FPlatformProperties::PlatformName()) / InLeaf;
+	return FPaths::GeneratedConfigDir() / ANSI_TO_TCHAR(FPlatformProperties::PlatformName()) / InLeaf;
 }
 
 FString ProjectAgnosticIniPath(const TCHAR* InLeaf)
 {
-	return YPaths::GameAgnosticSavedDir() / TEXT("Config") / ANSI_TO_TCHAR(FPlatformProperties::PlatformName()) / InLeaf;
+	return FPaths::GameAgnosticSavedDir() / TEXT("Config") / ANSI_TO_TCHAR(FPlatformProperties::PlatformName()) / InLeaf;
 }
 
 /** Migrates config files from a previous version of the engine. Does nothing on non-installed versions */
 void MigratePreviousEngineInis()
 {
-	if (!YPaths::ShouldSaveToUserDir() && !FApp::IsEngineInstalled())
+	if (!FPaths::ShouldSaveToUserDir() && !FApp::IsEngineInstalled())
 	{
 		// We can't do this in non-installed engines or where we haven't saved to a user directory
 		return;
@@ -78,7 +78,7 @@ void MigratePreviousEngineInis()
 		const FEngineVersion PreviousVersion(FEngineVersion::Current().GetMajor(), MinorVersion--, 0, 0, FString());
 	
 		const FString Directory = FString(FPlatformProcess::UserSettingsDir()) / VERSION_TEXT(EPIC_PRODUCT_IDENTIFIER) / PreviousVersion.ToString(EVersionComponent::Minor) / TEXT("Saved") / TEXT("Config") / ANSI_TO_TCHAR(FPlatformProperties::PlatformName());
-		if (YPaths::DirectoryExists(Directory))
+		if (FPaths::DirectoryExists(Directory))
 		{
 			const FString DestDir = ProjectAgnosticIniPath(TEXT(""));
 			if (PlatformFile.CreateDirectoryTree(*DestDir))
@@ -99,7 +99,7 @@ void FConfigManifest::UpgradeFromPreviousVersions()
 
 	const FString ManifestFilename = ProjectAgnosticIniPath(TEXT("Manifest.ini"));
 
-	if (!YPaths::FileExists(ManifestFilename) && IsDirectoryEmpty(*YPaths::GetPath(ManifestFilename)))
+	if (!FPaths::FileExists(ManifestFilename) && IsDirectoryEmpty(*FPaths::GetPath(ManifestFilename)))
 	{
 		// Copy files from previous versions of the engine, if possible
 		MigratePreviousEngineInis();
@@ -108,7 +108,7 @@ void FConfigManifest::UpgradeFromPreviousVersions()
 	const EConfigManifestVersion LatestVersion = (EConfigManifestVersion)((int32)EConfigManifestVersion::NumOfVersions - 1);
 	EConfigManifestVersion CurrentVersion = EConfigManifestVersion::Initial;
 
-	if (YPaths::FileExists(ManifestFilename))
+	if (FPaths::FileExists(ManifestFilename))
 	{
 		// Load the manifest from the file
 		Manifest.Read(*ManifestFilename);
@@ -149,9 +149,9 @@ void MigrateToAgnosticIni(const TCHAR* SrcIniName, const TCHAR* DstIniName)
 	const FString OldIni = ProjectSpecificIniPath(SrcIniName);
 	const FString NewIni = ProjectAgnosticIniPath(DstIniName);
 
-	if (YPaths::FileExists(*OldIni))
+	if (FPaths::FileExists(*OldIni))
 	{
-		if (!YPaths::FileExists(*NewIni))
+		if (!FPaths::FileExists(*NewIni))
 		{
 			IFileManager::Get().Move(*NewIni, *OldIni);
 		}
@@ -171,9 +171,9 @@ void MigrateToAgnosticIni(const TCHAR* IniName)
 /** Rename an ini file, dealing with the case where the destination already exists */
 void RenameIni(const TCHAR* OldIni, const TCHAR* NewIni)
 {
-	if (YPaths::FileExists(OldIni))
+	if (FPaths::FileExists(OldIni))
 	{
-		if (!YPaths::FileExists(NewIni))
+		if (!FPaths::FileExists(NewIni))
 		{
 			IFileManager::Get().Move(NewIni, OldIni);
 		}
@@ -187,7 +187,7 @@ void RenameIni(const TCHAR* OldIni, const TCHAR* NewIni)
 void FConfigManifest::MigrateEditorUserSettings()
 {
 	const FString EditorUserSettingsFilename = ProjectSpecificIniPath(TEXT("EditorUserSettings.ini"));
-	if (!YPaths::FileExists(EditorUserSettingsFilename))
+	if (!FPaths::FileExists(EditorUserSettingsFilename))
 	{
 		return;
 	}

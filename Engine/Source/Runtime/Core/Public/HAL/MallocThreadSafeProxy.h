@@ -8,8 +8,8 @@
 #include "Misc/ScopeLock.h"
 
 /**
-* YMalloc proxy that synchronizes access, making the used malloc thread safe.
-*/
+ * FMalloc proxy that synchronizes access, making the used malloc thread safe.
+ */
 class FMallocThreadSafeProxy : public FMalloc
 {
 private:
@@ -20,13 +20,13 @@ private:
 
 public:
 	/**
-	* Constructor for thread safe proxy malloc that takes a malloc to be used and a
-	* synchronization object used via FScopeLock as a parameter.
-	*
-	* @param	InMalloc					YMalloc that is going to be used for actual allocations
-	*/
-	FMallocThreadSafeProxy(FMalloc* InMalloc)
-		: UsedMalloc(InMalloc)
+	 * Constructor for thread safe proxy malloc that takes a malloc to be used and a
+	 * synchronization object used via FScopeLock as a parameter.
+	 * 
+	 * @param	InMalloc					FMalloc that is going to be used for actual allocations
+	 */
+	FMallocThreadSafeProxy( FMalloc* InMalloc)
+	:	UsedMalloc( InMalloc )
 	{}
 
 	virtual void InitializeStatsMetadata() override
@@ -34,66 +34,66 @@ public:
 		UsedMalloc->InitializeStatsMetadata();
 	}
 
-	/**
-	* Malloc
-	*/
-	virtual void* Malloc(SIZE_T Size, uint32 Alignment) override
+	/** 
+	 * Malloc
+	 */
+	virtual void* Malloc( SIZE_T Size, uint32 Alignment ) override
 	{
 		IncrementTotalMallocCalls();
-		FScopeLock ScopeLock(&SynchronizationObject);
-		return UsedMalloc->Malloc(Size, Alignment);
+		FScopeLock ScopeLock( &SynchronizationObject );
+		return UsedMalloc->Malloc( Size, Alignment );
 	}
 
-	/**
-	* Realloc
-	*/
-	virtual void* Realloc(void* Ptr, SIZE_T NewSize, uint32 Alignment) override
+	/** 
+	 * Realloc
+	 */
+	virtual void* Realloc( void* Ptr, SIZE_T NewSize, uint32 Alignment ) override
 	{
 		IncrementTotalReallocCalls();
-		FScopeLock ScopeLock(&SynchronizationObject);
-		return UsedMalloc->Realloc(Ptr, NewSize, Alignment);
+		FScopeLock ScopeLock( &SynchronizationObject );
+		return UsedMalloc->Realloc( Ptr, NewSize, Alignment );
 	}
 
-	/**
-	* Free
-	*/
-	virtual void Free(void* Ptr) override
+	/** 
+	 * Free
+	 */
+	virtual void Free( void* Ptr ) override
 	{
-		if (Ptr)
+		if( Ptr )
 		{
 			IncrementTotalFreeCalls();
-			FScopeLock ScopeLock(&SynchronizationObject);
-			UsedMalloc->Free(Ptr);
+			FScopeLock ScopeLock( &SynchronizationObject );
+			UsedMalloc->Free( Ptr );
 		}
 	}
 
 	/** Writes allocator stats from the last update into the specified destination. */
-	virtual void GetAllocatorStats(FGenericMemoryStats& out_Stats) override
+	virtual void GetAllocatorStats( FGenericMemoryStats& out_Stats ) override
 	{
-		FScopeLock ScopeLock(&SynchronizationObject);
-		UsedMalloc->GetAllocatorStats(out_Stats);
+		FScopeLock ScopeLock( &SynchronizationObject );
+		UsedMalloc->GetAllocatorStats( out_Stats );
 	}
 
 	/** Dumps allocator stats to an output device. */
-	virtual void DumpAllocatorStats(class FOutputDevice& Ar) override
+	virtual void DumpAllocatorStats( class FOutputDevice& Ar ) override
 	{
-		FScopeLock ScopeLock(&SynchronizationObject);
-		UsedMalloc->DumpAllocatorStats(Ar);
+		FScopeLock ScopeLock( &SynchronizationObject );
+		UsedMalloc->DumpAllocatorStats( Ar );
 	}
 
 	/**
-	* Validates the allocator's heap
-	*/
+	 * Validates the allocator's heap
+	 */
 	virtual bool ValidateHeap() override
 	{
-		FScopeLock Lock(&SynchronizationObject);
-		return(UsedMalloc->ValidateHeap());
+		FScopeLock Lock( &SynchronizationObject );
+		return( UsedMalloc->ValidateHeap() );
 	}
 
-	virtual bool Exec(UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar) override
+	virtual bool Exec( UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar ) override
 	{
-		FScopeLock ScopeLock(&SynchronizationObject);
-		return UsedMalloc->Exec(InWorld, Cmd, Ar);
+		FScopeLock ScopeLock( &SynchronizationObject );
+		return UsedMalloc->Exec( InWorld, Cmd, Ar);
 	}
 
 	/**
@@ -105,15 +105,15 @@ public:
 	*/
 	virtual bool GetAllocationSize(void *Original, SIZE_T &SizeOut) override
 	{
-		FScopeLock ScopeLock(&SynchronizationObject);
-		return UsedMalloc->GetAllocationSize(Original, SizeOut);
+		FScopeLock ScopeLock( &SynchronizationObject );
+		return UsedMalloc->GetAllocationSize(Original,SizeOut);
 	}
 
 	virtual const TCHAR* GetDescriptiveName() override
-	{
-		FScopeLock ScopeLock(&SynchronizationObject);
+	{ 
+		FScopeLock ScopeLock( &SynchronizationObject );
 		check(UsedMalloc);
-		return UsedMalloc->GetDescriptiveName();
+		return UsedMalloc->GetDescriptiveName(); 
 	}
 
 	virtual void Trim() override

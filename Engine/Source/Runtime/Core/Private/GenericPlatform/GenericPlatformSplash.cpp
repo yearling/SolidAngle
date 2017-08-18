@@ -26,7 +26,7 @@ FString GetSplashFilename(const FString& ContentDir, const FString& Filename)
 	{
 		Path = ImageName + SupportedSplashImageExt[index++];
 
-		if (YPaths::FileExists(Path))
+		if (FPaths::FileExists(Path))
 			return Path;
 	}
 
@@ -49,7 +49,7 @@ bool FGenericPlatformSplash::GetSplashPath(const TCHAR* SplashFilename, FString&
 	FString Filename = FString(TEXT("Splash/")) + SplashFilename;
 
 	// first look in game's splash directory
-	OutPath = GetSplashFilename(YPaths::GameContentDir(), Filename);
+	OutPath = GetSplashFilename(FPaths::GameContentDir(), Filename);
 	OutIsCustom = true;
 
 	// if this was found, then we're done
@@ -57,7 +57,7 @@ bool FGenericPlatformSplash::GetSplashPath(const TCHAR* SplashFilename, FString&
 		return true;
 
 	// next look in Engine/Splash
-	OutPath = YPaths::ConvertRelativePathToFull(GetSplashFilename(YPaths::EngineContentDir(), Filename));
+	OutPath = FPaths::ConvertRelativePathToFull(GetSplashFilename(FPaths::EngineContentDir(), Filename));
 	OutIsCustom = false;
 
 	// if this was found, then we're done
@@ -74,8 +74,8 @@ bool FGenericPlatformSplash::GetSplashPath(const TCHAR* SplashFilename, const TC
 	FString IconName = FString(TEXT("Splash/")) + IconFilename;
 
 	// first look in game's splash directory
-	OutPath = YPaths::ConvertRelativePathToFull(GetSplashFilename(YPaths::GameContentDir(), Filename));
-	OutIconPath = GetSplashFilename(YPaths::GameContentDir(), IconName);
+	OutPath = FPaths::ConvertRelativePathToFull(GetSplashFilename(FPaths::GameContentDir(), Filename));
+	OutIconPath = GetSplashFilename(FPaths::GameContentDir(), IconName);
 	OutIsCustom = true;
 
 	// if this was found, then we're done
@@ -83,8 +83,8 @@ bool FGenericPlatformSplash::GetSplashPath(const TCHAR* SplashFilename, const TC
 		return true;
 
 	// next look in Engine/Splash
-	OutPath = YPaths::ConvertRelativePathToFull(GetSplashFilename(YPaths::EngineContentDir(), Filename));
-	OutIconPath = GetSplashFilename(YPaths::EngineContentDir(), IconName);
+	OutPath = FPaths::ConvertRelativePathToFull(GetSplashFilename(FPaths::EngineContentDir(), Filename));
+	OutIconPath = GetSplashFilename(FPaths::EngineContentDir(), IconName);
 	OutIsCustom = false;
 
 	// if this was found, then we're done
