@@ -8,14 +8,14 @@
 #include "Serialization/Archive.h"
 
 /**
-* Wrapper around a raw pointer that destroys it automatically.
-* Calls operator delete on the object, so it must have been allocated with
-* operator new. Modeled after boost::scoped_ptr.
-*
-* If a custom deallocator is needed, this class will have to
-* expanded with a deletion policy.
-*/
-template<typename ReferencedType>
+ * Wrapper around a raw pointer that destroys it automatically.
+ * Calls operator delete on the object, so it must have been allocated with
+ * operator new. Modeled after boost::scoped_ptr.
+ * 
+ * If a custom deallocator is needed, this class will have to
+ * expanded with a deletion policy.
+ */
+template<typename ReferencedType> 
 class TScopedPointer
 {
 private:
@@ -27,7 +27,7 @@ public:
 
 	/** Initialization constructor. */
 	DEPRECATED(4.15, "TScopedPointer has been deprecated and should be replaced with TUniquePtr.")
-		explicit TScopedPointer(ReferencedType* InReference = nullptr)
+	explicit TScopedPointer(ReferencedType* InReference = nullptr)
 		: Reference(InReference)
 	{ }
 
@@ -49,7 +49,7 @@ public:
 	/** Assignment operator. */
 	TScopedPointer& operator=(const TScopedPointer& InCopy)
 	{
-		if (&InCopy != this)
+		if(&InCopy != this)
 		{
 			delete Reference;
 			Reference = InCopy.Reference ?
@@ -87,7 +87,7 @@ public:
 	/** Returns true if the pointer is valid */
 	bool IsValid() const
 	{
-		return (Reference != 0);
+		return ( Reference != 0 );
 	}
 
 	// implicit conversion to the reference type.
@@ -120,9 +120,9 @@ public:
 	}
 
 	// Serializer.
-	friend FArchive& operator<<(FArchive& Ar, SelfType& P)
+	friend FArchive& operator<<(FArchive& Ar,SelfType& P)
 	{
-		if (Ar.IsLoading())
+		if(Ar.IsLoading())
 		{
 			// When loading, allocate a new value.
 			ReferencedType* OldReference = P.Reference;
@@ -151,20 +151,20 @@ struct TTypeTraits<TScopedPointer<ReferencedType> > : public TTypeTraitsBase<TSc
 
 
 /** Implement movement of a scoped pointer to avoid copying the referenced value. */
-template<typename ReferencedType> void Move(TScopedPointer<ReferencedType>& A, ReferencedType* B)
+template<typename ReferencedType> void Move(TScopedPointer<ReferencedType>& A,ReferencedType* B)
 {
 	A.Reset(B);
 }
 
 
 /**
-* Wrapper around a raw pointer that destroys it automatically.
-* Calls operator delete on the object, so it must have been allocated with
-* operator new.
-*
-* Same as TScopedPointer, except never calls new to make a duplicate
-*/
-template<typename ReferencedType>
+ * Wrapper around a raw pointer that destroys it automatically.
+ * Calls operator delete on the object, so it must have been allocated with
+ * operator new.
+ * 
+ * Same as TScopedPointer, except never calls new to make a duplicate
+ */
+template<typename ReferencedType> 
 class TAutoPtr
 {
 private:
@@ -176,8 +176,8 @@ public:
 
 	/** Initialization constructor. */
 	DEPRECATED(4.15, "TAutoPtr has been deprecated and should be replaced with TUniquePtr.")
-		explicit TAutoPtr(ReferencedType* InReference = nullptr)
-		: Reference(InReference)
+	explicit TAutoPtr(ReferencedType* InReference = nullptr)
+		:	Reference(InReference)
 	{}
 
 	/** Destructor. */
@@ -214,7 +214,7 @@ public:
 	/** Returns true if the pointer is valid */
 	bool IsValid() const
 	{
-		return (Reference != 0);
+		return ( Reference != 0 );
 	}
 
 	// implicit conversion to the reference type.
@@ -251,7 +251,7 @@ struct TTypeTraits<TAutoPtr<ReferencedType> > : public TTypeTraitsBase<TAutoPtr<
 
 
 /** Implement movement of a scoped pointer to avoid copying the referenced value. */
-template<typename ReferencedType> void Move(TAutoPtr<ReferencedType>& A, ReferencedType* B)
+template<typename ReferencedType> void Move(TAutoPtr<ReferencedType>& A,ReferencedType* B)
 {
 	A.Reset(B);
 }

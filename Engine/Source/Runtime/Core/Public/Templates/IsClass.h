@@ -1,9 +1,12 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
+
 #include "CoreTypes.h"
 
 /**
-* Determines if T is a struct/class type
-*/
+ * Determines if T is a struct/class type
+ */
 template <typename T>
 struct TIsClass
 {

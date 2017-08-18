@@ -1,3 +1,5 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
@@ -27,16 +29,16 @@ namespace UE4Decay_Private
 	template <typename RetType, typename... Params>
 	struct TDecayNonReference<RetType(Params...)>
 	{
-		typedef RetType(*Type)(Params...);
+		typedef RetType (*Type)(Params...);
 	};
 }
 
 /**
-* Returns the decayed type of T, meaning it removes all references, qualifiers and
-* applies array-to-pointer and function-to-pointer conversions.
-*
-* http://en.cppreference.com/w/cpp/types/decay
-*/
+ * Returns the decayed type of T, meaning it removes all references, qualifiers and
+ * applies array-to-pointer and function-to-pointer conversions.
+ *
+ * http://en.cppreference.com/w/cpp/types/decay
+ */
 template <typename T>
 struct TDecay
 {

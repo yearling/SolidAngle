@@ -15,15 +15,15 @@
 #include "Traits/IsContiguousContainer.h"
 
 /*-----------------------------------------------------------------------------
-Standard templates.
+	Standard templates.
 -----------------------------------------------------------------------------*/
 
 /**
-* Chooses between the two parameters based on whether the first is nullptr or not.
-* @return If the first parameter provided is non-nullptr, it is returned; otherwise the second parameter is returned.
-*/
+ * Chooses between the two parameters based on whether the first is nullptr or not.
+ * @return If the first parameter provided is non-nullptr, it is returned; otherwise the second parameter is returned.
+ */
 template<typename ReferencedType>
-FORCEINLINE ReferencedType* IfAThenAElseB(ReferencedType* A, ReferencedType* B)
+FORCEINLINE ReferencedType* IfAThenAElseB(ReferencedType* A,ReferencedType* B)
 {
 	const PTRINT IntA = reinterpret_cast<PTRINT>(A);
 	const PTRINT IntB = reinterpret_cast<PTRINT>(B);
@@ -37,8 +37,8 @@ FORCEINLINE ReferencedType* IfAThenAElseB(ReferencedType* A, ReferencedType* B)
 /** branchless pointer selection based on predicate
 * return PTRINT(Predicate) ? A : B;
 **/
-template<typename PredicateType, typename ReferencedType>
-FORCEINLINE ReferencedType* IfPThenAElseB(PredicateType Predicate, ReferencedType* A, ReferencedType* B)
+template<typename PredicateType,typename ReferencedType>
+FORCEINLINE ReferencedType* IfPThenAElseB(PredicateType Predicate,ReferencedType* A,ReferencedType* B)
 {
 	const PTRINT IntA = reinterpret_cast<PTRINT>(A);
 	const PTRINT IntB = reinterpret_cast<PTRINT>(B);
@@ -57,7 +57,7 @@ inline bool XOR(bool A, bool B)
 
 /** This is used to provide type specific behavior for a copy which cannot change the value of B. */
 template<typename T>
-FORCEINLINE void Move(T& A, typename TMoveSupportTraits<T>::Copy B)
+FORCEINLINE void Move(T& A,typename TMoveSupportTraits<T>::Copy B)
 {
 	// Destruct the previous value of A.
 	A.~T();
@@ -68,7 +68,7 @@ FORCEINLINE void Move(T& A, typename TMoveSupportTraits<T>::Copy B)
 
 /** This is used to provide type specific behavior for a move which may change the value of B. */
 template<typename T>
-FORCEINLINE void Move(T& A, typename TMoveSupportTraits<T>::Move B)
+FORCEINLINE void Move(T& A,typename TMoveSupportTraits<T>::Move B)
 {
 	// Destruct the previous value of A.
 	A.~T();
@@ -78,8 +78,8 @@ FORCEINLINE void Move(T& A, typename TMoveSupportTraits<T>::Move B)
 }
 
 /**
-* Generically gets the data pointer of a contiguous container
-*/
+ * Generically gets the data pointer of a contiguous container
+ */
 template<typename T, typename = typename TEnableIf<TIsContiguousContainer<T>::Value>::Type>
 auto GetData(T&& Container) -> decltype(Container.GetData())
 {
@@ -87,7 +87,7 @@ auto GetData(T&& Container) -> decltype(Container.GetData())
 }
 
 template <typename T, SIZE_T N>
-CONSTEXPR T* GetData(T(&Container)[N])
+CONSTEXPR T* GetData(T (&Container)[N])
 {
 	return Container;
 }
@@ -108,7 +108,7 @@ SIZE_T GetNum(T&& Container)
 }
 
 template <typename T, SIZE_T N>
-CONSTEXPR SIZE_T GetNum(T(&Container)[N])
+CONSTEXPR SIZE_T GetNum(T (&Container)[N])
 {
 	return N;
 }
@@ -120,11 +120,11 @@ CONSTEXPR SIZE_T GetNum(std::initializer_list<T> List)
 }
 
 /*----------------------------------------------------------------------------
-Standard macros.
+	Standard macros.
 ----------------------------------------------------------------------------*/
 
 template <typename T, uint32 N>
-char(&ArrayCountHelper(const T(&)[N]))[N];
+char (&ArrayCountHelper(const T (&)[N]))[N];
 
 // Number of elements in an array.
 #define ARRAY_COUNT( array ) (sizeof(ArrayCountHelper(array))+0)
@@ -141,22 +141,22 @@ char(&ArrayCountHelper(const T(&)[N]))[N];
 #endif
 
 #if PLATFORM_VTABLE_AT_END_OF_CLASS
-#error need implementation
+	#error need implementation
 #else
-#define VTABLE_OFFSET( Class, MultipleInheritenceParent )	( ((PTRINT) static_cast<MultipleInheritenceParent*>((Class*)1)) - 1)
+	#define VTABLE_OFFSET( Class, MultipleInheritenceParent )	( ((PTRINT) static_cast<MultipleInheritenceParent*>((Class*)1)) - 1)
 #endif
 
 
 /**
-* works just like std::min_element.
-*/
+ * works just like std::min_element.
+ */
 template<class ForwardIt> inline
 ForwardIt MinElement(ForwardIt First, ForwardIt Last)
 {
 	ForwardIt Result = First;
 	for (; ++First != Last; )
 	{
-		if (*First < *Result)
+		if (*First < *Result) 
 		{
 			Result = First;
 		}
@@ -165,15 +165,15 @@ ForwardIt MinElement(ForwardIt First, ForwardIt Last)
 }
 
 /**
-* works just like std::min_element.
-*/
+ * works just like std::min_element.
+ */
 template<class ForwardIt, class PredicateType> inline
 ForwardIt MinElement(ForwardIt First, ForwardIt Last, PredicateType Predicate)
 {
 	ForwardIt Result = First;
 	for (; ++First != Last; )
 	{
-		if (Predicate(*First, *Result))
+		if (Predicate(*First,*Result))
 		{
 			Result = First;
 		}
@@ -190,7 +190,7 @@ ForwardIt MaxElement(ForwardIt First, ForwardIt Last)
 	ForwardIt Result = First;
 	for (; ++First != Last; )
 	{
-		if (*Result < *First)
+		if (*Result < *First) 
 		{
 			Result = First;
 		}
@@ -207,7 +207,7 @@ ForwardIt MaxElement(ForwardIt First, ForwardIt Last, PredicateType Predicate)
 	ForwardIt Result = First;
 	for (; ++First != Last; )
 	{
-		if (Predicate(*Result, *First))
+		if (Predicate(*Result,*First))
 		{
 			Result = First;
 		}
@@ -216,9 +216,9 @@ ForwardIt MaxElement(ForwardIt First, ForwardIt Last, PredicateType Predicate)
 }
 
 /**
-* utility template for a class that should not be copyable.
-* Derive from this class to make your class non-copyable
-*/
+ * utility template for a class that should not be copyable.
+ * Derive from this class to make your class non-copyable
+ */
 class FNoncopyable
 {
 protected:
@@ -232,18 +232,18 @@ private:
 };
 
 
-/**
-* exception-safe guard around saving/restoring a value.
-* Commonly used to make sure a value is restored
-* even if the code early outs in the future.
-* Usage:
-*  	TGuardValue<bool> GuardSomeBool(bSomeBool, false); // Sets bSomeBool to false, and restores it in dtor.
-*/
+/** 
+ * exception-safe guard around saving/restoring a value.
+ * Commonly used to make sure a value is restored 
+ * even if the code early outs in the future.
+ * Usage:
+ *  	TGuardValue<bool> GuardSomeBool(bSomeBool, false); // Sets bSomeBool to false, and restores it in dtor.
+ */
 template <typename Type>
 struct TGuardValue : private FNoncopyable
 {
 	TGuardValue(Type& ReferenceValue, const Type& NewValue)
-		: RefValue(ReferenceValue), OldValue(ReferenceValue)
+	: RefValue(ReferenceValue), OldValue(ReferenceValue)
 	{
 		RefValue = NewValue;
 	}
@@ -253,11 +253,11 @@ struct TGuardValue : private FNoncopyable
 	}
 
 	/**
-	* Overloaded dereference operator.
-	* Provides read-only access to the original value of the data being tracked by this struct
-	*
-	* @return	a const reference to the original data value
-	*/
+	 * Overloaded dereference operator.
+	 * Provides read-only access to the original value of the data being tracked by this struct
+	 *
+	 * @return	a const reference to the original data value
+	 */
 	FORCEINLINE const Type& operator*() const
 	{
 		return OldValue;
@@ -269,11 +269,11 @@ private:
 };
 
 
-/**
-* Commonly used to make sure a value is incremented, and then decremented anyway the function can terminate.
-* Usage:
-*  	TScopeCounter<int32> BeginProcessing(ProcessingCount); // increments ProcessingCount, and decrements it in the dtor
-*/
+/** 
+ * Commonly used to make sure a value is incremented, and then decremented anyway the function can terminate.
+ * Usage:
+ *  	TScopeCounter<int32> BeginProcessing(ProcessingCount); // increments ProcessingCount, and decrements it in the dtor
+ */
 template <typename Type>
 struct TScopeCounter : private FNoncopyable
 {
@@ -293,35 +293,35 @@ private:
 
 
 /**
-* Helper class to make it easy to use key/value pairs with a container.
-*/
+ * Helper class to make it easy to use key/value pairs with a container.
+ */
 template <typename KeyType, typename ValueType>
 struct TKeyValuePair
 {
-	TKeyValuePair(const KeyType& InKey, const ValueType& InValue)
-		: Key(InKey), Value(InValue)
+	TKeyValuePair( const KeyType& InKey, const ValueType& InValue )
+	:	Key(InKey), Value(InValue)
 	{
 	}
-	TKeyValuePair(const KeyType& InKey)
-		: Key(InKey)
+	TKeyValuePair( const KeyType& InKey )
+	:	Key(InKey)
 	{
 	}
 	TKeyValuePair()
 	{
 	}
-	bool operator==(const TKeyValuePair& Other) const
+	bool operator==( const TKeyValuePair& Other ) const
 	{
 		return Key == Other.Key;
 	}
-	bool operator!=(const TKeyValuePair& Other) const
+	bool operator!=( const TKeyValuePair& Other ) const
 	{
 		return Key != Other.Key;
 	}
-	bool operator<(const TKeyValuePair& Other) const
+	bool operator<( const TKeyValuePair& Other ) const
 	{
 		return Key < Other.Key;
 	}
-	FORCEINLINE bool operator()(const TKeyValuePair& A, const TKeyValuePair& B) const
+	FORCEINLINE bool operator()( const TKeyValuePair& A, const TKeyValuePair& B ) const
 	{
 		return A.Key < B.Key;
 	}
@@ -339,20 +339,20 @@ struct TKeyValuePair
 
 
 /**
-* Removes one level of pointer from a type, e.g.:
-*
-* TRemovePointer<      int32  >::Type == int32
-* TRemovePointer<      int32* >::Type == int32
-* TRemovePointer<      int32**>::Type == int32*
-* TRemovePointer<const int32* >::Type == const int32
-*/
-template <typename T> struct TRemovePointer { typedef T Type; };
+ * Removes one level of pointer from a type, e.g.:
+ *
+ * TRemovePointer<      int32  >::Type == int32
+ * TRemovePointer<      int32* >::Type == int32
+ * TRemovePointer<      int32**>::Type == int32*
+ * TRemovePointer<const int32* >::Type == const int32
+ */
+template <typename T> struct TRemovePointer     { typedef T Type; };
 template <typename T> struct TRemovePointer<T*> { typedef T Type; };
 
 /**
-* MoveTemp will cast a reference to an rvalue reference.
-* This is UE's equivalent of std::move.
-*/
+ * MoveTemp will cast a reference to an rvalue reference.
+ * This is UE's equivalent of std::move.
+ */
 template <typename T>
 FORCEINLINE typename TRemoveReference<T>::Type&& MoveTemp(T&& Obj)
 {
@@ -360,10 +360,10 @@ FORCEINLINE typename TRemoveReference<T>::Type&& MoveTemp(T&& Obj)
 }
 
 /**
-* CopyTemp will enforce the creation of an rvalue which can bind to rvalue reference parameters.
-* Unlike MoveTemp, the source object will never be modifed. (i.e. a copy will be made)
-* There is no std:: equivalent.
-*/
+ * CopyTemp will enforce the creation of an rvalue which can bind to rvalue reference parameters.
+ * Unlike MoveTemp, the source object will never be modifed. (i.e. a copy will be made)
+ * There is no std:: equivalent.
+ */
 template <typename T>
 FORCEINLINE T CopyTemp(T& Val)
 {
@@ -384,9 +384,9 @@ FORCEINLINE T&& CopyTemp(T&& Val)
 }
 
 /**
-* Forward will cast a reference to an rvalue reference.
-* This is UE's equivalent of std::forward.
-*/
+ * Forward will cast a reference to an rvalue reference.
+ * This is UE's equivalent of std::forward.
+ */
 template <typename T>
 FORCEINLINE T&& Forward(typename TRemoveReference<T>::Type& Obj)
 {
@@ -400,8 +400,8 @@ FORCEINLINE T&& Forward(typename TRemoveReference<T>::Type&& Obj)
 }
 
 /**
-* A traits class which specifies whether a Swap of a given type should swap the bits or use a traditional value-based swap.
-*/
+ * A traits class which specifies whether a Swap of a given type should swap the bits or use a traditional value-based swap.
+ */
 template <typename T>
 struct TUseBitwiseSwap
 {
@@ -411,8 +411,8 @@ struct TUseBitwiseSwap
 
 
 /**
-* Swap two values.  Assumes the types are trivially relocatable.
-*/
+ * Swap two values.  Assumes the types are trivially relocatable.
+ */
 template <typename T>
 inline typename TEnableIf<TUseBitwiseSwap<T>::Value>::Type Swap(T& A, T& B)
 {
@@ -437,10 +437,10 @@ inline void Exchange(T& A, T& B)
 }
 
 /**
-* This exists to avoid a Visual Studio bug where using a cast to forward an rvalue reference array argument
-* to a pointer parameter will cause bad code generation.  Wrapping the cast in a function causes the correct
-* code to be generated.
-*/
+ * This exists to avoid a Visual Studio bug where using a cast to forward an rvalue reference array argument
+ * to a pointer parameter will cause bad code generation.  Wrapping the cast in a function causes the correct
+ * code to be generated.
+ */
 template <typename T, typename ArgType>
 FORCEINLINE T StaticCast(ArgType&& Arg)
 {
@@ -448,26 +448,26 @@ FORCEINLINE T StaticCast(ArgType&& Arg)
 }
 
 /**
-* TRValueToLValueReference converts any rvalue reference type into the equivalent lvalue reference, otherwise returns the same type.
-*/
-template <typename T> struct TRValueToLValueReference { typedef T  Type; };
+ * TRValueToLValueReference converts any rvalue reference type into the equivalent lvalue reference, otherwise returns the same type.
+ */
+template <typename T> struct TRValueToLValueReference      { typedef T  Type; };
 template <typename T> struct TRValueToLValueReference<T&&> { typedef T& Type; };
 
 /**
-* Reverses the order of the bits of a value.
-* This is an TEnableIf'd template to ensure that no undesirable conversions occur.  Overloads for other types can be added in the same way.
-*
-* @param Bits - The value to bit-swap.
-* @return The bit-swapped value.
-*/
+ * Reverses the order of the bits of a value.
+ * This is an TEnableIf'd template to ensure that no undesirable conversions occur.  Overloads for other types can be added in the same way.
+ *
+ * @param Bits - The value to bit-swap.
+ * @return The bit-swapped value.
+ */
 template <typename T>
-FORCEINLINE typename TEnableIf<TAreTypesEqual<T, uint32>::Value, T>::Type ReverseBits(T Bits)
+FORCEINLINE typename TEnableIf<TAreTypesEqual<T, uint32>::Value, T>::Type ReverseBits( T Bits )
 {
-	Bits = (Bits << 16) | (Bits >> 16);
-	Bits = ((Bits & 0x00ff00ff) << 8) | ((Bits & 0xff00ff00) >> 8);
-	Bits = ((Bits & 0x0f0f0f0f) << 4) | ((Bits & 0xf0f0f0f0) >> 4);
-	Bits = ((Bits & 0x33333333) << 2) | ((Bits & 0xcccccccc) >> 2);
-	Bits = ((Bits & 0x55555555) << 1) | ((Bits & 0xaaaaaaaa) >> 1);
+	Bits = ( Bits << 16) | ( Bits >> 16);
+	Bits = ( (Bits & 0x00ff00ff) << 8 ) | ( (Bits & 0xff00ff00) >> 8 );
+	Bits = ( (Bits & 0x0f0f0f0f) << 4 ) | ( (Bits & 0xf0f0f0f0) >> 4 );
+	Bits = ( (Bits & 0x33333333) << 2 ) | ( (Bits & 0xcccccccc) >> 2 );
+	Bits = ( (Bits & 0x55555555) << 1 ) | ( (Bits & 0xaaaaaaaa) >> 1 );
 	return Bits;
 }
 
@@ -492,22 +492,22 @@ struct FNoopStruct
 };
 
 /**
-* Copies the cv-qualifiers from one type to another, e.g.:
-*
-* TCopyQualifiersFromTo<const    T1,       T2>::Type == const T2
-* TCopyQualifiersFromTo<volatile T1, const T2>::Type == const volatile T2
-*/
-template <typename From, typename To> struct TCopyQualifiersFromTo { typedef                To Type; };
+ * Copies the cv-qualifiers from one type to another, e.g.:
+ *
+ * TCopyQualifiersFromTo<const    T1,       T2>::Type == const T2
+ * TCopyQualifiersFromTo<volatile T1, const T2>::Type == const volatile T2
+ */
+template <typename From, typename To> struct TCopyQualifiersFromTo                          { typedef                To Type; };
 template <typename From, typename To> struct TCopyQualifiersFromTo<const          From, To> { typedef const          To Type; };
 template <typename From, typename To> struct TCopyQualifiersFromTo<      volatile From, To> { typedef       volatile To Type; };
 template <typename From, typename To> struct TCopyQualifiersFromTo<const volatile From, To> { typedef const volatile To Type; };
 
 /**
-* Tests if qualifiers are lost between one type and another, e.g.:
-*
-* TCopyQualifiersFromTo<const    T1,                T2>::Value == true
-* TCopyQualifiersFromTo<volatile T1, const volatile T2>::Value == false
-*/
+ * Tests if qualifiers are lost between one type and another, e.g.:
+ *
+ * TCopyQualifiersFromTo<const    T1,                T2>::Value == true
+ * TCopyQualifiersFromTo<volatile T1, const volatile T2>::Value == false
+ */
 template <typename From, typename To>
 struct TLosesQualifiersFromTo
 {
@@ -515,14 +515,14 @@ struct TLosesQualifiersFromTo
 };
 
 /**
-* Returns the same type passed to it.  This is useful in a few cases, but mainly for inhibiting template argument deduction in function arguments, e.g.:
-*
-* template <typename T>
-* void Func1(T Val); // Can be called like Func(123) or Func<int>(123);
-*
-* template <typename T>
-* void Func2(typename TIdentity<T>::Type Val); // Must be called like Func<int>(123)
-*/
+ * Returns the same type passed to it.  This is useful in a few cases, but mainly for inhibiting template argument deduction in function arguments, e.g.:
+ *
+ * template <typename T>
+ * void Func1(T Val); // Can be called like Func(123) or Func<int>(123);
+ *
+ * template <typename T>
+ * void Func2(typename TIdentity<T>::Type Val); // Must be called like Func<int>(123)
+ */
 template <typename T>
 struct TIdentity
 {
@@ -530,8 +530,8 @@ struct TIdentity
 };
 
 /**
-* Metafunction which returns the specified boolean value.
-*/
+ * Metafunction which returns the specified boolean value.
+ */
 template <bool bValue>
 struct TBoolConstant
 {
@@ -539,9 +539,9 @@ struct TBoolConstant
 };
 
 /**
-* Equivalent to std::declval.
-*
-* Note that this function is unimplemented, and is only intended to be used in unevaluated contexts, like sizeof and trait expressions.
-*/
+ * Equivalent to std::declval.  
+ *
+ * Note that this function is unimplemented, and is only intended to be used in unevaluated contexts, like sizeof and trait expressions.
+ */
 template <typename T>
 T&& DeclVal();

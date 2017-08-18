@@ -1,3 +1,5 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
@@ -15,12 +17,12 @@ public:
 
 
 /**
-* The base class of reference counted objects.
-*/
+ * The base class of reference counted objects.
+ */
 class CORE_API FRefCountedObject
 {
 public:
-	FRefCountedObject() : NumRefs(0) {}
+	FRefCountedObject(): NumRefs(0) {}
 	virtual ~FRefCountedObject() { check(!NumRefs); }
 	uint32 AddRef() const
 	{
@@ -29,7 +31,7 @@ public:
 	uint32 Release() const
 	{
 		uint32 Refs = uint32(--NumRefs);
-		if (Refs == 0)
+		if(Refs == 0)
 		{
 			delete this;
 		}
@@ -45,8 +47,8 @@ private:
 
 
 /**
-* A smart pointer to an object which implements AddRef/Release.
-*/
+ * A smart pointer to an object which implements AddRef/Release.
+ */
 template<typename ReferencedType>
 class TRefCountPtr
 {
@@ -54,14 +56,14 @@ class TRefCountPtr
 
 public:
 
-	FORCEINLINE TRefCountPtr() :
+	FORCEINLINE TRefCountPtr():
 		Reference(nullptr)
 	{ }
 
-	TRefCountPtr(ReferencedType* InReference, bool bAddRef = true)
+	TRefCountPtr(ReferencedType* InReference,bool bAddRef = true)
 	{
 		Reference = InReference;
-		if (Reference && bAddRef)
+		if(Reference && bAddRef)
 		{
 			Reference->AddRef();
 		}
@@ -70,7 +72,7 @@ public:
 	TRefCountPtr(const TRefCountPtr& Copy)
 	{
 		Reference = Copy.Reference;
-		if (Reference)
+		if(Reference)
 		{
 			Reference->AddRef();
 		}
@@ -84,7 +86,7 @@ public:
 
 	~TRefCountPtr()
 	{
-		if (Reference)
+		if(Reference)
 		{
 			Reference->Release();
 		}
@@ -95,11 +97,11 @@ public:
 		// Call AddRef before Release, in case the new reference is the same as the old reference.
 		ReferencedType* OldReference = Reference;
 		Reference = InReference;
-		if (Reference)
+		if(Reference)
 		{
 			Reference->AddRef();
 		}
-		if (OldReference)
+		if(OldReference)
 		{
 			OldReference->Release();
 		}
@@ -118,7 +120,7 @@ public:
 			ReferencedType* OldReference = Reference;
 			Reference = InPtr.Reference;
 			InPtr.Reference = nullptr;
-			if (OldReference)
+			if(OldReference)
 			{
 				OldReference->Release();
 			}
@@ -180,11 +182,11 @@ public:
 		InPtr.Reference = OldReference;
 	}
 
-	friend FArchive& operator<<(FArchive& Ar, TRefCountPtr& Ptr)
+	friend FArchive& operator<<(FArchive& Ar,TRefCountPtr& Ptr)
 	{
 		ReferenceType PtrReference = Ptr.Reference;
 		Ar << PtrReference;
-		if (Ar.IsLoading())
+		if(Ar.IsLoading())
 		{
 			Ptr = PtrReference;
 		}

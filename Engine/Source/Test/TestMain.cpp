@@ -250,7 +250,7 @@ void TestUniquePtr()
 void TestSharedPtr()
 {
 	std::cout << "\n---------------SharedPtrTest----------" << std::endl;
-	SharedPointerTesting::TestSharedPointer<ESPMode::Fast>();
+	//SharedPointerTesting::TestSharedPointer<ESPMode::Fast>();
 }
 class YTestModel : public FDefaultModuleImpl
 {

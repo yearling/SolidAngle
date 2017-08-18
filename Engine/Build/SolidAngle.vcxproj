@@ -198,6 +198,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\Core\Private\Features\ModularFeatures.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Private\HAL\MallocVerify.h" />
     <ClInclude Include="..\Source\Runtime\Core\Private\HAL\PThreadRunnableThread.h" />
     <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\CamelCaseBreakIterator.h" />
     <ClInclude Include="..\Source\Runtime\Core\Private\Internationalization\ICUCulture.h" />
@@ -635,6 +636,10 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\EnableIf.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\Function.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\Greater.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\HasGetTypeHash.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\HasInserterOperator.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\HasOperatorEquals.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IdentityFunctor.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IntegralConstant.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\Invoke.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsArithmetic.h" />
@@ -650,6 +655,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsTriviallyCopyAssignable.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsTriviallyCopyConstructible.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsTriviallyDestructible.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsValidVariadicFunctionArg.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\Less.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\MemoryOps.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\PointerIsConvertibleFromTo.h" />
@@ -657,6 +663,7 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\RemoveCV.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\RemoveExtent.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\RemoveReference.h" />
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\ScopedCallback.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\ScopedPointer.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\SharedPointer.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\SharedPointerInternals.h" />

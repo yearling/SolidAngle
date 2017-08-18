@@ -29,7 +29,7 @@ struct TDefaultDelete
 		typename U,
 		typename = typename TEnableIf<TPointerIsConvertibleFromTo<U, T>::Value>::Type
 	>
-		TDefaultDelete(const TDefaultDelete<U>&)
+	TDefaultDelete(const TDefaultDelete<U>&)
 	{
 	}
 
@@ -37,7 +37,7 @@ struct TDefaultDelete
 		typename U,
 		typename = typename TEnableIf<TPointerIsConvertibleFromTo<U, T>::Value>::Type
 	>
-		TDefaultDelete& operator=(const TDefaultDelete<U>&)
+	TDefaultDelete& operator=(const TDefaultDelete<U>&)
 	{
 		return *this;
 	}
@@ -60,7 +60,7 @@ struct TDefaultDelete<T[]>
 		typename U,
 		typename = typename TEnableIf<TPointerIsConvertibleFromTo<U[], T[]>::Value>::Type
 	>
-		TDefaultDelete(const TDefaultDelete<U[]>&)
+	TDefaultDelete(const TDefaultDelete<U[]>&)
 	{
 	}
 
@@ -68,7 +68,7 @@ struct TDefaultDelete<T[]>
 		typename U,
 		typename = typename TEnableIf<TPointerIsConvertibleFromTo<U[], T[]>::Value>::Type
 	>
-		TDefaultDelete& operator=(const TDefaultDelete<U[]>&)
+	TDefaultDelete& operator=(const TDefaultDelete<U[]>&)
 	{
 		return *this;
 	}
@@ -76,7 +76,7 @@ struct TDefaultDelete<T[]>
 	template <typename U>
 	typename TEnableIf<TPointerIsConvertibleFromTo<U[], T[]>::Value>::Type operator()(U* Ptr) const
 	{
-		delete[] Ptr;
+		delete [] Ptr;
 	}
 };
 
@@ -88,59 +88,59 @@ class TUniquePtr : private Deleter
 
 public:
 	/**
-	* Default constructor - initializes the TUniquePtr to null.
-	*/
+	 * Default constructor - initializes the TUniquePtr to null.
+	 */
 	FORCEINLINE TUniquePtr()
 		: Ptr(nullptr)
 	{
 	}
 
 	/**
-	* Pointer constructor - takes ownership of the pointed-to object
-	*
-	* @param InPtr The pointed-to object to take ownership of.
-	*/
+	 * Pointer constructor - takes ownership of the pointed-to object
+	 *
+	 * @param InPtr The pointed-to object to take ownership of.
+	 */
 	explicit FORCEINLINE TUniquePtr(T* InPtr)
 		: Ptr(InPtr)
 	{
 	}
 
 	/**
-	* nullptr constructor - initializes the TUniquePtr to null.
-	*/
+	 * nullptr constructor - initializes the TUniquePtr to null.
+	 */
 	FORCEINLINE TUniquePtr(TYPE_OF_NULLPTR)
 		: Ptr(nullptr)
 	{
 	}
 
 	/**
-	* Move constructor
-	*/
+	 * Move constructor
+	 */
 	FORCEINLINE TUniquePtr(TUniquePtr&& Other)
 		: Deleter(MoveTemp(Other.GetDeleter()))
-		, Ptr(Other.Ptr)
+		, Ptr    (Other.Ptr)
 	{
 		Other.Ptr = nullptr;
 	}
 
 	/**
-	* Constructor from rvalues of other (usually derived) types
-	*/
+	 * Constructor from rvalues of other (usually derived) types
+	 */
 	template <
 		typename OtherT,
 		typename OtherDeleter,
 		typename = typename TEnableIf<!TIsArray<OtherT>::Value>::Type
 	>
-		FORCEINLINE TUniquePtr(TUniquePtr<OtherT, OtherDeleter>&& Other)
+	FORCEINLINE TUniquePtr(TUniquePtr<OtherT, OtherDeleter>&& Other)
 		: Deleter(MoveTemp(Other.GetDeleter()))
-		, Ptr(Other.Ptr)
+		, Ptr    (Other.Ptr)
 	{
 		Other.Ptr = nullptr;
 	}
 
 	/**
-	* Move assignment operator
-	*/
+	 * Move assignment operator
+	 */
 	FORCEINLINE TUniquePtr& operator=(TUniquePtr&& Other)
 	{
 		if (this != &Other)
@@ -158,8 +158,8 @@ public:
 	}
 
 	/**
-	* Assignment operator for rvalues of other (usually derived) types
-	*/
+	 * Assignment operator for rvalues of other (usually derived) types
+	 */
 	template <typename OtherT, typename OtherDeleter>
 	FORCEINLINE typename TEnableIf<!TIsArray<OtherT>::Value, TUniquePtr&>::Type operator=(TUniquePtr<OtherT, OtherDeleter>&& Other)
 	{
@@ -175,8 +175,8 @@ public:
 	}
 
 	/**
-	* Nullptr assignment operator
-	*/
+	 * Nullptr assignment operator
+	 */
 	FORCEINLINE TUniquePtr& operator=(TYPE_OF_NULLPTR)
 	{
 		// We delete last, because we don't want odd side effects if the destructor of T relies on the state of this
@@ -203,78 +203,78 @@ public:
 	}
 
 	/**
-	* Destructor
-	*/
+	 * Destructor
+	 */
 	FORCEINLINE ~TUniquePtr()
 	{
 		GetDeleter()(Ptr);
 	}
 
 	/**
-	* Tests if the TUniquePtr currently owns an object.
-	*
-	* @return true if the TUniquePtr currently owns an object, false otherwise.
-	*/
+	 * Tests if the TUniquePtr currently owns an object.
+	 *
+	 * @return true if the TUniquePtr currently owns an object, false otherwise.
+	 */
 	bool IsValid() const
 	{
 		return Ptr != nullptr;
 	}
 
 	/**
-	* operator bool
-	*
-	* @return true if the TUniquePtr currently owns an object, false otherwise.
-	*/
+	 * operator bool
+	 *
+	 * @return true if the TUniquePtr currently owns an object, false otherwise.
+	 */
 	FORCEINLINE explicit operator bool() const
 	{
 		return IsValid();
 	}
 
 	/**
-	* Logical not operator
-	*
-	* @return false if the TUniquePtr currently owns an object, true otherwise.
-	*/
+	 * Logical not operator
+	 *
+	 * @return false if the TUniquePtr currently owns an object, true otherwise.
+	 */
 	FORCEINLINE bool operator!() const
 	{
 		return !IsValid();
 	}
 
 	/**
-	* Indirection operator
-	*
-	* @return A pointer to the object owned by the TUniquePtr.
-	*/
+	 * Indirection operator
+	 *
+	 * @return A pointer to the object owned by the TUniquePtr.
+	 */
 	FORCEINLINE T* operator->() const
 	{
 		return Ptr;
 	}
 
 	/**
-	* Dereference operator
-	*
-	* @return A reference to the object owned by the TUniquePtr.
-	*/
+	 * Dereference operator
+	 *
+	 * @return A reference to the object owned by the TUniquePtr.
+	 */
 	FORCEINLINE T& operator*() const
 	{
 		return *Ptr;
 	}
 
 	/**
-	* Returns a pointer to the owned object without relinquishing ownership.
-	*
-	* @return A copy of the pointer to the object owned by the TUniquePtr, or nullptr if no object is being owned.
-	*/
+	 * Returns a pointer to the owned object without relinquishing ownership.
+	 *
+	 * @return A copy of the pointer to the object owned by the TUniquePtr, or nullptr if no object is being owned.
+	 */
 	FORCEINLINE T* Get() const
 	{
 		return Ptr;
 	}
 
 	/**
-	* Relinquishes control of the owned object to the caller and nulls the TUniquePtr.
-	*
-	* @return The pointer to the object that was owned by the TUniquePtr, or nullptr if no object was being owned.
-	*/
+	 * Relinquishes control of the owned object to the caller and nulls the TUniquePtr.
+	 *
+	 * @return The pointer to the object that was owned by the TUniquePtr, or nullptr if no object was being owned.
+	 */
 	FORCEINLINE T* Release()
 	{
 		T* Result = Ptr;
@@ -283,10 +283,10 @@ public:
 	}
 
 	/**
-	* Gives the TUniquePtr a new object to own, destroying any previously-owned object.
-	*
-	* @param InPtr A pointer to the object to take ownership of.
-	*/
+	 * Gives the TUniquePtr a new object to own, destroying any previously-owned object.
+	 *
+	 * @param InPtr A pointer to the object to take ownership of.
+	 */
 	FORCEINLINE void Reset(T* InPtr = nullptr)
 	{
 		// We delete last, because we don't want odd side effects if the destructor of T relies on the state of this
@@ -296,20 +296,20 @@ public:
 	}
 
 	/**
-	* Returns a reference to the deleter subobject.
-	*
-	* @return A reference to the deleter.
-	*/
+	 * Returns a reference to the deleter subobject.
+	 *
+	 * @return A reference to the deleter.
+	 */
 	FORCEINLINE Deleter& GetDeleter()
 	{
 		return static_cast<Deleter&>(*this);
 	}
 
 	/**
-	* Returns a reference to the deleter subobject.
-	*
-	* @return A reference to the deleter.
-	*/
+	 * Returns a reference to the deleter subobject.
+	 *
+	 * @return A reference to the deleter.
+	 */
 	FORCEINLINE const Deleter& GetDeleter() const
 	{
 		return static_cast<const Deleter&>(*this);
@@ -331,63 +331,63 @@ class TUniquePtr<T[], Deleter> : private Deleter
 
 public:
 	/**
-	* Default constructor - initializes the TUniquePtr to null.
-	*/
+	 * Default constructor - initializes the TUniquePtr to null.
+	 */
 	FORCEINLINE TUniquePtr()
 		: Ptr(nullptr)
 	{
 	}
 
 	/**
-	* Pointer constructor - takes ownership of the pointed-to array
-	*
-	* @param InPtr The pointed-to array to take ownership of.
-	*/
+	 * Pointer constructor - takes ownership of the pointed-to array
+	 *
+	 * @param InPtr The pointed-to array to take ownership of.
+	 */
 	template <
 		typename U,
 		typename = typename TEnableIf<TPointerIsConvertibleFromTo<U[], T[]>::Value>::Type
 	>
-		explicit FORCEINLINE TUniquePtr(U* InPtr)
+	explicit FORCEINLINE TUniquePtr(U* InPtr)
 		: Ptr(InPtr)
 	{
 	}
 
 	/**
-	* nullptr constructor - initializes the TUniquePtr to null.
-	*/
+	 * nullptr constructor - initializes the TUniquePtr to null.
+	 */
 	FORCEINLINE TUniquePtr(TYPE_OF_NULLPTR)
 		: Ptr(nullptr)
 	{
 	}
 
 	/**
-	* Move constructor
-	*/
+	 * Move constructor
+	 */
 	FORCEINLINE TUniquePtr(TUniquePtr&& Other)
 		: Deleter(MoveTemp(Other.GetDeleter()))
-		, Ptr(Other.Ptr)
+		, Ptr    (Other.Ptr)
 	{
 		Other.Ptr = nullptr;
 	}
 
 	/**
-	* Constructor from rvalues of other (usually less qualified) types
-	*/
+	 * Constructor from rvalues of other (usually less qualified) types
+	 */
 	template <
 		typename OtherT,
 		typename OtherDeleter,
 		typename = typename TEnableIf<TPointerIsConvertibleFromTo<OtherT[], T[]>::Value>::Type
 	>
-		FORCEINLINE TUniquePtr(TUniquePtr<OtherT, OtherDeleter>&& Other)
+	FORCEINLINE TUniquePtr(TUniquePtr<OtherT, OtherDeleter>&& Other)
 		: Deleter(MoveTemp(Other.GetDeleter()))
-		, Ptr(Other.Ptr)
+		, Ptr    (Other.Ptr)
 	{
 		Other.Ptr = nullptr;
 	}
 
 	/**
-	* Move assignment operator
-	*/
+	 * Move assignment operator
+	 */
 	FORCEINLINE TUniquePtr& operator=(TUniquePtr&& Other)
 	{
 		if (this != &Other)
@@ -405,8 +405,8 @@ public:
 	}
 
 	/**
-	* Assignment operator for rvalues of other (usually less qualified) types
-	*/
+	 * Assignment operator for rvalues of other (usually less qualified) types
+	 */
 	template <typename OtherT, typename OtherDeleter>
 	FORCEINLINE typename TEnableIf<TPointerIsConvertibleFromTo<OtherT[], T[]>::Value, TUniquePtr&>::Type operator=(TUniquePtr<OtherT>&& Other)
 	{
@@ -422,8 +422,8 @@ public:
 	}
 
 	/**
-	* Nullptr assignment operator
-	*/
+	 * Nullptr assignment operator
+	 */
 	FORCEINLINE TUniquePtr& operator=(TYPE_OF_NULLPTR)
 	{
 		// We delete last, because we don't want odd side effects if the destructor of T relies on the state of this
@@ -435,68 +435,68 @@ public:
 	}
 
 	/**
-	* Destructor
-	*/
+	 * Destructor
+	 */
 	FORCEINLINE ~TUniquePtr()
 	{
 		GetDeleter()(Ptr);
 	}
 
 	/**
-	* Tests if the TUniquePtr currently owns an array.
-	*
-	* @return true if the TUniquePtr currently owns an array, false otherwise.
-	*/
+	 * Tests if the TUniquePtr currently owns an array.
+	 *
+	 * @return true if the TUniquePtr currently owns an array, false otherwise.
+	 */
 	bool IsValid() const
 	{
 		return Ptr != nullptr;
 	}
 
 	/**
-	* operator bool
-	*
-	* @return true if the TUniquePtr currently owns an array, false otherwise.
-	*/
+	 * operator bool
+	 *
+	 * @return true if the TUniquePtr currently owns an array, false otherwise.
+	 */
 	FORCEINLINE explicit operator bool() const
 	{
 		return IsValid();
 	}
 
 	/**
-	* Logical not operator
-	*
-	* @return false if the TUniquePtr currently owns an array, true otherwise.
-	*/
+	 * Logical not operator
+	 *
+	 * @return false if the TUniquePtr currently owns an array, true otherwise.
+	 */
 	FORCEINLINE bool operator!() const
 	{
 		return !IsValid();
 	}
 
 	/**
-	* Indexing operator
-	*
-	* @return A reference to the object at the specified index by the TUniquePtr.
-	*/
+	 * Indexing operator
+	 *
+	 * @return A reference to the object at the specified index by the TUniquePtr.
+	 */
 	FORCEINLINE T& operator[](SIZE_T Index) const
 	{
 		return Ptr[Index];
 	}
 
 	/**
-	* Returns a pointer to the owned array without relinquishing ownership.
-	*
-	* @return A copy of the pointer to the array owned by the TUniquePtr, or nullptr if no array is being owned.
-	*/
+	 * Returns a pointer to the owned array without relinquishing ownership.
+	 *
+	 * @return A copy of the pointer to the array owned by the TUniquePtr, or nullptr if no array is being owned.
+	 */
 	FORCEINLINE T* Get() const
 	{
 		return Ptr;
 	}
 
 	/**
-	* Relinquishes control of the owned array to the caller and nulls the TUniquePtr.
-	*
-	* @return The pointer to the array that was owned by the TUniquePtr, or nullptr if no array was being owned.
-	*/
+	 * Relinquishes control of the owned array to the caller and nulls the TUniquePtr.
+	 *
+	 * @return The pointer to the array that was owned by the TUniquePtr, or nullptr if no array was being owned.
+	 */
 	FORCEINLINE T* Release()
 	{
 		T* Result = Ptr;
@@ -505,10 +505,10 @@ public:
 	}
 
 	/**
-	* Gives the TUniquePtr a new array to own, destroying any previously-owned array.
-	*
-	* @param InPtr A pointer to the array to take ownership of.
-	*/
+	 * Gives the TUniquePtr a new array to own, destroying any previously-owned array.
+	 *
+	 * @param InPtr A pointer to the array to take ownership of.
+	 */
 	template <typename U>
 	FORCEINLINE typename TEnableIf<TPointerIsConvertibleFromTo<U[], T[]>::Value>::Type Reset(U* InPtr)
 	{
@@ -527,20 +527,20 @@ public:
 	}
 
 	/**
-	* Returns a reference to the deleter subobject.
-	*
-	* @return A reference to the deleter.
-	*/
+	 * Returns a reference to the deleter subobject.
+	 *
+	 * @return A reference to the deleter.
+	 */
 	FORCEINLINE Deleter& GetDeleter()
 	{
 		return static_cast<Deleter&>(*this);
 	}
 
 	/**
-	* Returns a reference to the deleter subobject.
-	*
-	* @return A reference to the deleter.
-	*/
+	 * Returns a reference to the deleter subobject.
+	 *
+	 * @return A reference to the deleter.
+	 */
 	FORCEINLINE const Deleter& GetDeleter() const
 	{
 		return static_cast<const Deleter&>(*this);
@@ -555,13 +555,13 @@ private:
 };
 
 /**
-* Equality comparison operator
-*
-* @param Lhs The first TUniquePtr to compare.
-* @param Rhs The second TUniquePtr to compare.
-*
-* @return true if the two TUniquePtrs are logically substitutable for each other, false otherwise.
-*/
+ * Equality comparison operator
+ *
+ * @param Lhs The first TUniquePtr to compare.
+ * @param Rhs The second TUniquePtr to compare.
+ *
+ * @return true if the two TUniquePtrs are logically substitutable for each other, false otherwise.
+ */
 template <typename LhsT, typename RhsT>
 FORCEINLINE bool operator==(const TUniquePtr<LhsT>& Lhs, const TUniquePtr<RhsT>& Rhs)
 {
@@ -574,13 +574,13 @@ FORCEINLINE bool operator==(const TUniquePtr<T>& Lhs, const TUniquePtr<T>& Rhs)
 }
 
 /**
-* Inequality comparison operator
-*
-* @param Lhs The first TUniquePtr to compare.
-* @param Rhs The second TUniquePtr to compare.
-*
-* @return false if the two TUniquePtrs are logically substitutable for each other, true otherwise.
-*/
+ * Inequality comparison operator
+ *
+ * @param Lhs The first TUniquePtr to compare.
+ * @param Rhs The second TUniquePtr to compare.
+ *
+ * @return false if the two TUniquePtrs are logically substitutable for each other, true otherwise.
+ */
 template <typename LhsT, typename RhsT>
 FORCEINLINE bool operator!=(const TUniquePtr<LhsT>& Lhs, const TUniquePtr<RhsT>& Rhs)
 {
@@ -593,12 +593,12 @@ FORCEINLINE bool operator!=(const TUniquePtr<T>& Lhs, const TUniquePtr<T>& Rhs)
 }
 
 /**
-* Equality comparison operator against nullptr.
-*
-* @param Lhs The TUniquePtr to compare.
-*
-* @return true if the TUniquePtr is null, false otherwise.
-*/
+ * Equality comparison operator against nullptr.
+ *
+ * @param Lhs The TUniquePtr to compare.
+ *
+ * @return true if the TUniquePtr is null, false otherwise.
+ */
 template <typename T>
 FORCEINLINE bool operator==(const TUniquePtr<T>& Lhs, TYPE_OF_NULLPTR)
 {
@@ -611,12 +611,12 @@ FORCEINLINE bool operator==(TYPE_OF_NULLPTR, const TUniquePtr<T>& Rhs)
 }
 
 /**
-* Inequality comparison operator against nullptr.
-*
-* @param Rhs The TUniquePtr to compare.
-*
-* @return true if the TUniquePtr is not null, false otherwise.
-*/
+ * Inequality comparison operator against nullptr.
+ *
+ * @param Rhs The TUniquePtr to compare.
+ *
+ * @return true if the TUniquePtr is not null, false otherwise.
+ */
 template <typename T>
 FORCEINLINE bool operator!=(const TUniquePtr<T>& Lhs, TYPE_OF_NULLPTR)
 {
@@ -643,12 +643,12 @@ struct TIsBitwiseConstructible<TUniquePtr<T>, T*>
 };
 
 /**
-* Allocates a new object of type T with the given arguments and returns it as a TUniquePtr.  Disabled for array-type TUniquePtrs.
-*
-* @param Args The arguments to pass to the constructor of T.
-*
-* @return A TUniquePtr which points to a newly-constructed T with the specified Args.
-*/
+ * Allocates a new object of type T with the given arguments and returns it as a TUniquePtr.  Disabled for array-type TUniquePtrs.
+ *
+ * @param Args The arguments to pass to the constructor of T.
+ *
+ * @return A TUniquePtr which points to a newly-constructed T with the specified Args.
+ */
 template <typename T, typename... TArgs>
 FORCEINLINE typename TEnableIf<!TIsArray<T>::Value, TUniquePtr<T>>::Type MakeUnique(TArgs&&... Args)
 {
@@ -656,12 +656,12 @@ FORCEINLINE typename TEnableIf<!TIsArray<T>::Value, TUniquePtr<T>>::Type MakeUni
 }
 
 /**
-* Allocates a new array of type T with the given size and returns it as a TUniquePtr.  Only enabled for array-type TUniquePtrs.
-*
-* @param Size The size of the array to allocate.
-*
-* @return A TUniquePtr which points to a newly-constructed T array of the specified Size.
-*/
+ * Allocates a new array of type T with the given size and returns it as a TUniquePtr.  Only enabled for array-type TUniquePtrs.
+ *
+ * @param Size The size of the array to allocate.
+ *
+ * @return A TUniquePtr which points to a newly-constructed T array of the specified Size.
+ */
 template <typename T>
 FORCEINLINE typename TEnableIf<TIsUnboundedArray<T>::Value, TUniquePtr<T>>::Type MakeUnique(SIZE_T Size)
 {
@@ -670,7 +670,7 @@ FORCEINLINE typename TEnableIf<TIsUnboundedArray<T>::Value, TUniquePtr<T>>::Type
 }
 
 /**
-* Overload to cause a compile error when MakeUnique<T[N]> is attempted.  Use MakeUnique<T>(N) instead.
-*/
+ * Overload to cause a compile error when MakeUnique<T[N]> is attempted.  Use MakeUnique<T>(N) instead.
+ */
 template <typename T, typename... TArgs>
 typename TEnableIf<TIsBoundedArray<T>::Value, TUniquePtr<T>>::Type MakeUnique(TArgs&&... Args) = delete;

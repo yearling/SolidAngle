@@ -1,3 +1,5 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
@@ -51,13 +53,13 @@ public:
 		return *this;
 	}
 
-	T& Get() { return *Obj; }
+	      T& Get()       { return *Obj; }
 	const T& Get() const { return *Obj; }
 
-	T* operator->() { return Obj.Get(); }
+	      T* operator->()       { return Obj.Get(); }
 	const T* operator->() const { return Obj.Get(); }
 
-	T& operator*() { return *Obj; }
+	      T& operator*()       { return *Obj; }
 	const T& operator*() const { return *Obj; }
 
 	friend FArchive& operator<<(FArchive& Ar, TUniqueObj& P)

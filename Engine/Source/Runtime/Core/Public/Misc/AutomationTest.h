@@ -16,11 +16,11 @@
 #include "HAL/PlatformTime.h"
 #include "HAL/ThreadSafeBool.h" 
 #include "HAL/PlatformStackWalk.h"
-#include "GenericPlatformStackWalk.h" 
+#include "GenericPlatform/GenericPlatformStackWalk.h" 
 #include "Containers/Queue.h"
 #include "Misc/FeedbackContext.h"
-#include "Future.h"
-#include "Async.h"
+#include "Async/Future.h"
+#include "Async/Async.h"
 #include "Misc/Guid.h"
 
 /** Flags for specifying automation test requirements/behavior */

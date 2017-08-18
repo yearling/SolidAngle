@@ -1,11 +1,12 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "CoreTypes.h"
-#include <type_traits>
 
 /**
-* Traits class which tests if a type is a pointer.
-*/
+ * Traits class which tests if a type is a pointer.
+ */
 template <typename T>
 struct TIsPointer
 {

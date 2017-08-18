@@ -1,7 +1,12 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 #pragma once
+
+#include "CoreTypes.h"
+
 /**
-* Does a boolean AND of the ::Value static members of each type, but short-circuits if any Type::Value == false.
-*/
+ * Does a boolean AND of the ::Value static members of each type, but short-circuits if any Type::Value == false.
+ */
 template <typename... Types>
 struct TAnd;
 
@@ -29,41 +34,40 @@ struct TAnd<>
 };
 
 /**
-* Does a boolean OR of the ::Value static members of each type, but short-circuits if any Type::Value == true.
-*/
-
-template<typename... Types>
+ * Does a boolean OR of the ::Value static members of each type, but short-circuits if any Type::Value == true.
+ */
+template <typename... Types>
 struct TOr;
 
-template<bool LHS, typename... RHS>
+template <bool LHSValue, typename... RHS>
 struct TOrValue
 {
-	enum { Value = TOr<RHS...>::Value};
+	enum { Value = TOr<RHS...>::Value };
 };
 
-template<typename... RHS>
+template <typename... RHS>
 struct TOrValue<true, RHS...>
 {
-	enum { Value = true};
+	enum { Value = true };
 };
 
-template<typename LHS, typename... RHS>
-struct TOr<LHS,RHS...>: TOrValue<LHS::Value,RHS...>
-{};
+template <typename LHS, typename... RHS>
+struct TOr<LHS, RHS...> : TOrValue<LHS::Value, RHS...>
+{
+};
 
-template<>
+template <>
 struct TOr<>
 {
-	enum {Value = false};
+	enum { Value = false };
 };
-
 
 /**
-* Does a boolean NOT of the ::Value static members of the type.
-*/
-
-template<typename Type>
+ * Does a boolean NOT of the ::Value static members of the type.
+ */
+template <typename Type>
 struct TNot
 {
-	enum {Value = !Type::Value};
+	enum { Value = !Type::Value };
 };
+

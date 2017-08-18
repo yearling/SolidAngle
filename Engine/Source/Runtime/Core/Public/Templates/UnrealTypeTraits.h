@@ -1,8 +1,9 @@
-#pragma once
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
 /*=============================================================================
-SolidAngleTraits.h: Unreal type traits definitions.
-Note: Boost does a much better job of limiting instantiations.
-We require VC8 so a lot of potential version checks are omitted.
+	UnrealTypeTraits.h: Unreal type traits definitions.
+	Note: Boost does a much better job of limiting instantiations.
+	We require VC8 so a lot of potential version checks are omitted.
 =============================================================================*/
 
 #pragma once
@@ -21,17 +22,17 @@ We require VC8 so a lot of potential version checks are omitted.
 
 
 /*-----------------------------------------------------------------------------
-* Macros to abstract the presence of certain compiler intrinsic type traits
------------------------------------------------------------------------------*/
+ * Macros to abstract the presence of certain compiler intrinsic type traits 
+ -----------------------------------------------------------------------------*/
 #define HAS_TRIVIAL_CONSTRUCTOR(T) __has_trivial_constructor(T)
 #define IS_POD(T) __is_pod(T)
 #define IS_EMPTY(T) __is_empty(T)
 
 
 /*-----------------------------------------------------------------------------
-Type traits similar to TR1 (uses intrinsics supported by VC8)
-Should be updated/revisited/discarded when compiler support for tr1 catches up.
------------------------------------------------------------------------------*/
+	Type traits similar to TR1 (uses intrinsics supported by VC8)
+	Should be updated/revisited/discarded when compiler support for tr1 catches up.
+ -----------------------------------------------------------------------------*/
 
 /** Is type DerivedType inherited from BaseType. */
 template<typename DerivedType, typename BaseType>
@@ -43,41 +44,41 @@ struct TIsDerivedFrom
 
 	// Overloading Test() s.t. only calling it with something that is
 	// a BaseType (or inherited from the BaseType) will return a Yes.
-	static Yes& Test(BaseType*);
-	static Yes& Test(const BaseType*);
-	static No& Test(...);
+	static Yes& Test( BaseType* );
+	static Yes& Test( const BaseType* );
+	static No& Test( ... );
 
 	// Makes a DerivedType ptr.
-	static DerivedType* DerivedTypePtr() { return nullptr; }
+	static DerivedType* DerivedTypePtr(){ return nullptr ;}
 
-public:
+	public:
 	// Test the derived type pointer. If it inherits from BaseType, the Test( BaseType* ) 
 	// will be chosen. If it does not, Test( ... ) will be chosen.
-	static const bool IsDerived = sizeof(Test(DerivedTypePtr())) == sizeof(Yes);
+	static const bool IsDerived = sizeof(Test( DerivedTypePtr() )) == sizeof(Yes);
 };
 
 /**
-* TIsSame
-*
-* Unreal implementation of std::is_same trait.
-*/
-template<typename A, typename B>	struct TIsSame { enum { Value = false }; };
-template<typename T>				struct TIsSame<T, T> { enum { Value = true }; };
+ * TIsSame
+ *
+ * Unreal implementation of std::is_same trait.
+ */
+template<typename A, typename B>	struct TIsSame			{ enum { Value = false	}; };
+template<typename T>				struct TIsSame<T, T>	{ enum { Value = true	}; };
 
 /**
-* TIsCharType
-*/
-template<typename T> struct TIsCharType { enum { Value = false }; };
-template<>           struct TIsCharType<ANSICHAR> { enum { Value = true }; };
-template<>           struct TIsCharType<UCS2CHAR> { enum { Value = true }; };
-template<>           struct TIsCharType<WIDECHAR> { enum { Value = true }; };
+ * TIsCharType
+ */
+template<typename T> struct TIsCharType           { enum { Value = false }; };
+template<>           struct TIsCharType<ANSICHAR> { enum { Value = true  }; };
+template<>           struct TIsCharType<UCS2CHAR> { enum { Value = true  }; };
+template<>           struct TIsCharType<WIDECHAR> { enum { Value = true  }; };
 
 /**
-* TFormatSpecifier, only applies to numeric types
-*/
-template<typename T>
+ * TFormatSpecifier, only applies to numeric types
+ */
+template<typename T> 
 struct TFormatSpecifier
-{
+{ 
 	FORCEINLINE static TCHAR const* GetFormatSpecifier()
 	{
 		// Force the template instantiation to be dependent upon T so the compiler cannot automatically decide that this template can never be instantiated.
@@ -113,27 +114,27 @@ Expose_TFormatSpecifier(long double, "%f")
 
 
 /**
-* TIsReferenceType
-*/
-template<typename T> struct TIsReferenceType { enum { Value = false }; };
-template<typename T> struct TIsReferenceType<T&> { enum { Value = true }; };
-template<typename T> struct TIsReferenceType<T&&> { enum { Value = true }; };
+ * TIsReferenceType
+ */
+template<typename T> struct TIsReferenceType      { enum { Value = false }; };
+template<typename T> struct TIsReferenceType<T&>  { enum { Value = true  }; };
+template<typename T> struct TIsReferenceType<T&&> { enum { Value = true  }; };
 
 /**
-* TIsLValueReferenceType
-*/
-template<typename T> struct TIsLValueReferenceType { enum { Value = false }; };
-template<typename T> struct TIsLValueReferenceType<T&> { enum { Value = true }; };
+ * TIsLValueReferenceType
+ */
+template<typename T> struct TIsLValueReferenceType     { enum { Value = false }; };
+template<typename T> struct TIsLValueReferenceType<T&> { enum { Value = true  }; };
 
 /**
-* TIsRValueReferenceType
-*/
-template<typename T> struct TIsRValueReferenceType { enum { Value = false }; };
-template<typename T> struct TIsRValueReferenceType<T&&> { enum { Value = true }; };
+ * TIsRValueReferenceType
+ */
+template<typename T> struct TIsRValueReferenceType      { enum { Value = false }; };
+template<typename T> struct TIsRValueReferenceType<T&&> { enum { Value = true  }; };
 
 /**
-* TIsVoidType
-*/
+ * TIsVoidType
+ */
 template<typename T> struct TIsVoidType { enum { Value = false }; };
 template<> struct TIsVoidType<void> { enum { Value = true }; };
 template<> struct TIsVoidType<void const> { enum { Value = true }; };
@@ -141,19 +142,19 @@ template<> struct TIsVoidType<void volatile> { enum { Value = true }; };
 template<> struct TIsVoidType<void const volatile> { enum { Value = true }; };
 
 /**
-* TIsFundamentalType
-*/
-template<typename T>
-struct TIsFundamentalType
-{
+ * TIsFundamentalType
+ */
+template<typename T> 
+struct TIsFundamentalType 
+{ 
 	enum { Value = TOr<TIsArithmetic<T>, TIsVoidType<T>>::Value };
 };
 
 /**
-* TIsFunction
-*
-* Tests is a type is a function.
-*/
+ * TIsFunction
+ *
+ * Tests is a type is a function.
+ */
 template <typename T>
 struct TIsFunction
 {
@@ -167,32 +168,30 @@ struct TIsFunction<RetType(Params...)>
 };
 
 /**
-* TIsZeroConstructType
-*/
-template<typename T>
-struct TIsZeroConstructType
-{
-	//enum { Value = TOr<TIsEnum<T>, TIsArithmetic<T>, TIsPointer<T>>::Value };
-	// !!NOTE by zyx, pod should belong zeroconstructtype
-	enum { Value = TOr<TIsEnum<T>, TIsArithmetic<T>, TIsPointer<T>, TIsPODType<T> >::Value };
+ * TIsZeroConstructType
+ */
+template<typename T> 
+struct TIsZeroConstructType 
+{ 
+	enum { Value = TOr<TIsEnum<T>, TIsArithmetic<T>, TIsPointer<T>>::Value };
 };
 
 /**
-* TIsWeakPointerType
-*/
-template<typename T>
+ * TIsWeakPointerType
+ */
+template<typename T> 
 struct TIsWeakPointerType
-{
+{ 
 	enum { Value = false };
 };
 
 
 /**
-* TNameOf
-*/
-template<typename T>
+ * TNameOf
+ */
+template<typename T> 
 struct TNameOf
-{
+{ 
 	FORCEINLINE static TCHAR const* GetName()
 	{
 		check(0); // request for the name of a type we do not know about
@@ -222,12 +221,12 @@ Expose_TNameOf(float)
 Expose_TNameOf(double)
 
 /*-----------------------------------------------------------------------------
-Call traits - Modeled somewhat after boost's interfaces.
+	Call traits - Modeled somewhat after boost's interfaces.
 -----------------------------------------------------------------------------*/
 
 /**
-* Call traits helpers
-*/
+ * Call traits helpers
+ */
 template <typename T, bool TypeIsSmall>
 struct TCallTraitsParamTypeHelper
 {
@@ -249,15 +248,15 @@ struct TCallTraitsParamTypeHelper<T*, true>
 
 
 /*-----------------------------------------------------------------------------
-Helper templates for dealing with 'const' in template code
+	Helper templates for dealing with 'const' in template code
 -----------------------------------------------------------------------------*/
 
 /**
-* TRemoveConst<> is modeled after boost's implementation.  It allows you to take a templatized type
-* such as 'const Foo*' and use const_cast to convert that type to 'Foo*' without knowing about Foo.
-*
-*		MutablePtr = const_cast< RemoveConst< ConstPtrType >::Type >( ConstPtr );
-*/
+ * TRemoveConst<> is modeled after boost's implementation.  It allows you to take a templatized type
+ * such as 'const Foo*' and use const_cast to convert that type to 'Foo*' without knowing about Foo.
+ *
+ *		MutablePtr = const_cast< RemoveConst< ConstPtrType >::Type >( ConstPtr );
+ */
 template< class T >
 struct TRemoveConst
 {
@@ -267,23 +266,23 @@ template< class T >
 struct TRemoveConst<const T>
 {
 	typedef T Type;
-};
+};	
 
 
 /*-----------------------------------------------------------------------------
-* TCallTraits
-*
-* Same call traits as boost, though not with as complete a solution.
-*
-* The main member to note is ParamType, which specifies the optimal
-* form to pass the type as a parameter to a function.
-*
-* Has a small-value optimization when a type is a POD type and as small as a pointer.
+ * TCallTraits
+ *
+ * Same call traits as boost, though not with as complete a solution.
+ *
+ * The main member to note is ParamType, which specifies the optimal 
+ * form to pass the type as a parameter to a function.
+ * 
+ * Has a small-value optimization when a type is a POD type and as small as a pointer.
 -----------------------------------------------------------------------------*/
 
 /**
-* base class for call traits. Used to more easily refine portions when specializing
-*/
+ * base class for call traits. Used to more easily refine portions when specializing
+ */
 template <typename T>
 struct TCallTraitsBase
 {
@@ -298,8 +297,8 @@ public:
 };
 
 /**
-* TCallTraits
-*/
+ * TCallTraits
+ */
 template <typename T>
 struct TCallTraits : public TCallTraitsBase<T> {};
 
@@ -316,7 +315,7 @@ struct TCallTraits<T&>
 
 // Array types
 template <typename T, size_t N>
-struct TCallTraits<T[N]>
+struct TCallTraits<T [N]>
 {
 private:
 	typedef T ArrayType[N];
@@ -330,7 +329,7 @@ public:
 
 // const array types
 template <typename T, size_t N>
-struct TCallTraits<const T[N]>
+struct TCallTraits<const T [N]>
 {
 private:
 	typedef const T ArrayType[N];
@@ -344,13 +343,13 @@ public:
 
 
 /*-----------------------------------------------------------------------------
-Traits for our particular container classes
+	Traits for our particular container classes
 -----------------------------------------------------------------------------*/
 
 /**
-* Helper for array traits. Provides a common base to more easily refine a portion of the traits
-* when specializing. Mainly used by MemoryOps.h which is used by the contiguous storage containers like TArray.
-*/
+ * Helper for array traits. Provides a common base to more easily refine a portion of the traits
+ * when specializing. Mainly used by MemoryOps.h which is used by the contiguous storage containers like TArray.
+ */
 template<typename T>
 struct TTypeTraitsBase
 {
@@ -363,14 +362,14 @@ struct TTypeTraitsBase
 };
 
 /**
-* Traits for types.
-*/
+ * Traits for types.
+ */
 template<typename T> struct TTypeTraits : public TTypeTraitsBase<T> {};
 
 
 /**
-* Traits for containers.
-*/
+ * Traits for containers.
+ */
 template<typename T> struct TContainerTraitsBase
 {
 	// This should be overridden by every container that supports emptying its contents via a move operation.
@@ -401,41 +400,41 @@ struct TMoveSupportTraitsBase<T, const T&>
 };
 
 /**
-* This traits class is intended to be used in pairs to allow efficient and correct move-aware overloads for generic types.
-* For example:
-*
-* template <typename T>
-* void Func(typename TMoveSupportTraits<T>::Copy Obj)
-* {
-*     // Copy Obj here
-* }
-*
-* template <typename T>
-* void Func(typename TMoveSupportTraits<T>::Move Obj)
-* {
-*     // Move from Obj here as if it was passed as T&&
-* }
-*
-* Structuring things in this way will handle T being a pass-by-value type (e.g. ints, floats, other 'small' types) which
-* should never have a reference overload.
-*/
+ * This traits class is intended to be used in pairs to allow efficient and correct move-aware overloads for generic types.
+ * For example:
+ *
+ * template <typename T>
+ * void Func(typename TMoveSupportTraits<T>::Copy Obj)
+ * {
+ *     // Copy Obj here
+ * }
+ *
+ * template <typename T>
+ * void Func(typename TMoveSupportTraits<T>::Move Obj)
+ * {
+ *     // Move from Obj here as if it was passed as T&&
+ * }
+ *
+ * Structuring things in this way will handle T being a pass-by-value type (e.g. ints, floats, other 'small' types) which
+ * should never have a reference overload.
+ */
 template <typename T>
 struct TMoveSupportTraits : TMoveSupportTraitsBase<T, typename TCallTraits<T>::ParamType>
 {
 };
 
 /**
-* Tests if a type T is bitwise-constructible from a given argument type U.  That is, whether or not
-* the U can be memcpy'd in order to produce an instance of T, rather than having to go
-* via a constructor.
-*
-* Examples:
-* TIsBitwiseConstructible<PODType,    PODType   >::Value == true  // PODs can be trivially copied
-* TIsBitwiseConstructible<const int*, int*      >::Value == true  // a non-const Derived pointer is trivially copyable as a const Base pointer
-* TIsBitwiseConstructible<int*,       const int*>::Value == false // not legal the other way because it would be a const-correctness violation
-* TIsBitwiseConstructible<int32,      uint32    >::Value == true  // signed integers can be memcpy'd as unsigned integers
-* TIsBitwiseConstructible<uint32,     int32     >::Value == true  // and vice versa
-*/
+ * Tests if a type T is bitwise-constructible from a given argument type U.  That is, whether or not
+ * the U can be memcpy'd in order to produce an instance of T, rather than having to go
+ * via a constructor.
+ *
+ * Examples:
+ * TIsBitwiseConstructible<PODType,    PODType   >::Value == true  // PODs can be trivially copied
+ * TIsBitwiseConstructible<const int*, int*      >::Value == true  // a non-const Derived pointer is trivially copyable as a const Base pointer
+ * TIsBitwiseConstructible<int*,       const int*>::Value == false // not legal the other way because it would be a const-correctness violation
+ * TIsBitwiseConstructible<int32,      uint32    >::Value == true  // signed integers can be memcpy'd as unsigned integers
+ * TIsBitwiseConstructible<uint32,     int32     >::Value == true  // and vice versa
+ */
 
 template <typename T, typename Arg>
 struct TIsBitwiseConstructible
@@ -446,7 +445,7 @@ struct TIsBitwiseConstructible
 		"TIsBitwiseConstructible is not designed to accept reference types");
 
 	static_assert(
-		TAreTypesEqual<T, typename TRemoveCV<T  >::Type>::Value &&
+		TAreTypesEqual<T,   typename TRemoveCV<T  >::Type>::Value &&
 		TAreTypesEqual<Arg, typename TRemoveCV<Arg>::Type>::Value,
 		"TIsBitwiseConstructible is not designed to accept qualified types");
 
@@ -479,13 +478,13 @@ struct TIsBitwiseConstructible<const T*, T*>
 
 // Unsigned types can be bitwise converted to their signed equivalents, and vice versa.
 // (assuming two's-complement, which we are)
-template <> struct TIsBitwiseConstructible<uint8, int8> { enum { Value = true }; };
-template <> struct TIsBitwiseConstructible< int8, uint8> { enum { Value = true }; };
-template <> struct TIsBitwiseConstructible<uint16, int16> { enum { Value = true }; };
+template <> struct TIsBitwiseConstructible<uint8,   int8>  { enum { Value = true }; };
+template <> struct TIsBitwiseConstructible< int8,  uint8>  { enum { Value = true }; };
+template <> struct TIsBitwiseConstructible<uint16,  int16> { enum { Value = true }; };
 template <> struct TIsBitwiseConstructible< int16, uint16> { enum { Value = true }; };
-template <> struct TIsBitwiseConstructible<uint32, int32> { enum { Value = true }; };
+template <> struct TIsBitwiseConstructible<uint32,  int32> { enum { Value = true }; };
 template <> struct TIsBitwiseConstructible< int32, uint32> { enum { Value = true }; };
-template <> struct TIsBitwiseConstructible<uint64, int64> { enum { Value = true }; };
+template <> struct TIsBitwiseConstructible<uint64,  int64> { enum { Value = true }; };
 template <> struct TIsBitwiseConstructible< int64, uint64> { enum { Value = true }; };
 
 #define GENERATE_MEMBER_FUNCTION_CHECK(MemberName, Result, ConstModifier, ...)									\
@@ -500,8 +499,8 @@ public:																											\
 };
 
 /*-----------------------------------------------------------------------------
-* Undef Macros abstracting the presence of certain compiler intrinsic type traits
------------------------------------------------------------------------------*/
+ * Undef Macros abstracting the presence of certain compiler intrinsic type traits
+ -----------------------------------------------------------------------------*/
 #undef IS_EMPTY
 #undef IS_POD
 #undef HAS_TRIVIAL_CONSTRUCTOR

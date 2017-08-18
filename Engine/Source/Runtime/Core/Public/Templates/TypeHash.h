@@ -7,29 +7,29 @@
 #include "Misc/Crc.h"
 
 /**
-* Combines two hash values to get a third.
-* Note - this function is not commutative.
-*/
+ * Combines two hash values to get a third.
+ * Note - this function is not commutative.
+ */
 inline uint32 HashCombine(uint32 A, uint32 C)
 {
 	uint32 B = 0x9e3779b9;
 	A += B;
 
-	A -= B; A -= C; A ^= (C >> 13);
-	B -= C; B -= A; B ^= (A << 8);
-	C -= A; C -= B; C ^= (B >> 13);
-	A -= B; A -= C; A ^= (C >> 12);
-	B -= C; B -= A; B ^= (A << 16);
-	C -= A; C -= B; C ^= (B >> 5);
-	A -= B; A -= C; A ^= (C >> 3);
-	B -= C; B -= A; B ^= (A << 10);
-	C -= A; C -= B; C ^= (B >> 15);
+	A -= B; A -= C; A ^= (C>>13);
+	B -= C; B -= A; B ^= (A<<8);
+	C -= A; C -= B; C ^= (B>>13);
+	A -= B; A -= C; A ^= (C>>12);
+	B -= C; B -= A; B ^= (A<<16);
+	C -= A; C -= B; C ^= (B>>5);
+	A -= B; A -= C; A ^= (C>>3);
+	B -= C; B -= A; B ^= (A<<10);
+	C -= A; C -= B; C ^= (B>>15);
 
 	return C;
 }
 
 
-inline uint32 PointerHash(const void* Key, uint32 C = 0)
+inline uint32 PointerHash(const void* Key,uint32 C = 0)
 {
 	// Avoid LHS stalls on PS3 and Xbox 360
 #if PLATFORM_64BITS
@@ -48,48 +48,48 @@ inline uint32 PointerHash(const void* Key, uint32 C = 0)
 // Hash functions for common types.
 //
 
-inline uint32 GetTypeHash(const uint8 A)
+inline uint32 GetTypeHash( const uint8 A )
 {
 	return A;
 }
 
-inline uint32 GetTypeHash(const int8 A)
+inline uint32 GetTypeHash( const int8 A )
 {
 	return A;
 }
 
-inline uint32 GetTypeHash(const uint16 A)
+inline uint32 GetTypeHash( const uint16 A )
 {
 	return A;
 }
 
-inline uint32 GetTypeHash(const int16 A)
+inline uint32 GetTypeHash( const int16 A )
 {
 	return A;
 }
 
-inline uint32 GetTypeHash(const int32 A)
+inline uint32 GetTypeHash( const int32 A )
 {
 	return A;
 }
 
-inline uint32 GetTypeHash(const uint32 A)
+inline uint32 GetTypeHash( const uint32 A )
 {
 	return A;
 }
 
-inline uint32 GetTypeHash(const uint64 A)
+inline uint32 GetTypeHash( const uint64 A )
 {
-	return (uint32)A + ((uint32)(A >> 32) * 23);
+	return (uint32)A+((uint32)(A>>32) * 23);
 }
 
-inline uint32 GetTypeHash(const int64 A)
+inline uint32 GetTypeHash( const int64 A )
 {
-	return (uint32)A + ((uint32)(A >> 32) * 23);
+	return (uint32)A+((uint32)(A>>32) * 23);
 }
 
 #if PLATFORM_MAC
-inline uint32 GetTypeHash(const __uint128_t A)
+inline uint32 GetTypeHash( const __uint128_t A )
 {
 	uint64 Low = (uint64)A;
 	uint64 High = (uint64)(A >> 64);
@@ -97,27 +97,27 @@ inline uint32 GetTypeHash(const __uint128_t A)
 }
 #endif
 
-inline uint32 GetTypeHash(float Value)
+inline uint32 GetTypeHash( float Value )
 {
 	return *(uint32*)&Value;
 }
 
-inline uint32 GetTypeHash(double Value)
+inline uint32 GetTypeHash( double Value )
 {
 	return GetTypeHash(*(uint64*)&Value);
 }
 
-inline uint32 GetTypeHash(const TCHAR* S)
+inline uint32 GetTypeHash( const TCHAR* S )
 {
 	return FCrc::Strihash_DEPRECATED(S);
 }
 
-inline uint32 GetTypeHash(const void* A)
+inline uint32 GetTypeHash( const void* A )
 {
 	return PointerHash(A);
 }
 
-inline uint32 GetTypeHash(void* A)
+inline uint32 GetTypeHash( void* A )
 {
 	return PointerHash(A);
 }
