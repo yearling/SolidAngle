@@ -15,7 +15,7 @@ TFunctionRef和TFunction对象的尺寸都是固定的。
 
 TFunctionRef只是持有了所引用的可调用对象的指针。
 
-TFunction内部有一个固定大小的存储空间，当持有的可调用对象的尺寸大于内部的存储空间时，会在栈上申请空间。
+TFunction内部有一个固定大小的存储空间，当持有的可调用对象的尺寸大于内部的存储空间时，会在堆上申请空间。
 
 	template <typename FuncType>
 	class TFunction
