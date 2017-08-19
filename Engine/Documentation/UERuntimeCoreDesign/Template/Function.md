@@ -1,15 +1,14 @@
 # Function
-有两个。
+与std::function功能类式，不过有2个。
+1. 相当于可调用对象的引用，并不实际持有所引用的对象。
 
-一个是相当于可调用对象的引用，并不实际持有所引用的对象。
+		TFunctionRef<FuncType>
+		// e.g. TfunctionRef<int(float, double)>
 
-	TFunctionRef<FuncType>
-	// e.g. TfunctionRef<int(float, double)>
+2. 传统的std::function对应物，实际持有可调用对象。
 
-另一个是传统的std::function对应物，实际持有可调用对象。
-
-	TFunction<FuncType>
-	// e.g. Tfunction<int(float, double)>
+		TFunction<FuncType>
+		// e.g. Tfunction<int(float, double)>
 
 TFunctionRef和TFunction对象的尺寸都是固定的。
 
