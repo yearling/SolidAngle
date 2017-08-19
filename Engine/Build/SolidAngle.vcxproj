@@ -667,8 +667,6 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\ScopedPointer.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\SharedPointer.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\SharedPointerInternals.h" />
-    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\SolidAngleTemplate.h" />
-    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\SolidAngleTypeTraits.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\Sorting.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\TypeCompatibleBytes.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\TypeHash.h" />

@@ -387,9 +387,6 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\Greater.h">
       <Filter>Source\Runtime\Core\Public\Templates</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\SolidAngleTypeTraits.h">
-      <Filter>Source\Runtime\Core\Public\Templates</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsEnum.h">
       <Filter>Source\Runtime\Core\Public\Templates</Filter>
     </ClInclude>
@@ -434,9 +431,6 @@
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformMisc.h">
       <Filter>Source\Runtime\Core\Public\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\SolidAngleTemplate.h">
-      <Filter>Source\Runtime\Core\Public\Templates</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\Array.h">
       <Filter>Source\Runtime\Core\Public\Containers</Filter>
@@ -1593,8 +1587,6 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Unrealmathsse.h">
       <Filter>Source\Runtime\Core\Public\Math</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\UnrealTemplate.h" />
-    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\UnrealTypeTraits.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\UObject\DevObjectVersion.h">
       <Filter>Source\Runtime\Core\Public\UObject</Filter>
     </ClInclude>
@@ -1858,6 +1850,12 @@
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Private\HAL\MallocVerify.h">
       <Filter>Source\Runtime\Core\Private\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\UnrealTemplate.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\UnrealTypeTraits.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

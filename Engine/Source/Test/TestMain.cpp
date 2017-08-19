@@ -13,6 +13,7 @@
 #include "Templates\Decay.h"
 #include "Templates\AreTypesEqual.h"
 #include "Containers\BitArray.h"
+#include "Windows\WindowsSystemIncludes.h"
 
 struct TrueValue
 {
@@ -524,6 +525,9 @@ int main()
 	TestBitArray();
 	TestSparseArray();
 	TestSet();
+	Windows::HANDLE handle=0;
+	Windows::OVERLAPPED Overlapped;
+	ConnectNamedPipe(handle,&Overlapped);
 //PODTypeWithStdString* pMemLeak = new PODTypeWithStdString();
 
 
