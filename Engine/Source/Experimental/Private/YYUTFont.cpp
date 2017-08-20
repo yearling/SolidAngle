@@ -2,7 +2,6 @@
 #include "YYUTHelper.h"
 #include "YYUTFont.h"
 #include "YYUTDXManager.h"
-#include <vector>
 #include <string>
 
 
@@ -55,7 +54,7 @@ void YYUTFont::EndFont()
 
 void YYUTFont::BeginText()
 {
-	m_vecFontVertices.clear();
+	m_vecFontVertices.Empty();
 }
 
 void YYUTFont::DrawText(std::string strText,
@@ -119,33 +118,33 @@ void YYUTFont::DrawText(std::string strText,
 		SpriteVertex.vPos = XMFLOAT3(fRectLeft, fRectTop, fDepth);
 		SpriteVertex.vTex = XMFLOAT2(fTexLeft, fTexTop);
 		SpriteVertex.vColor = vFontColor;
-		m_vecFontVertices.push_back(SpriteVertex);
+		m_vecFontVertices.Add(SpriteVertex);
 
 		SpriteVertex.vPos = XMFLOAT3(fRectRight, fRectTop, fDepth);
 		SpriteVertex.vTex = XMFLOAT2(fTexRight, fTexTop);
 		SpriteVertex.vColor = vFontColor;
-		m_vecFontVertices.push_back(SpriteVertex);
+		m_vecFontVertices.Add(SpriteVertex);
 
 		SpriteVertex.vPos = XMFLOAT3(fRectLeft, fRectBottom, fDepth);
 		SpriteVertex.vTex = XMFLOAT2(fTexLeft, fTexBottom);
 		SpriteVertex.vColor = vFontColor;
-		m_vecFontVertices.push_back(SpriteVertex);
+		m_vecFontVertices.Add(SpriteVertex);
 
 		// tri2
 		SpriteVertex.vPos = XMFLOAT3(fRectRight, fRectTop, fDepth);
 		SpriteVertex.vTex = XMFLOAT2(fTexRight, fTexTop);
 		SpriteVertex.vColor = vFontColor;
-		m_vecFontVertices.push_back(SpriteVertex);
+		m_vecFontVertices.Add(SpriteVertex);
 
 		SpriteVertex.vPos = XMFLOAT3(fRectRight, fRectBottom, fDepth);
 		SpriteVertex.vTex = XMFLOAT2(fTexRight, fTexBottom);
 		SpriteVertex.vColor = vFontColor;
-		m_vecFontVertices.push_back(SpriteVertex);
+		m_vecFontVertices.Add(SpriteVertex);
 
 		SpriteVertex.vPos = XMFLOAT3(fRectLeft, fRectBottom, fDepth);
 		SpriteVertex.vTex = XMFLOAT2(fTexLeft, fTexBottom);
 		SpriteVertex.vColor = vFontColor;
-		m_vecFontVertices.push_back(SpriteVertex);
+		m_vecFontVertices.Add(SpriteVertex);
 
 		fRectLeft += fGlyphSizeX;
 
@@ -157,11 +156,11 @@ void YYUTFont::DrawText(std::string strText,
 
 void YYUTFont::RenderText()
 {
-	if (m_vecFontVertices.empty())
+	if (!m_vecFontVertices.Num())
 		return;
 
 	// ensure our buffer size can hold our sprites
-	UINT FontDataBytes = static_cast<UINT>(m_vecFontVertices.size() * sizeof(YYSpriteVertex));
+	uint32 FontDataBytes = static_cast<uint32>(m_vecFontVertices.Num() * sizeof(YYSpriteVertex));
 	if (m_FontBufferBytes < FontDataBytes)
 	{
 		m_FontBuffer = NULL;
@@ -201,9 +200,9 @@ void YYUTFont::RenderText()
 	float blend[] = { 0.0f };
 	m_dc->OMSetBlendState(m_BlendStateAlpha, blend, 0xffffffff);
 	m_dc->OMSetRenderTargets(1, &m_RTV, m_DSV);
-	m_dc->Draw(static_cast<UINT>(m_vecFontVertices.size()), 0);
+	m_dc->Draw(static_cast<UINT>(m_vecFontVertices.Num()), 0);
 	m_dc->PSSetShaderResources(0, 1, &pOldTexture);
-	m_vecFontVertices.clear();
+	m_vecFontVertices.Empty();
 }
 
 void YYUTFont::SetInsertionPos(int x, int y)

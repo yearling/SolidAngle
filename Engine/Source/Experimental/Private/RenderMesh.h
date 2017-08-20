@@ -2,6 +2,7 @@
 #include "YYUT.h"
 #include "YYUTCamera.h"
 #include "StaticMesh.h"
+#include <memory>
 struct RenderMeshCBuffer
 {
 	XMMATRIX  m_matView;

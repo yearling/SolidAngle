@@ -1,10 +1,9 @@
 #pragma once
 #include "YYUT.h"
-#include <vector>
 
 struct FontNode
 {
-	WCHAR strFace[MAX_PATH];
+	TCHAR strFace[MAX_PATH];
 	LONG nHeight;
 	LONG nWeight;
 };
@@ -25,13 +24,7 @@ public:
 	void							EndFont();
 	void							BeginText();
 
-	void							DrawText(std::string strText,
-		const RECT& rcScreen,
-		XMFLOAT4 vFontColor,
-		float fBBWidth,
-		float fBBHeight,
-		bool bCenter);
-
+	void							DrawText(std::string strText,const RECT& rcScreen,XMFLOAT4 vFontColor,float fBBWidth,float fBBHeight,bool bCenter);
 
 	void							SetInsertionPos(int x, int y);
 	void							SetForegroundColor(XMFLOAT4 clr);
@@ -39,8 +32,8 @@ public:
 protected:
 	void							RenderText();
 	TComPtr<ID3D11Buffer>			m_FontBuffer;
-	UINT							m_FontBufferBytes;
-	std::vector<YYSpriteVertex>		m_vecFontVertices;
+	uint32							m_FontBufferBytes;
+	TArray<YYSpriteVertex>			m_vecFontVertices;
 	TComPtr<ID3D11ShaderResourceView> m_FontSRV;
 	TComPtr<ID3D11InputLayout>		m_FontInputLayout;
 	TComPtr<ID3D11Device>			m_device;

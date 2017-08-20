@@ -1,6 +1,5 @@
 #include "Canvas.h"
 #include "YYUTHelper.h"
-#include <algorithm>
 #include "YYUTDXManager.h"
 
 Y3DCanvas gCanvas;

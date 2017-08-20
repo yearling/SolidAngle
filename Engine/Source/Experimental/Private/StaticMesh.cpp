@@ -59,16 +59,16 @@ bool StaticMesh::AllocResource(TComPtr<ID3D11Device> device, TComPtr<ID3D11Devic
 {
 	if (FaceNum != 0)
 	{
-		CreateVertexBufferDynamic(device, (UINT)VertexArray.size() * sizeof(LocalVertex), &VertexArray[0], m_VB);
-		CreateIndexBuffer(device, (UINT)IndexArray.size() * sizeof(int), &IndexArray[0], m_IB);
+		CreateVertexBufferDynamic(device, (UINT)VertexArray.Num() * sizeof(LocalVertex), &VertexArray[0], m_VB);
+		CreateIndexBuffer(device, (UINT)IndexArray.Num() * sizeof(int), &IndexArray[0], m_IB);
 	}
 	return true;
 }
 
 void StaticMesh::Clear()
 {
-	VertexArray.clear();
-	MapTriangleIndexToMaterialIndex.clear();
+	VertexArray.Empty();
+	MapTriangleIndexToMaterialIndex.Empty();
 	FaceNum = -1;
 }
 
@@ -89,7 +89,7 @@ void StaticMesh::Render(TComPtr<ID3D11DeviceContext> dc, TComPtr<ID3D11Buffer> c
 	D3D11_MAPPED_SUBRESOURCE VBMapResource;
 	hr = dc->Map(m_VB, 0, D3D11_MAP_WRITE_DISCARD, 0, &VBMapResource);
 	LocalVertex *pLocalVertexArray = (LocalVertex *)VBMapResource.pData;
-	memcpy(pLocalVertexArray, &VertexArray[0], sizeof(LocalVertex)*VertexArray.size());
+	memcpy(pLocalVertexArray, &VertexArray[0], sizeof(LocalVertex)*VertexArray.Num());
 	dc->Unmap(m_VB,0);
 
 	UINT strid = sizeof(LocalVertex);
@@ -101,7 +101,7 @@ void StaticMesh::Render(TComPtr<ID3D11DeviceContext> dc, TComPtr<ID3D11Buffer> c
 	dc->PSSetConstantBuffers(1, 1, &cb);
 	//m_VS->Update();
 	//m_PS->Update();
-	dc->DrawIndexed(IndexArray.size(), 0, 0);
+	dc->DrawIndexed(IndexArray.Num(), 0, 0);
 }
 
 void StaticMesh::UpdateVertexPosition(FbxMesh* pMesh, FbxVector4* pVertexArray)
@@ -125,12 +125,12 @@ MeshModel::MeshModel()
 
 void MeshModel::Init(TComPtr<ID3D11Device> device, TComPtr<ID3D11DeviceContext> dc)
 {
-	m_VS = std::make_unique<YVSShader>();
+	m_VS = MakeUnique<YVSShader>();
 	if (!m_VS->CreateShader("..\\..\\Source\\Experimental\\Private\\RenderMesh.hlsl", "VSMain"))
 	{
 		assert(0);
 	}
-	m_PS = std::make_unique<YPSShader>();
+	m_PS = MakeUnique<YPSShader>();
 	if (!m_PS->CreateShader("..\\..\\Source\\Experimental\\Private\\RenderMesh.hlsl", "PSMain"))
 	{
 		assert(0);
@@ -571,13 +571,13 @@ void MeshModel::ComputeSkinDeformation(FbxAMatrix& pGlobalPosition,
 void MeshModel::DrawMesh(FbxNode* pNode,
 	FbxAMatrix& pGlobalPosition)
 {
-	auto FindResult = mapFbxNodeToStaticMesh.find(pNode);
-	if (FindResult == mapFbxNodeToStaticMesh.end())
+	auto FindResult = mapFbxNodeToStaticMesh.Find(pNode);
+	if (!FindResult)
 		return;
-	int StaticMeshIndex = FindResult->second;
-	std::unique_ptr<StaticMesh> &pMesh = MeshArrays[StaticMeshIndex];
-	pMesh->m_VS = m_VS.get();
-	pMesh->m_PS = m_PS.get();
+	int StaticMeshIndex = *FindResult;
+	TUniquePtr<StaticMesh> &pMesh = MeshArrays[StaticMeshIndex];
+	pMesh->m_VS = m_VS.Get();
+	pMesh->m_PS = m_PS.Get();
 	FbxAMatrix MeshOffsetInNode = GetGeometry(pNode);
 	// do deformer
 	FbxMesh* lMesh = pNode->GetMesh();

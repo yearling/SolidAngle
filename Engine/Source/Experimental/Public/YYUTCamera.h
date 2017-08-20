@@ -10,12 +10,8 @@ public:
 	virtual void					FrameMove(float elapse_time) = 0;
 
 	virtual void					Reset();
-	virtual void					SetViewParam(const XMFLOAT3 &eye,
-		const XMFLOAT3 &lookat);
-	virtual void					SetProjParam(float FOV,
-		float aspect,
-		float near_plane,
-		float far_plane);
+	virtual void					SetViewParam(const XMFLOAT3 &eye,const XMFLOAT3 &lookat);
+	virtual void					SetProjParam(float FOV,float aspect,float near_plane,float far_plane);
 	void							SetWindow(int width, int height);
 	void							AddPitchYaw(float pitch, float yaw);
 	void							SetVelocity(const XMFLOAT3 &velocity);

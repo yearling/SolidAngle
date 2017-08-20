@@ -165,8 +165,8 @@ void YYUTDXManager::KeyboardMouseProc(void)
 
 void YYUTDXManager::Render(void)
 {
-	for (auto iter = m_ListRenderEvents.begin(); iter != m_ListRenderEvents.end(); ++iter)
-		(*iter)();
+	for(auto &Func:m_ListRenderEvents)
+		(Func)();
 	m_SwapChain->Present(0, 0);
 	m_FPSCounts++;
 }
@@ -202,7 +202,7 @@ void YYUTDXManager::SetKeyboardMouseEvent(DX_KEYBOARD_MOUSE_EVENT key_event)
 
 void YYUTDXManager::AddRenderEvent(DX_RENDER_EVENT render_event)
 {
-	m_ListRenderEvents.push_back(render_event);
+	m_ListRenderEvents.Add(render_event);
 }
 
 TComPtr<ID3D11DepthStencilView> YYUTDXManager::GetDepthStencilView(void)

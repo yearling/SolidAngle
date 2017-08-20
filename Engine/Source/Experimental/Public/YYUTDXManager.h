@@ -1,16 +1,14 @@
 #pragma once
 #include "YYUT.h"
 #include <d3d11.h>
-#include <memory>
-#include <functional>
-#include <list>
-typedef	std::function<void()>	DX_RENDER_EVENT;
+
+typedef	TFunction<void()>	DX_RENDER_EVENT;
 
 class YYUTDXManager
 {
 public:
 
-	typedef std::function<void(int)>   DX_KEYBOARD_MOUSE_EVENT;
+	typedef TFunction<void(int)>   DX_KEYBOARD_MOUSE_EVENT;
 public:
 
 	virtual							~YYUTDXManager(void);
@@ -62,6 +60,6 @@ private:
 	bool							m_bInitialed;
 	bool							m_bPauseRender;
 	DX_KEYBOARD_MOUSE_EVENT			m_EventMouseKeyborad;
-	std::list<DX_RENDER_EVENT>		m_ListRenderEvents;
+	TArray<DX_RENDER_EVENT>			m_ListRenderEvents;
 	float							m_lastFPSTime;
 };

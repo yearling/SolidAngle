@@ -1,20 +1,18 @@
 #pragma once
 #include "YYUT.h"
 #include "VertexDef.h"
-#include <vector>
 #include <fbxsdk.h>
-#include <memory>
 #include "YYUTHelper.h"
 #include "Skeleton.h"
 #include "IShader.h"
-#include <map>
+
 
 
 
 struct MaterialBaseFbx
 {
-	std::string MaterialName;
-	std::string DiffusePath;
+	FString MaterialName;
+	FString DiffusePath;
 };
 
 class StaticMesh
@@ -27,15 +25,15 @@ public:
 	void Render(TComPtr<ID3D11DeviceContext> dc, TComPtr<ID3D11Buffer> cb);
 	void UpdateVertexPosition(FbxMesh*pMesh, FbxVector4* pVertexArray);
 	XMMATRIX  MatWorld;
-	std::vector<LocalVertex> VertexArray;
-	std::vector<int> IndexArray;
+	TArray<LocalVertex> VertexArray;
+	TArray<int> IndexArray;
 	int FaceNum;
 	FbxNode* m_pNode;
-	std::vector<int> MapTriangleIndexToMaterialIndex;
-	std::vector<MaterialBaseFbx> MaterialArray;
+	TArray<int> MapTriangleIndexToMaterialIndex;
+	TArray<MaterialBaseFbx> MaterialArray;
 	TComPtr<ID3D11Buffer>			m_VB;
 	TComPtr<ID3D11Buffer>			m_IB;
-	std::string					MeshName;
+	FString					MeshName;
 	YVSShader * m_VS;
 	YPSShader * m_PS;
 };
@@ -62,13 +60,13 @@ public:
 	FbxTime mFrameTime, mStart, mStop, mCurrentTime;
 	FbxNode* RootNode;
 	FbxScene* Scene;
-	std::vector<std::unique_ptr<StaticMesh>> MeshArrays;
+	TArray<TUniquePtr<StaticMesh>> MeshArrays;
 	Skeleton MainSkeleton;
 	FbxArray<FbxString*> mAnimStackNameArray;
 	FbxAnimLayer * mCurrentAnimLayer;
 	TComPtr<ID3D11Buffer>			m_cbPerMesh;
 	TComPtr<ID3D11DeviceContext>    m_dc;
-	std::map<FbxNode*, int>       mapFbxNodeToStaticMesh;
-	std::unique_ptr<YVSShader>  m_VS;
-	std::unique_ptr<YPSShader>  m_PS;
+	TMap<FbxNode*, int>       mapFbxNodeToStaticMesh;
+	TUniquePtr<YVSShader>  m_VS;
+	TUniquePtr<YPSShader>  m_PS;
 };

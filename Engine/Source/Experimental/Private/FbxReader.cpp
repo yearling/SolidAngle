@@ -148,16 +148,16 @@ std::pair<bool,std::string> FBXReader::LoadNodesRecursive(FbxNode* pNode)
 	if (NodeAttribute && NodeAttribute->GetAttributeType() == FbxNodeAttribute::eMesh)
 	{
 		FbxMesh * lMesh = pNode->GetMesh();
-		std::unique_ptr<StaticMesh> pStaticMesh = std::make_unique<StaticMesh>();
-		auto Result = LoadMeshInfo(lMesh, pStaticMesh.get());
+		TUniquePtr<StaticMesh> pStaticMesh = MakeUnique<StaticMesh>();
+		auto Result = LoadMeshInfo(lMesh, pStaticMesh.Get());
 		if (!Result.first)
 		{
 			IsSuccess = false;
 			return std::make_pair<>(false, Result.second);
 		}
 			
-		pMeshModel->MeshArrays.push_back(std::move(pStaticMesh));
-		pMeshModel->mapFbxNodeToStaticMesh[pNode] = pMeshModel->MeshArrays.size() - 1;
+		pMeshModel->MeshArrays.Add(MoveTemp(pStaticMesh));
+		pMeshModel->mapFbxNodeToStaticMesh.Add(pNode, pMeshModel->MeshArrays.Num() - 1);
 	}
 	else if (NodeAttribute && NodeAttribute->GetAttributeType() == FbxNodeAttribute::eSkeleton)
 	{
@@ -198,15 +198,15 @@ std::pair<bool,std::string> FBXReader::LoadMeshInfo(FbxMesh *pMesh, StaticMesh* 
 	XMFLOAT3 tangent[3];
 	XMFLOAT2 uv[3][2];
 	int      index[3];
-	std::vector<LocalVertex> LocalVertexBuffer;
-	std::vector<int>  LocalIndexBuffer;
+	TArray<LocalVertex> LocalVertexBuffer;
+	TArray<int>  LocalIndexBuffer;
 	int VertexCount = 0;
-	std::vector<XMFLOAT3>  ControlPoints;
+	TArray<XMFLOAT3>  ControlPoints;
 	int ControlPointCounts = pMesh->GetControlPointsCount();
 	for(int i=0;i<ControlPointCounts;++i)
 	{
 		FbxVector4 VertexPos = pMesh->GetControlPointAt(i);
-		ControlPoints.emplace_back(XMFLOAT3(VertexPos[0],VertexPos[1],VertexPos[2]));
+		ControlPoints.Emplace(XMFLOAT3(VertexPos[0],VertexPos[1],VertexPos[2]));
 	}
 
 
@@ -226,16 +226,16 @@ std::pair<bool,std::string> FBXReader::LoadMeshInfo(FbxMesh *pMesh, StaticMesh* 
 			tmpLocalVertex.Position = vertex[i];
 			tmpLocalVertex.Normal = normal[i];
 			tmpLocalVertex.UV0 = uv[i][0];
-			LocalVertexBuffer.emplace_back(tmpLocalVertex);
+			LocalVertexBuffer.Emplace(tmpLocalVertex);
 		}
 		for (int i = 0; i < 3; ++i)
 		{
-			LocalIndexBuffer.push_back(index[i]);
+			LocalIndexBuffer.Add(index[i]);
 		}
 	}
 	ConnectMaterialToMesh(pMesh, pStaticMesh);
-	pStaticMesh->VertexArray = std::move(LocalVertexBuffer);
-	pStaticMesh->IndexArray = std::move(LocalIndexBuffer);
+	pStaticMesh->VertexArray = MoveTemp(LocalVertexBuffer);
+	pStaticMesh->IndexArray = MoveTemp(LocalIndexBuffer);
 	pStaticMesh->m_pNode = pMesh->GetNode();
 	
 	FbxAMatrix& FbxWorldMatrix =  pMesh->GetNode()->EvaluateGlobalTransform();
@@ -539,7 +539,7 @@ void FBXReader::ConnectMaterialToMesh(FbxMesh* pMesh, StaticMesh* pStaticMesh)
 			{
 				if (pMaterialIndices->GetCount() == pStaticMesh->FaceNum)
 				{
-					pStaticMesh->MapTriangleIndexToMaterialIndex.resize(pStaticMesh->FaceNum);
+					pStaticMesh->MapTriangleIndexToMaterialIndex.SetNum(pStaticMesh->FaceNum);
 					for (int triangleIndex = 0; triangleIndex < pStaticMesh->FaceNum; ++triangleIndex)
 					{
 						int materialIndex = pMaterialIndices->GetAt(triangleIndex);
@@ -553,7 +553,7 @@ void FBXReader::ConnectMaterialToMesh(FbxMesh* pMesh, StaticMesh* pStaticMesh)
 			case FbxGeometryElement::eAllSame:
 			{
 				int lMaterialIndex = pMaterialIndices->GetAt(0);
-				pStaticMesh->MapTriangleIndexToMaterialIndex.resize(pStaticMesh->FaceNum);
+				pStaticMesh->MapTriangleIndexToMaterialIndex.SetNum(pStaticMesh->FaceNum);
 				for (int triangleIndex = 0; triangleIndex < pStaticMesh->FaceNum; ++triangleIndex)
 				{
 					int materialIndex = pMaterialIndices->GetAt(triangleIndex);
@@ -579,7 +579,7 @@ void FBXReader::ReadMaterial(FbxMesh* pMesh, StaticMesh* pStaticMesh)
 			for (int materialIndex = 0; materialIndex < materialCount; materialIndex++)
 			{
 				FbxSurfaceMaterial* pSurfaceMaterial = pNode->GetMaterial(materialIndex);
-				pStaticMesh->MaterialArray.emplace_back(LoadMaterialAttribute(pSurfaceMaterial));
+				pStaticMesh->MaterialArray.Emplace(LoadMaterialAttribute(pSurfaceMaterial));
 			}
 		}
 	}

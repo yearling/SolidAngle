@@ -1,6 +1,5 @@
 #include "YYUTCamera.h"
 #include <iostream>
-#include <algorithm>
 using std::cout;
 using std::endl;
 
@@ -148,8 +147,8 @@ FirstPersionCamera::~FirstPersionCamera()
 
 void FirstPersionCamera::FrameMove(float elapse_time)
 {
-	m_fCameraPitchAngle = (std::min)(XM_PIDIV2, m_fCameraPitchAngle);
-	m_fCameraPitchAngle = (std::max)(-XM_PIDIV2, m_fCameraPitchAngle);
+	m_fCameraPitchAngle = FMath::Min(XM_PIDIV2, m_fCameraPitchAngle);
+	m_fCameraPitchAngle = FMath::Max(-XM_PIDIV2, m_fCameraPitchAngle);
 	//XMMATRIX CamRote=XMMatrixRotationRollPitchYaw(0,m_fCameraPitchAngle,m_fCameraYawAngle);
 	XMMATRIX CamRote = XMMatrixRotationRollPitchYaw(m_fCameraPitchAngle, m_fCameraYawAngle, 0);
 	XMFLOAT3 UP3(0.0f, 1.0f, 0.0f);
