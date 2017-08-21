@@ -18,7 +18,7 @@ void DX11Demo::Initial()
 {
 	YYUTApplication::Initial();
 	int default_x = 800;
-	int default_y = 600;
+	int default_y = 800;
 	YYUTApplication::WindowCreate(default_x, default_y, _T("Render Mesh Demo"));
 	m_width = default_x;
 	m_height = default_y;
@@ -34,10 +34,14 @@ void DX11Demo::Initial()
 	//YYUTTimer::GetInstance().Start();
 	XMFLOAT3 eye(40.0f, 40.0f, -40.0f);
 	XMFLOAT3 lookat(0.0f, 0.0f, 0.0f);
+	FVector eyeF(40.0f, 40.0f, -40.0f);
+	FVector lookatF(0.0f, 0.0f, 0.0f);
 	m_pCamera = new FirstPersionCamera();
 	m_pLightCamera = new FirstPersionCamera();
 	m_pCamera->SetViewParam(eye, lookat);
 	m_pCamera->SetProjParam(XM_PI / 4, m_width / (float)m_height, 1.0f, 1000.0f);
+	m_pCamera->SetViewParamF(eyeF, lookatF);
+	m_pCamera->SetProjParamF(PI / 4, m_width / (float)m_height, 1.0f, 1000.0f);
 	m_pLightCamera->SetProjParam(XM_PI / 4, m_width / (float)m_height, 50.0f, 300.0f);
 	m_pRenderMesh = std::make_shared<RenderScene>();
 	m_pRenderMesh->SetScreenWidthHeigth(default_x, default_y);

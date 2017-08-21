@@ -21,6 +21,8 @@ public:
 	FMatrix     FMatParentToBone;
 	FMatrix		FMatLocalTransform;
 	FMatrix     FMatCurParent;
+	XMMATRIX	MatParentToBone;
+	XMMATRIX	MatLocalTransform;
 };
 
 class Skeleton
