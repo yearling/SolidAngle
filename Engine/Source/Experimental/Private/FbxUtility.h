@@ -13,6 +13,18 @@ inline XMMATRIX FbxMatrixToXMMATRIX(const FbxAMatrix & InMatrix)
 	}
 	return XMLoadFloat4x4(&OutMatrix);
 }
+inline FMatrix FbxMatrixToFMATRIX(const FbxAMatrix & InMatrix)
+{
+	FMatrix OutMatrix;
+	for (int i = 0; i < 4; ++i)
+	{
+		for (int j = 0; j < 4; ++j)
+		{
+			OutMatrix.M[i][j] = (float)InMatrix[i][j];
+		}
+	}
+	return OutMatrix;
+}
 
 inline FbxAMatrix GetGeometry(FbxNode* pNode)
 {

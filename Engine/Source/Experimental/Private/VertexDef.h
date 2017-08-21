@@ -12,3 +12,8 @@ struct PerMeshCBuffer
 {
 	XMMATRIX m_matWrold;
 };
+
+struct PerFMeshCBuffer
+{
+	FMatrix m_matWrold;
+};

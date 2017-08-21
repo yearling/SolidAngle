@@ -81,8 +81,8 @@ void StaticMesh::Render(TComPtr<ID3D11DeviceContext> dc, TComPtr<ID3D11Buffer> c
 	D3D11_MAPPED_SUBRESOURCE MapResource;
 	auto hr = dc->Map(cb, 0, D3D11_MAP_WRITE_DISCARD, 0, &MapResource);
 
-	PerMeshCBuffer &cbPerMesh = (*(PerMeshCBuffer*)MapResource.pData);
-	cbPerMesh.m_matWrold = XMMatrixTranspose(MatWorld);
+	PerFMeshCBuffer &cbPerMesh = (*(PerFMeshCBuffer*)MapResource.pData);
+	cbPerMesh.m_matWrold = MatWorld.GetTransposed();
 	dc->Unmap(cb, 0);
 	//m_VS->BindResource("g_world", XMMatrixTranspose(MatWorld));
 
@@ -636,7 +636,7 @@ void MeshModel::DrawMesh(FbxNode* pNode,
 	// to do 
 	// mutiply the node's trasformation
 	FbxAMatrix GlobalTrans = GetGlobalPosition(pNode);
-	pMesh->MatWorld = FbxMatrixToXMMATRIX(GlobalTrans);
+	pMesh->MatWorld = FbxMatrixToFMATRIX(GlobalTrans);
 	pMesh->Render(m_dc,m_cbPerMesh);
 }
 void MeshModel::Render(TComPtr<ID3D11DeviceContext> dc)

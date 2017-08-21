@@ -18,10 +18,9 @@ public:
 	BoneIDType			BoneID;
 	BoneIDType			ParentBoneID;
 	std::vector<BoneIDType>   ChildBones;
-	XMMATRIX    MatParentToBone;
-	XMMATRIX	MatLocalTransform;
-	XMMATRIX    MatCurParent;
-
+	FMatrix     FMatParentToBone;
+	FMatrix		FMatLocalTransform;
+	FMatrix     FMatCurParent;
 };
 
 class Skeleton

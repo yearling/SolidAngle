@@ -11,7 +11,14 @@ struct RenderMeshCBuffer
 	XMMATRIX  m_matInvViewProj;
 	XMFLOAT3  m_lightDir;
 };
-
+struct FRenderMeshCBuffer
+{
+	FMatrix  m_matView;
+	FMatrix  m_matProj;
+	FMatrix  m_matViewProj;
+	FMatrix  m_matInvViewProj;
+	FMatrix  m_lightDir;
+};
 class RenderScene
 {
 public:

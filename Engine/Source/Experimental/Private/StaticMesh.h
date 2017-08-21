@@ -24,7 +24,7 @@ public:
 	void Clear();
 	void Render(TComPtr<ID3D11DeviceContext> dc, TComPtr<ID3D11Buffer> cb);
 	void UpdateVertexPosition(FbxMesh*pMesh, FbxVector4* pVertexArray);
-	XMMATRIX  MatWorld;
+	FMatrix  MatWorld;
 	TArray<LocalVertex> VertexArray;
 	TArray<int> IndexArray;
 	int FaceNum;

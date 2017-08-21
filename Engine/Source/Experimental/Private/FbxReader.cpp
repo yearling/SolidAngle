@@ -239,7 +239,7 @@ std::pair<bool,std::string> FBXReader::LoadMeshInfo(FbxMesh *pMesh, StaticMesh* 
 	pStaticMesh->m_pNode = pMesh->GetNode();
 	
 	FbxAMatrix& FbxWorldMatrix =  pMesh->GetNode()->EvaluateGlobalTransform();
-	pStaticMesh->MatWorld = FbxMatrixToXMMATRIX(FbxWorldMatrix);
+	pStaticMesh->MatWorld = FbxMatrixToFMATRIX(FbxWorldMatrix);
 	return std::make_pair<>(true, "");
 }
 

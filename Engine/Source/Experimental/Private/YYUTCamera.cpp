@@ -15,11 +15,18 @@ ICamera::ICamera() :
 {
 	XMStoreFloat4x4(&m_matView, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_matProjection, XMMatrixIdentity());
+	
 	m_vDir = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_vMouseDelata = XMFLOAT2(0.0f, 0.0f);
 	m_vEye = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_vLookat = XMFLOAT3(0.0f, 0.0f, 0.0f);
 
+	m_matViewF.SetIdentity();
+	m_matProjectionF.SetIdentity();
+	m_vDirF = FVector::ZeroVector;
+	m_vMouseDelataF = FVector2D::ZeroVector;
+	m_vEyeF = FVector::ZeroVector;
+	m_vLookatF = FVector::ZeroVector;
 }
 
 void ICamera::SetViewParam(const XMFLOAT3 &eye, const XMFLOAT3 &lookat)
@@ -39,6 +46,19 @@ void ICamera::SetViewParam(const XMFLOAT3 &eye, const XMFLOAT3 &lookat)
 	float len = sqrtf(powf(zBasis->z, 2) + powf(zBasis->x, 2));
 	m_fCameraPitchAngle = -atan2f(zBasis->y, len);
 	XMStoreFloat3(&m_vDir, XMVector3Normalize(vLookat - vEye));
+}
+
+void ICamera::SetViewParam(const FVector &eye, const FVector &lookat)
+{
+	m_vEyeF = eye;
+	m_vLookatF = lookat;
+	m_matViewF = FLookAtMatrix(m_vEyeF, m_vLookatF,FVector(.0f,1.0f,.0f));
+	m_vDirF = m_vLookatF - m_vEyeF;
+
+	FVector zBasis(m_matViewF.M[0][3], m_matViewF.M[1][3], m_matViewF.M[2][3]);
+	m_fCameraYawAngle = atan2f(zBasis.X, zBasis.Z);
+	float len = sqrtf(powf(zBasis.Z, 2) + powf(zBasis.X, 2));
+	m_fCameraPitchAngle = -atan2f(zBasis.Y, len);
 }
 
 void ICamera::SetProjParam(float FOV, float aspect, float near_plane, float far_plane)
@@ -67,15 +87,30 @@ const XMMATRIX ICamera::GetView() const
 	return XMLoadFloat4x4(&m_matView);
 }
 
+FMatrix ICamera::GetViewF() const
+{
+	return m_matViewF;
+}
+
 const XMMATRIX ICamera::GetViewInverse() const
 {
 	XMVECTOR determinant;
 	return XMMatrixInverse(&determinant, XMLoadFloat4x4(&m_matView));
 }
 
+FMatrix ICamera::GetViewInverseF() const
+{
+	return m_matViewF.Inverse();
+}
+
 const XMMATRIX ICamera::GetProject() const
 {
 	return XMLoadFloat4x4(&m_matProjection);
+}
+
+FMatrix ICamera::GetProjectF() const
+{
+	return m_matProjectionF;
 }
 
 const XMMATRIX ICamera::GetProjInv() const
@@ -84,14 +119,29 @@ const XMMATRIX ICamera::GetProjInv() const
 	return XMMatrixInverse(&determinant, XMLoadFloat4x4(&m_matProjection));
 }
 
+FMatrix ICamera::GetProjInvF() const
+{
+	return m_matProjectionF.Inverse();
+}
+
 const XMVECTOR ICamera::GetEyePt() const
 {
 	return XMLoadFloat3(&m_vEye);
 }
 
+FVector ICamera::GetEyePtF() const
+{
+	return m_vEyeF;
+}
+
 const XMVECTOR ICamera::GetDir() const
 {
 	return XMLoadFloat3(&m_vDir);
+}
+
+FVector ICamera::GetDirF() const
+{
+	return m_vDirF;
 }
 
 float ICamera::GetNearClip() const
@@ -116,15 +166,30 @@ ICamera::~ICamera()
 
 }
 
+void ICamera::FrameMove(float elapse_time)
+{
+
+}
+
 const XMMATRIX ICamera::GetViewProject() const
 {
 	return XMMatrixMultiply(XMLoadFloat4x4(&m_matView), XMLoadFloat4x4(&m_matProjection));
+}
+
+FMatrix ICamera::GetViewProjectF() const
+{
+
 }
 
 const XMMATRIX ICamera::GetViewProjInv() const
 {
 	XMVECTOR determinant;
 	return XMMatrixInverse(&determinant, XMMatrixMultiply(XMLoadFloat4x4(&m_matView), XMLoadFloat4x4(&m_matProjection)));
+}
+
+FMatrix ICamera::GetViewProjInvF() const
+{
+
 }
 
 void ICamera::SetVelocity(XMFLOAT3 const &velocity)
@@ -134,6 +199,11 @@ void ICamera::SetVelocity(XMFLOAT3 const &velocity)
 
 
 
+
+void ICamera::SetVelocity(const XMFLOAT3 &velocity)
+{
+
+}
 
 FirstPersionCamera::FirstPersionCamera()
 {

@@ -85,4 +85,6 @@ Bone::Bone()
 {
 	MatParentToBone = XMMatrixIdentity();
 	MatLocalTransform = XMMatrixIdentity();
+	FMatParentToBone = FMatrix::Identity;
+	FMatLocalTransform = FMatrix::Identity;
 }
