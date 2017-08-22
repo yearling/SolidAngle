@@ -2,10 +2,10 @@
 #include "YYUT.h"
 struct LocalVertex
 {
-	XMFLOAT3 Position;
-	XMFLOAT3 Normal;
-	XMFLOAT2 UV0;
-	XMFLOAT4 Color;
+	FVector Position;
+	FVector Normal;
+	FVector2D UV0;
+	FLinearColor Color;
 };
 
 struct PerMeshCBuffer

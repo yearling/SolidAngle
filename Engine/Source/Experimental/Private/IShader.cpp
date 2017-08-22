@@ -255,7 +255,7 @@ bool IShaderBind::BindResource(const FString &ParaName, FVector V3)
 			assert(0);
 			return false;
 		}
-		YConstantBuffer::YCBVector2::SetValue(ConstantBuffers[Index.ConstantBufferIndex].Get(), Index.ValueIndex, (float*)&V3);
+		YConstantBuffer::YCBVector3::SetValue(ConstantBuffers[Index.ConstantBufferIndex].Get(), Index.ValueIndex, (float*)&V3);
 		return true;
 	}
 	return false;
@@ -271,7 +271,7 @@ bool IShaderBind::BindResource(const FString &ParaName, FPlane V4)
 			assert(0);
 			return false;
 		}
-		YConstantBuffer::YCBVector2::SetValue(ConstantBuffers[Index.ConstantBufferIndex].Get(), Index.ValueIndex, (float*)&V4);
+		YConstantBuffer::YCBVector4::SetValue(ConstantBuffers[Index.ConstantBufferIndex].Get(), Index.ValueIndex, (float*)&V4);
 		return true;
 	}
 	return false;

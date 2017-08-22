@@ -5,6 +5,7 @@
 #include "YYUTHelper.h"
 #include "Skeleton.h"
 #include "IShader.h"
+#include "RenderInfo.h"
 
 
 
@@ -14,7 +15,7 @@ struct MaterialBaseFbx
 	FString MaterialName;
 	FString DiffusePath;
 };
-
+class MeshModel;
 class StaticMesh
 {
 public:
@@ -34,10 +35,9 @@ public:
 	TComPtr<ID3D11Buffer>			m_VB;
 	TComPtr<ID3D11Buffer>			m_IB;
 	FString					MeshName;
-	YVSShader * m_VS;
-	YPSShader * m_PS;
 	TUniquePtr<YVSShader>		m_VSShader;
 	TUniquePtr<YPSShader>		m_PSShader;
+	MeshModel*    pMeshModel;
 };
 
 class MeshModel
@@ -53,7 +53,7 @@ public:
 	void ComputeClusterDeformation(FbxAMatrix& pGlobalPosition, FbxMesh* pMesh, FbxCluster* pCluster, FbxAMatrix& pVertexTransformMatrix);
 	void ComputeSkinDeformation(FbxAMatrix& pGlobalPosition, FbxMesh* pMesh, FbxVector4* pVertexArray);
 	void DrawMesh(FbxNode* pNode, FbxAMatrix& pGlobalPosition);
-	void Render(TComPtr<ID3D11DeviceContext> dc);
+	void Render(TSharedRef<FRenderInfo> RenderInfo);
 	bool SetCurrentAnimStack(int pIndex);
 	FbxAMatrix GetGlobalPosition(FbxNode* pNode);
 	void DrawSkeleton(FbxNode* pNode, FbxAMatrix& pParentGlobalPosition, FbxAMatrix& pGlobalPosition);
@@ -67,8 +67,8 @@ public:
 	FbxArray<FbxString*> mAnimStackNameArray;
 	FbxAnimLayer * mCurrentAnimLayer;
 	TComPtr<ID3D11Buffer>			m_cbPerMesh;
-	TComPtr<ID3D11DeviceContext>    m_dc;
 	TMap<FbxNode*, int>       mapFbxNodeToStaticMesh;
 	TUniquePtr<YVSShader>  m_VS;
 	TUniquePtr<YPSShader>  m_PS;
+	FRenderInfo					m_RenderInfo;
 };

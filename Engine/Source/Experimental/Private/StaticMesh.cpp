@@ -64,6 +64,10 @@ bool StaticMesh::AllocResource()
 	{
 		CreateVertexBufferDynamic(Device, (UINT)VertexArray.Num() * sizeof(LocalVertex), &VertexArray[0], m_VB);
 		CreateIndexBuffer(Device, (UINT)IndexArray.Num() * sizeof(int), &IndexArray[0], m_IB);
+		if (!m_VSShader->CreateShader("..\\..\\Source\\Experimental\\Private\\RenderMesh.hlsl", "VSMain"))
+			return false;
+		if (!m_PSShader->CreateShader("..\\..\\Source\\Experimental\\Private\\RenderMesh.hlsl", "PSMain"))
+			return false;
 	}
 	return true;
 }
@@ -75,35 +79,50 @@ void StaticMesh::Clear()
 	FaceNum = -1;
 }
 
+void MeshModel::Render(TSharedRef<FRenderInfo> RenderInfo)
+{
+	m_RenderInfo = RenderInfo.Get();
+	FbxAMatrix matIdentity;
+	DrawNodeRecursive(RootNode, matIdentity);
+	Bone::BoneIDType RootBoneID = MainSkeleton.RootBone;
+	if (RootBoneID != Bone::InvalidBone)
+	{
+		Bone* pRootBone = &MainSkeleton.GetBone(RootBoneID);
+		DrawSkeleton2(pRootBone, XMMatrixIdentity());
+	}
+	/*for (int i = 0; i < MeshArrays.size(); ++i)
+	{
+	MeshArrays[i]->Render(dc, m_cb);
+	}*/
+}
 
 void StaticMesh::Render(TComPtr<ID3D11Buffer> cb)
 {
 	if (FaceNum == 0)
 		return;
+	FRenderInfo* RenderInfo = &pMeshModel->m_RenderInfo;
+	m_VSShader->BindResource(TEXT("g_view"), RenderInfo->RenderCameraInfo.View);
+	m_VSShader->BindResource(TEXT("g_projection"), RenderInfo->RenderCameraInfo.Projection);
+	m_VSShader->BindResource(TEXT("g_VP"), RenderInfo->RenderCameraInfo.ViewProjection);
+	m_VSShader->BindResource(TEXT("g_InvVP"), RenderInfo->RenderCameraInfo.ViewProjectionInv);
+	m_VSShader->BindResource(TEXT("g_world"), MatWorld);
+	m_PSShader->BindResource(TEXT("g_lightDir"), RenderInfo->SceneInfo.MainLightDir.GetSafeNormal());
 	TComPtr<ID3D11DeviceContext> dc = YYUTDXManager::GetInstance().GetD3DDC();
-	D3D11_MAPPED_SUBRESOURCE MapResource;
-	auto hr = dc->Map(cb, 0, D3D11_MAP_WRITE_DISCARD, 0, &MapResource);
-
-	PerFMeshCBuffer &cbPerMesh = (*(PerFMeshCBuffer*)MapResource.pData);
-	cbPerMesh.m_matWrold = MatWorld.GetTransposed();
-	dc->Unmap(cb, 0);
-	//m_VS->BindResource("g_world", XMMatrixTranspose(MatWorld));
-
-	D3D11_MAPPED_SUBRESOURCE VBMapResource;
-	hr = dc->Map(m_VB, 0, D3D11_MAP_WRITE_DISCARD, 0, &VBMapResource);
-	LocalVertex *pLocalVertexArray = (LocalVertex *)VBMapResource.pData;
-	memcpy(pLocalVertexArray, &VertexArray[0], sizeof(LocalVertex)*VertexArray.Num());
-	dc->Unmap(m_VB,0);
+	{
+		D3D11_MAPPED_SUBRESOURCE VBMapResource;
+		HRESULT hr = dc->Map(m_VB, 0, D3D11_MAP_WRITE_DISCARD, 0, &VBMapResource);
+		LocalVertex *pLocalVertexArray = (LocalVertex *)VBMapResource.pData;
+		memcpy(pLocalVertexArray, &VertexArray[0], sizeof(LocalVertex)*VertexArray.Num());
+		dc->Unmap(m_VB, 0);
+	}
 
 	UINT strid = sizeof(LocalVertex);
 	UINT offset = 0;
 	dc->IASetVertexBuffers(0, 1, &(m_VB), &strid, &offset);
 	dc->IASetIndexBuffer(m_IB, DXGI_FORMAT_R32_UINT, 0);
 	dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	dc->VSSetConstantBuffers(1, 1, &cb);
-	dc->PSSetConstantBuffers(1, 1, &cb);
-	//m_VS->Update();
-	//m_PS->Update();
+	m_VSShader->Update();
+	m_PSShader->Update();
 	dc->DrawIndexed(IndexArray.Num(), 0, 0);
 }
 
@@ -114,9 +133,9 @@ void StaticMesh::UpdateVertexPosition(FbxMesh* pMesh, FbxVector4* pVertexArray)
 		for (int i = 0; i < 3; ++i)
 		{
 			int CtrlPointIndex = pMesh->GetPolygonVertex(TriangleIndex, i);
-			VertexArray[TriangleIndex*3+i].Position.x = static_cast<float>(pVertexArray[CtrlPointIndex][0]);
-			VertexArray[TriangleIndex*3+i].Position.y = static_cast<float>(pVertexArray[CtrlPointIndex][1]);
-			VertexArray[TriangleIndex*3+i].Position.z = static_cast<float>(pVertexArray[CtrlPointIndex][2]);
+			VertexArray[TriangleIndex*3+i].Position.X = static_cast<float>(pVertexArray[CtrlPointIndex][0]);
+			VertexArray[TriangleIndex*3+i].Position.Y = static_cast<float>(pVertexArray[CtrlPointIndex][1]);
+			VertexArray[TriangleIndex*3+i].Position.Z = static_cast<float>(pVertexArray[CtrlPointIndex][2]);
 		}
 	}
 }
@@ -144,6 +163,7 @@ void MeshModel::Init()
 	for (auto& pStaticMesh : MeshArrays)
 	{
 		pStaticMesh->AllocResource();
+		pStaticMesh->pMeshModel = this;
 	}
 	
 }
@@ -580,8 +600,6 @@ void MeshModel::DrawMesh(FbxNode* pNode,
 		return;
 	int StaticMeshIndex = *FindResult;
 	TUniquePtr<StaticMesh> &pMesh = MeshArrays[StaticMeshIndex];
-	pMesh->m_VS = m_VS.Get();
-	pMesh->m_PS = m_PS.Get();
 	FbxAMatrix MeshOffsetInNode = GetGeometry(pNode);
 	// do deformer
 	FbxMesh* lMesh = pNode->GetMesh();
@@ -643,22 +661,7 @@ void MeshModel::DrawMesh(FbxNode* pNode,
 	pMesh->MatWorld = FbxMatrixToFMATRIX(GlobalTrans);
 	pMesh->Render(m_cbPerMesh);
 }
-void MeshModel::Render(TComPtr<ID3D11DeviceContext> dc)
-{
-	m_dc = dc;
-	FbxAMatrix matIdentity;
-	DrawNodeRecursive(RootNode, matIdentity);
-	Bone::BoneIDType RootBoneID = MainSkeleton.RootBone;
-	if (RootBoneID != Bone::InvalidBone)
-	{
-		Bone* pRootBone = &MainSkeleton.GetBone(RootBoneID);
-		DrawSkeleton2(pRootBone, XMMatrixIdentity());
-	}
-	/*for (int i = 0; i < MeshArrays.size(); ++i)
-	{
-		MeshArrays[i]->Render(dc, m_cb);
-	}*/
-}
+
 
 bool MeshModel::SetCurrentAnimStack(int pIndex)
 {
@@ -739,15 +742,15 @@ void MeshModel::DrawSkeleton(FbxNode* pNode, FbxAMatrix& pParentGlobalPosition, 
 	{
 		FbxVector4 BasePose= pParentGlobalPosition.GetT();
 		FbxVector4 RefPose = pGlobalPosition.GetT();
-		XMFLOAT3 fBasePose;
-		fBasePose.x = BasePose[0];
-		fBasePose.y = BasePose[1];
-		fBasePose.z = BasePose[2];
-		XMFLOAT3 fRefPose;
-		fRefPose.x = RefPose[0];
-		fRefPose.y = RefPose[1];
-		fRefPose.z = RefPose[2];
-		GCanvas->DrawLine(fBasePose, fRefPose, XMFLOAT4(1.0, 1.0, 0, 1.0));
+		FVector fBasePose;
+		fBasePose.X = BasePose[0];
+		fBasePose.Y = BasePose[1];
+		fBasePose.Z = BasePose[2];
+		FVector fRefPose;
+		fRefPose.X = RefPose[0];
+		fRefPose.Y = RefPose[1];
+		fRefPose.Z = RefPose[2];
+		GCanvas->DrawLine(fBasePose, fRefPose, FLinearColor(1.0, 1.0, 0, 1.0));
 	}
 }
 
@@ -765,7 +768,7 @@ void MeshModel::DrawSkeleton2(Bone* pBone, const XMMATRIX& MatParent)
 		XMStoreFloat4x4(&matChildBase, XMMatrixMultiply(matParentTransform,ChildBone.MatParentToBone));
 		XMFLOAT3 fBasePose(matParentBase.m[3]);
 		XMFLOAT3 fRefPos(matChildBase.m[3]);
-		GCanvas->DrawLine(fBasePose, fRefPos, XMFLOAT4(1.0, 1.0, 1.0, 1.0));
+		GCanvas->DrawLine(FVector(fBasePose.x,fBasePose.y,fBasePose.z), FVector(fRefPos.x,fRefPos.y,fRefPos.z), FLinearColor(1.0, 1.0, 1.0, 1.0));
 		DrawSkeleton2(&ChildBone, matParentTransform);
 	}
 }

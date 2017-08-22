@@ -24,7 +24,7 @@ void Y3DCanvas::Init()
 	CreateVertexBufferDynamic(Device, sizeof(LocalVertex) * m_MAXVertex, nullptr, m_VB, "line vb");
 }
 
-void Y3DCanvas::DrawLine(XMFLOAT3 StartPos, XMFLOAT3 EndPos, XMFLOAT4 Color)
+void Y3DCanvas::DrawLine(FVector StartPos, FVector EndPos, FLinearColor Color)
 {
 	LocalVertex Vertex;
 	Vertex.Position = StartPos;

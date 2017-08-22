@@ -9,7 +9,7 @@ class Y3DCanvas
 {
 public:
 	Y3DCanvas();
-	void						DrawLine(XMFLOAT3 StartPos, XMFLOAT3 EndPos, XMFLOAT4 Color);
+	void DrawLine(FVector StartPos, FVector EndPos, FLinearColor Color);
 	void						Render(TSharedRef<FRenderInfo> RenderInf);
 	void						Init();
 private:

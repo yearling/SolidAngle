@@ -223,9 +223,9 @@ std::pair<bool,std::string> FBXReader::LoadMeshInfo(FbxMesh *pMesh, StaticMesh* 
 			ReadTangent(pMesh, CtrlPointIndex, VertexCount, &tangent[i]);
 			index[i] = VertexCount++;
 			LocalVertex tmpLocalVertex;
-			tmpLocalVertex.Position = vertex[i];
-			tmpLocalVertex.Normal = normal[i];
-			tmpLocalVertex.UV0 = uv[i][0];
+			tmpLocalVertex.Position = FVector(vertex[i].x, vertex[i].y, vertex[i].z);
+			tmpLocalVertex.Normal = FVector(normal[i].x, normal[i].y, normal[i].z);
+			tmpLocalVertex.UV0 = FVector2D(uv[i][0].x, uv[i][0].y);
 			LocalVertexBuffer.Emplace(tmpLocalVertex);
 		}
 		for (int i = 0; i < 3; ++i)

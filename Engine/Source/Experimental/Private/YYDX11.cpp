@@ -43,14 +43,14 @@ void DX11Demo::Initial()
 	m_pCamera->SetProjParam(XM_PI / 4, m_width / (float)m_height, 1.0f, 1000.0f);
 	m_pCamera->SetViewParamF(eyeF, lookatF);
 	m_pCamera->SetProjParamF(PI / 4, m_width / (float)m_height, 1.0f, 1000.0f);
-	m_pLightCamera->SetProjParam(XM_PI / 4, m_width / (float)m_height, 50.0f, 300.0f);
+	m_pLightCamera->SetProjParam(XM_PI / 4, 1, 50.0f, 300.0f);
+	FVector lightEyeF(-320, 300, -220.3f);
+	FVector ligntLookatF(0.0f, 0.0f, 0.0f);
+	m_pLightCamera->SetViewParamF(lightEyeF, ligntLookatF);
+	m_pLightCamera->FrameMove(0); 
+
 	m_pRenderMesh = std::make_shared<RenderScene>();
 	m_pRenderMesh->SetScreenWidthHeigth(default_x, default_y);
-	m_pRenderMesh->SetCamera(m_pCamera);
-	m_pRenderMesh->SetLightCamera(m_pLightCamera);
-	m_pRenderMesh->SetDevice(YYUTDXManager::GetInstance().GetD3DDevice());
-	m_pRenderMesh->SetDeviceContext(YYUTDXManager::GetInstance().GetD3DDC());
-
 
 	m_pFbxReader = std::make_unique<class FBXReader>();
 	m_pFbxReader->InitialFBXSDK();
@@ -134,11 +134,11 @@ LRESULT DX11Demo::MyProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 				break;
 			case 'A':
 				m_vVelocity.x = -20.0f;
-				m_vVelocityF.Z = -20.0f;
+				m_vVelocityF.X = -20.0f;
 				break;
 			case 'D':
 				m_vVelocity.x = 20.0f;
-				m_vVelocityF.Z = 20.0f;
+				m_vVelocityF.X = 20.0f;
 				break;
 			case 'R':
 			{
@@ -372,11 +372,11 @@ void DX11Demo::DrawGroundGrid()
 
 	for (float xCurrent = xStart; xCurrent < xEnd + 1.0f; xCurrent += Grid)
 	{
-		GCanvas->DrawLine(XMFLOAT3(xCurrent, 0, zStart), XMFLOAT3(xCurrent, 0, zEnd), XMFLOAT4(1.0f, 1.0f, 1.0f, 0.3f));
+		GCanvas->DrawLine(FVector(xCurrent, 0, zStart), FVector(xCurrent, 0, zEnd), FLinearColor(1.0f, 1.0f, 1.0f, 0.3f));
 	}
 	for (float zCurrent = zStart; zCurrent < zEnd + 1.0f; zCurrent += Grid)
 	{
-		GCanvas->DrawLine(XMFLOAT3(xStart, 0, zCurrent), XMFLOAT3(xEnd, 0, zCurrent), XMFLOAT4(1.0f, 1.0f, 1.0f, 0.3f));
+		GCanvas->DrawLine(FVector(xStart, 0, zCurrent), FVector(xEnd, 0, zCurrent), FLinearColor(1.0f, 1.0f, 1.0f, 0.3f));
 	}
 }
 
@@ -421,6 +421,7 @@ void DX11Demo::Render()
 	pRenderInfo->RenderCameraInfo.Projection = m_pCamera->GetProjectF();
 	pRenderInfo->RenderCameraInfo.ViewProjection = m_pCamera->GetViewProjectF();
 	pRenderInfo->RenderCameraInfo.ViewProjectionInv = m_pCamera->GetViewProjInvF();
+	pRenderInfo->SceneInfo.MainLightDir = m_pLightCamera->GetDirF();
 	YYUTDXManager::GetInstance().AddRenderEvent([this, pRenderInfo]() {m_pRenderMesh->Render(pRenderInfo); });
 	YYUTDXManager::GetInstance().AddRenderEvent([this]() { DrawGroundGrid(); });
 	YYUTDXManager::GetInstance().AddRenderEvent([pRenderInfo]() {GCanvas->Render(pRenderInfo); });
