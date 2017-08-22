@@ -42,8 +42,8 @@
 		m_pLightCamera->SetProjParam(XM_PIDIV4,1.0f,0.1f,1000.0f);
 		FVector lightEyeF(-320,300,-220.3f);
 		FVector ligntLookatF(0.0f,0.0f,0.0f);
-		//m_pLightCamera->SetViewParamF(lightEyeF, ligntLookatF);
-		//m_pLightCamera->SetProjParamF(PI / 4, 1.0f, 0.1f, 1000.0f);
+		m_pLightCamera->SetViewParamF(lightEyeF, ligntLookatF);
+		m_pLightCamera->SetProjParamF(PI / 4, 1.0f, 0.1f, 1000.0f);
 		m_pLightCamera->FrameMove(0);
 		CreateMeshResource();
 	}
@@ -56,8 +56,8 @@
 		}
 	}
 
-	void RenderScene::Render()
-	{
+	void RenderScene::Render(TSharedRef<FRenderInfo> RenderInfo)
+{
 		static bool bSetAniStack = true;
 		if (bSetAniStack)
 		{
@@ -76,10 +76,6 @@
 		m_dc->OMSetRenderTargets(1,&m_MainRenderTargetView,m_MainDepthStencilView);
 		m_dc->RSSetViewports(1,YYUTDXManager::GetInstance().GetDefaultViewPort());
 
-		XMMATRIX matCameraProj = m_pViewCamera->GetProject();
-		XMMATRIX matCameraView = m_pViewCamera->GetView();
-		XMMATRIX matCamaraViewProj = m_pViewCamera->GetViewProject();
-
 		//更新CB
 #pragma region 更新CB
 		D3D11_MAPPED_SUBRESOURCE MapResource;
@@ -88,13 +84,13 @@
 		{
 			return;
 		}
-		RenderMeshCBuffer &cbShadowData = (*(RenderMeshCBuffer*)MapResource.pData);
-		cbShadowData.m_matView = XMMatrixTranspose(m_pViewCamera->GetView());
-		cbShadowData.m_matProj = XMMatrixTranspose(m_pViewCamera->GetProject());
-		cbShadowData.m_matViewProj = XMMatrixTranspose(m_pViewCamera->GetViewProject());
-		XMVECTOR deter;
-		cbShadowData.m_matInvViewProj =XMMatrixTranspose(XMMatrixInverse(&deter, cbShadowData.m_matViewProj));
-		XMStoreFloat3(&cbShadowData.m_lightDir,-XMVector3Normalize(m_pLightCamera->GetDir()));
+		
+		FRenderMeshCBuffer &cbShadowData = (*(FRenderMeshCBuffer*)MapResource.pData);
+		cbShadowData.m_matView = m_pViewCamera->GetViewF().GetTransposed();
+		cbShadowData.m_matProj = m_pViewCamera->GetProjectF().GetTransposed();
+		cbShadowData.m_matViewProj = m_pViewCamera->GetViewProjectF().GetTransposed();
+		cbShadowData.m_matInvViewProj = cbShadowData.m_matViewProj.Inverse().GetTransposed();
+		cbShadowData.m_lightDir = m_pLightCamera->GetDirF().GetSafeNormal();
 		m_dc->Unmap(m_cbPerFrame,0);
 
 		m_dc->PSSetSamplers(0,1,&m_ss);
@@ -129,7 +125,7 @@
 		};
 		CreateInputLayout(m_device, "..\\..\\Source\\Experimental\\Private\\RenderMesh.hlsl", "VSMain", layout, _countof(layout), m_InputLayout, "sdkmesh_inputlayout");
 		
-		m_pMesh->Init(m_device, m_dc);
+		m_pMesh->Init();
 	}
 
 

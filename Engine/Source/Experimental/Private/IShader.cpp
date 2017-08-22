@@ -164,7 +164,7 @@ bool IShaderBind::Update()
 }
 
 
-bool IShaderBind::BindResource(const FString &ParaName, int n)
+bool IShaderBind::BindResource(const FString &ParaName, int32 n)
 {
 
 	return true;
@@ -224,12 +224,12 @@ bool IShaderBind::BindResource(const FString &ParaName, float* f, int Num)
 
 
 
-bool IShaderBind::BindResource(const FString &ParaName, const DirectX::XMMATRIX *Mat, int Num)
+bool IShaderBind::BindResource(const FString &ParaName, const FMatrix  *Mat, int Num)
 {
 	return true;
 }
 
-bool IShaderBind::BindResource(const FString &ParaName, XMFLOAT2 V2)
+bool IShaderBind::BindResource(const FString &ParaName, FVector2D V2)
 {
 	ScalarIndex Index;
 	if (BindResourceHelp(ParaName, Index))
@@ -245,7 +245,7 @@ bool IShaderBind::BindResource(const FString &ParaName, XMFLOAT2 V2)
 	return false;
 }
 
-bool IShaderBind::BindResource(const FString &ParaName, XMFLOAT3 V3)
+bool IShaderBind::BindResource(const FString &ParaName, FVector V3)
 {
 	ScalarIndex Index;
 	if (BindResourceHelp(ParaName, Index))
@@ -261,7 +261,7 @@ bool IShaderBind::BindResource(const FString &ParaName, XMFLOAT3 V3)
 	return false;
 }
 
-bool IShaderBind::BindResource(const FString &ParaName, XMFLOAT4 V4)
+bool IShaderBind::BindResource(const FString &ParaName, FPlane V4)
 {
 	ScalarIndex Index;
 	if (BindResourceHelp(ParaName, Index))
@@ -276,7 +276,7 @@ bool IShaderBind::BindResource(const FString &ParaName, XMFLOAT4 V4)
 	}
 	return false;
 }
-bool IShaderBind::BindResource(const FString &ParaName, const DirectX::XMMATRIX &Mat)
+bool IShaderBind::BindResource(const FString &ParaName, const FMatrix  &Mat)
 {
 	ScalarIndex Index;
 	if (BindResourceHelp(ParaName, Index))

@@ -2,12 +2,6 @@
 #include "YYUTHelper.h"
 #include "YYUTFont.h"
 #include "YYUTDXManager.h"
-#include <string>
-
-
-
-
-
 
 void YYUTFont::Init()
 {
@@ -32,7 +26,7 @@ void YYUTFont::Init()
 	CreateDepthStencileState(m_device, m_DS, false, "Font::DS State");
 	CreateSamplerLinearWrap(m_device, m_SampleWrap, "Font::SamepleWrap");
 	//////////////////////////////////////////////////////////////////////////
-	m_clr = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_clr = FLinearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_pt.x = 0;
 	m_pt.y = 0;
 	m_nLineHeight = 15;
@@ -57,9 +51,9 @@ void YYUTFont::BeginText()
 	m_vecFontVertices.Empty();
 }
 
-void YYUTFont::DrawText(std::string strText,
+void YYUTFont::DrawText(const FString strText,
 	const RECT& rcScreen,
-	XMFLOAT4 vFontColor,
+	FLinearColor vFontColor,
 	float fBBWidth,
 	float fBBHeight,
 	bool bCenter)
@@ -77,7 +71,7 @@ void YYUTFont::DrawText(std::string strText,
 	fRectLeft = fRectLeft * 2.0f - 1.0f;
 	fRectTop = fRectTop * 2.0f - 1.0f;
 
-	int NumChars = (int)strText.length();
+	int NumChars = (int)strText.Len();
 	if (bCenter) {
 		float fRectRight = rcScreen.right / fBBWidth;
 		fRectRight = fRectRight * 2.0f - 1.0f;
@@ -115,34 +109,34 @@ void YYUTFont::DrawText(std::string strText,
 		float fTexRight = fTexLeft + fCharTexSizeX;
 
 		// tri1
-		SpriteVertex.vPos = XMFLOAT3(fRectLeft, fRectTop, fDepth);
-		SpriteVertex.vTex = XMFLOAT2(fTexLeft, fTexTop);
+		SpriteVertex.vPos = FVector(fRectLeft, fRectTop, fDepth);
+		SpriteVertex.vTex = FVector2D(fTexLeft, fTexTop);
 		SpriteVertex.vColor = vFontColor;
 		m_vecFontVertices.Add(SpriteVertex);
 
-		SpriteVertex.vPos = XMFLOAT3(fRectRight, fRectTop, fDepth);
-		SpriteVertex.vTex = XMFLOAT2(fTexRight, fTexTop);
+		SpriteVertex.vPos = FVector(fRectRight, fRectTop, fDepth);
+		SpriteVertex.vTex = FVector2D(fTexRight, fTexTop);
 		SpriteVertex.vColor = vFontColor;
 		m_vecFontVertices.Add(SpriteVertex);
 
-		SpriteVertex.vPos = XMFLOAT3(fRectLeft, fRectBottom, fDepth);
-		SpriteVertex.vTex = XMFLOAT2(fTexLeft, fTexBottom);
+		SpriteVertex.vPos = FVector(fRectLeft, fRectBottom, fDepth);
+		SpriteVertex.vTex = FVector2D(fTexLeft, fTexBottom);
 		SpriteVertex.vColor = vFontColor;
 		m_vecFontVertices.Add(SpriteVertex);
 
 		// tri2
-		SpriteVertex.vPos = XMFLOAT3(fRectRight, fRectTop, fDepth);
-		SpriteVertex.vTex = XMFLOAT2(fTexRight, fTexTop);
+		SpriteVertex.vPos = FVector(fRectRight, fRectTop, fDepth);
+		SpriteVertex.vTex = FVector2D(fTexRight, fTexTop);
 		SpriteVertex.vColor = vFontColor;
 		m_vecFontVertices.Add(SpriteVertex);
 
-		SpriteVertex.vPos = XMFLOAT3(fRectRight, fRectBottom, fDepth);
-		SpriteVertex.vTex = XMFLOAT2(fTexRight, fTexBottom);
+		SpriteVertex.vPos = FVector(fRectRight, fRectBottom, fDepth);
+		SpriteVertex.vTex = FVector2D(fTexRight, fTexBottom);
 		SpriteVertex.vColor = vFontColor;
 		m_vecFontVertices.Add(SpriteVertex);
 
-		SpriteVertex.vPos = XMFLOAT3(fRectLeft, fRectBottom, fDepth);
-		SpriteVertex.vTex = XMFLOAT2(fTexLeft, fTexBottom);
+		SpriteVertex.vPos = FVector(fRectLeft, fRectBottom, fDepth);
+		SpriteVertex.vTex = FVector2D(fTexLeft, fTexBottom);
 		SpriteVertex.vColor = vFontColor;
 		m_vecFontVertices.Add(SpriteVertex);
 
@@ -211,12 +205,12 @@ void YYUTFont::SetInsertionPos(int x, int y)
 	m_pt.y = y;
 }
 
-void YYUTFont::SetForegroundColor(XMFLOAT4 clr)
+void YYUTFont::SetForegroundColor(FLinearColor clr)
 {
 	m_clr = clr;
 }
 
-void YYUTFont::DrawTextLine(std::string str)
+void YYUTFont::DrawTextLine(const FString& str)
 {
 	RECT rc;
 	SetRect(&rc, m_pt.x, m_pt.y, 0, 0);

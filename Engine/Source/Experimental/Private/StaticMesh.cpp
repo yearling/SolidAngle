@@ -2,6 +2,7 @@
 #include "Canvas.h"
 #include "FbxReader.h"
 #include "FbxUtility.h"
+#include "YYUTDXManager.h"
 
 
 // Scale all the elements of a matrix.
@@ -47,7 +48,8 @@ void MatrixAdd(FbxAMatrix& pDstMatrix, FbxAMatrix& pSrcMatrix)
 
 StaticMesh::StaticMesh()
 {
-
+	m_VSShader= MakeUnique<YVSShader>();
+	m_PSShader = MakeUnique<YPSShader>();
 }
 
 StaticMesh::~StaticMesh()
@@ -55,12 +57,13 @@ StaticMesh::~StaticMesh()
 
 }
 
-bool StaticMesh::AllocResource(TComPtr<ID3D11Device> device, TComPtr<ID3D11DeviceContext> dc)
+bool StaticMesh::AllocResource()
 {
+	TComPtr<ID3D11Device> Device = YYUTDXManager::GetInstance().GetD3DDevice();
 	if (FaceNum != 0)
 	{
-		CreateVertexBufferDynamic(device, (UINT)VertexArray.Num() * sizeof(LocalVertex), &VertexArray[0], m_VB);
-		CreateIndexBuffer(device, (UINT)IndexArray.Num() * sizeof(int), &IndexArray[0], m_IB);
+		CreateVertexBufferDynamic(Device, (UINT)VertexArray.Num() * sizeof(LocalVertex), &VertexArray[0], m_VB);
+		CreateIndexBuffer(Device, (UINT)IndexArray.Num() * sizeof(int), &IndexArray[0], m_IB);
 	}
 	return true;
 }
@@ -73,11 +76,11 @@ void StaticMesh::Clear()
 }
 
 
-void StaticMesh::Render(TComPtr<ID3D11DeviceContext> dc, TComPtr<ID3D11Buffer> cb)
+void StaticMesh::Render(TComPtr<ID3D11Buffer> cb)
 {
 	if (FaceNum == 0)
 		return;
-
+	TComPtr<ID3D11DeviceContext> dc = YYUTDXManager::GetInstance().GetD3DDC();
 	D3D11_MAPPED_SUBRESOURCE MapResource;
 	auto hr = dc->Map(cb, 0, D3D11_MAP_WRITE_DISCARD, 0, &MapResource);
 
@@ -123,8 +126,9 @@ MeshModel::MeshModel()
 	m_cbPerMesh = nullptr;
 }
 
-void MeshModel::Init(TComPtr<ID3D11Device> device, TComPtr<ID3D11DeviceContext> dc)
+void MeshModel::Init()
 {
+	TComPtr<ID3D11Device> Device = YYUTDXManager::GetInstance().GetD3DDevice();
 	m_VS = MakeUnique<YVSShader>();
 	if (!m_VS->CreateShader("..\\..\\Source\\Experimental\\Private\\RenderMesh.hlsl", "VSMain"))
 	{
@@ -135,11 +139,11 @@ void MeshModel::Init(TComPtr<ID3D11Device> device, TComPtr<ID3D11DeviceContext> 
 	{
 		assert(0);
 	}
-	CreateConstantBufferCPUWrite(device, sizeof(PerMeshCBuffer), m_cbPerMesh, "cbPerframe");
+	CreateConstantBufferCPUWrite(Device, sizeof(PerMeshCBuffer), m_cbPerMesh, "cbPerframe");
 	mFrameTime.SetTime(0, 0, 0, 1, 0, Scene->GetGlobalSettings().GetTimeMode());
 	for (auto& pStaticMesh : MeshArrays)
 	{
-		pStaticMesh->AllocResource(device, dc);
+		pStaticMesh->AllocResource();
 	}
 	
 }
@@ -637,7 +641,7 @@ void MeshModel::DrawMesh(FbxNode* pNode,
 	// mutiply the node's trasformation
 	FbxAMatrix GlobalTrans = GetGlobalPosition(pNode);
 	pMesh->MatWorld = FbxMatrixToFMATRIX(GlobalTrans);
-	pMesh->Render(m_dc,m_cbPerMesh);
+	pMesh->Render(m_cbPerMesh);
 }
 void MeshModel::Render(TComPtr<ID3D11DeviceContext> dc)
 {

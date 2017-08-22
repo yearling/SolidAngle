@@ -166,7 +166,6 @@
     <ClCompile Include="..\Source\Experimental\Private\YYUTCamera.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YYUTDXManager.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YYUTFont.cpp" />
-    <ClCompile Include="..\Source\Experimental\Private\YYUTFrustum.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YYUTHelper.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YYUTMutiScreen.cpp" />
   </ItemGroup>
@@ -186,8 +185,8 @@
     <ClInclude Include="..\Source\Experimental\Public\YYUTCamera.h" />
     <ClInclude Include="..\Source\Experimental\Public\YYUTDXManager.h" />
     <ClInclude Include="..\Source\Experimental\Public\YYUTFont.h" />
-    <ClInclude Include="..\Source\Experimental\Public\YYUTFrustum.h" />
     <ClInclude Include="..\Source\Experimental\Public\YYUTHelper.h" />
+    <ClInclude Include="..\Source\Experimental\Public\RenderInfo.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Source\Experimental\Private\BaseVertex.hlsl">

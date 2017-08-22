@@ -6,7 +6,6 @@ Y3DCanvas gCanvas;
 Y3DCanvas* GCanvas = &gCanvas;
 
 Y3DCanvas::Y3DCanvas()
-	:m_pViewCamera(nullptr)
 {
 	m_VSShader = MakeUnique<YVSShader>();
 	m_PSShader = MakeUnique<YPSShader>();
@@ -36,7 +35,7 @@ void Y3DCanvas::DrawLine(XMFLOAT3 StartPos, XMFLOAT3 EndPos, XMFLOAT4 Color)
 	LineDatas.Add(Vertex);
 }
 
-void Y3DCanvas::Render()
+void Y3DCanvas::Render(TSharedRef<FRenderInfo> RenderInf)
 {
 	TComPtr<ID3D11DeviceContext> DeviceContext = YYUTDXManager::GetInstance().GetD3DDC();
 	DeviceContext->RSSetState(m_rs);
@@ -51,22 +50,11 @@ void Y3DCanvas::Render()
 	}
 	DeviceContext->Unmap(m_VB, 0);
 
-	XMMATRIX matCameraProj = m_pViewCamera->GetProject();
-	XMMATRIX matCameraView = m_pViewCamera->GetView();
-	XMMATRIX matCamaraViewProj = m_pViewCamera->GetViewProject();
-	XMVECTOR deter;
-	XMMATRIX matCamaraViewProjInv = XMMatrixInverse(&deter, matCamaraViewProj);
-
-	FMatrix	 matCameraProjF = m_pViewCamera->GetProjectF();
-	FMatrix matCameraViewF = m_pViewCamera->GetViewF();
-	FMatrix matCamaraViewProjF = m_pViewCamera->GetViewProjectF();
-	FMatrix matCamaraViewProjInvF = matCamaraViewProjF.Inverse();
-
-	m_VSShader->BindResource("g_view", matCameraView);
-	m_VSShader->BindResource("g_projection", matCameraProj);
-	m_VSShader->BindResource("g_VP", matCamaraViewProj);
-	m_VSShader->BindResource("g_InvVP", matCamaraViewProjInv);
-	m_VSShader->BindResource("g_world", XMMatrixIdentity());
+	m_VSShader->BindResource("g_view", RenderInf->RenderCameraInfo.View);
+	m_VSShader->BindResource("g_projection", RenderInf->RenderCameraInfo.Projection);
+	m_VSShader->BindResource("g_VP", RenderInf->RenderCameraInfo.ViewProjection);
+	m_VSShader->BindResource("g_InvVP", RenderInf->RenderCameraInfo.ViewProjectionInv);
+	m_VSShader->BindResource("g_world", FMatrix::Identity);
 	DeviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 	UINT tride = (UINT)sizeof(LocalVertex);
 	UINT offset = 0;

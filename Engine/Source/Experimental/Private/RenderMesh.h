@@ -2,6 +2,7 @@
 #include "YYUT.h"
 #include "YYUTCamera.h"
 #include "StaticMesh.h"
+#include "RenderInfo.h"
 #include <memory>
 struct RenderMeshCBuffer
 {
@@ -17,7 +18,7 @@ struct FRenderMeshCBuffer
 	FMatrix  m_matProj;
 	FMatrix  m_matViewProj;
 	FMatrix  m_matInvViewProj;
-	FMatrix  m_lightDir;
+	FVector  m_lightDir;
 };
 class RenderScene
 {
@@ -26,7 +27,7 @@ public:
 	~RenderScene(void);
 	virtual	void					Init();
 	virtual void					Update(float ElpaseTime);
-	virtual void					Render();
+	virtual void					Render(TSharedRef<FRenderInfo> RenderInfo);
 	void							SetCamera(ICamera* pCamera) { m_pViewCamera = pCamera; }
 	void							SetLightCamera(ICamera* pCamera) { m_pLightCamera = pCamera; }
 	void							SetDevice(TComPtr<ID3D11Device> device) { m_device = device; }

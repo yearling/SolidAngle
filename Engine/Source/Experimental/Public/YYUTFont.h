@@ -10,9 +10,9 @@ struct FontNode
 
 struct YYSpriteVertex
 {
-	XMFLOAT3 vPos;
-	XMFLOAT4 vColor;
-	XMFLOAT2 vTex;
+	FVector vPos;
+	FLinearColor vColor;
+	FVector2D vTex;
 };
 
 class YYUTFont
@@ -24,11 +24,11 @@ public:
 	void							EndFont();
 	void							BeginText();
 
-	void							DrawText(std::string strText,const RECT& rcScreen,XMFLOAT4 vFontColor,float fBBWidth,float fBBHeight,bool bCenter);
+	void DrawText(const FString strText,const RECT& rcScreen,FLinearColor vFontColor,float fBBWidth,float fBBHeight,bool bCenter);
 
 	void							SetInsertionPos(int x, int y);
-	void							SetForegroundColor(XMFLOAT4 clr);
-	void							DrawTextLine(std::string);
+	void							SetForegroundColor(FLinearColor clr);
+	void							DrawTextLine(const FString&);
 protected:
 	void							RenderText();
 	TComPtr<ID3D11Buffer>			m_FontBuffer;
@@ -49,7 +49,7 @@ protected:
 
 	POINT							m_pt;
 	int								m_nLineHeight;
-	XMFLOAT4						m_clr;
+	FLinearColor					m_clr;
 	int								m_BackBufferWidth;
 	int								m_BackBufferHeight;
 };

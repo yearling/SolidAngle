@@ -206,6 +206,11 @@ void ICamera::SetVelocity(XMFLOAT3 const &velocity)
 	m_vVelocity = velocity;
 }
 
+void ICamera::SetVelocityF(FVector elocity)
+{
+	m_vVelocityF = elocity;
+}
+
 FirstPersionCamera::FirstPersionCamera()
 {
 

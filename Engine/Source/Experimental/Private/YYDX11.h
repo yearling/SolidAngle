@@ -34,6 +34,7 @@ private:
 	bool							m_bMouseMDown;
 	bool							m_bMouseRDown;
 	XMFLOAT3						m_vVelocity;
+	FVector							m_vVelocityF;
 	POINT							m_LastMousePosition;
 	XMFLOAT2						m_vMouseDelta;
 	float							m_fYawOrigin;
@@ -41,6 +42,8 @@ private:
 	bool							m_bSwitchButtonDown;
 	bool							m_bInit;
 	bool                            m_bShowColorLayer;
+	int64							m_LastTickCycles;
+	double							m_LastFrameTime;
 private:
 	//std::shared_ptr<DepthPeeling::ObjPrimitive> m_spObj;
 	std::shared_ptr<RenderScene>		m_pRenderMesh;

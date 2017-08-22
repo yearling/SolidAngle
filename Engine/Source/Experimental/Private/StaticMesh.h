@@ -20,9 +20,9 @@ class StaticMesh
 public:
 	StaticMesh();
 	~StaticMesh();
-	bool AllocResource(TComPtr<ID3D11Device> device, TComPtr<ID3D11DeviceContext> dc);
+	bool AllocResource();
 	void Clear();
-	void Render(TComPtr<ID3D11DeviceContext> dc, TComPtr<ID3D11Buffer> cb);
+	void Render(TComPtr<ID3D11Buffer> cb);
 	void UpdateVertexPosition(FbxMesh*pMesh, FbxVector4* pVertexArray);
 	FMatrix  MatWorld;
 	TArray<LocalVertex> VertexArray;
@@ -36,13 +36,15 @@ public:
 	FString					MeshName;
 	YVSShader * m_VS;
 	YPSShader * m_PS;
+	TUniquePtr<YVSShader>		m_VSShader;
+	TUniquePtr<YPSShader>		m_PSShader;
 };
 
 class MeshModel
 {
 public:
 	MeshModel();
-	void Init(TComPtr<ID3D11Device> device, TComPtr<ID3D11DeviceContext> dc);
+	void Init();
 	void Tick();
 	void DrawNodeRecursive(FbxNode* pNode, FbxAMatrix& pParentGlobalPosition);
 	void DrawNode(FbxNode* pNode, FbxAMatrix& pParentGlobalPosition, FbxAMatrix& pGlobalPosition);

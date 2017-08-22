@@ -25,11 +25,11 @@ public:
 	virtual bool				BindResource(const FString &ParaName, int32 n)=0;
 	virtual bool				BindResource(const FString &ParaName, float f)=0;
 	virtual bool				BindResource(const FString &ParaName, float* f, int Num)=0;
-	virtual bool				BindResource(const FString &ParaName, XMFLOAT2 V2)=0;
-	virtual bool				BindResource(const FString &ParaName, XMFLOAT3 V3)=0;
-	virtual bool				BindResource(const FString &ParaName, XMFLOAT4 V4)=0;
-	virtual bool				BindResource(const FString &ParaName, const DirectX::XMMATRIX &Mat)=0;
-	virtual bool				BindResource(const FString &ParaName, const DirectX::XMMATRIX *Mat,int Num)=0;
+	virtual bool				BindResource(const FString &ParaName, FVector2D V2)=0;
+	virtual bool				BindResource(const FString &ParaName, FVector V3)=0;
+	virtual bool				BindResource(const FString &ParaName, FPlane V4)=0;
+	virtual bool				BindResource(const FString &ParaName, const FMatrix  &Mat)=0;
+	virtual bool				BindResource(const FString &ParaName, const FMatrix  *Mat,int Num)=0;
 	virtual bool				Update()=0;
 protected:
 	virtual TComPtr<ID3D11DeviceChild>  GetInternalResource()const = 0;
@@ -92,13 +92,13 @@ struct YConstantBuffer
 	typedef YCBVector<float, 4> YCBVector4;
 	struct YCBMatrix4X4
 	{
-		static XMMATRIX& GetValue(YConstantBuffer *ConstantBuffer, unsigned int Offset) 
+		static FMatrix& GetValue(YConstantBuffer *ConstantBuffer, unsigned int Offset)
 		{
-			return *((XMMATRIX*)(ConstantBuffer->ShadowBuffer.Get() + Offset));
+			return *((FMatrix*)(ConstantBuffer->ShadowBuffer.Get() + Offset));
 		}
-		static void SetValue(YConstantBuffer *ConstantBuffer, unsigned int Offset, const XMMATRIX& Value)
+		static void SetValue(YConstantBuffer *ConstantBuffer, unsigned int Offset, const FMatrix& Value)
 		{
-			*((XMMATRIX*)(ConstantBuffer->ShadowBuffer.Get() + Offset)) = XMMatrixTranspose(Value);
+			*((FMatrix*)(ConstantBuffer->ShadowBuffer.Get() + Offset)) = Value.GetTransposed();
 		}
 	};
 
@@ -119,11 +119,11 @@ public:
 	virtual bool				BindResource(const FString &ParaName, int32 n) override;
 	virtual bool				BindResource(const FString &ParaName, float f) override;
 	virtual bool				BindResource(const FString &ParaName, float* f, int Num) override;
-	virtual bool				BindResource(const FString &ParaName, XMFLOAT2 V2) override;
-	virtual bool				BindResource(const FString &ParaName, XMFLOAT3 V3) override;
-	virtual bool				BindResource(const FString &ParaName, XMFLOAT4 V4) override;
-	virtual bool				BindResource(const FString &ParaName, const DirectX::XMMATRIX &Mat) override;
-	virtual bool				BindResource(const FString &ParaName, const DirectX::XMMATRIX *Mat, int Num) override;
+	virtual bool				BindResource(const FString &ParaName, FVector2D V2) override;
+	virtual bool				BindResource(const FString &ParaName, FVector V3) override;
+	virtual bool				BindResource(const FString &ParaName, FPlane V4) override;
+	virtual bool				BindResource(const FString &ParaName, const FMatrix  &Mat) override;
+	virtual bool				BindResource(const FString &ParaName, const FMatrix  *Mat, int Num) override;
 protected:
 	bool						ReflectShader(TComPtr<ID3DBlob> Blob);
 	FString					ShaderPath;

@@ -169,6 +169,7 @@ void YYUTDXManager::Render(void)
 		(Func)();
 	m_SwapChain->Present(0, 0);
 	m_FPSCounts++;
+	m_ListRenderEvents.Reset();
 }
 
 void YYUTDXManager::Tick(DWORD elapse_time)

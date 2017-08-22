@@ -17,6 +17,7 @@ public:
 	void							SetWindow(int width, int height);
 	void							AddPitchYaw(float pitch, float yaw);
 	void							SetVelocity(const XMFLOAT3 &velocity);
+	void							SetVelocityF(FVector elocity);
 	float							GetPitch() const { return m_fCameraPitchAngle; }
 	float							GetYaw() const { return m_fCameraYawAngle; }
 	void							SetPitch(float pitch) { m_fCameraPitchAngle = pitch; }

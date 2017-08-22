@@ -16,6 +16,7 @@ extern "C" __declspec(dllimport) LRESULT WINAPI SendMessageW( HWND   hWnd,UINT  
 
 void DX11Demo::Initial()
 {
+	FPlatformTime::InitTiming();
 	YYUTApplication::Initial();
 	int default_x = 800;
 	int default_y = 800;
@@ -73,18 +74,10 @@ void DX11Demo::Initial()
 		return;
 	}
 	m_pRenderMesh->Init();
-	YYUTDXManager::GetInstance().AddRenderEvent(std::bind(&RenderScene::Render, m_pRenderMesh));
-
-
 	// Draw ground grid
-	YYUTDXManager::GetInstance().AddRenderEvent([this]() { DrawGroundGrid(); });
 	GCanvas->Init();
-
-	GCanvas->SetCamera(m_pCamera);
-	YYUTDXManager::GetInstance().AddRenderEvent([]() {GCanvas->Render(); });
-
-
 	m_pCurrentCamera = m_pCamera;
+	m_LastFrameTime = FPlatformTime::Seconds();
 	m_bInit = true;
 }
 
@@ -133,15 +126,19 @@ LRESULT DX11Demo::MyProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 			{
 			case 'W':
 				m_vVelocity.z = 20.0f;
+				m_vVelocityF.Z = 20.0f;
 				break;
 			case 'S':
 				m_vVelocity.z = -20.0f;
+				m_vVelocityF.Z = -20.0f;
 				break;
 			case 'A':
 				m_vVelocity.x = -20.0f;
+				m_vVelocityF.Z = -20.0f;
 				break;
 			case 'D':
 				m_vVelocity.x = 20.0f;
+				m_vVelocityF.Z = 20.0f;
 				break;
 			case 'R':
 			{
@@ -164,15 +161,19 @@ LRESULT DX11Demo::MyProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 			{
 			case 'W':
 				m_vVelocity.z = 0.0f;
+				m_vVelocityF.Z = 0.0f;
 				break;
 			case 'S':
 				m_vVelocity.z = 0.0f;
+				m_vVelocityF.Z = 0.0f;
 				break;
 			case 'A':
 				m_vVelocity.x = 0.0f;
+				m_vVelocityF.X = 0.0f;
 				break;
 			case 'D':
 				m_vVelocity.x = 0.0f;
+				m_vVelocityF.X = 0.0f;
 				break;
 			case 'R':
 			{
@@ -302,10 +303,9 @@ void DX11Demo::GameMain()
 int DX11Demo::Run()
 {
 	MSG msg;
-	float elapseTime = 0.0f;
+	double elapseTime = 0.0f;
 	while (1)
 	{
-
 		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			if (WM_QUIT == msg.message)
@@ -313,6 +313,9 @@ int DX11Demo::Run()
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
+		//elapseTime = FPlatformTime::ToSeconds64(FPlatformTime::Cycles64() - m_LastTickCycles);
+		elapseTime = FPlatformTime::Seconds() - m_LastFrameTime;
+		m_LastFrameTime = FPlatformTime::Seconds();
 		Update(elapseTime);
 		Render();
 	}
@@ -383,6 +386,8 @@ void DX11Demo::Update(float ElapseTime)
 	if (!m_bInit)
 		return;
 	m_pCurrentCamera->SetVelocity(m_vVelocity);
+	//std::cout << "Update::Velocity: " << m_vVelocity.x << "  " << m_vVelocity.z << std::endl;
+	m_pCurrentCamera->SetVelocityF(m_vVelocityF);
 	XMVECTOR EyePos = m_pCurrentCamera->GetEyePt();
 	XMFLOAT3 vEyePos;
 	XMStoreFloat3(&vEyePos, EyePos);
@@ -411,6 +416,14 @@ void DX11Demo::Update(float ElapseTime)
 
 void DX11Demo::Render()
 {
+	TSharedRef<FRenderInfo> pRenderInfo = MakeShared<FRenderInfo>();
+	pRenderInfo->RenderCameraInfo.View = m_pCamera->GetViewF();
+	pRenderInfo->RenderCameraInfo.Projection = m_pCamera->GetProjectF();
+	pRenderInfo->RenderCameraInfo.ViewProjection = m_pCamera->GetViewProjectF();
+	pRenderInfo->RenderCameraInfo.ViewProjectionInv = m_pCamera->GetViewProjInvF();
+	YYUTDXManager::GetInstance().AddRenderEvent([this, pRenderInfo]() {m_pRenderMesh->Render(pRenderInfo); });
+	YYUTDXManager::GetInstance().AddRenderEvent([this]() { DrawGroundGrid(); });
+	YYUTDXManager::GetInstance().AddRenderEvent([pRenderInfo]() {GCanvas->Render(pRenderInfo); });
 	YYUTDXManager::GetInstance().Render();
 }
 
