@@ -30,7 +30,7 @@ public:
 	/**
 	 * Constructor
 	 *
-	 * @param HalfFOV half Field of View in the Y direction
+	 * @param HalfFOV half Field of View in the X direction
 	 * @param Width view space width
 	 * @param Height view space height
 	 * @param MinZ distance to the near Z plane

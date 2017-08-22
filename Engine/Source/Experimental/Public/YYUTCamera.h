@@ -11,8 +11,9 @@ public:
 
 	virtual void					Reset();
 	virtual void					SetViewParam(const XMFLOAT3 &eye,const XMFLOAT3 &lookat);
-	virtual void					SetViewParam(const FVector &eye,const FVector &lookat);
+	virtual void					SetViewParamF(const FVector &eye,const FVector &lookat);
 	virtual void					SetProjParam(float FOV,float aspect,float near_plane,float far_plane);
+	virtual void					SetProjParamF(float FOV,float aspect,float near_plane,float far_plane);
 	void							SetWindow(int width, int height);
 	void							AddPitchYaw(float pitch, float yaw);
 	void							SetVelocity(const XMFLOAT3 &velocity);

@@ -56,6 +56,12 @@ void Y3DCanvas::Render()
 	XMMATRIX matCamaraViewProj = m_pViewCamera->GetViewProject();
 	XMVECTOR deter;
 	XMMATRIX matCamaraViewProjInv = XMMatrixInverse(&deter, matCamaraViewProj);
+
+	FMatrix	 matCameraProjF = m_pViewCamera->GetProjectF();
+	FMatrix matCameraViewF = m_pViewCamera->GetViewF();
+	FMatrix matCamaraViewProjF = m_pViewCamera->GetViewProjectF();
+	FMatrix matCamaraViewProjInvF = matCamaraViewProjF.Inverse();
+
 	m_VSShader->BindResource("g_view", matCameraView);
 	m_VSShader->BindResource("g_projection", matCameraProj);
 	m_VSShader->BindResource("g_VP", matCamaraViewProj);

@@ -40,9 +40,12 @@
 		XMFLOAT3 ligntLookat(0.0f,0.0f,0.0f);
 		m_pLightCamera->SetViewParam(lightEye,ligntLookat);
 		m_pLightCamera->SetProjParam(XM_PIDIV4,1.0f,0.1f,1000.0f);
+		FVector lightEyeF(-320,300,-220.3f);
+		FVector ligntLookatF(0.0f,0.0f,0.0f);
+		//m_pLightCamera->SetViewParamF(lightEyeF, ligntLookatF);
+		//m_pLightCamera->SetProjParamF(PI / 4, 1.0f, 0.1f, 1000.0f);
 		m_pLightCamera->FrameMove(0);
 		CreateMeshResource();
-		
 	}
 
 	void RenderScene::Update(float ElpaseTime)

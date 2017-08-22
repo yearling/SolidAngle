@@ -48,14 +48,14 @@ void ICamera::SetViewParam(const XMFLOAT3 &eye, const XMFLOAT3 &lookat)
 	XMStoreFloat3(&m_vDir, XMVector3Normalize(vLookat - vEye));
 }
 
-void ICamera::SetViewParam(const FVector &eye, const FVector &lookat)
+void ICamera::SetViewParamF(const FVector &eye, const FVector &lookat)
 {
 	m_vEyeF = eye;
 	m_vLookatF = lookat;
 	m_matViewF = FLookAtMatrix(m_vEyeF, m_vLookatF,FVector(.0f,1.0f,.0f));
 	m_vDirF = m_vLookatF - m_vEyeF;
 
-	FVector zBasis(m_matViewF.M[0][3], m_matViewF.M[1][3], m_matViewF.M[2][3]);
+	FVector zBasis(m_matViewF.M[0][2], m_matViewF.M[1][2], m_matViewF.M[2][2]);
 	m_fCameraYawAngle = atan2f(zBasis.X, zBasis.Z);
 	float len = sqrtf(powf(zBasis.Z, 2) + powf(zBasis.X, 2));
 	m_fCameraPitchAngle = -atan2f(zBasis.Y, len);
@@ -68,6 +68,15 @@ void ICamera::SetProjParam(float FOV, float aspect, float near_plane, float far_
 	m_fNearPlane = near_plane;
 	m_fFarPlane = far_plane;
 	XMStoreFloat4x4(&m_matProjection, XMMatrixPerspectiveFovLH(m_fFov, m_fAspect, m_fNearPlane, m_fFarPlane));
+}
+
+void ICamera::SetProjParamF(float FOV, float aspect, float near_plane, float far_plane)
+{
+	m_fFov = FOV;
+	m_fAspect = aspect;
+	m_fNearPlane = near_plane;
+	m_fFarPlane = far_plane;
+	m_matProjectionF = FPerspectiveMatrix(FOV/2, aspect, 1.0f, m_fNearPlane, m_fNearPlane);
 }
 
 void ICamera::SetWindow(int width, int height)
@@ -178,7 +187,7 @@ const XMMATRIX ICamera::GetViewProject() const
 
 FMatrix ICamera::GetViewProjectF() const
 {
-
+	return m_matViewF* m_matProjectionF;
 }
 
 const XMMATRIX ICamera::GetViewProjInv() const
@@ -189,20 +198,12 @@ const XMMATRIX ICamera::GetViewProjInv() const
 
 FMatrix ICamera::GetViewProjInvF() const
 {
-
+	return (m_matViewF* m_matProjectionF).Inverse();
 }
 
 void ICamera::SetVelocity(XMFLOAT3 const &velocity)
 {
 	m_vVelocity = velocity;
-}
-
-
-
-
-void ICamera::SetVelocity(const XMFLOAT3 &velocity)
-{
-
 }
 
 FirstPersionCamera::FirstPersionCamera()
@@ -238,6 +239,21 @@ void FirstPersionCamera::FrameMove(float elapse_time)
 	m_vDir.x = XMVectorGetX(CamRote.r[2]);
 	m_vDir.y = XMVectorGetY(CamRote.r[2]);
 	m_vDir.z = XMVectorGetZ(CamRote.r[2]);
+
+	XMFLOAT4X4 ToUEMatrix;
+	XMStoreFloat4x4(&ToUEMatrix, CamRote);
+	FPlane r1(ToUEMatrix._11, ToUEMatrix._12, ToUEMatrix._13, ToUEMatrix._14);
+	FPlane r2(ToUEMatrix._21, ToUEMatrix._22, ToUEMatrix._23, ToUEMatrix._24);
+	FPlane r3(ToUEMatrix._31, ToUEMatrix._32, ToUEMatrix._33, ToUEMatrix._34);
+	FPlane r4(ToUEMatrix._41, ToUEMatrix._42, ToUEMatrix._43, ToUEMatrix._44);
+	FMatrix CamRotate(r1, r2, r3, r4);
+	FVector FWorldUP = CamRotate.TransformVector(FVector(0.0f, 1.0f, 0.0f));
+	FVector FWorldAhead = CamRotate.TransformVector(FVector(0.0f, 0.0f, 100.0f));
+	FVector FWorldMove = CamRotate.TransformVector(m_vVelocityF);
+	m_vEyeF += (FWorldMove* elapse_time);
+	m_vLookatF = m_vEyeF + FWorldAhead;
+	m_matViewF = FLookAtMatrix(m_vEyeF, m_vLookatF, FWorldUP);
+	m_vDirF = FVector(CamRotate.M[1][0], CamRotate.M[1][1], CamRotate.M[1][2]);
 }
 
 

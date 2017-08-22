@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="YYUT">
+      <UniqueIdentifier>{d87f7598-1f71-4ffd-a9a3-293a15ee3c2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{11289358-699b-4d8c-a9f8-f7f67b355014}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{0e978638-7d3c-4f91-9a3f-5775cc5a8864}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fbx">
+      <UniqueIdentifier>{4a452185-205b-4c89-b68a-aa70e3d8b083}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mesh">
+      <UniqueIdentifier>{1df79a16-1e20-4793-9ca9-472d2feb50c9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Experimental\Private\game_main.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YYDX11.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YYUTApplication.cpp">
+      <Filter>YYUT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YYUTDXManager.cpp">
+      <Filter>YYUT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YYUTHelper.cpp">
+      <Filter>YYUT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YYUTFrustum.cpp">
+      <Filter>YYUT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\IShader.cpp">
+      <Filter>YYUT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YYUTCamera.cpp">
+      <Filter>YYUT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YYUTFont.cpp">
+      <Filter>YYUT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\Canvas.cpp">
+      <Filter>YYUT</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\FbxReader.cpp">
+      <Filter>fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\StaticMesh.cpp">
+      <Filter>Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\Skeleton.cpp">
+      <Filter>Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\RenderMesh.cpp">
+      <Filter>Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YYUTMutiScreen.cpp">
+      <Filter>YYUT</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\Experimental\Private\YYDX11.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YYUTApplication.h">
+      <Filter>YYUT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YYUT.h">
+      <Filter>YYUT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YYUTDXManager.h">
+      <Filter>YYUT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YYUTHelper.h">
+      <Filter>YYUT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YYUTFrustum.h">
+      <Filter>YYUT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\IShader.h">
+      <Filter>YYUT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YYUTCamera.h">
+      <Filter>YYUT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YYUTFont.h">
+      <Filter>YYUT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Private\Canvas.h">
+      <Filter>YYUT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Private\VertexDef.h">
+      <Filter>YYUT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Private\FbxReader.h">
+      <Filter>fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Private\FbxUtility.h">
+      <Filter>fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Private\StaticMesh.h">
+      <Filter>Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Private\Skeleton.h">
+      <Filter>Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Private\RenderMesh.h">
+      <Filter>Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Private\YYUTMutiScreen.h">
+      <Filter>YYUT</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Source\Experimental\Private\RenderMesh.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Source\Experimental\Private\BaseVertex.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Source\Experimental\Private\UI.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Source\Experimental\Private\Canvas.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>
