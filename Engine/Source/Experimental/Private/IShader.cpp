@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <d3dcompiler.h>
+#include <D3D11Shader.h>
 
 
 const char* gSystemDir = "..\\Shader";
@@ -132,6 +133,7 @@ void IShaderBind::SetInclude(const FString & ShaderSrcInclude)
 
 bool IShaderBind::AddAlias(const FString & AliasName)
 {
+#ifdef DEBUG
 	AliasNameForDebug = AliasName;
 	TComPtr<ID3D11DeviceChild> DeviceChild = GetInternalResource();
 	if (DeviceChild && (!AliasNameForDebug.IsEmpty()))
@@ -145,6 +147,7 @@ bool IShaderBind::AddAlias(const FString & AliasName)
 			}
 		}
 	}
+#endif
 	return true;
 }
 

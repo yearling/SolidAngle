@@ -113,7 +113,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\Binaries\x64\;..\Source\ThirdParty\Fbx\2016.1.1\lib\vs2015\x64\debug;..\Source\ThirdParty\DirectXTex\DirectXTex\lib\$(Platform)\$(PlatformToolset)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SolidAngle_x64_Debug.lib;libfbxsdk.lib;DirectXTex_debug.lib;D3D11.lib;D3DCompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DXGUID.lib;D3D11.lib;D3DCompiler.lib;SolidAngle_x64_Debug.lib;libfbxsdk.lib;DirectXTex_debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -141,7 +141,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;FBXSDK_SHARED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;FBXSDK_SHARED;_CONSOLE;PLATFORM_WINDOWS=1;IS_PROGRAM=1;IS_MONOLITHIC=0;UE_BUILD_MINIMAL=0;WITH_PLUGIN_SUPPORT=1;UE_BUILD_DEVELOPMENT;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_SERVER_CODE=0;CORE_API=__declspec(dllimport);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Source\Experimental\Public;..\Source\ThirdParty\Fbx\2017.0.1\include;..\Source\ThirdParty\DirectXTex\DDSTextureLoader;..\Source\ThirdParty\DirectXTex\WICTextureLoader;..\Source\ThirdParty\DirectXTex\DirectXTex;..\Source\Runtime\Core\Public</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -150,7 +150,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\Binaries\x64\;..\Source\ThirdParty\Fbx\2017.0.1\lib\vs2015\x64\release;..\Source\ThirdParty\DirectXTex\DirectXTex\lib\$(Platform)\$(PlatformToolset)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SolidAngle_x64_Release.lib;libfbxsdk.lib;DirectXTex.lib;D3D11.lib;D3DCompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DXGUID.lib;D3D11.lib;D3DCompiler.lib;libfbxsdk.lib;DirectXTex_release.lib;SolidAngle_x64_Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -199,6 +199,7 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\Source\Experimental\Private\RenderMesh.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
