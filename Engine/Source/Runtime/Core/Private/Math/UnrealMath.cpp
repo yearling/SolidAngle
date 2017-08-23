@@ -370,6 +370,66 @@ FRotator FRotator::GetInverse() const
 }
 
 
+// UE
+//FQuat FRotator::Quaternion() const
+//{
+//	SCOPE_CYCLE_COUNTER(STAT_MathConvertRotatorToQuat);
+//
+//	DiagnosticCheckNaN();
+//
+//#if PLATFORM_ENABLE_VECTORINTRINSICS
+//	const VectorRegister Angles = MakeVectorRegister(Pitch, Yaw, Roll, 0.0f);
+//	const VectorRegister HalfAngles = VectorMultiply(Angles, GlobalVectorConstants::DEG_TO_RAD_HALF);
+//
+//	VectorRegister SinAngles, CosAngles;
+//	VectorSinCos(&SinAngles, &CosAngles, &HalfAngles);
+//
+//	// Vectorized conversion, measured 20% faster than using scalar version after VectorSinCos.
+//	// Indices within VectorRegister (for shuffles): P=0, Y=1, R=2
+//	const VectorRegister SR = VectorReplicate(SinAngles, 2);
+//	const VectorRegister CR = VectorReplicate(CosAngles, 2);
+//
+//	const VectorRegister SY_SY_CY_CY_Temp = VectorShuffle(SinAngles, CosAngles, 1, 1, 1, 1);
+//
+//	const VectorRegister SP_SP_CP_CP = VectorShuffle(SinAngles, CosAngles, 0, 0, 0, 0);
+//	const VectorRegister SY_CY_SY_CY = VectorShuffle(SY_SY_CY_CY_Temp, SY_SY_CY_CY_Temp, 0, 2, 0, 2);
+//
+//	const VectorRegister CP_CP_SP_SP = VectorShuffle(CosAngles, SinAngles, 0, 0, 0, 0);
+//	const VectorRegister CY_SY_CY_SY = VectorShuffle(SY_SY_CY_CY_Temp, SY_SY_CY_CY_Temp, 2, 0, 2, 0);
+//
+//	const uint32 Neg = uint32(1 << 31);
+//	const uint32 Pos = uint32(0);
+//	const VectorRegister SignBitsLeft  = MakeVectorRegister(Pos, Neg, Pos, Pos);
+//	const VectorRegister SignBitsRight = MakeVectorRegister(Neg, Neg, Neg, Pos);
+//	const VectorRegister LeftTerm  = VectorBitwiseXor(SignBitsLeft , VectorMultiply(CR, VectorMultiply(SP_SP_CP_CP, SY_CY_SY_CY)));
+//	const VectorRegister RightTerm = VectorBitwiseXor(SignBitsRight, VectorMultiply(SR, VectorMultiply(CP_CP_SP_SP, CY_SY_CY_SY)));
+//
+//	FQuat RotationQuat;
+//	const VectorRegister Result = VectorAdd(LeftTerm, RightTerm);	
+//	VectorStoreAligned(Result, &RotationQuat);
+//#else
+//	const float DEG_TO_RAD = PI/(180.f);
+//	const float DIVIDE_BY_2 = DEG_TO_RAD/2.f;
+//	float SP, SY, SR;
+//	float CP, CY, CR;
+//
+//	FMath::SinCos(&SP, &CP, Pitch*DIVIDE_BY_2);
+//	FMath::SinCos(&SY, &CY, Yaw*DIVIDE_BY_2);
+//	FMath::SinCos(&SR, &CR, Roll*DIVIDE_BY_2);
+//
+//	FQuat RotationQuat;
+//	RotationQuat.X =  CR*SP*SY - SR*CP*CY;
+//	RotationQuat.Y = -CR*SP*CY - SR*CP*SY;
+//	RotationQuat.Z =  CR*CP*SY - SR*SP*CY;
+//	RotationQuat.W =  CR*CP*CY + SR*SP*SY;
+//#endif // PLATFORM_ENABLE_VECTORINTRINSICS
+//
+//	RotationQuat.DiagnosticCheckNaN();
+//
+//	return RotationQuat;
+//}
+
+//US 
 FQuat FRotator::Quaternion() const
 {
 	SCOPE_CYCLE_COUNTER(STAT_MathConvertRotatorToQuat);
@@ -388,27 +448,27 @@ FQuat FRotator::Quaternion() const
 	const VectorRegister SR = VectorReplicate(SinAngles, 2);
 	const VectorRegister CR = VectorReplicate(CosAngles, 2);
 
+	const VectorRegister SP_SP_CP_CP_Temp = VectorShuffle(SinAngles, CosAngles, 0, 0, 0, 0);
 	const VectorRegister SY_SY_CY_CY_Temp = VectorShuffle(SinAngles, CosAngles, 1, 1, 1, 1);
 
-	const VectorRegister SP_SP_CP_CP = VectorShuffle(SinAngles, CosAngles, 0, 0, 0, 0);
-	const VectorRegister SY_CY_SY_CY = VectorShuffle(SY_SY_CY_CY_Temp, SY_SY_CY_CY_Temp, 0, 2, 0, 2);
-
-	const VectorRegister CP_CP_SP_SP = VectorShuffle(CosAngles, SinAngles, 0, 0, 0, 0);
-	const VectorRegister CY_SY_CY_SY = VectorShuffle(SY_SY_CY_CY_Temp, SY_SY_CY_CY_Temp, 2, 0, 2, 0);
+	const VectorRegister SP_CP_SP_CP = VectorShuffle(SP_SP_CP_CP_Temp, SP_SP_CP_CP_Temp, 0, 2, 0, 2);
+	const VectorRegister CY_SY_SY_CY = VectorShuffle(SY_SY_CY_CY_Temp, SY_SY_CY_CY_Temp, 2, 0, 0, 2);
+	const VectorRegister CP_SP_CP_SP = VectorShuffle(SP_SP_CP_CP_Temp, SP_SP_CP_CP_Temp, 2, 0, 2, 0);
+	const VectorRegister SY_CY_CY_SY = VectorShuffle(SY_SY_CY_CY_Temp, SY_SY_CY_CY_Temp, 0, 2, 2, 0);
 
 	const uint32 Neg = uint32(1 << 31);
 	const uint32 Pos = uint32(0);
-	const VectorRegister SignBitsLeft  = MakeVectorRegister(Pos, Neg, Pos, Pos);
-	const VectorRegister SignBitsRight = MakeVectorRegister(Neg, Neg, Neg, Pos);
-	const VectorRegister LeftTerm  = VectorBitwiseXor(SignBitsLeft , VectorMultiply(CR, VectorMultiply(SP_SP_CP_CP, SY_CY_SY_CY)));
-	const VectorRegister RightTerm = VectorBitwiseXor(SignBitsRight, VectorMultiply(SR, VectorMultiply(CP_CP_SP_SP, CY_SY_CY_SY)));
+	const VectorRegister SignBitsLeft = MakeVectorRegister(Pos, Pos, Neg, Pos);
+	const VectorRegister SignBitsRight = MakeVectorRegister(Neg, Pos, Pos, Pos);
+	const VectorRegister LeftTerm = VectorBitwiseXor(SignBitsLeft, VectorMultiply(CR, VectorMultiply(SP_CP_SP_CP, CY_SY_SY_CY)));
+	const VectorRegister RightTerm = VectorBitwiseXor(SignBitsRight, VectorMultiply(SR, VectorMultiply(CP_SP_CP_SP, SY_CY_CY_SY)));
 
 	FQuat RotationQuat;
-	const VectorRegister Result = VectorAdd(LeftTerm, RightTerm);	
+	const VectorRegister Result = VectorAdd(LeftTerm, RightTerm);
 	VectorStoreAligned(Result, &RotationQuat);
 #else
-	const float DEG_TO_RAD = PI/(180.f);
-	const float DIVIDE_BY_2 = DEG_TO_RAD/2.f;
+	const float DEG_TO_RAD = PI / (180.f);
+	const float DIVIDE_BY_2 = DEG_TO_RAD / 2.f;
 	float SP, SY, SR;
 	float CP, CY, CR;
 
@@ -417,10 +477,10 @@ FQuat FRotator::Quaternion() const
 	FMath::SinCos(&SR, &CR, Roll*DIVIDE_BY_2);
 
 	FQuat RotationQuat;
-	RotationQuat.X =  CR*SP*SY - SR*CP*CY;
-	RotationQuat.Y = -CR*SP*CY - SR*CP*SY;
-	RotationQuat.Z =  CR*CP*SY - SR*SP*CY;
-	RotationQuat.W =  CR*CP*CY + SR*SP*SY;
+	RotationQuat.X =  SP*CY*CR - CP*SY*SR;
+	RotationQuat.Y =  CP*SY*CR + SP*CY*SR;
+	RotationQuat.Z = -SP*SY*CR + CP*CY*SR;
+	RotationQuat.W =  CP*CY*CR + SP*SY*SR;
 #endif // PLATFORM_ENABLE_VECTORINTRINSICS
 
 	RotationQuat.DiagnosticCheckNaN();
@@ -430,12 +490,14 @@ FQuat FRotator::Quaternion() const
 
 FVector FRotator::Euler() const
 {
-	return FVector( Roll, Pitch, Yaw );
+	//return FVector( Roll, Pitch, Yaw );
+	return FVector( Pitch, Yaw, Roll );
 }
 
 FRotator FRotator::MakeFromEuler(const FVector& Euler)
 {
-	return FRotator(Euler.Y, Euler.Z, Euler.X);
+	//return FRotator(Euler.Y, Euler.Z, Euler.X);
+	return FRotator(Euler.X, Euler.Y, Euler.Z);
 }
 
 FVector FRotator::UnrotateVector(const FVector& V) const
@@ -468,26 +530,58 @@ void FRotator::GetWindingAndRemainder(FRotator& Winding, FRotator& Remainder) co
 }
 
 
+// UE
+//FRotator FMatrix::Rotator() const
+//{
+//	const FVector		XAxis	= GetScaledAxis( EAxis::X );
+//	const FVector		YAxis	= GetScaledAxis( EAxis::Y );
+//	const FVector		ZAxis	= GetScaledAxis( EAxis::Z );
+//
+//	FRotator	Rotator	= FRotator( 
+//									FMath::Atan2( XAxis.Z, FMath::Sqrt(FMath::Square(XAxis.X)+FMath::Square(XAxis.Y)) ) * 180.f / PI, 
+//									FMath::Atan2( XAxis.Y, XAxis.X ) * 180.f / PI, 
+//									0 
+//								);
+//	
+//	const FVector		SYAxis	= FRotationMatrix( Rotator ).GetScaledAxis( EAxis::Y );
+//	Rotator.Roll		= FMath::Atan2( ZAxis | SYAxis, YAxis | SYAxis ) * 180.f / PI;
+//
+//	Rotator.DiagnosticCheckNaN();
+//	return Rotator;
+//}
 
+// US
 FRotator FMatrix::Rotator() const
 {
-	const FVector		XAxis	= GetScaledAxis( EAxis::X );
-	const FVector		YAxis	= GetScaledAxis( EAxis::Y );
-	const FVector		ZAxis	= GetScaledAxis( EAxis::Z );
-
-	FRotator	Rotator	= FRotator( 
-									FMath::Atan2( XAxis.Z, FMath::Sqrt(FMath::Square(XAxis.X)+FMath::Square(XAxis.Y)) ) * 180.f / PI, 
-									FMath::Atan2( XAxis.Y, XAxis.X ) * 180.f / PI, 
-									0 
-								);
-	
-	const FVector		SYAxis	= FRotationMatrix( Rotator ).GetScaledAxis( EAxis::Y );
-	Rotator.Roll		= FMath::Atan2( ZAxis | SYAxis, YAxis | SYAxis ) * 180.f / PI;
-
+	// Euler to Rotation Matrix, RotationWorld(Pitch) * Rotation(Y) * Rotation(Z)
+	// cycz            cysz          -sy
+	// -cxsz+sxsycz    cxcz+sxsysz   sxcy
+	// sxsz+cxsycz     -sxcz+cxsysz  cxcy
+	const float SINGULARITY_THRESHOLD = 0.9999999f;
+	const float RAD_TO_DEG = (180.f) / PI;
+	const float t = -M[0][2];
+	FRotator	Rotator;
+	if (t < -SINGULARITY_THRESHOLD)
+	{
+		Rotator.Pitch = FMath::Atan2(-M[1][0], M[1][1]);
+		Rotator.Yaw = - HALF_PI;
+		Rotator.Roll = Rotator.Pitch;
+	}
+	else if (t > SINGULARITY_THRESHOLD)
+	{
+		Rotator.Pitch = FMath::Atan2(M[1][0], M[1][1]);
+		Rotator.Yaw = HALF_PI;
+		Rotator.Roll = -Rotator.Pitch;
+	}
+	else
+	{
+		Rotator.Pitch = FMath::Atan2(M[1][2], M[2][2]);
+		Rotator.Yaw = FMath::Asin(t);
+		Rotator.Roll = FMath::Atan2(M[0][1], M[0][0]);
+	}
 	Rotator.DiagnosticCheckNaN();
 	return Rotator;
 }
-
 
 FQuat FMatrix::ToQuat() const
 {
@@ -539,8 +633,8 @@ FRotator FQuat::Rotator() const
 
 	DiagnosticCheckNaN();
 	const float SingularityTest = Z*X-W*Y;
-	const float YawY = 2.f*(W*Z+X*Y);
-	const float YawX = (1.f-2.f*(FMath::Square(Y) + FMath::Square(Z)));
+	const float RollSin = 2.f*(W*Z+X*Y);
+	const float RollCos = (1.f-2.f*(FMath::Square(Y) + FMath::Square(Z)));
 
 	// reference 
 	// http://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
@@ -553,6 +647,8 @@ FRotator FQuat::Rotator() const
 	const float RAD_TO_DEG = (180.f)/PI;
 	FRotator RotatorFromQuat;
 
+	/*
+	UE 
 	if (SingularityTest < -SINGULARITY_THRESHOLD)
 	{
 		RotatorFromQuat.Pitch = -90.f;
@@ -569,13 +665,32 @@ FRotator FQuat::Rotator() const
 	{
 		RotatorFromQuat.Pitch = FMath::FastAsin(2.f*(SingularityTest)) * RAD_TO_DEG;
 		RotatorFromQuat.Yaw = FMath::Atan2(YawY, YawX) * RAD_TO_DEG;
-		RotatorFromQuat.Roll = FMath::Atan2(-2.f*(W*X+Y*Z), (1.f-2.f*(FMath::Square(X) + FMath::Square(Y)))) * RAD_TO_DEG;
+		RotatorFromQuat.Roll = FMath::Atan2(-2.f*(W*X + Y*Z), (1.f - 2.f*(FMath::Square(X) + FMath::Square(Y)))) * RAD_TO_DEG;
+	}*/
+
+	if (SingularityTest < -SINGULARITY_THRESHOLD) // Sin(Yaw) > 1
+	{
+		RotatorFromQuat.Yaw = 90.f;
+		RotatorFromQuat.Roll = FMath::Atan2(RollSin, RollCos) * RAD_TO_DEG;
+		RotatorFromQuat.Pitch = FRotator::NormalizeAxis(RotatorFromQuat.Roll + (2.f * FMath::Atan2(X, W) * RAD_TO_DEG));
+	}
+	else if (SingularityTest > SINGULARITY_THRESHOLD) // Sin(Yaw)<-1
+	{
+		RotatorFromQuat.Yaw = -90.f;
+		RotatorFromQuat.Roll = FMath::Atan2(RollSin, RollCos) * RAD_TO_DEG;
+		RotatorFromQuat.Pitch = FRotator::NormalizeAxis(- RotatorFromQuat.Roll + (2.f * FMath::Atan2(X, W) * RAD_TO_DEG));
+	}
+	else
+	{
+		RotatorFromQuat.Pitch = FMath::Atan2(2.0f*(X*W+Y*Z), (1.f - 2.f*(FMath::Square(X)+FMath::Square(Y)))) * RAD_TO_DEG;
+		RotatorFromQuat.Yaw = FMath::FastAsin(-2.f*(SingularityTest)) * RAD_TO_DEG;
+		RotatorFromQuat.Roll = FMath::Atan2(RollSin, RollCos) * RAD_TO_DEG;
 	}
 
 #if ENABLE_NAN_DIAGNOSTIC
 	if (RotatorFromQuat.ContainsNaN())
 	{
-		logOrEnsureNanError(TEXT("FQuat::Rotator(): Rotator result %s contains NaN! Quat = %s, YawY = %.9f, YawX = %.9f"), *RotatorFromQuat.ToString(), *this->ToString(), YawY, YawX);
+		logOrEnsureNanError(TEXT("FQuat::Rotator(): Rotator result %s contains NaN! Quat = %s, YawY = %.9f, YawX = %.9f"), *RotatorFromQuat.ToString(), *this->ToString(), RollSin, RollCos);
 		RotatorFromQuat = FRotator::ZeroRotator;
 	}
 #endif
