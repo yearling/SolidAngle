@@ -39,14 +39,12 @@ void DX11Demo::Initial()
 	FVector lookatF(0.0f, 0.0f, 0.0f);
 	m_pCamera = new FirstPersionCamera();
 	m_pLightCamera = new FirstPersionCamera();
-	m_pCamera->SetViewParam(eye, lookat);
-	m_pCamera->SetProjParam(XM_PI / 4, m_width / (float)m_height, 1.0f, 1000.0f);
-	m_pCamera->SetViewParamF(eyeF, lookatF);
-	m_pCamera->SetProjParamF(PI / 4, m_width / (float)m_height, 1.0f, 1000.0f);
-	m_pLightCamera->SetProjParam(XM_PI / 4, 1, 50.0f, 300.0f);
+	m_pCamera->SetViewParam(eyeF, lookatF);
+	m_pCamera->SetProjParam(PI / 4, m_width / (float)m_height, 1.0f, 1000.0f);
 	FVector lightEyeF(-320, 300, -220.3f);
 	FVector ligntLookatF(0.0f, 0.0f, 0.0f);
-	m_pLightCamera->SetViewParamF(lightEyeF, ligntLookatF);
+	m_pLightCamera->SetViewParam(lightEyeF, ligntLookatF);
+	m_pLightCamera->SetProjParam(PI / 4, 1, 50.0f, 300.0f);
 	m_pLightCamera->FrameMove(0); 
 
 	m_pRenderMesh = std::make_shared<RenderScene>();
@@ -361,12 +359,8 @@ void DX11Demo::Update(float ElapseTime)
 	//m_Camera.AddPitchYaw(m_vMouseDelta.y*ElapseTime,m_vMouseDelta.x*ElapseTime);
 	if (!m_bInit)
 		return;
-	m_pCurrentCamera->SetVelocity(m_vVelocity);
 	//std::cout << "Update::Velocity: " << m_vVelocity.x << "  " << m_vVelocity.z << std::endl;
-	m_pCurrentCamera->SetVelocityF(m_vVelocityF);
-	XMVECTOR EyePos = m_pCurrentCamera->GetEyePt();
-	XMFLOAT3 vEyePos;
-	XMStoreFloat3(&vEyePos, EyePos);
+	m_pCurrentCamera->SetVelocity(m_vVelocityF);
 	//cout << " x: " << vEyePos.x << " y: " << vEyePos.y << " z: " << vEyePos.z << endl;
 	if (m_bMouseLDown && !m_bMouseRDown)
 	{
@@ -382,7 +376,7 @@ void DX11Demo::Update(float ElapseTime)
 		float fyaw = m_fYawOrigin + m_vMouseDelta.x*0.005f;
 		m_pLightCamera->SetPitch(fpitch);
 		m_pLightCamera->SetYaw(fyaw);
-		m_pLightCamera->SetVelocity(XMFLOAT3(0.0f, 0.0f, 0.0f));
+		m_pLightCamera->SetVelocity(FVector(0.0f, 0.0f, 0.0f));
 		m_pLightCamera->FrameMove(ElapseTime);
 	}
 	else
@@ -393,11 +387,11 @@ void DX11Demo::Update(float ElapseTime)
 void DX11Demo::Render()
 {
 	TSharedRef<FRenderInfo> pRenderInfo = MakeShared<FRenderInfo>();
-	pRenderInfo->RenderCameraInfo.View = m_pCamera->GetViewF();
-	pRenderInfo->RenderCameraInfo.Projection = m_pCamera->GetProjectF();
-	pRenderInfo->RenderCameraInfo.ViewProjection = m_pCamera->GetViewProjectF();
-	pRenderInfo->RenderCameraInfo.ViewProjectionInv = m_pCamera->GetViewProjInvF();
-	pRenderInfo->SceneInfo.MainLightDir = m_pLightCamera->GetDirF();
+	pRenderInfo->RenderCameraInfo.View = m_pCamera->GetView();
+	pRenderInfo->RenderCameraInfo.Projection = m_pCamera->GetProject();
+	pRenderInfo->RenderCameraInfo.ViewProjection = m_pCamera->GetViewProject();
+	pRenderInfo->RenderCameraInfo.ViewProjectionInv = m_pCamera->GetViewProjInv();
+	pRenderInfo->SceneInfo.MainLightDir = m_pLightCamera->GetDir();
 	YYUTDXManager::GetInstance().AddRenderEvent([this, pRenderInfo]() {m_pRenderMesh->Render(pRenderInfo); });
 	YYUTDXManager::GetInstance().Render();
 }

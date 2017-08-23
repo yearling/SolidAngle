@@ -29,7 +29,7 @@ public:
 };
 
 
-// UE original
+// UE original, Internal rotator order: Yaw -> Pitch -> Roll, FMatrix= R(Roll)*R(Pitch)*R(Yaw) = R(X)*R(Y)*R(Z),跟我们的很相似，只是顺序变了下
 //FORCEINLINE FRotationTranslationMatrix::FRotationTranslationMatrix(const FRotator& Rot, const FVector& Origin)
 //{
 //#if PLATFORM_ENABLE_VECTORINTRINSICS
