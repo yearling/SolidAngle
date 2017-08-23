@@ -356,30 +356,6 @@ DX11Demo::~DX11Demo()
 
 }
 
-void DX11Demo::RenderShadowMap(void)
-{
-
-}
-
-void DX11Demo::DrawGroundGrid()
-{
-	// draw grid 5X5
-	float xStart = -100.0f;
-	float xEnd = 100.0f;
-	float zStart = -100.0f;
-	float zEnd = 100.0f;
-	float Grid = 10.0f;
-
-	for (float xCurrent = xStart; xCurrent < xEnd + 1.0f; xCurrent += Grid)
-	{
-		GCanvas->DrawLine(FVector(xCurrent, 0, zStart), FVector(xCurrent, 0, zEnd), FLinearColor(1.0f, 1.0f, 1.0f, 0.3f));
-	}
-	for (float zCurrent = zStart; zCurrent < zEnd + 1.0f; zCurrent += Grid)
-	{
-		GCanvas->DrawLine(FVector(xStart, 0, zCurrent), FVector(xEnd, 0, zCurrent), FLinearColor(1.0f, 1.0f, 1.0f, 0.3f));
-	}
-}
-
 void DX11Demo::Update(float ElapseTime)
 {
 	//m_Camera.AddPitchYaw(m_vMouseDelta.y*ElapseTime,m_vMouseDelta.x*ElapseTime);
@@ -423,8 +399,6 @@ void DX11Demo::Render()
 	pRenderInfo->RenderCameraInfo.ViewProjectionInv = m_pCamera->GetViewProjInvF();
 	pRenderInfo->SceneInfo.MainLightDir = m_pLightCamera->GetDirF();
 	YYUTDXManager::GetInstance().AddRenderEvent([this, pRenderInfo]() {m_pRenderMesh->Render(pRenderInfo); });
-	YYUTDXManager::GetInstance().AddRenderEvent([this]() { DrawGroundGrid(); });
-	YYUTDXManager::GetInstance().AddRenderEvent([pRenderInfo]() {GCanvas->Render(pRenderInfo); });
 	YYUTDXManager::GetInstance().Render();
 }
 

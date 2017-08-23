@@ -19,7 +19,6 @@ public:
 	void							OnResize(void);
 	void							OnMinimize(void);
 	void							RenderShadowMap(void);
-	void							DrawGroundGrid();
 protected:
 	virtual LRESULT					MyProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) throw();
 	bool							m_bResize;

@@ -31,7 +31,7 @@ public:
 	void							SetScreenWidthHeigth(int width, int height) { m_ScreenWidth = (float)width; m_ScreenHeight = (float)height; }
 	void							SetMesh(std::unique_ptr<MeshModel> && pMesh) { m_pMesh = std::move(pMesh); }
 	void							CreateMeshResource();
-
+	void							DrawGridAndCoordinates();
 private:
 	float							m_ScreenWidth;
 	float							m_ScreenHeight;

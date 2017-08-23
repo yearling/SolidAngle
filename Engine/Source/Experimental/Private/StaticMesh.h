@@ -23,7 +23,7 @@ public:
 	~StaticMesh();
 	bool AllocResource();
 	void Clear();
-	void Render(TComPtr<ID3D11Buffer> cb);
+	void Render();
 	void UpdateVertexPosition(FbxMesh*pMesh, FbxVector4* pVertexArray);
 	FMatrix  MatWorld;
 	TArray<LocalVertex> VertexArray;
@@ -66,7 +66,6 @@ public:
 	Skeleton MainSkeleton;
 	FbxArray<FbxString*> mAnimStackNameArray;
 	FbxAnimLayer * mCurrentAnimLayer;
-	TComPtr<ID3D11Buffer>			m_cbPerMesh;
 	TMap<FbxNode*, int>       mapFbxNodeToStaticMesh;
 	TUniquePtr<YVSShader>  m_VS;
 	TUniquePtr<YPSShader>  m_PS;

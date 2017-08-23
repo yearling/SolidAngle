@@ -59,11 +59,10 @@ StaticMesh::~StaticMesh()
 
 bool StaticMesh::AllocResource()
 {
-	TComPtr<ID3D11Device> Device = YYUTDXManager::GetInstance().GetD3DDevice();
 	if (FaceNum != 0)
 	{
-		CreateVertexBufferDynamic(Device, (UINT)VertexArray.Num() * sizeof(LocalVertex), &VertexArray[0], m_VB);
-		CreateIndexBuffer(Device, (UINT)IndexArray.Num() * sizeof(int), &IndexArray[0], m_IB);
+		CreateVertexBufferDynamic( (UINT)VertexArray.Num() * sizeof(LocalVertex), &VertexArray[0], m_VB);
+		CreateIndexBuffer( (UINT)IndexArray.Num() * sizeof(int), &IndexArray[0], m_IB);
 		if (!m_VSShader->CreateShader("..\\..\\Source\\Experimental\\Private\\RenderMesh.hlsl", "VSMain"))
 			return false;
 		if (!m_PSShader->CreateShader("..\\..\\Source\\Experimental\\Private\\RenderMesh.hlsl", "PSMain"))
@@ -96,7 +95,7 @@ void MeshModel::Render(TSharedRef<FRenderInfo> RenderInfo)
 	}*/
 }
 
-void StaticMesh::Render(TComPtr<ID3D11Buffer> cb)
+void StaticMesh::Render()
 {
 	if (FaceNum == 0)
 		return;
@@ -142,7 +141,6 @@ void StaticMesh::UpdateVertexPosition(FbxMesh* pMesh, FbxVector4* pVertexArray)
 
 MeshModel::MeshModel()
 {
-	m_cbPerMesh = nullptr;
 }
 
 void MeshModel::Init()
@@ -158,7 +156,6 @@ void MeshModel::Init()
 	{
 		assert(0);
 	}
-	CreateConstantBufferCPUWrite(Device, sizeof(PerMeshCBuffer), m_cbPerMesh, "cbPerframe");
 	mFrameTime.SetTime(0, 0, 0, 1, 0, Scene->GetGlobalSettings().GetTimeMode());
 	for (auto& pStaticMesh : MeshArrays)
 	{
@@ -659,7 +656,7 @@ void MeshModel::DrawMesh(FbxNode* pNode,
 	// mutiply the node's trasformation
 	FbxAMatrix GlobalTrans = GetGlobalPosition(pNode);
 	pMesh->MatWorld = FbxMatrixToFMATRIX(GlobalTrans);
-	pMesh->Render(m_cbPerMesh);
+	pMesh->Render();
 }
 
 

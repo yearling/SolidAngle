@@ -14,14 +14,12 @@ Y3DCanvas::Y3DCanvas()
 void Y3DCanvas::Init()
 {
 	LineDatas.Empty();
-	TComPtr<ID3D11Device> Device = YYUTDXManager::GetInstance().GetD3DDevice();
-
 	m_VSShader->CreateShader("..\\..\\Source\\Experimental\\Private\\Canvas.hlsl", "VSMain");
 	m_PSShader->CreateShader("..\\..\\Source\\Experimental\\Private\\Canvas.hlsl", "PSColor");
-	CreateRasterStateNonCull(Device, m_rs);
-	CreateBlendState(Device, m_bs, false, "m_BlendOpaque");
-	CreateDepthStencileStateNoWriteNoTest(Device, m_ds, "m_DS_Test");
-	CreateVertexBufferDynamic(Device, sizeof(LocalVertex) * m_MAXVertex, nullptr, m_VB, "line vb");
+	CreateRasterStateNonCull(m_rs);
+	CreateBlendState(m_bs, false, "m_BlendOpaque");
+	CreateDepthStencileStateNoWriteNoTest(m_ds, "m_DS_Test");
+	CreateVertexBufferDynamic( sizeof(LocalVertex) * m_MAXVertex, nullptr, m_VB, "line vb");
 }
 
 void Y3DCanvas::DrawLine(FVector StartPos, FVector EndPos, FLinearColor Color)

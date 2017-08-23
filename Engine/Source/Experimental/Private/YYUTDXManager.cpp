@@ -146,9 +146,9 @@ void YYUTDXManager::ReSize(int width, int height)
 	}
 
 
-	Create2DTextureDSV_SRV(m_Device, m_iWidth, m_iHeight, DXGI_FORMAT_R32_TYPELESS, m_DepthStencilTexture, "m_DepthStencilTexture");
-	CreateDSVForTexture2D(m_Device, DXGI_FORMAT_D32_FLOAT, m_DepthStencilTexture, m_DSV, "depth_stencil_dsv");
-	CreateSRVForTexture2D(m_Device, DXGI_FORMAT_R32_FLOAT, m_DepthStencilTexture, m_SRVforDS, "depth_stencil_srv");
+	Create2DTextureDSV_SRV(m_iWidth, m_iHeight, DXGI_FORMAT_R32_TYPELESS, m_DepthStencilTexture, "m_DepthStencilTexture");
+	CreateDSVForTexture2D(DXGI_FORMAT_D32_FLOAT, m_DepthStencilTexture, m_DSV, "depth_stencil_dsv");
+	CreateSRVForTexture2D( DXGI_FORMAT_R32_FLOAT, m_DepthStencilTexture, m_SRVforDS, "depth_stencil_srv");
 	m_ViewPort.TopLeftX = 0.0f;
 	m_ViewPort.TopLeftY = 0.0f;
 	m_ViewPort.Width = (float)m_iWidth;

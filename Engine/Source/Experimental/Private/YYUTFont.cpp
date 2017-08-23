@@ -12,19 +12,19 @@ void YYUTFont::Init()
 	m_RTV = YYUTDXManager::GetInstance().GetRenderTargetView();
 	m_BackBufferWidth = YYUTDXManager::GetInstance().GetBackBufferWidth();
 	m_BackBufferHeight = YYUTDXManager::GetInstance().GetBackBufferHeight();
-	CreateSRVFromeFile(m_device, "..\\..\\media\\Font.dds", m_FontSRV, "Font::m_FontSRV");
-	CreateVertexShader(m_device, "..\\..\\src\\UI.hlsl", "VSmain", m_VS, "Font::m_FontVS");
-	CreatePixelShader(m_device, "..\\..\\src\\UI.hlsl", "PSmain", m_PS, "Font::m_PS");
+	CreateSRVFromeFile( "..\\..\\media\\Font.dds", m_FontSRV, "Font::m_FontSRV");
+	CreateVertexShader("..\\..\\src\\UI.hlsl", "VSmain", m_VS, "Font::m_FontVS");
+	CreatePixelShader("..\\..\\src\\UI.hlsl", "PSmain", m_PS, "Font::m_PS");
 	const D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
 		{ "POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "COLOR",     0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT,       0, 28, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
-	CreateInputLayout(m_device, "..\\..\\src\\UI.hlsl", "VSmain", layout, _countof(layout), m_FontInputLayout, "Font::m_FontInputLayOut");
-	CreateBlendState(m_device, m_BlendStateAlpha, false, "Font::BlendState");
-	CreateDepthStencileState(m_device, m_DS, false, "Font::DS State");
-	CreateSamplerLinearWrap(m_device, m_SampleWrap, "Font::SamepleWrap");
+	CreateInputLayout("..\\..\\src\\UI.hlsl", "VSmain", layout, _countof(layout), m_FontInputLayout, "Font::m_FontInputLayOut");
+	CreateBlendState(m_BlendStateAlpha, false, "Font::BlendState");
+	CreateDepthStencileState(m_DS, false, "Font::DS State");
+	CreateSamplerLinearWrap( m_SampleWrap, "Font::SamepleWrap");
 	//////////////////////////////////////////////////////////////////////////
 	m_clr = FLinearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_pt.x = 0;
@@ -159,7 +159,7 @@ void YYUTFont::RenderText()
 	{
 		m_FontBuffer = NULL;
 		m_FontBufferBytes = FontDataBytes;
-		CreateVertexBufferDynamic(m_device, m_FontBufferBytes, NULL, m_FontBuffer, "m_FontBuffer");
+		CreateVertexBufferDynamic( m_FontBufferBytes, NULL, m_FontBuffer, "m_FontBuffer");
 	}
 
 	// Copy the sprites over

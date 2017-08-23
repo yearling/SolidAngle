@@ -22,9 +22,9 @@ RenderScene::~RenderScene(void)
 void RenderScene::Init()
 {
 	TComPtr<ID3D11Device> Device = YYUTDXManager::GetInstance().GetD3DDevice();
-	CreateRasterState(Device, m_rs);
-	CreateBlendState(Device, m_bs, true, "m_BlendOpaque");
-	CreateDepthStencileState(Device, m_ds, true, "m_DS_Test");
+	CreateRasterState(m_rs);
+	CreateBlendState(m_bs, true, "m_BlendOpaque");
+	CreateDepthStencileState(m_ds, true, "m_DS_Test");
 	CreateMeshResource();
 }
 
@@ -62,11 +62,8 @@ void RenderScene::Render(TSharedRef<FRenderInfo> RenderInfo)
 		m_pMesh->Render(RenderInfo);
 	}
 
-
-	// Draw Coordinate
-	GCanvas->DrawLine(FVector(0, 0, 0), FVector(5, 0, 0), FLinearColor(1, 0, 0, 1));
-	GCanvas->DrawLine(FVector(0, 0, 0), FVector(0, 5, 0), FLinearColor(0, 1, 0, 1));
-	GCanvas->DrawLine(FVector(0, 0, 0), FVector(0, 0, 5), FLinearColor(0, 0, 1, 1));
+	DrawGridAndCoordinates();
+	GCanvas->Render(RenderInfo);
 }
 
 void RenderScene::CreateMeshResource()
@@ -74,5 +71,28 @@ void RenderScene::CreateMeshResource()
 	m_pMesh->Init();
 }
 
+void RenderScene::DrawGridAndCoordinates()
+{
+	// DrawGrids
+	float xStart = -100.0f;
+	float xEnd = 100.0f;
+	float zStart = -100.0f;
+	float zEnd = 100.0f;
+	float Grid = 10.0f;
+
+	for (float xCurrent = xStart; xCurrent < xEnd + 1.0f; xCurrent += Grid)
+	{
+		GCanvas->DrawLine(FVector(xCurrent, 0, zStart), FVector(xCurrent, 0, zEnd), FLinearColor(1.0f, 1.0f, 1.0f, 0.3f));
+	}
+	for (float zCurrent = zStart; zCurrent < zEnd + 1.0f; zCurrent += Grid)
+	{
+		GCanvas->DrawLine(FVector(xStart, 0, zCurrent), FVector(xEnd, 0, zCurrent), FLinearColor(1.0f, 1.0f, 1.0f, 0.3f));
+	}
+
+	// Draw Coordinate
+	GCanvas->DrawLine(FVector(0, 0, 0), FVector(5, 0, 0), FLinearColor(1, 0, 0, 1));
+	GCanvas->DrawLine(FVector(0, 0, 0), FVector(0, 5, 0), FLinearColor(0, 1, 0, 1));
+	GCanvas->DrawLine(FVector(0, 0, 0), FVector(0, 0, 5), FLinearColor(0, 0, 1, 1));
+}
 
 
