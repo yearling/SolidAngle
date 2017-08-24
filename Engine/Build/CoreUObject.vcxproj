@@ -1,0 +1,488 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\CoreUObjectPrivatePCH.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\Misc\StringReferenceTemplates.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\Serialization\ArchiveDescribeReference.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\Serialization\ArchiveFindAllRefs.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\Serialization\AsyncLoadingPrivate.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\Serialization\AsyncLoadingThread.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\Serialization\DeferredMessageLog.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\UObject\FastReferenceCollector.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\UObject\FindStronglyConnected.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\UObject\GCScopeLock.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerManager.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerPlaceholderBase.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerPlaceholderClass.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerPlaceholderExportObject.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerPlaceholderFunction.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyHelper.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\UObject\StructScriptLoader.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Blueprint\BlueprintSupport.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\CoreUObject.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\CoreUObjectSharedPCH.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Internationalization\IPackageLocalizationCache.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Internationalization\PackageLocalizationCache.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Internationalization\PackageLocalizationManager.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Internationalization\PackageLocalizationUtil.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Internationalization\TextPackageNamespaceUtil.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Misc\AssetRegistryInterface.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Misc\ExclusiveLoadPackageTimeTracker.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Misc\HotReloadInterface.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Misc\NotifyHook.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Misc\PackageName.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Misc\RedirectCollector.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Misc\StartupPackages.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Misc\StringAssetReference.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Misc\StringClassReference.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Misc\TextBuffer.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Misc\UObjectToken.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Misc\WorldCompositionUtility.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveAsync.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveCountMem.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveFindCulprit.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveObjectCrc32.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveObjectGraph.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveObjectPropertyMapper.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveReferenceMarker.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveReplaceArchetype.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveReplaceObjectRef.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveReplaceOrClearExternalReferences.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveScriptReferenceCollector.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveShowReferences.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveTraceRoute.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveUObject.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveUObjectBase.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\AsyncLoading.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\AsyncPackage.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\BulkData.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\DuplicatedDataReader.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\DuplicatedDataWriter.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\DuplicatedObject.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\FindObjectReferencers.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\FindReferencersArchive.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ObjectAndNameAsStringProxyArchive.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ObjectReader.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ObjectWriter.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\PropertyLocalizationDataGathering.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ReloadObjectArc.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\SerializedPropertyScope.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\TextReferenceCollector.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\TraceReferences.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Templates\Casts.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Templates\SubclassOf.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\AssetPtr.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\Class.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ClassTree.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ConstructorHelpers.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\CoreNative.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\CoreNet.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\CoreNetTypes.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\CoreOnline.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\EnumProperty.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ErrorException.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\GarbageCollection.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\GCObject.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\GCObjectScopeGuard.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\GeneratedCppIncludes.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\Interface.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\LazyObjectPtr.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\LevelGuids.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\Linker.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\LinkerLoad.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\LinkerSave.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\MetaData.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\NoExportTypes.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\Object.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ObjectKey.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ObjectMacros.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ObjectMemoryAnalyzer.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ObjectRedirector.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ObjectResource.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\Package.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\PackageFileSummary.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\PackageReload.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\PersistentObjectPtr.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\PropertyTag.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ReferenceChainSearch.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\Script.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ScriptInterface.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ScriptMacros.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ScriptSerialization.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ScriptStackTracker.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\Stack.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\StrongObjectPtr.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\StructOnScope.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\TextProperty.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\UnrealType.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\UObject.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\UObjectAllocator.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\UObjectAnnotation.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\UObjectArray.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\UObjectBase.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\UObjectBaseUtility.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\UObjectGlobals.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\UObjectHash.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\UObjectIterator.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\UObjectMarks.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\UObjectThreadContext.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\WeakObjectPtr.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Blueprint\BlueprintSupport.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Internationalization\PackageLocalizationCache.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Internationalization\PackageLocalizationManager.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Internationalization\PackageLocalizationUtil.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Internationalization\TextPackageNamespaceUtil.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Misc\ExclusiveLoadPackageTimeTracker.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Misc\GCObjectReferencer.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Misc\NotifyHook.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Misc\PackageName.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Misc\RedirectCollector.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Misc\StartupPackages.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Misc\StringAssetReference.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Misc\StringClassReference.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Misc\TextBuffer.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Misc\UObjectToken.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Misc\WorldCompositionUtility.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\ArchiveDescribeReference.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\ArchiveFindAllRefs.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\ArchiveFindCulprit.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\ArchiveObjectCrc32.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\ArchiveObjectGraph.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\ArchiveShowReferences.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\ArchiveTraceRoute.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\ArchiveUObject.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\AsyncLoading.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\BulkData.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\DeferredMessageLog.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\DuplicateDataReader.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\DuplicateDataWriter.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\FindReferencersArchive.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\ObjectReader.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\ObjectWriter.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\PropertyLocalizationDataGathering.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\ReloadObjectArc.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\TextReferenceCollector.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\TraceReferences.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Templates\Casts.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\Class.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\CoreNative.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\CoreNet.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\EditPropertyChain.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\Enum.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\EnumProperty.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\ErrorException.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\FindStronglyConnected.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\GarbageCollection.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\Interface.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\LazyObjectPtr.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\Linker.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerLoad.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerManager.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerPlaceholderBase.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerPlaceholderClass.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerPlaceholderExportObject.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerPlaceholderFunction.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerSave.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\MetaData.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\Obj.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\ObjectBaseUtility.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\ObjectMemoryAnalyzer.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\ObjectRedirector.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\ObjectResource.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\Package.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PackageFileSummary.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PackageReload.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\Property.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyArray.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyAssetClass.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyAssetObject.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyBaseObject.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyBool.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyByte.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyClass.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyDelegate.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyDouble.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyFloat.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyInt.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyInt16.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyInt64.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyInt8.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyInterface.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyLazyObjectPtr.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyMap.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyMulticastDelegate.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyName.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyNumeric.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyObject.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertySet.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyStr.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyStruct.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyTag.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyUInt16.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyUInt32.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyUInt64.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyWeakObjectPtr.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\ReferenceChainSearch.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\ReferencerInformation.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\SavePackage.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\ScriptCore.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\ScriptStackTracker.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\StructScriptLoader.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\TextProperty.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UnrealType.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UObjectAllocator.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UObjectArchetype.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UObjectArray.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UObjectBase.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UObjectBaseUtility.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UObjectClusters.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UObjectGlobals.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UObjectHash.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UObjectLinker.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UObjectMarks.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UObjectNetIndex.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UObjectThreadContext.cpp" />
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\WeakObjectPtr.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerPlaceholderBase.inl" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{3BE7C2D3-EA07-4B2D-A8C5-9A882D030CBD}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>RHI</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\Binaries\$(Platform)\</OutDir>
+    <IntDir>..\Intermediate\Build\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\Binaries\$(Platform)\</OutDir>
+    <IntDir>..\Intermediate\Build\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;RHI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;_DEBUG;_CONSOLE;UE_IS_ENGINE_MODULE=1;COREUOBJECT_API=__declspec(dllexport);CORE_API=__declspec(dllimport);PROJECTS_API=__declspec(dllimport);MALLOC_LEAKDETECTION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\;..\Source\Runtime\Projects\Public;..\Source\Runtime\CoreUObject\Public;..\Source\Runtime\CoreUObject\Private;..\Source\Runtime\CoreUObject\Public\UObject;..\Source\Runtime\CoreUObject\Public\Templates;..\Source\Runtime\CoreUObject\Public\Serialization;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\Core\Public\Containers;..\Source\Developer\TargetPlatform\Public;..\Source\Runtime\Json\Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\Binaries\x64\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SolidAngle_x64_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;RHI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;CORE_API=__declspec(dllimport);COREUOBJECT_API=__declspec(dllexport);PROJECTS_API=__declspec(dllimport);WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\;..\Source\Runtime\Projects\Public;..\Source\Runtime\CoreUObject\Public;..\Source\Runtime\CoreUObject\Private;..\Source\Runtime\CoreUObject\Public\UObject;..\Source\Runtime\CoreUObject\Public\Templates;..\Source\Runtime\CoreUObject\Public\Serialization;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\Core\Public\Containers;..\Source\Developer\TargetPlatform\Public;..\Source\Runtime\Json\Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\Binaries\x64\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SolidAngle_x64_Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

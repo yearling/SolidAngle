@@ -1,0 +1,782 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Public">
+      <UniqueIdentifier>{9798739d-112d-4a43-9846-8bfcd9005db7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private">
+      <UniqueIdentifier>{41368f8d-df66-483d-a817-a84481a5a826}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public\UObject">
+      <UniqueIdentifier>{36ff4192-6325-4603-98e2-32a3c6b1af8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public\Templates">
+      <UniqueIdentifier>{afde250a-d989-4fdf-90ba-ed77976d3755}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public\Serialization">
+      <UniqueIdentifier>{f348b80d-0618-4b93-8786-81954af3ac21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public\Misc">
+      <UniqueIdentifier>{af9c8001-5248-4f46-8895-1c656394595d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public\Internationalization">
+      <UniqueIdentifier>{036546bb-9597-4a8d-8443-643fedbb0cc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public\Blueprint">
+      <UniqueIdentifier>{971788ab-992a-4b18-b7de-dc74d063da82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private\UObject">
+      <UniqueIdentifier>{6236944d-7529-4d9f-9db5-c47c76c29f8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private\Templates">
+      <UniqueIdentifier>{24d1c3db-a99f-45df-8c59-ca14c24e1eb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private\Serialization">
+      <UniqueIdentifier>{62ed2a7e-f203-49e4-ab9c-0607615c48bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private\Misc">
+      <UniqueIdentifier>{32201f6c-dfaf-4b5a-bc55-4bceffbcc456}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private\Internationalization">
+      <UniqueIdentifier>{096eaa7c-9775-40e2-8ae0-def3027db774}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private\Blueprint">
+      <UniqueIdentifier>{27e8f094-fc35-403a-9508-b275c26cf097}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\CoreUObjectSharedPCH.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\CoreUObject.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\CoreNative.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\CoreNet.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\CoreNetTypes.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\CoreOnline.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\EnumProperty.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ErrorException.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\GarbageCollection.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\GCObject.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\GCObjectScopeGuard.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\GeneratedCppIncludes.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\Interface.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\LazyObjectPtr.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\LevelGuids.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\Linker.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\LinkerLoad.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\LinkerSave.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\MetaData.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\NoExportTypes.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\Object.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ObjectKey.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ObjectMacros.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ObjectMemoryAnalyzer.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ObjectRedirector.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ObjectResource.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\Package.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\PackageFileSummary.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\PackageReload.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\PersistentObjectPtr.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\PropertyTag.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ReferenceChainSearch.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\Script.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ScriptInterface.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ScriptMacros.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ScriptSerialization.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ScriptStackTracker.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\Stack.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\StrongObjectPtr.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\StructOnScope.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\TextProperty.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\UnrealType.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\UObject.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\UObjectAllocator.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\UObjectAnnotation.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\UObjectArray.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\UObjectBase.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\UObjectBaseUtility.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\UObjectGlobals.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\UObjectHash.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\UObjectIterator.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\UObjectMarks.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\UObjectThreadContext.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\WeakObjectPtr.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\AssetPtr.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\Class.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ClassTree.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\ConstructorHelpers.h">
+      <Filter>Public\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Templates\Casts.h">
+      <Filter>Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Templates\SubclassOf.h">
+      <Filter>Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveObjectCrc32.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveObjectGraph.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveObjectPropertyMapper.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveReferenceMarker.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveReplaceArchetype.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveReplaceObjectRef.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveReplaceOrClearExternalReferences.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveScriptReferenceCollector.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveShowReferences.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveTraceRoute.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveUObject.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveUObjectBase.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\AsyncLoading.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\AsyncPackage.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\BulkData.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\DuplicatedDataReader.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\DuplicatedDataWriter.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\DuplicatedObject.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\FindObjectReferencers.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\FindReferencersArchive.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ObjectAndNameAsStringProxyArchive.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ObjectReader.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ObjectWriter.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\PropertyLocalizationDataGathering.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ReloadObjectArc.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\SerializedPropertyScope.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\TextReferenceCollector.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\TraceReferences.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveAsync.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveCountMem.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Serialization\ArchiveFindCulprit.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Misc\StartupPackages.h">
+      <Filter>Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Misc\StringAssetReference.h">
+      <Filter>Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Misc\StringClassReference.h">
+      <Filter>Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Misc\TextBuffer.h">
+      <Filter>Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Misc\UObjectToken.h">
+      <Filter>Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Misc\WorldCompositionUtility.h">
+      <Filter>Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Misc\AssetRegistryInterface.h">
+      <Filter>Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Misc\ExclusiveLoadPackageTimeTracker.h">
+      <Filter>Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Misc\HotReloadInterface.h">
+      <Filter>Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Misc\NotifyHook.h">
+      <Filter>Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Misc\PackageName.h">
+      <Filter>Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Misc\RedirectCollector.h">
+      <Filter>Public\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Internationalization\PackageLocalizationManager.h">
+      <Filter>Public\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Internationalization\PackageLocalizationUtil.h">
+      <Filter>Public\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Internationalization\TextPackageNamespaceUtil.h">
+      <Filter>Public\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Internationalization\IPackageLocalizationCache.h">
+      <Filter>Public\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Internationalization\PackageLocalizationCache.h">
+      <Filter>Public\Internationalization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Public\Blueprint\BlueprintSupport.h">
+      <Filter>Public\Blueprint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\CoreUObjectPrivatePCH.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\Misc\StringReferenceTemplates.h">
+      <Filter>Private\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\Serialization\AsyncLoadingPrivate.h">
+      <Filter>Private\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\Serialization\AsyncLoadingThread.h">
+      <Filter>Private\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\Serialization\DeferredMessageLog.h">
+      <Filter>Private\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\Serialization\ArchiveDescribeReference.h">
+      <Filter>Private\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\Serialization\ArchiveFindAllRefs.h">
+      <Filter>Private\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\UObject\GCScopeLock.h">
+      <Filter>Private\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerManager.h">
+      <Filter>Private\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerPlaceholderBase.h">
+      <Filter>Private\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerPlaceholderClass.h">
+      <Filter>Private\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerPlaceholderExportObject.h">
+      <Filter>Private\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerPlaceholderFunction.h">
+      <Filter>Private\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyHelper.h">
+      <Filter>Private\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\UObject\StructScriptLoader.h">
+      <Filter>Private\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\UObject\FastReferenceCollector.h">
+      <Filter>Private\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Private\UObject\FindStronglyConnected.h">
+      <Filter>Private\UObject</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Blueprint\BlueprintSupport.cpp">
+      <Filter>Private\Blueprint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Internationalization\PackageLocalizationManager.cpp">
+      <Filter>Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Internationalization\PackageLocalizationUtil.cpp">
+      <Filter>Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Internationalization\TextPackageNamespaceUtil.cpp">
+      <Filter>Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Internationalization\PackageLocalizationCache.cpp">
+      <Filter>Private\Internationalization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Misc\RedirectCollector.cpp">
+      <Filter>Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Misc\StartupPackages.cpp">
+      <Filter>Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Misc\StringAssetReference.cpp">
+      <Filter>Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Misc\StringClassReference.cpp">
+      <Filter>Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Misc\TextBuffer.cpp">
+      <Filter>Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Misc\UObjectToken.cpp">
+      <Filter>Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Misc\WorldCompositionUtility.cpp">
+      <Filter>Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Misc\ExclusiveLoadPackageTimeTracker.cpp">
+      <Filter>Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Misc\GCObjectReferencer.cpp">
+      <Filter>Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Misc\NotifyHook.cpp">
+      <Filter>Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Misc\PackageName.cpp">
+      <Filter>Private\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\ArchiveFindCulprit.cpp">
+      <Filter>Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\ArchiveObjectCrc32.cpp">
+      <Filter>Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\ArchiveObjectGraph.cpp">
+      <Filter>Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\ArchiveShowReferences.cpp">
+      <Filter>Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\ArchiveTraceRoute.cpp">
+      <Filter>Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\ArchiveUObject.cpp">
+      <Filter>Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\AsyncLoading.cpp">
+      <Filter>Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\BulkData.cpp">
+      <Filter>Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\DeferredMessageLog.cpp">
+      <Filter>Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\DuplicateDataReader.cpp">
+      <Filter>Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\DuplicateDataWriter.cpp">
+      <Filter>Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\FindReferencersArchive.cpp">
+      <Filter>Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\ObjectReader.cpp">
+      <Filter>Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\ObjectWriter.cpp">
+      <Filter>Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\PropertyLocalizationDataGathering.cpp">
+      <Filter>Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\ReloadObjectArc.cpp">
+      <Filter>Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\TextReferenceCollector.cpp">
+      <Filter>Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\TraceReferences.cpp">
+      <Filter>Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\ArchiveDescribeReference.cpp">
+      <Filter>Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Serialization\ArchiveFindAllRefs.cpp">
+      <Filter>Private\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Templates\Casts.cpp">
+      <Filter>Private\Templates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\GarbageCollection.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\Interface.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\LazyObjectPtr.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\Linker.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerLoad.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerManager.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerPlaceholderBase.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerPlaceholderClass.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerPlaceholderExportObject.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerPlaceholderFunction.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerSave.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\MetaData.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\Obj.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\ObjectBaseUtility.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\ObjectMemoryAnalyzer.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\ObjectRedirector.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\ObjectResource.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\Package.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PackageFileSummary.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PackageReload.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\Property.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyArray.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyAssetClass.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyAssetObject.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyBaseObject.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyBool.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyByte.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyClass.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyDelegate.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyDouble.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyFloat.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyInt.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyInt8.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyInt16.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyInt64.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyInterface.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyLazyObjectPtr.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyMap.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyMulticastDelegate.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyName.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyNumeric.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyObject.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertySet.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyStr.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyStruct.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyTag.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyUInt16.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyUInt32.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyUInt64.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\PropertyWeakObjectPtr.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\ReferenceChainSearch.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\ReferencerInformation.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\SavePackage.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\ScriptCore.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\ScriptStackTracker.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\StructScriptLoader.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\TextProperty.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UnrealType.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UObjectAllocator.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UObjectArchetype.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UObjectArray.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UObjectBase.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UObjectBaseUtility.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UObjectClusters.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UObjectGlobals.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UObjectHash.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UObjectLinker.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UObjectMarks.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UObjectNetIndex.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\UObjectThreadContext.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\WeakObjectPtr.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\Class.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\CoreNative.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\CoreNet.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\EditPropertyChain.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\Enum.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\EnumProperty.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\ErrorException.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\FindStronglyConnected.cpp">
+      <Filter>Private\UObject</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Source\Runtime\CoreUObject\Private\UObject\LinkerPlaceholderBase.inl">
+      <Filter>Private\UObject</Filter>
+    </None>
+  </ItemGroup>
+</Project>
