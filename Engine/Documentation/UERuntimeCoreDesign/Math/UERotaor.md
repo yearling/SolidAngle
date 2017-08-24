@@ -20,6 +20,8 @@
 		{
 			return FRotator(Euler.Y, Euler.Z, Euler.X);
 		}
+5. UE中欧拉角的顺序为Yaw->Pitch->Roll(内旋转），虽然Rotator到Matrix,quta的矩阵计算方式与我们一致，都是R(X)*R(Y)*R(Z)，但是X在UE中指的是Roll，我们的是pitch，无法使用UE的矩阵计算，只能替换掉
+
 
 ## FRotationTranslationMatrix（FRotator ==> FMatrix) 
 已经修正为Directx下的，ZYX旋转（内旋）顺序；
