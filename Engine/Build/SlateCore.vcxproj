@@ -1,0 +1,367 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\CompositeFont.generated.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\Events.generated.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\FontBulkData.generated.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\FontCache.generated.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\FontFaceInterface.generated.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\FontProviderInterface.generated.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\Geometry.generated.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\Margin.generated.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\NavigationReply.generated.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\SlateBrush.generated.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\SlateColor.generated.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\SlateCore.generated.dep.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\SlateCoreClasses.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\SlateEnums.generated.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\SlateFontInfo.generated.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\SlateSound.generated.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\SlateTypes.generated.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\SlateWidgetStyle.generated.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\SlateWidgetStyleAsset.generated.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\SlateWidgetStyleContainerBase.generated.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\SlateWidgetStyleContainerInterface.generated.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Private\Application\ActiveTimerHandle.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Private\Fonts\FontCacheCompositeFont.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Private\Fonts\FontCacheFreeType.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Private\Fonts\FontCacheHarfBuzz.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Private\Fonts\FontCacheUtils.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Private\Fonts\LegacySlateFontInfoCache.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Private\Fonts\SlateFontRenderer.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Private\Fonts\SlateTextShaper.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Animation\CurveHandle.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Animation\CurveSequence.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Animation\SlateSprings.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Application\SlateApplicationBase.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Application\SlateWindowHelper.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Application\ThrottleManager.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Brushes\SlateBorderBrush.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Brushes\SlateBoxBrush.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Brushes\SlateColorBrush.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Brushes\SlateDynamicImageBrush.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Brushes\SlateImageBrush.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Brushes\SlateNoResource.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Fonts\CompositeFont.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Fonts\FontBulkData.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Fonts\FontCache.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Fonts\FontFaceInterface.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Fonts\FontMeasure.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Fonts\FontProviderInterface.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Fonts\FontTypes.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Fonts\ShapedTextFwd.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Fonts\SlateFontInfo.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Input\CursorReply.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Input\DragAndDrop.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Input\Events.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Input\HittestGrid.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Input\NavigationReply.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Input\PopupMethodReply.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Input\Reply.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Input\ReplyBase.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Layout\ArrangedChildren.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Layout\ArrangedWidget.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Layout\Children.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Layout\Geometry.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Layout\LayoutGeometry.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Layout\LayoutUtils.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Layout\Margin.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Layout\PaintGeometry.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Layout\SlateRect.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Layout\Visibility.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Layout\WidgetCaching.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Layout\WidgetPath.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Logging\EventLogger.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Logging\IEventLogger.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Rendering\DrawElements.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Rendering\ElementBatcher.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Rendering\RenderingCommon.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Rendering\RenderingPolicy.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Rendering\ShaderResourceManager.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Rendering\SlateDrawBuffer.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Rendering\SlateLayoutTransform.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Rendering\SlateRenderer.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Rendering\SlateRenderTransform.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\SlateCore.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\SlateGlobals.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\SlotBase.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Sound\ISlateSoundDevice.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Sound\NullSlateSoundDevice.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Sound\SlateSound.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Stats\SlateStats.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\CoreStyle.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\ISlateStyle.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\SlateBrush.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\SlateColor.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\SlateIconFinder.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\SlateStyle.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\SlateStyleRegistry.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\SlateTypes.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\SlateWidgetStyle.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\SlateWidgetStyleAsset.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\SlateWidgetStyleContainerBase.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\SlateWidgetStyleContainerInterface.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\StyleDefaults.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\WidgetStyle.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Textures\SlateIcon.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Textures\SlateShaderResource.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Textures\SlateTextureData.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Textures\SlateUpdatableTexture.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Textures\TextureAtlas.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Types\ISlateMetaData.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Types\NavigationMetaData.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Types\PaintArgs.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Types\ReflectionMetadata.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Types\SlateConstants.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Types\SlateEnums.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Types\SlateStructs.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Types\WidgetActiveTimerDelegate.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Widgets\DeclarativeSyntaxSupport.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Widgets\IToolTip.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Widgets\SBoxPanel.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Widgets\SCompoundWidget.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Widgets\SLeafWidget.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Widgets\SNullWidget.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Widgets\SOverlay.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Widgets\SPanel.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Widgets\SUserWidget.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Widgets\SWidget.h" />
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Widgets\SWindow.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Source\Runtime\SlateCore\Public\Input\DragAndDrop.inl" />
+    <None Include="..\Source\Runtime\SlateCore\Public\Layout\WidgetPath.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Generated\SlateCore.generated.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Animation\CurveHandle.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Animation\CurveSequence.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Application\ActiveTimerHandle.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Application\SlateApplicationBase.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Application\SlateWindowHelper.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Application\ThrottleManager.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Brushes\SlateDynamicImageBrush.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Children.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\CompositeFont.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\FontBulkData.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\FontCache.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\FontCacheCompositeFont.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\FontCacheFreeType.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\FontCacheHarfBuzz.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\FontFaceInterface.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\FontMeasure.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\FontProviderInterface.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\FontTypes.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\LegacySlateFontInfoCache.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\SlateFontInfo.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\SlateFontRenderer.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\SlateTextShaper.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Input\DragAndDrop.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Input\Events.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Input\HittestGrid.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Input\Reply.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Layout\ArrangedChildren.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Layout\ArrangedWidget.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Layout\Geometry.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Layout\LayoutUtils.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Layout\SlateRect.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Layout\Visibility.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Layout\WidgetCaching.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Layout\WidgetPath.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Logging\EventLogger.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Rendering\DrawElements.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Rendering\ElementBatcher.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Rendering\RenderingCommon.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Rendering\RenderingPolicy.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Rendering\ShaderResourceManager.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Rendering\SlateDrawBuffer.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Rendering\SlateRenderer.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\SlateCoreClasses.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\SlateCoreModule.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\SlotBase.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Sound\NullSlateSoundDevice.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Sound\SlateSound.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Stats\SlateStats.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Styling\CoreStyle.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Styling\SlateBrush.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Styling\SlateColor.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Styling\SlateIconFinder.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Styling\SlateStyleRegistry.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Styling\SlateStyleSet.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Styling\SlateTypes.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Styling\SlateWidgetStyleContainerBase.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Styling\SlateWidgetStyleContainerInterface.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Styling\StyleDefaults.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Textures\SlateIcon.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Textures\TextureAtlas.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Types\PaintArgs.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Types\WidgetStyle.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Widgets\SBoxPanel.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Widgets\SCompoundWidget.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Widgets\SLeafWidget.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Widgets\SNullWidget.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Widgets\SOverlay.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Widgets\SPanel.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Widgets\SWidget.cpp" />
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Widgets\SWindow.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{5CDA61AD-AA68-400E-B864-9C8DB7092A06}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>RHI</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\Binaries\$(Platform)\</OutDir>
+    <IntDir>..\Intermediate\Build\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\Binaries\$(Platform)\</OutDir>
+    <IntDir>..\Intermediate\Build\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;RHI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>SLATECORE_API=__declspec(dllexport);INPUTCORE_API=__declspec(dllimport);JSON_API=__declspec(dllimport);CORE_API=__declspec(dllimport);COREUOBJECT_API=__declspec(dllimport);INPUTCORE=__declspec(dllimport);UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;_DEBUG;_CONSOLE;UE_IS_ENGINE_MODULE=1;MALLOC_LEAKDETECTION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\Runtime\Engine\Public;..\Source\;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\Json\Public;..\Source\Runtime\CoreUObject\Public;..\Source\Runtime\InputCore\Public;..\Source\Runtime\SlateCore\Public;..\Source\Runtime\SlateCore\Private;..\Source\Runtime\SlateCore\Generated;..\Source\Runtime\InputCore\Classes;..\Source\Runtime\InputCore\Private;..\Source\Runtime\CoreUObject\Public\UObject;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\SlateCore\Public\Fonts;..\Source\Runtime\SlateCore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MinimalRebuild>false</MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\Binaries\x64\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SolidAngle_x64_Debug.lib;Json_x64_Debug.lib;CoreUObject_x64_Debug.lib;InputCore_x64_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;RHI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>SLATECORE_API=__declspec(dllexport);INPUTCORE_API=__declspec(dllimport);JSON_API=__declspec(dllimport);CORE_API=__declspec(dllimport);COREUOBJECT_API=__declspec(dllimport);INPUTCORE=__declspec(dllimport);UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\Runtime\Engine\Public;..\Source\;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\Json\Public;..\Source\Runtime\CoreUObject\Public;..\Source\Runtime\InputCore\Public;..\Source\Runtime\SlateCore\Public;..\Source\Runtime\SlateCore\Private;..\Source\Runtime\SlateCore\Generated;..\Source\Runtime\InputCore\Classes;..\Source\Runtime\InputCore\Private;..\Source\Runtime\CoreUObject\Public\UObject;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\SlateCore\Public\Fonts;..\Source\Runtime\SlateCore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\Binaries\x64\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SolidAngle_x64_Release.lib;Json_x64_Release.lib;CoreUObject_x64_Release.lib;InputCore_x64_Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

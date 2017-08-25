@@ -1,0 +1,1238 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Public">
+      <UniqueIdentifier>{9798739d-112d-4a43-9846-8bfcd9005db7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private">
+      <UniqueIdentifier>{41368f8d-df66-483d-a817-a84481a5a826}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated">
+      <UniqueIdentifier>{3f59614a-3d90-4c98-97c6-5f4a6128dcb7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\SlateExtras.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\SlateFwd.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\SlateMaterialBrush.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\SlateOptMacros.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\SlateSettings.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\SlateSharedPCH.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Application\AnalogCursor.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Application\IInputProcessor.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Application\IMenu.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Application\IPlatformTextField.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Application\IWidgetReflector.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Application\MenuStack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Application\NavigationConfig.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Application\SlateApplication.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Application\SWindowTitleBar.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Commands\Commands.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Commands\GenericCommands.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Commands\InputBindingManager.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Commands\InputChord.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Commands\InputGesture.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Commands\UIAction.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Commands\UICommandDragDropOp.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Commands\UICommandInfo.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Commands\UICommandList.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Docking\LayoutExtender.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Docking\LayoutService.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Docking\TabCommands.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Docking\TabManager.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Docking\WorkspaceItem.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Layout\InertialScrollManager.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Layout\IScrollableWidget.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Layout\Overscroll.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Layout\ScrollyZoomy.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Layout\SlateScrollHelper.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\MarqueeRect.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\MetaData\DriverIdMetaData.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\MetaData\DriverMetaData.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\MultiBox\MultiBox.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\MultiBox\MultiBoxBuilder.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\MultiBox\MultiBoxDefs.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\MultiBox\MultiBoxExtender.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\MultiBox\SToolBarButtonBlock.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\MultiBox\SToolBarComboButtonBlock.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Notifications\NotificationManager.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\SlateDelegates.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Styling\ButtonWidgetStyle.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Styling\CheckBoxWidgetStyle.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Styling\ComboBoxWidgetStyle.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Styling\ComboButtonWidgetStyle.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Styling\EditableTextBoxWidgetStyle.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Styling\EditableTextWidgetStyle.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Styling\ProgressWidgetStyle.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Styling\ScrollBarWidgetStyle.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Styling\ScrollBoxWidgetStyle.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Styling\SpinBoxWidgetStyle.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Styling\TextBlockWidgetStyle.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\Android\AndroidPlatformTextField.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\BaseTextLayoutMarshaller.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\DefaultLayoutBlock.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\GenericPlatformTextField.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\ILayoutBlock.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\ILineHighlighter.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\IRichTextMarkupParser.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\IRichTextMarkupWriter.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\IRun.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\IRunRenderer.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\ISlateLineHighlighter.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\ISlateRun.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\ISlateRunRenderer.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\ITextDecorator.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\ITextLayoutMarshaller.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\PlainTextLayoutMarshaller.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\PlatformTextField.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\RichTextLayoutMarshaller.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\RichTextMarkupProcessing.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\RunUtils.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\ShapedTextCache.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\ShapedTextCacheFwd.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\SlateHyperlinkRun.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\SlateImageRun.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\SlatePasswordRun.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\SlateTextHighlightRunRenderer.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\SlateTextLayout.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\SlateTextLayoutFactory.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\SlateTextRun.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\SlateTextUnderlineLineHighlighter.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\SlateWidgetRun.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\SyntaxHighlighterTextLayoutMarshaller.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\SyntaxTokenizer.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\TextDecorators.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\TextHitPoint.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\TextLayout.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\TextLayoutEngine.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\TextLayoutFactory.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\TextLine.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\TextLineHighlight.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\TextRange.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\TextRunRenderer.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\WidgetLayoutBlock.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Views\ITypedTableView.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Views\TableViewTypeTraits.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Colors\SColorBlock.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Colors\SColorGradingWheel.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Colors\SColorSpectrum.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Colors\SColorWheel.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Docking\SDockableTab.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Docking\SDockTab.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Docking\SDockTabStack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Images\SImage.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Images\SSpinningImage.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Images\SThrobber.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\IVirtualKeyboardEntry.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\NumericTypeInterface.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SButton.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SCheckBox.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SComboBox.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SComboButton.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SEditableComboBox.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SEditableLabel.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SEditableText.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SEditableTextBox.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SExpandableButton.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SHyperlink.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SInputKeySelector.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SMenuAnchor.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SMultiLineEditableTextBox.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SNumericDropDown.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SNumericEntryBox.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SRichTextHyperlink.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SRotatorInputBox.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SSearchBox.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SSlider.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SSpinBox.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SSubMenuHandler.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SSuggestionTextBox.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\STextComboBox.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\STextComboPopup.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\STextEntryPopup.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SVectorInputBox.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SVirtualJoystick.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SVirtualKeyboardEntry.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SVolumeControl.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\LayerManager\SLayerManager.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\LayerManager\STooltipPresenter.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\Anchors.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SBackgroundBlur.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SBorder.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SBox.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SConstraintCanvas.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SDPIScaler.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SEnableBox.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SExpandableArea.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SFxWidget.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SGridPanel.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SHeader.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SMenuOwner.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SMissingWidget.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SPopup.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SResponsiveGridPanel.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SSafeZone.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SScaleBox.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SScissorRectBox.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SScrollBar.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SScrollBarTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SScrollBorder.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SScrollBox.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SSeparator.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SSpacer.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SSplitter.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SUniformGridPanel.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SWidgetSwitcher.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SWindowTitleBarArea.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SWrapBox.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Navigation\SBreadcrumbTrail.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Notifications\INotificationWidget.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Notifications\SErrorHint.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Notifications\SErrorText.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Notifications\SNotificationList.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Notifications\SPopUpErrorText.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Notifications\SProgressBar.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\SCanvas.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\SInvalidationPanel.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\SToolTip.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\SViewport.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\SWeakWidget.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Text\ISlateEditableTextWidget.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Text\SInlineEditableTextBlock.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Text\SlateEditableTextLayout.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Text\SlateEditableTextTypes.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Text\SMultiLineEditableText.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Text\SRichTextBlock.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Text\STextBlock.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Text\TextBlockLayout.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Views\SExpanderArrow.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Views\SHeaderRow.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Views\SListView.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Views\STableRow.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Views\STableViewBase.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Views\STileView.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Views\STreeView.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Slate.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Public\SlateBasics.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\Application\Menu.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\Docking\FDockingDragOperation.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingArea.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingCross.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingNode.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingSplitter.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingTabStack.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingTabWell.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingTarget.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\MultiBoxCustomization.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SButtonRowBlock.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SClippingHorizontalBox.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SEditableTextBlock.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SGroupMarkerBlock.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SHeadingBlock.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SMenuEntryBlock.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SMenuSeparatorBlock.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SToolBarSeparatorBlock.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SWidgetBlock.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\Text\TextEditHelper.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Widgets\Views\SListPanel.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\CheckBoxWidgetStyle.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\ComboBoxWidgetStyle.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\ComboButtonWidgetStyle.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\EditableTextBoxWidgetStyle.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\EditableTextWidgetStyle.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\InputChord.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\ITypedTableView.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\ProgressWidgetStyle.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\ScrollBarWidgetStyle.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\ScrollBoxWidgetStyle.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\Slate.generated.dep.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\SlateClasses.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\SlateSettings.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\SpinBoxWidgetStyle.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\SProgressBar.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\SScaleBox.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\TextBlockWidgetStyle.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\TextLayout.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\Anchors.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\ButtonWidgetStyle.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Source\Runtime\Slate\Public\Widgets\Input\NumericUnitTypeInterface.inl">
+      <Filter>Public</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Application\AnalogCursor.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Application\Menu.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Application\MenuStack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Application\NavigationConfig.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Application\SlateApplication.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Application\SlateSettings.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Commands\Commands.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Commands\GenericCommands.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Commands\InputBindingManager.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Commands\InputChord.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Commands\UIAction.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Commands\UICommandDragDropOp.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Commands\UICommandInfo.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Commands\UICommandList.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Docking\FDockingDragOperation.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Docking\LayoutService.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingArea.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingCross.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingNode.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingSplitter.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingTabStack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingTabWell.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingTarget.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockTabStack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Docking\TabCommands.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Docking\TabManager.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Layout\InertialScrollManager.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Layout\Overscroll.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Layout\ScrollyZoomy.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MetaData\DriverMetaData.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\MultiBox.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\MultiBoxBuilder.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\MultiBoxCustomization.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\MultiBoxExtender.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SButtonRowBlock.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SClippingHorizontalBox.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SEditableTextBlock.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SGroupMarkerBlock.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SHeadingBlock.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SMenuEntryBlock.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SMenuSeparatorBlock.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SToolBarButtonBlock.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SToolBarComboButtonBlock.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SToolBarSeparatorBlock.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SWidgetBlock.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Notifications\NotificationManager.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Styling\ButtonWidgetStyle.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Styling\CheckBoxWidgetStyle.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Styling\ComboBoxWidgetStyle.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Styling\ComboButtonWidgetStyle.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Styling\EditableTextBoxWidgetStyle.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Styling\EditableTextWidgetStyle.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Styling\ProgressWidgetStyle.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Styling\ScrollBarWidgetStyle.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Styling\ScrollBoxWidgetStyle.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Styling\SpinBoxWidgetStyle.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Styling\TextBlockWidgetStyle.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\Android\AndroidPlatformTextField.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\PlainTextLayoutMarshaller.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\RichTextLayoutMarshaller.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\RichTextMarkupProcessing.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\RunUtils.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\ShapedTextCache.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\SlateHyperlinkRun.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\SlateImageRun.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\SlatePasswordRun.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\SlateTextHighlightRunRenderer.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\SlateTextLayout.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\SlateTextRun.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\SlateTextUnderlineLineHighlighter.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\SlateWidgetRun.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\SyntaxHighlighterTextLayoutMarshaller.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\SyntaxTokenizer.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\TextDecorators.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\TextEditHelper.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\TextLayout.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\TextRange.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Colors\SColorBlock.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Colors\SColorGradingWheel.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Colors\SColorSpectrum.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Colors\SColorWheel.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Docking\SDockableTab.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Docking\SDockTab.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Images\SImage.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Images\SSpinningImage.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Images\SThrobber.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SButton.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SCheckBox.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SComboButton.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SEditableLabel.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SEditableText.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SEditableTextBox.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SExpandableButton.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SInputKeySelector.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SMenuAnchor.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SMultiLineEditableTextBox.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SRotatorInputBox.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SSearchBox.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SSlider.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SSpinBox.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SSubMenuHandler.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SSuggestionTextBox.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\STextComboBox.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\STextComboPopup.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\STextEntryPopup.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SVectorInputBox.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SVirtualJoystick.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SVirtualKeyboardEntry.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SVolumeControl.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\LayerManager\SLayerManager.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\LayerManager\STooltipPresenter.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SBackgroundBlur.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SBorder.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SBox.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SConstraintCanvas.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SDPIScaler.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SExpandableArea.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SFxWidget.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SGridPanel.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SHeader.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SMenuOwner.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SMissingWidget.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SPopup.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SResponsiveGridPanel.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SSafeZone.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SScaleBox.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SScissorRectBox.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SScrollBar.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SScrollBarTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SScrollBorder.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SScrollBox.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SSeparator.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SSpacer.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SSplitter.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SUniformGridPanel.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SWidgetSwitcher.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SWindowTitleBarArea.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SWrapBox.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Notifications\SErrorHint.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Notifications\SErrorText.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Notifications\SNotificationList.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Notifications\SPopUpErrorText.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Notifications\SProgressBar.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\SCanvas.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\SInvalidationPanel.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\SToolTip.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\SViewport.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\SWeakWidget.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Text\ISlateEditableTextWidget.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Text\SInlineEditableTextBlock.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Text\SlateEditableTextLayout.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Text\SlateEditableTextTypes.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Text\SMultiLineEditableText.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Text\SRichTextBlock.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Text\STextBlock.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Text\TextBlockLayout.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Views\SExpanderArrow.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Views\SHeaderRow.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Views\SListPanel.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Views\STableViewBase.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Private\SlateModule.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Slate\Generated\Slate.generated.cpp">
+      <Filter>Generated</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

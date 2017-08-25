@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Public">
+      <UniqueIdentifier>{9798739d-112d-4a43-9846-8bfcd9005db7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private">
+      <UniqueIdentifier>{41368f8d-df66-483d-a817-a84481a5a826}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes">
+      <UniqueIdentifier>{a59c8d87-5098-4c49-9c94-003571ed5c87}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\InputCore\Public\InputCore.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\InputCore\Public\InputCoreModule.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\InputCore\Private\InputCore.generated.dep.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\InputCore\Private\InputCoreClasses.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\InputCore\Private\InputCoreTypes.generated.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\InputCore\Classes\InputCoreTypes.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Runtime\InputCore\Private\InputCoreModule.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\InputCore\Private\InputCoreTypes.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\InputCore\Private\InputCore.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\InputCore\Private\InputCore.generated.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

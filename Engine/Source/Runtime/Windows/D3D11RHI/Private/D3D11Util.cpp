@@ -5,8 +5,8 @@
 =============================================================================*/
 
 #include "D3D11RHIPrivate.h"
-#include "EngineModule.h"
-#include "RendererInterface.h"
+//#include "EngineModule.h"
+//#include "RendererInterface.h"
 
 #define D3DERR(x) case x: ErrorCodeText = TEXT(#x); break;
 #define LOCTEXT_NAMESPACE "Developer.MessageLog"
@@ -201,7 +201,7 @@ static void TerminateOnOutOfMemory(HRESULT D3DResult, bool bCreatingTextures)
 			FPlatformMisc::MessageBoxExt(EAppMsgType::Ok, *NSLOCTEXT("D3D11RHI", "OutOfMemory", "Out of video memory trying to allocate a rendering resource. Make sure your video card has the minimum required memory, try lowering the resolution and/or closing other applications that are running. Exiting...").ToString(), TEXT("Error"));
 		}
 #if STATS
-		GetRendererModule().DebugLogOnCrash();
+		//GetRendererModule().DebugLogOnCrash();
 #endif
 		FPlatformMisc::RequestExit(true);
 	}

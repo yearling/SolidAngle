@@ -19,6 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Generated\CoreNetTypes.generated.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Generated\CoreOnline.generated.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Generated\CoreUObject.generated.dep.h" />
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Generated\NoExportTypes.generated.h" />
     <ClInclude Include="..\Source\Runtime\CoreUObject\Private\CoreUObjectPrivatePCH.h" />
     <ClInclude Include="..\Source\Runtime\CoreUObject\Private\Misc\StringReferenceTemplates.h" />
     <ClInclude Include="..\Source\Runtime\CoreUObject\Private\Serialization\ArchiveDescribeReference.h" />
@@ -147,6 +151,7 @@
     <ClInclude Include="..\Source\Runtime\CoreUObject\Public\UObject\WeakObjectPtr.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Generated\CoreUObject.generated.cpp" />
     <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Blueprint\BlueprintSupport.cpp" />
     <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Internationalization\PackageLocalizationCache.cpp" />
     <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Internationalization\PackageLocalizationManager.cpp" />
@@ -432,8 +437,8 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;_DEBUG;_CONSOLE;UE_IS_ENGINE_MODULE=1;COREUOBJECT_API=__declspec(dllexport);CORE_API=__declspec(dllimport);PROJECTS_API=__declspec(dllimport);MALLOC_LEAKDETECTION=1;HACK_HEADER_GENERATOR=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\;..\Source\Runtime\Projects\Public;..\Source\Runtime\CoreUObject\Public;..\Source\Runtime\CoreUObject\Private;..\Source\Runtime\CoreUObject\Public\UObject;..\Source\Runtime\CoreUObject\Public\Templates;..\Source\Runtime\CoreUObject\Public\Serialization;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\Core\Public\Containers;..\Source\Developer\TargetPlatform\Public;..\Source\Runtime\Json\Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>COREUOBJECT_API=__declspec(dllexport);CORE_API=__declspec(dllimport);PROJECTS_API=__declspec(dllimport);UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;_DEBUG;_CONSOLE;UE_IS_ENGINE_MODULE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\;..\Source\Runtime\Projects\Public;..\Source\Runtime\CoreUObject\Public;..\Source\Runtime\CoreUObject\Private;..\Source\Runtime\CoreUObject\Public\UObject;..\Source\Runtime\CoreUObject\Public\Templates;..\Source\Runtime\CoreUObject\Public\Serialization;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\Core\Public\Containers;..\Source\Developer\TargetPlatform\Public;..\Source\Runtime\Json\Public;..\Source\Runtime\CoreUObject;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
@@ -469,8 +474,8 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;CORE_API=__declspec(dllimport);COREUOBJECT_API=__declspec(dllexport);PROJECTS_API=__declspec(dllimport);WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;HACK_HEADER_GENERATOR=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\;..\Source\Runtime\Projects\Public;..\Source\Runtime\CoreUObject\Public;..\Source\Runtime\CoreUObject\Private;..\Source\Runtime\CoreUObject\Public\UObject;..\Source\Runtime\CoreUObject\Public\Templates;..\Source\Runtime\CoreUObject\Public\Serialization;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\Core\Public\Containers;..\Source\Developer\TargetPlatform\Public;..\Source\Runtime\Json\Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>COREUOBJECT_API=__declspec(dllexport);CORE_API=__declspec(dllimport);PROJECTS_API=__declspec(dllimport);UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\;..\Source\Runtime\Projects\Public;..\Source\Runtime\CoreUObject\Public;..\Source\Runtime\CoreUObject\Private;..\Source\Runtime\CoreUObject\Public\UObject;..\Source\Runtime\CoreUObject\Public\Templates;..\Source\Runtime\CoreUObject\Public\Serialization;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\Core\Public\Containers;..\Source\Developer\TargetPlatform\Public;..\Source\Runtime\Json\Public;..\Source\Runtime\CoreUObject;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>

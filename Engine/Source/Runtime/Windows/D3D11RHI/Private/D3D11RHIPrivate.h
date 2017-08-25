@@ -14,7 +14,7 @@
 #include "ShaderCore.h"
 #include "Containers/ResourceArray.h"
 #include "EngineGlobals.h"
-#include "Engine/Engine.h"
+//#include "Engine/Engine.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(LogD3D11RHI, Log, All);
 

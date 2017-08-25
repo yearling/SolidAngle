@@ -1,0 +1,574 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\Anchors.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\ButtonWidgetStyle.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\CheckBoxWidgetStyle.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\ComboBoxWidgetStyle.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\ComboButtonWidgetStyle.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\EditableTextBoxWidgetStyle.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\EditableTextWidgetStyle.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\InputChord.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\ITypedTableView.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\ProgressWidgetStyle.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\ScrollBarWidgetStyle.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\ScrollBoxWidgetStyle.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\Slate.generated.dep.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\SlateClasses.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\SlateSettings.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\SpinBoxWidgetStyle.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\SProgressBar.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\SScaleBox.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\TextBlockWidgetStyle.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Generated\TextLayout.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\Application\Menu.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\Docking\FDockingDragOperation.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingArea.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingCross.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingNode.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingSplitter.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingTabStack.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingTabWell.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingTarget.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\MultiBoxCustomization.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SButtonRowBlock.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SClippingHorizontalBox.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SEditableTextBlock.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SGroupMarkerBlock.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SHeadingBlock.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SMenuEntryBlock.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SMenuSeparatorBlock.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SToolBarSeparatorBlock.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SWidgetBlock.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Framework\Text\TextEditHelper.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Private\Widgets\Views\SListPanel.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Application\AnalogCursor.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Application\IInputProcessor.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Application\IMenu.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Application\IPlatformTextField.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Application\IWidgetReflector.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Application\MenuStack.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Application\NavigationConfig.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Application\SlateApplication.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Application\SWindowTitleBar.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Commands\Commands.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Commands\GenericCommands.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Commands\InputBindingManager.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Commands\InputChord.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Commands\InputGesture.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Commands\UIAction.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Commands\UICommandDragDropOp.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Commands\UICommandInfo.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Commands\UICommandList.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Docking\LayoutExtender.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Docking\LayoutService.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Docking\TabCommands.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Docking\TabManager.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Docking\WorkspaceItem.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Layout\InertialScrollManager.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Layout\IScrollableWidget.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Layout\Overscroll.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Layout\ScrollyZoomy.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Layout\SlateScrollHelper.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\MarqueeRect.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\MetaData\DriverIdMetaData.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\MetaData\DriverMetaData.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\MultiBox\MultiBox.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\MultiBox\MultiBoxBuilder.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\MultiBox\MultiBoxDefs.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\MultiBox\MultiBoxExtender.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\MultiBox\SToolBarButtonBlock.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\MultiBox\SToolBarComboButtonBlock.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Notifications\NotificationManager.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\SlateDelegates.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Styling\ButtonWidgetStyle.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Styling\CheckBoxWidgetStyle.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Styling\ComboBoxWidgetStyle.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Styling\ComboButtonWidgetStyle.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Styling\EditableTextBoxWidgetStyle.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Styling\EditableTextWidgetStyle.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Styling\ProgressWidgetStyle.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Styling\ScrollBarWidgetStyle.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Styling\ScrollBoxWidgetStyle.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Styling\SpinBoxWidgetStyle.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Styling\TextBlockWidgetStyle.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\Android\AndroidPlatformTextField.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\BaseTextLayoutMarshaller.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\DefaultLayoutBlock.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\GenericPlatformTextField.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\ILayoutBlock.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\ILineHighlighter.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\IRichTextMarkupParser.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\IRichTextMarkupWriter.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\IRun.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\IRunRenderer.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\ISlateLineHighlighter.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\ISlateRun.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\ISlateRunRenderer.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\ITextDecorator.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\ITextLayoutMarshaller.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\PlainTextLayoutMarshaller.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\PlatformTextField.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\RichTextLayoutMarshaller.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\RichTextMarkupProcessing.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\RunUtils.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\ShapedTextCache.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\ShapedTextCacheFwd.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\SlateHyperlinkRun.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\SlateImageRun.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\SlatePasswordRun.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\SlateTextHighlightRunRenderer.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\SlateTextLayout.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\SlateTextLayoutFactory.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\SlateTextRun.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\SlateTextUnderlineLineHighlighter.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\SlateWidgetRun.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\SyntaxHighlighterTextLayoutMarshaller.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\SyntaxTokenizer.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\TextDecorators.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\TextHitPoint.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\TextLayout.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\TextLayoutEngine.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\TextLayoutFactory.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\TextLine.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\TextLineHighlight.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\TextRange.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\TextRunRenderer.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\WidgetLayoutBlock.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Views\ITypedTableView.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Views\TableViewTypeTraits.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Slate.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\SlateBasics.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\SlateExtras.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\SlateFwd.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\SlateMaterialBrush.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\SlateOptMacros.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\SlateSettings.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\SlateSharedPCH.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Colors\SColorBlock.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Colors\SColorGradingWheel.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Colors\SColorSpectrum.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Colors\SColorWheel.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Docking\SDockableTab.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Docking\SDockTab.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Docking\SDockTabStack.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Images\SImage.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Images\SSpinningImage.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Images\SThrobber.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\IVirtualKeyboardEntry.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\NumericTypeInterface.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SButton.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SCheckBox.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SComboBox.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SComboButton.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SEditableComboBox.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SEditableLabel.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SEditableText.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SEditableTextBox.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SExpandableButton.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SHyperlink.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SInputKeySelector.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SMenuAnchor.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SMultiLineEditableTextBox.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SNumericDropDown.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SNumericEntryBox.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SRichTextHyperlink.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SRotatorInputBox.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SSearchBox.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SSlider.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SSpinBox.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SSubMenuHandler.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SSuggestionTextBox.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\STextComboBox.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\STextComboPopup.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\STextEntryPopup.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SVectorInputBox.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SVirtualJoystick.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SVirtualKeyboardEntry.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Input\SVolumeControl.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\LayerManager\SLayerManager.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\LayerManager\STooltipPresenter.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\Anchors.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SBackgroundBlur.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SBorder.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SBox.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SConstraintCanvas.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SDPIScaler.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SEnableBox.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SExpandableArea.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SFxWidget.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SGridPanel.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SHeader.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SMenuOwner.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SMissingWidget.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SPopup.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SResponsiveGridPanel.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SSafeZone.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SScaleBox.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SScissorRectBox.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SScrollBar.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SScrollBarTrack.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SScrollBorder.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SScrollBox.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SSeparator.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SSpacer.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SSplitter.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SUniformGridPanel.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SWidgetSwitcher.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SWindowTitleBarArea.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Layout\SWrapBox.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Navigation\SBreadcrumbTrail.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Notifications\INotificationWidget.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Notifications\SErrorHint.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Notifications\SErrorText.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Notifications\SNotificationList.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Notifications\SPopUpErrorText.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Notifications\SProgressBar.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\SCanvas.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\SInvalidationPanel.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\SToolTip.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\SViewport.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\SWeakWidget.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Text\ISlateEditableTextWidget.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Text\SInlineEditableTextBlock.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Text\SlateEditableTextLayout.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Text\SlateEditableTextTypes.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Text\SMultiLineEditableText.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Text\SRichTextBlock.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Text\STextBlock.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Text\TextBlockLayout.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Views\SExpanderArrow.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Views\SHeaderRow.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Views\SListView.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Views\STableRow.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Views\STableViewBase.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Views\STileView.h" />
+    <ClInclude Include="..\Source\Runtime\Slate\Public\Widgets\Views\STreeView.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Source\Runtime\Slate\Public\Widgets\Input\NumericUnitTypeInterface.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Runtime\Slate\Generated\Slate.generated.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Application\AnalogCursor.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Application\Menu.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Application\MenuStack.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Application\NavigationConfig.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Application\SlateApplication.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Application\SlateSettings.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Commands\Commands.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Commands\GenericCommands.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Commands\InputBindingManager.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Commands\InputChord.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Commands\UIAction.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Commands\UICommandDragDropOp.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Commands\UICommandInfo.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Commands\UICommandList.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Docking\FDockingDragOperation.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Docking\LayoutService.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingArea.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingCross.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingNode.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingSplitter.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingTabStack.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingTabWell.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockingTarget.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Docking\SDockTabStack.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Docking\TabCommands.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Docking\TabManager.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Layout\InertialScrollManager.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Layout\Overscroll.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Layout\ScrollyZoomy.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MetaData\DriverMetaData.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\MultiBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\MultiBoxBuilder.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\MultiBoxCustomization.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\MultiBoxExtender.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SButtonRowBlock.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SClippingHorizontalBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SEditableTextBlock.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SGroupMarkerBlock.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SHeadingBlock.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SMenuEntryBlock.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SMenuSeparatorBlock.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SToolBarButtonBlock.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SToolBarComboButtonBlock.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SToolBarSeparatorBlock.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\MultiBox\SWidgetBlock.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Notifications\NotificationManager.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Styling\ButtonWidgetStyle.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Styling\CheckBoxWidgetStyle.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Styling\ComboBoxWidgetStyle.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Styling\ComboButtonWidgetStyle.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Styling\EditableTextBoxWidgetStyle.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Styling\EditableTextWidgetStyle.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Styling\ProgressWidgetStyle.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Styling\ScrollBarWidgetStyle.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Styling\ScrollBoxWidgetStyle.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Styling\SpinBoxWidgetStyle.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Styling\TextBlockWidgetStyle.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\Android\AndroidPlatformTextField.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\PlainTextLayoutMarshaller.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\RichTextLayoutMarshaller.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\RichTextMarkupProcessing.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\RunUtils.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\ShapedTextCache.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\SlateHyperlinkRun.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\SlateImageRun.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\SlatePasswordRun.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\SlateTextHighlightRunRenderer.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\SlateTextLayout.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\SlateTextRun.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\SlateTextUnderlineLineHighlighter.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\SlateWidgetRun.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\SyntaxHighlighterTextLayoutMarshaller.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\SyntaxTokenizer.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\TextDecorators.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\TextEditHelper.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\TextLayout.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\TextRange.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\SlateModule.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Colors\SColorBlock.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Colors\SColorGradingWheel.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Colors\SColorSpectrum.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Colors\SColorWheel.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Docking\SDockableTab.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Docking\SDockTab.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Images\SImage.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Images\SSpinningImage.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Images\SThrobber.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SButton.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SCheckBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SComboButton.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SEditableLabel.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SEditableText.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SEditableTextBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SExpandableButton.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SInputKeySelector.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SMenuAnchor.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SMultiLineEditableTextBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SRotatorInputBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SSearchBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SSlider.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SSpinBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SSubMenuHandler.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SSuggestionTextBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\STextComboBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\STextComboPopup.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\STextEntryPopup.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SVectorInputBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SVirtualJoystick.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SVirtualKeyboardEntry.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Input\SVolumeControl.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\LayerManager\SLayerManager.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\LayerManager\STooltipPresenter.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SBackgroundBlur.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SBorder.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SConstraintCanvas.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SDPIScaler.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SExpandableArea.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SFxWidget.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SGridPanel.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SHeader.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SMenuOwner.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SMissingWidget.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SPopup.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SResponsiveGridPanel.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SSafeZone.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SScaleBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SScissorRectBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SScrollBar.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SScrollBarTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SScrollBorder.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SScrollBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SSeparator.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SSpacer.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SSplitter.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SUniformGridPanel.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SWidgetSwitcher.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SWindowTitleBarArea.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Layout\SWrapBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Notifications\SErrorHint.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Notifications\SErrorText.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Notifications\SNotificationList.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Notifications\SPopUpErrorText.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Notifications\SProgressBar.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\SCanvas.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\SInvalidationPanel.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\SToolTip.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\SViewport.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\SWeakWidget.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Text\ISlateEditableTextWidget.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Text\SInlineEditableTextBlock.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Text\SlateEditableTextLayout.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Text\SlateEditableTextTypes.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Text\SMultiLineEditableText.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Text\SRichTextBlock.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Text\STextBlock.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Text\TextBlockLayout.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Views\SExpanderArrow.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Views\SHeaderRow.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Views\SListPanel.cpp" />
+    <ClCompile Include="..\Source\Runtime\Slate\Private\Widgets\Views\STableViewBase.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{D2A49CB7-D888-4C27-866A-118F303799D8}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>RHI</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\Binaries\$(Platform)\</OutDir>
+    <IntDir>..\Intermediate\Build\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\Binaries\$(Platform)\</OutDir>
+    <IntDir>..\Intermediate\Build\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;RHI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>SLATE_API=__declspec(dllexport);SLATECORE_API=__declspec(dllimport);INPUTCORE_API=__declspec(dllimport);JSON_API=__declspec(dllimport);CORE_API=__declspec(dllimport);COREUOBJECT_API=__declspec(dllimport);INPUTCORE=__declspec(dllimport);UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;_DEBUG;_CONSOLE;UE_IS_ENGINE_MODULE=1;MALLOC_LEAKDETECTION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\Runtime\Engine\Public;..\Source\;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\Json\Public;..\Source\Runtime\CoreUObject\Public;..\Source\Runtime\InputCore\Public;..\Source\Runtime\SlateCore\Public;..\Source\Runtime\SlateCore\Private;..\Source\Runtime\SlateCore\Generated;..\Source\Runtime\InputCore\Classes;..\Source\Runtime\InputCore\Private;..\Source\Runtime\CoreUObject\Public\UObject;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\SlateCore\Public\Fonts;..\Source\Runtime\SlateCore;..\Source\Runtime\Slate;..\Source\Runtime\Slate\Public;..\Source\Runtime\Slate\Private;..\Source\Runtime\Slate\Generated;..\Source\Runtime\SlateCore\Public\Input;..\Source\Runtime\Slate\Public\Framework;..\Source\Runtime\Slate\Public\Framework\MetaData;..\Source\Runtime\Slate\Public\Framework\MultiBox;..\Source\Runtime\SlateCore\Public\Types;..\Source\Runtime\Slate\Public\Framework\Application;..\Source\Runtime\Slate\Private\Framework\MultiBox;..\Source\Runtime\Slate\Public\Widgets\Colors;..\Source\Runtime\Slate\Public\Widgets\Input;..\Source\Runtime\Slate\Public\Widgets\Layout;..\Source\Runtime\SlateCore\Public\Styling;..\Source\Runtime\SlateCore\Public\Rendering;..\Source\Runtime\Slate\Public\Framework\Docking;..\Source\Runtime\Core\Public\HAL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MinimalRebuild>false</MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\Binaries\x64\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SolidAngle_x64_Debug.lib;Json_x64_Debug.lib;CoreUObject_x64_Debug.lib;InputCore_x64_Debug.lib;SlateCore_x64_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;RHI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>SLATE_API=__declspec(dllexport);SLATECORE_API=__declspec(dllimport);INPUTCORE_API=__declspec(dllimport);JSON_API=__declspec(dllimport);CORE_API=__declspec(dllimport);COREUOBJECT_API=__declspec(dllimport);INPUTCORE=__declspec(dllimport);UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\Runtime\Engine\Public;..\Source\;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\Json\Public;..\Source\Runtime\CoreUObject\Public;..\Source\Runtime\InputCore\Public;..\Source\Runtime\SlateCore\Public;..\Source\Runtime\SlateCore\Private;..\Source\Runtime\SlateCore\Generated;..\Source\Runtime\InputCore\Classes;..\Source\Runtime\InputCore\Private;..\Source\Runtime\CoreUObject\Public\UObject;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\SlateCore\Public\Fonts;..\Source\Runtime\SlateCore;..\Source\Runtime\Slate;..\Source\Runtime\Slate\Public;..\Source\Runtime\Slate\Private;..\Source\Runtime\Slate\Generated;..\Source\Runtime\SlateCore\Public\Input;..\Source\Runtime\Slate\Public\Framework;..\Source\Runtime\Slate\Public\Framework\MetaData;..\Source\Runtime\Slate\Public\Framework\MultiBox;..\Source\Runtime\SlateCore\Public\Types;..\Source\Runtime\Slate\Public\Framework\Application;..\Source\Runtime\Slate\Private\Framework\MultiBox;..\Source\Runtime\Slate\Public\Widgets\Colors;..\Source\Runtime\Slate\Public\Widgets\Input;..\Source\Runtime\Slate\Public\Widgets\Layout;..\Source\Runtime\SlateCore\Public\Styling;..\Source\Runtime\SlateCore\Public\Rendering;..\Source\Runtime\Slate\Public\Framework\Docking;..\Source\Runtime\Core\Public\HAL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\Binaries\x64\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SolidAngle_x64_Release.lib;Json_x64_Release.lib;CoreUObject_x64_Release.lib;InputCore_x64_Release.lib;SlateCore_x64_Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

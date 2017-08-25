@@ -43,6 +43,9 @@
     <Filter Include="Private\Blueprint">
       <UniqueIdentifier>{27e8f094-fc35-403a-9508-b275c26cf097}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Generated">
+      <UniqueIdentifier>{3694eb72-4a4e-48a2-b53d-64309f7dd4da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\CoreUObject\Public\CoreUObjectSharedPCH.h">
@@ -423,6 +426,18 @@
     <ClInclude Include="..\Source\Runtime\CoreUObject\Private\UObject\FindStronglyConnected.h">
       <Filter>Private\UObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Generated\CoreUObject.generated.dep.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Generated\NoExportTypes.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Generated\CoreNetTypes.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\CoreUObject\Generated\CoreOnline.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\CoreUObject\Private\Blueprint\BlueprintSupport.cpp">
@@ -772,6 +787,9 @@
     </ClCompile>
     <ClCompile Include="..\Source\Runtime\CoreUObject\Private\UObject\FindStronglyConnected.cpp">
       <Filter>Private\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\CoreUObject\Generated\CoreUObject.generated.cpp">
+      <Filter>Generated</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

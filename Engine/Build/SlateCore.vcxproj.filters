@@ -1,0 +1,617 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Public">
+      <UniqueIdentifier>{9798739d-112d-4a43-9846-8bfcd9005db7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private">
+      <UniqueIdentifier>{41368f8d-df66-483d-a817-a84481a5a826}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated">
+      <UniqueIdentifier>{3f59614a-3d90-4c98-97c6-5f4a6128dcb7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Input\CursorReply.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Input\DragAndDrop.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Input\Events.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Input\HittestGrid.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Input\NavigationReply.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Input\PopupMethodReply.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Input\Reply.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Input\ReplyBase.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Layout\ArrangedChildren.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Layout\ArrangedWidget.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Layout\Children.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Layout\Geometry.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Layout\LayoutGeometry.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Layout\LayoutUtils.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Layout\Margin.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Layout\PaintGeometry.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Layout\SlateRect.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Layout\Visibility.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Layout\WidgetCaching.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Layout\WidgetPath.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Logging\EventLogger.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Logging\IEventLogger.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Rendering\DrawElements.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Rendering\ElementBatcher.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Rendering\RenderingCommon.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Rendering\RenderingPolicy.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Rendering\ShaderResourceManager.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Rendering\SlateDrawBuffer.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Rendering\SlateLayoutTransform.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Rendering\SlateRenderer.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Rendering\SlateRenderTransform.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Sound\ISlateSoundDevice.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Sound\NullSlateSoundDevice.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Sound\SlateSound.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Stats\SlateStats.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\CoreStyle.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\ISlateStyle.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\SlateBrush.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\SlateColor.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\SlateIconFinder.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\SlateStyle.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\SlateStyleRegistry.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\SlateTypes.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\SlateWidgetStyle.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\SlateWidgetStyleAsset.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\SlateWidgetStyleContainerBase.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\SlateWidgetStyleContainerInterface.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\StyleDefaults.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Styling\WidgetStyle.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Textures\SlateIcon.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Textures\SlateShaderResource.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Textures\SlateTextureData.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Textures\SlateUpdatableTexture.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Textures\TextureAtlas.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Types\ISlateMetaData.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Types\NavigationMetaData.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Types\PaintArgs.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Types\ReflectionMetadata.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Types\SlateConstants.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Types\SlateEnums.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Types\SlateStructs.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Types\WidgetActiveTimerDelegate.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Widgets\DeclarativeSyntaxSupport.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Widgets\IToolTip.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Widgets\SBoxPanel.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Widgets\SCompoundWidget.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Widgets\SLeafWidget.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Widgets\SNullWidget.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Widgets\SOverlay.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Widgets\SPanel.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Widgets\SUserWidget.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Widgets\SWidget.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Widgets\SWindow.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\SlateCore.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\SlateGlobals.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\SlotBase.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Animation\CurveHandle.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Animation\CurveSequence.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Animation\SlateSprings.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Application\SlateApplicationBase.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Application\SlateWindowHelper.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Application\ThrottleManager.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Brushes\SlateBorderBrush.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Brushes\SlateBoxBrush.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Brushes\SlateColorBrush.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Brushes\SlateDynamicImageBrush.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Brushes\SlateImageBrush.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Brushes\SlateNoResource.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Fonts\CompositeFont.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Fonts\FontBulkData.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Fonts\FontCache.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Fonts\FontFaceInterface.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Fonts\FontMeasure.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Fonts\FontProviderInterface.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Fonts\FontTypes.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Fonts\ShapedTextFwd.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Public\Fonts\SlateFontInfo.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Private\Application\ActiveTimerHandle.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Private\Fonts\FontCacheCompositeFont.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Private\Fonts\FontCacheFreeType.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Private\Fonts\FontCacheHarfBuzz.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Private\Fonts\FontCacheUtils.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Private\Fonts\LegacySlateFontInfoCache.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Private\Fonts\SlateFontRenderer.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Private\Fonts\SlateTextShaper.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\Geometry.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\Margin.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\NavigationReply.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\SlateBrush.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\SlateColor.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\SlateCore.generated.dep.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\SlateCoreClasses.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\SlateEnums.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\SlateFontInfo.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\SlateSound.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\SlateTypes.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\SlateWidgetStyle.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\SlateWidgetStyleAsset.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\SlateWidgetStyleContainerBase.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\SlateWidgetStyleContainerInterface.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\CompositeFont.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\Events.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\FontBulkData.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\FontCache.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\FontFaceInterface.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\SlateCore\Generated\FontProviderInterface.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Source\Runtime\SlateCore\Public\Input\DragAndDrop.inl">
+      <Filter>Public</Filter>
+    </None>
+    <None Include="..\Source\Runtime\SlateCore\Public\Layout\WidgetPath.inl">
+      <Filter>Public</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Input\DragAndDrop.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Input\Events.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Input\HittestGrid.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Input\Reply.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Layout\ArrangedChildren.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Layout\ArrangedWidget.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Layout\Geometry.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Layout\LayoutUtils.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Layout\SlateRect.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Layout\Visibility.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Layout\WidgetCaching.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Layout\WidgetPath.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Logging\EventLogger.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Rendering\DrawElements.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Rendering\ElementBatcher.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Rendering\RenderingCommon.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Rendering\RenderingPolicy.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Rendering\ShaderResourceManager.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Rendering\SlateDrawBuffer.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Rendering\SlateRenderer.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Sound\NullSlateSoundDevice.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Sound\SlateSound.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Stats\SlateStats.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Styling\CoreStyle.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Styling\SlateBrush.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Styling\SlateColor.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Styling\SlateIconFinder.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Styling\SlateStyleRegistry.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Styling\SlateStyleSet.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Styling\SlateTypes.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Styling\SlateWidgetStyleContainerBase.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Styling\SlateWidgetStyleContainerInterface.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Styling\StyleDefaults.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Textures\SlateIcon.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Textures\TextureAtlas.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Types\PaintArgs.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Types\WidgetStyle.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Widgets\SBoxPanel.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Widgets\SCompoundWidget.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Widgets\SLeafWidget.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Widgets\SNullWidget.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Widgets\SOverlay.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Widgets\SPanel.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Widgets\SWidget.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Widgets\SWindow.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Children.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\SlateCoreClasses.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\SlateCoreModule.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\SlotBase.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Animation\CurveHandle.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Animation\CurveSequence.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Application\ActiveTimerHandle.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Application\SlateApplicationBase.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Application\SlateWindowHelper.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Application\ThrottleManager.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Brushes\SlateDynamicImageBrush.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\CompositeFont.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\FontBulkData.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\FontCache.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\FontCacheCompositeFont.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\FontCacheFreeType.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\FontCacheHarfBuzz.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\FontFaceInterface.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\FontMeasure.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\FontProviderInterface.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\FontTypes.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\LegacySlateFontInfoCache.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\SlateFontInfo.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\SlateFontRenderer.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Private\Fonts\SlateTextShaper.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\SlateCore\Generated\SlateCore.generated.cpp">
+      <Filter>Generated</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
