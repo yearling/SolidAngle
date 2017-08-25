@@ -692,7 +692,6 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\UObject\MobileObjectVersion.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\UObject\NameTypes.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\UObject\NetworkingObjectVersion.h" />
-    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\ObjectMacros.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\UObject\ObjectVersion.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\UObject\OnlineObjectVersion.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\UObject\PendingVersions.h" />

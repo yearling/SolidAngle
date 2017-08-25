@@ -1593,8 +1593,6 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Math\Unrealmathsse.h">
       <Filter>Source\Runtime\Core\Public\Math</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\UnrealTemplate.h" />
-    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\UnrealTypeTraits.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\UObject\DevObjectVersion.h">
       <Filter>Source\Runtime\Core\Public\UObject</Filter>
     </ClInclude>
@@ -1602,9 +1600,6 @@
       <Filter>Source\Runtime\Core\Public\UObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\UObject\NameTypes.h">
-      <Filter>Source\Runtime\Core\Public\UObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\UObject\ObjectMacros.h">
       <Filter>Source\Runtime\Core\Public\UObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\UObject\ObjectVersion.h">
@@ -1858,6 +1853,12 @@
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Private\HAL\MallocVerify.h">
       <Filter>Source\Runtime\Core\Private\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\UnrealTemplate.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\UnrealTypeTraits.h">
+      <Filter>Source\Runtime\Core\Public\Templates</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
