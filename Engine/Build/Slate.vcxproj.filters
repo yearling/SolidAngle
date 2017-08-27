@@ -180,9 +180,6 @@
     <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Styling\TextBlockWidgetStyle.h">
       <Filter>Public</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\Android\AndroidPlatformTextField.h">
-      <Filter>Public</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Runtime\Slate\Public\Framework\Text\BaseTextLayoutMarshaller.h">
       <Filter>Public</Filter>
     </ClInclude>
@@ -917,9 +914,6 @@
       <Filter>Private</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Styling\TextBlockWidgetStyle.cpp">
-      <Filter>Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\Android\AndroidPlatformTextField.cpp">
       <Filter>Private</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Runtime\Slate\Private\Framework\Text\PlainTextLayoutMarshaller.cpp">

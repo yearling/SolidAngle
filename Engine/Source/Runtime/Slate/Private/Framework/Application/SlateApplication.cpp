@@ -30,7 +30,7 @@
 #include "Framework/Notifications/NotificationManager.h"
 #include "Framework/Application/IInputProcessor.h"
 #include "GenericPlatform/ITextInputMethodSystem.h"
-#include "ToolboxModule.h"
+//#include "ToolboxModule.h"
 #include "Framework/Docking/TabCommands.h"
 
 #define SLATE_HAS_WIDGET_REFLECTOR !UE_BUILD_SHIPPING || PLATFORM_DESKTOP
@@ -4648,10 +4648,10 @@ bool FSlateApplication::ProcessKeyDownEvent( FKeyEvent& InKeyEvent )
 		// Ctrl+Shift+~ summons the Toolbox.
 		if (InKeyEvent.GetKey() == EKeys::Tilde && InKeyEvent.IsControlDown() && InKeyEvent.IsShiftDown())
 		{
-			IToolboxModule* ToolboxModule = FModuleManager::LoadModulePtr<IToolboxModule>("Toolbox");
-			if (ToolboxModule)
+			//IToolboxModule* ToolboxModule = FModuleManager::LoadModulePtr<IToolboxModule>("Toolbox");
+			//if (ToolboxModule)
 			{
-				ToolboxModule->SummonToolbox();
+				//ToolboxModule->SummonToolbox();
 			}
 		}
 

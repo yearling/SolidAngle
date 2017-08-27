@@ -6,7 +6,7 @@
 #include "Misc/AutomationTest.h"
 #include "Misc/App.h"
 #include "EngineAnalytics.h"
-#include "AnalyticsEventAttribute.h"
+//#include "AnalyticsEventAttribute.h"
 #include "Interfaces/IAnalyticsProvider.h"
 
 #if WITH_DEV_AUTOMATION_TESTS

@@ -24,7 +24,7 @@
 #include "SceneManagement.h"
 
 #if WITH_EDITOR
-#include "Editor.h"
+//#include "Editor.h"
 #endif 
 
 #define LOCTEXT_NAMESPACE "ErrorChecking"
@@ -419,12 +419,12 @@ void AWorldSettings::PostEditChangeProperty(FPropertyChangedEvent& PropertyChang
 	{
 		if (PropertyThatChanged->GetFName() == GET_MEMBER_NAME_CHECKED(FHierarchicalSimplification,TransitionScreenSize))
 		{
-			GEditor->BroadcastHLODTransitionScreenSizeChanged();
+			//GEditor->BroadcastHLODTransitionScreenSizeChanged();
 		}
 
 		else if (PropertyThatChanged->GetFName() == GET_MEMBER_NAME_CHECKED(AWorldSettings,HierarchicalLODSetup))
 		{
-			GEditor->BroadcastHLODLevelsArrayChanged();
+			//GEditor->BroadcastHLODLevelsArrayChanged();
 			NumHLODLevels = HierarchicalLODSetup.Num();			
 		}
 	}
