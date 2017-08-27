@@ -19,33 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Source\Runtime\EngineSettings\Classes\ConsoleSettings.h" />
-    <ClInclude Include="..\Source\Runtime\EngineSettings\Classes\GameMapsSettings.h" />
-    <ClInclude Include="..\Source\Runtime\EngineSettings\Classes\GameNetworkManagerSettings.h" />
-    <ClInclude Include="..\Source\Runtime\EngineSettings\Classes\GameSessionSettings.h" />
-    <ClInclude Include="..\Source\Runtime\EngineSettings\Classes\GeneralEngineSettings.h" />
-    <ClInclude Include="..\Source\Runtime\EngineSettings\Classes\GeneralProjectSettings.h" />
-    <ClInclude Include="..\Source\Runtime\EngineSettings\Classes\HudSettings.h" />
-    <ClInclude Include="..\Source\Runtime\EngineSettings\Generated\ConsoleSettings.generated.h" />
-    <ClInclude Include="..\Source\Runtime\EngineSettings\Generated\EngineSettings.generated.dep.h" />
-    <ClInclude Include="..\Source\Runtime\EngineSettings\Generated\EngineSettingsClasses.h" />
-    <ClInclude Include="..\Source\Runtime\EngineSettings\Generated\GameMapsSettings.generated.h" />
-    <ClInclude Include="..\Source\Runtime\EngineSettings\Generated\GameNetworkManagerSettings.generated.h" />
-    <ClInclude Include="..\Source\Runtime\EngineSettings\Generated\GameSessionSettings.generated.h" />
-    <ClInclude Include="..\Source\Runtime\EngineSettings\Generated\GeneralEngineSettings.generated.h" />
-    <ClInclude Include="..\Source\Runtime\EngineSettings\Generated\GeneralProjectSettings.generated.h" />
-    <ClInclude Include="..\Source\Runtime\EngineSettings\Generated\HudSettings.generated.h" />
-    <ClInclude Include="..\Source\Runtime\EngineSettings\Public\EngineSettings.h" />
+    <ClCompile Include="..\Source\Runtime\PacketHandlers\PacketHandler\Generated\PacketHandler.generated.cpp" />
+    <ClCompile Include="..\Source\Runtime\PacketHandlers\PacketHandler\Private\HandlerComponentFactory.cpp" />
+    <ClCompile Include="..\Source\Runtime\PacketHandlers\PacketHandler\Private\PacketHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Source\Runtime\EngineSettings\Generated\EngineSettings.generated.cpp" />
-    <ClCompile Include="..\Source\Runtime\EngineSettings\Private\EngineSettingsModule.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Source\Runtime\EngineSettings\Generated\Timestamp" />
+    <ClInclude Include="..\Source\Runtime\PacketHandlers\PacketHandler\Classes\HandlerComponentFactory.h" />
+    <ClInclude Include="..\Source\Runtime\PacketHandlers\PacketHandler\Generated\HandlerComponentFactory.generated.h" />
+    <ClInclude Include="..\Source\Runtime\PacketHandlers\PacketHandler\Generated\PacketHandler.generated.dep.h" />
+    <ClInclude Include="..\Source\Runtime\PacketHandlers\PacketHandler\Generated\PacketHandlerClasses.h" />
+    <ClInclude Include="..\Source\Runtime\PacketHandlers\PacketHandler\Public\PacketHandler.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{28E60EFD-60F0-41AF-A52F-B72224876582}</ProjectGuid>
+    <ProjectGuid>{A844FC40-11BA-494C-8CE6-D536A00ABCE3}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>RHI</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
@@ -132,8 +118,8 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>ENGINESETTINGS_API=__declspec(dllexport);CORE_API=__declspec(dllimport);COREUOBJECT_API=__declspec(dllimport);UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;_DEBUG;_CONSOLE;UE_IS_ENGINE_MODULE=1;MALLOC_LEAKDETECTION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\EngineSettings;..\Source\Runtime\EngineSettings\Public;..\Source\Runtime\EngineSettings\Classes;..\Source\Runtime\EngineSettings\Generated;..\Source\Runtime\CoreUObject\Public;..\Source\Runtime\CoreUObject\Public\UObject;..\Source\Runtime\Core\Public\Templates;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>PACKETHANDLER_API=__declspec(dllexport);CORE_API=__declspec(dllimport);COREUOBJECT_API=__declspec(dllimport);UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;_DEBUG;_CONSOLE;UE_IS_ENGINE_MODULE=1;MALLOC_LEAKDETECTION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\PacketHandlers\PacketHandler\Classes;..\Source\Runtime\PacketHandlers\PacketHandler\Public;..\Source\Runtime\PacketHandlers\PacketHandler\Generated;..\Source\Runtime\CoreUObject\Public;..\Source\Runtime\CoreUObject\Public\UObject;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\PacketHandlers\PacketHandler;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -167,8 +153,8 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>ENGINESETTINGS_API=__declspec(dllexport);CORE_API=__declspec(dllimport);COREUOBJECT_API=__declspec(dllimport);UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\EngineSettings;..\Source\Runtime\EngineSettings\Public;..\Source\Runtime\EngineSettings\Classes;..\Source\Runtime\EngineSettings\Generated;..\Source\Runtime\CoreUObject\Public;..\Source\Runtime\CoreUObject\Public\UObject;..\Source\Runtime\Core\Public\Templates;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>PACKETHANDLER_API=__declspec(dllexport);CORE_API=__declspec(dllimport);COREUOBJECT_API=__declspec(dllimport);UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\PacketHandlers\PacketHandler\Classes;..\Source\Runtime\PacketHandlers\PacketHandler\Public;..\Source\Runtime\PacketHandlers\PacketHandler\Generated;..\Source\Runtime\CoreUObject\Public;..\Source\Runtime\CoreUObject\Public\UObject;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\PacketHandlers\PacketHandler;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
