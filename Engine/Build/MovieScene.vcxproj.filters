@@ -1,0 +1,389 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Public">
+      <UniqueIdentifier>{9798739d-112d-4a43-9846-8bfcd9005db7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private">
+      <UniqueIdentifier>{41368f8d-df66-483d-a817-a84481a5a826}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated">
+      <UniqueIdentifier>{8c298562-dbca-431a-99cc-8a991b867499}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneBindingOwnerInterface.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneClipboard.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneCommonHelpers.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneExecutionToken.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneFolder.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneFwd.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneKeyStruct.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneNameableTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieScenePossessable.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneSequence.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneSequenceID.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneSequenceInstance.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneSequencePlayer.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneSignedObject.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneSpawnable.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneSpawnRegister.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Compilation\IMovieSceneTemplateGenerator.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Compilation\MovieSceneCompilerRules.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Compilation\MovieSceneEvaluationTemplateGenerator.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Compilation\MovieSceneSegmentCompiler.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneAnimTypeID.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneEvalTemplate.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneEvalTemplateBase.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneEvaluation.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneEvaluationCustomVersion.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneEvaluationField.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneEvaluationKey.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneEvaluationState.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneEvaluationTemplate.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneEvaluationTemplateInstance.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneEvaluationTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneExecutionTokens.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneLegacyTrackInstanceTemplate.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieScenePlayback.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieScenePreAnimatedState.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieScenePropertyTemplate.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneSectionParameters.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneSegment.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneSequenceHierarchy.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneSequenceTemplateStore.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneSequenceTransform.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneTrackIdentifier.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneTrackImplementation.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\PersistentEvaluationData.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\IMovieSceneModule.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\IMovieScenePlayer.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\IMovieSceneTrackInstance.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\KeyParams.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieScene.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneBinding.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneBindingOverrides.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneBindingOverridesInterface.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneEvalTemplateSerializer.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneBindingOverrides.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneBindingOverridesInterface.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneBindingOwnerInterface.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneClasses.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneEvalTemplate.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneEvalTemplateBase.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneEvaluationField.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneEvaluationTemplate.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneEvaluationTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneFolder.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneKeyStruct.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneLegacyTrackInstanceTemplate.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneNameableTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieScenePossessable.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieScenePropertyTemplate.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneSectionParameters.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneSegment.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneSequence.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneSequenceHierarchy.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneSequenceID.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneSequencePlayer.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneSequenceTransform.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneSignedObject.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneSpawnable.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneTrackIdentifier.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneTrackImplementation.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\KeyParams.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieScene.generated.dep.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieScene.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneBinding.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneClipboard.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneCommonHelpers.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneFolder.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneModule.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneNameableTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieScenePlayer.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneSequence.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneSequenceInstance.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneSequencePlayer.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneSignedObject.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneSpawnable.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneSpawnRegister.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Compilation\MovieSceneEvaluationTemplateGenerator.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Compilation\MovieSceneSegmentCompiler.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneAnimTypeID.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneEvalTemplate.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneEvaluationCustomVersion.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneEvaluationField.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneEvaluationState.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneEvaluationTemplate.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneEvaluationTemplateInstance.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneEvaluationTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneExecutionTokens.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneLegacyTrackInstanceTemplate.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieScenePlayback.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieScenePreAnimatedState.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieScenePropertyTemplate.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneSequenceTemplateStore.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneTrackImplementation.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieScene.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneBinding.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneBindingOverrides.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Generated\MovieScene.generated.cpp">
+      <Filter>Generated</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Source\Runtime\MovieScene\Generated\Timestamp">
+      <Filter>Generated</Filter>
+    </None>
+  </ItemGroup>
+</Project>

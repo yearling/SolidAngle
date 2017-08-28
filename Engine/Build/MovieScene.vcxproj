@@ -1,0 +1,288 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\KeyParams.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieScene.generated.dep.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieScene.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneBinding.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneBindingOverrides.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneBindingOverridesInterface.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneBindingOwnerInterface.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneClasses.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneEvalTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneEvalTemplateBase.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneEvaluationField.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneEvaluationTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneEvaluationTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneFolder.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneKeyStruct.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneLegacyTrackInstanceTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneNameableTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieScenePossessable.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieScenePropertyTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneSectionParameters.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneSegment.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneSequence.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneSequenceHierarchy.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneSequenceID.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneSequencePlayer.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneSequenceTransform.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneSignedObject.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneSpawnable.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneTrackIdentifier.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Generated\MovieSceneTrackImplementation.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneEvalTemplateSerializer.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Compilation\IMovieSceneTemplateGenerator.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Compilation\MovieSceneCompilerRules.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Compilation\MovieSceneEvaluationTemplateGenerator.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Compilation\MovieSceneSegmentCompiler.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneAnimTypeID.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneEvalTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneEvalTemplateBase.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneEvaluation.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneEvaluationCustomVersion.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneEvaluationField.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneEvaluationKey.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneEvaluationState.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneEvaluationTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneEvaluationTemplateInstance.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneEvaluationTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneExecutionTokens.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneLegacyTrackInstanceTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieScenePlayback.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieScenePreAnimatedState.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieScenePropertyTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneSectionParameters.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneSegment.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneSequenceHierarchy.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneSequenceTemplateStore.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneSequenceTransform.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneTrackIdentifier.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\MovieSceneTrackImplementation.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\Evaluation\PersistentEvaluationData.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\IMovieSceneModule.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\IMovieScenePlayer.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\IMovieSceneTrackInstance.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\KeyParams.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieScene.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneBinding.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneBindingOverrides.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneBindingOverridesInterface.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneBindingOwnerInterface.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneClipboard.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneCommonHelpers.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneExecutionToken.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneFolder.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneFwd.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneKeyStruct.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneNameableTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieScenePossessable.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneSequence.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneSequenceID.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneSequenceInstance.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneSequencePlayer.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneSignedObject.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneSpawnable.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneSpawnRegister.h" />
+    <ClInclude Include="..\Source\Runtime\MovieScene\Public\MovieSceneTrack.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Runtime\MovieScene\Generated\MovieScene.generated.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Compilation\MovieSceneEvaluationTemplateGenerator.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Compilation\MovieSceneSegmentCompiler.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneAnimTypeID.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneEvalTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneEvaluationCustomVersion.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneEvaluationField.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneEvaluationState.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneEvaluationTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneEvaluationTemplateInstance.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneEvaluationTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneExecutionTokens.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneLegacyTrackInstanceTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieScenePlayback.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieScenePreAnimatedState.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieScenePropertyTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneSequenceTemplateStore.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\Evaluation\MovieSceneTrackImplementation.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieScene.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneBinding.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneBindingOverrides.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneClipboard.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneCommonHelpers.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneFolder.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneModule.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneNameableTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieScenePlayer.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneSequence.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneSequenceInstance.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneSequencePlayer.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneSignedObject.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneSpawnable.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneSpawnRegister.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieScene\Private\MovieSceneTrack.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Source\Runtime\MovieScene\Generated\Timestamp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B20253B1-D028-4756-B21E-5F038A475350}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>RHI</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\Binaries\$(Platform)\</OutDir>
+    <IntDir>..\Intermediate\Build\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\Binaries\$(Platform)\</OutDir>
+    <IntDir>..\Intermediate\Build\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;RHI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>RHI_API=__declspec(dllimport);ENGINE_API=__declspec(dllimport);MOVIESCENE_API=__declspec(dllexport);CORE_API=__declspec(dllimport);COREUOBJECT_API=__declspec(dllimport);UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;_DEBUG;_CONSOLE;UE_IS_ENGINE_MODULE=1;MALLOC_LEAKDETECTION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\Runtime\Engine\Public;..\Source\;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\MovieScene\Public;..\Source\Runtime\MovieScene\Public\Evaluation;..\Source\Runtime\MovieScene\Public\Compilation;..\Source\Runtime\MovieScene;..\Source\Runtime\CoreUObject\Public;..\Source\Runtime\MovieScene\Generated;..\Source\Runtime\Engine\Classes;..\Source\Runtime\Engine\Generated;..\Source\Runtime\RHI\Public;..\Source\Runtime\Core\Public\UObject;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\Binaries\x64\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SolidAngle_x64_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;RHI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>RHI_API=__declspec(dllimport);ENGINE_API=__declspec(dllimport);MOVIESCENE_API=__declspec(dllexport);CORE_API=__declspec(dllimport);COREUOBJECT_API=__declspec(dllimport);UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\Runtime\Engine\Public;..\Source\;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\MovieScene\Public;..\Source\Runtime\MovieScene\Public\Evaluation;..\Source\Runtime\MovieScene\Public\Compilation;..\Source\Runtime\MovieScene;..\Source\Runtime\CoreUObject\Public;..\Source\Runtime\MovieScene\Generated;..\Source\Runtime\Engine\Classes;..\Source\Runtime\Engine\Generated;..\Source\Runtime\RHI\Public;..\Source\Runtime\Core\Public\UObject;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\Binaries\x64\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SolidAngle_x64_Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
