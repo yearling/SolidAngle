@@ -132,7 +132,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WITH_UNREALJPEG=1;WITH_UNREALEXR=1;WITH_UNREALPNG=1;IMAGEWRAPPER_API=__declspec(dllexport);IMAGECORE_API=__declspec(dllimport);CORE_API=__declspec(dllimport);UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;_DEBUG;_CONSOLE;UE_IS_ENGINE_MODULE=1;MALLOC_LEAKDETECTION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\ImageCore\Public;..\Source\Runtime\ImageWrapper\Public;..\Source\Runtime\ImageWrapper\Private;..\Source;..\Source\ThirdParty\libJPG;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\ImageCore\Public;..\Source\Runtime\ImageWrapper\Public;..\Source\Runtime\ImageWrapper\Private;..\Source;..\Source\ThirdParty\libJPG;..\Source\ThirdParty\openexr\OpenEXR-1.7.1\openexr-1.7.1\IlmImf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -167,7 +167,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WITH_UNREALJPEG=1;WITH_UNREALEXR=1;WITH_UNREALPNG=1;IMAGEWRAPPER_API=__declspec(dllexport);IMAGECORE_API=__declspec(dllimport);CORE_API=__declspec(dllimport);UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\ImageCore\Public;..\Source\Runtime\ImageWrapper\Public;..\Source\Runtime\ImageWrapper\Private;..\Source;..\Source\ThirdParty\libJPG;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\ImageCore\Public;..\Source\Runtime\ImageWrapper\Public;..\Source\Runtime\ImageWrapper\Private;..\Source;..\Source\ThirdParty\libJPG;..\Source\ThirdParty\openexr\OpenEXR-1.7.1\openexr-1.7.1\IlmImf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
