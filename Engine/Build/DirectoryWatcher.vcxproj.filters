@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Public">
+      <UniqueIdentifier>{9798739d-112d-4a43-9846-8bfcd9005db7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private">
+      <UniqueIdentifier>{41368f8d-df66-483d-a817-a84481a5a826}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private\Windows">
+      <UniqueIdentifier>{4ae45d49-39b4-4183-b145-801b3553ab9c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\Developer\DirectoryWatcher\Public\DirectoryWatcherModule.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Developer\DirectoryWatcher\Public\FileCache.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Developer\DirectoryWatcher\Public\FileCacheUtilities.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Developer\DirectoryWatcher\Public\IDirectoryWatcher.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Developer\DirectoryWatcher\Private\DirectoryWatcherPrivate.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Developer\DirectoryWatcher\Private\Windows\DirectoryWatcherWindows.h">
+      <Filter>Private\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Developer\DirectoryWatcher\Private\Windows\DirectoryWatchRequestWindows.h">
+      <Filter>Private\Windows</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Developer\DirectoryWatcher\Private\DirectoryWatcherModule.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Developer\DirectoryWatcher\Private\DirectoryWatcherTests.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Developer\DirectoryWatcher\Private\FileCache.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Developer\DirectoryWatcher\Private\FileCacheUtilities.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Developer\DirectoryWatcher\Private\Windows\DirectoryWatcherWindows.cpp">
+      <Filter>Private\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Developer\DirectoryWatcher\Private\Windows\DirectoryWatchRequestWindows.cpp">
+      <Filter>Private\Windows</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -3,12 +3,12 @@
 #include "PhysXFormats.h"
 #include "Serialization/MemoryWriter.h"
 #include "Modules/ModuleManager.h"
-//#include "Interfaces/Interface_CollisionDataProvider.h"
+#include "Interfaces/Interface_CollisionDataProvider.h"
 #include "IPhysXFormat.h"
 #include "IPhysXFormatModule.h"
-//#include "PhysicsEngine/PhysXSupport.h"
+#include "PhysicsEngine/PhysXSupport.h"
 
-//static_assert(WITH_PHYSX, "No point in compiling PhysX cooker, if we don't have PhysX.");
+static_assert(WITH_PHYSX, "No point in compiling PhysX cooker, if we don't have PhysX.");
 
 static FName NAME_PhysXPC(TEXT("PhysXPC"));
 static FName NAME_PhysXXboxOne(TEXT("PhysXXboxOne"));
@@ -25,7 +25,7 @@ class FPhysXFormats : public IPhysXFormat
 		UE_PHYSX_PC_VER = 0,
 	};
 
-	//PxCooking* PhysXCooking;
+	PxCooking* PhysXCooking;
 
 	/**
 	 * Validates format name and returns its PhysX enum value.
@@ -34,33 +34,33 @@ class FPhysXFormats : public IPhysXFormat
 	 * @param OutFormat PhysX enum
 	 * @return true if InFormatName is a valid and supported PhysX format
 	 */
-	//bool GetPhysXFormat(FName InFormatName, PxPlatform::Enum& OutFormat) const
-	//{
-	//	if ((InFormatName == NAME_PhysXPC) || (InFormatName == NAME_PhysXXboxOne) || (InFormatName == NAME_PhysXPS4))
-	//	{
-	//		OutFormat = PxPlatform::ePC;
-	//	}
-	//	else
-	//	{
-	//		return false;
-	//	}
-	//	return true;
-	//}
+	bool GetPhysXFormat(FName InFormatName, PxPlatform::Enum& OutFormat) const
+	{
+		if ((InFormatName == NAME_PhysXPC) || (InFormatName == NAME_PhysXXboxOne) || (InFormatName == NAME_PhysXPS4))
+		{
+			OutFormat = PxPlatform::ePC;
+		}
+		else
+		{
+			return false;
+		}
+		return true;
+	}
 
 	/**
 	 * Valudates PhysX format name.
 	 */
-	//bool CheckPhysXFormat(FName InFormatName) const
-	//{
-	//	PxPlatform::Enum PhysXFormat = PxPlatform::ePC;
-	//	return GetPhysXFormat(InFormatName, PhysXFormat);
-	//}
+	bool CheckPhysXFormat(FName InFormatName) const
+	{
+		PxPlatform::Enum PhysXFormat = PxPlatform::ePC;
+		return GetPhysXFormat(InFormatName, PhysXFormat);
+	}
 
 public:
 
-	/*FPhysXFormats( PxCooking* InCooking )
+	FPhysXFormats( PxCooking* InCooking )
 		: PhysXCooking( InCooking )
-	{}*/
+	{}
 
 	virtual bool AllowParallelBuild() const override
 	{
