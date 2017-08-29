@@ -1,0 +1,407 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScene3DAttachSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScene3DAttachTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScene3DAttachTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScene3DConstraintSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScene3DConstraintTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScene3DPathSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScene3DPathTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScene3DPathTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScene3DTransformSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScene3DTransformTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScene3DTransformTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneActorReferenceSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneActorReferenceTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneActorReferenceTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneAudioSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneAudioTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneAudioTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneBoolSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneBoolTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneByteSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneByteTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneCameraAnimSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneCameraAnimTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneCameraAnimTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneCameraCutSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneCameraCutTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneCameraCutTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneCameraShakeSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneCameraShakeTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneCinematicShotSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneCinematicShotTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneColorSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneColorTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneColorTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneEnumSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneEnumTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneEventSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneEventTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneEventTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneFadeSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneFadeTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneFadeTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneFloatSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneFloatTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneIntegerSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneIntegerTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneLevelVisibilitySection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneLevelVisibilityTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneLevelVisibilityTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneMaterialTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneParameterSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneParameterTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneParticleParameterTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneParticleParameterTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneParticleSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneParticleTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneParticleTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScenePropertyTemplates.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScenePropertyTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneSkeletalAnimationSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneSkeletalAnimationTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneSkeletalAnimationTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneSlomoSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneSlomoTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneSlomoTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneSpawnSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneSpawnTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneSpawnTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneStringSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneStringTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneSubSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneSubTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneTracks.generated.dep.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneTracksClasses.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneVectorSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneVectorTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneVisibilityTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneVisibilityTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieScene3DAttachTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieScene3DPathTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieScene3DTransformTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneActorReferenceTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneAudioTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneCameraAnimTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneCameraCutTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneColorTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneEventTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneFadeTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneLevelVisibilityTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneParticleParameterTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneParticleTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieScenePropertyTemplates.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneSkeletalAnimationTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneSlomoTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneTemplateCommon.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneVisibilityTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Evaluation\MovieSceneParameterTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Evaluation\MovieSceneSpawnTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\IMovieSceneTracksModule.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\MovieSceneHitProxy.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\IKeyframeSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieScene3DAttachSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieScene3DConstraintSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieScene3DPathSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieScene3DTransformSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneActorReferenceSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneAudioSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneBoolSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneByteSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneCameraAnimSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneCameraCutSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneCameraShakeSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneCinematicShotSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneColorSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneEnumSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneEventSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneFadeSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneFloatSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneIntegerSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneLevelVisibilitySection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneParameterSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneParticleSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneSkeletalAnimationSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneSlomoSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneSpawnSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneStringSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneSubSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneVectorSection.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieScene3DAttachTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieScene3DConstraintTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieScene3DPathTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieScene3DTransformTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneActorReferenceTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneAudioTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneBoolTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneByteTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneCameraAnimTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneCameraCutTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneCameraShakeTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneCinematicShotTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneColorTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneEnumTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneEventTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneFadeTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneFloatTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneIntegerTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneLevelVisibilityTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneMaterialTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneParticleParameterTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneParticleTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieScenePropertyTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneSkeletalAnimationTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneSlomoTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneSpawnTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneStringTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneSubTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneVectorTrack.h" />
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneVisibilityTrack.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneTracks.generated.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieScene3DAttachTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieScene3DPathTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieScene3DTransformTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneActorReferenceTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneAudioTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneCameraAnimTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneCameraCutTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneColorTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneEventTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneFadeTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneLevelVisibilityTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneParameterTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneParticleParameterTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneParticleTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieScenePropertyTemplates.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneSkeletalAnimationTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneSlomoTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneSpawnTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneTemplateCommon.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneVisibilityTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\MovieSceneHitProxy.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\MovieSceneTracksModule.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieScene3DAttachSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieScene3DConstraintSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieScene3DPathSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieScene3DTransformSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneActorReferenceSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneAudioSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneBoolSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneByteSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneCameraAnimSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneCameraCutSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneCameraShakeSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneCinematicShotSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneColorSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneEnumSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneEventSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneFadeSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneFloatSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneIntegerSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneLevelVisibilitySection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneParameterSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneParticleSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneSkeletalAnimationSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneSlomoSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneSpawnSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneStringSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneSubSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneVectorSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieScene3DAttachTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieScene3DConstraintTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieScene3DPathTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieScene3DTransformTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneActorReferenceTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneAudioTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneBoolTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneByteTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneCameraAnimTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneCameraCutTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneCameraShakeTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneCinematicShotTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneColorTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneEnumTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneEventTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneFadeTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneFloatTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneIntegerTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneLevelVisibilityTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneMaterialTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneParticleParameterTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneParticleTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieScenePropertyTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneSkeletalAnimationTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneSlomoTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneSpawnTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneStringTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneSubTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneVectorTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneVisibilityTrack.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Source\Runtime\MovieSceneTracks\Generated\Timestamp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A4C65D85-719B-4C8D-A3A3-47DA0BF487BE}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>RHI</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\Binaries\$(Platform)\</OutDir>
+    <IntDir>..\Intermediate\Build\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\Binaries\$(Platform)\</OutDir>
+    <IntDir>..\Intermediate\Build\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;RHI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>ANIMGRAPHRUNTIME_API=__declspec(dllimport);SLATE_API=__declspec(dllimport);SLATECORE_API=__declspec(dllimport);INPUTCORE_API=__declspec(dllimport);SHADERCORE_API=__declspec(dllimport);RENDERCORE_API=__declspec(dllimport);INPUTCORE_API=__declspec(dllimport);MOVIESCENETRACKS_API=__declspec(dllexport);COREUOBJECT_API=__declspec(dllimport);CORE_API=__declspec(dllimport);RHI_API=__declspec(dllimport);ENGINE_API=__declspec(dllimport);MOVIESCENE_API=__declspec(dllimport);UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;_DEBUG;_CONSOLE;UE_IS_ENGINE_MODULE=1;MALLOC_LEAKDETECTION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\Runtime\Engine\Public;..\Source\;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\MovieSceneTracks;..\Source\Runtime\MovieSceneTracks\Public;..\Source\Runtime\MovieSceneTracks\Private;..\Source\Runtime\MovieSceneTracks\Generated;..\Source\Runtime\CoreUObject\Public;..\Source\Runtime\Engine\Classes;..\Source\Runtime\Core\Public\UObject;..\Source\Runtime\MovieScene\Public;..\Source\Runtime\Engine\Generated;..\Source\Runtime\MovieScene\Generated;..\Source\Runtime\InputCore\Classes;..\Source\Runtime\InputCore\Private;..\Source\Runtime\RHI\Public;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\MovieSceneTracks\Public\Sections;..\Source\Runtime\RenderCore\Public;..\Source\Runtime\SlateCore\Public;..\Source\Runtime\ShaderCore\Public;..\Source\Runtime\MovieScene\Public\Evaluation;..\Source\Runtime\SlateCore\Generated;..\Source\Runtime\Core\Public\Misc;..\Source\Runtime\CoreUObject\Public\UObject;..\Source\Runtime\Renderer\Public;..\Source\Runtime\Slate\Public;..\Source\Runtime\MovieSceneTracks\Public\Tracks;..\Source\Runtime\Slate\Generated;..\Source\Runtime\Core\Public\Logging;..\Source;..\Source\Runtime\AnimGraphRuntime\Generated;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\Binaries\x64\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SolidAngle_x64_Debug.lib;CoreUObject_x64_Debug.lib;Slate_x64_Debug.lib;SlateCore_x64_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;RHI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>ANIMGRAPHRUNTIME_API=__declspec(dllimport);SLATE_API=__declspec(dllimport);SLATECORE_API=__declspec(dllimport);INPUTCORE_API=__declspec(dllimport);SHADERCORE_API=__declspec(dllimport);RENDERCORE_API=__declspec(dllimport);INPUTCORE_API=__declspec(dllimport);MOVIESCENETRACKS_API=__declspec(dllexport);COREUOBJECT_API=__declspec(dllimport);CORE_API=__declspec(dllimport);RHI_API=__declspec(dllimport);ENGINE_API=__declspec(dllimport);MOVIESCENE_API=__declspec(dllimport);UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\Runtime\Engine\Public;..\Source\;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\MovieSceneTracks;..\Source\Runtime\MovieSceneTracks\Public;..\Source\Runtime\MovieSceneTracks\Private;..\Source\Runtime\MovieSceneTracks\Generated;..\Source\Runtime\CoreUObject\Public;..\Source\Runtime\Engine\Classes;..\Source\Runtime\Core\Public\UObject;..\Source\Runtime\MovieScene\Public;..\Source\Runtime\Engine\Generated;..\Source\Runtime\MovieScene\Generated;..\Source\Runtime\InputCore\Classes;..\Source\Runtime\InputCore\Private;..\Source\Runtime\RHI\Public;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\MovieSceneTracks\Public\Sections;..\Source\Runtime\RenderCore\Public;..\Source\Runtime\SlateCore\Public;..\Source\Runtime\ShaderCore\Public;..\Source\Runtime\MovieScene\Public\Evaluation;..\Source\Runtime\SlateCore\Generated;..\Source\Runtime\Core\Public\Misc;..\Source\Runtime\CoreUObject\Public\UObject;..\Source\Runtime\Renderer\Public;..\Source\Runtime\Slate\Public;..\Source\Runtime\MovieSceneTracks\Public\Tracks;..\Source\Runtime\Slate\Generated;..\Source\Runtime\Core\Public\Logging;..\Source;..\Source\Runtime\AnimGraphRuntime\Generated;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\Binaries\x64\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SolidAngle_x64_Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -187,7 +187,7 @@ FNavDataConfig::FNavDataConfig(float Radius, float Height)
 	, Name(TEXT("Default"))
 	, Color(140, 255, 0, 164)
 	, DefaultQueryExtent(DEFAULT_NAV_QUERY_EXTENT_HORIZONTAL, DEFAULT_NAV_QUERY_EXTENT_HORIZONTAL, DEFAULT_NAV_QUERY_EXTENT_VERTICAL)
-	, NavigationDataClass(ARecastNavMesh::StaticClass())
+	//, NavigationDataClass(ARecastNavMesh::StaticClass())
 	, NavigationDataClassName(NavigationDataClass)
 {
 }
@@ -1579,16 +1579,16 @@ bool UNavigationSystem::IsNavigationBuilt(const AWorldSettings* Settings) const
 		ANavigationData* NavData = NavDataSet[NavDataIndex];
 		if (NavData != NULL && NavData->GetWorldSettings() == Settings)
 		{
-			FNavDataGenerator* Generator = NavData->GetGenerator();
-			if ((NavData->GetRuntimeGenerationMode() != ERuntimeGenerationType::Static
-#if WITH_EDITOR
-				|| GEditor != NULL
-#endif // WITH_EDITOR
-				) && (Generator == NULL || Generator->IsBuildInProgress(/*bCheckDirtyToo=*/true) == true))
-			{
-				bIsBuilt = false;
-				break;
-			}
+//			FNavDataGenerator* Generator = NavData->GetGenerator();
+//			if ((NavData->GetRuntimeGenerationMode() != ERuntimeGenerationType::Static
+//#if WITH_EDITOR
+//				|| GEditor != NULL
+//#endif // WITH_EDITOR
+//				) && (Generator == NULL || Generator->IsBuildInProgress(/*bCheckDirtyToo=*/true) == true))
+//			{
+//				bIsBuilt = false;
+//				break;
+//			}
 		}
 	}
 
@@ -3381,13 +3381,13 @@ bool UNavigationSystem::IsNavigationBuildInProgress(bool bCheckDirtyToo)
 	
 	for (int32 NavDataIndex = 0; NavDataIndex < NavDataSet.Num(); ++NavDataIndex)
 	{
-		ANavigationData* NavData = NavDataSet[NavDataIndex];
+		/*ANavigationData* NavData = NavDataSet[NavDataIndex];
 		if (NavData != NULL && NavData->GetGenerator() != NULL 
 			&& NavData->GetGenerator()->IsBuildInProgress(bCheckDirtyToo) == true)
 		{
 			bRet = true;
 			break;
-		}
+		}*/
 	}
 
 	return bRet;
@@ -3406,7 +3406,7 @@ int32 UNavigationSystem::GetNumRemainingBuildTasks() const
 	{
 		if (NavData && NavData->GetGenerator())
 		{
-			NumTasks+= NavData->GetGenerator()->GetNumRemaningBuildTasks();
+			//NumTasks+= NavData->GetGenerator()->GetNumRemaningBuildTasks();
 		}
 	}
 	
@@ -3421,7 +3421,7 @@ int32 UNavigationSystem::GetNumRunningBuildTasks() const
 	{
 		if (NavData && NavData->GetGenerator())
 		{
-			NumTasks+= NavData->GetGenerator()->GetNumRunningBuildTasks();
+			//NumTasks+= NavData->GetGenerator()->GetNumRunningBuildTasks();
 		}
 	}
 	

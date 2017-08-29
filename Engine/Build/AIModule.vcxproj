@@ -1,0 +1,695 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Actions\PawnAction.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Actions\PawnActionsComponent.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Actions\PawnAction_BlueprintBase.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Actions\PawnAction_Move.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Actions\PawnAction_Repeat.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Actions\PawnAction_Sequence.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Actions\PawnAction_Wait.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\AIController.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\AIResourceInterface.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\AIResources.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\AISystem.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\AITypes.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\BehaviorTree.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\BehaviorTreeComponent.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\BehaviorTreeManager.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\BehaviorTreeTypes.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\BlackboardComponent.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\BlackboardData.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Blackboard\BlackboardKeyAllTypes.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Blackboard\BlackboardKeyType.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Blackboard\BlackboardKeyType_Bool.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Blackboard\BlackboardKeyType_Class.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Blackboard\BlackboardKeyType_Enum.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Blackboard\BlackboardKeyType_Float.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Blackboard\BlackboardKeyType_Int.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Blackboard\BlackboardKeyType_Name.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Blackboard\BlackboardKeyType_NativeEnum.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Blackboard\BlackboardKeyType_Object.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Blackboard\BlackboardKeyType_Rotator.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Blackboard\BlackboardKeyType_String.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Blackboard\BlackboardKeyType_Vector.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\BTAuxiliaryNode.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\BTCompositeNode.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\BTDecorator.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\BTFunctionLibrary.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\BTNode.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\BTService.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\BTTaskNode.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Composites\BTComposite_Selector.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Composites\BTComposite_Sequence.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Composites\BTComposite_SimpleParallel.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Decorators\BTDecorator_Blackboard.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Decorators\BTDecorator_BlackboardBase.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Decorators\BTDecorator_BlueprintBase.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Decorators\BTDecorator_CheckGameplayTagsOnActor.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Decorators\BTDecorator_CompareBBEntries.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Decorators\BTDecorator_ConditionalLoop.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Decorators\BTDecorator_ConeCheck.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Decorators\BTDecorator_Cooldown.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Decorators\BTDecorator_DoesPathExist.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Decorators\BTDecorator_ForceSuccess.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Decorators\BTDecorator_IsAtLocation.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Decorators\BTDecorator_IsBBEntryOfClass.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Decorators\BTDecorator_KeepInCone.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Decorators\BTDecorator_Loop.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Decorators\BTDecorator_ReachedMoveGoal.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Decorators\BTDecorator_SetTagCooldown.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Decorators\BTDecorator_TagCooldown.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Decorators\BTDecorator_TimeLimit.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Services\BTService_BlackboardBase.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Services\BTService_BlueprintBase.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Services\BTService_DefaultFocus.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Services\BTService_RunEQS.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Tasks\BTTask_BlackboardBase.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Tasks\BTTask_BlueprintBase.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Tasks\BTTask_GameplayTaskBase.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Tasks\BTTask_MakeNoise.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Tasks\BTTask_MoveDirectlyToward.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Tasks\BTTask_MoveTo.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Tasks\BTTask_PawnActionBase.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Tasks\BTTask_PlayAnimation.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Tasks\BTTask_PlaySound.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Tasks\BTTask_PushPawnAction.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Tasks\BTTask_RotateToFaceBBEntry.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Tasks\BTTask_RunBehavior.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Tasks\BTTask_RunBehaviorDynamic.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Tasks\BTTask_RunEQSQuery.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Tasks\BTTask_SetTagCooldown.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Tasks\BTTask_Wait.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BehaviorTree\Tasks\BTTask_WaitBlackboardTime.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Blueprint\AIAsyncTaskBlueprintProxy.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Blueprint\AIBlueprintHelperLibrary.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\BrainComponent.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\DataProviders\AIDataProvider.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\DataProviders\AIDataProvider_QueryParams.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\DataProviders\AIDataProvider_Random.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\DetourCrowdAIController.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Contexts\EnvQueryContext_BlueprintBase.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Contexts\EnvQueryContext_Item.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Contexts\EnvQueryContext_Querier.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\EnvQuery.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\EnvQueryContext.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\EnvQueryDebugHelpers.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\EnvQueryGenerator.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\EnvQueryInstanceBlueprintWrapper.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\EnvQueryManager.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\EnvQueryNode.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\EnvQueryOption.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\EnvQueryTest.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\EnvQueryTypes.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\EQSQueryResultSourceInterface.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\EQSRenderingComponent.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\EQSTestingPawn.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Generators\EnvQueryGenerator_ActorsOfClass.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Generators\EnvQueryGenerator_BlueprintBase.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Generators\EnvQueryGenerator_Composite.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Generators\EnvQueryGenerator_Cone.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Generators\EnvQueryGenerator_CurrentLocation.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Generators\EnvQueryGenerator_Donut.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Generators\EnvQueryGenerator_OnCircle.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Generators\EnvQueryGenerator_PathingGrid.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Generators\EnvQueryGenerator_ProjectedPoints.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Generators\EnvQueryGenerator_SimpleGrid.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Items\EnvQueryAllItemTypes.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Items\EnvQueryItemType.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Items\EnvQueryItemType_Actor.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Items\EnvQueryItemType_ActorBase.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Items\EnvQueryItemType_Direction.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Items\EnvQueryItemType_Point.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Items\EnvQueryItemType_VectorBase.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Tests\EnvQueryTest_Distance.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Tests\EnvQueryTest_Dot.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Tests\EnvQueryTest_GameplayTags.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Tests\EnvQueryTest_Overlap.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Tests\EnvQueryTest_Pathfinding.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Tests\EnvQueryTest_PathfindingBatch.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Tests\EnvQueryTest_Project.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Tests\EnvQueryTest_Random.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\EnvironmentQuery\Tests\EnvQueryTest_Trace.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\GenericTeamAgentInterface.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\GridPathAIController.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\HotSpots\AIHotSpotManager.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Navigation\CrowdAgentInterface.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Navigation\CrowdFollowingComponent.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Navigation\CrowdManager.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Navigation\GridPathFollowingComponent.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Navigation\MetaNavMeshPath.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Navigation\NavFilter_AIControllerDefault.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Navigation\NavLocalGridData.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Navigation\NavLocalGridManager.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Navigation\PathFollowingComponent.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AIPerceptionComponent.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AIPerceptionListenerInterface.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AIPerceptionStimuliSourceComponent.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AIPerceptionSystem.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AIPerceptionTypes.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AISense.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AISenseBlueprintListener.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AISenseConfig.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AISenseConfig_Blueprint.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AISenseConfig_Damage.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AISenseConfig_Hearing.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AISenseConfig_Prediction.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AISenseConfig_Sight.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AISenseConfig_Team.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AISenseConfig_Touch.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AISenseEvent.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AISenseEvent_Damage.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AISenseEvent_Hearing.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AISense_Blueprint.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AISense_Damage.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AISense_Hearing.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AISense_Prediction.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AISense_Sight.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AISense_Team.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AISense_Touch.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\AISightTargetInterface.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Perception\PawnSensingComponent.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Tasks\AITask.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Tasks\AITask_LockLogic.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\Tasks\AITask_MoveTo.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Classes\VisualLoggerExtension.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AIAsyncTaskBlueprintProxy.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AIBlueprintHelperLibrary.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AIController.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AIDataProvider.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AIDataProvider_QueryParams.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AIDataProvider_Random.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AIHotSpotManager.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AIModule.generated.dep.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AIModuleClasses.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AIPerceptionComponent.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AIPerceptionListenerInterface.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AIPerceptionStimuliSourceComponent.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AIPerceptionSystem.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AIPerceptionTypes.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AIResourceInterface.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AIResources.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AISense.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AISenseBlueprintListener.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AISenseConfig.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AISenseConfig_Blueprint.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AISenseConfig_Damage.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AISenseConfig_Hearing.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AISenseConfig_Prediction.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AISenseConfig_Sight.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AISenseConfig_Team.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AISenseConfig_Touch.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AISenseEvent.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AISenseEvent_Damage.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AISenseEvent_Hearing.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AISense_Blueprint.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AISense_Damage.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AISense_Hearing.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AISense_Prediction.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AISense_Sight.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AISense_Team.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AISense_Touch.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AISightTargetInterface.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AISystem.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AITask.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AITask_LockLogic.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AITask_MoveTo.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\AITypes.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BehaviorTree.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BehaviorTreeComponent.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BehaviorTreeManager.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BehaviorTreeTypes.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BlackboardComponent.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BlackboardData.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BlackboardKeyType.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BlackboardKeyType_Bool.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BlackboardKeyType_Class.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BlackboardKeyType_Enum.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BlackboardKeyType_Float.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BlackboardKeyType_Int.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BlackboardKeyType_Name.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BlackboardKeyType_NativeEnum.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BlackboardKeyType_Object.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BlackboardKeyType_Rotator.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BlackboardKeyType_String.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BlackboardKeyType_Vector.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BrainComponent.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTAuxiliaryNode.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTCompositeNode.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTComposite_Selector.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTComposite_Sequence.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTComposite_SimpleParallel.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTDecorator.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTDecorator_Blackboard.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTDecorator_BlackboardBase.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTDecorator_BlueprintBase.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTDecorator_CheckGameplayTagsOnActor.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTDecorator_CompareBBEntries.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTDecorator_ConditionalLoop.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTDecorator_ConeCheck.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTDecorator_Cooldown.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTDecorator_DoesPathExist.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTDecorator_ForceSuccess.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTDecorator_IsAtLocation.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTDecorator_IsBBEntryOfClass.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTDecorator_KeepInCone.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTDecorator_Loop.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTDecorator_ReachedMoveGoal.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTDecorator_SetTagCooldown.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTDecorator_TagCooldown.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTDecorator_TimeLimit.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTFunctionLibrary.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTNode.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTService.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTService_BlackboardBase.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTService_BlueprintBase.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTService_DefaultFocus.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTService_RunEQS.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTTaskNode.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTTask_BlackboardBase.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTTask_BlueprintBase.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTTask_GameplayTaskBase.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTTask_MakeNoise.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTTask_MoveDirectlyToward.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTTask_MoveTo.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTTask_PawnActionBase.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTTask_PlayAnimation.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTTask_PlaySound.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTTask_PushPawnAction.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTTask_RotateToFaceBBEntry.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTTask_RunBehavior.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTTask_RunBehaviorDynamic.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTTask_RunEQSQuery.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTTask_SetTagCooldown.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTTask_Wait.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\BTTask_WaitBlackboardTime.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\CrowdAgentInterface.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\CrowdFollowingComponent.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\CrowdManager.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\DetourCrowdAIController.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQuery.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryContext.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryContext_BlueprintBase.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryContext_Item.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryContext_Querier.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryDebugHelpers.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryGenerator.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryGenerator_ActorsOfClass.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryGenerator_BlueprintBase.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryGenerator_Composite.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryGenerator_Cone.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryGenerator_CurrentLocation.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryGenerator_Donut.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryGenerator_OnCircle.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryGenerator_PathingGrid.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryGenerator_ProjectedPoints.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryGenerator_SimpleGrid.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryInstanceBlueprintWrapper.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryItemType.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryItemType_Actor.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryItemType_ActorBase.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryItemType_Direction.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryItemType_Point.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryItemType_VectorBase.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryManager.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryNode.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryOption.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryTest.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryTest_Distance.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryTest_Dot.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryTest_GameplayTags.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryTest_Overlap.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryTest_Pathfinding.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryTest_PathfindingBatch.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryTest_Project.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryTest_Random.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryTest_Trace.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EnvQueryTypes.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EQSQueryResultSourceInterface.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EQSRenderingComponent.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\EQSTestingPawn.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\GenericTeamAgentInterface.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\GridPathAIController.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\GridPathFollowingComponent.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\NavFilter_AIControllerDefault.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\NavLocalGridManager.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\PathFollowingComponent.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\PawnAction.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\PawnActionsComponent.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\PawnAction_BlueprintBase.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\PawnAction_Move.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\PawnAction_Repeat.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\PawnAction_Sequence.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\PawnAction_Wait.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\PawnSensingComponent.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Generated\VisualLoggerExtension.generated.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Private\AIModuleLog.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\EnvQueryTraceHelpers.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Private\GameplayDebugger\GameplayDebuggerCategory_AI.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Private\GameplayDebugger\GameplayDebuggerCategory_BehaviorTree.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Private\GameplayDebugger\GameplayDebuggerCategory_EQS.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Private\GameplayDebugger\GameplayDebuggerCategory_NavLocalGrid.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Private\GameplayDebugger\GameplayDebuggerCategory_Navmesh.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Private\GameplayDebugger\GameplayDebuggerCategory_Perception.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Public\AIConfig.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Public\AIHelpers.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Public\AIModule.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Public\BehaviorTreeDelegates.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Public\BlueprintNodeHelpers.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Public\GraphAStar.h" />
+    <ClInclude Include="..\Source\Runtime\AIModule\Public\SimpleCellGrid.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Runtime\AIModule\Generated\AIModule.generated.1.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Generated\AIModule.generated.2.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Actions\PawnAction.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Actions\PawnActionsComponent.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Actions\PawnAction_BlueprintBase.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Actions\PawnAction_Move.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Actions\PawnAction_Repeat.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Actions\PawnAction_Sequence.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Actions\PawnAction_Wait.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\AIConfig.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\AIController.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\AIInterfaces.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\AIModule.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\AIResources.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\AISystem.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\AISystemExec.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\AITypes.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\BehaviorTree.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\BehaviorTreeComponent.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\BehaviorTreeDelegates.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\BehaviorTreeManager.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\BehaviorTreeTypes.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\BlackboardComponent.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\BlackboardData.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Blackboard\BlackboardKeyType.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Blackboard\BlackboardKeyType_Bool.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Blackboard\BlackboardKeyType_Class.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Blackboard\BlackboardKeyType_Enum.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Blackboard\BlackboardKeyType_Float.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Blackboard\BlackboardKeyType_Int.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Blackboard\BlackboardKeyType_Name.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Blackboard\BlackboardKeyType_NativeEnum.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Blackboard\BlackboardKeyType_Object.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Blackboard\BlackboardKeyType_Rotator.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Blackboard\BlackboardKeyType_String.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Blackboard\BlackboardKeyType_Vector.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\BlueprintNodeHelpers.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\BTAuxiliaryNode.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\BTCompositeNode.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\BTDecorator.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\BTFunctionLibrary.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\BTNode.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\BTService.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\BTTaskNode.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Composites\BTComposite_Selector.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Composites\BTComposite_Sequence.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Composites\BTComposite_SimpleParallel.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Decorators\BTDecorator_Blackboard.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Decorators\BTDecorator_BlackboardBase.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Decorators\BTDecorator_BlueprintBase.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Decorators\BTDecorator_CheckGameplayTagsOnActor.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Decorators\BTDecorator_CompareBBEntries.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Decorators\BTDecorator_ConditionalLoop.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Decorators\BTDecorator_ConeCheck.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Decorators\BTDecorator_Cooldown.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Decorators\BTDecorator_DoesPathExist.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Decorators\BTDecorator_ForceSuccess.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Decorators\BTDecorator_IsAtLocation.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Decorators\BTDecorator_IsBBEntryOfClass.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Decorators\BTDecorator_KeepInCone.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Decorators\BTDecorator_Loop.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Decorators\BTDecorator_ReachedMoveGoal.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Decorators\BTDecorator_SetTagCooldown.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Decorators\BTDecorator_TagCooldown.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Decorators\BTDecorator_TimeLimit.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Services\BTService_BlackboardBase.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Services\BTService_BlueprintBase.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Services\BTService_DefaultFocus.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Services\BTService_RunEQS.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Tasks\BTTask_BlackboardBase.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Tasks\BTTask_BlueprintBase.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Tasks\BTTask_GameplayTaskBase.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Tasks\BTTask_MakeNoise.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Tasks\BTTask_MoveDirectlyToward.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Tasks\BTTask_MoveTo.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Tasks\BTTask_PawnActionBase.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Tasks\BTTask_PlayAnimation.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Tasks\BTTask_PlaySound.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Tasks\BTTask_PushPawnAction.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Tasks\BTTask_RotateToFaceBBEntry.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Tasks\BTTask_RunBehavior.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Tasks\BTTask_RunBehaviorDynamic.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Tasks\BTTask_RunEQSQuery.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Tasks\BTTask_SetTagCooldown.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Tasks\BTTask_Wait.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BehaviorTree\Tasks\BTTask_WaitBlackboardTime.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Blueprint\AIBlueprintHelperLibrary.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\BrainComponent.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\DataProviders\AIDataProvider.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\DataProviders\AIDataProvider_QueryParams.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\DataProviders\AIDataProvider_Random.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\DetourCrowdAIController.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Contexts\EnvQueryContext_BlueprintBase.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Contexts\EnvQueryContext_Item.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Contexts\EnvQueryContext_Querier.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\EnvQuery.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\EnvQueryContext.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\EnvQueryDebugHelpers.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\EnvQueryGenerator.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\EnvQueryInstance.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\EnvQueryInstanceBlueprintWrapper.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\EnvQueryManager.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\EnvQueryNode.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\EnvQueryOption.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\EnvQueryTest.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\EnvQueryTraceHelpers.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\EnvQueryTypes.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\EQSRenderingComponent.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\EQSTestingPawn.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Generators\EnvQueryGenerator_ActorsOfClass.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Generators\EnvQueryGenerator_BlueprintBase.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Generators\EnvQueryGenerator_Composite.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Generators\EnvQueryGenerator_Cone.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Generators\EnvQueryGenerator_CurrentLocation.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Generators\EnvQueryGenerator_Donut.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Generators\EnvQueryGenerator_OnCircle.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Generators\EnvQueryGenerator_PathingGrid.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Generators\EnvQueryGenerator_ProjectedPoints.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Generators\EnvQueryGenerator_SimpleGrid.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Items\EnvQueryItemType.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Items\EnvQueryItemType_Actor.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Items\EnvQueryItemType_ActorBase.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Items\EnvQueryItemType_Direction.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Items\EnvQueryItemType_Point.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Items\EnvQueryItemType_VectorBase.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Tests\EnvQueryTest_Distance.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Tests\EnvQueryTest_Dot.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Tests\EnvQueryTest_GameplayTags.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Tests\EnvQueryTest_Overlap.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Tests\EnvQueryTest_Pathfinding.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Tests\EnvQueryTest_PathfindingBatch.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Tests\EnvQueryTest_Project.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Tests\EnvQueryTest_Random.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\EnvironmentQuery\Tests\EnvQueryTest_Trace.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\GameplayDebugger\GameplayDebuggerCategory_AI.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\GameplayDebugger\GameplayDebuggerCategory_BehaviorTree.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\GameplayDebugger\GameplayDebuggerCategory_EQS.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\GameplayDebugger\GameplayDebuggerCategory_NavLocalGrid.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\GameplayDebugger\GameplayDebuggerCategory_Navmesh.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\GameplayDebugger\GameplayDebuggerCategory_Perception.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\GridPathAIController.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\HotSpots\AIHotSpotManager.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Navigation\CrowdFollowingComponent.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Navigation\CrowdManager.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Navigation\GridPathFollowingComponent.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Navigation\MetaNavMeshPath.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Navigation\NavFilter_AIControllerDefault.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Navigation\NavigationInterfaces.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Navigation\NavLocalGridData.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Navigation\NavLocalGridManager.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Navigation\PathFollowingComponent.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Perception\AIPerceptionComponent.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Perception\AIPerceptionListenerInterface.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Perception\AIPerceptionStimuliSourceComponent.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Perception\AIPerceptionSystem.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Perception\AIPerceptionTypes.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Perception\AISense.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Perception\AISenseConfig_Damage.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Perception\AISenseEvent.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Perception\AISense_Blueprint.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Perception\AISense_Damage.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Perception\AISense_Hearing.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Perception\AISense_Prediction.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Perception\AISense_Sight.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Perception\AISense_Team.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Perception\AISense_Touch.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Perception\AISightTargetInterface.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Perception\PawnSensingComponent.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Tasks\AITask.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Tasks\AITask_LockLogic.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\Tasks\AITask_MoveTo.cpp" />
+    <ClCompile Include="..\Source\Runtime\AIModule\Private\VisualLoggerExtension.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Source\Runtime\AIModule\Generated\Timestamp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{5B63732F-016C-4F9B-B71B-2D7A6C148361}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>RHI</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\Binaries\$(Platform)\</OutDir>
+    <IntDir>..\Intermediate\Build\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\Binaries\$(Platform)\</OutDir>
+    <IntDir>..\Intermediate\Build\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;RHI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>GAMEPLAYTAGS_API=__declspec(dllimport);SLATE_API=__declspec(dllimport);SHADERCORE_API=__declspec(dllimport);SLATECORE_API=__declspec(dllimport);GAMEPLAYTASKS_API=__declspec(dllimport);RENDERCORE_API=__declspec(dllimport);RHI_API=__declspec(dllimport);INPUTCORE_API=__declspec(dllimport);ENGINE_API=__declspec(dllimport);COREUOBJECT_API=__declspec(dllimport);AIMODULE_API=__declspec(dllexport);CORE_API=__declspec(dllimport);UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;_DEBUG;_CONSOLE;UE_IS_ENGINE_MODULE=1;MALLOC_LEAKDETECTION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\Runtime\Engine\Public;..\Source\;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\AIModule;..\Source\Runtime\AIModule\Public;..\Source\Runtime\AIModule\Private;..\Source\Runtime\AIModule\Classes;..\Source\Runtime\AIModule\Generated;..\Source\Runtime\CoreUObject\Public;..\Source\Runtime\Engine\Classes\;..\Source\Runtime\GameplayTasks\Classes;..\Source\Runtime\InputCore\Classes;..\Source\Runtime\Engine\Generated;..\Source\Runtime\InputCore\Private;..\Source\Runtime\RHI\Public;..\Source\Runtime\GameplayTasks\Public;..\Source\Runtime\RenderCore\Public;..\Source\Runtime\GameplayTasks\Generated;..\Source\Runtime\SlateCore\Public;..\Source\Runtime\SlateCore\Generated;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\Slate\Public;..\Source\Runtime\ShaderCore\Public;..\Source\Runtime\Renderer\Public;..\Source\Runtime\Slate\Generated;..\Source\Runtime\Core\Public\Misc;..\Source\Runtime\GameplayTags\Classes;..\Source\Runtime\GameplayTags\Generated;..\Source\Runtime\CoreUObject\Public\UObject;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\Binaries\x64\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SolidAngle_x64_Debug.lib;CoreUObject_x64_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;RHI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>GAMEPLAYTAGS_API=__declspec(dllimport);SLATE_API=__declspec(dllimport);SHADERCORE_API=__declspec(dllimport);SLATECORE_API=__declspec(dllimport);GAMEPLAYTASKS_API=__declspec(dllimport);RENDERCORE_API=__declspec(dllimport);RHI_API=__declspec(dllimport);INPUTCORE_API=__declspec(dllimport);ENGINE_API=__declspec(dllimport);COREUOBJECT_API=__declspec(dllimport);AIMODULE_API=__declspec(dllexport);CORE_API=__declspec(dllimport);UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\Runtime\Engine\Public;..\Source\;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\AIModule;..\Source\Runtime\AIModule\Public;..\Source\Runtime\AIModule\Private;..\Source\Runtime\AIModule\Classes;..\Source\Runtime\AIModule\Generated;..\Source\Runtime\CoreUObject\Public;..\Source\Runtime\Engine\Classes\;..\Source\Runtime\GameplayTasks\Classes;..\Source\Runtime\InputCore\Classes;..\Source\Runtime\Engine\Generated;..\Source\Runtime\InputCore\Private;..\Source\Runtime\RHI\Public;..\Source\Runtime\GameplayTasks\Public;..\Source\Runtime\RenderCore\Public;..\Source\Runtime\GameplayTasks\Generated;..\Source\Runtime\SlateCore\Public;..\Source\Runtime\SlateCore\Generated;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\Slate\Public;..\Source\Runtime\ShaderCore\Public;..\Source\Runtime\Renderer\Public;..\Source\Runtime\Slate\Generated;..\Source\Runtime\Core\Public\Misc;..\Source\Runtime\GameplayTags\Classes;..\Source\Runtime\GameplayTags\Generated;..\Source\Runtime\CoreUObject\Public\UObject;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\Binaries\x64\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SolidAngle_x64_Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

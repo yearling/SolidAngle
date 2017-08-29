@@ -1,0 +1,737 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Public">
+      <UniqueIdentifier>{9798739d-112d-4a43-9846-8bfcd9005db7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private">
+      <UniqueIdentifier>{41368f8d-df66-483d-a817-a84481a5a826}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated">
+      <UniqueIdentifier>{86094bb8-7c86-4dad-998b-f50ddb65e589}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Evaluation\MovieSceneParameterTemplate.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Evaluation\MovieSceneSpawnTemplate.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\IKeyframeSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieScene3DAttachSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieScene3DConstraintSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieScene3DPathSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieScene3DTransformSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneActorReferenceSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneAudioSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneBoolSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneByteSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneCameraAnimSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneCameraCutSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneCameraShakeSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneCinematicShotSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneColorSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneEnumSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneEventSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneFadeSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneFloatSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneIntegerSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneLevelVisibilitySection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneParameterSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneParticleSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneSkeletalAnimationSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneSlomoSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneSpawnSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneStringSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneSubSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Sections\MovieSceneVectorSection.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieScene3DAttachTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieScene3DConstraintTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieScene3DPathTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieScene3DTransformTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneActorReferenceTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneAudioTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneBoolTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneByteTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneCameraAnimTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneCameraCutTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneCameraShakeTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneCinematicShotTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneColorTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneEnumTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneEventTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneFadeTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneFloatTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneIntegerTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneLevelVisibilityTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneMaterialTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneParticleParameterTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneParticleTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieScenePropertyTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneSkeletalAnimationTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneSlomoTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneSpawnTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneStringTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneSubTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneVectorTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\Tracks\MovieSceneVisibilityTrack.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\IMovieSceneTracksModule.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Public\MovieSceneHitProxy.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieScene3DAttachTemplate.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieScene3DPathTemplate.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieScene3DTransformTemplate.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneActorReferenceTemplate.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneAudioTemplate.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneCameraAnimTemplate.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneCameraCutTemplate.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneColorTemplate.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneEventTemplate.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneFadeTemplate.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneLevelVisibilityTemplate.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneParticleParameterTemplate.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneParticleTemplate.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieScenePropertyTemplates.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneSkeletalAnimationTemplate.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneSlomoTemplate.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneTemplateCommon.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneVisibilityTemplate.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneActorReferenceSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneActorReferenceTemplate.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneActorReferenceTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneAudioSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneAudioTemplate.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneAudioTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneBoolSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneBoolTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneByteSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneByteTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneCameraAnimSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneCameraAnimTemplate.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneCameraAnimTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneCameraCutSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneCameraCutTemplate.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneCameraCutTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneCameraShakeSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneCameraShakeTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneCinematicShotSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneCinematicShotTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneColorSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneColorTemplate.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneColorTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneEnumSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneEnumTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneEventSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneEventTemplate.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneEventTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneFadeSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneFadeTemplate.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneFadeTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneFloatSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneFloatTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneIntegerSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneIntegerTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneLevelVisibilitySection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneLevelVisibilityTemplate.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneLevelVisibilityTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneMaterialTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneParameterSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneParameterTemplate.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneParticleParameterTemplate.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneParticleParameterTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneParticleSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneParticleTemplate.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneParticleTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScenePropertyTemplates.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScenePropertyTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneSkeletalAnimationSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneSkeletalAnimationTemplate.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneSkeletalAnimationTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneSlomoSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneSlomoTemplate.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneSlomoTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneSpawnSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneSpawnTemplate.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneSpawnTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneStringSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneStringTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneSubSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneSubTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneTracks.generated.dep.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneTracksClasses.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneVectorSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneVectorTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneVisibilityTemplate.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneVisibilityTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScene3DAttachSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScene3DAttachTemplate.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScene3DAttachTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScene3DConstraintSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScene3DConstraintTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScene3DPathSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScene3DPathTemplate.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScene3DPathTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScene3DTransformSection.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScene3DTransformTemplate.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieScene3DTransformTrack.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieScene3DAttachSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieScene3DConstraintSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieScene3DPathSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieScene3DTransformSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneActorReferenceSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneAudioSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneBoolSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneByteSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneCameraAnimSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneCameraCutSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneCameraShakeSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneCinematicShotSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneColorSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneEnumSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneEventSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneFadeSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneFloatSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneIntegerSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneLevelVisibilitySection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneParameterSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneParticleSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneSkeletalAnimationSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneSlomoSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneSpawnSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneStringSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneSubSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Sections\MovieSceneVectorSection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieScene3DAttachTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieScene3DConstraintTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieScene3DPathTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieScene3DTransformTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneActorReferenceTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneAudioTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneBoolTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneByteTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneCameraAnimTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneCameraCutTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneCameraShakeTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneCinematicShotTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneColorTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneEnumTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneEventTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneFadeTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneFloatTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneIntegerTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneLevelVisibilityTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneMaterialTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneParticleParameterTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneParticleTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieScenePropertyTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneSkeletalAnimationTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneSlomoTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneSpawnTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneStringTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneSubTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneVectorTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Tracks\MovieSceneVisibilityTrack.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\MovieSceneHitProxy.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\MovieSceneTracksModule.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieScene3DAttachTemplate.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieScene3DPathTemplate.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieScene3DTransformTemplate.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneActorReferenceTemplate.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneAudioTemplate.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneCameraAnimTemplate.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneCameraCutTemplate.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneColorTemplate.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneEventTemplate.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneFadeTemplate.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneLevelVisibilityTemplate.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneParameterTemplate.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneParticleParameterTemplate.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneParticleTemplate.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieScenePropertyTemplates.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneSkeletalAnimationTemplate.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneSlomoTemplate.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneSpawnTemplate.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneTemplateCommon.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Private\Evaluation\MovieSceneVisibilityTemplate.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\MovieSceneTracks\Generated\MovieSceneTracks.generated.cpp">
+      <Filter>Generated</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Source\Runtime\MovieSceneTracks\Generated\Timestamp">
+      <Filter>Generated</Filter>
+    </None>
+  </ItemGroup>
+</Project>
