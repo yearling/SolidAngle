@@ -387,9 +387,6 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\Greater.h">
       <Filter>Source\Runtime\Core\Public\Templates</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\SolidAngleTypeTraits.h">
-      <Filter>Source\Runtime\Core\Public\Templates</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Templates\IsEnum.h">
       <Filter>Source\Runtime\Core\Public\Templates</Filter>
     </ClInclude>
@@ -434,9 +431,6 @@
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Windows\WindowsPlatformMisc.h">
       <Filter>Source\Runtime\Core\Public\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\Templates\SolidAngleTemplate.h">
-      <Filter>Source\Runtime\Core\Public\Templates</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\Array.h">
       <Filter>Source\Runtime\Core\Public\Containers</Filter>

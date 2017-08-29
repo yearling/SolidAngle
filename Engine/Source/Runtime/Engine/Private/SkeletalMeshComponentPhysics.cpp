@@ -4017,7 +4017,7 @@ void USkeletalMeshComponent::ParallelEvaluateCloth(float DeltaTime, const FCloth
 
 	{
 		SCOPE_CYCLE_COUNTER(STAT_ClothSimTime)
-		ApexClothingActor->simulate(DeltaTime);
+		//ApexClothingActor->simulate(DeltaTime);
 		ApexClothingActor->getSimulationPositions();	//This is a hack that we use to internally call waitForFetchResults.
 	}
 }

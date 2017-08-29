@@ -1295,7 +1295,7 @@ void FPhysScene::SetUpForFrame(const FVector* NewGrav, float InDeltaSeconds, flo
 				apex::Scene* ApexScene = GetApexScene(SceneType);
 				if(SceneType == PST_Cloth && ApexScene)
 				{
-					ApexScene->updateGravity();
+					//ApexScene->updateGravity();
 				}
 #endif
 
