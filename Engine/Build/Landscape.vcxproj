@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\ControlPointMeshComponent.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\Landscape.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeComponent.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeGizmoActiveActor.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeGizmoActor.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeGizmoRenderComponent.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeGrassType.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeHeightfieldCollisionComponent.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeInfo.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeInfoMap.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeLayerInfoObject.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeMaterialInstanceConstant.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeMeshCollisionComponent.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeMeshProxyActor.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeMeshProxyComponent.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeProxy.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeSplineControlPoint.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeSplinesComponent.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeSplineSegment.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeStreamingProxy.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\Materials\MaterialExpressionLandscapeGrassOutput.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\Materials\MaterialExpressionLandscapeLayerBlend.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\Materials\MaterialExpressionLandscapeLayerCoords.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\Materials\MaterialExpressionLandscapeLayerSample.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\Materials\MaterialExpressionLandscapeLayerSwitch.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\Materials\MaterialExpressionLandscapeLayerWeight.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\Materials\MaterialExpressionLandscapeVisibilityMask.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\ControlPointMeshComponent.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\Landscape.generated.dep.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\Landscape.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeClasses.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeComponent.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeGizmoActiveActor.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeGizmoActor.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeGizmoRenderComponent.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeGrassType.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeHeightfieldCollisionComponent.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeInfo.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeInfoMap.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeLayerInfoObject.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeMaterialInstanceConstant.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeMeshCollisionComponent.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeMeshProxyActor.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeMeshProxyComponent.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeProxy.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeSplineControlPoint.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeSplinesComponent.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeSplineSegment.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeStreamingProxy.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\MaterialExpressionLandscapeGrassOutput.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\MaterialExpressionLandscapeLayerBlend.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\MaterialExpressionLandscapeLayerCoords.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\MaterialExpressionLandscapeLayerSample.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\MaterialExpressionLandscapeLayerSwitch.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\MaterialExpressionLandscapeLayerWeight.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\MaterialExpressionLandscapeVisibilityMask.generated.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Private\LandscapePrivate.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Private\LandscapeSplineRaster.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Private\LandscapeVersion.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Public\LandscapeDataAccess.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Public\LandscapeEdit.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Public\LandscapeLight.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Public\LandscapeModule.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Public\LandscapeRender.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Public\LandscapeRenderMobile.h" />
+    <ClInclude Include="..\Source\Runtime\Landscape\Public\LandscapeSplineProxies.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Runtime\Landscape\Generated\Landscape.generated.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\Landscape.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeBlueprintSupport.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeCollision.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeComponent.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeDataAccess.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeEdit.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeEditInterface.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeGizmoActor.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeGrass.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeInfo.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeInfoMap.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeLight.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeModule.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeProxy.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeRender.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeRenderMobile.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeSplineProxies.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeSplineRaster.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeSplines.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\Materials\MaterialExpressionLandscapeLayerBlend.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\Materials\MaterialExpressionLandscapeLayerCoords.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\Materials\MaterialExpressionLandscapeLayerSample.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\Materials\MaterialExpressionLandscapeLayerSwitch.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\Materials\MaterialExpressionLandscapeLayerWeight.cpp" />
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\Materials\MaterialExpressionLandscapeVisibilityMask.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Source\Runtime\Landscape\Generated\Timestamp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{176DAB50-F382-4CF4-B7DC-81D86B398E1D}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>RHI</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\Binaries\$(Platform)\</OutDir>
+    <IntDir>..\Intermediate\Build\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\Binaries\$(Platform)\</OutDir>
+    <IntDir>..\Intermediate\Build\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;RHI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>SLATECORE_API=__declspec(dllimport);UNREALED_API=__declspec(dllimport);SHADERCORE_API=__declspec(dllimport);LANDSCAPE_API=__declspec(dllexport);RENDERCORE_API=__declspec(dllimport);INPUTCORE_API=__declspec(dllimport);RHI_API=__declspec(dllimport);ENGINE_API=__declspec(dllimport);MOVIESCENE_API=__declspec(dllexport);CORE_API=__declspec(dllimport);COREUOBJECT_API=__declspec(dllimport);UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;_DEBUG;_CONSOLE;UE_IS_ENGINE_MODULE=1;MALLOC_LEAKDETECTION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\Runtime\SlateCore\Generated;..\Source\Runtime\Core\Public\Misc;..\Source\Runtime\Core\Public\;..\Source\Runtime\Engine\Public;..\Source\;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\CoreUObject\Public;..\Source\Runtime\MovieScene\Generated;..\Source\Runtime\Engine\Classes;..\Source\Runtime\Engine\Generated;..\Source\Runtime\RHI\Public;..\Source\Runtime\Core\Public\UObject;..\Source\Runtime\InputCore\Classes;..\Source\Runtime\CoreUObject\Public\UObject;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\InputCore\Private;..\Source\Runtime\RenderCore\Public;..\Source\Runtime\Landscape;..\Source\Runtime\Landscape\Public;..\Source\Runtime\Landscape\Private;..\Source\Runtime\Landscape\Classes;..\Source\Runtime\Landscape\Generated;..\Source\Runtime\ShaderCore\Public;..\Source\Runtime\SlateCore\Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\Binaries\x64\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SolidAngle_x64_Debug.lib;CoreUObject_x64_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;RHI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>SLATECORE_API=__declspec(dllimport);UNREALED_API=__declspec(dllimport);SHADERCORE_API=__declspec(dllimport);LANDSCAPE_API=__declspec(dllexport);RENDERCORE_API=__declspec(dllimport);INPUTCORE_API=__declspec(dllimport);RHI_API=__declspec(dllimport);ENGINE_API=__declspec(dllimport);MOVIESCENE_API=__declspec(dllexport);CORE_API=__declspec(dllimport);COREUOBJECT_API=__declspec(dllimport);UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\Runtime\SlateCore\Generated;..\Source\Runtime\Core\Public\Misc;..\Source\Runtime\Core\Public\;..\Source\Runtime\Engine\Public;..\Source\;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\CoreUObject\Public;..\Source\Runtime\MovieScene\Generated;..\Source\Runtime\Engine\Classes;..\Source\Runtime\Engine\Generated;..\Source\Runtime\RHI\Public;..\Source\Runtime\Core\Public\UObject;..\Source\Runtime\InputCore\Classes;..\Source\Runtime\CoreUObject\Public\UObject;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\InputCore\Private;..\Source\Runtime\RenderCore\Public;..\Source\Runtime\Landscape;..\Source\Runtime\Landscape\Public;..\Source\Runtime\Landscape\Private;..\Source\Runtime\Landscape\Classes;..\Source\Runtime\Landscape\Generated;..\Source\Runtime\ShaderCore\Public;..\Source\Runtime\SlateCore\Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\Binaries\x64\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SolidAngle_x64_Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,302 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Public">
+      <UniqueIdentifier>{9798739d-112d-4a43-9846-8bfcd9005db7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private">
+      <UniqueIdentifier>{41368f8d-df66-483d-a817-a84481a5a826}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated">
+      <UniqueIdentifier>{8c298562-dbca-431a-99cc-8a991b867499}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes">
+      <UniqueIdentifier>{846857a0-cda6-4d4a-8003-ce4f64cbd969}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\Landscape\Public\LandscapeModule.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Public\LandscapeRender.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Public\LandscapeRenderMobile.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Public\LandscapeSplineProxies.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Public\LandscapeDataAccess.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Public\LandscapeEdit.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Public\LandscapeLight.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Private\LandscapePrivate.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Private\LandscapeSplineRaster.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Private\LandscapeVersion.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeGizmoActor.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeGizmoRenderComponent.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeGrassType.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeHeightfieldCollisionComponent.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeInfo.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeInfoMap.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeLayerInfoObject.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeMaterialInstanceConstant.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeMeshCollisionComponent.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeMeshProxyActor.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeMeshProxyComponent.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeProxy.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeSplineControlPoint.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeSplinesComponent.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeSplineSegment.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeStreamingProxy.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\Materials\MaterialExpressionLandscapeGrassOutput.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\Materials\MaterialExpressionLandscapeLayerBlend.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\Materials\MaterialExpressionLandscapeLayerCoords.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\Materials\MaterialExpressionLandscapeLayerSample.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\Materials\MaterialExpressionLandscapeLayerSwitch.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\Materials\MaterialExpressionLandscapeLayerWeight.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\Materials\MaterialExpressionLandscapeVisibilityMask.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\ControlPointMeshComponent.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\Landscape.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeComponent.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Classes\LandscapeGizmoActiveActor.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\Landscape.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeClasses.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeComponent.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeGizmoActiveActor.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeGizmoActor.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeGizmoRenderComponent.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeGrassType.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeHeightfieldCollisionComponent.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeInfo.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeInfoMap.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeLayerInfoObject.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeMaterialInstanceConstant.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeMeshCollisionComponent.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeMeshProxyActor.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeMeshProxyComponent.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeProxy.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeSplineControlPoint.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeSplinesComponent.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeSplineSegment.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\LandscapeStreamingProxy.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\MaterialExpressionLandscapeGrassOutput.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\MaterialExpressionLandscapeLayerBlend.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\MaterialExpressionLandscapeLayerCoords.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\MaterialExpressionLandscapeLayerSample.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\MaterialExpressionLandscapeLayerSwitch.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\MaterialExpressionLandscapeLayerWeight.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\MaterialExpressionLandscapeVisibilityMask.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\ControlPointMeshComponent.generated.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Landscape\Generated\Landscape.generated.dep.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeEdit.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeEditInterface.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeGizmoActor.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeGrass.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeInfo.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeInfoMap.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeLight.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeModule.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeProxy.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeRender.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeRenderMobile.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeSplineProxies.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeSplineRaster.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeSplines.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\Materials\MaterialExpressionLandscapeLayerBlend.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\Materials\MaterialExpressionLandscapeLayerCoords.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\Materials\MaterialExpressionLandscapeLayerSample.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\Materials\MaterialExpressionLandscapeLayerSwitch.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\Materials\MaterialExpressionLandscapeLayerWeight.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\Materials\MaterialExpressionLandscapeVisibilityMask.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\Landscape.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeBlueprintSupport.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeCollision.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeComponent.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Private\LandscapeDataAccess.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Landscape\Generated\Landscape.generated.cpp">
+      <Filter>Generated</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Source\Runtime\Landscape\Generated\Timestamp">
+      <Filter>Generated</Filter>
+    </None>
+  </ItemGroup>
+</Project>

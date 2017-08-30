@@ -2279,7 +2279,7 @@ int32 UGameplayStatics::GrassOverlappingSphereCount(const UObject* WorldContextO
 		const FSphere Sphere(CenterPosition, Radius);
 
 		// check every landscape
-		for (TActorIterator<ALandscapeProxy> It(World); It; ++It)
+		/*for (TActorIterator<ALandscapeProxy> It(World); It; ++It)
 		{
 			ALandscapeProxy* L = *It;
 			if (L)
@@ -2292,7 +2292,7 @@ int32 UGameplayStatics::GrassOverlappingSphereCount(const UObject* WorldContextO
 					}
 				}
 			}
-		}
+		}*/
 	}
 
 	return Count;

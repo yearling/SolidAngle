@@ -681,19 +681,19 @@ void UGameViewportClient::AddCursor(EMouseCursor::Type Cursor, const FStringClas
 {
 	if ( CursorClass.IsValid() )
 	{
-		UClass* Class = CursorClass.TryLoadClass<UUserWidget>();
-		if ( Class )
-		{
-			UUserWidget* UserWidget = CreateWidget<UUserWidget>(GetGameInstance(), Class);
+		//UClass* Class = CursorClass.TryLoadClass<UUserWidget>();
+		//if ( Class )
+		//{
+			/*UUserWidget* UserWidget = CreateWidget<UUserWidget>(GetGameInstance(), Class);
 			if ( ensure(UserWidget) )
 			{
 				CursorWidgets.Add(Cursor, UserWidget->TakeWidget());
-			}
-		}
-		else
-		{
-			FMessageLog("PIE").Error(FText::Format(LOCTEXT("CursorClassNotFoundFormat", "The cursor class '{0}' was not found, check your custom cursor settings."), FText::FromString(CursorClass.ToString())));
-		}
+			}*/
+		//}
+		//else
+		//{
+			//FMessageLog("PIE").Error(FText::Format(LOCTEXT("CursorClassNotFoundFormat", "The cursor class '{0}' was not found, check your custom cursor settings."), FText::FromString(CursorClass.ToString())));
+		//}
 	}
 }
 

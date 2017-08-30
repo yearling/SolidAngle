@@ -3012,8 +3012,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\Binaries\x64\;..\Source\ThirdParty\DirectShow\DirectShow-1.0.0\lib\Win64\VS2015;..\Source\ThirdParty\PhysX\Lib\Win64\VS2015</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SolidAngle_x64_Debug.lib;CoreUObject_x64_Debug.lib;RenderCore_x64_Debug.lib;Json_x64_Debug.lib;RHI_x64_Debug.lib;InputCore_x64_Debug.lib;SlateCore_x64_Debug.lib;Slate_x64_Debug.lib;AIModule_x64_Debug.lib;ShaderCore_x64_Debug.lib;PacketHandler_x64_Debug.lib;DirectShowd_64.lib;SimulationController_x64.lib;SceneQuery_x64.lib;RenderDebug_x64.lib;PxFoundation_x64.lib;PhysX3Common_x64.lib;PhysX3_x64.lib;LowLevel_x64.lib;LowLevelDynamics_x64.lib;PhysX3ExtensionsDEBUG.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Binaries\x64\;..\Source\ThirdParty\DirectShow\DirectShow-1.0.0\lib\Win64\VS2015;..\Source\ThirdParty\PhysX\Lib\Win64\VS2015;..\Source\ThirdParty\libOpus\opus-1.1\win32\VS2012\x64\Debug\;..\Source\ThirdParty\Vorbis\libvorbis-1.3.2\lib\Win64\VS2015</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SolidAngle_x64_Debug.lib;CoreUObject_x64_Debug.lib;RenderCore_x64_Debug.lib;Json_x64_Debug.lib;RHI_x64_Debug.lib;InputCore_x64_Debug.lib;SlateCore_x64_Debug.lib;Slate_x64_Debug.lib;AIModule_x64_Debug.lib;ShaderCore_x64_Debug.lib;PacketHandler_x64_Debug.lib;DirectShowd_64.lib;SimulationController_x64.lib;SceneQuery_x64.lib;RenderDebug_x64.lib;PxFoundation_x64.lib;PhysX3Common_x64.lib;PhysX3_x64.lib;LowLevel_x64.lib;LowLevelDynamics_x64.lib;Projects_x64_Debug.lib;EngineMessages_x64_Debug.lib;EngineSettings_x64_Debug.lib;Analytics_x64_Debug.lib;MaterialShaderQualitySettings_x64_Debug.lib;opus.lib;silk_common.lib;silk_float.lib;celt.lib;speex_resampler.lib;libvorbis_64.lib;libvorbisfile_64.lib;Strmiids.lib;strmbase.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

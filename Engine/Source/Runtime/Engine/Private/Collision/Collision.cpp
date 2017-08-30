@@ -729,10 +729,10 @@ namespace CollisionResponseConsoleCommands
 				UPrimitiveComponent* Comp = *Iter;
 				
 				// TEMP CRASH WORKAROUND: IsCollisionEnabled() fails on ULandscapeComponent CDO.
-				if (Cast<ULandscapeHeightfieldCollisionComponent>(Comp))
+			/*	if (Cast<ULandscapeHeightfieldCollisionComponent>(Comp))
 				{
 					continue;
-				}
+				}*/
 
 				if (IsQueryCollisionEnabled(Comp))
 				{

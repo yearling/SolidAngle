@@ -1,0 +1,508 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\AsyncTaskDownloadImage.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\BackgroundBlur.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\BackgroundBlurSlot.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\BoolBinding.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\Border.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\BorderSlot.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\BrushBinding.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\Button.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\ButtonSlot.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\CanvasPanel.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\CanvasPanelSlot.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\CheckBox.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\CheckedStateBinding.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\CircularThrobber.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\ColorBinding.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\ComboBox.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\ComboBoxString.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\ContentWidget.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\DragDropOperation.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\DynamicPropertyPath.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\EditableText.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\EditableTextBox.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\ExpandableArea.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\FloatBinding.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\GridPanel.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\GridSlot.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\HorizontalBox.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\HorizontalBoxSlot.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\Image.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\InputKeySelector.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\Int32Binding.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\InvalidationBox.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\ListView.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\MenuAnchor.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\MouseCursorBinding.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\MovieScene2DTransformSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\MovieScene2DTransformTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\MovieScene2DTransformTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\MovieSceneMarginSection.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\MovieSceneMarginTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\MovieSceneMarginTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\MovieSceneWidgetMaterialTemplate.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\MovieSceneWidgetMaterialTrack.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\MultiLineEditableText.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\MultiLineEditableTextBox.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\NamedSlot.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\NamedSlotInterface.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\NativeWidgetHost.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\Overlay.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\OverlaySlot.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\PanelSlot.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\PanelWidget.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\ProgressBar.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\PropertyBinding.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\RetainerBox.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\RichTextBlock.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\RichTextBlockDecorator.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\SafeZone.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\SafeZoneSlot.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\ScaleBox.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\ScaleBoxSlot.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\ScrollBar.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\ScrollBox.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\ScrollBoxSlot.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\SizeBox.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\SizeBoxSlot.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\SlateBlueprintLibrary.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\SlateDataSheet.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\SlateVectorArtData.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\SlateWrapperTypes.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\Slider.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\Spacer.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\SpinBox.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\TableViewBase.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\TextBinding.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\TextBlock.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\TextWidgetTypes.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\Throbber.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\TileView.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\UMG.generated.dep.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\UMGClasses.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\UMGSequencePlayer.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\UniformGridPanel.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\UniformGridSlot.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\UserWidget.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\VerticalBox.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\VerticalBoxSlot.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\Viewport.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\VisibilityBinding.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\Visual.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\Widget.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\WidgetAnimation.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\WidgetAnimationBinding.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\WidgetBinding.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\WidgetBlueprintGeneratedClass.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\WidgetBlueprintLibrary.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\WidgetComponent.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\WidgetInteractionComponent.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\WidgetLayoutLibrary.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\WidgetNavigation.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\WidgetSwitcher.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\WidgetSwitcherSlot.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\WidgetTransform.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\WidgetTree.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\WindowTitleBarArea.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\WindowTitleBarAreaSlot.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\WrapBox.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Generated\WrapBoxSlot.generated.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Private\Animation\MovieScene2DTransformTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Private\Animation\MovieSceneMarginTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Private\Animation\MovieSceneWidgetMaterialTemplate.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Private\UMGPrivate.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Animation\MovieScene2DTransformSection.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Animation\MovieScene2DTransformTrack.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Animation\MovieSceneMarginSection.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Animation\MovieSceneMarginTrack.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Animation\MovieSceneWidgetMaterialTrack.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Animation\UMGSequencePlayer.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Animation\WidgetAnimation.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Animation\WidgetAnimationBinding.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Animation\WidgetMaterialTrackUtilities.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Binding\BoolBinding.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Binding\BrushBinding.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Binding\CheckedStateBinding.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Binding\ColorBinding.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Binding\DynamicPropertyPath.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Binding\FloatBinding.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Binding\Int32Binding.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Binding\MouseCursorBinding.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Binding\PropertyBinding.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Binding\TextBinding.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Binding\VisibilityBinding.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Binding\WidgetBinding.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Blueprint\AsyncTaskDownloadImage.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Blueprint\DragDropOperation.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Blueprint\SlateBlueprintLibrary.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Blueprint\UserWidget.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Blueprint\WidgetBlueprintGeneratedClass.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Blueprint\WidgetBlueprintLibrary.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Blueprint\WidgetLayoutLibrary.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Blueprint\WidgetNavigation.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Blueprint\WidgetTree.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\BackgroundBlur.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\BackgroundBlurSlot.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\Border.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\BorderSlot.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\Button.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\ButtonSlot.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\CanvasPanel.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\CanvasPanelSlot.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\CheckBox.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\CircularThrobber.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\ComboBox.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\ComboBoxString.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\ContentWidget.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\EditableText.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\EditableTextBox.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\ExpandableArea.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\GridPanel.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\GridSlot.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\HorizontalBox.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\HorizontalBoxSlot.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\Image.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\InputKeySelector.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\InvalidationBox.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\ListView.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\MenuAnchor.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\MultiLineEditableText.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\MultiLineEditableTextBox.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\NamedSlot.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\NamedSlotInterface.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\NativeWidgetHost.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\Overlay.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\OverlaySlot.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\PanelSlot.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\PanelWidget.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\ProgressBar.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\RetainerBox.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\RichTextBlock.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\RichTextBlockDecorator.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\SafeZone.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\SafeZoneSlot.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\ScaleBox.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\ScaleBoxSlot.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\ScrollBar.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\ScrollBox.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\ScrollBoxSlot.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\SizeBox.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\SizeBoxSlot.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\SlateWrapperTypes.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\Slider.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\Spacer.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\SpinBox.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\TableViewBase.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\TextBlock.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\TextWidgetTypes.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\Throbber.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\TileView.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\UniformGridPanel.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\UniformGridSlot.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\VerticalBox.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\VerticalBoxSlot.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\Viewport.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\Visual.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\Widget.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\WidgetComponent.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\WidgetInteractionComponent.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\WidgetSwitcher.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\WidgetSwitcherSlot.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\WindowTitleBarArea.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\WindowTitleBarAreaSlot.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\WrapBox.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Components\WrapBoxSlot.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\IUMGModule.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Slate\SlateDataSheet.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Slate\SlateVectorArtData.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Slate\SlateVectorArtInstanceData.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Slate\SMeshWidget.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Slate\SObjectWidget.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Slate\SRetainerWidget.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Slate\SWorldWidgetScreenLayer.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Slate\UMGDragDropOp.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Slate\WidgetRenderer.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\Slate\WidgetTransform.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\UMG.h" />
+    <ClInclude Include="..\Source\Runtime\UMG\Public\UMGStyle.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Runtime\UMG\Generated\UMG.generated.1.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Generated\UMG.generated.2.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Animation\MovieScene2DTransformSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Animation\MovieScene2DTransformTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Animation\MovieScene2DTransformTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Animation\MovieSceneMarginSection.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Animation\MovieSceneMarginTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Animation\MovieSceneMarginTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Animation\MovieSceneWidgetMaterialTemplate.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Animation\MovieSceneWidgetMaterialTrack.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Animation\UMGSequencePlayer.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Animation\WidgetAnimation.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Animation\WidgetAnimationBinding.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Animation\WidgetMaterialTrackUtilities.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Binding\BoolBinding.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Binding\BrushBinding.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Binding\CheckedStateBinding.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Binding\ColorBinding.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Binding\DynamicPropertyPath.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Binding\FloatBinding.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Binding\Int32Binding.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Binding\MouseCursorBinding.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Binding\PropertyBinding.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Binding\TextBinding.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Binding\VisibilityBinding.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Binding\WidgetBinding.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Blueprint\AsyncTaskDownloadImage.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\BackgroundBlur.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\BackgroundBlurSlot.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\Border.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\BorderSlot.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\Button.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\ButtonSlot.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\CanvasPanel.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\CanvasPanelSlot.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\CheckBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\CircularThrobber.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\ComboBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\ComboBoxString.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\ContentWidget.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\EditableText.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\EditableTextBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\ExpandableArea.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\GridPanel.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\GridSlot.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\HorizontalBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\HorizontalBoxSlot.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\Image.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\InputKeySelector.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\InvalidationBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\ListView.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\MenuAnchor.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\MultiLineEditableText.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\MultiLineEditableTextBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\NamedSlot.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\NamedSlotInterface.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\NativeWidgetHost.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\Overlay.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\OverlaySlot.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\PanelSlot.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\PanelWidget.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\ProgressBar.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\RetainerBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\RichTextBlock.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\RichTextBlockDecorator.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\SafeZone.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\SafeZoneSlot.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\ScaleBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\ScaleBoxSlot.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\ScrollBar.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\ScrollBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\ScrollBoxSlot.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\SizeBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\SizeBoxSlot.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\Slider.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\Spacer.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\SpinBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\TableViewBase.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\TextBlock.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\TextWidgetTypes.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\Throbber.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\TileView.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\UniformGridPanel.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\UniformGridSlot.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\VerticalBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\VerticalBoxSlot.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\Viewport.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\Visual.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\Widget.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\WidgetComponent.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\WidgetInteractionComponent.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\WidgetSwitcher.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\WidgetSwitcherSlot.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\WindowTitleBarArea.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\WindowTitleBarAreaSlot.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\WrapBox.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Components\WrapBoxSlot.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\DragDropOperation.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\SlateBlueprintLibrary.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Slate\SlateDataSheet.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Slate\SlateVectorArtData.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Slate\SlateVectorArtInstanceData.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Slate\SMeshWidget.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Slate\SObjectWidget.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Slate\SRetainerWidget.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Slate\SWorldWidgetScreenLayer.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Slate\UMGDragDropOp.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\Slate\WidgetRenderer.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\UMGModule.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\UMGStyle.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\UserWidget.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\UWidgetNavigation.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\WidgetBlueprintGeneratedClass.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\WidgetBlueprintLibrary.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\WidgetLayoutLibrary.cpp" />
+    <ClCompile Include="..\Source\Runtime\UMG\Private\WidgetTree.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Source\Runtime\UMG\Generated\Timestamp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2F552F19-835E-478B-8B90-0DE4250CC813}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>RHI</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\Binaries\$(Platform)\</OutDir>
+    <IntDir>..\Intermediate\Build\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\Binaries\$(Platform)\</OutDir>
+    <IntDir>..\Intermediate\Build\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;RHI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>SLATE_API=__declspec(dllimport);SLATECORE_API=__declspec(dllimport);RENDERCORE_API=__declspec(dllimport);INPUTCORE_API=__declspec(dllimport);RHI_API=__declspec(dllimport);ENGINE_API=__declspec(dllimport);UMG_API=__declspec(dllexport);CORE_API=__declspec(dllimport);COREUOBJECT_API=__declspec(dllimport);UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;_DEBUG;_CONSOLE;UE_IS_ENGINE_MODULE=1;MALLOC_LEAKDETECTION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Renderer\Public;..\Source\Runtime\MovieScene\Public;..\Source\Runtime\ShaderCore\Public;..\Source\Runtime\UMG\Public\Blueprint;..\Source\Runtime\Slate\Generated;..\Source\Runtime\SlateCore\Generated;..\Source\Runtime\Slate\Public;..\Source\Runtime\Core\Public\;..\Source\Runtime\Engine\Public;..\Source\;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\CoreUObject\Public;..\Source\Runtime\MovieScene\Generated;..\Source\Runtime\Engine\Classes;..\Source\Runtime\Engine\Generated;..\Source\Runtime\RHI\Public;..\Source\Runtime\Core\Public\UObject;..\Source\Runtime\InputCore\Classes;..\Source\Runtime\MovieScene\Private\;..\Source\Runtime\CoreUObject\Public\UObject;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\InputCore\Private;..\Source\Runtime\RenderCore\Public;..\Source\Runtime\UMG;..\Source\Runtime\UMG\Public;..\Source\Runtime\UMG\Private;..\Source\Runtime\UMG\Generated;..\Source\Runtime\SlateCore\Public\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\Binaries\x64\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SolidAngle_x64_Debug.lib;CoreUObject_x64_Debug.lib;InputCore_x64_Debug.lib;Slate_x64_Debug.lib;SlateCore_x64_Debug.lib;ShaderCore_x64_Debug.lib;RenderCore_x64_Debug.lib;RHI_x64_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;RHI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>SLATE_API=__declspec(dllimport);SLATECORE_API=__declspec(dllimport);RENDERCORE_API=__declspec(dllimport);INPUTCORE_API=__declspec(dllimport);RHI_API=__declspec(dllimport);ENGINE_API=__declspec(dllimport);UMG_API=__declspec(dllexport);CORE_API=__declspec(dllimport);COREUOBJECT_API=__declspec(dllimport);UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Renderer\Public;..\Source\Runtime\MovieScene\Public;..\Source\Runtime\ShaderCore\Public;..\Source\Runtime\UMG\Public\Blueprint;..\Source\Runtime\Slate\Generated;..\Source\Runtime\SlateCore\Generated;..\Source\Runtime\Slate\Public;..\Source\Runtime\Core\Public\;..\Source\Runtime\Engine\Public;..\Source\;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\CoreUObject\Public;..\Source\Runtime\MovieScene\Generated;..\Source\Runtime\Engine\Classes;..\Source\Runtime\Engine\Generated;..\Source\Runtime\RHI\Public;..\Source\Runtime\Core\Public\UObject;..\Source\Runtime\InputCore\Classes;..\Source\Runtime\MovieScene\Private\;..\Source\Runtime\CoreUObject\Public\UObject;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\InputCore\Private;..\Source\Runtime\RenderCore\Public;..\Source\Runtime\UMG;..\Source\Runtime\UMG\Public;..\Source\Runtime\UMG\Private;..\Source\Runtime\UMG\Generated;..\Source\Runtime\SlateCore\Public\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\Binaries\x64\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SolidAngle_x64_Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
