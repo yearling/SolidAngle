@@ -34,14 +34,14 @@ void FBXReader::InitialFBXSDK()
 	FBXSdkManager->SetIOSettings(Ios);
 }
 
-bool FBXReader::ImportFile(std::string FileName)
+bool FBXReader::ImportFile(FString FileName)
 {
-	cout << "[FBXReader::ImportFile]:FileName: " << FileName << endl;
+	//cout << "[FBXReader::ImportFile]:FileName: " << FileName << endl;
 	// Create an importer.
 	FbxImporter* Importer = FbxImporter::Create(FBXSdkManager, "");
 
 	// Initialize the importer by providing a filename.
-	const bool ImportStatus = Importer->Initialize(FileName.c_str(), -1, FBXSdkManager->GetIOSettings());
+	const bool ImportStatus = Importer->Initialize(TCHAR_TO_ANSI(*FileName), -1, FBXSdkManager->GetIOSettings());
 
 	// Get the version number of the FBX file format.
 	int FileMajor, FileMinor, FileRevision;

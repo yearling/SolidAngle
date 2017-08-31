@@ -13,12 +13,10 @@ public:
 	FBXReader();
 	~FBXReader();
 	void InitialFBXSDK();
-	bool ImportFile(std::string FileName);
+	bool ImportFile(FString FileName);
 	std::unique_ptr<MeshModel> GenerateModelMesh();
 
-	FbxManager*   FBXSdkManager;
-	FbxScene*	  MainScene;
-	std::vector<std::unique_ptr<StaticMesh>>	StaticMeshArray;
+
 	void ConvertScene();
 	std::pair<bool,std::string> LoadNodes();
 	std::pair<bool,std::string> LoadNodesRecursive(FbxNode* pNode);
@@ -35,6 +33,10 @@ public:
 	void BuildSkeletonRelationship();
 	void BuildSkeletonRecursive(FbxNode * pSkeleton);
 	FbxSkeleton* GetParentSkeleton(FbxSkeleton* pSkeleton);
+
+	FbxManager*   FBXSdkManager;
+	FbxScene*	  MainScene;
+	std::vector<std::unique_ptr<StaticMesh>>	StaticMeshArray;
 	std::vector<FbxVector4>		MeshVertex;
 	std::vector<int>			MeshIndex;
 	MeshModel*                  pMeshModel;
