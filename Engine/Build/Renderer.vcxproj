@@ -1,0 +1,411 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\AmbientCubemapParameters.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\AtmosphereRendering.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\AtmosphereTextures.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\BasePassRendering.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\CapsuleShadowRendering.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\ClearQuad.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\CompositionLighting\CompositionLighting.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\CompositionLighting\PostProcessAmbient.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\CompositionLighting\PostProcessAmbientOcclusion.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\CompositionLighting\PostProcessDeferredDecals.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\CompositionLighting\PostProcessLpvIndirect.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\CompositionLighting\PostProcessPassThrough.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\CustomDepthRendering.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\DebugViewModeRendering.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\DecalRenderingShared.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\DeferredShadingRenderer.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\DepthRendering.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\DistanceFieldGlobalIllumination.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\DistanceFieldLightingPost.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\DistanceFieldLightingShared.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\DistanceFieldSurfaceCacheLighting.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\DistortionRendering.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\DynamicPrimitiveDrawing.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\EditorCompositeParams.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\GlobalDistanceField.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\GPUBenchmark.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\HeightfieldLighting.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\LightMapDensityRendering.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\LightMapRendering.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\LightPropagationVolume.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\LightRendering.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\LightSceneInfo.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\MaterialTexCoordScalesRendering.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\MeshTexCoordSizeAccuracyRendering.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\MobileBasePassRendering.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\MobileSceneCaptureRendering.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PlanarReflectionRendering.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessAA.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessBloomSetup.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessBlurGBuffer.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessBokehDOF.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessBokehDOFRecombine.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessBufferInspector.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessBusyWait.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessCircleDOF.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessCombineLUTs.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessCompositeEditorPrimitives.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessDOF.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessDownsample.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessEyeAdaptation.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessGBufferHints.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessHierarchical.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessHistogram.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessHistogramReduce.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessHMD.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessing.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessInput.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessLensBlur.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessLensFlares.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessMaterial.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessMobile.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessMorpheus.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessMotionBlur.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessNoiseBlur.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessOutput.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessSelectionOutline.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessStreamingAccuracyLegend.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessSubsurface.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessTemporalAA.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessTestImage.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessTonemap.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessUpscale.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessVisualizeBuffer.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessVisualizeComplexity.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessVisualizeHDR.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessWeightedSampleSum.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\RenderingCompositionGraph.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\RenderTargetPool.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\SceneFilterRendering.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\SceneRenderTargets.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\ScreenSpaceReflections.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\VisualizeShadingModels.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\VisualizeTexture.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PrimitiveDistanceAccuracyRendering.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\ReflectionEnvironment.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\ReflectionEnvironmentCapture.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\RendererModule.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\RendererPrivate.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\RenderTargetTemp.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\RequiredTextureResolutionRendering.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\SceneCore.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\SceneHitProxyRendering.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\SceneOcclusion.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\ScenePrivate.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\ScenePrivateBase.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\SceneRendering.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\ShaderBaseClasses.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\ShaderComplexityRendering.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\ShadowRendering.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\StaticMeshDrawList.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\SystemTextures.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\TranslucentRendering.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\VelocityRendering.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\WideCustomResolveShaders.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Public\AtmosphereTextureParameters.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Public\DecalRenderingCommon.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Public\DrawingPolicy.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Public\GlobalDistanceFieldParameters.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Public\HdrCustomResolveShaders.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Public\MaterialShader.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Public\MeshMaterialShader.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Public\PostProcessParameters.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Public\PrimitiveSceneInfo.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Public\RendererInterface.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Public\SceneRenderTargetParameters.h" />
+    <ClInclude Include="..\Source\Runtime\Renderer\Public\VolumeRendering.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\AtmosphereRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\AtmosphereTextures.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\BasePassRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\CapsuleShadowRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\ClearQuad.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\CompositionLighting\CompositionLighting.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\CompositionLighting\PostProcessAmbient.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\CompositionLighting\PostProcessAmbientOcclusion.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\CompositionLighting\PostProcessDeferredDecals.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\CompositionLighting\PostProcessLpvIndirect.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\CompositionLighting\PostProcessMeshDecals.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\CompositionLighting\PostProcessPassThrough.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\ConvertToUniformMesh.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\CustomDepthRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DebugViewModeRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DecalRenderingShared.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DeferredShadingRenderer.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DepthRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DistanceFieldGlobalIllumination.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DistanceFieldLightingPost.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DistanceFieldObjectManagement.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DistanceFieldScreenGridLighting.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DistanceFieldShadowing.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DistanceFieldSpecularOcclusion.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DistanceFieldSurfaceCacheLighting.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DistortionRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DrawingPolicy.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\EditorCompositeParams.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\FogRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\GammaCorrection.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\GlobalDistanceField.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\GPUBenchmark.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\HdrCustomResolveShaders.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\HeightfieldLighting.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\IndirectLightingCache.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\LightFunctionRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\LightGridInjection.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\LightMapDensityRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\LightMapRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\LightPropagationVolume.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\LightPropagationVolumeVisualisation.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\LightRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\LightSceneInfo.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\LightShaftRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\MaterialTexCoordScalesRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\MeshTexCoordSizeAccuracyRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\MobileBasePassRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\MobileDecalRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\MobileSceneCaptureRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\MobileShadingRenderer.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\MobileTranslucentRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\MonoscopicFarFieldRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PlanarReflectionRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessAA.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessBloomSetup.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessBokehDOF.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessBokehDOFRecombine.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessBufferInspector.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessBusyWait.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessCircleDOF.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessCombineLUTs.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessCompositeEditorPrimitives.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessDOF.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessDownsample.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessEyeAdaptation.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessGBufferHints.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessHierarchical.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessHistogram.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessHistogramReduce.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessHMD.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessing.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessInput.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessLensBlur.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessLensFlares.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessMaterial.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessMobile.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessMorpheus.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessMotionBlur.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessNoiseBlur.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessOutput.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessSelectionOutline.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessStreamingAccuracyLegend.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessSubsurface.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessTemporalAA.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessTestImage.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessTonemap.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessUpscale.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessVisualizeBuffer.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessVisualizeComplexity.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessVisualizeHDR.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessWeightedSampleSum.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\RenderingCompositionGraph.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\RenderTargetPool.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\SceneFilterRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\SceneRenderTargets.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\ScreenSpaceReflections.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\VisualizeShadingModels.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\VisualizeTexture.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PreCullTriangles.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PrimitiveDistanceAccuracyRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PrimitiveSceneInfo.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\ReflectionEnvironment.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\ReflectionEnvironmentCapture.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\ReflectionEnvironmentDiffuseIrradiance.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\Renderer.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\RendererScene.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\RequiredTextureResolutionRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\SceneCaptureRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\SceneCore.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\SceneHitProxyRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\SceneOcclusion.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\SceneRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\SceneVisibility.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\ShaderBaseClasses.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\ShaderComplexityRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\ShadowDepthRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\ShadowRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\ShadowSetup.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\ShadowSetupMobile.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\SurfelTree.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\SystemTextures.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\TiledDeferredLightRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\TranslucentLighting.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\TranslucentRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\VelocityRendering.cpp" />
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\WideCustomResolveShaders.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Source\Runtime\Renderer\Private\BasePassRendering.inl" />
+    <None Include="..\Source\Runtime\Renderer\Private\CompositionLighting\LPV.tps" />
+    <None Include="..\Source\Runtime\Renderer\Private\DynamicPrimitiveDrawing.inl" />
+    <None Include="..\Source\Runtime\Renderer\Private\StaticMeshDrawList.inl" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C7A72967-A424-4C19-B12E-4CE0E600E753}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>D3D11RHI</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\Binaries\$(Platform)\</OutDir>
+    <IntDir>..\Intermediate\Build\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\Binaries\$(Platform)\</OutDir>
+    <IntDir>..\Intermediate\Build\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;RHI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>HEADMOUNTEDDISPLAY_API=__declspec(dllimport);USE_STATS_WITHOUT_ENGINE=0;UTILITYSHADERS_API=__declspec(dllimport);ENGINE_API=__declspec(dllimport);RENDERER_API=__declspec(dllexport);SLATECORE_API=__declspec(dllimport);RHI_API=__declspec(dllimport);CORE_API=__declspec(dllimport);COREUOBJECT_API=__declspec(dllimport);RENDERCORE_API=__declspec(dllimport);SHADERCORE_API=__declspec(dllimport);INPUTCORE_API=__declspec(dllimport);UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;_DEBUG;_CONSOLE;UE_IS_ENGINE_MODULE=1;MALLOC_LEAKDETECTION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\Misc;..\Source\Runtime\Renderer;..\Source\Runtime\Renderer\Public\;..\Source\Runtime\Renderer\Private;..\Source\Runtime\HeadMountedDisplay\Public;..\Source\Runtime\Core\Public\;..\Source\Runtime\RHI\Public;..\Source\Runtime\Engine\Public;..\Source\;..\Source\Runtime\Core\Public\Modules;..\Source\Developer\TaskGraph\Public;..\Source\Runtime\Windows\D3D11RHI\Public;..\Source\Runtime\Windows\D3D11RHI\Private;..\Source\Runtime\ShaderCore\Public;..\Source\Runtime\RenderCore\Public;..\Source\Runtime\Core\Public\Containers;..\Source\Runtime\Core\Public\Windows;..\Source\Runtime\Windows\D3D11RHI\Private\Windows;..\Source\ThirdParty\NVIDIA\nvapi;..\Source\ThirdParty\AMD\AMD_AGS\inc;..\Source\Runtime\Core\Public\GenericPlatform;..\Source\Runtime\InputCore\Classes;..\Source\Runtime\InputCore\Private;..\Source\Runtime\Engine\Classes;..\Source\Runtime\CoreUObject\Public\;..\Source\Runtime\Engine\Generated;..\Source\Runtime\SlateCore\Public;..\Source\Runtime\SlateCore\Generated;..\Source\Runtime\UtilityShaders\Public;..\Source\Runtime\Renderer\Public;..\Source\Runtime\Core\Public\Templates;..\Plugins\Blendables\LightPropagationVolume\Source\LightPropagationVolumeRuntime\Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\Binaries\x64\;..\Source\ThirdParty\NVIDIA\nvapi\amd64;..\Source\ThirdParty\AMD\AMD_AGS\lib\VS2015</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RenderCore_x64_Debug.lib;SolidAngle_x64_Debug.lib;RHI_x64_Debug.lib;Engine_x64_Debug.lib;ShaderCore_x64_Debug.lib;UtilityShaders_x64_Debug.lib;nvapi64.lib;DXGUID.lib;D3D11.lib;D3D9.lib;amd_ags_x64d.lib;Dwmapi.lib	;DXGI.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;RHI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>HEADMOUNTEDDISPLAY_API=__declspec(dllimport);USE_STATS_WITHOUT_ENGINE=0;UTILITYSHADERS_API=__declspec(dllimport);ENGINE_API=__declspec(dllimport);RENDERER_API=__declspec(dllexport);SLATECORE_API=__declspec(dllimport);RHI_API=__declspec(dllimport);CORE_API=__declspec(dllimport);COREUOBJECT_API=__declspec(dllimport);RENDERCORE_API=__declspec(dllimport);SHADERCORE_API=__declspec(dllimport);INPUTCORE_API=__declspec(dllimport);UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\Misc;..\Source\Runtime\Renderer;..\Source\Runtime\Renderer\Public\;..\Source\Runtime\Renderer\Private;..\Source\Runtime\HeadMountedDisplay\Public;..\Source\Runtime\Core\Public\;..\Source\Runtime\RHI\Public;..\Source\Runtime\Engine\Public;..\Source\;..\Source\Runtime\Core\Public\Modules;..\Source\Developer\TaskGraph\Public;..\Source\Runtime\Windows\D3D11RHI\Public;..\Source\Runtime\Windows\D3D11RHI\Private;..\Source\Runtime\ShaderCore\Public;..\Source\Runtime\RenderCore\Public;..\Source\Runtime\Core\Public\Containers;..\Source\Runtime\Core\Public\Windows;..\Source\Runtime\Windows\D3D11RHI\Private\Windows;..\Source\ThirdParty\NVIDIA\nvapi;..\Source\ThirdParty\AMD\AMD_AGS\inc;..\Source\Runtime\Core\Public\GenericPlatform;..\Source\Runtime\InputCore\Classes;..\Source\Runtime\InputCore\Private;..\Source\Runtime\Engine\Classes;..\Source\Runtime\CoreUObject\Public\;..\Source\Runtime\Engine\Generated;..\Source\Runtime\SlateCore\Public;..\Source\Runtime\SlateCore\Generated;..\Source\Runtime\UtilityShaders\Public;..\Source\Runtime\Renderer\Public;..\Source\Runtime\Core\Public\Templates;..\Plugins\Blendables\LightPropagationVolume\Source\LightPropagationVolumeRuntime\Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\Binaries\x64\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SolidAngle_x64_Release.lib;RHI_x64_Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

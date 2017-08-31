@@ -1,0 +1,761 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Public">
+      <UniqueIdentifier>{9798739d-112d-4a43-9846-8bfcd9005db7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private">
+      <UniqueIdentifier>{41368f8d-df66-483d-a817-a84481a5a826}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PostProcess">
+      <UniqueIdentifier>{3eb6459f-28fd-446f-a6ef-96f23f209d50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CompositionLighting">
+      <UniqueIdentifier>{40c37729-6d29-4c77-8022-1e714d678d83}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\Renderer\Public\GlobalDistanceFieldParameters.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Public\HdrCustomResolveShaders.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Public\MaterialShader.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Public\MeshMaterialShader.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Public\PostProcessParameters.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Public\PrimitiveSceneInfo.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Public\RendererInterface.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Public\SceneRenderTargetParameters.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Public\VolumeRendering.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Public\AtmosphereTextureParameters.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Public\DecalRenderingCommon.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Public\DrawingPolicy.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\AtmosphereTextures.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\BasePassRendering.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\CapsuleShadowRendering.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\ClearQuad.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\CustomDepthRendering.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\DebugViewModeRendering.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\DecalRenderingShared.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\DeferredShadingRenderer.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\DepthRendering.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\DistanceFieldGlobalIllumination.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\DistanceFieldLightingPost.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\DistanceFieldLightingShared.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\DistanceFieldSurfaceCacheLighting.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\DistortionRendering.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\DynamicPrimitiveDrawing.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\EditorCompositeParams.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\GlobalDistanceField.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\GPUBenchmark.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\HeightfieldLighting.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\LightMapDensityRendering.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\LightMapRendering.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\LightPropagationVolume.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\LightRendering.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\LightSceneInfo.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\MaterialTexCoordScalesRendering.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\MeshTexCoordSizeAccuracyRendering.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\MobileBasePassRendering.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\MobileSceneCaptureRendering.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PlanarReflectionRendering.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PrimitiveDistanceAccuracyRendering.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\ReflectionEnvironment.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\ReflectionEnvironmentCapture.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\RendererModule.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\RendererPrivate.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\RenderTargetTemp.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\RequiredTextureResolutionRendering.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\SceneCore.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\SceneHitProxyRendering.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\SceneOcclusion.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\ScenePrivate.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\ScenePrivateBase.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\SceneRendering.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\ShaderBaseClasses.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\ShaderComplexityRendering.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\ShadowRendering.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\StaticMeshDrawList.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\SystemTextures.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\TranslucentRendering.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\VelocityRendering.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\WideCustomResolveShaders.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\AmbientCubemapParameters.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\AtmosphereRendering.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\RenderingCompositionGraph.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\RenderTargetPool.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\SceneFilterRendering.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\SceneRenderTargets.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\ScreenSpaceReflections.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\VisualizeShadingModels.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\VisualizeTexture.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessAA.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessBloomSetup.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessBlurGBuffer.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessBokehDOF.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessBokehDOFRecombine.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessBufferInspector.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessBusyWait.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessCircleDOF.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessCombineLUTs.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessCompositeEditorPrimitives.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessDOF.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessDownsample.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessEyeAdaptation.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessGBufferHints.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessHierarchical.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessHistogram.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessHistogramReduce.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessHMD.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessing.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessInput.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessLensBlur.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessLensFlares.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessMaterial.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessMobile.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessMorpheus.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessMotionBlur.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessNoiseBlur.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessOutput.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessSelectionOutline.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessStreamingAccuracyLegend.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessSubsurface.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessTemporalAA.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessTestImage.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessTonemap.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessUpscale.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessVisualizeBuffer.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessVisualizeComplexity.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessVisualizeHDR.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessWeightedSampleSum.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\CompositionLighting\PostProcessAmbient.h">
+      <Filter>CompositionLighting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\CompositionLighting\PostProcessAmbientOcclusion.h">
+      <Filter>CompositionLighting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\CompositionLighting\PostProcessDeferredDecals.h">
+      <Filter>CompositionLighting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\CompositionLighting\PostProcessLpvIndirect.h">
+      <Filter>CompositionLighting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\CompositionLighting\PostProcessPassThrough.h">
+      <Filter>CompositionLighting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Renderer\Private\CompositionLighting\CompositionLighting.h">
+      <Filter>CompositionLighting</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\BasePassRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\CapsuleShadowRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\ClearQuad.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\ConvertToUniformMesh.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\CustomDepthRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DebugViewModeRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DecalRenderingShared.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DeferredShadingRenderer.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DepthRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DistanceFieldGlobalIllumination.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DistanceFieldLightingPost.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DistanceFieldObjectManagement.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DistanceFieldScreenGridLighting.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DistanceFieldShadowing.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DistanceFieldSpecularOcclusion.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DistanceFieldSurfaceCacheLighting.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DistortionRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\DrawingPolicy.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\EditorCompositeParams.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\FogRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\GammaCorrection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\GlobalDistanceField.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\GPUBenchmark.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\HdrCustomResolveShaders.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\HeightfieldLighting.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\IndirectLightingCache.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\LightFunctionRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\LightGridInjection.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\LightMapDensityRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\LightMapRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\LightPropagationVolume.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\LightPropagationVolumeVisualisation.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\LightRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\LightSceneInfo.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\LightShaftRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\MaterialTexCoordScalesRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\MeshTexCoordSizeAccuracyRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\MobileBasePassRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\MobileDecalRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\MobileSceneCaptureRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\MobileShadingRenderer.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\MobileTranslucentRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\MonoscopicFarFieldRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PlanarReflectionRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PreCullTriangles.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PrimitiveDistanceAccuracyRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PrimitiveSceneInfo.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\ReflectionEnvironment.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\ReflectionEnvironmentCapture.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\ReflectionEnvironmentDiffuseIrradiance.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\Renderer.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\RendererScene.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\RequiredTextureResolutionRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\SceneCaptureRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\SceneCore.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\SceneHitProxyRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\SceneOcclusion.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\SceneRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\SceneVisibility.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\ShaderBaseClasses.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\ShaderComplexityRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\ShadowDepthRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\ShadowRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\ShadowSetup.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\ShadowSetupMobile.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\SurfelTree.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\SystemTextures.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\TiledDeferredLightRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\TranslucentLighting.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\TranslucentRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\VelocityRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\WideCustomResolveShaders.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\AtmosphereRendering.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\AtmosphereTextures.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\RenderTargetPool.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\SceneFilterRendering.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\SceneRenderTargets.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\ScreenSpaceReflections.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\VisualizeShadingModels.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\VisualizeTexture.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessAA.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessBloomSetup.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessBokehDOF.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessBokehDOFRecombine.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessBufferInspector.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessBusyWait.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessCircleDOF.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessCombineLUTs.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessCompositeEditorPrimitives.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessDOF.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessDownsample.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessEyeAdaptation.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessGBufferHints.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessHierarchical.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessHistogram.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessHistogramReduce.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessHMD.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessing.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessInput.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessLensBlur.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessLensFlares.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessMaterial.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessMobile.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessMorpheus.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessMotionBlur.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessNoiseBlur.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessOutput.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessSelectionOutline.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessStreamingAccuracyLegend.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessSubsurface.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessTemporalAA.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessTestImage.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessTonemap.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessUpscale.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessVisualizeBuffer.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessVisualizeComplexity.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessVisualizeHDR.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\PostProcessWeightedSampleSum.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\PostProcess\RenderingCompositionGraph.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\CompositionLighting\PostProcessAmbient.cpp">
+      <Filter>CompositionLighting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\CompositionLighting\PostProcessAmbientOcclusion.cpp">
+      <Filter>CompositionLighting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\CompositionLighting\PostProcessDeferredDecals.cpp">
+      <Filter>CompositionLighting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\CompositionLighting\PostProcessLpvIndirect.cpp">
+      <Filter>CompositionLighting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\CompositionLighting\PostProcessMeshDecals.cpp">
+      <Filter>CompositionLighting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\CompositionLighting\PostProcessPassThrough.cpp">
+      <Filter>CompositionLighting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Renderer\Private\CompositionLighting\CompositionLighting.cpp">
+      <Filter>CompositionLighting</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Source\Runtime\Renderer\Private\BasePassRendering.inl">
+      <Filter>Private</Filter>
+    </None>
+    <None Include="..\Source\Runtime\Renderer\Private\DynamicPrimitiveDrawing.inl">
+      <Filter>Private</Filter>
+    </None>
+    <None Include="..\Source\Runtime\Renderer\Private\StaticMeshDrawList.inl">
+      <Filter>Private</Filter>
+    </None>
+    <None Include="..\Source\Runtime\Renderer\Private\CompositionLighting\LPV.tps">
+      <Filter>CompositionLighting</Filter>
+    </None>
+  </ItemGroup>
+</Project>
