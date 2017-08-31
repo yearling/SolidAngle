@@ -13,7 +13,7 @@
 #include "HideWindowsPlatformTypes.h"
 
 #include "HardwareInfo.h"
-//#include "Runtime/HeadMountedDisplay/Public/IHeadMountedDisplayModule.h"
+#include "Runtime/HeadMountedDisplay/Public/IHeadMountedDisplayModule.h"
 #include "GenericPlatformDriver.h"			// FGPUDriverInfo
 
 extern bool D3D11RHI_ShouldCreateWithD3DDebug();
@@ -520,8 +520,7 @@ void FD3D11DynamicRHIModule::FindAdapter()
 #endif
 
 	// Allow HMD to override which graphics adapter is chosen, so we pick the adapter where the HMD is connected
-	//int32 HmdGraphicsAdapter  = IHeadMountedDisplayModule::IsAvailable() ? IHeadMountedDisplayModule::Get().GetGraphicsAdapter() : -1;
-	int32 HmdGraphicsAdapter  = -1;
+	int32 HmdGraphicsAdapter  = IHeadMountedDisplayModule::IsAvailable() ? IHeadMountedDisplayModule::Get().GetGraphicsAdapter() : -1;
 	bool bUseHmdGraphicsAdapter = HmdGraphicsAdapter >= 0;
 	int32 CVarExplicitAdapterValue = bUseHmdGraphicsAdapter ? HmdGraphicsAdapter : CVarGraphicsAdapter.GetValueOnGameThread();
 
