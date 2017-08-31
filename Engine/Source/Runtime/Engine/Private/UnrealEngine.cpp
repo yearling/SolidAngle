@@ -884,7 +884,7 @@ void UEngine::Init(IEngineLoop* InEngineLoop)
 		// Create test windows (if we were asked to do that)
 		if( FParse::Param( FCommandLine::Get(), TEXT("SlateDebug") ) )
 		{
-			RestoreSlateTestSuite();
+			//RestoreSlateTestSuite();
 		}
 #endif // #if !UE_BUILD_SHIPPING
 	}
@@ -2651,19 +2651,19 @@ bool UEngine::Exec( UWorld* InWorld, const TCHAR* Cmd, FOutputDevice& Ar )
 
 #if ENABLE_LOC_TESTING
 	{
-		FString CultureName;
+		/*FString CultureName;
 		if (FParse::Value(Cmd, TEXT("CULTURE="), CultureName))
 		{
 			FInternationalization::Get().SetCurrentCulture(CultureName);
-		}
+		}*/
 	}
 
 	{
-		FString ConfigFilePath;
-		if (FParse::Value(Cmd, TEXT("REGENLOC="), ConfigFilePath))
-		{
-			FTextLocalizationResourceGenerator::GenerateAndUpdateLiveEntriesFromConfig(ConfigFilePath, /*bSkipSourceCheck*/false);
-		}
+		//FString ConfigFilePath;
+		//if (FParse::Value(Cmd, TEXT("REGENLOC="), ConfigFilePath))
+		//{
+		//	//FTextLocalizationResourceGenerator::GenerateAndUpdateLiveEntriesFromConfig(ConfigFilePath, /*bSkipSourceCheck*/false);
+		//}
 	}
 #endif
 

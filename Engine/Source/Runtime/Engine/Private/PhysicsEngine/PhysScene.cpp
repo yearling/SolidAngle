@@ -509,7 +509,7 @@ void FPhysScene::AddForceAtPosition_AssumesLocked(FBodyInstance* BodyInstance, c
 		}
 		else
 		{
-			PxRigidBodyExt::addForceAtPos(*PRigidBody, U2PVector(Force), U2PVector(Position), PxForceMode::eFORCE, true);
+			//PxRigidBodyExt::addForceAtPos(*PRigidBody, U2PVector(Force), U2PVector(Position), PxForceMode::eFORCE, true);
 		}
 	}
 #endif
@@ -1719,7 +1719,7 @@ void FPhysScene::InitPhysScene(uint32 SceneType)
 	{
 		if (NumPhysxDispatcher)
 		{
-			CPUDispatcher[SceneType] = PxDefaultCpuDispatcherCreate(NumPhysxDispatcher);
+			//CPUDispatcher[SceneType] = PxDefaultCpuDispatcherCreate(NumPhysxDispatcher);
 		}
 		else
 		{

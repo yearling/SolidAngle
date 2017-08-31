@@ -402,7 +402,8 @@ bool FConstraintInstance::CreatePxJoint_AssumesLocked(physx::PxRigidActor* PActo
 	SCOPED_SCENE_WRITE_LOCK(PScene);
 
 	// Because PhysX keeps limits/axes locked in the first body reference frame, whereas Unreal keeps them in the second body reference frame, we have to flip the bodies here.
-	PxD6Joint* PD6Joint = PxD6JointCreate(*GPhysXSDK, PActor2, U2PTransform(Local2), PActor1, U2PTransform(Local1));
+	//PxD6Joint* PD6Joint = PxD6JointCreate(*GPhysXSDK, PActor2, U2PTransform(Local2), PActor1, U2PTransform(Local1));
+	PxD6Joint* PD6Joint = nullptr;
 
 	if (PD6Joint == nullptr)
 	{

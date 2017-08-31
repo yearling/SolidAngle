@@ -3174,7 +3174,7 @@ FVector GetUnrealWorldVelocityAtPointImp(const FBodyInstance* BodyInstance, cons
 	FPhysXSupport<NeedsLock>::ExecuteOnPxRigidBodyReadOnly(BodyInstance, [&](const PxRigidBody* PRigidBody)
 	{
 		PxVec3 PPoint = U2PVector(Point);
-		LinVel = P2UVector(PxRigidBodyExt::getVelocityAtPos(*PRigidBody, PPoint));
+		//LinVel = P2UVector(PxRigidBodyExt::getVelocityAtPos(*PRigidBody, PPoint));
 	});
 #endif // WITH_PHYSX
 
@@ -3628,8 +3628,8 @@ PxMassProperties ComputeMassProperties(const FBodyInstance* OwningBodyInstance, 
 		RaiseMassToPower = PhysMat->RaiseMassToPower;
 	}
 
-	PxMassProperties MassProps = PxRigidBodyExt::computeMassPropertiesFromShapes(Shapes.GetData(), Shapes.Num()) * DensityKGPerCubicUU;
-
+	//PxMassProperties MassProps = PxRigidBodyExt::computeMassPropertiesFromShapes(Shapes.GetData(), Shapes.Num()) * DensityKGPerCubicUU;
+	PxMassProperties MassProps;
 	float OldMass = MassProps.mass;
 	float NewMass = 0.f;
 
@@ -4191,7 +4191,7 @@ void FBodyInstance::AddImpulseAtPosition(const FVector& Impulse, const FVector& 
 		if (!IsRigidBodyKinematic_AssumesLocked(PRigidBody))
 		{
 			PxForceMode::Enum Mode = PxForceMode::eIMPULSE; // does not support eVELOCITY_CHANGE
-			PxRigidBodyExt::addForceAtPos(*PRigidBody, U2PVector(Impulse), U2PVector(Position), Mode, true);
+			//PxRigidBodyExt::addForceAtPos(*PRigidBody, U2PVector(Impulse), U2PVector(Position), Mode, true);
 		}
 	});
 	

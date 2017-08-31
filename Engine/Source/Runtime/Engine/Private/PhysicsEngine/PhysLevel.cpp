@@ -303,7 +303,7 @@ void InitGamePhys()
 	GPreGarbageCollectDelegateHandle = FCoreUObjectDelegates::PreGarbageCollect.AddRaw(GPhysCommandHandler, &FPhysCommandHandler::Flush);
 
 	// Init Extensions
-	PxInitExtensions(*GPhysXSDK, GPhysXVisualDebugger);
+	//PxInitExtensions(*GPhysXSDK, GPhysXVisualDebugger);
 
 	if (CVarUseUnifiedHeightfield.GetValueOnGameThread())
 	{
@@ -507,7 +507,7 @@ void TermGamePhys()
 
 	if (GPhysXSDK != NULL)
 	{
-		PxCloseExtensions();
+		//PxCloseExtensions();
 	}
 
 	if(GPhysXSDK != NULL)

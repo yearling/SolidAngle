@@ -648,14 +648,15 @@ PxTriangleMesh* FPhysXFormatDataReader::ReadTriMesh( FBufferReader& Ar, uint8* I
 
 SIZE_T GetPhysxObjectSize(PxBase* Obj, const PxCollection* SharedCollection)
 {
-	PxSerializationRegistry* Sr = PxSerialization::createSerializationRegistry(*GPhysXSDK);
+	//PxSerializationRegistry* Sr = PxSerialization::createSerializationRegistry(*GPhysXSDK);
+	PxSerializationRegistry* Sr = nullptr;
 	PxCollection* Collection = PxCreateCollection();
 
 	Collection->add(*Obj);
-	PxSerialization::complete(*Collection, *Sr, SharedCollection);	// chase all other stuff (shared shaps, materials, etc) needed to serialize this collection
+	//PxSerialization::complete(*Collection, *Sr, SharedCollection);	// chase all other stuff (shared shaps, materials, etc) needed to serialize this collection
 
 	FPhysXCountMemoryStream Out;
-	PxSerialization::serializeCollectionToBinary(Out, *Collection, *Sr, SharedCollection);
+	//PxSerialization::serializeCollectionToBinary(Out, *Collection, *Sr, SharedCollection);
 
 	Collection->release();
 	Sr->release();
@@ -797,7 +798,8 @@ void FPhysxSharedData::DumpSharedMemoryUsage(FOutputDevice* Ar)
 		TArray<PxBase*>* ObjectsArray = ObjectsByType.Find(TypeName);
 		check(ObjectsArray);
 
-		PxSerializationRegistry* Sr = PxSerialization::createSerializationRegistry(*GPhysXSDK);
+		//PxSerializationRegistry* Sr = PxSerialization::createSerializationRegistry(*GPhysXSDK);
+		PxSerializationRegistry* Sr = nullptr;
 		PxCollection* Collection = PxCreateCollection();
 		
 		for (int32 i=0; i < ObjectsArray->Num(); ++i)
@@ -805,10 +807,10 @@ void FPhysxSharedData::DumpSharedMemoryUsage(FOutputDevice* Ar)
 			Collection->add(*((*ObjectsArray)[i]));;
 		}
 
-		PxSerialization::complete(*Collection, *Sr);	// chase all other stuff (shared shaps, materials, etc) needed to serialize this collection
+		//PxSerialization::complete(*Collection, *Sr);	// chase all other stuff (shared shaps, materials, etc) needed to serialize this collection
 
 		FPhysXCountMemoryStream Out;
-		PxSerialization::serializeCollectionToBinary(Out, *Collection, *Sr);
+		//PxSerialization::serializeCollectionToBinary(Out, *Collection, *Sr);
 
 		Collection->release();
 		Sr->release();
@@ -871,7 +873,7 @@ PxCollection* MakePhysXCollection(const TArray<UPhysicalMaterial*>& PhysicalMate
 		}
 	}
 
-	PxSerialization::createSerialObjectIds(*PCollection, PxSerialObjectId(BaseId));
+	//PxSerialization::createSerialObjectIds(*PCollection, PxSerialObjectId(BaseId));
 
 	return PCollection;
 }

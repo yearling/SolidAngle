@@ -185,7 +185,7 @@ void FPhysSubstepTask::ApplyForces_AssumesLocked(const FPhysTarget& PhysTarget, 
 
 		if (ForceTarget.bPosition)
 		{
-			PxRigidBodyExt::addForceAtPos(*PRigidBody, U2PVector(ForceTarget.Force), U2PVector(ForceTarget.Position), PxForceMode::eFORCE, true);
+			//PxRigidBodyExt::addForceAtPos(*PRigidBody, U2PVector(ForceTarget.Force), U2PVector(ForceTarget.Position), PxForceMode::eFORCE, true);
 		}
 		else
 		{

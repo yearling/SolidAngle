@@ -11,7 +11,7 @@
 #if WITH_DX_PERF
 	// For perf events
 	#include "AllowWindowsPlatformTypes.h"
-		#include "d3d9.h"
+#include "D3D9.h"
 	#include "HideWindowsPlatformTypes.h"
 #endif	//WITH_DX_PERF
 #include "OneColorShader.h"
@@ -19,6 +19,7 @@
 #if !UE_BUILD_SHIPPING
 	#include "STaskGraph.h"
 #endif
+#include "..\Classes\Engine\Engine.h"
 
 DEFINE_LOG_CATEGORY(LogD3D11RHI);
 

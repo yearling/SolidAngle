@@ -130,12 +130,13 @@ void UPhysicsSerializer::CreatePhysicsData(const TArray<UBodySetup*>& BodySetups
 		//Note that PhysX expects the binary data to be 128-byte aligned. Because of this we've padded so find the next spot in memory
 		int32 BytesToPad = PHYSX_SERIALIZATION_ALIGNMENT - (Ar.Tell() % PHYSX_SERIALIZATION_ALIGNMENT);
 		
-		physx::PxSerializationRegistry* PRegistry =  PxSerialization::createSerializationRegistry(*GPhysXSDK);
+		//physx::PxSerializationRegistry* PRegistry =  PxSerialization::createSerializationRegistry(*GPhysXSDK);
+		physx::PxSerializationRegistry* PRegistry =  nullptr;
 		physx::PxCollection* PCollection = nullptr;
 		PxCollection* PExternalData = MakePhysXCollection(PhysicalMaterials, BodySetups, BaseId);		
 		{
 			QUICK_SCOPE_CYCLE_COUNTER(STAT_DeserializePhysics);
-			PCollection = PxSerialization::createCollectionFromBinary(SerializedData + Ar.Tell() + BytesToPad, *PRegistry, PExternalData);	
+			//PCollection = PxSerialization::createCollectionFromBinary(SerializedData + Ar.Tell() + BytesToPad, *PRegistry, PExternalData);	
 		}
 
 		{
