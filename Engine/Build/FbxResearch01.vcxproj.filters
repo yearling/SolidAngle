@@ -12,5 +12,13 @@
     <ClCompile Include="..\Source\FbxResearch\Private\Main.cpp">
       <Filter>Private</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\FbxResearch\Private\FbxCommon.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\FbxResearch\Public\FbxCommon.h">
+      <Filter>Public</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
