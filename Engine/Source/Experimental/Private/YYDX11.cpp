@@ -25,7 +25,7 @@ void DX11Demo::Initial()
 	m_height = default_y;
 #if defined( DEBUG ) || defined( _DEBUG )
 	//把log打到指定的文件
-	YYSetConsoleA();
+	//YYSetConsoleA();
 	//把log在console里显示
 	//YYSetConsoleA(GetHWND());		
 #endif // _DEBUG
@@ -54,7 +54,7 @@ void DX11Demo::Initial()
 	m_pFbxReader->InitialFBXSDK();
 	std::unique_ptr<MeshModel> Mesh;
 	//std::string ImportFileName = "..\\..\\media\\box\\lotsof.FBX";
-	std::string ImportFileName = "media\\human\\humanoid.fbx";
+	FString ImportFileName = TEXT("media\\human\\humanoid.fbx") ;
 	//std::string ImportFileName = "..\\..\\media\\human\\AnimatedCharacter.fbx";
 	//std::string ImportFileName = "..\\..\\media\\human\\twobone.fbx";
 	//std::string ImportFileName = "..\\..\\media\\human\\twobonefirstcluseroffset10.fbx";

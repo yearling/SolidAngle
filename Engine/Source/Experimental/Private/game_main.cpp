@@ -21,8 +21,10 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 					   _In_ int       nCmdShow)
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
-	UNREFERENCED_PARAMETER(lpCmdLine);
-	
+	FCommandLine::Set(lpCmdLine);
+	GLogConsole = FPlatformOutputDevices::GetLogConsole();
+	GLogConsole->Show(true);
+	FPlatformOutputDevices::SetupOutputDevices();
 	FPlatformMemory::Init();
 	const FPlatformMemoryStats& StateReport = FPlatformMemory::GetStats();
 	std::cout << "MemoryTotalPhysical: " << StateReport.TotalPhysicalGB << " GB" << std::endl;
@@ -38,5 +40,6 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	FMallocLeakDetection::Get().SetAllocationCollection(false);
 	FMallocLeakDetection::Get().DumpPotentialLeakers();
 	FMallocLeakDetection::Get().DumpOpenCallstacks();
+	GLog->TearDown();
 	return result;
 }
