@@ -7,12 +7,13 @@ bool InitializeSdkObjects(FbxManager*& pManager, FbxScene*& pScene)
 	pManager = FbxManager::Create();
 	if (!pManager)
 	{
-		FBXSDK_printf("Error: Unable to create FBX Manager!\n");
-		UE_LOG(FbxSDKLog, Warning, TEXT("Create AbonusGameModeBase Successful"));
+		UE_LOG(FbxSDKLog, Error, TEXT("Error: Unable to create FBX Manager!\n"));
 		return false;
 	}
-	else FBXSDK_printf("Autodesk FBX SDK version %s\n", pManager->GetVersion());
-	UE_LOG(FbxSDKLog, Log, TEXT("Log system Successful"));
+	else
+	{
+		UE_LOG(FbxSDKLog, Log, TEXT("Autodesk FBX SDK version %ls"), ANSI_TO_TCHAR(pManager->GetVersion()));
+	}
 	//Create an IOSettings object. This object holds all import/export settings.
 	FbxIOSettings* ios = FbxIOSettings::Create(pManager, IOSROOT);
 	pManager->SetIOSettings(ios);
@@ -25,7 +26,7 @@ bool InitializeSdkObjects(FbxManager*& pManager, FbxScene*& pScene)
 	pScene = FbxScene::Create(pManager, "My Scene");
 	if (!pScene)
 	{
-		FBXSDK_printf("Error: Unable to create FBX scene!\n");
+		UE_LOG(FbxSDKLog,Error,TEXT("Error: Unable to create FBX scene!\n"));
 		return false;
 	}
 	return true;
