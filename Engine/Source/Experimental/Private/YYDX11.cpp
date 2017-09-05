@@ -8,7 +8,6 @@
 #include "FbxReader.h"
 #include "Canvas.h"
 #include "RenderMesh.h"
-#include "YYUTMutiScreen.h"
 using std::cout;
 using std::endl;
 
@@ -23,12 +22,6 @@ void DX11Demo::Initial()
 	YYUTApplication::WindowCreate(default_x, default_y, _T("Render Mesh Demo"));
 	m_width = default_x;
 	m_height = default_y;
-#if defined( DEBUG ) || defined( _DEBUG )
-	//把log打到指定的文件
-	YYSetConsoleA();
-	//把log在console里显示
-	//YYSetConsoleA(GetHWND());		
-#endif // _DEBUG
 	YYUTDXManager::GetInstance().Init(m_spMainWindow->m_hWnd);
 	YYUTDXManager::GetInstance().ReSize(m_width, m_height);
 
@@ -54,7 +47,7 @@ void DX11Demo::Initial()
 	m_pFbxReader->InitialFBXSDK();
 	std::unique_ptr<MeshModel> Mesh;
 	//std::string ImportFileName = "..\\..\\media\\box\\lotsof.FBX";
-	std::string ImportFileName = "media\\human\\humanoid.fbx";
+	FString ImportFileName = TEXT("media\\human\\humanoid.fbx") ;
 	//std::string ImportFileName = "..\\..\\media\\human\\AnimatedCharacter.fbx";
 	//std::string ImportFileName = "..\\..\\media\\human\\twobone.fbx";
 	//std::string ImportFileName = "..\\..\\media\\human\\twobonefirstcluseroffset10.fbx";

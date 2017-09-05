@@ -33,9 +33,6 @@
     <ClCompile Include="..\Source\Experimental\Private\YYUTHelper.cpp">
       <Filter>YYUT</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\YYUTMutiScreen.cpp">
-      <Filter>YYUT</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\Canvas.cpp">
       <Filter>YYUT</Filter>
     </ClCompile>
@@ -78,9 +75,6 @@
       <Filter>YYUT</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\YYUTHelper.h">
-      <Filter>YYUT</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Private\YYUTMutiScreen.h">
       <Filter>YYUT</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Private\Canvas.h">

@@ -114,6 +114,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;PLATFORM_WINDOWS=1;IS_PROGRAM=1;IS_MONOLITHIC=0;UE_BUILD_MINIMAL=0;WITH_PLUGIN_SUPPORT=1;UE_BUILD_DEBUG;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_SERVER_CODE=0;CORE_API=__declspec(dllimport);UNREALED_API=__declspec(dllexport);MALLOC_LEAKDETECTION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Source\Runtime\Core\;..\Source\Runtime\Core\Public;..\Source\Editor\Fbx\Public;..\Source\ThirdParty\Fbx\2017.0.1\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -125,6 +126,9 @@
       <AdditionalLibraryDirectories>..\Source\ThirdParty\Fbx\2017.0.1\lib\vs2015\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libfbxsdk.lib</AdditionalDependencies>
     </Lib>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
