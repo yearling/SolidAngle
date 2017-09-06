@@ -22,6 +22,18 @@
 	2. 静态
 		1.  `/MT`: LIBCMT.lib静态链接
 		2.  `/MD`: LIBCMT.lib动态链接
+## fbx类的作用关系
+1. FbxScene
+	1. 管理整个场景
+		1. 场景层次关系组织
+		2. 场景的内存分配
+		3. RootNode和所有的Node
+		4. scene information,global settings,global evaluator
+	2. Evaluator 动画
+2. FbxMesh 
+	1. 从FbxGeometry集成而来，是FbxNodeAttribute
+	2. 可以是多边形，也可以是三角形
+	3. 
 
 ## 映射方式
 决定每个元素怎么映射到一个平面上  
@@ -58,6 +70,13 @@ Determines how the mapping information is stored in the array of coordinates.
 
 ## Geometry Element
 
+### FbxLayerElement
+没有从FbxObject上继承而来，保存在FbxMesh中，用来储存各元素的映射信息。 
+>fbxlyaer.h A layer element type is identified by EType. 
+A FbxLayerElement describes how the layer element is mapped to a geometry surface
+and how the mapping information is arranged in memory.
+A FbxLayerElement contains Normals, UVs or other kind of information.
+
 	/**  Defines geometry element classes.
 	  *  A geometry element describes how the geometry element is mapped to a geometry surface
 	  *  and how the mapping information is arranged in memory.
@@ -85,3 +104,72 @@ typedef FbxLayerElementCrease FbxGeometryElementCrease;
 typedef FbxLayerElementHole FbxGeometryElementHole;
 typedef FbxLayerElementVisibility FbxGeometryElementVisibility
 
+## FBX创建静态Mesh流程
+1. 创建ControlPoints
+	1. FbxMesh::InitControlPoints
+	2. FbxVector4* lControlPoints = lMesh->GetControlPoints();
+	3. lControlPoints[0] = FbxVector4(1,1,1);
+	
+2. 创建IndexBuffer
+	1. int lPolygonVertices[] = { 0, 1, 2, 3, 4, 5, 6};
+	
+3. 创建三角形列表
+	1. 对于每个三角形
+	2. FbxMesh->BeginPolygon(-1, -1, -1, false);
+	3. 添加顶点 
+		1. FbxMesh->AddPolygon(ControlPointIndex);
+	4. FbxMesh->EndPolygon();
+
+4. 创建法线
+	1. 先考虑分裂顶点后，定点与法线一一对应的情况
+		1. 创建映射
+				FbxGeometryElementNormal* lGeometryElementNormal = FbxMesh->CreateElementNormal(); 
+		2. 设置映射模式为ebyControlPoints 
+				lGeometryElementNormal->SetMappingMode(FbxGeometryElement::eByControlPoint);
+		3. 设置引用模式为eDirect
+				lGeometryElementNormal->SetReferenceMode(FbxGeometryElement::eDirect);
+		4. 设置对应关系
+				lGeometryElementNormal->GetDirectArray().Add(FbxVector(1,1,1));
+
+5. 创建UV
+	1. 考虑索引方式
+		1. 创建映射
+				FbxGeometryElementUV* lUVDiffuseElement = lMesh->CreateElementUV("DiffuseUV");
+		2. 设置映射模式为eByPolygonVertex
+				lUVDiffuseElement->SetMappingMode(FbxGeometryElement::eByPolygonVertex);
+		3. 设置引用模式为eIndexToDirect
+				lUVDiffuseElement->SetReferenceMode(FbxGeometryElement::eIndexToDirect);
+		4. 给DirectArray()就是存的是float2的数组赋值
+				lUVDiffuseElement->GetDirectArray().Add(lVectors0); 
+		5. 给IndexArray() 赋值
+				1. lUVDiffuseElement->GetIndexArray().SetCount(24);
+				2. FbxMesh->BeginPolygon(-1, -1, -1, false);
+				3. lUVDiffuseElement->GetIndexArray().SetAt(顶点索引, UV索引);
+				4. FbxMesh->EndPolygon()；
+				5. 
+6. 创建FbxMesh与FbxNode间的关系
+		FbxNode* lNode = FbxNode::Create(pScene,pName);
+	    // set the node attribute
+	    lNode->SetNodeAttribute(lMesh);
+
+7. 创建材质
+	1. 材质基类：FbxSurfaceMaterial
+	2. 创建材质 
+			FbxSurfacePhong::Create(pScene, lMaterialName.Buffer());
+	3. 添加材质
+		1. 创建映射
+				FbxGeometryElementMaterial* lMaterialElement = pMesh->CreateElementMaterial(); 
+		2. 设置映射模式为eByPolygon
+				lMaterialElement->SetMappingMode(FbxGeometryElement::eByPolygon);
+		3. 设置引用模式为eIndexToDirect
+				lMaterialElement->SetReferenceMode(FbxGeometryElement::eIndexToDirect);
+		4. 建立FbxMesh与FbxSurfaceMaterial的关系,下面会用到。因为Material与FNode是多对多的关系，一个FNode可以有多个Material,靠索引来查找
+				  FbxNode* lNode = pMesh->GetNode();
+	    		  if(lNode == NULL) 
+	       			 return;
+	    		  lNode->AddMaterial(gMaterial);
+		5. 创建IndexArray
+			 	lMaterialElement->GetIndexArray().SetCount(6);
+		6. 填充IndexArray
+				lMaterialElement->GetIndexArray().SetAt(三角形索引,材质索引);
+		
