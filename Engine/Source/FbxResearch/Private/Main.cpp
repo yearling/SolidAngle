@@ -4,6 +4,8 @@
 #include <iostream>
 #include "FbxCommon.h"
 #include "fbxsdk\scene\geometry\fbxlayer.h"
+#include "fbxsdk\scene\animation\fbxanimlayer.h"
+#include "fbxsdk\scene\animation\fbxanimcurve.h"
 class ResearchFbx : public FDefaultModuleImpl
 {
 public:
@@ -16,8 +18,9 @@ public:
 IMPLEMENT_MODULE(ResearchFbx, TestModel)
 
 FbxManager*   gSdkManager = nullptr;
-FbxScene*     gScene = nullptr;
-
+FbxAnimLayer* gAnimLayer = NULL;  // holder of animation curves
+FbxFileTexture*  gTexture = NULL;
+FbxSurfacePhong* gMaterial = NULL;
 #ifdef IOS_REF
 #undef  IOS_REF
 #define IOS_REF (*(pSdkManager->GetIOSettings()))
@@ -26,8 +29,14 @@ DECLARE_LOG_CATEGORY_EXTERN(Main, Log, All);
 DEFINE_LOG_CATEGORY(Main);
 
 
-FbxFileTexture*  gTexture = NULL;
-FbxSurfacePhong* gMaterial = NULL;
+
+void CreateAnimation(FbxScene* pScene)
+{
+	FbxAnimStack* lAnimStack = FbxAnimStack::Create(pScene, "Self Animation Stack");
+	gAnimLayer = FbxAnimLayer::Create(pScene, "Base Layer");
+	lAnimStack->AddMember(gAnimLayer);
+}
+
 void CreateTexture(FbxScene* pScene)
 {
 	gTexture = FbxFileTexture::Create(pScene, "Diffuse Texture");
@@ -82,11 +91,11 @@ void AddMaterials(FbxMesh* pMesh)
 		return;
 	lNode->AddMaterial(gMaterial);
 
-	// We are in eByPolygon, so there's only need for 6 index (a cube has 6 polygons).
-	lMaterialElement->GetIndexArray().SetCount(6);
+	// We are in eByPolygon, so there's only need for 12 index (a cube has 12 polygons).
+	lMaterialElement->GetIndexArray().SetCount(12);
 
 	// Set the Index 0 to 6 to the material in position 0 of the direct array.
-	for (int i = 0; i < 6; ++i)
+	for (int i = 0; i < 12; ++i)
 		lMaterialElement->GetIndexArray().SetAt(i, 0);
 }
 
@@ -295,8 +304,8 @@ FbxMesh* CreateCubeMeshTriangle(FbxScene* pScene, char* pName)
 								 5, 7, 6,
 								 4, 0, 3,
 								 4, 3, 7,
-								 3, 2, 7,
-								 2, 6, 7,
+								 3, 2, 6,
+								 3, 6, 7,
 								 0, 5, 1,
 								 0, 4, 5 };
 	int NormalIndex[] = { 
@@ -323,8 +332,8 @@ FbxMesh* CreateCubeMeshTriangle(FbxScene* pScene, char* pName)
 		0, 2, 3,
 		0, 1, 2,
 		0, 3, 2,
-		0, 1, 3,
-		1,2 ,3,
+		0, 1, 2,
+		0, 2 ,3,
 		0,2 ,1,
 		0, 3, 2
 	};
@@ -416,6 +425,41 @@ bool SaveScene(FbxManager* pSdkManager, FbxDocument* pScene, const char* pFilena
 
 	return lStatus;
 }
+
+void AnimateCubeRotateAxis(FbxNode* pCube, FbxAnimLayer* pAnimLayer,int32 Axis)
+{
+	FbxAnimCurve* lCurve = NULL;
+	FbxTime lTime;
+	int lKeyIndex = 0;
+
+	pCube->LclRotation.GetCurveNode(pAnimLayer, true);
+	if (Axis == 0)
+	{
+		lCurve = pCube->LclRotation.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_X, true);
+	}
+	else if (Axis == 1)
+	{
+		lCurve = pCube->LclRotation.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_Y, true);
+	}
+	else if (Axis == 2)
+	{
+		lCurve = pCube->LclRotation.GetCurve(pAnimLayer, FBXSDK_CURVENODE_COMPONENT_Z, true);
+	}
+
+	if (lCurve)
+	{
+		lCurve->KeyModifyBegin();
+
+		lTime.SetSecondDouble(0.0);
+		lKeyIndex = lCurve->KeyAdd(lTime);
+		lCurve->KeySet(lKeyIndex, lTime, 0.0, FbxAnimCurveDef::eInterpolationLinear);
+
+		lTime.SetSecondDouble(20.0);
+		lKeyIndex = lCurve->KeyAdd(lTime);
+		lCurve->KeySet(lKeyIndex, lTime, -3500, FbxAnimCurveDef::eInterpolationLinear);
+		lCurve->KeyModifyEnd();
+	}
+}
 int main(int argc,TCHAR* argv[])
 {
 	FCommandLine::Set(TEXT(""));
@@ -430,12 +474,32 @@ int main(int argc,TCHAR* argv[])
 		UE_LOG(Main, Error, TEXT("Create FbxScene Failed!"));
 		return -1;
 	}
+	CreateAnimation(pScene);
 	CreateTexture(pScene);
 	CreateMaterial(pScene);
 	FbxMesh* pCubeNode = CreateCubeMeshTriangle(pScene, "CubeMesh");
 	AddMaterials(pCubeNode);
 	pCubeNode->GetNode()->LclTranslation = FbxVector4(150, 0, 0);
 	pScene->GetRootNode()->AddChild(pCubeNode->GetNode());
+
+	FbxMesh* pCubeNodeRotateX = CreateCubeMeshTriangle(pScene, "CubeMeshRotateX");
+	AddMaterials(pCubeNodeRotateX);
+	AnimateCubeRotateAxis(pCubeNodeRotateX->GetNode(), gAnimLayer, 0);
+	pCubeNodeRotateX->GetNode()->LclTranslation = FbxVector4(300, 0, 0);
+	pScene->GetRootNode()->AddChild(pCubeNodeRotateX->GetNode());
+
+	FbxMesh* pCubeNodeRotateY = CreateCubeMeshTriangle(pScene, "CubeMeshRotateY");
+	AddMaterials(pCubeNodeRotateY);
+	AnimateCubeRotateAxis(pCubeNodeRotateY->GetNode(), gAnimLayer, 1);
+	pCubeNodeRotateY->GetNode()->LclTranslation = FbxVector4(450, 0, 0);
+	pScene->GetRootNode()->AddChild(pCubeNodeRotateY->GetNode());
+
+	FbxMesh* pCubeNodeRotateZ = CreateCubeMeshTriangle(pScene, "CubeMeshRotateZ");
+	AddMaterials(pCubeNodeRotateZ);
+	AnimateCubeRotateAxis(pCubeNodeRotateZ->GetNode(), gAnimLayer, 2);
+	pCubeNodeRotateZ->GetNode()->LclTranslation = FbxVector4(600, 0, 0);
+	pScene->GetRootNode()->AddChild(pCubeNodeRotateZ->GetNode());
+	
 	pCubeNode = CreateCubeMeshPolygon(pScene, "CubePolygon");
 	AddMaterials(pCubeNode);
 	pScene->GetRootNode()->AddChild(pCubeNode->GetNode());
