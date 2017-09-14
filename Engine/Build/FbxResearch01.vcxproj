@@ -21,9 +21,13 @@
   <ItemGroup>
     <ClCompile Include="..\Source\FbxResearch\Private\FbxCommon.cpp" />
     <ClCompile Include="..\Source\FbxResearch\Private\Main.cpp" />
+    <ClCompile Include="..\Source\FbxResearch\Private\Test00CreateCube.cpp" />
+    <ClCompile Include="..\Source\FbxResearch\Private\Test01RotateCube.cpp" />
+    <ClCompile Include="..\Source\FbxResearch\Private\Test02Pivot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\FbxResearch\Public\FbxCommon.h" />
+    <ClInclude Include="..\Source\FbxResearch\Public\TestCategory.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1626D562-E40A-45B6-BF64-759B88D613AA}</ProjectGuid>

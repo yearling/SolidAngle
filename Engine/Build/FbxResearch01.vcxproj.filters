@@ -7,6 +7,12 @@
     <Filter Include="Private">
       <UniqueIdentifier>{469878bc-529f-4f25-a9ae-73ddc5a6c97f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Public\Test">
+      <UniqueIdentifier>{4127833f-20d7-4c1f-8c89-472601d92285}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private\Test">
+      <UniqueIdentifier>{714e006c-7832-49c6-8a16-a3cde585d4e9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\FbxResearch\Private\Main.cpp">
@@ -15,10 +21,22 @@
     <ClCompile Include="..\Source\FbxResearch\Private\FbxCommon.cpp">
       <Filter>Private</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\FbxResearch\Private\Test00CreateCube.cpp">
+      <Filter>Private\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\FbxResearch\Private\Test01RotateCube.cpp">
+      <Filter>Private\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\FbxResearch\Private\Test02Pivot.cpp">
+      <Filter>Private\Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\FbxResearch\Public\FbxCommon.h">
       <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\FbxResearch\Public\TestCategory.h">
+      <Filter>Public\Test</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
