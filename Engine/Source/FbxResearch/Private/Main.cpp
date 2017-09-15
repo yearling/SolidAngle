@@ -33,5 +33,6 @@ int main(int argc,TCHAR* argv[])
 	TestCreateCube();
 	TestRotateCube();
 	TestPivot();
+	TestPivotConvert();
 	GLog->TearDown();
 }

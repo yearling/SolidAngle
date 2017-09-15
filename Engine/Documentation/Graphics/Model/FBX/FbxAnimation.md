@@ -150,3 +150,52 @@ __注意__:SCalingPivot为（0，0，50）,ScalingOffset(0,0,-210)
  __注意__:RotationPivot(0,0,50),PreRotation(0,90,0),因为Maya没有PreRotate对应的变换参数，所以要重计算，在动画轴上可以看到有连续的key帧。
 ### LclTranslate
 ![Add](Pic/translate.gif)
+
+### GeometryRotate
+![Add](Pic/GeometryRotate.gif)
+__注意__: 旋转为（0，0，50）,可见maya处理不了GeometryRotate时，直接变换了ControlPoint的位置。 Max和Maya的处理方法一致。 
+
+### GeoMetryTranslate
+![Add](Pic/GeometryTranslate.gif)
+__注意__: 偏移为（0，0，-70）,可见maya处理不了GeometryTranslate时，直接变换了ControlPoint的位置。 Max和Maya的处理方法一致。 
+
+### GeoMetryScaling
+![Add](Pic/GeometryScaling.gif)
+__注意__: 缩放为（0.5，1,1）,可见maya处理不了GeometryTranslate时，直接变换了ControlPoint的位置。 Max和Maya的处理方法一致。 
+
+
+# Convert
+FbxNode中包含两个PivotSet
+1. FbxNode::eSourcePivot
+2. FbxNode::eDestinationPivot
+节点的动画可以在两个PivotSet间转化。
+Pivot集中保存有
+Rotation offset (Roff)
+Rotation pivot (Rp)
+Pre-rotation (Rpre)
+Post-rotation (Rpost)
+Scaling offset (Soff)
+Scaling pivot (Sp)
+Geometric translation (Gt)
+Geometric rotation (Gr)
+Geometric scaling (Gs)
+
+## Convert使用场景
+比如从Maya中导出的带RotatePivot的动画，因为max中没有处理RotatePivot的能力，故将带RotatePivot的动画转化为用SRT的矩阵来表示，Convert就是干这个事的。
+### 使用方法
+下面示例：将带PivotRotate的eSourcePivot转化为不带PivotRotate的eDestinationPiovt
+1. 设置好动画；
+		// Enable pivot
+		pCubeNode->SetRotationActive(true);
+		// Set the rotation pivot at the center of the pyramid
+		pCubeNode->SetRotationPivot(FbxNode::eSourcePivot, FbxVector4(0, 2, 0));
+2. 将PivotState设为active,
+		pCubeNode->SetPivotState(FbxNode::eSourcePivot, FbxNode::ePivotActive);
+		pCubeNode->SetPivotState(FbxNode::eDestinationPivot, FbxNode::ePivotActive);
+3. 将eDestinationPivot的RotatePivot设置为0
+		pCubeNode->SetRotationPivot(FbxNode::eDestinationPivot, FbxVector4(0, 0, 0));
+4. 转化
+		pScene->GetRootNode()->ConvertPivotAnimationRecursive(lAnimStack, FbxNode::eDestinationPivot, 30.0);
+5. __注意__:
+	1. 只在eSourcePivot集的变换信息才被maya,max等读取并渲染；
+	2. 变换完后，RotationActive为false

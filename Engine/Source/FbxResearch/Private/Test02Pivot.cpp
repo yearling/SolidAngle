@@ -124,6 +124,21 @@ void AnimateCubeTranslate(FbxNode* pCube, FbxAnimLayer* pAnimLayer)
 		lCurve->KeyModifyEnd();
 	}
 }
+
+void CubeGeometryRotation(FbxNode* pCube)
+{
+	pCube->SetGeometricRotation(FbxNode::eSourcePivot, FbxVector4(0, 0, 50));
+}
+
+void CubeGeometryTranslate(FbxNode* pCube)
+{
+	pCube->SetGeometricTranslation(FbxNode::eSourcePivot, FbxVector4(-70, 0, 0));
+}
+
+void CubeGeometryScaling(FbxNode* pCube)
+{
+	pCube->SetGeometricScaling(FbxNode::eSourcePivot, FbxVector4(0.5, 1, 1));
+}
 static FString GetFbxPropertyFlags(FbxPropertyFlags::EFlags EProp)
 {
 	FString PropertyFlagsName;
@@ -256,15 +271,18 @@ void TestPivot()
 	//pCubeMesh->GetNode()->SetGeometricTranslation(FbxNode::eSourcePivot, FbxVector4(0, 0, 50));
 	//AnimateCubeScalingWithScalingPivotAndOffset(pCubeMesh->GetNode(), pAnimLayer);
 	//AnimateCubeScalingWithScalingPivot(pCubeMesh->GetNode(), pAnimLayer);
-	AnimateCubeRotateAxisWithPivot(pCubeMesh->GetNode(), pAnimLayer,0);
+	//AnimateCubeRotateAxisWithPivot(pCubeMesh->GetNode(), pAnimLayer,0);
 	//AnimateCubeRotateAxisWithOffset(pCubeMesh->GetNode(), pAnimLayer,0);
 	//AnimateCubePreRotate(pCubeMesh->GetNode(), pAnimLayer,0);
 	pCubeMesh->GetNode()->SetRotationActive(true);
 	//AnimateCubePostRotate(pCubeMesh->GetNode(), pAnimLayer,0);
 	//AnimateCubePreRotate(pCubeMesh->GetNode(), pAnimLayer, 0);
-	AnimateCubeTranslate(pCubeMesh->GetNode(), pAnimLayer);
-	pCubeMesh->GetNode()->LclTranslation = FbxVector4(0, 0, 0);
-	pCubeMesh->GetNode()->ScalingPivot = FbxVector4(0, 0, 0);
+	//AnimateCubeTranslate(pCubeMesh->GetNode(), pAnimLayer);
+	//CubeGeometryRotation(pCubeMesh->GetNode());
+	//CubeGeometryTranslate(pCubeMesh->GetNode());
+	CubeGeometryScaling(pCubeMesh->GetNode());
+	//pCubeMesh->GetNode()->LclTranslation = FbxVector4(0, 0, 0);
+	//pCubeMesh->GetNode()->ScalingPivot = FbxVector4(0, 0, 0);
 	pScene->GetRootNode()->AddChild(pCubeMesh->GetNode());
 
 

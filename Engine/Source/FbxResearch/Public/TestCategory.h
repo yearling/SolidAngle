@@ -9,3 +9,5 @@
 void TestCreateCube();
 void TestRotateCube();
 void TestPivot();
+void TestPivotConvert();
+

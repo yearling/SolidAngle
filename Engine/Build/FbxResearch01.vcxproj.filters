@@ -30,6 +30,9 @@
     <ClCompile Include="..\Source\FbxResearch\Private\Test02Pivot.cpp">
       <Filter>Private\Test</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\FbxResearch\Private\PivoteConvert.cpp">
+      <Filter>Private\Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\FbxResearch\Public\FbxCommon.h">
