@@ -153,6 +153,7 @@ typedef FbxLayerElementVisibility FbxGeometryElementVisibility
 	    lNode->SetNodeAttribute(lMesh);
 
 7. 创建材质
+	__注意__:材质一定要在mesh的拓扑关系确定后再添加
 	1. 材质基类：FbxSurfaceMaterial
 	2. 创建材质 
 			FbxSurfacePhong::Create(pScene, lMaterialName.Buffer());
@@ -165,9 +166,9 @@ typedef FbxLayerElementVisibility FbxGeometryElementVisibility
 				lMaterialElement->SetReferenceMode(FbxGeometryElement::eIndexToDirect);
 		4. 建立FbxMesh与FbxSurfaceMaterial的关系,下面会用到。因为Material与FNode是多对多的关系，一个FNode可以有多个Material,靠索引来查找
 				  FbxNode* lNode = pMesh->GetNode();
-	    		  if(lNode == NULL) 
-	       			 return;
-	    		  lNode->AddMaterial(gMaterial);
+	    		  lNode->AddMaterial(通过FbxSurfacePhone::Create()创建的Mtl));
+
+			__注意__：这里不用创建DirectArray,FbxGeometryElementMaterial::GetDirectArray是Private的，要用上述方法来添加。原因是为了实现材质的复用。
 		5. 创建IndexArray
 			 	lMaterialElement->GetIndexArray().SetCount(6);
 		6. 填充IndexArray
