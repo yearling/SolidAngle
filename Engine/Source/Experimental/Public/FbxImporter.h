@@ -2,42 +2,17 @@
 #include "CoreMinimal.h"
 #include <fbxsdk.h>
 #include "fbxsdk\core\math\fbxaffinematrix.h"
+#include "StaticMeshImportData.h"
+#include "Misc\SecureHash.h"
+#include "Logging\TokenizedMessage.h"
 DECLARE_LOG_CATEGORY_EXTERN(LogFbx, Log, All);
 
 class YStaticMesh;
+class YSkeletalMesh;
+class YMaterialInterface;
+class YRawMesh;
 #define DEBUG_FBX_NODE( Prepend, FbxNode ) FPlatformMisc::LowLevelOutputDebugStringf( TEXT("%s %s\n"), ANSI_TO_TCHAR(Prepend), ANSI_TO_TCHAR( FbxNode->GetName() ) )
 
-enum EFBXNormalImportMethod
-{
-	FBXNIM_ComputeNormals ,
-	FBXNIM_ImportNormals ,
-	FBXNIM_ImportNormalsAndTangents ,
-	FBXNIM_MAX,
-};
-
-namespace EFBXNormalGenerationMethod
-{
-	enum Type
-	{
-		/** Use the legacy built in method to generate normals (faster in some cases) */
-		BuiltIn,
-		/** Use MikkTSpace to generate normals and tangents */
-		MikkTSpace,
-	};
-}
-
-namespace EVertexColorImportOption
-{
-	enum Type
-	{
-		/** Import the static mesh using the vertex colors from the FBX file. */
-		Replace,
-		/** Ignore vertex colors from the FBX file, and keep the existing mesh vertex colors. */
-		Ignore,
-		/** Override all vertex colors with the specified color. */
-		Override
-	};
-}
 
 enum EFBXAnimationLengthImportType
 {
@@ -376,18 +351,18 @@ namespace UnFbx
 		static FbxAMatrix JointPostConversionMatrix;
 	};
 
-	//struct FImportedMaterialData
-	//{
-	//public:
-	//	void AddImportedMaterial(FbxSurfaceMaterial& FbxMaterial, UMaterialInterface& UnrealMaterial);
-	//	bool IsUnique(FbxSurfaceMaterial& FbxMaterial, FName ImportedMaterialName) const;
-	//	UMaterialInterface* GetUnrealMaterial(const FbxSurfaceMaterial& FbxMaterial) const;
-	//	void Clear();
-	//private:
-	//	/** Mapping of FBX material to Unreal material.  Some materials in FBX have the same name so we use this map to determine if materials are unique */
-	//	TMap<FbxSurfaceMaterial*, TWeakObjectPtr<UMaterialInterface> > FbxToUnrealMaterialMap;
-	//	TSet<FName> ImportedMaterialNames;
-	//};
+	struct FImportedMaterialData
+	{
+	public:
+		void AddImportedMaterial(FbxSurfaceMaterial& FbxMaterial, YMaterialInterface& UnrealMaterial);
+		bool IsUnique(FbxSurfaceMaterial& FbxMaterial, FName ImportedMaterialName) const;
+		YMaterialInterface* GetUnrealMaterial(const FbxSurfaceMaterial& FbxMaterial) const;
+		void Clear();
+	private:
+		/** Mapping of FBX material to Unreal material.  Some materials in FBX have the same name so we use this map to determine if materials are unique */
+		TMap<FbxSurfaceMaterial*, TWeakPtr<YMaterialInterface> > FbxToUnrealMaterialMap;
+		TSet<FName> ImportedMaterialNames;
+	};
 
 	class FFbxImporter
 	{
@@ -518,7 +493,23 @@ namespace UnFbx
 		*
 		* @returns UObject*	the UStaticMesh object.
 		*/
-		YStaticMesh* ImportStaticMeshAsSingle(UObject* InParent, TArray<FbxNode*>& MeshNodeArray, const FName InName, UFbxStaticMeshImportData* TemplateImportData, UStaticMesh* InStaticMesh, int LODIndex = 0, void *ExistMeshDataPtr = nullptr);
+		YStaticMesh* ImportStaticMeshAsSingle(UObject* InParent, TArray<FbxNode*>& MeshNodeArray, const FName InName, UFbxStaticMeshImportData* TemplateImportData, YStaticMesh* InStaticMesh, int LODIndex = 0, void *ExistMeshDataPtr = nullptr);
+
+		/**
+		* Empties the FBX scene, releasing its memory.
+		* Currently, we can't release KFbxSdkManager because Fbx Sdk2010.2 has a bug that FBX can only has one global sdkmanager.
+		* From Fbx Sdk2011, we can create multiple KFbxSdkManager, then we can release it.
+		*/
+		void ReleaseScene();
+
+		public:
+			// current Fbx scene we are importing. Make sure to release it after import
+			FbxScene* Scene;
+			FBXImportOptions* ImportOptions;
+
+			//We cache the hash of the file when we open the file. This is to avoid calculating the hash many time when importing many asset in one fbx file.
+			FMD5Hash Md5Hash;
+
 	protected:
 		enum IMPORTPHASE
 		{
@@ -532,7 +523,7 @@ namespace UnFbx
 		struct FFbxMaterial
 		{
 			FbxSurfaceMaterial* FbxMaterial;
-			UMaterialInterface* Material;
+			YMaterialInterface* Material;
 
 			FString GetName() const { return FbxMaterial ? ANSI_TO_TCHAR(FbxMaterial->GetName()) : TEXT("None"); }
 		};
@@ -546,7 +537,7 @@ namespace UnFbx
 		FString ErrorMessage;
 		// base path of fbx file
 		FString FileBasePath;
-		TWeakObjectPtr<UObject> Parent;
+		//TWeakObjectPtr<UObject> Parent;
 		// Flag that the mesh is the first mesh to import in current FBX scene
 		// FBX scene may contain multiple meshes, importer can import them at one time.
 		// Initialized as true when start to import a FBX scene
@@ -563,5 +554,119 @@ namespace UnFbx
 		FbxMap<FbxString, TSharedPtr< FbxArray<FbxNode* > > > CollisionModels;
 
 		FFbxImporter();
+		/**
+		* Set up the static mesh data from Fbx Mesh.
+		*
+		* @param StaticMesh Unreal static mesh object to fill data into
+		* @param LODIndex	LOD level to set up for StaticMesh
+		* @return bool true if set up successfully
+		*/
+		bool BuildStaticMeshFromGeometry(FbxNode* Node, YStaticMesh* StaticMesh, TArray<FFbxMaterial>& MeshMaterials, int LODIndex, YRawMesh& RawMesh,
+			EVertexColorImportOption::Type VertexColorImportOption, const TMap<FVector, FColor>& ExistingVertexColorData, const FColor& VertexOverrideColor);
+
+		/**
+		* Clean up for destroy the Importer.
+		*/
+		void CleanUp();
+
+		/**
+		* Compute the global matrix for Fbx Node
+		* If we import scene it will return identity plus the pivot if we turn the bake pivot option
+		*
+		* @param Node	Fbx Node
+		* @return KFbxXMatrix*	The global transform matrix
+		*/
+		FbxAMatrix ComputeTotalMatrix(FbxNode* Node);
+
+		/**
+		* Compute the matrix for skeletal Fbx Node
+		* If we import don't import a scene it will call ComputeTotalMatrix with Node as the parameter. If we import a scene
+		* it will return the relative transform between the RootSkeletalNode and Node.
+		*
+		* @param Node	Fbx Node
+		* @param Node	Fbx RootSkeletalNode
+		* @return KFbxXMatrix*	The global transform matrix
+		*/
+		FbxAMatrix ComputeSkeletalMeshTotalMatrix(FbxNode* Node, FbxNode *RootSkeletalNode);
+		/**
+		* Check if there are negative scale in the transform matrix and its number is odd.
+		* @return bool True if there are negative scale and its number is 1 or 3.
+		*/
+		bool IsOddNegativeScale(FbxAMatrix& TotalMatrix);
+
+		public:
+			/** Import and set up animation related data from mesh **/
+			//void SetupAnimationDataFromMesh(YSkeletalMesh * SkeletalMesh, UObject* InParent, TArray<FbxNode*>& NodeArray, UFbxAnimSequenceImportData* ImportData, const FString& Filename);
+
+			/** error message handler */
+			void AddTokenizedErrorMessage(TSharedRef<FTokenizedMessage> Error, FName FbxErrorName);
+			void ClearTokenizedErrorMessages();
+			void FlushToTokenizedErrorMessage(enum EMessageSeverity::Type Severity);
+		private:
+			friend class FFbxLoggerSetter;
+
+			// logger set/clear function
+			class FFbxLogger * Logger;
+			void SetLogger(class FFbxLogger * InLogger);
+			void ClearLogger();
+
+			FImportedMaterialData ImportedMaterialData;
+
+			//Cache to create unique name for mesh. This is use to fix name clash
+			TArray<FString> MeshNamesCache;
+
+	};
+
+	/** message Logger for FBX. Saves all the messages and prints when it's destroyed */
+	class FFbxLogger
+	{
+		FFbxLogger();
+		~FFbxLogger();
+
+		/** Error messages **/
+		TArray<TSharedRef<FTokenizedMessage>> TokenizedErrorMessages;
+
+		/* The logger will show the LogMessage only if at least one TokenizedErrorMessage have a severity of Error or CriticalError*/
+		bool ShowLogMessageOnlyIfError;
+
+		friend class FFbxImporter;
+		friend class FFbxLoggerSetter;
+	};
+
+	/**
+	* This class is to make sure Logger isn't used by outside of purpose.
+	* We add this only top level of functions where it needs to be handled
+	* if the importer already has logger set, it won't set anymore
+	*/
+	class FFbxLoggerSetter
+	{
+		class FFbxLogger Logger;
+		FFbxImporter * Importer;
+
+	public:
+		FFbxLoggerSetter(FFbxImporter * InImpoter, bool ShowLogMessageOnlyIfError = false)
+			: Importer(InImpoter)
+		{
+			// if impoter doesn't have logger, sets it
+			if (Importer->Logger == NULL)
+			{
+				Logger.ShowLogMessageOnlyIfError = ShowLogMessageOnlyIfError;
+				Importer->SetLogger(&Logger);
+			}
+			else
+			{
+				// if impoter already has logger set
+				// invalidated Importer to make sure it doesn't clear
+				Importer = NULL;
+			}
+		}
+
+		~FFbxLoggerSetter()
+		{
+			if (Importer)
+			{
+				Importer->ClearLogger();
+			}
+		}
 	};
 }

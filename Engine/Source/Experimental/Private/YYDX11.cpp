@@ -8,6 +8,7 @@
 #include "FbxReader.h"
 #include "Canvas.h"
 #include "RenderMesh.h"
+#include "FbxImporter.h"
 using std::cout;
 using std::endl;
 
@@ -71,6 +72,10 @@ void DX11Demo::Initial()
 	m_pCurrentCamera = m_pCamera;
 	m_LastFrameTime = FPlatformTime::Seconds();
 	m_bInit = true;
+
+
+	UnFbx::FFbxImporter* FbxImporter = UnFbx::FFbxImporter::GetInstance();
+
 }
 
 

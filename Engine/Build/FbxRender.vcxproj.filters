@@ -15,9 +15,6 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Source\Experimental\Private\YYDX11.cpp">
-      <Filter>YYUT</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\YYUTApplication.cpp">
       <Filter>YYUT</Filter>
     </ClCompile>
@@ -60,11 +57,11 @@
     <ClCompile Include="..\Source\Experimental\Private\FbxImporter.cpp">
       <Filter>Fbx</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YYDX11.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Source\Experimental\Private\YYDX11.h">
-      <Filter>YYUT</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\YYUT.h">
       <Filter>YYUT</Filter>
     </ClInclude>
@@ -115,6 +112,15 @@
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\FbxImporter.h">
       <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\StaticMeshImportData.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\FbxMeshImportData.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Private\YYDX11.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

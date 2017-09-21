@@ -185,7 +185,9 @@
     <ClInclude Include="..\Source\Experimental\Private\YYDX11.h" />
     <ClInclude Include="..\Source\Experimental\Public\FbxImporter.h" />
     <ClInclude Include="..\Source\Experimental\Public\FbxLibs.h" />
+    <ClInclude Include="..\Source\Experimental\Public\FbxMeshImportData.h" />
     <ClInclude Include="..\Source\Experimental\Public\IShader.h" />
+    <ClInclude Include="..\Source\Experimental\Public\StaticMeshImportData.h" />
     <ClInclude Include="..\Source\Experimental\Public\YYUT.h" />
     <ClInclude Include="..\Source\Experimental\Public\YYUTApplication.h" />
     <ClInclude Include="..\Source\Experimental\Public\YYUTCamera.h" />
