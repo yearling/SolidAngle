@@ -98,14 +98,14 @@ FbxNode* CreateSkeleton(FbxScene* pScene, const char* pName)
 	lSkeletonLimbNodeAttribute2->SetSkeletonType(FbxSkeleton::eLimbNode);
 	FbxNode* lSkeletonLimbNode2 = FbxNode::Create(pScene, lLimbNodeName2.Buffer());
 	lSkeletonLimbNode2->SetNodeAttribute(lSkeletonLimbNodeAttribute2);
-	lSkeletonLimbNode2->LclTranslation.Set(FbxVector4(0.0, 20.0, 0.0));
+	lSkeletonLimbNode2->LclTranslation.Set(FbxVector4(0.0, 10.0, 0.0));
 
 	FbxString lLimbNodeName3(pName);
 	lLimbNodeName3 += "LimbNode3";
 	FbxSkeleton* lSkeletonLimbNodeAttribute3 = FbxSkeleton::Create(pScene, lLimbNodeName3);
 	lSkeletonLimbNodeAttribute3->SetSkeletonType(FbxSkeleton::eLimbNode);
 	FbxNode* lSkeletonLimbNode3 = FbxNode::Create(pScene, lLimbNodeName3.Buffer());
-	lSkeletonLimbNode3->SetNodeAttribute(lSkeletonLimbNodeAttribute2);
+	lSkeletonLimbNode3->SetNodeAttribute(lSkeletonLimbNodeAttribute3);
 	lSkeletonLimbNode3->LclTranslation.Set(FbxVector4(0.0, 10.0, 0.0));
 
 	FbxString lLimbNodeName4(pName);
@@ -113,7 +113,7 @@ FbxNode* CreateSkeleton(FbxScene* pScene, const char* pName)
 	FbxSkeleton* lSkeletonLimbNodeAttribute4 = FbxSkeleton::Create(pScene, lLimbNodeName4);
 	lSkeletonLimbNodeAttribute4->SetSkeletonType(FbxSkeleton::eLimbNode);
 	FbxNode* lSkeletonLimbNode4 = FbxNode::Create(pScene, lLimbNodeName4.Buffer());
-	lSkeletonLimbNode4->SetNodeAttribute(lSkeletonLimbNodeAttribute2);
+	lSkeletonLimbNode4->SetNodeAttribute(lSkeletonLimbNodeAttribute4);
 	lSkeletonLimbNode4->LclTranslation.Set(FbxVector4(0.0, 10.0, 0.0));
 
 	FbxString lLimbNodeName5(pName);
@@ -121,7 +121,7 @@ FbxNode* CreateSkeleton(FbxScene* pScene, const char* pName)
 	FbxSkeleton* lSkeletonLimbNodeAttribute5 = FbxSkeleton::Create(pScene, lLimbNodeName5);
 	lSkeletonLimbNodeAttribute5->SetSkeletonType(FbxSkeleton::eLimbNode);
 	FbxNode* lSkeletonLimbNode5 = FbxNode::Create(pScene, lLimbNodeName5.Buffer());
-	lSkeletonLimbNode5->SetNodeAttribute(lSkeletonLimbNodeAttribute2);
+	lSkeletonLimbNode5->SetNodeAttribute(lSkeletonLimbNodeAttribute5);
 	lSkeletonLimbNode5->LclTranslation.Set(FbxVector4(0.0, 10.0, 0.0));
 
 	// Build skeleton node hierarchy. 
@@ -150,15 +150,11 @@ void LinkPatchToSkeleton(FbxScene* pScene, FbxNode** pPatch, FbxNode* pSkeletonR
 
 	// Now we have the Patch and the skeleton correctly positioned,
 	// set the Transform and TransformLink matrix accordingly.
-	FbxSkin* lSkin = FbxSkin::Create(pScene, "SelfSkin");
-	for (int32 i = 0; i < 1; ++i)
+	
+	for (int32 i = 0; i < 5; ++i)
 	{
-
+		FbxSkin* lSkin = FbxSkin::Create(pScene, "SelfSkin");
 		lXMatrix = pPatch[i]->EvaluateGlobalTransform();
-		//if (i == 1)
-		//{
-			//lXMatrix.SetT(FbxVector4(0, 0, 0, 1));
-		//}
 		FbxCluster* Cluster = FbxCluster::Create(pScene, "");
 		Cluster->SetLink(SkeletonChain[i]);
 		Cluster->SetLinkMode(FbxCluster::eNormalize);
@@ -167,31 +163,124 @@ void LinkPatchToSkeleton(FbxScene* pScene, FbxNode** pPatch, FbxNode* pSkeletonR
 
 		lXMatrix = SkeletonChain[i]->EvaluateGlobalTransform();
 		Cluster->SetTransformLinkMatrix(lXMatrix);
-			Cluster->AddControlPointIndex(0, 1);
-			Cluster->AddControlPointIndex(1, 1);
-			Cluster->AddControlPointIndex(2, 0);
-			Cluster->AddControlPointIndex(3, 0);
-
+			Cluster->AddControlPointIndex(0, 0.5);
+			Cluster->AddControlPointIndex(1, 0.5);
+			Cluster->AddControlPointIndex(2, 0.5);
+			Cluster->AddControlPointIndex(3, 0.5);
 		lSkin->AddCluster(Cluster);
 
 		Cluster = FbxCluster::Create(pScene, "");
 		Cluster->SetLink(SkeletonChain[i+1]);
 		Cluster->SetLinkMode(FbxCluster::eNormalize);
-
 		lXMatrix = pPatch[i]->EvaluateGlobalTransform();
 		Cluster->SetTransformMatrix(lXMatrix);
 
 		lXMatrix = SkeletonChain[i+1]->EvaluateGlobalTransform();
 		Cluster->SetTransformLinkMatrix(lXMatrix);
-		{
-			Cluster->AddControlPointIndex(0, 0);
-			Cluster->AddControlPointIndex(1, 0);
-			Cluster->AddControlPointIndex(2, 1);
-			Cluster->AddControlPointIndex(3, 1);
-		}
+			Cluster->AddControlPointIndex(0, 0.5);
+			Cluster->AddControlPointIndex(1, 0.5);
+			Cluster->AddControlPointIndex(2, 0.5);
+			Cluster->AddControlPointIndex(3, 0.5);
+
 		lSkin->AddCluster(Cluster);
 		FbxGeometry* lPatchAttribute = (FbxGeometry*)(pPatch[i]->GetNodeAttribute());
 		lPatchAttribute->AddDeformer(lSkin);
+	}
+}
+
+void AddNodeRecursively(FbxArray<FbxNode*>& pNodeArray, FbxNode* pNode)
+{
+	if (pNode)
+	{
+		AddNodeRecursively(pNodeArray, pNode->GetParent());
+
+		if (pNodeArray.Find(pNode) == -1)
+		{
+			// Node not in the list, add it
+			pNodeArray.Add(pNode);
+		}
+	}
+}
+// Store the Bind Pose
+void StoreBindPose(FbxScene* pScene, TArray<FbxNode*> Patchs)
+{
+	// In the bind pose, we must store all the link's global matrix at the time of the bind.
+	// Plus, we must store all the parent(s) global matrix of a link, even if they are not
+	// themselves deforming any model.
+
+	// In this example, since there is only one model deformed, we don't need walk through 
+	// the scene
+	//
+
+	// Now list the all the link involve in the patch deformation
+	FbxArray<FbxNode*> lClusteredFbxNodes;
+	int                       i, j;
+
+	for (FbxNode* pPatch : Patchs)
+	{
+		if (pPatch && pPatch->GetNodeAttribute())
+		{
+			int lSkinCount = 0;
+			int lClusterCount = 0;
+			switch (pPatch->GetNodeAttribute()->GetAttributeType())
+			{
+			default:
+				break;
+			case FbxNodeAttribute::eMesh:
+			case FbxNodeAttribute::eNurbs:
+			case FbxNodeAttribute::ePatch:
+
+				lSkinCount = ((FbxGeometry*)pPatch->GetNodeAttribute())->GetDeformerCount(FbxDeformer::eSkin);
+				//Go through all the skins and count them
+				//then go through each skin and get their cluster count
+				for (i = 0; i < lSkinCount; ++i)
+				{
+					FbxSkin *lSkin = (FbxSkin*)((FbxGeometry*)pPatch->GetNodeAttribute())->GetDeformer(i, FbxDeformer::eSkin);
+					lClusterCount += lSkin->GetClusterCount();
+				}
+				break;
+			}
+			//if we found some clusters we must add the node
+			if (lClusterCount)
+			{
+				//Again, go through all the skins get each cluster link and add them
+				for (i = 0; i < lSkinCount; ++i)
+				{
+					FbxSkin *lSkin = (FbxSkin*)((FbxGeometry*)pPatch->GetNodeAttribute())->GetDeformer(i, FbxDeformer::eSkin);
+					lClusterCount = lSkin->GetClusterCount();
+					for (j = 0; j < lClusterCount; ++j)
+					{
+						FbxNode* lClusterNode = lSkin->GetCluster(j)->GetLink();
+						AddNodeRecursively(lClusteredFbxNodes, lClusterNode);
+					}
+
+				}
+
+				// Add the patch to the pose
+				lClusteredFbxNodes.Add(pPatch);
+			}
+		}
+	}
+
+	// Now create a bind pose with the link list
+	if (lClusteredFbxNodes.GetCount())
+	{
+		// A pose must be named. Arbitrarily use the name of the patch node.
+		FbxPose* lPose = FbxPose::Create(pScene, "SelfPose");
+
+		// default pose type is rest pose, so we need to set the type as bind pose
+		lPose->SetIsBindPose(true);
+
+		for (i = 0; i < lClusteredFbxNodes.GetCount(); i++)
+		{
+			FbxNode*  lKFbxNode = lClusteredFbxNodes.GetAt(i);
+			FbxMatrix lBindMatrix = lKFbxNode->EvaluateGlobalTransform();
+
+			lPose->Add(lKFbxNode, lBindMatrix);
+		}
+
+		// Add the pose to the scene
+		pScene->AddPose(lPose);
 	}
 }
 void TestSkin()
@@ -208,16 +297,21 @@ void TestSkin()
 	FbxMesh* pMesh4 = CreateTrianglePatch(pScene, TEXT("Mesh4"));
 	FbxNode* pRootNode = pScene->GetRootNode();
 	pRootNode->AddChild(pMesh0->GetNode());
-	//pRootNode->AddChild(pMesh1->GetNode());
-	//pMesh1->GetNode()->LclTranslation.Set(FbxVector4(0, 20, 0));
-	//pRootNode->AddChild(pMesh2->GetNode());
-	//pRootNode->AddChild(pMesh3->GetNode());
-	//pRootNode->AddChild(pMesh4->GetNode());
+	pRootNode->AddChild(pMesh1->GetNode());
+	pMesh1->GetNode()->LclTranslation.Set(FbxVector4(0, 10, 0));
+	pMesh2->GetNode()->LclTranslation.Set(FbxVector4(0, 20, 0));
+	pMesh3->GetNode()->LclTranslation.Set(FbxVector4(0, 30, 0));
+	pMesh4->GetNode()->LclTranslation.Set(FbxVector4(0, 40, 0));
+	pRootNode->AddChild(pMesh2->GetNode());
+	pRootNode->AddChild(pMesh3->GetNode());
+	pRootNode->AddChild(pMesh4->GetNode());
 
 	FbxNode* pSkeletonRootNode = CreateSkeleton(pScene, "SelfSkeleton");
 	pRootNode->AddChild(pSkeletonRootNode);
 	FbxNode* pPatchNode[] = { pMesh0->GetNode(),pMesh1->GetNode(),pMesh2->GetNode(),pMesh3->GetNode(),pMesh4->GetNode() };
+	TArray<FbxNode*> Patchs= { pMesh0->GetNode(),pMesh1->GetNode(),pMesh2->GetNode(),pMesh3->GetNode(),pMesh4->GetNode() };
 	LinkPatchToSkeleton(pScene, pPatchNode, pSkeletonRootNode);
-	SaveScene(pManager, pScene, "Text Fbx Skin");
+	StoreBindPose(pScene, Patchs);
+	SaveScene(pManager, pScene, "FbxSkin");
 	check(pScene);
 }

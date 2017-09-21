@@ -134,7 +134,7 @@ typedef FbxLayerElementVisibility FbxGeometryElementVisibility
 5. 创建UV
 	1. 考虑索引方式
 		1. 创建映射
-				FbxGeometryElementUV* lUVDiffuseElement = lMesh->CreateElementUV("DiffuseUV");
+				FbxGeometryElementUV* lUVDiffuseElement = lMesh->CreateElementUV("DiffuseUV"); //可以有多套UV
 		2. 设置映射模式为eByPolygonVertex
 				lUVDiffuseElement->SetMappingMode(FbxGeometryElement::eByPolygonVertex);
 		3. 设置引用模式为eIndexToDirect

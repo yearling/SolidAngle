@@ -245,6 +245,8 @@ std::pair<bool,std::string> FBXReader::LoadMeshInfo(FbxMesh *pMesh, StaticMesh* 
 
 std::pair<bool, std::string> FBXReader::LoadSkeletonInfo(FbxSkeleton* pSkeleton)
 {
+	FbxString BoneName = pSkeleton->GetName();
+	FbxString BoneNodeName = pSkeleton->GetNode()->GetName();
 	auto Result = pMeshModel->MainSkeleton.AddBone(pSkeleton->GetNode()->GetName());
 	if (!Result.first)
 	{

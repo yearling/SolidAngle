@@ -47,7 +47,8 @@ void DX11Demo::Initial()
 	m_pFbxReader->InitialFBXSDK();
 	std::unique_ptr<MeshModel> Mesh;
 	//std::string ImportFileName = "..\\..\\media\\box\\lotsof.FBX";
-	FString ImportFileName = TEXT("media\\human\\humanoid.fbx") ;
+	//FString ImportFileName = TEXT("media\\human\\humanoid.fbx") ;
+	FString ImportFileName = TEXT("FbxSkin.fbx") ;
 	//std::string ImportFileName = "..\\..\\media\\human\\AnimatedCharacter.fbx";
 	//std::string ImportFileName = "..\\..\\media\\human\\twobone.fbx";
 	//std::string ImportFileName = "..\\..\\media\\human\\twobonefirstcluseroffset10.fbx";

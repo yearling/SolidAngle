@@ -54,6 +54,12 @@
     <ClCompile Include="..\Source\Experimental\Private\StaticMesh.cpp">
       <Filter>Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\FbxLibs.cpp">
+      <Filter>Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\FbxImporter.cpp">
+      <Filter>Fbx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Experimental\Private\YYDX11.h">
@@ -103,6 +109,12 @@
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\RenderInfo.h">
       <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\FbxLibs.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\FbxImporter.h">
+      <Filter>Fbx</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

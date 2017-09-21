@@ -159,6 +159,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Experimental\Private\Canvas.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\FbxImporter.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\FbxLibs.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\FbxReader.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\game_main.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\IShader.cpp" />
@@ -181,6 +183,8 @@
     <ClInclude Include="..\Source\Experimental\Private\StaticMesh.h" />
     <ClInclude Include="..\Source\Experimental\Private\VertexDef.h" />
     <ClInclude Include="..\Source\Experimental\Private\YYDX11.h" />
+    <ClInclude Include="..\Source\Experimental\Public\FbxImporter.h" />
+    <ClInclude Include="..\Source\Experimental\Public\FbxLibs.h" />
     <ClInclude Include="..\Source\Experimental\Public\IShader.h" />
     <ClInclude Include="..\Source\Experimental\Public\YYUT.h" />
     <ClInclude Include="..\Source\Experimental\Public\YYUTApplication.h" />

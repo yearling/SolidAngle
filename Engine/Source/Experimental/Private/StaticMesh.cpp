@@ -537,14 +537,10 @@ void MeshModel::ComputeClusterDeformation(FbxAMatrix& pGlobalPosition,
 		MatControlPointFromClusterSpaceToBoneSpace = MatBoneSpaceToLocalSpace.Inverse() * MatControlPointFromClusterSpaceLocalSpace;
 		lClusterGlobalCurrentPosition = GetGlobalPosition(pCluster->GetLink());
 		FbxAMatrix BoneBindPos;
-		//pVertexTransformMatrix = lClusterGlobalCurrentPosition*(BoneBindPos.Inverse()*BoneBindPos)*MatControlPointFromClusterSpaceToBoneSpace;
-		//pVertexTransformMatrix = lClusterGlobalCurrentPosition*MatControlPointFromClusterSpaceToBoneSpace;
 		pVertexTransformMatrix = lClusterGlobalCurrentPosition*MatControlPointFromClusterSpaceToBoneSpace;
 		FbxAMatrix localGloblaPosition = pGlobalPosition;
 		//这一步的作用是将插值好的skin的定点从local space 转到 node space，因为在渲染的时候会乘节点的local offset
 		pVertexTransformMatrix = localGloblaPosition.Inverse()*pVertexTransformMatrix;
-		//pVertexTransformMatrix = pVertexTransformMatrix*pGlobalPosition.Inverse();
-		//pVertexTransformMatrix = pVertexTransformMatrix*pGlobalPosition.Inverse();
 	}
 }
 
