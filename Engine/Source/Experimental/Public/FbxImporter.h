@@ -424,15 +424,52 @@ namespace UnFbx
 		bool ImportFromFile(const FString& Filename, const FString& Type, bool bPreventMaterialNameClash = false);
 
 		/**
+		* Fill the FbxNodeInfo structure recursively to reflect the FbxNode hierarchy. The result will be an array sorted with the parent first
+		*
+		* @param SceneInfo   The scene info to modify
+		* @param Parent      The parent FbxNode
+		* @param ParentInfo  The parent FbxNodeInfo
+		*/
+		void TraverseHierarchyNodeRecursively(FbxSceneInfo& SceneInfo, FbxNode *ParentNode, FbxNodeInfo &ParentInfo);
+
+		/**
+		* Recursive search for a node having a mesh attribute
+		*
+		* @param Node	The node from which we start the search for the first node containing a mesh attribute
+		*/
+		FbxNode *RecursiveGetFirstMeshNode(FbxNode* Node, FbxNode* NodeToFind = nullptr);
+		/**
+		* Find the first node containing a mesh attribute for the specified LOD index.
+		*
+		* @param NodeLodGroup	The LOD group fbx node
+		* @param LodIndex		The index of the LOD we search the mesh node
+		*/
+		FbxNode* FindLODGroupNode(FbxNode* NodeLodGroup, int32 LodIndex, FbxNode *NodeToFind = nullptr);
+		
+		/**
+		* Find the first parent node containing a eLODGroup attribute.
+		*
+		* @param ParentNode		The node where to start the search.
+		*/
+		FbxNode *RecursiveFindParentLodGroup(FbxNode *ParentNode);
+		
+		/**
 		* Retrieve the FBX loader's error message explaining its failure to read a given FBX file.
 		* Note that the message should be valid even if the parser is successful and may contain warnings.
 		*
 		* @ return TCHAR*	the error message
 		*/
+
 		const TCHAR* GetErrorMessage() const
 		{
 			return *ErrorMessage;
 		}
+
+		/**
+		* When there is some materials with the same name we add a clash suffixe _ncl1_x.
+		* Example, if we have 3 materials name shader we will get (shader, shader_ncl1_1, shader_ncl1_2).
+		*/
+		void FixMaterialClashName();
 
 		/**
 		* Retrieve the object inside the FBX scene from the name
@@ -444,14 +481,6 @@ namespace UnFbx
 		FbxNode* RetrieveObjectFromName(const TCHAR* ObjectName, FbxNode* Root = NULL);
 
 		/**
-		* Find the first node containing a mesh attribute for the specified LOD index.
-		*
-		* @param NodeLodGroup	The LOD group fbx node
-		* @param LodIndex		The index of the LOD we search the mesh node
-		*/
-		FbxNode* FindLODGroupNode(FbxNode* NodeLodGroup, int32 LodIndex, FbxNode *NodeToFind = nullptr);
-
-		/**
 		* Find the all the node containing a mesh attribute for the specified LOD index.
 		*
 		* @param OutNodeInLod   All the mesh node under the lod group
@@ -459,13 +488,6 @@ namespace UnFbx
 		* @param LodIndex		The index of the LOD we search the mesh node
 		*/
 		void FindAllLODGroupNode(TArray<FbxNode*> &OutNodeInLod, FbxNode* NodeLodGroup, int32 LodIndex);
-
-		/**
-		* Find the first parent node containing a eLODGroup attribute.
-		*
-		* @param ParentNode		The node where to start the search.
-		*/
-		FbxNode *RecursiveFindParentLodGroup(FbxNode *ParentNode);
 
 		/**
 		* Creates a static mesh with the given name and flags, imported from within the FBX scene.
@@ -510,6 +532,10 @@ namespace UnFbx
 			//We cache the hash of the file when we open the file. This is to avoid calculating the hash many time when importing many asset in one fbx file.
 			FMD5Hash Md5Hash;
 
+			//help
+			ANSICHAR* MakeName(const ANSICHAR* name);
+			FString MakeString(const ANSICHAR* Name);
+			FName MakeNameForMesh(FString InName, FbxObject* FbxObject);
 	protected:
 		enum IMPORTPHASE
 		{

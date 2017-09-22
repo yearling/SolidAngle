@@ -75,7 +75,8 @@ void DX11Demo::Initial()
 
 
 	UnFbx::FFbxImporter* FbxImporter = UnFbx::FFbxImporter::GetInstance();
-
+	UnFbx::FFbxLoggerSetter Logger(FbxImporter);
+	FbxImporter->GetImportType(TEXT("D:/wolf/Wolf_UDK.fbx"));
 }
 
 
