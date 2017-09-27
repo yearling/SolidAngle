@@ -363,7 +363,19 @@ namespace UnFbx
 		TMap<FbxSurfaceMaterial*, TWeakPtr<YMaterialInterface> > FbxToUnrealMaterialMap;
 		TSet<FName> ImportedMaterialNames;
 	};
+	enum EFBXImportType
+	{
+		/** Select Static Mesh if you'd like to import static mesh. */
+		FBXIT_StaticMesh,
+		/** Select Skeletal Mesh if you'd like to import skeletal mesh. */
+		FBXIT_SkeletalMesh,
+		/** Select Animation if you'd like to import only animation. */
+		FBXIT_Animation,
+		/** Subdivision Surface (Experimental, Early work in progress) */
+		FBXIT_SubDSurface,
 
+		FBXIT_MAX,
+	};
 	class FFbxImporter
 	{
 	public:
@@ -374,6 +386,7 @@ namespace UnFbx
 		static FFbxImporter* GetInstance();
 		static void DeleteInstance();
 
+		void MainImport(const FString & FileToImport, EFBXImportType ImportType);
 		/**
 		* Detect if the FBX file has skeletal mesh model. If there is deformer definition, then there is skeletal mesh.
 		* In this function, we don't need to import the scene. But the open process is time-consume if the file is large.
@@ -423,6 +436,12 @@ namespace UnFbx
 		*/
 		bool ImportFromFile(const FString& Filename, const FString& Type, bool bPreventMaterialNameClash = false);
 
+		/**
+		* Get the object of import options
+		*
+		* @return FBXImportOptions
+		*/
+		FBXImportOptions* GetImportOptions() const;
 		/**
 		* Fill the FbxNodeInfo structure recursively to reflect the FbxNode hierarchy. The result will be an array sorted with the parent first
 		*
@@ -536,6 +555,56 @@ namespace UnFbx
 			ANSICHAR* MakeName(const ANSICHAR* name);
 			FString MakeString(const ANSICHAR* Name);
 			FName MakeNameForMesh(FString InName, FbxObject* FbxObject);
+
+
+			/**
+			* Get all Fbx skeletal mesh objects in the scene. these meshes are grouped by skeleton they bind to
+			*
+			* @param Node Root node to find skeletal meshes
+			* @param outSkelMeshArray return Fbx meshes they are grouped by skeleton
+			*/
+			void FillFbxSkelMeshArrayInScene(FbxNode* Node, TArray< TArray<FbxNode*>* >& outSkelMeshArray, bool ExpandLOD, bool bForceFindRigid = false);
+
+			/**
+			* Get all Fbx skeletal mesh objects which are grouped by skeleton they bind to
+			*
+			* @param Node Root node to find skeletal meshes
+			* @param outSkelMeshArray return Fbx meshes they are grouped by skeleton
+			* @param SkeletonArray
+			* @param ExpandLOD flag of expanding LOD to get each mesh
+			*/
+			void RecursiveFindFbxSkelMesh(FbxNode* Node, TArray< TArray<FbxNode*>* >& outSkelMeshArray, TArray<FbxNode*>& SkeletonArray, bool ExpandLOD);
+
+
+			/**
+			* ActorX plug-in can export mesh and dummy as skeleton.
+			* For the mesh and dummy in the skeleton hierarchy, convert them to FBX skeleton.
+			*
+			* @param Node          root skeleton node
+			* @param SkelMeshes    skeletal meshes that bind to this skeleton
+			* @param bImportNestedMeshes	if true we will import meshes nested in bone hierarchies instead of converting them to bones
+			*/
+			void RecursiveFixSkeleton(FbxNode* Node, TArray<FbxNode*> &SkelMeshes, bool bImportNestedMeshes);
+
+			/**
+			* Get all Fbx rigid mesh objects which are grouped by skeleton hierarchy
+			*
+			* @param Node Root node to find skeletal meshes
+			* @param outSkelMeshArray return Fbx meshes they are grouped by skeleton hierarchy
+			* @param SkeletonArray
+			* @param ExpandLOD flag of expanding LOD to get each mesh
+			*/
+			void RecursiveFindRigidMesh(FbxNode* Node, TArray< TArray<FbxNode*>* >& outSkelMeshArray, TArray<FbxNode*>& SkeletonArray, bool ExpandLOD);
+
+			/**
+			* Get Unreal skeleton root from the FBX skeleton node.
+			* Mesh and dummy can be used as skeleton.
+			*
+			* @param Link one FBX skeleton node
+			*/
+			FbxNode* GetRootSkeleton(FbxNode* Link);
+
+			static void DumpFBXNode(FbxNode* Node);
 	protected:
 		enum IMPORTPHASE
 		{
@@ -641,6 +710,13 @@ namespace UnFbx
 			//Cache to create unique name for mesh. This is use to fix name clash
 			TArray<FString> MeshNamesCache;
 
+			private:
+			/**
+			* Verify that all meshes are also reference by a fbx hierarchy node. If it found some Geometry
+			* not reference it will add a tokenized error.
+			*/
+			void ValidateAllMeshesAreReferenceByNodeAttribute();
+
 	};
 
 	/** message Logger for FBX. Saves all the messages and prints when it's destroyed */
@@ -695,4 +771,6 @@ namespace UnFbx
 			}
 		}
 	};
+
+
 }
