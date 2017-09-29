@@ -254,7 +254,7 @@ std::pair<bool, std::string> FBXReader::LoadSkeletonInfo(FbxSkeleton* pSkeleton)
 	}
 	Bone & NewBone = pMeshModel->MainSkeleton.GetBone(Result.second);
 	FbxAMatrix BoneInitPos = pSkeleton->GetNode()->EvaluateGlobalTransform();
-	FbxAMatrix lGeometryOffset = GetGeometry(pSkeleton->GetNode());
+	FbxAMatrix lGeometryOffset = GetGeometryOld(pSkeleton->GetNode());
 	NewBone.MatLocalTransform = FbxMatrixToXMMATRIX(lGeometryOffset*BoneInitPos);
 	return std::make_pair<>(true, "");
 }

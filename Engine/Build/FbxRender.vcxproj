@@ -159,14 +159,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Experimental\Private\Canvas.cpp" />
-    <ClCompile Include="..\Source\Experimental\Private\FbxImporter.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\FbxLibs.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\FbxMainImport.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\FbxReader.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\FbxSkeletalMeshImport.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\FbxStaticMeshImport.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\FbxUtilsImport.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\game_main.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\IShader.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\MaterialInterface.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\RenderMesh.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\SkeletalMeshImport.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\Skeleton.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\StaticMesh.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\YSkeletalMesh.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\YStaticMesh.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YYDX11.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YYUTApplication.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YYUTCamera.cpp" />
@@ -183,10 +190,19 @@
     <ClInclude Include="..\Source\Experimental\Private\StaticMesh.h" />
     <ClInclude Include="..\Source\Experimental\Private\VertexDef.h" />
     <ClInclude Include="..\Source\Experimental\Private\YYDX11.h" />
+    <ClInclude Include="..\Source\Experimental\Public\BoneIndices.h" />
+    <ClInclude Include="..\Source\Experimental\Public\FbxAnimSequenceImportData.h" />
     <ClInclude Include="..\Source\Experimental\Public\FbxImporter.h" />
     <ClInclude Include="..\Source\Experimental\Public\FbxLibs.h" />
     <ClInclude Include="..\Source\Experimental\Public\FbxMeshImportData.h" />
+    <ClInclude Include="..\Source\Experimental\Public\FbxSkeletalMeshImportData.h" />
     <ClInclude Include="..\Source\Experimental\Public\IShader.h" />
+    <ClInclude Include="..\Source\Experimental\Public\MaterialInterface.h" />
+    <ClInclude Include="..\Source\Experimental\Public\ReferenceSkeleton.h" />
+    <ClInclude Include="..\Source\Experimental\Public\SkeletalMeshTypes.h" />
+    <ClInclude Include="..\Source\Experimental\Public\SkelImport.h" />
+    <ClInclude Include="..\Source\Experimental\Public\YSkeletalMesh.h" />
+    <ClInclude Include="..\Source\Experimental\Public\YStaticMesh.h" />
     <ClInclude Include="..\Source\Experimental\Public\StaticMeshImportData.h" />
     <ClInclude Include="..\Source\Experimental\Public\YYUT.h" />
     <ClInclude Include="..\Source\Experimental\Public\YYUTApplication.h" />

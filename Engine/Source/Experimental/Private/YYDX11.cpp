@@ -76,10 +76,10 @@ void DX11Demo::Initial()
 	m_LastFrameTime = FPlatformTime::Seconds();
 	m_bInit = true;
 
-	UnFbx::EFBXImportType MeshTypeToImport;
-	UnFbx::EFBXImportType OriginalImportType;
-	UnFbx::FFbxImporter* FbxImporter = UnFbx::FFbxImporter::GetInstance();
-	UnFbx::FFbxLoggerSetter Logger(FbxImporter);
+	EFBXImportType MeshTypeToImport;
+	EFBXImportType OriginalImportType;
+	FFbxImporter* FbxImporter = UnFbx::FFbxImporter::GetInstance();
+	FFbxLoggerSetter Logger(FbxImporter);
 	FString FileToImport = TEXT("D:/wolf/Wolf_UDK.fbx");
 	int32 ImportType = FbxImporter->GetImportType(FileToImport);
 	if (ImportType == -1)
@@ -89,8 +89,8 @@ void DX11Demo::Initial()
 	}
 	else 
 	{
-		MeshTypeToImport = UnFbx::EFBXImportType(ImportType);
-		OriginalImportType = UnFbx::EFBXImportType(ImportType);
+		MeshTypeToImport = EFBXImportType(ImportType);
+		OriginalImportType = EFBXImportType(ImportType);
 	}
 	UnFbx::FBXImportOptions* ImportOptions = FbxImporter->GetImportOptions();
 

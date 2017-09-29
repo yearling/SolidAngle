@@ -6,7 +6,7 @@
 
 ## importer
 
-	FFbxImporter::GetImportType
+	FFbxImporter::GetImportType   //第一遍解析场景，
 		|- FFbxImporter::OpenFile // 创建FbxImpoter
 		|- FFbxImporter::GetSceneInfo 
 			|- FFbxImporter::ImportFile 

@@ -6,7 +6,7 @@
 
 
 // Scale all the elements of a matrix.
-void MatrixScale(FbxAMatrix& pMatrix, double pValue)
+static void MatrixScale(FbxAMatrix& pMatrix, double pValue)
 {
 	int i, j;
 
@@ -21,7 +21,7 @@ void MatrixScale(FbxAMatrix& pMatrix, double pValue)
 
 
 // Add a value to all the elements in the diagonal of the matrix.
-void MatrixAddToDiagonal(FbxAMatrix& pMatrix, double pValue)
+static void MatrixAddToDiagonal(FbxAMatrix& pMatrix, double pValue)
 {
 	pMatrix[0][0] += pValue;
 	pMatrix[1][1] += pValue;
@@ -31,7 +31,7 @@ void MatrixAddToDiagonal(FbxAMatrix& pMatrix, double pValue)
 
 
 // Sum two matrices element by element.
-void MatrixAdd(FbxAMatrix& pDstMatrix, FbxAMatrix& pSrcMatrix)
+static void MatrixAdd(FbxAMatrix& pDstMatrix, FbxAMatrix& pSrcMatrix)
 {
 	int i, j;
 
@@ -187,7 +187,7 @@ void MeshModel::DrawNodeRecursive(FbxNode* pNode, FbxAMatrix& pParentGlobalPosit
 	{
 		// Geometry offset.
 		// it is not inherited by the children.
-		FbxAMatrix lGeometryOffset = GetGeometry(pNode);
+		FbxAMatrix lGeometryOffset = GetGeometryOld(pNode);
 		FbxAMatrix lGlobalOffPosition = lGlobalPosition * lGeometryOffset;
 
 		DrawNode(pNode, pParentGlobalPosition, lGlobalOffPosition);
@@ -505,20 +505,20 @@ void MeshModel::ComputeClusterDeformation(FbxAMatrix& pGlobalPosition,
 	{
 		pCluster->GetTransformAssociateModelMatrix(lAssociateGlobalInitPosition);
 		// Geometric transform of the model
-		lAssociateGeometry = GetGeometry(pCluster->GetAssociateModel());
+		lAssociateGeometry = GetGeometryOld(pCluster->GetAssociateModel());
 		lAssociateGlobalInitPosition *= lAssociateGeometry;
 		lAssociateGlobalCurrentPosition = GetGlobalPosition(pCluster->GetAssociateModel());
 
 		pCluster->GetTransformMatrix(lReferenceGlobalInitPosition);
 		// Multiply lReferenceGlobalInitPosition by Geometric Transformation
-		lReferenceGeometry = GetGeometry(pMesh->GetNode());
+		lReferenceGeometry = GetGeometryOld(pMesh->GetNode());
 		lReferenceGlobalInitPosition *= lReferenceGeometry;
 		lReferenceGlobalCurrentPosition = pGlobalPosition;
 
 		// Get the link initial global position and the link current global position.
 		pCluster->GetTransformLinkMatrix(MatBoneSpaceToLocalSpace);
 		// Multiply lClusterGlobalInitPosition by Geometric Transformation
-		lClusterGeometry = GetGeometry(pCluster->GetLink());
+		lClusterGeometry = GetGeometryOld(pCluster->GetLink());
 		MatBoneSpaceToLocalSpace *= lClusterGeometry;
 		lClusterGlobalCurrentPosition = GetGlobalPosition(pCluster->GetLink());
 
@@ -531,7 +531,7 @@ void MeshModel::ComputeClusterDeformation(FbxAMatrix& pGlobalPosition,
 	{
 		FbxAMatrix MatControlPointsFromClusterSpaceToPivotSpace;
 		pCluster->GetTransformMatrix(MatControlPointsFromClusterSpaceToPivotSpace);
-		FbxAMatrix matPivotToLocal = GetGeometry(pMesh->GetNode());
+		FbxAMatrix matPivotToLocal = GetGeometryOld(pMesh->GetNode());
 		FbxAMatrix MatControlPointFromClusterSpaceLocalSpace = MatControlPointsFromClusterSpaceToPivotSpace*matPivotToLocal;
 		pCluster->GetTransformLinkMatrix(MatBoneSpaceToLocalSpace);
 		MatControlPointFromClusterSpaceToBoneSpace = MatBoneSpaceToLocalSpace.Inverse() * MatControlPointFromClusterSpaceLocalSpace;
@@ -593,7 +593,7 @@ void MeshModel::DrawMesh(FbxNode* pNode,
 		return;
 	int StaticMeshIndex = *FindResult;
 	TUniquePtr<StaticMesh> &pMesh = MeshArrays[StaticMeshIndex];
-	FbxAMatrix MeshOffsetInNode = GetGeometry(pNode);
+	FbxAMatrix MeshOffsetInNode = GetGeometryOld(pNode);
 	// do deformer
 	FbxMesh* lMesh = pNode->GetMesh();
 	const bool lHasVertexCache = lMesh->GetDeformerCount(FbxDeformer::eVertexCache) &&
