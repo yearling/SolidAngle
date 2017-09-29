@@ -7,21 +7,21 @@ pushd %~dp0
 if "%VS140COMNTOOLS%" neq "" (
   set FoundVSInstance=1
   mkdir "%USERPROFILE%\Documents\Visual Studio 2015\Visualizers"
-  copy SolidAngle.natvis "%USERPROFILE%\Documents\Visual Studio 2015\Visualizers"
+  copy UE4.natvis "%USERPROFILE%\Documents\Visual Studio 2015\Visualizers"
   echo Installed visualizers for Visual Studio 2015
 )
 
 if "%VS120COMNTOOLS%" neq "" (
   set FoundVSInstance=1
   mkdir "%USERPROFILE%\Documents\Visual Studio 2013\Visualizers"
-  copy SolidAngle.natvis "%USERPROFILE%\Documents\Visual Studio 2013\Visualizers"
+  copy UE4.natvis "%USERPROFILE%\Documents\Visual Studio 2013\Visualizers"
   echo Installed visualizers for Visual Studio 2013
 )
 
 if "%VS110COMNTOOLS%" neq "" (
   set FoundVSInstance=1
   mkdir "%USERPROFILE%\Documents\Visual Studio 2012\Visualizers"
-  copy SolidAngle.natvis "%USERPROFILE%\Documents\Visual Studio 2012\Visualizers"
+  copy UE4.natvis "%USERPROFILE%\Documents\Visual Studio 2012\Visualizers"
   echo Installed visualizers for Visual Studio 2012
 )
 
