@@ -9,11 +9,14 @@
 #include "Canvas.h"
 #include "RenderMesh.h"
 #include "FbxImporter.h"
+#include "Misc/FbxErrors.h"
 using std::cout;
 using std::endl;
 
 extern "C" __declspec(dllimport) LRESULT WINAPI SendMessageW( HWND   hWnd,UINT   Msg,WPARAM wParam,LPARAM lParam);
-
+DEFINE_LOG_CATEGORY(YYDX11);
+#define LOCTEXT_NAMESPACE "FbxMainImport"
+using namespace UnFbx;
 void DX11Demo::Initial()
 {
 	FPlatformTime::InitTiming();
@@ -73,10 +76,78 @@ void DX11Demo::Initial()
 	m_LastFrameTime = FPlatformTime::Seconds();
 	m_bInit = true;
 
+	EFBXImportType MeshTypeToImport;
+	EFBXImportType OriginalImportType;
+	FFbxImporter* FbxImporter = UnFbx::FFbxImporter::GetInstance();
+	FFbxLoggerSetter Logger(FbxImporter);
+	FString FileToImport = TEXT("D:/wolf/Wolf_UDK.fbx");
+	int32 ImportType = FbxImporter->GetImportType(FileToImport);
+	if (ImportType == -1)
+	{
+		FbxImporter->AddTokenizedErrorMessage(FTokenizedMessage::Create(EMessageSeverity::Warning, LOCTEXT("NoImportTypeDetected", "Can't detect import type. No mesh is found or animation track.")), FFbxErrors::Generic_CannotDetectImportType);
+		m_bInit = false;
+	}
+	else 
+	{
+		MeshTypeToImport = EFBXImportType(ImportType);
+		OriginalImportType = EFBXImportType(ImportType);
+	}
+	UnFbx::FBXImportOptions* ImportOptions = FbxImporter->GetImportOptions();
 
-	UnFbx::FFbxImporter* FbxImporter = UnFbx::FFbxImporter::GetInstance();
-	UnFbx::FFbxLoggerSetter Logger(FbxImporter);
-	FbxImporter->GetImportType(TEXT("D:/wolf/Wolf_UDK.fbx"));
+	// Set import parameters
+	ImportOptions->bImportScene = false;
+	ImportOptions->bImportMaterials = true;
+	ImportOptions->bInvertNormalMap = false;
+	ImportOptions->bImportTextures = true;
+	ImportOptions->bImportLOD = false;
+	ImportOptions->bUsedAsFullName = true;
+	ImportOptions->bConvertScene = true;
+	ImportOptions->bForceFrontXAxis = false;
+	ImportOptions->bConvertSceneUnit = false;
+	ImportOptions->bRemoveNameSpace = false;
+	ImportOptions->ImportTranslation = FVector(0.0, 0.0, 0.0);
+	ImportOptions->ImportRotation = FRotator(0.0, 0.0, 0.0);
+	ImportOptions->ImportUniformScale = 1.0f;
+	ImportOptions->NormalImportMethod = FBXNIM_ComputeNormals;
+	ImportOptions->NormalGenerationMethod = EFBXNormalGenerationMethod::MikkTSpace;
+	ImportOptions->bTransformVertexToAbsolute = true;
+	ImportOptions->bBakePivotInVertex = false;
+	ImportOptions->bCombineToSingle = false;
+	ImportOptions->VertexColorImportOption = EVertexColorImportOption::Ignore;
+	ImportOptions->VertexOverrideColor = FColor(255, 255, 255, 255);
+	ImportOptions->bRemoveDegenerates = true;
+	ImportOptions->bBuildAdjacencyBuffer = true;
+	ImportOptions->bBuildReversedIndexBuffer = true;
+	ImportOptions->bGenerateLightmapUVs = true;
+	ImportOptions->bOneConvexHullPerUCX = true;
+	ImportOptions->bAutoGenerateCollision = true;
+	ImportOptions->StaticMeshLODGroup = FName("None");
+	ImportOptions->bImportStaticMeshLODs = false;
+	ImportOptions->BaseMaterial = nullptr;
+	ImportOptions->bImportMorph = false;
+	ImportOptions->bImportAnimations = true;
+	ImportOptions->bUpdateSkeletonReferencePose = false;
+	ImportOptions->bResample = true;
+	ImportOptions->bImportRigidMesh = false;
+	ImportOptions->bUseT0AsRefPose = false;
+	ImportOptions->bPreserveSmoothingGroups = true;
+	ImportOptions->bKeepOverlappingVertices = false;
+	ImportOptions->bImportMeshesInBoneHierarchy = true;
+	ImportOptions->bCreatePhysicsAsset = true;
+	ImportOptions->bImportSkeletalMeshLODs = false;
+	ImportOptions->AnimationLengthImportType = FBXALIT_ExportedTime;
+	ImportOptions->AnimationRange = FIntPoint(0, 0);
+	ImportOptions->AnimationName = TEXT("");
+	ImportOptions->bPreserveLocalTransform = false;
+	ImportOptions->bDeleteExistingMorphTargetCurves = false;
+	ImportOptions->bImportCustomAttribute = true;
+	ImportOptions->bSetMaterialDriveParameterOnCustomAttribute = false;
+	ImportOptions->bRemoveRedundantKeys = true;
+	ImportOptions->bDoNotImportCurveWithZero = true;
+	ImportOptions->MaterialCurveSuffixes.Reset();
+	ImportOptions->MaterialCurveSuffixes.Add(TEXT("_mat"));
+	ImportOptions->MaterialBasePath = FName("None");
+	FbxImporter->MainImport(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
 }
 
 
@@ -409,3 +480,4 @@ void DX11Demo::SwichCamera()
 	//m_pShadow->SwitchCamera();
 }
 
+#undef LOCTEXT_NAMESPACE

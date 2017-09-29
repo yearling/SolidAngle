@@ -1,10 +1,12 @@
 #pragma once
 #include "YYUTApplication.h"
 #include <memory>
+#include "Core.h"
 class FBXReader;
 class FirstPersionCamera;
 class ICamera;
 class RenderScene;
+DECLARE_LOG_CATEGORY_EXTERN(YYDX11, Warning, All);
 class DX11Demo :public YYUTApplication
 {
 public:

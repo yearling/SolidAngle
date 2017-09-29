@@ -26,7 +26,7 @@ inline FMatrix FbxMatrixToFMATRIX(const FbxAMatrix & InMatrix)
 	return OutMatrix;
 }
 
-inline FbxAMatrix GetGeometry(FbxNode* pNode)
+inline FbxAMatrix GetGeometryOld(FbxNode* pNode)
 {
 	const FbxVector4 lT = pNode->GetGeometricTranslation(FbxNode::eSourcePivot);
 	const FbxVector4 lR = pNode->GetGeometricRotation(FbxNode::eSourcePivot);

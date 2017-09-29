@@ -49,6 +49,7 @@ struct UFbxAssetImportData
 
 class UFbxMeshImportData : public UFbxAssetImportData
 {
+public:
 		/** If this option is true the node absolute transform (transform, offset and pivot) will be apply to the mesh vertices. */
 		bool bTransformVertexToAbsolute;
 

@@ -30,7 +30,7 @@ class UMaterialInstanceConstant;
 class UMaterialInterface;
 class UPhysicsAsset;
 class USkeletalMesh;
-class USkeleton;
+class YSkeleton;
 class UStaticMesh;
 class USubDSurface;
 class UTexture;
@@ -96,7 +96,6 @@ class FSkeletalMeshImportData;
 class FSkelMeshOptionalImportData;
 class ASkeletalMeshActor;
 class UInterpTrackMoveAxis;
-struct FbxSceneInfo;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogFbx, Log, All);
 
@@ -230,7 +229,7 @@ struct FBXImportOptions
 	UPhysicsAsset *PhysicsAsset;
 	bool bImportSkeletalMeshLODs;
 	// Animation option
-	USkeleton* SkeletonForAnimation;
+	YSkeleton* SkeletonForAnimation;
 	EFBXAnimationLengthImportType AnimationLengthImportType;
 	struct YIntPoint AnimationRange;
 	YString AnimationName;
@@ -749,7 +748,7 @@ public:
 	 * @param Filename	Fbx file name
 	 * @param NodeArray node array of FBX meshes
 	 */
-	//UAnimSequence* ImportAnimations(USkeleton* Skeleton, UObject* Outer, TArray<FbxNode*>& SortedLinks, const YString& Name, UFbxAnimSequenceImportData* TemplateImportData, TArray<FbxNode*>& NodeArray);
+	//UAnimSequence* ImportAnimations(YSkeleton* Skeleton, UObject* Outer, TArray<FbxNode*>& SortedLinks, const YString& Name, UFbxAnimSequenceImportData* TemplateImportData, TArray<FbxNode*>& NodeArray);
 
 	/**
 	 * Get Animation Time Span - duration of the animation
@@ -768,7 +767,7 @@ public:
 	 * @param ResampleRate	Resample Rate for data
 	 * @param AnimTimeSpan	AnimTimeSpan
 	 */
-	bool ImportAnimation(USkeleton* Skeleton, UAnimSequence* DestSeq, const YString& FileName, TArray<FbxNode*>& SortedLinks, TArray<FbxNode*>& NodeArray, FbxAnimStack* CurAnimStack, const int32 ResampleRate, const FbxTimeSpan AnimTimeSpan);
+	bool ImportAnimation(YSkeleton* Skeleton, UAnimSequence* DestSeq, const YString& FileName, TArray<FbxNode*>& SortedLinks, TArray<FbxNode*>& NodeArray, FbxAnimStack* CurAnimStack, const int32 ResampleRate, const FbxTimeSpan AnimTimeSpan);
 	/**
 	 * Calculate Max Sample Rate - separate out of the original ImportAnimations
 	 *
@@ -1498,7 +1497,7 @@ protected:
 	/**
 	 * Fill up and verify bone names for animation 
 	 */
-	void FillAndVerifyBoneNames(USkeleton* Skeleton, TArray<FbxNode*>& SortedLinks, TArray<FName> & OutRawBoneNames, YString Filename);
+	void FillAndVerifyBoneNames(YSkeleton* Skeleton, TArray<FbxNode*>& SortedLinks, TArray<FName> & OutRawBoneNames, YString Filename);
 	/**
 	 * Is valid animation data
 	 */

@@ -54,11 +54,32 @@
     <ClCompile Include="..\Source\Experimental\Private\FbxLibs.cpp">
       <Filter>Fbx</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\FbxImporter.cpp">
-      <Filter>Fbx</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\YYDX11.cpp">
       <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YStaticMesh.cpp">
+      <Filter>Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\FbxUtilsImport.cpp">
+      <Filter>Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\FbxMainImport.cpp">
+      <Filter>Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\FbxSkeletalMeshImport.cpp">
+      <Filter>Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\SkeletalMeshImport.cpp">
+      <Filter>Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\MaterialInterface.cpp">
+      <Filter>Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YSkeletalMesh.cpp">
+      <Filter>Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\FbxStaticMeshImport.cpp">
+      <Filter>Fbx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -110,9 +131,6 @@
     <ClInclude Include="..\Source\Experimental\Public\FbxLibs.h">
       <Filter>Fbx</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\FbxImporter.h">
-      <Filter>Fbx</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\StaticMeshImportData.h">
       <Filter>Fbx</Filter>
     </ClInclude>
@@ -121,6 +139,34 @@
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Private\YYDX11.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YStaticMesh.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\FbxImporter.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\FbxSkeletalMeshImportData.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\FbxAnimSequenceImportData.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\SkelImport.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\BoneIndices.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\ReferenceSkeleton.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\SkeletalMeshTypes.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YSkeletalMesh.h" />
+    <ClInclude Include="..\Source\Experimental\Public\MaterialInterface.h">
+      <Filter>Fbx</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
