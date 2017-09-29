@@ -161,6 +161,7 @@
     <ClCompile Include="..\Source\Experimental\Private\Canvas.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\FbxLibs.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\FbxMainImport.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\FbxMaterialImport.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\FbxReader.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\FbxSkeletalMeshImport.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\FbxStaticMeshImport.cpp" />

@@ -15,6 +15,7 @@
 #include "FbxImporter.h"
 #include "FbxImporter.h"
 #include "FbxSkeletalMeshImportData.h"
+#include "MaterialInterface.h"
 
 DEFINE_LOG_CATEGORY(LogFbx);
 
@@ -281,15 +282,15 @@ void ApplyImportUIToImportOptions(UFbxImportUI* ImportUI, FBXImportOptions& InOu
 #endif
 void FImportedMaterialData::AddImportedMaterial( FbxSurfaceMaterial& FbxMaterial, UMaterialInterface& UnrealMaterial )
 {
-	//FbxToUnrealMaterialMap.Add( &FbxMaterial, &UnrealMaterial );
-	//ImportedMaterialNames.Add( *UnrealMaterial.GetPathName() );
+	FbxToUnrealMaterialMap.Add( &FbxMaterial, &UnrealMaterial );
+	ImportedMaterialNames.Add( *UnrealMaterial.GetPathName() );
 }
 
 bool FImportedMaterialData::IsUnique( FbxSurfaceMaterial& FbxMaterial, FName ImportedMaterialName ) const
 {
-	//UMaterialInterface* FoundMaterial = GetUnrealMaterial( FbxMaterial );
+	UMaterialInterface* FoundMaterial = GetUnrealMaterial( FbxMaterial );
 
-	//return FoundMaterial != NULL || ImportedMaterialNames.Contains( ImportedMaterialName );
+	return FoundMaterial != NULL || ImportedMaterialNames.Contains( ImportedMaterialName );
 	return true;
 }
 
