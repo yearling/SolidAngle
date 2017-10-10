@@ -84,6 +84,9 @@
     <ClCompile Include="..\Source\Experimental\Private\FbxMaterialImport.cpp">
       <Filter>Fbx</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\Texture.cpp">
+      <Filter>Fbx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Experimental\Public\YYUT.h">
@@ -169,6 +172,9 @@
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\YSkeletalMesh.h" />
     <ClInclude Include="..\Source\Experimental\Public\MaterialInterface.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\Texture.h">
       <Filter>Fbx</Filter>
     </ClInclude>
   </ItemGroup>

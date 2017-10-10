@@ -6,6 +6,7 @@
 
 ## importer
 
+1. 首先调用GetImportType,来获取fbx里的基本信息（StaticMesh,SkeletonMesh,Morph,Bones)等等，然后提供给UI让用户选择导入
 	FFbxImporter::GetImportType   //第一遍解析场景，
 		|- FFbxImporter::OpenFile // 创建FbxImpoter
 		|- FFbxImporter::GetSceneInfo 
@@ -24,3 +25,36 @@
 			|- 获取节点间的变换关系
 				|- 获取RootNode的变换信息(节点名，UniuqeID, Transform)并填入FbxNodeInfo,并将FbxNodeInfo节点放入FbxSceneInfo::HierachyInfo.
 				|- 深度优先遍历整个Scene，将节点信息存入FbxSceneInfo::HierachyInfo.
+
+2. 根据类型选择具体导入的类型
+	1. UnFbx::FBXImportOptions* ImportOptions = FbxImporter->GetImportOptions();
+	根据需求设置导入选项。
+
+	2. 导入SkeletonMesh 
+	
+			|- FFbxImport::ImportFromFile
+				|- FFbxImport::OpenFile  同上
+				|- FFbxImport::ImportFile 同上（Scene重建了一次）
+				|- ConvertScene() 坐标系与单位变换
+				|- ValidateAllMeshesAreReferenceByNodeAttribute() 保证每个Mesh都保存在了NodeAttribute中
+		  	|- 如果导入的是SkeletonMesh
+				|- FillFbxSkelMeshArrayInScene 
+					|- RecursiveFindFbxSkelMesh[outSkelMeshArray: 每级lod的skinmeshes，只有一级LOD的话，outSkelMeshArray有一个元素，该元素有所有的SKinMesh; SkeletonArray:每级LOD的骨骼根节点，只有一级LOD的话，SkeletonArray中只保存骨骼根节点
+			
+			|- 如果outSkelMeshArray不为空，说明有可以导入的模型
+				|- 如果是SkeletalMesh
+					|- 对于每层LOD
+						|- YSkeletalMesh* NewMesh = ImportSkeletalMesh(nullptr, SkelMeshNodeArray, OutputName, &SkeletalMeshImportData, LODIndex, &bOperationCanceled);
+							|- CheckSmoothingInfo()
+							|- FillLastImportMaterialNames()
+							|- FillSkeletalMeshImportData() // 最后一遍检查导入数据是否合格，如果不合格就不导入；因为之后会销毁同名的skeletonMesh,如果导入失败，之前导入的也不能用了
+								|- ImportBone()
+									|- RetrievePoseFromBindPose()
+										|- 检查Fbx自带的BindPose()是否正确,通过调用FbxPose::IsValidBindPoseVerbose()
+									|- 如果BindBose不正确
+										|- 销毁当前BindPose()
+										|- 通过SDK重建BindPose()
+										|- BuildSkeletonSystem() //遍历所有的mesh对应的cluster,收集所有cluster的link，放到SortedLinks中
+											|- RecursiveBuildSkeleton()
+										|- 查找有没有同名骨骼
+										|- 创建UnrealBone的层次结构（将FbxSkeleton用自己的VBone结构来表示，保存层级结构，保存骨骼位姿信息（相对于父骨骼来说，Fbx的每根骨骼都是相对于模型空间）

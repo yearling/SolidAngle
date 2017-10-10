@@ -482,7 +482,7 @@ public:
 	void Clear();
 private:
 	/** Mapping of FBX material to Unreal material.  Some materials in FBX have the same name so we use this map to determine if materials are unique */
-	TMap<FbxSurfaceMaterial*, TWeakPtr<UMaterialInterface> > FbxToUnrealMaterialMap;
+	TMap<FbxSurfaceMaterial*, UMaterialInterface* > FbxToUnrealMaterialMap;
 	TSet<FName> ImportedMaterialNames;
 };
 

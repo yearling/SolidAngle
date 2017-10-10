@@ -173,6 +173,7 @@
     <ClCompile Include="..\Source\Experimental\Private\SkeletalMeshImport.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\Skeleton.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\StaticMesh.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\Texture.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YSkeletalMesh.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YStaticMesh.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YYDX11.cpp" />
@@ -202,6 +203,7 @@
     <ClInclude Include="..\Source\Experimental\Public\ReferenceSkeleton.h" />
     <ClInclude Include="..\Source\Experimental\Public\SkeletalMeshTypes.h" />
     <ClInclude Include="..\Source\Experimental\Public\SkelImport.h" />
+    <ClInclude Include="..\Source\Experimental\Public\Texture.h" />
     <ClInclude Include="..\Source\Experimental\Public\YSkeletalMesh.h" />
     <ClInclude Include="..\Source\Experimental\Public\YStaticMesh.h" />
     <ClInclude Include="..\Source\Experimental\Public\StaticMeshImportData.h" />
