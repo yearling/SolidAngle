@@ -296,8 +296,7 @@ bool FImportedMaterialData::IsUnique( FbxSurfaceMaterial& FbxMaterial, FName Imp
 
 UMaterialInterface* FImportedMaterialData::GetUnrealMaterial( const FbxSurfaceMaterial& FbxMaterial ) const
 {
-	//return FbxToUnrealMaterialMap.FindRef( &FbxMaterial ).Get();
-	return nullptr;
+	return FbxToUnrealMaterialMap.FindRef( &FbxMaterial );
 }
 
 void FImportedMaterialData::Clear()

@@ -58,3 +58,11 @@
 											|- RecursiveBuildSkeleton()
 										|- 查找有没有同名骨骼
 										|- 创建UnrealBone的层次结构（将FbxSkeleton用自己的VBone结构来表示，保存层级结构，保存骨骼位姿信息（相对于父骨骼来说，Fbx的每根骨骼都是相对于模型空间）
+										|- 把UI中的变换应用于根骨骼
+								|- ApplyTransformSettingsToFbxNode(),把UI中指定的变换应用到场景根节点
+								|- 添加材质
+								|- 对**每个**SkeletonMesh调用FillSkelMeshImporterFromFbx()
+									|- 去掉BadPolygons
+									|- 获取UVLayers
+									|- 根据UV名（UVChannel_1)来重新对UV集排序
+									|- 获取材质

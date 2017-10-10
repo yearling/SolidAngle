@@ -1,10 +1,28 @@
 #pragma once
 #include "Core.h"
+class UTexture;
+enum class TextureSamplerType
+{
+	SAMPLERTYPE_Normal,
+	SAMPLERTYPE_Color,
+};
+class TextureSampler
+{
+public:
+	TextureSamplerType SamplerType;
+	UTexture* Texture;
+	float ScalingU;
+	float ScalingV;
+	int32 UVIndex;
+};
 class UMaterialInterface
 {
 public:
 	UMaterialInterface();
 	FString GetPathName() const;
-private:
 	FString PathName;
+	TextureSampler DiffuseTexture;
+	TextureSampler NormalTexture;
+	TextureSampler BumpTexture;
+
 };

@@ -1209,6 +1209,14 @@ protected:
 														bool bSetupAsNormalMap,
 														TArray<FString>& UVSet,
 														const FVector2D& Location );
+
+
+	bool CreateMaterialProperty(FbxSurfaceMaterial& FbxMaterial,
+		UMaterialInterface* UnrealMaterial,
+		const char* MaterialProperty,
+		bool bSetupAsNormalMap,
+		TArray<FString>& UVSet);
+
 	/**
 	* Create and link texture to the right material parameter value
 	*
@@ -1230,6 +1238,7 @@ protected:
 	 * @param unMaterial Unreal material object.
 	 */
 	void FixupMaterial( FbxSurfaceMaterial& FbxMaterial, UMaterial* unMaterial);
+	void FixupMaterial( FbxSurfaceMaterial& FbxMaterial, UMaterialInterface* unMaterial);
 	
 	/**
 	 * Get material mapping array according "Skinxx" flag in material name
