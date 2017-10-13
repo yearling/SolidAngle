@@ -519,7 +519,7 @@ public:
 
 	/**
 	 * Initialize Fbx file for import.
-	 *
+	 * 创建FbxImporter
 	 * @param Filename
 	 * @param bParseStatistics
 	 * @return bool
@@ -528,7 +528,7 @@ public:
 	
 	/**
 	 * Import Fbx file.
-	 *
+	 * 创建FbxScene并且导入Scene
 	 * @param Filename
 	 * @return bool
 	 */

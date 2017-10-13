@@ -67,6 +67,11 @@ UTexture* UnFbx::FFbxImporter::ImportTexture( FbxFileTexture* FbxTexture, bool b
 		UnrealTexture->FileName = Filename;
 
 	}
+	else
+	{
+		UnrealTexture = new UTexture();
+		UnrealTexture->FileName = Filename;
+	}
 
 	return UnrealTexture;
 }

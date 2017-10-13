@@ -9,6 +9,7 @@ enum class TextureSamplerType
 class TextureSampler
 {
 public:
+	TextureSampler();
 	TextureSamplerType SamplerType;
 	UTexture* Texture;
 	float ScalingU;

@@ -2463,8 +2463,8 @@ bool UnFbx::FFbxImporter::FillSkelMeshImporterFromFbx( FSkeletalMeshImportData& 
 						if (LocalUVSetName == UVSets[UVIndex])
 						{
 							LayerElementUV[UVIndex] = const_cast<FbxLayerElementUV*>(ElementUV);
-							UVReferenceMode[UVIndex] = LayerElementUV[FbxUVIndex]->GetReferenceMode();
-							UVMappingMode[UVIndex] = LayerElementUV[FbxUVIndex]->GetMappingMode();
+							UVReferenceMode[UVIndex] = LayerElementUV[UVIndex]->GetReferenceMode();
+							UVMappingMode[UVIndex] = LayerElementUV[UVIndex]->GetMappingMode();
 							break;
 						}
 					}

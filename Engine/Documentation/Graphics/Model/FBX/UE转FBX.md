@@ -40,9 +40,10 @@
 		  	|- 如果导入的是SkeletonMesh
 				|- FillFbxSkelMeshArrayInScene 
 					|- RecursiveFindFbxSkelMesh[outSkelMeshArray: 每级lod的skinmeshes，只有一级LOD的话，outSkelMeshArray有一个元素，该元素有所有的SKinMesh; SkeletonArray:每级LOD的骨骼根节点，只有一级LOD的话，SkeletonArray中只保存骨骼根节点
+				|- RecursiveFixSkeleton() 修正因为ActorX导出的Mesh为bone的情况，将Mesh替换为bone
 			
 			|- 如果outSkelMeshArray不为空，说明有可以导入的模型
-				|- 如果是SkeletalMesh
+				|- 如果是SkeletalMesh,对于每组SkeletonMesh(有可能一个fbx中，有两组skeleton mesh)
 					|- 对于每层LOD
 						|- YSkeletalMesh* NewMesh = ImportSkeletalMesh(nullptr, SkelMeshNodeArray, OutputName, &SkeletalMeshImportData, LODIndex, &bOperationCanceled);
 							|- CheckSmoothingInfo()
@@ -58,10 +59,12 @@
 											|- RecursiveBuildSkeleton()
 										|- 查找有没有同名骨骼
 										|- 创建UnrealBone的层次结构（将FbxSkeleton用自己的VBone结构来表示，保存层级结构，保存骨骼位姿信息（相对于父骨骼来说，Fbx的每根骨骼都是相对于模型空间）
+											|- 统计Cluster对应的Link
+											|- 对于每个link,获取每个link相对于Pose的位置（位于模型空间），然后乘以父亲节点变换的逆，得到相对于父节点的变换
 										|- 把UI中的变换应用于根骨骼
 								|- ApplyTransformSettingsToFbxNode(),把UI中指定的变换应用到场景根节点
-								|- 添加材质
-								|- 对**每个**SkeletonMesh调用FillSkelMeshImporterFromFbx()
+								|- 收集材质
+								|- 对**每个**SkeletonMesh调用FillSkelMeshImporterFromFbx(),填充FSkeletalMeshImportData结构体
 									|- 去掉BadPolygons
 									|- 获取UVLayers
 									|- 根据UV名（UVChannel_1)来重新对UV集排序
