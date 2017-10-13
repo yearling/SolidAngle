@@ -11,8 +11,8 @@
 #include "ReferenceSkeleton.h"
 #include "SkeletalMeshTypes.h"
 #include "MaterialInterface.h"
+#include "MeshCommon.h"
 //#include "Engine/SkeletalMesh.h"
-enum { MAX_TEXCOORDS = 4, MAX_STATIC_TEXCOORDS = 8 };
 class UAssetImportData;
 class UMorphTarget;
 class UPhysicsAsset;

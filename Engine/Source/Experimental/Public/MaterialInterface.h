@@ -9,6 +9,7 @@ enum class TextureSamplerType
 class TextureSampler
 {
 public:
+	TextureSampler();
 	TextureSamplerType SamplerType;
 	UTexture* Texture;
 	float ScalingU;
@@ -20,7 +21,10 @@ class UMaterialInterface
 public:
 	UMaterialInterface();
 	FString GetPathName() const;
+	bool IsValid() const;
+	FName GetFName() const;
 	FString PathName;
+	FName	MaterialName;
 	TextureSampler DiffuseTexture;
 	TextureSampler NormalTexture;
 	TextureSampler BumpTexture;

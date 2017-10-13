@@ -286,8 +286,8 @@ void FFbxImporter::SkinControlPointsToPose(FSkeletalMeshImportData& ImportData, 
 // Fully taken from SkeletalMeshImport.cpp
 
 extern void ProcessImportMeshInfluences(FSkeletalMeshImportData& ImportData);
-//extern void ProcessImportMeshMaterials( TArray<FSkeletalMaterial>& Materials, FSkeletalMeshImportData& ImportData );
-//extern bool ProcessImportMeshSkeleton(const YSkeleton* SkeletonAsset, FReferenceSkeleton& RefSkeleton, int32& SkeletalDepth, FSkeletalMeshImportData& ImportData);
+extern void ProcessImportMeshMaterials( TArray<FSkeletalMaterial>& Materials, FSkeletalMeshImportData& ImportData );
+extern bool ProcessImportMeshSkeleton(const YSkeleton* SkeletonAsset, FReferenceSkeleton& RefSkeleton, int32& SkeletalDepth, FSkeletalMeshImportData& ImportData);
 
 struct tFaceRecord
 {
@@ -1297,7 +1297,7 @@ YSkeletalMesh* UnFbx::FFbxImporter::ImportSkeletalMesh(UObject* InParent, TArray
 	{
 		// When we are not re-importing we want to create the mesh here to be sure there is no material
 		// or texture that will be create with the same name
-		//SkeletalMesh = NewObject<YSkeletalMesh>(InParent, Name, Flags);
+		SkeletalMesh = new YSkeletalMesh();
 	}
 
 	FSkeletalMeshImportData TempData;
@@ -1374,16 +1374,16 @@ YSkeletalMesh* UnFbx::FFbxImporter::ImportSkeletalMesh(UObject* InParent, TArray
 	//SkeletalMesh->PreEditChange(NULL);
 
 	// process materials from import data
-	//ProcessImportMeshMaterials(SkeletalMesh->Materials, *SkelMeshImportDataPtr);
+	ProcessImportMeshMaterials(SkeletalMesh->Materials, *SkelMeshImportDataPtr);
 
 	// process reference skeleton from import data
-	//int32 SkeletalDepth = 0;
-	//if (!ProcessImportMeshSkeleton(SkeletalMesh->Skeleton, SkeletalMesh->RefSkeleton, SkeletalDepth, *SkelMeshImportDataPtr))
-	//{
-	//	SkeletalMesh->ClearFlags(RF_Standalone);
-	//	SkeletalMesh->Rename(NULL, GetTransientPackage());
-	//	return nullptr;
-	//}
+	int32 SkeletalDepth = 0;
+	if (!ProcessImportMeshSkeleton(SkeletalMesh->Skeleton, SkeletalMesh->RefSkeleton, SkeletalDepth, *SkelMeshImportDataPtr))
+	{
+		//SkeletalMesh->ClearFlags(RF_Standalone);
+		//SkeletalMesh->Rename(NULL, GetTransientPackage());
+		return nullptr;
+	}
 	//
 	//if (!GIsAutomationTesting)
 	//	UE_LOG(LogFbx, Warning, TEXT("Bones digested - %i  Depth of hierarchy - %i"), SkeletalMesh->RefSkeleton.GetNum(), SkeletalDepth);
