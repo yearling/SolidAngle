@@ -43,3 +43,34 @@ public:
 	std::unordered_map<std::string, Bone::BoneIDType> BoneNameToBoneID;
 	Bone::BoneIDType		RootBone;
 };
+
+struct FVirtualBone
+{
+public:
+	FName SourceBoneName;
+	FName TargetBoneName;
+	FName VirtualBoneName;
+
+	FVirtualBone() {}
+
+	FVirtualBone(FName InSource, FName InTarget)
+		: SourceBoneName(InSource)
+		, TargetBoneName(InTarget)
+	{
+		// VB Prefix including space after VB so that it will never collide with 
+		// an actual bone name (as they cannot contain spaces)
+		static FString VirtualBonePrefix(TEXT("VB "));
+
+		VirtualBoneName = FName(*(VirtualBonePrefix + SourceBoneName.ToString() + TEXT("_") + TargetBoneName.ToString()));
+	}
+};
+class YSkeleton
+{
+public:
+	const TArray<FVirtualBone>& GetVirtualBones() const { return VirtualBones; }
+	/**
+	*  Array of this skeletons virtual bones. These are new bones are links between two existing bones
+	*  and are baked into all the skeletons animations
+	*/
+	TArray<FVirtualBone> VirtualBones;
+};

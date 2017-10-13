@@ -14,10 +14,141 @@
 #include "Logging/TokenizedMessage.h"
 #include "FbxImporter.h"
 #include "Misc/FbxErrors.h"
+#include "YSkeletalMesh.h"
+#include "Skeleton.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogSkeletalMeshImport, Log, All);
 
 #define LOCTEXT_NAMESPACE "SkeletalMeshImport"
+
+/**
+* Process and fill in the mesh Materials using the raw binary import data
+*
+* @param Materials - [out] array of materials to update
+* @param ImportData - raw binary import data to process
+*/
+void ProcessImportMeshMaterials(TArray<FSkeletalMaterial>& Materials, FSkeletalMeshImportData& ImportData)
+{
+	TArray <VMaterial>&	ImportedMaterials = ImportData.Materials;
+
+	// If direct linkup of materials is requested, try to find them here - to get a texture name from a 
+	// material name, cut off anything in front of the dot (beyond are special flags).
+	Materials.Empty();
+	for (int32 MatIndex = 0; MatIndex < ImportedMaterials.Num(); ++MatIndex)
+	{
+		const VMaterial& ImportedMaterial = ImportedMaterials[MatIndex];
+
+		UMaterialInterface* Material = NULL;
+		if (ImportedMaterial.Material->IsValid())
+		{
+			Material = ImportedMaterial.Material;
+		}
+		else
+		{
+			const FString& MaterialName = ImportedMaterial.MaterialImportName;
+			//Material = FindObject<UMaterialInterface>(ANY_PACKAGE, *MaterialName);
+
+			if (Material == nullptr)
+			{
+				int32 SkinOffset = MaterialName.Find(TEXT("_skin"));
+				if (SkinOffset != INDEX_NONE)
+				{
+					const FString& MaterialNameNoSkin = MaterialName.LeftChop(MaterialName.Len() - SkinOffset);
+					//Material = FindObject<UMaterialInterface>(ANY_PACKAGE, *MaterialNameNoSkin);
+				}
+			}
+		}
+
+		const bool bEnableShadowCasting = true;
+		Materials.Add(FSkeletalMaterial(Material, bEnableShadowCasting, false, Material != nullptr ? Material->GetFName() : FName(*(ImportedMaterial.MaterialImportName)), FName(*(ImportedMaterial.MaterialImportName))));
+	}
+
+	int32 NumMaterialsToAdd = FMath::Max<int32>(ImportedMaterials.Num(), ImportData.MaxMaterialIndex + 1);
+
+	// Pad the material pointers
+	while (NumMaterialsToAdd > Materials.Num())
+	{
+		Materials.Add(FSkeletalMaterial(NULL, true, false, NAME_None, NAME_None));
+	}
+}
+
+/**
+* Process and fill in the mesh ref skeleton bone hierarchy using the raw binary import data
+*
+* @param RefSkeleton - [out] reference skeleton hierarchy to update
+* @param SkeletalDepth - [out] depth of the reference skeleton hierarchy
+* @param ImportData - raw binary import data to process
+* @return true if the operation completed successfully
+*/
+bool ProcessImportMeshSkeleton(const YSkeleton* SkeletonAsset, FReferenceSkeleton& RefSkeleton, int32& SkeletalDepth, FSkeletalMeshImportData& ImportData)
+{
+	TArray <VBone>&	RefBonesBinary = ImportData.RefBonesBinary;
+
+	// Setup skeletal hierarchy + names structure.
+	RefSkeleton.Empty();
+
+	FReferenceSkeletonModifier RefSkelModifier(RefSkeleton, SkeletonAsset);
+
+	// Digest bones to the serializable format.
+	for (int32 b = 0; b < RefBonesBinary.Num(); b++)
+	{
+		const VBone & BinaryBone = RefBonesBinary[b];
+		const FString BoneName = FSkeletalMeshImportData::FixupBoneName(BinaryBone.Name);
+		const FMeshBoneInfo BoneInfo(FName(*BoneName, FNAME_Add), BinaryBone.Name, BinaryBone.ParentIndex);
+		const FTransform BoneTransform(BinaryBone.BonePos.Transform);
+
+		if (RefSkeleton.FindRawBoneIndex(BoneInfo.Name) != INDEX_NONE)
+		{
+			UnFbx::FFbxImporter* FFbxImporter = UnFbx::FFbxImporter::GetInstance();
+			FFbxImporter->AddTokenizedErrorMessage(FTokenizedMessage::Create(EMessageSeverity::Error, FText::Format(LOCTEXT("SkeletonHasDuplicateBones", "Skeleton has non-unique bone names.\nBone named '{0}' encountered more than once."), FText::FromName(BoneInfo.Name))), FFbxErrors::SkeletalMesh_DuplicateBones);
+			return false;
+		}
+
+		RefSkelModifier.Add(BoneInfo, BoneTransform);
+	}
+
+	// Add hierarchy index to each bone and detect max depth.
+	SkeletalDepth = 0;
+
+	TArray<int32> SkeletalDepths;
+	SkeletalDepths.Empty(RefBonesBinary.Num());
+	SkeletalDepths.AddZeroed(RefBonesBinary.Num());
+	for (int32 b = 0; b < RefSkeleton.GetRawBoneNum(); b++)
+	{
+		int32 Parent = RefSkeleton.GetRawParentIndex(b);
+		int32 Depth = 1.0f;
+
+		SkeletalDepths[b] = 1.0f;
+		if (Parent != INDEX_NONE)
+		{
+			Depth += SkeletalDepths[Parent];
+		}
+		if (SkeletalDepth < Depth)
+		{
+			SkeletalDepth = Depth;
+		}
+		SkeletalDepths[b] = Depth;
+	}
+
+	return true;
+}
+
+/**
+* Takes an imported bone name, removes any leading or trailing spaces, and converts the remaining spaces to dashes.
+*/
+FString FSkeletalMeshImportData::FixupBoneName(const FString &InBoneName)
+{
+	FString BoneName = InBoneName;
+
+	BoneName.Trim();
+	BoneName.TrimTrailing();
+	BoneName = BoneName.Replace(TEXT(" "), TEXT("-"));
+
+	return BoneName;
+}
+
+
+
 #if 0
 /** Check that root bone is the same, and that any bones that are common have the correct parent. */
 bool SkeletonsAreCompatible( const FReferenceSkeleton& NewSkel, const FReferenceSkeleton& ExistSkel )
@@ -54,20 +185,6 @@ bool SkeletonsAreCompatible( const FReferenceSkeleton& NewSkel, const FReference
 	}
 
 	return true;
-}
-
-/**
-* Takes an imported bone name, removes any leading or trailing spaces, and converts the remaining spaces to dashes.
-*/
-FString FSkeletalMeshImportData::FixupBoneName( const FString &InBoneName )
-{
-	FString BoneName = InBoneName;
-
-	BoneName.Trim();
-	BoneName.TrimTrailing();
-	BoneName = BoneName.Replace( TEXT( " " ), TEXT( "-" ) );
-	
-	return BoneName;
 }
 
 
@@ -147,117 +264,8 @@ void FSkeletalMeshImportData::CopyLODImportData(
 	// Copy mapping
 	LODPointToRawMap = PointToRawMap;
 }
-/**
-* Process and fill in the mesh Materials using the raw binary import data
-* 
-* @param Materials - [out] array of materials to update
-* @param ImportData - raw binary import data to process
-*/
-void ProcessImportMeshMaterials(TArray<FSkeletalMaterial>& Materials, FSkeletalMeshImportData& ImportData )
-{
-	TArray <VMaterial>&	ImportedMaterials = ImportData.Materials;
 
-	// If direct linkup of materials is requested, try to find them here - to get a texture name from a 
-	// material name, cut off anything in front of the dot (beyond are special flags).
-	Materials.Empty();
-	for( int32 MatIndex=0; MatIndex < ImportedMaterials.Num(); ++MatIndex)
-	{			
-		const VMaterial& ImportedMaterial = ImportedMaterials[MatIndex];
 
-		UMaterialInterface* Material = NULL;
-		if( ImportedMaterial.Material.IsValid() )
-		{
-			Material = ImportedMaterial.Material.Get();
-		}
-		else
-		{
-			const FString& MaterialName = ImportedMaterial.MaterialImportName;
-			Material = FindObject<UMaterialInterface>(ANY_PACKAGE, *MaterialName);
-
-			if (Material == nullptr)
-			{
-				int32 SkinOffset = MaterialName.Find(TEXT("_skin"));
-				if (SkinOffset != INDEX_NONE)
-				{
-					const FString& MaterialNameNoSkin = MaterialName.LeftChop(MaterialName.Len() - SkinOffset);
-					Material = FindObject<UMaterialInterface>(ANY_PACKAGE, *MaterialNameNoSkin);
-				}
-			}
-		}
-
-		const bool bEnableShadowCasting = true;
-		Materials.Add( FSkeletalMaterial( Material, bEnableShadowCasting, false, Material != nullptr ? Material->GetFName() : FName(*(ImportedMaterial.MaterialImportName)), FName(*(ImportedMaterial.MaterialImportName)) ) );
-	}
-
-	int32 NumMaterialsToAdd = FMath::Max<int32>( ImportedMaterials.Num(), ImportData.MaxMaterialIndex + 1 );
-
-	// Pad the material pointers
-	while( NumMaterialsToAdd > Materials.Num() )
-	{
-		Materials.Add( FSkeletalMaterial( NULL, true, false, NAME_None, NAME_None ) );
-	}
-}
-
-/**
-* Process and fill in the mesh ref skeleton bone hierarchy using the raw binary import data
-* 
-* @param RefSkeleton - [out] reference skeleton hierarchy to update
-* @param SkeletalDepth - [out] depth of the reference skeleton hierarchy
-* @param ImportData - raw binary import data to process
-* @return true if the operation completed successfully
-*/
-bool ProcessImportMeshSkeleton(const YSkeleton* SkeletonAsset, FReferenceSkeleton& RefSkeleton, int32& SkeletalDepth, FSkeletalMeshImportData& ImportData)
-{
-	TArray <VBone>&	RefBonesBinary = ImportData.RefBonesBinary;
-
-	// Setup skeletal hierarchy + names structure.
-	RefSkeleton.Empty();
-
-	FReferenceSkeletonModifier RefSkelModifier(RefSkeleton, SkeletonAsset);
-
-	// Digest bones to the serializable format.
-	for( int32 b=0; b<RefBonesBinary.Num(); b++ )
-	{
-		const VBone & BinaryBone = RefBonesBinary[ b ];
-		const FString BoneName = FSkeletalMeshImportData::FixupBoneName( BinaryBone.Name );
-		const FMeshBoneInfo BoneInfo(FName(*BoneName, FNAME_Add), BinaryBone.Name, BinaryBone.ParentIndex);
-		const FTransform BoneTransform(BinaryBone.BonePos.Transform);
-
-		if(RefSkeleton.FindRawBoneIndex(BoneInfo.Name) != INDEX_NONE)
-		{
-			UnFbx::FFbxImporter* FFbxImporter = UnFbx::FFbxImporter::GetInstance();
-			FFbxImporter->AddTokenizedErrorMessage(FTokenizedMessage::Create(EMessageSeverity::Error, FText::Format(LOCTEXT("SkeletonHasDuplicateBones", "Skeleton has non-unique bone names.\nBone named '{0}' encountered more than once."), FText::FromName(BoneInfo.Name))), FFbxErrors::SkeletalMesh_DuplicateBones);
-			return false;
-		}
-
-		RefSkelModifier.Add(BoneInfo, BoneTransform);
-	}
-
-	// Add hierarchy index to each bone and detect max depth.
-	SkeletalDepth = 0;
-
-	TArray<int32> SkeletalDepths;
-	SkeletalDepths.Empty( RefBonesBinary.Num() );
-	SkeletalDepths.AddZeroed( RefBonesBinary.Num() );
-	for( int32 b=0; b < RefSkeleton.GetRawBoneNum(); b++ )
-	{
-		int32 Parent	= RefSkeleton.GetRawParentIndex(b);
-		int32 Depth	= 1.0f;
-
-		SkeletalDepths[b]	= 1.0f;
-		if( Parent != INDEX_NONE )
-		{
-			Depth += SkeletalDepths[Parent];
-		}
-		if( SkeletalDepth < Depth )
-		{
-			SkeletalDepth = Depth;
-		}
-		SkeletalDepths[b] = Depth;
-	}
-
-	return true;
-}
 
 /**
 * Process and update the vertex Influences using the raw binary import data

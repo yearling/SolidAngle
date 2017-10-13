@@ -44,10 +44,10 @@
 			
 			|- 如果outSkelMeshArray不为空，说明有可以导入的模型
 				|- 如果是SkeletalMesh,对于每组SkeletonMesh(有可能一个fbx中，有两组skeleton mesh)
-					|- 对于每层LOD
+					|- 对于outSkelMeshArray中组skelMesh中的每层LOD
 						|- YSkeletalMesh* NewMesh = ImportSkeletalMesh(nullptr, SkelMeshNodeArray, OutputName, &SkeletalMeshImportData, LODIndex, &bOperationCanceled);
 							|- CheckSmoothingInfo()
-							|- FillLastImportMaterialNames()
+							|- FillLastImportMaterialNames() // 目前不知道干什么
 							|- FillSkeletalMeshImportData() // 最后一遍检查导入数据是否合格，如果不合格就不导入；因为之后会销毁同名的skeletonMesh,如果导入失败，之前导入的也不能用了
 								|- ImportBone()
 									|- RetrievePoseFromBindPose()
@@ -79,3 +79,15 @@
 									|- 获取法线
 									|- 获取切线
 									
+								|- 如果使用T0的姿势作为Pose
+									|- SkinControlPointsToPose()
+								|- 去掉没有使用过的材质:CleanUpUnsuedMaterials
+								|- 对材质重排序
+								|- 调用DoUnSmoothVerts() : 只在NormalGenerationMethod!= MikkTSpace下有用
+									|- 记录每个ControlPoint到包含该ControlPoint的Wedge的映射 
+									|- 记录每个ControlPoint到包含该ControlPoint的Weight的映射
+										这些是用来分裂顶点时用 
+									|- 记录每个ControlPoint到包含该ControlPoint的面的映射 
+										用来深度遍历整个图，整个问题变成一个联通图问题，即如果两个三角形共用一条边（Wedge的ControlPoint相同）并且光滑组一致，则这两个三角形位于同一光滑组。
+										通过对引用每个顶点的三角形面片用上述方法划分光滑组，如果有两个以上的光滑组，则分裂ControlPoint. 
+										注意：如果使用MikkTSpace的话，分裂了顶点但是没有分裂wedge,基本上相当于没有操作。

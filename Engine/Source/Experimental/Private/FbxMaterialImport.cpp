@@ -594,7 +594,7 @@ void UnFbx::FFbxImporter::CreateUnrealMaterial(FbxSurfaceMaterial& FbxMaterial, 
 	{
 		// create an unreal material asset
 		UnrealMaterialFinal = new UMaterialInterface();
-
+		UnrealMaterialFinal->MaterialName = FName(*MaterialFullName);
 #if DEBUG_LOG_FBX_MATERIAL_PROPERTIES
 			const FbxProperty &FirstProperty = FbxMaterial.GetFirstProperty();
 			if (FirstProperty.IsValid())

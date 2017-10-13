@@ -21,7 +21,10 @@ class UMaterialInterface
 public:
 	UMaterialInterface();
 	FString GetPathName() const;
+	bool IsValid() const;
+	FName GetFName() const;
 	FString PathName;
+	FName	MaterialName;
 	TextureSampler DiffuseTexture;
 	TextureSampler NormalTexture;
 	TextureSampler BumpTexture;

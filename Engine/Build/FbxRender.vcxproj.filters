@@ -87,6 +87,9 @@
     <ClCompile Include="..\Source\Experimental\Private\Texture.cpp">
       <Filter>Fbx</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\ReferenceSkeleton.cpp">
+      <Filter>Fbx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Experimental\Public\YYUT.h">
@@ -170,11 +173,16 @@
     <ClInclude Include="..\Source\Experimental\Public\SkeletalMeshTypes.h">
       <Filter>Fbx</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\YSkeletalMesh.h" />
     <ClInclude Include="..\Source\Experimental\Public\MaterialInterface.h">
       <Filter>Fbx</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\Texture.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YSkeletalMesh.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\MeshCommon.h">
       <Filter>Fbx</Filter>
     </ClInclude>
   </ItemGroup>

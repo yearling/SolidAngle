@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "BoneIndices.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(LogAnimation, Log, All);
 class YSkeleton;
 struct FReferenceSkeleton;
 
