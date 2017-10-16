@@ -185,6 +185,7 @@
     <ClInclude Include="..\Source\Experimental\Public\MeshCommon.h">
       <Filter>Fbx</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\GPUSkinPublicDefs.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shader">

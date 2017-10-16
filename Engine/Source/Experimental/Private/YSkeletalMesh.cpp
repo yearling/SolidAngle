@@ -3,6 +3,7 @@
 
 
 YSkeletalMesh::YSkeletalMesh()
+	:Skeleton(nullptr)
 {
 }
 

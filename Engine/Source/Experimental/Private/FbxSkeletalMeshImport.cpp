@@ -1385,11 +1385,11 @@ YSkeletalMesh* UnFbx::FFbxImporter::ImportSkeletalMesh(UObject* InParent, TArray
 		return nullptr;
 	}
 	//
-	//if (!GIsAutomationTesting)
-	//	UE_LOG(LogFbx, Warning, TEXT("Bones digested - %i  Depth of hierarchy - %i"), SkeletalMesh->RefSkeleton.GetNum(), SkeletalDepth);
+	if (!GIsAutomationTesting)
+		UE_LOG(LogFbx, Warning, TEXT("Bones digested - %i  Depth of hierarchy - %i"), SkeletalMesh->RefSkeleton.GetNum(), SkeletalDepth);
 
-	//// process bone influences from import data
-	//ProcessImportMeshInfluences(*SkelMeshImportDataPtr);
+	// process bone influences from import data
+	ProcessImportMeshInfluences(*SkelMeshImportDataPtr);
 
 	//FSkeletalMeshResource* ImportedResource = SkeletalMesh->GetImportedResource();
 	//check(ImportedResource->LODModels.Num() == 0);

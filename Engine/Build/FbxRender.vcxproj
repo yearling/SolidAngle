@@ -199,6 +199,7 @@
     <ClInclude Include="..\Source\Experimental\Public\FbxLibs.h" />
     <ClInclude Include="..\Source\Experimental\Public\FbxMeshImportData.h" />
     <ClInclude Include="..\Source\Experimental\Public\FbxSkeletalMeshImportData.h" />
+    <ClInclude Include="..\Source\Experimental\Public\GPUSkinPublicDefs.h" />
     <ClInclude Include="..\Source\Experimental\Public\IShader.h" />
     <ClInclude Include="..\Source\Experimental\Public\MaterialInterface.h" />
     <ClInclude Include="..\Source\Experimental\Public\MeshCommon.h" />
