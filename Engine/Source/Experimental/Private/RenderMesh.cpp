@@ -59,12 +59,13 @@ void RenderScene::Render(TSharedRef<FRenderInfo> RenderInfo)
 
 	if (m_pMesh)
 	{
-		m_pMesh->Render(RenderInfo);
+		//m_pMesh->Render(RenderInfo);
 	}
-
+	DrawSkeletalMeshImportData();
 	DrawGridAndCoordinates();
 	GCanvas->Render(RenderInfo);
 }
+
 
 void RenderScene::CreateMeshResource()
 {
@@ -95,4 +96,35 @@ void RenderScene::DrawGridAndCoordinates()
 	GCanvas->DrawLine(FVector(0, 0, 0), FVector(0, 0, 5), FLinearColor(0, 0, 1, 1));
 }
 
+FMatrix GetParentMatrix(TArray<VBone>& pSkeleton, int32 iIndex)
+{
+	FMatrix ParentMatrix = FMatrix::Identity;
+	while (pSkeleton[iIndex].ParentIndex!= -1)
+	{
+		ParentMatrix = ParentMatrix* pSkeleton[pSkeleton[iIndex].ParentIndex].BonePos.Transform.ToMatrixWithScale();
+		iIndex = pSkeleton[iIndex].ParentIndex;
+	}
+	return ParentMatrix;
+}
 
+void RenderScene::DrawSkeletalMeshImportData()
+{
+	TArray<VBone>& pSkeleton= 	m_pSkeletalMeshData->RefBonesBinary;
+	for (int32 i = 0; i < pSkeleton.Num(); ++i)
+	{
+		if (pSkeleton[i].ParentIndex != -1)
+		{
+			FMatrix ParentMatrix = GetParentMatrix(pSkeleton, i);
+			FMatrix LocalMatrix = pSkeleton[i].BonePos.Transform.ToMatrixWithScale()*ParentMatrix;
+			FVector ParentPos = ParentMatrix.TransformPosition(FVector(0, 0, 0));
+			FVector LocalPos = LocalMatrix.TransformPosition(FVector(0, 0, 0));
+			GCanvas->DrawLine(ParentPos, LocalPos, FLinearColor(1, 1, 0, 1));
+		}
+	}
+}
+
+void RenderScene::SetFSkeletalMeshImportData(FSkeletalMeshImportData* pSkeletalMeshData)
+{
+	check(pSkeletalMeshData);
+	m_pSkeletalMeshData = pSkeletalMeshData;
+}

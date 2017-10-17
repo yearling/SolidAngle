@@ -4,6 +4,7 @@
 #include "StaticMesh.h"
 #include "RenderInfo.h"
 #include <memory>
+#include "SkelImport.h"
 struct RenderMeshCBuffer
 {
 	XMMATRIX  m_matView;
@@ -30,8 +31,10 @@ public:
 	virtual void					Render(TSharedRef<FRenderInfo> RenderInfo);
 	void							SetScreenWidthHeigth(int width, int height) { m_ScreenWidth = (float)width; m_ScreenHeight = (float)height; }
 	void							SetMesh(std::unique_ptr<MeshModel> && pMesh) { m_pMesh = std::move(pMesh); }
+	void							SetFSkeletalMeshImportData(FSkeletalMeshImportData* pSkeletalMeshData);
 	void							CreateMeshResource();
 	void							DrawGridAndCoordinates();
+	void							DrawSkeletalMeshImportData();
 private:
 	float							m_ScreenWidth;
 	float							m_ScreenHeight;
@@ -40,5 +43,5 @@ private:
 	TComPtr<ID3D11BlendState>		m_bs;
 	TComPtr<ID3D11DepthStencilState>m_ds;
 private:
-	TComPtr<ID3D11InputLayout>		m_InputLayout;
+	FSkeletalMeshImportData*		m_pSkeletalMeshData;
 };

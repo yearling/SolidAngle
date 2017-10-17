@@ -16,6 +16,7 @@
 #include "FbxImporter.h"
 #include "FbxSkeletalMeshImportData.h"
 #include "MaterialInterface.h"
+#include "SkelImport.h"
 
 DEFINE_LOG_CATEGORY(LogFbx);
 
@@ -2269,6 +2270,396 @@ FbxNode* FFbxImporter::RetrieveObjectFromName(const TCHAR* ObjectName, FbxNode* 
 
 } // namespace UnFbx
 
+
+
+FSkeletalMeshImportData* UnFbx::FFbxImporter::MainInportTest(const FString & FileToImport, EFBXImportType MeshTypeToImport)
+{
+	FName Name(TEXT("FbxSelfImportMesh"));
+	if (!ImportFromFile(FileToImport, TEXT("FBX"), true))
+	{
+		// Log the error message and fail the import.
+		//Warn->Log(ELogVerbosity::Error, FbxImporter->GetErrorMessage());
+		UE_LOG(LogFbx, Error, TEXT("%s"), GetErrorMessage());
+	}
+	else
+	{
+		const TCHAR* errorMessage = GetErrorMessage();
+		if (errorMessage[0] != '\0')
+		{
+			//Warn->Log(errorMessage);
+			UE_LOG(LogFbx, Error, TEXT("%s"), GetErrorMessage());
+		}
+
+		FbxNode* RootNodeToImport = NULL;
+		RootNodeToImport = Scene->GetRootNode();
+
+		// For animation and static mesh we assume there is at lease one interesting node by default
+		int32 InterestingNodeCount = 1;
+		TArray< TArray<FbxNode*>* > SkelMeshArray;
+
+		bool bImportStaticMeshLODs = ImportOptions->bImportStaticMeshLODs;
+		bool bCombineMeshes = ImportOptions->bCombineToSingle;
+		bool bCombineMeshesLOD = false;
+
+		if (MeshTypeToImport == FBXIT_SkeletalMesh)
+		{
+			FillFbxSkelMeshArrayInScene(RootNodeToImport, SkelMeshArray, false);
+			InterestingNodeCount = SkelMeshArray.Num();
+		}
+		else if (MeshTypeToImport == FBXIT_StaticMesh)
+		{
+			UFbxAssetImportData ImportData;
+			ApplyTransformSettingsToFbxNode(RootNodeToImport, &ImportData);
+
+			if (bCombineMeshes && !bImportStaticMeshLODs)
+			{
+				// If Combine meshes and dont import mesh LODs, the interesting node count should be 1 so all the meshes are grouped together into one static mesh
+				InterestingNodeCount = 1;
+			}
+			else
+			{
+				// count meshes in lod groups if we dont care about importing LODs
+				bool bCountLODGroupMeshes = !bImportStaticMeshLODs;
+				int32 NumLODGroups = 0;
+				InterestingNodeCount = GetFbxMeshCount(RootNodeToImport, bCountLODGroupMeshes, NumLODGroups);
+
+				// if there were LODs in the file, do not combine meshes even if requested
+				if (bImportStaticMeshLODs && bCombineMeshes && NumLODGroups > 0)
+				{
+					bCombineMeshes = false;
+					//Combine all the LOD together and export one mesh with LODs
+					bCombineMeshesLOD = true;
+				}
+			}
+		}
+
+		if (InterestingNodeCount > 1)
+		{
+			// the option only works when there are only one asset
+			ImportOptions->bUsedAsFullName = false;
+		}
+
+		const FString Filename(FileToImport);
+		if (RootNodeToImport && InterestingNodeCount > 0)
+		{
+			int32 NodeIndex = 0;
+
+			int32 ImportedMeshCount = 0;
+			if (MeshTypeToImport == FBXIT_StaticMesh)  // static mesh
+			{
+#if 0
+				YStaticMesh* NewStaticMesh = NULL;
+				if (bCombineMeshes)
+				{
+					TArray<FbxNode*> FbxMeshArray;
+					FillFbxMeshArray(RootNodeToImport, FbxMeshArray, this);
+					if (FbxMeshArray.Num() > 0)
+					{
+						UFbxStaticMeshImportData ImportData;
+						NewStaticMesh = ImportStaticMeshAsSingle(nullptr, FbxMeshArray, FName(TEXT("StaticMesh")), &ImportData, NULL, 0);
+						if (NewStaticMesh != nullptr)
+						{
+							ReorderMaterialToFbxOrder(NewStaticMesh, FbxMeshArray);
+						}
+					}
+
+					ImportedMeshCount = NewStaticMesh ? 1 : 0;
+				}
+				else if (bCombineMeshesLOD)
+				{
+					TArray<FbxNode*> FbxMeshArray;
+					TArray<FbxNode*> FbxLodGroups;
+					TArray<TArray<FbxNode*>> FbxMeshesLod;
+					FillFbxMeshAndLODGroupArray(RootNodeToImport, FbxLodGroups, FbxMeshArray);
+					FbxMeshesLod.Add(FbxMeshArray);
+					for (FbxNode* LODGroup : FbxLodGroups)
+					{
+						if (LODGroup->GetNodeAttribute() && LODGroup->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eLODGroup && LODGroup->GetChildCount() > 0)
+						{
+							for (int32 GroupLodIndex = 0; GroupLodIndex < LODGroup->GetChildCount(); ++GroupLodIndex)
+							{
+								TArray<FbxNode*> AllNodeInLod;
+								FindAllLODGroupNode(AllNodeInLod, LODGroup, GroupLodIndex);
+								if (AllNodeInLod.Num() > 0)
+								{
+									if (FbxMeshesLod.Num() <= GroupLodIndex)
+									{
+										FbxMeshesLod.Add(AllNodeInLod);
+									}
+									else
+									{
+										TArray<FbxNode*> &LODGroupArray = FbxMeshesLod[GroupLodIndex];
+										for (FbxNode* NodeToAdd : AllNodeInLod)
+										{
+											LODGroupArray.Add(NodeToAdd);
+										}
+									}
+								}
+							}
+						}
+					}
+
+
+					UFbxStaticMeshImportData StaticMeshImportData;
+					//Import the LOD root
+					if (FbxMeshesLod.Num() > 0)
+					{
+						TArray<FbxNode*> &LODMeshesArray = FbxMeshesLod[0];
+						NewStaticMesh = ImportStaticMeshAsSingle(nullptr, LODMeshesArray, Name, &StaticMeshImportData, NULL, 0);
+					}
+					//Import all LODs
+					for (int32 LODIndex = 1; LODIndex < FbxMeshesLod.Num(); ++LODIndex)
+					{
+						TArray<FbxNode*> &LODMeshesArray = FbxMeshesLod[LODIndex];
+						ImportStaticMeshAsSingle(nullptr, LODMeshesArray, Name, &StaticMeshImportData, NewStaticMesh, LODIndex);
+					}
+				}
+				else
+				{
+					TArray<UObject*> AllNewAssets;
+					//UObject* Object = RecursiveImportNode(FbxImporter, RootNodeToImport, InParent, Name, Flags, NodeIndex, InterestingNodeCount, AllNewAssets);
+
+					//NewStaticMesh = Cast<UStaticMesh>(Object);
+
+					// Make sure to notify the asset registry of all assets created other than the one returned, which will notify the asset registry automatically.
+					for (auto AssetIt = AllNewAssets.CreateConstIterator(); AssetIt; ++AssetIt)
+					{
+						UObject* Asset = *AssetIt;
+						//if (Asset != NewStaticMesh)
+						{
+							//FAssetRegistryModule::AssetCreated(Asset);
+							//Asset->MarkPackageDirty();
+						}
+					}
+
+					ImportedMeshCount = AllNewAssets.Num();
+				}
+
+				// Importing static mesh global sockets only if one mesh is imported
+				if (ImportedMeshCount == 1 && NewStaticMesh)
+				{
+					ImportStaticMeshGlobalSockets(NewStaticMesh);
+				}
+
+				//NewObject = NewStaticMesh;
+#endif
+			}
+			else if (MeshTypeToImport == FBXIT_SkeletalMesh)// skeletal mesh
+			{
+				int32 TotalNumNodes = 0;
+
+				for (int32 i = 0; i < SkelMeshArray.Num(); i++)
+				{
+					TArray<FbxNode*> NodeArray = *SkelMeshArray[i];
+
+					TotalNumNodes += NodeArray.Num();
+					// check if there is LODGroup for this skeletal mesh
+					int32 MaxLODLevel = 1;
+					for (int32 j = 0; j < NodeArray.Num(); j++)
+					{
+						FbxNode* Node = NodeArray[j];
+						if (Node->GetNodeAttribute() && Node->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eLODGroup)
+						{
+							// get max LODgroup level
+							if (MaxLODLevel < Node->GetChildCount())
+							{
+								MaxLODLevel = Node->GetChildCount();
+							}
+						}
+					}
+
+					int32 LODIndex;
+					int32 SuccessfulLodIndex = 0;
+					//bool bImportSkeletalMeshLODs = ImportUI->SkeletalMeshImportData->bImportMeshLODs;
+					bool bImportSkeletalMeshLODs = false;
+					for (LODIndex = 0; LODIndex < MaxLODLevel; LODIndex++)
+					{
+						//We need to know what is the imported lod index when importing the morph targets
+						int32 ImportedSuccessfulLodIndex = INDEX_NONE;
+						if (!bImportSkeletalMeshLODs && LODIndex > 0) // not import LOD if UI option is OFF
+						{
+							break;
+						}
+
+						TArray<FbxNode*> SkelMeshNodeArray;
+						for (int32 j = 0; j < NodeArray.Num(); j++)
+						{
+							FbxNode* Node = NodeArray[j];
+							if (Node->GetNodeAttribute() && Node->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eLODGroup)
+							{
+								TArray<FbxNode*> NodeInLod;
+								if (Node->GetChildCount() > LODIndex)
+								{
+									FindAllLODGroupNode(NodeInLod, Node, LODIndex);
+								}
+								else // in less some LODGroups have less level, use the last level
+								{
+									FindAllLODGroupNode(NodeInLod, Node, Node->GetChildCount() - 1);
+								}
+
+								for (FbxNode *MeshNode : NodeInLod)
+								{
+									SkelMeshNodeArray.Add(MeshNode);
+								}
+							}
+							else
+							{
+								SkelMeshNodeArray.Add(Node);
+							}
+						}
+
+						if (LODIndex == 0 && SkelMeshNodeArray.Num() != 0)
+						{
+							FName OutputName = MakeNameForMesh(Name.ToString(), SkelMeshNodeArray[0]);
+							UFbxSkeletalMeshImportData SkeletalMeshImportData;
+							SkeletalMeshImportData.bConvertScene = true;
+							SkeletalMeshImportData.bConvertSceneUnit = false;
+							SkeletalMeshImportData.bForceFrontXAxis = false;
+							SkeletalMeshImportData.bImportAsScene = false;
+							SkeletalMeshImportData.ImportRotation = FRotator(0, 0, 0);
+							SkeletalMeshImportData.ImportTranslation = FVector(0, 0, 0);
+							SkeletalMeshImportData.ImportUniformScale = 1.0f;
+							bool bOperationCanceled = false;
+							FSkeletalMeshImportData* pSkeletonMeshImportData = new FSkeletalMeshImportData();
+							YSkeletalMesh* NewMesh = ImportSkeletalMesh(nullptr, SkelMeshNodeArray, OutputName, &SkeletalMeshImportData, LODIndex, &bOperationCanceled,nullptr, pSkeletonMeshImportData);
+							//NewObject = NewMesh;
+							return pSkeletonMeshImportData;
+							if (bOperationCanceled)
+							{
+								// User cancelled, clean up and return
+								ReleaseScene();
+								//Warn->EndSlowTask();
+								bOperationCanceled = true;
+								//return nullptr;
+							}
+
+							if (NewMesh)
+							{
+								if (true)
+								{
+									// We need to remove all scaling from the root node before we set up animation data.
+									// Othewise some of the global transform calculations will be incorrect.
+									UFbxSkeletalMeshImportData SkeletalMeshImportData;
+									UFbxAnimSequenceImportData AnimSequenceImportData;
+									RemoveTransformSettingsFromFbxNode(RootNodeToImport, &SkeletalMeshImportData);
+									SetupAnimationDataFromMesh(NewMesh, nullptr, SkelMeshNodeArray, &AnimSequenceImportData, OutputName.ToString());
+
+									// Reapply the transforms for the rest of the import
+									ApplyTransformSettingsToFbxNode(RootNodeToImport, &SkeletalMeshImportData);
+									ImportedSuccessfulLodIndex = SuccessfulLodIndex;
+								}
+								//Increment the LOD index
+								SuccessfulLodIndex++;
+							}
+						}
+						//else if (NewObject) // the base skeletal mesh is imported successfully
+						//{
+						//	YSkeletalMesh* BaseSkeletalMesh = Cast<YSkeletalMesh>(NewObject);
+						//	FName LODObjectName = NAME_None;
+						//	YSkeletalMesh *LODObject = FbxImporter->ImportSkeletalMesh(BaseSkeletalMesh->GetOutermost(), SkelMeshNodeArray, LODObjectName, RF_Transient, ImportUI->SkeletalMeshImportData, SuccessfulLodIndex, &bOperationCanceled);
+						//	bool bImportSucceeded = !bOperationCanceled && FbxImporter->ImportSkeletalMeshLOD(LODObject, BaseSkeletalMesh, SuccessfulLodIndex, false);
+
+						//	if (bImportSucceeded)
+						//	{
+						//		BaseSkeletalMesh->LODInfo[SuccessfulLodIndex].ScreenSize = 1.0f / (MaxLODLevel * SuccessfulLodIndex);
+						//		ImportedSuccessfulLodIndex = SuccessfulLodIndex;
+						//		SuccessfulLodIndex++;
+						//	}
+						//	else
+						//	{
+						//		FbxImporter->AddTokenizedErrorMessage(FTokenizedMessage::Create(EMessageSeverity::Error, LOCTEXT("FailedToImport_SkeletalMeshLOD", "Failed to import Skeletal mesh LOD.")), FFbxErrors::SkeletalMesh_LOD_FailedToImport);
+						//	}
+						//}
+
+						//// import morph target
+						//if (NewObject && ImportUI->SkeletalMeshImportData->bImportMorphTargets && ImportedSuccessfulLodIndex != INDEX_NONE)
+						//{
+						//	// Disable material importing when importing morph targets
+						//	uint32 bImportMaterials = ImportOptions->bImportMaterials;
+						//	ImportOptions->bImportMaterials = 0;
+						//	uint32 bImportTextures = ImportOptions->bImportTextures;
+						//	ImportOptions->bImportTextures = 0;
+
+						//	FbxImporter->ImportFbxMorphTarget(SkelMeshNodeArray, Cast<YSkeletalMesh>(NewObject), InParent, ImportedSuccessfulLodIndex);
+
+						//	ImportOptions->bImportMaterials = !!bImportMaterials;
+						//	ImportOptions->bImportTextures = !!bImportTextures;
+						//}
+					}
+
+					/*	if (NewObject)
+					{
+					NodeIndex++;
+					FFormatNamedArguments Args;
+					Args.Add(TEXT("NodeIndex"), NodeIndex);
+					Args.Add(TEXT("ArrayLength"), SkelMeshArray.Num());
+					GWarn->StatusUpdate(NodeIndex, SkelMeshArray.Num(), FText::Format(NSLOCTEXT("UnrealEd", "Importingf", "Importing ({NodeIndex} of {ArrayLength})"), Args));
+					}*/
+				}
+
+				for (int32 i = 0; i < SkelMeshArray.Num(); i++)
+				{
+					delete SkelMeshArray[i];
+				}
+
+				// if total nodes we found is 0, we didn't find anything. 
+				if (TotalNumNodes == 0)
+				{
+					AddTokenizedErrorMessage(FTokenizedMessage::Create(EMessageSeverity::Error, LOCTEXT("FailedToImport_NoMeshFoundOnRoot", "Could not find any valid mesh on the root hierarchy. If you have mesh in the sub hierarchy, please enable option of [Import Meshes In Bone Hierarchy] when import.")),
+						FFbxErrors::SkeletalMesh_NoMeshFoundOnRoot);
+				}
+			}
+			else if (MeshTypeToImport == FBXIT_SubDSurface) // SubDSurface
+			{
+				/*USubDSurface* NewMesh = NULL;
+				TArray<FbxNode*> FbxMeshArray;
+				FbxImporter->FillFbxMeshArray(RootNodeToImport, FbxMeshArray, FbxImporter);
+				if (FbxMeshArray.Num() > 0)
+				{
+				NewMesh = Cast<USubDSurface>(CreateOrOverwriteAsset(USubDSurface::StaticClass(), InParent, Name, Flags));
+
+				bool bOk = FbxImporter->ImportSubDSurface(NewMesh, InParent, FbxMeshArray, Name, Flags, ImportUI->StaticMeshImportData);
+
+				if (!bOk)
+				{
+				FbxImporter->AddTokenizedErrorMessage(FTokenizedMessage::Create(EMessageSeverity::Error, LOCTEXT("FailedToImport_ImportSubDSurface", "Could not import subdivision surface mesh (no quad mesh?).")),
+				FFbxErrors::SkeletalMesh_ImportSubDSurface);
+
+				ObjectTools::DeleteSingleObject(NewMesh);
+				}
+				}
+
+				ImportedMeshCount = NewMesh ? 1 : 0;
+
+				NewObject = NewMesh;*/
+			}
+			else if (MeshTypeToImport == FBXIT_Animation)// animation
+			{
+				if (ImportOptions->SkeletonForAnimation)
+				{
+					// will return the last animation sequence that were added
+					//NewObject = ImportFbxAnimation(ImportOptions->SkeletonForAnimation, InParent, ImportUI->AnimSequenceImportData, *Filename, *Name.ToString(), true);
+				}
+			}
+		}
+		else
+		{
+			if (RootNodeToImport == NULL)
+			{
+				AddTokenizedErrorMessage(FTokenizedMessage::Create(EMessageSeverity::Error, LOCTEXT("FailedToImport_InvalidRoot", "Could not find root node.")), FFbxErrors::SkeletalMesh_InvalidRoot);
+			}
+			else if (MeshTypeToImport == FBXIT_SkeletalMesh)
+			{
+				AddTokenizedErrorMessage(FTokenizedMessage::Create(EMessageSeverity::Error, LOCTEXT("FailedToImport_InvalidBone", "Failed to find any bone hierarchy. Try disabling the \"Import As Skeletal\" option to import as a rigid mesh. ")), FFbxErrors::SkeletalMesh_InvalidBone);
+			}
+			else
+			{
+				AddTokenizedErrorMessage(FTokenizedMessage::Create(EMessageSeverity::Error, LOCTEXT("FailedToImport_InvalidNode", "Could not find any node.")), FFbxErrors::SkeletalMesh_InvalidNode);
+			}
+		}
+	}
+	return nullptr;
+}
 
 void UnFbx::FFbxImporter::MainImport(const FString & FileToImport, EFBXImportType MeshTypeToImport)
 {
