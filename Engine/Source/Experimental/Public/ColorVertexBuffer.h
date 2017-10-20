@@ -2,7 +2,7 @@
 
 #pragma once
 
-//#include "RenderResource.h"
+#include "RenderResource.h"
 #include "Core.h"
 
 struct FStaticMeshBuildVertex;
@@ -10,7 +10,7 @@ struct FStaticMeshBuildVertex;
 /**
 * A vertex buffer of colors.
 */
-class FColorVertexBuffer //: public FVertexBuffer
+class FColorVertexBuffer : public FVertexBuffer
 {
 public:
 	/** Default constructor. */

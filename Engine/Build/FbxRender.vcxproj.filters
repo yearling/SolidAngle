@@ -93,6 +93,15 @@
     <ClCompile Include="..\Source\Experimental\Private\SkeletalMesh.cpp">
       <Filter>Fbx</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\BulkData.cpp">
+      <Filter>Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\SkinWeightVertexBuffer.cpp">
+      <Filter>Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\ColorVertexBuffer.cpp">
+      <Filter>Fbx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Experimental\Public\YYUT.h">
@@ -189,13 +198,25 @@
       <Filter>Fbx</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\GPUSkinPublicDefs.h" />
-    <ClInclude Include="..\Source\Experimental\Public\PackedNormal.h">
-      <Filter>Fbx</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\SkinWeightVertexBuffer.h">
       <Filter>Fbx</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\ColorVertexBuffer.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\StaticMeshVertexData.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\StaticMeshResources.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\RawIndexBuffer.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\LocalVertexFactory.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\BulkData.h">
       <Filter>Fbx</Filter>
     </ClInclude>
   </ItemGroup>

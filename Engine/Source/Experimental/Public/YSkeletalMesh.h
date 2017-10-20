@@ -3,6 +3,7 @@
 #include "MeshCommon.h"
 #include "Skeleton.h"
 #include "ReferenceSkeleton.h"
+DECLARE_LOG_CATEGORY_EXTERN(LogSkeletalMesh, Error, All);
 
 struct FSkeletalMaterial
 {
@@ -49,6 +50,7 @@ class YSkeletalMesh
 public:
 	YSkeletalMesh();
 	virtual ~YSkeletalMesh();
+	FSkeletalMeshResource* GetImportedResource();
 	YSkeleton* Skeleton;
 	FReferenceSkeleton RefSkeleton;
 	TArray<FSkeletalMaterial> Materials;

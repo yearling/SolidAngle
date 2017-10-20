@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "FbxMeshImportData.h"
 
-class USkeletalMesh;
+class YSkeletalMesh;
 
 /**
  * Import data and options used when importing a static mesh from fbx

@@ -259,8 +259,9 @@ public:
 			// Create the index buffer.
 			FRHIResourceCreateInfo CreateInfo(&Indices);
 			
-			extern  bool DoSkeletalMeshIndexBuffersNeedSRV();
-			bool bSRV = DoSkeletalMeshIndexBuffersNeedSRV();
+			//extern  bool DoSkeletalMeshIndexBuffersNeedSRV();
+			//bool bSRV = DoSkeletalMeshIndexBuffersNeedSRV();
+			bool bSRV = false;
 
 			EBufferUsageFlags Flags = BUF_Static;
 

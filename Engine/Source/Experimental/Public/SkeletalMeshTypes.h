@@ -18,6 +18,8 @@
 #include "SkinWeightVertexBuffer.h"
 #include "RenderResource.h"
 #include "ColorVertexBuffer.h"
+#include "BulkData.h"
+#include "ReferenceSkeleton.h"
 
 class FMaterialRenderProxy;
 class FMeshElementCollector;
@@ -25,7 +27,7 @@ class FPrimitiveDrawInterface;
 class FRawStaticIndexBuffer16or32Interface;
 class UMorphTarget;
 class UPrimitiveComponent;
-class USkeletalMesh;
+class YSkeletalMesh;
 class USkinnedMeshComponent;
 
 enum ETriangleSortOption
@@ -78,7 +80,7 @@ struct FBoneIndexPair
 
 
 
-class USkeletalMesh;
+class YSkeletalMesh;
 
 
 /*-----------------------------------------------------------------------------
@@ -306,6 +308,85 @@ static const TCHAR* TriangleSortOptionToString(ETriangleSortOption Option)
 			return TEXT("None");
 	}
 }
+
+class  FStripDataFlags
+{
+	/** Serialized engine strip flags (up to 8 flags). */
+	uint8 GlobalStripFlags;
+	/** Serialized per-class strip flags (user defined, up to 8 flags). */
+	uint8 ClassStripFlags;
+
+public:
+
+	/** Engine strip flags */
+	enum EStrippedData
+	{
+		None = 0,
+
+		/* Editor data */
+		Editor = 1,
+		/* All data not required for dedicated server to work correctly (usually includes editor data). */
+		Server = 2,
+
+		// Add global flags here (up to 8 including the already defined ones).
+
+		/** All flags */
+		All = 0xff
+	};
+
+	/**
+	* Constructor.
+	* Serializes strip data flags. Global (engine) flags are automatically generated from target platform
+	* when saving. Class flags need to be defined by the user.
+	*
+	* @param Ar - Archive to serialize with.
+	* @param InClassFlags - User defined per class flags .
+	* @param InVersion - Minimal strip version required to serialize strip flags
+	*/
+	FStripDataFlags(FArchive& Ar, uint8 InClassFlags = 0, int32 InVersion = VER_UE4_OLDEST_LOADABLE_PACKAGE);
+
+	/**
+	* Constructor.
+	* Serializes strip data flags. Global (engine) flags are user defined and will not be automatically generated
+	* when saving. Class flags also need to be defined by the user.
+	*
+	* @param Ar - Archive to serialize with.
+	* @param InClassFlags - User defined per class flags.
+	* @param InVersion - Minimal version required to serialize strip flags
+	*/
+	FStripDataFlags(FArchive& Ar, uint8 InGlobalFlags, uint8 InClassFlags, int32 InVersion = VER_UE4_OLDEST_LOADABLE_PACKAGE);
+
+	/**
+	* Checks if FStripDataFlags::Editor flag is set or not
+	*
+	* @return true if FStripDataFlags::Editor is set, false otherwise.
+	*/
+	FORCEINLINE bool IsEditorDataStripped() const
+	{
+		return (GlobalStripFlags & FStripDataFlags::Editor) != 0;
+	}
+
+	/**
+	* Checks if FStripDataFlags::Server flag is set or not
+	*
+	* @return true if FStripDataFlags::Server is set, false otherwise.
+	*/
+	bool IsDataStrippedForServer() const
+	{
+		return (GlobalStripFlags & FStripDataFlags::Server) != 0;
+	}
+
+	/**
+	* Checks if user defined flags are set or not.
+	*
+	* @InFlags - User defined flags to check.
+	* @return true if the specified user defined flags are set, false otherwise.
+	*/
+	bool IsClassDataStripped(uint8 InFlags) const
+	{
+		return (ClassStripFlags & InFlags) != 0;
+	}
+};
 
 /**
  * A set of skeletal mesh triangles which use the same material
@@ -1504,7 +1585,7 @@ public:
 	 void ReleaseResources();
 
 	/** Serialize to/from the specified archive.. */
-	void Serialize(FArchive& Ar, USkeletalMesh* Owner);
+	void Serialize(FArchive& Ar, YSkeletalMesh* Owner);
 
 	/**
 	 * Computes the maximum number of bones per section used to render this mesh.
@@ -1632,7 +1713,7 @@ protected:
 	class FSkeletalMeshResource* SkelMeshResource;
 
 	/** The points to the skeletal mesh and physics assets are purely for debug purposes. Access is NOT thread safe! */
-	const USkeletalMesh* SkeletalMeshForDebug;
+	const YSkeletalMesh* SkeletalMeshForDebug;
 	class UPhysicsAsset* PhysicsAssetForDebug;
 
 	/** data copied for rendering */

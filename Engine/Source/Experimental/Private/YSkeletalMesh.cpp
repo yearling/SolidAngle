@@ -11,3 +11,8 @@ YSkeletalMesh::YSkeletalMesh()
 YSkeletalMesh::~YSkeletalMesh()
 {
 }
+
+FSkeletalMeshResource* YSkeletalMesh::GetImportedResource()
+{
+
+}

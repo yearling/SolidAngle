@@ -1391,7 +1391,7 @@ YSkeletalMesh* UnFbx::FFbxImporter::ImportSkeletalMesh(UObject* InParent, TArray
 	// process bone influences from import data
 	ProcessImportMeshInfluences(*SkelMeshImportDataPtr);
 
-	FSkeletalMeshResource* ImportedResource = SkeletalMesh->GetImportedResource();
+	//FSkeletalMeshResource* ImportedResource = SkeletalMesh->GetImportedResource();
 	//check(ImportedResource->LODModels.Num() == 0);
 	//ImportedResource->LODModels.Empty();
 	//new(ImportedResource->LODModels)FStaticLODModel();
