@@ -8,6 +8,7 @@
 //#include "Factories/FbxAnimSequenceImportData.h"
 //#include "Factories/FbxImportUI.h"
 #include "Logging/TokenizedMessage.h"
+#include "StaticMeshVertexData.h"
 //#include "Factories/FbxStaticMeshImportData.h"
 //#include "Factories/FbxTextureImportData.h"
 //#include "Factories/FbxSceneImportFactory.h"
@@ -122,18 +123,18 @@ namespace UnFbx
 			MikkTSpace,
 		};
 	}
-	namespace EVertexColorImportOption
-	{
-		enum Type
-		{
-			/** Import the static mesh using the vertex colors from the FBX file. */
-			Replace,
-			/** Ignore vertex colors from the FBX file, and keep the existing mesh vertex colors. */
-			Ignore,
-			/** Override all vertex colors with the specified color. */
-			Override
-		};
-	}
+	//namespace EVertexColorImportOption
+	//{
+	//	enum Type
+	//	{
+	//		/** Import the static mesh using the vertex colors from the FBX file. */
+	//		Replace,
+	//		/** Ignore vertex colors from the FBX file, and keep the existing mesh vertex colors. */
+	//		Ignore,
+	//		/** Override all vertex colors with the specified color. */
+	//		Override
+	//	};
+	//}
 
 	namespace EMaterialSearchLocation
 	{

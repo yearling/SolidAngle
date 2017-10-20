@@ -16,6 +16,8 @@
 #include "GPUSkinPublicDefs.h"
 #include "MeshCommon.h"
 #include "SkinWeightVertexBuffer.h"
+#include "RenderResource.h"
+#include "ColorVertexBuffer.h"
 
 class FMaterialRenderProxy;
 class FMeshElementCollector;
@@ -636,7 +638,7 @@ public:
 /** 
 * Vertex buffer with static lod chunk vertices for use with GPU skinning 
 */
-class FSkeletalMeshVertexBuffer /*: public FVertexBuffer*/
+class FSkeletalMeshVertexBuffer : public FVertexBuffer
 {
 public:
 	/**
@@ -689,14 +691,14 @@ public:
 	/**
 	* Initialize the RHI resource for this vertex buffer
 	*/
-	virtual void InitRHI() /*override*/;
+	virtual void InitRHI() override;
 
-	virtual void ReleaseRHI() /*override*/;
+	virtual void ReleaseRHI() override;
 
 	/**
 	* @return text description for the resource type
 	*/
-	virtual FString GetFriendlyName() const /*override*/;
+	virtual FString GetFriendlyName() const override;
 
 	//~ End FRenderResource interface.
 
@@ -978,7 +980,7 @@ private:
  * A vertex buffer for holding skeletal mesh per APEX cloth information only. 
  * This buffer sits along side FSkeletalMeshVertexBuffer in each skeletal mesh lod
  */
-class FSkeletalMeshVertexAPEXClothBuffer /*: public FVertexBuffer*/
+class FSkeletalMeshVertexAPEXClothBuffer : public FVertexBuffer
 {
 public:
 	/**
@@ -1024,12 +1026,12 @@ public:
 	/**
 	 * Initialize the RHI resource for this vertex buffer
 	 */
-	virtual void InitRHI() ;
+	virtual void InitRHI() override;
 
 	/**
 	 * @return text description for the resource type
 	 */
-	virtual FString GetFriendlyName() const ;
+	virtual FString GetFriendlyName() const override;
 
 	//~ End FRenderResource interface.
 
@@ -1085,7 +1087,7 @@ private:
 	void AllocateData();	
 };
 
-class FMorphTargetVertexInfoBuffers /*: public FRenderResource*/
+class FMorphTargetVertexInfoBuffers : public FRenderResource
 {
 public:
 	FMorphTargetVertexInfoBuffers()
@@ -1101,11 +1103,11 @@ public:
 		return NumInfluencedVerticesByMorphs;
 	}
 
-	/*FVertexBufferRHIRef PerVertexInfoVB;
+	FVertexBufferRHIRef PerVertexInfoVB;
 	FShaderResourceViewRHIRef PerVertexInfoSRV;
 
 	FVertexBufferRHIRef FlattenedDeltasVB;
-	FShaderResourceViewRHIRef FlattenedDeltasSRV;*/
+	FShaderResourceViewRHIRef FlattenedDeltasSRV;
 
 	// Changes to this struct must be reflected in MorphTargets.usf
 	struct FPerVertexInfo

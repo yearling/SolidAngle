@@ -2,7 +2,7 @@
 
 #pragma once
 
-//#include "RenderResource.h"
+#include "RenderResource.h"
 #include "StaticMeshVertexData.h"
 #include "GPUSkinPublicDefs.h"
 
@@ -56,7 +56,7 @@ public:
 };
 
 /** A vertex buffer for skin weights. */
-class FSkinWeightVertexBuffer //: public FVertexBuffer
+class FSkinWeightVertexBuffer : public FVertexBuffer
 {
 public:
 	/** Default constructor. */
@@ -83,10 +83,10 @@ public:
 	friend FArchive& operator<<(FArchive& Ar, FSkinWeightVertexBuffer& VertexBuffer);
 
 	// FRenderResource interface.
-	virtual void InitRHI() ;
-	virtual void ReleaseRHI() ;
+	virtual void InitRHI() override;
+	virtual void ReleaseRHI() override;
 
-	virtual FString GetFriendlyName() const  
+	virtual FString GetFriendlyName() const override 
 	{ 
 		return TEXT("SkeletalMesh Vertex Weights"); 
 	}
@@ -171,7 +171,7 @@ public:
 
 protected:
 	// guaranteed only to be valid if the vertex buffer is valid
-	//FShaderResourceViewRHIRef SRVValue;
+	FShaderResourceViewRHIRef SRVValue;
 
 private:
 
