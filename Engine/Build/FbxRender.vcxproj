@@ -171,6 +171,7 @@
     <ClCompile Include="..\Source\Experimental\Private\MaterialInterface.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\ReferenceSkeleton.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\RenderMesh.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\SkeletalMesh.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\SkeletalMeshImport.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\Skeleton.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\StaticMesh.cpp" />
@@ -194,6 +195,7 @@
     <ClInclude Include="..\Source\Experimental\Private\VertexDef.h" />
     <ClInclude Include="..\Source\Experimental\Private\YYDX11.h" />
     <ClInclude Include="..\Source\Experimental\Public\BoneIndices.h" />
+    <ClInclude Include="..\Source\Experimental\Public\ColorVertexBuffer.h" />
     <ClInclude Include="..\Source\Experimental\Public\FbxAnimSequenceImportData.h" />
     <ClInclude Include="..\Source\Experimental\Public\FbxImporter.h" />
     <ClInclude Include="..\Source\Experimental\Public\FbxLibs.h" />
@@ -203,9 +205,11 @@
     <ClInclude Include="..\Source\Experimental\Public\IShader.h" />
     <ClInclude Include="..\Source\Experimental\Public\MaterialInterface.h" />
     <ClInclude Include="..\Source\Experimental\Public\MeshCommon.h" />
+    <ClInclude Include="..\Source\Experimental\Public\PackedNormal.h" />
     <ClInclude Include="..\Source\Experimental\Public\ReferenceSkeleton.h" />
     <ClInclude Include="..\Source\Experimental\Public\SkeletalMeshTypes.h" />
     <ClInclude Include="..\Source\Experimental\Public\SkelImport.h" />
+    <ClInclude Include="..\Source\Experimental\Public\SkinWeightVertexBuffer.h" />
     <ClInclude Include="..\Source\Experimental\Public\Texture.h" />
     <ClInclude Include="..\Source\Experimental\Public\YSkeletalMesh.h" />
     <ClInclude Include="..\Source\Experimental\Public\YStaticMesh.h" />

@@ -91,3 +91,9 @@
 										用来深度遍历整个图，整个问题变成一个联通图问题，即如果两个三角形共用一条边（Wedge的ControlPoint相同）并且光滑组一致，则这两个三角形位于同一光滑组。
 										通过对引用每个顶点的三角形面片用上述方法划分光滑组，如果有两个以上的光滑组，则分裂ControlPoint. 
 										注意：如果使用MikkTSpace的话，分裂了顶点但是没有分裂wedge,基本上相当于没有操作。
+							|- ProcessImportMeshMaterials()
+							|- ProcessImportMeshSkeleton()
+							|- ProcessImportMeshInfluences()
+								|- 对FSkeletalMeshImportData::Influences中ControlPoint其索引排序；
+								|- 遍历FSkeletalMeshImportData::Influences，查看是否存在受8根以上骨骼影响的顶点，给出Warning;Normalize顶点权重；
+								|- 删掉8根骨骼权重以上的权重，删掉小于0.00001的权重，normalize顶点权重

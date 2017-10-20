@@ -90,6 +90,9 @@
     <ClCompile Include="..\Source\Experimental\Private\ReferenceSkeleton.cpp">
       <Filter>Fbx</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\SkeletalMesh.cpp">
+      <Filter>Fbx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Experimental\Public\YYUT.h">
@@ -186,6 +189,15 @@
       <Filter>Fbx</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\GPUSkinPublicDefs.h" />
+    <ClInclude Include="..\Source\Experimental\Public\PackedNormal.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\SkinWeightVertexBuffer.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\ColorVertexBuffer.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shader">

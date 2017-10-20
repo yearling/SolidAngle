@@ -12,6 +12,10 @@
 
 #include "CoreMinimal.h"
 #include "Containers/IndirectArray.h"
+#include "PackedNormal.h"
+#include "GPUSkinPublicDefs.h"
+#include "MeshCommon.h"
+#include "SkinWeightVertexBuffer.h"
 
 class FMaterialRenderProxy;
 class FMeshElementCollector;
@@ -21,6 +25,27 @@ class UMorphTarget;
 class UPrimitiveComponent;
 class USkeletalMesh;
 class USkinnedMeshComponent;
+
+enum ETriangleSortOption
+{
+	TRISORT_None,
+	TRISORT_CenterRadialDistance,
+	TRISORT_Random,
+	TRISORT_MergeContiguous,
+	TRISORT_Custom,
+	TRISORT_CustomLeftRight,
+	TRISORT_MAX,
+};
+
+
+/** Enum to specify which axis to use for the forward vector when using TRISORT_CustomLeftRight sort mode. */
+enum ETriangleSortAxis
+{
+	TSA_X_Axis,
+	TSA_Y_Axis,
+	TSA_Z_Axis,
+	TSA_MAX,
+};
 
 /** 
 * A pair of bone indices
@@ -181,7 +206,6 @@ struct FSkelMeshExtraInfluenceImportData
 //
 //	FSoftSkinVertex
 //
-#if 0
 struct FSoftSkinVertex
 {
 	FVector			Position;
@@ -201,7 +225,7 @@ struct FSoftSkinVertex
 	uint8			InfluenceWeights[MAX_TOTAL_INFLUENCES];
 
 	/** If this vert is rigidly weighted to a bone, return true and the bone index. Otherwise return false. */
-	ENGINE_API bool GetRigidWeightBone(uint8& OutBoneIndex) const;
+	 bool GetRigidWeightBone(uint8& OutBoneIndex) const;
 
 	/**
 	* Serializer
@@ -403,7 +427,7 @@ struct FSkelMeshSection
 	/**
 	* Calculate max # of bone influences used by this skel mesh section
 	*/
-	ENGINE_API void CalcMaxBoneInfluences();
+	 void CalcMaxBoneInfluences();
 
 	FORCEINLINE bool HasExtraBoneInfluences() const
 	{
@@ -612,27 +636,27 @@ public:
 /** 
 * Vertex buffer with static lod chunk vertices for use with GPU skinning 
 */
-class FSkeletalMeshVertexBuffer : public FVertexBuffer
+class FSkeletalMeshVertexBuffer /*: public FVertexBuffer*/
 {
 public:
 	/**
 	* Constructor
 	*/
-	ENGINE_API FSkeletalMeshVertexBuffer();
+	 FSkeletalMeshVertexBuffer();
 
 	/**
 	* Destructor
 	*/
-	ENGINE_API virtual ~FSkeletalMeshVertexBuffer();
+	 virtual ~FSkeletalMeshVertexBuffer();
 
 	/**
 	* Assignment. Assumes that vertex buffer will be rebuilt 
 	*/
-	ENGINE_API FSkeletalMeshVertexBuffer& operator=(const FSkeletalMeshVertexBuffer& Other);
+	 FSkeletalMeshVertexBuffer& operator=(const FSkeletalMeshVertexBuffer& Other);
 	/**
 	* Constructor (copy)
 	*/
-	ENGINE_API FSkeletalMeshVertexBuffer(const FSkeletalMeshVertexBuffer& Other);
+	 FSkeletalMeshVertexBuffer(const FSkeletalMeshVertexBuffer& Other);
 
 	/** 
 	* Delete existing resources 
@@ -651,7 +675,7 @@ public:
 	* Initializes the buffer with the given vertices.
 	* @param InVertices - The vertices to initialize the buffer with.
 	*/
-	ENGINE_API void Init(const TArray<FSoftSkinVertex>& InVertices);
+	 void Init(const TArray<FSoftSkinVertex>& InVertices);
 
 	/**
 	* Serializer for this class
@@ -665,14 +689,14 @@ public:
 	/**
 	* Initialize the RHI resource for this vertex buffer
 	*/
-	virtual void InitRHI() override;
+	virtual void InitRHI() /*override*/;
 
-	virtual void ReleaseRHI() override;
+	virtual void ReleaseRHI() /*override*/;
 
 	/**
 	* @return text description for the resource type
 	*/
-	virtual FString GetFriendlyName() const override;
+	virtual FString GetFriendlyName() const /*override*/;
 
 	//~ End FRenderResource interface.
 
@@ -896,14 +920,14 @@ public:
 	}
 	
 	// @param guaranteed only to be valid if the vertex buffer is valid
-	FShaderResourceViewRHIParamRef GetSRV() const
-	{
-		return SRVValue;
-	}
+	//FShaderResourceViewRHIParamRef GetSRV() const
+	//{
+		//return SRVValue;
+	//}
 
 protected:
 	// guaranteed only to be valid if the vertex buffer is valid
-	FShaderResourceViewRHIRef SRVValue;
+	//FShaderResourceViewRHIRef SRVValue;
 
 private:
 	/** Corresponds to USkeletalMesh::bUseFullPrecisionUVs. if true then 32 bit UVs are used */
@@ -954,28 +978,28 @@ private:
  * A vertex buffer for holding skeletal mesh per APEX cloth information only. 
  * This buffer sits along side FSkeletalMeshVertexBuffer in each skeletal mesh lod
  */
-class FSkeletalMeshVertexAPEXClothBuffer : public FVertexBuffer
+class FSkeletalMeshVertexAPEXClothBuffer /*: public FVertexBuffer*/
 {
 public:
 	/**
 	 * Constructor
 	 */
-	ENGINE_API FSkeletalMeshVertexAPEXClothBuffer();
+	 FSkeletalMeshVertexAPEXClothBuffer();
 
 	/**
 	 * Destructor
 	 */
-	ENGINE_API virtual ~FSkeletalMeshVertexAPEXClothBuffer();
+	 virtual ~FSkeletalMeshVertexAPEXClothBuffer();
 
 	/**
 	 * Assignment. Assumes that vertex buffer will be rebuilt 
 	 */
-	ENGINE_API FSkeletalMeshVertexAPEXClothBuffer& operator=(const FSkeletalMeshVertexAPEXClothBuffer& Other);
+	 FSkeletalMeshVertexAPEXClothBuffer& operator=(const FSkeletalMeshVertexAPEXClothBuffer& Other);
 	
 	/**
 	 * Constructor (copy)
 	 */
-	ENGINE_API FSkeletalMeshVertexAPEXClothBuffer(const FSkeletalMeshVertexAPEXClothBuffer& Other);
+	 FSkeletalMeshVertexAPEXClothBuffer(const FSkeletalMeshVertexAPEXClothBuffer& Other);
 
 	/** 
 	 * Delete existing resources 
@@ -1000,12 +1024,12 @@ public:
 	/**
 	 * Initialize the RHI resource for this vertex buffer
 	 */
-	virtual void InitRHI() override;
+	virtual void InitRHI() ;
 
 	/**
 	 * @return text description for the resource type
 	 */
-	virtual FString GetFriendlyName() const override;
+	virtual FString GetFriendlyName() const ;
 
 	//~ End FRenderResource interface.
 
@@ -1061,7 +1085,7 @@ private:
 	void AllocateData();	
 };
 
-class FMorphTargetVertexInfoBuffers : public FRenderResource
+class FMorphTargetVertexInfoBuffers /*: public FRenderResource*/
 {
 public:
 	FMorphTargetVertexInfoBuffers()
@@ -1069,19 +1093,19 @@ public:
 	{
 	}
 
-	ENGINE_API virtual void InitRHI() override;
-	ENGINE_API virtual void ReleaseRHI() override;
+	 virtual void InitRHI() ;
+	 virtual void ReleaseRHI() ;
 
 	uint32 GetNumInfluencedVerticesByMorphs() const
 	{
 		return NumInfluencedVerticesByMorphs;
 	}
 
-	FVertexBufferRHIRef PerVertexInfoVB;
+	/*FVertexBufferRHIRef PerVertexInfoVB;
 	FShaderResourceViewRHIRef PerVertexInfoSRV;
 
 	FVertexBufferRHIRef FlattenedDeltasVB;
-	FShaderResourceViewRHIRef FlattenedDeltasSRV;
+	FShaderResourceViewRHIRef FlattenedDeltasSRV;*/
 
 	// Changes to this struct must be reflected in MorphTargets.usf
 	struct FPerVertexInfo
@@ -1129,7 +1153,7 @@ public:
 	{
 	}
 
-	ENGINE_API ~FMultiSizeIndexContainer();
+	 ~FMultiSizeIndexContainer();
 	
 	/**
 	 * Initialize the index buffer's render resources.
@@ -1152,22 +1176,22 @@ public:
 	/**
 	 * Creates a new index buffer
 	 */
-	ENGINE_API void CreateIndexBuffer(uint8 DataTypeSize);
+	 void CreateIndexBuffer(uint8 DataTypeSize);
 
 	/**
 	 * Repopulates the index buffer
 	 */
-	ENGINE_API void RebuildIndexBuffer( const FMultiSizeIndexContainerData& InData );
+	 void RebuildIndexBuffer( const FMultiSizeIndexContainerData& InData );
 
 	/**
 	 * Returns a 32 bit version of the index buffer
 	 */
-	ENGINE_API void GetIndexBuffer( TArray<uint32>& OutArray ) const;
+	 void GetIndexBuffer( TArray<uint32>& OutArray ) const;
 
 	/**
 	 * Populates the index buffer with a new set of indices
 	 */
-	ENGINE_API void CopyIndexBuffer(const TArray<uint32>& NewArray);
+	 void CopyIndexBuffer(const TArray<uint32>& NewArray);
 
 	bool IsIndexBufferValid() const { return IndexBuffer != NULL; }
 
@@ -1190,10 +1214,10 @@ public:
 	/**
 	 * Retrieves index buffer related data
 	 */
-	ENGINE_API void GetIndexBufferData( FMultiSizeIndexContainerData& OutData ) const;
+	 void GetIndexBufferData( FMultiSizeIndexContainerData& OutData ) const;
 	
-	ENGINE_API FMultiSizeIndexContainer(const FMultiSizeIndexContainer& Other);
-	ENGINE_API FMultiSizeIndexContainer& operator=(const FMultiSizeIndexContainer& Buffer);
+	 FMultiSizeIndexContainer(const FMultiSizeIndexContainer& Other);
+	 FMultiSizeIndexContainer& operator=(const FMultiSizeIndexContainer& Buffer);
 #endif
 
 	friend FArchive& operator<<(FArchive& Ar, FMultiSizeIndexContainer& Buffer);
@@ -1277,7 +1301,7 @@ public:
 	/**
 	* Releases the LOD's render resources.
 	*/
-	ENGINE_API void ReleaseResources();
+	void ReleaseResources();
 
 	/**
 	* Releases the LOD's CPU render resources.
@@ -1307,7 +1331,7 @@ public:
 	*
 	* @param Vertices Array to fill.
 	*/
-	ENGINE_API void GetVertices(TArray<FSoftSkinVertex>& Vertices) const;
+	 void GetVertices(TArray<FSoftSkinVertex>& Vertices) const;
 
 	/**
 	* Fill array with APEX cloth mapping data.
@@ -1331,26 +1355,26 @@ public:
 	 * Initialize vertex buffers from skel mesh chunks.
 	 * @param BuildFlags See EVertexFlags.
 	 */
-	ENGINE_API void BuildVertexBuffers(uint32 BuildFlags);
+	 void BuildVertexBuffers(uint32 BuildFlags);
 
 	/** Utility function for returning total number of faces in this LOD. */
-	ENGINE_API int32 GetTotalFaces() const;
+	 int32 GetTotalFaces() const;
 
 	DEPRECATED(4.13, "Please use GetSectionFromVertIndex.")
-	ENGINE_API void GetChunkAndSkinType(int32 InVertIndex, int32& OutChunkIndex, int32& OutVertIndex, bool& bOutSoftVert, bool& bOutHasExtraBoneInfluences) const
+	 void GetChunkAndSkinType(int32 InVertIndex, int32& OutChunkIndex, int32& OutVertIndex, bool& bOutSoftVert, bool& bOutHasExtraBoneInfluences) const
 	{
 		GetSectionFromVertexIndex(InVertIndex, OutChunkIndex, OutVertIndex, bOutHasExtraBoneInfluences);
 		bOutSoftVert = true;
 	}
 
 	/** Utility for finding the section that a particular vertex is in. */
-	ENGINE_API void GetSectionFromVertexIndex(int32 InVertIndex, int32& OutSectionIndex, int32& OutVertIndex, bool& bOutHasExtraBoneInfluences) const;
+	 void GetSectionFromVertexIndex(int32 InVertIndex, int32& OutSectionIndex, int32& OutVertIndex, bool& bOutHasExtraBoneInfluences) const;
 
 	/**
 	 * Sort the triangles with the specified sorting method
 	 * @param ETriangleSortOption NewTriangleSorting new sorting method
 	 */
-	ENGINE_API void SortTriangles( FVector SortCenter, bool bUseSortCenter, int32 SectionIndex, ETriangleSortOption NewTriangleSorting );
+	 void SortTriangles( FVector SortCenter, bool bUseSortCenter, int32 SectionIndex, ETriangleSortOption NewTriangleSorting );
 
 	/**
 	* @return true if any chunks have cloth data.
@@ -1454,9 +1478,9 @@ public:
 
 	/** Rebuild index buffer for everything **/
 #if WITH_EDITOR
-	ENGINE_API void RebuildIndexBuffer();
+	 void RebuildIndexBuffer();
 #endif
-	ENGINE_API void RebuildIndexBuffer(FMultiSizeIndexContainerData* IndexBufferData, FMultiSizeIndexContainerData* AdjacencyData);
+	 void RebuildIndexBuffer(FMultiSizeIndexContainerData* IndexBufferData, FMultiSizeIndexContainerData* AdjacencyData);
 };
 
 /**
@@ -1475,7 +1499,7 @@ public:
 	void InitResources(bool bNeedsVertexColors, TArray<UMorphTarget*>& InMorphTargets);
 	
 	/** Releases rendering resources. */
-	ENGINE_API void ReleaseResources();
+	 void ReleaseResources();
 
 	/** Serialize to/from the specified archive.. */
 	void Serialize(FArchive& Ar, USkeletalMesh* Owner);
@@ -1524,6 +1548,7 @@ struct FBoneVertInfo
 
 
 
+#if 0
 /*-----------------------------------------------------------------------------
 FSkeletalMeshSceneProxy
 -----------------------------------------------------------------------------*/
@@ -1532,7 +1557,7 @@ class USkinnedMeshComponent;
 /**
  * A skeletal mesh component scene proxy.
  */
-class ENGINE_API FSkeletalMeshSceneProxy : public FPrimitiveSceneProxy
+class  FSkeletalMeshSceneProxy : public FPrimitiveSceneProxy
 {
 public:
 	/** 

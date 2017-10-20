@@ -147,9 +147,9 @@ void DX11Demo::Initial()
 	ImportOptions->MaterialCurveSuffixes.Reset();
 	ImportOptions->MaterialCurveSuffixes.Add(TEXT("_mat"));
 	ImportOptions->MaterialBasePath = FName("None");
-	//FbxImporter->MainImport(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
-	FSkeletalMeshImportData* pSkeletalMeshImportData =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
-	m_pRenderMesh->SetFSkeletalMeshImportData(pSkeletalMeshImportData);
+	FbxImporter->MainImport(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
+	//FSkeletalMeshImportData* pSkeletalMeshImportData =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
+	//m_pRenderMesh->SetFSkeletalMeshImportData(pSkeletalMeshImportData);
 }
 
 

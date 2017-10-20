@@ -42,7 +42,7 @@
     <ClInclude Include="..\Source\Runtime\RHI\Public\GPUProfiler.h">
       <Filter>Public</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Engine\Public\PixelFormat.h">
+    <ClInclude Include="..\Source\Runtime\RHI\Public\PixelFormat.h">
       <Filter>Public</Filter>
     </ClInclude>
   </ItemGroup>

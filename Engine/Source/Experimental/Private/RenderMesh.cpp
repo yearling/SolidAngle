@@ -9,7 +9,8 @@
 
 
 
-RenderScene::RenderScene(void)
+RenderScene::RenderScene(void):
+	m_pSkeletalMeshData(nullptr)
 {
 
 }
@@ -109,6 +110,8 @@ FMatrix GetParentMatrix(TArray<VBone>& pSkeleton, int32 iIndex)
 
 void RenderScene::DrawSkeletalMeshImportData()
 {
+	if (!m_pSkeletalMeshData)
+		return;
 	TArray<VBone>& pSkeleton= 	m_pSkeletalMeshData->RefBonesBinary;
 	for (int32 i = 0; i < pSkeleton.Num(); ++i)
 	{
