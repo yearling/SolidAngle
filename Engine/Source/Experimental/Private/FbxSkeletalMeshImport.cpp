@@ -1391,24 +1391,24 @@ YSkeletalMesh* UnFbx::FFbxImporter::ImportSkeletalMesh(UObject* InParent, TArray
 	// process bone influences from import data
 	ProcessImportMeshInfluences(*SkelMeshImportDataPtr);
 
-	//FSkeletalMeshResource* ImportedResource = SkeletalMesh->GetImportedResource();
-	//check(ImportedResource->LODModels.Num() == 0);
-	//ImportedResource->LODModels.Empty();
-	//new(ImportedResource->LODModels)FStaticLODModel();
+	FSkeletalMeshResource* ImportedResource = SkeletalMesh->GetImportedResource();
+	check(ImportedResource->LODModels.Num() == 0);
+	ImportedResource->LODModels.Empty();
+	new(ImportedResource->LODModels)FStaticLODModel();
 
-	//SkeletalMesh->LODInfo.Empty();
-	//SkeletalMesh->LODInfo.AddZeroed();
-	//SkeletalMesh->LODInfo[0].LODHysteresis = 0.02f;
-	//FSkeletalMeshOptimizationSettings Settings;
-	//// set default reduction settings values
-	//SkeletalMesh->LODInfo[0].ReductionSettings = Settings;
+	SkeletalMesh->LODInfo.Empty();
+	SkeletalMesh->LODInfo.AddZeroed();
+	SkeletalMesh->LODInfo[0].LODHysteresis = 0.02f;
+	FSkeletalMeshOptimizationSettings Settings;
+	// set default reduction settings values
+	SkeletalMesh->LODInfo[0].ReductionSettings = Settings;
 
-	//SkeletalMesh->SetImportedBounds(FBoxSphereBounds(BoundingBox));
+	SkeletalMesh->SetImportedBounds(FBoxSphereBounds(BoundingBox));
 
 	//// Store whether or not this mesh has vertex colors
-	//SkeletalMesh->bHasVertexColors = SkelMeshImportDataPtr->bHasVertexColors;
+	SkeletalMesh->bHasVertexColors = SkelMeshImportDataPtr->bHasVertexColors;
 
-	//FStaticLODModel& LODModel = ImportedResource->LODModels[0];
+	FStaticLODModel& LODModel = ImportedResource->LODModels[0];
 	//
 	//// Pass the number of texture coordinate sets to the LODModel.  Ensure there is at least one UV coord
 	//LODModel.NumTexCoords = FMath::Max<uint32>(1, SkelMeshImportDataPtr->NumTexCoords);
