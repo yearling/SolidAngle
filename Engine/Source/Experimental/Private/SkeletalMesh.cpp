@@ -2391,6 +2391,267 @@ void FSkeletalMeshResource::SyncUVChannelData(const TArray<FSkeletalMaterial>& O
 //}
 #endif
 
+FBoxSphereBounds YSkeletalMesh::GetBounds()
+{
+	return ExtendedBounds;
+}
+
+FBoxSphereBounds YSkeletalMesh::GetImportedBounds()
+{
+	return ImportedBounds;
+}
+void YSkeletalMesh::SetImportedBounds(const FBoxSphereBounds& InBounds)
+{
+	ImportedBounds = InBounds;
+	CalculateExtendedBounds();
+}
+void YSkeletalMesh::CalculateExtendedBounds()
+{
+	FBoxSphereBounds CalculatedBounds = ImportedBounds;
+
+	// Convert to Min and Max
+	FVector Min = CalculatedBounds.Origin - CalculatedBounds.BoxExtent;
+	FVector Max = CalculatedBounds.Origin + CalculatedBounds.BoxExtent;
+	// Apply bound extensions
+	Min -= NegativeBoundsExtension;
+	Max += PositiveBoundsExtension;
+	// Convert back to Origin, Extent and update SphereRadius
+	CalculatedBounds.Origin = (Min + Max) / 2;
+	CalculatedBounds.BoxExtent = (Max - Min) / 2;
+	CalculatedBounds.SphereRadius = CalculatedBounds.BoxExtent.GetAbsMax();
+
+	ExtendedBounds = CalculatedBounds;
+}
+void YSkeletalMesh::BeginDestroy()
+{
+	//Super::BeginDestroy();
+
+	// remove the cache of link up
+	if (Skeleton)
+	{
+		//Skeleton->RemoveLinkup(this);
+	}
+
+#if WITH_APEX_CLOTHING
+	// release clothing assets
+	for (FClothingAssetData& Data : ClothingAssets)
+	{
+		if (Data.ApexClothingAsset)
+		{
+			GPhysCommandHandler->DeferredRelease(Data.ApexClothingAsset);
+			Data.ApexClothingAsset = nullptr;
+		}
+	}
+#endif // #if WITH_APEX_CLOTHING
+
+	// Release the mesh's render resources.
+	ReleaseResources();
+}
+void YSkeletalMesh::ReleaseResources()
+{
+	ImportedResource->ReleaseResources();
+	// insert a fence to signal when these commands completed
+	//ReleaseResourcesFence.BeginFence();
+}
+bool YSkeletalMesh::IsReadyForFinishDestroy()
+{
+	// see if we have hit the resource flush fence
+	//return ReleaseResourcesFence.IsFenceComplete();
+	return true;
+}
+
+void YSkeletalMesh::Serialize(FArchive& Ar)
+{
+	//DECLARE_SCOPE_CYCLE_COUNTER(TEXT("USkeletalMesh::Serialize"), STAT_SkeletalMesh_Serialize, STATGROUP_LoadTime);
+
+	//Super::Serialize(Ar);
+
+	Ar.UsingCustomVersion(FFrameworkObjectVersion::GUID);
+	Ar.UsingCustomVersion(FEditorObjectVersion::GUID);
+	Ar.UsingCustomVersion(FRenderingObjectVersion::GUID);
+
+	FStripDataFlags StripFlags(Ar);
+
+	Ar << ImportedBounds;
+	Ar << Materials;
+
+	Ar << RefSkeleton;
+
+	// Serialize the default resource.
+	ImportedResource->Serialize(Ar, this);
+
+	// Build adjacency information for meshes that have not yet had it built.
+#if WITH_EDITOR
+	for (int32 LODIndex = 0; LODIndex < ImportedResource->LODModels.Num(); ++LODIndex)
+	{
+		FStaticLODModel& LODModel = ImportedResource->LODModels[LODIndex];
+
+		if (!LODModel.AdjacencyMultiSizeIndexContainer.IsIndexBufferValid()
+#if WITH_APEX_CLOTHING
+			|| (Ar.IsLoading() && Ar.UE4Ver() < VER_UE4_APEX_CLOTH_TESSELLATION && LODModel.HasApexClothData())
+#endif // WITH_APEX_CLOTHING
+			)
+		{
+			TArray<FSoftSkinVertex> Vertices;
+			FMultiSizeIndexContainerData IndexData;
+			FMultiSizeIndexContainerData AdjacencyIndexData;
+			//IMeshUtilities& MeshUtilities = FModuleManager::Get().LoadModuleChecked<IMeshUtilities>("MeshUtilities");
+
+			//UE_LOG(LogSkeletalMesh, Warning, TEXT("Building adjacency information for skeletal mesh '%s'. Please resave the asset."), *GetPathName());
+			LODModel.GetVertices(Vertices);
+			LODModel.MultiSizeIndexContainer.GetIndexBufferData(IndexData);
+			AdjacencyIndexData.DataTypeSize = IndexData.DataTypeSize;
+			//MeshUtilities.BuildSkeletalAdjacencyIndexBuffer(Vertices, LODModel.NumTexCoords, IndexData.Indices, AdjacencyIndexData.Indices);
+			//LODModel.AdjacencyMultiSizeIndexContainer.RebuildIndexBuffer(AdjacencyIndexData);
+		}
+	}
+#endif // #if WITH_EDITOR
+
+	// make sure we're counting properly
+	if (!Ar.IsLoading() && !Ar.IsSaving())
+	{
+		Ar << RefBasesInvMatrix;
+	}
+
+	if (Ar.UE4Ver() < VER_UE4_REFERENCE_SKELETON_REFACTOR)
+	{
+		TMap<FName, int32> DummyNameIndexMap;
+		Ar << DummyNameIndexMap;
+	}
+
+	//@todo legacy
+	TArray<UObject*> DummyObjs;
+	Ar << DummyObjs;
+
+	if (Ar.IsLoading() && Ar.CustomVer(FRenderingObjectVersion::GUID) < FRenderingObjectVersion::TextureStreamingMeshUVChannelData)
+	{
+		TArray<float> CachedStreamingTextureFactors;
+		Ar << CachedStreamingTextureFactors;
+	}
+
+	if (!StripFlags.IsEditorDataStripped())
+	{
+		FSkeletalMeshSourceData& SkelSourceData = *(FSkeletalMeshSourceData*)(&SourceData);
+		SkelSourceData.Serialize(Ar, this);
+	}
+
+#if WITH_EDITORONLY_DATA
+	if (Ar.IsLoading() && Ar.UE4Ver() < VER_UE4_ASSET_IMPORT_DATA_AS_JSON && !AssetImportData)
+	{
+		// AssetImportData should always be valid
+		//AssetImportData = NewObject<UAssetImportData>(this, TEXT("AssetImportData"));
+	}
+
+	// SourceFilePath and SourceFileTimestamp were moved into a subobject
+	if (Ar.IsLoading() && Ar.UE4Ver() < VER_UE4_ADDED_FBX_ASSET_IMPORT_DATA && AssetImportData)
+	{
+		// AssetImportData should always have been set up in the constructor where this is relevant
+		//FAssetImportInfo Info;
+		//Info.Insert(FAssetImportInfo::FSourceFile(SourceFilePath_DEPRECATED));
+		//AssetImportData->SourceData = MoveTemp(Info);
+
+		SourceFilePath_DEPRECATED = TEXT("");
+		SourceFileTimestamp_DEPRECATED = TEXT("");
+	}
+#endif // WITH_EDITORONLY_DATA
+	if (Ar.UE4Ver() >= VER_UE4_APEX_CLOTH)
+	{
+		// Serialize non-UPROPERTY ApexClothingAsset data.
+		//for (int32 Idx = 0; Idx < ClothingAssets.Num(); Idx++)
+		//{
+			//Ar << ClothingAssets[Idx];
+		//}
+
+		if (Ar.UE4Ver() < VER_UE4_REFERENCE_SKELETON_REFACTOR)
+		{
+			RebuildRefSkeletonNameToIndexMap();
+		}
+	}
+
+	if (Ar.IsLoading() && Ar.UE4Ver() < VER_UE4_MOVE_SKELETALMESH_SHADOWCASTING)
+	{
+		// Previous to this version, shadowcasting flags were stored in the LODInfo array
+		// now they're in the Materials array so we need to move them over
+		MoveDeprecatedShadowFlagToMaterials();
+	}
+#if WITH_EDITORONLY_DATA
+	if (Ar.UE4Ver() < VER_UE4_SKELETON_ASSET_PROPERTY_TYPE_CHANGE)
+	{
+		//PreviewAttachedAssetContainer.SaveAttachedObjectsFromDeprecatedProperties();
+	}
+#endif
+
+	if (bEnablePerPolyCollision)
+	{
+		//Ar << BodySetup;
+	}
+
+#if WITH_EDITORONLY_DATA
+	if (Ar.CustomVer(FEditorObjectVersion::GUID) < FEditorObjectVersion::RefactorMeshEditorMaterials)
+	{
+		MoveMaterialFlagsToSections();
+	}
+#endif
+
+#if WITH_APEX_CLOTHING && WITH_EDITORONLY_DATA
+	if (GIsEditor && Ar.IsLoading() && Ar.CustomVer(FFrameworkObjectVersion::GUID) < FFrameworkObjectVersion::AddInternalClothingGraphicalSkinning)
+	{
+		ApexClothingUtils::BackupClothingDataFromSkeletalMesh(this);
+		ApexClothingUtils::ReapplyClothingDataToSkeletalMesh(this);
+	}
+#endif
+
+#if WITH_EDITORONLY_DATA
+	bRequiresLODScreenSizeConversion = Ar.CustomVer(FFrameworkObjectVersion::GUID) < FFrameworkObjectVersion::LODsUseResolutionIndependentScreenSize;
+	bRequiresLODHysteresisConversion = Ar.CustomVer(FFrameworkObjectVersion::GUID) < FFrameworkObjectVersion::LODHysteresisUseResolutionIndependentScreenSize;
+#endif
+}
+
+FArchive& operator<<(FArchive& Ar, FSkeletalMaterial& Elem)
+{
+	Ar.UsingCustomVersion(FEditorObjectVersion::GUID);
+
+	//Ar << Elem.MaterialInterface;
+
+	//Use the automatic serialization instead of this custom operator
+	if (Ar.CustomVer(FEditorObjectVersion::GUID) >= FEditorObjectVersion::RefactorMeshEditorMaterials)
+	{
+		Ar << Elem.MaterialSlotName;
+#if WITH_EDITORONLY_DATA
+		/*if (!Ar.IsCooking() || Ar.CookingTarget()->HasEditorOnlyData())
+		{
+			Ar << Elem.ImportedMaterialSlotName;
+		}*/
+#endif //#if WITH_EDITORONLY_DATA
+	}
+	else
+	{
+		if (Ar.UE4Ver() >= VER_UE4_MOVE_SKELETALMESH_SHADOWCASTING)
+		{
+			Ar << Elem.bEnableShadowCasting_DEPRECATED;
+		}
+
+		Ar.UsingCustomVersion(FRecomputeTangentCustomVersion::GUID);
+		if (Ar.CustomVer(FRecomputeTangentCustomVersion::GUID) >= FRecomputeTangentCustomVersion::RuntimeRecomputeTangent)
+		{
+			Ar << Elem.bRecomputeTangent_DEPRECATED;
+		}
+	}
+
+	if (!Ar.IsLoading() || Ar.CustomVer(FRenderingObjectVersion::GUID) >= FRenderingObjectVersion::TextureStreamingMeshUVChannelData)
+	{
+		Ar << Elem.UVChannelData;
+	}
+
+	return Ar;
+}
+void YSkeletalMesh::MoveDeprecatedShadowFlagToMaterials()
+{
+
+}
+
+
+
 #undef LOCTEXT_NAMESPACE
 
 

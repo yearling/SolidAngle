@@ -490,12 +490,12 @@ public:
 	//virtual void PreEditChange(UProperty* PropertyAboutToChange) ;
 	//virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) ;
 
-	virtual void PostEditUndo() ;
+	//virtual void PostEditUndo() ;
 	//virtual void GetAssetRegistryTagMetadata(TMap<FName, FAssetRegistryTagMetadata>& OutMetadata) const override;
 #endif // WITH_EDITOR
 	virtual void BeginDestroy() ;
 	virtual bool IsReadyForFinishDestroy() ;
-	virtual void PreSave(const class ITargetPlatform* TargetPlatform);
+	//virtual void PreSave(const class ITargetPlatform* TargetPlatform);
 	virtual void Serialize(FArchive& Ar);
 	virtual void PostInitProperties();
 	virtual void PostLoad() ;
