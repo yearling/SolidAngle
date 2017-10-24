@@ -1,11 +1,21 @@
 #pragma once
 #include "Core.h"
 #include "MeshCommon.h"
-#include "Skeleton.h"
+//#include "Skeleton.h"
 #include "ReferenceSkeleton.h"
 #include "SkeletalMeshTypes.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(LogSkeletalMesh, Error, All);
+
+// The max number of uv channels processed in the texture streaming build.
+#define TEXSTREAM_MAX_NUM_UVCHANNELS  4
+// The initial texture scales (must be bigger than actual used values)
+#define TEXSTREAM_INITIAL_GPU_SCALE 256
+// The tile size when outputting the material texture scales.
+#define TEXSTREAM_TILE_RESOLUTION 32
+// The max number of textures processed in the material texture scales build.
+#define TEXSTREAM_MAX_NUM_TEXTURES_PER_MATERIAL 32
+
 
 struct FSkeletalMaterial
 {

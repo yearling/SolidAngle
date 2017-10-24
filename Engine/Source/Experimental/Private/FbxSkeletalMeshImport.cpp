@@ -12,7 +12,7 @@
 //#include "Async/AsyncWork.h"
 //#include "Misc/ConfigCacheIni.h"
 //#include "Misc/FeedbackContext.h"
-//#include "Modules/ModuleManager.h"
+#include "Modules/ModuleManager.h"
 //#include "UObject/ObjectMacros.h"
 #include "Logging/TokenizedMessage.h"
 #include "FbxImporter.h"
@@ -1409,32 +1409,32 @@ YSkeletalMesh* UnFbx::FFbxImporter::ImportSkeletalMesh(UObject* InParent, TArray
 	SkeletalMesh->bHasVertexColors = SkelMeshImportDataPtr->bHasVertexColors;
 
 	FStaticLODModel& LODModel = ImportedResource->LODModels[0];
-	//
-	//// Pass the number of texture coordinate sets to the LODModel.  Ensure there is at least one UV coord
-	//LODModel.NumTexCoords = FMath::Max<uint32>(1, SkelMeshImportDataPtr->NumTexCoords);
+	
+	// Pass the number of texture coordinate sets to the LODModel.  Ensure there is at least one UV coord
+	LODModel.NumTexCoords = FMath::Max<uint32>(1, SkelMeshImportDataPtr->NumTexCoords);
 
-	//// Array of re-import contexts for components using this mesh
-	//// Will unregister before import, then re-register afterwards
+	// Array of re-import contexts for components using this mesh
+	// Will unregister before import, then re-register afterwards
 	//TIndirectArray<FComponentReregisterContext> ComponentContexts;
 
-	//if (bCreateRenderData)
-	//{
-	//	TArray<FVector> LODPoints;
-	//	TArray<FMeshWedge> LODWedges;
-	//	TArray<FMeshFace> LODFaces;
-	//	TArray<FVertInfluence> LODInfluences;
-	//	TArray<int32> LODPointToRawMap;
-	//	SkelMeshImportDataPtr->CopyLODImportData(LODPoints,LODWedges,LODFaces,LODInfluences,LODPointToRawMap);
+	if (bCreateRenderData)
+	{
+		TArray<FVector> LODPoints;
+		TArray<FMeshWedge> LODWedges;
+		TArray<FMeshFace> LODFaces;
+		TArray<FVertInfluence> LODInfluences;
+		TArray<int32> LODPointToRawMap;
+		SkelMeshImportDataPtr->CopyLODImportData(LODPoints,LODWedges,LODFaces,LODInfluences,LODPointToRawMap);
 
-	//	IMeshUtilities::MeshBuildOptions BuildOptions;
-	//	BuildOptions.bKeepOverlappingVertices = ImportOptions->bKeepOverlappingVertices;
-	//	BuildOptions.bComputeNormals = !ImportOptions->ShouldImportNormals() || !SkelMeshImportDataPtr->bHasNormals;
-	//	BuildOptions.bComputeTangents = !ImportOptions->ShouldImportTangents() || !SkelMeshImportDataPtr->bHasTangents;
-	//	BuildOptions.bUseMikkTSpace = (ImportOptions->NormalGenerationMethod == EFBXNormalGenerationMethod::MikkTSpace) && (!ImportOptions->ShouldImportNormals() || !ImportOptions->ShouldImportTangents());
-	//	BuildOptions.bRemoveDegenerateTriangles = false;
+		IMeshUtilities::MeshBuildOptions BuildOptions;
+		BuildOptions.bKeepOverlappingVertices = ImportOptions->bKeepOverlappingVertices;
+		BuildOptions.bComputeNormals = !ImportOptions->ShouldImportNormals() || !SkelMeshImportDataPtr->bHasNormals;
+		BuildOptions.bComputeTangents = !ImportOptions->ShouldImportTangents() || !SkelMeshImportDataPtr->bHasTangents;
+		BuildOptions.bUseMikkTSpace = (ImportOptions->NormalGenerationMethod == EFBXNormalGenerationMethod::MikkTSpace) && (!ImportOptions->ShouldImportNormals() || !ImportOptions->ShouldImportTangents());
+		BuildOptions.bRemoveDegenerateTriangles = false;
 
-	//	IMeshUtilities& MeshUtilities = FModuleManager::Get().LoadModuleChecked<IMeshUtilities>("MeshUtilities");
-	//	
+		IMeshUtilities& MeshUtilities = FModuleManager::Get().LoadModuleChecked<IMeshUtilities>("MeshUtilities");
+		
 	//	TArray<FText> WarningMessages;
 	//	TArray<FName> WarningNames;
 	//	// Create actual rendering data.
@@ -1486,7 +1486,7 @@ YSkeletalMesh* UnFbx::FFbxImporter::ImportSkeletalMesh(UObject* InParent, TArray
 	//			new(ComponentContexts) FComponentReregisterContext(SkinComp);
 	//		}
 	//	}
-	//}
+	}
 
 	//if(LodIndex == 0)
 	//{
