@@ -338,24 +338,24 @@ namespace SkeletalMeshTools
 	void CopySkinnedModelData(FSkinnedModelData& OutData, FStaticLODModel& Model)
 	{
 	#if WITH_EDITORONLY_DATA
-		Model.GetVertices(OutData.Vertices);
-		Model.MultiSizeIndexContainer.GetIndexBuffer(OutData.Indices);
-		if (Model.RawPointIndices.GetElementCount() == OutData.Vertices.Num())
-		{
-			OutData.RawPointIndices.Empty(Model.RawPointIndices.GetElementCount());
-			OutData.RawPointIndices.AddUninitialized(Model.RawPointIndices.GetElementCount());
-			void* DestPtr = OutData.RawPointIndices.GetData();
-			Model.RawPointIndices.GetCopy(&DestPtr, /*bDiscardInternalCopy=*/false);
-			check(DestPtr == OutData.RawPointIndices.GetData());
-		}
-		OutData.MeshToImportVertexMap = Model.MeshToImportVertexMap;
-		OutData.Sections = Model.Sections;
-		for (int32 SectionIndex = 0; SectionIndex < Model.Sections.Num(); ++SectionIndex)
-		{
-			TArray<FBoneIndexType>& DestBoneMap = *new(OutData.BoneMaps) TArray<FBoneIndexType>();
-			DestBoneMap = Model.Sections[SectionIndex].BoneMap;
-		}
-		OutData.NumTexCoords = Model.NumTexCoords;
+		//Model.GetVertices(OutData.Vertices);
+		//Model.MultiSizeIndexContainer.GetIndexBuffer(OutData.Indices);
+		//if (Model.RawPointIndices.GetElementCount() == OutData.Vertices.Num())
+		//{
+		//	OutData.RawPointIndices.Empty(Model.RawPointIndices.GetElementCount());
+		//	OutData.RawPointIndices.AddUninitialized(Model.RawPointIndices.GetElementCount());
+		//	void* DestPtr = OutData.RawPointIndices.GetData();
+		//	Model.RawPointIndices.GetCopy(&DestPtr, /*bDiscardInternalCopy=*/false);
+		//	check(DestPtr == OutData.RawPointIndices.GetData());
+		//}
+		//OutData.MeshToImportVertexMap = Model.MeshToImportVertexMap;
+		//OutData.Sections = Model.Sections;
+		//for (int32 SectionIndex = 0; SectionIndex < Model.Sections.Num(); ++SectionIndex)
+		//{
+		//	TArray<FBoneIndexType>& DestBoneMap = *new(OutData.BoneMaps) TArray<FBoneIndexType>();
+		//	DestBoneMap = Model.Sections[SectionIndex].BoneMap;
+		//}
+		//OutData.NumTexCoords = Model.NumTexCoords;
 	#endif // #if WITH_EDITORONLY_DATA
 	};
 
@@ -446,13 +446,13 @@ namespace SkeletalMeshTools
 	}
 
 	
-	void CalcBoneVertInfos(USkeletalMesh* SkeletalMesh, TArray<FBoneVertInfo>& Infos, bool bOnlyDominant)
+	void CalcBoneVertInfos(YSkeletalMesh* SkeletalMesh, TArray<FBoneVertInfo>& Infos, bool bOnlyDominant)
 	{
 		FSkeletalMeshResource* ImportedResource = SkeletalMesh->GetImportedResource();
 		if (ImportedResource->LODModels.Num() == 0)
 			return;
 
-		SkeletalMesh->CalculateInvRefMatrices();
+		//SkeletalMesh->CalculateInvRefMatrices();
 		check( SkeletalMesh->RefSkeleton.GetRawBoneNum() == SkeletalMesh->RefBasesInvMatrix.Num() );
 
 		Infos.Empty();

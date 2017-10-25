@@ -391,7 +391,7 @@ public:
 /**
  * A set of skeletal mesh triangles which use the same material
  */
-struct FSkelMeshSection
+struct ENGINE_API FSkelMeshSection
 {
 	/** Material (texture) used for this section. */
 	uint16 MaterialIndex;
@@ -719,7 +719,7 @@ public:
 /** 
 * Vertex buffer with static lod chunk vertices for use with GPU skinning 
 */
-class FSkeletalMeshVertexBuffer : public FVertexBuffer
+class ENGINE_API FSkeletalMeshVertexBuffer : public FVertexBuffer
 {
 public:
 	/**
@@ -1061,7 +1061,7 @@ private:
  * A vertex buffer for holding skeletal mesh per APEX cloth information only. 
  * This buffer sits along side FSkeletalMeshVertexBuffer in each skeletal mesh lod
  */
-class FSkeletalMeshVertexAPEXClothBuffer : public FVertexBuffer
+class ENGINE_API FSkeletalMeshVertexAPEXClothBuffer : public FVertexBuffer
 {
 public:
 	/**
@@ -1227,7 +1227,7 @@ struct FMultiSizeIndexContainerData
  * Skeletal mesh index buffers are 16 bit by default and 32 bit when called for.
  * This class adds a level of abstraction on top of the index buffers so that we can treat them all as 32 bit.
  */
-class FMultiSizeIndexContainer
+class ENGINE_API FMultiSizeIndexContainer
 {
 public:
 	FMultiSizeIndexContainer()
@@ -1317,7 +1317,7 @@ private:
 * All necessary data to render smooth-parts is in SkinningStream, SmoothVerts, SmoothSections and SmoothIndexbuffer.
 * For rigid parts: RigidVertexStream, RigidIndexBuffer, and RigidSections.
 */
-class FStaticLODModel
+class ENGINE_API FStaticLODModel
 {
 public:
 	/** Sections. */

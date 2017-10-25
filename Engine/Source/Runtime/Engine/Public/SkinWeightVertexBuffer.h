@@ -56,7 +56,7 @@ public:
 };
 
 /** A vertex buffer for skin weights. */
-class FSkinWeightVertexBuffer : public FVertexBuffer
+class ENGINE_API FSkinWeightVertexBuffer : public FVertexBuffer
 {
 public:
 	/** Default constructor. */

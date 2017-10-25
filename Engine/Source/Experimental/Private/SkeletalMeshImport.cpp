@@ -312,6 +312,83 @@ void ProcessImportMeshInfluences(FSkeletalMeshImportData& ImportData)
 	}
 }
 
+/**
+* Copy mesh data for importing a single LOD
+*
+* @param LODPoints - vertex data.
+* @param LODWedges - wedge information to static LOD level.
+* @param LODFaces - triangle/ face data to static LOD level.
+* @param LODInfluences - weights/ influences to static LOD level.
+*/
+void FSkeletalMeshImportData::CopyLODImportData(
+	TArray<FVector>& LODPoints,
+	TArray<FMeshWedge>& LODWedges,
+	TArray<FMeshFace>& LODFaces,
+	TArray<FVertInfluence>& LODInfluences,
+	TArray<int32>& LODPointToRawMap)
+{
+	// Copy vertex data.
+	LODPoints.Empty(Points.Num());
+	LODPoints.AddUninitialized(Points.Num());
+	for (int32 p = 0; p < Points.Num(); p++)
+	{
+		LODPoints[p] = Points[p];
+	}
+
+	// Copy wedge information to static LOD level.
+	LODWedges.Empty(Wedges.Num());
+	LODWedges.AddUninitialized(Wedges.Num());
+	for (int32 w = 0; w < Wedges.Num(); w++)
+	{
+		LODWedges[w].iVertex = Wedges[w].VertexIndex;
+		// Copy all texture coordinates
+		FMemory::Memcpy(LODWedges[w].UVs, Wedges[w].UVs, sizeof(FVector2D) * MAX_TEXCOORDS);
+		LODWedges[w].Color = Wedges[w].Color;
+
+	}
+
+	// Copy triangle/ face data to static LOD level.
+	LODFaces.Empty(Faces.Num());
+	LODFaces.AddUninitialized(Faces.Num());
+	for (int32 f = 0; f < Faces.Num(); f++)
+	{
+		FMeshFace Face;
+		Face.iWedge[0] = Faces[f].WedgeIndex[0];
+		Face.iWedge[1] = Faces[f].WedgeIndex[1];
+		Face.iWedge[2] = Faces[f].WedgeIndex[2];
+		Face.MeshMaterialIndex = Faces[f].MatIndex;
+
+		Face.TangentX[0] = Faces[f].TangentX[0];
+		Face.TangentX[1] = Faces[f].TangentX[1];
+		Face.TangentX[2] = Faces[f].TangentX[2];
+
+		Face.TangentY[0] = Faces[f].TangentY[0];
+		Face.TangentY[1] = Faces[f].TangentY[1];
+		Face.TangentY[2] = Faces[f].TangentY[2];
+
+		Face.TangentZ[0] = Faces[f].TangentZ[0];
+		Face.TangentZ[1] = Faces[f].TangentZ[1];
+		Face.TangentZ[2] = Faces[f].TangentZ[2];
+
+		Face.SmoothingGroups = Faces[f].SmoothingGroups;
+
+		LODFaces[f] = Face;
+	}
+
+	// Copy weights/ influences to static LOD level.
+	LODInfluences.Empty(Influences.Num());
+	LODInfluences.AddUninitialized(Influences.Num());
+	for (int32 i = 0; i < Influences.Num(); i++)
+	{
+		LODInfluences[i].Weight = Influences[i].Weight;
+		LODInfluences[i].VertIndex = Influences[i].VertexIndex;
+		LODInfluences[i].BoneIndex = Influences[i].BoneIndex;
+	}
+
+	// Copy mapping
+	LODPointToRawMap = PointToRawMap;
+}
+
 
 #if 0
 /** Check that root bone is the same, and that any bones that are common have the correct parent. */
@@ -352,82 +429,6 @@ bool SkeletonsAreCompatible( const FReferenceSkeleton& NewSkel, const FReference
 }
 
 
-/**
-* Copy mesh data for importing a single LOD
-*
-* @param LODPoints - vertex data.
-* @param LODWedges - wedge information to static LOD level.
-* @param LODFaces - triangle/ face data to static LOD level.
-* @param LODInfluences - weights/ influences to static LOD level.
-*/ 
-void FSkeletalMeshImportData::CopyLODImportData( 
-					   TArray<FVector>& LODPoints, 
-					   TArray<FMeshWedge>& LODWedges,
-					   TArray<FMeshFace>& LODFaces,	
-					   TArray<FVertInfluence>& LODInfluences,
-					   TArray<int32>& LODPointToRawMap)
-{
-	// Copy vertex data.
-	LODPoints.Empty( Points.Num() );
-	LODPoints.AddUninitialized( Points.Num() );
-	for( int32 p=0; p < Points.Num(); p++ )
-	{
-		LODPoints[p] = Points[p];
-	}
-
-	// Copy wedge information to static LOD level.
-	LODWedges.Empty( Wedges.Num() );
-	LODWedges.AddUninitialized( Wedges.Num() );
-	for( int32 w=0; w < Wedges.Num(); w++ )
-	{
-		LODWedges[w].iVertex	= Wedges[w].VertexIndex;
-		// Copy all texture coordinates
-		FMemory::Memcpy( LODWedges[w].UVs, Wedges[w].UVs, sizeof(FVector2D) * MAX_TEXCOORDS );
-		LODWedges[w].Color	= Wedges[ w ].Color;
-		
-	}
-
-	// Copy triangle/ face data to static LOD level.
-	LODFaces.Empty( Faces.Num() );
-	LODFaces.AddUninitialized( Faces.Num() );
-	for( int32 f=0; f < Faces.Num(); f++)
-	{
-		FMeshFace Face;
-		Face.iWedge[0]			= Faces[f].WedgeIndex[0];
-		Face.iWedge[1]			= Faces[f].WedgeIndex[1];
-		Face.iWedge[2]			= Faces[f].WedgeIndex[2];
-		Face.MeshMaterialIndex	= Faces[f].MatIndex;
-
-		Face.TangentX[0]		= Faces[f].TangentX[0];
-		Face.TangentX[1]		= Faces[f].TangentX[1];
-		Face.TangentX[2]		= Faces[f].TangentX[2];
-
-		Face.TangentY[0]		= Faces[f].TangentY[0];
-		Face.TangentY[1]		= Faces[f].TangentY[1];
-		Face.TangentY[2]		= Faces[f].TangentY[2];
-
-		Face.TangentZ[0]		= Faces[f].TangentZ[0];
-		Face.TangentZ[1]		= Faces[f].TangentZ[1];
-		Face.TangentZ[2]		= Faces[f].TangentZ[2];
-
-		Face.SmoothingGroups    = Faces[f].SmoothingGroups;
-
-		LODFaces[f] = Face;
-	}			
-
-	// Copy weights/ influences to static LOD level.
-	LODInfluences.Empty( Influences.Num() );
-	LODInfluences.AddUninitialized( Influences.Num() );
-	for( int32 i=0; i < Influences.Num(); i++ )
-	{
-		LODInfluences[i].Weight		= Influences[i].Weight;
-		LODInfluences[i].VertIndex	= Influences[i].VertexIndex;
-		LODInfluences[i].BoneIndex	= Influences[i].BoneIndex;
-	}
-
-	// Copy mapping
-	LODPointToRawMap = PointToRawMap;
-}
 
 
 

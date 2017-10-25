@@ -25,7 +25,7 @@ public:
 	XMMATRIX	MatLocalTransform;
 };
 
-class Skeleton
+class ENGINE_API Skeleton
 {
 public:
 	Skeleton();
@@ -64,7 +64,7 @@ public:
 		VirtualBoneName = FName(*(VirtualBonePrefix + SourceBoneName.ToString() + TEXT("_") + TargetBoneName.ToString()));
 	}
 };
-class YSkeleton
+class ENGINE_API YSkeleton
 {
 public:
 	const TArray<FVirtualBone>& GetVirtualBones() const { return VirtualBones; }

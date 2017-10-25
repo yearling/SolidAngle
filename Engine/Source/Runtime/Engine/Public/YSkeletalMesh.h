@@ -257,7 +257,7 @@ struct FSkeletalMeshLODInfo
 };
 
 
-class YSkeletalMesh
+class ENGINE_API YSkeletalMesh
 {
 public:
 	YSkeletalMesh();

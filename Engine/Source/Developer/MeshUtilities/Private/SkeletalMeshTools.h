@@ -8,7 +8,7 @@
 #include "GPUSkinPublicDefs.h"
 #include "SkeletalMeshTypes.h"
 
-class USkeletalMesh;
+class YSkeletalMesh;
 
 // this is used for a sub-quadratic routine to find "equal" verts
 struct FSkeletalMeshVertIndexAndZ

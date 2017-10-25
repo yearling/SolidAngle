@@ -18,9 +18,6 @@
     <ClInclude Include="..\Source\Developer\MeshUtilities\Private\LayoutUV.h">
       <Filter>Private</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Developer\MeshUtilities\Private\ProxyMaterialUtilities.h">
-      <Filter>Private</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Developer\MeshUtilities\Private\SkeletalMeshTools.h">
       <Filter>Private</Filter>
     </ClInclude>
@@ -32,6 +29,21 @@
     </ClInclude>
     <ClInclude Include="..\Source\Developer\MeshUtilities\Public\MeshBuild.h">
       <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Developer\MeshUtilities\Public\mikktspace.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Developer\MeshUtilities\Public\forsythtriangleorderoptimizer.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Developer\MeshUtilities\Public\NvTriStrip.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Developer\MeshUtilities\Private\NvTriStripObjects.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Developer\MeshUtilities\Public\nvtess.h">
+      <Filter>Public</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -45,6 +57,21 @@
       <Filter>Private</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Developer\MeshUtilities\Private\Allocator2D.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Developer\MeshUtilities\Private\mikktspace.c">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Developer\MeshUtilities\Private\forsythtriangleorderoptimizer.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Developer\MeshUtilities\Private\NvTriStripObjects.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Developer\MeshUtilities\Private\NvTriStrip.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Developer\MeshUtilities\Private\nvtess.cpp">
       <Filter>Private</Filter>
     </ClCompile>
   </ItemGroup>

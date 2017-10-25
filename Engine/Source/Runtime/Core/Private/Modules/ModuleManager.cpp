@@ -1022,7 +1022,8 @@ void FModuleManager::FindModulePathsInDirectory(const FString& InDirectorFName, 
 
 		// Find all the files
 		TArray<FString> FullFileNames;
-		IFileManager::Get().FindFilesRecursive(FullFileNames, *InDirectorFName, *(ModulePrefix + NamePattern + ModuleSuffix), true, false);
+		//IFileManager::Get().FindFilesRecursive(FullFileNames, *InDirectorFName, *(ModulePrefix + NamePattern + ModuleSuffix), true, false);
+		IFileManager::Get().FindFilesRecursive(FullFileNames, *InDirectorFName, *(NamePattern + ModuleSuffix), true, false);
 
 		// Parse all the matching module names
 		for (int32 Idx = 0; Idx < FullFileNames.Num(); Idx++)

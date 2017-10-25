@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Public">
+      <UniqueIdentifier>{9798739d-112d-4a43-9846-8bfcd9005db7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private">
+      <UniqueIdentifier>{41368f8d-df66-483d-a817-a84481a5a826}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\RawMesh.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\BoneIndices.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\BulkData.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\LocalVertexFactory.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\MaterialInterface.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\MeshCommon.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\RawIndexBuffer.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\ReferenceSkeleton.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\SkeletalMeshTypes.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\Skeleton.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\SkinWeightVertexBuffer.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\ColorVertexBuffer.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\YSkeletalMesh.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\GPUSkinVertexFactory.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\ResourcePool.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\RawMesh.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\BulkData.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\MaterialInterface.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\ColorVertexBuffer.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\ReferenceSkeleton.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\SkeletalMesh.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\Skeleton.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\SkinWeightVertexBuffer.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\YSkeletalMesh.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\RawIndexBuffer.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\LocalVertexFactory.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\GPUSkinVertexFactory.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -10,7 +10,7 @@ struct FStaticMeshBuildVertex;
 /**
 * A vertex buffer of colors.
 */
-class FColorVertexBuffer : public FVertexBuffer
+class ENGINE_API FColorVertexBuffer : public FVertexBuffer
 {
 public:
 	/** Default constructor. */

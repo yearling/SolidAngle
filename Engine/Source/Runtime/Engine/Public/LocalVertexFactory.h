@@ -6,6 +6,7 @@
 #include "ShaderParameters.h"
 //#include "Components.h"
 #include "VertexFactory.h"
+#include "MeshCommon.h"
 
 class FMaterial;
 class FSceneView;
@@ -18,7 +19,7 @@ struct FMeshBatchElement;
 /**
  * A vertex factory which simply transforms explicit vertex attributes from local to world space.
  */
-class  FLocalVertexFactory : public FVertexFactory
+class  ENGINE_API FLocalVertexFactory : public FVertexFactory
 {
 	DECLARE_VERTEX_FACTORY_TYPE(FLocalVertexFactory);
 public:

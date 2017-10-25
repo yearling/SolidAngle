@@ -2,6 +2,7 @@
 
 #include "LayoutUV.h"
 #include "DisjointSet.h"
+#include "HAL/PlatformTime.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogLayoutUV, Warning, All);
 

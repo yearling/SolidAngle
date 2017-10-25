@@ -3332,6 +3332,24 @@ FMatrix YSkeletalMesh::GetRefPoseMatrix(int32 BoneIndex) const
 	return BoneTransform.ToMatrixWithScale();
 }
 
+void YSkeletalMesh::CalculateRequiredBones(class FStaticLODModel& LODModel, const struct FReferenceSkeleton& RefSkeleton, const TMap<FBoneIndexType, FBoneIndexType> * BonesToRemove)
+{
+	int32 RequiredBoneCount = RefSkeleton.GetNum();
+	LODModel.RequiredBones.Empty(RequiredBoneCount);
+	for (int32 i = 0; i < RequiredBoneCount; i++)
+	{
+		// Make sure it's not in BonesToRemove
+		// @Todo change this to one TArray
+		if (!BonesToRemove || BonesToRemove->Find(i) == NULL)
+		{
+			LODModel.RequiredBones.Add(i);
+		}
+	}
+
+	LODModel.RequiredBones.Shrink();
+}
+
+
 
 #undef LOCTEXT_NAMESPACE
 

@@ -20,6 +20,7 @@
 #include "YSkeletalMesh.h"
 #include "FbxSkeletalMeshImportData.h"
 #include "Misc/FbxErrors.h"
+#include "MeshUtilities.h"
 
 #define LOCTEXT_NAMESPACE "FBXImpoter"
 #define MAX_BONES 65536 // DesiredBones is passed to the decompression routines as a TArray<FBoneIndexType>, so we know this max is appropriate
@@ -1435,27 +1436,27 @@ YSkeletalMesh* UnFbx::FFbxImporter::ImportSkeletalMesh(UObject* InParent, TArray
 
 		IMeshUtilities& MeshUtilities = FModuleManager::Get().LoadModuleChecked<IMeshUtilities>("MeshUtilities");
 		
-	//	TArray<FText> WarningMessages;
-	//	TArray<FName> WarningNames;
-	//	// Create actual rendering data.
-	//	bool bBuildSuccess = MeshUtilities.BuildSkeletalMesh(ImportedResource->LODModels[0],SkeletalMesh->RefSkeleton,LODInfluences,LODWedges,LODFaces,LODPoints,LODPointToRawMap,BuildOptions, &WarningMessages, &WarningNames);
+		TArray<FText> WarningMessages;
+		TArray<FName> WarningNames;
+		// Create actual rendering data.
+		bool bBuildSuccess = MeshUtilities.BuildSkeletalMesh(ImportedResource->LODModels[0],SkeletalMesh->RefSkeleton,LODInfluences,LODWedges,LODFaces,LODPoints,LODPointToRawMap,BuildOptions, &WarningMessages, &WarningNames);
 
-	//	// temporary hack of message/names, should be one token or a struct
-	//	if(WarningMessages.Num() > 0 && WarningNames.Num() == WarningMessages.Num())
-	//	{
-	//		EMessageSeverity::Type MessageSeverity = bBuildSuccess ? EMessageSeverity::Warning : EMessageSeverity::Error;
+		// temporary hack of message/names, should be one token or a struct
+		if(WarningMessages.Num() > 0 && WarningNames.Num() == WarningMessages.Num())
+		{
+			EMessageSeverity::Type MessageSeverity = bBuildSuccess ? EMessageSeverity::Warning : EMessageSeverity::Error;
 
-	//		for(int32 MessageIdx = 0; MessageIdx<WarningMessages.Num(); ++MessageIdx)
-	//		{
-	//			AddTokenizedErrorMessage(FTokenizedMessage::Create(MessageSeverity, WarningMessages[MessageIdx]), WarningNames[MessageIdx]);
-	//		}
-	//	}
+			for(int32 MessageIdx = 0; MessageIdx<WarningMessages.Num(); ++MessageIdx)
+			{
+				AddTokenizedErrorMessage(FTokenizedMessage::Create(MessageSeverity, WarningMessages[MessageIdx]), WarningNames[MessageIdx]);
+			}
+		}
 
-	//	if( !bBuildSuccess )
-	//	{
-	//		SkeletalMesh->MarkPendingKill();
-	//		return NULL;
-	//	}
+		if( !bBuildSuccess )
+		{
+			//SkeletalMesh->MarkPendingKill();
+			return NULL;
+		}
 
 	//	// Presize the per-section shadow casting array with the number of sections in the imported LOD.
 	//	const int32 NumSections = LODModel.Sections.Num();

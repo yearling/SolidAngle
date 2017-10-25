@@ -13,7 +13,7 @@
 
 #define DISALLOW_32BIT_INDICES 0
 
-class FRawIndexBuffer : public FIndexBuffer
+class ENGINE_API FRawIndexBuffer : public FIndexBuffer
 {
 public:
 
@@ -40,7 +40,7 @@ class FRawIndexBuffer16or32 : public FRawIndexBuffer
 
 #else
 
-class FRawIndexBuffer16or32 : public FIndexBuffer
+class ENGINE_API FRawIndexBuffer16or32 : public FIndexBuffer
 {
 public:
 	FRawIndexBuffer16or32()
@@ -91,7 +91,7 @@ namespace EIndexBufferStride
  * An array view in to a static index buffer. Allows access to the underlying
  * indices regardless of their type without a copy.
  */
-class FIndexArrayView
+class ENGINE_API FIndexArrayView
 {
 public:
 	/** Default constructor. */
@@ -129,7 +129,7 @@ private:
 	bool b32Bit;
 };
 
-class FRawStaticIndexBuffer : public FIndexBuffer
+class ENGINE_API FRawStaticIndexBuffer : public FIndexBuffer
 {
 public:	
 	/**
@@ -200,7 +200,7 @@ private:
 /**
  * Virtual interface for the FRawStaticIndexBuffer16or32 class
  */
-class FRawStaticIndexBuffer16or32Interface : public FIndexBuffer
+class ENGINE_API FRawStaticIndexBuffer16or32Interface : public FIndexBuffer
 {
 public:
 	virtual void Serialize( FArchive& Ar ) = 0;
@@ -233,7 +233,7 @@ protected:
 };
 
 template <typename INDEX_TYPE>
-class FRawStaticIndexBuffer16or32 : public FRawStaticIndexBuffer16or32Interface
+class ENGINE_API FRawStaticIndexBuffer16or32 : public FRawStaticIndexBuffer16or32Interface
 {
 public:	
 	/**

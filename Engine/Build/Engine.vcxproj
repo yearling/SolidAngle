@@ -19,34 +19,40 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Source\Developer\MeshUtilities\Private\Allocator2D.h" />
-    <ClInclude Include="..\Source\Developer\MeshUtilities\Private\DisjointSet.h" />
-    <ClInclude Include="..\Source\Developer\MeshUtilities\Private\LayoutUV.h" />
-    <ClInclude Include="..\Source\Developer\MeshUtilities\Private\NvTriStripObjects.h" />
-    <ClInclude Include="..\Source\Developer\MeshUtilities\Private\SkeletalMeshTools.h" />
-    <ClInclude Include="..\Source\Developer\MeshUtilities\Public\forsythtriangleorderoptimizer.h" />
-    <ClInclude Include="..\Source\Developer\MeshUtilities\Public\MeshBuild.h" />
-    <ClInclude Include="..\Source\Developer\MeshUtilities\Public\MeshMergeData.h" />
-    <ClInclude Include="..\Source\Developer\MeshUtilities\Public\MeshUtilities.h" />
-    <ClInclude Include="..\Source\Developer\MeshUtilities\Public\mikktspace.h" />
-    <ClInclude Include="..\Source\Developer\MeshUtilities\Public\nvtess.h" />
-    <ClInclude Include="..\Source\Developer\MeshUtilities\Public\NvTriStrip.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\BoneIndices.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\BulkData.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\ColorVertexBuffer.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\GPUSkinVertexFactory.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\LocalVertexFactory.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\MaterialInterface.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\MeshCommon.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\RawIndexBuffer.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\RawMesh.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\ReferenceSkeleton.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\ResourcePool.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\SkeletalMeshTypes.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\Skeleton.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\SkinWeightVertexBuffer.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\YSkeletalMesh.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Source\Developer\MeshUtilities\Private\Allocator2D.cpp" />
-    <ClCompile Include="..\Source\Developer\MeshUtilities\Private\forsythtriangleorderoptimizer.cpp" />
-    <ClCompile Include="..\Source\Developer\MeshUtilities\Private\LayoutUV.cpp" />
-    <ClCompile Include="..\Source\Developer\MeshUtilities\Private\MeshUtilities.cpp" />
-    <ClCompile Include="..\Source\Developer\MeshUtilities\Private\mikktspace.c" />
-    <ClCompile Include="..\Source\Developer\MeshUtilities\Private\nvtess.cpp" />
-    <ClCompile Include="..\Source\Developer\MeshUtilities\Private\NvTriStrip.cpp" />
-    <ClCompile Include="..\Source\Developer\MeshUtilities\Private\NvTriStripObjects.cpp" />
-    <ClCompile Include="..\Source\Developer\MeshUtilities\Private\SkeletalMeshTools.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\BulkData.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\ColorVertexBuffer.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\GPUSkinVertexFactory.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\LocalVertexFactory.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\MaterialInterface.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\RawIndexBuffer.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\RawMesh.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\ReferenceSkeleton.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\SkeletalMesh.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\Skeleton.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\SkinWeightVertexBuffer.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\YSkeletalMesh.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{1B69604E-248C-4500-B73D-2DCCA62925C5}</ProjectGuid>
+    <ProjectGuid>{96B91E8C-5EE0-4784-8C72-5F06FCAE9E23}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>MeshUtilities</RootNamespace>
+    <RootNamespace>Engine</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -131,15 +137,15 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;_DEBUG;_CONSOLE;UE_IS_ENGINE_MODULE=1;MESHUTILITIES_API=__declspec(dllexport);CORE_API=__declspec(dllimport);RHI_API=__declspec(dllimport);RENDERCORE_API=__declspec(dllimport);SHADERCORE_API=__declspec(dllimport);ENGINE_API=__declspec(dllimport);MALLOC_LEAKDETECTION=1;_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\Runtime\RHI\Public;..\Source\Runtime\Engine\Public;..\Source\;..\Source\Runtime\Core\Public\Modules;..\Source\Developer\TaskGraph\Public;..\Source\Developer\MeshUtilities\Public;..\Source\Developer\MeshUtilities\Private;..\Source\Experimental\Public;..\Source\Runtime\RenderCore\Public;..\Source\Runtime\ShaderCore\Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;_DEBUG;_CONSOLE;UE_IS_ENGINE_MODULE=1;ENGINE_API=__declspec(dllexport);CORE_API=__declspec(dllimport);RHI_API=__declspec(dllimport);RENDERCORE_API=__declspec(dllimport);SHADERCORE_API=__declspec(dllimport);MALLOC_LEAKDETECTION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\Runtime\RHI\Public;..\Source\Runtime\Engine\Public;..\Source\;..\Source\Runtime\Core\Public\Modules;..\Source\Developer\TaskGraph\Public;..\Source\Developer\MeshUtilities\Public;..\Source\Developer\MeshUtilities\Private;..\Source\Experimental\Public;..\Source\Runtime\RenderCore\Public;..\Source\Runtime\ShaderCore\Public;..\Source\Runtime\Engine\Private;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\Binaries\x64\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SolidAngle_x64_Debug.lib;RenderCore_x64_Debug.lib;Engine_x64_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SolidAngle_x64_Debug.lib;RenderCore_x64_Debug.lib;RHI_x64_Debug.lib;ShaderCore_x64_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
@@ -170,8 +176,8 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;MESHUTILITIES_API=__declspec(dllexport);CORE_API=__declspec(dllimport);RHI_API=__declspec(dllimport);RENDERCORE_API=__declspec(dllimport);WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\Runtime\RHI\Public;..\Source\Runtime\Engine\Public;..\Source\;..\Source\Runtime\Core\Public\Modules;..\Source\Developer\TaskGraph\Public;..\Source\Developer\MeshUtilities\Public;..\Source\Developer\MeshUtilities\Private;..\Source\Experimental\Public;..\Source\Runtime\RenderCore\Public;..\Source\Runtime\ShaderCore\Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;ENGINE_API=__declspec(dllexport);CORE_API=__declspec(dllimport);RHI_API=__declspec(dllimport);RENDERCORE_API=__declspec(dllimport);WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Source\Runtime\Core\Public\;..\Source\Runtime\RHI\Public;..\Source\Runtime\Engine\Public;..\Source\;..\Source\Runtime\Core\Public\Modules;..\Source\Developer\TaskGraph\Public;..\Source\Developer\MeshUtilities\Public;..\Source\Developer\MeshUtilities\Private;..\Source\Experimental\Public;..\Source\Runtime\RenderCore\Public;..\Source\Runtime\ShaderCore\Public;..\Source\Runtime\Engine\Private;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

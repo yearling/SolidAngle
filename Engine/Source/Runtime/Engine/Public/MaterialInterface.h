@@ -6,7 +6,7 @@ enum class TextureSamplerType
 	SAMPLERTYPE_Normal,
 	SAMPLERTYPE_Color,
 };
-class TextureSampler
+class ENGINE_API TextureSampler
 {
 public:
 	TextureSampler();
@@ -16,7 +16,7 @@ public:
 	float ScalingV;
 	int32 UVIndex;
 };
-class UMaterialInterface
+class ENGINE_API UMaterialInterface
 {
 public:
 	UMaterialInterface();

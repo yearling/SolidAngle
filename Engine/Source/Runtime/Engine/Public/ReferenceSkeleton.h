@@ -70,7 +70,7 @@ class YSkeleton;
 struct FReferenceSkeleton;
 
 // Allow modifications to a reference skeleton while guaranteeing that virtual bones remain valid.
-struct  FReferenceSkeletonModifier
+struct ENGINE_API FReferenceSkeletonModifier
 {
 private:
 	FReferenceSkeleton& RefSkeleton;

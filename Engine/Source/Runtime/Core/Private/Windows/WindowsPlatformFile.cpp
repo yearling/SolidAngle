@@ -21,6 +21,7 @@
 		uint32 WIN_INVALID_SET_FILE_POINTER = INVALID_SET_FILE_POINTER;
 	}
 #include "Windows/HideWindowsPlatformTypes.h"
+#include "WindowsPlatformProcess.h"
 
 namespace
 {
@@ -776,6 +777,8 @@ public:
 		bool Result = false;
 		WIN32_FIND_DATAW Data;
 		HANDLE Handle = FindFirstFileW(*(NormalizeDirectory(Directory) / TEXT("*.*")), &Data);
+		DWORD dw = GetLastError();
+		FString currentDir = FPlatformProcess::GetCurrentWorkingDirectory();
 		if (Handle != INVALID_HANDLE_VALUE)
 		{
 			Result = true;

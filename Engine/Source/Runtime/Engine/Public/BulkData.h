@@ -66,7 +66,7 @@ enum EBulkDataLockFlags
 /**
  * @documentation @todo documentation
  */
-struct  FUntypedBulkData
+ struct  ENGINE_API FUntypedBulkData
 {
 private:
 	// This struct represents an optional allocation.
@@ -519,7 +519,7 @@ protected:
 	uint8 version of bulk data.
 -----------------------------------------------------------------------------*/
 
-struct  FByteBulkData : public FUntypedBulkData
+struct ENGINE_API FByteBulkData : public FUntypedBulkData
 {
 	/**
 	 * Returns size in bytes of single element.
@@ -542,7 +542,7 @@ struct  FByteBulkData : public FUntypedBulkData
 	WORD version of bulk data.
 -----------------------------------------------------------------------------*/
 
-struct  FWordBulkData : public FUntypedBulkData
+struct ENGINE_API FWordBulkData : public FUntypedBulkData
 {
 	/**
 	 * Returns size in bytes of single element.
@@ -565,7 +565,7 @@ struct  FWordBulkData : public FUntypedBulkData
 	int32 version of bulk data.
 -----------------------------------------------------------------------------*/
 
-struct  FIntBulkData : public FUntypedBulkData
+struct  ENGINE_API FIntBulkData : public FUntypedBulkData
 {
 	/**
 	 * Returns size in bytes of single element.
@@ -588,7 +588,7 @@ struct  FIntBulkData : public FUntypedBulkData
 	float version of bulk data.
 -----------------------------------------------------------------------------*/
 
-struct  FFloatBulkData : public FUntypedBulkData
+struct ENGINE_API FFloatBulkData : public FUntypedBulkData
 {
 	/**
 	 * Returns size in bytes of single element.
@@ -607,7 +607,7 @@ struct  FFloatBulkData : public FUntypedBulkData
 	virtual void SerializeElement( FArchive& Ar, void* Data, int32 ElementIndex );
 };
 
-class FFormatContainer
+class ENGINE_API FFormatContainer
 {
 	TMap<FName, FByteBulkData*> Formats;
 	uint32 Alignment;
