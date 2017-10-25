@@ -170,14 +170,14 @@ bool FindNewestModuleFile(TArray<FString>& FilesToSearch, const FDateTime& Newer
 		const FString FoundFilePath = ModuleFileSearchDirectory.IsEmpty() ? FoundFile : (ModuleFileSearchDirectory / FoundFile);
 
 		// need to reject some files here that are not numbered...release executables, do have a suffix, so we need to make sure we don't find the debug version
-		check(FoundFilePath.Len() > Prefix.Len() + Suffix.Len());
-		FString Center = FoundFilePath.Mid(Prefix.Len(), FoundFilePath.Len() - Prefix.Len() - Suffix.Len());
-		check(Center.StartsWith(TEXT("-"))); // a minus sign is still considered numeric, so we can leave it.
-		if (!Center.IsNumeric())
-		{
-			// this is a debug DLL or something, it is not a numbered hot DLL
-			continue;
-		}
+		//check(FoundFilePath.Len() > Prefix.Len() + Suffix.Len());
+		//FString Center = FoundFilePath.Mid(Prefix.Len(), FoundFilePath.Len() - Prefix.Len() - Suffix.Len());
+		//check(Center.StartsWith(TEXT("-"))); // a minus sign is still considered numeric, so we can leave it.
+		//if (!Center.IsNumeric())
+		//{
+			//// this is a debug DLL or something, it is not a numbered hot DLL
+			//continue;
+		//}
 
 		// Check the time stamp for this file
 		const FDateTime FoundFileTime = IFileManager::Get().GetTimeStamp(*FoundFilePath);
@@ -290,7 +290,8 @@ void FModuleManager::AddModule(const FName InModuleName)
 		return;
 	}
 
-	const FString ModuleFileSearchString = FString::Printf(TEXT("%s-*%s"), *Prefix, *Suffix);
+	//const FString ModuleFileSearchString = FString::Printf(TEXT("%s-*%s"), *Prefix, *Suffix);
+	const FString ModuleFileSearchString = FString::Printf(TEXT("%s*%s"), *Prefix, *Suffix);
 
 	// Search for module files
 	TArray<FString> FoundFiles;
@@ -905,7 +906,7 @@ void FModuleManager::GetModuleFilenameFormat(bool bGameModule, FString& OutPrefi
 	switch(FApp::GetBuildConfiguration())
 	{
 	case EBuildConfigurations::Debug:
-		ConfigSuffix = TEXT("-Debug");
+		ConfigSuffix = TEXT("_Debug");
 		break;
 	case EBuildConfigurations::DebugGame:
 		ConfigSuffix = bGameModule? TEXT("-DebugGame") : NULL;
@@ -939,8 +940,9 @@ void FModuleManager::GetModuleFilenameFormat(bool bGameModule, FString& OutPrefi
 	OutSuffix.Empty();
 	if (ConfigSuffix != NULL)
 	{
-		OutSuffix += TEXT("-");
-		OutSuffix += FPlatformProcess::GetBinariesSubdirectory();
+		//OutSuffix += TEXT("-");
+		//OutSuffix += FPlatformProcess::GetBinariesSubdirectory();
+		OutSuffix += TEXT("_x64");
 		OutSuffix += ConfigSuffix;
 	}
 	OutSuffix += TEXT(".");
@@ -1039,14 +1041,16 @@ void FModuleManager::FindModulePathsInDirectory(const FString& InDirectorFName, 
 		#endif
 		
 			FString FileName = FPaths::GetCleanFilename(FullFileName);
-			if (FileName.StartsWith(ModulePrefix) && FileName.EndsWith(ModuleSuffix))
+			
+			/*if (FileName.StartsWith(ModulePrefix) && FileName.EndsWith(ModuleSuffix))
 			{
 				FString ModuleName = FileName.Mid(ModulePrefix.Len(), FileName.Len() - ModulePrefix.Len() - ModuleSuffix.Len());
 				if (!ModuleName.EndsWith("-Debug") && !ModuleName.EndsWith("-Shipping") && !ModuleName.EndsWith("-Test") && !ModuleName.EndsWith("-DebugGame"))
 				{
 					OutModulePaths.Add(FName(*ModuleName), FullFileName);
 				}
-			}
+			}*/
+			OutModulePaths.Add(FName(*FileName), FullFileName);
 		}
 	}
 }

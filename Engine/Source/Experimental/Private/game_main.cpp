@@ -29,7 +29,6 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	FMallocLeakDetection::Get().SetAllocationCollection(true);
 	GLogConsole->Logf__VA(TEXT("log's name %s"), *FPlatformOutputDevices::GetAbsoluteLogFilename());
 
-	FModuleManager::Get().LoadModule(TEXT("MeshUtilities_x64_Debug"));
 	FILE *stream;
 	freopen_s(&stream, "CONOUT$", "w", stdout);
 	freopen_s(&stream, "CONIN$", "w+t", stdin);

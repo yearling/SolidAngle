@@ -115,7 +115,8 @@ void* FWindowsPlatformProcess::GetDllExport( void* DllHandle, const TCHAR* ProcN
 
 int32 FWindowsPlatformProcess::GetDllApiVersion( const TCHAR* Filename )
 {
-	int32 Result = -1;
+	//int32 Result = -1;
+	int32 Result = 0;
 
 	// Retrieves the embedded API version from a DLL
 	check(Filename);
