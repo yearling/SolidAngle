@@ -5092,7 +5092,7 @@ public:
 		BuildData->ValidateTangentArraySize();
 		check(LODOverlappingCorners.Num() == 1);
 
-		EndSlowTask();
+		//EndSlowTask();
 
 		Stage = EStage::Prepared;
 		return true;

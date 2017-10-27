@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Misc/MonolithicHeaderBoilerplate.h"
-MONOLITHIC_HEADER_BOILERPLATE()
+//MONOLITHIC_HEADER_BOILERPLATE()
 
 /*----------------------------------------------------------------------------
 	Low level includes.
