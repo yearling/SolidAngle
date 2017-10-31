@@ -113,3 +113,14 @@
 												|- 平均面法线并保存到顶点
                                             |- 调用Mikkt的库，计算每个顶点的Tangent.
 									|- FSkeletalMeshUtilityBuilder::GenerateSkeletalRenderMesh() 优化Mesh,根据材质切分Mesh
+										|- 检查每个Wedge是否有一个Influence
+										|- 将读取到的原始数据，拼成TArray<FSoftSkinBuildVertex> RawVertices，FSoftSkinBuildVertex{Position,TangentXYZ,UVs,Color,InfluenceBones,InfluenceWeights,PointWedgeIdx},其实就是扩展后的Wedge，说白了就是以前的一个Wedge可以被多个三角形引用,现在相当与把引用的Wedge实例化了，每个顶点的Wedge保存数据而不是索引。RawVertices按着三角形顶点顺序一个一个排。
+										|- SkeletalMeshTools::BuildSkeletalMeshChunks() 
+											|- 因为材质ID存在于面上，所以对位于同一边但属于两个不同材质的三角形的顶点来说，需要拆分。每个属于同一个材质的Mesh保存到FSkinnedMeshChunk中去 
+											|- 对扩展后的Wedge,也就是RawVertices的进行排序，以便加速查询，像上面算切空间一样
+											|- 删掉重复的顶点（因为上一步生成RawVertices时拆分了顶点
+											|- 生成Index；这时候就完成了材质的拆分；
+										|- SkeletalMeshTools::ChunkSkinnedVertices() 防止骨骼太多来拆分Chunk,比如有257根骨头，引用第256根骨头的顶点就会放到新的Chunk中。
+										|-  FMeshUtilities::BuildSkeletalModelFromChunks() //生成可渲染数据
+											|- FSkinnedMeshChunk是MeshUtilities中的数据结构；FSkelMeshSection是Engine中用来渲染的数据结构，所以要把FSkinnedMeshChunk转化为FSkelMeshSection
+											
