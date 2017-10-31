@@ -1458,25 +1458,25 @@ YSkeletalMesh* UnFbx::FFbxImporter::ImportSkeletalMesh(UObject* InParent, TArray
 			return NULL;
 		}
 
-	//	// Presize the per-section shadow casting array with the number of sections in the imported LOD.
-	//	const int32 NumSections = LODModel.Sections.Num();
-	//	for ( int32 SectionIndex = 0 ; SectionIndex < NumSections ; ++SectionIndex )
-	//	{
-	//		SkeletalMesh->LODInfo[0].TriangleSortSettings.AddZeroed();
-	//	}
+		// Presize the per-section shadow casting array with the number of sections in the imported LOD.
+		const int32 NumSections = LODModel.Sections.Num();
+		for ( int32 SectionIndex = 0 ; SectionIndex < NumSections ; ++SectionIndex )
+		{
+			SkeletalMesh->LODInfo[0].TriangleSortSettings.AddZeroed();
+		}
 
-	//	if (ExistSkelMeshDataPtr)
-	//	{
-	//		RestoreExistingSkelMeshData(ExistSkelMeshDataPtr, SkeletalMesh);
-	//	}
+		if (ExistSkelMeshDataPtr)
+		{
+			//RestoreExistingSkelMeshData(ExistSkelMeshDataPtr, SkeletalMesh);
+		}
 
-	//	// Store the current file path and timestamp for re-import purposes
-	//	UFbxSkeletalMeshImportData* ImportData = UFbxSkeletalMeshImportData::GetImportDataForSkeletalMesh(SkeletalMesh, TemplateImportData);
-	//	SkeletalMesh->AssetImportData->Update(UFactory::GetCurrentFilename(), &Md5Hash);
+		// Store the current file path and timestamp for re-import purposes
+		//UFbxSkeletalMeshImportData* ImportData = UFbxSkeletalMeshImportData::GetImportDataForSkeletalMesh(SkeletalMesh, TemplateImportData);
+		//SkeletalMesh->AssetImportData->Update(UFactory::GetCurrentFilename(), &Md5Hash);
 
-	//	SkeletalMesh->CalculateInvRefMatrices();
-	//	SkeletalMesh->PostEditChange();
-	//	SkeletalMesh->MarkPackageDirty();
+		SkeletalMesh->CalculateInvRefMatrices();
+		//SkeletalMesh->PostEditChange();
+		//SkeletalMesh->MarkPackageDirty();
 
 	//	// Now iterate over all skeletal mesh components re-initialising them.
 	//	for (TObjectIterator<USkinnedMeshComponent> It; It; ++It)
@@ -1489,8 +1489,8 @@ YSkeletalMesh* UnFbx::FFbxImporter::ImportSkeletalMesh(UObject* InParent, TArray
 	//	}
 	}
 
-	//if(LodIndex == 0)
-	//{
+	if(LodIndex == 0)
+	{
 	//	// Create PhysicsAsset if requested and if physics asset is null
 	//	if (ImportOptions->bCreatePhysicsAsset )
 	//	{
@@ -1525,29 +1525,29 @@ YSkeletalMesh* UnFbx::FFbxImporter::ImportSkeletalMesh(UObject* InParent, TArray
 	//		SkeletalMesh->PhysicsAsset = ImportOptions->PhysicsAsset;
 	//	}
 
-	//	// see if we have skeleton set up
-	//	// if creating skeleton, create skeleeton
-	//	YSkeleton* Skeleton = ImportOptions->SkeletonForAnimation;
-	//	if (Skeleton == NULL)
-	//	{
-	//		FString ObjectName = FString::Printf(TEXT("%s_Skeleton"), *SkeletalMesh->GetName());
-	//		Skeleton = CreateAsset<YSkeleton>(InParent->GetName(), ObjectName, true); 
-	//		if (!Skeleton)
-	//		{
-	//			// same object exists, try to see if it's skeleton, if so, load
-	//			Skeleton = LoadObject<YSkeleton>(InParent, *ObjectName);
+		// see if we have skeleton set up
+		// if creating skeleton, create skeleeton
+		YSkeleton* Skeleton = ImportOptions->SkeletonForAnimation;
+		if (Skeleton == NULL)
+		{
+			//FString ObjectName = FString::Printf(TEXT("%s_Skeleton"), *SkeletalMesh->GetName());
+			//Skeleton = CreateAsset<YSkeleton>(InParent->GetName(), ObjectName, true); 
+			if (!Skeleton)
+			{
+				// same object exists, try to see if it's skeleton, if so, load
+				//Skeleton = LoadObject<YSkeleton>(InParent, *ObjectName);
 
-	//			// if not skeleton, we're done, we can't create skeleton with same name
-	//			// @todo in the future, we'll allow them to rename
-	//			if (!Skeleton)
-	//			{
-	//				AddTokenizedErrorMessage(FTokenizedMessage::Create(EMessageSeverity::Error, FText::Format(LOCTEXT("FbxSkeletaLMeshimport_SkeletonRecreateError", "'{0}' already exists. It fails to recreate it."), FText::FromString(ObjectName))), FFbxErrors::SkeletalMesh_SkeletonRecreateError);
-	//				return SkeletalMesh;
-	//			}
-	//		}
-	//	}
+				// if not skeleton, we're done, we can't create skeleton with same name
+				// @todo in the future, we'll allow them to rename
+				if (!Skeleton)
+				{
+					//AddTokenizedErrorMessage(FTokenizedMessage::Create(EMessageSeverity::Error, FText::Format(LOCTEXT("FbxSkeletaLMeshimport_SkeletonRecreateError", "'{0}' already exists. It fails to recreate it."), FText::FromString(ObjectName))), FFbxErrors::SkeletalMesh_SkeletonRecreateError);
+					return SkeletalMesh;
+				}
+			}
+		}
 
-	//	// merge bones to the selected skeleton
+		// merge bones to the selected skeleton
 	//	if ( !Skeleton->MergeAllBonesToBoneTree( SkeletalMesh ) )
 	//	{
 	//		// We should only show the skeleton save toast once, not as many times as we have nodes to import
@@ -1625,12 +1625,12 @@ YSkeletalMesh* UnFbx::FFbxImporter::ImportSkeletalMesh(UObject* InParent, TArray
 	//		}
 	//	}
 
-	//	if (SkeletalMesh->Skeleton != Skeleton)
-	//	{
-	//		SkeletalMesh->Skeleton = Skeleton;
-	//		SkeletalMesh->MarkPackageDirty();
-	//	}
-	//}
+		if (SkeletalMesh->Skeleton != Skeleton)
+		{
+			SkeletalMesh->Skeleton = Skeleton;
+			//SkeletalMesh->MarkPackageDirty();
+		}
+	}
 #if WITH_APEX_CLOTHING
 	//for supporting re-import 
 	ApexClothingUtils::ReapplyClothingDataToSkeletalMesh(SkeletalMesh);

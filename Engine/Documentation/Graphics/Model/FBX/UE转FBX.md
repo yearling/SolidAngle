@@ -97,3 +97,19 @@
 								|- 对FSkeletalMeshImportData::Influences中ControlPoint其索引排序；
 								|- 遍历FSkeletalMeshImportData::Influences，查看是否存在受8根以上骨骼影响的顶点，给出Warning;Normalize顶点权重；
 								|- 删掉8根骨骼权重以上的权重，删掉小于0.00001的权重，normalize顶点权重
+							|- bCreateRenderData
+								|- IMeshUtilities::BuildSkeletalMesh(ImportedResource->LODModels[0]/*要填入的数据*/）)
+									|- FSkeletalMeshUtilityBuilder::PrepareSourceMesh 算切空间
+										|- Skeletal_FindOverlappingCorners()
+											|- 将3维的Vertex的hash到一维，然后进行排序，之后对排序的解果进行对比，得到在空间上重合的点，O(n^2)复杂度。
+										|- Skeletal_ComputeTangents_MikkTSpace()
+											使用Mikkt来计算Tangent空间
+											|- Skeletal_ComputeTriangleTangents()
+												计算面法线
+											|- 对于每个面的顶点，找出与顶点相邻的面（顶点位置一样或者索引一样，位于同一光滑组），平分法线
+												|- 粗选： 选择与该面相临的三角形（距离）,相临信息存在AdjacentFaces中，
+												|- 细选：每个顶点一个相邻面的list，存在RelevantFacesForCorner[3]中，
+												|- 再细选： 面光滑组相同 && （bBlendOverlappingNormals ||顶点的索引相同）
+												|- 平均面法线并保存到顶点
+                                            |- 调用Mikkt的库，计算每个顶点的Tangent.
+									|- FSkeletalMeshUtilityBuilder::GenerateSkeletalRenderMesh() 优化Mesh,根据材质切分Mesh

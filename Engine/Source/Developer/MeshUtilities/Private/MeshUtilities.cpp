@@ -1959,7 +1959,7 @@ void FMeshUtilities::BuildSkeletalModelFromChunks(FStaticLODModel& LODModel, con
 	{
 		if (IsInGameThread())
 		{
-			GWarn->StatusUpdate(SectionIndex, LODModel.Sections.Num(), NSLOCTEXT("UnrealEd", "ProcessingSections", "Processing Sections"));
+			//GWarn->StatusUpdate(SectionIndex, LODModel.Sections.Num(), NSLOCTEXT("UnrealEd", "ProcessingSections", "Processing Sections"));
 		}
 
 		FSkinnedMeshChunk* SrcChunk = Chunks[SectionIndex];
@@ -2013,7 +2013,7 @@ void FMeshUtilities::BuildSkeletalModelFromChunks(FStaticLODModel& LODModel, con
 		if (IsInGameThread())
 		{
 			// Only update status if in the game thread.  When importing morph targets, this function can run in another thread
-			GWarn->StatusUpdate(SectionIndex, LODModel.Sections.Num(), NSLOCTEXT("UnrealEd", "ProcessingChunks", "Processing Chunks"));
+			//GWarn->StatusUpdate(SectionIndex, LODModel.Sections.Num(), NSLOCTEXT("UnrealEd", "ProcessingChunks", "Processing Chunks"));
 		}
 
 		CurrentVertexIndex = 0;
@@ -5276,7 +5276,7 @@ public:
 		check(MaxGPUSkinBones <= FGPUBaseSkinVertexFactory::GHardwareMaxGPUSkinBones);
 		SkeletalMeshTools::ChunkSkinnedVertices(BuildData.Chunks, MaxGPUSkinBones);
 
-		EndSlowTask();
+		//EndSlowTask();
 
 		Stage = EStage::GenerateRendering;
 		return true;
@@ -5284,7 +5284,7 @@ public:
 
 	void BeginSlowTask()
 	{
-		if (IsInGameThread())
+		//if (IsInGameThread())
 		{
 			//GWarn->BeginSlowTask(NSLOCTEXT("UnrealEd", "ProcessingSkeletalTriangles", "Processing Mesh Triangles"), true);
 		}
@@ -5300,10 +5300,10 @@ public:
 
 	void EndSlowTask()
 	{
-		if (IsInGameThread())
+		/*if (IsInGameThread())
 		{
 			GWarn->EndSlowTask();
-		}
+		}*/
 	}
 
 private:
@@ -5522,7 +5522,7 @@ bool FMeshUtilities::BuildSkeletalMesh_Legacy(FStaticLODModel& LODModel, const F
 	if (IsInGameThread())
 	{
 		// Only update status if in the game thread.  When importing morph targets, this function can run in another thread
-		GWarn->BeginSlowTask(NSLOCTEXT("UnrealEd", "ProcessingSkeletalTriangles", "Processing Mesh Triangles"), true);
+		//GWarn->BeginSlowTask(NSLOCTEXT("UnrealEd", "ProcessingSkeletalTriangles", "Processing Mesh Triangles"), true);
 	}
 
 
@@ -5609,7 +5609,7 @@ bool FMeshUtilities::BuildSkeletalMesh_Legacy(FStaticLODModel& LODModel, const F
 		if (FaceIndex % 5000 == 0 && IsInGameThread())
 		{
 			// Only update status if in the game thread.  When importing morph targets, this function can run in another thread
-			GWarn->StatusUpdate(FaceIndex, Faces.Num(), NSLOCTEXT("UnrealEd", "ProcessingSkeletalTriangles", "Processing Mesh Triangles"));
+			//GWarn->StatusUpdate(FaceIndex, Faces.Num(), NSLOCTEXT("UnrealEd", "ProcessingSkeletalTriangles", "Processing Mesh Triangles"));
 		}
 
 		const FMeshFace&	Face = Faces[FaceIndex];
@@ -5808,7 +5808,7 @@ bool FMeshUtilities::BuildSkeletalMesh_Legacy(FStaticLODModel& LODModel, const F
 	if (IsInGameThread())
 	{
 		// Only update status if in the game thread.  When importing morph targets, this function can run in another thread
-		GWarn->EndSlowTask();
+		//GWarn->EndSlowTask();
 	}
 
 	// Only show these warnings if in the game thread.  When importing morph targets, this function can run in another thread and these warnings dont prevent the mesh from importing
