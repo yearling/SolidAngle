@@ -21,6 +21,7 @@
 #include "FbxSkeletalMeshImportData.h"
 #include "Misc/FbxErrors.h"
 #include "MeshUtilities.h"
+#include "Skeleton.h"
 
 #define LOCTEXT_NAMESPACE "FBXImpoter"
 #define MAX_BONES 65536 // DesiredBones is passed to the decompression routines as a TArray<FBoneIndexType>, so we know this max is appropriate
@@ -1471,7 +1472,7 @@ YSkeletalMesh* UnFbx::FFbxImporter::ImportSkeletalMesh(UObject* InParent, TArray
 		}
 
 		// Store the current file path and timestamp for re-import purposes
-		//UFbxSkeletalMeshImportData* ImportData = UFbxSkeletalMeshImportData::GetImportDataForSkeletalMesh(SkeletalMesh, TemplateImportData);
+		UFbxSkeletalMeshImportData* ImportData = UFbxSkeletalMeshImportData::GetImportDataForSkeletalMesh(SkeletalMesh, TemplateImportData);
 		//SkeletalMesh->AssetImportData->Update(UFactory::GetCurrentFilename(), &Md5Hash);
 
 		SkeletalMesh->CalculateInvRefMatrices();
@@ -1532,6 +1533,7 @@ YSkeletalMesh* UnFbx::FFbxImporter::ImportSkeletalMesh(UObject* InParent, TArray
 		{
 			//FString ObjectName = FString::Printf(TEXT("%s_Skeleton"), *SkeletalMesh->GetName());
 			//Skeleton = CreateAsset<YSkeleton>(InParent->GetName(), ObjectName, true); 
+			Skeleton = new YSkeleton();
 			if (!Skeleton)
 			{
 				// same object exists, try to see if it's skeleton, if so, load
@@ -1548,7 +1550,7 @@ YSkeletalMesh* UnFbx::FFbxImporter::ImportSkeletalMesh(UObject* InParent, TArray
 		}
 
 		// merge bones to the selected skeleton
-	//	if ( !Skeleton->MergeAllBonesToBoneTree( SkeletalMesh ) )
+		if ( !Skeleton->MergeAllBonesToBoneTree( SkeletalMesh ) )
 	//	{
 	//		// We should only show the skeleton save toast once, not as many times as we have nodes to import
 	//		bool bToastSaveMessage = false;
@@ -3586,4 +3588,29 @@ FFbxLogger::~FFbxLogger()
 		}
 	}
 }
+
+
+UFbxSkeletalMeshImportData* UFbxSkeletalMeshImportData::GetImportDataForSkeletalMesh(YSkeletalMesh* SkeletalMesh, UFbxSkeletalMeshImportData* TemplateForCreation)
+{
+	check(SkeletalMesh);
+
+	//UFbxSkeletalMeshImportData* ImportData =dynamic_cast<UFbxSkeletalMeshImportData*>(SkeletalMesh->AssetImportData);
+	UFbxSkeletalMeshImportData* ImportData = nullptr;
+	if (!ImportData)
+	{
+		//ImportData = NewObject<UFbxSkeletalMeshImportData>(SkeletalMesh, NAME_None, RF_NoFlags, TemplateForCreation);
+		ImportData = new UFbxSkeletalMeshImportData();
+
+		// Try to preserve the source file data if possible
+		//if (SkeletalMesh->AssetImportData != NULL)
+		{
+			//ImportData->SourceData = SkeletalMesh->AssetImportData->SourceData;
+		}
+
+		//SkeletalMesh->AssetImportData = ImportData;
+	}
+
+	return ImportData;
+}
+
 #undef LOCTEXT_NAMESPACE

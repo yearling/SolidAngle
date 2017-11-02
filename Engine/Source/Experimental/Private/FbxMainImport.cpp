@@ -2272,7 +2272,7 @@ FbxNode* FFbxImporter::RetrieveObjectFromName(const TCHAR* ObjectName, FbxNode* 
 
 
 
-FSkeletalMeshImportData* UnFbx::FFbxImporter::MainInportTest(const FString & FileToImport, EFBXImportType MeshTypeToImport)
+YSkeletalMesh* UnFbx::FFbxImporter::MainInportTest(const FString & FileToImport, EFBXImportType MeshTypeToImport)
 {
 	FName Name(TEXT("FbxSelfImportMesh"));
 	if (!ImportFromFile(FileToImport, TEXT("FBX"), true))
@@ -2523,7 +2523,7 @@ FSkeletalMeshImportData* UnFbx::FFbxImporter::MainInportTest(const FString & Fil
 							FSkeletalMeshImportData* pSkeletonMeshImportData = new FSkeletalMeshImportData();
 							YSkeletalMesh* NewMesh = ImportSkeletalMesh(nullptr, SkelMeshNodeArray, OutputName, &SkeletalMeshImportData, LODIndex, &bOperationCanceled,nullptr, pSkeletonMeshImportData);
 							//NewObject = NewMesh;
-							return pSkeletonMeshImportData;
+							return NewMesh;
 							if (bOperationCanceled)
 							{
 								// User cancelled, clean up and return

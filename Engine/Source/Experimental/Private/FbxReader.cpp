@@ -247,7 +247,7 @@ std::pair<bool, std::string> FBXReader::LoadSkeletonInfo(FbxSkeleton* pSkeleton)
 {
 	FbxString BoneName = pSkeleton->GetName();
 	FbxString BoneNodeName = pSkeleton->GetNode()->GetName();
-	auto Result = pMeshModel->MainSkeleton.AddBone(pSkeleton->GetNode()->GetName());
+	/*auto Result = pMeshModel->MainSkeleton.AddBone(pSkeleton->GetNode()->GetName());
 	if (!Result.first)
 	{
 		return std::make_pair<>(false, "find two same bone names");
@@ -255,7 +255,7 @@ std::pair<bool, std::string> FBXReader::LoadSkeletonInfo(FbxSkeleton* pSkeleton)
 	Bone & NewBone = pMeshModel->MainSkeleton.GetBone(Result.second);
 	FbxAMatrix BoneInitPos = pSkeleton->GetNode()->EvaluateGlobalTransform();
 	FbxAMatrix lGeometryOffset = GetGeometryOld(pSkeleton->GetNode());
-	NewBone.MatLocalTransform = FbxMatrixToXMMATRIX(lGeometryOffset*BoneInitPos);
+	NewBone.MatLocalTransform = FbxMatrixToXMMATRIX(lGeometryOffset*BoneInitPos);*/
 	return std::make_pair<>(true, "");
 }
 
@@ -689,29 +689,29 @@ void FBXReader::BuildSkeletonRecursive(FbxNode * pNode)
 		if (pSkeleton->GetSkeletonType() == FbxSkeleton::eRoot || pSkeleton->GetSkeletonType() == FbxSkeleton::eLimb || pSkeleton->GetSkeletonType() == FbxSkeleton::eLimbNode)
 		{
 			FbxSkeleton* pParentSkeleton= GetParentSkeleton(pSkeleton);
-			if (!pParentSkeleton)
-			{
-				//¸ù¹Ç÷À
-				Bone *pCurrentBone = pMeshModel->MainSkeleton.GetBone(pSkeleton->GetNode()->GetName());
-				assert(pCurrentBone);
-				assert(pMeshModel->MainSkeleton.RootBone == Bone::InvalidBone);
-				pCurrentBone->ParentBoneID = Bone::InvalidBone;
-				pCurrentBone->MatParentToBone = pCurrentBone->MatLocalTransform;
-				pMeshModel->MainSkeleton.RootBone = pCurrentBone->BoneID;
-				
-			}
-			else
-			{
-				Bone* pParentBone = pMeshModel->MainSkeleton.GetBone(pParentSkeleton->GetNode()->GetName());
-				assert(pParentBone);
-				Bone* pCurrentBone = pMeshModel->MainSkeleton.GetBone(pSkeleton->GetNode()->GetName());
-				assert(pCurrentBone);
-				pParentBone->ChildBones.emplace_back(pCurrentBone->BoneID);
-				pCurrentBone->ParentBoneID = pParentBone->BoneID;
-				auto LocalTrans = pSkeleton->GetNode()->EvaluateLocalTransform();
-				XMVECTOR Determain;
-				pCurrentBone->MatParentToBone = DirectX::XMMatrixInverse(&Determain, pParentBone->MatLocalTransform)*pCurrentBone->MatLocalTransform;
-			}
+			//if (!pParentSkeleton)
+			//{
+			//	//¸ù¹Ç÷À
+			//	Bone *pCurrentBone = pMeshModel->MainSkeleton.GetBone(pSkeleton->GetNode()->GetName());
+			//	assert(pCurrentBone);
+			//	assert(pMeshModel->MainSkeleton.RootBone == Bone::InvalidBone);
+			//	pCurrentBone->ParentBoneID = Bone::InvalidBone;
+			//	pCurrentBone->MatParentToBone = pCurrentBone->MatLocalTransform;
+			//	pMeshModel->MainSkeleton.RootBone = pCurrentBone->BoneID;
+			//	
+			//}
+			//else
+			//{
+			//	Bone* pParentBone = pMeshModel->MainSkeleton.GetBone(pParentSkeleton->GetNode()->GetName());
+			//	assert(pParentBone);
+			//	Bone* pCurrentBone = pMeshModel->MainSkeleton.GetBone(pSkeleton->GetNode()->GetName());
+			//	assert(pCurrentBone);
+			//	pParentBone->ChildBones.emplace_back(pCurrentBone->BoneID);
+			//	pCurrentBone->ParentBoneID = pParentBone->BoneID;
+			//	auto LocalTrans = pSkeleton->GetNode()->EvaluateLocalTransform();
+			//	XMVECTOR Determain;
+			//	pCurrentBone->MatParentToBone = DirectX::XMMatrixInverse(&Determain, pParentBone->MatLocalTransform)*pCurrentBone->MatLocalTransform;
+			//}
 		}
 	}
 

@@ -83,12 +83,12 @@ void MeshModel::Render(TSharedRef<FRenderInfo> RenderInfo)
 	m_RenderInfo = RenderInfo.Get();
 	FbxAMatrix matIdentity;
 	DrawNodeRecursive(RootNode, matIdentity);
-	Bone::BoneIDType RootBoneID = MainSkeleton.RootBone;
-	if (RootBoneID != Bone::InvalidBone)
-	{
-		Bone* pRootBone = &MainSkeleton.GetBone(RootBoneID);
-		DrawSkeleton2(pRootBone, XMMatrixIdentity());
-	}
+	//Bone::BoneIDType RootBoneID = MainSkeleton.RootBone;
+	//if (RootBoneID != Bone::InvalidBone)
+	//{
+	//	Bone* pRootBone = &MainSkeleton.GetBone(RootBoneID);
+	//	DrawSkeleton2(pRootBone, XMMatrixIdentity());
+	//}
 	/*for (int i = 0; i < MeshArrays.size(); ++i)
 	{
 	MeshArrays[i]->Render(dc, m_cb);
@@ -747,24 +747,24 @@ void MeshModel::DrawSkeleton(FbxNode* pNode, FbxAMatrix& pParentGlobalPosition, 
 	}
 }
 
-void MeshModel::DrawSkeleton2(Bone* pBone, const XMMATRIX& MatParent)
-{
-	if (!pBone)
-		return;
-	for (int ChildBoneID : pBone->ChildBones)
-	{
-		Bone & ChildBone = MainSkeleton.GetBone(ChildBoneID);
-		XMFLOAT4X4 matParentBase;
-		XMFLOAT4X4 matChildBase;
-		XMMATRIX matParentTransform = XMMatrixMultiply(MatParent,pBone->MatParentToBone);
-		XMStoreFloat4x4(&matParentBase, matParentTransform);
-		XMStoreFloat4x4(&matChildBase, XMMatrixMultiply(matParentTransform,ChildBone.MatParentToBone));
-		XMFLOAT3 fBasePose(matParentBase.m[3]);
-		XMFLOAT3 fRefPos(matChildBase.m[3]);
-		GCanvas->DrawLine(FVector(fBasePose.x,fBasePose.y,fBasePose.z), FVector(fRefPos.x,fRefPos.y,fRefPos.z), FLinearColor(1.0, 1.0, 1.0, 1.0));
-		DrawSkeleton2(&ChildBone, matParentTransform);
-	}
-}
+//void MeshModel::DrawSkeleton2(Bone* pBone, const XMMATRIX& MatParent)
+//{
+//	if (!pBone)
+//		return;
+//	for (int ChildBoneID : pBone->ChildBones)
+//	{
+//		Bone & ChildBone = MainSkeleton.GetBone(ChildBoneID);
+//		XMFLOAT4X4 matParentBase;
+//		XMFLOAT4X4 matChildBase;
+//		XMMATRIX matParentTransform = XMMatrixMultiply(MatParent,pBone->MatParentToBone);
+//		XMStoreFloat4x4(&matParentBase, matParentTransform);
+//		XMStoreFloat4x4(&matChildBase, XMMatrixMultiply(matParentTransform,ChildBone.MatParentToBone));
+//		XMFLOAT3 fBasePose(matParentBase.m[3]);
+//		XMFLOAT3 fRefPos(matChildBase.m[3]);
+//		GCanvas->DrawLine(FVector(fBasePose.x,fBasePose.y,fBasePose.z), FVector(fRefPos.x,fRefPos.y,fRefPos.z), FLinearColor(1.0, 1.0, 1.0, 1.0));
+//		DrawSkeleton2(&ChildBone, matParentTransform);
+//	}
+//}
 
 void MeshModel::ComputeDualQuaternionDeformation(FbxAMatrix& pGlobalPosition,
 	FbxMesh* pMesh,

@@ -123,4 +123,5 @@
 										|- SkeletalMeshTools::ChunkSkinnedVertices() 防止骨骼太多来拆分Chunk,比如有257根骨头，引用第256根骨头的顶点就会放到新的Chunk中。
 										|-  FMeshUtilities::BuildSkeletalModelFromChunks() //生成可渲染数据
 											|- FSkinnedMeshChunk是MeshUtilities中的数据结构；FSkelMeshSection是Engine中用来渲染的数据结构，所以要把FSkinnedMeshChunk转化为FSkelMeshSection
+												|- 对Index进行优化
 											

@@ -32,4 +32,5 @@ public:
 	uint32 bKeepOverlappingVertices:1;
 
 	/** Gets or creates fbx import data for the specified skeletal mesh */
+	static UFbxSkeletalMeshImportData* GetImportDataForSkeletalMesh(YSkeletalMesh* SkeletalMesh, UFbxSkeletalMeshImportData* TemplateForCreation);
 };

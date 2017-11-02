@@ -57,13 +57,13 @@ public:
 	bool SetCurrentAnimStack(int pIndex);
 	FbxAMatrix GetGlobalPosition(FbxNode* pNode);
 	void DrawSkeleton(FbxNode* pNode, FbxAMatrix& pParentGlobalPosition, FbxAMatrix& pGlobalPosition);
-	void DrawSkeleton2(Bone* pBone, const XMMATRIX& MatParent);
+	//void DrawSkeleton2(Bone* pBone, const XMMATRIX& MatParent);
 	void ComputeDualQuaternionDeformation(FbxAMatrix& pGlobalPosition, FbxMesh* pMesh, FbxVector4* pVertexArray);
 	FbxTime mFrameTime, mStart, mStop, mCurrentTime;
 	FbxNode* RootNode;
 	FbxScene* Scene;
 	TArray<TUniquePtr<StaticMesh>> MeshArrays;
-	Skeleton MainSkeleton;
+	//Skeleton MainSkeleton;
 	FbxArray<FbxString*> mAnimStackNameArray;
 	FbxAnimLayer * mCurrentAnimLayer;
 	TMap<FbxNode*, int>       mapFbxNodeToStaticMesh;

@@ -500,7 +500,7 @@ public:
 	static void DeleteInstance();
 	void MainImport(const FString & FileToImport, EFBXImportType ImportType);
 	// !!FIXME by zyx, just for test
-	FSkeletalMeshImportData* MainInportTest(const FString & FileToImport, EFBXImportType ImportType);
+	YSkeletalMesh* MainInportTest(const FString & FileToImport, EFBXImportType ImportType);
 	/**
 	 * Detect if the FBX file has skeletal mesh model. If there is deformer definition, then there is skeletal mesh.
 	 * In this function, we don't need to import the scene. But the open process is time-consume if the file is large.
