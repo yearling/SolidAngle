@@ -7,6 +7,12 @@
     <Filter Include="Private">
       <UniqueIdentifier>{41368f8d-df66-483d-a817-a84481a5a826}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Public\Curves">
+      <UniqueIdentifier>{115475f4-ba73-46fe-867e-d35acb48f4bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private\Curves">
+      <UniqueIdentifier>{df51865d-d9de-4012-9cb5-f5724688d62b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Runtime\Engine\Public\RawMesh.h">
@@ -54,6 +60,72 @@
     <ClInclude Include="..\Source\Runtime\Engine\Public\ResourcePool.h">
       <Filter>Public</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimCurveTypes.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimTypes.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\SmartName.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\BoneContainer.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\CustomBoneIndexArray.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimationAsset.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimInterpFilter.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimSequence.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimSequenceBase.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\Curves\IndexedCurve.h">
+      <Filter>Public\Curves</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\Curves\KeyHandle.h">
+      <Filter>Public\Curves</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\Curves\CurveFloat.h">
+      <Filter>Public\Curves</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\Curves\RichCurve.h">
+      <Filter>Public\Curves</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\Curves\CurveBase.h">
+      <Filter>Public\Curves</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\Curves\CurveOwnerInterface.h">
+      <Filter>Public\Curves</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimationRuntime.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\BonePose.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimEncoding.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimationCompression.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimEncoding_PerTrackCompression.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimEncoding_VariableKeyLerp.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimEncoding_ConstantKeyLerp.h">
+      <Filter>Public</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\Engine\Private\RawMesh.cpp">
@@ -90,6 +162,63 @@
       <Filter>Private</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Runtime\Engine\Private\GPUSkinVertexFactory.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\SmartName.cpp">
+      <Filter>Public</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\BoneContainer.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimTypes.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimInterpFilter.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimationAsset.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimSequence.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimSequenceBase.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\Curves\KeyHandle.cpp">
+      <Filter>Private\Curves</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\Curves\IndexedCurve.cpp">
+      <Filter>Private\Curves</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\Curves\CurveOwnerInterface.cpp">
+      <Filter>Private\Curves</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\Curves\CurveFloat.cpp">
+      <Filter>Private\Curves</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\Curves\RichCurve.cpp">
+      <Filter>Private\Curves</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCurveTypes.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\Curves\CurveBase.cpp">
+      <Filter>Private\Curves</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimEncoding.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimEncoding_PerTrackCompression.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimEncoding_VariableKeyLerp.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimEncoding_ConstantKeyLerp.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimationRuntime.cpp">
       <Filter>Private</Filter>
     </ClCompile>
   </ItemGroup>

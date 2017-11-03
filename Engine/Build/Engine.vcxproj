@@ -19,9 +19,30 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimationAsset.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimationCompression.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimationRuntime.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimCurveTypes.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimEncoding.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimEncoding_ConstantKeyLerp.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimEncoding_PerTrackCompression.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimEncoding_VariableKeyLerp.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimInterpFilter.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimSequence.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimSequenceBase.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimTypes.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\BoneContainer.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\BoneIndices.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\BonePose.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\BulkData.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\ColorVertexBuffer.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\Curves\CurveBase.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\Curves\CurveFloat.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\Curves\CurveOwnerInterface.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\Curves\IndexedCurve.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\Curves\KeyHandle.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\Curves\RichCurve.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\CustomBoneIndexArray.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\GPUSkinVertexFactory.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\LocalVertexFactory.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\MaterialInterface.h" />
@@ -33,11 +54,30 @@
     <ClInclude Include="..\Source\Runtime\Engine\Public\SkeletalMeshTypes.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\Skeleton.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\SkinWeightVertexBuffer.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\SmartName.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\YSkeletalMesh.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimationAsset.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimationRuntime.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCurveTypes.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimEncoding.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimEncoding_ConstantKeyLerp.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimEncoding_PerTrackCompression.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimEncoding_VariableKeyLerp.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimInterpFilter.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimSequence.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimSequenceBase.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimTypes.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\BoneContainer.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\BulkData.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\ColorVertexBuffer.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\Curves\CurveBase.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\Curves\CurveFloat.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\Curves\CurveOwnerInterface.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\Curves\IndexedCurve.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\Curves\KeyHandle.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\Curves\RichCurve.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\GPUSkinVertexFactory.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\LocalVertexFactory.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\MaterialInterface.cpp" />
@@ -47,6 +87,7 @@
     <ClCompile Include="..\Source\Runtime\Engine\Private\SkeletalMesh.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\Skeleton.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\SkinWeightVertexBuffer.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\SmartName.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\YSkeletalMesh.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

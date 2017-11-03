@@ -10,12 +10,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/ObjectMacros.h"
+//#include "UObject/ObjectMacros.h"
 //#include "UObject/Object.h"
 #include "Misc/Guid.h"
 #include "ReferenceSkeleton.h"
 //#include "Animation/PreviewAssetAttachComponent.h"
-//#include "Animation/SmartName.h"
+#include "SmartName.h"
 
 //#include "Skeleton.generated.h"
 
@@ -23,31 +23,8 @@ class UAnimSequence;
 class UBlendProfile;
 class UPreviewMeshCollection;
 class URig;
-class USkeletalMesh;
+class YSkeletalMesh;
 class USkeletalMeshSocket;
-
-
-
-struct FVirtualBone
-{
-public:
-	FName SourceBoneName;
-	FName TargetBoneName;
-	FName VirtualBoneName;
-
-	FVirtualBone() {}
-
-	FVirtualBone(FName InSource, FName InTarget)
-		: SourceBoneName(InSource)
-		, TargetBoneName(InTarget)
-	{
-		// VB Prefix including space after VB so that it will never collide with 
-		// an actual bone name (as they cannot contain spaces)
-		static FString VirtualBonePrefix(TEXT("VB "));
-
-		VirtualBoneName = FName(*(VirtualBonePrefix + SourceBoneName.ToString() + TEXT("_") + TargetBoneName.ToString()));
-	}
-};
 
 /** This is a mapping table between bone in a particular skeletal mesh and bone of this skeleton set. */
 //USTRUCT()
@@ -136,7 +113,7 @@ struct FReferencePose
 
 #if WITH_EDITORONLY_DATA
 	//UPROPERTY()
-		USkeletalMesh*	ReferenceMesh;
+		YSkeletalMesh*	ReferenceMesh;
 #endif
 
 	/**
@@ -153,9 +130,9 @@ struct FReferencePose
 //USTRUCT()
 struct FBoneReductionSetting
 {
-	GENERATED_USTRUCT_BODY()
+	//GENERATED_USTRUCT_BODY()
 
-		UPROPERTY()
+		//UPROPERTY()
 		TArray<FName> BonesToRemove;
 
 	bool Add(FName BoneName)
@@ -180,15 +157,15 @@ struct FBoneReductionSetting
 	}
 };
 
-USTRUCT()
+//USTRUCT()
 struct FNameMapping
 {
-	GENERATED_USTRUCT_BODY()
+	//GENERATED_USTRUCT_BODY()
 
-		UPROPERTY()
+		//UPROPERTY()
 		FName NodeName;
 
-	UPROPERTY()
+	//UPROPERTY()
 		FName BoneName;
 
 	FNameMapping()
@@ -210,32 +187,32 @@ struct FNameMapping
 	}
 };
 
-USTRUCT()
+//USTRUCT()
 struct FRigConfiguration
 {
-	GENERATED_USTRUCT_BODY()
+	//GENERATED_USTRUCT_BODY()
 
-		UPROPERTY()
+		//UPROPERTY()
 		class URig * Rig;
 
 	// @todo in the future we can make this to be run-time data
-	UPROPERTY()
+	//UPROPERTY()
 		TArray<FNameMapping> BoneMappingTable;
 };
 
-USTRUCT()
+//USTRUCT()
 struct FAnimSlotGroup
 {
-	GENERATED_USTRUCT_BODY()
+	//GENERATED_USTRUCT_BODY()
 
 public:
 	static ENGINE_API const FName DefaultGroupName;
 	static ENGINE_API const FName DefaultSlotName;
 
-	UPROPERTY()
+	//UPROPERTY()
 		FName GroupName;
 
-	UPROPERTY()
+	//UPROPERTY()
 		TArray<FName> SlotNames;
 
 	FAnimSlotGroup()
@@ -249,19 +226,19 @@ public:
 	}
 };
 
-USTRUCT()
+//USTRUCT()
 struct FVirtualBone
 {
-	GENERATED_USTRUCT_BODY()
+	//GENERATED_USTRUCT_BODY()
 
 public:
-	UPROPERTY()
+	//UPROPERTY()
 		FName SourceBoneName;
 
-	UPROPERTY()
+	//UPROPERTY()
 		FName TargetBoneName;
 
-	UPROPERTY()
+	//UPROPERTY()
 		FName VirtualBoneName;
 
 	FVirtualBone() {}
@@ -285,18 +262,20 @@ public:
 *		- Retargetting related
 *		- Mirror table
 */
-UCLASS(hidecategories = Object, MinimalAPI)
-class USkeleton : public UObject
+//UCLASS(hidecategories = Object, MinimalAPI)
+class ENGINE_API YSkeleton /*: public UObject*/
 {
-	GENERATED_UCLASS_BODY()
+	//GENERATED_UCLASS_BODY()
 
+public:
+	YSkeleton();
 protected:
 	/** Skeleton bone tree - each contains name and parent index**/
-	UPROPERTY(VisibleAnywhere, Category = Skeleton)
+	//UPROPERTY(VisibleAnywhere, Category = Skeleton)
 		TArray<struct FBoneNode> BoneTree;
 
 	/** Reference skeleton poses in local space */
-	UPROPERTY()
+	//UPROPERTY()
 		TArray<FTransform> RefLocalPoses_DEPRECATED;
 
 	/** Reference Skeleton */
@@ -307,7 +286,7 @@ protected:
 
 	/** Guid for virtual bones.
 	*  Separate so that we don't have to dirty the original guid when only changing virtual bones */
-	UPROPERTY()
+	//UPROPERTY()
 		FGuid VirtualBoneGuid;
 
 	/** Conversion function. Remove when VER_UE4_REFERENCE_SKELETON_REFACTOR is removed. */
@@ -317,13 +296,13 @@ protected:
 	*  Array of this skeletons virtual bones. These are new bones are links between two existing bones
 	*  and are baked into all the skeletons animations
 	*/
-	UPROPERTY()
+	//UPROPERTY()
 		TArray<FVirtualBone> VirtualBones;
 
 public:
 	//~ Begin UObject Interface.
 #if WITH_EDITOR
-	virtual void PostEditUndo() override;
+	//virtual void PostEditUndo() override;
 #endif
 
 	/** Accessor to Reference Skeleton to make data read only */
@@ -336,14 +315,14 @@ public:
 	const TArray<FVirtualBone>& GetVirtualBones() const { return VirtualBones; }
 
 	/** Non-serialised cache of linkups between different skeletal meshes and this Skeleton. */
-	UPROPERTY(transient)
+	//UPROPERTY(transient)
 		TArray<struct FSkeletonToMeshLinkup> LinkupCache;
 
 	/**
 	*	Array of named socket locations, set up in editor and used as a shortcut instead of specifying
 	*	everything explicitly to AttachComponent in the SkeletalMeshComponent.
 	*/
-	UPROPERTY()
+	//UPROPERTY()
 		TArray<class USkeletalMeshSocket*> Sockets;
 
 	/** Serializable retarget sources for this skeleton **/
@@ -353,41 +332,41 @@ public:
 	typedef SmartName::UID_Type AnimCurveUID;
 
 	// Names for smartname mappings, if you're adding a new category of smartnames add a new name here
-	static ENGINE_API const FName AnimCurveMappingName;
+	static  const FName AnimCurveMappingName;
 
 	// Names for smartname mappings, if you're adding a new category of smartnames add a new name here
-	static ENGINE_API const FName AnimTrackCurveMappingName;
+	static  const FName AnimTrackCurveMappingName;
 
 	// these return container of curve meta data, if you modify this container, 
 	// you'll have to call REfreshCAchedAnimationCurveData to apply
-	ENGINE_API FCurveMetaData* GetCurveMetaData(const FName& CurveName);
-	ENGINE_API const FCurveMetaData* GetCurveMetaData(const FName& CurveName) const;
-	ENGINE_API const FCurveMetaData* GetCurveMetaData(const SmartName::UID_Type CurveUID) const;
-	ENGINE_API FCurveMetaData* GetCurveMetaData(const FSmartName& CurveName);
-	ENGINE_API const FCurveMetaData* GetCurveMetaData(const FSmartName& CurveName) const;
+	//ENGINE_API FCurveMetaData* GetCurveMetaData(const FName& CurveName);
+	//ENGINE_API const FCurveMetaData* GetCurveMetaData(const FName& CurveName) const;
+	//ENGINE_API const FCurveMetaData* GetCurveMetaData(const SmartName::UID_Type CurveUID) const;
+	//ENGINE_API FCurveMetaData* GetCurveMetaData(const FSmartName& CurveName);
+	//ENGINE_API const FCurveMetaData* GetCurveMetaData(const FSmartName& CurveName) const;
 	// this is called when you know both flags - called by post serialize
-	ENGINE_API void AccumulateCurveMetaData(FName CurveName, bool bMaterialSet, bool bMorphtargetSet);
+	 void AccumulateCurveMetaData(FName CurveName, bool bMaterialSet, bool bMorphtargetSet);
 
-	ENGINE_API bool AddNewVirtualBone(const FName SourceBoneName, const FName TargetBoneName);
+	 bool AddNewVirtualBone(const FName SourceBoneName, const FName TargetBoneName);
 
-	ENGINE_API bool AddNewVirtualBone(const FName SourceBoneName, const FName TargetBoneName, FName& NewVirtualBoneName);
+	 bool AddNewVirtualBone(const FName SourceBoneName, const FName TargetBoneName, FName& NewVirtualBoneName);
 
-	ENGINE_API void RemoveVirtualBones(const TArray<FName>& BonesToRemove);
+	 void RemoveVirtualBones(const TArray<FName>& BonesToRemove);
 
 	void HandleVirtualBoneChanges();
 
 	// return version of AnimCurveUidVersion
 	uint16 GetAnimCurveUidVersion() const { return AnimCurveUidVersion; }
-	const TArray<AnimCurveUID>& GetDefaultCurveUIDList() const { return DefaultCurveUIDList; }
+	//const TArray<AnimCurveUID>& GetDefaultCurveUIDList() const { return DefaultCurveUIDList; }
 protected:
 	// Container for smart name mappings
-	UPROPERTY()
+	//UPROPERTY()
 		FSmartNameContainer SmartNames;
 
 	// this is default curve uid list used like ref pose, as default value
 	// don't use this unless you want all curves from the skeleton
 	// FBoneContainer contains only list that is used by current LOD
-	TArray<AnimCurveUID> DefaultCurveUIDList;
+	//TArray<AnimCurveUID> DefaultCurveUIDList;
 
 private:
 	/** Increase the AnimCurveUidVersion so that instances can get the latest information */
@@ -400,14 +379,14 @@ public:
 	// Blend Profiles
 
 	/** List of blend profiles available in this skeleton */
-	UPROPERTY(Instanced)
+	//UPROPERTY(Instanced)
 		TArray<UBlendProfile*> BlendProfiles;
 
 	/** Get the specified blend profile by name */
-	ENGINE_API UBlendProfile* GetBlendProfile(const FName& InProfileName);
+	 UBlendProfile* GetBlendProfile(const FName& InProfileName);
 
 	/** Create a new blend profile with the specified name */
-	ENGINE_API UBlendProfile* CreateNewBlendProfile(const FName& InProfileName);
+	 UBlendProfile* CreateNewBlendProfile(const FName& InProfileName);
 
 	//////////////////////////////////////////////////////////////////////////
 
@@ -416,7 +395,7 @@ public:
 	/************************************************************************/
 private:
 	// serialized slot groups and slot names.
-	UPROPERTY()
+	//UPROPERTY()
 		TArray<FAnimSlotGroup> SlotGroups;
 
 	/** SlotName to GroupName TMap, only at runtime, not serialized. **/
@@ -425,22 +404,22 @@ private:
 	void BuildSlotToGroupMap(bool bInRemoveDuplicates = false);
 
 public:
-	ENGINE_API FAnimSlotGroup* FindAnimSlotGroup(const FName& InGroupName);
-	ENGINE_API const FAnimSlotGroup* FindAnimSlotGroup(const FName& InGroupName) const;
-	ENGINE_API const TArray<FAnimSlotGroup>& GetSlotGroups() const;
-	ENGINE_API bool ContainsSlotName(const FName& InSlotName) const;
-	ENGINE_API void RegisterSlotNode(const FName& InSlotName);
-	ENGINE_API void SetSlotGroupName(const FName& InSlotName, const FName& InGroupName);
+	 FAnimSlotGroup* FindAnimSlotGroup(const FName& InGroupName);
+	 const FAnimSlotGroup* FindAnimSlotGroup(const FName& InGroupName) const;
+	 const TArray<FAnimSlotGroup>& GetSlotGroups() const;
+	 bool ContainsSlotName(const FName& InSlotName) const;
+	 void RegisterSlotNode(const FName& InSlotName);
+	 void SetSlotGroupName(const FName& InSlotName, const FName& InGroupName);
 	/** Returns true if Group is added, false if it already exists */
-	ENGINE_API bool AddSlotGroupName(const FName& InNewGroupName);
-	ENGINE_API FName GetSlotGroupName(const FName& InSlotName) const;
+	 bool AddSlotGroupName(const FName& InNewGroupName);
+	 FName GetSlotGroupName(const FName& InSlotName) const;
 
 	// Edits/removes slot group data
 	// WARNING: Does not verify that the names aren't used anywhere - if it isn't checked
 	// by the caller the names will be recreated when referencing assets load again.
-	ENGINE_API void RemoveSlotName(const FName& InSlotName);
-	ENGINE_API void RemoveSlotGroup(const FName& InSlotName);
-	ENGINE_API void RenameSlotName(const FName& OldName, const FName& NewName);
+	 void RemoveSlotName(const FName& InSlotName);
+	 void RemoveSlotGroup(const FName& InSlotName);
+	 void RenameSlotName(const FName& OldName, const FName& NewName);
 
 	////////////////////////////////////////////////////////////////////////////
 	// Smart Name Interfaces
@@ -448,64 +427,64 @@ public:
 	// Adds a new name to the smart name container and modifies the skeleton so it can be saved
 	// return bool - Whether a name was added (false if already present)
 #if WITH_EDITOR
-	ENGINE_API bool AddSmartNameAndModify(FName ContainerName, FName NewDisplayName, FSmartName& NewName);
+	//ENGINE_API bool AddSmartNameAndModify(FName ContainerName, FName NewDisplayName, FSmartName& NewName);
 
-	// Renames a smartname in the specified container and modifies the skeleton
-	// return bool - Whether the rename was sucessful
-	ENGINE_API bool RenameSmartnameAndModify(FName ContainerName, SmartName::UID_Type Uid, FName NewName);
+	//// Renames a smartname in the specified container and modifies the skeleton
+	//// return bool - Whether the rename was sucessful
+	//ENGINE_API bool RenameSmartnameAndModify(FName ContainerName, SmartName::UID_Type Uid, FName NewName);
 
-	// Removes a smartname from the specified container and modifies the skeleton
-	ENGINE_API void RemoveSmartnameAndModify(FName ContainerName, SmartName::UID_Type Uid);
+	//// Removes a smartname from the specified container and modifies the skeleton
+	//ENGINE_API void RemoveSmartnameAndModify(FName ContainerName, SmartName::UID_Type Uid);
 
-	// Removes smartnames from the specified container and modifies the skeleton
-	ENGINE_API void RemoveSmartnamesAndModify(FName ContainerName, const TArray<SmartName::UID_Type>& Uids);
+	//// Removes smartnames from the specified container and modifies the skeleton
+	//ENGINE_API void RemoveSmartnamesAndModify(FName ContainerName, const TArray<SmartName::UID_Type>& Uids);
 #endif// WITH_EDITOR
 
 	// quick wrapper function for Find UID by name, if not found, it will return SmartName::MaxUID
-	ENGINE_API SmartName::UID_Type GetUIDByName(const FName& ContainerName, const FName& Name) const;
-	ENGINE_API bool GetSmartNameByUID(const FName& ContainerName, SmartName::UID_Type UID, FSmartName& OutSmartName);
-	ENGINE_API bool GetSmartNameByName(const FName& ContainerName, const FName& InName, FSmartName& OutSmartName);
+	 SmartName::UID_Type GetUIDByName(const FName& ContainerName, const FName& Name) const;
+	 bool GetSmartNameByUID(const FName& ContainerName, SmartName::UID_Type UID, FSmartName& OutSmartName);
+	 bool GetSmartNameByName(const FName& ContainerName, const FName& InName, FSmartName& OutSmartName);
 
-	// Adds a new name to the smart name container and modifies the skeleton so it can be saved
-	// return bool - Whether a name was added (false if already present)
-	ENGINE_API bool RenameSmartName(FName ContainerName, const SmartName::UID_Type& Uid, FName NewName);
+	//// Adds a new name to the smart name container and modifies the skeleton so it can be saved
+	//// return bool - Whether a name was added (false if already present)
+	//ENGINE_API bool RenameSmartName(FName ContainerName, const SmartName::UID_Type& Uid, FName NewName);
 
-	// Get or add a smartname container with the given name
-	ENGINE_API const FSmartNameMapping* GetSmartNameContainer(const FName& ContainerName) const;
+	//// Get or add a smartname container with the given name
+	//ENGINE_API const FSmartNameMapping* GetSmartNameContainer(const FName& ContainerName) const;
 
-	// make sure the smart name has valid UID and so on
-	ENGINE_API void VerifySmartName(const FName&  ContainerName, FSmartName& InOutSmartName);
-	ENGINE_API void VerifySmartNames(const FName&  ContainerName, TArray<FSmartName>& InOutSmartNames);
+	//// make sure the smart name has valid UID and so on
+	//ENGINE_API void VerifySmartName(const FName&  ContainerName, FSmartName& InOutSmartName);
+	//ENGINE_API void VerifySmartNames(const FName&  ContainerName, TArray<FSmartName>& InOutSmartNames);
 private:
 	// Get or add a smartname container with the given name
-	FSmartNameMapping* GetOrAddSmartNameContainer(const FName& ContainerName);
-	bool VerifySmartNameInternal(const FName&  ContainerName, FSmartName& InOutSmartName);
-	bool FillSmartNameByDisplayName(FSmartNameMapping* Mapping, const FName& DisplayName, FSmartName& OutSmartName);
+	//FSmartNameMapping* GetOrAddSmartNameContainer(const FName& ContainerName);
+	//bool VerifySmartNameInternal(const FName&  ContainerName, FSmartName& InOutSmartName);
+	//bool FillSmartNameByDisplayName(FSmartNameMapping* Mapping, const FName& DisplayName, FSmartName& OutSmartName);
 #if WITH_EDITORONLY_DATA
 private:
 	/** The default skeletal mesh to use when previewing this skeleton */
-	UPROPERTY(duplicatetransient, AssetRegistrySearchable)
-		TAssetPtr<class USkeletalMesh> PreviewSkeletalMesh;
+	//UPROPERTY(duplicatetransient, AssetRegistrySearchable)
+		//TAssetPtr<class USkeletalMesh> PreviewSkeletalMesh;
 
 	/** The additional skeletal meshes to use when previewing this skeleton */
-	UPROPERTY(duplicatetransient, AssetRegistrySearchable)
-		TAssetPtr<class UPreviewMeshCollection> AdditionalPreviewSkeletalMeshes;
+	//UPROPERTY(duplicatetransient, AssetRegistrySearchable)
+		//TAssetPtr<class UPreviewMeshCollection> AdditionalPreviewSkeletalMeshes;
 
-	UPROPERTY()
+	//UPROPERTY()
 		FRigConfiguration RigConfig;
 
 	/** rig property will be saved separately */
-	ENGINE_API virtual void GetAssetRegistryTags(TArray<FAssetRegistryTag>& OutTags) const override;
+	//ENGINE_API virtual void GetAssetRegistryTags(TArray<FAssetRegistryTag>& OutTags) const override;
 
 public:
 
 	/** AnimNotifiers that has been created. Right now there is no delete step for this, but in the future we'll supply delete**/
-	UPROPERTY()
+	//UPROPERTY()
 		TArray<FName> AnimationNotifies;
 
 	/* Attached assets component for this skeleton */
-	UPROPERTY()
-		FPreviewAssetAttachContainer PreviewAttachedAssetContainer;
+	//UPROPERTY()
+		//FPreviewAssetAttachContainer PreviewAttachedAssetContainer;
 #endif // WITH_EDITORONLY_DATA
 
 private:
@@ -546,42 +525,42 @@ public:
 	typedef TArray<FBoneNode> FBoneTreeType;
 
 	/** Runtime built mapping table between SkeletalMeshes, and LinkupCache array indices. */
-	TMap<TWeakObjectPtr<USkeletalMesh>, int32> SkelMesh2LinkupCache;
+	TMap<YSkeletalMesh*, int32> SkelMesh2LinkupCache;
 
 #if WITH_EDITORONLY_DATA
 
 	// @todo document
-	ENGINE_API void CollectAnimationNotifies();
+	 void CollectAnimationNotifies();
 
 	// @todo document
-	ENGINE_API void AddNewAnimationNotify(FName NewAnimNotifyName);
+	 void AddNewAnimationNotify(FName NewAnimNotifyName);
 
 	/** Returns the skeletons preview mesh, loading it if necessary */
-	ENGINE_API USkeletalMesh* GetPreviewMesh(bool bFindIfNotSet = false);
-	ENGINE_API USkeletalMesh* GetPreviewMesh() const;
-	ENGINE_API USkeletalMesh* GetAssetPreviewMesh(class UAnimationAsset* AnimAsset);
+	 YSkeletalMesh* GetPreviewMesh(bool bFindIfNotSet = false);
+	 YSkeletalMesh* GetPreviewMesh() const;
+	 YSkeletalMesh* GetAssetPreviewMesh(class UAnimationAsset* AnimAsset);
 
 	/** Find the first compatible mesh for this skeleton */
-	ENGINE_API USkeletalMesh* FindCompatibleMesh() const;
+	 YSkeletalMesh* FindCompatibleMesh() const;
 
 	/** Returns the skeletons preview mesh, loading it if necessary */
-	ENGINE_API void SetPreviewMesh(USkeletalMesh* PreviewMesh, bool bMarkAsDirty = true);
+	 void SetPreviewMesh(YSkeletalMesh* PreviewMesh, bool bMarkAsDirty = true);
 
 	/** Load any additional meshes we may have */
-	ENGINE_API void LoadAdditionalPreviewSkeletalMeshes();
+	 void LoadAdditionalPreviewSkeletalMeshes();
 
 	/** Get the additional skeletal meshes we use when previewing this skeleton */
-	ENGINE_API UPreviewMeshCollection* GetAdditionalPreviewSkeletalMeshes() const;
+	 UPreviewMeshCollection* GetAdditionalPreviewSkeletalMeshes() const;
 
 	/** Set the additional skeletal meshes we use when previewing this skeleton */
-	ENGINE_API void SetAdditionalPreviewSkeletalMeshes(UPreviewMeshCollection* PreviewMeshCollection);
+	 void SetAdditionalPreviewSkeletalMeshes(UPreviewMeshCollection* PreviewMeshCollection);
 
 	/**
 	* Makes sure all attached objects are valid and removes any that aren't.
 	*
 	* @return		NumberOfBrokenAssets
 	*/
-	ENGINE_API int32 ValidatePreviewAttachedObjects();
+	 int32 ValidatePreviewAttachedObjects();
 
 	/**
 	* Get List of Child Bones of the ParentBoneIndex
@@ -589,14 +568,14 @@ public:
 	* @param	Parent Bone Index
 	* @param	(out) List of Direct Children
 	*/
-	ENGINE_API int32 GetChildBones(int32 ParentBoneIndex, TArray<int32> & Children) const;
+	 int32 GetChildBones(int32 ParentBoneIndex, TArray<int32> & Children) const;
 
 #endif
 
 	/**
 	*	Check if this skeleton may be used with other skeleton
 	*/
-	ENGINE_API bool IsCompatible(USkeleton const * InSkeleton) const { return (InSkeleton && this == InSkeleton); }
+	 bool IsCompatible(YSkeleton const * InSkeleton) const { return (InSkeleton && this == InSkeleton); }
 
 	/**
 	* Indexing naming convention
@@ -619,16 +598,16 @@ public:
 	*
 	* @return				true if animation set can play on supplied SkeletalMesh, false if not.
 	*/
-	ENGINE_API bool IsCompatibleMesh(const USkeletalMesh* InSkelMesh) const;
+	 bool IsCompatibleMesh(const YSkeletalMesh* InSkelMesh) const;
 
 	/** Clears all cache data **/
-	ENGINE_API void ClearCacheData();
+	 void ClearCacheData();
 
 	/**
 	* Find a mesh linkup table (mapping of skeleton bone tree indices to refpose indices) for a particular SkeletalMesh
 	* If one does not already exist, create it now.
 	*/
-	ENGINE_API int32 GetMeshLinkupIndex(const USkeletalMesh* InSkelMesh);
+	 int32 GetMeshLinkupIndex( YSkeletalMesh* InSkelMesh);
 
 	/**
 	* Merge Bones (RequiredBones from InSkelMesh) to BoneTrees if not exists
@@ -642,7 +621,7 @@ public:
 	*
 	* @return true if success
 	*/
-	ENGINE_API bool MergeBonesToBoneTree(const USkeletalMesh* InSkeletalMesh, const TArray<int32> &RequiredRefBones);
+	 bool MergeBonesToBoneTree(const YSkeletalMesh* InSkeletalMesh, const TArray<int32> &RequiredRefBones);
 
 	/**
 	* Merge all Bones to BoneTrees if not exists
@@ -654,7 +633,7 @@ public:
 	*
 	* @return true if success
 	*/
-	ENGINE_API bool MergeAllBonesToBoneTree(const USkeletalMesh* InSkelMesh);
+	 bool MergeAllBonesToBoneTree(const YSkeletalMesh* InSkelMesh);
 
 	/**
 	* Merge has failed, then Recreate BoneTree
@@ -665,7 +644,7 @@ public:
 	*
 	* @return true if success
 	*/
-	ENGINE_API bool RecreateBoneTree(USkeletalMesh* InSkelMesh);
+	 bool RecreateBoneTree(YSkeletalMesh* InSkelMesh);
 
 	/** This is const accessor for BoneTree
 	*  Understand there will be a lot of need to access BoneTree, but
@@ -701,7 +680,7 @@ public:
 	*
 	* @return	Index of Track of Animation Sequence
 	*/
-	ENGINE_API int32 GetAnimationTrackIndex(const int32& InSkeletonBoneIndex, const UAnimSequence* InAnimSeq, const bool bUseRawData);
+	 int32 GetAnimationTrackIndex(const int32& InSkeletonBoneIndex, const UAnimSequence* InAnimSeq, const bool bUseRawData);
 
 	/**
 	* Get Bone Tree Index from Reference Bone Index
@@ -709,7 +688,7 @@ public:
 	* @param	InRefBoneIdx	Reference Bone Index to look for - index of USkeletalMesh.RefSkeleton
 	* @return	Index of BoneTree Index
 	*/
-	ENGINE_API int32 GetSkeletonBoneIndexFromMeshBoneIndex(const USkeletalMesh* InSkelMesh, const int32& MeshBoneIndex);
+	 int32 GetSkeletonBoneIndexFromMeshBoneIndex(const YSkeletalMesh* InSkelMesh, const int32& MeshBoneIndex);
 
 	/**
 	* Get Reference Bone Index from Bone Tree Index
@@ -717,7 +696,7 @@ public:
 	* @param	InBoneTreeIdx	Bone Tree Index to look for - index of USkeleton.BoneTree
 	* @return	Index of BoneTree Index
 	*/
-	ENGINE_API int32 GetMeshBoneIndexFromSkeletonBoneIndex(const USkeletalMesh* InSkelMesh, const int32& SkeletonBoneIndex);
+	 int32 GetMeshBoneIndexFromSkeletonBoneIndex(const YSkeletalMesh* InSkelMesh, const int32& SkeletonBoneIndex);
 
 	EBoneTranslationRetargetingMode::Type GetBoneTranslationRetargetingMode(const int32& BoneTreeIdx) const
 	{
@@ -733,23 +712,23 @@ public:
 	*
 	* @param	InSkelMesh	: SkeletalMesh to build look up for
 	*/
-	void RebuildLinkup(const USkeletalMesh* InSkelMesh);
+	void RebuildLinkup(const YSkeletalMesh* InSkelMesh);
 
 	/**
 	* Remove Link up cache for the SkelMesh
 	*
 	* @param	InSkelMesh	: SkeletalMesh to remove linkup cache for
 	*/
-	void RemoveLinkup(const USkeletalMesh* InSkelMesh);
+	void RemoveLinkup(const YSkeletalMesh* InSkelMesh);
 
-	ENGINE_API void SetBoneTranslationRetargetingMode(const int32& BoneIndex, EBoneTranslationRetargetingMode::Type NewRetargetingMode, bool bChildrenToo = false);
+	 void SetBoneTranslationRetargetingMode(const int32& BoneIndex, EBoneTranslationRetargetingMode::Type NewRetargetingMode, bool bChildrenToo = false);
 
-	ENGINE_API virtual void PostLoad() override;
+	/*ENGINE_API virtual void PostLoad() override;
 	ENGINE_API virtual void PostDuplicate(bool bDuplicateForPIE) override;
 	ENGINE_API virtual void PostInitProperties() override;
-	ENGINE_API virtual void Serialize(FArchive& Ar) override;
+	ENGINE_API virtual void Serialize(FArchive& Ar) override;*/
 
-	ENGINE_API static void AddReferencedObjects(UObject* InThis, FReferenceCollector& Collector);
+	//ENGINE_API static void AddReferencedObjects(UObject* InThis, FReferenceCollector& Collector);
 
 	/**
 	* Create RefLocalPoses from InSkelMesh. Note InSkelMesh cannot be null and this function will assert if it is.
@@ -760,7 +739,7 @@ public:
 	*
 	* @return true if successful. false if skeletalmesh wasn't compatible with the bone hierarchy
 	*/
-	ENGINE_API void UpdateReferencePoseFromMesh(const USkeletalMesh* InSkelMesh);
+	 void UpdateReferencePoseFromMesh(const YSkeletalMesh* InSkelMesh);
 
 #if WITH_EDITORONLY_DATA
 	/**
@@ -768,7 +747,7 @@ public:
 	*
 	* @param Name	Name of pose to update
 	*/
-	ENGINE_API void UpdateRetargetSource(const FName InName);
+	 void UpdateRetargetSource(const FName InName);
 #endif
 protected:
 	/**
@@ -782,7 +761,7 @@ protected:
 	*
 	* @return true if matches till root. false if not.
 	*/
-	bool DoesParentChainMatch(int32 StartBoneTreeIndex, const USkeletalMesh* InSkelMesh) const;
+	bool DoesParentChainMatch(int32 StartBoneTreeIndex, const YSkeletalMesh* InSkelMesh) const;
 
 	/**
 	* Build Look up between SkelMesh to BoneTree
@@ -790,7 +769,7 @@ protected:
 	* @param	InSkelMesh	: SkeletalMesh to build look up for
 	* @return	Index of LinkupCache that this SkelMesh is linked to
 	*/
-	int32 BuildLinkup(const USkeletalMesh* InSkelMesh);
+	int32 BuildLinkup( YSkeletalMesh* InSkelMesh);
 
 #if WITH_EDITORONLY_DATA
 	/**
@@ -806,7 +785,7 @@ protected:
 	*
 	* @return true if successful
 	*/
-	bool CreateReferenceSkeletonFromMesh(const USkeletalMesh* InSkeletalMesh, const TArray<int32> & RequiredRefBones);
+	bool CreateReferenceSkeletonFromMesh(const YSkeletalMesh* InSkeletalMesh, const TArray<int32> & RequiredRefBones);
 
 #if WITH_EDITOR
 	DECLARE_MULTICAST_DELEGATE(FOnSkeletonHierarchyChangedMulticaster);
@@ -819,38 +798,38 @@ public:
 	typedef FOnSkeletonHierarchyChangedMulticaster::FDelegate FOnSkeletonHierarchyChanged;
 
 	/** Registers a delegate to be called after notification has changed*/
-	ENGINE_API void RegisterOnSkeletonHierarchyChanged(const FOnSkeletonHierarchyChanged& Delegate);
-	ENGINE_API void UnregisterOnSkeletonHierarchyChanged(void* Unregister);
+	 void RegisterOnSkeletonHierarchyChanged(const FOnSkeletonHierarchyChanged& Delegate);
+	 void UnregisterOnSkeletonHierarchyChanged(void* Unregister);
 
 	/** Removes the supplied bones from the skeleton */
-	ENGINE_API void RemoveBonesFromSkeleton(const TArray<FName>& BonesToRemove, bool bRemoveChildBones);
+	 void RemoveBonesFromSkeleton(const TArray<FName>& BonesToRemove, bool bRemoveChildBones);
 
 	// Asset registry information for animation notifies
 	static const FName AnimNotifyTag;
 	static const FString AnimNotifyTagDelimiter;
 
 	// Asset registry information for animation curves
-	ENGINE_API static const FName CurveTag;
-	ENGINE_API static const FString CurveTagDelimiter;
+	 static const FName CurveTag;
+	 static const FString CurveTagDelimiter;
 
 	// rig Configs
-	ENGINE_API static const FName RigTag;
-	ENGINE_API void SetRigConfig(URig * Rig);
-	ENGINE_API FName GetRigBoneMapping(const FName& NodeName) const;
-	ENGINE_API bool SetRigBoneMapping(const FName& NodeName, FName BoneName);
-	ENGINE_API FName GetRigNodeNameFromBoneName(const FName& BoneName) const;
+	 static const FName RigTag;
+	 void SetRigConfig(URig * Rig);
+	 FName GetRigBoneMapping(const FName& NodeName) const;
+	 bool SetRigBoneMapping(const FName& NodeName, FName BoneName);
+	 FName GetRigNodeNameFromBoneName(const FName& BoneName) const;
 	// this make sure it stays within the valid range
-	ENGINE_API int32 GetMappedValidNodes(TArray<FName> &OutValidNodeNames);
+	 int32 GetMappedValidNodes(TArray<FName> &OutValidNodeNames);
 	// verify if it has all latest data
-	ENGINE_API void RefreshRigConfig();
+	 void RefreshRigConfig();
 	int32 FindRigBoneMapping(const FName& NodeName) const;
-	ENGINE_API URig * GetRig() const;
+	 URig * GetRig() const;
 
 #endif
 
 public:
-	ENGINE_API USkeletalMeshSocket* FindSocketAndIndex(FName InSocketName, int32& OutIndex) const;
-	ENGINE_API USkeletalMeshSocket* FindSocket(FName InSocketName) const;
+	 USkeletalMeshSocket* FindSocketAndIndex(FName InSocketName, int32& OutIndex) const;
+	 USkeletalMeshSocket* FindSocket(FName InSocketName) const;
 
 private:
 	/** Regenerate new Guid */
