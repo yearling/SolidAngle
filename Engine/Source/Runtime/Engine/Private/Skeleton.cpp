@@ -27,6 +27,7 @@ Skeleton.cpp: Skeleton features
 //#include "Engine/PreviewMeshCollection.h"
 #include "Misc/ScopedSlowTask.h"
 #include "YSkeletalMesh.h"
+#include "AnimationRuntime.h"
 
 #define LOCTEXT_NAMESPACE "Skeleton"
 #define ROOT_BONE_PARENT	INDEX_NONE
@@ -555,7 +556,7 @@ bool YSkeleton::CreateReferenceSkeletonFromMesh(const YSkeletalMesh* InSkeletalM
 {
 	// Filter list, we only want bones that have their parents present in this array.
 	TArray<int32> FilteredRequiredBones;
-	//FAnimationRuntime::ExcludeBonesWithNoParents(RequiredRefBones, InSkeletalMesh->RefSkeleton, FilteredRequiredBones);
+	FAnimationRuntime::ExcludeBonesWithNoParents(RequiredRefBones, InSkeletalMesh->RefSkeleton, FilteredRequiredBones);
 
 	FReferenceSkeletonModifier RefSkelModifier(ReferenceSkeleton, this);
 
@@ -650,7 +651,7 @@ bool YSkeleton::MergeBonesToBoneTree(const YSkeletalMesh* InSkeletalMesh, const 
 	if (bShouldHandleHierarchyChange)
 	{
 #if WITH_EDITOR
-		//HandleSkeletonHierarchyChange();
+		HandleSkeletonHierarchyChange();
 #endif
 	}
 
@@ -952,8 +953,8 @@ bool YSkeleton::MergeBonesToBoneTree(const YSkeletalMesh* InSkeletalMesh, const 
 //	}
 //}
 //
-//void YSkeleton::HandleSkeletonHierarchyChange()
-//{
+void YSkeleton::HandleSkeletonHierarchyChange()
+{
 //	MarkPackageDirty();
 //
 //	RegenerateGuid();
@@ -991,8 +992,8 @@ bool YSkeleton::MergeBonesToBoneTree(const YSkeletalMesh* InSkeletalMesh, const 
 //#endif
 //
 //	OnSkeletonHierarchyChanged.Broadcast();
-//}
-//
+}
+
 //void YSkeleton::RegisterOnSkeletonHierarchyChanged(const FOnSkeletonHierarchyChanged& Delegate)
 //{
 //	OnSkeletonHierarchyChanged.Add(Delegate);
