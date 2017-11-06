@@ -494,25 +494,25 @@ int32 YSkeleton::BuildLinkup( YSkeletalMesh* InSkelMesh)
 //	BuildLinkup(InSkelMesh);
 //}
 //
-//void YSkeleton::UpdateReferencePoseFromMesh(const USkeletalMesh* InSkelMesh)
-//{
-//	check(InSkelMesh);
-//
-//	FReferenceSkeletonModifier RefSkelModifier(ReferenceSkeleton, this);
-//
-//	for (int32 BoneIndex = 0; BoneIndex < ReferenceSkeleton.GetRawBoneNum(); BoneIndex++)
-//	{
-//		// find index from ref pose array
-//		const int32 MeshBoneIndex = InSkelMesh->RefSkeleton.FindRawBoneIndex(ReferenceSkeleton.GetBoneName(BoneIndex));
-//		if (MeshBoneIndex != INDEX_NONE)
-//		{
-//			RefSkelModifier.UpdateRefPoseTransform(BoneIndex, InSkelMesh->RefSkeleton.GetRefBonePose()[MeshBoneIndex]);
-//		}
-//	}
-//
-//	MarkPackageDirty();
-//}
-//
+void YSkeleton::UpdateReferencePoseFromMesh(const YSkeletalMesh* InSkelMesh)
+{
+	check(InSkelMesh);
+
+	FReferenceSkeletonModifier RefSkelModifier(ReferenceSkeleton, this);
+
+	for (int32 BoneIndex = 0; BoneIndex < ReferenceSkeleton.GetRawBoneNum(); BoneIndex++)
+	{
+		// find index from ref pose array
+		const int32 MeshBoneIndex = InSkelMesh->RefSkeleton.FindRawBoneIndex(ReferenceSkeleton.GetBoneName(BoneIndex));
+		if (MeshBoneIndex != INDEX_NONE)
+		{
+			RefSkelModifier.UpdateRefPoseTransform(BoneIndex, InSkelMesh->RefSkeleton.GetRefBonePose()[MeshBoneIndex]);
+		}
+	}
+
+	//MarkPackageDirty();
+}
+
 //bool YSkeleton::RecreateBoneTree(USkeletalMesh* InSkelMesh)
 //{
 //	if (InSkelMesh)

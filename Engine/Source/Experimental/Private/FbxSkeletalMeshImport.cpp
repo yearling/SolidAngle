@@ -1551,17 +1551,17 @@ YSkeletalMesh* UnFbx::FFbxImporter::ImportSkeletalMesh(UObject* InParent, TArray
 
 		// merge bones to the selected skeleton
 		if ( !Skeleton->MergeAllBonesToBoneTree( SkeletalMesh ) )
-	//	{
-	//		// We should only show the skeleton save toast once, not as many times as we have nodes to import
-	//		bool bToastSaveMessage = false;
-	//		if(bFirstMesh || (LastMergeBonesChoice != EAppReturnType::NoAll && LastMergeBonesChoice != EAppReturnType::YesAll))
-	//		{
-	//			LastMergeBonesChoice = FMessageDialog::Open(EAppMsgType::YesNoYesAllNoAllCancel,
-	//														LOCTEXT("SkeletonFailed_BoneMerge", "FAILED TO MERGE BONES:\n\n This could happen if significant hierarchical change has been made\n"
-	//															"- i.e. inserting bone between nodes\n Would you like to regenerate Skeleton from this mesh? \n\n"
-	//															"***WARNING: THIS WILL REQUIRE RECOMPRESS ALL ANIMATION DATA AND POTENTIALLY INVALIDATE***\n"));
-	//			bToastSaveMessage = true;
-	//		}
+		{
+			// We should only show the skeleton save toast once, not as many times as we have nodes to import
+			bool bToastSaveMessage = false;
+			if(bFirstMesh || (LastMergeBonesChoice != EAppReturnType::NoAll && LastMergeBonesChoice != EAppReturnType::YesAll))
+			{
+				LastMergeBonesChoice = FMessageDialog::Open(EAppMsgType::YesNoYesAllNoAllCancel,
+															LOCTEXT("SkeletonFailed_BoneMerge", "FAILED TO MERGE BONES:\n\n This could happen if significant hierarchical change has been made\n"
+																"- i.e. inserting bone between nodes\n Would you like to regenerate Skeleton from this mesh? \n\n"
+																"***WARNING: THIS WILL REQUIRE RECOMPRESS ALL ANIMATION DATA AND POTENTIALLY INVALIDATE***\n"));
+				bToastSaveMessage = true;
+			}
 	//		
 	//		if(LastMergeBonesChoice == EAppReturnType::Cancel)
 	//		{
@@ -1616,16 +1616,16 @@ YSkeletalMesh* UnFbx::FFbxImporter::ImportSkeletalMesh(UObject* InParent, TArray
 	//				FAssetNotifications::SkeletonNeedsToBeSaved(Skeleton);
 	//			}
 	//		}
-	//	}
-	//	else
-	//	{
-	//		// ask if they'd like to update their position form this mesh
-	//		if ( ImportOptions->SkeletonForAnimation && ImportOptions->bUpdateSkeletonReferencePose )
-	//		{
-	//			Skeleton->UpdateReferencePoseFromMesh(SkeletalMesh);
-	//			FAssetNotifications::SkeletonNeedsToBeSaved(Skeleton);
-	//		}
-	//	}
+		}
+		else
+		{
+			// ask if they'd like to update their position form this mesh
+			if ( ImportOptions->SkeletonForAnimation && ImportOptions->bUpdateSkeletonReferencePose )
+			{
+				Skeleton->UpdateReferencePoseFromMesh(SkeletalMesh);
+				//FAssetNotifications::SkeletonNeedsToBeSaved(Skeleton);
+			}
+		}
 
 		if (SkeletalMesh->Skeleton != Skeleton)
 		{
