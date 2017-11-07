@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AssetImportData.h"
 
 enum EFBXNormalImportMethod
 {
@@ -29,7 +30,7 @@ namespace EFBXNormalGenerationMethod
 * Import data and options used when importing any mesh from FBX
 */
 
-struct UFbxAssetImportData 
+struct UFbxAssetImportData:public UAssetImportData 
 {
 		FVector ImportTranslation;
 

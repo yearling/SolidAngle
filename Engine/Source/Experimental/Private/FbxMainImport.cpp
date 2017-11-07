@@ -2927,7 +2927,6 @@ void UnFbx::FFbxImporter::MainImport(const FString & FileToImport, EFBXImportTyp
 								{
 									// We need to remove all scaling from the root node before we set up animation data.
 									// Othewise some of the global transform calculations will be incorrect.
-									UFbxSkeletalMeshImportData SkeletalMeshImportData;
 									UFbxAnimSequenceImportData AnimSequenceImportData;
 									RemoveTransformSettingsFromFbxNode(RootNodeToImport, &SkeletalMeshImportData);
 									SetupAnimationDataFromMesh(NewMesh, nullptr, SkelMeshNodeArray, &AnimSequenceImportData, OutputName.ToString());

@@ -78,6 +78,9 @@
     <ClCompile Include="..\Source\Experimental\Private\Texture.cpp">
       <Filter>Fbx</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\SkeletalMeshEdit.cpp">
+      <Filter>Fbx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Experimental\Public\YYUT.h">

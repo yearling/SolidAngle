@@ -16,6 +16,7 @@
 #include "AnimCurveTypes.h"
 #include "AnimSequenceBase.h"
 #include "BoneContainer.h"
+#include "SkelImport.h"
 //#include "AnimSequence.generated.h"
 
 struct FAnimCompressContext;

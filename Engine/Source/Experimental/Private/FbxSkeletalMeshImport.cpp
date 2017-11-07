@@ -22,6 +22,7 @@
 #include "Misc/FbxErrors.h"
 #include "MeshUtilities.h"
 #include "Skeleton.h"
+#include "AnimSequence.h"
 
 #define LOCTEXT_NAMESPACE "FBXImpoter"
 #define MAX_BONES 65536 // DesiredBones is passed to the decompression routines as a TArray<FBoneIndexType>, so we know this max is appropriate
@@ -1691,7 +1692,6 @@ UObject* UnFbx::FFbxImporter::CreateAssetOfClass(UClass* AssetClass, FString Par
 
 void UnFbx::FFbxImporter::SetupAnimationDataFromMesh(YSkeletalMesh* SkeletalMesh, UObject* InParent, TArray<FbxNode*>& NodeArray, UFbxAnimSequenceImportData* TemplateImportData, const FString& Name)
 {
-#if 0
 	YSkeleton* Skeleton = SkeletalMesh->Skeleton;
 
 	if (Scene->GetSrcObjectCount<FbxAnimStack>() > 0)
@@ -1705,13 +1705,13 @@ void UnFbx::FFbxImporter::SetupAnimationDataFromMesh(YSkeletalMesh* SkeletalMesh
 			RecursiveBuildSkeleton(SkeletonRoot, SortedLinks);
 
 			// when importing animation from SkeletalMesh, add new Group Anim, a lot of times they're same name
-			UPackage * OuterPackage = InParent->GetOutermost();
+			//UPackage * OuterPackage = InParent->GetOutermost();
+			UObject * OuterPackage = nullptr;
 			FString AnimName = (ImportOptions->AnimationName!="")? ImportOptions->AnimationName : Name+TEXT("_Anim");
 			// give animouter as outer
 			ImportAnimations(Skeleton, OuterPackage, SortedLinks, AnimName, TemplateImportData, NodeArray);
 		}
 	}
-#endif
 }
 
 YSkeletalMesh* UnFbx::FFbxImporter::ReimportSkeletalMesh(YSkeletalMesh* Mesh, UFbxSkeletalMeshImportData* TemplateImportData, uint64 SkeletalMeshFbxUID, TArray<FbxNode*> *OutSkeletalMeshArray)
@@ -3613,4 +3613,24 @@ UFbxSkeletalMeshImportData* UFbxSkeletalMeshImportData::GetImportDataForSkeletal
 	return ImportData;
 }
 
+UFbxAnimSequenceImportData* UFbxAnimSequenceImportData::GetImportDataForAnimSequence(UAnimSequence* AnimSequence, UFbxAnimSequenceImportData* TemplateForCreation)
+{
+	check(AnimSequence);
+
+	UFbxAnimSequenceImportData* ImportData = dynamic_cast<UFbxAnimSequenceImportData*>(AnimSequence->AssetImportData);
+	if (!ImportData)
+	{
+		//ImportData = NewObject<UFbxAnimSequenceImportData>(AnimSequence, NAME_None, RF_NoFlags, TemplateForCreation);
+		ImportData = new UFbxAnimSequenceImportData();
+		// Try to preserve the source file data if possible
+		if (AnimSequence->AssetImportData != NULL)
+		{
+			//ImportData->SourceData = AnimSequence->AssetImportData->SourceData;
+		}
+
+		AnimSequence->AssetImportData = ImportData;
+	}
+
+	return ImportData;
+}
 #undef LOCTEXT_NAMESPACE

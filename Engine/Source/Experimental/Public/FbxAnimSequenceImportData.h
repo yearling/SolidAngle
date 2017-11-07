@@ -32,7 +32,19 @@ enum EFBXAnimationLengthImportType
 */
 class  UFbxAnimSequenceImportData : public UFbxAssetImportData
 {
-	
+public:
+	UFbxAnimSequenceImportData()
+		:bImportMeshesInBoneHierarchy(true)
+		, bImportCustomAttribute(true)
+		, bRemoveRedundantKeys(true)
+		, bDoNotImportCurveWithZero(true)
+	{
+		FrameImportRange.Min = 0;
+		FrameImportRange.Max = 0;
+
+		MaterialCurveSuffixes.Add(TEXT("_mat"));
+	}
+	static UFbxAnimSequenceImportData* UFbxAnimSequenceImportData::GetImportDataForAnimSequence(UAnimSequence* AnimSequence, UFbxAnimSequenceImportData* TemplateForCreation);
 	/** If checked, meshes nested in bone hierarchies will be imported instead of being converted to bones. */
 	bool bImportMeshesInBoneHierarchy;
 	
@@ -75,4 +87,7 @@ class  UFbxAnimSequenceImportData : public UFbxAssetImportData
 	/** If enabled, this will import a curve within the animation */
 	bool bPreserveLocalTransform;
 
+	
+
 };
+

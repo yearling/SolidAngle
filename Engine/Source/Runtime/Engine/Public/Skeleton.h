@@ -16,6 +16,7 @@
 #include "ReferenceSkeleton.h"
 //#include "Animation/PreviewAssetAttachComponent.h"
 #include "SmartName.h"
+#include "AnimTypes.h"
 
 //#include "Skeleton.generated.h"
 
@@ -339,11 +340,11 @@ public:
 
 	// these return container of curve meta data, if you modify this container, 
 	// you'll have to call REfreshCAchedAnimationCurveData to apply
-	//ENGINE_API FCurveMetaData* GetCurveMetaData(const FName& CurveName);
-	//ENGINE_API const FCurveMetaData* GetCurveMetaData(const FName& CurveName) const;
-	//ENGINE_API const FCurveMetaData* GetCurveMetaData(const SmartName::UID_Type CurveUID) const;
-	//ENGINE_API FCurveMetaData* GetCurveMetaData(const FSmartName& CurveName);
-	//ENGINE_API const FCurveMetaData* GetCurveMetaData(const FSmartName& CurveName) const;
+	 FCurveMetaData* GetCurveMetaData(const FName& CurveName);
+	 const FCurveMetaData* GetCurveMetaData(const FName& CurveName) const;
+	 const FCurveMetaData* GetCurveMetaData(const SmartName::UID_Type CurveUID) const;
+	 FCurveMetaData* GetCurveMetaData(const FSmartName& CurveName);
+	 const FCurveMetaData* GetCurveMetaData(const FSmartName& CurveName) const;
 	// this is called when you know both flags - called by post serialize
 	 void AccumulateCurveMetaData(FName CurveName, bool bMaterialSet, bool bMorphtargetSet);
 
@@ -357,7 +358,7 @@ public:
 
 	// return version of AnimCurveUidVersion
 	uint16 GetAnimCurveUidVersion() const { return AnimCurveUidVersion; }
-	//const TArray<AnimCurveUID>& GetDefaultCurveUIDList() const { return DefaultCurveUIDList; }
+	const TArray<AnimCurveUID>& GetDefaultCurveUIDList() const { return DefaultCurveUIDList; }
 protected:
 	// Container for smart name mappings
 	//UPROPERTY()
@@ -366,7 +367,7 @@ protected:
 	// this is default curve uid list used like ref pose, as default value
 	// don't use this unless you want all curves from the skeleton
 	// FBoneContainer contains only list that is used by current LOD
-	//TArray<AnimCurveUID> DefaultCurveUIDList;
+	TArray<AnimCurveUID> DefaultCurveUIDList;
 
 private:
 	/** Increase the AnimCurveUidVersion so that instances can get the latest information */
@@ -427,17 +428,17 @@ public:
 	// Adds a new name to the smart name container and modifies the skeleton so it can be saved
 	// return bool - Whether a name was added (false if already present)
 #if WITH_EDITOR
-	//ENGINE_API bool AddSmartNameAndModify(FName ContainerName, FName NewDisplayName, FSmartName& NewName);
+	 bool AddSmartNameAndModify(FName ContainerName, FName NewDisplayName, FSmartName& NewName);
 
 	//// Renames a smartname in the specified container and modifies the skeleton
 	//// return bool - Whether the rename was sucessful
-	//ENGINE_API bool RenameSmartnameAndModify(FName ContainerName, SmartName::UID_Type Uid, FName NewName);
+	 bool RenameSmartnameAndModify(FName ContainerName, SmartName::UID_Type Uid, FName NewName);
 
 	//// Removes a smartname from the specified container and modifies the skeleton
-	//ENGINE_API void RemoveSmartnameAndModify(FName ContainerName, SmartName::UID_Type Uid);
+	 void RemoveSmartnameAndModify(FName ContainerName, SmartName::UID_Type Uid);
 
 	//// Removes smartnames from the specified container and modifies the skeleton
-	//ENGINE_API void RemoveSmartnamesAndModify(FName ContainerName, const TArray<SmartName::UID_Type>& Uids);
+	 void RemoveSmartnamesAndModify(FName ContainerName, const TArray<SmartName::UID_Type>& Uids);
 #endif// WITH_EDITOR
 
 	// quick wrapper function for Find UID by name, if not found, it will return SmartName::MaxUID
@@ -446,20 +447,20 @@ public:
 	 bool GetSmartNameByName(const FName& ContainerName, const FName& InName, FSmartName& OutSmartName);
 
 	//// Adds a new name to the smart name container and modifies the skeleton so it can be saved
-	//// return bool - Whether a name was added (false if already present)
-	//ENGINE_API bool RenameSmartName(FName ContainerName, const SmartName::UID_Type& Uid, FName NewName);
+	//// return bool - WhetheDefaultCurveUIDListr a name was added (false if already present)
+	bool RenameSmartName(FName ContainerName, const SmartName::UID_Type& Uid, FName NewName);
 
 	//// Get or add a smartname container with the given name
-	//ENGINE_API const FSmartNameMapping* GetSmartNameContainer(const FName& ContainerName) const;
+	 const FSmartNameMapping* GetSmartNameContainer(const FName& ContainerName) const;
 
 	//// make sure the smart name has valid UID and so on
-	//ENGINE_API void VerifySmartName(const FName&  ContainerName, FSmartName& InOutSmartName);
-	//ENGINE_API void VerifySmartNames(const FName&  ContainerName, TArray<FSmartName>& InOutSmartNames);
+	void VerifySmartName(const FName&  ContainerName, FSmartName& InOutSmartName);
+	void VerifySmartNames(const FName&  ContainerName, TArray<FSmartName>& InOutSmartNames);
 private:
 	// Get or add a smartname container with the given name
-	//FSmartNameMapping* GetOrAddSmartNameContainer(const FName& ContainerName);
-	//bool VerifySmartNameInternal(const FName&  ContainerName, FSmartName& InOutSmartName);
-	//bool FillSmartNameByDisplayName(FSmartNameMapping* Mapping, const FName& DisplayName, FSmartName& OutSmartName);
+	FSmartNameMapping* GetOrAddSmartNameContainer(const FName& ContainerName);
+	bool VerifySmartNameInternal(const FName&  ContainerName, FSmartName& InOutSmartName);
+	bool FillSmartNameByDisplayName(FSmartNameMapping* Mapping, const FName& DisplayName, FSmartName& OutSmartName);
 #if WITH_EDITORONLY_DATA
 private:
 	/** The default skeletal mesh to use when previewing this skeleton */

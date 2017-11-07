@@ -180,7 +180,7 @@ struct ENGINE_API FSmartNameContainer
 	friend FArchive& operator<<(FArchive& Ar, FSmartNameContainer& Elem);
 
 	/** Only restricted classes can access the protected interface */
-	friend class USkeleton;
+	friend class YSkeleton;
 	FSmartNameMapping* GetContainerInternal(const FName& ContainerName);
 	const FSmartNameMapping* GetContainerInternal(const FName& ContainerName) const;
 

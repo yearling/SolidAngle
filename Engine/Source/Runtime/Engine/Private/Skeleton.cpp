@@ -119,7 +119,7 @@ YSkeleton::YSkeleton()
 //
 //void YSkeleton::Serialize(FArchive& Ar)
 //{
-//	DECLARE_SCOPE_CYCLE_COUNTER(TEXT("USkeleton::Serialize"), STAT_Skeleton_Serialize, STATGROUP_LoadTime);
+//	DECLARE_SCOPE_CYCLE_COUNTER(TEXT("YSkeleton::Serialize"), STAT_Skeleton_Serialize, STATGROUP_LoadTime);
 //
 //	Super::Serialize(Ar);
 //
@@ -217,7 +217,7 @@ YSkeleton::YSkeleton()
 //
 //void YSkeleton::AddReferencedObjects(UObject* InThis, FReferenceCollector& Collector)
 //{
-//	USkeleton* This = CastChecked<USkeleton>(InThis);
+//	YSkeleton* This = CastChecked<YSkeleton>(InThis);
 //
 //#if WITH_EDITORONLY_DATA
 //	for (auto Iter = This->AnimRetargetSources.CreateIterator(); Iter; ++Iter)
@@ -715,68 +715,68 @@ bool YSkeleton::MergeBonesToBoneTree(const YSkeletalMesh* InSkeletalMesh, const 
 //}
 //
 //#if WITH_EDITORONLY_DATA
-//void YSkeleton::UpdateRetargetSource(const FName Name)
-//{
-//	FReferencePose * PoseFound = AnimRetargetSources.Find(Name);
-//
-//	if (PoseFound)
-//	{
-//		USkeletalMesh * ReferenceMesh = PoseFound->ReferenceMesh;
-//
-//		// reference mesh can be deleted after base pose is created, don't update it if it's not there. 
-//		if (ReferenceMesh)
-//		{
-//			const TArray<FTransform>& MeshRefPose = ReferenceMesh->RefSkeleton.GetRefBonePose();
-//			const TArray<FTransform>& SkeletonRefPose = GetReferenceSkeleton().GetRefBonePose();
-//			const TArray<FMeshBoneInfo> & SkeletonBoneInfo = GetReferenceSkeleton().GetRefBoneInfo();
-//
-//			PoseFound->ReferencePose.Empty(SkeletonRefPose.Num());
-//			PoseFound->ReferencePose.AddUninitialized(SkeletonRefPose.Num());
-//
-//			for (int32 SkeletonBoneIndex = 0; SkeletonBoneIndex<SkeletonRefPose.Num(); ++SkeletonBoneIndex)
-//			{
-//				FName SkeletonBoneName = SkeletonBoneInfo[SkeletonBoneIndex].Name;
-//				int32 MeshBoneIndex = ReferenceMesh->RefSkeleton.FindBoneIndex(SkeletonBoneName);
-//				if (MeshBoneIndex != INDEX_NONE)
-//				{
-//					PoseFound->ReferencePose[SkeletonBoneIndex] = MeshRefPose[MeshBoneIndex];
-//				}
-//				else
-//				{
-//					PoseFound->ReferencePose[SkeletonBoneIndex] = FTransform::Identity;
-//				}
-//			}
-//		}
-//		else
-//		{
-//			UE_LOG(LogAnimation, Warning, TEXT("Reference Mesh for Retarget Source %s has been removed."), *Name.ToString());
-//		}
-//	}
-//}
-//
-//void YSkeleton::RefreshAllRetargetSources()
-//{
-//	for (auto Iter = AnimRetargetSources.CreateConstIterator(); Iter; ++Iter)
-//	{
-//		UpdateRetargetSource(Iter.Key());
-//	}
-//}
-//
-//int32 YSkeleton::GetChildBones(int32 ParentBoneIndex, TArray<int32> & Children) const
-//{
-//	Children.Empty();
-//
-//	const int32 NumBones = ReferenceSkeleton.GetNum();
-//	for (int32 ChildIndex = ParentBoneIndex + 1; ChildIndex<NumBones; ChildIndex++)
-//	{
-//		if (ParentBoneIndex == ReferenceSkeleton.GetParentIndex(ChildIndex))
-//		{
-//			Children.Add(ChildIndex);
-//		}
-//	}
-//
-//	return Children.Num();
-//}
+void YSkeleton::UpdateRetargetSource(const FName Name)
+{
+	FReferencePose * PoseFound = AnimRetargetSources.Find(Name);
+
+	if (PoseFound)
+	{
+		YSkeletalMesh * ReferenceMesh = PoseFound->ReferenceMesh;
+
+		// reference mesh can be deleted after base pose is created, don't update it if it's not there. 
+		if (ReferenceMesh)
+		{
+			const TArray<FTransform>& MeshRefPose = ReferenceMesh->RefSkeleton.GetRefBonePose();
+			const TArray<FTransform>& SkeletonRefPose = GetReferenceSkeleton().GetRefBonePose();
+			const TArray<FMeshBoneInfo> & SkeletonBoneInfo = GetReferenceSkeleton().GetRefBoneInfo();
+
+			PoseFound->ReferencePose.Empty(SkeletonRefPose.Num());
+			PoseFound->ReferencePose.AddUninitialized(SkeletonRefPose.Num());
+
+			for (int32 SkeletonBoneIndex = 0; SkeletonBoneIndex<SkeletonRefPose.Num(); ++SkeletonBoneIndex)
+			{
+				FName SkeletonBoneName = SkeletonBoneInfo[SkeletonBoneIndex].Name;
+				int32 MeshBoneIndex = ReferenceMesh->RefSkeleton.FindBoneIndex(SkeletonBoneName);
+				if (MeshBoneIndex != INDEX_NONE)
+				{
+					PoseFound->ReferencePose[SkeletonBoneIndex] = MeshRefPose[MeshBoneIndex];
+				}
+				else
+				{
+					PoseFound->ReferencePose[SkeletonBoneIndex] = FTransform::Identity;
+				}
+			}
+		}
+		else
+		{
+			UE_LOG(LogAnimation, Warning, TEXT("Reference Mesh for Retarget Source %s has been removed."), *Name.ToString());
+		}
+	}
+}
+
+void YSkeleton::RefreshAllRetargetSources()
+{
+	for (auto Iter = AnimRetargetSources.CreateConstIterator(); Iter; ++Iter)
+	{
+		UpdateRetargetSource(Iter.Key());
+	}
+}
+
+int32 YSkeleton::GetChildBones(int32 ParentBoneIndex, TArray<int32> & Children) const
+{
+	Children.Empty();
+
+	const int32 NumBones = ReferenceSkeleton.GetNum();
+	for (int32 ChildIndex = ParentBoneIndex + 1; ChildIndex<NumBones; ChildIndex++)
+	{
+		if (ParentBoneIndex == ReferenceSkeleton.GetParentIndex(ChildIndex))
+		{
+			Children.Add(ChildIndex);
+		}
+	}
+
+	return Children.Num();
+}
 //
 //void YSkeleton::CollectAnimationNotifies()
 //{
@@ -798,10 +798,10 @@ bool YSkeleton::MergeBonesToBoneTree(const YSkeletalMesh* InSkeletalMesh, const 
 //		if (SkeletonValue == CurrentSkeletonName)
 //		{
 //			FString Value;
-//			if (Asset.GetTagValue(USkeleton::AnimNotifyTag, Value))
+//			if (Asset.GetTagValue(YSkeleton::AnimNotifyTag, Value))
 //			{
 //				TArray<FString> NotifyList;
-//				Value.ParseIntoArray(NotifyList, *USkeleton::AnimNotifyTagDelimiter, true);
+//				Value.ParseIntoArray(NotifyList, *YSkeleton::AnimNotifyTagDelimiter, true);
 //				for (auto NotifyIter = NotifyList.CreateConstIterator(); NotifyIter; ++NotifyIter)
 //				{
 //					FString NotifyName = *NotifyIter;
@@ -957,13 +957,13 @@ void YSkeleton::HandleSkeletonHierarchyChange()
 {
 //	MarkPackageDirty();
 //
-//	RegenerateGuid();
-//
-//	// Clear exiting MeshLinkUp tables.
-//	ClearCacheData();
-//
-//	// Fix up loaded animations (any animations that aren't loaded will be fixed on load)
-//	int32 NumLoadedAssets = 0;
+	RegenerateGuid();
+
+	// Clear exiting MeshLinkUp tables.
+	ClearCacheData();
+
+	// Fix up loaded animations (any animations that aren't loaded will be fixed on load)
+	//int32 NumLoadedAssets = 0;
 //	for (TObjectIterator<UAnimationAsset> It; It; ++It)
 //	{
 //		UAnimationAsset* CurrentAnimation = *It;
@@ -987,9 +987,9 @@ void YSkeleton::HandleSkeletonHierarchyChange()
 //		}
 //	}
 //
-//#if WITH_EDITORONLY_DATA
-//	RefreshAllRetargetSources();
-//#endif
+#if WITH_EDITORONLY_DATA
+	RefreshAllRetargetSources();
+#endif
 //
 //	OnSkeletonHierarchyChanged.Broadcast();
 }
@@ -1044,14 +1044,14 @@ void YSkeleton::HandleSkeletonHierarchyChange()
 //	}
 //}
 //
-//FAnimSlotGroup* YSkeleton::FindAnimSlotGroup(const FName& InGroupName)
-//{
-//	return SlotGroups.FindByPredicate([&InGroupName](const FAnimSlotGroup& Item)
-//	{
-//		return Item.GroupName == InGroupName;
-//	});
-//}
-//
+FAnimSlotGroup* YSkeleton::FindAnimSlotGroup(const FName& InGroupName)
+{
+	return SlotGroups.FindByPredicate([&InGroupName](const FAnimSlotGroup& Item)
+	{
+		return Item.GroupName == InGroupName;
+	});
+}
+
 //const FAnimSlotGroup* YSkeleton::FindAnimSlotGroup(const FName& InGroupName) const
 //{
 //	return SlotGroups.FindByPredicate([&InGroupName](const FAnimSlotGroup& Item)
@@ -1171,78 +1171,78 @@ void YSkeleton::HandleSkeletonHierarchyChange()
 //	SetSlotGroupName(NewName, GroupName);
 //}
 //
-//#if WITH_EDITOR
-//
-//bool YSkeleton::AddSmartNameAndModify(FName ContainerName, FName NewDisplayName, FSmartName& NewName)
-//{
-//	bool Successful = false;
-//	FSmartNameMapping* RequestedMapping = GetOrAddSmartNameContainer(ContainerName);
-//	if (RequestedMapping)
-//	{
-//		if (RequestedMapping->FindOrAddSmartName(NewDisplayName, NewName))
-//		{
-//			Modify(true);
-//			Successful = true;
-//			IncreaseAnimCurveUidVersion();
-//		}
-//	}
-//	return Successful;
-//}
-//bool YSkeleton::RenameSmartnameAndModify(FName ContainerName, SmartName::UID_Type Uid, FName NewName)
-//{
-//	bool Successful = false;
-//	FSmartNameMapping* RequestedMapping = SmartNames.GetContainerInternal(ContainerName);
-//	if (RequestedMapping)
-//	{
-//		FName CurrentName;
-//		RequestedMapping->GetName(Uid, CurrentName);
-//		if (CurrentName != NewName)
-//		{
-//			Modify();
-//			Successful = RequestedMapping->Rename(Uid, NewName);
-//			IncreaseAnimCurveUidVersion();
-//		}
-//	}
-//	return Successful;
-//}
-//
-//void YSkeleton::RemoveSmartnameAndModify(FName ContainerName, SmartName::UID_Type Uid)
-//{
-//	FSmartNameMapping* RequestedMapping = SmartNames.GetContainerInternal(ContainerName);
-//	if (RequestedMapping)
-//	{
-//		Modify();
-//		if (RequestedMapping->Remove(Uid))
-//		{
-//			IncreaseAnimCurveUidVersion();
-//		}
-//	}
-//}
-//
-//void YSkeleton::RemoveSmartnamesAndModify(FName ContainerName, const TArray<SmartName::UID_Type>& Uids)
-//{
-//	FSmartNameMapping* RequestedMapping = SmartNames.GetContainerInternal(ContainerName);
-//	if (RequestedMapping)
-//	{
-//		bool bModified = false;
-//		for (const SmartName::UID_Type& UID : Uids)
-//		{
-//			if (RequestedMapping->Exists(UID))
-//			{
-//				RequestedMapping->Remove(UID);
-//				bModified = true;
-//			}
-//		}
-//
-//		if (bModified)
-//		{
-//			Modify();
-//			IncreaseAnimCurveUidVersion();
-//		}
-//	}
-//}
-//#endif // WITH_EDITOR
-//
+#if WITH_EDITOR
+
+bool YSkeleton::AddSmartNameAndModify(FName ContainerName, FName NewDisplayName, FSmartName& NewName)
+{
+	bool Successful = false;
+	FSmartNameMapping* RequestedMapping = GetOrAddSmartNameContainer(ContainerName);
+	if (RequestedMapping)
+	{
+		if (RequestedMapping->FindOrAddSmartName(NewDisplayName, NewName))
+		{
+			//Modify(true);
+			Successful = true;
+			IncreaseAnimCurveUidVersion();
+		}
+	}
+	return Successful;
+}
+bool YSkeleton::RenameSmartnameAndModify(FName ContainerName, SmartName::UID_Type Uid, FName NewName)
+{
+	bool Successful = false;
+	FSmartNameMapping* RequestedMapping = SmartNames.GetContainerInternal(ContainerName);
+	if (RequestedMapping)
+	{
+		FName CurrentName;
+		RequestedMapping->GetName(Uid, CurrentName);
+		if (CurrentName != NewName)
+		{
+			//Modify();
+			Successful = RequestedMapping->Rename(Uid, NewName);
+			IncreaseAnimCurveUidVersion();
+		}
+	}
+	return Successful;
+}
+
+void YSkeleton::RemoveSmartnameAndModify(FName ContainerName, SmartName::UID_Type Uid)
+{
+	FSmartNameMapping* RequestedMapping = SmartNames.GetContainerInternal(ContainerName);
+	if (RequestedMapping)
+	{
+		//Modify();
+		if (RequestedMapping->Remove(Uid))
+		{
+			IncreaseAnimCurveUidVersion();
+		}
+	}
+}
+
+void YSkeleton::RemoveSmartnamesAndModify(FName ContainerName, const TArray<SmartName::UID_Type>& Uids)
+{
+	FSmartNameMapping* RequestedMapping = SmartNames.GetContainerInternal(ContainerName);
+	if (RequestedMapping)
+	{
+		bool bModified = false;
+		for (const SmartName::UID_Type& UID : Uids)
+		{
+			if (RequestedMapping->Exists(UID))
+			{
+				RequestedMapping->Remove(UID);
+				bModified = true;
+			}
+		}
+
+		if (bModified)
+		{
+			//Modify();
+			IncreaseAnimCurveUidVersion();
+		}
+	}
+}
+#endif // WITH_EDITOR
+
 bool YSkeleton::GetSmartNameByUID(const FName& ContainerName, SmartName::UID_Type UID, FSmartName& OutSmartName)
 {
 	const FSmartNameMapping* RequestedMapping = SmartNames.GetContainerInternal(ContainerName);
@@ -1285,97 +1285,97 @@ SmartName::UID_Type YSkeleton::GetUIDByName(const FName& ContainerName, const FN
 //// this does very simple thing.
 //// @todo: this for now prioritize FName because that is main issue right now
 //// @todo: @fixme: this has to be fixed when we have GUID
-//void YSkeleton::VerifySmartName(const FName& ContainerName, FSmartName& InOutSmartName)
-//{
-//	VerifySmartNameInternal(ContainerName, InOutSmartName);
-//	if (ContainerName == USkeleton::AnimCurveMappingName)
-//	{
-//		IncreaseAnimCurveUidVersion();
-//	}
-//}
-//
-//
-//bool YSkeleton::FillSmartNameByDisplayName(FSmartNameMapping* Mapping, const FName& DisplayName, FSmartName& OutSmartName)
-//{
-//	FSmartName SkeletonName;
-//	if (Mapping->FindSmartName(DisplayName, SkeletonName))
-//	{
-//		OutSmartName.DisplayName = DisplayName;
-//
-//#if WITH_EDITORONLY_DATA
-//		// if same guid, this is same
-//		if (SkeletonName.Guid == OutSmartName.Guid)
-//		{
-//			OutSmartName.UID = SkeletonName.UID;
-//			return true;
-//		}
-//		// else, take Skeleton Guid, we don't allow same name with different Guid
-//		else
-//		{
-//			OutSmartName.Guid = SkeletonName.Guid;
-//			OutSmartName.UID = SkeletonName.UID;
-//			return true;
-//		}
-//#else
-//		// if not editor, we assume name is always correct
-//		OutSmartName.UID = SkeletonName.UID;
-//		return true;
-//#endif // WITH_EDITORONLY_DATA
-//	}
-//
-//	return false;
-//}
-////@todo: this does prioritize name over UID since UID doesn't work well
-//// until we have GUID, we'll prioritize name over UID
-//bool YSkeleton::VerifySmartNameInternal(const FName&  ContainerName, FSmartName& InOutSmartName)
-//{
-//	FSmartNameMapping* Mapping = GetOrAddSmartNameContainer(ContainerName);
-//	if (Mapping != nullptr)
-//	{
-//		// make a copy just in case we change by accident
-//		FName DisplayName = InOutSmartName.DisplayName;
-//
-//#if WITH_EDITOR
-//		// if I find the name, fill up the data
-//		// look for same guid, the name might have been changed
-//		if (Mapping->GetNameByGuid(InOutSmartName.Guid, DisplayName))
-//		{
-//			ensureAlways(FillSmartNameByDisplayName(Mapping, DisplayName, InOutSmartName));
-//		}
-//		else if (FillSmartNameByDisplayName(Mapping, DisplayName, InOutSmartName) == false)
-//		{
-//			// look for same guid, the name might have been changed
-//			if (Mapping->GetNameByGuid(InOutSmartName.Guid, DisplayName))
-//			{
-//				ensureAlways(FillSmartNameByDisplayName(Mapping, DisplayName, InOutSmartName));
-//			}
-//			else if (InOutSmartName.IsValid())
-//			{
-//				// this is only case where we add new one
-//				Modify();
-//				ensureAlways(Mapping->AddSmartName(InOutSmartName));
-//				return true;
-//			}
-//			else
-//			{
-//				// this is only case where we add new one
-//				Modify();
-//				Mapping->FindOrAddSmartName(InOutSmartName.DisplayName, InOutSmartName);
-//				return true;
-//			}
-//		}
-//#else
-//		// if cooking didn't save the skeleton package properly
-//		// meaning it can be loaded by animations but not saved together
-//		// then later on, it gets loaded, and it's saved with empty array
-//		// so it can fail to load the name, so we'll have to add it manually
-//		Mapping->FindOrAddSmartName(DisplayName, InOutSmartName.UID);
-//#endif // WITH_EDITOR
-//	}
-//
-//	return false;
-//}
-//
+void YSkeleton::VerifySmartName(const FName& ContainerName, FSmartName& InOutSmartName)
+{
+	VerifySmartNameInternal(ContainerName, InOutSmartName);
+	if (ContainerName == YSkeleton::AnimCurveMappingName)
+	{
+		IncreaseAnimCurveUidVersion();
+	}
+}
+
+
+bool YSkeleton::FillSmartNameByDisplayName(FSmartNameMapping* Mapping, const FName& DisplayName, FSmartName& OutSmartName)
+{
+	FSmartName SkeletonName;
+	if (Mapping->FindSmartName(DisplayName, SkeletonName))
+	{
+		OutSmartName.DisplayName = DisplayName;
+
+#if WITH_EDITORONLY_DATA
+		// if same guid, this is same
+		if (SkeletonName.Guid == OutSmartName.Guid)
+		{
+			OutSmartName.UID = SkeletonName.UID;
+			return true;
+		}
+		// else, take Skeleton Guid, we don't allow same name with different Guid
+		else
+		{
+			OutSmartName.Guid = SkeletonName.Guid;
+			OutSmartName.UID = SkeletonName.UID;
+			return true;
+		}
+#else
+		// if not editor, we assume name is always correct
+		OutSmartName.UID = SkeletonName.UID;
+		return true;
+#endif // WITH_EDITORONLY_DATA
+	}
+
+	return false;
+}
+//@todo: this does prioritize name over UID since UID doesn't work well
+// until we have GUID, we'll prioritize name over UID
+bool YSkeleton::VerifySmartNameInternal(const FName&  ContainerName, FSmartName& InOutSmartName)
+{
+	FSmartNameMapping* Mapping = GetOrAddSmartNameContainer(ContainerName);
+	if (Mapping != nullptr)
+	{
+		// make a copy just in case we change by accident
+		FName DisplayName = InOutSmartName.DisplayName;
+
+#if WITH_EDITOR
+		// if I find the name, fill up the data
+		// look for same guid, the name might have been changed
+		if (Mapping->GetNameByGuid(InOutSmartName.Guid, DisplayName))
+		{
+			ensureAlways(FillSmartNameByDisplayName(Mapping, DisplayName, InOutSmartName));
+		}
+		else if (FillSmartNameByDisplayName(Mapping, DisplayName, InOutSmartName) == false)
+		{
+			// look for same guid, the name might have been changed
+			if (Mapping->GetNameByGuid(InOutSmartName.Guid, DisplayName))
+			{
+				ensureAlways(FillSmartNameByDisplayName(Mapping, DisplayName, InOutSmartName));
+			}
+			else if (InOutSmartName.IsValid())
+			{
+				// this is only case where we add new one
+				//Modify();
+				ensureAlways(Mapping->AddSmartName(InOutSmartName));
+				return true;
+			}
+			else
+			{
+				// this is only case where we add new one
+				//Modify();
+				Mapping->FindOrAddSmartName(InOutSmartName.DisplayName, InOutSmartName);
+				return true;
+			}
+		}
+#else
+		// if cooking didn't save the skeleton package properly
+		// meaning it can be loaded by animations but not saved together
+		// then later on, it gets loaded, and it's saved with empty array
+		// so it can fail to load the name, so we'll have to add it manually
+		Mapping->FindOrAddSmartName(DisplayName, InOutSmartName.UID);
+#endif // WITH_EDITOR
+	}
+
+	return false;
+}
+
 //void YSkeleton::VerifySmartNames(const FName&  ContainerName, TArray<FSmartName>& InOutSmartNames)
 //{
 //	bool bRefreshCache = false;
@@ -1385,36 +1385,36 @@ SmartName::UID_Type YSkeleton::GetUIDByName(const FName& ContainerName, const FN
 //		VerifySmartNameInternal(ContainerName, SmartName);
 //	}
 //
-//	if (ContainerName == USkeleton::AnimCurveMappingName)
+//	if (ContainerName == YSkeleton::AnimCurveMappingName)
 //	{
 //		IncreaseAnimCurveUidVersion();
 //	}
 //}
 //
-//FSmartNameMapping* YSkeleton::GetOrAddSmartNameContainer(const FName& ContainerName)
-//{
-//	FSmartNameMapping* Mapping = SmartNames.GetContainerInternal(ContainerName);
-//	if (Mapping == nullptr)
-//	{
-//		Modify();
-//		IncreaseAnimCurveUidVersion();
-//		SmartNames.AddContainer(ContainerName);
-//		Mapping = SmartNames.GetContainerInternal(ContainerName);
-//	}
-//
-//	return Mapping;
-//}
-//
-//const FSmartNameMapping* YSkeleton::GetSmartNameContainer(const FName& ContainerName) const
-//{
-//	return SmartNames.GetContainer(ContainerName);
-//}
-//
-//void YSkeleton::RegenerateGuid()
-//{
-//	Guid = FGuid::NewGuid();
-//	check(Guid.IsValid());
-//}
+FSmartNameMapping* YSkeleton::GetOrAddSmartNameContainer(const FName& ContainerName)
+{
+	FSmartNameMapping* Mapping = SmartNames.GetContainerInternal(ContainerName);
+	if (Mapping == nullptr)
+	{
+		//Modify();
+		IncreaseAnimCurveUidVersion();
+		SmartNames.AddContainer(ContainerName);
+		Mapping = SmartNames.GetContainerInternal(ContainerName);
+	}
+
+	return Mapping;
+}
+
+const FSmartNameMapping* YSkeleton::GetSmartNameContainer(const FName& ContainerName) const
+{
+	return SmartNames.GetContainer(ContainerName);
+}
+
+void YSkeleton::RegenerateGuid()
+{
+	Guid = FGuid::NewGuid();
+	check(Guid.IsValid());
+}
 //
 //void YSkeleton::RegenerateVirtualBoneGuid()
 //{
@@ -1422,119 +1422,119 @@ SmartName::UID_Type YSkeleton::GetUIDByName(const FName& ContainerName, const FN
 //	check(VirtualBoneGuid.IsValid());
 //}
 //
-//bool YSkeleton::RenameSmartName(FName ContainerName, const SmartName::UID_Type& Uid, FName NewName)
-//{
-//	FSmartNameMapping* Mapping = SmartNames.GetContainerInternal(ContainerName);
-//	if (Mapping->Exists(Uid))
-//	{
-//		Modify();
-//		IncreaseAnimCurveUidVersion();
-//		Mapping->Rename(Uid, NewName);
-//		return true;
-//	}
-//
-//	return false;
-//}
-//
-//void YSkeleton::IncreaseAnimCurveUidVersion()
-//{
-//	// this will be checked by skeletalmeshcomponent and if it's same, it won't care. If it's different, it will rebuild UID list
-//	++AnimCurveUidVersion;
-//
-//	// update default uid list
-//	const FSmartNameMapping* Mapping = GetSmartNameContainer(USkeleton::AnimCurveMappingName);
-//	if (Mapping != nullptr)
-//	{
-//		DefaultCurveUIDList.Reset();
-//		Mapping->FillUidArray(DefaultCurveUIDList);
-//	}
-//}
-//
-//FCurveMetaData* YSkeleton::GetCurveMetaData(const FName& CurveName)
-//{
-//	FSmartNameMapping* Mapping = SmartNames.GetContainerInternal(USkeleton::AnimCurveMappingName);
-//	if (ensureAlways(Mapping))
-//	{
-//		return Mapping->GetCurveMetaData(CurveName);
-//	}
-//
-//	return nullptr;
-//}
-//
-//const FCurveMetaData* YSkeleton::GetCurveMetaData(const FName& CurveName) const
-//{
-//	const FSmartNameMapping* Mapping = SmartNames.GetContainerInternal(USkeleton::AnimCurveMappingName);
-//	if (ensureAlways(Mapping))
-//	{
-//		return Mapping->GetCurveMetaData(CurveName);
-//	}
-//
-//	return nullptr;
-//}
-//
-//const FCurveMetaData* YSkeleton::GetCurveMetaData(const SmartName::UID_Type CurveUID) const
-//{
-//	const FSmartNameMapping* Mapping = SmartNames.GetContainerInternal(USkeleton::AnimCurveMappingName);
-//	if (ensureAlways(Mapping))
-//	{
-//		FSmartName SmartName;
-//		if (Mapping->FindSmartNameByUID(CurveUID, SmartName))
-//		{
-//			return Mapping->GetCurveMetaData(SmartName.DisplayName);
-//		}
-//	}
-//
-//	return nullptr;
-//}
-//
-//FCurveMetaData* YSkeleton::GetCurveMetaData(const FSmartName& CurveName)
-//{
-//	FSmartNameMapping* Mapping = SmartNames.GetContainerInternal(USkeleton::AnimCurveMappingName);
-//	if (ensureAlways(Mapping))
-//	{
-//		// the name might have changed, make sure it's up-to-date
-//		FName DisplayName;
-//		Mapping->GetName(CurveName.UID, DisplayName);
-//		return Mapping->GetCurveMetaData(DisplayName);
-//	}
-//
-//	return nullptr;
-//}
-//
-//const FCurveMetaData* YSkeleton::GetCurveMetaData(const FSmartName& CurveName) const
-//{
-//	const FSmartNameMapping* Mapping = SmartNames.GetContainerInternal(USkeleton::AnimCurveMappingName);
-//	if (ensureAlways(Mapping))
-//	{
-//		// the name might have changed, make sure it's up-to-date
-//		FName DisplayName;
-//		Mapping->GetName(CurveName.UID, DisplayName);
-//		return Mapping->GetCurveMetaData(DisplayName);
-//	}
-//
-//	return nullptr;
-//}
-//
+bool YSkeleton::RenameSmartName(FName ContainerName, const SmartName::UID_Type& Uid, FName NewName)
+{
+	FSmartNameMapping* Mapping = SmartNames.GetContainerInternal(ContainerName);
+	if (Mapping->Exists(Uid))
+	{
+		//Modify();
+		IncreaseAnimCurveUidVersion();
+		Mapping->Rename(Uid, NewName);
+		return true;
+	}
+
+	return false;
+}
+
+void YSkeleton::IncreaseAnimCurveUidVersion()
+{
+	// this will be checked by skeletalmeshcomponent and if it's same, it won't care. If it's different, it will rebuild UID list
+	++AnimCurveUidVersion;
+
+	// update default uid list
+	const FSmartNameMapping* Mapping = GetSmartNameContainer(YSkeleton::AnimCurveMappingName);
+	if (Mapping != nullptr)
+	{
+		DefaultCurveUIDList.Reset();
+		Mapping->FillUidArray(DefaultCurveUIDList);
+	}
+}
+
+FCurveMetaData* YSkeleton::GetCurveMetaData(const FName& CurveName)
+{
+	FSmartNameMapping* Mapping = SmartNames.GetContainerInternal(YSkeleton::AnimCurveMappingName);
+	if (ensureAlways(Mapping))
+	{
+		return Mapping->GetCurveMetaData(CurveName);
+	}
+
+	return nullptr;
+}
+
+const FCurveMetaData* YSkeleton::GetCurveMetaData(const FName& CurveName) const
+{
+	const FSmartNameMapping* Mapping = SmartNames.GetContainerInternal(YSkeleton::AnimCurveMappingName);
+	if (ensureAlways(Mapping))
+	{
+		return Mapping->GetCurveMetaData(CurveName);
+	}
+
+	return nullptr;
+}
+
+const FCurveMetaData* YSkeleton::GetCurveMetaData(const SmartName::UID_Type CurveUID) const
+{
+	const FSmartNameMapping* Mapping = SmartNames.GetContainerInternal(YSkeleton::AnimCurveMappingName);
+	if (ensureAlways(Mapping))
+	{
+		FSmartName SmartName;
+		if (Mapping->FindSmartNameByUID(CurveUID, SmartName))
+		{
+			return Mapping->GetCurveMetaData(SmartName.DisplayName);
+		}
+	}
+
+	return nullptr;
+}
+
+FCurveMetaData* YSkeleton::GetCurveMetaData(const FSmartName& CurveName)
+{
+	FSmartNameMapping* Mapping = SmartNames.GetContainerInternal(YSkeleton::AnimCurveMappingName);
+	if (ensureAlways(Mapping))
+	{
+		// the name might have changed, make sure it's up-to-date
+		FName DisplayName;
+		Mapping->GetName(CurveName.UID, DisplayName);
+		return Mapping->GetCurveMetaData(DisplayName);
+	}
+
+	return nullptr;
+}
+
+const FCurveMetaData* YSkeleton::GetCurveMetaData(const FSmartName& CurveName) const
+{
+	const FSmartNameMapping* Mapping = SmartNames.GetContainerInternal(YSkeleton::AnimCurveMappingName);
+	if (ensureAlways(Mapping))
+	{
+		// the name might have changed, make sure it's up-to-date
+		FName DisplayName;
+		Mapping->GetName(CurveName.UID, DisplayName);
+		return Mapping->GetCurveMetaData(DisplayName);
+	}
+
+	return nullptr;
+}
+
 //// this is called when you know both flags - called by post serialize
-//void YSkeleton::AccumulateCurveMetaData(FName CurveName, bool bMaterialSet, bool bMorphtargetSet)
-//{
-//	if (bMaterialSet || bMorphtargetSet)
-//	{
-//		const FSmartNameMapping* Mapping = SmartNames.GetContainerInternal(USkeleton::AnimCurveMappingName);
-//		if (ensureAlways(Mapping))
-//		{
-//			// if we don't have name, add one
-//			if (Mapping->Exists(CurveName))
-//			{
-//				FCurveMetaData* CurveMetaData = GetCurveMetaData(CurveName);
-//				// we don't want to undo previous flags, if it was true, we just alolw more to it. 
-//				CurveMetaData->Type.bMaterial |= bMaterialSet;
-//				CurveMetaData->Type.bMorphtarget |= bMorphtargetSet;
-//				MarkPackageDirty();
-//			}
-//		}
-//	}
-//}
+void YSkeleton::AccumulateCurveMetaData(FName CurveName, bool bMaterialSet, bool bMorphtargetSet)
+{
+	if (bMaterialSet || bMorphtargetSet)
+	{
+		const FSmartNameMapping* Mapping = SmartNames.GetContainerInternal(YSkeleton::AnimCurveMappingName);
+		if (ensureAlways(Mapping))
+		{
+			// if we don't have name, add one
+			if (Mapping->Exists(CurveName))
+			{
+				FCurveMetaData* CurveMetaData = GetCurveMetaData(CurveName);
+				// we don't want to undo previous flags, if it was true, we just alolw more to it. 
+				CurveMetaData->Type.bMaterial |= bMaterialSet;
+				CurveMetaData->Type.bMorphtarget |= bMorphtargetSet;
+				//MarkPackageDirty();
+			}
+		}
+	}
+}
 //
 //bool YSkeleton::AddNewVirtualBone(const FName SourceBoneName, const FName TargetBoneName)
 //{
@@ -1552,7 +1552,7 @@ SmartName::UID_Type YSkeleton::GetUIDByName(const FName& ContainerName, const FN
 //			return false;
 //		}
 //	}
-//	Modify();
+//	//Modify();
 //	VirtualBones.Add(FVirtualBone(SourceBoneName, TargetBoneName));
 //	NewVirtualBoneName = VirtualBones.Last().VirtualBoneName;
 //
@@ -1565,7 +1565,7 @@ SmartName::UID_Type YSkeleton::GetUIDByName(const FName& ContainerName, const FN
 //
 //void YSkeleton::RemoveVirtualBones(const TArray<FName>& BonesToRemove)
 //{
-//	Modify();
+//	//Modify();
 //	VirtualBones.RemoveAllSwap([&BonesToRemove](const FVirtualBone& VB) { return BonesToRemove.Contains(VB.VirtualBoneName); });
 //
 //	RegenerateVirtualBoneGuid();
@@ -1577,9 +1577,9 @@ SmartName::UID_Type YSkeleton::GetUIDByName(const FName& ContainerName, const FN
 //	const bool bRebuildNameMap = false;
 //	ReferenceSkeleton.RebuildRefSkeleton(this, bRebuildNameMap);
 //
-//	for (TObjectIterator<USkeletalMesh> ItMesh; ItMesh; ++ItMesh)
+//	for (TObjectIterator<YSkeletalMesh> ItMesh; ItMesh; ++ItMesh)
 //	{
-//		USkeletalMesh* SkelMesh = *ItMesh;
+//		YSkeletalMesh* SkelMesh = *ItMesh;
 //		if (SkelMesh->Skeleton == this)
 //		{
 //			SkelMesh->RefSkeleton.RebuildRefSkeleton(this, bRebuildNameMap);
@@ -1758,7 +1758,7 @@ SmartName::UID_Type YSkeleton::GetUIDByName(const FName& ContainerName, const FN
 //	Super::GetAssetRegistryTags(OutTags);
 //	FString RigFullName = (RigConfig.Rig) ? RigConfig.Rig->GetFullName() : TEXT("");
 //
-//	OutTags.Add(FAssetRegistryTag(USkeleton::RigTag, RigFullName, FAssetRegistryTag::TT_Hidden));
+//	OutTags.Add(FAssetRegistryTag(YSkeleton::RigTag, RigFullName, FAssetRegistryTag::TT_Hidden));
 //}
 //
 //UBlendProfile* YSkeleton::CreateNewBlendProfile(const FName& InProfileName)

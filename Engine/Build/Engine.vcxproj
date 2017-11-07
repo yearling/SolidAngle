@@ -31,6 +31,7 @@
     <ClInclude Include="..\Source\Runtime\Engine\Public\AnimSequence.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\AnimSequenceBase.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\AnimTypes.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AssetImportData.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\BoneContainer.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\BoneIndices.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\BonePose.h" />

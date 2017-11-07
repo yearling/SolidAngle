@@ -126,6 +126,9 @@
     <ClInclude Include="..\Source\Runtime\Engine\Public\AnimEncoding_ConstantKeyLerp.h">
       <Filter>Public</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AssetImportData.h">
+      <Filter>Public</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\Engine\Private\RawMesh.cpp">

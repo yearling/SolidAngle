@@ -444,15 +444,15 @@ void UAnimSequenceBase::RefreshCacheData()
 //#endif //WITH_EDITOR
 }
 //
-//#if WITH_EDITOR
-//void UAnimSequenceBase::InitializeNotifyTrack()
-//{
-//	if ( AnimNotifyTracks.Num() == 0 ) 
-//	{
-//		AnimNotifyTracks.Add(FAnimNotifyTrack(TEXT("1"), FLinearColor::White ));
-//	}
-//}
-//
+#if WITH_EDITOR
+void UAnimSequenceBase::InitializeNotifyTrack()
+{
+	if ( AnimNotifyTracks.Num() == 0 ) 
+	{
+		AnimNotifyTracks.Add(FAnimNotifyTrack(TEXT("1"), FLinearColor::White ));
+	}
+}
+
 int32 UAnimSequenceBase::GetNumberOfFrames() const
 {
 	static float DefaultSampleRateInterval = 1.f/DEFAULT_SAMPLERATE;
@@ -481,19 +481,19 @@ float UAnimSequenceBase::GetTimeAtFrame(const int32 Frame) const
 //	OnNotifyChanged.RemoveAll(Unregister);
 //}
 //
-//void UAnimSequenceBase::ClampNotifiesAtEndOfSequence()
-//{
-//	const float NotifyClampTime = SequenceLength - 0.01f; //Slight offset so that notify is still draggable
-//	for(int i = 0; i < Notifies.Num(); ++ i)
-//	{
-//		if(Notifies[i].GetTime() >= SequenceLength)
-//		{
-//			Notifies[i].SetTime(NotifyClampTime);
-//			Notifies[i].TriggerTimeOffset = GetTriggerTimeOffsetForType(EAnimEventTriggerOffsets::OffsetBefore);
-//		}
-//	}
-//}
-//
+void UAnimSequenceBase::ClampNotifiesAtEndOfSequence()
+{
+	const float NotifyClampTime = SequenceLength - 0.01f; //Slight offset so that notify is still draggable
+	for(int i = 0; i < Notifies.Num(); ++ i)
+	{
+		/*if(Notifies[i].GetTime() >= SequenceLength)
+		{
+			Notifies[i].SetTime(NotifyClampTime);
+			Notifies[i].TriggerTimeOffset = GetTriggerTimeOffsetForType(EAnimEventTriggerOffsets::OffsetBefore);
+		}*/
+	}
+}
+
 EAnimEventTriggerOffsets::Type UAnimSequenceBase::CalculateOffsetForNotify(float NotifyDisplayTime) const
 {
 	if (NotifyDisplayTime == 0.f)
@@ -635,7 +635,7 @@ void UAnimSequenceBase::RefreshParentAssetData()
 //#endif // WITH_EDITORONLY_DATA
 //
 }
-//#endif	//WITH_EDITOR
+#endif	//WITH_EDITOR
 
 
 ///** Add curve data to Instance at the time of CurrentTime **/
