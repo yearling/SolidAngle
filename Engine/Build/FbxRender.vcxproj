@@ -116,7 +116,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\Binaries\Win64\;..\Source\ThirdParty\Fbx\2016.1.1\lib\vs2015\x64\debug;..\Source\ThirdParty\DirectXTex\DirectXTex\lib\$(Platform)\$(PlatformToolset)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>DXGUID.lib;D3D11.lib;D3DCompiler.lib;SolidAngle_x64_Debug.lib;libfbxsdk.lib;DirectXTex_debug.lib;RenderCore_x64_Debug.lib;RHI_x64_Debug.lib;ShaderCore_x64_Debug.lib;MeshUtilities_x64_Debug.lib;Engine_x64_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DXGUID.lib;D3D11.lib;D3DCompiler.lib;SolidAngle_x64_Debug.lib;libfbxsdk.lib;DirectXTex_debug.lib;RenderCore_x64_Debug.lib;RHI_x64_Debug.lib;ShaderCore_x64_Debug.lib;Engine_x64_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
