@@ -33,7 +33,8 @@
 //#include "Animation/AnimCompressionDerivedData.h"
 //#include "UObject/UObjectThreadContext.h"
 //#include "Animation/AnimNotifies/AnimNotifyState.h"
-
+#include "AnimCompressionDerivedData.h"
+#include "Misc/CoreMisc.h"
 #define USE_SLERP 0
 #define LOCTEXT_NAMESPACE "AnimSequence"
 
@@ -2025,66 +2026,67 @@ void UAnimSequence::RequestAnimCompression(bool bAsyncCompression, bool bAllowAl
 //
 void UAnimSequence::RequestAnimCompression(bool bAsyncCompression, TSharedPtr<FAnimCompressContext> CompressContext)
 {
-//#if WITH_EDITOR
-//	if (GetSkeleton() == nullptr)
-//	{
-//		bUseRawDataOnly = true;
-//		return;
-//	}
-//
-//	if (FPlatformProperties::RequiresCookedData())
-//	{
-//		return;
-//	}
-//
-//	if (!CompressionScheme)
-//	{
-//		CompressionScheme = FAnimationUtils::GetDefaultAnimationCompressionAlgorithm();
-//	}
-//
-//	if (!RawDataGuid.IsValid())
-//	{
-//		RawDataGuid = GenerateGuidFromRawData();
-//	}
-//
-//	bAsyncCompression = false; //Just get sync working first
-//	bUseRawDataOnly = true;
-//
-//	TGuardValue<bool> CompressGuard(bCompressionInProgress, true);
-//
-//	const bool bDoCompressionInPlace = FUObjectThreadContext::Get().IsRoutingPostLoad;
-//
-//	if (bAsyncCompression)
-//	{
-//	}
-//	else
-//	{
-//		TArray<uint8> OutData;
-//		FDerivedDataAnimationCompression* AnimCompressor = new FDerivedDataAnimationCompression(this, CompressContext, bDoCompressionInPlace);
-//		// For debugging DDC/Compression issues		
-//		const bool bSkipDDC = false;
-//		if (bSkipDDC)
-//		{
-//			AnimCompressor->Build(OutData);
-//		}
-//		else
-//		{
-//			if (AnimCompressor->CanBuild())
-//			{
-//				GetDerivedDataCacheRef().GetSynchronous(AnimCompressor, OutData);
-//			}
-//		}
-//
-//		if (bUseRawDataOnly && OutData.Num() > 0)
-//		{
-//			FMemoryReader MemAr(OutData);
-//			SerializeCompressedData(MemAr, true);
-//			//This is only safe during sync anim compression
-//			SetSkeletonVirtualBoneGuid(GetSkeleton()->GetVirtualBoneGuid());
-//			bUseRawDataOnly = false;
-//		}
-//	}
-//#endif
+#if WITH_EDITOR
+	if (GetSkeleton() == nullptr)
+	{
+		bUseRawDataOnly = true;
+		return;
+	}
+
+	if (FPlatformProperties::RequiresCookedData())
+	{
+		return;
+	}
+
+	if (!CompressionScheme)
+	{
+		CompressionScheme = FAnimationUtils::GetDefaultAnimationCompressionAlgorithm();
+	}
+
+	if (!RawDataGuid.IsValid())
+	{
+		RawDataGuid = GenerateGuidFromRawData();
+	}
+
+	bAsyncCompression = false; //Just get sync working first
+	bUseRawDataOnly = true;
+
+	TGuardValue<bool> CompressGuard(bCompressionInProgress, true);
+
+	//const bool bDoCompressionInPlace = FUObjectThreadContext::Get().IsRoutingPostLoad;
+	const bool bDoCompressionInPlace = false;
+
+	if (bAsyncCompression)
+	{
+	}
+	else
+	{
+		TArray<uint8> OutData;
+		FDerivedDataAnimationCompression* AnimCompressor = new FDerivedDataAnimationCompression(this, CompressContext, bDoCompressionInPlace);
+		// For debugging DDC/Compression issues		
+		const bool bSkipDDC = true;
+		if (bSkipDDC)
+		{
+			AnimCompressor->Build(OutData);
+		}
+		else
+		{
+			if (AnimCompressor->CanBuild())
+			{
+				//GetDerivedDataCacheRef().GetSynchronous(AnimCompressor, OutData);
+			}
+		}
+
+		if (bUseRawDataOnly && OutData.Num() > 0)
+		{
+			FMemoryReader MemAr(OutData);
+			SerializeCompressedData(MemAr, true);
+			//This is only safe during sync anim compression
+			SetSkeletonVirtualBoneGuid(GetSkeleton()->GetVirtualBoneGuid());
+			bUseRawDataOnly = false;
+		}
+	}
+#endif
 }
 //
 //#if WITH_EDITOR

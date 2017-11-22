@@ -32,6 +32,7 @@
     <ClInclude Include="..\Source\Runtime\Engine\Public\AnimationSettings.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\AnimationUtils.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\AnimCompress.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimCompressionDerivedData.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\AnimCurveTypes.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\AnimEncoding.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\AnimEncoding_ConstantKeyLerp.h" />
@@ -75,6 +76,7 @@
     <ClCompile Include="..\Source\Runtime\Engine\Private\AnimationSettings.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\AnimationUtils.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCompress.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCompressionDerivedData.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCompress_Automatic.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCompress_BitwiseCompressOnly.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCompress_LeastDestructive.cpp" />

@@ -162,6 +162,9 @@
     <ClInclude Include="..\Source\Runtime\Engine\Public\AnimationSettings.h">
       <Filter>Public</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimCompressionDerivedData.h">
+      <Filter>Public</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\Engine\Private\RawMesh.cpp">
@@ -288,6 +291,9 @@
       <Filter>Private</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Runtime\Engine\Private\AnimationSettings.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCompressionDerivedData.cpp">
       <Filter>Private</Filter>
     </ClCompile>
   </ItemGroup>
