@@ -230,6 +230,8 @@ UAnimCompress::UAnimCompress()
 	Description = TEXT("None");
 	TranslationCompressionFormat = ACF_None;
 	RotationCompressionFormat = ACF_Float96NoW;
+	ScaleCompressionFormat = ACF_None;
+
 }
 
 
