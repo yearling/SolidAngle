@@ -2088,299 +2088,300 @@ void UAnimSequence::RequestAnimCompression(bool bAsyncCompression, TSharedPtr<FA
 	}
 #endif
 }
-//
+
+#if WITH_EDITOR
+struct FAnimDDCDebugData
+{
+	FString FullName;
+	uint8   AdditiveSetting;
+	FString CompressionSchemeName;
+	FGuid   RawDataGuid;
+
+	FAnimDDCDebugData(const UAnimSequence* AnimSequence, FArchive& Ar)
+	{
+		if (Ar.IsSaving())
+		{
+			FullName = AnimSequence->GetFullName();
+			AdditiveSetting = (uint8)AnimSequence->AdditiveAnimType.GetValue();
+			//CompressionSchemeName = AnimSequence->CompressionScheme->GetFullName();
+			RawDataGuid = AnimSequence->GetRawDataGuid();
+		}
+
+		Ar << FullName;
+		Ar << AdditiveSetting;
+		Ar << CompressionSchemeName;
+		Ar << RawDataGuid;
+	}
+};
+#endif
+
+void UAnimSequence::SerializeCompressedData(FArchive& Ar, bool bDDCData)
+{
+	Ar << KeyEncodingFormat;
+	Ar << TranslationCompressionFormat;
+	Ar << RotationCompressionFormat;
+	Ar << ScaleCompressionFormat;
+
+	Ar << CompressedTrackOffsets;
+	Ar << CompressedScaleOffsets;
+
+	Ar << CompressedTrackToSkeletonMapTable;
+	Ar << CompressedCurveData;
+
+	if (Ar.IsLoading())
+	{
+		// Serialize the compressed byte stream from the archive to the buffer.
+		int32 NumBytes;
+		Ar << NumBytes;
+
+		TArray<uint8> SerializedData;
+		SerializedData.Empty(NumBytes);
+		SerializedData.AddUninitialized(NumBytes);
+		Ar.Serialize(SerializedData.GetData(), NumBytes);
+
+		// Swap the buffer into the byte stream.
+		FMemoryReader MemoryReader(SerializedData, true);
+		MemoryReader.SetByteSwapping(Ar.ForceByteSwapping());
+
+		// we must know the proper codecs to use
+		AnimationFormat_SetInterfaceLinks(*this);
+
+		// and then use the codecs to byte swap
+		check(RotationCodec != NULL);
+		((AnimEncoding*)RotationCodec)->ByteSwapIn(*this, MemoryReader);
+	}
+	else if (Ar.IsSaving() || Ar.IsCountingMemory())
+	{
+		// Swap the byte stream into a buffer.
+		TArray<uint8> SerializedData;
+
+		// we must know the proper codecs to use
+		AnimationFormat_SetInterfaceLinks(*this);
+
+		// and then use the codecs to byte swap
+		check(RotationCodec != NULL);
+		((AnimEncoding*)RotationCodec)->ByteSwapOut(*this, SerializedData, Ar.ForceByteSwapping());
+
+		// Make sure the entire byte stream was serialized.
+		//check( CompressedByteStream.Num() == SerializedData.Num() );
+
+		// Serialize the buffer to archive.
+		int32 Num = SerializedData.Num();
+		Ar << Num;
+		Ar.Serialize(SerializedData.GetData(), SerializedData.Num());
+
+		// Count compressed data.
+		Ar.CountBytes(SerializedData.Num(), SerializedData.Num());
+	}
+
+#if WITH_EDITOR
+	if (bDDCData)
+	{
+		//Skip ddc debug data if we are cooking
+		FAnimDDCDebugData DebugData(this, Ar);
+
+		if (Ar.IsLoading())
+		{
+			VerifyCurveNames<FFloatCurve>(GetSkeleton(), YSkeleton::AnimCurveMappingName, CompressedCurveData.FloatCurves);
+			bUseRawDataOnly = !IsCompressedDataValid();
+			ensureMsgf(!bUseRawDataOnly, TEXT("Anim Compression failed for Sequence '%s' Guid:%s CompressedDebugData:\n\tOriginal Anim:%s\n\tAdditiveSetting:%i\n\tCompression Scheme:%s\n\tRawDataGuid:%s"),
+				*GetFullName(),
+				*RawDataGuid.ToString(),
+				*DebugData.FullName,
+				DebugData.AdditiveSetting,
+				*DebugData.CompressionSchemeName,
+				*DebugData.RawDataGuid.ToString());
+		}
+	}
+#endif
+}
+
 //#if WITH_EDITOR
-//struct FAnimDDCDebugData
-//{
-//	FString FullName;
-//	uint8   AdditiveSetting;
-//	FString CompressionSchemeName;
-//	FGuid   RawDataGuid;
 //
-//	FAnimDDCDebugData(const UAnimSequence* AnimSequence, FArchive& Ar)
-//	{
-//		if (Ar.IsSaving())
-//		{
-//			FullName = AnimSequence->GetFullName();
-//			AdditiveSetting = (uint8)AnimSequence->AdditiveAnimType.GetValue();
-//			CompressionSchemeName = AnimSequence->CompressionScheme->GetFullName();
-//			RawDataGuid = AnimSequence->GetRawDataGuid();
-//		}
+bool UAnimSequence::CanBakeAdditive() const
+{
+	return	(NumFrames > 0) &&
+			IsValidAdditive() &&
+			GetSkeleton();
+}
+
+FFloatCurve* GetFloatCurve(FRawCurveTracks& RawCurveTracks, YSkeleton::AnimCurveUID& CurveUID)
+{
+	return static_cast<FFloatCurve *>(RawCurveTracks.GetCurveData(CurveUID, FRawCurveTracks::FloatType));
+}
+
+bool IsNewKeyDifferent(const FRichCurveKey& LastKey, float NewValue)
+{
+	return LastKey.Value != NewValue;
+}
+
+template <typename ArrayType>
+void UpdateSHAWithArray(FSHA1& Sha, const TArray<ArrayType>& Array)
+{
+	Sha.Update((uint8*)Array.GetData(), Array.Num() * Array.GetTypeSize());
+}
+
+void UpdateSHAWithRawTrack(FSHA1& Sha, const FRawAnimSequenceTrack& RawTrack)
+{
+	UpdateSHAWithArray(Sha, RawTrack.PosKeys);
+	UpdateSHAWithArray(Sha, RawTrack.RotKeys);
+	UpdateSHAWithArray(Sha, RawTrack.ScaleKeys);
+}
+
+template<class DataType>
+void UpdateWithData(FSHA1& Sha, const DataType& Data)
+{
+	Sha.Update((uint8*)(&Data), sizeof(DataType));
+}
+
+void UAnimSequence::UpdateSHAWithCurves(FSHA1& Sha, const FRawCurveTracks& InRawCurveData) const
+{
+	for (const FFloatCurve& Curve : InRawCurveData.FloatCurves)
+	{
+		UpdateWithData(Sha, Curve.Name.UID);
+		UpdateWithData(Sha, Curve.FloatCurve.DefaultValue);
+		UpdateSHAWithArray(Sha, Curve.FloatCurve.GetConstRefOfKeys());
+		UpdateWithData(Sha, Curve.FloatCurve.PreInfinityExtrap);
+		UpdateWithData(Sha, Curve.FloatCurve.PostInfinityExtrap);
+	}
+}
+
+bool UAnimSequence::DoesSequenceContainZeroScale()
+{
+	for (const FRawAnimSequenceTrack& RawTrack : RawAnimationData)
+	{
+		for (const FVector ScaleKey : RawTrack.ScaleKeys)
+		{
+			if (ScaleKey.IsZero())
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+FGuid UAnimSequence::GenerateGuidFromRawData() const
+{
+	FSHA1 Sha;
+
+	for (const FRawAnimSequenceTrack& Track : RawAnimationData)
+	{
+		UpdateSHAWithRawTrack(Sha, Track);
+	}
+
+	UpdateSHAWithCurves(Sha, RawCurveData);
+
+	Sha.Final();
+
+	uint32 Hash[5];
+	Sha.GetHash((uint8*)Hash);
+	FGuid Guid(Hash[0] ^ Hash[4], Hash[1], Hash[2], Hash[3]);
+	return Guid;
+}
+
+void CopyTransformToRawAnimationData(const FTransform& BoneTransform, FRawAnimSequenceTrack& Track, int32 Frame)
+{
+	Track.PosKeys[Frame] = BoneTransform.GetTranslation();
+	Track.RotKeys[Frame] = BoneTransform.GetRotation();
+	Track.RotKeys[Frame].Normalize();
+	Track.ScaleKeys[Frame] = BoneTransform.GetScale3D();
+}
 //
-//		Ar << FullName;
-//		Ar << AdditiveSetting;
-//		Ar << CompressionSchemeName;
-//		Ar << RawDataGuid;
-//	}
-//};
-//#endif
-//
-//void UAnimSequence::SerializeCompressedData(FArchive& Ar, bool bDDCData)
-//{
-//	Ar << KeyEncodingFormat;
-//	Ar << TranslationCompressionFormat;
-//	Ar << RotationCompressionFormat;
-//	Ar << ScaleCompressionFormat;
-//
-//	Ar << CompressedTrackOffsets;
-//	Ar << CompressedScaleOffsets;
-//
-//	Ar << CompressedTrackToSkeletonMapTable;
-//	Ar << CompressedCurveData;
-//
-//	if (Ar.IsLoading())
-//	{
-//		// Serialize the compressed byte stream from the archive to the buffer.
-//		int32 NumBytes;
-//		Ar << NumBytes;
-//
-//		TArray<uint8> SerializedData;
-//		SerializedData.Empty(NumBytes);
-//		SerializedData.AddUninitialized(NumBytes);
-//		Ar.Serialize(SerializedData.GetData(), NumBytes);
-//
-//		// Swap the buffer into the byte stream.
-//		FMemoryReader MemoryReader(SerializedData, true);
-//		MemoryReader.SetByteSwapping(Ar.ForceByteSwapping());
-//
-//		// we must know the proper codecs to use
-//		AnimationFormat_SetInterfaceLinks(*this);
-//
-//		// and then use the codecs to byte swap
-//		check(RotationCodec != NULL);
-//		((AnimEncoding*)RotationCodec)->ByteSwapIn(*this, MemoryReader);
-//	}
-//	else if (Ar.IsSaving() || Ar.IsCountingMemory())
-//	{
-//		// Swap the byte stream into a buffer.
-//		TArray<uint8> SerializedData;
-//
-//		// we must know the proper codecs to use
-//		AnimationFormat_SetInterfaceLinks(*this);
-//
-//		// and then use the codecs to byte swap
-//		check(RotationCodec != NULL);
-//		((AnimEncoding*)RotationCodec)->ByteSwapOut(*this, SerializedData, Ar.ForceByteSwapping());
-//
-//		// Make sure the entire byte stream was serialized.
-//		//check( CompressedByteStream.Num() == SerializedData.Num() );
-//
-//		// Serialize the buffer to archive.
-//		int32 Num = SerializedData.Num();
-//		Ar << Num;
-//		Ar.Serialize(SerializedData.GetData(), SerializedData.Num());
-//
-//		// Count compressed data.
-//		Ar.CountBytes(SerializedData.Num(), SerializedData.Num());
-//	}
-//
-//#if WITH_EDITOR
-//	if (bDDCData)
-//	{
-//		//Skip ddc debug data if we are cooking
-//		FAnimDDCDebugData DebugData(this, Ar);
-//
-//		if (Ar.IsLoading())
-//		{
-//			VerifyCurveNames<FFloatCurve>(GetSkeleton(), YSkeleton::AnimCurveMappingName, CompressedCurveData.FloatCurves);
-//			bUseRawDataOnly = !IsCompressedDataValid();
-//			ensureMsgf(!bUseRawDataOnly, TEXT("Anim Compression failed for Sequence '%s' Guid:%s CompressedDebugData:\n\tOriginal Anim:%s\n\tAdditiveSetting:%i\n\tCompression Scheme:%s\n\tRawDataGuid:%s"),
-//				*GetFullName(),
-//				*RawDataGuid.ToString(),
-//				*DebugData.FullName,
-//				DebugData.AdditiveSetting,
-//				*DebugData.CompressionSchemeName,
-//				*DebugData.RawDataGuid.ToString());
-//		}
-//	}
-//#endif
-//}
-//
-//#if WITH_EDITOR
-//
-//bool UAnimSequence::CanBakeAdditive() const
-//{
-//	return	(NumFrames > 0) &&
-//			IsValidAdditive() &&
-//			GetSkeleton();
-//}
-//
-//FFloatCurve* GetFloatCurve(FRawCurveTracks& RawCurveTracks, YSkeleton::AnimCurveUID& CurveUID)
-//{
-//	return static_cast<FFloatCurve *>(RawCurveTracks.GetCurveData(CurveUID, FRawCurveTracks::FloatType));
-//}
-//
-//bool IsNewKeyDifferent(const FRichCurveKey& LastKey, float NewValue)
-//{
-//	return LastKey.Value != NewValue;
-//}
-//
-//template <typename ArrayType>
-//void UpdateSHAWithArray(FSHA1& Sha, const TArray<ArrayType>& Array)
-//{
-//	Sha.Update((uint8*)Array.GetData(), Array.Num() * Array.GetTypeSize());
-//}
-//
-//void UpdateSHAWithRawTrack(FSHA1& Sha, const FRawAnimSequenceTrack& RawTrack)
-//{
-//	UpdateSHAWithArray(Sha, RawTrack.PosKeys);
-//	UpdateSHAWithArray(Sha, RawTrack.RotKeys);
-//	UpdateSHAWithArray(Sha, RawTrack.ScaleKeys);
-//}
-//
-//template<class DataType>
-//void UpdateWithData(FSHA1& Sha, const DataType& Data)
-//{
-//	Sha.Update((uint8*)(&Data), sizeof(DataType));
-//}
-//
-//void UAnimSequence::UpdateSHAWithCurves(FSHA1& Sha, const FRawCurveTracks& InRawCurveData) const
-//{
-//	for (const FFloatCurve& Curve : InRawCurveData.FloatCurves)
-//	{
-//		UpdateWithData(Sha, Curve.Name.UID);
-//		UpdateWithData(Sha, Curve.FloatCurve.DefaultValue);
-//		UpdateSHAWithArray(Sha, Curve.FloatCurve.GetConstRefOfKeys());
-//		UpdateWithData(Sha, Curve.FloatCurve.PreInfinityExtrap);
-//		UpdateWithData(Sha, Curve.FloatCurve.PostInfinityExtrap);
-//	}
-//}
-//
-//bool UAnimSequence::DoesSequenceContainZeroScale()
-//{
-//	for (const FRawAnimSequenceTrack& RawTrack : RawAnimationData)
-//	{
-//		for (const FVector ScaleKey : RawTrack.ScaleKeys)
-//		{
-//			if (ScaleKey.IsZero())
-//			{
-//				return true;
-//			}
-//		}
-//	}
-//
-//	return false;
-//}
-//
-//FGuid UAnimSequence::GenerateGuidFromRawData() const
-//{
-//	FSHA1 Sha;
-//
-//	for (const FRawAnimSequenceTrack& Track : RawAnimationData)
-//	{
-//		UpdateSHAWithRawTrack(Sha, Track);
-//	}
-//
-//	UpdateSHAWithCurves(Sha, RawCurveData);
-//
-//	Sha.Final();
-//
-//	uint32 Hash[5];
-//	Sha.GetHash((uint8*)Hash);
-//	FGuid Guid(Hash[0] ^ Hash[4], Hash[1], Hash[2], Hash[3]);
-//	return Guid;
-//}
-//
-//void CopyTransformToRawAnimationData(const FTransform& BoneTransform, FRawAnimSequenceTrack& Track, int32 Frame)
-//{
-//	Track.PosKeys[Frame] = BoneTransform.GetTranslation();
-//	Track.RotKeys[Frame] = BoneTransform.GetRotation();
-//	Track.RotKeys[Frame].Normalize();
-//	Track.ScaleKeys[Frame] = BoneTransform.GetScale3D();
-//}
-//
-//struct FByFramePoseEvalContext
-//{
-//private:
-//	const UAnimSequence* AnimToEval;
-//	
-//public:
-//	FBoneContainer RequiredBones;
-//
-//	// Length of one frame.
-//	const float IntervalTime;
-//
-//	TArray<FBoneIndexType> RequiredBoneIndexArray;
-//
-//	FByFramePoseEvalContext(const UAnimSequence* InAnimToEval)
-//		: AnimToEval(InAnimToEval)
-//		, IntervalTime(InAnimToEval->SequenceLength / ((float)InAnimToEval->NumFrames - 1))
-//	{
-//		// Initialize RequiredBones for pose evaluation
-//		RequiredBones.SetUseRAWData(true);
-//
-//		YSkeleton* MySkeleton = AnimToEval->GetSkeleton();
-//		check(MySkeleton);
-//
-//		RequiredBoneIndexArray.AddUninitialized(MySkeleton->GetReferenceSkeleton().GetNum());
-//		for (int32 BoneIndex = 0; BoneIndex < RequiredBoneIndexArray.Num(); ++BoneIndex)
-//		{
-//			RequiredBoneIndexArray[BoneIndex] = BoneIndex;
-//		}
-//
-//		RequiredBones.InitializeTo(RequiredBoneIndexArray, *MySkeleton);
-//	}
-//
-//};
-//
-//void UAnimSequence::BakeOutVirtualBoneTracks()
-//{
-//	const int32 NumVirtualBones = GetSkeleton()->GetVirtualBones().Num();
-//	check( (RawAnimationData.Num() == TrackToSkeletonMapTable.Num()) && (RawAnimationData.Num() == AnimationTrackNames.Num()) ); //Make sure starting data is valid
-//
-//	TArray<FRawAnimSequenceTrack> NewRawTracks = TArray<FRawAnimSequenceTrack>(RawAnimationData, NumVirtualBones);
-//
-//	TArray<FTrackToSkeletonMap> NewTrackToSkeletonMapTable = TArray<FTrackToSkeletonMap>(TrackToSkeletonMapTable, NumVirtualBones);
-//
-//	TArray<FName> NewAnimationTrackNames = TArray<FName>(AnimationTrackNames, NumVirtualBones);
-//
-//	for (int32 VBIndex = 0; VBIndex < NumVirtualBones; ++VBIndex)
-//	{
-//		const int32 TrackIndex = NewRawTracks.Add(FRawAnimSequenceTrack());
-//
-//		//Init new tracks
-//		NewRawTracks[TrackIndex].PosKeys.SetNumUninitialized(NumFrames);
-//		NewRawTracks[TrackIndex].RotKeys.SetNumUninitialized(NumFrames);
-//		NewRawTracks[TrackIndex].ScaleKeys.SetNumUninitialized(NumFrames);
-//		
-//		NewTrackToSkeletonMapTable.Add(FTrackToSkeletonMap(GetSkeleton()->GetReferenceSkeleton().GetRequiredVirtualBones()[VBIndex]));
-//		NewAnimationTrackNames.Add(GetSkeleton()->GetVirtualBones()[VBIndex].VirtualBoneName);
-//	}
-//
-//	FMemMark Mark(FMemStack::Get());
-//	FByFramePoseEvalContext EvalContext(this);
-//
-//	//Pose evaluation data
-//	FCompactPose Pose;
-//	Pose.SetBoneContainer(&EvalContext.RequiredBones);
-//	FAnimExtractContext ExtractContext;
-//
-//	const TArray<FVirtualBoneRefData>& VBRefData = GetSkeleton()->GetReferenceSkeleton().GetVirtualBoneRefData();
-//
-//	for (int Frame = 0; Frame < NumFrames; ++Frame)
-//	{
-//		// Initialise curve data from Skeleton
-//		FBlendedCurve Curve;
-//		Curve.InitFrom(EvalContext.RequiredBones);
-//
-//		//Grab pose for this frame
-//		const float CurrentFrameTime = Frame * EvalContext.IntervalTime;
-//		ExtractContext.CurrentTime = CurrentFrameTime;
-//		GetAnimationPose(Pose, Curve, ExtractContext);
-//
-//		for (int32 VBIndex = 0; VBIndex < VBRefData.Num(); ++VBIndex)
-//		{
-//			const FVirtualBoneRefData& VB = VBRefData[VBIndex];
-//			CopyTransformToRawAnimationData(Pose[FCompactPoseBoneIndex(VB.VBRefSkelIndex)], NewRawTracks[VBIndex + RawAnimationData.Num()], Frame);
-//		}
-//	}
-//
-//	RawAnimationData = MoveTemp(NewRawTracks);
-//	AnimationTrackNames = MoveTemp(NewAnimationTrackNames);
-//	TrackToSkeletonMapTable = MoveTemp(NewTrackToSkeletonMapTable);
-//
-//	CompressRawAnimData();
-//}
+struct FByFramePoseEvalContext
+{
+private:
+	const UAnimSequence* AnimToEval;
+	
+public:
+	FBoneContainer RequiredBones;
+
+	// Length of one frame.
+	const float IntervalTime;
+
+	TArray<FBoneIndexType> RequiredBoneIndexArray;
+
+	FByFramePoseEvalContext(const UAnimSequence* InAnimToEval)
+		: AnimToEval(InAnimToEval)
+		, IntervalTime(InAnimToEval->SequenceLength / ((float)InAnimToEval->NumFrames - 1))
+	{
+		// Initialize RequiredBones for pose evaluation
+		RequiredBones.SetUseRAWData(true);
+
+		YSkeleton* MySkeleton = AnimToEval->GetSkeleton();
+		check(MySkeleton);
+
+		RequiredBoneIndexArray.AddUninitialized(MySkeleton->GetReferenceSkeleton().GetNum());
+		for (int32 BoneIndex = 0; BoneIndex < RequiredBoneIndexArray.Num(); ++BoneIndex)
+		{
+			RequiredBoneIndexArray[BoneIndex] = BoneIndex;
+		}
+
+		//RequiredBones.InitializeTo(RequiredBoneIndexArray, *MySkeleton);
+		RequiredBones.InitializeTo(RequiredBoneIndexArray);
+	}
+
+};
+
+void UAnimSequence::BakeOutVirtualBoneTracks()
+{
+	const int32 NumVirtualBones = GetSkeleton()->GetVirtualBones().Num();
+	check( (RawAnimationData.Num() == TrackToSkeletonMapTable.Num()) && (RawAnimationData.Num() == AnimationTrackNames.Num()) ); //Make sure starting data is valid
+
+	TArray<FRawAnimSequenceTrack> NewRawTracks = TArray<FRawAnimSequenceTrack>(RawAnimationData, NumVirtualBones);
+
+	TArray<FTrackToSkeletonMap> NewTrackToSkeletonMapTable = TArray<FTrackToSkeletonMap>(TrackToSkeletonMapTable, NumVirtualBones);
+
+	TArray<FName> NewAnimationTrackNames = TArray<FName>(AnimationTrackNames, NumVirtualBones);
+
+	for (int32 VBIndex = 0; VBIndex < NumVirtualBones; ++VBIndex)
+	{
+		const int32 TrackIndex = NewRawTracks.Add(FRawAnimSequenceTrack());
+
+		//Init new tracks
+		NewRawTracks[TrackIndex].PosKeys.SetNumUninitialized(NumFrames);
+		NewRawTracks[TrackIndex].RotKeys.SetNumUninitialized(NumFrames);
+		NewRawTracks[TrackIndex].ScaleKeys.SetNumUninitialized(NumFrames);
+		
+		NewTrackToSkeletonMapTable.Add(FTrackToSkeletonMap(GetSkeleton()->GetReferenceSkeleton().GetRequiredVirtualBones()[VBIndex]));
+		NewAnimationTrackNames.Add(GetSkeleton()->GetVirtualBones()[VBIndex].VirtualBoneName);
+	}
+
+	FMemMark Mark(FMemStack::Get());
+	FByFramePoseEvalContext EvalContext(this);
+
+	//Pose evaluation data
+	FCompactPose Pose;
+	Pose.SetBoneContainer(&EvalContext.RequiredBones);
+	FAnimExtractContext ExtractContext;
+
+	const TArray<FVirtualBoneRefData>& VBRefData = GetSkeleton()->GetReferenceSkeleton().GetVirtualBoneRefData();
+
+	for (int Frame = 0; Frame < NumFrames; ++Frame)
+	{
+		// Initialise curve data from Skeleton
+		FBlendedCurve Curve;
+		Curve.InitFrom(EvalContext.RequiredBones);
+
+		//Grab pose for this frame
+		const float CurrentFrameTime = Frame * EvalContext.IntervalTime;
+		ExtractContext.CurrentTime = CurrentFrameTime;
+		GetAnimationPose(Pose, Curve, ExtractContext);
+
+		for (int32 VBIndex = 0; VBIndex < VBRefData.Num(); ++VBIndex)
+		{
+			const FVirtualBoneRefData& VB = VBRefData[VBIndex];
+			CopyTransformToRawAnimationData(Pose[FCompactPoseBoneIndex(VB.VBRefSkelIndex)], NewRawTracks[VBIndex + RawAnimationData.Num()], Frame);
+		}
+	}
+
+	RawAnimationData = MoveTemp(NewRawTracks);
+	AnimationTrackNames = MoveTemp(NewAnimationTrackNames);
+	TrackToSkeletonMapTable = MoveTemp(NewTrackToSkeletonMapTable);
+
+	CompressRawAnimData();
+}
 //
 //void UAnimSequence::BakeOutAdditiveIntoRawData()
 //{

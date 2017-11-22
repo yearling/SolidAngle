@@ -96,7 +96,7 @@ public:
 	FBoneContainer(const TArray<FBoneIndexType>& InRequiredBoneIndexArray, UObject& InAsset);
 
 	/** Initialize BoneContainer to a new Asset, RequiredBonesArray and RefPoseArray. */
-	void InitializeTo(const TArray<FBoneIndexType>& InRequiredBoneIndexArray, UObject& InAsset);
+	void InitializeTo(const TArray<FBoneIndexType>& InRequiredBoneIndexArray);
 
 	/** Returns true if FBoneContainer is Valid. Needs an Asset, a RefPoseArray, and a RequiredBonesArray. */
 	const bool IsValid() const

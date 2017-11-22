@@ -36,7 +36,7 @@ FBoneContainer::FBoneContainer(const TArray<FBoneIndexType>& InRequiredBoneIndex
 	Initialize();
 }
 
-void FBoneContainer::InitializeTo(const TArray<FBoneIndexType>& InRequiredBoneIndexArray, UObject& InAsset)
+void FBoneContainer::InitializeTo(const TArray<FBoneIndexType>& InRequiredBoneIndexArray)
 {
 	BoneIndicesArray = InRequiredBoneIndexArray;
 	//Asset = &InAsset;
