@@ -28,7 +28,9 @@ class UAnimSequenceBase : public UAnimationAsset
 public:
 	UAnimSequenceBase();
 	//GENERATED_UCLASS_BODY()
-
+	FString GetName() const;
+	FName GetFName() const;
+	FString GetFullName() const;
 	/** Animation notifies, sorted by time (earliest notification first). */
 	//UPROPERTY()
 	TArray<struct FAnimNotifyEvent> Notifies;

@@ -129,6 +129,39 @@
     <ClInclude Include="..\Source\Runtime\Engine\Public\AssetImportData.h">
       <Filter>Public</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimCompress.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimationUtils.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Private\AnimCompress_Automatic.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Private\AnimCompress_BitwiseCompressOnly.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Private\AnimCompress_LeastDestructive.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Private\AnimCompress_PerTrackCompression.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Private\AnimCompress_RemoveEverySecondKey.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Private\AnimCompress_RemoveLinearKeys.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Private\AnimCompress_RemoveTrivialKeys.h">
+      <Filter>Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimSet.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimationSettings.h">
+      <Filter>Public</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\Engine\Private\RawMesh.cpp">
@@ -222,6 +255,39 @@
       <Filter>Private</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Runtime\Engine\Private\AnimationRuntime.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimationUtils.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCompress.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCompress_Automatic.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCompress_BitwiseCompressOnly.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCompress_LeastDestructive.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCompress_PerTrackCompression.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCompress_RemoveEverySecondKey.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCompress_RemoveLinearKeys.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCompress_RemoveTrivialKeys.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimSet.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimationSettings.cpp">
       <Filter>Private</Filter>
     </ClCompile>
   </ItemGroup>

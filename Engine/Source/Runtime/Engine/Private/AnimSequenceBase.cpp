@@ -21,6 +21,21 @@ UAnimSequenceBase::UAnimSequenceBase()
 {
 }
 
+FString UAnimSequenceBase::GetName() const
+{
+	return TEXT("DefaultAniSequence");
+}
+
+FName UAnimSequenceBase::GetFName() const
+{
+	return FName(*GetName());
+}
+
+FString UAnimSequenceBase::GetFullName() const
+{
+	return TEXT("DefaultAniSequence");
+}
+
 void UAnimSequenceBase::PostLoad()
 {
 	//Super::PostLoad();

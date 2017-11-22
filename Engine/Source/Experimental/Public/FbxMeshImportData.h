@@ -32,13 +32,13 @@ namespace EFBXNormalGenerationMethod
 
 struct UFbxAssetImportData:public UAssetImportData 
 {
-		FVector ImportTranslation;
+	FVector ImportTranslation{ FVector::ZeroVector};
 
-		FRotator ImportRotation;
+	FRotator ImportRotation{ FRotator::ZeroRotator };
 
-		float ImportUniformScale;
+	float ImportUniformScale{ 1.0f };
 
-		bool bConvertScene;
+		bool bConvertScene ;
 
 		bool bForceFrontXAxis;
 

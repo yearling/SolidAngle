@@ -19,9 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\Engine\Private\AnimCompress_Automatic.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Private\AnimCompress_BitwiseCompressOnly.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Private\AnimCompress_LeastDestructive.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Private\AnimCompress_PerTrackCompression.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Private\AnimCompress_RemoveEverySecondKey.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Private\AnimCompress_RemoveLinearKeys.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Private\AnimCompress_RemoveTrivialKeys.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\AnimationAsset.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\AnimationCompression.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\AnimationRuntime.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimationSettings.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimationUtils.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimCompress.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\AnimCurveTypes.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\AnimEncoding.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\AnimEncoding_ConstantKeyLerp.h" />
@@ -30,6 +40,7 @@
     <ClInclude Include="..\Source\Runtime\Engine\Public\AnimInterpFilter.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\AnimSequence.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\AnimSequenceBase.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\AnimSet.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\AnimTypes.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\AssetImportData.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\BoneContainer.h" />
@@ -61,6 +72,16 @@
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\Engine\Private\AnimationAsset.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\AnimationRuntime.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimationSettings.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimationUtils.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCompress.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCompress_Automatic.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCompress_BitwiseCompressOnly.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCompress_LeastDestructive.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCompress_PerTrackCompression.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCompress_RemoveEverySecondKey.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCompress_RemoveLinearKeys.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCompress_RemoveTrivialKeys.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCurveTypes.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\AnimEncoding.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\AnimEncoding_ConstantKeyLerp.cpp" />
@@ -69,6 +90,7 @@
     <ClCompile Include="..\Source\Runtime\Engine\Private\AnimInterpFilter.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\AnimSequence.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\AnimSequenceBase.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\AnimSet.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\AnimTypes.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\BoneContainer.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\BulkData.cpp" />

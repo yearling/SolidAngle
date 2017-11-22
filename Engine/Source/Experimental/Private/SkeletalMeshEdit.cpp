@@ -1129,7 +1129,7 @@ bool UnFbx::FFbxImporter::ImportAnimation(YSkeleton* Skeleton, UAnimSequence * D
 	// import blend shape curves
 	//
 	{
-		GWarn->BeginSlowTask( LOCTEXT("BeginImportMorphTargetCurves", "Importing Morph Target Curves"), true);
+		//GWarn->BeginSlowTask( LOCTEXT("BeginImportMorphTargetCurves", "Importing Morph Target Curves"), true);
 		for ( int32 NodeIndex = 0; NodeIndex < NodeArray.Num(); NodeIndex++ )
 		{
 			// consider blendshape animation curve
@@ -1184,7 +1184,7 @@ bool UnFbx::FFbxImporter::ImportAnimation(YSkeleton* Skeleton, UAnimSequence * D
 				}
 			}
 		}
-		GWarn->EndSlowTask();
+		//GWarn->EndSlowTask();
 	}
 
 	// 
@@ -1192,7 +1192,7 @@ bool UnFbx::FFbxImporter::ImportAnimation(YSkeleton* Skeleton, UAnimSequence * D
 	//
 	if (ImportOptions->bImportCustomAttribute)
 	{
-		GWarn->BeginSlowTask( LOCTEXT("BeginImportCustomAttributeCurves", "Importing Custom Attribute Curves"), true);
+		//GWarn->BeginSlowTask( LOCTEXT("BeginImportCustomAttributeCurves", "Importing Custom Attribute Curves"), true);
 		const int32 TotalLinks = SortedLinks.Num();
 		int32 CurLinkIndex=0;
 		for(auto Node: SortedLinks)
@@ -1268,7 +1268,7 @@ bool UnFbx::FFbxImporter::ImportAnimation(YSkeleton* Skeleton, UAnimSequence * D
 			CurLinkIndex++;
 		}
 
-		GWarn->EndSlowTask();
+		//GWarn->EndSlowTask();
 	}
 
 	// importing custom attribute END
@@ -1280,7 +1280,7 @@ bool UnFbx::FFbxImporter::ImportAnimation(YSkeleton* Skeleton, UAnimSequence * D
 
 	// import animation
 	{
-		GWarn->BeginSlowTask( LOCTEXT("BeginImportAnimation", "Importing Animation"), true);
+		//GWarn->BeginSlowTask( LOCTEXT("BeginImportAnimation", "Importing Animation"), true);
 
 		DestSeq->RecycleAnimSequence();
 
@@ -1329,7 +1329,7 @@ bool UnFbx::FFbxImporter::ImportAnimation(YSkeleton* Skeleton, UAnimSequence * D
 			Args.Add(TEXT("TrackIndex"), FText::AsNumber(SourceTrackIdx+1));
 			Args.Add(TEXT("TotalTracks"), FText::AsNumber(FbxRawBoneNames.Num()));
 			const FText StatusUpate = FText::Format(LOCTEXT("ImportingAnimTrackDetail", "Importing Animation Track [{TrackName}] ({TrackIndex}/{TotalTracks}) - TotalKey {TotalKey}"), Args);
-			GWarn->StatusForceUpdate(SourceTrackIdx + 1, FbxRawBoneNames.Num(), StatusUpate);
+			//GWarn->StatusForceUpdate(SourceTrackIdx + 1, FbxRawBoneNames.Num(), StatusUpate);
 
 			if (BoneTreeIndex!=INDEX_NONE)
 			{
@@ -1450,13 +1450,13 @@ bool UnFbx::FFbxImporter::ImportAnimation(YSkeleton* Skeleton, UAnimSequence * D
 
 		//DestSeq->MarkRawDataAsModified();
 
-		GWarn->EndSlowTask();
+		//GWarn->EndSlowTask();
 	}
 
 	// compress animation
 	{
-		GWarn->BeginSlowTask( LOCTEXT("BeginCompressAnimation", "Compress Animation"), true);
-		GWarn->StatusForceUpdate(1, 1, LOCTEXT("CompressAnimation", "Compressing Animation"));
+		//GWarn->BeginSlowTask( LOCTEXT("BeginCompressAnimation", "Compress Animation"), true);
+		//GWarn->StatusForceUpdate(1, 1, LOCTEXT("CompressAnimation", "Compressing Animation"));
 		// if source data exists, you should bake it to Raw to apply
 		if(bSourceDataExists)
 		{
@@ -1470,7 +1470,7 @@ bool UnFbx::FFbxImporter::ImportAnimation(YSkeleton* Skeleton, UAnimSequence * D
 
 		// run debug mode
 		AnimationTransformDebug::OutputAnimationTransformDebugData(TransformDebugData, TotalNumKeys, RefSkeleton);
-		GWarn->EndSlowTask();
+		//GWarn->EndSlowTask();
 	}
 
 	return true;

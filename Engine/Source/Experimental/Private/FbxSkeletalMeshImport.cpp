@@ -984,7 +984,7 @@ bool UnFbx::FFbxImporter::ImportBone(TArray<FbxNode*>& NodeArray, FSkeletalMeshI
 		if (LinkIndex)
 		{
 			FbxAMatrix	Matrix;
-			Matrix = GlobalsPerLink[ParentIndex].Inverse() * GlobalsPerLink[LinkIndex];
+			Matrix = GlobalsPerLink[ParentIndex].Inverse() * GlobalsPerLink[LinkIndex]; // FbxAMatrix use column major 
 			LocalLinkT = Matrix.GetT();
 			LocalLinkQ = Matrix.GetQ();
 			LocalLinkS = Matrix.GetS();

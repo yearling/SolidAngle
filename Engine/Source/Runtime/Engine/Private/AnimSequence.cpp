@@ -24,6 +24,10 @@
 //#include "EditorFramework/AssetImportData.h"
 #include "Logging/TokenizedMessage.h"
 #include "Logging/MessageLog.h"
+#include "Templates/SharedPointer.h"
+#include "AnimCompress.h"
+#include "AnimEncoding.h"
+#include "AnimationRuntime.h"
 //#include "DerivedDataCacheInterface.h"
 //#include "Interfaces/ITargetPlatform.h"
 //#include "Animation/AnimCompressionDerivedData.h"
@@ -131,6 +135,7 @@ UAnimSequence::UAnimSequence()
 	, RootMotionRootLock(ERootMotionRootLock::RefPose)
 	, bRootMotionSettingsCopiedFromMontage(false)
 	, bUseRawDataOnly(!FPlatformProperties::RequiresCookedData())
+	, AssetImportData(nullptr)
 {
 	RateScale = 1.0;
 }
@@ -176,26 +181,26 @@ UAnimSequence::UAnimSequence()
 //	Super::GetAssetRegistryTags(OutTags);
 //}
 //
-//int32 UAnimSequence::GetApproxRawSize() const
-//{
-//	int32 Total = sizeof(FRawAnimSequenceTrack) * RawAnimationData.Num();
-//	for (int32 i=0;i<RawAnimationData.Num();++i)
-//	{
-//		const FRawAnimSequenceTrack& RawTrack = RawAnimationData[i];
-//		Total +=
-//			sizeof( FVector ) * RawTrack.PosKeys.Num() +
-//			sizeof( FQuat ) * RawTrack.RotKeys.Num() + 
-//			sizeof( FVector ) * RawTrack.ScaleKeys.Num(); 
-//	}
-//	return Total;
-//}
-//
-//int32 UAnimSequence::GetApproxCompressedSize() const
-//{
-//	const int32 Total = sizeof(int32)*CompressedTrackOffsets.Num() + CompressedByteStream.Num() + CompressedScaleOffsets.GetMemorySize();
-//	return Total;
-//}
-//
+int32 UAnimSequence::GetApproxRawSize() const
+{
+	int32 Total = sizeof(FRawAnimSequenceTrack) * RawAnimationData.Num();
+	for (int32 i = 0; i < RawAnimationData.Num(); ++i)
+	{
+		const FRawAnimSequenceTrack& RawTrack = RawAnimationData[i];
+		Total +=
+			sizeof(FVector) * RawTrack.PosKeys.Num() +
+			sizeof(FQuat) * RawTrack.RotKeys.Num() +
+			sizeof(FVector) * RawTrack.ScaleKeys.Num();
+	}
+	return Total;
+}
+
+int32 UAnimSequence::GetApproxCompressedSize() const
+{
+	const int32 Total = sizeof(int32)*CompressedTrackOffsets.Num() + CompressedByteStream.Num() + CompressedScaleOffsets.GetMemorySize();
+	return Total;
+}
+
 ///**
 // * Deserializes old compressed track formats from the specified archive.
 // */
@@ -718,144 +723,144 @@ void UAnimSequence::PostLoad()
 //	}
 //	return FoundIndex;
 //}
-//
-//void UAnimSequence::GetBoneTransform(FTransform& OutAtom, int32 TrackIndex, float Time, bool bUseRawData) const
-//{
-//	// If the caller didn't request that raw animation data be used . . .
-//	if ( !bUseRawData )
-//	{
-//		if ( CompressedTrackOffsets.Num() > 0 )
-//		{
-//			AnimationFormat_GetBoneAtom( OutAtom, *this, TrackIndex, Time );
-//			return;
-//		}
-//	}
-//
-//	ExtractBoneTransform(RawAnimationData, OutAtom, TrackIndex, Time);
-//}
-//
-//void UAnimSequence::ExtractBoneTransform(const TArray<struct FRawAnimSequenceTrack>& InRawAnimationData, FTransform& OutAtom, int32 TrackIndex, float Time) const
-//{
-//	// Bail out if the animation data doesn't exists (e.g. was stripped by the cooker).
-//	if(InRawAnimationData.Num() == 0)
-//	{
-//		UE_LOG(LogAnimation, Log, TEXT("UAnimSequence::GetBoneTransform : No anim data in AnimSequence[%s]!"),*GetFullName());
-//		OutAtom.SetIdentity();
-//		return;
-//	}
-//
-//	ExtractBoneTransform(InRawAnimationData[TrackIndex], OutAtom, Time);
-//}
-//
-//void UAnimSequence::ExtractBoneTransform(const struct FRawAnimSequenceTrack& RawTrack, FTransform& OutAtom, int32 KeyIndex) const
-//{
-//	// Bail out (with rather wacky data) if data is empty for some reason.
-//	if (RawTrack.PosKeys.Num() == 0 || RawTrack.RotKeys.Num() == 0)
-//	{
-//		UE_LOG(LogAnimation, Log, TEXT("UAnimSequence::GetBoneTransform : No anim data in AnimSequence!"));
-//		OutAtom.SetIdentity();
-//		return;
-//	}
-//
-//	const int32 PosKeyIndex = FMath::Min(KeyIndex, RawTrack.PosKeys.Num() - 1);
-//	const int32 RotKeyIndex = FMath::Min(KeyIndex, RawTrack.RotKeys.Num() - 1);
-//	static const FVector DefaultScale3D = FVector(1.f);
-//
-//	OutAtom.SetTranslation(RawTrack.PosKeys[PosKeyIndex]);
-//	OutAtom.SetRotation(RawTrack.RotKeys[RotKeyIndex]);
-//	if (RawTrack.ScaleKeys.Num() > 0)
-//	{
-//		const int32 ScaleKeyIndex = FMath::Min(KeyIndex, RawTrack.ScaleKeys.Num() - 1);
-//		OutAtom.SetScale3D(RawTrack.ScaleKeys[ScaleKeyIndex]);
-//	}
-//	else
-//	{
-//		OutAtom.SetScale3D(DefaultScale3D);
-//	}
-//}
-//
-//void UAnimSequence::ExtractBoneTransform(const struct FRawAnimSequenceTrack& RawTrack, FTransform& OutAtom, float Time) const
-//{
-//	// Bail out (with rather wacky data) if data is empty for some reason.
-//	if(RawTrack.PosKeys.Num() == 0 || RawTrack.RotKeys.Num() == 0)
-//	{
-//		UE_LOG(LogAnimation, Log, TEXT("UAnimSequence::GetBoneTransform : No anim data in AnimSequence[%s]!"),*GetFullName());
-//		OutAtom.SetIdentity();
-//		return;
-//	}
-//
-//	int32 KeyIndex1, KeyIndex2;
-//	float Alpha;
-//	FAnimationRuntime::GetKeyIndicesFromTime(KeyIndex1, KeyIndex2, Alpha, Time, NumFrames, SequenceLength);
-//	// @Todo fix me: this change is not good, it has lots of branches. But we'd like to save memory for not saving scale if no scale change exists
-//	const bool bHasScaleKey = (RawTrack.ScaleKeys.Num() > 0);
-//	static const FVector DefaultScale3D = FVector(1.f);
-//
-//	if (Interpolation == EAnimInterpolationType::Step) 
-//	{
-//		Alpha = 0.f;
-//	}
-//
-//	if(Alpha <= 0.f)
-//	{
-//		const int32 PosKeyIndex1 = FMath::Min(KeyIndex1, RawTrack.PosKeys.Num()-1);
-//		const int32 RotKeyIndex1 = FMath::Min(KeyIndex1, RawTrack.RotKeys.Num()-1);
-//		if(bHasScaleKey)
-//		{
-//			const int32 ScaleKeyIndex1 = FMath::Min(KeyIndex1, RawTrack.ScaleKeys.Num()-1);
-//			OutAtom = FTransform(RawTrack.RotKeys[RotKeyIndex1], RawTrack.PosKeys[PosKeyIndex1], RawTrack.ScaleKeys[ScaleKeyIndex1]);
-//		}
-//		else
-//		{
-//			OutAtom = FTransform(RawTrack.RotKeys[RotKeyIndex1], RawTrack.PosKeys[PosKeyIndex1], DefaultScale3D);
-//		}
-//		return;
-//	}
-//	else if(Alpha >= 1.f)
-//	{
-//		const int32 PosKeyIndex2 = FMath::Min(KeyIndex2, RawTrack.PosKeys.Num()-1);
-//		const int32 RotKeyIndex2 = FMath::Min(KeyIndex2, RawTrack.RotKeys.Num()-1);
-//		if(bHasScaleKey)
-//		{
-//			const int32 ScaleKeyIndex2 = FMath::Min(KeyIndex2, RawTrack.ScaleKeys.Num()-1);
-//			OutAtom = FTransform(RawTrack.RotKeys[RotKeyIndex2], RawTrack.PosKeys[PosKeyIndex2], RawTrack.ScaleKeys[ScaleKeyIndex2]);
-//		}
-//		else
-//		{
-//			OutAtom = FTransform(RawTrack.RotKeys[RotKeyIndex2], RawTrack.PosKeys[PosKeyIndex2], DefaultScale3D);
-//		}
-//		return;
-//	}
-//
-//	const int32 PosKeyIndex1 = FMath::Min(KeyIndex1, RawTrack.PosKeys.Num()-1);
-//	const int32 RotKeyIndex1 = FMath::Min(KeyIndex1, RawTrack.RotKeys.Num()-1);
-//
-//	const int32 PosKeyIndex2 = FMath::Min(KeyIndex2, RawTrack.PosKeys.Num()-1);
-//	const int32 RotKeyIndex2 = FMath::Min(KeyIndex2, RawTrack.RotKeys.Num()-1);
-//
-//	FTransform KeyAtom1, KeyAtom2;
-//
-//	if(bHasScaleKey)
-//	{
-//		const int32 ScaleKeyIndex1 = FMath::Min(KeyIndex1, RawTrack.ScaleKeys.Num()-1);
-//		const int32 ScaleKeyIndex2 = FMath::Min(KeyIndex2, RawTrack.ScaleKeys.Num()-1);
-//
-//		KeyAtom1 = FTransform(RawTrack.RotKeys[RotKeyIndex1], RawTrack.PosKeys[PosKeyIndex1], RawTrack.ScaleKeys[ScaleKeyIndex1]);
-//		KeyAtom2 = FTransform(RawTrack.RotKeys[RotKeyIndex2], RawTrack.PosKeys[PosKeyIndex2], RawTrack.ScaleKeys[ScaleKeyIndex2]);
-//	}
-//	else
-//	{
-//		KeyAtom1 = FTransform(RawTrack.RotKeys[RotKeyIndex1], RawTrack.PosKeys[PosKeyIndex1], DefaultScale3D);
-//		KeyAtom2 = FTransform(RawTrack.RotKeys[RotKeyIndex2], RawTrack.PosKeys[PosKeyIndex2], DefaultScale3D);
-//	}
-//
-//	// 	UE_LOG(LogAnimation, Log, TEXT(" *  *  *  Position. PosKeyIndex1: %3d, PosKeyIndex2: %3d, Alpha: %f"), PosKeyIndex1, PosKeyIndex2, Alpha);
-//	// 	UE_LOG(LogAnimation, Log, TEXT(" *  *  *  Rotation. RotKeyIndex1: %3d, RotKeyIndex2: %3d, Alpha: %f"), RotKeyIndex1, RotKeyIndex2, Alpha);
-//
-//	OutAtom.Blend(KeyAtom1, KeyAtom2, Alpha);
-//	OutAtom.NormalizeRotation();
-//}
-//
+
+void UAnimSequence::GetBoneTransform(FTransform& OutAtom, int32 TrackIndex, float Time, bool bUseRawData) const
+{
+	// If the caller didn't request that raw animation data be used . . .
+	if ( !bUseRawData )
+	{
+		if ( CompressedTrackOffsets.Num() > 0 )
+		{
+			AnimationFormat_GetBoneAtom( OutAtom, *this, TrackIndex, Time );
+			return;
+		}
+	}
+
+	ExtractBoneTransform(RawAnimationData, OutAtom, TrackIndex, Time);
+}
+
+void UAnimSequence::ExtractBoneTransform(const TArray<struct FRawAnimSequenceTrack>& InRawAnimationData, FTransform& OutAtom, int32 TrackIndex, float Time) const
+{
+	// Bail out if the animation data doesn't exists (e.g. was stripped by the cooker).
+	if(InRawAnimationData.Num() == 0)
+	{
+		UE_LOG(LogAnimation, Log, TEXT("UAnimSequence::GetBoneTransform : No anim data in AnimSequence[%s]!"),*GetFullName());
+		OutAtom.SetIdentity();
+		return;
+	}
+
+	ExtractBoneTransform(InRawAnimationData[TrackIndex], OutAtom, Time);
+}
+
+void UAnimSequence::ExtractBoneTransform(const struct FRawAnimSequenceTrack& RawTrack, FTransform& OutAtom, int32 KeyIndex) const
+{
+	// Bail out (with rather wacky data) if data is empty for some reason.
+	if (RawTrack.PosKeys.Num() == 0 || RawTrack.RotKeys.Num() == 0)
+	{
+		UE_LOG(LogAnimation, Log, TEXT("UAnimSequence::GetBoneTransform : No anim data in AnimSequence!"));
+		OutAtom.SetIdentity();
+		return;
+	}
+
+	const int32 PosKeyIndex = FMath::Min(KeyIndex, RawTrack.PosKeys.Num() - 1);
+	const int32 RotKeyIndex = FMath::Min(KeyIndex, RawTrack.RotKeys.Num() - 1);
+	static const FVector DefaultScale3D = FVector(1.f);
+
+	OutAtom.SetTranslation(RawTrack.PosKeys[PosKeyIndex]);
+	OutAtom.SetRotation(RawTrack.RotKeys[RotKeyIndex]);
+	if (RawTrack.ScaleKeys.Num() > 0)
+	{
+		const int32 ScaleKeyIndex = FMath::Min(KeyIndex, RawTrack.ScaleKeys.Num() - 1);
+		OutAtom.SetScale3D(RawTrack.ScaleKeys[ScaleKeyIndex]);
+	}
+	else
+	{
+		OutAtom.SetScale3D(DefaultScale3D);
+	}
+}
+
+void UAnimSequence::ExtractBoneTransform(const struct FRawAnimSequenceTrack& RawTrack, FTransform& OutAtom, float Time) const
+{
+	// Bail out (with rather wacky data) if data is empty for some reason.
+	if(RawTrack.PosKeys.Num() == 0 || RawTrack.RotKeys.Num() == 0)
+	{
+		UE_LOG(LogAnimation, Log, TEXT("UAnimSequence::GetBoneTransform : No anim data in AnimSequence[%s]!"),*GetFullName());
+		OutAtom.SetIdentity();
+		return;
+	}
+
+	int32 KeyIndex1, KeyIndex2;
+	float Alpha;
+	FAnimationRuntime::GetKeyIndicesFromTime(KeyIndex1, KeyIndex2, Alpha, Time, NumFrames, SequenceLength);
+	// @Todo fix me: this change is not good, it has lots of branches. But we'd like to save memory for not saving scale if no scale change exists
+	const bool bHasScaleKey = (RawTrack.ScaleKeys.Num() > 0);
+	static const FVector DefaultScale3D = FVector(1.f);
+
+	if (Interpolation == EAnimInterpolationType::Step) 
+	{
+		Alpha = 0.f;
+	}
+
+	if(Alpha <= 0.f)
+	{
+		const int32 PosKeyIndex1 = FMath::Min(KeyIndex1, RawTrack.PosKeys.Num()-1);
+		const int32 RotKeyIndex1 = FMath::Min(KeyIndex1, RawTrack.RotKeys.Num()-1);
+		if(bHasScaleKey)
+		{
+			const int32 ScaleKeyIndex1 = FMath::Min(KeyIndex1, RawTrack.ScaleKeys.Num()-1);
+			OutAtom = FTransform(RawTrack.RotKeys[RotKeyIndex1], RawTrack.PosKeys[PosKeyIndex1], RawTrack.ScaleKeys[ScaleKeyIndex1]);
+		}
+		else
+		{
+			OutAtom = FTransform(RawTrack.RotKeys[RotKeyIndex1], RawTrack.PosKeys[PosKeyIndex1], DefaultScale3D);
+		}
+		return;
+	}
+	else if(Alpha >= 1.f)
+	{
+		const int32 PosKeyIndex2 = FMath::Min(KeyIndex2, RawTrack.PosKeys.Num()-1);
+		const int32 RotKeyIndex2 = FMath::Min(KeyIndex2, RawTrack.RotKeys.Num()-1);
+		if(bHasScaleKey)
+		{
+			const int32 ScaleKeyIndex2 = FMath::Min(KeyIndex2, RawTrack.ScaleKeys.Num()-1);
+			OutAtom = FTransform(RawTrack.RotKeys[RotKeyIndex2], RawTrack.PosKeys[PosKeyIndex2], RawTrack.ScaleKeys[ScaleKeyIndex2]);
+		}
+		else
+		{
+			OutAtom = FTransform(RawTrack.RotKeys[RotKeyIndex2], RawTrack.PosKeys[PosKeyIndex2], DefaultScale3D);
+		}
+		return;
+	}
+
+	const int32 PosKeyIndex1 = FMath::Min(KeyIndex1, RawTrack.PosKeys.Num()-1);
+	const int32 RotKeyIndex1 = FMath::Min(KeyIndex1, RawTrack.RotKeys.Num()-1);
+
+	const int32 PosKeyIndex2 = FMath::Min(KeyIndex2, RawTrack.PosKeys.Num()-1);
+	const int32 RotKeyIndex2 = FMath::Min(KeyIndex2, RawTrack.RotKeys.Num()-1);
+
+	FTransform KeyAtom1, KeyAtom2;
+
+	if(bHasScaleKey)
+	{
+		const int32 ScaleKeyIndex1 = FMath::Min(KeyIndex1, RawTrack.ScaleKeys.Num()-1);
+		const int32 ScaleKeyIndex2 = FMath::Min(KeyIndex2, RawTrack.ScaleKeys.Num()-1);
+
+		KeyAtom1 = FTransform(RawTrack.RotKeys[RotKeyIndex1], RawTrack.PosKeys[PosKeyIndex1], RawTrack.ScaleKeys[ScaleKeyIndex1]);
+		KeyAtom2 = FTransform(RawTrack.RotKeys[RotKeyIndex2], RawTrack.PosKeys[PosKeyIndex2], RawTrack.ScaleKeys[ScaleKeyIndex2]);
+	}
+	else
+	{
+		KeyAtom1 = FTransform(RawTrack.RotKeys[RotKeyIndex1], RawTrack.PosKeys[PosKeyIndex1], DefaultScale3D);
+		KeyAtom2 = FTransform(RawTrack.RotKeys[RotKeyIndex2], RawTrack.PosKeys[PosKeyIndex2], DefaultScale3D);
+	}
+
+	// 	UE_LOG(LogAnimation, Log, TEXT(" *  *  *  Position. PosKeyIndex1: %3d, PosKeyIndex2: %3d, Alpha: %f"), PosKeyIndex1, PosKeyIndex2, Alpha);
+	// 	UE_LOG(LogAnimation, Log, TEXT(" *  *  *  Rotation. RotKeyIndex1: %3d, RotKeyIndex2: %3d, Alpha: %f"), RotKeyIndex1, RotKeyIndex2, Alpha);
+
+	OutAtom.Blend(KeyAtom1, KeyAtom2, Alpha);
+	OutAtom.NormalizeRotation();
+}
+
 //void UAnimSequence::HandleAssetPlayerTickedInternal(FAnimAssetTickContext &Context, const float PreviousTime, const float MoveDelta, const FAnimTickRecord &Instance, struct FAnimNotifyQueue& NotifyQueue) const
 //{
 //	Super::HandleAssetPlayerTickedInternal(Context, PreviousTime, MoveDelta, Instance, NotifyQueue);
@@ -2014,8 +2019,8 @@ bool UAnimSequence::CompressRawAnimData()
 //
 void UAnimSequence::RequestAnimCompression(bool bAsyncCompression, bool bAllowAlternateCompressor, bool bOutput)
 {
-//	TSharedPtr<FAnimCompressContext> CompressContext = MakeShareable(new FAnimCompressContext(bAllowAlternateCompressor, bOutput));
-//	RequestAnimCompression(bAsyncCompression, CompressContext);
+	TSharedPtr<FAnimCompressContext> CompressContext = MakeShareable(new FAnimCompressContext(bAllowAlternateCompressor, bOutput));
+	RequestAnimCompression(bAsyncCompression, CompressContext);
 }
 //
 void UAnimSequence::RequestAnimCompression(bool bAsyncCompression, TSharedPtr<FAnimCompressContext> CompressContext)

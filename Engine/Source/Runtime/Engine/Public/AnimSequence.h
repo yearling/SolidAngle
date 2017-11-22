@@ -345,7 +345,6 @@ public:
 	/** Number of raw frames in this sequence (not used by engine - just for informational purposes). */
 	//UPROPERTY(AssetRegistrySearchable, meta=(DisplayName = "Number of Keys"))
 	int32 NumFrames;
-
 protected:
 	/**
 	 * In the future, maybe keeping RawAnimSequenceTrack + TrackMap as one would be good idea to avoid inconsistent array size

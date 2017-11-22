@@ -124,4 +124,7 @@
 										|-  FMeshUtilities::BuildSkeletalModelFromChunks() //生成可渲染数据
 											|- FSkinnedMeshChunk是MeshUtilities中的数据结构；FSkelMeshSection是Engine中用来渲染的数据结构，所以要把FSkinnedMeshChunk转化为FSkelMeshSection
 												|- 对Index进行优化
+										|- 	YSkeletalMesh::	CalculateInvRefMatrices(),计算每根骨骼到LocalSpace的逆
+							|- 创建FSkeleton
+								|- FSkeleton::MergeAllBonesToBoneTree,从FSkeletalMesh创建FSeleton
 											

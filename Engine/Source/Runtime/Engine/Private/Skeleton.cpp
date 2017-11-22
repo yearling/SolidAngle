@@ -676,23 +676,23 @@ bool YSkeleton::MergeBonesToBoneTree(const YSkeletalMesh* InSkeletalMesh, const 
 //	}
 //}
 //
-//int32 YSkeleton::GetAnimationTrackIndex(const int32& InSkeletonBoneIndex, const UAnimSequence* InAnimSeq, const bool bUseRawData)
-//{
-//	const TArray<FTrackToSkeletonMap>& TrackToSkelMap = bUseRawData ? InAnimSeq->GetRawTrackToSkeletonMapTable() : InAnimSeq->GetCompressedTrackToSkeletonMapTable();
-//	if (InSkeletonBoneIndex != INDEX_NONE)
-//	{
-//		for (int32 TrackIndex = 0; TrackIndex<TrackToSkelMap.Num(); ++TrackIndex)
-//		{
-//			const FTrackToSkeletonMap& TrackToSkeleton = TrackToSkelMap[TrackIndex];
-//			if (TrackToSkeleton.BoneTreeIndex == InSkeletonBoneIndex)
-//			{
-//				return TrackIndex;
-//			}
-//		}
-//	}
-//
-//	return INDEX_NONE;
-//}
+int32 YSkeleton::GetAnimationTrackIndex(const int32& InSkeletonBoneIndex, const UAnimSequence* InAnimSeq, const bool bUseRawData)
+{
+	const TArray<FTrackToSkeletonMap>& TrackToSkelMap = bUseRawData ? InAnimSeq->GetRawTrackToSkeletonMapTable() : InAnimSeq->GetCompressedTrackToSkeletonMapTable();
+	if (InSkeletonBoneIndex != INDEX_NONE)
+	{
+		for (int32 TrackIndex = 0; TrackIndex<TrackToSkelMap.Num(); ++TrackIndex)
+		{
+			const FTrackToSkeletonMap& TrackToSkeleton = TrackToSkelMap[TrackIndex];
+			if (TrackToSkeleton.BoneTreeIndex == InSkeletonBoneIndex)
+			{
+				return TrackIndex;
+			}
+		}
+	}
+
+	return INDEX_NONE;
+}
 //
 //
 //int32 YSkeleton::GetSkeletonBoneIndexFromMeshBoneIndex(const USkeletalMesh* InSkelMesh, const int32& MeshBoneIndex)
@@ -1535,6 +1535,12 @@ void YSkeleton::AccumulateCurveMetaData(FName CurveName, bool bMaterialSet, bool
 		}
 	}
 }
+
+FName YSkeleton::GetFName() const
+{
+	return FName(TEXT("Default Skeleton Name"));
+}
+
 //
 //bool YSkeleton::AddNewVirtualBone(const FName SourceBoneName, const FName TargetBoneName)
 //{

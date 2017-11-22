@@ -270,6 +270,7 @@ class ENGINE_API YSkeleton /*: public UObject*/
 
 public:
 	YSkeleton();
+	FName GetFName() const;
 protected:
 	/** Skeleton bone tree - each contains name and parent index**/
 	//UPROPERTY(VisibleAnywhere, Category = Skeleton)
