@@ -1718,7 +1718,7 @@ void FFbxImporter::RecursiveFindFbxSkelMesh(FbxNode* Node, TArray< TArray<FbxNod
 	FbxNode* SkelMeshNode = nullptr;
 	FbxNode* NodeToAdd = Node;
 
-	DumpFBXNode(Node);
+	//DumpFBXNode(Node);
 
     if (Node->GetMesh() && Node->GetMesh()->GetDeformerCount(FbxDeformer::eSkin) > 0 )
 	{
@@ -2272,7 +2272,7 @@ FbxNode* FFbxImporter::RetrieveObjectFromName(const TCHAR* ObjectName, FbxNode* 
 
 
 
-YSkeletalMesh* UnFbx::FFbxImporter::MainInportTest(const FString & FileToImport, EFBXImportType MeshTypeToImport)
+YSkeletalMesh* UnFbx::FFbxImporter::MainInportTest(const FString & FileToImport, EFBXImportType ImportType)
 {
 	FName Name(TEXT("FbxSelfImportMesh"));
 	if (!ImportFromFile(FileToImport, TEXT("FBX"), true))
@@ -2301,12 +2301,12 @@ YSkeletalMesh* UnFbx::FFbxImporter::MainInportTest(const FString & FileToImport,
 		bool bCombineMeshes = ImportOptions->bCombineToSingle;
 		bool bCombineMeshesLOD = false;
 
-		if (MeshTypeToImport == FBXIT_SkeletalMesh)
+		if (ImportType == FBXIT_SkeletalMesh)
 		{
 			FillFbxSkelMeshArrayInScene(RootNodeToImport, SkelMeshArray, false);
 			InterestingNodeCount = SkelMeshArray.Num();
 		}
-		else if (MeshTypeToImport == FBXIT_StaticMesh)
+		else if (ImportType == FBXIT_StaticMesh)
 		{
 			UFbxAssetImportData ImportData;
 			ApplyTransformSettingsToFbxNode(RootNodeToImport, &ImportData);
@@ -2345,7 +2345,7 @@ YSkeletalMesh* UnFbx::FFbxImporter::MainInportTest(const FString & FileToImport,
 			int32 NodeIndex = 0;
 
 			int32 ImportedMeshCount = 0;
-			if (MeshTypeToImport == FBXIT_StaticMesh)  // static mesh
+			if (ImportType == FBXIT_StaticMesh)  // static mesh
 			{
 #if 0
 				YStaticMesh* NewStaticMesh = NULL;
@@ -2444,7 +2444,7 @@ YSkeletalMesh* UnFbx::FFbxImporter::MainInportTest(const FString & FileToImport,
 				//NewObject = NewStaticMesh;
 #endif
 			}
-			else if (MeshTypeToImport == FBXIT_SkeletalMesh)// skeletal mesh
+			else if (ImportType == FBXIT_SkeletalMesh)// skeletal mesh
 			{
 				int32 TotalNumNodes = 0;
 
@@ -2609,7 +2609,7 @@ YSkeletalMesh* UnFbx::FFbxImporter::MainInportTest(const FString & FileToImport,
 						FFbxErrors::SkeletalMesh_NoMeshFoundOnRoot);
 				}
 			}
-			else if (MeshTypeToImport == FBXIT_SubDSurface) // SubDSurface
+			else if (ImportType == FBXIT_SubDSurface) // SubDSurface
 			{
 				/*USubDSurface* NewMesh = NULL;
 				TArray<FbxNode*> FbxMeshArray;
@@ -2633,7 +2633,7 @@ YSkeletalMesh* UnFbx::FFbxImporter::MainInportTest(const FString & FileToImport,
 
 				NewObject = NewMesh;*/
 			}
-			else if (MeshTypeToImport == FBXIT_Animation)// animation
+			else if (ImportType == FBXIT_Animation)// animation
 			{
 				if (ImportOptions->SkeletonForAnimation)
 				{
@@ -2648,7 +2648,7 @@ YSkeletalMesh* UnFbx::FFbxImporter::MainInportTest(const FString & FileToImport,
 			{
 				AddTokenizedErrorMessage(FTokenizedMessage::Create(EMessageSeverity::Error, LOCTEXT("FailedToImport_InvalidRoot", "Could not find root node.")), FFbxErrors::SkeletalMesh_InvalidRoot);
 			}
-			else if (MeshTypeToImport == FBXIT_SkeletalMesh)
+			else if (ImportType == FBXIT_SkeletalMesh)
 			{
 				AddTokenizedErrorMessage(FTokenizedMessage::Create(EMessageSeverity::Error, LOCTEXT("FailedToImport_InvalidBone", "Failed to find any bone hierarchy. Try disabling the \"Import As Skeletal\" option to import as a rigid mesh. ")), FFbxErrors::SkeletalMesh_InvalidBone);
 			}

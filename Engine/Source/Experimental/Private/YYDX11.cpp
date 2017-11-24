@@ -44,8 +44,8 @@ void DX11Demo::Initial()
 	m_pLightCamera->SetProjParam(PI / 4, 1, 50.0f, 300.0f);
 	m_pLightCamera->FrameMove(0); 
 
-	m_pRenderMesh = std::make_shared<RenderScene>();
-	m_pRenderMesh->SetScreenWidthHeigth(default_x, default_y);
+	m_pSceneRender = std::make_shared<RenderScene>();
+	m_pSceneRender->SetScreenWidthHeigth(default_x, default_y);
 
 	m_pFbxReader = std::make_unique<class FBXReader>();
 	m_pFbxReader->InitialFBXSDK();
@@ -62,14 +62,14 @@ void DX11Demo::Initial()
 	}
 	if (Mesh)
 	{
-		m_pRenderMesh->SetMesh(std::move(Mesh));
+		m_pSceneRender->SetMesh(std::move(Mesh));
 	}
 	else
 	{
 		assert(0);
 		return;
 	}
-	m_pRenderMesh->Init();
+	m_pSceneRender->Init();
 	// Draw ground grid
 	GCanvas->Init();
 	m_pCurrentCamera = m_pCamera;
@@ -147,8 +147,10 @@ void DX11Demo::Initial()
 	ImportOptions->MaterialCurveSuffixes.Reset();
 	ImportOptions->MaterialCurveSuffixes.Add(TEXT("_mat"));
 	ImportOptions->MaterialBasePath = FName("None");
-	FbxImporter->MainImport(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
-	//FSkeletalMeshImportData* pSkeletalMeshImportData =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
+	//FbxImporter->MainImport(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
+	YSkeletalMesh* pSkeletalMesh =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
+	m_pSceneRender->RegisterSkeletalMesh(pSkeletalMesh);
+	m_pSceneRender->AllocResource();
 	//m_pRenderMesh->SetFSkeletalMeshImportData(pSkeletalMeshImportData);
 }
 
@@ -465,7 +467,7 @@ void DX11Demo::Render()
 	pRenderInfo->RenderCameraInfo.ViewProjection = m_pCamera->GetViewProject();
 	pRenderInfo->RenderCameraInfo.ViewProjectionInv = m_pCamera->GetViewProjInv();
 	pRenderInfo->SceneInfo.MainLightDir = m_pLightCamera->GetDir();
-	YYUTDXManager::GetInstance().AddRenderEvent([this, pRenderInfo]() {m_pRenderMesh->Render(pRenderInfo); });
+	YYUTDXManager::GetInstance().AddRenderEvent([this, pRenderInfo]() {m_pSceneRender->Render(pRenderInfo); });
 	YYUTDXManager::GetInstance().Render();
 }
 

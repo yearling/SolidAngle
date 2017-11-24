@@ -21,6 +21,19 @@ struct FRenderMeshCBuffer
 	FMatrix  m_matInvViewProj;
 	FVector  m_lightDir;
 };
+
+class FSkeletalMeshRenderHelper
+{
+public:
+	FSkeletalMeshRenderHelper(YSkeletalMesh* InSkeletalMesh);
+	~FSkeletalMeshRenderHelper();
+	void Init();
+	void Render();
+private:
+	YSkeletalMesh* SkeletalMesh;
+	TUniquePtr<YVSShader>		m_VSShader;
+	TUniquePtr<YPSShader>		m_PSShader;
+};
 class RenderScene
 {
 public:
@@ -29,12 +42,15 @@ public:
 	virtual	void					Init();
 	virtual void					Update(float ElpaseTime);
 	virtual void					Render(TSharedRef<FRenderInfo> RenderInfo);
+	virtual void					AllocResource();
 	void							SetScreenWidthHeigth(int width, int height) { m_ScreenWidth = (float)width; m_ScreenHeight = (float)height; }
 	void							SetMesh(std::unique_ptr<MeshModel> && pMesh) { m_pMesh = std::move(pMesh); }
-	void							SetFSkeletalMeshImportData(FSkeletalMeshImportData* pSkeletalMeshData);
+	void							RegisterSkeletalMesh(YSkeletalMesh* pSkeletalMesh);
 	void							CreateMeshResource();
 	void							DrawGridAndCoordinates();
-	void							DrawSkeletalMeshImportData();
+	void							DrawSkeletalMeshes();
+	void							DrawSkeleton(YSkeletalMesh* pSkeletalMesh);
+	void							DrawMesh(YSkeletalMesh* pSkeletalMesh);
 private:
 	float							m_ScreenWidth;
 	float							m_ScreenHeight;
@@ -44,4 +60,6 @@ private:
 	TComPtr<ID3D11DepthStencilState>m_ds;
 private:
 	FSkeletalMeshImportData*		m_pSkeletalMeshData;
+	TArray<YSkeletalMesh*>			SkeletalMeshes;
+	TArray<TUniquePtr<FSkeletalMeshRenderHelper>> SkeletalMeshRenderHeplers;
 };

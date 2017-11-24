@@ -9,7 +9,8 @@ class Y3DCanvas
 {
 public:
 	Y3DCanvas();
-	void DrawLine(FVector StartPos, FVector EndPos, FLinearColor Color);
+	void						DrawLine(FVector StartPos, FVector EndPos, FLinearColor Color);
+	void DrawBall(FVector Pos, FLinearColor Color, float Length = 0.3f);
 	void						Render(TSharedRef<FRenderInfo> RenderInf);
 	void						Init();
 private:
@@ -20,7 +21,7 @@ private:
 	TArray<LocalVertex>		LineDatas;
 	TUniquePtr<YVSShader>		m_VSShader;
 	TUniquePtr<YPSShader>		m_PSShader;
-	const int						m_MAXVertex = 1024;
+	const int						m_MAXVertex = 1024*1024*10;
 };
 
 extern Y3DCanvas* GCanvas;

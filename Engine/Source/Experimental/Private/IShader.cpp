@@ -6,7 +6,7 @@
 #include <d3dcompiler.h>
 #include <D3D11Shader.h>
 
-
+DEFINE_LOG_CATEGORY(ShaderLog)
 const char* gSystemDir = "..\\Shader";
 
 class CShaderInclude : public ID3DInclude
@@ -115,9 +115,10 @@ IShaderBind::~IShaderBind()
 
 }
 
-void IShaderBind::PostReflection(TComPtr<ID3DBlob> &Blob, TComPtr<ID3D11ShaderReflection>& ShaderReflector)
+bool IShaderBind::PostReflection(TComPtr<ID3DBlob> &Blob, TComPtr<ID3D11ShaderReflection>& ShaderReflector)
 {
 	//nothing
+	return true;
 }
 
 void IShaderBind::AddShaderMacros(const TArray<ShaderMacroEntry> & InShaderMacroEntrys)
@@ -399,7 +400,11 @@ bool IShaderBind::ReflectShader(TComPtr<ID3DBlob> Blob)
 			}
 		}
 	}
-	PostReflection(Blob, ShaderReflector);
+	if (!PostReflection(Blob, ShaderReflector))
+	{
+		UE_LOG(ShaderLog, Error, TEXT("PostReflection failed!! FileName %s "), *ShaderPath);
+		return false;
+	}
 	return true;
 }
 
@@ -457,7 +462,12 @@ bool YVSShader::CreateShader(const FString &FileName, const FString &MainPoint)
 		std::cout << "VS Shader create failed!! \n FileName: " << *FileName << "   MainPoint:" << *MainPoint << std::endl;
 		return false;
 	}
-	ReflectShader(VSBlob);
+	if (!ReflectShader(VSBlob))
+	{
+		UE_LOG(ShaderLog, Error, TEXT("YVSShader ReflectShader error, %s"), *ShaderPath);
+		return false;
+	}
+
 	assert(VertexShader);
 	if (!AliasNameForDebug.IsEmpty())
 	{
@@ -482,12 +492,18 @@ bool YVSShader::Update()
 	return false;
 }
 
-void YVSShader::PostReflection(TComPtr<ID3DBlob> &Blob, TComPtr<ID3D11ShaderReflection>& ShaderReflector)
+bool YVSShader::BindInputLayout(TArray<D3D11_INPUT_ELEMENT_DESC> InInputLayoutDesc)
+{
+	Swap(InputLayoutDesc, InInputLayoutDesc);
+	return true;
+}
+
+bool YVSShader::PostReflection(TComPtr<ID3DBlob> &Blob, TComPtr<ID3D11ShaderReflection>& ShaderReflector)
 {
 	D3D11_SHADER_DESC ShaderDesc;
 	ShaderReflector->GetDesc(&ShaderDesc);
 
-	TArray<D3D11_INPUT_ELEMENT_DESC> lInputLayoutDesc;
+	TArray<D3D11_INPUT_ELEMENT_DESC> ReflectInputLayoutDesc;
 	for (unsigned lI = 0; lI < ShaderDesc.InputParameters; lI++)
 	{
 		D3D11_SIGNATURE_PARAMETER_DESC lParamDesc;
@@ -527,13 +543,48 @@ void YVSShader::PostReflection(TComPtr<ID3DBlob> &Blob, TComPtr<ID3D11ShaderRefl
 			else if (lParamDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32) lElementDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		}
 
-		lInputLayoutDesc.Emplace(lElementDesc);
+		ReflectInputLayoutDesc.Emplace(lElementDesc);
+	}
+	if (InputLayoutDesc.Num() < ReflectInputLayoutDesc.Num())
+	{
+		UE_LOG(ShaderLog, Error, TEXT("InputLayout is not compatible with shader reflection"));
+		return false;
+	}
+
+	bool InputLayoutMarch = true;
+	// 反射出来的有可能比手动创建的D3D11_INPUT_ELEMENT_DESC少
+	for (int32 i = 0; i < ReflectInputLayoutDesc.Num(); ++i)
+	{
+		bool bFindSameNameAndIndexDesc = false;
+		for (int32 j = 0; j < InputLayoutDesc.Num(); ++j)
+		{
+			if (FPlatformString::Strcmp(InputLayoutDesc[j].SemanticName, ReflectInputLayoutDesc[i].SemanticName) == 0 &&
+				InputLayoutDesc[j].SemanticIndex == ReflectInputLayoutDesc[i].SemanticIndex && 
+				InputLayoutDesc[j].InputSlot == ReflectInputLayoutDesc[i].InputSlot)
+			{
+				bFindSameNameAndIndexDesc = true;
+				break;
+			}
+		}
+
+		if (!bFindSameNameAndIndexDesc)
+		{
+			InputLayoutMarch = false;
+			break;
+		}
+	}
+	if (!InputLayoutMarch)
+	{
+		UE_LOG(ShaderLog, Error, TEXT("InputLayout is not compatible with shader reflection"));
+		return false;
 	}
 	TComPtr<ID3D11Device> Device = YYUTDXManager::GetInstance().GetD3DDevice();
-	if (FAILED(Device->CreateInputLayout(&lInputLayoutDesc[0], ShaderDesc.InputParameters, Blob->GetBufferPointer(), Blob->GetBufferSize(), &InputLayout)))
+	if (FAILED(Device->CreateInputLayout(&ReflectInputLayoutDesc[0], ShaderDesc.InputParameters, Blob->GetBufferPointer(), Blob->GetBufferSize(), &InputLayout)))
 	{
-		std::cout << "VS Shader create layout failed!! \n FileName: " << std::endl;
+		UE_LOG(ShaderLog, Error, TEXT("VS Shader create layout failed!! FileName %s "), *ShaderPath);
+		return false;
 	}
+	return true;
 }
 
 TComPtr<ID3D11DeviceChild> YVSShader::GetInternalResource() const
@@ -610,7 +661,12 @@ bool YPSShader::CreateShader(const FString &FileName, const FString &MainPoint)
 		std::cout << "VS Shader create failed!! \n FileName: " << *FileName << "   MainPoint:" << *MainPoint << std::endl;
 		return false;
 	}
-	ReflectShader(VSBlob);
+	if (!ReflectShader(VSBlob))
+	{
+		UE_LOG(ShaderLog, Error, TEXT("YPSShader ReflectShader error, %s"), *ShaderPath);
+		return false;
+	}
+
 	assert(PixShader);
 	if (!AliasNameForDebug.IsEmpty())
 	{

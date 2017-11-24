@@ -5,6 +5,7 @@
 #include "StaticMesh.h"
 #include "Canvas.h"
 #include "IShader.h"
+#include "YSkeletalMesh.h"
 
 
 
@@ -62,11 +63,19 @@ void RenderScene::Render(TSharedRef<FRenderInfo> RenderInfo)
 	{
 		//m_pMesh->Render(RenderInfo);
 	}
-	DrawSkeletalMeshImportData();
+	DrawSkeletalMeshes();
 	DrawGridAndCoordinates();
 	GCanvas->Render(RenderInfo);
 }
 
+
+void RenderScene::AllocResource()
+{
+	for (TUniquePtr<FSkeletalMeshRenderHelper>& RenderHelper : SkeletalMeshRenderHeplers)
+	{
+		RenderHelper->Init();
+	}
+}
 
 void RenderScene::CreateMeshResource()
 {
@@ -97,37 +106,93 @@ void RenderScene::DrawGridAndCoordinates()
 	GCanvas->DrawLine(FVector(0, 0, 0), FVector(0, 0, 5), FLinearColor(0, 0, 1, 1));
 }
 
-FMatrix GetParentMatrix(TArray<VBone>& pSkeleton, int32 iIndex)
+void RenderScene::DrawSkeletalMeshes()
+{
+	for (YSkeletalMesh* pMesh : SkeletalMeshes)
+	{
+		DrawSkeleton(pMesh);
+		
+	}
+}
+
+FMatrix GetParentMatrix(const TArray<FMeshBoneInfo>& MeshBoneInfoes, const TArray<FTransform> & BonePoses, int32 iIndex)
 {
 	FMatrix ParentMatrix = FMatrix::Identity;
-	while (pSkeleton[iIndex].ParentIndex!= -1)
+	int32 ParentBoneIndex = MeshBoneInfoes[iIndex].ParentIndex;
+	while (ParentBoneIndex != INDEX_NONE)
 	{
-		ParentMatrix = ParentMatrix* pSkeleton[pSkeleton[iIndex].ParentIndex].BonePos.Transform.ToMatrixWithScale();
-		iIndex = pSkeleton[iIndex].ParentIndex;
+		ParentMatrix = ParentMatrix* BonePoses[ParentBoneIndex].ToMatrixWithScale();
+		ParentBoneIndex = MeshBoneInfoes[ParentBoneIndex].ParentIndex;
 	}
 	return ParentMatrix;
 }
 
-void RenderScene::DrawSkeletalMeshImportData()
+void RenderScene::DrawSkeleton(YSkeletalMesh* pSkeletalMesh)
 {
-	if (!m_pSkeletalMeshData)
+	if (!pSkeletalMesh)
 		return;
-	TArray<VBone>& pSkeleton= 	m_pSkeletalMeshData->RefBonesBinary;
-	for (int32 i = 0; i < pSkeleton.Num(); ++i)
+	const FReferenceSkeleton& Skeleton= pSkeletalMesh->RefSkeleton;
+	const TArray<FMeshBoneInfo> &MeshBoneInfos = Skeleton.GetRefBoneInfo();
+	const TArray<FTransform> & BonePoses = Skeleton.GetRawRefBonePose();
+	for (int32 i = 0; i < MeshBoneInfos.Num(); ++i)
 	{
-		if (pSkeleton[i].ParentIndex != -1)
+		const FMeshBoneInfo & BoneInfo = MeshBoneInfos[i];
+		if (BoneInfo.ParentIndex != INDEX_NONE)
 		{
-			FMatrix ParentMatrix = GetParentMatrix(pSkeleton, i);
-			FMatrix LocalMatrix = pSkeleton[i].BonePos.Transform.ToMatrixWithScale()*ParentMatrix;
+			FMatrix ParentMatrix = GetParentMatrix(MeshBoneInfos, BonePoses, i);
+			FMatrix LocalMatrix = BonePoses[i].ToMatrixWithScale()*ParentMatrix;
 			FVector ParentPos = ParentMatrix.TransformPosition(FVector(0, 0, 0));
 			FVector LocalPos = LocalMatrix.TransformPosition(FVector(0, 0, 0));
 			GCanvas->DrawLine(ParentPos, LocalPos, FLinearColor(1, 1, 0, 1));
+			GCanvas->DrawBall(LocalPos,FLinearColor(1,0,0,1));
+		}
+		else
+		{
+			GCanvas->DrawBall(BonePoses[i].GetTranslation(), FLinearColor(1, 0, 0, 1));
 		}
 	}
 }
 
-void RenderScene::SetFSkeletalMeshImportData(FSkeletalMeshImportData* pSkeletalMeshData)
+void RenderScene::DrawMesh(YSkeletalMesh* pSkeletalMesh)
 {
-	check(pSkeletalMeshData);
-	m_pSkeletalMeshData = pSkeletalMeshData;
+	if (!pSkeletalMesh)
+		return;
+	
+}
+
+void RenderScene::RegisterSkeletalMesh(YSkeletalMesh* pSkeletalMesh)
+{
+	SkeletalMeshes.AddUnique(pSkeletalMesh);
+	SkeletalMeshRenderHeplers.Emplace(MakeUnique<FSkeletalMeshRenderHelper>(pSkeletalMesh));
+}
+
+FSkeletalMeshRenderHelper::FSkeletalMeshRenderHelper(YSkeletalMesh* InSkeletalMesh)
+	:SkeletalMesh(InSkeletalMesh)
+{
+
+}
+
+FSkeletalMeshRenderHelper::~FSkeletalMeshRenderHelper()
+{
+
+}
+
+void FSkeletalMeshRenderHelper::Init()
+{
+	if (!SkeletalMesh)
+		return;
+
+	FSkeletalMeshResource* SkeletalMeshResource = SkeletalMesh->GetResourceForRendering();
+	for (int32 i = 0; i < SkeletalMeshResource->LODModels.Num(); ++i)
+	{
+		FStaticLODModel& StaticLodModel = SkeletalMeshResource->LODModels[i];
+		TArray<FSoftSkinVertex> SkinVertex;
+		StaticLodModel.GetVertices(SkinVertex);
+
+	}
+}
+
+void FSkeletalMeshRenderHelper::Render()
+{
+
 }

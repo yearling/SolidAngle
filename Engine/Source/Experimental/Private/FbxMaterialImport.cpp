@@ -145,7 +145,7 @@ void UnFbx::FFbxImporter::ImportTexturesFromNode(FbxNode* Node)
 //-------------------------------------------------------------------------
 
 //Enable debug log of fbx material properties, this will log all material properties that are in the FBX file
-#define DEBUG_LOG_FBX_MATERIAL_PROPERTIES 1
+#define DEBUG_LOG_FBX_MATERIAL_PROPERTIES 0
 #if DEBUG_LOG_FBX_MATERIAL_PROPERTIES
 void LogPropertyAndChild(FbxSurfaceMaterial& FbxMaterial, const FbxProperty &Property)
 {

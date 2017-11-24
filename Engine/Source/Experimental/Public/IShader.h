@@ -2,6 +2,7 @@
 #include "YYUT.h"
 #include <d3d11shader.h>
 
+DECLARE_LOG_CATEGORY_EXTERN(ShaderLog, Log, All);
 struct ShaderMacroEntry
 {
 	FString MacroName;
@@ -31,6 +32,7 @@ public:
 	virtual bool				BindResource(const FString &ParaName, const FMatrix  &Mat)=0;
 	virtual bool				BindResource(const FString &ParaName, const FMatrix  *Mat,int Num)=0;
 	virtual bool				Update()=0;
+	virtual bool				BindInputLayout(TArray<D3D11_INPUT_ELEMENT_DESC> lInputLayoutDesc)=0;
 protected:
 	virtual TComPtr<ID3D11DeviceChild>  GetInternalResource()const = 0;
 };
@@ -111,7 +113,7 @@ class IShaderBind :public IShader
 public:
 	IShaderBind() = default;
 	virtual ~IShaderBind();
-	virtual void				PostReflection(TComPtr<ID3DBlob> &Blob, TComPtr<ID3D11ShaderReflection>& ShaderReflector);
+	virtual bool PostReflection(TComPtr<ID3DBlob> &Blob, TComPtr<ID3D11ShaderReflection>& ShaderReflector);
 	virtual void				AddShaderMacros(const TArray<ShaderMacroEntry> & InShaderMacroEntrys) override;
 	virtual void				SetInclude(const FString & ShaderSrcInclude) override;
 	virtual bool				AddAlias(const FString & AliasName) override;
@@ -124,6 +126,7 @@ public:
 	virtual bool				BindResource(const FString &ParaName, FPlane V4) override;
 	virtual bool				BindResource(const FString &ParaName, const FMatrix  &Mat) override;
 	virtual bool				BindResource(const FString &ParaName, const FMatrix  *Mat, int Num) override;
+	virtual bool				BindInputLayout(TArray<D3D11_INPUT_ELEMENT_DESC> lInputLayoutDesc) override { return true; };
 protected:
 	bool						ReflectShader(TComPtr<ID3DBlob> Blob);
 	FString					ShaderPath;
@@ -155,13 +158,15 @@ class YVSShader :public IShaderBind
 public:
 	YVSShader();
 	virtual ~YVSShader();
-	virtual bool CreateShader(const FString &FileName, const FString &MainPoint) override;
+	virtual bool				CreateShader(const FString &FileName, const FString &MainPoint) override;
 	virtual bool				Update() override;
+	virtual bool				BindInputLayout(TArray<D3D11_INPUT_ELEMENT_DESC> InInputLayoutDesc) override;
 private:
-	virtual void				PostReflection(TComPtr<ID3DBlob> &Blob, TComPtr<ID3D11ShaderReflection>& ShaderReflector) override;
+	virtual bool PostReflection(TComPtr<ID3DBlob> &Blob, TComPtr<ID3D11ShaderReflection>& ShaderReflector) override;
 	virtual TComPtr<ID3D11DeviceChild> GetInternalResource() const;
 	TComPtr<ID3D11VertexShader> VertexShader;
 	TComPtr<ID3D11InputLayout>  InputLayout;
+	TArray<D3D11_INPUT_ELEMENT_DESC> InputLayoutDesc;
 };
 
 class YPSShader :public IShaderBind
