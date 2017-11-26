@@ -63,6 +63,14 @@ bool StaticMesh::AllocResource()
 	{
 		CreateVertexBufferDynamic( (UINT)VertexArray.Num() * sizeof(LocalVertex), &VertexArray[0], m_VB);
 		CreateIndexBuffer( (UINT)IndexArray.Num() * sizeof(int), &IndexArray[0], m_IB);
+		TArray<D3D11_INPUT_ELEMENT_DESC> layout =
+		{
+			{ "POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "NORMAL",    0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT,    0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "COLOR",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		};
+		m_VSShader->BindInputLayout(layout);
 		if (!m_VSShader->CreateShader("..\\..\\Source\\Experimental\\Private\\RenderMesh.hlsl", "VSMain"))
 			return false;
 		if (!m_PSShader->CreateShader("..\\..\\Source\\Experimental\\Private\\RenderMesh.hlsl", "PSMain"))
@@ -147,6 +155,14 @@ void MeshModel::Init()
 {
 	TComPtr<ID3D11Device> Device = YYUTDXManager::GetInstance().GetD3DDevice();
 	m_VS = MakeUnique<YVSShader>();
+	TArray<D3D11_INPUT_ELEMENT_DESC> layout =
+	{
+		{ "POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL",    0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT,    0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+	m_VS->BindInputLayout(layout);
 	if (!m_VS->CreateShader("..\\..\\Source\\Experimental\\Private\\RenderMesh.hlsl", "VSMain"))
 	{
 		assert(0);

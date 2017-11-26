@@ -441,27 +441,29 @@ bool YVSShader::CreateShader(const FString &FileName, const FString &MainPoint)
 	FString ErrorMsg;
 	if (!ComplieShaderFromFile(FileName, MainPoint, "vs_5_0", ShaderMacroEntrys, ShaderIncludePath, VSBlob, ErrorMsg))
 	{
-		std::cout << "VS Shader file compile failed!! \n FileName: " << *FileName << std::endl;
-		std::cout << "Error msg is :" << *ErrorMsg << std::endl;
+		UE_LOG(ShaderLog, Error, TEXT("VS Shader file compile failed!! FileName: %s, ErrorMsg is %s"), *FileName, *ErrorMsg);
 		if (ShaderMacroEntrys.Num())
 		{
-			std::cout << "ShaderMacroEntrys:" << std::endl;
-			for (ShaderMacroEntry &Entry : ShaderMacroEntrys)
-			{
-				std::cout << "\"" << *Entry.MacroName << "\"" << '[' << *Entry.Value << ']' << std::endl;
-			}
+			//std::cout << "ShaderMacroEntrys:" << std::endl;
+			//for (ShaderMacroEntry &Entry : ShaderMacroEntrys)
+			//{
+				//std::cout << "\"" << *Entry.MacroName << "\"" << '[' << *Entry.Value << ']' << std::endl;
+			//}
 		}
 		if (!ShaderIncludePath.IsEmpty())
 		{
-			std::cout << "ShaderInclude:" << *ShaderIncludePath << std::endl;
+			//std::cout << "ShaderInclude:" << *ShaderIncludePath << std::endl;
 		}
 		return false;
 	}
+
+	ShaderPath = FileName;
 	if (FAILED(hr = Device->CreateVertexShader(VSBlob->GetBufferPointer(), VSBlob->GetBufferSize(), NULL, &VertexShader)))
 	{
-		std::cout << "VS Shader create failed!! \n FileName: " << *FileName << "   MainPoint:" << *MainPoint << std::endl;
+		UE_LOG(ShaderLog, Error, TEXT("VS Shader create failed!! FileName:%s, MainPoint is %s "), *FileName, *MainPoint);
 		return false;
 	}
+
 	if (!ReflectShader(VSBlob))
 	{
 		UE_LOG(ShaderLog, Error, TEXT("YVSShader ReflectShader error, %s"), *ShaderPath);
@@ -579,7 +581,7 @@ bool YVSShader::PostReflection(TComPtr<ID3DBlob> &Blob, TComPtr<ID3D11ShaderRefl
 		return false;
 	}
 	TComPtr<ID3D11Device> Device = YYUTDXManager::GetInstance().GetD3DDevice();
-	if (FAILED(Device->CreateInputLayout(&ReflectInputLayoutDesc[0], ShaderDesc.InputParameters, Blob->GetBufferPointer(), Blob->GetBufferSize(), &InputLayout)))
+	if (FAILED(Device->CreateInputLayout(&InputLayoutDesc[0], ShaderDesc.InputParameters, Blob->GetBufferPointer(), Blob->GetBufferSize(), &InputLayout)))
 	{
 		UE_LOG(ShaderLog, Error, TEXT("VS Shader create layout failed!! FileName %s "), *ShaderPath);
 		return false;
@@ -656,6 +658,7 @@ bool YPSShader::CreateShader(const FString &FileName, const FString &MainPoint)
 		}
 		return false;
 	}
+	ShaderPath = FileName;
 	if (FAILED(hr = Device->CreatePixelShader(VSBlob->GetBufferPointer(), VSBlob->GetBufferSize(), NULL, &PixShader)))
 	{
 		std::cout << "VS Shader create failed!! \n FileName: " << *FileName << "   MainPoint:" << *MainPoint << std::endl;

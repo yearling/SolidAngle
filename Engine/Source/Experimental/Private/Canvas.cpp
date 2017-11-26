@@ -14,6 +14,14 @@ Y3DCanvas::Y3DCanvas()
 void Y3DCanvas::Init()
 {
 	LineDatas.Empty();
+	TArray<D3D11_INPUT_ELEMENT_DESC> layout =
+	{
+		{ "POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL",    0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT,    0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+	m_VSShader->BindInputLayout(layout);
 	m_VSShader->CreateShader("..\\..\\Source\\Experimental\\Private\\Canvas.hlsl", "VSMain");
 	m_PSShader->CreateShader("..\\..\\Source\\Experimental\\Private\\Canvas.hlsl", "PSColor");
 	CreateRasterStateNonCull(m_rs);

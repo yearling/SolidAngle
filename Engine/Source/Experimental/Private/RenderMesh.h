@@ -28,11 +28,18 @@ public:
 	FSkeletalMeshRenderHelper(YSkeletalMesh* InSkeletalMesh);
 	~FSkeletalMeshRenderHelper();
 	void Init();
-	void Render();
+	void Render(TSharedRef<FRenderInfo> RenderInfo);
 private:
 	YSkeletalMesh* SkeletalMesh;
-	TUniquePtr<YVSShader>		m_VSShader;
-	TUniquePtr<YPSShader>		m_PSShader;
+	TUniquePtr<YVSShader>		VSShader;
+	TUniquePtr<YPSShader>		PSShader;
+	TComPtr<ID3D11Buffer>       VB;
+	TComPtr<ID3D11Buffer>       IB;
+	TArray<FSoftSkinVertex> SkinVertex;
+	FMultiSizeIndexContainerData IndexData;
+	TComPtr<ID3D11BlendState>		m_bs;
+	TComPtr<ID3D11DepthStencilState>m_ds;
+	TComPtr<ID3D11RasterizerState>	m_rs;
 };
 class RenderScene
 {

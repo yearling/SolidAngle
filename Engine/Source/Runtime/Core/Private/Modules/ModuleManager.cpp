@@ -912,7 +912,7 @@ void FModuleManager::GetModuleFilenameFormat(bool bGameModule, FString& OutPrefi
 		ConfigSuffix = bGameModule? TEXT("-DebugGame") : NULL;
 		break;
 	case EBuildConfigurations::Development:
-		ConfigSuffix = NULL;
+		ConfigSuffix = TEXT("_Release");
 		break;
 	case EBuildConfigurations::Test:
 		ConfigSuffix = TEXT("-Test");

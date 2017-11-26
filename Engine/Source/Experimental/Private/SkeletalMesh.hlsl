@@ -13,17 +13,19 @@ cbuffer ChangePerMesh
 	matrix g_world;
 }
 
+
 struct VS_INPUT
 {
-	float3   vPosition		: POSITION;
-	float3    TangentX		: NORMAL0;
-	float3    TangentY		: NORMAL1;
-	float4    TangentZ		: NORMAL2;
-	float2	TexCoords[4]	: ATTRIBUTE5;
-	uint4    BlendIndices	: ATTRIBUTE6;
-	uint4    BlendIndicesExtra	: ATTRIBUTE7;
-	float4	BlendIndices	: ATTRIBUTE8;
-	float4	BlendIndicesExtra	: ATTRIBUTE9;
+	float3    vPosition		: ATTRIBUTE;
+	float3    TangentX		: ATTRIBUTE1;
+	float3    TangentY		: ATTRIBUTE2;
+	float4    TangentZ		: ATTRIBUTE3;
+	float2	  TexCoords[4]	: ATTRIBUTE4;
+	float4    VertexColor	: ATTRIBUTE8;
+	uint4     BlendIndices	: ATTRIBUTE9;
+	uint4     BlendIndicesExtra	: ATTRIBUTE10;
+	float4	  BlendWeights	: ATTRIBUTE11;
+	float4	  BlendWeightsExtra	: ATTRIBUTE12;
 };
 struct VS_OUTPUT
 {
@@ -39,13 +41,15 @@ VS_OUTPUT VSMain(VS_INPUT Input)
 	matrix matWVP = mul(g_world, g_VP);
 	//matrix matWVP = mul(g_VP, g_world);
 	Output.vPosition = mul(float4(Input.vPosition,1.0f), matWVP);
-	Output.vNormal = normalize(mul(Input.vNormal, (float3x3) g_world));
-	Output.vTexcoord = Input.vTexcoord;
-	Output.vColor = Input.vColor;
+	Output.vNormal = normalize(mul(Input.TangentZ.xyz, (float3x3) g_world));
+	Output.vTexcoord = Input.TexCoords[0];
+	Output.vColor = Input.VertexColor;
 	return Output;
 }
 
-float4 PSColor(VS_OUTPUT Input) :SV_Target
+float4 PSMain(VS_OUTPUT Input) :SV_Target
 {
-	return Input.vColor;
+	float NDL = clamp(dot(Input.vNormal,g_lightDir),0.2,1);
+	return float4(NDL, NDL, NDL, 1.0f);
+	//return float4(1,1,1,1);
 }
