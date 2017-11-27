@@ -1690,7 +1690,7 @@ UObject* UnFbx::FFbxImporter::CreateAssetOfClass(UClass* AssetClass, FString Par
 	return nullptr;
 }
 
-void UnFbx::FFbxImporter::SetupAnimationDataFromMesh(YSkeletalMesh* SkeletalMesh, UObject* InParent, TArray<FbxNode*>& NodeArray, UFbxAnimSequenceImportData* TemplateImportData, const FString& Name)
+TArray<UAnimSequence*> UnFbx::FFbxImporter::SetupAnimationDataFromMesh(YSkeletalMesh * SkeletalMesh, UObject* InParent, TArray<FbxNode*>& NodeArray, UFbxAnimSequenceImportData* ImportData, const FString& Filename)
 {
 	YSkeleton* Skeleton = SkeletalMesh->Skeleton;
 
@@ -1707,11 +1707,12 @@ void UnFbx::FFbxImporter::SetupAnimationDataFromMesh(YSkeletalMesh* SkeletalMesh
 			// when importing animation from SkeletalMesh, add new Group Anim, a lot of times they're same name
 			//UPackage * OuterPackage = InParent->GetOutermost();
 			UObject * OuterPackage = nullptr;
-			FString AnimName = (ImportOptions->AnimationName!="")? ImportOptions->AnimationName : Name+TEXT("_Anim");
+			FString AnimName = (ImportOptions->AnimationName!="")? ImportOptions->AnimationName : Filename+TEXT("_Anim");
 			// give animouter as outer
-			ImportAnimations(Skeleton, OuterPackage, SortedLinks, AnimName, TemplateImportData, NodeArray);
+			return ImportAnimations(Skeleton, OuterPackage, SortedLinks, AnimName, ImportData, NodeArray);
 		}
 	}
+	return TArray<UAnimSequence*>();
 }
 
 YSkeletalMesh* UnFbx::FFbxImporter::ReimportSkeletalMesh(YSkeletalMesh* Mesh, UFbxSkeletalMeshImportData* TemplateImportData, uint64 SkeletalMeshFbxUID, TArray<FbxNode*> *OutSkeletalMeshArray)

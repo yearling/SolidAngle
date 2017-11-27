@@ -1002,64 +1002,64 @@ FTransform UAnimSequence::ExtractRootTrackTransform(float Pos, const FBoneContai
 //}
 //#endif
 //
-//void UAnimSequence::GetAnimationPose(FCompactPose& OutPose, FBlendedCurve& OutCurve, const FAnimExtractContext& ExtractionContext) const
-//{
-//	SCOPE_CYCLE_COUNTER(STAT_GetAnimationPose);
-//
-//	// @todo anim: if compressed and baked in the future, we don't have to do this 
-//	if (UseRawDataForPoseExtraction(OutPose.GetBoneContainer()) && IsValidAdditive())
-//	{
-//		if (AdditiveAnimType == AAT_LocalSpaceBase)
-//		{
-//			GetBonePose_Additive(OutPose, OutCurve, ExtractionContext);
-//		}
-//		else if (AdditiveAnimType == AAT_RotationOffsetMeshSpace)
-//		{
-//			GetBonePose_AdditiveMeshRotationOnly(OutPose, OutCurve, ExtractionContext);
-//		}
-//	}
-//	else
-//	{
-//		GetBonePose(OutPose, OutCurve, ExtractionContext);
-//	}
-//
-//	// Check that all bone atoms coming from animation are normalized
-//#if DO_CHECK && WITH_EDITORONLY_DATA
-//	check(OutPose.IsNormalized());
-//#endif
-//
-//#if DEBUG_POSE_OUTPUT
-//	TArray<TArray<int32>> ParentLevel;
-//	ParentLevel.Reserve(64);
-//	for (int32 i = 0; i < 64; ++i)
-//	{
-//		ParentLevel.Add(TArray<int32>());
-//	}
-//	ParentLevel[0].Add(0);
-//
-//	FPlatformMisc::LowLevelOutputDebugString(TEXT("\nGetAnimationPose\n"));
-//	
-//	DebugPrintBone(OutPose, FCompactPoseBoneIndex(0), 0);
-//	for (FCompactPoseBoneIndex BoneIndex(1); BoneIndex < OutPose.GetNumBones(); ++BoneIndex)
-//	{
-//		FCompactPoseBoneIndex ParentIndex = OutPose.GetBoneContainer().GetParentBoneIndex(BoneIndex);
-//		int32 Indent = 0;
-//		for (; Indent < ParentLevel.Num(); ++Indent)
-//		{
-//			if (ParentLevel[Indent].Contains(ParentIndex.GetInt()))
-//			{
-//				break;
-//			}
-//		}
-//		Indent += 1;
-//		check(Indent < 64);
-//		ParentLevel[Indent].Add(BoneIndex.GetInt());
-//
-//		DebugPrintBone(OutPose, BoneIndex, Indent);
-//	}
-//#endif
-//}
-//
+void UAnimSequence::GetAnimationPose(FCompactPose& OutPose, FBlendedCurve& OutCurve, const FAnimExtractContext& ExtractionContext) const
+{
+	//SCOPE_CYCLE_COUNTER(STAT_GetAnimationPose);
+
+	// @todo anim: if compressed and baked in the future, we don't have to do this 
+	if (UseRawDataForPoseExtraction(OutPose.GetBoneContainer()) && IsValidAdditive())
+	{
+		if (AdditiveAnimType == AAT_LocalSpaceBase)
+		{
+			GetBonePose_Additive(OutPose, OutCurve, ExtractionContext);
+		}
+		else if (AdditiveAnimType == AAT_RotationOffsetMeshSpace)
+		{
+			GetBonePose_AdditiveMeshRotationOnly(OutPose, OutCurve, ExtractionContext);
+		}
+	}
+	else
+	{
+		GetBonePose(OutPose, OutCurve, ExtractionContext);
+	}
+
+	// Check that all bone atoms coming from animation are normalized
+#if DO_CHECK && WITH_EDITORONLY_DATA
+	check(OutPose.IsNormalized());
+#endif
+
+#if DEBUG_POSE_OUTPUT
+	TArray<TArray<int32>> ParentLevel;
+	ParentLevel.Reserve(64);
+	for (int32 i = 0; i < 64; ++i)
+	{
+		ParentLevel.Add(TArray<int32>());
+	}
+	ParentLevel[0].Add(0);
+
+	FPlatformMisc::LowLevelOutputDebugString(TEXT("\nGetAnimationPose\n"));
+	
+	DebugPrintBone(OutPose, FCompactPoseBoneIndex(0), 0);
+	for (FCompactPoseBoneIndex BoneIndex(1); BoneIndex < OutPose.GetNumBones(); ++BoneIndex)
+	{
+		FCompactPoseBoneIndex ParentIndex = OutPose.GetBoneContainer().GetParentBoneIndex(BoneIndex);
+		int32 Indent = 0;
+		for (; Indent < ParentLevel.Num(); ++Indent)
+		{
+			if (ParentLevel[Indent].Contains(ParentIndex.GetInt()))
+			{
+				break;
+			}
+		}
+		Indent += 1;
+		check(Indent < 64);
+		ParentLevel[Indent].Add(BoneIndex.GetInt());
+
+		DebugPrintBone(OutPose, BoneIndex, Indent);
+	}
+#endif
+}
+
 void UAnimSequence::ResetRootBoneForRootMotion(FTransform& BoneTransform, const FBoneContainer& RequiredBones, ERootMotionRootLock::Type InRootMotionRootLock) const
 {
 	switch (InRootMotionRootLock)
@@ -1424,31 +1424,31 @@ int32 UAnimSequence::AddNewRawTrack(FName TrackName, FRawAnimSequenceTrack* Trac
 }
 #endif
 
-//void UAnimSequence::GetBonePose_Additive(FCompactPose& OutPose, FBlendedCurve& OutCurve, const FAnimExtractContext& ExtractionContext) const
-//{
-//	if (!IsValidAdditive())
-//	{
-//		OutPose.ResetToAdditiveIdentity();
-//		return;
-//	}
-//
-//	// Extract target pose
-//	GetBonePose(OutPose, OutCurve, ExtractionContext);
-//
-//	// Extract base pose
-//	FCompactPose BasePose;
-//	FBlendedCurve BaseCurve;
-//	
-//	BasePose.SetBoneContainer(&OutPose.GetBoneContainer());
-//	BaseCurve.InitFrom(OutCurve);	
-//
-//	GetAdditiveBasePose(BasePose, BaseCurve, ExtractionContext);
-//
-//	// Create Additive animation
-//	FAnimationRuntime::ConvertPoseToAdditive(OutPose, BasePose);
-//	OutCurve.ConvertToAdditive(BaseCurve);
-//}
-//
+void UAnimSequence::GetBonePose_Additive(FCompactPose& OutPose, FBlendedCurve& OutCurve, const FAnimExtractContext& ExtractionContext) const
+{
+	if (!IsValidAdditive())
+	{
+		OutPose.ResetToAdditiveIdentity();
+		return;
+	}
+
+	// Extract target pose
+	GetBonePose(OutPose, OutCurve, ExtractionContext);
+
+	// Extract base pose
+	FCompactPose BasePose;
+	FBlendedCurve BaseCurve;
+	
+	BasePose.SetBoneContainer(&OutPose.GetBoneContainer());
+	BaseCurve.InitFrom(OutCurve);	
+
+	GetAdditiveBasePose(BasePose, BaseCurve, ExtractionContext);
+
+	// Create Additive animation
+	FAnimationRuntime::ConvertPoseToAdditive(OutPose, BasePose);
+	OutCurve.ConvertToAdditive(BaseCurve);
+}
+
 void UAnimSequence::GetAdditiveBasePose(FCompactPose& OutPose, FBlendedCurve& OutCurve, const FAnimExtractContext& ExtractionContext) const
 {
 	check(RefPoseType == ABPT_RefPose || !RefPoseSeq->IsValidAdditive() || RefPoseSeq->RawAnimationData.Num() > 0); //If this fails there is not enough information to get the base pose
@@ -4070,13 +4070,13 @@ int32 UAnimSequence::InsertTrack(const FName& BoneName)
 //	return false;
 //}
 //
-//void UAnimSequence::ClearBakedTransformData()
-//{
-//	UE_LOG(LogAnimation, Warning, TEXT("[%s] Detected previous edited data is invalidated. Clearing transform curve data and Source Data. This can happen if you do retarget another animation to this. If not, please report back to Epic. "), *GetName());
-//	SourceRawAnimationData.Empty();
-//	//Clear Transform curve data
-//	RawCurveData.DeleteAllCurveData(FRawCurveTracks::TransformType);
-//}
+void UAnimSequence::ClearBakedTransformData()
+{
+	UE_LOG(LogAnimation, Warning, TEXT("[%s] Detected previous edited data is invalidated. Clearing transform curve data and Source Data. This can happen if you do retarget another animation to this. If not, please report back to Epic. "), *GetName());
+	SourceRawAnimationData.Empty();
+	//Clear Transform curve data
+	RawCurveData.DeleteAllCurveData(FRawCurveTracks::TransformType);
+}
 
 void UAnimSequence::BakeTrackCurvesToRawAnimation()
 {
@@ -4231,68 +4231,68 @@ void UAnimSequence::BakeTrackCurvesToRawAnimation()
 	bNeedsRebake = false;
 }
 
-//bool UAnimSequence::DoesNeedRebake() const
-//{
-//	return (bNeedsRebake);
-//}
-//
+bool UAnimSequence::DoesNeedRebake() const
+{
+	return (bNeedsRebake);
+}
+
 bool UAnimSequence::DoesContainTransformCurves() const
 {
 	return (RawCurveData.TransformCurves.Num() > 0);
 }
 
-//void UAnimSequence::AddKeyToSequence(float Time, const FName& BoneName, const FTransform& AdditiveTransform)
-//{
-//	// if source animation exists, but doesn't match with raw animation number, it's possible this has been retargetted
-//	// or for any other reason, track has been modified. Just log here. 
-//	if (SourceRawAnimationData.Num()>0 && SourceRawAnimationData.Num() != RawAnimationData.Num())
-//	{
-//		// currently it contains invalid data to edit
-//		// clear and start over
-//		ClearBakedTransformData();
-//	}
-//
-//	// find if this already exists, then just add curve data only
-//	FName CurveName = BoneName;
-//	YSkeleton * CurrentSkeleton = GetSkeleton();
-//	check (CurrentSkeleton);
-//
-//	FSmartName NewCurveName;
-//	CurrentSkeleton->AddSmartNameAndModify(YSkeleton::AnimTrackCurveMappingName, CurveName, NewCurveName);
-//
-//	// add curve - this won't add duplicate curve
-//	RawCurveData.AddCurveData(NewCurveName, ACF_DriveTrack | ACF_Editable, FRawCurveTracks::TransformType);
-//
-//	//Add this curve
-//	FTransformCurve* TransformCurve = static_cast<FTransformCurve*>(RawCurveData.GetCurveData(NewCurveName.UID, FRawCurveTracks::TransformType));
-//	check(TransformCurve);
-//
-//	TransformCurve->UpdateOrAddKey(AdditiveTransform, Time);
-//
-//	bNeedsRebake = true;
-//}
-//
-//void UAnimSequence::ResetAnimation()
-//{
-//	// clear everything. Making new animation, so need to reset all the things that belong here
-//	NumFrames = 0;
-//	SequenceLength = 0.f;
-//	RawAnimationData.Empty();
-//	SourceRawAnimationData.Empty();
-//	AnimationTrackNames.Empty();
-//	TrackToSkeletonMapTable.Empty();
-//	CompressedTrackOffsets.Empty();
-//	CompressedScaleOffsets.Empty();
-//	CompressedByteStream.Empty();
-//
-//	Notifies.Empty();
-//	AuthoredSyncMarkers.Empty();
-//	UniqueMarkerNames.Empty();
-//	AnimNotifyTracks.Empty();
-//	RawCurveData.Empty();
-//	RateScale = 1.f;
-//}
-//
+void UAnimSequence::AddKeyToSequence(float Time, const FName& BoneName, const FTransform& AdditiveTransform)
+{
+	// if source animation exists, but doesn't match with raw animation number, it's possible this has been retargetted
+	// or for any other reason, track has been modified. Just log here. 
+	if (SourceRawAnimationData.Num()>0 && SourceRawAnimationData.Num() != RawAnimationData.Num())
+	{
+		// currently it contains invalid data to edit
+		// clear and start over
+		ClearBakedTransformData();
+	}
+
+	// find if this already exists, then just add curve data only
+	FName CurveName = BoneName;
+	YSkeleton * CurrentSkeleton = GetSkeleton();
+	check (CurrentSkeleton);
+
+	FSmartName NewCurveName;
+	CurrentSkeleton->AddSmartNameAndModify(YSkeleton::AnimTrackCurveMappingName, CurveName, NewCurveName);
+
+	// add curve - this won't add duplicate curve
+	RawCurveData.AddCurveData(NewCurveName, ACF_DriveTrack | ACF_Editable, FRawCurveTracks::TransformType);
+
+	//Add this curve
+	FTransformCurve* TransformCurve = static_cast<FTransformCurve*>(RawCurveData.GetCurveData(NewCurveName.UID, FRawCurveTracks::TransformType));
+	check(TransformCurve);
+
+	TransformCurve->UpdateOrAddKey(AdditiveTransform, Time);
+
+	bNeedsRebake = true;
+}
+
+void UAnimSequence::ResetAnimation()
+{
+	// clear everything. Making new animation, so need to reset all the things that belong here
+	NumFrames = 0;
+	SequenceLength = 0.f;
+	RawAnimationData.Empty();
+	SourceRawAnimationData.Empty();
+	AnimationTrackNames.Empty();
+	TrackToSkeletonMapTable.Empty();
+	CompressedTrackOffsets.Empty();
+	CompressedScaleOffsets.Empty();
+	CompressedByteStream.Empty();
+
+	Notifies.Empty();
+	AuthoredSyncMarkers.Empty();
+	UniqueMarkerNames.Empty();
+	AnimNotifyTracks.Empty();
+	RawCurveData.Empty();
+	RateScale = 1.f;
+}
+
 void UAnimSequence::RefreshTrackMapFromAnimTrackNames()
 {
 	TrackToSkeletonMapTable.Empty();
@@ -4328,47 +4328,47 @@ void UAnimSequence::RefreshTrackMapFromAnimTrackNames()
 //	}
 //	return NULL;
 //}
-//
-//bool UAnimSequence::CreateAnimation(USkeletalMesh* Mesh)
-//{
-//	// create animation from Mesh's ref pose
-//	if (Mesh)
-//	{
-//		ResetAnimation();
-//
-//		const FReferenceSkeleton& RefSkeleton = Mesh->RefSkeleton;
-//		SequenceLength = MINIMUM_ANIMATION_LENGTH;
-//		NumFrames = 1;
-//
-//		const int32 NumBones = RefSkeleton.GetRawBoneNum();
-//		RawAnimationData.AddZeroed(NumBones);
-//		AnimationTrackNames.AddUninitialized(NumBones);
-//
-//		const TArray<FTransform>& RefBonePose = RefSkeleton.GetRefBonePose();
-//
-//		check (RefBonePose.Num() == NumBones);
-//
-//		for (int32 BoneIndex=0; BoneIndex<NumBones; ++BoneIndex)
-//		{
-//			AnimationTrackNames[BoneIndex] = RefSkeleton.GetBoneName(BoneIndex);
-//
-//			FRawAnimSequenceTrack& RawTrack = RawAnimationData[BoneIndex];
-//
-//			RawTrack.PosKeys.Add(RefBonePose[BoneIndex].GetTranslation());
-//			RawTrack.RotKeys.Add(RefBonePose[BoneIndex].GetRotation());
-//			RawTrack.ScaleKeys.Add(RefBonePose[BoneIndex].GetScale3D());
-//		}
-//
-//		// refresh TrackToskeletonMapIndex
-//		RefreshTrackMapFromAnimTrackNames();
-//
-//		// should recreate track map
-//		PostProcessSequence();
-//		return true;
-//	}
-//
-//	return false;
-//}
+
+bool UAnimSequence::CreateAnimation(YSkeletalMesh* Mesh)
+{
+	// create animation from Mesh's ref pose
+	if (Mesh)
+	{
+		ResetAnimation();
+
+		const FReferenceSkeleton& RefSkeleton = Mesh->RefSkeleton;
+		SequenceLength = MINIMUM_ANIMATION_LENGTH;
+		NumFrames = 1;
+
+		const int32 NumBones = RefSkeleton.GetRawBoneNum();
+		RawAnimationData.AddZeroed(NumBones);
+		AnimationTrackNames.AddUninitialized(NumBones);
+
+		const TArray<FTransform>& RefBonePose = RefSkeleton.GetRefBonePose();
+
+		check (RefBonePose.Num() == NumBones);
+
+		for (int32 BoneIndex=0; BoneIndex<NumBones; ++BoneIndex)
+		{
+			AnimationTrackNames[BoneIndex] = RefSkeleton.GetBoneName(BoneIndex);
+
+			FRawAnimSequenceTrack& RawTrack = RawAnimationData[BoneIndex];
+
+			RawTrack.PosKeys.Add(RefBonePose[BoneIndex].GetTranslation());
+			RawTrack.RotKeys.Add(RefBonePose[BoneIndex].GetRotation());
+			RawTrack.ScaleKeys.Add(RefBonePose[BoneIndex].GetScale3D());
+		}
+
+		// refresh TrackToskeletonMapIndex
+		RefreshTrackMapFromAnimTrackNames();
+
+		// should recreate track map
+		PostProcessSequence();
+		return true;
+	}
+
+	return false;
+}
 //
 //bool UAnimSequence::CreateAnimation(USkeletalMeshComponent* MeshComponent)
 //{
@@ -4412,38 +4412,38 @@ void UAnimSequence::RefreshTrackMapFromAnimTrackNames()
 //	return false;
 //}
 //
-//bool UAnimSequence::CreateAnimation(UAnimSequence* Sequence)
-//{
-//	if(Sequence)
-//	{
-//		ResetAnimation();
-//
-//		SequenceLength = Sequence->SequenceLength;
-//		NumFrames = Sequence->NumFrames;
-//
-//		RawAnimationData = Sequence->RawAnimationData;
-//		AnimationTrackNames = Sequence->AnimationTrackNames;
-//
-//		Notifies = Sequence->Notifies;
-//		AnimNotifyTracks = Sequence->AnimNotifyTracks;
-//		RawCurveData = Sequence->RawCurveData;
-//		// keep the same setting as source
-//		bNeedsRebake = Sequence->DoesNeedRebake();
-//		SourceRawAnimationData = Sequence->SourceRawAnimationData;
-//
-//		// refresh TrackToskeletonMapIndex
-//		RefreshTrackMapFromAnimTrackNames();
-//
-//		// should recreate track map
-//		PostProcessSequence();
-//		return true;
-//	}
-//	
-//	return false;
-//}
-//
+bool UAnimSequence::CreateAnimation(UAnimSequence* Sequence)
+{
+	if(Sequence)
+	{
+		ResetAnimation();
+
+		SequenceLength = Sequence->SequenceLength;
+		NumFrames = Sequence->NumFrames;
+
+		RawAnimationData = Sequence->RawAnimationData;
+		AnimationTrackNames = Sequence->AnimationTrackNames;
+
+		Notifies = Sequence->Notifies;
+		AnimNotifyTracks = Sequence->AnimNotifyTracks;
+		RawCurveData = Sequence->RawCurveData;
+		// keep the same setting as source
+		bNeedsRebake = Sequence->DoesNeedRebake();
+		SourceRawAnimationData = Sequence->SourceRawAnimationData;
+
+		// refresh TrackToskeletonMapIndex
+		RefreshTrackMapFromAnimTrackNames();
+
+		// should recreate track map
+		PostProcessSequence();
+		return true;
+	}
+	
+	return false;
+}
+
 //#endif
-//
+
 //void UAnimSequence::RefreshCacheData()
 //{
 //	SortSyncMarkers();
@@ -4470,17 +4470,17 @@ void UAnimSequence::RefreshTrackMapFromAnimTrackNames()
 //#endif
 //	Super::RefreshCacheData();
 //}
-//
+
 void UAnimSequence::EvaluateCurveData(FBlendedCurve& OutCurve, float CurrentTime, bool bForceUseRawData) const
 {
-	//if (bUseRawDataOnly || bForceUseRawData)
-	//{
-	//	Super::EvaluateCurveData(OutCurve, CurrentTime);
-	//}
-	//else
-	//{
-	//	CompressedCurveData.EvaluateCurveData(OutCurve, CurrentTime);
-	//}
+	if (bUseRawDataOnly || bForceUseRawData)
+	{
+		UAnimSequenceBase::EvaluateCurveData(OutCurve, CurrentTime);
+	}
+	else
+	{
+		CompressedCurveData.EvaluateCurveData(OutCurve, CurrentTime);
+	}
 }
 //
 //void UAnimSequence::RefreshSyncMarkerDataFromAuthored()

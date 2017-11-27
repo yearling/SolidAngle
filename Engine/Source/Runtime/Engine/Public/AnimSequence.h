@@ -609,7 +609,7 @@ public:
 	* @param	OutCurve			[out] Curves to fill
 	* @param	ExtractionContext	Extraction Context (position, looping, root motion, etc.)
 	*/
-	//virtual void GetAnimationPose(FCompactPose& OutPose, FBlendedCurve& OutCurve, const FAnimExtractContext& ExtractionContext) const override;
+	virtual void GetAnimationPose(FCompactPose& OutPose, FBlendedCurve& OutCurve, const FAnimExtractContext& ExtractionContext) const override;
 
 	/**
 	* Get Bone Transform of the animation for the Time given, relative to Parent for all RequiredBones

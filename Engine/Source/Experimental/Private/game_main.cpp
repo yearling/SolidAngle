@@ -23,30 +23,30 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	FCommandLine::Set(lpCmdLine);
 	GLogConsole = FPlatformOutputDevices::GetLogConsole();
-	GLogConsole->Show(true);
+	GLogConsole->Show(false);
 	FPlatformOutputDevices::SetupOutputDevices();
 	FPlatformMemory::Init();
-	FMallocLeakDetection::Get().SetAllocationCollection(true);
+	//FMallocLeakDetection::Get().SetAllocationCollection(true);
 	GLogConsole->Logf__VA(TEXT("log's name %s"), *FPlatformOutputDevices::GetAbsoluteLogFilename());
 
-	FILE *stream;
-	freopen_s(&stream, "CONOUT$", "w", stdout);
-	freopen_s(&stream, "CONIN$", "w+t", stdin);
-	freopen_s(&stream, "CONOUT$", "w+t", stderr);
-	setlocale(LC_ALL, "chs");
-	std::ios::sync_with_stdio();
-	std::cout.clear();//防止在AllocConsole之前调用cout，这样子的话，cout.badbit set会被设置，然后就什么也不能输出了。
-	//见http://stackoverflow.com/questions/18914506/doing-a-stdendl-before-allocconsole-causes-no-display-of-stdcout
-	std::wcout.clear();
+	//FILE *stream;
+	//freopen_s(&stream, "CONOUT$", "w", stdout);
+	//freopen_s(&stream, "CONIN$", "w+t", stdin);
+	//freopen_s(&stream, "CONOUT$", "w+t", stderr);
+	//setlocale(LC_ALL, "chs");
+	//std::ios::sync_with_stdio();
+	//std::cout.clear();//防止在AllocConsole之前调用cout，这样子的话，cout.badbit set会被设置，然后就什么也不能输出了。
+	////见http://stackoverflow.com/questions/18914506/doing-a-stdendl-before-allocconsole-causes-no-display-of-stdcout
+	//std::wcout.clear();
 	int result=0;
 	YYUTApplication* yy_app=GetApplication();
 	yy_app->Initial();
 	//std::wcout << "hello" << std::endl;
 	result=yy_app->Run();
 	yy_app->Exit();
-	FMallocLeakDetection::Get().SetAllocationCollection(false);
-	FMallocLeakDetection::Get().DumpPotentialLeakers();
-	FMallocLeakDetection::Get().DumpOpenCallstacks();
+	//FMallocLeakDetection::Get().SetAllocationCollection(false);
+	//FMallocLeakDetection::Get().DumpPotentialLeakers();
+	//FMallocLeakDetection::Get().DumpOpenCallstacks();
 	if (GLog)
 	{
 		GLog->TearDown();

@@ -486,6 +486,11 @@ private:
 	TSet<FName> ImportedMaterialNames;
 };
 
+struct ImportResultPackage
+{
+	YSkeletalMesh* SkeletalMesh;
+	TArray<UAnimSequence*> AnimSequence;
+};
 /**
  * Main FBX Importer class.
  */
@@ -500,7 +505,7 @@ public:
 	static void DeleteInstance();
 	void MainImport(const FString & FileToImport, EFBXImportType ImportType);
 	// !!FIXME by zyx, just for test
-	YSkeletalMesh* MainInportTest(const FString & FileToImport, EFBXImportType ImportType);
+	ImportResultPackage MainInportTest(const FString & FileToImport, EFBXImportType ImportType);
 	/**
 	 * Detect if the FBX file has skeletal mesh model. If there is deformer definition, then there is skeletal mesh.
 	 * In this function, we don't need to import the scene. But the open process is time-consume if the file is large.
@@ -694,7 +699,7 @@ public:
 	 * @param Filename	Fbx file name
 	 * @param NodeArray node array of FBX meshes
 	 */
-	UAnimSequence* ImportAnimations(YSkeleton* Skeleton, UObject* Outer, TArray<FbxNode*>& SortedLinks, const FString& Name, UFbxAnimSequenceImportData* TemplateImportData, TArray<FbxNode*>& NodeArray);
+	TArray<UAnimSequence*> ImportAnimations(YSkeleton* Skeleton, UObject* Outer, TArray<FbxNode*>& SortedLinks, const FString& Name, UFbxAnimSequenceImportData* TemplateImportData, TArray<FbxNode*>& NodeArray);
 
 	/**
 	 * Get Animation Time Span - duration of the animation
@@ -1471,7 +1476,7 @@ protected:
 
 public:
 	/** Import and set up animation related data from mesh **/
-	void SetupAnimationDataFromMesh(YSkeletalMesh * SkeletalMesh, UObject* InParent, TArray<FbxNode*>& NodeArray, UFbxAnimSequenceImportData* ImportData, const FString& Filename);
+	TArray<UAnimSequence*> SetupAnimationDataFromMesh(YSkeletalMesh * SkeletalMesh, UObject* InParent, TArray<FbxNode*>& NodeArray, UFbxAnimSequenceImportData* ImportData, const FString& Filename);
 
 	/** error message handler */
 	void AddTokenizedErrorMessage(TSharedRef<FTokenizedMessage> Error, FName FbxErrorName );

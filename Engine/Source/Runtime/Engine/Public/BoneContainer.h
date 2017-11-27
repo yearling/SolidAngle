@@ -41,18 +41,20 @@ struct FVirtualBoneCompactPoseData
 **/
 struct ENGINE_API FBoneContainer
 {
-private:
+//private:
 	/** Array of RequiredBonesIndices. In increasing order. */
 	TArray<FBoneIndexType>	BoneIndicesArray;
 	/** Array sized by Current RefPose. true if Bone is contained in RequiredBones array, false otherwise. */
 	TBitArray<>				BoneSwitchArray;
 
 	/** Asset BoneIndicesArray was made for. Typically a SkeletalMesh. */
-	TWeakPtr<UObject>	Asset;
+	//TWeakPtr<UObject>	Asset;
 	/** If Asset is a SkeletalMesh, this will be a pointer to it. Can be NULL if Asset is a USkeleton. */
-	TWeakPtr<YSkeletalMesh> AssetSkeletalMesh;
+	//TWeakPtr<YSkeletalMesh> AssetSkeletalMesh;
+	YSkeletalMesh* AssetSkeletalMesh;
 	/** If Asset is a Skeleton that will be it. If Asset is a SkeletalMesh, that will be its Skeleton. */
-	TWeakPtr<YSkeleton> AssetSkeleton;
+	//TWeakPtr<YSkeleton> AssetSkeleton;
+	YSkeleton* AssetSkeleton;
 
 	/** Pointer to RefSkeleton of Asset. */
 	const FReferenceSkeleton* RefSkeleton;
@@ -101,7 +103,8 @@ public:
 	/** Returns true if FBoneContainer is Valid. Needs an Asset, a RefPoseArray, and a RequiredBonesArray. */
 	const bool IsValid() const
 	{
-		return (Asset.IsValid() && (RefSkeleton != NULL) && (BoneIndicesArray.Num() > 0));
+		//return (Asset.IsValid() && (RefSkeleton != NULL) && (BoneIndicesArray.Num() > 0));
+		return ( (RefSkeleton != NULL) && (BoneIndicesArray.Num() > 0));
 	}
 
 	/** Get Asset this BoneContainer was made for. Typically a SkeletalMesh, but could also be a USkeleton. */
@@ -115,14 +118,16 @@ public:
 	YSkeletalMesh* GetSkeletalMeshAsset() const
 	{
 		//return AssetSkeletalMesh.Get();
-		return nullptr;
+		//return nullptr;
+		return AssetSkeletalMesh;
 	}
 
 	/** Get Skeleton Asset. Could either be the SkeletalMesh's Skeleton, or the Skeleton this BoneContainer was made for. Is non NULL is BoneContainer is valid. */
 	YSkeleton* GetSkeletonAsset() const
 	{
 		//return AssetSkeleton.Get();
-		return nullptr;
+		//return nullptr;
+		return  AssetSkeleton;
 	}
 
 	/** Disable Retargeting for debugging. */

@@ -38,10 +38,14 @@ void YYUTDXManager::Init(HWND hwnd)
 	D3D_FEATURE_LEVEL pCreate_level;
 	int feature_counts = _countof(d3d_feature_levels);
 	assert(feature_counts != 0 && "D3D_FEATURE_LEVEL should not be empty!!");
+	uint32 deviceCreationFlags =0;
+#ifdef _DEBUG
+	deviceCreationFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
 	if (FAILED(hr = D3D11CreateDevice(NULL/*default adapter*/,
 		D3D_DRIVER_TYPE_HARDWARE/*硬件加速*/,
 		NULL/*not software*/,
-		0,/*not flag*/
+		deviceCreationFlags,/*not flag*/
 		d3d_feature_levels,/*feature levels counts*/
 		feature_counts,
 		D3D11_SDK_VERSION,
@@ -59,14 +63,14 @@ void YYUTDXManager::Init(HWND hwnd)
 	m_Device->CheckMultisampleQualityLevels(
 		DXGI_FORMAT_R8G8B8A8_UNORM, 4, &MSAA4x);
 	assert(MSAA4x > 0);
-	cout << "max of MSAA: " << MSAA4x << endl;
+	//cout << "max of MSAA: " << MSAA4x << endl;
 	m_SampeDesc.Count = 1;
 	m_SampeDesc.Quality = 0;
 	m_hWnd = hwnd;
 	RECT rc;
 	::GetClientRect(m_hWnd, &rc);
-	cout << "rc.left: " << rc.left << "	rc.right: " << rc.right << "	width is:" << rc.right - rc.left << endl;
-	cout << "rc.top: " << rc.top << "		rc.bottom: " << rc.bottom << "	height is:" << rc.bottom - rc.top << endl;
+	//cout << "rc.left: " << rc.left << "	rc.right: " << rc.right << "	width is:" << rc.right - rc.left << endl;
+	//cout << "rc.top: " << rc.top << "		rc.bottom: " << rc.bottom << "	height is:" << rc.bottom - rc.top << endl;
 	m_iWidth = rc.right - rc.left;
 	m_iHeight = rc.bottom - rc.top;
 	DXGI_SWAP_CHAIN_DESC chain_des;

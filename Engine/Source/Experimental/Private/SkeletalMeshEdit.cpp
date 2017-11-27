@@ -475,22 +475,22 @@ FbxTimeSpan UnFbx::FFbxImporter::GetAnimationTimeSpan(FbxNode* RootNode, FbxAnim
 /**
 * Add to the animation set, the animations contained within the FBX document, for the given skeleton
 */
-UAnimSequence * UnFbx::FFbxImporter::ImportAnimations(YSkeleton* Skeleton, UObject* Outer, TArray<FbxNode*>& SortedLinks, const FString& Name, UFbxAnimSequenceImportData* TemplateImportData, TArray<FbxNode*>& NodeArray)
+TArray<UAnimSequence*> UnFbx::FFbxImporter::ImportAnimations(YSkeleton* Skeleton, UObject* Outer, TArray<FbxNode*>& SortedLinks, const FString& Name, UFbxAnimSequenceImportData* TemplateImportData, TArray<FbxNode*>& NodeArray)
 {
 	// we need skeleton to create animsequence
 	if (Skeleton == NULL)
 	{
-		return NULL;
+		return TArray<UAnimSequence*>();
 	}
 
 	int32 ValidTakeCount = 0;
 	if (IsValidAnimationData(SortedLinks, NodeArray, ValidTakeCount) == false)
 	{
 		AddTokenizedErrorMessage(FTokenizedMessage::Create(EMessageSeverity::Warning, LOCTEXT("FBXImport_InvalidAnimationData", "This does not contain any valid animation takes.")), FFbxErrors::Animation_InvalidData);
-		return NULL;
+		return TArray<UAnimSequence*>();
 	}
 
-	UAnimSequence* LastCreatedAnim = NULL;
+	TArray<UAnimSequence*> CreatedAnims;
 
 	int32 ResampleRate = DEFAULT_SAMPLERATE;
 	if ( ImportOptions->bResample )
@@ -514,6 +514,8 @@ UAnimSequence * UnFbx::FFbxImporter::ImportAnimations(YSkeleton* Skeleton, UObje
 	}
 
 	int32 AnimStackCount = Scene->GetSrcObjectCount<FbxAnimStack>();
+	// accelerate for debug
+	AnimStackCount = 1;
 	for( int32 AnimStackIndex = 0; AnimStackIndex < AnimStackCount; AnimStackIndex++ )
 	{
 		FbxAnimStack* CurAnimStack = Scene->GetSrcObject<FbxAnimStack>(AnimStackIndex);
@@ -572,10 +574,11 @@ UAnimSequence * UnFbx::FFbxImporter::ImportAnimations(YSkeleton* Skeleton, UObje
 
 		ImportAnimation(Skeleton, DestSeq, Name, SortedLinks, NodeArray, CurAnimStack, ResampleRate, AnimTimeSpan);
 
-		LastCreatedAnim = DestSeq;
+		CreatedAnims.Add(DestSeq);
+		//LastCreatedAnim = DestSeq;
 	}
 
-	return LastCreatedAnim;
+	return CreatedAnims;
 }
 
 int32 GetAnimationCurveRate(FbxAnimCurve* CurrentCurve)

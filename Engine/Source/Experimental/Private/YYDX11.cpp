@@ -148,10 +148,11 @@ void DX11Demo::Initial()
 	ImportOptions->MaterialCurveSuffixes.Add(TEXT("_mat"));
 	ImportOptions->MaterialBasePath = FName("None");
 	//FbxImporter->MainImport(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
-	YSkeletalMesh* pSkeletalMesh =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
-	m_pSceneRender->RegisterSkeletalMesh(pSkeletalMesh);
+	ImportResultPackage ImportResult =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
+
+	m_pSceneRender->RegisterSkeletalMesh(ImportResult.SkeletalMesh,ImportResult.AnimSequence[0]);
+	m_pSceneRender->PlayAnimation(ImportResult.AnimSequence[0]);
 	m_pSceneRender->AllocResource();
-	//m_pRenderMesh->SetFSkeletalMeshImportData(pSkeletalMeshImportData);
 }
 
 

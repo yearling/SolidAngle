@@ -25,12 +25,13 @@ struct FRenderMeshCBuffer
 class FSkeletalMeshRenderHelper
 {
 public:
-	FSkeletalMeshRenderHelper(YSkeletalMesh* InSkeletalMesh);
+	FSkeletalMeshRenderHelper(YSkeletalMesh* InSkeletalMesh, UAnimSequence* InAnimSequence);
 	~FSkeletalMeshRenderHelper();
 	void Init();
 	void Render(TSharedRef<FRenderInfo> RenderInfo);
 private:
 	YSkeletalMesh* SkeletalMesh;
+	UAnimSequence* AnimSequence;
 	TUniquePtr<YVSShader>		VSShader;
 	TUniquePtr<YPSShader>		PSShader;
 	TComPtr<ID3D11Buffer>       VB;
@@ -52,12 +53,12 @@ public:
 	virtual void					AllocResource();
 	void							SetScreenWidthHeigth(int width, int height) { m_ScreenWidth = (float)width; m_ScreenHeight = (float)height; }
 	void							SetMesh(std::unique_ptr<MeshModel> && pMesh) { m_pMesh = std::move(pMesh); }
-	void							RegisterSkeletalMesh(YSkeletalMesh* pSkeletalMesh);
+	void							RegisterSkeletalMesh(YSkeletalMesh* pSkeletalMesh,UAnimSequence* pAnimationSequence);
+	void							PlayAnimation(UAnimSequence* pAnimationSequence) { AnimationSequence = pAnimationSequence; }
 	void							CreateMeshResource();
 	void							DrawGridAndCoordinates();
 	void							DrawSkeletalMeshes();
 	void							DrawSkeleton(YSkeletalMesh* pSkeletalMesh);
-	void							DrawMesh(YSkeletalMesh* pSkeletalMesh);
 private:
 	float							m_ScreenWidth;
 	float							m_ScreenHeight;
@@ -68,5 +69,7 @@ private:
 private:
 	FSkeletalMeshImportData*		m_pSkeletalMeshData;
 	TArray<YSkeletalMesh*>			SkeletalMeshes;
+	TArray<UAnimSequence*>			AnimationSequences;
 	TArray<TUniquePtr<FSkeletalMeshRenderHelper>> SkeletalMeshRenderHeplers;
+	UAnimSequence*					AnimationSequence;
 };

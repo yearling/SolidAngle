@@ -127,4 +127,20 @@
 										|- 	YSkeletalMesh::	CalculateInvRefMatrices(),计算每根骨骼到LocalSpace的逆
 							|- 创建FSkeleton
 								|- FSkeleton::MergeAllBonesToBoneTree,从FSkeletalMesh创建FSeleton
-											
+						|- 导出Animation
+							|- RemoveTransformSettingsFromFbxNode() //把我们之前作用于Fbx根节点的变换去掉，以便导出fbx
+							|- SetupAnimationDataFromMesh()
+								|- 根据Skeleton->ReferenceSkeleton->GetBoneName(0)来找到根骨骼对应的Fbx的节点
+								|- 通过根骨骼的Fbx节点来重建骨骼节点
+								|- ImportAnimations
+									|- IsValidAnimationData() //检查对应的track有没有animation data
+									|- 对于每个Take
+										|- ValidateAnimStack() 
+											|- MergeAllLayerAnimation()
+												|- BakeLayers() // 把一个animationstack中的所有layer bake到 base layer
+												|- 对从根节点开始，递归所有的节点，调用 FbxAnimCurveFilterUnroll 来把180附近的欧拉角变的连续。  Filter to apply continuous rotation values to animation curves. Due to Euler rotation properties, when a rotation angle cross over the 180 degree value, it becomes -179. This filter tries to keep a continuous rotation effectively by producing increasing values, to actually become 181 degrees, etc...
+													|- ApplyUnroll
+														|- 转成轴序为XYZ的欧拉角
+														|- 调用UnrollFilter
+
+							|- ApplyTransformSettingsToFbxNode（）// 恢复去掉的变换，为下面导出morph等使用		

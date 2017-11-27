@@ -2272,7 +2272,7 @@ FbxNode* FFbxImporter::RetrieveObjectFromName(const TCHAR* ObjectName, FbxNode* 
 
 
 
-YSkeletalMesh* UnFbx::FFbxImporter::MainInportTest(const FString & FileToImport, EFBXImportType ImportType)
+UnFbx::ImportResultPackage UnFbx::FFbxImporter::MainInportTest(const FString & FileToImport, EFBXImportType ImportType)
 {
 	FName Name(TEXT("FbxSelfImportMesh"));
 	if (!ImportFromFile(FileToImport, TEXT("FBX"), true))
@@ -2523,7 +2523,7 @@ YSkeletalMesh* UnFbx::FFbxImporter::MainInportTest(const FString & FileToImport,
 							FSkeletalMeshImportData* pSkeletonMeshImportData = new FSkeletalMeshImportData();
 							YSkeletalMesh* NewMesh = ImportSkeletalMesh(nullptr, SkelMeshNodeArray, OutputName, &SkeletalMeshImportData, LODIndex, &bOperationCanceled,nullptr, pSkeletonMeshImportData);
 							//NewObject = NewMesh;
-							return NewMesh;
+							//return NewMesh;
 							if (bOperationCanceled)
 							{
 								// User cancelled, clean up and return
@@ -2542,8 +2542,12 @@ YSkeletalMesh* UnFbx::FFbxImporter::MainInportTest(const FString & FileToImport,
 									UFbxSkeletalMeshImportData SkeletalMeshImportData;
 									UFbxAnimSequenceImportData AnimSequenceImportData;
 									RemoveTransformSettingsFromFbxNode(RootNodeToImport, &SkeletalMeshImportData);
-									SetupAnimationDataFromMesh(NewMesh, nullptr, SkelMeshNodeArray, &AnimSequenceImportData, OutputName.ToString());
+									TArray<UAnimSequence*> AnimSequence = SetupAnimationDataFromMesh(NewMesh, nullptr, SkelMeshNodeArray, &AnimSequenceImportData, OutputName.ToString());
 
+									ImportResultPackage Result;
+									Result.SkeletalMesh = NewMesh;
+									Result.AnimSequence =MoveTemp(AnimSequence);
+									return Result;
 									// Reapply the transforms for the rest of the import
 									ApplyTransformSettingsToFbxNode(RootNodeToImport, &SkeletalMeshImportData);
 									ImportedSuccessfulLodIndex = SuccessfulLodIndex;
@@ -2658,7 +2662,7 @@ YSkeletalMesh* UnFbx::FFbxImporter::MainInportTest(const FString & FileToImport,
 			}
 		}
 	}
-	return nullptr;
+	return ImportResultPackage();
 }
 
 void UnFbx::FFbxImporter::MainImport(const FString & FileToImport, EFBXImportType MeshTypeToImport)

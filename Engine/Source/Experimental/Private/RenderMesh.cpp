@@ -6,6 +6,7 @@
 #include "Canvas.h"
 #include "IShader.h"
 #include "YSkeletalMesh.h"
+#include "BonePose.h"
 
 
 
@@ -112,10 +113,22 @@ void RenderScene::DrawGridAndCoordinates()
 
 void RenderScene::DrawSkeletalMeshes()
 {
-	for (YSkeletalMesh* pMesh : SkeletalMeshes)
+	//for (YSkeletalMesh* pMesh : SkeletalMeshes)
+	for(int32 i=0;i<SkeletalMeshes.Num();++i)
 	{
+		YSkeletalMesh* pMesh = SkeletalMeshes[i];
 		DrawSkeleton(pMesh);
-		
+		UAnimSequence* pAnimSequence = AnimationSequences[i];
+		TArray<FBoneIndexType> RequiredBone = pMesh->GetResourceForRendering()->LODModels[0].RequiredBones;
+		FBoneContainer BoneContainer;
+		BoneContainer.AssetSkeletalMesh = pMesh;
+		BoneContainer.InitializeTo(RequiredBone);
+		FCompactPose CompactPose;
+		FMemMark Mark(FMemStack::Get());
+		CompactPose.SetBoneContainer(&BoneContainer);
+		CompactPose.ResetToRefPose();
+		FBlendedCurve BlendCurve;
+		pAnimSequence->GetAnimationPose(CompactPose, BlendCurve, FAnimExtractContext(0.1, pAnimSequence->bEnableRootMotion));
 	}
 }
 
@@ -157,21 +170,17 @@ void RenderScene::DrawSkeleton(YSkeletalMesh* pSkeletalMesh)
 	}
 }
 
-void RenderScene::DrawMesh(YSkeletalMesh* pSkeletalMesh)
+
+void RenderScene::RegisterSkeletalMesh(YSkeletalMesh* pSkeletalMesh, UAnimSequence* pAnimationSequence)
 {
-	if (!pSkeletalMesh)
-		return;
-	
+	SkeletalMeshes.Add(pSkeletalMesh);
+	AnimationSequences.Add(pAnimationSequence);
+	SkeletalMeshRenderHeplers.Emplace(MakeUnique<FSkeletalMeshRenderHelper>(pSkeletalMesh,pAnimationSequence));
 }
 
-void RenderScene::RegisterSkeletalMesh(YSkeletalMesh* pSkeletalMesh)
-{
-	SkeletalMeshes.AddUnique(pSkeletalMesh);
-	SkeletalMeshRenderHeplers.Emplace(MakeUnique<FSkeletalMeshRenderHelper>(pSkeletalMesh));
-}
-
-FSkeletalMeshRenderHelper::FSkeletalMeshRenderHelper(YSkeletalMesh* InSkeletalMesh)
+FSkeletalMeshRenderHelper::FSkeletalMeshRenderHelper(YSkeletalMesh* InSkeletalMesh, UAnimSequence* InAnimSequence)
 	:SkeletalMesh(InSkeletalMesh)
+	,AnimSequence(InAnimSequence)
 {
 
 }
@@ -222,7 +231,7 @@ void FSkeletalMeshRenderHelper::Init()
 		FStaticLODModel& StaticLodModel = SkeletalMeshResource->LODModels[i];
 		//TArray<FSoftSkinVertex> SkinVertex;
 		StaticLodModel.GetVertices(SkinVertex);
-		CreateVertexBufferDynamic((UINT)SkinVertex.Num() * sizeof(FSoftSkinVertex), &SkinVertex[0], VB);
+		CreateVertexBuffer((UINT)SkinVertex.Num() * sizeof(FSoftSkinVertex), &SkinVertex[0], VB);
 
 		//FMultiSizeIndexContainerData IndexData;
 		StaticLodModel.MultiSizeIndexContainer.GetIndexBufferData(IndexData);
@@ -249,13 +258,13 @@ void FSkeletalMeshRenderHelper::Render(TSharedRef<FRenderInfo> RenderInfo)
 			VSShader->BindResource(TEXT("g_world"), FMatrix::Identity);
 			PSShader->BindResource(TEXT("g_lightDir"), RenderInfo->SceneInfo.MainLightDir.GetSafeNormal());
 			TComPtr<ID3D11DeviceContext> dc = YYUTDXManager::GetInstance().GetD3DDC();
-			{
+			/*{
 				D3D11_MAPPED_SUBRESOURCE VBMapResource;
 				HRESULT hr = dc->Map(VB, 0, D3D11_MAP_WRITE_DISCARD, 0, &VBMapResource);
 				FSoftSkinVertex *pLocalVertexArray = (FSoftSkinVertex *)VBMapResource.pData;
 				memcpy(pLocalVertexArray, &SkinVertex[0], sizeof(FSoftSkinVertex)*SkinVertex.Num());
 				dc->Unmap(VB, 0);
-			}
+			}*/
 
 			float BlendColor[4] = { 1.0f,1.0f,1.0f,1.0f };
 			dc->OMSetBlendState(m_bs, BlendColor, 0xffffffff);

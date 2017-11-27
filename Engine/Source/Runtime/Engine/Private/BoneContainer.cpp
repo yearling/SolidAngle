@@ -9,8 +9,8 @@
 // FBoneContainer
 
 FBoneContainer::FBoneContainer()
-: Asset(NULL)
-, AssetSkeletalMesh(NULL)
+//: Asset(NULL)
+: AssetSkeletalMesh(NULL)
 , AssetSkeleton(NULL)
 , RefSkeleton(NULL)
 , bDisableRetargeting(false)
@@ -56,7 +56,7 @@ void FBoneContainer::Initialize()
 	UObject* AssetObj = nullptr;
 	//YSkeletalMesh* AssetSkeletalMeshObj = Cast<USkeletalMesh>(AssetObj);
 	//YSkeleton* AssetSkeletonObj = nullptr;
-	YSkeletalMesh* AssetSkeletalMeshObj =nullptr;
+	YSkeletalMesh* AssetSkeletalMeshObj = AssetSkeletalMesh;
 	YSkeleton* AssetSkeletonObj = nullptr;
 
 	if (AssetSkeletalMeshObj)
@@ -186,12 +186,12 @@ void FBoneContainer::Initialize()
 
 void FBoneContainer::CacheRequiredAnimCurveUids()
 {
-	if (AssetSkeleton.IsValid())
+	if (AssetSkeleton)
 	{
 		// this is placeholder. In the future, this will change to work with linked joint of curve meta data
 		// anim curve name Uids; For now it adds all of them
-		//const FSmartNameMapping* Mapping = AssetSkeleton->GetSmartNameContainer(USkeleton::AnimCurveMappingName);
-		const FSmartNameMapping * Mapping = nullptr;
+		const FSmartNameMapping* Mapping = AssetSkeleton->GetSmartNameContainer(YSkeleton::AnimCurveMappingName);
+		//const FSmartNameMapping * Mapping = nullptr;
 		if (Mapping != nullptr)
 		{
 			AnimCurveNameUids.Reset();
