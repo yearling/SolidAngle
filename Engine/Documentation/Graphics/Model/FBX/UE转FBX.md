@@ -142,5 +142,27 @@
 													|- ApplyUnroll
 														|- 转成轴序为XYZ的欧拉角
 														|- 调用UnrollFilter
-
+										|- ImportAnimation(Skeleton, DestSeq, Name, SortedLinks, NodeArray, CurAnimStack, ResampleRate, AnimTimeSpan)
+											|- FillAndVerifyBoneNames() 来获取FbxRawBoneNames;
+											|- 	对于FbxRawBoneNames中的每个Name，查找对应FSkeleton::ReferenceSkeleton对应的BoneID
+												|- 对于当前Bone的所有帧 
+													|- 通过对节点计算EvaluateGlobalTransform()来算出当前的相对于夫骨骼的变换
+												|- 保存一个bone所有track到FRawAnimSequenceTrack中
+											|- 保存每根骨骼对应的{BoneName,FRawAnimSequenceTrack}到UAnimSequence中，其中
+												|- UAnimSequence::AnimationTrackNames保存{BoneName};
+												|- UAnimSequence::RawAnimationData保存FRawAnimaSequenceTrack
+												|- UAnimSequence::TrackToSkeletonMapTable保存对应Skeleton中的BoneID
+										|- PostProcessSequence()//压缩
+											|- 1. 除去接近零的数据，直接设为0
+											|- 2. normalize Rotation
+											|- CompressRawAnimData()
+												|- CompressRawAnimSequenceTrack()
+													|- 排除掉空的Track(SRT)
+													|- 判断所有的Track(SRT)是否一致，如果一致，精简为一帧
+											|- OnRawDataChanged() 
+												|-RequestSyncAnimRecompression()
+													|- RequestAnimCompression()
+														|-UAnimSequence::RequestAnimCompression()
+															|- CompressionScheme = FAnimationUtils::GetDefaultAnimationCompressionAlgorithm();
+															|- FDerivedDataAnimationCompression* AnimCompressor = new FDerivedDataAnimationCompression(this, CompressContext, bDoCompressionInPlace);
 							|- ApplyTransformSettingsToFbxNode（）// 恢复去掉的变换，为下面导出morph等使用		

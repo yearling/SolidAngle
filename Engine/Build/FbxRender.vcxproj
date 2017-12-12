@@ -199,7 +199,6 @@
     <ClInclude Include="..\Source\Experimental\Public\FbxSkeletalMeshImportData.h" />
     <ClInclude Include="..\Source\Experimental\Public\GPUSkinPublicDefs.h" />
     <ClInclude Include="..\Source\Experimental\Public\IShader.h" />
-    <ClInclude Include="..\Source\Experimental\Public\ReferenceSkeleton.h" />
     <ClInclude Include="..\Source\Experimental\Public\SkelImport.h" />
     <ClInclude Include="..\Source\Experimental\Public\SkinWeightVertexBuffer.h" />
     <ClInclude Include="..\Source\Experimental\Public\StaticMeshResources.h" />

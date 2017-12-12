@@ -155,9 +155,6 @@
     <ClInclude Include="..\Source\Experimental\Public\SkelImport.h">
       <Filter>Fbx</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\ReferenceSkeleton.h">
-      <Filter>Fbx</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\Texture.h">
       <Filter>Fbx</Filter>
     </ClInclude>

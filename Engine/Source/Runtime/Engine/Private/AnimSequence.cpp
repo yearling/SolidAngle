@@ -2059,7 +2059,8 @@ void UAnimSequence::RequestAnimCompression(bool bAsyncCompression, TSharedPtr<FA
 	TGuardValue<bool> CompressGuard(bCompressionInProgress, true);
 
 	//const bool bDoCompressionInPlace = FUObjectThreadContext::Get().IsRoutingPostLoad;
-	const bool bDoCompressionInPlace = false;
+	//const bool bDoCompressionInPlace = false;
+	const bool bDoCompressionInPlace = true;
 
 	if (bAsyncCompression)
 	{
@@ -2521,18 +2522,18 @@ void UAnimSequence::BakeOutAdditiveIntoRawData()
 	CompressRawAnimData();
 }
 //
-//void UAnimSequence::FlagDependentAnimationsAsRawDataOnly() const
-//{
-//	for (TObjectIterator<UAnimSequence> Iter; Iter; ++Iter)
-//	{
-//		UAnimSequence* Seq = *Iter;
-//		if (Seq->RefPoseSeq == this)
-//		{
-//			Seq->bUseRawDataOnly = true;
-//		}
-//	}
-//}
-//
+void UAnimSequence::FlagDependentAnimationsAsRawDataOnly() const
+{
+	/*for (TObjectIterator<UAnimSequence> Iter; Iter; ++Iter)
+	{
+		UAnimSequence* Seq = *Iter;
+		if (Seq->RefPoseSeq == this)
+		{
+			Seq->bUseRawDataOnly = true;
+		}
+	}*/
+}
+
 //#endif
 //
 void UAnimSequence::RecycleAnimSequence()
@@ -2699,26 +2700,26 @@ void UAnimSequence::RecycleAnimSequence()
 //
 //	return true;
 //}
-//
-//bool UAnimSequence::IsValidAdditive() const		
-//{ 
-//	if (AdditiveAnimType != AAT_None)
-//	{
-//		switch (RefPoseType)
-//		{
-//		case ABPT_RefPose:
-//			return true;
-//		case ABPT_AnimScaled:
-//			return (RefPoseSeq != NULL);
-//		case ABPT_AnimFrame:
-//			return (RefPoseSeq != NULL) && (RefFrameIndex >= 0);
-//		default:
-//			return false;
-//		}
-//	}
-//
-//	return false;
-//}
+
+bool UAnimSequence::IsValidAdditive() const		
+{ 
+	if (AdditiveAnimType != AAT_None)
+	{
+		switch (RefPoseType)
+		{
+		case ABPT_RefPose:
+			return true;
+		case ABPT_AnimScaled:
+			return (RefPoseSeq != NULL);
+		case ABPT_AnimFrame:
+			return (RefPoseSeq != NULL) && (RefFrameIndex >= 0);
+		default:
+			return false;
+		}
+	}
+
+	return false;
+}
 //
 //#if WITH_EDITOR
 //

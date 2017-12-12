@@ -564,7 +564,7 @@ public:
 	//~ End UObject Interface
 
 	//~ Begin UAnimationAsset Interface
-	//virtual bool IsValidAdditive() const override;
+	virtual bool IsValidAdditive() const override;
 	//virtual TArray<FName>* GetUniqueMarkerNames() { return &UniqueMarkerNames; }
 #if WITH_EDITOR
 	//virtual bool GetAllAnimationSequencesReferred(TArray<UAnimationAsset*>& AnimationAssets, bool bRecursive = true) override;
@@ -580,13 +580,13 @@ public:
 	//virtual EAdditiveAnimationType GetAdditiveAnimType() const override { return AdditiveAnimType; }
 	virtual void EvaluateCurveData(FBlendedCurve& OutCurve, float CurrentTime, bool bForceUseRawData=false) const;
 #if WITH_EDITOR
-	//virtual void MarkRawDataAsModified(bool bForceNewRawDatGuid = true) 
-	//{
-	//	//Super::MarkRawDataAsModified();
-	//	bUseRawDataOnly = true;
-	//	RawDataGuid = bForceNewRawDatGuid ? FGuid::NewGuid() : GenerateGuidFromRawData();
-	//	FlagDependentAnimationsAsRawDataOnly();
-	//}
+	virtual void MarkRawDataAsModified(bool bForceNewRawDatGuid = true) 
+	{
+		//Super::MarkRawDataAsModified();
+		bUseRawDataOnly = true;
+		RawDataGuid = bForceNewRawDatGuid ? FGuid::NewGuid() : GenerateGuidFromRawData();
+		FlagDependentAnimationsAsRawDataOnly();
+	}
 #endif
 	//~ End UAnimSequenceBase Interface
 

@@ -3339,7 +3339,7 @@ void YSkeletalMesh::CalculateRequiredBones(class FStaticLODModel& LODModel, cons
 	for (int32 i = 0; i < RequiredBoneCount; i++)
 	{
 		// Make sure it's not in BonesToRemove
-		// @Todo change this to one TArray
+		// @Todo changeRequiredBones this to one TArray
 		if (!BonesToRemove || BonesToRemove->Find(i) == NULL)
 		{
 			LODModel.RequiredBones.Add(i);
