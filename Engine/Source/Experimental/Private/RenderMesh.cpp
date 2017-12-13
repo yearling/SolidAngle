@@ -113,7 +113,7 @@ void RenderScene::DrawGridAndCoordinates()
 
 void RenderScene::DrawSkeletalMeshes(TSharedRef<FRenderInfo> RenderInfo)
 {
-	//for (YSkeletalMesh* pMesh : SkeletalMeshes)
+	
 	for(int32 i=0;i<SkeletalMeshes.Num();++i)
 	{
 		YSkeletalMesh* pMesh = SkeletalMeshes[i];
@@ -277,39 +277,49 @@ void FSkeletalMeshRenderHelper::SetPos(FCompactPose& CompacePose)
 	TArray<FMatrix> CurrentBonePos;
 	CurrentBonePos.Empty(SkeletalMesh->RefSkeleton.GetRawBoneNum());
 	const TArray<FMeshBoneInfo> &MeshBoneInfos = SkeletalMesh->RefSkeleton.GetRefBoneInfo();
-	for (int32 i = 0; i < SkeletalMesh->RefSkeleton.GetRawBoneNum(); ++i)
+	for (int32 LodIndex = 0; LodIndex < SkeletalMesh->RefSkeleton.GetRawBoneNum(); ++LodIndex)
 	{
-		if (i==0)
+		if (LodIndex==0)
 		{
-			check(MeshBoneInfos[i].ParentIndex == INDEX_NONE);
-			CurrentBonePos.Add(CurrentPose[i].ToMatrixWithScale());
+			check(MeshBoneInfos[LodIndex].ParentIndex == INDEX_NONE);
+			CurrentBonePos.Add(CurrentPose[LodIndex].ToMatrixWithScale());
 		}
 		else
 		{
-			int32 ParentIndex = MeshBoneInfos[i].ParentIndex;
-			CurrentBonePos.Add(CurrentPose[i].ToMatrixWithScale()*CurrentBonePos[ParentIndex]);
+			int32 ParentIndex = MeshBoneInfos[LodIndex].ParentIndex;
+			CurrentBonePos.Add(CurrentPose[LodIndex].ToMatrixWithScale()*CurrentBonePos[ParentIndex]);
 		}
 	}
 
 	FSkeletalMeshResource* SkeletalMeshResource = SkeletalMesh->GetResourceForRendering();
-	for (int32 i = 0; i < SkeletalMeshResource->LODModels.Num(); ++i)
+	TArray<FSoftSkinVertex> TransformSkinVertex;
+	for (int32 LodIndex = 0; LodIndex < SkeletalMeshResource->LODModels.Num(); ++LodIndex)
+	
 	{
-		FStaticLODModel& StaticLodModel = SkeletalMeshResource->LODModels[i];
-		TArray<FSoftSkinVertex> TransformSkinVertex;
-		TransformSkinVertex.Empty(SkinVertex.Num());
-		for (int32 i = 0; i < SkinVertex.Num(); ++i)
+		FStaticLODModel& StaticLodModel = SkeletalMeshResource->LODModels[LodIndex];
+		TransformSkinVertex = SkinVertex;
+		const float normalUint8 = 1 / 255.0f;
+		for (int32 VertexIndex = 0; VertexIndex < SkinVertex.Num(); ++VertexIndex)
 		{
-			FSoftSkinVertex &RefPoseVertex= SkinVertex[i];
+			FSoftSkinVertex &RefPoseVertex= SkinVertex[VertexIndex];
 			FMatrix TranformMatrix;
 			memset(&TranformMatrix, 0, sizeof(FMatrix));
-			for (int32 i = 0; i < 8; ++i)
+			for (int32 WeightIndex = 0; WeightIndex< 8; ++WeightIndex)
 			{
-				TranformMatrix += CurrentBonePos[RefPoseVertex.InfluenceBones[i]] * RefPoseVertex.InfluenceWeights[i];
+				TranformMatrix += SkeletalMesh->RefBasesInvMatrix[RefPoseVertex.InfluenceBones[WeightIndex]] * CurrentBonePos[RefPoseVertex.InfluenceBones[WeightIndex]] * (((float)RefPoseVertex.InfluenceWeights[WeightIndex])* normalUint8);
 			}
-			FSoftSkinVertex TransVertex = RefPoseVertex;
-			FVector FinalPos = Tran RefPoseVertex.Position
+			TransformSkinVertex[VertexIndex].Position = FTransform(TranformMatrix).TransformPosition(RefPoseVertex.Position);
+			//TransformSkinVertex[VertexIndex].Position = TranformMatrix.TransformPosition(RefPoseVertex.Position);
 		}
+
 	}
+	D3D11_MAPPED_SUBRESOURCE MapResource;
+	TComPtr<ID3D11DeviceContext> DeviceContext = YYUTDXManager::GetInstance().GetD3DDC();
+	HRESULT hr = DeviceContext->Map(VB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MapResource);
+	{
+		memcpy(MapResource.pData, &TransformSkinVertex[0], sizeof(FSoftSkinVertex)* TransformSkinVertex.Num());
+	}
+	DeviceContext->Unmap(VB, 0);
 }
 
 void FSkeletalMeshRenderHelper::Render(TSharedRef<FRenderInfo> RenderInfo)
@@ -319,8 +329,10 @@ void FSkeletalMeshRenderHelper::Render(TSharedRef<FRenderInfo> RenderInfo)
 	for (int32 i = 0; i < SkeletalMeshResource->LODModels.Num(); ++i)
 	{
 		FStaticLODModel& StaticLodModel = SkeletalMeshResource->LODModels[i];
-		for (FSkelMeshSection& MeshSection : StaticLodModel.Sections)
+		//for (FSkelMeshSection& MeshSection : StaticLodModel.Sections)
+		for(int32 MeshSectionID = 0;MeshSectionID<StaticLodModel.Sections.Num();++MeshSectionID)
 		{
+			FSkelMeshSection& MeshSection = StaticLodModel.Sections[MeshSectionID];
 			if (MeshSection.NumTriangles == 0)
 				return;
 			VSShader->BindResource(TEXT("g_view"), RenderInfo->RenderCameraInfo.View);
