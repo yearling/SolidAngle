@@ -165,4 +165,6 @@
 														|-UAnimSequence::RequestAnimCompression()
 															|- CompressionScheme = FAnimationUtils::GetDefaultAnimationCompressionAlgorithm();
 															|- FDerivedDataAnimationCompression* AnimCompressor = new FDerivedDataAnimationCompression(this, CompressContext, bDoCompressionInPlace);
+															|- AnimCompressor->Build(OutData);
+																|- FAnimationUtils::CompressAnimSequence(AnimToOperateOn, *CompressContext.Get());
 							|- ApplyTransformSettingsToFbxNode（）// 恢复去掉的变换，为下面导出morph等使用		

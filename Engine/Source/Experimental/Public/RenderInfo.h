@@ -19,4 +19,6 @@ struct FRenderInfo
 {
 	FRenderCameraInfo RenderCameraInfo;
 	FRenderSceneInfo  SceneInfo;
+	double			  CurrentTime;
+	double			  TickTime;
 };

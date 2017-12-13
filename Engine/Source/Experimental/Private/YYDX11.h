@@ -17,7 +17,7 @@ public:
 	virtual void					Exit(void);
 	virtual void					GameMain(void);
 	virtual void					Update(float ElapseTime);
-	virtual void					Render();
+	virtual void					Render(float ElapseTime);
 	void							OnResize(void);
 	void							OnMinimize(void);
 protected:

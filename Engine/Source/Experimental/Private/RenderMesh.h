@@ -5,6 +5,7 @@
 #include "RenderInfo.h"
 #include <memory>
 #include "SkelImport.h"
+#include "BonePose.h"
 struct RenderMeshCBuffer
 {
 	XMMATRIX  m_matView;
@@ -28,6 +29,7 @@ public:
 	FSkeletalMeshRenderHelper(YSkeletalMesh* InSkeletalMesh, UAnimSequence* InAnimSequence);
 	~FSkeletalMeshRenderHelper();
 	void Init();
+	void SetPos(FCompactPose& CompacePose);
 	void Render(TSharedRef<FRenderInfo> RenderInfo);
 private:
 	YSkeletalMesh* SkeletalMesh;
@@ -41,6 +43,7 @@ private:
 	TComPtr<ID3D11BlendState>		m_bs;
 	TComPtr<ID3D11DepthStencilState>m_ds;
 	TComPtr<ID3D11RasterizerState>	m_rs;
+	TArray<FTransform>			CurrentPose;
 };
 class RenderScene
 {
@@ -57,8 +60,9 @@ public:
 	void							PlayAnimation(UAnimSequence* pAnimationSequence) { AnimationSequence = pAnimationSequence; }
 	void							CreateMeshResource();
 	void							DrawGridAndCoordinates();
-	void							DrawSkeletalMeshes();
+	void							DrawSkeletalMeshes(TSharedRef<FRenderInfo> RenderInfo);
 	void							DrawSkeleton(YSkeletalMesh* pSkeletalMesh);
+	void							DrawSkeleton2(YSkeletalMesh* pSkeletalMesh,const FCompactPose& CompacePose);
 private:
 	float							m_ScreenWidth;
 	float							m_ScreenHeight;

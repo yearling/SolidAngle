@@ -64,7 +64,7 @@ void RenderScene::Render(TSharedRef<FRenderInfo> RenderInfo)
 	{
 		//m_pMesh->Render(RenderInfo);
 	}
-	DrawSkeletalMeshes();
+	DrawSkeletalMeshes(RenderInfo);
 	DrawGridAndCoordinates();
 	for (TUniquePtr<FSkeletalMeshRenderHelper>& RenderHelper : SkeletalMeshRenderHeplers)
 	{
@@ -111,13 +111,13 @@ void RenderScene::DrawGridAndCoordinates()
 	GCanvas->DrawLine(FVector(0, 0, 0), FVector(0, 0, 5), FLinearColor(0, 0, 1, 1));
 }
 
-void RenderScene::DrawSkeletalMeshes()
+void RenderScene::DrawSkeletalMeshes(TSharedRef<FRenderInfo> RenderInfo)
 {
 	//for (YSkeletalMesh* pMesh : SkeletalMeshes)
 	for(int32 i=0;i<SkeletalMeshes.Num();++i)
 	{
 		YSkeletalMesh* pMesh = SkeletalMeshes[i];
-		DrawSkeleton(pMesh);
+		//DrawSkeleton(pMesh);
 		UAnimSequence* pAnimSequence = AnimationSequences[i];
 		TArray<FBoneIndexType> RequiredBone = pMesh->GetResourceForRendering()->LODModels[0].RequiredBones;
 		FBoneContainer BoneContainer;
@@ -128,11 +128,16 @@ void RenderScene::DrawSkeletalMeshes()
 		CompactPose.SetBoneContainer(&BoneContainer);
 		CompactPose.ResetToRefPose();
 		FBlendedCurve BlendCurve;
-		pAnimSequence->GetAnimationPose(CompactPose, BlendCurve, FAnimExtractContext(0.1, pAnimSequence->bEnableRootMotion));
+		static float AnimationTime = 0.0;
+		AnimationTime += RenderInfo->TickTime;
+		AnimationTime = FMath::Fmod(AnimationTime, pAnimSequence->GetPlayLength());
+		pAnimSequence->GetAnimationPose(CompactPose, BlendCurve, FAnimExtractContext(AnimationTime, pAnimSequence->bEnableRootMotion));
+		DrawSkeleton2(pMesh,CompactPose);
+		SkeletalMeshRenderHeplers[i]->SetPos(CompactPose);
 	}
 }
-
-FMatrix GetParentMatrix(const TArray<FMeshBoneInfo>& MeshBoneInfoes, const TArray<FTransform> & BonePoses, int32 iIndex)
+template<class TAlloc>
+FMatrix GetParentMatrix(const TArray<FMeshBoneInfo>& MeshBoneInfoes, const TArray<FTransform,TAlloc> & BonePoses, int32 iIndex)
 {
 	FMatrix ParentMatrix = FMatrix::Identity;
 	int32 ParentBoneIndex = MeshBoneInfoes[iIndex].ParentIndex;
@@ -170,6 +175,32 @@ void RenderScene::DrawSkeleton(YSkeletalMesh* pSkeletalMesh)
 	}
 }
 
+
+void RenderScene::DrawSkeleton2(YSkeletalMesh* pSkeletalMesh,const FCompactPose& CompacePose)
+{
+	if (!pSkeletalMesh)
+		return;
+	const FReferenceSkeleton& Skeleton = pSkeletalMesh->RefSkeleton;
+	const TArray<FMeshBoneInfo> &MeshBoneInfos = Skeleton.GetRefBoneInfo();
+	const TArray<FTransform,FAnimStackAllocator> & BonePoses = CompacePose.GetBones();
+	for (int32 i = 0; i < MeshBoneInfos.Num(); ++i)
+	{
+		const FMeshBoneInfo & BoneInfo = MeshBoneInfos[i];
+		if (BoneInfo.ParentIndex != INDEX_NONE)
+		{
+			FMatrix ParentMatrix = GetParentMatrix(MeshBoneInfos, BonePoses, i);
+			FMatrix LocalMatrix = BonePoses[i].ToMatrixWithScale()*ParentMatrix;
+			FVector ParentPos = ParentMatrix.TransformPosition(FVector(0, 0, 0));
+			FVector LocalPos = LocalMatrix.TransformPosition(FVector(0, 0, 0));
+			GCanvas->DrawLine(ParentPos, LocalPos, FLinearColor(1, 1, 0, 1));
+			GCanvas->DrawBall(LocalPos, FLinearColor(1, 0, 0, 1));
+		}
+		else
+		{
+			GCanvas->DrawBall(BonePoses[i].GetTranslation(), FLinearColor(0, 1, 0, 1));
+		}
+	}
+}
 
 void RenderScene::RegisterSkeletalMesh(YSkeletalMesh* pSkeletalMesh, UAnimSequence* pAnimationSequence)
 {
@@ -231,12 +262,53 @@ void FSkeletalMeshRenderHelper::Init()
 		FStaticLODModel& StaticLodModel = SkeletalMeshResource->LODModels[i];
 		//TArray<FSoftSkinVertex> SkinVertex;
 		StaticLodModel.GetVertices(SkinVertex);
-		CreateVertexBuffer((UINT)SkinVertex.Num() * sizeof(FSoftSkinVertex), &SkinVertex[0], VB);
+		CreateVertexBufferDynamic((UINT)SkinVertex.Num() * sizeof(FSoftSkinVertex), &SkinVertex[0], VB);
 
 		//FMultiSizeIndexContainerData IndexData;
 		StaticLodModel.MultiSizeIndexContainer.GetIndexBufferData(IndexData);
 		CreateIndexBuffer((UINT)IndexData.Indices.Num() * sizeof(uint32), &IndexData.Indices[0], IB);
 
+	}
+}
+
+void FSkeletalMeshRenderHelper::SetPos(FCompactPose& CompacePose)
+{
+	CompacePose.CopyBonesTo(CurrentPose);
+	TArray<FMatrix> CurrentBonePos;
+	CurrentBonePos.Empty(SkeletalMesh->RefSkeleton.GetRawBoneNum());
+	const TArray<FMeshBoneInfo> &MeshBoneInfos = SkeletalMesh->RefSkeleton.GetRefBoneInfo();
+	for (int32 i = 0; i < SkeletalMesh->RefSkeleton.GetRawBoneNum(); ++i)
+	{
+		if (i==0)
+		{
+			check(MeshBoneInfos[i].ParentIndex == INDEX_NONE);
+			CurrentBonePos.Add(CurrentPose[i].ToMatrixWithScale());
+		}
+		else
+		{
+			int32 ParentIndex = MeshBoneInfos[i].ParentIndex;
+			CurrentBonePos.Add(CurrentPose[i].ToMatrixWithScale()*CurrentBonePos[ParentIndex]);
+		}
+	}
+
+	FSkeletalMeshResource* SkeletalMeshResource = SkeletalMesh->GetResourceForRendering();
+	for (int32 i = 0; i < SkeletalMeshResource->LODModels.Num(); ++i)
+	{
+		FStaticLODModel& StaticLodModel = SkeletalMeshResource->LODModels[i];
+		TArray<FSoftSkinVertex> TransformSkinVertex;
+		TransformSkinVertex.Empty(SkinVertex.Num());
+		for (int32 i = 0; i < SkinVertex.Num(); ++i)
+		{
+			FSoftSkinVertex &RefPoseVertex= SkinVertex[i];
+			FMatrix TranformMatrix;
+			memset(&TranformMatrix, 0, sizeof(FMatrix));
+			for (int32 i = 0; i < 8; ++i)
+			{
+				TranformMatrix += CurrentBonePos[RefPoseVertex.InfluenceBones[i]] * RefPoseVertex.InfluenceWeights[i];
+			}
+			FSoftSkinVertex TransVertex = RefPoseVertex;
+			FVector FinalPos = Tran RefPoseVertex.Position
+		}
 	}
 }
 

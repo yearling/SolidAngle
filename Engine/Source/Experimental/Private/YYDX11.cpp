@@ -391,7 +391,7 @@ int DX11Demo::Run()
 		elapseTime = FPlatformTime::Seconds() - m_LastFrameTime;
 		m_LastFrameTime = FPlatformTime::Seconds();
 		Update(elapseTime);
-		Render();
+		Render(elapseTime);
 	}
 	return static_cast<int>(msg.wParam);
 }
@@ -460,7 +460,7 @@ void DX11Demo::Update(float ElapseTime)
 	//m_pShadow->Update(ElapseTime);
 }
 
-void DX11Demo::Render()
+void DX11Demo::Render(float ElapseTime)
 {
 	TSharedRef<FRenderInfo> pRenderInfo = MakeShared<FRenderInfo>();
 	pRenderInfo->RenderCameraInfo.View = m_pCamera->GetView();
@@ -468,6 +468,7 @@ void DX11Demo::Render()
 	pRenderInfo->RenderCameraInfo.ViewProjection = m_pCamera->GetViewProject();
 	pRenderInfo->RenderCameraInfo.ViewProjectionInv = m_pCamera->GetViewProjInv();
 	pRenderInfo->SceneInfo.MainLightDir = m_pLightCamera->GetDir();
+	pRenderInfo->TickTime = ElapseTime;
 	YYUTDXManager::GetInstance().AddRenderEvent([this, pRenderInfo]() {m_pSceneRender->Render(pRenderInfo); });
 	YYUTDXManager::GetInstance().Render();
 }
