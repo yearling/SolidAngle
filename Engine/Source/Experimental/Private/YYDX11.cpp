@@ -81,7 +81,8 @@ void DX11Demo::Initial()
 	FFbxImporter* FbxImporter = UnFbx::FFbxImporter::GetInstance();
 	FFbxLoggerSetter Logger(FbxImporter);
 	FString FileToImport = TEXT("D:/wolf/Wolf_UDK.fbx");
-	int32 ImportType = FbxImporter->GetImportType(FileToImport);
+	//int32 ImportType = FbxImporter->GetImportType(FileToImport);
+	int32 ImportType = 1;
 	if (ImportType == -1)
 	{
 		FbxImporter->AddTokenizedErrorMessage(FTokenizedMessage::Create(EMessageSeverity::Warning, LOCTEXT("NoImportTypeDetected", "Can't detect import type. No mesh is found or animation track.")), FFbxErrors::Generic_CannotDetectImportType);
