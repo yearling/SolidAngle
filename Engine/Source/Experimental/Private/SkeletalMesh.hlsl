@@ -16,7 +16,7 @@ cbuffer ChangePerMesh
 
 struct VS_INPUT
 {
-	float3    vPosition		: ATTRIBUTE;
+	float4    vPosition		: ATTRIBUTE;
 	float3    TangentX		: ATTRIBUTE1;
 	float3    TangentY		: ATTRIBUTE2;
 	float4    TangentZ		: ATTRIBUTE3;
@@ -38,10 +38,10 @@ struct VS_OUTPUT
 VS_OUTPUT VSMain(VS_INPUT Input)
 {
 	VS_OUTPUT Output;
-	matrix matWVP = mul(g_world, g_VP);
-	//matrix matWVP = mul(g_VP, g_world);
-	Output.vPosition = mul(float4(Input.vPosition,1.0f), matWVP);
+	Output.vPosition = mul(Input.vPosition, g_VP);
 	Output.vNormal = normalize(mul(Input.TangentZ.xyz, (float3x3) g_world));
+	//Output.vPosition = mul( matWVP, float4(Input.vPosition, 1.0f));
+	//Output.vNormal = normalize(mul((float3x3) g_world, Input.TangentZ.xyz));
 	Output.vTexcoord = Input.TexCoords[0];
 	Output.vColor = Input.VertexColor;
 	return Output;

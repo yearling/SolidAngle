@@ -2088,9 +2088,9 @@ FbxNode* FFbxImporter::FindFBXMeshesByBone(const FName& RootBoneName, bool bExpa
 			FbxNode* FbxNode = Scene->GetNode(NodeIndex);
 
 			FCStringAnsi::Strcpy(TmpBoneName, 64, MakeName(FbxNode->GetName()));
-			check(0); // !!FixMe to compile through
-			//FString FbxBoneName = FSkeletalMeshImportData::FixupBoneName(TmpBoneName);
-			FString FbxBoneName = TmpBoneName;
+			//check(0); // !!FixMe to compile through
+			FString FbxBoneName = FSkeletalMeshImportData::FixupBoneName(TmpBoneName);
+			//FString FbxBoneName = TmpBoneName;
 			if (FbxBoneName == BoneNameString)
 			{
 				SkeletonRoot = FbxNode;

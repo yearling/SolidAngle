@@ -81,6 +81,9 @@ void DX11Demo::Initial()
 	FFbxImporter* FbxImporter = UnFbx::FFbxImporter::GetInstance();
 	FFbxLoggerSetter Logger(FbxImporter);
 	FString FileToImport = TEXT("D:/wolf/Wolf_UDK.fbx");
+	//FString FileToImport = TEXT("D:/wolf/humanoid.fbx");
+	//FString FileToImport = TEXT("G:\\测试用FBX文件\\身体分多个模型的骨骼动画\\out.fbx");
+	//FString FileToImport = TEXT("G:\\测试用FBX文件\\挂载武器的骨骼动画2\\attack.FBX");
 	//int32 ImportType = FbxImporter->GetImportType(FileToImport);
 	int32 ImportType = 1;
 	if (ImportType == -1)
