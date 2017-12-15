@@ -47,28 +47,6 @@ void DX11Demo::Initial()
 	m_pSceneRender = std::make_shared<RenderScene>();
 	m_pSceneRender->SetScreenWidthHeigth(default_x, default_y);
 
-	m_pFbxReader = std::make_unique<class FBXReader>();
-	m_pFbxReader->InitialFBXSDK();
-	std::unique_ptr<MeshModel> Mesh;
-	//std::string ImportFileName = "..\\..\\media\\box\\lotsof.FBX";
-	//FString ImportFileName = TEXT("media\\human\\humanoid.fbx") ;
-	FString ImportFileName = TEXT("FbxSkin.fbx") ;
-	//std::string ImportFileName = "..\\..\\media\\human\\AnimatedCharacter.fbx";
-	//std::string ImportFileName = "..\\..\\media\\human\\twobone.fbx";
-	//std::string ImportFileName = "..\\..\\media\\human\\twobonefirstcluseroffset10.fbx";
-	if (m_pFbxReader->ImportFile(ImportFileName))
-	{
-		Mesh = std::move(m_pFbxReader->GenerateModelMesh());
-	}
-	if (Mesh)
-	{
-		m_pSceneRender->SetMesh(std::move(Mesh));
-	}
-	else
-	{
-		assert(0);
-		return;
-	}
 	m_pSceneRender->Init();
 	// Draw ground grid
 	GCanvas->Init();

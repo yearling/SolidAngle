@@ -190,5 +190,8 @@
     <None Include="..\Source\Experimental\Private\SkeletalMesh.hlsl">
       <Filter>Shader</Filter>
     </None>
+    <None Include="..\Source\Experimental\Private\GPUSkin.hlsl">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -47,5 +47,4 @@ private:
 private:
 	//std::shared_ptr<DepthPeeling::ObjPrimitive> m_spObj;
 	std::shared_ptr<RenderScene>		m_pSceneRender;
-	std::unique_ptr<class FBXReader>	m_pFbxReader;
 };

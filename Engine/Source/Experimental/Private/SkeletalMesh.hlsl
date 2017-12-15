@@ -5,7 +5,6 @@ cbuffer ChangePerFrame
 	matrix g_VP;
 	matrix g_InvVP;
 	float3 g_lightDir;
-	float  g_pad;
 }
 
 cbuffer ChangePerMesh 
@@ -38,12 +37,15 @@ struct VS_OUTPUT
 VS_OUTPUT VSMain(VS_INPUT Input)
 {
 	VS_OUTPUT Output;
-	Output.vPosition = mul(Input.vPosition, g_VP);
+	matrix matWVP = mul(g_world, g_VP);
+	//matrix matWVP = mul(g_VP, g_world);
+	float4 MatMajor0 = g_VP[0];
+	Output.vPosition = mul(Input.vPosition, matWVP);
 	Output.vNormal = normalize(mul(Input.TangentZ.xyz, (float3x3) g_world));
 	//Output.vPosition = mul( matWVP, float4(Input.vPosition, 1.0f));
 	//Output.vNormal = normalize(mul((float3x3) g_world, Input.TangentZ.xyz));
 	Output.vTexcoord = Input.TexCoords[0];
-	Output.vColor = Input.VertexColor;
+	Output.vColor = Input.VertexColor + MatMajor0;
 	return Output;
 }
 

@@ -55,7 +55,6 @@ public:
 	virtual void					Render(TSharedRef<FRenderInfo> RenderInfo);
 	virtual void					AllocResource();
 	void							SetScreenWidthHeigth(int width, int height) { m_ScreenWidth = (float)width; m_ScreenHeight = (float)height; }
-	void							SetMesh(std::unique_ptr<MeshModel> && pMesh) { m_pMesh = std::move(pMesh); }
 	void							RegisterSkeletalMesh(YSkeletalMesh* pSkeletalMesh,UAnimSequence* pAnimationSequence);
 	void							PlayAnimation(UAnimSequence* pAnimationSequence) { AnimationSequence = pAnimationSequence; }
 	void							CreateMeshResource();
@@ -66,7 +65,6 @@ public:
 private:
 	float							m_ScreenWidth;
 	float							m_ScreenHeight;
-	std::unique_ptr<MeshModel>     m_pMesh;
 	TComPtr<ID3D11RasterizerState>	m_rs;
 	TComPtr<ID3D11BlendState>		m_bs;
 	TComPtr<ID3D11DepthStencilState>m_ds;

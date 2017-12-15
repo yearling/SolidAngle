@@ -72,6 +72,7 @@ bool ComplieShaderFromFile(const FString &ShaderFileName,
 #if defined( DEBUG ) ||  defined( _DEBUG)
 	shader_flags |= D3DCOMPILE_DEBUG;
 	shader_flags |= D3D10_SHADER_SKIP_OPTIMIZATION;
+	shader_flags |= D3DCOMPILE_PREFER_FLOW_CONTROL;
 #endif
 	TComPtr<ID3DBlob> err_bob;
 	TArray<D3D_SHADER_MACRO> D3DShaderMacro;
@@ -391,7 +392,7 @@ bool IShaderBind::ReflectShader(TComPtr<ID3DBlob> Blob)
 				}
 				else
 				{
-					assert(0 && "shader reflection not support matrix type");
+					//assert(0 && "shader reflection not support matrix type");
 				}
 			}
 			else if (TypeDesc.Class == D3D_SHADER_VARIABLE_CLASS::D3D_SVC_MATRIX_ROWS)
