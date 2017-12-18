@@ -6,6 +6,8 @@
 #include <memory>
 #include "SkelImport.h"
 #include "BonePose.h"
+#include "YYUTFont.h"
+
 struct RenderMeshCBuffer
 {
 	XMMATRIX  m_matView;
@@ -74,4 +76,5 @@ private:
 	TArray<UAnimSequence*>			AnimationSequences;
 	TArray<TUniquePtr<FSkeletalMeshRenderHelper>> SkeletalMeshRenderHeplers;
 	UAnimSequence*					AnimationSequence;
+	TUniquePtr<YYUTFont>			ScreenLayout;
 };

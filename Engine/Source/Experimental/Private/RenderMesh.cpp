@@ -14,7 +14,7 @@
 RenderScene::RenderScene(void):
 	m_pSkeletalMeshData(nullptr)
 {
-
+	ScreenLayout = MakeUnique<YYUTFont>();
 }
 
 RenderScene::~RenderScene(void)
@@ -29,6 +29,7 @@ void RenderScene::Init()
 	CreateBlendState(m_bs, true, "m_BlendOpaque");
 	CreateDepthStencileState(m_ds, true, "m_DS_Test");
 	CreateMeshResource();
+	ScreenLayout->Init();
 }
 
 void RenderScene::Update(float ElpaseTime)
@@ -62,6 +63,8 @@ void RenderScene::Render(TSharedRef<FRenderInfo> RenderInfo)
 		RenderHelper->Render(RenderInfo);
 	}
 	GCanvas->Render(RenderInfo);
+	ScreenLayout->BeginText();
+	ScreenLayout->DrawTextLine(FString::Printf(TEXT("FPS: %f"), RenderInfo->FPS));
 }
 
 

@@ -12,16 +12,16 @@ void YYUTFont::Init()
 	m_RTV = YYUTDXManager::GetInstance().GetRenderTargetView();
 	m_BackBufferWidth = YYUTDXManager::GetInstance().GetBackBufferWidth();
 	m_BackBufferHeight = YYUTDXManager::GetInstance().GetBackBufferHeight();
-	CreateSRVFromeFile( "..\\..\\media\\Font.dds", m_FontSRV, "Font::m_FontSRV");
-	CreateVertexShader("..\\..\\src\\UI.hlsl", "VSmain", m_VS, "Font::m_FontVS");
-	CreatePixelShader("..\\..\\src\\UI.hlsl", "PSmain", m_PS, "Font::m_PS");
+	CreateSRVFromeFile( TEXT("media\\Font.dds"), m_FontSRV, TEXT("Font::m_FontSRV"));
+	CreateVertexShader(TEXT("..\\..\\Source\\Experimental\\Private\\UI.hlsl"), TEXT("VSmain"), m_VS, TEXT("Font::m_FontVS"));
+	CreatePixelShader(TEXT("..\\..\\Source\\Experimental\\Private\\UI.hlsl"), TEXT("PSmain"), m_PS, TEXT("Font::m_PS"));
 	const D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
 		{ "POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "COLOR",     0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT,       0, 28, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
-	CreateInputLayout("..\\..\\src\\UI.hlsl", "VSmain", layout, _countof(layout), m_FontInputLayout, "Font::m_FontInputLayOut");
+	CreateInputLayout(TEXT("..\\..\\Source\\Experimental\\Private\\UI.hlsl"), TEXT("VSmain"), layout, _countof(layout), m_FontInputLayout, "Font::m_FontInputLayOut");
 	CreateBlendState(m_BlendStateAlpha, false, "Font::BlendState");
 	CreateDepthStencileState(m_DS, false, "Font::DS State");
 	CreateSamplerLinearWrap( m_SampleWrap, "Font::SamepleWrap");
@@ -49,6 +49,8 @@ void YYUTFont::EndFont()
 void YYUTFont::BeginText()
 {
 	m_vecFontVertices.Empty();
+	m_pt.x = 0.0f;
+	m_pt.y = 0.0f;
 }
 
 void YYUTFont::DrawText(const FString strText,

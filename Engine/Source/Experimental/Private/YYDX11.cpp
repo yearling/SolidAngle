@@ -374,6 +374,16 @@ int DX11Demo::Run()
 		m_LastFrameTime = FPlatformTime::Seconds();
 		Update(elapseTime);
 		Render(elapseTime);
+		if (FPlatformTime::Seconds() - m_LastSecond > 1.0)
+		{
+			m_FPS =( (double)m_LastSecondFrames) / (FPlatformTime::Seconds() - m_LastSecond);
+			m_LastSecond = FPlatformTime::Seconds();
+			m_LastSecondFrames = 0;
+		}
+		else
+		{
+			m_LastSecondFrames++;
+		}
 	}
 	return static_cast<int>(msg.wParam);
 }
@@ -386,6 +396,11 @@ void DX11Demo::OnResize()
 void DX11Demo::OnMinimize(void)
 {
 	//YYUTDXManager::GetInstance().PauseAll(true);
+}
+
+float DX11Demo::GetFPS() const
+{
+	return m_FPS;
 }
 
 DX11Demo::DX11Demo() :
@@ -402,7 +417,9 @@ DX11Demo::DX11Demo() :
 	m_pCamera(nullptr),
 	m_pLightCamera(nullptr),
 	m_bInit(false),
-	m_bShowColorLayer(false)
+	m_bShowColorLayer(false),
+	m_FPS(0.0f),
+	m_LastSecondFrames(0)
 {
 	//m_vVelocity = XMFLOAT3(0, 0, 0);
 }
@@ -451,6 +468,7 @@ void DX11Demo::Render(float ElapseTime)
 	pRenderInfo->RenderCameraInfo.ViewProjectionInv = m_pCamera->GetViewProjInv();
 	pRenderInfo->SceneInfo.MainLightDir = m_pLightCamera->GetDir();
 	pRenderInfo->TickTime = ElapseTime;
+	pRenderInfo->FPS = GetFPS();
 	YYUTDXManager::GetInstance().AddRenderEvent([this, pRenderInfo]() {m_pSceneRender->Render(pRenderInfo); });
 	YYUTDXManager::GetInstance().Render();
 }

@@ -20,6 +20,7 @@ public:
 	virtual void					Render(float ElapseTime);
 	void							OnResize(void);
 	void							OnMinimize(void);
+	float							GetFPS() const;
 protected:
 	virtual LRESULT					MyProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) throw();
 	bool							m_bResize;
@@ -44,6 +45,9 @@ private:
 	bool                            m_bShowColorLayer;
 	int64							m_LastTickCycles;
 	double							m_LastFrameTime;
+	float							m_FPS;
+	int32							m_LastSecondFrames;
+	double							m_LastSecond;
 private:
 	//std::shared_ptr<DepthPeeling::ObjPrimitive> m_spObj;
 	std::shared_ptr<RenderScene>		m_pSceneRender;

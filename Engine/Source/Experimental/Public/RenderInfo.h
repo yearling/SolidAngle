@@ -21,4 +21,5 @@ struct FRenderInfo
 	FRenderSceneInfo  SceneInfo;
 	double			  CurrentTime;
 	double			  TickTime;
+	float			  FPS;
 };
