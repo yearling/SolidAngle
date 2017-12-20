@@ -175,7 +175,6 @@ void RenderScene::DrawSkeleton2(YSkeletalMesh* pSkeletalMesh,const FCompactPose&
 	if (!pSkeletalMesh)
 		return;
 	const FReferenceSkeleton& Skeleton = pSkeletalMesh->RefSkeleton;
-	//const TArray<FMeshBoneInfo> &MeshBoneInfos = Skeleton.GetRefBoneInfo();
 	const TArray<FTransform,FAnimStackAllocator> & BonePoses = CompacePose.GetBones();
 
 	TArray<FMatrix> CurrentBonePos;
@@ -226,6 +225,7 @@ void RenderScene::RegisterSkeletalMesh(YSkeletalMesh* pSkeletalMesh, UAnimSequen
 FSkeletalMeshRenderHelper::FSkeletalMeshRenderHelper(YSkeletalMesh* InSkeletalMesh, UAnimSequence* InAnimSequence)
 	:SkeletalMesh(InSkeletalMesh)
 	,AnimSequence(InAnimSequence)
+	, IsCPURender(false)
 {
 
 }
@@ -264,6 +264,12 @@ void FSkeletalMeshRenderHelper::Init()
 	{
 		check(0);
 	}
+	VSShaderGPU = MakeUnique<YVSShader>();
+	VSShaderGPU->BindInputLayout(Layout);
+	if (!VSShaderGPU->CreateShader(TEXT("..\\..\\Source\\Experimental\\Private\\GPUSKin.hlsl"), TEXT("VSMain")))
+	{
+		check(0);
+	}
 	PSShader = MakeUnique<YPSShader>();
 	if (!PSShader->CreateShader(TEXT("..\\..\\Source\\Experimental\\Private\\SkeletalMesh.hlsl"), TEXT("PSMain")))
 	{
@@ -282,6 +288,16 @@ void FSkeletalMeshRenderHelper::Init()
 		StaticLodModel.MultiSizeIndexContainer.GetIndexBufferData(IndexData);
 		CreateIndexBuffer((UINT)IndexData.Indices.Num() * sizeof(uint32), &IndexData.Indices[0], IB);
 
+		CreateVertexBuffer((UINT)SkinVertex.Num() * sizeof(FSoftSkinVertex), &SkinVertex[0], VBGPU);
+		TArray<TComPtr<ID3D11Buffer>> BoneMatrix;
+		
+		for (int32 SectionIndex = 0; SectionIndex < StaticLodModel.Sections.Num(); ++SectionIndex)
+		{
+			TComPtr<ID3D11Buffer> BoneMatrixBuffer;
+			CreateStruturedBufferSRV<true, false, true, false>(StaticLodModel.Sections[SectionIndex].BoneMap.Num() * 4, 16, BoneMatrixBuffer);
+			BoneMatrix.Emplace(std::move(BoneMatrixBuffer));
+		}
+		FinalBoneMatrix.Emplace(BoneMatrix);
 	}
 }
 
@@ -307,44 +323,75 @@ void FSkeletalMeshRenderHelper::SetPos(FCompactPose& CompacePose)
 	}
 
 	FSkeletalMeshResource* SkeletalMeshResource = SkeletalMesh->GetResourceForRendering();
-	TArray<FSoftSkinVertex> TransformSkinVertex;
-	for (int32 LodIndex = 0; LodIndex < SkeletalMeshResource->LODModels.Num(); ++LodIndex)
-	
+	if (IsCPURender)
 	{
-		FStaticLODModel& StaticLodModel = SkeletalMeshResource->LODModels[LodIndex];
-		TransformSkinVertex.Empty(SkinVertex.Num());
-		const float normalUint8 = 1 / 255.0f;
-		for (int32 SectionIndex = 0; SectionIndex <StaticLodModel.Sections.Num(); SectionIndex++)
+		TArray<FSoftSkinVertex> TransformSkinVertex;
+		for (int32 LodIndex = 0; LodIndex < SkeletalMeshResource->LODModels.Num(); ++LodIndex)
 		{
-			FSkelMeshSection& Section = StaticLodModel.Sections[SectionIndex];
-			for (int32 i = 0; i < Section.SoftVertices.Num(); i++)
+			FStaticLODModel& StaticLodModel = SkeletalMeshResource->LODModels[LodIndex];
+			TransformSkinVertex.Empty(SkinVertex.Num());
+			const float normalUint8 = 1 / 255.0f;
+			for (int32 SectionIndex = 0; SectionIndex < StaticLodModel.Sections.Num(); SectionIndex++)
 			{
-				FSoftSkinVertex* SoftVert = &Section.SoftVertices[i];
-				FSoftSkinVertex DesVertex = *SoftVert;
-				FMatrix TranformMatrix;
-				memset(&TranformMatrix, 0, sizeof(FMatrix));
-				for (int32 j = 0; j < MAX_TOTAL_INFLUENCES; j++)
+				FSkelMeshSection& Section = StaticLodModel.Sections[SectionIndex];
+				for (int32 i = 0; i < Section.SoftVertices.Num(); i++)
 				{
+					FSoftSkinVertex* SoftVert = &Section.SoftVertices[i];
+					FSoftSkinVertex DesVertex = *SoftVert;
+					FMatrix TranformMatrix;
+					memset(&TranformMatrix, 0, sizeof(FMatrix));
+					for (int32 j = 0; j < MAX_TOTAL_INFLUENCES; j++)
+					{
 						if (SoftVert->InfluenceWeights[j] > 0)
 						{
-							
+
 							int32 BoneIndex = Section.BoneMap[SoftVert->InfluenceBones[j]];
 							TranformMatrix += SkeletalMesh->RefBasesInvMatrix[BoneIndex] * CurrentBonePose[BoneIndex] * (((float)SoftVert->InfluenceWeights[j])* normalUint8);
 						}
+					}
+					DesVertex.Position = FTransform(TranformMatrix).TransformPosition(SoftVert->Position);
+					TransformSkinVertex.Emplace(DesVertex);
 				}
-				DesVertex.Position = FTransform(TranformMatrix).TransformPosition(SoftVert->Position);
-				TransformSkinVertex.Emplace(DesVertex);
+			}
+			check(TransformSkinVertex.Num() == SkinVertex.Num());
+		}
+		D3D11_MAPPED_SUBRESOURCE MapResource;
+		TComPtr<ID3D11DeviceContext> DeviceContext = YYUTDXManager::GetInstance().GetD3DDC();
+		HRESULT hr = DeviceContext->Map(VB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MapResource);
+		{
+			memcpy(MapResource.pData, &TransformSkinVertex[0], sizeof(FSoftSkinVertex)* TransformSkinVertex.Num());
+		}
+		DeviceContext->Unmap(VB, 0);
+	}
+	else
+	{
+		for (int32 LodIndex = 0; LodIndex < SkeletalMeshResource->LODModels.Num(); ++LodIndex)
+		{
+			FStaticLODModel& StaticLodModel = SkeletalMeshResource->LODModels[LodIndex];
+			for (int32 SectionIndex = 0; SectionIndex < StaticLodModel.Sections.Num(); SectionIndex++)
+			{
+				FSkelMeshSection &CurrentSection = StaticLodModel.Sections[SectionIndex];
+				TArray<FMatrix> RefToLocalMatrix;
+				RefToLocalMatrix.AddUninitialized(CurrentSection.BoneMap.Num());
+				for (int32 iSectionBone = 0; iSectionBone < CurrentSection.BoneMap.Num(); ++iSectionBone)
+				{
+					int32 BoneIndex = CurrentSection.BoneMap[iSectionBone];
+					//RefToLocalMatrix[iSectionBone] = (SkeletalMesh->RefBasesInvMatrix[BoneIndex] * CurrentBonePose[BoneIndex]).GetTransposed();
+					FMatrix TestMatrix(FPlane(0, 1, 2, 3), FPlane(4, 5, 6, 7), FPlane(8, 9, 10, 11), FPlane(12, 13, 14, 15));
+					RefToLocalMatrix[iSectionBone] = TestMatrix;
+				}
+				TComPtr<ID3D11Buffer>& CurrentBoneBuffer = FinalBoneMatrix[LodIndex][SectionIndex];
+				TComPtr<ID3D11DeviceContext> DeviceContext = YYUTDXManager::GetInstance().GetD3DDC();
+				D3D11_MAPPED_SUBRESOURCE MapResource;
+				HRESULT hr = DeviceContext->Map(CurrentBoneBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MapResource);
+				if(SUCCEEDED(hr))
+				{
+					memcpy(MapResource.pData, &RefToLocalMatrix[0], sizeof(FMatrix)* RefToLocalMatrix.Num());
+				}
+				DeviceContext->Unmap(CurrentBoneBuffer, 0);
 			}
 		}
-		check(TransformSkinVertex.Num() == SkinVertex.Num());
 	}
-	D3D11_MAPPED_SUBRESOURCE MapResource;
-	TComPtr<ID3D11DeviceContext> DeviceContext = YYUTDXManager::GetInstance().GetD3DDC();
-	HRESULT hr = DeviceContext->Map(VB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MapResource);
-	{
-		memcpy(MapResource.pData, &TransformSkinVertex[0], sizeof(FSoftSkinVertex)* TransformSkinVertex.Num());
-	}
-	DeviceContext->Unmap(VB, 0);
 }
 
 void FSkeletalMeshRenderHelper::Render(TSharedRef<FRenderInfo> RenderInfo)
@@ -354,35 +401,42 @@ void FSkeletalMeshRenderHelper::Render(TSharedRef<FRenderInfo> RenderInfo)
 	for (int32 i = 0; i < SkeletalMeshResource->LODModels.Num(); ++i)
 	{
 		FStaticLODModel& StaticLodModel = SkeletalMeshResource->LODModels[i];
-		//for (FSkelMeshSection& MeshSection : StaticLodModel.Sections)
 		for(int32 MeshSectionID = 0;MeshSectionID<StaticLodModel.Sections.Num();++MeshSectionID)
 		{
 			FSkelMeshSection& MeshSection = StaticLodModel.Sections[MeshSectionID];
 			if (MeshSection.NumTriangles == 0)
 				return;
-			VSShader->BindResource(TEXT("g_view"), RenderInfo->RenderCameraInfo.View);
-			VSShader->BindResource(TEXT("g_projection"), RenderInfo->RenderCameraInfo.Projection);
-			VSShader->BindResource(TEXT("g_VP"), RenderInfo->RenderCameraInfo.ViewProjection);
-			VSShader->BindResource(TEXT("g_InvVP"), RenderInfo->RenderCameraInfo.ViewProjectionInv);
-			VSShader->BindResource(TEXT("g_world"), FMatrix::Identity);
-			PSShader->BindResource(TEXT("g_lightDir"), RenderInfo->SceneInfo.MainLightDir.GetSafeNormal());
+			
 			TComPtr<ID3D11DeviceContext> dc = YYUTDXManager::GetInstance().GetD3DDC();
-			/*{
-				D3D11_MAPPED_SUBRESOURCE VBMapResource;
-				HRESULT hr = dc->Map(VB, 0, D3D11_MAP_WRITE_DISCARD, 0, &VBMapResource);
-				FSoftSkinVertex *pLocalVertexArray = (FSoftSkinVertex *)VBMapResource.pData;
-				memcpy(pLocalVertexArray, &SkinVertex[0], sizeof(FSoftSkinVertex)*SkinVertex.Num());
-				dc->Unmap(VB, 0);
-			}*/
-
 			float BlendColor[4] = { 1.0f,1.0f,1.0f,1.0f };
 			dc->OMSetBlendState(m_bs, BlendColor, 0xffffffff);
 			dc->RSSetState(m_rs);
 			dc->OMSetDepthStencilState(m_ds, 0);
 			UINT strid = sizeof(FSoftSkinVertex);
 			UINT offset = 0;
-			dc->IASetVertexBuffers(0, 1, &(VB), &strid, &offset);
+			if (IsCPURender)
+			{
+				VSShader->BindResource(TEXT("g_view"), RenderInfo->RenderCameraInfo.View);
+				VSShader->BindResource(TEXT("g_projection"), RenderInfo->RenderCameraInfo.Projection);
+				VSShader->BindResource(TEXT("g_VP"), RenderInfo->RenderCameraInfo.ViewProjection);
+				VSShader->BindResource(TEXT("g_InvVP"), RenderInfo->RenderCameraInfo.ViewProjectionInv);
+				VSShader->BindResource(TEXT("g_world"), FMatrix::Identity);
+				VSShader->Update();
+				dc->IASetVertexBuffers(0, 1, &(VB), &strid, &offset);
+			}
+			else
+			{
+				VSShaderGPU->BindResource(TEXT("g_view"), RenderInfo->RenderCameraInfo.View);
+				VSShaderGPU->BindResource(TEXT("g_projection"), RenderInfo->RenderCameraInfo.Projection);
+				VSShaderGPU->BindResource(TEXT("g_VP"), RenderInfo->RenderCameraInfo.ViewProjection);
+				VSShaderGPU->BindResource(TEXT("g_InvVP"), RenderInfo->RenderCameraInfo.ViewProjectionInv);
+				VSShaderGPU->BindResource(TEXT("g_world"), FMatrix::Identity);
+				VSShaderGPU->Update();
+				dc->IASetVertexBuffers(0, 1, &(VBGPU), &strid, &offset);
+			}
 			
+			PSShader->BindResource(TEXT("g_lightDir"), RenderInfo->SceneInfo.MainLightDir.GetSafeNormal());
+			PSShader->Update();
 		/*	if(IndexData.DataTypeSize == sizeof(uint16))
 			{ 
 				dc->IASetIndexBuffer(IB, DXGI_FORMAT_R16_UINT, 0);
@@ -392,8 +446,7 @@ void FSkeletalMeshRenderHelper::Render(TSharedRef<FRenderInfo> RenderInfo)
 				dc->IASetIndexBuffer(IB, DXGI_FORMAT_R32_UINT, 0);
 			}
 			dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-			VSShader->Update();
-			PSShader->Update();
+			
 			dc->DrawIndexed(MeshSection.NumTriangles*3, MeshSection.BaseIndex, 0);
 		}
 	}

@@ -1,6 +1,22 @@
 #pragma once
 #include "YYUT.h"
 #include <string>
+#include "YYUTDXManager.h"
+
+template<typename T>
+inline void AddAlias(T & buffer, const FString& alias)
+{
+	HRESULT hr = S_OK;
+	if (!alias.IsEmpty())
+	{
+		TCHAR *p = new TCHAR[alias.Len() + 1];
+		memcpy_s(p, alias.Len(), *alias, alias.Len());
+		p[alias.Len()] = TEXT('\0');
+		if (FAILED(hr = buffer->SetPrivateData(WKPDID_D3DDebugObjectName, (UINT)alias.Len() + 1, p)))
+		{
+		}
+	}
+}
 
 //D3DX11CompileShaderFromeFile的Asicall封装，ColomMajor是用来指定编译后的shader是行主还是列主，列主对矩阵乘法友好，manul建议用
 void ComplieShaderFromFile(const FString &file_name,
@@ -84,10 +100,9 @@ void CreateStruturedBufferSRV_UAV(int numbers,
 	TComPtr<ID3D11Buffer> & buffer,
 	const FString& alias = "");
 
-void CreateStruturedBufferSRV(int numbers,
-	int perSize,
-	TComPtr<ID3D11Buffer> & buffer,
-	const FString& alias = "");
+template<bool CPUWrite,bool GPUWrite,bool CreateSRV,bool CreateUAV>
+void CreateStruturedBufferSRV(int numbers, int perSize, TComPtr<ID3D11Buffer> & buffer, const FString& alias = "");
+
 
 void CreateStruturedBufferUAV(int numbers,
 	int perSize,

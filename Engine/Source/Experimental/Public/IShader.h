@@ -31,6 +31,7 @@ public:
 	virtual bool				BindResource(const FString &ParaName, FPlane V4)=0;
 	virtual bool				BindResource(const FString &ParaName, const FMatrix  &Mat)=0;
 	virtual bool				BindResource(const FString &ParaName, const FMatrix  *Mat,int Num)=0;
+	virtual bool				BindSRV(const FString& ParamName, TComPtr<ID3D11ShaderResourceView> SRV) = 0;
 	virtual bool				Update()=0;
 	virtual bool				BindInputLayout(TArray<D3D11_INPUT_ELEMENT_DESC> lInputLayoutDesc)=0;
 protected:
@@ -107,6 +108,13 @@ struct YConstantBuffer
 	TComPtr<ID3D11Buffer>		D3DBuffer;
 };
 
+struct YShaderResourceView
+{
+	FString						Name;
+	uint32						BindPoint;
+	uint32						BindCount;
+	TComPtr<ID3D11ShaderResourceView> SRV;
+};
 
 class IShaderBind :public IShader
 {
@@ -126,6 +134,7 @@ public:
 	virtual bool				BindResource(const FString &ParaName, FPlane V4) override;
 	virtual bool				BindResource(const FString &ParaName, const FMatrix  &Mat) override;
 	virtual bool				BindResource(const FString &ParaName, const FMatrix  *Mat, int Num) override;
+	virtual bool				BindSRV(const FString& ParamName, TComPtr<ID3D11ShaderResourceView> SRV) override;
 	virtual bool				BindInputLayout(TArray<D3D11_INPUT_ELEMENT_DESC> lInputLayoutDesc) override { return true; };
 protected:
 	bool						ReflectShader(TComPtr<ID3DBlob> Blob);
@@ -151,6 +160,8 @@ protected:
 	bool						BindResourceHelp(const FString &ParaName,ScalarIndex& Index);
 	void AddScalarVariable(const FString &Name, uint32 InConstantBufferIndex, uint32 InValueIndex, ScalarIndex::eType InType);
 	TMap<FString, ScalarIndex> MapShaderVariableToScalar;
+	TMap<FString, ScalarIndex> MapSRVToScalar;
+	TMap<FString, TUniquePtr<YShaderResourceView>> MapSRV;
 };
 
 class YVSShader :public IShaderBind

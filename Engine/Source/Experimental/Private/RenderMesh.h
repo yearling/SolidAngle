@@ -37,15 +37,19 @@ private:
 	YSkeletalMesh* SkeletalMesh;
 	UAnimSequence* AnimSequence;
 	TUniquePtr<YVSShader>		VSShader;
+	TUniquePtr<YVSShader>		VSShaderGPU;
 	TUniquePtr<YPSShader>		PSShader;
 	TComPtr<ID3D11Buffer>       VB;
 	TComPtr<ID3D11Buffer>       IB;
+	TComPtr<ID3D11Buffer>       VBGPU;
 	TArray<FSoftSkinVertex> SkinVertex;
 	FMultiSizeIndexContainerData IndexData;
 	TComPtr<ID3D11BlendState>		m_bs;
 	TComPtr<ID3D11DepthStencilState>m_ds;
 	TComPtr<ID3D11RasterizerState>	m_rs;
 	TArray<FTransform>			CurrentPose;
+	bool						IsCPURender;
+	TArray<TArray<TComPtr<ID3D11Buffer>>> FinalBoneMatrix;
 };
 class RenderScene
 {

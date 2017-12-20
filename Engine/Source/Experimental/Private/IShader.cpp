@@ -165,6 +165,7 @@ bool IShaderBind::Update()
 		memcpy_s(MapResource.pData, ConstantBuffer->CBSize, ConstantBuffer->ShadowBuffer.Get(), ConstantBuffer->CBSize);
 		DeviceContext->Unmap(ConstantBuffer->D3DBuffer, 0);
 	}
+	
 	return true;
 }
 
@@ -175,6 +176,20 @@ bool IShaderBind::BindResource(const FString &ParaName, int32 n)
 	return true;
 }
 
+
+bool IShaderBind::BindSRV(const FString& ParamName, TComPtr<ID3D11ShaderResourceView> InSRV)
+{
+	TUniquePtr<YShaderResourceView>* pSRV = MapSRV.Find(ParamName);
+	if (pSRV)
+	{
+		(*pSRV)->SRV = InSRV;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
 
 bool IShaderBind::BindResourceHelp(const FString &ParaName, ScalarIndex& Index)
 {
@@ -308,99 +323,135 @@ bool IShaderBind::ReflectShader(TComPtr<ID3DBlob> Blob)
 	ShaderReflector->GetDesc(&ShaderDesc);
 	// 获取shader中数据
 	// Constant Buffer's count: $Global, cbxxx
+	// Resource
+	uint32 ResourceCount = ShaderDesc.BoundResources;
 	uint32 ConstantBufferCount = ShaderDesc.ConstantBuffers;
-	for (unsigned int i = 0; i < ConstantBufferCount; ++i)
+	uint32 ParsedConstantBufferCount = 0;
+	for (uint32 nResourceIndex = 0; nResourceIndex < ResourceCount; ++nResourceIndex)
 	{
-		D3D11_SHADER_BUFFER_DESC ShaderBufferDesc;
-		ID3D11ShaderReflectionConstantBuffer* pConstBuffer = ShaderReflector->GetConstantBufferByIndex(i);
-		pConstBuffer->GetDesc(&ShaderBufferDesc);
-		ConstantBuffers.Emplace(MakeUnique<YConstantBuffer>(ShaderBufferDesc.Size));
-		TUniquePtr<YConstantBuffer>& ConstantBuffer = ConstantBuffers.Last();
-		ConstantBuffer->CBName = ShaderBufferDesc.Name;
-		ConstantBuffer->CBType = (YConstantBuffer::eCBType)ShaderBufferDesc.Type;
 		D3D11_SHADER_INPUT_BIND_DESC BindDesc;
-		hr = ShaderReflector->GetResourceBindingDescByName(TCHAR_TO_ANSI(*ConstantBuffer->CBName), &BindDesc);
-		if (FAILED(hr))
+		if (FAILED(ShaderReflector->GetResourceBindingDesc(nResourceIndex, &BindDesc)))
 		{
 			return false;
 		}
-		ConstantBuffer->BindSlotIndex = BindDesc.BindPoint;
-		ConstantBuffer->BindSlotNum = BindDesc.BindCount;
-		for (unsigned int j = 0; j < ShaderBufferDesc.Variables; j++)
+
+		if(BindDesc.Type == D3D_SIT_CBUFFER)
 		{
-			ID3D11ShaderReflectionVariable* pVariable = pConstBuffer->GetVariableByIndex(j);
-			D3D11_SHADER_VARIABLE_DESC VarDesc;
-			pVariable->GetDesc(&VarDesc);
-
-			ID3D11ShaderReflectionType* pType = pVariable->GetType();
-			D3D11_SHADER_TYPE_DESC TypeDesc;
-			pType->GetDesc(&TypeDesc);
-			if (TypeDesc.Class == D3D_SHADER_VARIABLE_CLASS::D3D_SVC_SCALAR)
+			ParsedConstantBufferCount++;
+			D3D11_SHADER_BUFFER_DESC ShaderBufferDesc;
+			uint32 CurrentConstantBufferIndex = 0; // 当前CB的index
+			for (uint32 nCurrentCBIndex = 0; nCurrentCBIndex < ConstantBufferCount; ++nCurrentCBIndex)
 			{
-				if (TypeDesc.Type == D3D_SHADER_VARIABLE_TYPE::D3D_SVT_BOOL)
+				ID3D11ShaderReflectionConstantBuffer* pConstBufferFromIndex = ShaderReflector->GetConstantBufferByIndex(nCurrentCBIndex);
+				D3D11_SHADER_BUFFER_DESC ShaderBufferDescTmp;
+				pConstBufferFromIndex->GetDesc(&ShaderBufferDescTmp);
+				if (FPlatformString::Strcmp(ShaderBufferDescTmp.Name, BindDesc.Name) == 0)
 				{
+					CurrentConstantBufferIndex = nCurrentCBIndex;
+					break;
+				}
+			}
 
-				}
-				else if (TypeDesc.Type == D3D_SHADER_VARIABLE_TYPE::D3D_SVT_INT)
+			ID3D11ShaderReflectionConstantBuffer* pConstBuffer = ShaderReflector->GetConstantBufferByName(BindDesc.Name);
+			pConstBuffer->GetDesc(&ShaderBufferDesc);
+			ConstantBuffers.Emplace(MakeUnique<YConstantBuffer>(ShaderBufferDesc.Size));
+			TUniquePtr<YConstantBuffer>& ConstantBuffer = ConstantBuffers.Last();
+			ConstantBuffer->CBName = ShaderBufferDesc.Name;
+			ConstantBuffer->CBType = (YConstantBuffer::eCBType)ShaderBufferDesc.Type;
+			ConstantBuffer->BindSlotIndex = BindDesc.BindPoint;
+			ConstantBuffer->BindSlotNum = BindDesc.BindCount;
+			for (unsigned int j = 0; j < ShaderBufferDesc.Variables; j++)
+			{
+				ID3D11ShaderReflectionVariable* pVariable = pConstBuffer->GetVariableByIndex(j);
+				D3D11_SHADER_VARIABLE_DESC VarDesc;
+				pVariable->GetDesc(&VarDesc);
+
+				ID3D11ShaderReflectionType* pType = pVariable->GetType();
+				D3D11_SHADER_TYPE_DESC TypeDesc;
+				pType->GetDesc(&TypeDesc);
+				if (TypeDesc.Class == D3D_SHADER_VARIABLE_CLASS::D3D_SVC_SCALAR)
 				{
-					assert(0 && "shader reflection not support");
-				}
-				else if (TypeDesc.Type == D3D_SHADER_VARIABLE_TYPE::D3D_SVT_FLOAT)
-				{
-					if (TypeDesc.Type == D3D_SHADER_VARIABLE_TYPE::D3D_SVT_FLOAT)
-					{
-						AddScalarVariable(VarDesc.Name, i, VarDesc.StartOffset, ScalarIndex::eType::FLOAT);
-					}
-					else
+					if (TypeDesc.Type == D3D_SHADER_VARIABLE_TYPE::D3D_SVT_BOOL)
 					{
 						assert(0 && "shader reflection not support");
 					}
-				}
-				else
-				{
-					assert(0 && "shader reflection not support scalar type");
-				}
-			}
-			else if (TypeDesc.Class == D3D_SHADER_VARIABLE_CLASS::D3D_SVC_VECTOR)
-			{
-				if (TypeDesc.Type == D3D_SHADER_VARIABLE_TYPE::D3D_SVT_FLOAT)
-				{
-					assert(TypeDesc.Rows == 1);
-					if (TypeDesc.Columns == 2)
+					else if (TypeDesc.Type == D3D_SHADER_VARIABLE_TYPE::D3D_SVT_INT)
 					{
-						AddScalarVariable(VarDesc.Name, i, VarDesc.StartOffset, ScalarIndex::eType::FLOAT2);
+						assert(0 && "shader reflection not support");
 					}
-					else if (TypeDesc.Columns == 3)
+					else if (TypeDesc.Type == D3D_SHADER_VARIABLE_TYPE::D3D_SVT_FLOAT)
 					{
-						AddScalarVariable(VarDesc.Name, i, VarDesc.StartOffset, ScalarIndex::eType::FLOAT3);
-					}
-					else if (TypeDesc.Columns == 4)
-					{
-						AddScalarVariable(VarDesc.Name, i, VarDesc.StartOffset, ScalarIndex::eType::FLOAT4);
+						if (TypeDesc.Type == D3D_SHADER_VARIABLE_TYPE::D3D_SVT_FLOAT)
+						{
+							AddScalarVariable(VarDesc.Name, CurrentConstantBufferIndex, VarDesc.StartOffset, ScalarIndex::eType::FLOAT);
+						}
+						else
+						{
+							assert(0 && "shader reflection not support");
+						}
 					}
 					else
 					{
-						assert(0);
+						assert(0 && "shader reflection not support scalar type");
 					}
 				}
-			}
-			else if (TypeDesc.Class == D3D_SHADER_VARIABLE_CLASS::D3D_SVC_MATRIX_COLUMNS)
-			{
-				if (TypeDesc.Type == D3D_SHADER_VARIABLE_TYPE::D3D_SVT_FLOAT && TypeDesc.Columns == 4 && TypeDesc.Rows == 4)
+				else if (TypeDesc.Class == D3D_SHADER_VARIABLE_CLASS::D3D_SVC_VECTOR)
 				{
-					AddScalarVariable(VarDesc.Name, i, VarDesc.StartOffset, ScalarIndex::eType::MATRIX4X4);
+					if (TypeDesc.Type == D3D_SHADER_VARIABLE_TYPE::D3D_SVT_FLOAT)
+					{
+						assert(TypeDesc.Rows == 1);
+						if (TypeDesc.Columns == 2)
+						{
+							AddScalarVariable(VarDesc.Name, CurrentConstantBufferIndex, VarDesc.StartOffset, ScalarIndex::eType::FLOAT2);
+						}
+						else if (TypeDesc.Columns == 3)
+						{
+							AddScalarVariable(VarDesc.Name, CurrentConstantBufferIndex, VarDesc.StartOffset, ScalarIndex::eType::FLOAT3);
+						}
+						else if (TypeDesc.Columns == 4)
+						{
+							AddScalarVariable(VarDesc.Name, CurrentConstantBufferIndex, VarDesc.StartOffset, ScalarIndex::eType::FLOAT4);
+						}
+						else
+						{
+							assert(0);
+						}
+					}
 				}
-				else
+				else if (TypeDesc.Class == D3D_SHADER_VARIABLE_CLASS::D3D_SVC_MATRIX_COLUMNS)
 				{
-					//assert(0 && "shader reflection not support matrix type");
+					if (TypeDesc.Type == D3D_SHADER_VARIABLE_TYPE::D3D_SVT_FLOAT && TypeDesc.Columns == 4 && TypeDesc.Rows == 4)
+					{
+						AddScalarVariable(VarDesc.Name, CurrentConstantBufferIndex, VarDesc.StartOffset, ScalarIndex::eType::MATRIX4X4);
+					}
+					else
+					{
+						//assert(0 && "shader reflection not support matrix type");
+					}
+				}
+				else if (TypeDesc.Class == D3D_SHADER_VARIABLE_CLASS::D3D_SVC_MATRIX_ROWS)
+				{
+					assert(0 && "shader not support matrix row major");
 				}
 			}
-			else if (TypeDesc.Class == D3D_SHADER_VARIABLE_CLASS::D3D_SVC_MATRIX_ROWS)
+		}
+		else if (BindDesc.Type == D3D_SIT_TEXTURE)
+		{
+			TUniquePtr<YShaderResourceView> StructureBuffer= MakeUnique<YShaderResourceView>();
+			StructureBuffer->Name = BindDesc.Name;
+			StructureBuffer->BindCount = BindDesc.BindCount;
+			StructureBuffer->BindPoint = BindDesc.BindPoint;
+			if (!MapSRV.Find(StructureBuffer->Name))
 			{
-				assert(0 && "shader not support matrix row major");
+				MapSRV.Add(BindDesc.Name, MoveTemp(StructureBuffer));
+			}
+			else
+			{
+				assert(0 && "Structured buffer should not have the same name");
 			}
 		}
 	}
+	check(ConstantBufferCount == ParsedConstantBufferCount);
 	if (!PostReflection(Blob, ShaderReflector))
 	{
 		UE_LOG(ShaderLog, Error, TEXT("PostReflection failed!! FileName %s "), *ShaderPath);
@@ -436,6 +487,7 @@ YVSShader::~YVSShader()
 
 bool YVSShader::CreateShader(const FString &FileName, const FString &MainPoint)
 {
+	check(!VertexShader);
 	TComPtr<ID3D11Device> Device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	TComPtr<ID3DBlob> VSBlob;
@@ -481,14 +533,21 @@ bool YVSShader::CreateShader(const FString &FileName, const FString &MainPoint)
 
 bool YVSShader::Update()
 {
+	IShaderBind::Update();
 	TComPtr<ID3D11DeviceContext> DeviceContext = YYUTDXManager::GetInstance().GetD3DDC();
-	if (IShaderBind::Update() && VertexShader)
+	if ( VertexShader)
 	{
 		DeviceContext->VSSetShader(VertexShader, nullptr, 0);
 		DeviceContext->IASetInputLayout(InputLayout);
 		for (TUniquePtr<YConstantBuffer> & ConstantBuffer : ConstantBuffers)
 		{
-			DeviceContext->VSSetConstantBuffers(ConstantBuffer->BindSlotIndex, 1, &ConstantBuffer->D3DBuffer);
+			DeviceContext->VSSetConstantBuffers(ConstantBuffer->BindSlotIndex, ConstantBuffer->BindSlotNum, &ConstantBuffer->D3DBuffer);
+		}
+
+		for (auto & SRVItem : MapSRV)
+		{
+			TUniquePtr<YShaderResourceView>& SRVValue = SRVItem.Value;
+			DeviceContext->VSSetShaderResources(SRVValue->BindPoint, SRVValue->BindCount, &SRVValue->SRV);
 		}
 		return true;
 	}
@@ -637,6 +696,7 @@ YPSShader::~YPSShader()
 
 bool YPSShader::CreateShader(const FString &FileName, const FString &MainPoint)
 {
+	check(!PixShader);
 	TComPtr<ID3D11Device> Device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	TComPtr<ID3DBlob> VSBlob;
@@ -688,6 +748,11 @@ bool YPSShader::Update()
 		for (TUniquePtr<YConstantBuffer> & ConstantBuffer : ConstantBuffers)
 		{
 			DeviceContext->PSSetConstantBuffers(ConstantBuffer->BindSlotIndex, 1, &ConstantBuffer->D3DBuffer);
+		}
+		for (auto & SRVItem : MapSRV)
+		{
+			TUniquePtr<YShaderResourceView>& SRVValue = SRVItem.Value;
+			DeviceContext->PSSetShaderResources(SRVValue->BindPoint, SRVValue->BindCount, &SRVValue->SRV);
 		}
 		return true;
 	}
