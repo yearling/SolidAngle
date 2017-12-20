@@ -50,6 +50,7 @@ private:
 	TArray<FTransform>			CurrentPose;
 	bool						IsCPURender;
 	TArray<TArray<TComPtr<ID3D11Buffer>>> FinalBoneMatrix;
+	TArray<TArray<TComPtr<ID3D11ShaderResourceView>>> FinalBoneMatrixSRV;
 };
 class RenderScene
 {

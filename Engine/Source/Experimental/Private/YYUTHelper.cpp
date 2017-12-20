@@ -187,6 +187,26 @@ void CreateSRVForStruturedBuffer(int number, TComPtr<ID3D11Buffer> &buffer, TCom
 #endif
 }
 
+void CreateSRVForTBuffer(DXGI_FORMAT format, int32 number, TComPtr<ID3D11Buffer> &buffer, TComPtr<ID3D11ShaderResourceView> &srv, const FString& alias /*= ""*/)
+{	
+	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	HRESULT hr = S_OK;
+	D3D11_SHADER_RESOURCE_VIEW_DESC desc;
+	memset(&desc, 0, sizeof(desc));
+	desc.Format = format;
+	desc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
+	desc.Buffer.ElementOffset = 0;
+	desc.Buffer.ElementWidth = number;
+	if (FAILED(hr = device->CreateShaderResourceView(buffer, &desc, &srv)))
+	{
+	}
+#if defined DEBUG | defined _DEBUG
+	AddAlias(srv, alias);
+#endif
+
+
+}
+
 void CreateUAVForStruturedBuffer(int number, TComPtr<ID3D11Buffer> &buffer, TComPtr<ID3D11UnorderedAccessView> &uav, const FString& alias /*= ""*/)
 {
 	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
@@ -824,7 +844,7 @@ void CreateGeometryShader(const FString& FileName, const FString& MainPoint, TCo
 
 
 template<>
-void CreateStruturedBufferSRV<true, false, true, false>(int numbers, int perSize, TComPtr<ID3D11Buffer> & buffer, const FString& alias)
+void CreateStruturedBuffer<true, false, true, false>(int numbers, int perSize, TComPtr<ID3D11Buffer> & buffer, const FString& alias)
 {
 	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
@@ -845,7 +865,7 @@ void CreateStruturedBufferSRV<true, false, true, false>(int numbers, int perSize
 };
 
 template<>
-void CreateStruturedBufferSRV<false, true, true, false>(int numbers, int perSize, TComPtr<ID3D11Buffer> & buffer, const FString& alias)
+void CreateStruturedBuffer<false, true, true, false>(int numbers, int perSize, TComPtr<ID3D11Buffer> & buffer, const FString& alias)
 {
 	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
@@ -864,3 +884,23 @@ void CreateStruturedBufferSRV<false, true, true, false>(int numbers, int perSize
 	AddAlias(buffer, alias);
 #endif
 };
+
+template<>
+void CreateTBuffer<true,false,true,false>(int32 ByteCounts, TComPtr<ID3D11Buffer> & buffer, const FString& alias)
+{	
+	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	HRESULT hr = S_OK;
+	D3D11_BUFFER_DESC desc;
+	memset(&desc, 0, sizeof(desc));
+	desc.ByteWidth = ByteCounts;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	desc.Usage = D3D11_USAGE_DYNAMIC;
+	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	desc.MiscFlags = 0;
+	if (FAILED(hr = device->CreateBuffer(&desc, NULL, &buffer)))
+	{
+	}
+#if defined DEBUG | defined _DEBUG
+	AddAlias(buffer, alias);
+#endif
+}

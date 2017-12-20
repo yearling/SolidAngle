@@ -101,8 +101,10 @@ void CreateStruturedBufferSRV_UAV(int numbers,
 	const FString& alias = "");
 
 template<bool CPUWrite,bool GPUWrite,bool CreateSRV,bool CreateUAV>
-void CreateStruturedBufferSRV(int numbers, int perSize, TComPtr<ID3D11Buffer> & buffer, const FString& alias = "");
+void CreateStruturedBuffer(int numbers, int perSize, TComPtr<ID3D11Buffer> & buffer, const FString& alias = "");
 
+template<bool CPUWrite,bool GPUWrite,bool CreateSRV,bool CreateUAV>
+void CreateTBuffer(int32 ByteCounts, TComPtr<ID3D11Buffer> & buffer, const FString& alias = "");
 
 void CreateStruturedBufferUAV(int numbers,
 	int perSize,
@@ -161,6 +163,12 @@ void									CreateUAVForBuffer(
 //////////////////////////////////////////////////////////////////////////
 //Create SRV
 void CreateSRVForStruturedBuffer(int number,
+	TComPtr<ID3D11Buffer> &buffer,
+	TComPtr<ID3D11ShaderResourceView> &srv,
+	const FString& alias = "");
+
+void CreateSRVForTBuffer(DXGI_FORMAT format,
+	int32 number,
 	TComPtr<ID3D11Buffer> &buffer,
 	TComPtr<ID3D11ShaderResourceView> &srv,
 	const FString& alias = "");

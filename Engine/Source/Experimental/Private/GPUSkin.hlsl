@@ -35,7 +35,7 @@ FBoneMatrix GetBoneMatrix(int Index)
 	float4 A = BoneMatrices[Index * 4];
 	float4 B = BoneMatrices[Index * 4 + 1];
 	float4 C = BoneMatrices[Index * 4 + 2];
-	float4 D = BoneMatrices[Index * 4 + 2];
+	float4 D = BoneMatrices[Index * 4 + 3];
 	return FBoneMatrix(A, B, C, D);
 }
 
