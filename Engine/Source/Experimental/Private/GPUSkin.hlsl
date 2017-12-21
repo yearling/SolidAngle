@@ -14,7 +14,8 @@ cbuffer ChangePerMesh
 }
 
 #define FBoneMatrix float3x4
-Buffer<float4> BoneMatrices;
+//Buffer<float4> BoneMatrices;
+float4 BoneMatrices[300];
 
 struct FVertexFactoryInput
 {
