@@ -31,6 +31,7 @@ public:
 	virtual bool				BindResource(const FString &ParaName, FPlane V4)=0;
 	virtual bool				BindResource(const FString &ParaName, const FMatrix  &Mat)=0;
 	virtual bool				BindResource(const FString &ParaName, const FMatrix  *Mat,int Num)=0;
+	virtual bool				BindResource(const FString &ParaName, const FVector4* VectorArray,int Num)=0;
 	virtual bool				BindSRV(const FString& ParamName, TComPtr<ID3D11ShaderResourceView> SRV) = 0;
 	virtual bool				Update()=0;
 	virtual bool				BindInputLayout(TArray<D3D11_INPUT_ELEMENT_DESC> lInputLayoutDesc)=0;
@@ -101,10 +102,22 @@ struct YConstantBuffer
 		}
 		static void SetValue(YConstantBuffer *ConstantBuffer, unsigned int Offset, const FMatrix& Value)
 		{
-			*((FMatrix*)(ConstantBuffer->ShadowBuffer.Get() + Offset)) = Value.GetTransposed();
+			//*((FMatrix*)(ConstantBuffer->ShadowBuffer.Get() + Offset)) = Value.GetTransposed();
+			*((FMatrix*)(ConstantBuffer->ShadowBuffer.Get() + Offset)) = Value;
 		}
 	};
-
+	struct YCBARRAYFloat4
+	{
+		static FVector4* GetValue(YConstantBuffer* ConstantBuffer, unsigned int Offset)
+		{
+			return (FVector4*)(ConstantBuffer->ShadowBuffer.Get() + Offset);
+		}
+		static void SetValue(YConstantBuffer *ConstantBuffer, unsigned int Offset, void* pData, uint32 nBytes)
+		{
+			//*((FMatrix*)(ConstantBuffer->ShadowBuffer.Get() + Offset)) = Value.GetTransposed();
+			memcpy(ConstantBuffer->ShadowBuffer.Get() + Offset, pData, nBytes);
+		}
+	};
 	TComPtr<ID3D11Buffer>		D3DBuffer;
 };
 
@@ -134,6 +147,7 @@ public:
 	virtual bool				BindResource(const FString &ParaName, FPlane V4) override;
 	virtual bool				BindResource(const FString &ParaName, const FMatrix  &Mat) override;
 	virtual bool				BindResource(const FString &ParaName, const FMatrix  *Mat, int Num) override;
+	virtual bool				BindResource(const FString &ParaName, const FVector4* VectorArray, int Num) override;
 	virtual bool				BindSRV(const FString& ParamName, TComPtr<ID3D11ShaderResourceView> SRV) override;
 	virtual bool				BindInputLayout(TArray<D3D11_INPUT_ELEMENT_DESC> lInputLayoutDesc) override { return true; };
 protected:
@@ -147,9 +161,10 @@ protected:
 	{
 		unsigned int ConstantBufferIndex;
 		unsigned int ValueIndex;
+		unsigned int ElementNum;
 		enum class eType
 		{
-			BOOL,INT,FLOAT,FLOAT2,FLOAT3,FLOAT4,MATRIX4X4,NUM
+			BOOL,INT,FLOAT,FLOAT2,FLOAT3,FLOAT4,MATRIX4X4,FLOAT4Array,Num
 		};
 		// 用来保证在BindResource时，ShadowBuffer的类型与绑定类型一致。
 		// 防止在HLSL中是float g_matWorld, Matrix g_fStrength,
@@ -159,6 +174,7 @@ protected:
 
 	bool						BindResourceHelp(const FString &ParaName,ScalarIndex& Index);
 	void AddScalarVariable(const FString &Name, uint32 InConstantBufferIndex, uint32 InValueIndex, ScalarIndex::eType InType);
+	void AddArrayVariable(const FString &Name, uint32 InConstantBufferIndex, uint32 InValueIndex, uint32 ElementsNum, ScalarIndex::eType InType);
 	TMap<FString, ScalarIndex> MapShaderVariableToScalar;
 	TMap<FString, ScalarIndex> MapSRVToScalar;
 	TMap<FString, TUniquePtr<YShaderResourceView>> MapSRV;
