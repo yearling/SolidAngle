@@ -13,7 +13,7 @@ cbuffer ChangePerMesh
 	matrix g_world;
 }
 
-#define FBoneMatrix float4x4
+#define FBoneMatrix float3x4
 Buffer<float4> BoneMatrices;
 
 struct FVertexFactoryInput
@@ -32,11 +32,10 @@ struct FVertexFactoryInput
 
 FBoneMatrix GetBoneMatrix(int Index)
 {
-	float4 A = BoneMatrices[Index * 4];
-	float4 B = BoneMatrices[Index * 4 + 1];
-	float4 C = BoneMatrices[Index * 4 + 2];
-	float4 D = BoneMatrices[Index * 4 + 3];
-	return FBoneMatrix(A, B, C, D);
+	float4 A = BoneMatrices[Index * 3];
+	float4 B = BoneMatrices[Index * 3 + 1];
+	float4 C = BoneMatrices[Index * 3 + 2];
+	return FBoneMatrix(A, B, C);
 }
 
 FBoneMatrix CalcBoneMatrix(FVertexFactoryInput Input)
@@ -65,8 +64,9 @@ struct VS_OUTPUT
 VS_OUTPUT VSMain(FVertexFactoryInput Input)
 {
 	VS_OUTPUT Output;
-	matrix BoneTransformMatrix = CalcBoneMatrix(Input);
-	float4 SkinPos = mul(Input.vPosition, BoneTransformMatrix);
+	FBoneMatrix BoneTransformMatrix = CalcBoneMatrix(Input);
+	//float4 SkinPos = mul(Input.vPosition, BoneTransformMatrix);
+	float4 SkinPos = float4(mul( BoneTransformMatrix, Input.vPosition),1.0);
 	Output.vPosition = mul(SkinPos, g_VP);
 	Output.vNormal = normalize(mul(Input.TangentZ.xyz, (float3x3) g_world));
 	//Output.vPosition = mul( matWVP, float4(Input.vPosition, 1.0f));
