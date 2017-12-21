@@ -67,7 +67,7 @@ bool ComplieShaderFromFile(const FString &ShaderFileName,
 {
 	HRESULT hr = S_OK;
 	DWORD shader_flags = D3DCOMPILE_ENABLE_STRICTNESS;
-	//if (!ColomMajor)
+	if (!ColomMajor)
 		shader_flags |= D3D10_SHADER_PACK_MATRIX_ROW_MAJOR;
 #if defined( DEBUG ) ||  defined( _DEBUG)
 	shader_flags |= D3DCOMPILE_DEBUG;
@@ -176,17 +176,6 @@ bool IShaderBind::BindResource(const FString &ParaName, int32 n)
 	return true;
 }
 
-
-bool IShaderBind::BindResource(const FString &ParaName, const FVector4* VectorArray, int Num)
-{
-	ScalarIndex Index;
-	if (BindResourceHelp(ParaName, Index))
-	{
-		assert(Index.ElementNum >= (uint32)Num);
-		YConstantBuffer::YCBARRAYFloat4::SetValue(ConstantBuffers[Index.ConstantBufferIndex].Get(), Index.ValueIndex, (void*)VectorArray, sizeof(FVector4)*Num);
-	}
-	return false;
-}
 
 bool IShaderBind::BindSRV(const FString& ParamName, TComPtr<ID3D11ShaderResourceView> InSRV)
 {
@@ -421,14 +410,7 @@ bool IShaderBind::ReflectShader(TComPtr<ID3DBlob> Blob)
 						}
 						else if (TypeDesc.Columns == 4)
 						{
-							if (TypeDesc.Elements == 1)
-							{
-								AddScalarVariable(VarDesc.Name, CurrentConstantBufferIndex, VarDesc.StartOffset, ScalarIndex::eType::FLOAT4);
-							}
-							else
-							{
-								AddArrayVariable(VarDesc.Name, CurrentConstantBufferIndex, VarDesc.StartOffset,TypeDesc.Elements, ScalarIndex::eType::FLOAT4);
-							}
+							AddScalarVariable(VarDesc.Name, CurrentConstantBufferIndex, VarDesc.StartOffset, ScalarIndex::eType::FLOAT4);
 						}
 						else
 						{
@@ -449,14 +431,7 @@ bool IShaderBind::ReflectShader(TComPtr<ID3DBlob> Blob)
 				}
 				else if (TypeDesc.Class == D3D_SHADER_VARIABLE_CLASS::D3D_SVC_MATRIX_ROWS)
 				{
-					if (TypeDesc.Type == D3D_SHADER_VARIABLE_TYPE::D3D_SVT_FLOAT && TypeDesc.Columns == 4 && TypeDesc.Rows == 4)
-					{
-						AddScalarVariable(VarDesc.Name, CurrentConstantBufferIndex, VarDesc.StartOffset, ScalarIndex::eType::MATRIX4X4);
-					}
-					else
-					{
-						//assert(0 && "shader reflection not support matrix type");
-					}
+					assert(0 && "shader not support matrix row major");
 				}
 			}
 		}
@@ -491,24 +466,6 @@ void IShaderBind::AddScalarVariable(const FString &Name, uint32 InConstantBuffer
 	Index.ConstantBufferIndex = InConstantBufferIndex;
 	Index.ValueIndex = InValueIndex;
 	Index.Type = InType;
-	Index.ElementNum = 1;
-	if (!MapShaderVariableToScalar.Find(Name))
-	{
-		MapShaderVariableToScalar.Add(Name, Index);
-	}
-	else
-	{
-		assert(0 && "should not have same name variable");
-	}
-}
-
-void IShaderBind::AddArrayVariable(const FString &Name, uint32 InConstantBufferIndex, uint32 InValueIndex, uint32 ElementsNum, ScalarIndex::eType InType)
-{
-	ScalarIndex Index;
-	Index.ConstantBufferIndex = InConstantBufferIndex;
-	Index.ValueIndex = InValueIndex;
-	Index.Type = InType;
-	Index.ElementNum = ElementsNum;
 	if (!MapShaderVariableToScalar.Find(Name))
 	{
 		MapShaderVariableToScalar.Add(Name, Index);

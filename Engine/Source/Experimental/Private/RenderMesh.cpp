@@ -289,27 +289,25 @@ void FSkeletalMeshRenderHelper::Init()
 		CreateIndexBuffer((UINT)IndexData.Indices.Num() * sizeof(uint32), &IndexData.Indices[0], IB);
 
 		CreateVertexBuffer((UINT)SkinVertex.Num() * sizeof(FSoftSkinVertex), &SkinVertex[0], VBGPU);
-		TArray<TComPtr<ID3D11Buffer>> BoneMatrixBufferLOD;
+		TArray<TComPtr<ID3D11Buffer>> BoneMatrix;
 		TArray<TComPtr<ID3D11ShaderResourceView>> BoneMatrixBufferSRV;
-		TArray<TArray<YSkinMatrix3x4>> BoneMatrixLOD;
 		for (int32 SectionIndex = 0; SectionIndex < StaticLodModel.Sections.Num(); ++SectionIndex)
 		{
 			TComPtr<ID3D11Buffer> BoneMatrixBuffer;
 			CreateTBuffer<true, false, true, false>(StaticLodModel.Sections[SectionIndex].BoneMap.Num() * 3* 16, BoneMatrixBuffer);
 			TComPtr<ID3D11ShaderResourceView> SRV;
 			CreateSRVForTBuffer(DXGI_FORMAT_R32G32B32A32_FLOAT,StaticLodModel.Sections[SectionIndex].BoneMap.Num() * 3, BoneMatrixBuffer,SRV);
-			BoneMatrixBufferLOD.Emplace(MoveTemp(BoneMatrixBuffer));
+			BoneMatrix.Emplace(MoveTemp(BoneMatrixBuffer));
 			BoneMatrixBufferSRV.Emplace(MoveTemp(SRV));
-			TArray<YSkinMatrix3x4> BoneMatrixSection;
-			BoneMatrixSection.SetNumUninitialized(StaticLodModel.Sections[SectionIndex].BoneMap.Num());
-			BoneMatrixLOD.Emplace(MoveTemp(BoneMatrixSection));
 		}
-		FinalBoneMatrixBuffer.Emplace(MoveTemp(BoneMatrixBufferLOD));
+		FinalBoneMatrix.Emplace(MoveTemp(BoneMatrix));
 		FinalBoneMatrixSRV.Emplace(MoveTemp(BoneMatrixBufferSRV));
-		FinalBoneMatrix.Emplace(MoveTemp(BoneMatrixLOD));
 	}
 }
-
+MS_ALIGN(16) struct YSkinMatrix3x4
+{
+	float M[3][4];
+};
 void FSkeletalMeshRenderHelper::SetPos(FCompactPose& CompacePose)
 {
 	CompacePose.CopyBonesTo(CurrentPose);
@@ -388,9 +386,7 @@ void FSkeletalMeshRenderHelper::SetPos(FCompactPose& CompacePose)
 					FMatrix BoneMatrix = (SkeletalMesh->RefBasesInvMatrix[BoneIndex] * CurrentBonePose[BoneIndex]);
 					BoneMatrix.To3x4MatrixTranspose((float*)RefToLocalMatrixRows[iSectionBone].M);
 				}
-				FinalBoneMatrix[LodIndex][SectionIndex] = MoveTemp(RefToLocalMatrixRows);
-				//VSShaderGPU->BindResource(TEXT("BoneMatrices"),(FVector4*) &RefToLocalMatrixRows[0],RefToLocalMatrixRows.Num()*3);
-				/*TComPtr<ID3D11Buffer>& CurrentBoneBuffer = FinalBoneMatrix[LodIndex][SectionIndex];
+				TComPtr<ID3D11Buffer>& CurrentBoneBuffer = FinalBoneMatrix[LodIndex][SectionIndex];
 				TComPtr<ID3D11DeviceContext> DeviceContext = YYUTDXManager::GetInstance().GetD3DDC();
 				D3D11_MAPPED_SUBRESOURCE MapResource;
 				HRESULT hr = DeviceContext->Map(CurrentBoneBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MapResource);
@@ -398,7 +394,7 @@ void FSkeletalMeshRenderHelper::SetPos(FCompactPose& CompacePose)
 				{
 					memcpy(MapResource.pData, &RefToLocalMatrixRows[0], sizeof(YSkinMatrix3x4)* RefToLocalMatrixRows.Num());
 				}
-				DeviceContext->Unmap(CurrentBoneBuffer, 0);*/
+				DeviceContext->Unmap(CurrentBoneBuffer, 0);
 			}
 		}
 	}
@@ -442,7 +438,6 @@ void FSkeletalMeshRenderHelper::Render(TSharedRef<FRenderInfo> RenderInfo)
 				VSShaderGPU->BindResource(TEXT("g_InvVP"), RenderInfo->RenderCameraInfo.ViewProjectionInv);
 				VSShaderGPU->BindResource(TEXT("g_world"), FMatrix::Identity);
 				VSShaderGPU->BindSRV(TEXT("BoneMatrices"), FinalBoneMatrixSRV[i][MeshSectionID]);
-				VSShaderGPU->BindResource(TEXT("BoneMatrices"), (FVector4*)&FinalBoneMatrix[i][MeshSectionID][0], FinalBoneMatrix[i][MeshSectionID].Num() * 3);
 				VSShaderGPU->Update();
 				dc->IASetVertexBuffers(0, 1, &(VBGPU), &strid, &offset);
 			}
