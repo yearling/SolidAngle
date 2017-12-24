@@ -6,7 +6,8 @@
 
 ## importer
 
-1. 首先调用GetImportType,来获取fbx里的基本信息（StaticMesh,SkeletonMesh,Morph,Bones)等等，然后提供给UI让用户选择导入
+### 获取类型，判断是SkinMesh，StaticMesh,还是Animation
+首先调用GetImportType,来获取fbx里的基本信息（StaticMesh,SkeletonMesh,Morph,Bones)等等，然后提供给UI让用户选择导入
 	FFbxImporter::GetImportType   //第一遍解析场景，
 		|- FFbxImporter::OpenFile // 创建FbxImpoter
 		|- FFbxImporter::GetSceneInfo 
@@ -26,6 +27,9 @@
 				|- 获取RootNode的变换信息(节点名，UniuqeID, Transform)并填入FbxNodeInfo,并将FbxNodeInfo节点放入FbxSceneInfo::HierachyInfo.
 				|- 深度优先遍历整个Scene，将节点信息存入FbxSceneInfo::HierachyInfo.
 
+__依据__：如果有SkinnedMesh,则导出为skinMesh;如果没有skinnedMesh但有别的mesh，则到处成StaticMesh;如果既没有SkinnedMesh也没有StaticMesh，但又Animation,则导出成动画。
+
+### SkinMesh
 2. 根据类型选择具体导入的类型
 	1. UnFbx::FBXImportOptions* ImportOptions = FbxImporter->GetImportOptions();
 	根据需求设置导入选项。
