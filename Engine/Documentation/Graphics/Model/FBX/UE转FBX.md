@@ -44,6 +44,7 @@ __依据__：如果有SkinnedMesh,则导出为skinMesh;如果没有skinnedMesh�
 		  	|- 如果导入的是SkeletonMesh
 				|- FillFbxSkelMeshArrayInScene 
 					|- RecursiveFindFbxSkelMesh[outSkelMeshArray: 每级lod的skinmeshes，只有一级LOD的话，outSkelMeshArray有一个元素，该元素有所有的SKinMesh; SkeletonArray:每级LOD的骨骼根节点，只有一级LOD的话，SkeletonArray中只保存骨骼根节点
+						|- 找到带有skin的mesh,通过link找到该mesh对应的RootBone, RootBone是一套Skeleton的唯一表识，有几个RootBone就说明有几套Skin.然后递归遍历整个场景，按以mesh的根骨骼为Key进行收集，同一根骨骼的mesh放到OutSkelMeshArray中，根骨骼位于SkeletonArray中
 				|- RecursiveFixSkeleton() 修正因为ActorX导出的Mesh为bone的情况，将Mesh替换为bone
 			
 			|- 如果outSkelMeshArray不为空，说明有可以导入的模型
@@ -51,6 +52,8 @@ __依据__：如果有SkinnedMesh,则导出为skinMesh;如果没有skinnedMesh�
 					|- 对于outSkelMeshArray中组skelMesh中的每层LOD
 						|- YSkeletalMesh* NewMesh = ImportSkeletalMesh(nullptr, SkelMeshNodeArray, OutputName, &SkeletalMeshImportData, LODIndex, &bOperationCanceled);
 							|- CheckSmoothingInfo()
+							|- FSkeletalMeshImportData：包含原始skin的所有信息
+								|- { 材质信息，顶点信息，Wedge(顶点索引,uv,color），Face(Wedge的索引，材质索引，光滑组信息）
 							|- FillLastImportMaterialNames() // 目前不知道干什么
 							|- FillSkeletalMeshImportData() // 最后一遍检查导入数据是否合格，如果不合格就不导入；因为之后会销毁同名的skeletonMesh,如果导入失败，之前导入的也不能用了
 								|- ImportBone()
@@ -59,12 +62,12 @@ __依据__：如果有SkinnedMesh,则导出为skinMesh;如果没有skinnedMesh�
 									|- 如果BindBose不正确
 										|- 销毁当前BindPose()
 										|- 通过SDK重建BindPose()
-										|- BuildSkeletonSystem() //遍历所有的mesh对应的cluster,收集所有cluster的link，放到SortedLinks中
+										|- BuildSkeletonSystem() //遍历所有的mesh对应的cluster,收集所有cluster的link，放到SortedLinks中（注意，SortedLinks中可能放有两套骨骼的根节点，在后面会检查出来报错）
 											|- RecursiveBuildSkeleton()
 										|- 查找有没有同名骨骼
 										|- 创建UnrealBone的层次结构（将FbxSkeleton用自己的VBone结构来表示，保存层级结构，保存骨骼位姿信息（相对于父骨骼来说，Fbx的每根骨骼都是相对于模型空间）
 											|- 统计Cluster对应的Link
-											|- 对于每个link,获取每个link相对于Pose的位置（位于模型空间），然后乘以父亲节点变换的逆，得到相对于父节点的变换
+											|- 对于每个link,获取每个link相对于Pose的位置（位于模型空间（fbx的Global空间)），然后乘以父亲节点变换的逆，得到相对于父节点的变换
 										|- 把UI中的变换应用于根骨骼
 								|- ApplyTransformSettingsToFbxNode(),把UI中指定的变换应用到场景根节点
 								|- 收集材质
