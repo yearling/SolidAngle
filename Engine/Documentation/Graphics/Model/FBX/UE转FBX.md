@@ -45,6 +45,9 @@ __依据__：如果有SkinnedMesh,则导出为skinMesh;如果没有skinnedMesh�
 				|- FillFbxSkelMeshArrayInScene 
 					|- RecursiveFindFbxSkelMesh[outSkelMeshArray: 每级lod的skinmeshes，只有一级LOD的话，outSkelMeshArray有一个元素，该元素有所有的SKinMesh; SkeletonArray:每级LOD的骨骼根节点，只有一级LOD的话，SkeletonArray中只保存骨骼根节点
 						|- 找到带有skin的mesh,通过link找到该mesh对应的RootBone, RootBone是一套Skeleton的唯一表识，有几个RootBone就说明有几套Skin.然后递归遍历整个场景，按以mesh的根骨骼为Key进行收集，同一根骨骼的mesh放到OutSkelMeshArray中，根骨骼位于SkeletonArray中
+						|- 如何判断根节点
+							FFbxImporter::GetRootSkeleton()
+							|-向上查找父节点，判断是否是父节点的标准是： eMesh,eNull,eSkeleton,如果父节点为场景根节点，则当前节点就是改骨骼的根节点。
 				|- RecursiveFixSkeleton() 修正因为ActorX导出的Mesh为bone的情况，将Mesh替换为bone
 			
 			|- 如果outSkelMeshArray不为空，说明有可以导入的模型

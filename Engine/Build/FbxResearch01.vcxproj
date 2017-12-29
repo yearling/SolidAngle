@@ -121,6 +121,8 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;FBXSDK_SHARED;_CONSOLE;PLATFORM_WINDOWS=1;IS_PROGRAM=1;IS_MONOLITHIC=0;UE_BUILD_MINIMAL=0;WITH_PLUGIN_SUPPORT=1;UE_BUILD_DEBUG;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_SERVER_CODE=0;CORE_API=__declspec(dllimport);MALLOC_LEAKDETECTION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Source\Experimental\Public;..\Source\ThirdParty\Fbx\2017.0.1\include;..\Source\ThirdParty\DirectXTex\DDSTextureLoader;..\Source\ThirdParty\DirectXTex\WICTextureLoader;..\Source\ThirdParty\DirectXTex\DirectXTex;..\Source\Runtime\Core\Public;..\Source\FbxResearch\Public</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -156,6 +158,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;FBXSDK_SHARED;_CONSOLE;PLATFORM_WINDOWS=1;IS_PROGRAM=1;IS_MONOLITHIC=0;UE_BUILD_MINIMAL=0;WITH_PLUGIN_SUPPORT=1;UE_BUILD_DEVELOPMENT;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_SERVER_CODE=0;CORE_API=__declspec(dllimport);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Source\Experimental\Public;..\Source\ThirdParty\Fbx\2017.0.1\include;..\Source\ThirdParty\DirectXTex\DDSTextureLoader;..\Source\ThirdParty\DirectXTex\WICTextureLoader;..\Source\ThirdParty\DirectXTex\DirectXTex;..\Source\Runtime\Core\Public;..\Source\FbxResearch\Public</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
