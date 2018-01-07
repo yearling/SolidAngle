@@ -132,6 +132,7 @@ typedef FbxLayerElementVisibility FbxGeometryElementVisibility
 				lGeometryElementNormal->GetDirectArray().Add(FbxVector(1,1,1));
 
 5. 创建UV
+	Mesh中有多个LayerCount{ Mesh->GetLayerCount();}每个Layer中又有多个UVset，所以要查找一个Mesh中的UVs有多少个是个二重循环。
 	1. 考虑索引方式
 		1. 创建映射
 				FbxGeometryElementUV* lUVDiffuseElement = lMesh->CreateElementUV("DiffuseUV"); //可以有多套UV

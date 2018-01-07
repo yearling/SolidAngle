@@ -980,7 +980,8 @@ void FFbxImporter::ConvertScene()
 
 		FbxAxisSystem SourceSetup = Scene->GetGlobalSettings().GetAxisSystem();
 
-		if (SourceSetup != UnrealImportAxis)
+		if (SourceSetup != FbxAxisSystem::eMayaYUp)
+		//if (SourceSetup != UnrealImportAxis)
 		{
 			FbxRootNodeUtility::RemoveAllFbxRoots(Scene);
 			UnrealImportAxis.ConvertScene(Scene);

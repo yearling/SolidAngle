@@ -1475,7 +1475,7 @@ YSkeletalMesh* UnFbx::FFbxImporter::ImportSkeletalMesh(UObject* InParent, TArray
 		// Store the current file path and timestamp for re-import purposes
 		UFbxSkeletalMeshImportData* ImportData = UFbxSkeletalMeshImportData::GetImportDataForSkeletalMesh(SkeletalMesh, TemplateImportData);
 		//SkeletalMesh->AssetImportData->Update(UFactory::GetCurrentFilename(), &Md5Hash);
-
+		delete ImportData;
 		SkeletalMesh->CalculateInvRefMatrices();
 		//SkeletalMesh->PostEditChange();
 		//SkeletalMesh->MarkPackageDirty();

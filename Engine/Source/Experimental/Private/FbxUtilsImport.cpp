@@ -7,7 +7,7 @@ using namespace UnFbx;
 
 
 FbxAMatrix FFbxDataConverter::JointPostConversionMatrix;
-#define  USEUECOORDINATES 1
+#define  USEUECOORDINATES 0
 #if USEUECOORDINATES
 FVector FFbxDataConverter::ConvertPos(FbxVector4 Vector)
 {
@@ -278,9 +278,9 @@ FVector UnFbx::FFbxDataConverter::ConvertRotationToFVect(FbxQuaternion Quaternio
 FQuat UnFbx::FFbxDataConverter::ConvertRotToQuat(FbxQuaternion Quaternion)
 {
 	FQuat UnrealQuat;
-	UnrealQuat.X = -Quaternion[0];
-	UnrealQuat.Y = -Quaternion[1];
-	UnrealQuat.Z = Quaternion[2];
+	UnrealQuat.X = Quaternion[0];
+	UnrealQuat.Y = Quaternion[1];
+	UnrealQuat.Z = -Quaternion[2];
 	UnrealQuat.W = -Quaternion[3];
 
 	return UnrealQuat;
@@ -316,11 +316,11 @@ FTransform UnFbx::FFbxDataConverter::ConvertTransform(FbxAMatrix Matrix)
 FMatrix UnFbx::FFbxDataConverter::ConvertMatrix(FbxAMatrix Matrix)
 {
 	FMatrix UEMatrix;
-	check(0);//没看明白为什么
+	//check(0);//没看明白为什么
 	for (int i = 0; i < 4; ++i)
 	{
-		FbxVector4 Row = Matrix.GetRow(i);
-		if (i == 1)
+		/*FbxVector4 Row = Matrix.GetRow(i);
+		if (i == 2)
 		{
 			UEMatrix.M[i][0] = -Row[0];
 			UEMatrix.M[i][1] = Row[1];
@@ -333,7 +333,13 @@ FMatrix UnFbx::FFbxDataConverter::ConvertMatrix(FbxAMatrix Matrix)
 			UEMatrix.M[i][1] = -Row[1];
 			UEMatrix.M[i][2] = Row[2];
 			UEMatrix.M[i][3] = Row[3];
-		}
+		}*/
+
+		FbxVector4 Row = Matrix.GetRow(i);
+		UEMatrix.M[i][0] = Row[0];
+		UEMatrix.M[i][1] = Row[1];
+		UEMatrix.M[i][2] = Row[2];
+		UEMatrix.M[i][3] = Row[3];
 	}
 
 	return UEMatrix;
