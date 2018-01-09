@@ -13,10 +13,11 @@ namespace EVertexColorImportOption
 		Override
 	};
 }
-
+class UStaticMesh;
 class UFbxStaticMeshImportData : public UFbxMeshImportData
 {
-
+public:
+		UFbxStaticMeshImportData();
 		/** The LODGroup to associate with this mesh when it is imported */
 		FName StaticMeshLODGroup;
 
@@ -46,7 +47,7 @@ class UFbxStaticMeshImportData : public UFbxMeshImportData
 		uint32 bCombineMeshes : 1;
 
 	/** Gets or creates fbx import data for the specified static mesh */
-	//static UFbxStaticMeshImportData* GetImportDataForStaticMesh(UStaticMesh* StaticMesh, UFbxStaticMeshImportData* TemplateForCreation);
+	static UFbxStaticMeshImportData* GetImportDataForStaticMesh(UStaticMesh* StaticMesh, UFbxStaticMeshImportData* TemplateForCreation);
 
 };
 

@@ -89,7 +89,7 @@ struct ENGINE_API FRawMesh
 /**
  * Bulk data storage for raw meshes.
  */
-class FRawMeshBulkData
+class ENGINE_API FRawMeshBulkData
 {
 	/** Internally store bulk data as bytes. */
 	FByteBulkData BulkData;

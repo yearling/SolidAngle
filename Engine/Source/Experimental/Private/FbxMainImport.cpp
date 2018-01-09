@@ -2348,8 +2348,7 @@ UnFbx::ImportResultPackage UnFbx::FFbxImporter::MainInportTest(const FString & F
 			int32 ImportedMeshCount = 0;
 			if (ImportType == FBXIT_StaticMesh)  // static mesh
 			{
-#if 0
-				YStaticMesh* NewStaticMesh = NULL;
+				UStaticMesh* NewStaticMesh = NULL;
 				if (bCombineMeshes)
 				{
 					TArray<FbxNode*> FbxMeshArray;
@@ -2417,15 +2416,15 @@ UnFbx::ImportResultPackage UnFbx::FFbxImporter::MainInportTest(const FString & F
 				}
 				else
 				{
-					TArray<UObject*> AllNewAssets;
-					//UObject* Object = RecursiveImportNode(FbxImporter, RootNodeToImport, InParent, Name, Flags, NodeIndex, InterestingNodeCount, AllNewAssets);
+					TArray<UStaticMesh*> AllNewAssets;
+					UStaticMesh* Object = RecursiveImportNode(this, RootNodeToImport, nullptr, Name, NodeIndex, InterestingNodeCount, AllNewAssets);
 
 					//NewStaticMesh = Cast<UStaticMesh>(Object);
 
 					// Make sure to notify the asset registry of all assets created other than the one returned, which will notify the asset registry automatically.
 					for (auto AssetIt = AllNewAssets.CreateConstIterator(); AssetIt; ++AssetIt)
 					{
-						UObject* Asset = *AssetIt;
+						UStaticMesh* Asset = *AssetIt;
 						//if (Asset != NewStaticMesh)
 						{
 							//FAssetRegistryModule::AssetCreated(Asset);
@@ -2443,7 +2442,6 @@ UnFbx::ImportResultPackage UnFbx::FFbxImporter::MainInportTest(const FString & F
 				}
 
 				//NewObject = NewStaticMesh;
-#endif
 			}
 			else if (ImportType == FBXIT_SkeletalMesh)// skeletal mesh
 			{
@@ -2742,7 +2740,7 @@ void UnFbx::FFbxImporter::MainImport(const FString & FileToImport, EFBXImportTyp
 			if (MeshTypeToImport == FBXIT_StaticMesh)  // static mesh
 			{
 #if 0
-				YStaticMesh* NewStaticMesh = NULL;
+				UStaticMesh* NewStaticMesh = NULL;
 				if (bCombineMeshes)
 				{
 					TArray<FbxNode*> FbxMeshArray;
@@ -3052,4 +3050,151 @@ void UnFbx::FFbxImporter::MainImport(const FString & FileToImport, EFBXImportTyp
 	}
 }
 
+UStaticMesh* UnFbx::FFbxImporter::ImportANode(void* VoidFbxImporter, TArray<void*> VoidNodes, UObject* InParent, FName InName, int32& NodeIndex, int32 Total, UStaticMesh* InMesh, int LODIndex)
+{
+	UnFbx::FFbxImporter* FFbxImporter = (UnFbx::FFbxImporter*)VoidFbxImporter;
+	TArray<FbxNode*> Nodes;
+	for (void* VoidNode : VoidNodes)
+	{
+		Nodes.Add((FbxNode*)VoidNode);
+	}
+	check(Nodes.Num() > 0 && Nodes[0] != nullptr);
+
+	UStaticMesh* NewObject = NULL;
+	FName OutputName = FFbxImporter->MakeNameForMesh(InName.ToString(), Nodes[0]);
+
+	{
+		// skip collision models
+		FbxString NodeName(Nodes[0]->GetName());
+		if (NodeName.Find("UCX") != -1 || NodeName.Find("MCDCX") != -1 ||
+			NodeName.Find("UBX") != -1 || NodeName.Find("USP") != -1)
+		{
+			return NULL;
+		}
+
+		//NewObject = FFbxImporter->ImportStaticMeshAsSingle(InParent, Nodes, OutputName, ImportUI->StaticMeshImportData, InMesh, LODIndex);
+		NewObject = FFbxImporter->ImportStaticMeshAsSingle(InParent, Nodes, OutputName, nullptr, InMesh, LODIndex);
+	}
+
+	if (NewObject)
+	{
+		NodeIndex++;
+		FFormatNamedArguments Args;
+		Args.Add(TEXT("NodeIndex"), NodeIndex);
+		Args.Add(TEXT("ArrayLength"), Total);
+		GWarn->StatusUpdate(NodeIndex, Total, FText::Format(NSLOCTEXT("UnrealEd", "Importingf", "Importing ({NodeIndex} of {ArrayLength})"), Args));
+	}
+
+	return NewObject;
+}
+
+
+UStaticMesh* UnFbx::FFbxImporter::RecursiveImportNode(void* VoidFbxImporter, void* VoidNode, UObject* InParent, FName InName, int32& NodeIndex, int32 Total, TArray<UStaticMesh*>& OutNewAssets)
+{
+	TArray<void*> TmpVoidArray;
+	UStaticMesh* NewObject = NULL;
+	UnFbx::FFbxImporter *FbxImporter = (UnFbx::FFbxImporter *)VoidFbxImporter;
+	FbxNode* Node = (FbxNode*)VoidNode;
+	if (Node->GetNodeAttribute() && Node->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eLODGroup && Node->GetChildCount() > 0)
+	{
+		TArray<FbxNode*> AllNodeInLod;
+		// import base mesh
+		FbxImporter->FindAllLODGroupNode(AllNodeInLod, Node, 0);
+		if (AllNodeInLod.Num() > 0)
+		{
+			TmpVoidArray.Empty();
+			for (FbxNode* LodNode : AllNodeInLod)
+			{
+				TmpVoidArray.Add(LodNode);
+			}
+			NewObject = ImportANode(VoidFbxImporter, TmpVoidArray, InParent, InName, NodeIndex, Total);
+		}
+
+		if (NewObject)
+		{
+			OutNewAssets.Add(NewObject);
+		}
+
+		bool bImportMeshLODs;
+		if (ImportUI->MeshTypeToImport == FBXIT_StaticMesh)
+		{
+			bImportMeshLODs = ImportUI->StaticMeshImportData->bImportMeshLODs;
+		}
+		/*else if (ImportUI->MeshTypeToImport == FBXIT_SkeletalMesh)
+		{
+			bImportMeshLODs = ImportUI->SkeletalMeshImportData->bImportMeshLODs;
+			check(0);
+		}*/
+		else
+		{
+			bImportMeshLODs = false;
+		}
+
+		if (NewObject && bImportMeshLODs)
+		{
+			// import LOD meshes
+			for (int32 LODIndex = 1; LODIndex < Node->GetChildCount(); LODIndex++)
+			{
+				AllNodeInLod.Empty();
+				FbxImporter->FindAllLODGroupNode(AllNodeInLod, Node, LODIndex);
+				if (AllNodeInLod.Num() > 0)
+				{
+					TmpVoidArray.Empty();
+					for (FbxNode* LodNode : AllNodeInLod)
+					{
+						TmpVoidArray.Add(LodNode);
+					}
+					ImportANode(VoidFbxImporter, TmpVoidArray, InParent, InName, NodeIndex, Total, NewObject, LODIndex);
+				}
+			}
+		}
+
+		if (NewObject)
+		{
+			//Reorder the material
+			TArray<FbxNode*> Nodes;
+			FbxImporter->FindAllLODGroupNode(Nodes, Node, 0);
+			if (Nodes.Num() > 0)
+			{
+				FbxImporter->ReorderMaterialToFbxOrder(NewObject, Nodes);
+			}
+		}
+	}
+	else
+	{
+		if (Node->GetMesh())
+		{
+			TmpVoidArray.Empty();
+			TmpVoidArray.Add(Node);
+			NewObject = ImportANode(VoidFbxImporter, TmpVoidArray, InParent, InName, NodeIndex, Total);
+
+			if (NewObject)
+			{
+				//Reorder the material
+				TArray<FbxNode*> Nodes;
+				Nodes.Add(Node);
+				FbxImporter->ReorderMaterialToFbxOrder(NewObject, Nodes);
+
+				OutNewAssets.Add(NewObject);
+			}
+		}
+
+		for (int32 ChildIndex = 0; ChildIndex < Node->GetChildCount(); ++ChildIndex)
+		{
+			UStaticMesh* SubObject = RecursiveImportNode(VoidFbxImporter, Node->GetChild(ChildIndex), InParent, InName, NodeIndex, Total, OutNewAssets);
+
+			if (SubObject)
+			{
+				OutNewAssets.Add(SubObject);
+			}
+
+			if (NewObject == NULL)
+			{
+				NewObject = SubObject;
+			}
+		}
+	}
+
+	return NewObject;
+}
 #undef LOCTEXT_NAMESPACE

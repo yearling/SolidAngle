@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Source\Experimental\Public\EngineTypes.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Private\AnimCompress_Automatic.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Private\AnimCompress_BitwiseCompressOnly.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Private\AnimCompress_LeastDestructive.h" />
@@ -56,6 +57,7 @@
     <ClInclude Include="..\Source\Runtime\Engine\Public\Curves\KeyHandle.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\Curves\RichCurve.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\CustomBoneIndexArray.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\GeomFitUtils.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\GPUSkinVertexFactory.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\LocalVertexFactory.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\MaterialInterface.h" />
@@ -68,9 +70,11 @@
     <ClInclude Include="..\Source\Runtime\Engine\Public\Skeleton.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\SkinWeightVertexBuffer.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\SmartName.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\StaticMesh.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\YSkeletalMesh.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Source\Experimental\Private\PositionVertexBuffer.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\AnimationAsset.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\AnimationRuntime.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\AnimationSettings.cpp" />
@@ -103,6 +107,7 @@
     <ClCompile Include="..\Source\Runtime\Engine\Private\Curves\IndexedCurve.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\Curves\KeyHandle.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\Curves\RichCurve.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\GeomFitUtils.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\GPUSkinVertexFactory.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\LocalVertexFactory.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\MaterialInterface.cpp" />
@@ -113,6 +118,8 @@
     <ClCompile Include="..\Source\Runtime\Engine\Private\Skeleton.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\SkinWeightVertexBuffer.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\SmartName.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\StaticMesh.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\StaticMeshBuild.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\YSkeletalMesh.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -6,11 +6,11 @@
 
 #include "YSkeletalMesh.h"
 #include "Serialization/CustomVersion.h"
-#include "UObject/FrameworkObjectVersion.h"
+//#include "UObject/FrameworkObjectVersion.h"
 #include "Misc/App.h"
 #include "Modules/ModuleManager.h"
-#include "UObject/EditorObjectVersion.h"
-#include "UObject/RenderingObjectVersion.h"
+//#include "UObject/EditorObjectVersion.h"
+//#include "UObject/RenderingObjectVersion.h"
 #include "Logging/TokenizedMessage.h"
 #include "Logging/MessageLog.h"
 #include "SkeletalMeshTypes.h"
@@ -3205,7 +3205,7 @@ void YSkeletalMesh::InitMorphTargets()
 	//}
 }
 
-float ComputeBoundsScreenSize(const FVector4& BoundsOrigin, const float SphereRadius, const FVector4& ViewOrigin, const FMatrix& ProjMatrix)
+static float ComputeBoundsScreenSize(const FVector4& BoundsOrigin, const float SphereRadius, const FVector4& ViewOrigin, const FMatrix& ProjMatrix)
 {
 	const float Dist = FVector::Dist(BoundsOrigin, ViewOrigin);
 

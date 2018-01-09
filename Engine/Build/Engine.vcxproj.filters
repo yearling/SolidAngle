@@ -165,6 +165,15 @@
     <ClInclude Include="..\Source\Runtime\Engine\Public\AnimCompressionDerivedData.h">
       <Filter>Public</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\StaticMesh.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\EngineTypes.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Engine\Public\GeomFitUtils.h">
+      <Filter>Public</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Runtime\Engine\Private\RawMesh.cpp">
@@ -294,6 +303,18 @@
       <Filter>Private</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Runtime\Engine\Private\AnimCompressionDerivedData.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\StaticMesh.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\PositionVertexBuffer.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\StaticMeshBuild.cpp">
+      <Filter>Public</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Engine\Private\GeomFitUtils.cpp">
       <Filter>Private</Filter>
     </ClCompile>
   </ItemGroup>

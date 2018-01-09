@@ -7,6 +7,7 @@
 #include "IShader.h"
 #include "YSkeletalMesh.h"
 #include "BonePose.h"
+#include "Templates/UniquePtr.h"
 
 
 

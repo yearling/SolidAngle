@@ -8,6 +8,12 @@
 #include "CoreMinimal.h"
 #include "Misc/Guid.h"
 #include "FbxImporter.h"
+#include "RawMesh.h"
+#include "StaticMesh.h"
+#include "Misc/FbxErrors.h"
+#include "Containers/Array.h"
+#include "StaticMeshResources.h"
+#include "GeomFitUtils.h"
 
 #define LOCTEXT_NAMESPACE "FbxStaticMeshImport"
 
@@ -16,9 +22,9 @@ static const int32 LARGE_MESH_MATERIAL_INDEX_THRESHOLD = 64;
 using namespace UnFbx;
 
 struct ExistingStaticMeshData;
-extern ExistingStaticMeshData* SaveExistingStaticMeshData(YStaticMesh* ExistingMesh, FBXImportOptions* ImportOptions);
-extern void RestoreExistingMeshSettings(struct ExistingStaticMeshData* ExistingMesh, YStaticMesh* NewMesh, int32 LODIndex);
-extern void RestoreExistingMeshData(struct ExistingStaticMeshData* ExistingMeshDataPtr, YStaticMesh* NewMesh);
+extern ExistingStaticMeshData* SaveExistingStaticMeshData(UStaticMesh* ExistingMesh, FBXImportOptions* ImportOptions);
+extern void RestoreExistingMeshSettings(struct ExistingStaticMeshData* ExistingMesh, UStaticMesh* NewMesh, int32 LODIndex);
+extern void RestoreExistingMeshData(struct ExistingStaticMeshData* ExistingMeshDataPtr, UStaticMesh* NewMesh);
 
 static FbxString GetNodeNameWithoutNamespace( FbxNode* Node )
 {
@@ -39,11 +45,10 @@ static FbxString GetNodeNameWithoutNamespace( FbxNode* Node )
 	}
 }
 
-#if 0
 //-------------------------------------------------------------------------
 //
 //-------------------------------------------------------------------------
-YStaticMesh* UnFbx::FFbxImporter::ImportStaticMesh(UObject* InParent, FbxNode* Node, const FName& Name, UFbxStaticMeshImportData* ImportData, YStaticMesh* InStaticMesh, int LODIndex, void *ExistMeshDataPtr)
+UStaticMesh* UnFbx::FFbxImporter::ImportStaticMesh(UObject* InParent, FbxNode* Node, const FName& Name, UFbxStaticMeshImportData* ImportData, UStaticMesh* InStaticMesh, int LODIndex, void *ExistMeshDataPtr)
 {
 	TArray<FbxNode*> MeshNodeArray;
 	
@@ -229,7 +234,7 @@ struct FFBXUVs
 	int32 UniqueUVCount;
 };
 
-bool UnFbx::FFbxImporter::BuildStaticMeshFromGeometry(FbxNode* Node, YStaticMesh* StaticMesh, TArray<FFbxMaterial>& MeshMaterials, int32 LODIndex,FRawMesh& RawMesh,
+bool UnFbx::FFbxImporter::BuildStaticMeshFromGeometry(FbxNode* Node, UStaticMesh* StaticMesh, TArray<FFbxMaterial>& MeshMaterials, int32 LODIndex,FRawMesh& RawMesh,
 	EVertexColorImportOption::Type VertexColorImportOption, const TMap<FVector, FColor>& ExistingVertexColorData, const FColor& VertexOverrideColor)
 {
 	check(StaticMesh->SourceModels.IsValidIndex(LODIndex));
@@ -287,24 +292,24 @@ bool UnFbx::FFbxImporter::BuildStaticMeshFromGeometry(FbxNode* Node, YStaticMesh
 		else
 		{
 			FString MaterialFullName = GetMaterialFullName(*FbxMaterial);
-			FString BasePackageName = PackageTools::SanitizePackageName(FPackageName::GetLongPackagePath(StaticMesh->GetOutermost()->GetName()) / MaterialFullName);
+			/*FString BasePackageName = PackageTools::SanitizePackageName(FPackageName::GetLongPackagePath(StaticMesh->GetOutermost()->GetName()) / MaterialFullName);
 			UMaterialInterface* UnrealMaterialInterface = FindObject<UMaterialInterface>(NULL, *(BasePackageName + TEXT(".") + MaterialFullName));
 			if (UnrealMaterialInterface == NULL)
 			{
 				UnrealMaterialInterface = UMaterial::GetDefaultMaterial(MD_Surface);
-			}
-			NewMaterial->Material = UnrealMaterialInterface;
+			}	
+			NewMaterial->Material = UnrealMaterialInterface;*/
 		}
 	}
 
 	if ( MaterialCount == 0 )
 	{
-		UMaterial* DefaultMaterial = UMaterial::GetDefaultMaterial(MD_Surface);
+		/*UMaterial* DefaultMaterial = UMaterial::GetDefaultMaterial(MD_Surface);
 		check(DefaultMaterial);
 		FFbxMaterial* NewMaterial = new(MeshMaterials) FFbxMaterial;
 		NewMaterial->Material = DefaultMaterial;
 		NewMaterial->FbxMaterial = NULL;
-		MaterialCount = 1;
+		MaterialCount = 1;*/
 	}
 
 	//
@@ -427,7 +432,7 @@ bool UnFbx::FFbxImporter::BuildStaticMeshFromGeometry(FbxNode* Node, YStaticMesh
 	bool bImportedCollision = ImportCollisionModels(StaticMesh, GetNodeNameWithoutNamespace(Node));
 
 	//If we import a collision or we "generate one and remove the degenerates triangles" we will automatically set the section collision boolean.
-	bool bEnableCollision = bImportedCollision || (GBuildStaticMeshCollision && LODIndex == 0 && ImportOptions->bRemoveDegenerates);
+	bool bEnableCollision = bImportedCollision || (/*GBuildStaticMeshCollision &&*/ LODIndex == 0 && ImportOptions->bRemoveDegenerates);
 	for(int32 SectionIndex=MaterialIndexOffset; SectionIndex<MaterialIndexOffset+MaterialCount; SectionIndex++)
 	{
 		FMeshSectionInfo Info = StaticMesh->SectionInfoMap.Get(LODIndex, SectionIndex);
@@ -742,10 +747,10 @@ bool UnFbx::FFbxImporter::BuildStaticMeshFromGeometry(FbxNode* Node, YStaticMesh
 	return bIsValidMesh;
 }
 
-YStaticMesh* UnFbx::FFbxImporter::ReimportSceneStaticMesh(uint64 FbxNodeUniqueId, uint64 FbxUniqueId, YStaticMesh* Mesh, UFbxStaticMeshImportData* TemplateImportData)
+UStaticMesh* UnFbx::FFbxImporter::ReimportSceneStaticMesh(uint64 FbxNodeUniqueId, uint64 FbxUniqueId, UStaticMesh* Mesh, UFbxStaticMeshImportData* TemplateImportData)
 {
 	TArray<FbxNode*> FbxMeshArray;
-	YStaticMesh* FirstBaseMesh = NULL;
+	UStaticMesh* FirstBaseMesh = NULL;
 	FbxNode* Node = NULL;
 
 	// get meshes in Fbx file
@@ -797,10 +802,10 @@ YStaticMesh* UnFbx::FFbxImporter::ReimportSceneStaticMesh(uint64 FbxNodeUniqueId
 		// if the Fbx mesh is a part of LODGroup, update LOD
 		if (NodeParent && NodeParent->GetNodeAttribute() && NodeParent->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eLODGroup)
 		{
-			TArray<YStaticMesh*> BaseMeshes;
+			TArray<UStaticMesh*> BaseMeshes;
 			TArray<FbxNode*> AllNodeInLod;
 			FindAllLODGroupNode(AllNodeInLod, NodeParent, 0);
-			FirstBaseMesh = ImportStaticMeshAsSingle(Mesh->GetOutermost(), AllNodeInLod, *Mesh->GetName(), RF_Public | RF_Standalone, TemplateImportData, Mesh, 0, ExistMeshDataPtr);
+			FirstBaseMesh = ImportStaticMeshAsSingle(nullptr, AllNodeInLod, *Mesh->GetName(), TemplateImportData, Mesh, 0, ExistMeshDataPtr);
 			//If we have a valid LOD group name we don't want to re-import LODs since they will be automatically generate by the LODGroup reduce settings
 			if(FirstBaseMesh && Mesh->LODGroup == NAME_None)
 			{
@@ -810,13 +815,13 @@ YStaticMesh* UnFbx::FFbxImporter::ReimportSceneStaticMesh(uint64 FbxNodeUniqueId
 					AllNodeInLod.Empty();
 					FindAllLODGroupNode(AllNodeInLod, NodeParent, LODIndex);
 					//For LOD we don't pass the ExistMeshDataPtr
-					ImportStaticMeshAsSingle(Mesh->GetOutermost(), AllNodeInLod, *Mesh->GetName(), RF_Public | RF_Standalone, TemplateImportData, FirstBaseMesh, LODIndex, nullptr);
+					ImportStaticMeshAsSingle(nullptr, AllNodeInLod, *Mesh->GetName(), TemplateImportData, FirstBaseMesh, LODIndex, nullptr);
 				}
 			}
 		}
 		else
 		{
-			FirstBaseMesh = ImportStaticMesh(Mesh->GetOutermost(), Node, *Mesh->GetName(), RF_Public | RF_Standalone, TemplateImportData, Mesh, 0, ExistMeshDataPtr);
+			FirstBaseMesh = ImportStaticMesh(nullptr, Node, *Mesh->GetName(), TemplateImportData, Mesh, 0, ExistMeshDataPtr);
 		}
 	}
 	else
@@ -824,7 +829,7 @@ YStaticMesh* UnFbx::FFbxImporter::ReimportSceneStaticMesh(uint64 FbxNodeUniqueId
 		// no FBX mesh match, maybe the Unreal mesh is imported from multiple FBX mesh (enable option "Import As Single")
 		if (FbxMeshArray.Num() > 0)
 		{
-			FirstBaseMesh = ImportStaticMeshAsSingle(Mesh->GetOutermost(), FbxMeshArray, *Mesh->GetName(), RF_Public | RF_Standalone, TemplateImportData, Mesh, 0, ExistMeshDataPtr);
+			FirstBaseMesh = ImportStaticMeshAsSingle(nullptr, FbxMeshArray, *Mesh->GetName(),TemplateImportData, Mesh, 0, ExistMeshDataPtr);
 		}
 		else // no mesh found in the FBX file
 		{
@@ -837,13 +842,13 @@ YStaticMesh* UnFbx::FFbxImporter::ReimportSceneStaticMesh(uint64 FbxNodeUniqueId
 }
 
 
-YStaticMesh* UnFbx::FFbxImporter::ReimportStaticMesh(YStaticMesh* Mesh, UFbxStaticMeshImportData* TemplateImportData)
+UStaticMesh* UnFbx::FFbxImporter::ReimportStaticMesh(UStaticMesh* Mesh, UFbxStaticMeshImportData* TemplateImportData)
 {
 	char MeshName[1024];
 	FCStringAnsi::Strcpy(MeshName,1024,TCHAR_TO_UTF8(*Mesh->GetName()));
 	TArray<FbxNode*> FbxMeshArray;
 	FbxNode* Node = NULL;
-	YStaticMesh* NewMesh = NULL;
+	UStaticMesh* NewMesh = NULL;
 
 	// get meshes in Fbx file
 	//the function also fill the collision models, so we can update collision models correctly
@@ -928,7 +933,7 @@ YStaticMesh* UnFbx::FFbxImporter::ReimportStaticMesh(YStaticMesh* Mesh, UFbxStat
 			if (AllNodeInLod.Num() > 0)
 			{
 				LodZeroNodes = AllNodeInLod;
-				NewMesh = ImportStaticMeshAsSingle(Mesh->GetOuter(), AllNodeInLod, *Mesh->GetName(), RF_Public | RF_Standalone, TemplateImportData, Mesh, 0, ExistMeshDataPtr);
+				NewMesh = ImportStaticMeshAsSingle(nullptr, AllNodeInLod, *Mesh->GetName(), TemplateImportData, Mesh, 0, ExistMeshDataPtr);
 			}
 
 			//If we have a valid LOD group name we don't want to re-import LODs since they will be automatically generate by the LODGroup reduce settings
@@ -942,7 +947,7 @@ YStaticMesh* UnFbx::FFbxImporter::ReimportStaticMesh(YStaticMesh* Mesh, UFbxStat
 					if (AllNodeInLod.Num() > 0)
 					{
 						//For LOD we don't pass the ExistMeshDataPtr
-						ImportStaticMeshAsSingle(Mesh->GetOuter(), AllNodeInLod, *Mesh->GetName(), RF_Public | RF_Standalone, TemplateImportData, NewMesh, LODIndex, nullptr);
+						ImportStaticMeshAsSingle(nullptr, AllNodeInLod, *Mesh->GetName(), TemplateImportData, NewMesh, LODIndex, nullptr);
 					}
 				}
 			}
@@ -950,7 +955,7 @@ YStaticMesh* UnFbx::FFbxImporter::ReimportStaticMesh(YStaticMesh* Mesh, UFbxStat
 		else
 		{
 			LodZeroNodes.Add(Node);
-			NewMesh = ImportStaticMesh(Mesh->GetOuter(), Node, *Mesh->GetName(), RF_Public|RF_Standalone, TemplateImportData, Mesh, 0, ExistMeshDataPtr);
+			NewMesh = ImportStaticMesh(nullptr, Node, *Mesh->GetName(), TemplateImportData, Mesh, 0, ExistMeshDataPtr);
 		}
 		ReorderMaterialToFbxOrder(NewMesh, LodZeroNodes);
 	}
@@ -959,7 +964,7 @@ YStaticMesh* UnFbx::FFbxImporter::ReimportStaticMesh(YStaticMesh* Mesh, UFbxStat
 		// no FBX mesh match, maybe the Unreal mesh is imported from multiple FBX mesh (enable option "Import As Single")
 		if (FbxMeshArray.Num() > 0)
 		{
-			NewMesh = ImportStaticMeshAsSingle(Mesh->GetOuter(), FbxMeshArray, *Mesh->GetName(), RF_Public|RF_Standalone, TemplateImportData, Mesh, 0, ExistMeshDataPtr);
+			NewMesh = ImportStaticMeshAsSingle(nullptr, FbxMeshArray, *Mesh->GetName(),TemplateImportData, Mesh, 0, ExistMeshDataPtr);
 			ReorderMaterialToFbxOrder(NewMesh, FbxMeshArray);
 		}
 		else // no mesh found in the FBX file
@@ -972,7 +977,7 @@ YStaticMesh* UnFbx::FFbxImporter::ReimportStaticMesh(YStaticMesh* Mesh, UFbxStat
 	return NewMesh;
 }
 
-void UnFbx::FFbxImporter::VerifyGeometry(YStaticMesh* StaticMesh)
+void UnFbx::FFbxImporter::VerifyGeometry(UStaticMesh* StaticMesh)
 {
 	// Calculate bounding box to check if too small
 	{
@@ -986,7 +991,7 @@ void UnFbx::FFbxImporter::VerifyGeometry(YStaticMesh* StaticMesh)
 	}
 }
 
-YStaticMesh* UnFbx::FFbxImporter::ImportStaticMeshAsSingle(UObject* InParent, TArray<FbxNode*>& MeshNodeArray, const FName InName,  UFbxStaticMeshImportData* TemplateImportData, YStaticMesh* InStaticMesh, int LODIndex, void *ExistMeshDataPtr)
+UStaticMesh* UnFbx::FFbxImporter::ImportStaticMeshAsSingle(UObject* InParent, TArray<FbxNode*>& MeshNodeArray, const FName InName,  UFbxStaticMeshImportData* TemplateImportData, UStaticMesh* InStaticMesh, int LODIndex, void *ExistMeshDataPtr)
 {
 	struct ExistingStaticMeshData* ExistMeshData = (struct ExistingStaticMeshData*)ExistMeshDataPtr;
 	bool bBuildStatus = true;
@@ -1035,9 +1040,9 @@ YStaticMesh* UnFbx::FFbxImporter::ImportStaticMeshAsSingle(UObject* InParent, TA
 	}*/
 
 	// create empty mesh
-	YStaticMesh*	StaticMesh = NULL;
+	UStaticMesh*	StaticMesh = NULL;
 
-	YStaticMesh* ExistingMesh = NULL;
+	UStaticMesh* ExistingMesh = NULL;
 	UObject* ExistingObject = NULL;
 
 	// A mapping of vertex positions to their color in the existing static mesh
@@ -1051,14 +1056,14 @@ YStaticMesh* UnFbx::FFbxImporter::ImportStaticMeshAsSingle(UObject* InParent, TA
 		// Create a package for each mesh
 		if (Package == nullptr)
 		{
-			NewPackageName = FPackageName::GetLongPackagePath(Parent->GetOutermost()->GetName()) + TEXT("/") + MeshName;
+			/*NewPackageName = FPackageName::GetLongPackagePath(Parent->GetOutermost()->GetName()) + TEXT("/") + MeshName;
 			NewPackageName = PackageTools::SanitizePackageName(NewPackageName);
-			Package = CreatePackage(NULL, *NewPackageName);
+			Package = CreatePackage(NULL, *NewPackageName);*/
 		}
-		Package->FullyLoad();
+	/*	Package->FullyLoad();
 
-		ExistingMesh = FindObject<YStaticMesh>( Package, *MeshName );
-		ExistingObject = FindObject<UObject>( Package, *MeshName );		
+		ExistingMesh = FindObject<UStaticMesh>( Package, *MeshName );
+		ExistingObject = FindObject<UObject>( Package, *MeshName );		*/
 	}
 
 	if (ExistingMesh)
@@ -1075,37 +1080,37 @@ YStaticMesh* UnFbx::FFbxImporter::ImportStaticMeshAsSingle(UObject* InParent, TA
 		}
 
 		// Free any RHI resources for existing mesh before we re-create in place.
-		ExistingMesh->PreEditChange(NULL);
+		//ExistingMesh->PreEditChange(NULL);
 	}
 	else if (ExistingObject)
 	{
 		// Replacing an object.  Here we go!
 		// Delete the existing object
-		bool bDeleteSucceeded = ObjectTools::DeleteSingleObject( ExistingObject );
+		//bool bDeleteSucceeded = ObjectTools::DeleteSingleObject( ExistingObject );
 
-		if (bDeleteSucceeded)
-		{
-			// Force GC so we can cleanly create a new asset (and not do an 'in place' replacement)
-			CollectGarbage( GARBAGE_COLLECTION_KEEPFLAGS );
+		//if (bDeleteSucceeded)
+		//{
+		//	// Force GC so we can cleanly create a new asset (and not do an 'in place' replacement)
+		//	CollectGarbage( GARBAGE_COLLECTION_KEEPFLAGS );
 
-			// Create a package for each mesh
-			Package = CreatePackage(NULL, *NewPackageName);
+		//	// Create a package for each mesh
+		//	Package = CreatePackage(NULL, *NewPackageName);
 
-			// Require the parent because it will have been invalidated from the garbage collection
-			Parent = Package;
-		}
-		else
-		{
-			// failed to delete
-			AddTokenizedErrorMessage(FTokenizedMessage::Create(EMessageSeverity::Error, FText::Format(LOCTEXT("ContentBrowser_CannotDeleteReferenced", "{0} wasn't created.\n\nThe asset is referenced by other content."), FText::FromString(MeshName))), FFbxErrors::Generic_CannotDeleteReferenced);
-			return NULL;
-		}
+		//	// Require the parent because it will have been invalidated from the garbage collection
+		//	Parent = Package;
+		//}
+		//else
+		//{
+		//	// failed to delete
+		//	AddTokenizedErrorMessage(FTokenizedMessage::Create(EMessageSeverity::Error, FText::Format(LOCTEXT("ContentBrowser_CannotDeleteReferenced", "{0} wasn't created.\n\nThe asset is referenced by other content."), FText::FromString(MeshName))), FFbxErrors::Generic_CannotDeleteReferenced);
+		//	return NULL;
+		//}
 
-		// Vertex colors should be copied always if there is no existing static mesh.
-		if (VertexColorImportOption == EVertexColorImportOption::Ignore)
-		{
-			VertexColorImportOption = EVertexColorImportOption::Replace;
-		}
+		//// Vertex colors should be copied always if there is no existing static mesh.
+		//if (VertexColorImportOption == EVertexColorImportOption::Ignore)
+		//{
+		//	VertexColorImportOption = EVertexColorImportOption::Replace;
+		//}
 	}
 	else
 	{ 
@@ -1122,7 +1127,8 @@ YStaticMesh* UnFbx::FFbxImporter::ImportStaticMeshAsSingle(UObject* InParent, TA
 	}
 	else
 	{
-		StaticMesh = NewObject<YStaticMesh>(Package, FName(*MeshName), Flags | RF_Public);
+		//StaticMesh = NewObject<UStaticMesh>(Package, FName(*MeshName), Flags | RF_Public);
+		StaticMesh = new UStaticMesh();
 	}
 
 	if (StaticMesh->SourceModels.Num() < LODIndex+1)
@@ -1430,7 +1436,7 @@ YStaticMesh* UnFbx::FFbxImporter::ImportStaticMeshAsSingle(UObject* InParent, TA
 		// Setup default LOD settings based on the selected LOD group.
 		if (LODIndex == 0)
 		{
-			ITargetPlatform* CurrentPlatform = GetTargetPlatformManagerRef().GetRunningTargetPlatform();
+		/*	ITargetPlatform* CurrentPlatform = GetTargetPlatformManagerRef().GetRunningTargetPlatform();
 			check(CurrentPlatform);
 			const FStaticMeshLODGroup& LODGroup = CurrentPlatform->GetStaticMeshLODSettings().GetLODGroup(ImportOptions->StaticMeshLODGroup);
 			int32 NumLODs = LODGroup.GetDefaultNumLODs();
@@ -1442,7 +1448,7 @@ YStaticMesh* UnFbx::FFbxImporter::ImportStaticMeshAsSingle(UObject* InParent, TA
 			{
 				StaticMesh->SourceModels[ModelLODIndex].ReductionSettings = LODGroup.GetDefaultSettings(ModelLODIndex);
 			}
-			StaticMesh->LightMapResolution = LODGroup.GetDefaultLightMapResolution();
+			StaticMesh->LightMapResolution = LODGroup.GetDefaultLightMapResolution();*/
 		}
 
 		UFbxStaticMeshImportData* ImportData = UFbxStaticMeshImportData::GetImportDataForStaticMesh(StaticMesh, TemplateImportData);
@@ -1453,7 +1459,7 @@ YStaticMesh* UnFbx::FFbxImporter::ImportStaticMeshAsSingle(UObject* InParent, TA
 		Doing this for CAD files with thousands of components hugely increases the time.
 		The following method uses a precomputed hash (once per file). Huge time savings.
 		*/
-		ImportData->Update(UFactory::GetCurrentFilename(), UFactory::GetFileHash());
+		//ImportData->Update(UFactory::GetCurrentFilename(), UFactory::GetFileHash());
 		//@third party END SIMPLYGON
 
 
@@ -1521,7 +1527,7 @@ StaticMesh->LightMapCoordinateIndex = FirstOpenUVChannel;
 			TArray< FString > MissingUVSets;
 			TArray< FString > BadUVSets;
 			TArray< FString > ValidUVSets;
-			YStaticMesh::CheckLightMapUVs(StaticMesh, MissingUVSets, BadUVSets, ValidUVSets);
+			UStaticMesh::CheckLightMapUVs(StaticMesh, MissingUVSets, BadUVSets, ValidUVSets);
 
 			// NOTE: We don't care about missing UV sets here, just bad ones!
 			if (BadUVSets.Num() > 0)
@@ -1535,8 +1541,8 @@ StaticMesh->LightMapCoordinateIndex = FirstOpenUVChannel;
 		// If we couldn't build the static mesh, its package is invalid. We should reject it entirely to prevent issues from arising from trying to use it in the editor.
 		if (!NewPackageName.IsEmpty())
 		{
-			Package->RemoveFromRoot();
-			Package->ConditionalBeginDestroy();
+			//Package->RemoveFromRoot();
+			//Package->ConditionalBeginDestroy();
 		}
 
 		StaticMesh = NULL;
@@ -1548,14 +1554,14 @@ StaticMesh->LightMapCoordinateIndex = FirstOpenUVChannel;
 		//collision generation
 		if (StaticMesh->bCustomizedCollision == false && ImportOptions->bAutoGenerateCollision)
 		{
-			FKAggregateGeom & AggGeom = StaticMesh->BodySetup->AggGeom;
-			AggGeom.ConvexElems.Empty(1);	//if no custom collision is setup we just regenerate collision when reimport
+			//FKAggregateGeom & AggGeom = StaticMesh->BodySetup->AggGeom;
+			//AggGeom.ConvexElems.Empty(1);	//if no custom collision is setup we just regenerate collision when reimport
 
-			const int32 NumDirs = 18;
-			TArray<FVector> Dirs;
-			Dirs.AddUninitialized(NumDirs);
-			for (int32 DirIdx = 0; DirIdx < NumDirs; ++DirIdx) { Dirs[DirIdx] = KDopDir18[DirIdx]; }
-			GenerateKDopAsSimpleCollision(StaticMesh, Dirs);
+			//const int32 NumDirs = 18;
+			//TArray<FVector> Dirs;
+			//Dirs.AddUninitialized(NumDirs);
+			//for (int32 DirIdx = 0; DirIdx < NumDirs; ++DirIdx) { Dirs[DirIdx] = KDopDir18[DirIdx]; }
+			//GenerateKDopAsSimpleCollision(StaticMesh, Dirs);
 		}
 
 		//warnings based on geometry
@@ -1567,7 +1573,7 @@ StaticMesh->LightMapCoordinateIndex = FirstOpenUVChannel;
 	return StaticMesh;
 }
 
-void UnFbx::FFbxImporter::ReorderMaterialToFbxOrder(YStaticMesh* StaticMesh, TArray<FbxNode*>& MeshNodeArray)
+void UnFbx::FFbxImporter::ReorderMaterialToFbxOrder(UStaticMesh* StaticMesh, TArray<FbxNode*>& MeshNodeArray)
 {
 	//If there is less the 2 materials in the fbx file there is no need to reorder them
 	if (StaticMesh == nullptr || StaticMesh->StaticMaterials.Num() < 2)
@@ -1653,161 +1659,161 @@ void UnFbx::FFbxImporter::ReorderMaterialToFbxOrder(YStaticMesh* StaticMesh, TAr
 
 bool UnFbx::FFbxImporter::ImportSubDSurface(USubDSurface* Out, UObject* InParent, TArray<FbxNode*>& MeshNodeArray, const FName InName, UFbxStaticMeshImportData* TemplateImportData)
 {
-	if(!MeshNodeArray.Num())
-	{
-		return false;
-	}
+	//if(!MeshNodeArray.Num())
+	//{
+	//	return false;
+	//}
 
-	// Make sure rendering is done - so we are not changing data being used
-	//FlushRenderingCommands();
+	//// Make sure rendering is done - so we are not changing data being used
+	////FlushRenderingCommands();
 
-	double StartTime = FPlatformTime::Seconds();
+	//double StartTime = FPlatformTime::Seconds();
 
-	Parent = InParent;
+	//Parent = InParent;
 
-	// warning for missing smoothing group info
-	CheckSmoothingInfo(MeshNodeArray[0]->GetMesh());
+	//// warning for missing smoothing group info
+	//CheckSmoothingInfo(MeshNodeArray[0]->GetMesh());
 
-	uint32 ModelCount = (uint32)MeshNodeArray.Num();
+	//uint32 ModelCount = (uint32)MeshNodeArray.Num();
 
-	// RemoveBadPolygons(), count Vertex and Indices
-	uint32 TotalIndexCount = 0, TotalVertexCount = 0, TotalPolyCount = 0;
-	{
-		for(uint32 ModelIndex = 0; ModelIndex < ModelCount; ++ModelIndex)
-		{
-			FbxNode* Node = MeshNodeArray[ModelIndex];
-			FbxMesh* FbxMesh = Node->GetMesh();
+	//// RemoveBadPolygons(), count Vertex and Indices
+	//uint32 TotalIndexCount = 0, TotalVertexCount = 0, TotalPolyCount = 0;
+	//{
+	//	for(uint32 ModelIndex = 0; ModelIndex < ModelCount; ++ModelIndex)
+	//	{
+	//		FbxNode* Node = MeshNodeArray[ModelIndex];
+	//		FbxMesh* FbxMesh = Node->GetMesh();
 
-			int32 Removed = FbxMesh->RemoveBadPolygons();
+	//		int32 Removed = FbxMesh->RemoveBadPolygons();
 
-			TotalVertexCount += FbxMesh->GetControlPointsCount();
+	//		TotalVertexCount += FbxMesh->GetControlPointsCount();
 
-			int32 PolyCount = FbxMesh->GetPolygonCount();
+	//		int32 PolyCount = FbxMesh->GetPolygonCount();
 
-			TotalPolyCount += PolyCount;
+	//		TotalPolyCount += PolyCount;
 
-			for(int32 PolyIndex = 0; PolyIndex < PolyCount; ++PolyIndex)
-			{
-				int32 PolySize = FbxMesh->GetPolygonSize(PolyIndex);
-				
-				TotalIndexCount += PolySize;
-			}
-		}
-	}
+	//		for(int32 PolyIndex = 0; PolyIndex < PolyCount; ++PolyIndex)
+	//		{
+	//			int32 PolySize = FbxMesh->GetPolygonSize(PolyIndex);
+	//			
+	//			TotalIndexCount += PolySize;
+	//		}
+	//	}
+	//}
 
-	Out->IndicesPerFace.AddUninitialized(TotalIndexCount);
-	Out->VertexCountPerFace.AddUninitialized(TotalPolyCount);
+	//Out->IndicesPerFace.AddUninitialized(TotalIndexCount);
+	//Out->VertexCountPerFace.AddUninitialized(TotalPolyCount);
 
-	uint32* IndicesPerFace = Out->IndicesPerFace.GetData();
-	uint32* VertexCountPerFace = Out->VertexCountPerFace.GetData();
+	//uint32* IndicesPerFace = Out->IndicesPerFace.GetData();
+	//uint32* VertexCountPerFace = Out->VertexCountPerFace.GetData();
 
-	// add position vertex attribute
-	FVector* Positions = 0;
-	{
-		auto Stream = Out->CreateVertexAttributeStream(FName(TEXT("Position")));
-		Positions = Stream->CreateFVectorUninitialized(TotalVertexCount);
-	}
+	//// add position vertex attribute
+	//FVector* Positions = 0;
+	//{
+	//	auto Stream = Out->CreateVertexAttributeStream(FName(TEXT("Position")));
+	//	Positions = Stream->CreateFVectorUninitialized(TotalVertexCount);
+	//}
 
-	// todo: support multiple UV
+	//// todo: support multiple UV
 
-	// add UV vertex attribute
-	FVector2D* UV0 = 0;
-	{
-		auto Stream = Out->CreateVertexAttributeStream(FName(TEXT("UV0")));
-		UV0 = Stream->CreateFVector2DUninitialized(TotalIndexCount);
-	}
+	//// add UV vertex attribute
+	//FVector2D* UV0 = 0;
+	//{
+	//	auto Stream = Out->CreateVertexAttributeStream(FName(TEXT("UV0")));
+	//	UV0 = Stream->CreateFVector2DUninitialized(TotalIndexCount);
+	//}
 
-	uint32 CurrentIndexStart = 0;
-	for(uint32 ModelIndex = 0; ModelIndex < ModelCount; ++ModelIndex)
-	{
-		FbxNode* Node = MeshNodeArray[ModelIndex];
-		FbxMesh* FbxMesh = Node->GetMesh();
-		uint32 PolyCount = (uint32)FbxMesh->GetPolygonCount();
+	//uint32 CurrentIndexStart = 0;
+	//for(uint32 ModelIndex = 0; ModelIndex < ModelCount; ++ModelIndex)
+	//{
+	//	FbxNode* Node = MeshNodeArray[ModelIndex];
+	//	FbxMesh* FbxMesh = Node->GetMesh();
+	//	uint32 PolyCount = (uint32)FbxMesh->GetPolygonCount();
 
-		FFBXUVs FBXUVs(FbxMesh);
+	//	FFBXUVs FBXUVs(FbxMesh);
 
-		FBXUVs.Phase2(FbxMesh);
+	//	FBXUVs.Phase2(FbxMesh);
 
-		for(uint32 PolyIndex = 0; PolyIndex < PolyCount; ++PolyIndex)
-		{
-			uint32 CornerCount = FbxMesh->GetPolygonSize(PolyIndex);
+	//	for(uint32 PolyIndex = 0; PolyIndex < PolyCount; ++PolyIndex)
+	//	{
+	//		uint32 CornerCount = FbxMesh->GetPolygonSize(PolyIndex);
 
-			// store VertexCountPerFace
-			*VertexCountPerFace++ = CornerCount;
+	//		// store VertexCountPerFace
+	//		*VertexCountPerFace++ = CornerCount;
 
-			for(uint32 Corner = 0; Corner < CornerCount; ++Corner)
-			{
-				uint32 VertexIndex = (uint32)FbxMesh->GetPolygonVertex(PolyIndex, Corner);
+	//		for(uint32 Corner = 0; Corner < CornerCount; ++Corner)
+	//		{
+	//			uint32 VertexIndex = (uint32)FbxMesh->GetPolygonVertex(PolyIndex, Corner);
 
-				check(VertexIndex < TotalVertexCount);
+	//			check(VertexIndex < TotalVertexCount);
 
-				// store IndicesPerFace
-				*IndicesPerFace++ = CurrentIndexStart + VertexIndex;
-			}
-		}
+	//			// store IndicesPerFace
+	//			*IndicesPerFace++ = CurrentIndexStart + VertexIndex;
+	//		}
+	//	}
 
-		int32 ControlPointsCount = FbxMesh->GetControlPointsCount();
+	//	int32 ControlPointsCount = FbxMesh->GetControlPointsCount();
 
-		CurrentIndexStart += ControlPointsCount;
+	//	CurrentIndexStart += ControlPointsCount;
 
-		FbxAMatrix Matrix = ComputeTotalMatrix(Node);
+	//	FbxAMatrix Matrix = ComputeTotalMatrix(Node);
 
-		{
-			
-			FbxVector4* ControlPoints = FbxMesh->GetControlPoints();
+	//	{
+	//		
+	//		FbxVector4* ControlPoints = FbxMesh->GetControlPoints();
 
-			for(int32 ControlPointsIndex = 0; ControlPointsIndex < ControlPointsCount; ControlPointsIndex++ )
-			{
-				FVector Pos = Converter.ConvertPos(Matrix.MultT(ControlPoints[ControlPointsIndex]));
+	//		for(int32 ControlPointsIndex = 0; ControlPointsIndex < ControlPointsCount; ControlPointsIndex++ )
+	//		{
+	//			FVector Pos = Converter.ConvertPos(Matrix.MultT(ControlPoints[ControlPointsIndex]));
 
-				*Positions++ = Pos;
-			}
-		}
+	//			*Positions++ = Pos;
+	//		}
+	//	}
 
 
 
-		//
-		// uvs
-		//
-		// In FBX file, the same UV may be saved multiple times, i.e., there may be same UV in LayerElementUV
-		// So we don't import the duplicate UVs
-		{
-			// We don't support multiple UV yet
-			ensure(FBXUVs.UniqueUVCount == 1);
+	//	//
+	//	// uvs
+	//	//
+	//	// In FBX file, the same UV may be saved multiple times, i.e., there may be same UV in LayerElementUV
+	//	// So we don't import the duplicate UVs
+	//	{
+	//		// We don't support multiple UV yet
+	//		ensure(FBXUVs.UniqueUVCount == 1);
 
-			int32 UVLayerIndex;
-			for (UVLayerIndex = 0; UVLayerIndex < FBXUVs.UniqueUVCount; UVLayerIndex++)
-			{
-				if (FBXUVs.LayerElementUV[UVLayerIndex] != NULL) 
-				{
-					uint32 UniqueCornerIndex = 0;
+	//		int32 UVLayerIndex;
+	//		for (UVLayerIndex = 0; UVLayerIndex < FBXUVs.UniqueUVCount; UVLayerIndex++)
+	//		{
+	//			if (FBXUVs.LayerElementUV[UVLayerIndex] != NULL) 
+	//			{
+	//				uint32 UniqueCornerIndex = 0;
 
-					for(uint32 PolyIndex = 0; PolyIndex < PolyCount; ++PolyIndex)
-					{
-						int32 PolySize = FbxMesh->GetPolygonSize(PolyIndex);
+	//				for(uint32 PolyIndex = 0; PolyIndex < PolyCount; ++PolyIndex)
+	//				{
+	//					int32 PolySize = FbxMesh->GetPolygonSize(PolyIndex);
 
-						for (int32 CornerIndex = 0; CornerIndex < PolySize; CornerIndex++)
-						{
-							// If there are odd number negative scale, invert the vertex order for triangles
-	//todo						int32 WedgeIndex = WedgeOffset + TriangleIndex * 3 + (OddNegativeScale ? 2 - CornerIndex : CornerIndex);
-		
-							int lControlPointIndex = FbxMesh->GetPolygonVertex(PolyIndex, CornerIndex);
+	//					for (int32 CornerIndex = 0; CornerIndex < PolySize; CornerIndex++)
+	//					{
+	//						// If there are odd number negative scale, invert the vertex order for triangles
+	////todo						int32 WedgeIndex = WedgeOffset + TriangleIndex * 3 + (OddNegativeScale ? 2 - CornerIndex : CornerIndex);
+	//	
+	//						int lControlPointIndex = FbxMesh->GetPolygonVertex(PolyIndex, CornerIndex);
 
-							int UVIndex = FBXUVs.ComputeUVIndex(UVLayerIndex, lControlPointIndex, UniqueCornerIndex);
-	
-							FbxVector2 UVVector = FBXUVs.LayerElementUV[UVLayerIndex]->GetDirectArray().GetAt(UVIndex);
+	//						int UVIndex = FBXUVs.ComputeUVIndex(UVLayerIndex, lControlPointIndex, UniqueCornerIndex);
+	//
+	//						FbxVector2 UVVector = FBXUVs.LayerElementUV[UVLayerIndex]->GetDirectArray().GetAt(UVIndex);
 
-							*UV0++ = FVector2D(static_cast<float>(UVVector[0]), 1.0f - static_cast<float>(UVVector[1]));   //flip the Y of UVs for DirectX
+	//						*UV0++ = FVector2D(static_cast<float>(UVVector[0]), 1.0f - static_cast<float>(UVVector[1]));   //flip the Y of UVs for DirectX
 
-							++UniqueCornerIndex;
-						}
-					}
-				}
-			}
-		}
-	}
-	
-	UE_LOG(LogFbx, Log, TEXT("SubDSurface import: %5.2f seconds"), FPlatformTime::Seconds() - StartTime);
+	//						++UniqueCornerIndex;
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
+	//
+	//UE_LOG(LogFbx, Log, TEXT("SubDSurface import: %5.2f seconds"), FPlatformTime::Seconds() - StartTime);
 
 	return true;
 }
@@ -1854,362 +1860,362 @@ static void FindMeshSockets( FbxNode* StartNode, TArray<FbxSocketNode>& OutFbxSo
 	}
 }
 
-void UnFbx::FFbxImporter::ImportStaticMeshLocalSockets(YStaticMesh* StaticMesh, TArray<FbxNode*>& MeshNodeArray)
+void UnFbx::FFbxImporter::ImportStaticMeshLocalSockets(UStaticMesh* StaticMesh, TArray<FbxNode*>& MeshNodeArray)
 {
-	check(MeshNodeArray.Num());
-	FbxNode *MeshRootNode = MeshNodeArray[0];
-	const FbxAMatrix &MeshTotalMatrix = ComputeTotalMatrix(MeshRootNode);
-	for (FbxNode* RootNode : MeshNodeArray)
-	{
-		// Find all nodes that are sockets
-		TArray<FbxSocketNode> SocketNodes;
-		FindMeshSockets(RootNode, SocketNodes);
+	//check(MeshNodeArray.Num());
+	//FbxNode *MeshRootNode = MeshNodeArray[0];
+	//const FbxAMatrix &MeshTotalMatrix = ComputeTotalMatrix(MeshRootNode);
+	//for (FbxNode* RootNode : MeshNodeArray)
+	//{
+	//	// Find all nodes that are sockets
+	//	TArray<FbxSocketNode> SocketNodes;
+	//	FindMeshSockets(RootNode, SocketNodes);
 
-		// Create a UStaticMeshSocket for each fbx socket
-		for (int32 SocketIndex = 0; SocketIndex < SocketNodes.Num(); ++SocketIndex)
-		{
-			FbxSocketNode& SocketNode = SocketNodes[SocketIndex];
+	//	// Create a UStaticMeshSocket for each fbx socket
+	//	for (int32 SocketIndex = 0; SocketIndex < SocketNodes.Num(); ++SocketIndex)
+	//	{
+	//		FbxSocketNode& SocketNode = SocketNodes[SocketIndex];
 
-			UStaticMeshSocket* Socket = StaticMesh->FindSocket(SocketNode.SocketName);
-			if (!Socket)
-			{
-				// If the socket didn't exist create a new one now
-				Socket = NewObject<UStaticMeshSocket>(StaticMesh);
-				check(Socket);
+	//		UStaticMeshSocket* Socket = StaticMesh->FindSocket(SocketNode.SocketName);
+	//		if (!Socket)
+	//		{
+	//			// If the socket didn't exist create a new one now
+	//			Socket = NewObject<UStaticMeshSocket>(StaticMesh);
+	//			check(Socket);
 
-				Socket->SocketName = SocketNode.SocketName;
-				StaticMesh->Sockets.Add(Socket);
-			}
+	//			Socket->SocketName = SocketNode.SocketName;
+	//			StaticMesh->Sockets.Add(Socket);
+	//		}
 
-			if (Socket)
-			{
-				const FbxAMatrix& SocketMatrix = Scene->GetAnimationEvaluator()->GetNodeLocalTransform(SocketNode.Node);
-				FbxAMatrix FinalSocketMatrix = MeshTotalMatrix * SocketMatrix;
-				FTransform SocketTransform;
-				SocketTransform.SetTranslation(Converter.ConvertPos(FinalSocketMatrix.GetT()));
-				SocketTransform.SetRotation(Converter.ConvertRotToQuat(FinalSocketMatrix.GetQ()));
-				SocketTransform.SetScale3D(Converter.ConvertScale(FinalSocketMatrix.GetS()));
+	//		if (Socket)
+	//		{
+	//			const FbxAMatrix& SocketMatrix = Scene->GetAnimationEvaluator()->GetNodeLocalTransform(SocketNode.Node);
+	//			FbxAMatrix FinalSocketMatrix = MeshTotalMatrix * SocketMatrix;
+	//			FTransform SocketTransform;
+	//			SocketTransform.SetTranslation(Converter.ConvertPos(FinalSocketMatrix.GetT()));
+	//			SocketTransform.SetRotation(Converter.ConvertRotToQuat(FinalSocketMatrix.GetQ()));
+	//			SocketTransform.SetScale3D(Converter.ConvertScale(FinalSocketMatrix.GetS()));
 
-				Socket->RelativeLocation = SocketTransform.GetLocation();
-				Socket->RelativeRotation = SocketTransform.GetRotation().Rotator();
-				Socket->RelativeScale = SocketTransform.GetScale3D();
-			}
-		}
-		// Delete mesh sockets that were removed from the import data
-		if (StaticMesh->Sockets.Num() != SocketNodes.Num())
-		{
-			for (int32 MeshSocketIx = 0; MeshSocketIx < StaticMesh->Sockets.Num(); ++MeshSocketIx)
-			{
-				bool Found = false;
-				UStaticMeshSocket* MeshSocket = StaticMesh->Sockets[MeshSocketIx];
-				for (int32 FbxSocketIx = 0; FbxSocketIx < SocketNodes.Num(); FbxSocketIx++)
-				{
-					if (SocketNodes[FbxSocketIx].SocketName == MeshSocket->SocketName)
-					{
-						Found = true;
-						break;
-					}
-				}
-				if (!Found)
-				{
-					StaticMesh->Sockets.RemoveAt(MeshSocketIx);
-					MeshSocketIx--;
-				}
-			}
-		}
-	}
+	//			Socket->RelativeLocation = SocketTransform.GetLocation();
+	//			Socket->RelativeRotation = SocketTransform.GetRotation().Rotator();
+	//			Socket->RelativeScale = SocketTransform.GetScale3D();
+	//		}
+	//	}
+	//	// Delete mesh sockets that were removed from the import data
+	//	if (StaticMesh->Sockets.Num() != SocketNodes.Num())
+	//	{
+	//		for (int32 MeshSocketIx = 0; MeshSocketIx < StaticMesh->Sockets.Num(); ++MeshSocketIx)
+	//		{
+	//			bool Found = false;
+	//			UStaticMeshSocket* MeshSocket = StaticMesh->Sockets[MeshSocketIx];
+	//			for (int32 FbxSocketIx = 0; FbxSocketIx < SocketNodes.Num(); FbxSocketIx++)
+	//			{
+	//				if (SocketNodes[FbxSocketIx].SocketName == MeshSocket->SocketName)
+	//				{
+	//					Found = true;
+	//					break;
+	//				}
+	//			}
+	//			if (!Found)
+	//			{
+	//				StaticMesh->Sockets.RemoveAt(MeshSocketIx);
+	//				MeshSocketIx--;
+	//			}
+	//		}
+	//	}
+	//}
 }
 
-void UnFbx::FFbxImporter::ImportStaticMeshGlobalSockets( YStaticMesh* StaticMesh )
+void UnFbx::FFbxImporter::ImportStaticMeshGlobalSockets( UStaticMesh* StaticMesh )
 {
-	FbxNode* RootNode = Scene->GetRootNode();
 
-	// Find all nodes that are sockets
-	TArray<FbxSocketNode> SocketNodes;
-	FindMeshSockets( RootNode, SocketNodes );
+	//FbxNode* RootNode = Scene->GetRootNode();
 
-	// Create a UStaticMeshSocket for each fbx socket
-	for( int32 SocketIndex = 0; SocketIndex < SocketNodes.Num(); ++SocketIndex )
-	{
-		FbxSocketNode& SocketNode = SocketNodes[ SocketIndex ];
+	//// Find all nodes that are sockets
+	//TArray<FbxSocketNode> SocketNodes;
+	//FindMeshSockets( RootNode, SocketNodes );
 
-		UStaticMeshSocket* Socket = StaticMesh->FindSocket( SocketNode.SocketName );
-		if( !Socket )
-		{
-			// If the socket didn't exist create a new one now
-			Socket = NewObject<UStaticMeshSocket>(StaticMesh);
-			check(Socket);
+	//// Create a UStaticMeshSocket for each fbx socket
+	//for( int32 SocketIndex = 0; SocketIndex < SocketNodes.Num(); ++SocketIndex )
+	//{
+	//	FbxSocketNode& SocketNode = SocketNodes[ SocketIndex ];
 
-			Socket->SocketName = SocketNode.SocketName;
-			StaticMesh->Sockets.Add(Socket);
+	//	UStaticMeshSocket* Socket = StaticMesh->FindSocket( SocketNode.SocketName );
+	//	if( !Socket )
+	//	{
+	//		// If the socket didn't exist create a new one now
+	//		Socket = NewObject<UStaticMeshSocket>(StaticMesh);
+	//		check(Socket);
 
-			const FbxAMatrix& SocketMatrix = Scene->GetAnimationEvaluator()->GetNodeGlobalTransform(SocketNode.Node);
-			FTransform SocketTransform;
-			SocketTransform.SetTranslation(Converter.ConvertPos(SocketMatrix.GetT()));
-			SocketTransform.SetRotation(Converter.ConvertRotToQuat(SocketMatrix.GetQ()));
-			SocketTransform.SetScale3D(Converter.ConvertScale(SocketMatrix.GetS()));
+	//		Socket->SocketName = SocketNode.SocketName;
+	//		StaticMesh->Sockets.Add(Socket);
 
-			Socket->RelativeLocation = SocketTransform.GetLocation();
-			Socket->RelativeRotation = SocketTransform.GetRotation().Rotator();
-			Socket->RelativeScale = SocketTransform.GetScale3D();
-		}
-	}
+	//		const FbxAMatrix& SocketMatrix = Scene->GetAnimationEvaluator()->GetNodeGlobalTransform(SocketNode.Node);
+	//		FTransform SocketTransform;
+	//		SocketTransform.SetTranslation(Converter.ConvertPos(SocketMatrix.GetT()));
+	//		SocketTransform.SetRotation(Converter.ConvertRotToQuat(SocketMatrix.GetQ()));
+	//		SocketTransform.SetScale3D(Converter.ConvertScale(SocketMatrix.GetS()));
 
-	// Delete mesh sockets that were removed from the import data
-	if (StaticMesh->Sockets.Num() != SocketNodes.Num())
-	{
-		for (int32 MeshSocketIx = 0; MeshSocketIx < StaticMesh->Sockets.Num(); ++MeshSocketIx)
-		{
-			bool Found = false;
-			UStaticMeshSocket* MeshSocket = StaticMesh->Sockets[MeshSocketIx];
-			for (int32 FbxSocketIx = 0; FbxSocketIx < SocketNodes.Num(); FbxSocketIx++)
-			{
-				if (SocketNodes[FbxSocketIx].SocketName == MeshSocket->SocketName)
-				{
-					Found = true;
-					break;
-				}
-			}
-			if (!Found)
-			{
-				StaticMesh->Sockets.RemoveAt(MeshSocketIx);
-				MeshSocketIx--;
-			}
-		}
-	}
+	//		Socket->RelativeLocation = SocketTransform.GetLocation();
+	//		Socket->RelativeRotation = SocketTransform.GetRotation().Rotator();
+	//		Socket->RelativeScale = SocketTransform.GetScale3D();
+	//	}
+	//}
+
+	//// Delete mesh sockets that were removed from the import data
+	//if (StaticMesh->Sockets.Num() != SocketNodes.Num())
+	//{
+	//	for (int32 MeshSocketIx = 0; MeshSocketIx < StaticMesh->Sockets.Num(); ++MeshSocketIx)
+	//	{
+	//		bool Found = false;
+	//		UStaticMeshSocket* MeshSocket = StaticMesh->Sockets[MeshSocketIx];
+	//		for (int32 FbxSocketIx = 0; FbxSocketIx < SocketNodes.Num(); FbxSocketIx++)
+	//		{
+	//			if (SocketNodes[FbxSocketIx].SocketName == MeshSocket->SocketName)
+	//			{
+	//				Found = true;
+	//				break;
+	//			}
+	//		}
+	//		if (!Found)
+	//		{
+	//			StaticMesh->Sockets.RemoveAt(MeshSocketIx);
+	//			MeshSocketIx--;
+	//		}
+	//	}
+	//}
 }
 
 
+//
+//extern void AddConvexGeomFromVertices( const TArray<FVector>& Verts, FKAggregateGeom* AggGeom, const TCHAR* ObjName );
+//extern void AddSphereGeomFromVerts( const TArray<FVector>& Verts, FKAggregateGeom* AggGeom, const TCHAR* ObjName );
+//extern void AddBoxGeomFromTris( const TArray<FPoly>& Tris, FKAggregateGeom* AggGeom, const TCHAR* ObjName );
+//extern void DecomposeUCXMesh( const TArray<FVector>& CollisionVertices, const TArray<int32>& CollisionFaceIdx, UBodySetup* BodySetup );
 
-extern void AddConvexGeomFromVertices( const TArray<FVector>& Verts, FKAggregateGeom* AggGeom, const TCHAR* ObjName );
-extern void AddSphereGeomFromVerts( const TArray<FVector>& Verts, FKAggregateGeom* AggGeom, const TCHAR* ObjName );
-extern void AddBoxGeomFromTris( const TArray<FPoly>& Tris, FKAggregateGeom* AggGeom, const TCHAR* ObjName );
-extern void DecomposeUCXMesh( const TArray<FVector>& CollisionVertices, const TArray<int32>& CollisionFaceIdx, UBodySetup* BodySetup );
-
-bool UnFbx::FFbxImporter::ImportCollisionModels(YStaticMesh* StaticMesh, const FbxString& InNodeName)
+bool UnFbx::FFbxImporter::ImportCollisionModels(UStaticMesh* StaticMesh, const FbxString& InNodeName)
 {
-	// find collision models
-	bool bRemoveEmptyKey = false;
-	FbxString EmptyKey;
+	//// find collision models
+	//bool bRemoveEmptyKey = false;
+	//FbxString EmptyKey;
 
-	// convert the name to upper because we are case insensitive
-	FbxMap<FbxString, TSharedPtr< FbxArray<FbxNode* > > >::RecordType const *Record = CollisionModels.Find(InNodeName.Upper());
-	if ( !Record )
-	{
-		// compatible with old collision name format
-		// if CollisionModels has only one entry and the key is ""
-		if ( CollisionModels.GetSize() == 1 )
-		{
-			Record = CollisionModels.Find( EmptyKey );
-		}
-		if ( !Record ) 
-		{
-			return false;
-		}
-		else
-		{
-			bRemoveEmptyKey = true;
-		}
-	}
+	//// convert the name to upper because we are case insensitive
+	//FbxMap<FbxString, TSharedPtr< FbxArray<FbxNode* > > >::RecordType const *Record = CollisionModels.Find(InNodeName.Upper());
+	//if ( !Record )
+	//{
+	//	// compatible with old collision name format
+	//	// if CollisionModels has only one entry and the key is ""
+	//	if ( CollisionModels.GetSize() == 1 )
+	//	{
+	//		Record = CollisionModels.Find( EmptyKey );
+	//	}
+	//	if ( !Record ) 
+	//	{
+	//		return false;
+	//	}
+	//	else
+	//	{
+	//		bRemoveEmptyKey = true;
+	//	}
+	//}
 
-	TSharedPtr< FbxArray<FbxNode*> > Models = Record->GetValue();
+	//TSharedPtr< FbxArray<FbxNode*> > Models = Record->GetValue();
 
-	StaticMesh->bCustomizedCollision = true;
+	//StaticMesh->bCustomizedCollision = true;
 
-	StaticMesh->CreateBodySetup();
+	//StaticMesh->CreateBodySetup();
 
-	TArray<FVector>	CollisionVertices;
-	TArray<int32>		CollisionFaceIdx;
+	//TArray<FVector>	CollisionVertices;
+	//TArray<int32>		CollisionFaceIdx;
 
-	// construct collision model
-	for (int32 ModelIndex=0; ModelIndex<Models->GetCount(); ModelIndex++)
-	{
-		FbxNode* Node = Models->GetAt(ModelIndex);
-		FbxMesh* FbxMesh = Node->GetMesh();
+	//// construct collision model
+	//for (int32 ModelIndex=0; ModelIndex<Models->GetCount(); ModelIndex++)
+	//{
+	//	FbxNode* Node = Models->GetAt(ModelIndex);
+	//	FbxMesh* FbxMesh = Node->GetMesh();
 
-		FbxMesh->RemoveBadPolygons();
+	//	FbxMesh->RemoveBadPolygons();
 
-		// Must do this before triangulating the mesh due to an FBX bug in TriangulateMeshAdvance
-		int32 LayerSmoothingCount = FbxMesh->GetLayerCount(FbxLayerElement::eSmoothing);
-		for(int32 LayerIndex = 0; LayerIndex < LayerSmoothingCount; LayerIndex++)
-		{
-			GeometryConverter->ComputePolygonSmoothingFromEdgeSmoothing (FbxMesh, LayerIndex);
-		}
+	//	// Must do this before triangulating the mesh due to an FBX bug in TriangulateMeshAdvance
+	//	int32 LayerSmoothingCount = FbxMesh->GetLayerCount(FbxLayerElement::eSmoothing);
+	//	for(int32 LayerIndex = 0; LayerIndex < LayerSmoothingCount; LayerIndex++)
+	//	{
+	//		GeometryConverter->ComputePolygonSmoothingFromEdgeSmoothing (FbxMesh, LayerIndex);
+	//	}
 
-		if (!FbxMesh->IsTriangleMesh())
-		{
-			FString NodeName = UTF8_TO_TCHAR(MakeName(Node->GetName()));
-			UE_LOG(LogFbx, Warning, TEXT("Triangulating mesh %s for collision model"), *NodeName);
+	//	if (!FbxMesh->IsTriangleMesh())
+	//	{
+	//		FString NodeName = UTF8_TO_TCHAR(MakeName(Node->GetName()));
+	//		UE_LOG(LogFbx, Warning, TEXT("Triangulating mesh %s for collision model"), *NodeName);
 
-			const bool bReplace = true;
-			FbxNodeAttribute* ConvertedNode = GeometryConverter->Triangulate(FbxMesh, bReplace); // not in place ! the old mesh is still there
+	//		const bool bReplace = true;
+	//		FbxNodeAttribute* ConvertedNode = GeometryConverter->Triangulate(FbxMesh, bReplace); // not in place ! the old mesh is still there
 
-			if( ConvertedNode != NULL && ConvertedNode->GetAttributeType() == FbxNodeAttribute::eMesh )
-			{
-				FbxMesh = (fbxsdk::FbxMesh*)ConvertedNode;
-			}
-			else
-			{
-				AddTokenizedErrorMessage(FTokenizedMessage::Create(EMessageSeverity::Warning, FText::Format(LOCTEXT("Error_FailedToTriangulate", "Unable to triangulate mesh '{0}'"), FText::FromString(NodeName))), FFbxErrors::Generic_Mesh_TriangulationFailed);
-				return false;
-			}
-		}
+	//		if( ConvertedNode != NULL && ConvertedNode->GetAttributeType() == FbxNodeAttribute::eMesh )
+	//		{
+	//			FbxMesh = (fbxsdk::FbxMesh*)ConvertedNode;
+	//		}
+	//		else
+	//		{
+	//			AddTokenizedErrorMessage(FTokenizedMessage::Create(EMessageSeverity::Warning, FText::Format(LOCTEXT("Error_FailedToTriangulate", "Unable to triangulate mesh '{0}'"), FText::FromString(NodeName))), FFbxErrors::Generic_Mesh_TriangulationFailed);
+	//			return false;
+	//		}
+	//	}
 
-		int32 ControlPointsIndex;
-		int32 ControlPointsCount = FbxMesh->GetControlPointsCount();
-		FbxVector4* ControlPoints = FbxMesh->GetControlPoints();
-		FbxAMatrix Matrix = ComputeTotalMatrix(Node);
+	//	int32 ControlPointsIndex;
+	//	int32 ControlPointsCount = FbxMesh->GetControlPointsCount();
+	//	FbxVector4* ControlPoints = FbxMesh->GetControlPoints();
+	//	FbxAMatrix Matrix = ComputeTotalMatrix(Node);
 
-		for ( ControlPointsIndex = 0; ControlPointsIndex < ControlPointsCount; ControlPointsIndex++ )
-		{
-			new(CollisionVertices)FVector(Converter.ConvertPos(Matrix.MultT(ControlPoints[ControlPointsIndex])));
-		}
+	//	for ( ControlPointsIndex = 0; ControlPointsIndex < ControlPointsCount; ControlPointsIndex++ )
+	//	{
+	//		new(CollisionVertices)FVector(Converter.ConvertPos(Matrix.MultT(ControlPoints[ControlPointsIndex])));
+	//	}
 
-		int32 TriangleCount = FbxMesh->GetPolygonCount();
-		int32 TriangleIndex;
-		for ( TriangleIndex = 0 ; TriangleIndex < TriangleCount ; TriangleIndex++ )
-		{
-			new(CollisionFaceIdx)int32(FbxMesh->GetPolygonVertex(TriangleIndex,0));
-			new(CollisionFaceIdx)int32(FbxMesh->GetPolygonVertex(TriangleIndex,1));
-			new(CollisionFaceIdx)int32(FbxMesh->GetPolygonVertex(TriangleIndex,2));
-		}
+	//	int32 TriangleCount = FbxMesh->GetPolygonCount();
+	//	int32 TriangleIndex;
+	//	for ( TriangleIndex = 0 ; TriangleIndex < TriangleCount ; TriangleIndex++ )
+	//	{
+	//		new(CollisionFaceIdx)int32(FbxMesh->GetPolygonVertex(TriangleIndex,0));
+	//		new(CollisionFaceIdx)int32(FbxMesh->GetPolygonVertex(TriangleIndex,1));
+	//		new(CollisionFaceIdx)int32(FbxMesh->GetPolygonVertex(TriangleIndex,2));
+	//	}
 
-		TArray<FPoly> CollisionTriangles;
+	//	TArray<FPoly> CollisionTriangles;
 
-		// Make triangles
-		for(int32 x = 0;x < CollisionFaceIdx.Num();x += 3)
-		{
-			FPoly*	Poly = new( CollisionTriangles ) FPoly();
+	//	// Make triangles
+	//	for(int32 x = 0;x < CollisionFaceIdx.Num();x += 3)
+	//	{
+	//		FPoly*	Poly = new( CollisionTriangles ) FPoly();
 
-			Poly->Init();
+	//		Poly->Init();
 
-			new(Poly->Vertices) FVector( CollisionVertices[CollisionFaceIdx[x + 2]] );
-			new(Poly->Vertices) FVector( CollisionVertices[CollisionFaceIdx[x + 1]] );
-			new(Poly->Vertices) FVector( CollisionVertices[CollisionFaceIdx[x + 0]] );
-			Poly->iLink = x / 3;
+	//		new(Poly->Vertices) FVector( CollisionVertices[CollisionFaceIdx[x + 2]] );
+	//		new(Poly->Vertices) FVector( CollisionVertices[CollisionFaceIdx[x + 1]] );
+	//		new(Poly->Vertices) FVector( CollisionVertices[CollisionFaceIdx[x + 0]] );
+	//		Poly->iLink = x / 3;
 
-			Poly->CalcNormal(1);
-		}
+	//		Poly->CalcNormal(1);
+	//	}
 
-		// Construct geometry object
-		FbxString ModelName(Node->GetName());
-		if ( ModelName.Find("UCX") != -1 || ModelName.Find("MCDCX") != -1 )
-		{
-			if( !ImportOptions->bOneConvexHullPerUCX )
-			{
-				DecomposeUCXMesh( CollisionVertices, CollisionFaceIdx, StaticMesh->BodySetup );
-			}
-			else
-			{
-				FKAggregateGeom& AggGeo = StaticMesh->BodySetup->AggGeom;
+	//	// Construct geometry object
+	//	FbxString ModelName(Node->GetName());
+	//	if ( ModelName.Find("UCX") != -1 || ModelName.Find("MCDCX") != -1 )
+	//	{
+	//		if( !ImportOptions->bOneConvexHullPerUCX )
+	//		{
+	//			DecomposeUCXMesh( CollisionVertices, CollisionFaceIdx, StaticMesh->BodySetup );
+	//		}
+	//		else
+	//		{
+	//			FKAggregateGeom& AggGeo = StaticMesh->BodySetup->AggGeom;
 
-				// This function cooks the given data, so we cannot test for duplicates based on the position data
-				// before we call it
-				AddConvexGeomFromVertices( CollisionVertices, &AggGeo, ANSI_TO_TCHAR(Node->GetName()) );
+	//			// This function cooks the given data, so we cannot test for duplicates based on the position data
+	//			// before we call it
+	//			AddConvexGeomFromVertices( CollisionVertices, &AggGeo, ANSI_TO_TCHAR(Node->GetName()) );
 
-				// Now test the late element in the AggGeo list and remove it if its a duplicate
-				if(AggGeo.ConvexElems.Num() > 1)
-				{
-					FKConvexElem& NewElem = AggGeo.ConvexElems.Last();
+	//			// Now test the late element in the AggGeo list and remove it if its a duplicate
+	//			if(AggGeo.ConvexElems.Num() > 1)
+	//			{
+	//				FKConvexElem& NewElem = AggGeo.ConvexElems.Last();
 
-					for(int32 ElementIndex = 0; ElementIndex < AggGeo.ConvexElems.Num()-1; ++ElementIndex)
-					{
-						FKConvexElem& CurrentElem = AggGeo.ConvexElems[ElementIndex];
-					
-						if(CurrentElem.VertexData.Num() == NewElem.VertexData.Num())
-						{
-							bool bFoundDifference = false;
-							for(int32 VertexIndex = 0; VertexIndex < NewElem.VertexData.Num(); ++VertexIndex)
-							{
-								if(CurrentElem.VertexData[VertexIndex] != NewElem.VertexData[VertexIndex])
-								{
-									bFoundDifference = true;
-									break;
-								}
-							}
+	//				for(int32 ElementIndex = 0; ElementIndex < AggGeo.ConvexElems.Num()-1; ++ElementIndex)
+	//				{
+	//					FKConvexElem& CurrentElem = AggGeo.ConvexElems[ElementIndex];
+	//				
+	//					if(CurrentElem.VertexData.Num() == NewElem.VertexData.Num())
+	//					{
+	//						bool bFoundDifference = false;
+	//						for(int32 VertexIndex = 0; VertexIndex < NewElem.VertexData.Num(); ++VertexIndex)
+	//						{
+	//							if(CurrentElem.VertexData[VertexIndex] != NewElem.VertexData[VertexIndex])
+	//							{
+	//								bFoundDifference = true;
+	//								break;
+	//							}
+	//						}
 
-							if(!bFoundDifference)
-							{
-								// The new collision geo is a duplicate, delete it
-								AggGeo.ConvexElems.RemoveAt(AggGeo.ConvexElems.Num()-1);
-								break;
-							}
-						}
-					}
-				}
-			}
-		}
-		else if ( ModelName.Find("UBX") != -1 )
-		{
-			FKAggregateGeom& AggGeo = StaticMesh->BodySetup->AggGeom;
+	//						if(!bFoundDifference)
+	//						{
+	//							// The new collision geo is a duplicate, delete it
+	//							AggGeo.ConvexElems.RemoveAt(AggGeo.ConvexElems.Num()-1);
+	//							break;
+	//						}
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//	else if ( ModelName.Find("UBX") != -1 )
+	//	{
+	//		FKAggregateGeom& AggGeo = StaticMesh->BodySetup->AggGeom;
 
-			AddBoxGeomFromTris( CollisionTriangles, &AggGeo, ANSI_TO_TCHAR(Node->GetName()) );
+	//		AddBoxGeomFromTris( CollisionTriangles, &AggGeo, ANSI_TO_TCHAR(Node->GetName()) );
 
-			// Now test the last element in the AggGeo list and remove it if its a duplicate
-			if(AggGeo.BoxElems.Num() > 1)
-			{
-				FKBoxElem& NewElem = AggGeo.BoxElems.Last();
+	//		// Now test the last element in the AggGeo list and remove it if its a duplicate
+	//		if(AggGeo.BoxElems.Num() > 1)
+	//		{
+	//			FKBoxElem& NewElem = AggGeo.BoxElems.Last();
 
-				for(int32 ElementIndex = 0; ElementIndex < AggGeo.BoxElems.Num()-1; ++ElementIndex)
-				{
-					FKBoxElem& CurrentElem = AggGeo.BoxElems[ElementIndex];
+	//			for(int32 ElementIndex = 0; ElementIndex < AggGeo.BoxElems.Num()-1; ++ElementIndex)
+	//			{
+	//				FKBoxElem& CurrentElem = AggGeo.BoxElems[ElementIndex];
 
-					if(	CurrentElem == NewElem )
-					{
-						// The new element is a duplicate, remove it
-						AggGeo.BoxElems.RemoveAt(AggGeo.BoxElems.Num()-1);
-						break;
-					}
-				}
-			}
-		}
-		else if ( ModelName.Find("USP") != -1 )
-		{
-			FKAggregateGeom& AggGeo = StaticMesh->BodySetup->AggGeom;
+	//				if(	CurrentElem == NewElem )
+	//				{
+	//					// The new element is a duplicate, remove it
+	//					AggGeo.BoxElems.RemoveAt(AggGeo.BoxElems.Num()-1);
+	//					break;
+	//				}
+	//			}
+	//		}
+	//	}
+	//	else if ( ModelName.Find("USP") != -1 )
+	//	{
+	//		FKAggregateGeom& AggGeo = StaticMesh->BodySetup->AggGeom;
 
-			AddSphereGeomFromVerts( CollisionVertices, &AggGeo, ANSI_TO_TCHAR(Node->GetName()) );
+	//		AddSphereGeomFromVerts( CollisionVertices, &AggGeo, ANSI_TO_TCHAR(Node->GetName()) );
 
-			// Now test the late element in the AggGeo list and remove it if its a duplicate
-			if(AggGeo.SphereElems.Num() > 1)
-			{
-				FKSphereElem& NewElem = AggGeo.SphereElems.Last();
+	//		// Now test the late element in the AggGeo list and remove it if its a duplicate
+	//		if(AggGeo.SphereElems.Num() > 1)
+	//		{
+	//			FKSphereElem& NewElem = AggGeo.SphereElems.Last();
 
-				for(int32 ElementIndex = 0; ElementIndex < AggGeo.SphereElems.Num()-1; ++ElementIndex)
-				{
-					FKSphereElem& CurrentElem = AggGeo.SphereElems[ElementIndex];
+	//			for(int32 ElementIndex = 0; ElementIndex < AggGeo.SphereElems.Num()-1; ++ElementIndex)
+	//			{
+	//				FKSphereElem& CurrentElem = AggGeo.SphereElems[ElementIndex];
 
-					if(	CurrentElem == NewElem )
-					{
-						// The new element is a duplicate, remove it
-						AggGeo.SphereElems.RemoveAt(AggGeo.SphereElems.Num()-1);
-						break;
-					}
-				}
-			}
-		}
+	//				if(	CurrentElem == NewElem )
+	//				{
+	//					// The new element is a duplicate, remove it
+	//					AggGeo.SphereElems.RemoveAt(AggGeo.SphereElems.Num()-1);
+	//					break;
+	//				}
+	//			}
+	//		}
+	//	}
 
-		// Clear any cached rigid-body collision shapes for this body setup.
-		StaticMesh->BodySetup->ClearPhysicsMeshes();
+	//	// Clear any cached rigid-body collision shapes for this body setup.
+	//	StaticMesh->BodySetup->ClearPhysicsMeshes();
 
-		// Remove the empty key because we only use the model once for the first mesh
-		if (bRemoveEmptyKey)
-		{
-			CollisionModels.Remove(EmptyKey);
-		}
+	//	// Remove the empty key because we only use the model once for the first mesh
+	//	if (bRemoveEmptyKey)
+	//	{
+	//		CollisionModels.Remove(EmptyKey);
+	//	}
 
-		CollisionVertices.Empty();
-		CollisionFaceIdx.Empty();
-	}
+	//	CollisionVertices.Empty();
+	//	CollisionFaceIdx.Empty();
+	//}
 
-	// Create new GUID
-	StaticMesh->BodySetup->InvalidatePhysicsData();
+	//// Create new GUID
+	//StaticMesh->BodySetup->InvalidatePhysicsData();
 
-	// refresh collision change back to staticmesh components
-	RefreshCollisionChange(*StaticMesh);
-		
+	//// refresh collision change back to staticmesh components
+	//RefreshCollisionChange(*StaticMesh);
+	//	
 	return true;
 }
-#endif
 
 
 bool UnFbx::FFbxImporter::FillCollisionModelList(FbxNode* Node)

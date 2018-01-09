@@ -7,6 +7,7 @@
 #include "SkelImport.h"
 #include "BonePose.h"
 #include "YYUTFont.h"
+#include "IShader.h"
 
 struct RenderMeshCBuffer
 {

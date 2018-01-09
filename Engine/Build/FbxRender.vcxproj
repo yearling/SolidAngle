@@ -165,18 +165,17 @@
     <ClCompile Include="..\Source\Experimental\Private\FbxLibs.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\FbxMainImport.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\FbxMaterialImport.cpp" />
-    <ClCompile Include="..\Source\Experimental\Private\FbxReader.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\FbxSkeletalMeshImport.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\FbxStaticMeshImport.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\FbxStaticMeshImportData.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\FbxUtilsImport.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\game_main.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\IShader.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\RenderMesh.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\SkeletalMeshEdit.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\SkeletalMeshImport.cpp" />
-    <ClCompile Include="..\Source\Experimental\Private\StaticMesh.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\StaticMeshEdit.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\Texture.cpp" />
-    <ClCompile Include="..\Source\Experimental\Private\YStaticMesh.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YYDX11.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YYUTApplication.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YYUTCamera.cpp" />
@@ -186,11 +185,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Experimental\Private\Canvas.h" />
-    <ClInclude Include="..\Source\Experimental\Private\FbxReader.h" />
     <ClInclude Include="..\Source\Experimental\Private\FbxUtility.h" />
     <ClInclude Include="..\Source\Experimental\Private\RenderMesh.h" />
     <ClInclude Include="..\Source\Experimental\Private\Skeleton.h" />
-    <ClInclude Include="..\Source\Experimental\Private\StaticMesh.h" />
     <ClInclude Include="..\Source\Experimental\Private\VertexDef.h" />
     <ClInclude Include="..\Source\Experimental\Private\YYDX11.h" />
     <ClInclude Include="..\Source\Experimental\Public\FbxAnimSequenceImportData.h" />
@@ -205,7 +202,6 @@
     <ClInclude Include="..\Source\Experimental\Public\StaticMeshResources.h" />
     <ClInclude Include="..\Source\Experimental\Public\StaticMeshVertexData.h" />
     <ClInclude Include="..\Source\Experimental\Public\Texture.h" />
-    <ClInclude Include="..\Source\Experimental\Public\YStaticMesh.h" />
     <ClInclude Include="..\Source\Experimental\Public\StaticMeshImportData.h" />
     <ClInclude Include="..\Source\Experimental\Public\YYUT.h" />
     <ClInclude Include="..\Source\Experimental\Public\YYUTApplication.h" />

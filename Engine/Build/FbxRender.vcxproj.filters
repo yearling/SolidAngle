@@ -39,13 +39,7 @@
     <ClCompile Include="..\Source\Experimental\Private\game_main.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\FbxReader.cpp">
-      <Filter>Fbx</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\RenderMesh.cpp">
-      <Filter>Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\StaticMesh.cpp">
       <Filter>Mesh</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\FbxLibs.cpp">
@@ -53,9 +47,6 @@
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\YYDX11.cpp">
       <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\YStaticMesh.cpp">
-      <Filter>Fbx</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\FbxUtilsImport.cpp">
       <Filter>Fbx</Filter>
@@ -79,6 +70,12 @@
       <Filter>Fbx</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\SkeletalMeshEdit.cpp">
+      <Filter>Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\FbxStaticMeshImportData.cpp">
+      <Filter>Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\StaticMeshEdit.cpp">
       <Filter>Fbx</Filter>
     </ClCompile>
   </ItemGroup>
@@ -110,16 +107,10 @@
     <ClInclude Include="..\Source\Experimental\Private\FbxUtility.h">
       <Filter>Fbx</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Private\FbxReader.h">
-      <Filter>Fbx</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Experimental\Private\RenderMesh.h">
       <Filter>Mesh</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Private\Skeleton.h">
-      <Filter>Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Private\StaticMesh.h">
       <Filter>Mesh</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Private\VertexDef.h">
@@ -139,9 +130,6 @@
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Private\YYDX11.h">
       <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\YStaticMesh.h">
-      <Filter>Fbx</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\FbxImporter.h">
       <Filter>Fbx</Filter>

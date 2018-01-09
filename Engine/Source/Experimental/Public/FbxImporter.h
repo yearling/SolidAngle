@@ -28,7 +28,7 @@ class UMaterialInterface;
 class UPhysicsAsset;
 class YSkeletalMesh;
 class YSkeleton;
-class YStaticMesh;
+class UStaticMesh;
 class USubDSurface;
 class UTexture;
 struct FExpressionInput;
@@ -97,7 +97,7 @@ class UInterpTrackMoveAxis;
 DECLARE_LOG_CATEGORY_EXTERN(LogFbx, Log, All);
 
 #define DEBUG_FBX_NODE( Prepend, FbxNode ) FPlatformMisc::LowLevelOutputDebugStringf( TEXT("%s %s\n"), ANSI_TO_TCHAR(Prepend), ANSI_TO_TCHAR( FbxNode->GetName() ) )
-class YStaticMesh;
+class UStaticMesh;
 class YSkeletalMesh;
 class YMaterialInterface;
 class YRawMesh;
@@ -515,6 +515,8 @@ public:
 	 */
 	int32 GetImportType(const FString& InFilename);
 
+	UStaticMesh* RecursiveImportNode(void* VoidFbxImporter, void* VoidNode, UObject* InParent, FName InName, int32& NodeIndex, int32 Total, TArray<UStaticMesh*>& OutNewAssets);
+	UStaticMesh* ImportANode(void* VoidFbxImporter, TArray<void*> VoidNodes, UObject* InParent, FName InName, int32& NodeIndex, int32 Total, UStaticMesh* InMesh, int LODIndex);
 	/**
 	 * Get detail infomation in the Fbx scene
 	 *
@@ -608,9 +610,9 @@ public:
 	 * @param InStaticMesh	if LODIndex is not 0, this is the base mesh object. otherwise is NULL
 	 * @param LODIndex	 LOD level to import to
 	 *
-	 * @returns UObject*	the YStaticMesh object.
+	 * @returns UObject*	the UStaticMesh object.
 	 */
-	 YStaticMesh* ImportStaticMesh(UObject* InParent, FbxNode* Node, const FName& Name,  UFbxStaticMeshImportData* ImportData, YStaticMesh* InStaticMesh = NULL, int LODIndex = 0, void *ExistMeshDataPtr = nullptr);
+	 UStaticMesh* ImportStaticMesh(UObject* InParent, FbxNode* Node, const FName& Name,  UFbxStaticMeshImportData* ImportData, UStaticMesh* InStaticMesh = NULL, int LODIndex = 0, void *ExistMeshDataPtr = nullptr);
 
 	/**
 	* Creates a static mesh from all the meshes in FBX scene with the given name and flags.
@@ -623,16 +625,16 @@ public:
 	* @param LODIndex	 LOD level to import to
 	* @param OrderedMaterialNames  If not null, the original fbx ordered materials name will be use to reorder the section of the mesh we currently import
 	*
-	* @returns UObject*	the YStaticMesh object.
+	* @returns UObject*	the UStaticMesh object.
 	*/
-	 YStaticMesh* ImportStaticMeshAsSingle(UObject* InParent, TArray<FbxNode*>& MeshNodeArray, const FName InName, UFbxStaticMeshImportData* TemplateImportData, YStaticMesh* InStaticMesh, int LODIndex = 0, void *ExistMeshDataPtr = nullptr);
+	 UStaticMesh* ImportStaticMeshAsSingle(UObject* InParent, TArray<FbxNode*>& MeshNodeArray, const FName InName, UFbxStaticMeshImportData* TemplateImportData, UStaticMesh* InStaticMesh, int LODIndex = 0, void *ExistMeshDataPtr = nullptr);
 
 	/**
 	 * Helper function to reorder the material array after we build the staticmesh.
 	 * It order the material like it is in the fbx file and reassign section material index properly.
 	 * This must be call once all LOD are imported.
 	 */
-	void ReorderMaterialToFbxOrder(YStaticMesh* StaticMesh, TArray<FbxNode*>& MeshNodeArray);
+	void ReorderMaterialToFbxOrder(UStaticMesh* StaticMesh, TArray<FbxNode*>& MeshNodeArray);
 
 	/**
 	* Creates a SubDSurface mesh from all the meshes in FBX scene with the given name and flags.
@@ -642,8 +644,8 @@ public:
 	*/
 	 bool ImportSubDSurface(USubDSurface* Out, UObject* InParent, TArray<FbxNode*>& MeshNodeArray, const FName InName, UFbxStaticMeshImportData* TemplateImportData);
 
-	void ImportStaticMeshGlobalSockets( YStaticMesh* StaticMesh );
-	void ImportStaticMeshLocalSockets( YStaticMesh* StaticMesh, TArray<FbxNode*>& MeshNodeArray);
+	void ImportStaticMeshGlobalSockets( UStaticMesh* StaticMesh );
+	void ImportStaticMeshLocalSockets( UStaticMesh* StaticMesh, TArray<FbxNode*>& MeshNodeArray);
 
 	/**
 	 * re-import Unreal static mesh from updated Fbx file
@@ -652,7 +654,7 @@ public:
 	 * @param Mesh the original Unreal static mesh object
 	 * @return UObject* the new Unreal mesh object
 	 */
-	YStaticMesh* ReimportStaticMesh(YStaticMesh* Mesh, UFbxStaticMeshImportData* TemplateImportData);
+	UStaticMesh* ReimportStaticMesh(UStaticMesh* Mesh, UFbxStaticMeshImportData* TemplateImportData);
 
 	/**
 	* re-import Unreal static mesh from updated scene Fbx file
@@ -661,7 +663,7 @@ public:
 	* @param Mesh the original Unreal static mesh object
 	* @return UObject* the new Unreal mesh object
 	*/
-	YStaticMesh* ReimportSceneStaticMesh(uint64 FbxNodeUniqueId, uint64 FbxMeshUniqueId, YStaticMesh* Mesh, UFbxStaticMeshImportData* TemplateImportData);
+	UStaticMesh* ReimportSceneStaticMesh(uint64 FbxNodeUniqueId, uint64 FbxMeshUniqueId, UStaticMesh* Mesh, UFbxStaticMeshImportData* TemplateImportData);
 	
 	/**
 	* re-import Unreal skeletal mesh from updated Fbx file
@@ -781,7 +783,7 @@ public:
 	 * @param NodeName - name of Fbx node that the static mesh constructed from
 	 * @return return true if the static mesh has collision model and import successfully
 	 */
-	bool ImportCollisionModels(YStaticMesh* StaticMesh, const FbxString& NodeName);
+	bool ImportCollisionModels(UStaticMesh* StaticMesh, const FbxString& NodeName);
 
 	//help
 	ANSICHAR* MakeName(const ANSICHAR* name);
@@ -994,7 +996,7 @@ private:
 	* Method used to verify if the geometry is valid. For example, if the bounding box is tiny we should warn
 	* @param StaticMesh - The imported static mesh which we'd like to verify
 	*/
-	void VerifyGeometry(YStaticMesh* StaticMesh);
+	void VerifyGeometry(UStaticMesh* StaticMesh);
 
 	/**
 	* When there is some materials with the same name we add a clash suffixe _ncl1_x.
@@ -1063,7 +1065,7 @@ protected:
 	 * @param LODIndex	LOD level to set up for StaticMesh
 	 * @return bool true if set up successfully
 	 */
-	bool BuildStaticMeshFromGeometry(FbxNode* Node, YStaticMesh* StaticMesh, TArray<FFbxMaterial>& MeshMaterials, int LODIndex, FRawMesh& RawMesh,
+	bool BuildStaticMeshFromGeometry(FbxNode* Node, UStaticMesh* StaticMesh, TArray<FFbxMaterial>& MeshMaterials, int LODIndex, FRawMesh& RawMesh,
 									 EVertexColorImportOption::Type VertexColorImportOption, const TMap<FVector, FColor>& ExistingVertexColorData, const FColor& VertexOverrideColor);
 	
 	/**
