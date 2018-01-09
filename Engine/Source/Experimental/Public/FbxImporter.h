@@ -516,7 +516,7 @@ public:
 	int32 GetImportType(const FString& InFilename);
 
 	UStaticMesh* RecursiveImportNode(void* VoidFbxImporter, void* VoidNode, UObject* InParent, FName InName, int32& NodeIndex, int32 Total, TArray<UStaticMesh*>& OutNewAssets);
-	UStaticMesh* ImportANode(void* VoidFbxImporter, TArray<void*> VoidNodes, UObject* InParent, FName InName, int32& NodeIndex, int32 Total, UStaticMesh* InMesh, int LODIndex);
+	UStaticMesh* ImportANode(void* VoidFbxImporter, TArray<void*> VoidNodes, UObject* InParent, FName InName, int32& NodeIndex, int32 Total, UStaticMesh* InMesh= nullptr, int LODIndex = 0);
 	/**
 	 * Get detail infomation in the Fbx scene
 	 *

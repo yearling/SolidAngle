@@ -75,7 +75,7 @@ void UStaticMesh::Build(bool bSilent, TArray<FText>* OutErrors)
 		FFormatNamedArguments Args;
 		//Args.Add( TEXT("Path"), FText::FromString( GetPathName() ) );
 		const FText StatusUpdate = FText::Format( LOCTEXT("BeginStaticMeshBuildingTask", "({Path}) Building"), Args );
-		GWarn->BeginSlowTask( StatusUpdate, true );	
+		//GWarn->BeginSlowTask( StatusUpdate, true );	
 	}
 
 	PreMeshBuild.Broadcast(this);
@@ -168,7 +168,7 @@ void UStaticMesh::Build(bool bSilent, TArray<FText>* OutErrors)
 
 	if(!bSilent)
 	{
-		GWarn->EndSlowTask();
+		//GWarn->EndSlowTask();
 	}
 
 #else

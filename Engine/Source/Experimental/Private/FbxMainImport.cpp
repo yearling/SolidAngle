@@ -3115,20 +3115,20 @@ UStaticMesh* UnFbx::FFbxImporter::RecursiveImportNode(void* VoidFbxImporter, voi
 			OutNewAssets.Add(NewObject);
 		}
 
-		bool bImportMeshLODs;
-		if (ImportUI->MeshTypeToImport == FBXIT_StaticMesh)
-		{
-			bImportMeshLODs = ImportUI->StaticMeshImportData->bImportMeshLODs;
-		}
-		/*else if (ImportUI->MeshTypeToImport == FBXIT_SkeletalMesh)
-		{
-			bImportMeshLODs = ImportUI->SkeletalMeshImportData->bImportMeshLODs;
-			check(0);
-		}*/
-		else
-		{
-			bImportMeshLODs = false;
-		}
+		bool bImportMeshLODs= ImportOptions->bImportStaticMeshLODs;
+		//if (ImportOptions-> == FBXIT_StaticMesh)
+		//{
+		//	//bImportMeshLODs = ImportUI->StaticMeshImportData->bImportMeshLODs;
+		//}
+		//else if (ImportUI->MeshTypeToImport == FBXIT_SkeletalMesh)
+		//{
+		//	//bImportMeshLODs = ImportUI->SkeletalMeshImportData->bImportMeshLODs;
+		//	check(0);
+		//}
+		//else
+		//{
+		//	bImportMeshLODs = false;
+		//}
 
 		if (NewObject && bImportMeshLODs)
 		{
