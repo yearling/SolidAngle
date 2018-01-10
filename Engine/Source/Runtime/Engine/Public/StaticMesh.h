@@ -20,6 +20,7 @@
 //#include "StaticMesh.generated.h"
 #include "MeshCommon.h"
 #include "EngineTypes.h"
+#include "MeshMerging.h"
 /** The maximum number of static mesh LODs allowed. */
 #define MAX_STATIC_MESH_LODS 8
 
@@ -147,7 +148,7 @@ struct FStaticMeshSourceModel
 	FMeshBuildSettings BuildSettings;
 
 	/** Reduction settings to apply when building render data. */
-	//FMeshReductionSettings ReductionSettings; 
+	FMeshReductionSettings ReductionSettings; 
 
 	float LODDistance_DEPRECATED;
 

@@ -59,9 +59,11 @@
     <ClInclude Include="..\Source\Runtime\Engine\Public\CustomBoneIndexArray.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\GeomFitUtils.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\GPUSkinVertexFactory.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\kDOP.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\LocalVertexFactory.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\MaterialInterface.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\MeshCommon.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\MeshMerging.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\RawIndexBuffer.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\RawMesh.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\ReferenceSkeleton.h" />
@@ -71,10 +73,10 @@
     <ClInclude Include="..\Source\Runtime\Engine\Public\SkinWeightVertexBuffer.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\SmartName.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\StaticMesh.h" />
+    <ClInclude Include="..\Source\Runtime\Engine\Public\StaticMeshResources.h" />
     <ClInclude Include="..\Source\Runtime\Engine\Public\YSkeletalMesh.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Source\Experimental\Private\PositionVertexBuffer.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\AnimationAsset.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\AnimationRuntime.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\AnimationSettings.cpp" />
@@ -111,6 +113,7 @@
     <ClCompile Include="..\Source\Runtime\Engine\Private\GPUSkinVertexFactory.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\LocalVertexFactory.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\MaterialInterface.cpp" />
+    <ClCompile Include="..\Source\Runtime\Engine\Private\PositionVertexBuffer.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\RawIndexBuffer.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\RawMesh.cpp" />
     <ClCompile Include="..\Source\Runtime\Engine\Private\ReferenceSkeleton.cpp" />

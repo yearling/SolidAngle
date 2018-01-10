@@ -1128,26 +1128,26 @@ void FStaticMeshLODSettings::GetLODGroupDisplayNames(TArray<FText>& OutDisplayNa
 	}
 }
 
-//FMeshReductionSettings FStaticMeshLODGroup::GetSettings(const FMeshReductionSettings& InSettings, int32 LODIndex) const
-//{
-//	check(LODIndex >= 0 && LODIndex < MAX_STATIC_MESH_LODS);
-//
-//	FMeshReductionSettings FinalSettings = InSettings;
-//
-//	// PercentTriangles is actually a multiplier.
-//	float PercentTrianglesMult = (LODIndex == 0) ? BasePercentTrianglesMult : SettingsBias.PercentTriangles;
-//	FinalSettings.PercentTriangles = FMath::Clamp(InSettings.PercentTriangles * PercentTrianglesMult, 0.0f, 1.0f);
-//
-//	// Bias the remaining settings.
-//	FinalSettings.MaxDeviation = FMath::Max(InSettings.MaxDeviation + SettingsBias.MaxDeviation, 0.0f);
-//	FinalSettings.PixelError = FMath::Max(InSettings.PixelError + SettingsBias.PixelError, 1.0f);
-//	FinalSettings.WeldingThreshold = FMath::Max(InSettings.WeldingThreshold + SettingsBias.WeldingThreshold, 0.0f);
-//	FinalSettings.HardAngleThreshold = FMath::Clamp(InSettings.HardAngleThreshold + SettingsBias.HardAngleThreshold, 0.0f, 180.0f);
-//	FinalSettings.SilhouetteImportance = (EMeshFeatureImportance::Type)FMath::Clamp<int32>(InSettings.SilhouetteImportance + SettingsBias.SilhouetteImportance, EMeshFeatureImportance::Off, EMeshFeatureImportance::Highest);
-//	FinalSettings.TextureImportance = (EMeshFeatureImportance::Type)FMath::Clamp<int32>(InSettings.TextureImportance + SettingsBias.TextureImportance, EMeshFeatureImportance::Off, EMeshFeatureImportance::Highest);
-//	FinalSettings.ShadingImportance = (EMeshFeatureImportance::Type)FMath::Clamp<int32>(InSettings.ShadingImportance + SettingsBias.ShadingImportance, EMeshFeatureImportance::Off, EMeshFeatureImportance::Highest);
-//	return FinalSettings;
-//}
+FMeshReductionSettings FStaticMeshLODGroup::GetSettings(const FMeshReductionSettings& InSettings, int32 LODIndex) const
+{
+	check(LODIndex >= 0 && LODIndex < MAX_STATIC_MESH_LODS);
+
+	FMeshReductionSettings FinalSettings = InSettings;
+
+	// PercentTriangles is actually a multiplier.
+	float PercentTrianglesMult = (LODIndex == 0) ? BasePercentTrianglesMult : SettingsBias.PercentTriangles;
+	FinalSettings.PercentTriangles = FMath::Clamp(InSettings.PercentTriangles * PercentTrianglesMult, 0.0f, 1.0f);
+
+	// Bias the remaining settings.
+	FinalSettings.MaxDeviation = FMath::Max(InSettings.MaxDeviation + SettingsBias.MaxDeviation, 0.0f);
+	FinalSettings.PixelError = FMath::Max(InSettings.PixelError + SettingsBias.PixelError, 1.0f);
+	FinalSettings.WeldingThreshold = FMath::Max(InSettings.WeldingThreshold + SettingsBias.WeldingThreshold, 0.0f);
+	FinalSettings.HardAngleThreshold = FMath::Clamp(InSettings.HardAngleThreshold + SettingsBias.HardAngleThreshold, 0.0f, 180.0f);
+	FinalSettings.SilhouetteImportance = (EMeshFeatureImportance::Type)FMath::Clamp<int32>(InSettings.SilhouetteImportance + SettingsBias.SilhouetteImportance, EMeshFeatureImportance::Off, EMeshFeatureImportance::Highest);
+	FinalSettings.TextureImportance = (EMeshFeatureImportance::Type)FMath::Clamp<int32>(InSettings.TextureImportance + SettingsBias.TextureImportance, EMeshFeatureImportance::Off, EMeshFeatureImportance::Highest);
+	FinalSettings.ShadingImportance = (EMeshFeatureImportance::Type)FMath::Clamp<int32>(InSettings.ShadingImportance + SettingsBias.ShadingImportance, EMeshFeatureImportance::Off, EMeshFeatureImportance::Highest);
+	return FinalSettings;
+}
 
 void UStaticMesh::GetLODGroups(TArray<FName>& OutLODGroups)
 {
@@ -1292,7 +1292,7 @@ static FString BuildStaticMeshDerivedDataKey(UStaticMesh* Mesh, const FStaticMes
 		FMemoryWriter Ar(TempBytes, /*bIsPersistent=*/ true);
 		//Ar << SrcModel.BuildSettings;
 
-		//FMeshReductionSettings FinalReductionSettings = LODGroup.GetSettings(SrcModel.ReductionSettings, LODIndex);
+		FMeshReductionSettings FinalReductionSettings = LODGroup.GetSettings(SrcModel.ReductionSettings, LODIndex);
 		//Ar << FinalReductionSettings;
 
 		// Now convert the raw bytes to a string.
@@ -1303,7 +1303,7 @@ static FString BuildStaticMeshDerivedDataKey(UStaticMesh* Mesh, const FStaticMes
 			ByteToHex(SettingsAsBytes[ByteIndex], KeySuffix);
 		}
 	}
-
+	return TEXT("STATICMESHDDV");
 	//return FDerivedDataCacheInterface::BuildCacheKey(
 	//	TEXT("STATICMESH"),
 	//	*GetStaticMeshDerivedDataVersion(),
@@ -1401,11 +1401,11 @@ void FStaticMeshRenderData::Cache(UStaticMesh* Owner, const FStaticMeshLODSettin
 	//{
 	//	COOK_STAT(auto Timer = StaticMeshCookStats::UsageStats.TimeSyncWork());
 	//	int32 T0 = FPlatformTime::Cycles();
-	//	int32 NumLODs = Owner->SourceModels.Num();
-	//	const FStaticMeshLODGroup& LODGroup = LODSettings.GetLODGroup(Owner->LODGroup);
-	//	DerivedDataKey = BuildStaticMeshDerivedDataKey(Owner, LODGroup);
+		int32 NumLODs = Owner->SourceModels.Num();
+		const FStaticMeshLODGroup& LODGroup = LODSettings.GetLODGroup(Owner->LODGroup);
+		DerivedDataKey = BuildStaticMeshDerivedDataKey(Owner, LODGroup);
 
-	//	TArray<uint8> DerivedData;
+		TArray<uint8> DerivedData;
 	//	if (GetDerivedDataCacheRef().GetSynchronous(*DerivedDataKey, DerivedData))
 	//	{
 	//		COOK_STAT(Timer.AddHit(DerivedData.Num()));
@@ -1425,11 +1425,11 @@ void FStaticMeshRenderData::Cache(UStaticMesh* Owner, const FStaticMeshLODSettin
 	//		Args.Add(TEXT("StaticMeshName"), FText::FromString( Owner->GetName() ) );
 	//		FStaticMeshStatusMessageContext StatusContext( FText::Format( NSLOCTEXT("Engine", "BuildingStaticMeshStatus", "Building static mesh {StaticMeshName}..."), Args ) );
 
-	//		IMeshUtilities& MeshUtilities = FModuleManager::Get().LoadModuleChecked<IMeshUtilities>(TEXT("MeshUtilities"));
-	//		MeshUtilities.BuildStaticMesh(*this, Owner->SourceModels, LODGroup, Owner->ImportVersion);
-	//		ComputeUVDensities();
-	//		FMemoryWriter Ar(DerivedData, /*bIsPersistent=*/ true);
-	//		Serialize(Ar, Owner, /*bCooked=*/ false);
+			IMeshUtilities& MeshUtilities = FModuleManager::Get().LoadModuleChecked<IMeshUtilities>(TEXT("MeshUtilities"));
+			MeshUtilities.BuildStaticMesh(*this, Owner->SourceModels, LODGroup, Owner->ImportVersion);
+			ComputeUVDensities();
+			FMemoryWriter Ar(DerivedData, /*bIsPersistent=*/ true);
+			Serialize(Ar, Owner, /*bCooked=*/ false);
 	//		GetDerivedDataCacheRef().Put(*DerivedDataKey, DerivedData);
 
 	//		int32 T1 = FPlatformTime::Cycles();
@@ -2294,6 +2294,8 @@ void UStaticMesh::CacheDerivedData()
 	//ITargetPlatform* RunningPlatform = TargetPlatformManager.GetRunningTargetPlatform();
 	//check(RunningPlatform);
 	//const FStaticMeshLODSettings& LODSettings = RunningPlatform->GetStaticMeshLODSettings();
+	FStaticMeshLODSettings LODSettings;
+	
 
 	//if (RenderData)
 	//{
@@ -2313,8 +2315,8 @@ void UStaticMesh::CacheDerivedData()
 	//	}
 	//}
 
-	//RenderData = MakeUnique<FStaticMeshRenderData>();
-	//RenderData->Cache(this, LODSettings);
+	RenderData = MakeUnique<FStaticMeshRenderData>();
+	RenderData->Cache(this, LODSettings);
 
 	//// Additionally cache derived data for any other platforms we care about.
 	//const TArray<ITargetPlatform*>& TargetPlatforms = TargetPlatformManager.GetActiveTargetPlatforms();

@@ -36,100 +36,100 @@ namespace ETangentOptions
 ///**
 // * Mesh reduction interface.
 // */
-//class IMeshReduction
-//{
-//public:
-//	/**
-//	 * Reduces the raw mesh using the provided reduction settings.
-//	 * @param OutReducedMesh - Upon return contains the reduced mesh.
-//	 * @param OutMaxDeviation - Upon return contains the maximum distance by which the reduced mesh deviates from the original.
-//	 * @param InMesh - The mesh to reduce.
-//	 * @param ReductionSettings - Setting with which to reduce the mesh.
-//	 */
-//	virtual void Reduce(
-//		struct FRawMesh& OutReducedMesh,
-//		float& OutMaxDeviation,
-//		const struct FRawMesh& InMesh,
-//		const TMultiMap<int32, int32>& InOverlappingCorners,
-//		const struct FMeshReductionSettings& ReductionSettings
-//		) = 0;
-//	/**
-//	 * Reduces the provided skeletal mesh.
-//	 * @returns true if reduction was successful.
-//	 */
-//	virtual bool ReduceSkeletalMesh(
-//	class USkeletalMesh* SkeletalMesh,
-//		int32 LODIndex,
-//		const struct FSkeletalMeshOptimizationSettings& Settings,
-//		bool bCalcLODDistance,
-//		bool bReregisterComponent = true
-//		) = 0;
-//	/**
-//	 * Returns a unique string identifying both the reduction plugin itself and the version of the plugin.
-//	 */
-//	virtual const FString& GetVersionString() const = 0;
-//
-//	/**
-//	 *	Returns true if mesh reduction is supported
-//	 */
-//	virtual bool IsSupported() const = 0;
-//};
+class IMeshReduction
+{
+public:
+	/**
+	 * Reduces the raw mesh using the provided reduction settings.
+	 * @param OutReducedMesh - Upon return contains the reduced mesh.
+	 * @param OutMaxDeviation - Upon return contains the maximum distance by which the reduced mesh deviates from the original.
+	 * @param InMesh - The mesh to reduce.
+	 * @param ReductionSettings - Setting with which to reduce the mesh.
+	 */
+	virtual void Reduce(
+		struct FRawMesh& OutReducedMesh,
+		float& OutMaxDeviation,
+		const struct FRawMesh& InMesh,
+		const TMultiMap<int32, int32>& InOverlappingCorners,
+		const struct FMeshReductionSettings& ReductionSettings
+		) = 0;
+	/**
+	 * Reduces the provided skeletal mesh.
+	 * @returns true if reduction was successful.
+	 */
+	virtual bool ReduceSkeletalMesh(
+	class USkeletalMesh* SkeletalMesh,
+		int32 LODIndex,
+		const struct FSkeletalMeshOptimizationSettings& Settings,
+		bool bCalcLODDistance,
+		bool bReregisterComponent = true
+		) = 0;
+	/**
+	 * Returns a unique string identifying both the reduction plugin itself and the version of the plugin.
+	 */
+	virtual const FString& GetVersionString() const = 0;
+
+	/**
+	 *	Returns true if mesh reduction is supported
+	 */
+	virtual bool IsSupported() const = 0;
+};
 //
 //DECLARE_DELEGATE_ThreeParams(FProxyCompleteDelegate, struct FRawMesh&, struct FFlattenMaterial&, const FGuid);
 //DECLARE_DELEGATE_TwoParams(FProxyFailedDelegate, const FGuid, const FString&);
 //DECLARE_DELEGATE_TwoParams(FCreateProxyDelegate, const FGuid, TArray<UObject*>&);
 //
 ///** Data used for passing back the data resulting from a completed mesh merging operation*/
-//struct FMergeCompleteData
-//{
-//	/** Outer object for the to store/save UObjects */
-//	class UPackage* InOuter;
-//	/** Base package name for the proxy mesh UObjects */
-//	FString ProxyBasePackageName;
-//	/** Merge/Proxy settings structure */
-//	//struct FMeshProxySettings InProxySettings;
-//	/** Callback delegate object used as a callback when the job finishes */
-//	FCreateProxyDelegate CallbackDelegate;
-//};
-//
+struct FMergeCompleteData
+{
+	/** Outer object for the to store/save UObjects */
+	class UPackage* InOuter;
+	/** Base package name for the proxy mesh UObjects */
+	FString ProxyBasePackageName;
+	/** Merge/Proxy settings structure */
+	//struct FMeshProxySettings InProxySettings;
+	/** Callback delegate object used as a callback when the job finishes */
+	//FCreateProxyDelegate CallbackDelegate;
+};
+
 ///**
 // * Mesh merging interface.
 // */
-//class IMeshMerging
-//{
-//public:
-//	virtual void ProxyLOD(const TArray<struct FMeshMergeData>& InData,
-//		const struct FMeshProxySettings& InProxySettings,
-//		const TArray<struct FFlattenMaterial>& InputMaterials,
-//		const FGuid InJobGUID) {}
-//
-//	virtual void AggregateLOD() {}
-//
-//	FProxyCompleteDelegate CompleteDelegate;
-//	FProxyFailedDelegate FailedDelegate;
-//};
-//
+class IMeshMerging
+{
+public:
+	virtual void ProxyLOD(const TArray<struct FMeshMergeData>& InData,
+		const struct FMeshProxySettings& InProxySettings,
+		const TArray<struct FFlattenMaterial>& InputMaterials,
+		const FGuid InJobGUID) {}
+
+	virtual void AggregateLOD() {}
+
+	//FProxyCompleteDelegate CompleteDelegate;
+	//FProxyFailedDelegate FailedDelegate;
+};
+
 ///**
 // * Mesh reduction module interface.
 // */
-//class IMeshReductionModule : public IModuleInterface
-//{
-//public:
-//	/**
-//	 * Retrieve the static mesh reduction interface.
-//	 */
-//	virtual class IMeshReduction* GetStaticMeshReductionInterface() = 0;
-//
-//	/**
-//	 * Retrieve the static mesh reduction interface.
-//	 */
-//	virtual class IMeshReduction* GetSkeletalMeshReductionInterface() = 0;
-//	
-//	/**
-//	 * Retrieve the mesh merging interface.
-//	 */
-//	virtual class IMeshMerging* GetMeshMergingInterface() = 0;
-//};
+class IMeshReductionModule : public IModuleInterface
+{
+public:
+	/**
+	 * Retrieve the static mesh reduction interface.
+	 */
+	virtual class IMeshReduction* GetStaticMeshReductionInterface() = 0;
+
+	/**
+	 * Retrieve the static mesh reduction interface.
+	 */
+	virtual class IMeshReduction* GetSkeletalMeshReductionInterface() = 0;
+	
+	/**
+	 * Retrieve the mesh merging interface.
+	 */
+	virtual class IMeshMerging* GetMeshMergingInterface() = 0;
+};
 //
 class IMeshUtilities : public IModuleInterface
 {
@@ -141,46 +141,46 @@ public:
 //	 * Builds a renderable static mesh using the provided source models and the LOD groups settings.
 //	 * @returns true if the renderable mesh was built successfully.
 //	 */
-//	virtual bool BuildStaticMesh(
-//		class FStaticMeshRenderData& OutRenderData,
-//		TArray<struct FStaticMeshSourceModel>& SourceModels,
-//		const class FStaticMeshLODGroup& LODGroup,
-//		int32 ImportVersion
-//		) = 0;
+	virtual bool BuildStaticMesh(
+		class FStaticMeshRenderData& OutRenderData,
+		TArray<struct FStaticMeshSourceModel>& SourceModels,
+		const class FStaticMeshLODGroup& LODGroup,
+		int32 ImportVersion
+	) = 0;
 //
-//	virtual void BuildStaticMeshVertexAndIndexBuffers(
-//		TArray<FStaticMeshBuildVertex>& OutVertices,
-//		TArray<TArray<uint32> >& OutPerSectionIndices,
-//		TArray<int32>& OutWedgeMap,
-//		const FRawMesh& RawMesh,
-//		const TMultiMap<int32, int32>& OverlappingCorners,
-//		const TMap<uint32, uint32>& MaterialToSectionMapping,
-//		float ComparisonThreshold,
-//		FVector BuildScale,
-//		int32 ImportVersion
-//		) = 0;
-//
-//	/**
-//	 * Builds a static mesh using the provided source models and the LOD groups settings, and replaces
-//	 * the RawMeshes with the reduced meshes. Does not modify renderable data.
-//	 * @returns true if the meshes were built successfully.
-//	 */
-//	virtual bool GenerateStaticMeshLODs(
-//		TArray<struct FStaticMeshSourceModel>& Models,
-//		const class FStaticMeshLODGroup& LODGroup
-//		) = 0;
-//
-//	/** Builds a signed distance field volume for the given LODModel. */
-//	/*virtual void GenerateSignedDistanceFieldVolumeData(
-//		const FStaticMeshLODResources& LODModel,
-//		class FQueuedThreadPool& ThreadPool,
-//		const TArray<EBlendMode>& MaterialBlendModes,
-//		const FBoxSphereBounds& Bounds,
-//		float DistanceFieldResolutionScale,
-//		float DistanceFieldBias,
-//		bool bGenerateAsIfTwoSided,
-//		class FDistanceFieldVolumeData& OutData) = 0;*/
-//
+	virtual void BuildStaticMeshVertexAndIndexBuffers(
+		TArray<FStaticMeshBuildVertex>& OutVertices,
+		TArray<TArray<uint32> >& OutPerSectionIndices,
+		TArray<int32>& OutWedgeMap,
+		const FRawMesh& RawMesh,
+		const TMultiMap<int32, int32>& OverlappingCorners,
+		const TMap<uint32, uint32>& MaterialToSectionMapping,
+		float ComparisonThreshold,
+		FVector BuildScale,
+		int32 ImportVersion
+		) = 0;
+
+	/**
+	 * Builds a static mesh using the provided source models and the LOD groups settings, and replaces
+	 * the RawMeshes with the reduced meshes. Does not modify renderable data.
+	 * @returns true if the meshes were built successfully.
+	 */
+	virtual bool GenerateStaticMeshLODs(
+		TArray<struct FStaticMeshSourceModel>& Models,
+		const class FStaticMeshLODGroup& LODGroup
+		) = 0;
+
+	/** Builds a signed distance field volume for the given LODModel. */
+/*	virtual void GenerateSignedDistanceFieldVolumeData(
+		const FStaticMeshLODResources& LODModel,
+		class FQueuedThreadPool& ThreadPool,
+		const TArray<EBlendMode>& MaterialBlendModes,
+		const FBoxSphereBounds& Bounds,
+		float DistanceFieldResolutionScale,
+		float DistanceFieldBias,
+		bool bGenerateAsIfTwoSided,
+		class FDistanceFieldVolumeData& OutData) = 0;*/
+
 //	/** Helper structure for skeletal mesh import options */
 	struct MeshBuildOptions
 	{
@@ -218,13 +218,13 @@ public:
 		) = 0;
 
 //	/** Returns the mesh reduction plugin if available. */
-//	virtual IMeshReduction* GetStaticMeshReductionInterface() = 0;
-//
-//	/** Returns the mesh reduction plugin if available. */
-//	virtual IMeshReduction* GetSkeletalMeshReductionInterface() = 0;
-//
-//	/** Returns the mesh merging plugin if available. */
-//	virtual IMeshMerging* GetMeshMergingInterface() = 0;
+	virtual IMeshReduction* GetStaticMeshReductionInterface() = 0;
+
+	/** Returns the mesh reduction plugin if available. */
+	virtual IMeshReduction* GetSkeletalMeshReductionInterface() = 0;
+
+	/** Returns the mesh merging plugin if available. */
+	//virtual IMeshMerging* GetMeshMergingInterface() = 0;
 //
 	/** Cache optimize the index buffer. */
 	virtual void CacheOptimizeIndexBuffer(TArray<uint16>& Indices) = 0;

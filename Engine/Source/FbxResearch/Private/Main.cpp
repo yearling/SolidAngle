@@ -26,6 +26,9 @@ DEFINE_LOG_CATEGORY(Main);
 
 int main(int argc,TCHAR* argv[])
 {
+	FbxAMatrix mt;
+	mt.SetT(FbxVector4(1, 2, 3, 4));
+
 	FCommandLine::Set(TEXT(""));
 	GLogConsole = FPlatformOutputDevices::GetLogConsole();
 	GLogConsole->Show(true);

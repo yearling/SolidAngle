@@ -18,6 +18,9 @@
 #include "nvtess.h"
 #include "MeshBuild.h"
 #include "YSkeletalMesh.h"
+#include "MeshMerging.h"
+#include "LayoutUV.h"
+#include "kDOP.h"
 //#include "UObject/Package.h"
 //#include "Misc/PackageName.h"
 //#include "Textures/SlateIcon.h"
@@ -121,150 +124,146 @@ DEFINE_LOG_CATEGORY_STATIC(LogMeshUtilities, Verbose, All);
 #define LOCTEXT_NAMESPACE "MeshUtils"
 //
 //// CVars
-//static TAutoConsoleVariable<int32> CVarTriangleOrderOptimization(
-//	TEXT("r.TriangleOrderOptimization"),
-//	1,
-//	TEXT("Controls the algorithm to use when optimizing the triangle order for the post-transform cache.\n")
-//	TEXT("0: Use NVTriStrip (slower)\n")
-//	TEXT("1: Use Forsyth algorithm (fastest)(default)")
-//	TEXT("2: No triangle order optimization. (least efficient, debugging purposes only)"),
-//	ECVF_Default);
+static TAutoConsoleVariable<int32> CVarTriangleOrderOptimization(
+	TEXT("r.TriangleOrderOptimization"),
+	1,
+	TEXT("Controls the algorithm to use when optimizing the triangle order for the post-transform cache.\n")
+	TEXT("0: Use NVTriStrip (slower)\n")
+	TEXT("1: Use Forsyth algorithm (fastest)(default)")
+	TEXT("2: No triangle order optimization. (least efficient, debugging purposes only)"),
+	ECVF_Default);
 //
-//static FAutoConsoleVariable CVarMeshReductionModule(
-//	TEXT("r.MeshReductionModule"),
-//	TEXT("QuadricMeshReduction"),
-//	TEXT("Name of what mesh reduction module to choose. If blank it chooses any that exist.\n"),
-//	ECVF_ReadOnly);
-//
+static FAutoConsoleVariable CVarMeshReductionModule(
+	TEXT("r.MeshReductionModule"),
+	TEXT("QuadricMeshReduction"),
+	TEXT("Name of what mesh reduction module to choose. If blank it chooses any that exist.\n"),
+	ECVF_ReadOnly);
+
 class FMeshUtilities : public IMeshUtilities
 {
 public:
 	/** Default constructor. */
-	//FMeshUtilities()
-	//	: StaticMeshReduction(NULL)
-	//	, SkeletalMeshReduction(NULL)
-	//	, MeshMerging(NULL)
-	//	, DistributedMeshMerging(NULL)
-	//	, Processor(NULL)
-	//{
-	//}
-
 	FMeshUtilities()
-		:bDisableTriangleOrderOptimization(false)
-		,bUsingNvTriStrip(true)
-	{}
+		: StaticMeshReduction(NULL)
+		, SkeletalMeshReduction(NULL)
+		, MeshMerging(NULL)
+		, DistributedMeshMerging(NULL)
+		, Processor(NULL)
+	{
+	}
 //
-//	void UpdateMeshReductionModule()
-//	{
-//		TArray<FName> ModuleNames;
-//		FModuleManager::Get().FindModules(TEXT("*MeshReduction"), ModuleNames);
+	void UpdateMeshReductionModule()
+	{
+		TArray<FName> ModuleNames;
+		FModuleManager::Get().FindModules(TEXT("*MeshReduction"), ModuleNames);
+
+		for(int32 Index = 0; Index < ModuleNames.Num(); Index++)
+		{
+			FString String = CVarMeshReductionModule->GetString();
+			bool bIsChoosenModule = ModuleNames[Index].GetPlainNameString().Equals(String);
+
+			IMeshReductionModule& MeshReductionModule = FModuleManager::LoadModuleChecked<IMeshReductionModule>(ModuleNames[Index]);
+
+			// Look for MeshReduction interface
+			if(MeshReductionModule.GetStaticMeshReductionInterface())
+			{
+				if(bIsChoosenModule || StaticMeshReduction == NULL)
+				{
+					StaticMeshReduction = MeshReductionModule.GetStaticMeshReductionInterface();
+					UE_LOG(LogMeshUtilities, Log, TEXT("Using %s for automatic static mesh reduction"), *ModuleNames[Index].ToString());
+				}
+			}
+
+			// Look for MeshReduction interface
+			if(MeshReductionModule.GetSkeletalMeshReductionInterface())
+			{
+				if(bIsChoosenModule || SkeletalMeshReduction == NULL)
+				{
+					SkeletalMeshReduction = MeshReductionModule.GetSkeletalMeshReductionInterface();
+					UE_LOG(LogMeshUtilities, Log, TEXT("Using %s for automatic skeletal mesh reduction"), *ModuleNames[Index].ToString());
+				}
+			}
+
+			// Look for MeshMerging interface
+			if(MeshReductionModule.GetMeshMergingInterface())
+			{
+				if(bIsChoosenModule || MeshMerging == NULL)
+				{
+					MeshMerging = MeshReductionModule.GetMeshMergingInterface();
+					UE_LOG(LogMeshUtilities, Log, TEXT("Using %s for automatic mesh merging"), *ModuleNames[Index].ToString());
+				}
+			}
+		}
+
+	}
 //
-//		for(int32 Index = 0; Index < ModuleNames.Num(); Index++)
-//		{
-//			FString String = CVarMeshReductionModule->GetString();
-//			bool bIsChoosenModule = ModuleNames[Index].GetPlainNameString().Equals(String);
-//
-//			IMeshReductionModule& MeshReductionModule = FModuleManager::LoadModuleChecked<IMeshReductionModule>(ModuleNames[Index]);
-//
-//			// Look for MeshReduction interface
-//			if(MeshReductionModule.GetStaticMeshReductionInterface())
-//			{
-//				if(bIsChoosenModule || StaticMeshReduction == NULL)
-//				{
-//					StaticMeshReduction = MeshReductionModule.GetStaticMeshReductionInterface();
-//					UE_LOG(LogMeshUtilities, Log, TEXT("Using %s for automatic static mesh reduction"), *ModuleNames[Index].ToString());
-//				}
-//			}
-//
-//			// Look for MeshReduction interface
-//			if(MeshReductionModule.GetSkeletalMeshReductionInterface())
-//			{
-//				if(bIsChoosenModule || SkeletalMeshReduction == NULL)
-//				{
-//					SkeletalMeshReduction = MeshReductionModule.GetSkeletalMeshReductionInterface();
-//					UE_LOG(LogMeshUtilities, Log, TEXT("Using %s for automatic skeletal mesh reduction"), *ModuleNames[Index].ToString());
-//				}
-//			}
-//
-//			// Look for MeshMerging interface
-//			if(MeshReductionModule.GetMeshMergingInterface())
-//			{
-//				if(bIsChoosenModule || MeshMerging == NULL)
-//				{
-//					MeshMerging = MeshReductionModule.GetMeshMergingInterface();
-//					UE_LOG(LogMeshUtilities, Log, TEXT("Using %s for automatic mesh merging"), *ModuleNames[Index].ToString());
-//				}
-//			}
-//		}
-//
-//	}
-//
-//private:
-//	/** Cached pointer to the mesh reduction interface. */
-//	IMeshReduction* StaticMeshReduction;
-//	/** Cached pointer to the mesh reduction interface. */
-//	IMeshReduction* SkeletalMeshReduction;
-//	/** Cached pointer to the mesh merging interface. */
-//	IMeshMerging* MeshMerging;
-//	/** Cached pointer to the distributed mesh merging interface. */
-//	IMeshMerging* DistributedMeshMerging;
-//	/** Cached version string. */
-//	FString VersionString;
-//	/** True if Simplygon is being used for mesh reduction. */
-//	bool bUsingSimplygon;
+private:
+	/** Cached pointer to the mesh reduction interface. */
+	IMeshReduction* StaticMeshReduction;
+	/** Cached pointer to the mesh reduction interface. */
+	IMeshReduction* SkeletalMeshReduction;
+	/** Cached pointer to the mesh merging interface. */
+	IMeshMerging* MeshMerging;
+	/** Cached pointer to the distributed mesh merging interface. */
+	IMeshMerging* DistributedMeshMerging;
+	/** Cached version string. */
+	FString VersionString;
+	/** True if Simplygon is being used for mesh reduction. */
+	bool bUsingSimplygon;
 	/** True if NvTriStrip is being used for tri order optimization. */
 	bool bUsingNvTriStrip;
 	/** True if we disable triangle order optimization.  For debugging purposes only */
 	bool bDisableTriangleOrderOptimization;
 //
-//	class FProxyGenerationProcessor* Processor;
+	class FProxyGenerationProcessor* Processor;
 //
 //	// IMeshUtilities interface.
-//	virtual const FString& GetVersionString() const override
-//	{
-//		return VersionString;
-//	}
+	/*virtual const FString& GetVersionString() const override
+	{
+		return VersionString;
+	}*/
 //
-//	virtual bool BuildStaticMesh(
-//		FStaticMeshRenderData& OutRenderData,
-//		TArray<FStaticMeshSourceModel>& SourceModels,
-//		const FStaticMeshLODGroup& LODGroup,
-//		int32 ImportVersion = EImportStaticMeshVersion::LastVersion
-//		) override;
+public:
+	virtual bool BuildStaticMesh(
+		FStaticMeshRenderData& OutRenderData,
+		TArray<FStaticMeshSourceModel>& SourceModels,
+		const FStaticMeshLODGroup& LODGroup,
+		int32 ImportVersion = EImportStaticMeshVersion::LastVersion
+		) override;
 //
-//	virtual void BuildStaticMeshVertexAndIndexBuffers(
-//		TArray<FStaticMeshBuildVertex>& OutVertices,
-//		TArray<TArray<uint32> >& OutPerSectionIndices,
-//		TArray<int32>& OutWedgeMap,
-//		const FRawMesh& RawMesh,
-//		const TMultiMap<int32, int32>& OverlappingCorners,
-//		const TMap<uint32, uint32>& MaterialToSectionMapping,
-//		float ComparisonThreshold,
-//		FVector BuildScale,
-//		int32 ImportVersion
-//		) override;
+	virtual void BuildStaticMeshVertexAndIndexBuffers(
+		TArray<FStaticMeshBuildVertex>& OutVertices,
+		TArray<TArray<uint32> >& OutPerSectionIndices,
+		TArray<int32>& OutWedgeMap,
+		const FRawMesh& RawMesh,
+		const TMultiMap<int32, int32>& OverlappingCorners,
+		const TMap<uint32, uint32>& MaterialToSectionMapping,
+		float ComparisonThreshold,
+		FVector BuildScale,
+		int32 ImportVersion
+		) override;
 //
-//	virtual bool GenerateStaticMeshLODs(TArray<FStaticMeshSourceModel>& Models, const FStaticMeshLODGroup& LODGroup) override;
+	virtual bool GenerateStaticMeshLODs(TArray<FStaticMeshSourceModel>& Models, const FStaticMeshLODGroup& LODGroup) override;
 //
-//	virtual void GenerateSignedDistanceFieldVolumeData(
-//		const FStaticMeshLODResources& LODModel,
-//		class FQueuedThreadPool& ThreadPool,
-//		const TArray<EBlendMode>& MaterialBlendModes,
-//		const FBoxSphereBounds& Bounds,
-//		float DistanceFieldResolutionScale,
-//		float DistanceFieldBias,
-//		bool bGenerateAsIfTwoSided,
-//		FDistanceFieldVolumeData& OutData) override;
+	/*virtual void GenerateSignedDistanceFieldVolumeData(
+		const FStaticMeshLODResources& LODModel,
+		class FQueuedThreadPool& ThreadPool,
+		const TArray<EBlendMode>& MaterialBlendModes,
+		const FBoxSphereBounds& Bounds,
+		float DistanceFieldResolutionScale,
+		float DistanceFieldBias,
+		bool bGenerateAsIfTwoSided,
+		FDistanceFieldVolumeData& OutData) override*/;
 //
 	virtual bool BuildSkeletalMesh(FStaticLODModel& LODModel, const FReferenceSkeleton& RefSkeleton, const TArray<FVertInfluence>& Influences, const TArray<FMeshWedge>& Wedges, const TArray<FMeshFace>& Faces, const TArray<FVector>& Points, const TArray<int32>& PointToOriginalMap, const MeshBuildOptions& BuildOptions = MeshBuildOptions(), TArray<FText> * OutWarningMessages = NULL, TArray<FName> * OutWarningNames = NULL) override;
 	bool BuildSkeletalMesh_Legacy(FStaticLODModel& LODModel, const FReferenceSkeleton& RefSkeleton, const TArray<FVertInfluence>& Influences, const TArray<FMeshWedge>& Wedges, const TArray<FMeshFace>& Faces, const TArray<FVector>& Points, const TArray<int32>& PointToOriginalMap, bool bKeepOverlappingVertices = false, bool bComputeNormals = true, bool bComputeTangents = true, TArray<FText> * OutWarningMessages = NULL, TArray<FName> * OutWarningNames = NULL);
 //
-//	virtual IMeshReduction* GetStaticMeshReductionInterface() override;
-//	virtual IMeshReduction* GetSkeletalMeshReductionInterface() override;
+	virtual IMeshReduction* GetStaticMeshReductionInterface() override;
+	virtual IMeshReduction* GetSkeletalMeshReductionInterface() override;
 //	virtual IMeshMerging* GetMeshMergingInterface() override;
 	virtual void CacheOptimizeIndexBuffer(TArray<uint16>& Indices) override;
 	virtual void CacheOptimizeIndexBuffer(TArray<uint32>& Indices) override;
-//	void CacheOptimizeVertexAndIndexBuffer(TArray<FStaticMeshBuildVertex>& Vertices, TArray<TArray<uint32> >& PerSectionIndices, TArray<int32>& WedgeMap);
+	void CacheOptimizeVertexAndIndexBuffer(TArray<FStaticMeshBuildVertex>& Vertices, TArray<TArray<uint32> >& PerSectionIndices, TArray<int32>& WedgeMap);
 //
 	virtual void BuildSkeletalAdjacencyIndexBuffer(
 		const TArray<FSoftSkinVertex>& VertexBuffer,
@@ -629,387 +628,209 @@ IMPLEMENT_MODULE(FMeshUtilities, MeshUtilities);
 //};
 //
 ////@todo - implement required vector intrinsics for other implementations
-//#if PLATFORM_ENABLE_VECTORINTRINSICS
-//
-//class FMeshBuildDataProvider
-//{
-//public:
-//
-//	/** Initialization constructor. */
-//	FMeshBuildDataProvider(
-//		const TkDOPTree<const FMeshBuildDataProvider, uint32>& InkDopTree) :
-//		kDopTree(InkDopTree)
-//	{}
-//
-//	// kDOP data provider interface.
-//
-//	FORCEINLINE const TkDOPTree<const FMeshBuildDataProvider, uint32>& GetkDOPTree(void) const
-//	{
-//		return kDopTree;
-//	}
-//
-//	FORCEINLINE const FMatrix& GetLocalToWorld(void) const
-//	{
-//		return FMatrix::Identity;
-//	}
-//
-//	FORCEINLINE const FMatrix& GetWorldToLocal(void) const
-//	{
-//		return FMatrix::Identity;
-//	}
-//
-//	FORCEINLINE FMatrix GetLocalToWorldTransposeAdjoint(void) const
-//	{
-//		return FMatrix::Identity;
-//	}
-//
-//	FORCEINLINE float GetDeterminant(void) const
-//	{
-//		return 1.0f;
-//	}
-//
-//private:
-//
-//	const TkDOPTree<const FMeshBuildDataProvider, uint32>& kDopTree;
-//};
-//
-///** Generates unit length, stratified and uniformly distributed direction samples in a hemisphere. */
-//void GenerateStratifiedUniformHemisphereSamples(int32 NumThetaSteps, int32 NumPhiSteps, FRandomStream& RandomStream, TArray<FVector4>& Samples)
-//{
-//	Samples.Empty(NumThetaSteps * NumPhiSteps);
-//	for (int32 ThetaIndex = 0; ThetaIndex < NumThetaSteps; ThetaIndex++)
-//	{
-//		for (int32 PhiIndex = 0; PhiIndex < NumPhiSteps; PhiIndex++)
-//		{
-//			const float U1 = RandomStream.GetFraction();
-//			const float U2 = RandomStream.GetFraction();
-//
-//			const float Fraction1 = (ThetaIndex + U1) / (float)NumThetaSteps;
-//			const float Fraction2 = (PhiIndex + U2) / (float)NumPhiSteps;
-//
-//			const float R = FMath::Sqrt(1.0f - Fraction1 * Fraction1);
-//
-//			const float Phi = 2.0f * (float)PI * Fraction2;
-//			// Convert to Cartesian
-//			Samples.Add(FVector4(FMath::Cos(Phi) * R, FMath::Sin(Phi) * R, Fraction1));
-//		}
-//	}
-//}
-//
-//class FMeshDistanceFieldAsyncTask : public FNonAbandonableTask
-//{
-//public:
-//	FMeshDistanceFieldAsyncTask(TkDOPTree<const FMeshBuildDataProvider, uint32>* InkDopTree,
-//		const TArray<FVector4>* InSampleDirections,
-//		FBox InVolumeBounds,
-//		FIntVector InVolumeDimensions,
-//		float InVolumeMaxDistance,
-//		float InDistanceFieldBias,
-//		int32 InZIndex,
-//		TArray<FFloat16>* DistanceFieldVolume)
-//		:
-//		kDopTree(InkDopTree),
-//		SampleDirections(InSampleDirections),
-//		VolumeBounds(InVolumeBounds),
-//		VolumeDimensions(InVolumeDimensions),
-//		VolumeMaxDistance(InVolumeMaxDistance),
-//		DistanceFieldBias(InDistanceFieldBias),
-//		ZIndex(InZIndex),
-//		OutDistanceFieldVolume(DistanceFieldVolume),
-//		bNegativeAtBorder(false)
-//	{}
-//
-//	void DoWork();
-//
-//	FORCEINLINE TStatId GetStatId() const
-//	{
-//		RETURN_QUICK_DECLARE_CYCLE_STAT(FMeshDistanceFieldAsyncTask, STATGROUP_ThreadPoolAsyncTasks);
-//	}
-//
-//	bool WasNegativeAtBorder() const
-//	{
-//		return bNegativeAtBorder;
-//	}
-//
-//private:
-//
-//	// Readonly inputs
-//	TkDOPTree<const FMeshBuildDataProvider, uint32>* kDopTree;
-//	const TArray<FVector4>* SampleDirections;
-//	FBox VolumeBounds;
-//	FIntVector VolumeDimensions;
-//	float VolumeMaxDistance;
-//	float DistanceFieldBias;
-//	int32 ZIndex;
-//
-//	// Output
-//	TArray<FFloat16>* OutDistanceFieldVolume;
-//	bool bNegativeAtBorder;
-//};
-//
-//void FMeshDistanceFieldAsyncTask::DoWork()
-//{
-//	FMeshBuildDataProvider kDOPDataProvider(*kDopTree);
-//	const FVector DistanceFieldVoxelSize(VolumeBounds.GetSize() / FVector(VolumeDimensions.X, VolumeDimensions.Y, VolumeDimensions.Z));
-//	const float VoxelDiameterSqr = DistanceFieldVoxelSize.SizeSquared();
-//
-//	for (int32 YIndex = 0; YIndex < VolumeDimensions.Y; YIndex++)
-//	{
-//		for (int32 XIndex = 0; XIndex < VolumeDimensions.X; XIndex++)
-//		{
-//			const FVector VoxelPosition = FVector(XIndex + .5f, YIndex + .5f, ZIndex + .5f) * DistanceFieldVoxelSize + VolumeBounds.Min;
-//			const int32 Index = (ZIndex * VolumeDimensions.Y * VolumeDimensions.X + YIndex * VolumeDimensions.X + XIndex);
-//
-//			float MinDistance = VolumeMaxDistance;
-//			int32 Hit = 0;
-//			int32 HitBack = 0;
-//
-//			for (int32 SampleIndex = 0; SampleIndex < SampleDirections->Num(); SampleIndex++)
-//			{
-//				const FVector RayDirection = (*SampleDirections)[SampleIndex];
-//
-//				if (FMath::LineBoxIntersection(VolumeBounds, VoxelPosition, VoxelPosition + RayDirection * VolumeMaxDistance, RayDirection))
-//				{
-//					FkHitResult Result;
-//
-//					TkDOPLineCollisionCheck<const FMeshBuildDataProvider, uint32> kDOPCheck(
-//						VoxelPosition,
-//						VoxelPosition + RayDirection * VolumeMaxDistance,
-//						true,
-//						kDOPDataProvider,
-//						&Result);
-//
-//					bool bHit = kDopTree->LineCheck(kDOPCheck);
-//
-//					if (bHit)
-//					{
-//						Hit++;
-//
-//						const FVector HitNormal = kDOPCheck.GetHitNormal();
-//
-//						if (FVector::DotProduct(RayDirection, HitNormal) > 0
-//							// MaterialIndex on the build triangles was set to 1 if two-sided, or 0 if one-sided
-//							&& kDOPCheck.Result->Item == 0)
-//						{
-//							HitBack++;
-//						}
-//
-//						const float CurrentDistance = VolumeMaxDistance * Result.Time;
-//
-//						if (CurrentDistance < MinDistance)
-//						{
-//							MinDistance = CurrentDistance;
-//						}
-//					}
-//				}
-//			}
-//
-//			const float UnsignedDistance = MinDistance;
-//
-//			// Consider this voxel 'inside' an object if more than 50% of the rays hit back faces
-//			MinDistance *= (Hit == 0 || HitBack < SampleDirections->Num() * .5f) ? 1 : -1;
-//
-//			// If we are very close to a surface and nearly all of our rays hit backfaces, treat as inside
-//			// This is important for one sided planes
-//			if (FMath::Square(UnsignedDistance) < VoxelDiameterSqr && HitBack > .95f * Hit)
-//			{
-//				MinDistance = -UnsignedDistance;
-//			}
-//
-//			MinDistance = FMath::Min(MinDistance + DistanceFieldBias, VolumeMaxDistance);
-//			const float VolumeSpaceDistance = MinDistance / VolumeBounds.GetExtent().GetMax();
-//
-//			if (MinDistance < 0 &&
-//				(XIndex == 0 || XIndex == VolumeDimensions.X - 1 ||
-//				YIndex == 0 || YIndex == VolumeDimensions.Y - 1 ||
-//				ZIndex == 0 || ZIndex == VolumeDimensions.Z - 1))
-//			{
-//				bNegativeAtBorder = true;
-//			}
-//
-//			(*OutDistanceFieldVolume)[Index] = FFloat16(VolumeSpaceDistance);
-//		}
-//	}
-//}
-//
-////void FMeshUtilities::GenerateSignedDistanceFieldVolumeData(
-////	const FStaticMeshLODResources& LODModel,
-////	class FQueuedThreadPool& ThreadPool,
-////	const TArray<EBlendMode>& MaterialBlendModes,
-////	const FBoxSphereBounds& Bounds,
-////	float DistanceFieldResolutionScale,
-////	float DistanceFieldBias,
-////	bool bGenerateAsIfTwoSided,
-////	FDistanceFieldVolumeData& OutData)
-////{
-////	if (DistanceFieldResolutionScale > 0)
-////	{
-////		const double StartTime = FPlatformTime::Seconds();
-////		const FPositionVertexBuffer& PositionVertexBuffer = LODModel.PositionVertexBuffer;
-////		FIndexArrayView Indices = LODModel.IndexBuffer.GetArrayView();
-////		TArray<FkDOPBuildCollisionTriangle<uint32> > BuildTriangles;
-////
-////		FVector BoundsSize = Bounds.GetBox().GetExtent() * 2;
-////		float MaxDimension = FMath::Max(FMath::Max(BoundsSize.X, BoundsSize.Y), BoundsSize.Z);
-////
-////		// Consider the mesh a plane if it is very flat
-////		const bool bMeshWasPlane = BoundsSize.Z * 100 < MaxDimension
-////			// And it lies mostly on the origin
-////			&& Bounds.Origin.Z - Bounds.BoxExtent.Z < KINDA_SMALL_NUMBER
-////			&& Bounds.Origin.Z + Bounds.BoxExtent.Z > -KINDA_SMALL_NUMBER;
-////
-////		for (int32 i = 0; i < Indices.Num(); i += 3)
-////		{
-////			FVector V0 = PositionVertexBuffer.VertexPosition(Indices[i + 0]);
-////			FVector V1 = PositionVertexBuffer.VertexPosition(Indices[i + 1]);
-////			FVector V2 = PositionVertexBuffer.VertexPosition(Indices[i + 2]);
-////
-////			if (bMeshWasPlane)
-////			{
-////				// Flatten out the mesh into an actual plane, this will allow us to manipulate the component's Z scale at runtime without artifacts
-////				V0.Z = 0;
-////				V1.Z = 0;
-////				V2.Z = 0;
-////			}
-////
-////			const FVector LocalNormal = ((V1 - V2) ^ (V0 - V2)).GetSafeNormal();
-////
-////			// No degenerates
-////			if (LocalNormal.IsUnit())
-////			{
-////				bool bTriangleIsOpaqueOrMasked = false;
-////
-////				for (int32 SectionIndex = 0; SectionIndex < LODModel.Sections.Num(); SectionIndex++)
-////				{
-////					const FStaticMeshSection& Section = LODModel.Sections[SectionIndex];
-////
-////					if ((uint32)i >= Section.FirstIndex && (uint32)i < Section.FirstIndex + Section.NumTriangles * 3)
-////					{
-////						if (MaterialBlendModes.IsValidIndex(Section.MaterialIndex))
-////						{
-////							bTriangleIsOpaqueOrMasked = !IsTranslucentBlendMode(MaterialBlendModes[Section.MaterialIndex]);
-////						}
-////
-////						break;
-////					}
-////				}
-////
-////				if (bTriangleIsOpaqueOrMasked)
-////				{
-////					BuildTriangles.Add(FkDOPBuildCollisionTriangle<uint32>(
-////						bGenerateAsIfTwoSided,
-////						V0,
-////						V1,
-////						V2));
-////				}
-////			}
-////		}
-////
-////		TkDOPTree<const FMeshBuildDataProvider, uint32> kDopTree;
-////		kDopTree.Build(BuildTriangles);
-////
-////		//@todo - project setting
-////		const int32 NumVoxelDistanceSamples = 1200;
-////		TArray<FVector4> SampleDirections;
-////		const int32 NumThetaSteps = FMath::TruncToInt(FMath::Sqrt(NumVoxelDistanceSamples / (2.0f * (float)PI)));
-////		const int32 NumPhiSteps = FMath::TruncToInt(NumThetaSteps * (float)PI);
-////		FRandomStream RandomStream(0);
-////		GenerateStratifiedUniformHemisphereSamples(NumThetaSteps, NumPhiSteps, RandomStream, SampleDirections);
-////		TArray<FVector4> OtherHemisphereSamples;
-////		GenerateStratifiedUniformHemisphereSamples(NumThetaSteps, NumPhiSteps, RandomStream, OtherHemisphereSamples);
-////
-////		for (int32 i = 0; i < OtherHemisphereSamples.Num(); i++)
-////		{
-////			FVector4 Sample = OtherHemisphereSamples[i];
-////			Sample.Z *= -1;
-////			SampleDirections.Add(Sample);
-////		}
-////
-////		static const auto CVar = IConsoleManager::Get().FindTConsoleVariableDataInt(TEXT("r.DistanceFields.MaxPerMeshResolution"));
-////		const int32 PerMeshMax = CVar->GetValueOnAnyThread();
-////
-////		// Meshes with explicit artist-specified scale can go higher
-////		const int32 MaxNumVoxelsOneDim = DistanceFieldResolutionScale <= 1 ? PerMeshMax / 2 : PerMeshMax;
-////		const int32 MinNumVoxelsOneDim = 8;
-////
-////		static const auto CVarDensity = IConsoleManager::Get().FindTConsoleVariableDataFloat(TEXT("r.DistanceFields.DefaultVoxelDensity"));
-////		const float VoxelDensity = CVarDensity->GetValueOnAnyThread();
-////
-////		const float NumVoxelsPerLocalSpaceUnit = VoxelDensity * DistanceFieldResolutionScale;
-////		FBox MeshBounds(Bounds.GetBox());
-////
-////		{
-////			const float MaxOriginalExtent = MeshBounds.GetExtent().GetMax();
-////			// Expand so that the edges of the volume are guaranteed to be outside of the mesh
-////			// Any samples outside the bounds will be clamped to the border, so they must be outside
-////			const FVector NewExtent(MeshBounds.GetExtent() + FVector(.2f * MaxOriginalExtent).ComponentMax(4 * MeshBounds.GetExtent() / MinNumVoxelsOneDim));
-////			FBox DistanceFieldVolumeBounds = FBox(MeshBounds.GetCenter() - NewExtent, MeshBounds.GetCenter() + NewExtent);
-////			const float DistanceFieldVolumeMaxDistance = DistanceFieldVolumeBounds.GetExtent().Size();
-////
-////			const FVector DesiredDimensions(DistanceFieldVolumeBounds.GetSize() * FVector(NumVoxelsPerLocalSpaceUnit));
-////
-////			const FIntVector VolumeDimensions(
-////				FMath::Clamp(FMath::TruncToInt(DesiredDimensions.X), MinNumVoxelsOneDim, MaxNumVoxelsOneDim),
-////				FMath::Clamp(FMath::TruncToInt(DesiredDimensions.Y), MinNumVoxelsOneDim, MaxNumVoxelsOneDim),
-////				FMath::Clamp(FMath::TruncToInt(DesiredDimensions.Z), MinNumVoxelsOneDim, MaxNumVoxelsOneDim));
-////
-////			OutData.Size = VolumeDimensions;
-////			OutData.LocalBoundingBox = DistanceFieldVolumeBounds;
-////			OutData.DistanceFieldVolume.AddZeroed(VolumeDimensions.X * VolumeDimensions.Y * VolumeDimensions.Z);
-////
-////			TIndirectArray<FAsyncTask<FMeshDistanceFieldAsyncTask>> AsyncTasks;
-////
-////			for (int32 ZIndex = 0; ZIndex < VolumeDimensions.Z; ZIndex++)
-////			{
-////				FAsyncTask<FMeshDistanceFieldAsyncTask>* Task = new FAsyncTask<class FMeshDistanceFieldAsyncTask>(
-////					&kDopTree,
-////					&SampleDirections,
-////					DistanceFieldVolumeBounds,
-////					VolumeDimensions,
-////					DistanceFieldVolumeMaxDistance,
-////					DistanceFieldBias,
-////					ZIndex,
-////					&OutData.DistanceFieldVolume);
-////
-////				Task->StartBackgroundTask(&ThreadPool);
-////
-////				AsyncTasks.Add(Task);
-////			}
-////
-////			bool bNegativeAtBorder = false;
-////
-////			for (int32 TaskIndex = 0; TaskIndex < AsyncTasks.Num(); TaskIndex++)
-////			{
-////				FAsyncTask<FMeshDistanceFieldAsyncTask>& Task = AsyncTasks[TaskIndex];
-////				Task.EnsureCompletion(false);
-////				bNegativeAtBorder = bNegativeAtBorder || Task.GetTask().WasNegativeAtBorder();
-////			}
-////
-////			OutData.bMeshWasClosed = !bNegativeAtBorder;
-////			OutData.bBuiltAsIfTwoSided = bGenerateAsIfTwoSided;
-////			OutData.bMeshWasPlane = bMeshWasPlane;
-////
-////			UE_LOG(LogMeshUtilities, Log, TEXT("Finished distance field build in %.1fs - %ux%ux%u distance field, %u triangles"),
-////				(float)(FPlatformTime::Seconds() - StartTime),
-////				VolumeDimensions.X,
-////				VolumeDimensions.Y,
-////				VolumeDimensions.Z,
-////				Indices.Num() / 3);
-////
-////			// Toss distance field if mesh was not closed
-////			if (bNegativeAtBorder)
-////			{
-////				OutData.Size = FIntVector(0, 0, 0);
-////				OutData.DistanceFieldVolume.Empty();
-////
-////				UE_LOG(LogMeshUtilities, Log, TEXT("Discarded distance field as mesh was not closed!  Assign a two-sided material to fix."));
-////			}
-////		}
-////	}
-////}
-//
-//#else
-//
+#if PLATFORM_ENABLE_VECTORINTRINSICS
+
+class FMeshBuildDataProvider
+{
+public:
+
+	/** Initialization constructor. */
+	FMeshBuildDataProvider(
+		const TkDOPTree<const FMeshBuildDataProvider, uint32>& InkDopTree) :
+		kDopTree(InkDopTree)
+	{}
+
+	// kDOP data provider interface.
+
+	FORCEINLINE const TkDOPTree<const FMeshBuildDataProvider, uint32>& GetkDOPTree(void) const
+	{
+		return kDopTree;
+	}
+
+	FORCEINLINE const FMatrix& GetLocalToWorld(void) const
+	{
+		return FMatrix::Identity;
+	}
+
+	FORCEINLINE const FMatrix& GetWorldToLocal(void) const
+	{
+		return FMatrix::Identity;
+	}
+
+	FORCEINLINE FMatrix GetLocalToWorldTransposeAdjoint(void) const
+	{
+		return FMatrix::Identity;
+	}
+
+	FORCEINLINE float GetDeterminant(void) const
+	{
+		return 1.0f;
+	}
+
+private:
+
+	const TkDOPTree<const FMeshBuildDataProvider, uint32>& kDopTree;
+};
+
+/** Generates unit length, stratified and uniformly distributed direction samples in a hemisphere. */
+void GenerateStratifiedUniformHemisphereSamples(int32 NumThetaSteps, int32 NumPhiSteps, FRandomStream& RandomStream, TArray<FVector4>& Samples)
+{
+	Samples.Empty(NumThetaSteps * NumPhiSteps);
+	for (int32 ThetaIndex = 0; ThetaIndex < NumThetaSteps; ThetaIndex++)
+	{
+		for (int32 PhiIndex = 0; PhiIndex < NumPhiSteps; PhiIndex++)
+		{
+			const float U1 = RandomStream.GetFraction();
+			const float U2 = RandomStream.GetFraction();
+
+			const float Fraction1 = (ThetaIndex + U1) / (float)NumThetaSteps;
+			const float Fraction2 = (PhiIndex + U2) / (float)NumPhiSteps;
+
+			const float R = FMath::Sqrt(1.0f - Fraction1 * Fraction1);
+
+			const float Phi = 2.0f * (float)PI * Fraction2;
+			// Convert to Cartesian
+			Samples.Add(FVector4(FMath::Cos(Phi) * R, FMath::Sin(Phi) * R, Fraction1));
+		}
+	}
+}
+
+class FMeshDistanceFieldAsyncTask : public FNonAbandonableTask
+{
+public:
+	FMeshDistanceFieldAsyncTask(TkDOPTree<const FMeshBuildDataProvider, uint32>* InkDopTree,
+		const TArray<FVector4>* InSampleDirections,
+		FBox InVolumeBounds,
+		FIntVector InVolumeDimensions,
+		float InVolumeMaxDistance,
+		float InDistanceFieldBias,
+		int32 InZIndex,
+		TArray<FFloat16>* DistanceFieldVolume)
+		:
+		kDopTree(InkDopTree),
+		SampleDirections(InSampleDirections),
+		VolumeBounds(InVolumeBounds),
+		VolumeDimensions(InVolumeDimensions),
+		VolumeMaxDistance(InVolumeMaxDistance),
+		DistanceFieldBias(InDistanceFieldBias),
+		ZIndex(InZIndex),
+		OutDistanceFieldVolume(DistanceFieldVolume),
+		bNegativeAtBorder(false)
+	{}
+
+	void DoWork();
+
+	FORCEINLINE TStatId GetStatId() const
+	{
+		RETURN_QUICK_DECLARE_CYCLE_STAT(FMeshDistanceFieldAsyncTask, STATGROUP_ThreadPoolAsyncTasks);
+	}
+
+	bool WasNegativeAtBorder() const
+	{
+		return bNegativeAtBorder;
+	}
+
+private:
+
+	// Readonly inputs
+	TkDOPTree<const FMeshBuildDataProvider, uint32>* kDopTree;
+	const TArray<FVector4>* SampleDirections;
+	FBox VolumeBounds;
+	FIntVector VolumeDimensions;
+	float VolumeMaxDistance;
+	float DistanceFieldBias;
+	int32 ZIndex;
+
+	// Output
+	TArray<FFloat16>* OutDistanceFieldVolume;
+	bool bNegativeAtBorder;
+};
+
+void FMeshDistanceFieldAsyncTask::DoWork()
+{
+	FMeshBuildDataProvider kDOPDataProvider(*kDopTree);
+	const FVector DistanceFieldVoxelSize(VolumeBounds.GetSize() / FVector(VolumeDimensions.X, VolumeDimensions.Y, VolumeDimensions.Z));
+	const float VoxelDiameterSqr = DistanceFieldVoxelSize.SizeSquared();
+
+	for (int32 YIndex = 0; YIndex < VolumeDimensions.Y; YIndex++)
+	{
+		for (int32 XIndex = 0; XIndex < VolumeDimensions.X; XIndex++)
+		{
+			const FVector VoxelPosition = FVector(XIndex + .5f, YIndex + .5f, ZIndex + .5f) * DistanceFieldVoxelSize + VolumeBounds.Min;
+			const int32 Index = (ZIndex * VolumeDimensions.Y * VolumeDimensions.X + YIndex * VolumeDimensions.X + XIndex);
+
+			float MinDistance = VolumeMaxDistance;
+			int32 Hit = 0;
+			int32 HitBack = 0;
+
+			for (int32 SampleIndex = 0; SampleIndex < SampleDirections->Num(); SampleIndex++)
+			{
+				const FVector RayDirection = (*SampleDirections)[SampleIndex];
+
+				if (FMath::LineBoxIntersection(VolumeBounds, VoxelPosition, VoxelPosition + RayDirection * VolumeMaxDistance, RayDirection))
+				{
+					FkHitResult Result;
+
+					TkDOPLineCollisionCheck<const FMeshBuildDataProvider, uint32> kDOPCheck(
+						VoxelPosition,
+						VoxelPosition + RayDirection * VolumeMaxDistance,
+						true,
+						kDOPDataProvider,
+						&Result);
+
+					bool bHit = kDopTree->LineCheck(kDOPCheck);
+
+					if (bHit)
+					{
+						Hit++;
+
+						const FVector HitNormal = kDOPCheck.GetHitNormal();
+
+						if (FVector::DotProduct(RayDirection, HitNormal) > 0
+							// MaterialIndex on the build triangles was set to 1 if two-sided, or 0 if one-sided
+							&& kDOPCheck.Result->Item == 0)
+						{
+							HitBack++;
+						}
+
+						const float CurrentDistance = VolumeMaxDistance * Result.Time;
+
+						if (CurrentDistance < MinDistance)
+						{
+							MinDistance = CurrentDistance;
+						}
+					}
+				}
+			}
+
+			const float UnsignedDistance = MinDistance;
+
+			// Consider this voxel 'inside' an object if more than 50% of the rays hit back faces
+			MinDistance *= (Hit == 0 || HitBack < SampleDirections->Num() * .5f) ? 1 : -1;
+
+			// If we are very close to a surface and nearly all of our rays hit backfaces, treat as inside
+			// This is important for one sided planes
+			if (FMath::Square(UnsignedDistance) < VoxelDiameterSqr && HitBack > .95f * Hit)
+			{
+				MinDistance = -UnsignedDistance;
+			}
+
+			MinDistance = FMath::Min(MinDistance + DistanceFieldBias, VolumeMaxDistance);
+			const float VolumeSpaceDistance = MinDistance / VolumeBounds.GetExtent().GetMax();
+
+			if (MinDistance < 0 &&
+				(XIndex == 0 || XIndex == VolumeDimensions.X - 1 ||
+				YIndex == 0 || YIndex == VolumeDimensions.Y - 1 ||
+				ZIndex == 0 || ZIndex == VolumeDimensions.Z - 1))
+			{
+				bNegativeAtBorder = true;
+			}
+
+			(*OutDistanceFieldVolume)[Index] = FFloat16(VolumeSpaceDistance);
+		}
+	}
+}
+
 //void FMeshUtilities::GenerateSignedDistanceFieldVolumeData(
 //	const FStaticMeshLODResources& LODModel,
 //	class FQueuedThreadPool& ThreadPool,
@@ -1022,11 +843,190 @@ IMPLEMENT_MODULE(FMeshUtilities, MeshUtilities);
 //{
 //	if (DistanceFieldResolutionScale > 0)
 //	{
-//		UE_LOG(LogMeshUtilities, Error, TEXT("Couldn't generate distance field for mesh, platform is missing required Vector intrinsics."));
+//		const double StartTime = FPlatformTime::Seconds();
+//		const FPositionVertexBuffer& PositionVertexBuffer = LODModel.PositionVertexBuffer;
+//		FIndexArrayView Indices = LODModel.IndexBuffer.GetArrayView();
+//		TArray<FkDOPBuildCollisionTriangle<uint32> > BuildTriangles;
+//
+//		FVector BoundsSize = Bounds.GetBox().GetExtent() * 2;
+//		float MaxDimension = FMath::Max(FMath::Max(BoundsSize.X, BoundsSize.Y), BoundsSize.Z);
+//
+//		// Consider the mesh a plane if it is very flat
+//		const bool bMeshWasPlane = BoundsSize.Z * 100 < MaxDimension
+//			// And it lies mostly on the origin
+//			&& Bounds.Origin.Z - Bounds.BoxExtent.Z < KINDA_SMALL_NUMBER
+//			&& Bounds.Origin.Z + Bounds.BoxExtent.Z > -KINDA_SMALL_NUMBER;
+//
+//		for (int32 i = 0; i < Indices.Num(); i += 3)
+//		{
+//			FVector V0 = PositionVertexBuffer.VertexPosition(Indices[i + 0]);
+//			FVector V1 = PositionVertexBuffer.VertexPosition(Indices[i + 1]);
+//			FVector V2 = PositionVertexBuffer.VertexPosition(Indices[i + 2]);
+//
+//			if (bMeshWasPlane)
+//			{
+//				// Flatten out the mesh into an actual plane, this will allow us to manipulate the component's Z scale at runtime without artifacts
+//				V0.Z = 0;
+//				V1.Z = 0;
+//				V2.Z = 0;
+//			}
+//
+//			const FVector LocalNormal = ((V1 - V2) ^ (V0 - V2)).GetSafeNormal();
+//
+//			// No degenerates
+//			if (LocalNormal.IsUnit())
+//			{
+//				bool bTriangleIsOpaqueOrMasked = false;
+//
+//				for (int32 SectionIndex = 0; SectionIndex < LODModel.Sections.Num(); SectionIndex++)
+//				{
+//					const FStaticMeshSection& Section = LODModel.Sections[SectionIndex];
+//
+//					if ((uint32)i >= Section.FirstIndex && (uint32)i < Section.FirstIndex + Section.NumTriangles * 3)
+//					{
+//						if (MaterialBlendModes.IsValidIndex(Section.MaterialIndex))
+//						{
+//							//bTriangleIsOpaqueOrMasked = !IsTranslucentBlendMode(MaterialBlendModes[Section.MaterialIndex]);
+//							bTriangleIsOpaqueOrMasked = true;
+//						}
+//
+//						break;
+//					}
+//				}
+//
+//				if (bTriangleIsOpaqueOrMasked)
+//				{
+//					BuildTriangles.Add(FkDOPBuildCollisionTriangle<uint32>(
+//						bGenerateAsIfTwoSided,
+//						V0,
+//						V1,
+//						V2));
+//				}
+//			}
+//		}
+//
+//		TkDOPTree<const FMeshBuildDataProvider, uint32> kDopTree;
+//		kDopTree.Build(BuildTriangles);
+//
+//		//@todo - project setting
+//		const int32 NumVoxelDistanceSamples = 1200;
+//		TArray<FVector4> SampleDirections;
+//		const int32 NumThetaSteps = FMath::TruncToInt(FMath::Sqrt(NumVoxelDistanceSamples / (2.0f * (float)PI)));
+//		const int32 NumPhiSteps = FMath::TruncToInt(NumThetaSteps * (float)PI);
+//		FRandomStream RandomStream(0);
+//		GenerateStratifiedUniformHemisphereSamples(NumThetaSteps, NumPhiSteps, RandomStream, SampleDirections);
+//		TArray<FVector4> OtherHemisphereSamples;
+//		GenerateStratifiedUniformHemisphereSamples(NumThetaSteps, NumPhiSteps, RandomStream, OtherHemisphereSamples);
+//
+//		for (int32 i = 0; i < OtherHemisphereSamples.Num(); i++)
+//		{
+//			FVector4 Sample = OtherHemisphereSamples[i];
+//			Sample.Z *= -1;
+//			SampleDirections.Add(Sample);
+//		}
+//
+//		static const auto CVar = IConsoleManager::Get().FindTConsoleVariableDataInt(TEXT("r.DistanceFields.MaxPerMeshResolution"));
+//		const int32 PerMeshMax = CVar->GetValueOnAnyThread();
+//
+//		// Meshes with explicit artist-specified scale can go higher
+//		const int32 MaxNumVoxelsOneDim = DistanceFieldResolutionScale <= 1 ? PerMeshMax / 2 : PerMeshMax;
+//		const int32 MinNumVoxelsOneDim = 8;
+//
+//		static const auto CVarDensity = IConsoleManager::Get().FindTConsoleVariableDataFloat(TEXT("r.DistanceFields.DefaultVoxelDensity"));
+//		const float VoxelDensity = CVarDensity->GetValueOnAnyThread();
+//
+//		const float NumVoxelsPerLocalSpaceUnit = VoxelDensity * DistanceFieldResolutionScale;
+//		FBox MeshBounds(Bounds.GetBox());
+//
+//		{
+//			const float MaxOriginalExtent = MeshBounds.GetExtent().GetMax();
+//			// Expand so that the edges of the volume are guaranteed to be outside of the mesh
+//			// Any samples outside the bounds will be clamped to the border, so they must be outside
+//			const FVector NewExtent(MeshBounds.GetExtent() + FVector(.2f * MaxOriginalExtent).ComponentMax(4 * MeshBounds.GetExtent() / MinNumVoxelsOneDim));
+//			FBox DistanceFieldVolumeBounds = FBox(MeshBounds.GetCenter() - NewExtent, MeshBounds.GetCenter() + NewExtent);
+//			const float DistanceFieldVolumeMaxDistance = DistanceFieldVolumeBounds.GetExtent().Size();
+//
+//			const FVector DesiredDimensions(DistanceFieldVolumeBounds.GetSize() * FVector(NumVoxelsPerLocalSpaceUnit));
+//
+//			const FIntVector VolumeDimensions(
+//				FMath::Clamp(FMath::TruncToInt(DesiredDimensions.X), MinNumVoxelsOneDim, MaxNumVoxelsOneDim),
+//				FMath::Clamp(FMath::TruncToInt(DesiredDimensions.Y), MinNumVoxelsOneDim, MaxNumVoxelsOneDim),
+//				FMath::Clamp(FMath::TruncToInt(DesiredDimensions.Z), MinNumVoxelsOneDim, MaxNumVoxelsOneDim));
+//
+//			OutData.Size = VolumeDimensions;
+//			OutData.LocalBoundingBox = DistanceFieldVolumeBounds;
+//			OutData.DistanceFieldVolume.AddZeroed(VolumeDimensions.X * VolumeDimensions.Y * VolumeDimensions.Z);
+//
+//			TIndirectArray<FAsyncTask<FMeshDistanceFieldAsyncTask>> AsyncTasks;
+//
+//			for (int32 ZIndex = 0; ZIndex < VolumeDimensions.Z; ZIndex++)
+//			{
+//				FAsyncTask<FMeshDistanceFieldAsyncTask>* Task = new FAsyncTask<class FMeshDistanceFieldAsyncTask>(
+//					&kDopTree,
+//					&SampleDirections,
+//					DistanceFieldVolumeBounds,
+//					VolumeDimensions,
+//					DistanceFieldVolumeMaxDistance,
+//					DistanceFieldBias,
+//					ZIndex,
+//					&OutData.DistanceFieldVolume);
+//
+//				Task->StartBackgroundTask(&ThreadPool);
+//
+//				AsyncTasks.Add(Task);
+//			}
+//
+//			bool bNegativeAtBorder = false;
+//
+//			for (int32 TaskIndex = 0; TaskIndex < AsyncTasks.Num(); TaskIndex++)
+//			{
+//				FAsyncTask<FMeshDistanceFieldAsyncTask>& Task = AsyncTasks[TaskIndex];
+//				Task.EnsureCompletion(false);
+//				bNegativeAtBorder = bNegativeAtBorder || Task.GetTask().WasNegativeAtBorder();
+//			}
+//
+//			OutData.bMeshWasClosed = !bNegativeAtBorder;
+//			OutData.bBuiltAsIfTwoSided = bGenerateAsIfTwoSided;
+//			OutData.bMeshWasPlane = bMeshWasPlane;
+//
+//			UE_LOG(LogMeshUtilities, Log, TEXT("Finished distance field build in %.1fs - %ux%ux%u distance field, %u triangles"),
+//				(float)(FPlatformTime::Seconds() - StartTime),
+//				VolumeDimensions.X,
+//				VolumeDimensions.Y,
+//				VolumeDimensions.Z,
+//				Indices.Num() / 3);
+//
+//			// Toss distance field if mesh was not closed
+//			if (bNegativeAtBorder)
+//			{
+//				OutData.Size = FIntVector(0, 0, 0);
+//				OutData.DistanceFieldVolume.Empty();
+//
+//				UE_LOG(LogMeshUtilities, Log, TEXT("Discarded distance field as mesh was not closed!  Assign a two-sided material to fix."));
+//			}
+//		}
 //	}
 //}
-//
-//#endif
+
+#else
+
+void FMeshUtilities::GenerateSignedDistanceFieldVolumeData(
+	const FStaticMeshLODResources& LODModel,
+	class FQueuedThreadPool& ThreadPool,
+	const TArray<EBlendMode>& MaterialBlendModes,
+	const FBoxSphereBounds& Bounds,
+	float DistanceFieldResolutionScale,
+	float DistanceFieldBias,
+	bool bGenerateAsIfTwoSided,
+	FDistanceFieldVolumeData& OutData)
+{
+	if (DistanceFieldResolutionScale > 0)
+	{
+		UE_LOG(LogMeshUtilities, Error, TEXT("Couldn't generate distance field for mesh, platform is missing required Vector intrinsics."));
+	}
+}
+
+#endif
 
 /*------------------------------------------------------------------------------
 NVTriStrip for cache optimizing index buffers.
@@ -3383,778 +3383,778 @@ static void ComputeTangents_MikkTSpace(
 	check(RawMesh.WedgeTangentY.Num() == NumWedges);
 	check(RawMesh.WedgeTangentZ.Num() == NumWedges);
 }
+
+static void BuildDepthOnlyIndexBuffer(
+	TArray<uint32>& OutDepthIndices,
+	const TArray<FStaticMeshBuildVertex>& InVertices,
+	const TArray<uint32>& InIndices,
+	const TArray<FStaticMeshSection>& InSections
+	)
+{
+	int32 NumVertices = InVertices.Num();
+	if (InIndices.Num() <= 0 || NumVertices <= 0)
+	{
+		OutDepthIndices.Empty();
+		return;
+	}
+
+	// Create a mapping of index -> first overlapping index to accelerate the construction of the shadow index buffer.
+	TArray<FIndexAndZ> VertIndexAndZ;
+	VertIndexAndZ.Empty(NumVertices);
+	for (int32 VertIndex = 0; VertIndex < NumVertices; VertIndex++)
+	{
+		new(VertIndexAndZ)FIndexAndZ(VertIndex, InVertices[VertIndex].Position);
+	}
+	VertIndexAndZ.Sort(FCompareIndexAndZ());
+
+	// Setup the index map. 0xFFFFFFFF == not set.
+	TArray<uint32> IndexMap;
+	IndexMap.AddUninitialized(NumVertices);
+	FMemory::Memset(IndexMap.GetData(), 0xFF, NumVertices * sizeof(uint32));
+
+	// Search for duplicates, quickly!
+	for (int32 i = 0; i < VertIndexAndZ.Num(); i++)
+	{
+		uint32 SrcIndex = VertIndexAndZ[i].Index;
+		float Z = VertIndexAndZ[i].Z;
+		IndexMap[SrcIndex] = FMath::Min(IndexMap[SrcIndex], SrcIndex);
+
+		// Search forward since we add pairs both ways.
+		for (int32 j = i + 1; j < VertIndexAndZ.Num(); j++)
+		{
+			if (FMath::Abs(VertIndexAndZ[j].Z - Z) > THRESH_POINTS_ARE_SAME * 4.01f)
+				break; // can't be any more dups
+
+			uint32 OtherIndex = VertIndexAndZ[j].Index;
+			if (PointsEqual(InVertices[SrcIndex].Position, InVertices[OtherIndex].Position,/*bUseEpsilonCompare=*/ true))
+			{
+				IndexMap[SrcIndex] = FMath::Min(IndexMap[SrcIndex], OtherIndex);
+				IndexMap[OtherIndex] = FMath::Min(IndexMap[OtherIndex], SrcIndex);
+			}
+		}
+	}
+
+	// Build the depth-only index buffer by remapping all indices to the first overlapping
+	// vertex in the vertex buffer.
+	OutDepthIndices.Empty();
+	for (int32 SectionIndex = 0; SectionIndex < InSections.Num(); ++SectionIndex)
+	{
+		const FStaticMeshSection& Section = InSections[SectionIndex];
+		int32 FirstIndex = Section.FirstIndex;
+		int32 LastIndex = FirstIndex + Section.NumTriangles * 3;
+		for (int32 SrcIndex = FirstIndex; SrcIndex < LastIndex; ++SrcIndex)
+		{
+			uint32 VertIndex = InIndices[SrcIndex];
+			OutDepthIndices.Add(IndexMap[VertIndex]);
+		}
+	}
+}
 //
-//static void BuildDepthOnlyIndexBuffer(
-//	TArray<uint32>& OutDepthIndices,
-//	const TArray<FStaticMeshBuildVertex>& InVertices,
-//	const TArray<uint32>& InIndices,
-//	const TArray<FStaticMeshSection>& InSections
-//	)
-//{
-//	int32 NumVertices = InVertices.Num();
-//	if (InIndices.Num() <= 0 || NumVertices <= 0)
-//	{
-//		OutDepthIndices.Empty();
-//		return;
-//	}
-//
-//	// Create a mapping of index -> first overlapping index to accelerate the construction of the shadow index buffer.
-//	TArray<FIndexAndZ> VertIndexAndZ;
-//	VertIndexAndZ.Empty(NumVertices);
-//	for (int32 VertIndex = 0; VertIndex < NumVertices; VertIndex++)
-//	{
-//		new(VertIndexAndZ)FIndexAndZ(VertIndex, InVertices[VertIndex].Position);
-//	}
-//	VertIndexAndZ.Sort(FCompareIndexAndZ());
-//
-//	// Setup the index map. 0xFFFFFFFF == not set.
-//	TArray<uint32> IndexMap;
-//	IndexMap.AddUninitialized(NumVertices);
-//	FMemory::Memset(IndexMap.GetData(), 0xFF, NumVertices * sizeof(uint32));
-//
-//	// Search for duplicates, quickly!
-//	for (int32 i = 0; i < VertIndexAndZ.Num(); i++)
-//	{
-//		uint32 SrcIndex = VertIndexAndZ[i].Index;
-//		float Z = VertIndexAndZ[i].Z;
-//		IndexMap[SrcIndex] = FMath::Min(IndexMap[SrcIndex], SrcIndex);
-//
-//		// Search forward since we add pairs both ways.
-//		for (int32 j = i + 1; j < VertIndexAndZ.Num(); j++)
-//		{
-//			if (FMath::Abs(VertIndexAndZ[j].Z - Z) > THRESH_POINTS_ARE_SAME * 4.01f)
-//				break; // can't be any more dups
-//
-//			uint32 OtherIndex = VertIndexAndZ[j].Index;
-//			if (PointsEqual(InVertices[SrcIndex].Position, InVertices[OtherIndex].Position,/*bUseEpsilonCompare=*/ true))
-//			{
-//				IndexMap[SrcIndex] = FMath::Min(IndexMap[SrcIndex], OtherIndex);
-//				IndexMap[OtherIndex] = FMath::Min(IndexMap[OtherIndex], SrcIndex);
-//			}
-//		}
-//	}
-//
-//	// Build the depth-only index buffer by remapping all indices to the first overlapping
-//	// vertex in the vertex buffer.
-//	OutDepthIndices.Empty();
-//	for (int32 SectionIndex = 0; SectionIndex < InSections.Num(); ++SectionIndex)
-//	{
-//		const FStaticMeshSection& Section = InSections[SectionIndex];
-//		int32 FirstIndex = Section.FirstIndex;
-//		int32 LastIndex = FirstIndex + Section.NumTriangles * 3;
-//		for (int32 SrcIndex = FirstIndex; SrcIndex < LastIndex; ++SrcIndex)
-//		{
-//			uint32 VertIndex = InIndices[SrcIndex];
-//			OutDepthIndices.Add(IndexMap[VertIndex]);
-//		}
-//	}
-//}
-//
-//static float GetComparisonThreshold(FMeshBuildSettings const& BuildSettings)
-//{
-//	return BuildSettings.bRemoveDegenerates ? THRESH_POINTS_ARE_SAME : 0.0f;
-//}
+static float GetComparisonThreshold(FMeshBuildSettings const& BuildSettings)
+{
+	return BuildSettings.bRemoveDegenerates ? THRESH_POINTS_ARE_SAME : 0.0f;
+}
 //
 ///*------------------------------------------------------------------------------
 //Static mesh building.
 //------------------------------------------------------------------------------*/
 //
-//static FStaticMeshBuildVertex BuildStaticMeshVertex(FRawMesh const& RawMesh, int32 WedgeIndex, FVector BuildScale)
-//{
-//	FStaticMeshBuildVertex Vertex;
-//	Vertex.Position = GetPositionForWedge(RawMesh, WedgeIndex) * BuildScale;
-//
-//	const FMatrix ScaleMatrix = FScaleMatrix(BuildScale).Inverse().GetTransposed();
-//	Vertex.TangentX = ScaleMatrix.TransformVector(RawMesh.WedgeTangentX[WedgeIndex]).GetSafeNormal();
-//	Vertex.TangentY = ScaleMatrix.TransformVector(RawMesh.WedgeTangentY[WedgeIndex]).GetSafeNormal();
-//	Vertex.TangentZ = ScaleMatrix.TransformVector(RawMesh.WedgeTangentZ[WedgeIndex]).GetSafeNormal();
-//
-//	if (RawMesh.WedgeColors.IsValidIndex(WedgeIndex))
-//	{
-//		Vertex.Color = RawMesh.WedgeColors[WedgeIndex];
-//	}
-//	else
-//	{
-//		Vertex.Color = FColor::White;
-//	}
-//
-//	int32 NumTexCoords = FMath::Min<int32>(MAX_MESH_TEXTURE_COORDS, MAX_STATIC_TEXCOORDS);
-//	for (int32 i = 0; i < NumTexCoords; ++i)
-//	{
-//		if (RawMesh.WedgeTexCoords[i].IsValidIndex(WedgeIndex))
-//		{
-//			Vertex.UVs[i] = RawMesh.WedgeTexCoords[i][WedgeIndex];
-//		}
-//		else
-//		{
-//			Vertex.UVs[i] = FVector2D(0.0f, 0.0f);
-//		}
-//	}
-//	return Vertex;
-//}
-//
-//static bool AreVerticesEqual(
-//	FStaticMeshBuildVertex const& A,
-//	FStaticMeshBuildVertex const& B,
-//	float ComparisonThreshold
-//	)
-//{
-//	if (!PointsEqual(A.Position, B.Position, ComparisonThreshold)
-//		|| !NormalsEqual(A.TangentX, B.TangentX)
-//		|| !NormalsEqual(A.TangentY, B.TangentY)
-//		|| !NormalsEqual(A.TangentZ, B.TangentZ)
-//		|| A.Color != B.Color)
-//	{
-//		return false;
-//	}
-//
-//	// UVs
-//	for (int32 UVIndex = 0; UVIndex < MAX_STATIC_TEXCOORDS; UVIndex++)
-//	{
-//		if (!UVsEqual(A.UVs[UVIndex], B.UVs[UVIndex]))
-//		{
-//			return false;
-//		}
-//	}
-//
-//	return true;
-//}
-//
-//void FMeshUtilities::BuildStaticMeshVertexAndIndexBuffers(
-//	TArray<FStaticMeshBuildVertex>& OutVertices,
-//	TArray<TArray<uint32> >& OutPerSectionIndices,
-//	TArray<int32>& OutWedgeMap,
-//	const FRawMesh& RawMesh,
-//	const TMultiMap<int32, int32>& OverlappingCorners,
-//	const TMap<uint32, uint32>& MaterialToSectionMapping,
-//	float ComparisonThreshold,
-//	FVector BuildScale,
-//	int32 ImportVersion
-//	)
-//{
-//	TMap<int32, int32> FinalVerts;
-//	TArray<int32> DupVerts;
-//	int32 NumFaces = RawMesh.WedgeIndices.Num() / 3;
-//
-//	// Process each face, build vertex buffer and per-section index buffers.
-//	for (int32 FaceIndex = 0; FaceIndex < NumFaces; FaceIndex++)
-//	{
-//		int32 VertexIndices[3];
-//		FVector CornerPositions[3];
-//
-//		for (int32 CornerIndex = 0; CornerIndex < 3; CornerIndex++)
-//		{
-//			CornerPositions[CornerIndex] = GetPositionForWedge(RawMesh, FaceIndex * 3 + CornerIndex);
-//		}
-//
-//		// Don't process degenerate triangles.
-//		if (PointsEqual(CornerPositions[0], CornerPositions[1], ComparisonThreshold)
-//			|| PointsEqual(CornerPositions[0], CornerPositions[2], ComparisonThreshold)
-//			|| PointsEqual(CornerPositions[1], CornerPositions[2], ComparisonThreshold))
-//		{
-//			for (int32 CornerIndex = 0; CornerIndex < 3; CornerIndex++)
-//			{
-//				OutWedgeMap.Add(INDEX_NONE);
-//			}
-//			continue;
-//		}
-//
-//		for (int32 CornerIndex = 0; CornerIndex < 3; CornerIndex++)
-//		{
-//			int32 WedgeIndex = FaceIndex * 3 + CornerIndex;
-//			FStaticMeshBuildVertex ThisVertex = BuildStaticMeshVertex(RawMesh, WedgeIndex, BuildScale);
-//
-//			DupVerts.Reset();
-//			OverlappingCorners.MultiFind(WedgeIndex, DupVerts);
-//			DupVerts.Sort();
-//
-//			int32 Index = INDEX_NONE;
-//			for (int32 k = 0; k < DupVerts.Num(); k++)
-//			{
-//				if (DupVerts[k] >= WedgeIndex)
-//				{
-//					// the verts beyond me haven't been placed yet, so these duplicates are not relevant
-//					break;
-//				}
-//
-//				int32 *Location = FinalVerts.Find(DupVerts[k]);
-//				if (Location != NULL
-//					&& AreVerticesEqual(ThisVertex, OutVertices[*Location], ComparisonThreshold))
-//				{
-//					Index = *Location;
-//					break;
-//				}
-//			}
-//			if (Index == INDEX_NONE)
-//			{
-//				Index = OutVertices.Add(ThisVertex);
-//				FinalVerts.Add(WedgeIndex, Index);
-//			}
-//			VertexIndices[CornerIndex] = Index;
-//		}
-//
-//		// Reject degenerate triangles.
-//		if (VertexIndices[0] == VertexIndices[1]
-//			|| VertexIndices[1] == VertexIndices[2]
-//			|| VertexIndices[0] == VertexIndices[2])
-//		{
-//			for (int32 CornerIndex = 0; CornerIndex < 3; CornerIndex++)
-//			{
-//				OutWedgeMap.Add(INDEX_NONE);
-//			}
-//			continue;
-//		}
-//
-//		// Put the indices in the material index buffer.
-//		uint32 SectionIndex = 0;
-//		if (ImportVersion < RemoveStaticMeshSkinxxWorkflow)
-//		{
-//			SectionIndex = FMath::Clamp(RawMesh.FaceMaterialIndices[FaceIndex], 0, OutPerSectionIndices.Num() - 1);
-//		}
-//		else
-//		{
-//			SectionIndex = MaterialToSectionMapping.FindChecked(RawMesh.FaceMaterialIndices[FaceIndex]);
-//		}
-//		TArray<uint32>& SectionIndices = OutPerSectionIndices[SectionIndex];
-//		for (int32 CornerIndex = 0; CornerIndex < 3; CornerIndex++)
-//		{
-//			SectionIndices.Add(VertexIndices[CornerIndex]);
-//			OutWedgeMap.Add(VertexIndices[CornerIndex]);
-//		}
-//	}
-//}
-//
-//void FMeshUtilities::CacheOptimizeVertexAndIndexBuffer(
-//	TArray<FStaticMeshBuildVertex>& Vertices,
-//	TArray<TArray<uint32> >& PerSectionIndices,
-//	TArray<int32>& WedgeMap
-//	)
-//{
-//	// Copy the vertices since we will be reordering them
-//	TArray<FStaticMeshBuildVertex> OriginalVertices = Vertices;
-//
-//	// Initialize a cache that stores which indices have been assigned
-//	TArray<int32> IndexCache;
-//	IndexCache.AddUninitialized(Vertices.Num());
-//	FMemory::Memset(IndexCache.GetData(), INDEX_NONE, IndexCache.Num() * IndexCache.GetTypeSize());
-//	int32 NextAvailableIndex = 0;
-//
-//	// Iterate through the section index buffers, 
-//	// Optimizing index order for the post transform cache (minimizes the number of vertices transformed), 
-//	// And vertex order for the pre transform cache (minimizes the amount of vertex data fetched by the GPU).
-//	for (int32 SectionIndex = 0; SectionIndex < PerSectionIndices.Num(); SectionIndex++)
-//	{
-//		TArray<uint32>& Indices = PerSectionIndices[SectionIndex];
-//
-//		if (Indices.Num())
-//		{
-//			// Optimize the index buffer for the post transform cache with.
-//			CacheOptimizeIndexBuffer(Indices);
-//
-//			// Copy the index buffer since we will be reordering it
-//			TArray<uint32> OriginalIndices = Indices;
-//
-//			// Go through the indices and assign them new values that are coherent where possible
-//			for (int32 Index = 0; Index < Indices.Num(); Index++)
-//			{
-//				const int32 CachedIndex = IndexCache[OriginalIndices[Index]];
-//
-//				if (CachedIndex == INDEX_NONE)
-//				{
-//					// No new index has been allocated for this existing index, assign a new one
-//					Indices[Index] = NextAvailableIndex;
-//					// Mark what this index has been assigned to
-//					IndexCache[OriginalIndices[Index]] = NextAvailableIndex;
-//					NextAvailableIndex++;
-//				}
-//				else
-//				{
-//					// Reuse an existing index assignment
-//					Indices[Index] = CachedIndex;
-//				}
-//				// Reorder the vertices based on the new index assignment
-//				Vertices[Indices[Index]] = OriginalVertices[OriginalIndices[Index]];
-//			}
-//		}
-//	}
-//
-//	for (int32 i = 0; i < WedgeMap.Num(); i++)
-//	{
-//		int32 MappedIndex = WedgeMap[i];
-//		if (MappedIndex != INDEX_NONE)
-//		{
-//			WedgeMap[i] = IndexCache[MappedIndex];
-//		}
-//	}
-//}
-//
-//class FStaticMeshUtilityBuilder
-//{
-//public:
-//	FStaticMeshUtilityBuilder() : Stage(EStage::Uninit), NumValidLODs(0) {}
-//
-//	bool GatherSourceMeshesPerLOD(TArray<FStaticMeshSourceModel>& SourceModels, IMeshReduction* MeshReduction)
-//	{
-//		check(Stage == EStage::Uninit);
-//
-//		// Gather source meshes for each LOD.
-//		for (int32 LODIndex = 0; LODIndex < SourceModels.Num(); ++LODIndex)
-//		{
-//			FStaticMeshSourceModel& SrcModel = SourceModels[LODIndex];
-//			FRawMesh& RawMesh = *new(LODMeshes)FRawMesh;
-//			TMultiMap<int32, int32>& OverlappingCorners = *new(LODOverlappingCorners)TMultiMap<int32, int32>;
-//
-//			if (!SrcModel.RawMeshBulkData->IsEmpty())
-//			{
-//				SrcModel.RawMeshBulkData->LoadRawMesh(RawMesh);
-//				// Make sure the raw mesh is not irreparably malformed.
-//				if (!RawMesh.IsValidOrFixable())
-//				{
-//					UE_LOG(LogMeshUtilities, Error, TEXT("Raw mesh is corrupt for LOD%d."), LODIndex);
-//					return false;
-//				}
-//				LODBuildSettings[LODIndex] = SrcModel.BuildSettings;
-//
-//				float ComparisonThreshold = GetComparisonThreshold(LODBuildSettings[LODIndex]);
-//				int32 NumWedges = RawMesh.WedgeIndices.Num();
-//
-//				// Find overlapping corners to accelerate adjacency.
-//				FindOverlappingCorners(OverlappingCorners, RawMesh, ComparisonThreshold);
-//
-//				// Figure out if we should recompute normals and tangents.
-//				bool bRecomputeNormals = SrcModel.BuildSettings.bRecomputeNormals || RawMesh.WedgeTangentZ.Num() != NumWedges;
-//				bool bRecomputeTangents = SrcModel.BuildSettings.bRecomputeTangents || RawMesh.WedgeTangentX.Num() != NumWedges || RawMesh.WedgeTangentY.Num() != NumWedges;
-//
-//				// Dump normals and tangents if we are recomputing them.
-//				if (bRecomputeTangents)
-//				{
-//					RawMesh.WedgeTangentX.Empty(NumWedges);
-//					RawMesh.WedgeTangentX.AddZeroed(NumWedges);
-//					RawMesh.WedgeTangentY.Empty(NumWedges);
-//					RawMesh.WedgeTangentY.AddZeroed(NumWedges);
-//				}
-//				if (bRecomputeNormals)
-//				{
-//					RawMesh.WedgeTangentZ.Empty(NumWedges);
-//					RawMesh.WedgeTangentZ.AddZeroed(NumWedges);
-//				}
-//
-//				// Compute any missing tangents.
-//				{
-//					// Static meshes always blend normals of overlapping corners.
-//					uint32 TangentOptions = ETangentOptions::BlendOverlappingNormals;
-//					if (SrcModel.BuildSettings.bRemoveDegenerates)
-//					{
-//						// If removing degenerate triangles, ignore them when computing tangents.
-//						TangentOptions |= ETangentOptions::IgnoreDegenerateTriangles;
-//					}
-//
-//					//MikkTSpace should be use only when the user want to recompute the normals or tangents otherwise should always fallback on builtin
-//					if (SrcModel.BuildSettings.bUseMikkTSpace && (SrcModel.BuildSettings.bRecomputeNormals || SrcModel.BuildSettings.bRecomputeTangents))
-//					{
-//						ComputeTangents_MikkTSpace(RawMesh, OverlappingCorners, TangentOptions);
-//					}
-//					else
-//					{
-//						ComputeTangents(RawMesh, OverlappingCorners, TangentOptions);
-//					}
-//				}
-//
-//				// At this point the mesh will have valid tangents.
-//				check(RawMesh.WedgeTangentX.Num() == NumWedges);
-//				check(RawMesh.WedgeTangentY.Num() == NumWedges);
-//				check(RawMesh.WedgeTangentZ.Num() == NumWedges);
-//
-//				// Generate lightmap UVs
-//				if (SrcModel.BuildSettings.bGenerateLightmapUVs)
-//				{
-//					if (RawMesh.WedgeTexCoords[SrcModel.BuildSettings.SrcLightmapIndex].Num() == 0)
-//					{
-//						SrcModel.BuildSettings.SrcLightmapIndex = 0;
-//					}
-//
-//					FLayoutUV Packer(&RawMesh, SrcModel.BuildSettings.SrcLightmapIndex, SrcModel.BuildSettings.DstLightmapIndex, SrcModel.BuildSettings.MinLightmapResolution);
-//
-//					Packer.FindCharts(OverlappingCorners);
-//					bool bPackSuccess = Packer.FindBestPacking();
-//					if (bPackSuccess)
-//					{
-//						Packer.CommitPackedUVs();
-//					}
-//				}
-//				HasRawMesh[LODIndex] = true;
-//			}
-//			else if (LODIndex > 0 && MeshReduction)
-//			{
-//				// If a raw mesh is not explicitly provided, use the raw mesh of the
-//				// next highest LOD.
-//				RawMesh = LODMeshes[LODIndex - 1];
-//				OverlappingCorners = LODOverlappingCorners[LODIndex - 1];
-//				LODBuildSettings[LODIndex] = LODBuildSettings[LODIndex - 1];
-//				HasRawMesh[LODIndex] = false;
-//			}
-//		}
-//		check(LODMeshes.Num() == SourceModels.Num());
-//		check(LODOverlappingCorners.Num() == SourceModels.Num());
-//
-//		// Bail if there is no raw mesh data from which to build a renderable mesh.
-//		if (LODMeshes.Num() == 0 || LODMeshes[0].WedgeIndices.Num() == 0)
-//		{
-//			return false;
-//		}
-//
-//		Stage = EStage::Gathered;
-//		return true;
-//	}
-//
-//	bool ReduceLODs(TArray<FStaticMeshSourceModel>& SourceModels, const FStaticMeshLODGroup& LODGroup, IMeshReduction* MeshReduction, bool& bOutWasReduced)
-//	{
-//		check(Stage == EStage::Gathered);
-//
-//		// Reduce each LOD mesh according to its reduction settings.
-//		for (int32 LODIndex = 0; LODIndex < SourceModels.Num(); ++LODIndex)
-//		{
-//			const FStaticMeshSourceModel& SrcModel = SourceModels[LODIndex];
-//			FMeshReductionSettings ReductionSettings = LODGroup.GetSettings(SrcModel.ReductionSettings, LODIndex);
-//			LODMaxDeviation[NumValidLODs] = 0.0f;
-//			if (LODIndex != NumValidLODs)
-//			{
-//				LODBuildSettings[NumValidLODs] = LODBuildSettings[LODIndex];
-//				LODOverlappingCorners[NumValidLODs] = LODOverlappingCorners[LODIndex];
-//			}
-//
-//			if (MeshReduction && (ReductionSettings.PercentTriangles < 1.0f || ReductionSettings.MaxDeviation > 0.0f))
-//			{
-//				FRawMesh& InMesh = LODMeshes[ReductionSettings.BaseLODModel];
-//				FRawMesh& DestMesh = LODMeshes[NumValidLODs];
-//				TMultiMap<int32, int32>& InOverlappingCorners = LODOverlappingCorners[ReductionSettings.BaseLODModel];
-//				TMultiMap<int32, int32>& DestOverlappingCorners = LODOverlappingCorners[NumValidLODs];
-//
-//				MeshReduction->Reduce(DestMesh, LODMaxDeviation[NumValidLODs], InMesh, InOverlappingCorners, ReductionSettings);
-//				if (DestMesh.WedgeIndices.Num() > 0 && !DestMesh.IsValid())
-//				{
-//					UE_LOG(LogMeshUtilities, Error, TEXT("Mesh reduction produced a corrupt mesh for LOD%d"), LODIndex);
-//					return false;
-//				}
-//				bOutWasReduced = true;
-//
-//				// Recompute adjacency information.
-//				DestOverlappingCorners.Reset();
-//				float ComparisonThreshold = GetComparisonThreshold(LODBuildSettings[NumValidLODs]);
-//				FindOverlappingCorners(DestOverlappingCorners, DestMesh, ComparisonThreshold);
-//			}
-//
-//			if (LODMeshes[NumValidLODs].WedgeIndices.Num() > 0)
-//			{
-//				NumValidLODs++;
-//			}
-//		}
-//
-//		if (NumValidLODs < 1)
-//		{
-//			return false;
-//		}
-//		Stage = EStage::Reduce;
-//		return true;
-//	}
-//
-//	bool GenerateRenderingMeshes(FMeshUtilities& MeshUtilities, FStaticMeshRenderData& OutRenderData, TArray<FStaticMeshSourceModel>& InOutModels, int32 ImportVersion)
-//	{
-//		check(Stage == EStage::Reduce);
-//		// Generate per-LOD rendering data.
-//		OutRenderData.AllocateLODResources(NumValidLODs);
-//		for (int32 LODIndex = 0; LODIndex < NumValidLODs; ++LODIndex)
-//		{
-//			FStaticMeshLODResources& LODModel = OutRenderData.LODResources[LODIndex];
-//			FRawMesh& RawMesh = LODMeshes[LODIndex];
-//			LODModel.MaxDeviation = LODMaxDeviation[LODIndex];
-//
-//			TArray<FStaticMeshBuildVertex> Vertices;
-//			TArray<TArray<uint32> > PerSectionIndices;
-//
-//			TMap<uint32, uint32> MaterialToSectionMapping;
-//
-//			// Find out how many sections are in the mesh.
-//			TArray<int32> MaterialIndices;
-//			for ( const int32 MaterialIndex : RawMesh.FaceMaterialIndices )
-//			{
-//				// Find all unique material indices
-//				MaterialIndices.AddUnique(MaterialIndex);
-//			}
-//
-//			// Need X number of sections for X number of material indices
-//			//for (const int32 MaterialIndex : MaterialIndices)
-//			for ( int32 Index = 0; Index < MaterialIndices.Num(); ++Index)
-//			{
-//				const int32 MaterialIndex = MaterialIndices[Index];
-//				FStaticMeshSection* Section = new(LODModel.Sections) FStaticMeshSection();
-//				Section->MaterialIndex = MaterialIndex;
-//				if (ImportVersion < RemoveStaticMeshSkinxxWorkflow)
-//				{
-//					MaterialToSectionMapping.Add(MaterialIndex, MaterialIndex);
-//				}
-//				else
-//				{
-//					MaterialToSectionMapping.Add(MaterialIndex, Index);
-//				}
-//				new(PerSectionIndices)TArray<uint32>;
-//			}
-//
-//			// Build and cache optimize vertex and index buffers.
-//			{
-//				// TODO_STATICMESH: The wedge map is only valid for LODIndex 0 if no reduction has been performed.
-//				// We can compute an approximate one instead for other LODs.
-//				TArray<int32> TempWedgeMap;
-//				TArray<int32>& WedgeMap = (LODIndex == 0 && InOutModels[0].ReductionSettings.PercentTriangles >= 1.0f) ? OutRenderData.WedgeMap : TempWedgeMap;
-//				float ComparisonThreshold = GetComparisonThreshold(LODBuildSettings[LODIndex]);
-//				MeshUtilities.BuildStaticMeshVertexAndIndexBuffers(Vertices, PerSectionIndices, WedgeMap, RawMesh, LODOverlappingCorners[LODIndex], MaterialToSectionMapping, ComparisonThreshold, LODBuildSettings[LODIndex].BuildScale3D, ImportVersion);
-//				check(WedgeMap.Num() == RawMesh.WedgeIndices.Num());
-//
-//				if (RawMesh.WedgeIndices.Num() < 100000 * 3)
-//				{
-//					MeshUtilities.CacheOptimizeVertexAndIndexBuffer(Vertices, PerSectionIndices, WedgeMap);
-//					check(WedgeMap.Num() == RawMesh.WedgeIndices.Num());
-//				}
-//			}
-//
-//			verifyf(Vertices.Num() != 0, TEXT("No valid vertices found for the mesh."));
-//
-//			// Initialize the vertex buffer.
-//			int32 NumTexCoords = ComputeNumTexCoords(RawMesh, MAX_STATIC_TEXCOORDS);
-//			LODModel.VertexBuffer.SetUseHighPrecisionTangentBasis(LODBuildSettings[LODIndex].bUseHighPrecisionTangentBasis);
-//			LODModel.VertexBuffer.SetUseFullPrecisionUVs(LODBuildSettings[LODIndex].bUseFullPrecisionUVs);
-//			LODModel.VertexBuffer.Init(Vertices, NumTexCoords);
-//			LODModel.PositionVertexBuffer.Init(Vertices);
-//			LODModel.ColorVertexBuffer.Init(Vertices);
-//
-//			// Concatenate the per-section index buffers.
-//			TArray<uint32> CombinedIndices;
-//			bool bNeeds32BitIndices = false;
-//			for (int32 SectionIndex = 0; SectionIndex < LODModel.Sections.Num(); SectionIndex++)
-//			{
-//				FStaticMeshSection& Section = LODModel.Sections[SectionIndex];
-//				TArray<uint32> const& SectionIndices = PerSectionIndices[SectionIndex];
-//				Section.FirstIndex = 0;
-//				Section.NumTriangles = 0;
-//				Section.MinVertexIndex = 0;
-//				Section.MaxVertexIndex = 0;
-//
-//				if (SectionIndices.Num())
-//				{
-//					Section.FirstIndex = CombinedIndices.Num();
-//					Section.NumTriangles = SectionIndices.Num() / 3;
-//
-//					CombinedIndices.AddUninitialized(SectionIndices.Num());
-//					uint32* DestPtr = &CombinedIndices[Section.FirstIndex];
-//					uint32 const* SrcPtr = SectionIndices.GetData();
-//
-//					Section.MinVertexIndex = *SrcPtr;
-//					Section.MaxVertexIndex = *SrcPtr;
-//
-//					for (int32 Index = 0; Index < SectionIndices.Num(); Index++)
-//					{
-//						uint32 VertIndex = *SrcPtr++;
-//
-//						bNeeds32BitIndices |= (VertIndex > MAX_uint16);
-//						Section.MinVertexIndex = FMath::Min<uint32>(VertIndex, Section.MinVertexIndex);
-//						Section.MaxVertexIndex = FMath::Max<uint32>(VertIndex, Section.MaxVertexIndex);
-//						*DestPtr++ = VertIndex;
-//					}
-//				}
-//			}
-//			LODModel.IndexBuffer.SetIndices(CombinedIndices, bNeeds32BitIndices ? EIndexBufferStride::Force32Bit : EIndexBufferStride::Force16Bit);
-//
-//			// Build the reversed index buffer.
-//			if (InOutModels[0].BuildSettings.bBuildReversedIndexBuffer)
-//			{
-//				TArray<uint32> InversedIndices;
-//				const int32 IndexCount = CombinedIndices.Num();
-//				InversedIndices.AddUninitialized(IndexCount);
-//
-//				for (int32 SectionIndex = 0; SectionIndex < LODModel.Sections.Num(); ++SectionIndex)
-//				{
-//					const FStaticMeshSection& SectionInfo = LODModel.Sections[SectionIndex];
-//					const int32 SectionIndexCount = SectionInfo.NumTriangles * 3;
-//
-//					for (int32 i = 0; i < SectionIndexCount; ++i)
-//					{
-//						InversedIndices[SectionInfo.FirstIndex + i] = CombinedIndices[SectionInfo.FirstIndex + SectionIndexCount - 1 - i];
-//					}
-//				}
-//				LODModel.ReversedIndexBuffer.SetIndices(InversedIndices, bNeeds32BitIndices ? EIndexBufferStride::Force32Bit : EIndexBufferStride::Force16Bit);
-//			}
-//
-//			// Build the depth-only index buffer.
-//			TArray<uint32> DepthOnlyIndices;
-//			{
-//				BuildDepthOnlyIndexBuffer(
-//					DepthOnlyIndices,
-//					Vertices,
-//					CombinedIndices,
-//					LODModel.Sections
-//					);
-//
-//				if (DepthOnlyIndices.Num() < 50000 * 3)
-//				{
-//					MeshUtilities.CacheOptimizeIndexBuffer(DepthOnlyIndices);
-//				}
-//
-//				LODModel.DepthOnlyIndexBuffer.SetIndices(DepthOnlyIndices, bNeeds32BitIndices ? EIndexBufferStride::Force32Bit : EIndexBufferStride::Force16Bit);
-//			}
-//
-//			// Build the inversed depth only index buffer.
-//			if (InOutModels[0].BuildSettings.bBuildReversedIndexBuffer)
-//			{
-//				TArray<uint32> ReversedDepthOnlyIndices;
-//				const int32 IndexCount = DepthOnlyIndices.Num();
-//				ReversedDepthOnlyIndices.AddUninitialized(IndexCount);
-//				for (int32 i = 0; i < IndexCount; ++i)
-//				{
-//					ReversedDepthOnlyIndices[i] = DepthOnlyIndices[IndexCount - 1 - i];
-//				}
-//				LODModel.ReversedDepthOnlyIndexBuffer.SetIndices(ReversedDepthOnlyIndices, bNeeds32BitIndices ? EIndexBufferStride::Force32Bit : EIndexBufferStride::Force16Bit);
-//			}
-//
-//			// Build a list of wireframe edges in the static mesh.
-//			{
-//				TArray<FMeshEdge> Edges;
-//				TArray<uint32> WireframeIndices;
-//
-//				FStaticMeshEdgeBuilder(CombinedIndices, Vertices, Edges).FindEdges();
-//				WireframeIndices.Empty(2 * Edges.Num());
-//				for (int32 EdgeIndex = 0; EdgeIndex < Edges.Num(); EdgeIndex++)
-//				{
-//					FMeshEdge&	Edge = Edges[EdgeIndex];
-//					WireframeIndices.Add(Edge.Vertices[0]);
-//					WireframeIndices.Add(Edge.Vertices[1]);
-//				}
-//				LODModel.WireframeIndexBuffer.SetIndices(WireframeIndices, bNeeds32BitIndices ? EIndexBufferStride::Force32Bit : EIndexBufferStride::Force16Bit);
-//			}
-//
-//			// Build the adjacency index buffer used for tessellation.
-//			if (InOutModels[0].BuildSettings.bBuildAdjacencyBuffer)
-//			{
-//				TArray<uint32> AdjacencyIndices;
-//
-//				BuildStaticAdjacencyIndexBuffer(
-//					LODModel.PositionVertexBuffer,
-//					LODModel.VertexBuffer,
-//					CombinedIndices,
-//					AdjacencyIndices
-//					);
-//				LODModel.AdjacencyIndexBuffer.SetIndices(AdjacencyIndices, bNeeds32BitIndices ? EIndexBufferStride::Force32Bit : EIndexBufferStride::Force16Bit);
-//			}
-//		}
-//
-//		// Copy the original material indices to fixup meshes before compacting of materials was done.
-//		if (NumValidLODs > 0)
-//		{
-//			OutRenderData.MaterialIndexToImportIndex = LODMeshes[0].MaterialIndexToImportIndex;
-//		}
-//
-//		// Calculate the bounding box.
-//		FBox BoundingBox(0);
-//		FPositionVertexBuffer& BasePositionVertexBuffer = OutRenderData.LODResources[0].PositionVertexBuffer;
-//		for (uint32 VertexIndex = 0; VertexIndex < BasePositionVertexBuffer.GetNumVertices(); VertexIndex++)
-//		{
-//			BoundingBox += BasePositionVertexBuffer.VertexPosition(VertexIndex);
-//		}
-//		BoundingBox.GetCenterAndExtents(OutRenderData.Bounds.Origin, OutRenderData.Bounds.BoxExtent);
-//
-//		// Calculate the bounding sphere, using the center of the bounding box as the origin.
-//		OutRenderData.Bounds.SphereRadius = 0.0f;
-//		for (uint32 VertexIndex = 0; VertexIndex < BasePositionVertexBuffer.GetNumVertices(); VertexIndex++)
-//		{
-//			OutRenderData.Bounds.SphereRadius = FMath::Max(
-//				(BasePositionVertexBuffer.VertexPosition(VertexIndex) - OutRenderData.Bounds.Origin).Size(),
-//				OutRenderData.Bounds.SphereRadius
-//				);
-//		}
-//
-//		Stage = EStage::GenerateRendering;
-//		return true;
-//	}
-//
-//	bool ReplaceRawMeshModels(TArray<FStaticMeshSourceModel>& SourceModels)
-//	{
-//		check(Stage == EStage::Reduce);
-//
-//		check(HasRawMesh[0]);
-//		check(SourceModels.Num() >= NumValidLODs);
-//		bool bDirty = false;
-//		for (int32 Index = 1; Index < NumValidLODs; ++Index)
-//		{
-//			if (!HasRawMesh[Index])
-//			{
-//				SourceModels[Index].RawMeshBulkData->SaveRawMesh(LODMeshes[Index]);
-//				bDirty = true;
-//			}
-//		}
-//
-//		Stage = EStage::ReplaceRaw;
-//		return true;
-//	}
-//
-//private:
-//	enum class EStage
-//	{
-//		Uninit,
-//		Gathered,
-//		Reduce,
-//		GenerateRendering,
-//		ReplaceRaw,
-//	};
-//
-//	EStage Stage;
-//
-//	int32 NumValidLODs;
-//
-//	TIndirectArray<FRawMesh> LODMeshes;
-//	TIndirectArray<TMultiMap<int32, int32> > LODOverlappingCorners;
-//	float LODMaxDeviation[MAX_STATIC_MESH_LODS];
-//	FMeshBuildSettings LODBuildSettings[MAX_STATIC_MESH_LODS];
-//	bool HasRawMesh[MAX_STATIC_MESH_LODS];
-//};
-//
-//bool FMeshUtilities::BuildStaticMesh(FStaticMeshRenderData& OutRenderData, TArray<FStaticMeshSourceModel>& SourceModels, const FStaticMeshLODGroup& LODGroup, int32 ImportVersion)
-//{
-//	FStaticMeshUtilityBuilder Builder;
-//	if (!Builder.GatherSourceMeshesPerLOD(SourceModels, StaticMeshReduction))
-//	{
-//		return false;
-//	}
-//
-//	bool bWasReduced = false;
-//	if (!Builder.ReduceLODs(SourceModels, LODGroup, StaticMeshReduction, bWasReduced))
-//	{
-//		return false;
-//	}
-//
-//	return Builder.GenerateRenderingMeshes(*this, OutRenderData, SourceModels, ImportVersion);
-//}
-//
-//bool FMeshUtilities::GenerateStaticMeshLODs(TArray<FStaticMeshSourceModel>& Models, const FStaticMeshLODGroup& LODGroup)
-//{
-//	FStaticMeshUtilityBuilder Builder;
-//	if (!Builder.GatherSourceMeshesPerLOD(Models, StaticMeshReduction))
-//	{
-//		return false;
-//	}
-//
-//	bool bWasReduced = false;
-//	if (!Builder.ReduceLODs(Models, LODGroup, StaticMeshReduction, bWasReduced))
-//	{
-//		return false;
-//	}
-//
-//	if (bWasReduced)
-//	{
-//		return Builder.ReplaceRawMeshModels(Models);
-//	}
-//
-//	return false;
-//}
-//
+static FStaticMeshBuildVertex BuildStaticMeshVertex(FRawMesh const& RawMesh, int32 WedgeIndex, FVector BuildScale)
+{
+	FStaticMeshBuildVertex Vertex;
+	Vertex.Position = GetPositionForWedge(RawMesh, WedgeIndex) * BuildScale;
+
+	const FMatrix ScaleMatrix = FScaleMatrix(BuildScale).Inverse().GetTransposed();
+	Vertex.TangentX = ScaleMatrix.TransformVector(RawMesh.WedgeTangentX[WedgeIndex]).GetSafeNormal();
+	Vertex.TangentY = ScaleMatrix.TransformVector(RawMesh.WedgeTangentY[WedgeIndex]).GetSafeNormal();
+	Vertex.TangentZ = ScaleMatrix.TransformVector(RawMesh.WedgeTangentZ[WedgeIndex]).GetSafeNormal();
+
+	if (RawMesh.WedgeColors.IsValidIndex(WedgeIndex))
+	{
+		Vertex.Color = RawMesh.WedgeColors[WedgeIndex];
+	}
+	else
+	{
+		Vertex.Color = FColor::White;
+	}
+
+	int32 NumTexCoords = FMath::Min<int32>(MAX_MESH_TEXTURE_COORDS, MAX_STATIC_TEXCOORDS);
+	for (int32 i = 0; i < NumTexCoords; ++i)
+	{
+		if (RawMesh.WedgeTexCoords[i].IsValidIndex(WedgeIndex))
+		{
+			Vertex.UVs[i] = RawMesh.WedgeTexCoords[i][WedgeIndex];
+		}
+		else
+		{
+			Vertex.UVs[i] = FVector2D(0.0f, 0.0f);
+		}
+	}
+	return Vertex;
+}
+
+static bool AreVerticesEqual(
+	FStaticMeshBuildVertex const& A,
+	FStaticMeshBuildVertex const& B,
+	float ComparisonThreshold
+	)
+{
+	if (!PointsEqual(A.Position, B.Position, ComparisonThreshold)
+		|| !NormalsEqual(A.TangentX, B.TangentX)
+		|| !NormalsEqual(A.TangentY, B.TangentY)
+		|| !NormalsEqual(A.TangentZ, B.TangentZ)
+		|| A.Color != B.Color)
+	{
+		return false;
+	}
+
+	// UVs
+	for (int32 UVIndex = 0; UVIndex < MAX_STATIC_TEXCOORDS; UVIndex++)
+	{
+		if (!UVsEqual(A.UVs[UVIndex], B.UVs[UVIndex]))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+void FMeshUtilities::BuildStaticMeshVertexAndIndexBuffers(
+	TArray<FStaticMeshBuildVertex>& OutVertices,
+	TArray<TArray<uint32> >& OutPerSectionIndices,
+	TArray<int32>& OutWedgeMap,
+	const FRawMesh& RawMesh,
+	const TMultiMap<int32, int32>& OverlappingCorners,
+	const TMap<uint32, uint32>& MaterialToSectionMapping,
+	float ComparisonThreshold,
+	FVector BuildScale,
+	int32 ImportVersion
+	)
+{
+	TMap<int32, int32> FinalVerts;
+	TArray<int32> DupVerts;
+	int32 NumFaces = RawMesh.WedgeIndices.Num() / 3;
+
+	// Process each face, build vertex buffer and per-section index buffers.
+	for (int32 FaceIndex = 0; FaceIndex < NumFaces; FaceIndex++)
+	{
+		int32 VertexIndices[3];
+		FVector CornerPositions[3];
+
+		for (int32 CornerIndex = 0; CornerIndex < 3; CornerIndex++)
+		{
+			CornerPositions[CornerIndex] = GetPositionForWedge(RawMesh, FaceIndex * 3 + CornerIndex);
+		}
+
+		// Don't process degenerate triangles.
+		if (PointsEqual(CornerPositions[0], CornerPositions[1], ComparisonThreshold)
+			|| PointsEqual(CornerPositions[0], CornerPositions[2], ComparisonThreshold)
+			|| PointsEqual(CornerPositions[1], CornerPositions[2], ComparisonThreshold))
+		{
+			for (int32 CornerIndex = 0; CornerIndex < 3; CornerIndex++)
+			{
+				OutWedgeMap.Add(INDEX_NONE);
+			}
+			continue;
+		}
+
+		for (int32 CornerIndex = 0; CornerIndex < 3; CornerIndex++)
+		{
+			int32 WedgeIndex = FaceIndex * 3 + CornerIndex;
+			FStaticMeshBuildVertex ThisVertex = BuildStaticMeshVertex(RawMesh, WedgeIndex, BuildScale);
+
+			DupVerts.Reset();
+			OverlappingCorners.MultiFind(WedgeIndex, DupVerts);
+			DupVerts.Sort();
+
+			int32 Index = INDEX_NONE;
+			for (int32 k = 0; k < DupVerts.Num(); k++)
+			{
+				if (DupVerts[k] >= WedgeIndex)
+				{
+					// the verts beyond me haven't been placed yet, so these duplicates are not relevant
+					break;
+				}
+
+				int32 *Location = FinalVerts.Find(DupVerts[k]);
+				if (Location != NULL
+					&& AreVerticesEqual(ThisVertex, OutVertices[*Location], ComparisonThreshold))
+				{
+					Index = *Location;
+					break;
+				}
+			}
+			if (Index == INDEX_NONE)
+			{
+				Index = OutVertices.Add(ThisVertex);
+				FinalVerts.Add(WedgeIndex, Index);
+			}
+			VertexIndices[CornerIndex] = Index;
+		}
+
+		// Reject degenerate triangles.
+		if (VertexIndices[0] == VertexIndices[1]
+			|| VertexIndices[1] == VertexIndices[2]
+			|| VertexIndices[0] == VertexIndices[2])
+		{
+			for (int32 CornerIndex = 0; CornerIndex < 3; CornerIndex++)
+			{
+				OutWedgeMap.Add(INDEX_NONE);
+			}
+			continue;
+		}
+
+		// Put the indices in the material index buffer.
+		uint32 SectionIndex = 0;
+		if (ImportVersion < RemoveStaticMeshSkinxxWorkflow)
+		{
+			SectionIndex = FMath::Clamp(RawMesh.FaceMaterialIndices[FaceIndex], 0, OutPerSectionIndices.Num() - 1);
+		}
+		else
+		{
+			SectionIndex = MaterialToSectionMapping.FindChecked(RawMesh.FaceMaterialIndices[FaceIndex]);
+		}
+		TArray<uint32>& SectionIndices = OutPerSectionIndices[SectionIndex];
+		for (int32 CornerIndex = 0; CornerIndex < 3; CornerIndex++)
+		{
+			SectionIndices.Add(VertexIndices[CornerIndex]);
+			OutWedgeMap.Add(VertexIndices[CornerIndex]);
+		}
+	}
+}
+
+void FMeshUtilities::CacheOptimizeVertexAndIndexBuffer(
+	TArray<FStaticMeshBuildVertex>& Vertices,
+	TArray<TArray<uint32> >& PerSectionIndices,
+	TArray<int32>& WedgeMap
+	)
+{
+	// Copy the vertices since we will be reordering them
+	TArray<FStaticMeshBuildVertex> OriginalVertices = Vertices;
+
+	// Initialize a cache that stores which indices have been assigned
+	TArray<int32> IndexCache;
+	IndexCache.AddUninitialized(Vertices.Num());
+	FMemory::Memset(IndexCache.GetData(), INDEX_NONE, IndexCache.Num() * IndexCache.GetTypeSize());
+	int32 NextAvailableIndex = 0;
+
+	// Iterate through the section index buffers, 
+	// Optimizing index order for the post transform cache (minimizes the number of vertices transformed), 
+	// And vertex order for the pre transform cache (minimizes the amount of vertex data fetched by the GPU).
+	for (int32 SectionIndex = 0; SectionIndex < PerSectionIndices.Num(); SectionIndex++)
+	{
+		TArray<uint32>& Indices = PerSectionIndices[SectionIndex];
+
+		if (Indices.Num())
+		{
+			// Optimize the index buffer for the post transform cache with.
+			CacheOptimizeIndexBuffer(Indices);
+
+			// Copy the index buffer since we will be reordering it
+			TArray<uint32> OriginalIndices = Indices;
+
+			// Go through the indices and assign them new values that are coherent where possible
+			for (int32 Index = 0; Index < Indices.Num(); Index++)
+			{
+				const int32 CachedIndex = IndexCache[OriginalIndices[Index]];
+
+				if (CachedIndex == INDEX_NONE)
+				{
+					// No new index has been allocated for this existing index, assign a new one
+					Indices[Index] = NextAvailableIndex;
+					// Mark what this index has been assigned to
+					IndexCache[OriginalIndices[Index]] = NextAvailableIndex;
+					NextAvailableIndex++;
+				}
+				else
+				{
+					// Reuse an existing index assignment
+					Indices[Index] = CachedIndex;
+				}
+				// Reorder the vertices based on the new index assignment
+				Vertices[Indices[Index]] = OriginalVertices[OriginalIndices[Index]];
+			}
+		}
+	}
+
+	for (int32 i = 0; i < WedgeMap.Num(); i++)
+	{
+		int32 MappedIndex = WedgeMap[i];
+		if (MappedIndex != INDEX_NONE)
+		{
+			WedgeMap[i] = IndexCache[MappedIndex];
+		}
+	}
+}
+
+class FStaticMeshUtilityBuilder
+{
+public:
+	FStaticMeshUtilityBuilder() : Stage(EStage::Uninit), NumValidLODs(0) {}
+
+	bool GatherSourceMeshesPerLOD(TArray<FStaticMeshSourceModel>& SourceModels, IMeshReduction* MeshReduction)
+	{
+		check(Stage == EStage::Uninit);
+
+		// Gather source meshes for each LOD.
+		for (int32 LODIndex = 0; LODIndex < SourceModels.Num(); ++LODIndex)
+		{
+			FStaticMeshSourceModel& SrcModel = SourceModels[LODIndex];
+			FRawMesh& RawMesh = *new(LODMeshes)FRawMesh;
+			TMultiMap<int32, int32>& OverlappingCorners = *new(LODOverlappingCorners)TMultiMap<int32, int32>;
+
+			if (!SrcModel.RawMeshBulkData->IsEmpty())
+			{
+				SrcModel.RawMeshBulkData->LoadRawMesh(RawMesh);
+				// Make sure the raw mesh is not irreparably malformed.
+				if (!RawMesh.IsValidOrFixable())
+				{
+					UE_LOG(LogMeshUtilities, Error, TEXT("Raw mesh is corrupt for LOD%d."), LODIndex);
+					return false;
+				}
+				LODBuildSettings[LODIndex] = SrcModel.BuildSettings;
+
+				float ComparisonThreshold = GetComparisonThreshold(LODBuildSettings[LODIndex]);
+				int32 NumWedges = RawMesh.WedgeIndices.Num();
+
+				// Find overlapping corners to accelerate adjacency.
+				FindOverlappingCorners(OverlappingCorners, RawMesh, ComparisonThreshold);
+
+				// Figure out if we should recompute normals and tangents.
+				bool bRecomputeNormals = SrcModel.BuildSettings.bRecomputeNormals || RawMesh.WedgeTangentZ.Num() != NumWedges;
+				bool bRecomputeTangents = SrcModel.BuildSettings.bRecomputeTangents || RawMesh.WedgeTangentX.Num() != NumWedges || RawMesh.WedgeTangentY.Num() != NumWedges;
+
+				// Dump normals and tangents if we are recomputing them.
+				if (bRecomputeTangents)
+				{
+					RawMesh.WedgeTangentX.Empty(NumWedges);
+					RawMesh.WedgeTangentX.AddZeroed(NumWedges);
+					RawMesh.WedgeTangentY.Empty(NumWedges);
+					RawMesh.WedgeTangentY.AddZeroed(NumWedges);
+				}
+				if (bRecomputeNormals)
+				{
+					RawMesh.WedgeTangentZ.Empty(NumWedges);
+					RawMesh.WedgeTangentZ.AddZeroed(NumWedges);
+				}
+
+				// Compute any missing tangents.
+				{
+					// Static meshes always blend normals of overlapping corners.
+					uint32 TangentOptions = ETangentOptions::BlendOverlappingNormals;
+					if (SrcModel.BuildSettings.bRemoveDegenerates)
+					{
+						// If removing degenerate triangles, ignore them when computing tangents.
+						TangentOptions |= ETangentOptions::IgnoreDegenerateTriangles;
+					}
+
+					//MikkTSpace should be use only when the user want to recompute the normals or tangents otherwise should always fallback on builtin
+					if (SrcModel.BuildSettings.bUseMikkTSpace && (SrcModel.BuildSettings.bRecomputeNormals || SrcModel.BuildSettings.bRecomputeTangents))
+					{
+						ComputeTangents_MikkTSpace(RawMesh, OverlappingCorners, TangentOptions);
+					}
+					else
+					{
+						ComputeTangents(RawMesh, OverlappingCorners, TangentOptions);
+					}
+				}
+
+				// At this point the mesh will have valid tangents.
+				check(RawMesh.WedgeTangentX.Num() == NumWedges);
+				check(RawMesh.WedgeTangentY.Num() == NumWedges);
+				check(RawMesh.WedgeTangentZ.Num() == NumWedges);
+
+				// Generate lightmap UVs
+				if (SrcModel.BuildSettings.bGenerateLightmapUVs)
+				{
+					if (RawMesh.WedgeTexCoords[SrcModel.BuildSettings.SrcLightmapIndex].Num() == 0)
+					{
+						SrcModel.BuildSettings.SrcLightmapIndex = 0;
+					}
+
+					FLayoutUV Packer(&RawMesh, SrcModel.BuildSettings.SrcLightmapIndex, SrcModel.BuildSettings.DstLightmapIndex, SrcModel.BuildSettings.MinLightmapResolution);
+
+					Packer.FindCharts(OverlappingCorners);
+					bool bPackSuccess = Packer.FindBestPacking();
+					if (bPackSuccess)
+					{
+						Packer.CommitPackedUVs();
+					}
+				}
+				HasRawMesh[LODIndex] = true;
+			}
+			else if (LODIndex > 0 && MeshReduction)
+			{
+				// If a raw mesh is not explicitly provided, use the raw mesh of the
+				// next highest LOD.
+				RawMesh = LODMeshes[LODIndex - 1];
+				OverlappingCorners = LODOverlappingCorners[LODIndex - 1];
+				LODBuildSettings[LODIndex] = LODBuildSettings[LODIndex - 1];
+				HasRawMesh[LODIndex] = false;
+			}
+		}
+		check(LODMeshes.Num() == SourceModels.Num());
+		check(LODOverlappingCorners.Num() == SourceModels.Num());
+
+		// Bail if there is no raw mesh data from which to build a renderable mesh.
+		if (LODMeshes.Num() == 0 || LODMeshes[0].WedgeIndices.Num() == 0)
+		{
+			return false;
+		}
+
+		Stage = EStage::Gathered;
+		return true;
+	}
+
+	bool ReduceLODs(TArray<FStaticMeshSourceModel>& SourceModels, const FStaticMeshLODGroup& LODGroup, IMeshReduction* MeshReduction, bool& bOutWasReduced)
+	{
+		check(Stage == EStage::Gathered);
+
+		// Reduce each LOD mesh according to its reduction settings.
+		for (int32 LODIndex = 0; LODIndex < SourceModels.Num(); ++LODIndex)
+		{
+			const FStaticMeshSourceModel& SrcModel = SourceModels[LODIndex];
+			FMeshReductionSettings ReductionSettings = LODGroup.GetSettings(SrcModel.ReductionSettings, LODIndex);
+			LODMaxDeviation[NumValidLODs] = 0.0f;
+			if (LODIndex != NumValidLODs)
+			{
+				LODBuildSettings[NumValidLODs] = LODBuildSettings[LODIndex];
+				LODOverlappingCorners[NumValidLODs] = LODOverlappingCorners[LODIndex];
+			}
+
+			if (MeshReduction && (ReductionSettings.PercentTriangles < 1.0f || ReductionSettings.MaxDeviation > 0.0f))
+			{
+				FRawMesh& InMesh = LODMeshes[ReductionSettings.BaseLODModel];
+				FRawMesh& DestMesh = LODMeshes[NumValidLODs];
+				TMultiMap<int32, int32>& InOverlappingCorners = LODOverlappingCorners[ReductionSettings.BaseLODModel];
+				TMultiMap<int32, int32>& DestOverlappingCorners = LODOverlappingCorners[NumValidLODs];
+
+				MeshReduction->Reduce(DestMesh, LODMaxDeviation[NumValidLODs], InMesh, InOverlappingCorners, ReductionSettings);
+				if (DestMesh.WedgeIndices.Num() > 0 && !DestMesh.IsValid())
+				{
+					UE_LOG(LogMeshUtilities, Error, TEXT("Mesh reduction produced a corrupt mesh for LOD%d"), LODIndex);
+					return false;
+				}
+				bOutWasReduced = true;
+
+				// Recompute adjacency information.
+				DestOverlappingCorners.Reset();
+				float ComparisonThreshold = GetComparisonThreshold(LODBuildSettings[NumValidLODs]);
+				FindOverlappingCorners(DestOverlappingCorners, DestMesh, ComparisonThreshold);
+			}
+
+			if (LODMeshes[NumValidLODs].WedgeIndices.Num() > 0)
+			{
+				NumValidLODs++;
+			}
+		}
+
+		if (NumValidLODs < 1)
+		{
+			return false;
+		}
+		Stage = EStage::Reduce;
+		return true;
+	}
+
+	bool GenerateRenderingMeshes(FMeshUtilities& MeshUtilities, FStaticMeshRenderData& OutRenderData, TArray<FStaticMeshSourceModel>& InOutModels, int32 ImportVersion)
+	{
+		check(Stage == EStage::Reduce);
+		// Generate per-LOD rendering data.
+		OutRenderData.AllocateLODResources(NumValidLODs);
+		for (int32 LODIndex = 0; LODIndex < NumValidLODs; ++LODIndex)
+		{
+			FStaticMeshLODResources& LODModel = OutRenderData.LODResources[LODIndex];
+			FRawMesh& RawMesh = LODMeshes[LODIndex];
+			LODModel.MaxDeviation = LODMaxDeviation[LODIndex];
+
+			TArray<FStaticMeshBuildVertex> Vertices;
+			TArray<TArray<uint32> > PerSectionIndices;
+
+			TMap<uint32, uint32> MaterialToSectionMapping;
+
+			// Find out how many sections are in the mesh.
+			TArray<int32> MaterialIndices;
+			for ( const int32 MaterialIndex : RawMesh.FaceMaterialIndices )
+			{
+				// Find all unique material indices
+				MaterialIndices.AddUnique(MaterialIndex);
+			}
+
+			// Need X number of sections for X number of material indices
+			//for (const int32 MaterialIndex : MaterialIndices)
+			for ( int32 Index = 0; Index < MaterialIndices.Num(); ++Index)
+			{
+				const int32 MaterialIndex = MaterialIndices[Index];
+				FStaticMeshSection* Section = new(LODModel.Sections) FStaticMeshSection();
+				Section->MaterialIndex = MaterialIndex;
+				if (ImportVersion < RemoveStaticMeshSkinxxWorkflow)
+				{
+					MaterialToSectionMapping.Add(MaterialIndex, MaterialIndex);
+				}
+				else
+				{
+					MaterialToSectionMapping.Add(MaterialIndex, Index);
+				}
+				new(PerSectionIndices)TArray<uint32>;
+			}
+
+			// Build and cache optimize vertex and index buffers.
+			{
+				// TODO_STATICMESH: The wedge map is only valid for LODIndex 0 if no reduction has been performed.
+				// We can compute an approximate one instead for other LODs.
+				TArray<int32> TempWedgeMap;
+				TArray<int32>& WedgeMap = (LODIndex == 0 && InOutModels[0].ReductionSettings.PercentTriangles >= 1.0f) ? OutRenderData.WedgeMap : TempWedgeMap;
+				float ComparisonThreshold = GetComparisonThreshold(LODBuildSettings[LODIndex]);
+				MeshUtilities.BuildStaticMeshVertexAndIndexBuffers(Vertices, PerSectionIndices, WedgeMap, RawMesh, LODOverlappingCorners[LODIndex], MaterialToSectionMapping, ComparisonThreshold, LODBuildSettings[LODIndex].BuildScale3D, ImportVersion);
+				check(WedgeMap.Num() == RawMesh.WedgeIndices.Num());
+
+				if (RawMesh.WedgeIndices.Num() < 100000 * 3)
+				{
+					MeshUtilities.CacheOptimizeVertexAndIndexBuffer(Vertices, PerSectionIndices, WedgeMap);
+					check(WedgeMap.Num() == RawMesh.WedgeIndices.Num());
+				}
+			}
+
+			verifyf(Vertices.Num() != 0, TEXT("No valid vertices found for the mesh."));
+
+			// Initialize the vertex buffer.
+			int32 NumTexCoords = ComputeNumTexCoords(RawMesh, MAX_STATIC_TEXCOORDS);
+			LODModel.VertexBuffer.SetUseHighPrecisionTangentBasis(LODBuildSettings[LODIndex].bUseHighPrecisionTangentBasis);
+			LODModel.VertexBuffer.SetUseFullPrecisionUVs(LODBuildSettings[LODIndex].bUseFullPrecisionUVs);
+			LODModel.VertexBuffer.Init(Vertices, NumTexCoords);
+			LODModel.PositionVertexBuffer.Init(Vertices);
+			LODModel.ColorVertexBuffer.Init(Vertices);
+
+			// Concatenate the per-section index buffers.
+			TArray<uint32> CombinedIndices;
+			bool bNeeds32BitIndices = false;
+			for (int32 SectionIndex = 0; SectionIndex < LODModel.Sections.Num(); SectionIndex++)
+			{
+				FStaticMeshSection& Section = LODModel.Sections[SectionIndex];
+				TArray<uint32> const& SectionIndices = PerSectionIndices[SectionIndex];
+				Section.FirstIndex = 0;
+				Section.NumTriangles = 0;
+				Section.MinVertexIndex = 0;
+				Section.MaxVertexIndex = 0;
+
+				if (SectionIndices.Num())
+				{
+					Section.FirstIndex = CombinedIndices.Num();
+					Section.NumTriangles = SectionIndices.Num() / 3;
+
+					CombinedIndices.AddUninitialized(SectionIndices.Num());
+					uint32* DestPtr = &CombinedIndices[Section.FirstIndex];
+					uint32 const* SrcPtr = SectionIndices.GetData();
+
+					Section.MinVertexIndex = *SrcPtr;
+					Section.MaxVertexIndex = *SrcPtr;
+
+					for (int32 Index = 0; Index < SectionIndices.Num(); Index++)
+					{
+						uint32 VertIndex = *SrcPtr++;
+
+						bNeeds32BitIndices |= (VertIndex > MAX_uint16);
+						Section.MinVertexIndex = FMath::Min<uint32>(VertIndex, Section.MinVertexIndex);
+						Section.MaxVertexIndex = FMath::Max<uint32>(VertIndex, Section.MaxVertexIndex);
+						*DestPtr++ = VertIndex;
+					}
+				}
+			}
+			LODModel.IndexBuffer.SetIndices(CombinedIndices, bNeeds32BitIndices ? EIndexBufferStride::Force32Bit : EIndexBufferStride::Force16Bit);
+
+			// Build the reversed index buffer.
+			if (InOutModels[0].BuildSettings.bBuildReversedIndexBuffer)
+			{
+				TArray<uint32> InversedIndices;
+				const int32 IndexCount = CombinedIndices.Num();
+				InversedIndices.AddUninitialized(IndexCount);
+
+				for (int32 SectionIndex = 0; SectionIndex < LODModel.Sections.Num(); ++SectionIndex)
+				{
+					const FStaticMeshSection& SectionInfo = LODModel.Sections[SectionIndex];
+					const int32 SectionIndexCount = SectionInfo.NumTriangles * 3;
+
+					for (int32 i = 0; i < SectionIndexCount; ++i)
+					{
+						InversedIndices[SectionInfo.FirstIndex + i] = CombinedIndices[SectionInfo.FirstIndex + SectionIndexCount - 1 - i];
+					}
+				}
+				LODModel.ReversedIndexBuffer.SetIndices(InversedIndices, bNeeds32BitIndices ? EIndexBufferStride::Force32Bit : EIndexBufferStride::Force16Bit);
+			}
+
+			// Build the depth-only index buffer.
+			TArray<uint32> DepthOnlyIndices;
+			{
+				BuildDepthOnlyIndexBuffer(
+					DepthOnlyIndices,
+					Vertices,
+					CombinedIndices,
+					LODModel.Sections
+					);
+
+				if (DepthOnlyIndices.Num() < 50000 * 3)
+				{
+					MeshUtilities.CacheOptimizeIndexBuffer(DepthOnlyIndices);
+				}
+
+				LODModel.DepthOnlyIndexBuffer.SetIndices(DepthOnlyIndices, bNeeds32BitIndices ? EIndexBufferStride::Force32Bit : EIndexBufferStride::Force16Bit);
+			}
+
+			// Build the inversed depth only index buffer.
+			if (InOutModels[0].BuildSettings.bBuildReversedIndexBuffer)
+			{
+				TArray<uint32> ReversedDepthOnlyIndices;
+				const int32 IndexCount = DepthOnlyIndices.Num();
+				ReversedDepthOnlyIndices.AddUninitialized(IndexCount);
+				for (int32 i = 0; i < IndexCount; ++i)
+				{
+					ReversedDepthOnlyIndices[i] = DepthOnlyIndices[IndexCount - 1 - i];
+				}
+				LODModel.ReversedDepthOnlyIndexBuffer.SetIndices(ReversedDepthOnlyIndices, bNeeds32BitIndices ? EIndexBufferStride::Force32Bit : EIndexBufferStride::Force16Bit);
+			}
+
+			// Build a list of wireframe edges in the static mesh.
+			{
+				TArray<FMeshEdge> Edges;
+				TArray<uint32> WireframeIndices;
+
+				FStaticMeshEdgeBuilder(CombinedIndices, Vertices, Edges).FindEdges();
+				WireframeIndices.Empty(2 * Edges.Num());
+				for (int32 EdgeIndex = 0; EdgeIndex < Edges.Num(); EdgeIndex++)
+				{
+					FMeshEdge&	Edge = Edges[EdgeIndex];
+					WireframeIndices.Add(Edge.Vertices[0]);
+					WireframeIndices.Add(Edge.Vertices[1]);
+				}
+				LODModel.WireframeIndexBuffer.SetIndices(WireframeIndices, bNeeds32BitIndices ? EIndexBufferStride::Force32Bit : EIndexBufferStride::Force16Bit);
+			}
+
+			// Build the adjacency index buffer used for tessellation.
+			if (InOutModels[0].BuildSettings.bBuildAdjacencyBuffer)
+			{
+				TArray<uint32> AdjacencyIndices;
+
+				BuildStaticAdjacencyIndexBuffer(
+					LODModel.PositionVertexBuffer,
+					LODModel.VertexBuffer,
+					CombinedIndices,
+					AdjacencyIndices
+					);
+				LODModel.AdjacencyIndexBuffer.SetIndices(AdjacencyIndices, bNeeds32BitIndices ? EIndexBufferStride::Force32Bit : EIndexBufferStride::Force16Bit);
+			}
+		}
+
+		// Copy the original material indices to fixup meshes before compacting of materials was done.
+		if (NumValidLODs > 0)
+		{
+			OutRenderData.MaterialIndexToImportIndex = LODMeshes[0].MaterialIndexToImportIndex;
+		}
+
+		// Calculate the bounding box.
+		FBox BoundingBox(0);
+		FPositionVertexBuffer& BasePositionVertexBuffer = OutRenderData.LODResources[0].PositionVertexBuffer;
+		for (uint32 VertexIndex = 0; VertexIndex < BasePositionVertexBuffer.GetNumVertices(); VertexIndex++)
+		{
+			BoundingBox += BasePositionVertexBuffer.VertexPosition(VertexIndex);
+		}
+		BoundingBox.GetCenterAndExtents(OutRenderData.Bounds.Origin, OutRenderData.Bounds.BoxExtent);
+
+		// Calculate the bounding sphere, using the center of the bounding box as the origin.
+		OutRenderData.Bounds.SphereRadius = 0.0f;
+		for (uint32 VertexIndex = 0; VertexIndex < BasePositionVertexBuffer.GetNumVertices(); VertexIndex++)
+		{
+			OutRenderData.Bounds.SphereRadius = FMath::Max(
+				(BasePositionVertexBuffer.VertexPosition(VertexIndex) - OutRenderData.Bounds.Origin).Size(),
+				OutRenderData.Bounds.SphereRadius
+				);
+		}
+
+		Stage = EStage::GenerateRendering;
+		return true;
+	}
+
+	bool ReplaceRawMeshModels(TArray<FStaticMeshSourceModel>& SourceModels)
+	{
+		check(Stage == EStage::Reduce);
+
+		check(HasRawMesh[0]);
+		check(SourceModels.Num() >= NumValidLODs);
+		bool bDirty = false;
+		for (int32 Index = 1; Index < NumValidLODs; ++Index)
+		{
+			if (!HasRawMesh[Index])
+			{
+				SourceModels[Index].RawMeshBulkData->SaveRawMesh(LODMeshes[Index]);
+				bDirty = true;
+			}
+		}
+
+		Stage = EStage::ReplaceRaw;
+		return true;
+	}
+
+private:
+	enum class EStage
+	{
+		Uninit,
+		Gathered,
+		Reduce,
+		GenerateRendering,
+		ReplaceRaw,
+	};
+
+	EStage Stage;
+
+	int32 NumValidLODs;
+
+	TIndirectArray<FRawMesh> LODMeshes;
+	TIndirectArray<TMultiMap<int32, int32> > LODOverlappingCorners;
+	float LODMaxDeviation[MAX_STATIC_MESH_LODS];
+	FMeshBuildSettings LODBuildSettings[MAX_STATIC_MESH_LODS];
+	bool HasRawMesh[MAX_STATIC_MESH_LODS];
+};
+
+bool FMeshUtilities::BuildStaticMesh(FStaticMeshRenderData& OutRenderData, TArray<FStaticMeshSourceModel>& SourceModels, const FStaticMeshLODGroup& LODGroup, int32 ImportVersion)
+{
+	FStaticMeshUtilityBuilder Builder;
+	if (!Builder.GatherSourceMeshesPerLOD(SourceModels, StaticMeshReduction))
+	{
+		return false;
+	}
+
+	bool bWasReduced = false;
+	if (!Builder.ReduceLODs(SourceModels, LODGroup, StaticMeshReduction, bWasReduced))
+	{
+		return false;
+	}
+
+	return Builder.GenerateRenderingMeshes(*this, OutRenderData, SourceModels, ImportVersion);
+}
+
+bool FMeshUtilities::GenerateStaticMeshLODs(TArray<FStaticMeshSourceModel>& Models, const FStaticMeshLODGroup& LODGroup)
+{
+	FStaticMeshUtilityBuilder Builder;
+	if (!Builder.GatherSourceMeshesPerLOD(Models, StaticMeshReduction))
+	{
+		return false;
+	}
+
+	bool bWasReduced = false;
+	if (!Builder.ReduceLODs(Models, LODGroup, StaticMeshReduction, bWasReduced))
+	{
+		return false;
+	}
+
+	if (bWasReduced)
+	{
+		return Builder.ReplaceRawMeshModels(Models);
+	}
+
+	return false;
+}
+
 class IMeshBuildData
 {
 public:
@@ -8250,17 +8250,17 @@ static bool NonOpaqueMaterialPredicate(UStaticMeshComponent* InMesh)
 ///*------------------------------------------------------------------------------
 //Mesh reduction .
 //------------------------------------------------------------------------------*/
-//
-//IMeshReduction* FMeshUtilities::GetStaticMeshReductionInterface()
-//{
-//	return StaticMeshReduction;
-//}
-//
-//IMeshReduction* FMeshUtilities::GetSkeletalMeshReductionInterface()
-//{
-//	return SkeletalMeshReduction;
-//}
-//
+
+IMeshReduction* FMeshUtilities::GetStaticMeshReductionInterface()
+{
+	return StaticMeshReduction;
+}
+
+IMeshReduction* FMeshUtilities::GetSkeletalMeshReductionInterface()
+{
+	return SkeletalMeshReduction;
+}
+
 ///*------------------------------------------------------------------------------
 //Mesh merging.
 //------------------------------------------------------------------------------*/

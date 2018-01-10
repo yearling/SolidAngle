@@ -211,19 +211,6 @@ enum EIndirectLightingCacheQuality
 };
 
 
-/** Note: This is mirrored in Lightmass, be sure to update the blend mode structure and logic there if this changes. */
-// Note: Check UMaterialInstance::Serialize if changed!!
-UENUM(BlueprintType)
-enum EBlendMode
-{
-	BLEND_Opaque UMETA(DisplayName="Opaque"),
-	BLEND_Masked UMETA(DisplayName="Masked"),
-	BLEND_Translucent UMETA(DisplayName="Translucent"),
-	BLEND_Additive UMETA(DisplayName="Additive"),
-	BLEND_Modulate UMETA(DisplayName="Modulate"),
-	BLEND_AlphaComposite UMETA(DisplayName ="AlphaComposite (Premultiplied Alpha)"),
-	BLEND_MAX,
-};
 
 
 UENUM()
@@ -3845,3 +3832,16 @@ struct FMeshBuildSettings
 	}
 };
 
+/** Note: This is mirrored in Lightmass, be sure to update the blend mode structure and logic there if this changes. */
+// Note: Check UMaterialInstance::Serialize if changed!!
+//UENUM(BlueprintType)
+enum EBlendMode
+{
+	BLEND_Opaque /*UMETA(DisplayName = "Opaque")*/,
+	BLEND_Masked ,
+	BLEND_Translucent ,
+	BLEND_Additive ,
+	BLEND_Modulate ,
+	BLEND_AlphaComposite ,
+	BLEND_MAX,
+};

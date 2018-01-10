@@ -36,6 +36,7 @@
 #include "LocalVertexFactory.h"
 #include "RenderUtils.h"
 #include "StaticMesh.h"
+#include "MeshMerging.h"
 
 class FDistanceFieldVolumeData;
 class UBodySetup;
@@ -53,8 +54,8 @@ public:
 		, BasePercentTrianglesMult(1.0f)
 		, DisplayName( NSLOCTEXT( "UnrealEd", "None", "None" ) )
 	{
-		//FMemory::Memzero(SettingsBias);
-		//SettingsBias.PercentTriangles = 1.0f;
+		FMemory::Memzero(SettingsBias);
+		SettingsBias.PercentTriangles = 1.0f;
 	}
 
 	/** Returns the default number of LODs to build. */
@@ -70,14 +71,14 @@ public:
 	}
 
 	/** Returns default reduction settings for the specified LOD. */
-	/*FMeshReductionSettings GetDefaultSettings(int32 LODIndex) const
+	FMeshReductionSettings GetDefaultSettings(int32 LODIndex) const
 	{
 		check(LODIndex >= 0 && LODIndex < MAX_STATIC_MESH_LODS);
 		return DefaultSettings[LODIndex];
-	}*/
+	}
 
 	/** Applies global settings tweaks for the specified LOD. */
-	// FMeshReductionSettings GetSettings(const FMeshReductionSettings& InSettings, int32 LODIndex) const;
+	ENGINE_API FMeshReductionSettings GetSettings(const FMeshReductionSettings& InSettings, int32 LODIndex) const;
 
 private:
 	/** FStaticMeshLODSettings initializes group entries. */
@@ -91,9 +92,9 @@ private:
 	/** Display name. */
 	FText DisplayName;
 	/** Default reduction settings for meshes in this group. */
-	//FMeshReductionSettings DefaultSettings[MAX_STATIC_MESH_LODS];
+	FMeshReductionSettings DefaultSettings[MAX_STATIC_MESH_LODS];
 	/** Biases applied to reduction settings. */
-	//FMeshReductionSettings SettingsBias;
+	FMeshReductionSettings SettingsBias;
 };
 
 /**
@@ -402,33 +403,33 @@ class FPositionVertexBuffer : public FVertexBuffer
 public:
 
 	/** Default constructor. */
-	 FPositionVertexBuffer();
+	ENGINE_API FPositionVertexBuffer();
 
 	/** Destructor. */
-	 ~FPositionVertexBuffer();
+	 ENGINE_API ~FPositionVertexBuffer();
 
 	/** Delete existing resources */
-	 void CleanUp();
+	 ENGINE_API void CleanUp();
 
 	/**
 	* Initializes the buffer with the given vertices, used to convert legacy layouts.
 	* @param InVertices - The vertices to initialize the buffer with.
 	*/
-	 void Init(const TArray<FStaticMeshBuildVertex>& InVertices);
+	 ENGINE_API void Init(const TArray<FStaticMeshBuildVertex>& InVertices);
 
 	/**
 	 * Initializes this vertex buffer with the contents of the given vertex buffer.
 	 * @param InVertexBuffer - The vertex buffer to initialize from.
 	 */
-	void Init(const FPositionVertexBuffer& InVertexBuffer);
+	 ENGINE_API void Init(const FPositionVertexBuffer& InVertexBuffer);
 
-	 void Init(const TArray<FVector>& InPositions);
+	ENGINE_API void Init(const TArray<FVector>& InPositions);
 
 	/**
 	* Removes the cloned vertices used for extruding shadow volumes.
 	* @param NumVertices - The real number of static mesh vertices which should remain in the buffer upon return.
 	*/
-	void RemoveLegacyShadowVolumeVertices(uint32 InNumVertices);
+	 ENGINE_API void RemoveLegacyShadowVolumeVertices(uint32 InNumVertices);
 
 	/**
 	* Serializer
@@ -492,32 +493,32 @@ class FStaticMeshVertexBuffer : public FVertexBuffer
 public:
 
 	/** Default constructor. */
-	FStaticMeshVertexBuffer();
+	ENGINE_API FStaticMeshVertexBuffer();
 
 	/** Destructor. */
-	 ~FStaticMeshVertexBuffer();
+	ENGINE_API ~FStaticMeshVertexBuffer();
 
 	/** Delete existing resources */
-	 void CleanUp();
+	ENGINE_API void CleanUp();
 
 	/**
 	 * Initializes the buffer with the given vertices.
 	 * @param InVertices - The vertices to initialize the buffer with.
 	 * @param InNumTexCoords - The number of texture coordinate to store in the buffer.
 	 */
-	 void Init(const TArray<FStaticMeshBuildVertex>& InVertices,uint32 InNumTexCoords);
+	ENGINE_API void Init(const TArray<FStaticMeshBuildVertex>& InVertices,uint32 InNumTexCoords);
 
 	/**
 	 * Initializes this vertex buffer with the contents of the given vertex buffer.
 	 * @param InVertexBuffer - The vertex buffer to initialize from.
 	 */
-	void Init(const FStaticMeshVertexBuffer& InVertexBuffer);
+	ENGINE_API void Init(const FStaticMeshVertexBuffer& InVertexBuffer);
 
 	/**
 	 * Removes the cloned vertices used for extruding shadow volumes.
 	 * @param NumVertices - The real number of static mesh vertices which should remain in the buffer upon return.
 	 */
-	void RemoveLegacyShadowVolumeVertices(uint32 NumVertices);
+	ENGINE_API void RemoveLegacyShadowVolumeVertices(uint32 NumVertices);
 
 	/**
 	* Serializer
@@ -892,7 +893,7 @@ public:
 	SIZE_T GetResourceSizeBytes() const;
 
 	/** Allocate LOD resources. */
-	 void AllocateLODResources(int32 NumLODs);
+	ENGINE_API void AllocateLODResources(int32 NumLODs);
 
 	/** Update LOD-SECTION uv densities. */
 	void ComputeUVDensities();
