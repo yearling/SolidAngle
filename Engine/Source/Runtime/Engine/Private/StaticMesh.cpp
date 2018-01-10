@@ -987,7 +987,7 @@ void FStaticMeshLODSettings::Initialize(const FConfigFile& IniFile)
 
 void FStaticMeshLODSettings::ReadEntry(FStaticMeshLODGroup& Group, FString Entry)
 {
-	/*
+	
 	FMeshReductionSettings& Settings = Group.DefaultSettings[0];
 	FMeshReductionSettings& Bias = Group.SettingsBias;
 	int32 Importance = EMeshFeatureImportance::Normal;
@@ -1109,7 +1109,7 @@ void FStaticMeshLODSettings::ReadEntry(FStaticMeshLODGroup& Group, FString Entry
 	{
 		Bias.ShadingImportance = (EMeshFeatureImportance::Type)FMath::Clamp<int32>(Importance, -EMeshFeatureImportance::Highest, EMeshFeatureImportance::Highest);
 	}
-	*/
+	
 }
 
 void FStaticMeshLODSettings::GetLODGroupNames(TArray<FName>& OutNames) const
@@ -1403,7 +1403,7 @@ void FStaticMeshRenderData::Cache(UStaticMesh* Owner, const FStaticMeshLODSettin
 	//	int32 T0 = FPlatformTime::Cycles();
 		int32 NumLODs = Owner->SourceModels.Num();
 		const FStaticMeshLODGroup& LODGroup = LODSettings.GetLODGroup(Owner->LODGroup);
-		DerivedDataKey = BuildStaticMeshDerivedDataKey(Owner, LODGroup);
+		//DerivedDataKey = BuildStaticMeshDerivedDataKey(Owner, LODGroup);
 
 		TArray<uint8> DerivedData;
 	//	if (GetDerivedDataCacheRef().GetSynchronous(*DerivedDataKey, DerivedData))
