@@ -12,10 +12,10 @@
 template<typename IndexDataType, typename Allocator>
 void CacheOptimizeIndexBuffer(TArray<IndexDataType,Allocator>& Indices)
 {
-	//TArray<IndexDataType> TempIndices(Indices);
-	//IMeshUtilities& MeshUtilities = FModuleManager::LoadModuleChecked<IMeshUtilities>("MeshUtilities");
-	//MeshUtilities.CacheOptimizeIndexBuffer(TempIndices);
-	//Indices = TempIndices;
+	TArray<IndexDataType> TempIndices(Indices);
+	IMeshUtilities& MeshUtilities = FModuleManager::LoadModuleChecked<IMeshUtilities>("MeshUtilities");
+	MeshUtilities.CacheOptimizeIndexBuffer(TempIndices);
+	Indices = TempIndices;
 }
 #endif // #if WITH_EDITOR
 

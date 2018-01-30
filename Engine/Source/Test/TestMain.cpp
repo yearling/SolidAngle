@@ -581,6 +581,13 @@ int main()
 	//Set.Contains(9);
 	//Set.Relax();
 	//Set.Remove(9);
+
+	TLinkedList<int>* GlobalHead = nullptr;
+	TLinkedList<int> ResourceLink = TLinkedList<int>(0);
+	ResourceLink.LinkHead(GlobalHead);
+
+	TLinkedList<int> ResourceLink1 = TLinkedList<int>(1);
+	ResourceLink1.LinkHead(GlobalHead);
 	return 0;
 }
 

@@ -2433,6 +2433,8 @@ UnFbx::ImportResultPackage UnFbx::FFbxImporter::MainInportTest(const FString & F
 					}
 
 					ImportedMeshCount = AllNewAssets.Num();
+					ImportResultPackage Result;
+					Result.StaticMeshes = std::move(AllNewAssets);
 				}
 
 				// Importing static mesh global sockets only if one mesh is imported
@@ -3082,7 +3084,7 @@ UStaticMesh* UnFbx::FFbxImporter::ImportANode(void* VoidFbxImporter, TArray<void
 		FFormatNamedArguments Args;
 		Args.Add(TEXT("NodeIndex"), NodeIndex);
 		Args.Add(TEXT("ArrayLength"), Total);
-		GWarn->StatusUpdate(NodeIndex, Total, FText::Format(NSLOCTEXT("UnrealEd", "Importingf", "Importing ({NodeIndex} of {ArrayLength})"), Args));
+		//GWarn->StatusUpdate(NodeIndex, Total, FText::Format(NSLOCTEXT("UnrealEd", "Importingf", "Importing ({NodeIndex} of {ArrayLength})"), Args));
 	}
 
 	return NewObject;

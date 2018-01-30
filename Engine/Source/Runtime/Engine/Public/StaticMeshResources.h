@@ -103,7 +103,7 @@ private:
 class FStaticMeshLODSettings
 {
 public:
-
+	FStaticMeshLODSettings();
 	/**
 	 * Initializes LOD settings by reading them from the passed in config file section.
 	 * @param IniFile Preloaded ini file object to load from
@@ -134,6 +134,7 @@ private:
 	/** Per-group settings. */
 	TMap<FName,FStaticMeshLODGroup> Groups;
 };
+
 
 template<typename TangentTypeT>
 struct TStaticMeshVertexTangentDatum
@@ -832,6 +833,16 @@ struct FStaticMeshLODResources
 	 * @param	bInOverrideColorVertexBuffer	If true, make a vertex factory ready for per-instance colors
 	 */
 	void InitVertexFactory(FLocalVertexFactory& InOutVertexFactory, UStaticMesh* InParentMesh, bool bInOverrideColorVertexBuffer);
+
+
+	// my engine
+	TUniquePtr<YVSShader>		VSShader;
+	TUniquePtr<YPSShader>		PSShader;
+	TComPtr<ID3D11Buffer>       VB;
+	TComPtr<ID3D11Buffer>       IB;
+	TComPtr<ID3D11BlendState>		m_bs;
+	TComPtr<ID3D11DepthStencilState>m_ds;
+	TComPtr<ID3D11RasterizerState>	m_rs;
 };
 
 /**
