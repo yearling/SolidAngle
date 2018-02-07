@@ -37,6 +37,7 @@
 #include "RenderUtils.h"
 #include "StaticMesh.h"
 #include "MeshMerging.h"
+#include "IShader.h"
 
 class FDistanceFieldVolumeData;
 class UBodySetup;
