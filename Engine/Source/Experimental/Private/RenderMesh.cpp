@@ -75,6 +75,11 @@ void RenderScene::AllocResource()
 	{
 		RenderHelper->Init();
 	}
+
+	for (UStaticMesh* pStaticMesh : StaticMeshes)
+	{
+		pStaticMesh->InitResource();
+	}
 }
 
 void RenderScene::CreateMeshResource()
@@ -221,6 +226,11 @@ void RenderScene::RegisterSkeletalMesh(YSkeletalMesh* pSkeletalMesh, UAnimSequen
 	SkeletalMeshes.Add(pSkeletalMesh);
 	AnimationSequences.Add(pAnimationSequence);
 	SkeletalMeshRenderHeplers.Emplace(MakeUnique<FSkeletalMeshRenderHelper>(pSkeletalMesh,pAnimationSequence));
+}
+
+void RenderScene::RegisterStaticMesh(UStaticMesh* pStaticMesh)
+{
+	StaticMeshes.Add(pStaticMesh);
 }
 
 FSkeletalMeshRenderHelper::FSkeletalMeshRenderHelper(YSkeletalMesh* InSkeletalMesh, UAnimSequence* InAnimSequence)

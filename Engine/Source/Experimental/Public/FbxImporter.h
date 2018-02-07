@@ -490,6 +490,7 @@ struct ImportResultPackage
 {
 	YSkeletalMesh* SkeletalMesh;
 	TArray<UAnimSequence*> AnimSequence;
+	TArray<UStaticMesh*> StaticMeshes;
 };
 /**
  * Main FBX Importer class.

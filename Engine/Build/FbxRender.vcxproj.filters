@@ -13,6 +13,9 @@
     <FxCompile Include="..\Source\Experimental\Private\UI.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
+    <FxCompile Include="..\Source\Experimental\Private\StaticMesh.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Experimental\Private\YYUTApplication.cpp">

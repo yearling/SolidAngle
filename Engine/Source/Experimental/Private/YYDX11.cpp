@@ -131,9 +131,18 @@ void DX11Demo::Initial()
 	ImportOptions->MaterialBasePath = FName("None");
 	//FbxImporter->MainImport(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
 	ImportResultPackage ImportResult =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_StaticMesh);
-
-	m_pSceneRender->RegisterSkeletalMesh(ImportResult.SkeletalMesh,ImportResult.AnimSequence[0]);
-	m_pSceneRender->PlayAnimation(ImportResult.AnimSequence[0]);
+	if(ImportResult.SkeletalMesh!= nullptr)
+	{ 
+		m_pSceneRender->RegisterSkeletalMesh(ImportResult.SkeletalMesh,ImportResult.AnimSequence[0]);
+		m_pSceneRender->PlayAnimation(ImportResult.AnimSequence[0]);
+	}
+	else if (ImportResult.StaticMeshes.Num())
+	{
+		for (UStaticMesh* pMesh : ImportResult.StaticMeshes)
+		{
+			m_pSceneRender->RegisterStaticMesh(pMesh);
+		}
+	}
 	m_pSceneRender->AllocResource();
 }
 

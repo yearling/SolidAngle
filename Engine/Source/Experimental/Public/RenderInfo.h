@@ -1,5 +1,6 @@
 #pragma once
-#include "YYUT.h"
+#include "Math\Vector.h"
+#include "Math\Matrix.h"
 
 struct FRenderSceneInfo
 {

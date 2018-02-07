@@ -14,7 +14,9 @@
 #include "Templates\AreTypesEqual.h"
 #include "Containers\BitArray.h"
 #include "Windows\WindowsSystemIncludes.h"
-
+#include "Templates\Invoke.h"
+#include <type_traits>
+#include "ThreadTest.h"
 struct TrueValue
 {
 	enum { Value = true };
@@ -435,6 +437,53 @@ struct TestStructDefaultConstruct
 	int b;
 	int c;
 };
+
+
+void Invoke_FOO(int n)
+{
+	std::cout << "call invoke" << n << std::endl;
+}
+
+struct AutoDestroy
+{
+	int a; 
+	~AutoDestroy()
+	{
+		std::cout << " call auto destroy" << std::endl;
+	}
+};
+
+struct DoesNotDefineDestroyer
+{
+	AutoDestroy autoDestroy;
+	int b;
+};
+
+struct InvokeMemFuncClass
+{
+	int a = 22;
+	void Foo(int add) 
+	{ 
+		std::cout << "InvokeMemFuncClass <<" << a + add << std::endl; 
+	}
+	InvokeMemFuncClass()
+	{
+		FunctionPointer = &InvokeMemFuncClass::FooStatic;
+	}
+	static void FooStatic(int add)
+	{
+		std::cout << "InvokeMemFuncClass <<" << add << std::endl; 
+	}
+	void(*FunctionPointer)(int b);
+};
+struct InvokeMemFuncImcompatible
+{
+	int b = 22;
+};
+
+
+
+
 int main()
 {
 #if 0
@@ -581,6 +630,31 @@ int main()
 	//Set.Contains(9);
 	//Set.Relax();
 	//Set.Remove(9);
+
+	TLinkedList<int>* GlobalHead = nullptr;
+	TLinkedList<int> ResourceLink = TLinkedList<int>(0);
+	ResourceLink.LinkHead(GlobalHead);
+
+	TLinkedList<int> ResourceLink1 = TLinkedList<int>(1);
+	ResourceLink1.LinkHead(GlobalHead);
+
+	Invoke(Invoke_FOO, 2);
+	Invoke([]() { Invoke_FOO(2); });
+	InvokeMemFuncClass invokeInstance;
+	InvokeMemFuncClass& invokeRef = invokeInstance;
+	InvokeMemFuncImcompatible invokeIncopatible;
+	//Invoke(&InvokeMemFuncClass::Foo, (&invokeInstance), 55);
+	int InvokeMemFuncClass::* pData = &InvokeMemFuncClass::a;
+	std::cout << Invoke(pData, invokeRef) << std::endl;
+
+	{
+		DoesNotDefineDestroyer des;
+	}
+	TFunction<void(int)> FuncVoid = Invoke_FOO;
+	FuncVoid(2);
+
+
+	TestThread();
 	return 0;
 }
 

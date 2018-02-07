@@ -64,6 +64,7 @@ public:
 	virtual void					AllocResource();
 	void							SetScreenWidthHeigth(int width, int height) { m_ScreenWidth = (float)width; m_ScreenHeight = (float)height; }
 	void							RegisterSkeletalMesh(YSkeletalMesh* pSkeletalMesh,UAnimSequence* pAnimationSequence);
+	void							RegisterStaticMesh(UStaticMesh* pStaticMesh);
 	void							PlayAnimation(UAnimSequence* pAnimationSequence) { AnimationSequence = pAnimationSequence; }
 	void							CreateMeshResource();
 	void							DrawGridAndCoordinates();
@@ -80,6 +81,7 @@ private:
 	FSkeletalMeshImportData*		m_pSkeletalMeshData;
 	TArray<YSkeletalMesh*>			SkeletalMeshes;
 	TArray<UAnimSequence*>			AnimationSequences;
+	TArray<UStaticMesh*>			StaticMeshes;
 	TArray<TUniquePtr<FSkeletalMeshRenderHelper>> SkeletalMeshRenderHeplers;
 	UAnimSequence*					AnimationSequence;
 	TUniquePtr<YYUTFont>			ScreenLayout;

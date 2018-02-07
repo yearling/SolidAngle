@@ -21,6 +21,7 @@
 #include "MeshCommon.h"
 #include "EngineTypes.h"
 #include "MeshMerging.h"
+#include "RenderInfo.h"
 /** The maximum number of static mesh LODs allowed. */
 #define MAX_STATIC_MESH_LODS 8
 
@@ -379,6 +380,11 @@ bool StaticMesh_CanLODsShareStaticLighting(UStaticMesh* Mesh);
 class UStaticMesh /*: public UObject, public IInterface_CollisionDataProvider, public IInterface_AssetUserData*/
 {
 	//GENERATED_UCLASS_BODY()
+public:
+	bool InitResource();
+	bool bInitResource;
+	bool ReleaseResource();
+	void Render(TSharedRef<FRenderInfo> RenderInf);
 public:
 	/** Pointer to the data used to render this static mesh. */
 	TUniquePtr<class FStaticMeshRenderData> RenderData;
