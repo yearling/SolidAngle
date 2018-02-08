@@ -137,12 +137,12 @@ void TestMemory()
 	{
 		FMemory::TestMemory();
 	}
-	FMallocLeakDetection::Get().SetAllocationCollection(true);
+	//FMallocLeakDetection::Get().SetAllocationCollection(true);
 	//int *pTestAllocMemory = (int*)FMemory::Malloc(sizeof(int));
 	int* pIntLeak = new int(5);
-	FMallocLeakDetection::Get().SetAllocationCollection(false);
-	FMallocLeakDetection::Get().DumpPotentialLeakers();
-	FMallocLeakDetection::Get().DumpOpenCallstacks();
+	//FMallocLeakDetection::Get().SetAllocationCollection(false);
+	//FMallocLeakDetection::Get().DumpPotentialLeakers();
+	//FMallocLeakDetection::Get().DumpOpenCallstacks();
 }
 void TestAlign()
 {
@@ -227,7 +227,7 @@ public:
 void TestUniquePtr()
 {
 	std::cout << "\n---------------UniqueTest----------" << std::endl;
-	FMallocLeakDetection::Get().SetAllocationCollection(true);
+	//FMallocLeakDetection::Get().SetAllocationCollection(true);
 	{
 		TUniquePtr<int> TestIntUniquePtr = MakeUnique<int>(5);
 		std::cout << "*(TUniquePtr<int>()): " << *TestIntUniquePtr << std::endl;
@@ -245,9 +245,9 @@ void TestUniquePtr()
 		TUniquePtr<int, InspectorCopyMoveConstructor> UniquePtrWithDeleter = TUniquePtr<int, InspectorCopyMoveConstructor>(new int(5), InspectorCopyMoveConstructor());
 		TUniquePtr<int, InspectorCopyMoveConstructor> UniquePtrWithDeleterCpy = MoveTemp(UniquePtrWithDeleter);
 	}
-	FMallocLeakDetection::Get().SetAllocationCollection(false);
-	FMallocLeakDetection::Get().DumpPotentialLeakers();
-	FMallocLeakDetection::Get().DumpOpenCallstacks();
+	//FMallocLeakDetection::Get().SetAllocationCollection(false);
+	//FMallocLeakDetection::Get().DumpPotentialLeakers();
+	//FMallocLeakDetection::Get().DumpOpenCallstacks();
 }
 
 void TestSharedPtr()

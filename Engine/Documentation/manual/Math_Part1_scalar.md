@@ -25,7 +25,7 @@ RoundToZero
 RoundToNegativeInfinity  
 RoundToPositiveInfinity 
 ### Ceil
-往数轴的左端取值  
+往数轴的右端取值  
 **CeilToInt**  
 **CeilToFloat**  
 **CeilToDouble**
