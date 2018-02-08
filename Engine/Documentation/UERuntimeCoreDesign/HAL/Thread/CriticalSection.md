@@ -20,6 +20,8 @@ Inheritance Hierarchy
 		|- FPThreadEvent
 		|- FSingleThreadEvent //Fake event object used when running with only one thread.
 		|- FEventWin // windows 实现
+		|- FSafeRecyclableEvent // EventPool的包裹
+	|- FEventPool 
 ## 实现
 1. 成员变量
 	1. uint32 EventId; //An unique id of this even
@@ -33,11 +35,14 @@ Inheritance Hierarchy
 可见，UE使用类似Windows的Event的接口，而不是Pthread的，这里使用pThread的接口来模拟WindowsEvent
 
 ## 使用工厂类来创建
+
 ### PoolEvent
+
 1. 创建：FGenericPlatformProcess::GetSynchEventFromPool(bool bIsManualRese);
 2. 回收：FPlatformProcess::ReturnSynchEventToPool(ThreadInitSyncEvent);
-### 普通Event
-1. 创建： static class FEvent* CreateSynchEvent(bool bIsManualReset = false);
+
+### 普通Event 被废弃
+1. 创建： static class FEvent* CreateSynchEvent(bool bIsManualReset = false); 
 ### 实现
 
 	FGenericPlatformProcess::GetSynchEventFromPool(bool bIsManualRese)
@@ -45,6 +50,18 @@ Inheritance Hierarchy
 		Event = new FEventWin();
 		Event->Create(bIsManualReset);
 	}
+
+	FGenericPlatformProcess::GetSynchEventFromPool(bool bIsManualRese)
+	{
+		 FEvent* Result = Pool.Pop(); //从无锁队列中取出一个Event
+		 if(!Result)
+		 {
+			Result = FGenericPlatformProcess::GetSynchEventFromPool(bool bIsManualRese);
+		 }
+		 return new FSafeRecyclableEvent(Result); // 包裹一下
+    }
+	
+
 ## FScopedEvent
 析构时等待
 
