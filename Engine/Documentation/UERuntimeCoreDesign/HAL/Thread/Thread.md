@@ -1,7 +1,8 @@
 # Thread
 
 ## Job
-### class FRunable
+### class FRunable  
+__相当于是Thread的入口函数__
 1. Init() //在分配出来的新线程里做
 2. Run()  //在分配出来的新线程里做
 3. Stop() __//在主线程，也就是持有FRunableThread的线程中调用__
@@ -53,6 +54,44 @@
 									|-ThreadName = InThreadName ? InThreadName : TEXT("Unnamed UE4");
 									|-SetThreadName( ThreadID, TCHAR_TO_ANSI( *ThreadName ) );
 									|-SetThreadPriority(InThreadPri);
+
+## 线程池与任务
+### 任务 Task
+
+class IQueuedWork;
+{
+   virtual void DoThreadedWork() = 0; //任务主体
+	virtual void Abandon() = 0; //在完成之前删除掉自己持有的资源， This will only be called if it is being abandoned before completion.
+}
+
+
+### 线程池  
+	线程池不维护IQueuedWork的生命周期
+	class FQueuedThreadPool   // 纯虚接口
+	{
+		virtual bool Create( uint32 InNumQueuedThreads, uint32 StackSize = (32 * 1024), EThreadPriority ThreadPriority=TPri_Normal ) = 0;
+	    virtual void AddQueuedWork( IQueuedWork* InQueuedWork ) = 0;
+	}
+	
+	class FQueuedThreadPoolBase //实现接口
+	class FQueuedThread: public FRunnable  // 线程池中线程，持有一个线程句柄
+	{
+		FRunnableThread* Thread;
+		class FQueuedThreadPool* OwningThreadPool;
+		virtual uint32 Run() override // 主循环
+		{
+			while(是否退出）
+			{
+		  		// 等待消费任务的信号量
+		  		// 完成任务
+				// 如果有任务获取任务继续干 || 没有任务退回到线程池中
+			} 
+		}
+		void DoWork(IQueuedWork* InQueuedWork) //插入Task
+		{
+			// 激活工作信号量
+		}
+	}
 ## Utility
 ### FTlsAutoCleanUp 接口
 #### 实现 
