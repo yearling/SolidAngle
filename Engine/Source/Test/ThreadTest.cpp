@@ -12,6 +12,7 @@
 #include "HAL\Runnable.h"
 #include "Containers\Array.h"
 #include "Misc\ScopeLock.h"
+#include "Windows\WindowsCriticalSection.h"
 
 int IsPrim(int n)
 {
@@ -31,18 +32,25 @@ void TestPool(int ThreadNum, int NumCacluePerThread)
 	double elapseTime = FPlatformTime::Seconds();
 	FQueuedThreadPool*pThreadPool = FQueuedThreadPool::Allocate();
 	pThreadPool->Create(ThreadNum);
-	FEvent* pEventDone = FPlatformProcess::GetSynchEventFromPool(false);
+	std::mutex Mutex;
+	std::condition_variable CV;
 	TArray<TUniquePtr<CaculatePrim>> TaskResults;
+	FCriticalSection CriticalSection;
+	bool bSuccess = false;
 	for (int i = 0; i < ThreadNum; ++i)
 	{
 		TaskResults.Emplace(MakeUnique<CaculatePrim>(i * NumCacluePerThread, (i + 1) * NumCacluePerThread));
-		TaskResults[i]->EventDone = pEventDone;
+		TaskResults[i]->pMutex = &Mutex;
+		TaskResults[i]->pConditional = &CV;
+		TaskResults[i]->bIsSuccess = &bSuccess;
 		pThreadPool->AddQueuedWork(TaskResults[i].Get());
 	}
 
 	for (int i = 0; i < ThreadNum; ++i)
 	{
-		pEventDone->Wait();
+		//FScopeLock Lock(&CriticalSection);
+		std::unique_lock<std::mutex> lock(Mutex);
+		CV.wait(lock, [&bSuccess] {return bSuccess; });
 	}
 
 	std::cout << "use " << ThreadNum << " thread pool caculate " << NumCacluePerThread * ThreadNum << " prime numbers cost: " << FPlatformTime::Seconds() - elapseTime << std::endl;
@@ -95,7 +103,7 @@ void TestThread()
 	RunableJobTest job;
 	FRunnableThread* pThread = FRunnableThread::Create(&job, TEXT("JOBTHREAD"));
 	delete pThread;
-	const int N = 5000;
+	const int N = 50000;
 	TestPool(1, N * 24);
 	TestPool(2, N * 12);
 	TestPool(3, N * 8);
@@ -156,9 +164,10 @@ void CaculatePrim::DoThreadedWork()
 			Result.Add(i);
 		}
 	}
-	FCriticalSection SCLock;
-	FScopeLock Lock(&SCLock);
-	EventDone->Trigger();
+	std::unique_lock<std::mutex> lk(*pMutex);
+	*bIsSuccess = true;
+	lk.unlock();
+	pConditional->notify_one();
 }
 
 void CaculatePrim::Abandon()
@@ -170,6 +179,7 @@ CaculatePrim::CaculatePrim(int32 Start, int End)
 	:StartNum(Start)
 	, EndNum(End)
 {
-	
-	Result.Empty(End - Start);
+	pMutex = nullptr;
+	pConditional = nullptr;
+	bIsSuccess = nullptr;
 }

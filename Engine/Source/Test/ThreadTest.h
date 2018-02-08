@@ -3,7 +3,9 @@
 #include "HAL\Runnable.h"
 #include "Misc\IQueuedWork.h"
 #include "Containers\Array.h"
-
+#include "Hal\CriticalSection.h"
+#include <mutex>
+#include <condition_variable>
 
 class RunableJobTest: public FRunnable
 {
@@ -23,5 +25,8 @@ public:
 	virtual void DoThreadedWork();
 	virtual void Abandon();
 	CaculatePrim(int32 Start, int End);
-	FEvent*             EventDone;
+
+	std::mutex*         pMutex;
+	std::condition_variable* pConditional;
+	bool*               bIsSuccess;
 };
