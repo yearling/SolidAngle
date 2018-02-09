@@ -24,9 +24,11 @@ public:
 	int32				EndNum;
 	virtual void DoThreadedWork();
 	virtual void Abandon();
-	CaculatePrim(int32 Start, int End);
+	CaculatePrim(int32 Start, int End,int ID);
+	virtual ~CaculatePrim();
 
 	std::mutex*         pMutex;
 	std::condition_variable* pConditional;
-	bool*               bIsSuccess;
+	volatile int32*               nIsSuccess;
+	int32				id;
 };

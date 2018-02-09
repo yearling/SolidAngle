@@ -27,33 +27,33 @@ int IsPrim(int n)
 	}
 	return true;
 }
-void TestPool(int ThreadNum, int NumCacluePerThread)
+void TestPool(int ThreadNum, int JobNum, int PrimNum)
 {
-	double elapseTime = FPlatformTime::Seconds();
 	FQueuedThreadPool*pThreadPool = FQueuedThreadPool::Allocate();
 	pThreadPool->Create(ThreadNum);
 	std::mutex Mutex;
 	std::condition_variable CV;
 	TArray<TUniquePtr<CaculatePrim>> TaskResults;
 	FCriticalSection CriticalSection;
-	bool bSuccess = false;
-	for (int i = 0; i < ThreadNum; ++i)
+	
+	double elapseTime = FPlatformTime::Seconds();
+	const int NumJobs= JobNum;
+	volatile int nSuccess = NumJobs;
+	for (int i = 0; i < NumJobs; ++i)
 	{
-		TaskResults.Emplace(MakeUnique<CaculatePrim>(i * NumCacluePerThread, (i + 1) * NumCacluePerThread));
+		const int32 PerJobCount = PrimNum / NumJobs;
+		TaskResults.Emplace(MakeUnique<CaculatePrim>(i * PerJobCount, (i + 1) * PerJobCount, i));
 		TaskResults[i]->pMutex = &Mutex;
 		TaskResults[i]->pConditional = &CV;
-		TaskResults[i]->bIsSuccess = &bSuccess;
+		TaskResults[i]->nIsSuccess = &nSuccess;
 		pThreadPool->AddQueuedWork(TaskResults[i].Get());
 	}
 
-	for (int i = 0; i < ThreadNum; ++i)
-	{
 		//FScopeLock Lock(&CriticalSection);
 		std::unique_lock<std::mutex> lock(Mutex);
-		CV.wait(lock, [&bSuccess] {return bSuccess; });
-	}
+		CV.wait(lock, [&nSuccess] {return nSuccess == 0; });
 
-	std::cout << "use " << ThreadNum << " thread pool caculate " << NumCacluePerThread * ThreadNum << " prime numbers cost: " << FPlatformTime::Seconds() - elapseTime << std::endl;
+	std::cout << "use " << ThreadNum << " thread pool caculate " << JobNum << " prime numbers cost: " << FPlatformTime::Seconds() - elapseTime << std::endl;
 }
 class FPrimRunable final : public FRunnable
 {
@@ -103,31 +103,14 @@ void TestThread()
 	RunableJobTest job;
 	FRunnableThread* pThread = FRunnableThread::Create(&job, TEXT("JOBTHREAD"));
 	delete pThread;
-	const int N = 50000;
-	TestPool(1, N * 24);
-	TestPool(2, N * 12);
-	TestPool(3, N * 8);
-	TestPool(4, N * 6);
-	TestPool(5, N * 24/5);
-	TestPool(6, N * 4);
-	TestPool(8, N * 3);
-	TestPool(12, N * 2);
-	TestPool(24, N );
-	TestPool(48, N/2 );
-	TestPool(96, N/4 );
-
-
-	TestRawThread(1, N * 24);
-	TestRawThread(2, N * 12);
-	TestRawThread(3, N * 8);
-	TestRawThread(4, N * 6);
-	TestRawThread(5, N * 24 / 5);
-	TestRawThread(6, N * 4);
-	TestRawThread(8, N * 3);
-	TestRawThread(12, N * 2);
-	TestRawThread(24, N);
-	TestRawThread(48, N / 2);
-	TestRawThread(96, N/4 );
+	const int N = 5000;
+	for (int ThreadNum = 1; ThreadNum <= 256; ThreadNum *= 2)
+	{
+		for (int JobNum = 1; JobNum <= 256; JobNum *= 2)
+		{
+			TestPool(ThreadNum, JobNum, N);
+		}
+	}
 
 	
 }
@@ -165,7 +148,7 @@ void CaculatePrim::DoThreadedWork()
 		}
 	}
 	std::unique_lock<std::mutex> lk(*pMutex);
-	*bIsSuccess = true;
+	(*nIsSuccess)--;
 	lk.unlock();
 	pConditional->notify_one();
 }
@@ -175,11 +158,20 @@ void CaculatePrim::Abandon()
 
 }
 
-CaculatePrim::CaculatePrim(int32 Start, int End)
+CaculatePrim::CaculatePrim(int32 Start, int End,int32 ID)
 	:StartNum(Start)
 	, EndNum(End)
+	,  id(ID)
 {
 	pMutex = nullptr;
 	pConditional = nullptr;
-	bIsSuccess = nullptr;
+	nIsSuccess = nullptr;
+}
+
+CaculatePrim::~CaculatePrim()
+{
+	if (id)
+	{
+		pMutex = nullptr;
+	}
 }
