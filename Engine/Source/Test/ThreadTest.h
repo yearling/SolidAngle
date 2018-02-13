@@ -27,8 +27,8 @@ public:
 	CaculatePrim(int32 Start, int End,int ID);
 	virtual ~CaculatePrim();
 
-	std::mutex*         pMutex;
-	std::condition_variable* pConditional;
+	FCriticalSection*         pMutex;
+	FEvent* pConditional;
 	volatile int32*               nIsSuccess;
 	int32				id;
 };

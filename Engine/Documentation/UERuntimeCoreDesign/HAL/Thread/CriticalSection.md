@@ -7,6 +7,9 @@
 
 		typedef FWindowsCriticalSection FCriticalSection;
 		typedef FWindowsSystemWideCriticalSection FSystemWideCriticalSection;
+##使用方法
+FScopeLock
+
 
 # FEvent
 用来实现wait机制，
