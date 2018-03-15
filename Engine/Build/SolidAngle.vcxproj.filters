@@ -612,12 +612,6 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Misc\NoopCounter.h">
       <Filter>Source\Runtime\Core\Public\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\LockFreeVoidPointerListBase.h">
-      <Filter>Source\Runtime\Core\Public\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\LockFreeListImpl.h">
-      <Filter>Source\Runtime\Core\Public\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Runtime\Core\Public\Async\TaskGraphInterfaces.h">
       <Filter>Source\Runtime\Core\Public\Async</Filter>
     </ClInclude>

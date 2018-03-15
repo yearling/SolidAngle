@@ -248,8 +248,6 @@
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\List.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\LockFreeFixedSizeAllocator.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\LockFreeList.h" />
-    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\LockFreeListImpl.h" />
-    <ClInclude Include="..\Source\Runtime\Core\Public\Containers\LockFreeVoidPointerListBase.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\map.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\MapBuilder.h" />
     <ClInclude Include="..\Source\Runtime\Core\Public\Containers\MRUArray.h" />
