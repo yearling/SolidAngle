@@ -381,7 +381,7 @@ class UStaticMesh /*: public UObject, public IInterface_CollisionDataProvider, p
 {
 	//GENERATED_UCLASS_BODY()
 public:
-	bool InitResource();
+	bool ENGINE_API InitResource();
 	bool bInitResource;
 	bool ReleaseResource();
 	void Render(TSharedRef<FRenderInfo> RenderInf);

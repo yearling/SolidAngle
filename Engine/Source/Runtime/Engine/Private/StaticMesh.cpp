@@ -1586,10 +1586,10 @@ bool UStaticMesh::InitResource()
 	{
 		for (FStaticMeshLODResources& pLODResource : RenderData->LODResources)
 		{
-			CreateRasterStateNonCull(pLODResource.m_rs);
-			CreateBlendState(pLODResource.m_bs, true, "m_BlendOpaque");
-			CreateDepthStencileState(pLODResource.m_ds, true, "m_DS_Test");
-			pLODResource.VSShader = MakeUnique<YVSShader>();
+			//CreateRasterStateNonCull(pLODResource.m_rs);
+			//CreateBlendState(pLODResource.m_bs, true, "m_BlendOpaque");
+			//CreateDepthStencileState(pLODResource.m_ds, true, "m_DS_Test");
+			//pLODResource.VSShader = MakeUnique<YVSShader>();
 			TArray<D3D11_INPUT_ELEMENT_DESC> Layout =
 			{
 				{ "ATTRIBUTE",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -1606,7 +1606,7 @@ bool UStaticMesh::InitResource()
 				{ "ATTRIBUTE",  11, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 68, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 				{ "ATTRIBUTE",  12, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 72, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			};
-			VSShader->BindInputLayout(Layout);
+		/*	VSShader->BindInputLayout(Layout);
 			if (!VSShader->CreateShader(TEXT("..\\..\\Source\\Experimental\\Private\\SkeletalMesh.hlsl"), TEXT("VSMain")))
 			{
 				check(0);
@@ -1621,9 +1621,11 @@ bool UStaticMesh::InitResource()
 			if (!PSShader->CreateShader(TEXT("..\\..\\Source\\Experimental\\Private\\SkeletalMesh.hlsl"), TEXT("PSMain")))
 			{
 				check(0);
-			}
+			}*/
 		}
+		
 	}
+	return true;
 }
 /**
  * Returns the size of the object/ resource for display to artists/ LDs in the Editor.

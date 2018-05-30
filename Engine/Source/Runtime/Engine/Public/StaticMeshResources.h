@@ -837,8 +837,8 @@ struct FStaticMeshLODResources
 
 
 	// my engine
-	TUniquePtr<YVSShader>		VSShader;
-	TUniquePtr<YPSShader>		PSShader;
+	/*TUniquePtr<YVSShader>		VSShader;
+	TUniquePtr<YPSShader>		PSShader;*/
 	TComPtr<ID3D11Buffer>       VB;
 	TComPtr<ID3D11Buffer>       IB;
 	TComPtr<ID3D11BlendState>		m_bs;

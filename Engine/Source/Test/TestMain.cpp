@@ -482,10 +482,29 @@ struct InvokeMemFuncImcompatible
 };
 
 
+struct TListNode
+{
+	TListNode* Pre;
+	TListNode* Next;
+	int a;
 
+	void LinkHead(TListNode* & Head)
+	{
+		if (Head)
+		{
+			this->Pre = Head->Pre;
+			Head->Pre = this;
+		}
+		this->Next = Head;
+		Head = this;
+	}
+};
 
 int main()
 {
+	TListNode* pNodeHead = nullptr;
+	TListNode FirstNode;
+	FirstNode.LinkHead(pNodeHead);
 #if 0
 	std::cout << "---------------TEnableIf-----------" << std::endl;
 	std::cout << GetEnableValue(12.0f) << std::endl;
@@ -654,7 +673,7 @@ int main()
 	FuncVoid(2);
 
 
-	TestThread();
+	//TestThread();
 	return 0;
 }
 
