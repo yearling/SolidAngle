@@ -57,8 +57,8 @@ void DX11Demo::Initial()
 	EFBXImportType OriginalImportType;
 	FFbxImporter* FbxImporter = UnFbx::FFbxImporter::GetInstance();
 	FFbxLoggerSetter Logger(FbxImporter);
-	FString FileToImport = TEXT("D:/wolf/Wolf_UDK.fbx");
-	//FString FileToImport = TEXT("D:/wolf/Wolf_static.fbx");
+	//FString FileToImport = TEXT("D:/wolf/Wolf_UDK.fbx");
+	FString FileToImport = TEXT("D:/wolf/Wolf_static.fbx");
 	//FString FileToImport = TEXT("D:/wolf/humanoid.fbx");
 	//FString FileToImport = TEXT("G:\\测试用FBX文件\\身体分多个模型的骨骼动画\\out.fbx");
 	//FString FileToImport = TEXT("G:\\测试用FBX文件\\挂载武器的骨骼动画2\\attack.FBX");
@@ -94,7 +94,7 @@ void DX11Demo::Initial()
 	ImportOptions->NormalGenerationMethod = EFBXNormalGenerationMethod::MikkTSpace;
 	ImportOptions->bTransformVertexToAbsolute = true;
 	ImportOptions->bBakePivotInVertex = false;
-	ImportOptions->bCombineToSingle = false;
+	ImportOptions->bCombineToSingle = true;
 	ImportOptions->VertexColorImportOption = EVertexColorImportOption::Ignore;
 	ImportOptions->VertexOverrideColor = FColor(255, 255, 255, 255);
 	ImportOptions->bRemoveDegenerates = true;
@@ -130,8 +130,8 @@ void DX11Demo::Initial()
 	ImportOptions->MaterialCurveSuffixes.Add(TEXT("_mat"));
 	ImportOptions->MaterialBasePath = FName("None");
 	//FbxImporter->MainImport(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
-	//ImportResultPackage ImportResult =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_StaticMesh);
-	ImportResultPackage ImportResult =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
+	ImportResultPackage ImportResult =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_StaticMesh);
+	//ImportResultPackage ImportResult =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
 	if(ImportResult.SkeletalMesh!= nullptr)
 	{ 
 		m_pSceneRender->RegisterSkeletalMesh(ImportResult.SkeletalMesh,ImportResult.AnimSequence[0]);

@@ -9,8 +9,8 @@
 1. 这里的FOV指的是Y轴方向上的FOV，tan(fov/2)= (近平面Width/2) / Znear; 
 2. 近平面Width/2 = Znear* tan(fov/2)*aspert; 
 3. 计算投影到近平面上的(x投）= Znear/Z*X;
-4. 归一到[0~1], (x投/（近平面Width/2)) = 2* x/((tan(fov/2) * aspert*Z)，__记为ScaleX__
-5. 同理，(y投/(近平面Height/2)) = 2*y/((tan(fov/2) * Z);__记为ScaleY__
+4. 归一到[0~1], (x投/（近平面Width/2)) =  x/((tan(fov/2) * aspert*Z)，__记为ScaleX__
+5. 同理，(y投/(近平面Height/2)) = y/((tan(fov/2) * Z);__记为ScaleY__
 6. 这样，投影矩阵只管X,Y值可以表示为
 	
 	ScaleX   0         未知   0
