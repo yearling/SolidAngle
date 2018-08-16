@@ -2364,6 +2364,9 @@ UnFbx::ImportResultPackage UnFbx::FFbxImporter::MainInportTest(const FString & F
 					}
 
 					ImportedMeshCount = NewStaticMesh ? 1 : 0;
+					ImportResultPackage Result;
+					Result.StaticMeshes.Add(NewStaticMesh);
+					return Result;
 				}
 				else if (bCombineMeshesLOD)
 				{

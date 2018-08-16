@@ -481,6 +481,7 @@ bool UnFbx::FFbxImporter::BuildStaticMeshFromGeometry(FbxNode* Node, UStaticMesh
 
 	if (LayerElementNormal || RawMesh.WedgeTangentZ.Num() > 0 )
 	{
+		check(WedgeOffset == RawMesh.WedgeTangentZ.Num());
 		RawMesh.WedgeTangentZ.AddZeroed(WedgeOffset + WedgeCount - RawMesh.WedgeTangentZ.Num());
 	}
 

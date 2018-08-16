@@ -469,3 +469,66 @@ void FSkeletalMeshRenderHelper::Render(TSharedRef<FRenderInfo> RenderInfo)
 		}
 	}
 }
+
+FStaticMeshRenderHelper::FStaticMeshRenderHelper(UStaticMesh* InMesh)
+:StaticMesh(InMesh)
+{
+
+}
+
+FStaticMeshRenderHelper::~FStaticMeshRenderHelper()
+{
+
+}
+
+void FStaticMeshRenderHelper::Init()
+{
+	if (!StaticMesh)
+		return;
+	CreateRasterStateNonCull(m_rs);
+	CreateBlendState(m_bs, true, "m_BlendOpaque");
+	CreateDepthStencileState(m_ds, true, "m_DS_Test");
+	VSShader = MakeUnique<YVSShader>();
+	TArray<D3D11_INPUT_ELEMENT_DESC> Layout =
+	{
+		{ "ATTRIBUTE",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "ATTRIBUTE",  1, DXGI_FORMAT_R8G8B8A8_UNORM,  0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "ATTRIBUTE",  2, DXGI_FORMAT_R8G8B8A8_UNORM,  0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "ATTRIBUTE",  3, DXGI_FORMAT_R8G8B8A8_UNORM,  0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "ATTRIBUTE",  4, DXGI_FORMAT_R32G32_FLOAT,    0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "ATTRIBUTE",  5, DXGI_FORMAT_R32G32_FLOAT,    0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "ATTRIBUTE",  6, DXGI_FORMAT_R32G32_FLOAT,    0, 40, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "ATTRIBUTE",  7, DXGI_FORMAT_R32G32_FLOAT,    0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "ATTRIBUTE",  8, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 56, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "ATTRIBUTE",  9, DXGI_FORMAT_R8G8B8A8_UINT, 0, 60, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "ATTRIBUTE",  10, DXGI_FORMAT_R8G8B8A8_UINT, 0, 64, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "ATTRIBUTE",  11, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 68, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "ATTRIBUTE",  12, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 72, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+	VSShader->BindInputLayout(Layout);
+	if (!VSShader->CreateShader(TEXT("..\\..\\Source\\Experimental\\Private\\SkeletalMesh.hlsl"), TEXT("VSMain")))
+	{
+		check(0);
+	}
+	VSShaderGPU = MakeUnique<YVSShader>();
+	VSShaderGPU->BindInputLayout(Layout);
+	if (!VSShaderGPU->CreateShader(TEXT("..\\..\\Source\\Experimental\\Private\\GPUSKin.hlsl"), TEXT("VSMain")))
+	{
+		check(0);
+	}
+	PSShader = MakeUnique<YPSShader>();
+	if (!PSShader->CreateShader(TEXT("..\\..\\Source\\Experimental\\Private\\SkeletalMesh.hlsl"), TEXT("PSMain")))
+	{
+		check(0);
+	}
+
+	FSkeletalMeshResource* SkeletalMeshResource = SkeletalMesh->GetResourceForRendering();
+	for (int32 i = 0; i < SkeletalMeshResource->LODModels.Num(); ++i)
+	{
+	}
+}
+
+void FStaticMeshRenderHelper::Render(TSharedRef<FRenderInfo> RenderInfo)
+{
+
+}

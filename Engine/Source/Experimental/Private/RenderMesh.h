@@ -53,6 +53,25 @@ private:
 	TArray<TArray<TComPtr<ID3D11Buffer>>> FinalBoneMatrix;
 	TArray<TArray<TComPtr<ID3D11ShaderResourceView>>> FinalBoneMatrixSRV;
 };
+
+class FStaticMeshRenderHelper
+{
+public:
+	FStaticMeshRenderHelper(UStaticMesh* InMesh);
+	~FStaticMeshRenderHelper();
+	void Init();
+	void Render(TSharedRef<FRenderInfo> RenderInfo);
+private:
+	UStaticMesh* StaticMesh;
+	TUniquePtr<YVSShader>		VSShader;
+	TUniquePtr<YPSShader>		PSShader;
+	TComPtr<ID3D11Buffer>       VB;
+	TComPtr<ID3D11Buffer>       IB;
+	TComPtr<ID3D11BlendState>		m_bs;
+	TComPtr<ID3D11DepthStencilState>m_ds;
+	TComPtr<ID3D11RasterizerState>	m_rs;
+	FTransform					WorldPos;
+};
 class RenderScene
 {
 public:
@@ -83,6 +102,7 @@ private:
 	TArray<UAnimSequence*>			AnimationSequences;
 	TArray<UStaticMesh*>			StaticMeshes;
 	TArray<TUniquePtr<FSkeletalMeshRenderHelper>> SkeletalMeshRenderHeplers;
+	TArray<TUniquePtr<FStaticMeshRenderHelper>> SkeletalMeshRenderHeplers;
 	UAnimSequence*					AnimationSequence;
 	TUniquePtr<YYUTFont>			ScreenLayout;
 };
