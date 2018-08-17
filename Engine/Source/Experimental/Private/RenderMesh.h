@@ -102,7 +102,7 @@ private:
 	TArray<UAnimSequence*>			AnimationSequences;
 	TArray<UStaticMesh*>			StaticMeshes;
 	TArray<TUniquePtr<FSkeletalMeshRenderHelper>> SkeletalMeshRenderHeplers;
-	TArray<TUniquePtr<FStaticMeshRenderHelper>> SkeletalMeshRenderHeplers;
+	TArray<TUniquePtr<FStaticMeshRenderHelper>> StaticMeshRenderHeplers;
 	UAnimSequence*					AnimationSequence;
 	TUniquePtr<YYUTFont>			ScreenLayout;
 };

@@ -16,8 +16,9 @@ cbuffer ChangePerMesh
 struct VS_INPUT
 {
 	float4    vPosition		: ATTRIBUTE;
-	half3     TangentX	: ATTRIBUTE1;
-	half4     TangentZ  : ATTRIBUTE2;
+	float4     TangentX	: ATTRIBUTE1;
+	float4     TangentY	: ATTRIBUTE1;
+	float4     TangentZ  : ATTRIBUTE2;
 	float2	  TexCoords[4]	: ATTRIBUTE4;
 	float4    VertexColor	: ATTRIBUTE8;
 };
