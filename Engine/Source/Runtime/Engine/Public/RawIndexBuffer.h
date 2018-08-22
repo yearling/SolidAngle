@@ -190,6 +190,7 @@ public:
 
 	inline bool Is32Bit() const { return b32Bit; }
 
+	const uint8* GetRawBuffer() { return &IndexStorage[0]; }
 private:
 	/** Storage for indices. */
 	TResourceArray<uint8,INDEXBUFFER_ALIGNMENT> IndexStorage;

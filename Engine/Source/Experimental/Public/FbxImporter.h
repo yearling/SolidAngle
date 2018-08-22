@@ -488,7 +488,7 @@ private:
 
 struct ImportResultPackage
 {
-	YSkeletalMesh* SkeletalMesh;
+	YSkeletalMesh* SkeletalMesh=nullptr;
 	TArray<UAnimSequence*> AnimSequence;
 	TArray<UStaticMesh*> StaticMeshes;
 };

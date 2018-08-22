@@ -16,11 +16,9 @@ cbuffer ChangePerMesh
 struct VS_INPUT
 {
 	float4    vPosition		: ATTRIBUTE;
-	float4     TangentX	: ATTRIBUTE1;
-	float4     TangentY	: ATTRIBUTE1;
-	float4     TangentZ  : ATTRIBUTE2;
-	float2	  TexCoords[4]	: ATTRIBUTE4;
-	float4    VertexColor	: ATTRIBUTE8;
+    half3     TangentX : ATTRIBUTE1;
+    half4     TangentZ : ATTRIBUTE2;
+    half2     TexCoords[2] : ATTRIBUTE3;
 };
 struct VS_OUTPUT
 {
@@ -37,7 +35,6 @@ VS_OUTPUT VSMain(VS_INPUT Input)
 	Output.vPosition = mul(Input.vPosition, matWVP);
 	Output.vNormal = normalize(mul(Input.TangentZ.xyz, (float3x3) g_world));
 	Output.vTexcoord = Input.TexCoords[0];
-	Output.vColor = Input.VertexColor;
 	return Output;
 }
 

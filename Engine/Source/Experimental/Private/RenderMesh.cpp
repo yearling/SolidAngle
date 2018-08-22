@@ -64,6 +64,12 @@ void RenderScene::Render(TSharedRef<FRenderInfo> RenderInfo)
 	{
 		RenderHelper->Render(RenderInfo);
 	}
+
+	for (TUniquePtr<FStaticMeshRenderHelper>& RenderHelper : StaticMeshRenderHeplers)
+	{
+		RenderHelper->Render(RenderInfo);
+	}
+
 	GCanvas->Render(RenderInfo);
 	ScreenLayout->BeginText();
 	ScreenLayout->DrawTextLine(FString::Printf(TEXT("FPS: %f"), RenderInfo->FPS));
@@ -77,9 +83,9 @@ void RenderScene::AllocResource()
 		RenderHelper->Init();
 	}
 
-	for (UStaticMesh* pStaticMesh : StaticMeshes)
+	for (TUniquePtr<FStaticMeshRenderHelper>& RenderHelper : StaticMeshRenderHeplers)
 	{
-		pStaticMesh->InitResource();
+		RenderHelper->Init();
 	}
 }
 
@@ -232,6 +238,7 @@ void RenderScene::RegisterSkeletalMesh(YSkeletalMesh* pSkeletalMesh, UAnimSequen
 void RenderScene::RegisterStaticMesh(UStaticMesh* pStaticMesh)
 {
 	StaticMeshes.Add(pStaticMesh);
+	StaticMeshRenderHeplers.Emplace(MakeUnique<FStaticMeshRenderHelper>(pStaticMesh));
 }
 
 FSkeletalMeshRenderHelper::FSkeletalMeshRenderHelper(YSkeletalMesh* InSkeletalMesh, UAnimSequence* InAnimSequence)
@@ -473,6 +480,7 @@ void FSkeletalMeshRenderHelper::Render(TSharedRef<FRenderInfo> RenderInfo)
 
 FStaticMeshRenderHelper::FStaticMeshRenderHelper(UStaticMesh* InMesh)
 :StaticMesh(InMesh)
+,b32bitIndex(false)
 {
 
 }
@@ -493,12 +501,10 @@ void FStaticMeshRenderHelper::Init()
 	TArray<D3D11_INPUT_ELEMENT_DESC> Layout =
 	{
 		{ "ATTRIBUTE",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "ATTRIBUTE",  1, DXGI_FORMAT_R8G8B8A8_UINT,  0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "ATTRIBUTE",  2, DXGI_FORMAT_R8G8B8A8_UINT,  0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "ATTRIBUTE",  5, DXGI_FORMAT_R16G16_FLOAT,    0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "ATTRIBUTE",  6, DXGI_FORMAT_R16G16_FLOAT,    0, 40, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "ATTRIBUTE",  7, DXGI_FORMAT_R32G32_FLOAT,    0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "ATTRIBUTE",  8, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 56, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "ATTRIBUTE",  1, DXGI_FORMAT_R8G8B8A8_UINT,  1, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "ATTRIBUTE",  2, DXGI_FORMAT_R8G8B8A8_UINT,  1, 4, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "ATTRIBUTE",  3, DXGI_FORMAT_R16G16_FLOAT,    1, 8, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "ATTRIBUTE",  4, DXGI_FORMAT_R16G16_FLOAT,    1, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 	VSShader->BindInputLayout(Layout);
 	if (!VSShader->CreateShader(TEXT("..\\..\\Source\\Experimental\\Private\\StaticMesh.hlsl"), TEXT("VSMain")))
@@ -515,14 +521,67 @@ void FStaticMeshRenderHelper::Init()
 	check(MeshRenderData->LODResources.Num() >= 1);
 	FStaticMeshLODResources& Meshes=MeshRenderData->LODResources[0];
 	const uint8* pVertexBuffer = Meshes.VertexBuffer.GetRawVertexData();
+	const uint32 nVertexBufferElementCount = Meshes.VertexBuffer.GetNumVertices();
+	const uint32 nVertexBufferStride= Meshes.VertexBuffer.GetStride();
+	const uint32 nVertexBufferSize = nVertexBufferElementCount* nVertexBufferStride;
+	CreateVertexBuffer(nVertexBufferSize, pVertexBuffer, VBTangentUV);
 
-	for (int i = 0; i < Meshes.Sections.Num(); ++i)
-	{
+	const uint8* pVertexBufferPosition = Meshes.PositionVertexBuffer.GetPositionVertexBuffer();
+	const uint32 nVertexBufferPositionCount = Meshes.PositionVertexBuffer.GetNumVertices();
+	const uint32 nVertexBufferPositionStride = Meshes.PositionVertexBuffer.GetStride();
+	const uint32 nVertexBufferPositionSize = nVertexBufferPositionCount* nVertexBufferPositionStride;
+	CreateVertexBuffer(nVertexBufferPositionSize, pVertexBufferPosition, VBPosition);
 
-	}
+	FRawStaticIndexBuffer & IndexBuffer = Meshes.IndexBuffer;
+	uint32 nIndexCount = IndexBuffer.GetNumIndices();
+	FIndexArrayView IndexRawView = IndexBuffer.GetArrayView();
+	b32bitIndex = IndexBuffer.Is32Bit();
+	uint32 nIndexBufferByteCount = IndexBuffer.GetAllocatedSize();
+	const uint8* IndexBufferRawData = IndexBuffer.GetRawBuffer();
+	CreateIndexBuffer(nIndexBufferByteCount, IndexBufferRawData, IB);
+
 }
 
 void FStaticMeshRenderHelper::Render(TSharedRef<FRenderInfo> RenderInfo)
 {
+	TUniquePtr<FStaticMeshRenderData>& MeshRenderData = StaticMesh->RenderData;
+	check(MeshRenderData->LODResources.Num() >= 1);
+	FStaticMeshLODResources& Meshes = MeshRenderData->LODResources[0];
+
+	TComPtr<ID3D11DeviceContext> dc = YYUTDXManager::GetInstance().GetD3DDC();
+	float BlendColor[4] = { 1.0f,1.0f,1.0f,1.0f };
+	dc->OMSetBlendState(m_bs, BlendColor, 0xffffffff);
+	dc->RSSetState(m_rs);
+	dc->OMSetDepthStencilState(m_ds, 0);
+	UINT stridPosition = 12;
+	uint32 StridTangeUV = 16;
+	UINT offset = 0;
+	VSShader->BindResource(TEXT("g_view"), RenderInfo->RenderCameraInfo.View);
+	VSShader->BindResource(TEXT("g_projection"), RenderInfo->RenderCameraInfo.Projection);
+	VSShader->BindResource(TEXT("g_VP"), RenderInfo->RenderCameraInfo.ViewProjection);
+	VSShader->BindResource(TEXT("g_InvVP"), RenderInfo->RenderCameraInfo.ViewProjectionInv);
+	VSShader->BindResource(TEXT("g_world"), FMatrix::Identity);
+	VSShader->Update();
+
+	PSShader->BindResource(TEXT("g_lightDir"), RenderInfo->SceneInfo.MainLightDir.GetSafeNormal());
+	PSShader->Update();
+
+	dc->IASetVertexBuffers(0, 1, &(VBPosition), &stridPosition, &offset);
+	dc->IASetVertexBuffers(1, 1, &(VBTangentUV), &StridTangeUV, &offset);
+	if (b32bitIndex)
+	{
+		dc->IASetIndexBuffer(IB, DXGI_FORMAT_R32_UINT, 0);
+	}
+	else
+	{
+		dc->IASetIndexBuffer(IB, DXGI_FORMAT_R16_UINT, 0);
+	}
+	dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	for (int i = 0; i< Meshes.Sections.Num(); ++i)
+	{
+		uint32 nIndexStart = Meshes.Sections[i].FirstIndex;
+		uint32 nTriangleCount = Meshes.Sections[i].NumTriangles;
+		dc->DrawIndexed(nTriangleCount * 3, nIndexStart, 0);
+	}
 
 }

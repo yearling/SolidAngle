@@ -65,8 +65,10 @@ private:
 	UStaticMesh* StaticMesh;
 	TUniquePtr<YVSShader>		VSShader;
 	TUniquePtr<YPSShader>		PSShader;
-	TComPtr<ID3D11Buffer>       VB;
+	TComPtr<ID3D11Buffer>       VBTangentUV;
+	TComPtr<ID3D11Buffer>       VBPosition;
 	TComPtr<ID3D11Buffer>       IB;
+	bool						b32bitIndex;
 	TComPtr<ID3D11BlendState>		m_bs;
 	TComPtr<ID3D11DepthStencilState>m_ds;
 	TComPtr<ID3D11RasterizerState>	m_rs;

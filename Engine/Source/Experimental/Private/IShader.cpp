@@ -621,9 +621,10 @@ bool YVSShader::PostReflection(TComPtr<ID3DBlob> &Blob, TComPtr<ID3D11ShaderRefl
 		for (int32 j = 0; j < InputLayoutDesc.Num(); ++j)
 		{
 			if (FPlatformString::Strcmp(InputLayoutDesc[j].SemanticName, ReflectInputLayoutDesc[i].SemanticName) == 0 &&
-				InputLayoutDesc[j].SemanticIndex == ReflectInputLayoutDesc[i].SemanticIndex && 
-				InputLayoutDesc[j].InputSlot == ReflectInputLayoutDesc[i].InputSlot)
+				InputLayoutDesc[j].SemanticIndex == ReflectInputLayoutDesc[i].SemanticIndex /*&&
+				InputLayoutDesc[j].InputSlot == ReflectInputLayoutDesc[i].InputSlot*/)
 			{
+
 				bFindSameNameAndIndexDesc = true;
 				break;
 			}
