@@ -2434,7 +2434,7 @@ UnFbx::ImportResultPackage UnFbx::FFbxImporter::MainInportTest(const FString & F
 							//Asset->MarkPackageDirty();
 						}
 					}
-
+					
 					ImportedMeshCount = AllNewAssets.Num();
 					ImportResultPackage Result;
 					Result.StaticMeshes = std::move(AllNewAssets);

@@ -494,7 +494,7 @@ void FStaticMeshRenderHelper::Init()
 {
 	if (!StaticMesh)
 		return;
-	CreateRasterStateNonCull(m_rs);
+	CreateRasterState(m_rs);
 	CreateBlendState(m_bs, true, "m_BlendOpaque");
 	CreateDepthStencileState(m_ds, true, "m_DS_Test");
 	VSShader = MakeUnique<YVSShader>();

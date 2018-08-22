@@ -33,7 +33,8 @@ VS_OUTPUT VSMain(VS_INPUT Input)
 	VS_OUTPUT Output;
 	matrix matWVP = mul(g_world, g_VP);
 	Output.vPosition = mul(Input.vPosition, matWVP);
-	Output.vNormal = normalize(mul(Input.TangentZ.xyz, (float3x3) g_world));
+    half3 TangetZ = Input.TangentZ.xyz / half3(127.0f, 127.0f, 127.0f) - 1.0f;
+	Output.vNormal = normalize(mul(TangetZ, (float3x3) g_world));
 	Output.vTexcoord = Input.TexCoords[0];
 	return Output;
 }
@@ -41,6 +42,7 @@ VS_OUTPUT VSMain(VS_INPUT Input)
 float4 PSMain(VS_OUTPUT Input) :SV_Target
 {
 	float NDL = clamp(dot(Input.vNormal,g_lightDir),0.2,1);
-	return float4(NDL, NDL, NDL, 1.0f);
+    float3 Color = Input.vNormal * 0.5 + 0.5;
+    return float4(Color,1.0f);
 	//return float4(1,1,1,1);
 }

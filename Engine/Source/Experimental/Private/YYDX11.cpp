@@ -16,6 +16,20 @@ extern "C" __declspec(dllimport) LRESULT WINAPI SendMessageW( HWND   hWnd,UINT  
 DEFINE_LOG_CATEGORY(YYDX11);
 #define LOCTEXT_NAMESPACE "FbxMainImport"
 using namespace UnFbx;
+
+class TestSerialize
+{
+public:
+	TestSerialize()
+		:Version(0) {};
+	int32 Version;
+	TArray<int> Data;
+	void Serialize(FArchive& Ar)
+	{
+		Ar << Version;
+		Ar << Data;
+	}
+};
 void DX11Demo::Initial()
 {
 	FPlatformTime::InitTiming();
@@ -28,6 +42,22 @@ void DX11Demo::Initial()
 	YYUTDXManager::GetInstance().Init(m_spMainWindow->m_hWnd);
 	YYUTDXManager::GetInstance().ReSize(m_width, m_height);
 
+
+
+	/*FArchive* FileWriter = IFileManager::Get().CreateFileWriter(TEXT("YYTest.yy"));
+	if (FileWriter)
+	{
+		TestOne.Serialize(*FileWriter);
+	}
+	delete FileWriter;
+
+	FArchive* FileReader = IFileManager::Get().CreateFileReader(TEXT("YYTest.yy"));
+	TestSerialize TestNewOne;
+	if (FileReader)
+	{
+		TestNewOne.Serialize(*FileReader);
+	}
+	delete FileReader;*/
 	//YYUTTimer::GetInstance().Start();
 	XMFLOAT3 eye(40.0f, 40.0f, -40.0f);
 	XMFLOAT3 lookat(0.0f, 0.0f, 0.0f);
@@ -129,6 +159,7 @@ void DX11Demo::Initial()
 	ImportOptions->MaterialCurveSuffixes.Reset();
 	ImportOptions->MaterialCurveSuffixes.Add(TEXT("_mat"));
 	ImportOptions->MaterialBasePath = FName("None");
+#if 0
 	//FbxImporter->MainImport(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
 	ImportResultPackage ImportResult =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_StaticMesh);
 	//ImportResultPackage ImportResult =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
@@ -142,8 +173,25 @@ void DX11Demo::Initial()
 		for (UStaticMesh* pMesh : ImportResult.StaticMeshes)
 		{
 			m_pSceneRender->RegisterStaticMesh(pMesh);
+			FString NewFileName = pMesh->GetName() + "yy.yyStatic";
+			TUniquePtr<FArchive> FileWriter(IFileManager::Get().CreateFileWriter(*NewFileName));
+			if (FileWriter)
+			{
+				pMesh->Serialize(*FileWriter);
+			}
 		}
+		
+		
 	}
+#else
+	TUniquePtr<FArchive>FileReader(IFileManager::Get().CreateFileReader(TEXT("yy.yyStatic")));
+	UStaticMesh* pSerialMesh = new UStaticMesh();
+	if (FileReader)
+	{
+		pSerialMesh->Serialize(*FileReader);
+	}
+	m_pSceneRender->RegisterStaticMesh(pSerialMesh);
+#endif
 	m_pSceneRender->AllocResource();
 }
 

@@ -733,7 +733,7 @@ void FStaticMeshRenderData::Serialize(FArchive& Ar, UStaticMesh* Owner, bool bCo
 
 #endif // #if WITH_EDITORONLY_DATA
 
-	//LODResources.Serialize(Ar, Owner);
+	LODResources.Serialize(Ar, nullptr);
 
 	// Inline the distance field derived data for cooked builds
 	if (bCooked)
@@ -2525,7 +2525,7 @@ void UStaticMesh::Serialize(FArchive& Ar)
 		for (int32 i = 0; i < SourceModels.Num(); ++i)
 		{
 			FStaticMeshSourceModel& SrcModel = SourceModels[i];
-			//SrcModel.SerializeBulkData(Ar, this);
+			//SrcModel.SerializeBulkData(Ar, nullptr);
 		}
 
 		if (Ar.CustomVer(FEditorObjectVersion::GUID) < FEditorObjectVersion::UPropertryForMeshSection)
@@ -2542,7 +2542,7 @@ void UStaticMesh::Serialize(FArchive& Ar)
 
 	// Inline the derived data for cooked builds. Never include render data when
 	// counting memory as it is included by GetResourceSize.
-	if (bCooked /*&& !IsTemplate()*/ && !Ar.IsCountingMemory())
+	//if (bCooked /*&& !IsTemplate()*/ && !Ar.IsCountingMemory())
 	{	
 		if (Ar.IsLoading())
 		{

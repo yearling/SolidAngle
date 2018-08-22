@@ -537,7 +537,7 @@ void CreateRasterState(TComPtr<ID3D11RasterizerState> &RasterState, int DepthDia
 	D3D11_RASTERIZER_DESC desc;
 	desc.FillMode = D3D11_FILL_SOLID;
 
-	desc.CullMode = D3D11_CULL_NONE;
+	desc.CullMode = D3D11_CULL_BACK;
 	desc.FrontCounterClockwise = FALSE;
 	desc.DepthBias = DepthDias;
 	desc.DepthBiasClamp = DepthBiasClamp;
