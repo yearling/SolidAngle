@@ -64,13 +64,13 @@ void RenderScene::Render(TSharedRef<FRenderInfo> RenderInfo)
 	{
 		RenderHelper->Render(RenderInfo);
 	}
-
+	GCanvas->Render(RenderInfo);
 	for (TUniquePtr<FStaticMeshRenderHelper>& RenderHelper : StaticMeshRenderHeplers)
 	{
 		RenderHelper->Render(RenderInfo);
 	}
 
-	GCanvas->Render(RenderInfo);
+	
 	ScreenLayout->BeginText();
 	ScreenLayout->DrawTextLine(FString::Printf(TEXT("FPS: %f"), RenderInfo->FPS));
 }
@@ -501,8 +501,8 @@ void FStaticMeshRenderHelper::Init()
 	TArray<D3D11_INPUT_ELEMENT_DESC> Layout =
 	{
 		{ "ATTRIBUTE",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "ATTRIBUTE",  1, DXGI_FORMAT_R8G8B8A8_UINT,  1, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "ATTRIBUTE",  2, DXGI_FORMAT_R8G8B8A8_UINT,  1, 4, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "ATTRIBUTE",  1, DXGI_FORMAT_R8G8B8A8_UNORM,  1, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "ATTRIBUTE",  2, DXGI_FORMAT_R8G8B8A8_UNORM,  1, 4, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "ATTRIBUTE",  3, DXGI_FORMAT_R16G16_FLOAT,    1, 8, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "ATTRIBUTE",  4, DXGI_FORMAT_R16G16_FLOAT,    1, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
