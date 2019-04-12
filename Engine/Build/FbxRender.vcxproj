@@ -176,6 +176,7 @@
     <ClCompile Include="..\Source\Experimental\Private\SkeletalMeshImport.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\StaticMeshEdit.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\Texture.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\YFbxConverter.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YYDX11.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YYUTApplication.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YYUTCamera.cpp" />
@@ -203,6 +204,7 @@
     <ClInclude Include="..\Source\Experimental\Public\StaticMeshVertexData.h" />
     <ClInclude Include="..\Source\Experimental\Public\Texture.h" />
     <ClInclude Include="..\Source\Experimental\Public\StaticMeshImportData.h" />
+    <ClInclude Include="..\Source\Experimental\Public\YFbxConverter.h" />
     <ClInclude Include="..\Source\Experimental\Public\YYUT.h" />
     <ClInclude Include="..\Source\Experimental\Public\YYUTApplication.h" />
     <ClInclude Include="..\Source\Experimental\Public\YYUTCamera.h" />

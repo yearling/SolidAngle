@@ -514,7 +514,7 @@ void CreateRasterState(TComPtr<ID3D11RasterizerState> &RasterState, const FStrin
 	desc.FillMode = D3D11_FILL_SOLID;
 
 	desc.CullMode = D3D11_CULL_BACK;
-	desc.FrontCounterClockwise = FALSE;
+	desc.FrontCounterClockwise = TRUE;
 	desc.DepthBias = 0;
 	desc.DepthBiasClamp = 0.0f;
 	desc.SlopeScaledDepthBias = 0.0f;

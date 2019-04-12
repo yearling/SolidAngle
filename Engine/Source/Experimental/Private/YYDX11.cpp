@@ -9,6 +9,7 @@
 #include "RenderMesh.h"
 #include "FbxImporter.h"
 #include "Misc/FbxErrors.h"
+#include "YFbxConverter.h"
 using std::cout;
 using std::endl;
 
@@ -34,8 +35,8 @@ void DX11Demo::Initial()
 {
 	FPlatformTime::InitTiming();
 	YYUTApplication::Initial();
-	int default_x = 800;
-	int default_y = 800;
+	int default_x = 1920;
+	int default_y = 1080;
 	YYUTApplication::WindowCreate(default_x, default_y, _T("Render Mesh Demo"));
 	m_width = default_x;
 	m_height = default_y;
@@ -184,6 +185,8 @@ void DX11Demo::Initial()
 		
 	}
 #else
+	TUniquePtr<YFbxConverter>  FbxConverter = MakeUnique<YFbxConverter>();
+	FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbxtest/lod/max_mutiply_static_mesh_LOD/mesh.FBX"));
 	TUniquePtr<FArchive>FileReader(IFileManager::Get().CreateFileReader(TEXT("yy.yyStatic")));
 	UStaticMesh* pSerialMesh = new UStaticMesh();
 	if (FileReader)
