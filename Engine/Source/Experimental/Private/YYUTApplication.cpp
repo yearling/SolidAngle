@@ -94,10 +94,10 @@ YYUTApplication * GetApplication()
 	return YYUT_application;
 }
 //throw an exception 
-void YYUTWindow::Init(int _width, int Height, const TCHAR *window_name)
+void YYUTWindow::Init(int width, int Height, const TCHAR *window_name)
 {
 	DWORD $err_hr;
-	m_iWidth = _width;
+	m_iWidth = width;
 	m_iHeight = Height;
 	WNDCLASSEX wcex;
 	TCHAR _Regstr[] = { _T("YYWINDOW") };

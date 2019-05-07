@@ -94,16 +94,35 @@ bool YFbxConverter::Init(const FString& Filename)
 	YFbxSceneInfo SceneInfo;
 	if (GetSceneInfo(Filename, SceneInfo))
 	{
+		if (SceneInfo.SkinnedMeshNum > 0)
+		{
+			bHasSkin = true;
+		}
+		else if(SceneInfo.TotalGeometryNum>0)
+		{
+			bHasStaticMesh = true;
+		}
+		if (SceneInfo.bHasAnimation)
+		{
+			bHasAnimation = true;
+		}
 	}
 	return true;
 }
 
 
-bool YFbxConverter::Import()
+bool YFbxConverter::Import(TUniquePtr<YFBXImportOptions> ImportOptionsIn)
 {
+	ImportOptions = std::move(ImportOptionsIn);
 	if (!ConvertScene())
 		return false;
 
+	FbxNode* RootNodeToImport = nullptr;
+	RootNodeToImport = Scene->GetRootNode();
+
+	int32 InterestingNodeCount = 1;
+
+	return true;
 }
 
 bool YFbxConverter::GetSceneInfo(const FString& FileName, YFbxSceneInfo& SceneInfo)
@@ -140,6 +159,15 @@ bool YFbxConverter::GetSceneInfo(const FString& FileName, YFbxSceneInfo& SceneIn
 					if (!IsLodRoot)
 					{
 						//Skip static mesh sub LOD
+						// 如下图效果
+						//			root 
+						//			/
+						//		LOD0
+						//   /    |      \
+						//  mesh0  dummy0  mesh1
+						//         /   \
+						//      mesh2  mesh3
+						//  其中mesh3就被continue了，原因是不属于lod子节点的第一个
 						continue;
 					}
 				}
@@ -462,8 +490,20 @@ FString YFbxConverter::MakeString(const ANSICHAR* Name)
 	return FString(ANSI_TO_TCHAR(Name));
 }
 
+static void DebugRootInfo(FbxNode* pRoot)
+{
+	//UE_LOG(LogYFbxConverter, Log, TEXT("Fbx")
+	FbxVector4 vecLRL = pRoot->EvaluateLocalRotation();
+	FbxAMatrix GlobalMat=  pRoot->EvaluateGlobalTransform();
+	FbxVector4 preRotation = pRoot->GetPreRotation(FbxNode::EPivotSet::eSourcePivot);
+	FbxVector4 vecScale = pRoot->EvaluateLocalScaling();
+}
 bool YFbxConverter::ConvertScene()
 {
+	FbxNode* pRootNode = Scene->GetRootNode();
+	DebugRootInfo(pRootNode);
+	DebugRootInfo(pRootNode->GetChild(0));
+	DebugRootInfo(pRootNode->GetChild(0)->GetChild(0));
 	FbxAxisSystem SourceSetup = Scene->GetGlobalSettings().GetAxisSystem();
 	if (SourceSetup != FbxAxisSystem::eMayaYUp)
 	{
@@ -474,6 +514,10 @@ bool YFbxConverter::ConvertScene()
 		FbxRootNodeUtility::RemoveAllFbxRoots(Scene);
 		FbxAxisSystem ConvertToSystem(FbxAxisSystem::eMayaYUp);
 		ConvertToSystem.ConvertScene(Scene);
+		pRootNode = Scene->GetRootNode();
+		DebugRootInfo(pRootNode);
+		DebugRootInfo(pRootNode->GetChild(0));
+		DebugRootInfo(pRootNode->GetChild(0)->GetChild(0));
 	}
 
 	FbxSystemUnit SceneSystemUnit = Scene->GetGlobalSettings().GetSystemUnit();
@@ -488,6 +532,10 @@ bool YFbxConverter::ConvertScene()
 			UE_LOG(LogYFbxConverter, Log, TEXT("Fbx file source unit is inch"));
 		}
 		FbxSystemUnit::cm.ConvertScene(Scene);
+		pRootNode = Scene->GetRootNode();
+		DebugRootInfo(pRootNode);
+		DebugRootInfo(pRootNode->GetChild(0));
+		DebugRootInfo(pRootNode->GetChild(0)->GetChild(0));
 	}
 
 	return true;

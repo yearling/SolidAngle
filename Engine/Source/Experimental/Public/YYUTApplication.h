@@ -29,6 +29,7 @@ public:
 	virtual void Initial();
 	virtual int Run();
 	virtual void Exit();
+	virtual void SetInstance(HINSTANCE hIns) { m_hMainInstance = hIns; }
 protected:
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	virtual LRESULT MyProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) throw();

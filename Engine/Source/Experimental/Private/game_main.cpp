@@ -40,6 +40,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	//std::wcout.clear();
 	int result=0;
 	YYUTApplication* yy_app=GetApplication();
+	yy_app->SetInstance(hInstance);
 	yy_app->Initial();
 	//std::wcout << "hello" << std::endl;
 	result=yy_app->Run();

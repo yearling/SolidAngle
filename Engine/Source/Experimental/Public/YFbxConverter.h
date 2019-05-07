@@ -1,6 +1,7 @@
 #pragma once
 #include "Core.h"
 #include <fbxsdk.h>
+
 #include "fbxsdk\fileio\fbxiosettings.h"
 DECLARE_LOG_CATEGORY_EXTERN(LogYFbxConverter, Log, All);
 
@@ -75,7 +76,135 @@ struct YFbxSceneInfo
 		TotalTime = 0.0;
 	}
 };
+enum EYFBXNormalImportMethod
+{
+	YFBXNIM_ComputeNormals,
+	YFBXNIM_ImportNormals,
+	YFBXNIM_ImportNormalsAndTangents,
+	YFBXNIM_MAX,
+};
 
+namespace EYFBXNormalGenerationMethod
+{
+	enum Type
+	{
+		/** Use the legacy built in method to generate normals (faster in some cases) */
+		BuiltIn,
+		/** Use MikkTSpace to generate normals and tangents */
+		MikkTSpace,
+	};
+}
+
+enum EYFBXAnimationLengthImportType
+{
+	/** This option imports animation frames based on what is defined at the time of export */
+	YFBXALIT_ExportedTime,
+	/** Will import the range of frames that have animation. Can be useful if the exported range is longer than the actual animation in the FBX file */
+	YFBXALIT_AnimatedKey,
+	/** This will enable the Start Frame and End Frame properties for you to define the frames of animation to import */
+	YFBXALIT_SetRange,
+
+	YFBXALIT_MAX,
+};
+
+struct YFBXImportOptions
+{
+	// General options
+	bool bImportScene= false;
+	bool bImportMaterials = true;
+	bool bInvertNormalMap = false;
+	bool bImportTextures = true;
+	bool bImportLOD = true;
+	bool bUsedAsFullName = true;
+	bool bConvertScene = true;
+	bool bConvertSceneUnit = true;
+	bool bRemoveNameSpace = true;
+	FVector ImportTranslation = FVector::ZeroVector;
+	FRotator ImportRotation = FRotator::ZeroRotator;
+	float ImportUniformScale=1.0f;
+	EYFBXNormalImportMethod NormalImportMethod= YFBXNIM_ComputeNormals;
+	EYFBXNormalGenerationMethod::Type NormalGenerationMethod = EYFBXNormalGenerationMethod::MikkTSpace;
+	bool bTransformVertexToAbsolute = true;
+	bool bBakePivotInVertex= false;
+	// Static Mesh options
+	bool bCombineToSingle= true;
+	//EVertexColorImportOption::Type VertexColorImportOption;
+	FColor VertexOverrideColor=FColor::White;
+	bool bRemoveDegenerates = true;
+	bool bBuildAdjacencyBuffer =true;
+	bool bBuildReversedIndexBuffer = true;
+	bool bGenerateLightmapUVs = true;
+	bool bOneConvexHullPerUCX = true;
+	bool bAutoGenerateCollision = true;
+	FName StaticMeshLODGroup;
+	bool bImportStaticMeshLODs = true;
+	// Material import options
+	class UMaterialInterface *BaseMaterial;
+	FString BaseColorName;
+	FString BaseDiffuseTextureName;
+	FString BaseEmissiveColorName;
+	FString BaseNormalTextureName;
+	FString BaseEmmisiveTextureName;
+	FString BaseSpecularTextureName;
+	//EMaterialSearchLocation::Type MaterialSearchLocation;
+	// Skeletal Mesh options
+	bool bImportMorph =true;
+	bool bImportAnimations = true;
+	bool bUpdateSkeletonReferencePose =true;
+	bool bResample =true;
+	bool bImportRigidMesh = true;
+	bool bUseT0AsRefPose = false;
+	bool bPreserveSmoothingGroups = true;
+	bool bKeepOverlappingVertices = false;
+	bool bImportMeshesInBoneHierarchy = true;
+	bool bCreatePhysicsAsset = true;
+	//UPhysicsAsset *PhysicsAsset;
+	bool bImportSkeletalMeshLODs = true;
+	// Animation option
+	//YSkeleton* SkeletonForAnimation;
+	EYFBXAnimationLengthImportType AnimationLengthImportType;
+	struct FIntPoint AnimationRange = FIntPoint(0, 0);;
+	FString AnimationName;
+	bool	bPreserveLocalTransform = false;
+	bool	bDeleteExistingMorphTargetCurves = false;
+	bool	bImportCustomAttribute= false;
+	bool	bSetMaterialDriveParameterOnCustomAttribute = false;
+	bool	bRemoveRedundantKeys= true;
+	bool	bDoNotImportCurveWithZero = true;
+	TArray<FString> MaterialCurveSuffixes;
+
+	/** This allow to add a prefix to the material name when unreal material get created.
+	*   This prefix can just modify the name of the asset for materials (i.e. TEXT("Mat"))
+	*   This prefix can modify the package path for materials (i.e. TEXT("/Materials/")).
+	*   Or both (i.e. TEXT("/Materials/Mat"))
+	*/
+	FName MaterialBasePath;
+
+	//This data allow to override some fbx Material(point by the uint64 id) with existing unreal material asset
+	TMap<uint64, class UMaterialInterface*> OverrideMaterials;
+
+	bool ShouldImportNormals()
+	{
+		return NormalImportMethod == YFBXNIM_ImportNormals || NormalImportMethod == YFBXNIM_ImportNormalsAndTangents;
+	}
+
+	bool ShouldImportTangents()
+	{
+		return NormalImportMethod == YFBXNIM_ImportNormalsAndTangents;
+	}
+
+	void ResetForReimportAnimation()
+	{
+		bImportMorph = true;
+		AnimationLengthImportType = YFBXALIT_ExportedTime;
+	}
+
+	static void ResetOptions(YFBXImportOptions *OptionsToReset)
+	{
+		check(OptionsToReset != nullptr);
+		FMemory::Memzero(OptionsToReset, sizeof(OptionsToReset));
+	}
+};
 
 class YFbxConverter
 {
@@ -83,7 +212,7 @@ public:
 	YFbxConverter();
 	~YFbxConverter();
 	bool Init(const FString &Filename);
-	bool Import();
+	bool Import(TUniquePtr<YFBXImportOptions> ImportOptionsIn);
 protected:
 	bool GetSceneInfo(const FString& FileName, YFbxSceneInfo& SceneInfo);
 	// 找到第一个LOD Group Node
@@ -101,5 +230,9 @@ private:
 	FbxImporter* Importer = nullptr;
 	FbxScene* Scene;
 	FString FileToImport;
+	bool bHasSkin = false;
+	bool bHasStaticMesh = false;
+	bool bHasAnimation = false;
+	TUniquePtr<YFBXImportOptions> ImportOptions;
 };
 

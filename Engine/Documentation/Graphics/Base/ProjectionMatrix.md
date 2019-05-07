@@ -30,3 +30,32 @@ __可见：一个向量乘完投影矩阵后，四个向量中，第一位x投�
    1. 近平面z映射到1，远平面映射到0，代入到a+ b/Znear = 1; a+b/Zfar = 0,解方程得到 a = Znear/(Znear-Zfar), b= - Znear*Zfar/(Znear-Zfar).
 
 __注意__ :第一个参数(halfFOV)是指X方向上的
+
+
+
+
+##opengl相关矩阵
+glm::mat4 proj = glm::perspective(glm::radians(60.0f), 1.0f, 0.3f, 1000.0f);
+
+◆ perspective()
+`GLM_FUNC_DECL mat<4, 4, T, defaultp> glm::perspective	(	T 	fovy,
+T 	aspect,
+T 	near,
+T 	far 
+)`		
+Creates a matrix for a symetric perspective-view frustum based on the default handedness and default near and far clip planes definition.
+
+To change default handedness use GLM_FORCE_LEFT_HANDED. To change default near and far clip planes definition use GLM_FORCE_DEPTH_ZERO_TO_ONE.
+
+Parameters
+1.	fovy	Specifies the field of view angle in the y direction. Expressed in radians.
+2.	aspect	Specifies the aspect ratio that determines the field of view in the x direction. The aspect ratio is the ratio of x (width) to y (height).
+3.	near	Specifies the distance from the viewer to the near clipping plane (always positive).
+4.	far	Specifies the distance from the viewer to the far clipping plane (always positive).
+Template Parameters
+5.	T	A floating-point scalar type
+
+
+推导过程
+__注意__:opengl从camera space到NDC space的时候，简单的进行z值取反，来实现从右手坐标到左手坐标系的变换。就是简单的z值取反，不涉及x，y轴方向的反转
+
