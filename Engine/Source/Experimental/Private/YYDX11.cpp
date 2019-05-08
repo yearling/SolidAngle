@@ -186,10 +186,13 @@ void DX11Demo::Initial()
 	}
 #else
 	TUniquePtr<YFbxConverter>  FbxConverter = MakeUnique<YFbxConverter>();
-	FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbx/dummywithlod.FBX"));
-	TUniquePtr<YFBXImportOptions> ImportOptionsy = MakeUnique< YFBXImportOptions>();
+	//FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbx/dummywithlod.FBX"));
+	if (FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbx/onlybox/box.FBX")))
+	{
+		TUniquePtr<YFBXImportOptions> ImportOptionsy = MakeUnique< YFBXImportOptions>();
+		FbxConverter->Import(std::move(ImportOptionsy));
+	}
 	
-	FbxConverter->Import(std::move(ImportOptionsy));
 	TUniquePtr<FArchive>FileReader(IFileManager::Get().CreateFileReader(TEXT("yy.yyStatic")));
 	UStaticMesh* pSerialMesh = new UStaticMesh();
 	if (FileReader)

@@ -3,6 +3,9 @@
 #include "fbxsdk\core\fbxmanager.h"
 #include "fbxsdk\scene\geometry\fbxmesh.h"
 #include "fbxsdk\scene\fbxaxissystem.h"
+#include "FbxSkeletalMeshImportData.h"
+#include "RawMesh.h"
+#include "StaticMesh.h"
 
 
 DEFINE_LOG_CATEGORY(LogYFbxConverter);
@@ -121,6 +124,45 @@ bool YFbxConverter::Import(TUniquePtr<YFBXImportOptions> ImportOptionsIn)
 	RootNodeToImport = Scene->GetRootNode();
 
 	int32 InterestingNodeCount = 1;
+
+	bool bImportStaticMeshLODs = ImportOptions->bImportStaticMeshLODs;
+	bool bCombineMeshes = ImportOptions->bCombineToSingle;
+	bool bCombineMeshesLOD = false;
+	if (bHasStaticMesh)
+	{
+		if (bCombineMeshes && !bImportStaticMeshLODs)
+		{
+			InterestingNodeCount = 1;
+		}
+		else
+		{
+			// 如果不引用lod，则统计mesh的在lod中的数量
+			bool bCountLODGroupMeshes = !bImportStaticMeshLODs;
+			int32 NumLODGroups = 0;
+			InterestingNodeCount = GetFbxMeshCount(RootNodeToImport, bCountLODGroupMeshes, NumLODGroups);
+			if (bImportStaticMeshLODs && bCombineMeshes && NumLODGroups > 0)
+			{
+				bCombineMeshes = false;
+				bCombineMeshesLOD = true;
+			}
+		}
+		
+		if (RootNodeToImport && InterestingNodeCount > 0)
+		{
+			int32 NodeIndex = 0;
+			int32 ImportedMeshCount = 0;
+			UStaticMesh* NewStaticMesh = NULL;
+			if (bCombineMeshes)
+			{
+				TArray<FbxNode*> FbxMeshArray;
+				FillFbxMeshArray(RootNodeToImport, FbxMeshArray);
+				if (FbxMeshArray > 0)
+				{
+
+				}
+			}
+		}
+	}
 
 	return true;
 }
@@ -492,6 +534,8 @@ FString YFbxConverter::MakeString(const ANSICHAR* Name)
 
 static void DebugRootInfo(FbxNode* pRoot)
 {
+	if (!pRoot)
+		return;
 	//UE_LOG(LogYFbxConverter, Log, TEXT("Fbx")
 	FbxVector4 vecLRL = pRoot->EvaluateLocalRotation();
 	FbxAMatrix GlobalMat=  pRoot->EvaluateGlobalTransform();
@@ -539,4 +583,81 @@ bool YFbxConverter::ConvertScene()
 	}
 
 	return true;
+}
+
+int32 YFbxConverter::GetFbxMeshCount(FbxNode * Node, bool bCountLODs, int32 & OutNumLODGroups)
+{
+	bool bLODGroup = Node->GetNodeAttribute() && Node->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eLODGroup;
+	if (bLODGroup)
+	{
+		++OutNumLODGroups;
+	}
+	int32 MeshCount = 0;
+	if (!bLODGroup || bCountLODs) // 当前节点不是eLOD节点，或者不引入LOD
+	{
+		if (Node->GetMesh())
+		{
+			MeshCount = 1;
+		}
+
+		for (int32 ChildIndex = 0; ChildIndex < Node->GetChildCount(); ++ChildIndex)
+		{
+			MeshCount += GetFbxMeshCount(Node->GetChild(ChildIndex), bCountLODs, OutNumLODGroups);
+		}
+	}
+	else // 当前节点是eLODGroup 并且 要引入LOD
+	{
+		MeshCount = 1;
+	}
+	return  MeshCount;
+}
+
+void YFbxConverter::FillFbxMeshArray(FbxNode * Node, TArray<FbxNode*>& outMeshArray)
+{
+	if (Node->GetMesh())
+	{
+		if (Node->GetMesh()->GetPolygonVertexCount > 0)
+		{
+			outMeshArray.Add(Node);
+		}
+	}
+
+	for (int32 ChildIndex = 0; ChildIndex < Node->GetChildCount(); ++ChildIndex)
+	{
+		FillFbxMeshArray(Node->GetChild(ChildIndex), outMeshArray);
+	}
+}
+
+UStaticMesh * YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode*>& MeshNodeArray, const FName InName, UStaticMesh * InStaticMesh, int LODIndex, void * ExistMeshDataPtr)
+{
+	if (MeshNodeArray.Num() == 0)
+	{
+		return nullptr;
+	}
+	int32 NumVerts = 0;
+	for (int32 MeshIndex = 0; MeshIndex < MeshNodeArray.Num(); MeshIndex++)
+	{
+		FbxNode* Node = MeshNodeArray[MeshIndex];
+		FbxMesh* FbxMesh = Node->GetMesh();
+		if (FbxMesh)
+		{
+			NumVerts += FbxMesh->GetControlPointsCount();
+			if (!ImportOptions->bCombineToSingle)
+			{
+				NumVerts = 0;
+			}
+		}
+	}
+	FString MeshName = InName.ToString();
+	for (int32 MeshIndex = 0; MeshIndex < MeshNodeArray.Num(); MeshIndex++)
+	{
+		FbxNode* Node = MeshNodeArray[MeshIndex];
+		FbxMesh* FbxMesh = Node->GetMesh();
+		FbxLayer* LayerSmoothing = FbxMesh->GetLayer(0, FbxLayerElement::eSmoothing);
+		if (!LayerSmoothing && !GIsAutomationTesting)
+		{
+			UE_LOG(LogYFbxConverter, Log, TEXT("Prompt_NoSmoothgroupForFBXScene", "No smoothing group information was found in this FBX scene.  Please make sure to enable the 'Export Smoothing Groups' option in the FBX Exporter plug-in before exporting the file.  Even for tools that don't support smoothing groups, the FBX Exporter will generate appropriate smoothing data at export-time so that correct vertex normals can be inferred while importing."));
+		}
+		UStaticMesh* StaticMesh = new UStaticMesh();
+	}
 }

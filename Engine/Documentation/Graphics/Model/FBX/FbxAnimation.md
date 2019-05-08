@@ -199,3 +199,7 @@ Geometric scaling (Gs)
 5. __注意__:
 	1. 只在eSourcePivot集的变换信息才被maya,max等读取并渲染；
 	2. 变换完后，RotationActive为false
+
+# FbxAxisSystem::ConvertToSystem
+1. 如果在3ds max里做的模型，按Y-up导出时，在root节点的所有子节点（第一层）上都有pre_rotator(-90,0,0)的一个旋转，因为fbx顺时针为正方向;
+2. 如果缩放了单位，还是作用在root节点下所有的子节点（第一层）。

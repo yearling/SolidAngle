@@ -3,6 +3,8 @@
 #include <fbxsdk.h>
 
 #include "fbxsdk\fileio\fbxiosettings.h"
+class UStaticMesh;
+
 DECLARE_LOG_CATEGORY_EXTERN(LogYFbxConverter, Log, All);
 
 
@@ -224,6 +226,9 @@ protected:
 	ANSICHAR* MakeName(const ANSICHAR* name);
 	FString MakeString(const ANSICHAR* Name);
 	bool ConvertScene();
+	int32 GetFbxMeshCount(FbxNode* Node, bool bCountLODs, int32& OutNumLODGroups);
+	void FillFbxMeshArray(FbxNode* Node, TArray<FbxNode*>& outMeshArray);
+	UStaticMesh* ImportStaticMeshAsSingle( TArray<FbxNode*>& MeshNodeArray, const FName InName, UStaticMesh* InStaticMesh, int LODIndex, void *ExistMeshDataPtr);
 private:
 	FbxManager* SdkManager = nullptr;
 	FbxGeometryConverter* GeometryConverter = nullptr;
