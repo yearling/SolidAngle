@@ -654,10 +654,11 @@ UStaticMesh * YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode*>& MeshNode
 		FbxNode* Node = MeshNodeArray[MeshIndex];
 		FbxMesh* FbxMesh = Node->GetMesh();
 		FbxLayer* LayerSmoothing = FbxMesh->GetLayer(0, FbxLayerElement::eSmoothing);
-		if (!LayerSmoothing && !GIsAutomationTesting)
+		if (!LayerSmoothing)
 		{
 			UE_LOG(LogYFbxConverter, Log, TEXT("Prompt_NoSmoothgroupForFBXScene", "No smoothing group information was found in this FBX scene.  Please make sure to enable the 'Export Smoothing Groups' option in the FBX Exporter plug-in before exporting the file.  Even for tools that don't support smoothing groups, the FBX Exporter will generate appropriate smoothing data at export-time so that correct vertex normals can be inferred while importing."));
 		}
 		UStaticMesh* StaticMesh = new UStaticMesh();
+		if(StaticMesh)
 	}
 }
