@@ -156,9 +156,9 @@ bool YFbxConverter::Import(TUniquePtr<YFBXImportOptions> ImportOptionsIn)
 			{
 				TArray<FbxNode*> FbxMeshArray;
 				FillFbxMeshArray(RootNodeToImport, FbxMeshArray);
-				if (FbxMeshArray > 0)
+				if (FbxMeshArray.Num() > 0)
 				{
-
+					ImportStaticMeshAsSingle(FbxMeshArray, "StaticMesh", nullptr, 0, nullptr);
 				}
 			}
 		}
@@ -659,6 +659,48 @@ UStaticMesh * YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode*>& MeshNode
 			UE_LOG(LogYFbxConverter, Log, TEXT("Prompt_NoSmoothgroupForFBXScene", "No smoothing group information was found in this FBX scene.  Please make sure to enable the 'Export Smoothing Groups' option in the FBX Exporter plug-in before exporting the file.  Even for tools that don't support smoothing groups, the FBX Exporter will generate appropriate smoothing data at export-time so that correct vertex normals can be inferred while importing."));
 		}
 		UStaticMesh* StaticMesh = new UStaticMesh();
-		if(StaticMesh)
+		if (StaticMesh->SourceModels.Num() < LODIndex + 1)
+		{
+			new(StaticMesh->SourceModels) FStaticMeshSourceModel();
+			if (StaticMesh->SourceModels.Num() < LODIndex + 1)
+			{
+				//有可能进来的lod顺序不对
+				LODIndex = StaticMesh->SourceModels.Num() - 1;
+			}
+		}
+		FStaticMeshSourceModel& SrcModel = StaticMesh->SourceModels[LODIndex];
+		StaticMesh->LightingGuid = FGuid::NewGuid();
+		StaticMesh->LightMapResolution = 64;
+		StaticMesh->LightMapCoordinateIndex = 1;
+		FRawMesh NewRawMesh;
+		SrcModel.RawMeshBulkData->LoadRawMesh(NewRawMesh);
+		TArray< YFbxMaterial> MeshMaterials;
+		for (int32 MeshIndex = 0; MeshIndex < MeshNodeArray.Num(); ++MeshIndex)
+		{
+			FbxNode* Node = MeshNodeArray[MeshIndex];
+			if (Node->GetMesh())
+			{
+				if (BuildStaticMeshFromGeometry(Node, StaticMesh, MeshMaterials,LODIndex,NewRawMesh,ImportOptions->VertexColorImportOption,ImportOptions->VertexOverrideColor))
+				{
+
+				}
+			}
+		}
 	}
+}
+
+bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode * Node, UStaticMesh * StaticMesh, TArray<YFbxMaterial>& MeshMaterials, int32 LODIndex, FRawMesh & RawMesh, EYVertexColorImportOption::Type VertexColorImportOption, const FColor & VertexOverrideColor)
+{
+	check(StaticMesh->SourceModels.IsValidIndex(LODIndex));
+	FbxMesh* Mesh = Node->GetMesh;
+	FStaticMeshSourceModel& SrcModel = StaticMesh->SourceModels[LODIndex];
+	Mesh->RemoveBadPolygons();
+
+	FbxLayer* BaseLayer = Mesh->GetLayer(0);
+	if (BaseLayer == nullptr)
+	{
+		UE_LOG(LogYFbxConverter,Error, TEXT("There is no geometry information in mesh %s"), Mesh->GetName());
+		return false;
+	}
+	return false;
 }

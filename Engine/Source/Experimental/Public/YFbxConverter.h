@@ -109,6 +109,19 @@ enum EYFBXAnimationLengthImportType
 	YFBXALIT_MAX,
 };
 
+namespace EYVertexColorImportOption
+{
+	enum Type
+	{
+		/** Import the static mesh using the vertex colors from the FBX file. */
+		Replace,
+		/** Ignore vertex colors from the FBX file, and keep the existing mesh vertex colors. */
+		Ignore,
+		/** Override all vertex colors with the specified color. */
+		Override
+	};
+}
+
 struct YFBXImportOptions
 {
 	// General options
@@ -130,7 +143,7 @@ struct YFBXImportOptions
 	bool bBakePivotInVertex= false;
 	// Static Mesh options
 	bool bCombineToSingle= true;
-	//EVertexColorImportOption::Type VertexColorImportOption;
+	EYVertexColorImportOption::Type VertexColorImportOption;
 	FColor VertexOverrideColor=FColor::White;
 	bool bRemoveDegenerates = true;
 	bool bBuildAdjacencyBuffer =true;
@@ -229,6 +242,16 @@ protected:
 	int32 GetFbxMeshCount(FbxNode* Node, bool bCountLODs, int32& OutNumLODGroups);
 	void FillFbxMeshArray(FbxNode* Node, TArray<FbxNode*>& outMeshArray);
 	UStaticMesh* ImportStaticMeshAsSingle( TArray<FbxNode*>& MeshNodeArray, const FName InName, UStaticMesh* InStaticMesh, int LODIndex, void *ExistMeshDataPtr);
+	struct YFbxMaterial
+	{
+		FbxSurfaceMaterial* FbxMaterial;
+		UMaterialInterface* Material;
+
+		FString GetName() const { return FbxMaterial ? ANSI_TO_TCHAR(FbxMaterial->GetName()) : TEXT("None"); }
+	};
+
+	bool BuildStaticMeshFromGeometry(FbxNode* Node, UStaticMesh* StaticMesh, TArray<YFbxMaterial>& MeshMaterials, int32 LODIndex, FRawMesh& RawMesh,
+		EYVertexColorImportOption::Type VertexColorImportOption, const FColor& VertexOverrideColor);
 private:
 	FbxManager* SdkManager = nullptr;
 	FbxGeometryConverter* GeometryConverter = nullptr;
