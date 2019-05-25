@@ -3,6 +3,7 @@
 #include "fbxsdk\core\fbxmanager.h"
 #include "fbxsdk\scene\geometry\fbxmesh.h"
 #include "fbxsdk\scene\fbxaxissystem.h"
+#include "fbxsdk\scene\geometry\fbxlayer.h"
 #include "FbxSkeletalMeshImportData.h"
 #include "RawMesh.h"
 #include "StaticMesh.h"
@@ -616,7 +617,7 @@ void YFbxConverter::FillFbxMeshArray(FbxNode * Node, TArray<FbxNode*>& outMeshAr
 {
 	if (Node->GetMesh())
 	{
-		if (Node->GetMesh()->GetPolygonVertexCount > 0)
+		if (Node->GetMesh()->GetPolygonVertexCount() > 0)
 		{
 			outMeshArray.Add(Node);
 		}
@@ -656,7 +657,7 @@ UStaticMesh * YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode*>& MeshNode
 		FbxLayer* LayerSmoothing = FbxMesh->GetLayer(0, FbxLayerElement::eSmoothing);
 		if (!LayerSmoothing)
 		{
-			UE_LOG(LogYFbxConverter, Log, TEXT("Prompt_NoSmoothgroupForFBXScene", "No smoothing group information was found in this FBX scene.  Please make sure to enable the 'Export Smoothing Groups' option in the FBX Exporter plug-in before exporting the file.  Even for tools that don't support smoothing groups, the FBX Exporter will generate appropriate smoothing data at export-time so that correct vertex normals can be inferred while importing."));
+			UE_LOG(LogYFbxConverter, Log, TEXT("Prompt_NoSmoothgroupForFBXScene , No smoothing group information was found in this FBX scene.  Please make sure to enable the 'Export Smoothing Groups' option in the FBX Exporter plug-in before exporting the file.  Even for tools that don't support smoothing groups, the FBX Exporter will generate appropriate smoothing data at export-time so that correct vertex normals can be inferred while importing."));
 		}
 		UStaticMesh* StaticMesh = new UStaticMesh();
 		if (StaticMesh->SourceModels.Num() < LODIndex + 1)
@@ -687,12 +688,130 @@ UStaticMesh * YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode*>& MeshNode
 			}
 		}
 	}
+
+	return nullptr;
 }
 
+struct YFBXUVs
+{
+	YFBXUVs(FbxMesh* Mesh)
+		:UniqueUVCount(0)
+	{
+		check(Mesh);
+		int LayerCount = Mesh->GetLayerCount();
+		if (LayerCount > 0)
+		{
+			//	store the UVs in arrays for fast access in the later looping of triangles 
+		//
+		// mapping from UVSets to Fbx LayerElementUV
+		// Fbx UVSets may be duplicated, remove the duplicated UVSets in the mapping 
+			for (int32 UVLayerIndex = 0; UVLayerIndex < LayerCount; ++UVLayerIndex)
+			{
+				FbxLayer* lLayer = Mesh->GetLayer(UVLayerIndex);
+				int UVSetCount = lLayer->GetUVSetCount();
+				if (UVSetCount)
+				{
+					FbxArray<const FbxLayerElementUV*> EleUVs = lLayer->GetUVSet();
+					for (int UVIndex = 0; UVIndex < UVSetCount; ++UVIndex)
+					{
+						FbxLayerElementUV const * ElementUV = EleUVs[UVIndex];
+						if (ElementUV)
+						{
+							const char* UVSetName = ElementUV->GetName();
+							FString LocalUVSetName = UTF8_TO_TCHAR(UVSetName);
+							if (LocalUVSetName.IsEmpty())
+							{
+								LocalUVSetName = TEXT("UVmap_") + FString::FromInt(UVLayerIndex);
+							}
+
+							UVSets.AddUnique(LocalUVSetName);
+						}
+					}
+				}
+			}
+		}
+
+
+		// If the the UV sets are named using the following format (UVChannel_X; where X ranges from 1 to 4)
+		// we will re-order them based on these names.  Any UV sets that do not follow this naming convention
+		// will be slotted into available spaces.
+
+		if (UVSets.Num())
+		{
+			for (int32 ChannelNumIndex = 0; ChannelNumIndex < 4; ++ChannelNumIndex)
+			{
+				FString ChannelName = FString::Printf(TEXT("UVChannel_%d"), ChannelNumIndex + 1);
+				int32 SetIndex = UVSets.Find(ChannelName);
+				if (SetIndex != INDEX_NONE && SetIndex != ChannelNumIndex)
+				{
+					//为了防止指定的channel的slot为空， 采用的方法就是先把所有的slot填满，
+					for (int32 Arrsize = UVSets.Num(); Arrsize < ChannelNumIndex + 1; ++Arrsize)
+					{
+						UVSets.Add(FString(TEXT("")));
+					}
+					UVSets.Swap(SetIndex, ChannelNumIndex);
+				}
+			}
+		}
+	}
+
+	void Phase2(FbxMesh* Mesh)
+	{
+		//	store the UVs in arrays for fast access in the later looping of triangles 
+		UniqueUVCount = UVSets.Num();
+		if (UniqueUVCount > 0)
+		{
+			LayerElementUV.AddZeroed(UniqueUVCount);
+			UVReferenceMode.AddZeroed(UniqueUVCount);
+			UVMappingMode.AddZeroed(UniqueUVCount);
+		}
+		for (int32 UVIndex = 0; UVIndex < UniqueUVCount; ++UVIndex)
+		{
+			LayerElementUV[UVIndex] = nullptr;
+			for (int32 UVLayerIndex = 0; UVLayerIndex < Mesh->GetLayerCount(); ++UVLayerIndex)
+			{
+				FbxLayer* lLayer = Mesh->GetLayer(UVLayerIndex);
+				int UVSetCount = lLayer->GetUVSetCount();
+				if (UVSetCount)
+				{
+					FbxArray<const FbxLayerElementUV*> EleUVs = lLayer->GetUVSet();
+					for (int UVIndex = 0; UVIndex < UVSetCount; ++UVIndex)
+					{
+						FbxLayerElementUV const * ElementUV = EleUVs[UVIndex];
+						if (ElementUV)
+						{
+							const char* UVSetName = ElementUV->GetName();
+							FString LocalUVSetName = UTF8_TO_TCHAR(UVSetName);
+							if (LocalUVSetName.IsEmpty())
+							{
+								LocalUVSetName = TEXT("UVmap_") + FString::FromInt(UVLayerIndex);
+							}
+
+							if (LocalUVSetName == UVSets[UVIndex])
+							{
+								LayerElementUV[UVIndex] = ElementUV;
+								UVReferenceMode[UVIndex] = ElementUV->GetReferenceMode();
+								UVMappingMode[UVIndex] = ElementUV->GetMappingMode();
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		//限制到4层
+		UniqueUVCount = FMath::Min<int32>(UniqueUVCount, MAX_MESH_TEXTURE_COORDS);
+	}
+	TArray<FString> UVSets;
+	TArray<FbxLayerElementUV const*> LayerElementUV;
+	TArray<FbxLayerElement::EReferenceMode> UVReferenceMode;
+	TArray<FbxLayerElement::EMappingMode> UVMappingMode;
+	int32 UniqueUVCount;
+};
 bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode * Node, UStaticMesh * StaticMesh, TArray<YFbxMaterial>& MeshMaterials, int32 LODIndex, FRawMesh & RawMesh, EYVertexColorImportOption::Type VertexColorImportOption, const FColor & VertexOverrideColor)
 {
 	check(StaticMesh->SourceModels.IsValidIndex(LODIndex));
-	FbxMesh* Mesh = Node->GetMesh;
+	FbxMesh* Mesh = Node->GetMesh();
 	FStaticMeshSourceModel& SrcModel = StaticMesh->SourceModels[LODIndex];
 	Mesh->RemoveBadPolygons();
 

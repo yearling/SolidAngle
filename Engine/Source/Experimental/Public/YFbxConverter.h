@@ -1,7 +1,7 @@
 #pragma once
 #include "Core.h"
 #include <fbxsdk.h>
-
+#include "RawMesh.h"
 #include "fbxsdk\fileio\fbxiosettings.h"
 class UStaticMesh;
 
