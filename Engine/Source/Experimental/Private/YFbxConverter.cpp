@@ -711,7 +711,7 @@ struct YFBXUVs
 				int UVSetCount = lLayer->GetUVSetCount();
 				if (UVSetCount)
 				{
-					FbxArray<const FbxLayerElementUV*> EleUVs = lLayer->GetUVSet();
+					FbxArray<const FbxLayerElementUV*> EleUVs = lLayer->GetUVSets();
 					for (int UVIndex = 0; UVIndex < UVSetCount; ++UVIndex)
 					{
 						FbxLayerElementUV const * ElementUV = EleUVs[UVIndex];
@@ -774,10 +774,10 @@ struct YFBXUVs
 				int UVSetCount = lLayer->GetUVSetCount();
 				if (UVSetCount)
 				{
-					FbxArray<const FbxLayerElementUV*> EleUVs = lLayer->GetUVSet();
-					for (int UVIndex = 0; UVIndex < UVSetCount; ++UVIndex)
+					FbxArray<const FbxLayerElementUV*> EleUVs = lLayer->GetUVSets();
+					for (int FbxUVIndex = 0; FbxUVIndex < UVSetCount; ++FbxUVIndex)
 					{
-						FbxLayerElementUV const * ElementUV = EleUVs[UVIndex];
+						FbxLayerElementUV const * ElementUV = EleUVs[FbxUVIndex];
 						if (ElementUV)
 						{
 							const char* UVSetName = ElementUV->GetName();
@@ -801,6 +801,34 @@ struct YFBXUVs
 		}
 		//ÏÞÖÆµ½4²ã
 		UniqueUVCount = FMath::Min<int32>(UniqueUVCount, MAX_MESH_TEXTURE_COORDS);
+	}
+
+	int32 FindLightUVIndex() const
+	{
+		for (int32 UVSetIndex = 0; UVSetIndex < UVSets.Num(); ++UVSetIndex)
+		{
+			if (UVSets[UVSetIndex] == TEXT("LightMapUV"))
+			{
+				return UVSetIndex;
+			}
+		}
+		return INDEX_NONE;
+	}
+
+	int32 ComputeUVIndex(int32 UVLayerIndex, int32 lControlPointIndex, int32 FaceCornerIndex) const
+	{
+		int32 UVMapIndex = (UVMappingMode[UVLayerIndex] == FbxLayerElement::eByControlPoint)lControlPointIndex:FaceCornerIndex;
+		int32 Ret;
+		if (UVReferenceMode[UVLayerIndex] == FbxLayerElement::eDirect)
+		{
+			Ret = UVMapIndex;
+		}
+		else
+		{
+			FbxLayerElementArrayTemplate<int>& Array = LayerElementUV[UVLayerIndex]->GetIndexArray();
+			Ret = Array.GetAt(UVMapIndex);
+		}
+		return Ret;
 	}
 	TArray<FString> UVSets;
 	TArray<FbxLayerElementUV const*> LayerElementUV;

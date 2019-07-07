@@ -44,7 +44,7 @@ public:
 
 		MaterialCurveSuffixes.Add(TEXT("_mat"));
 	}
-	static UFbxAnimSequenceImportData* UFbxAnimSequenceImportData::GetImportDataForAnimSequence(UAnimSequence* AnimSequence, UFbxAnimSequenceImportData* TemplateForCreation);
+	static UFbxAnimSequenceImportData* GetImportDataForAnimSequence(UAnimSequence* AnimSequence, UFbxAnimSequenceImportData* TemplateForCreation);
 	/** If checked, meshes nested in bone hierarchies will be imported instead of being converted to bones. */
 	bool bImportMeshesInBoneHierarchy;
 	
