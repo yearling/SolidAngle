@@ -78,7 +78,12 @@
     <ClCompile Include="..\Source\Experimental\Private\StaticMeshEdit.cpp">
       <Filter>Fbx</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\YFbxConverter.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\YFbxConverter.cpp">
+      <Filter>yconverter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YMaterial.cpp">
+      <Filter>yconverter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Experimental\Public\YYUT.h">
@@ -157,7 +162,12 @@
     <ClInclude Include="..\Source\Experimental\Public\StaticMeshResources.h">
       <Filter>Fbx</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\YFbxConverter.h" />
+    <ClInclude Include="..\Source\Experimental\Public\YFbxConverter.h">
+      <Filter>yconverter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YMaterial.h">
+      <Filter>yconverter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shader">
@@ -177,6 +187,9 @@
     </Filter>
     <Filter Include="conveter">
       <UniqueIdentifier>{66280312-bfb7-4794-aa01-f11d3d4df7da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="yconverter">
+      <UniqueIdentifier>{b0e9f654-fe05-415e-b6b7-8ad09db59088}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

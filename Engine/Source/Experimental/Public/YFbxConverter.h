@@ -3,6 +3,8 @@
 #include <fbxsdk.h>
 #include "RawMesh.h"
 #include "fbxsdk\fileio\fbxiosettings.h"
+#include "YMaterial.h"
+
 class UStaticMesh;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogYFbxConverter, Log, All);
@@ -245,13 +247,16 @@ protected:
 	struct YFbxMaterial
 	{
 		FbxSurfaceMaterial* FbxMaterial;
-		UMaterialInterface* Material;
+		YMaterialInterface* Material;
 
 		FString GetName() const { return FbxMaterial ? ANSI_TO_TCHAR(FbxMaterial->GetName()) : TEXT("None"); }
 	};
 
 	bool BuildStaticMeshFromGeometry(FbxNode* Node, UStaticMesh* StaticMesh, TArray<YFbxMaterial>& MeshMaterials, int32 LODIndex, FRawMesh& RawMesh,
 		EYVertexColorImportOption::Type VertexColorImportOption, const FColor& VertexOverrideColor);
+	int32 CreateNodeMaterials(FbxNode* FbxNode, TArray<YMaterialInterface*>& outMaterials, TArray<FString>& UVSets);
+	void CreateMaterial(FbxSurfaceMaterial& FbxMaterial, TArray<UMaterialInterface*>& OutMaterials, TArray<FString>& UVSets);
+
 private:
 	FbxManager* SdkManager = nullptr;
 	FbxGeometryConverter* GeometryConverter = nullptr;

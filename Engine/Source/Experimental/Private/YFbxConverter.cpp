@@ -817,7 +817,7 @@ struct YFBXUVs
 
 	int32 ComputeUVIndex(int32 UVLayerIndex, int32 lControlPointIndex, int32 FaceCornerIndex) const
 	{
-		int32 UVMapIndex = (UVMappingMode[UVLayerIndex] == FbxLayerElement::eByControlPoint)lControlPointIndex:FaceCornerIndex;
+		int32 UVMapIndex = (UVMappingMode[UVLayerIndex] == FbxLayerElement::eByControlPoint)?lControlPointIndex:FaceCornerIndex;
 		int32 Ret;
 		if (UVReferenceMode[UVLayerIndex] == FbxLayerElement::eDirect)
 		{
@@ -849,5 +849,75 @@ bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode * Node, UStaticMesh * St
 		UE_LOG(LogYFbxConverter,Error, TEXT("There is no geometry information in mesh %s"), Mesh->GetName());
 		return false;
 	}
+	YFBXUVs FBXUVs(Mesh);
+	int32 FBXNamedLightMapCoordinateIndex = FBXUVs.FindLightUVIndex();
+	if (FBXNamedLightMapCoordinateIndex != INDEX_NONE)
+	{
+		StaticMesh->LightMapCoordinateIndex = FBXNamedLightMapCoordinateIndex;
+	}
+
+	int32 MaterialCount = 0;
+	TArray<YMaterialInterface*> Materials;
+	if (ImportOptions->bImportMaterials)
+	{
+
+	}
 	return false;
+}
+
+int32 YFbxConverter::CreateNodeMaterials(FbxNode* FbxNode, TArray<YMaterialInterface*>& outMaterials, TArray<FString>& UVSets)
+{
+	int32 MaterialCount = FbxNode->GetMaterialCount();
+	TArray<FbxSurfaceMaterial*> UsedSurfaceMaterials;
+	FbxMesh* MeshNode = FbxNode->GetMesh();
+	TSet<int32> UsedMaterialIndexes;
+	if (MeshNode)
+	{
+		for (int32 ElementMaterialIndex = 0; ElementMaterialIndex < MeshNode->GetElementMaterialCount(); ++ElementMaterialIndex)
+		{
+			FbxGeometryElementMaterial* ElementMaterial = MeshNode->GetElementMaterial(ElementMaterialIndex);
+			switch (ElementMaterial->GetMappingMode())
+			{
+			case FbxLayerElement::eAllSame:
+			{
+				if (ElementMaterial->GetIndexArray().GetCount() > 0)
+				{
+					// todo: why not GetDirectArray()
+					UsedMaterialIndexes.Add(ElementMaterial->GetIndexArray()[0]);
+				}
+			}
+			break;
+			case FbxLayerElement::eByPolygon:
+			{
+				for (int32 MaterialIndex = 0; MaterialIndex < ElementMaterial->GetIndexArray().GetCount(); ++MaterialIndex)
+				{
+					UsedMaterialIndexes.Add(ElementMaterial->GetIndexArray()[MaterialIndex]);
+				}
+			}
+			break;
+			default:
+				break;
+			}
+		}
+	}
+
+	for (int32 MaterialIndex = 0; MaterialIndex < MaterialCount; ++MaterialIndex)
+	{
+		//Create only the material used by the mesh element material
+		if (MeshNode == nullptr || UsedMaterialIndexes.Contains(MaterialIndex))
+		{
+			FbxSurfaceMaterial* FbxMaterial = FbxNode->GetMaterial(MaterialIndex);
+			if (FbxMaterial)
+			{
+				
+			}
+		}
+	}
+}
+
+void YFbxConverter::CreateMaterial(FbxSurfaceMaterial& FbxMaterial, TArray<YMaterialInterface*>& OutMaterials, TArray<FString>& UVSets)
+{
+	FString MaterialFullName = UTF8_TO_TCHAR(MakeName(FbxMaterial.GetName()));
+	YMaterialInterface* pMaterial = new YMaterialInterface();
+	pMaterial->MaterialName = FName(*MaterialFullName);
 }
