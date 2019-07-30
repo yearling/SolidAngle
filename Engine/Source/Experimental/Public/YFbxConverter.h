@@ -255,8 +255,9 @@ protected:
 	bool BuildStaticMeshFromGeometry(FbxNode* Node, UStaticMesh* StaticMesh, TArray<YFbxMaterial>& MeshMaterials, int32 LODIndex, FRawMesh& RawMesh,
 		EYVertexColorImportOption::Type VertexColorImportOption, const FColor& VertexOverrideColor);
 	int32 CreateNodeMaterials(FbxNode* FbxNode, TArray<YMaterialInterface*>& outMaterials, TArray<FString>& UVSets);
-	void CreateMaterial(FbxSurfaceMaterial& FbxMaterial, TArray<UMaterialInterface*>& OutMaterials, TArray<FString>& UVSets);
-
+	void CreateMaterial(FbxSurfaceMaterial& FbxMaterial, TArray<YMaterialInterface*>& OutMaterials, TArray<FString>& UVSets);
+	bool CreateMaterialProperty(FbxSurfaceMaterial& FbxMaterial,YMaterialInterface* UnrealMaterial,const char* MaterialProperty,bool bSetupAsNormalMap,TArray<FString>& UVSet);
+	YTexture* ImportTexture(FbxFileTexture* FbxTexture, bool bSetupAsNormalMap);
 private:
 	FbxManager* SdkManager = nullptr;
 	FbxGeometryConverter* GeometryConverter = nullptr;

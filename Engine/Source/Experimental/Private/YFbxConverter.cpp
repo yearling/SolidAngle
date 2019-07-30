@@ -29,6 +29,7 @@ YFbxConverter::~YFbxConverter()
 bool YFbxConverter::Init(const FString& Filename)
 {
 	FileToImport = Filename;
+	FileBasePath = FPaths::GetPath(Filename);
 	Importer = FbxImporter::Create(SdkManager, "");
 	int32 SDKMajor, SDKMinor, SDKRevision;
 	FbxManager::GetFileFormatVersion(SDKMajor, SDKMinor, SDKRevision);
@@ -909,10 +910,15 @@ int32 YFbxConverter::CreateNodeMaterials(FbxNode* FbxNode, TArray<YMaterialInter
 			FbxSurfaceMaterial* FbxMaterial = FbxNode->GetMaterial(MaterialIndex);
 			if (FbxMaterial)
 			{
-				
+				CreateMaterial(*FbxMaterial, outMaterials, UVSets);
 			}
 		}
+		else
+		{
+			outMaterials.Add(nullptr);
+		}
 	}
+	return MaterialCount;
 }
 
 void YFbxConverter::CreateMaterial(FbxSurfaceMaterial& FbxMaterial, TArray<YMaterialInterface*>& OutMaterials, TArray<FString>& UVSets)
@@ -920,4 +926,139 @@ void YFbxConverter::CreateMaterial(FbxSurfaceMaterial& FbxMaterial, TArray<YMate
 	FString MaterialFullName = UTF8_TO_TCHAR(MakeName(FbxMaterial.GetName()));
 	YMaterialInterface* pMaterial = new YMaterialInterface();
 	pMaterial->MaterialName = FName(*MaterialFullName);
+	pMaterial->
+}
+
+bool YFbxConverter::CreateMaterialProperty(FbxSurfaceMaterial& FbxMaterial, YMaterialInterface* UnrealMaterial, const char* MaterialProperty, bool bSetupAsNormalMap, TArray<FString>& UVSet)
+{
+	bool bCreated = false;
+	FbxProperty FbxMaterialProperty = FbxMaterial.FindProperty(MaterialProperty);
+	if (FbxMaterialProperty.IsValid())
+	{
+		int32 UnsupportedTextureCount = FbxMaterialProperty.GetSrcObjectCount<FbxLayeredTexture>();
+		UnsupportedTextureCount += FbxMaterialProperty.GetSrcObjectCount<FbxProceduralTexture>();
+		if (UnsupportedTextureCount > 0)
+		{
+			UE_LOG(LogYFbxConverter,Warning, TEXT("Layered or procedural Textures are not supported (material %s)"), UTF8_TO_TCHAR(FbxMaterial.GetName()));
+		}
+		else
+		{
+			int32 TextureCount = FbxMaterialProperty.GetSrcObjectCount<FbxTexture>();
+			if (TextureCount > 0)
+			{
+				for (int32 TextureIndex = 0; TextureIndex < TextureCount; ++TextureIndex)
+				{
+					FbxFileTexture* FbxTexture = FbxMaterialProperty.GetSrcObject<FbxFileTexture>(TextureIndex);
+
+					YTexture* Texture = ImportTexture(FbxTexture, bSetupAsNormalMap);
+					if (Texture)
+					{
+						float ScaleU = FbxTexture->GetScaleU();
+						float ScaleV = FbxTexture->GetScaleV();
+
+						YTextureSampler tmpTextureSampler;
+						tmpTextureSampler.SamplerType = bSetupAsNormalMap ? YTextureSampleType::YTEXUTRESAMPLE_NORMAL : TextureSamplerType::SAMPLERTYPE_Color;
+						tmpTextureSampler.Texture = Texture;
+						
+						//add /find UVSet and set it to the texture
+						FbxString UVSetName = FbxTexture->UVSet.Get();
+						FString LocalUVSetName = UTF8_TO_TCHAR(UVSetName.Buffer());
+						if (LocalUVSetName.IsEmpty())
+						{
+							LocalUVSetName = TEXT("UVMap_0");
+						}
+						int SetIndex = UVSet.Find(LocalUVSetName);
+						if ((SetIndex != 0 && SetIndex != INDEX_NONE) || ScaleU != 1.0f || ScaleV != 1.0f)
+						{
+							tmpTextureSampler.UVIndex = (SetIndex >= 0) ? SetIndex : 0;
+							tmpTextureSampler.ScalingU = ScaleU;
+							tmpTextureSampler.ScalingV = ScaleV;
+						}
+						if (FCStringAnsi::Strcmp(MaterialProperty, FbxSurfaceMaterial::sDiffuse) == 0)
+						{
+							UnrealMaterial->DiffuseTexture = tmpTextureSampler;
+						}
+						else if (FCStringAnsi::Strcmp(MaterialProperty, FbxSurfaceMaterial::sEmissive) == 0)
+						{
+
+						}
+						else if (FCStringAnsi::Strcmp(MaterialProperty, FbxSurfaceMaterial::sSpecular) == 0)
+						{
+
+						}
+						else if (FCStringAnsi::Strcmp(MaterialProperty, FbxSurfaceMaterial::sNormalMap) == 0)
+						{
+							UnrealMaterial->NormalTexture = tmpTextureSampler;
+						}
+						else if (FCStringAnsi::Strcmp(MaterialProperty, FbxSurfaceMaterial::sBump) == 0)
+						{
+						}
+						else if (FCStringAnsi::Strcmp(MaterialProperty, FbxSurfaceMaterial::sTransparentColor) == 0)
+						{
+
+						}
+						else if (FCStringAnsi::Strcmp(MaterialProperty, FbxSurfaceMaterial::sTransparencyFactor) == 0)
+						{
+
+						}
+						bCreated = true;
+
+					}
+				}
+			}
+		}
+	}
+	return bCreated;
+}
+
+YTexture* YFbxConverter::ImportTexture(FbxFileTexture* FbxTexture, bool bSetupAsNormalMap)
+{
+	if (!FbxTexture)
+	{
+		return nullptr;
+	}
+
+	FString Filename1 = UTF8_TO_TCHAR(FbxTexture->GetFileName());
+	FString Extension = FPaths::GetExtension(Filename1).ToLower();
+	FString TextureName = FPaths::GetBaseFilename(Filename1);
+	YTexture* Texture = nullptr;
+	// try to open from absolute path
+	FString FileName = Filename1;
+	TArray<uint8> DataBinary;
+	if (!FFileHelper::LoadFileToArray(DataBinary, *FileName))
+	{
+		// try fbx file base path + relative path
+		FString Filename2 = FileBasePath / UTF8_TO_TCHAR(FbxTexture->GetRelativeFileName());
+		FileName = Filename2;
+		if (!FFileHelper::LoadFileToArray(DataBinary, *FileName))
+		{
+			// try fbx file base path + texture file name (no path)
+			FString Filename3 = UTF8_TO_TCHAR(FbxTexture->GetRelativeFileName());
+			FString FileOnly = FPaths::GetCleanFilename(Filename3);
+			Filename3 = FileBasePath / FileOnly;
+			Filename = Filename3;
+			if (!FFileHelper::LoadFileToArray(DataBinary, *Filename))
+			{
+				UE_LOG(LogYFbxConverter, Warning, TEXT("Unable to find TEXTure file %s. Tried:\n - %s\n - %s\n - %s"), *FileOnly, *Filename1, *Filename2, *Filename3);
+			}
+		}
+	}
+	if (DataBinary.Num() > 0)
+	{
+		UE_LOG(LogYFbxConverter, Verbose, TEXT("Loading texture file %s"), *Filename);
+		const uint8* PtrTexture = DataBinary.GetData();
+		const TCHAR* TextureType = *Extension;
+		if (bSetupAsNormalMap)
+		{
+		}
+
+		Texture = new FTexture();
+		Texture->FileName = Filename;
+	}
+	else
+	{
+		Texture = new FTexture();
+		Texture->FileName = Filename;
+	}
+	return Texture;
 }
