@@ -7,7 +7,8 @@
 #include "FbxSkeletalMeshImportData.h"
 #include "RawMesh.h"
 #include "StaticMesh.h"
-
+#include "YTexture.h"
+#include "YMaterial.h"
 
 DEFINE_LOG_CATEGORY(LogYFbxConverter);
 YFbxConverter::YFbxConverter()
@@ -861,7 +862,20 @@ bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode * Node, UStaticMesh * St
 	TArray<YMaterialInterface*> Materials;
 	if (ImportOptions->bImportMaterials)
 	{
-
+		CreateNodeMaterials(Node, Materials, FBXUVs.UVSets);
+	}
+	MaterialCount = Node->GetMaterialCount();
+	check(!ImportOptions->bImportMaterials || Materials.Num() == MaterialCount);
+	int32 MaterialIndexOffset = MeshMaterials.Num();
+	for (int32 MaterialIndex = 0; MaterialIndex < MaterialCount; ++MaterialIndex)
+	{
+		YFbxMaterial* NewMaterial = new(MeshMaterials) YFbxMaterial;
+		FbxSurfaceMaterial* FbxMaterial = Node->GetMaterial(MaterialIndex);
+		NewMaterial->FbxMaterial = FbxMaterial;
+		if (ImportOptions->bImportMaterials)
+		{
+			NewMaterial->Material = Materials[MaterialIndex];
+		}
 	}
 	return false;
 }
@@ -926,7 +940,9 @@ void YFbxConverter::CreateMaterial(FbxSurfaceMaterial& FbxMaterial, TArray<YMate
 	FString MaterialFullName = UTF8_TO_TCHAR(MakeName(FbxMaterial.GetName()));
 	YMaterialInterface* pMaterial = new YMaterialInterface();
 	pMaterial->MaterialName = FName(*MaterialFullName);
-	pMaterial->
+	CreateMaterialProperty(FbxMaterial, pMaterial, FbxSurfaceMaterial::sDiffuse, false, UVSets);
+	CreateMaterialProperty(FbxMaterial, pMaterial, FbxSurfaceMaterial::sNormalMap, true, UVSets);
+	OutMaterials.Add(pMaterial);
 }
 
 bool YFbxConverter::CreateMaterialProperty(FbxSurfaceMaterial& FbxMaterial, YMaterialInterface* UnrealMaterial, const char* MaterialProperty, bool bSetupAsNormalMap, TArray<FString>& UVSet)
@@ -957,7 +973,7 @@ bool YFbxConverter::CreateMaterialProperty(FbxSurfaceMaterial& FbxMaterial, YMat
 						float ScaleV = FbxTexture->GetScaleV();
 
 						YTextureSampler tmpTextureSampler;
-						tmpTextureSampler.SamplerType = bSetupAsNormalMap ? YTextureSampleType::YTEXUTRESAMPLE_NORMAL : TextureSamplerType::SAMPLERTYPE_Color;
+						tmpTextureSampler.SamplerType = bSetupAsNormalMap ? YTextureSampleType::YTEXUTRESAMPLE_NORMAL : YTextureSampleType::YTEXTURESAMPLE_COLOR;
 						tmpTextureSampler.Texture = Texture;
 						
 						//add /find UVSet and set it to the texture
@@ -1036,8 +1052,8 @@ YTexture* YFbxConverter::ImportTexture(FbxFileTexture* FbxTexture, bool bSetupAs
 			FString Filename3 = UTF8_TO_TCHAR(FbxTexture->GetRelativeFileName());
 			FString FileOnly = FPaths::GetCleanFilename(Filename3);
 			Filename3 = FileBasePath / FileOnly;
-			Filename = Filename3;
-			if (!FFileHelper::LoadFileToArray(DataBinary, *Filename))
+			FileName = Filename3;
+			if (!FFileHelper::LoadFileToArray(DataBinary, *FileName))
 			{
 				UE_LOG(LogYFbxConverter, Warning, TEXT("Unable to find TEXTure file %s. Tried:\n - %s\n - %s\n - %s"), *FileOnly, *Filename1, *Filename2, *Filename3);
 			}
@@ -1045,20 +1061,20 @@ YTexture* YFbxConverter::ImportTexture(FbxFileTexture* FbxTexture, bool bSetupAs
 	}
 	if (DataBinary.Num() > 0)
 	{
-		UE_LOG(LogYFbxConverter, Verbose, TEXT("Loading texture file %s"), *Filename);
+		UE_LOG(LogYFbxConverter, Verbose, TEXT("Loading texture file %s"), *FileName);
 		const uint8* PtrTexture = DataBinary.GetData();
 		const TCHAR* TextureType = *Extension;
 		if (bSetupAsNormalMap)
 		{
 		}
 
-		Texture = new FTexture();
-		Texture->FileName = Filename;
+		Texture = new YTexture();
+		Texture->FileName = FileName;
 	}
 	else
 	{
-		Texture = new FTexture();
-		Texture->FileName = Filename;
+		Texture = new YTexture();
+		Texture->FileName = FileName;
 	}
 	return Texture;
 }

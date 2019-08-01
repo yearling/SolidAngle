@@ -264,6 +264,7 @@ private:
 	FbxImporter* Importer = nullptr;
 	FbxScene* Scene;
 	FString FileToImport;
+	FString FileBasePath;
 	bool bHasSkin = false;
 	bool bHasStaticMesh = false;
 	bool bHasAnimation = false;
