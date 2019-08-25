@@ -100,7 +100,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogFbx, Log, All);
 class UStaticMesh;
 class YSkeletalMesh;
 class YMaterialInterface;
-class YRawMesh;
+struct YRawMesh;
 
 enum EFBXImportType
 {

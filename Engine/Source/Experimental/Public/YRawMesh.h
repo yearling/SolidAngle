@@ -4,7 +4,7 @@
 
 enum 
 {
-	MAX_MESH_TEXTURE_COORDS =8 
+	MAX_TEXTURE_COORDS =8 
 };
 
 /**
@@ -38,9 +38,9 @@ struct YRawMesh
 	// Normal. Array[WedgeId] = float3(x,y,z)
 	TArray<FVector> WedgeTangentZ;
 	// Texture coordinates. Array[UVId][WedgeId]=float2(u,v)
-	TArray<FVector2D> WedgeTexCoords[MAX_MESH_TEXTURE_COORDS];
+	TArray<FVector2D> WedgeTexCoords[MAX_TEXTURE_COORDS];
 	// color, Array[WedgeId] = float4(r,g,b,a)
-	TArray<FColor> WedgeColos;
+	TArray<FColor> WedgeColors;
 
 	/**
 	* Map from material index -> original material index at import time. It's

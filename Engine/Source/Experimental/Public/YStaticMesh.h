@@ -2,6 +2,7 @@
 #include "Core.h"
 
 
+
 struct YMeshSectionInfo
 {
 	//Index in to the materials array on YStaticMesh
@@ -42,13 +43,32 @@ struct YMeshSectionInfoMap
 
 };
 
+// Source model from which a renderable static mesh is built.
 struct YStaticMeshSourceModel
 {
-	
+	/** Imported raw mesh data. Optional for all but the first LOD. */
+	class YRawMeshBulkData* RawMeshBulkData;
+	/**
+	 * ScreenSize to display this LOD.
+	 * The screen size is based around the projected diameter of the bounding
+	 * sphere of the model. i.e. 0.5 means half the screen's maximum dimension.
+	 */
+	float ScreenSize;
+	YStaticMeshSourceModel();
+	~YStaticMeshSourceModel();
+	void SerializeBulkData(FArchive& Ar, UObject* Owner);
 };
 class YStaticMesh:public FRefCountedObject
 {
 public:
 	YStaticMesh();
+	/** Imported raw mesh bulk data. */
+	TArray<YStaticMeshSourceModel> SourceModels;
+	/** Map of LOD+Section index to per-section info. */
 	YMeshSectionInfoMap SectionInfoMap;
+	FBoxSphereBounds ExtendedBounds;
+	/** Unique ID for tracking/caching this mesh during distributed lighting */
+	FGuid LightingGuid;
+	int32 LightMapResolution;
+	int32 LightMapCoordinateIndex;
 };

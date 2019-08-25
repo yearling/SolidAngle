@@ -9,6 +9,7 @@
 #include "StaticMesh.h"
 #include "YTexture.h"
 #include "YMaterial.h"
+#include "YRawMesh.h"
 
 DEFINE_LOG_CATEGORY(LogYFbxConverter);
 YFbxConverter::YFbxConverter()
@@ -661,7 +662,7 @@ UStaticMesh * YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode*>& MeshNode
 		{
 			UE_LOG(LogYFbxConverter, Log, TEXT("Prompt_NoSmoothgroupForFBXScene , No smoothing group information was found in this FBX scene.  Please make sure to enable the 'Export Smoothing Groups' option in the FBX Exporter plug-in before exporting the file.  Even for tools that don't support smoothing groups, the FBX Exporter will generate appropriate smoothing data at export-time so that correct vertex normals can be inferred while importing."));
 		}
-		YStaticMesh* StaticMesh = new YStaticMesh();
+		TRefCountPtr<YStaticMesh> StaticMesh( new YStaticMesh());
 		if (StaticMesh->SourceModels.Num() < LODIndex + 1)
 		{
 			new(StaticMesh->SourceModels) FStaticMeshSourceModel();
@@ -671,11 +672,11 @@ UStaticMesh * YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode*>& MeshNode
 				LODIndex = StaticMesh->SourceModels.Num() - 1;
 			}
 		}
-		FStaticMeshSourceModel& SrcModel = StaticMesh->SourceModels[LODIndex];
+		YStaticMeshSourceModel& SrcModel = StaticMesh->SourceModels[LODIndex];
 		StaticMesh->LightingGuid = FGuid::NewGuid();
 		StaticMesh->LightMapResolution = 64;
 		StaticMesh->LightMapCoordinateIndex = 1;
-		FRawMesh NewRawMesh;
+		YRawMesh NewRawMesh;
 		SrcModel.RawMeshBulkData->LoadRawMesh(NewRawMesh);
 		TArray< YFbxMaterial> MeshMaterials;
 		for (int32 MeshIndex = 0; MeshIndex < MeshNodeArray.Num(); ++MeshIndex)
@@ -839,11 +840,11 @@ struct YFBXUVs
 	int32 UniqueUVCount;
 };
 
-bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<YStaticMesh> StaticMesh, TArray<YFbxMaterial>& MeshMaterials, int32 LODIndex, FRawMesh& RawMesh, EYVertexColorImportOption::Type VertexColorImportOption, const FColor& VertexOverrideColor)
+bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<YStaticMesh> StaticMesh, TArray<YFbxMaterial>& MeshMaterials, int32 LODIndex, YRawMesh& RawMesh, EYVertexColorImportOption::Type VertexColorImportOption, const FColor& VertexOverrideColor)
 {
 	check(StaticMesh->SourceModels.IsValidIndex(LODIndex));
 	FbxMesh* Mesh = Node->GetMesh();
-	FStaticMeshSourceModel& SrcModel = StaticMesh->SourceModels[LODIndex];
+	YStaticMeshSourceModel& SrcModel = StaticMesh->SourceModels[LODIndex];
 	Mesh->RemoveBadPolygons();
 
 	FbxLayer* BaseLayer = Mesh->GetLayer(0);
@@ -970,13 +971,114 @@ bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<YSta
 		BinormalReferenceMode = LayerElementBinormal->GetReferenceMode();
 		BinormalMappingMode = LayerElementBinormal->GetMappingMode();
 	}
+	bool bImportedCollision = true;
+	bool bEnableCollision = bImportedCollision || (/*GBuildStaticMeshCollision &&*/ LODIndex == 0 && ImportOptions->bRemoveDegenerates);
 
 	for (int32 SectionIndex = MaterialIndexOffset; SectionIndex < MaterialIndexOffset + MaterialCount; ++SectionIndex)
 	{
+		YMeshSectionInfo Info = StaticMesh->SectionInfoMap.Get(LODIndex, SectionIndex);
+		Info.bEnableCollision = bEnableCollision;
+		StaticMesh->SectionInfoMap.Set(LODIndex, SectionIndex, Info);
+	}
+	
+	FbxAMatrix TotalMatrix;
+	FbxAMatrix TotalMatrixForNormal;
+	TotalMatrix = ComputeTotalMatrix(Node);
+	TotalMatrixForNormal = TotalMatrix.Inverse();
+	TotalMatrixForNormal = TotalMatrixForNormal.Transpose();
 
+	int32 TriangleCount = Mesh->GetPolygonCount();
+	if (TriangleCount == 0)
+	{
+		UE_LOG(LogYFbxConverter, Error, TEXT("No Triangle were foudn on mesh %s "), UTF8_TO_TCHAR(Mesh->GetName()));
+		return false;
 	}
 
+	int32 VertexCount = Mesh->GetControlPointsCount();
+	int32 WedgeCount = TriangleCount * 3;
+	bool OddNegtiveScale = IsOddNegativeScale(TotalMatrix);
 	
+	int32 VertexOffset = RawMesh.VertexPositions.Num();
+	int32 WedgeOffset = RawMesh.WedgeIndices.Num();
+	int32 TriangleOffset = RawMesh.FaceMaterialIndices.Num();
+	int32 MaxMaterialIndex = 0;
+
+	// Reserve space for attributes.
+	RawMesh.FaceMaterialIndices.AddZeroed(TriangleCount);
+	RawMesh.FaceSmoothingMasks.AddZeroed(TriangleCount);
+	RawMesh.WedgeIndices.AddZeroed(WedgeCount);
+	
+	if (bHasNTBInformation || RawMesh.WedgeTangentX.Num() > 0 || RawMesh.WedgeTangentY.Num() > 0)
+	{
+		RawMesh.WedgeTangentX.AddZeroed(WedgeOffset + WedgeCount - RawMesh.WedgeTangentX.Num());
+		RawMesh.WedgeTangentY.AddZeroed(WedgeOffset + WedgeCount - RawMesh.WedgeTangentY.Num());
+	}
+
+	if (LayerElementNormal || RawMesh.WedgeTangentZ.Num() > 0)
+	{
+		check(WedgeOffset == RawMesh.WedgeTangentZ.Num());
+		RawMesh.WedgeTangentZ.AddZeroed(WedgeOffset + WedgeCount - RawMesh.WedgeTangentZ.Num());
+	}
+
+	if (LayerElementVertexColor || VertexColorImportOption != EYVertexColorImportOption::Replace || RawMesh.WedgeColors.Num())
+	{
+		int32 NumNewColors = WedgeOffset + WedgeCount - RawMesh.WedgeColors.Num();
+		int32 FirstNewColor = RawMesh.WedgeColors.Num();
+		RawMesh.WedgeColors.AddUninitialized(NumNewColors);
+		for (int32 WedgeIndex = FirstNewColor; WedgeIndex < FirstNewColor + NumNewColors; ++WedgeIndex)
+		{
+			RawMesh.WedgeColors[WedgeIndex] = FColor::White;
+		}
+	}
+
+	// When importing multiple mesh pieces to the same static mesh.  Ensure each mesh piece has the same number of Uv's
+	int32 ExistingUVCount = 0;
+	for (int32 ExistingUVIndex = 0; ExistingUVIndex < MAX_TEXTURE_COORDS; ++ExistingUVIndex)
+	{
+		if (RawMesh.WedgeTexCoords[ExistingUVIndex].Num() > 0)
+		{
+			++ExistingUVCount;
+		}
+		else
+		{
+			break;
+		}
+	}
+	int32 UVCount = FMath::Max(FBXUVs.UniqueUVCount, ExistingUVCount);
+	// At least one UV set must exist.  
+	UVCount = FMath::Max(1, UVCount);
+	for (int32 UVLayerIndex = 0; UVLayerIndex < UVCount; ++UVLayerIndex)
+	{
+		RawMesh.WedgeTexCoords[UVLayerIndex].AddZeroed(WedgeOffset + WedgeCount - RawMesh.WedgeTexCoords[UVLayerIndex].Num());
+	}
+
+	int32 TriangleIndex;
+	TMap<int32, int32> IndexMap;
+	bool bHasNonDegenrateTriangles = false;
+	for (TriangleIndex = 0; TriangleIndex < TriangleCount; ++TriangleIndex)
+	{
+		int32 DestTriangleIndex = TriangleOffset + TriangleIndex;
+		FVector CornerPosition[3];
+		for (int32 CornerIndex = 0; CornerIndex < 3; ++CornerIndex)
+		{
+			// If there are odd number negative scale, invert the vertex order for triangles
+			int32 WedgeIndex = WedgeOffset + TriangleIndex * 3 + (OddNegtiveScale ? 2 - CornerIndex : CornerIndex);
+			// Store vertex index and position.
+			int32 ControlPointIndex = Mesh->GetPolygonVertex(TriangleIndex, CornerIndex);
+			int32* ExistingIndex = IndexMap.Find(ControlPointIndex);
+			if (ExistingIndex)
+			{
+				RawMesh.WedgeIndices[WedgeIndex] = *ExistingIndex;
+				CornerPosition[CornerIndex] = RawMesh.VertexPositions[*ExistingIndex];
+			}
+			else
+			{
+				FbxVector4 FbxPosition = Mesh->GetControlPoints()[ControlPointIndex];
+				FbxVector4 FinialPostion = TotalMatrix.MultT(FbxPosition);
+				int32 VertexIndex = RawMesh.VertexPositions.Add(Converter.)
+			}
+		}
+	}
 	return false;
 }
 
@@ -1177,4 +1279,60 @@ YTexture* YFbxConverter::ImportTexture(FbxFileTexture* FbxTexture, bool bSetupAs
 		Texture->FileName = FileName;
 	}
 	return Texture;
+}
+
+FbxAMatrix YFbxConverter::ComputeTotalMatrix(FbxNode* Node)
+{
+	FbxAMatrix Geometry;
+	FbxVector4 Translation, Rotation, Scaling;
+	Translation = Node->GetGeometricTranslation(FbxNode::eSourcePivot);
+	Rotation = Node->GetGeometricRotation(FbxNode::eSourcePivot);
+	Scaling = Node->GetGeometricScaling(FbxNode::eSourcePivot);
+	Geometry.SetT(Translation);
+	Geometry.SetR(Rotation);
+	Geometry.SetS(Scaling);
+	//For Single Matrix situation, obtain transfrom matrix from eDESTINATION_SET, which include pivot offsets and pre/post rotations.
+	FbxAMatrix& GlobalTransform = Scene->GetAnimationEvaluator()->GetNodeGlobalTransform(Node);
+	//We can bake the pivot only if we don't transform the vertex to the absolute position
+	if (!ImportOptions->bTransformVertexToAbsolute)
+	{
+		if (ImportOptions->bBakePivotInVertex)
+		{
+			FbxAMatrix PivotGeometry;
+			FbxVector4 RotationPivot = Node->GetRotationPivot(FbxNode::eSourcePivot);
+			FbxVector4 FullPivot;
+			FullPivot[0] = -RotationPivot[0];
+			FullPivot[1] = -RotationPivot[1];
+			FullPivot[2] = -RotationPivot[2];
+			PivotGeometry.SetT(FullPivot);
+			Geometry = Geometry * PivotGeometry;
+		}
+		else
+		{
+			//No Vertex transform and no bake pivot, it will be the mesh as-is.
+			Geometry.SetIdentity();
+		}
+	}
+	//We must always add the geometric transform. Only Max use the geometric transform which is an offset to the local transform of the node
+	FbxAMatrix TotalMatrix = ImportOptions->bTransformVertexToAbsolute ? GlobalTransform * Geometry : Geometry;
+	return TotalMatrix;
+}
+
+bool YFbxConverter::IsOddNegativeScale(FbxAMatrix& TotalMatrix)
+{
+	FbxVector4 Scale = TotalMatrix.GetS();
+	int32 NegtiveNum = 0;
+	if (Scale[0] < 0)
+	{
+		NegtiveNum++;
+	}
+	if (Scale[1] < 0)
+	{
+		NegtiveNum++;
+	}
+	if (Scale[2] < 0)
+	{
+		NegtiveNum++;
+	}
+	return NegtiveNum == 1 || NegtiveNum == 3;
 }

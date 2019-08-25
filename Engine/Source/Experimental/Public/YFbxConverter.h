@@ -1,10 +1,11 @@
 #pragma once
 #include "Core.h"
 #include <fbxsdk.h>
-#include "RawMesh.h"
 #include "fbxsdk\fileio\fbxiosettings.h"
 #include "YMaterial.h"
 #include "YStaticMesh.h"
+#include "YRawMesh.h"
+#include "FbxImporter.h"
 
 class UStaticMesh;
 
@@ -253,12 +254,19 @@ protected:
 		FString GetName() const { return FbxMaterial ? ANSI_TO_TCHAR(FbxMaterial->GetName()) : TEXT("None"); }
 	};
 
-	bool BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<YStaticMesh> StaticMesh, TArray<YFbxMaterial>& MeshMaterials, int32 LODIndex, FRawMesh& RawMesh,
+	bool BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<YStaticMesh> StaticMesh, TArray<YFbxMaterial>& MeshMaterials, int32 LODIndex, YRawMesh& RawMesh,
 		EYVertexColorImportOption::Type VertexColorImportOption, const FColor& VertexOverrideColor);
 	int32 CreateNodeMaterials(FbxNode* FbxNode, TArray<YMaterialInterface*>& outMaterials, TArray<FString>& UVSets);
 	void CreateMaterial(FbxSurfaceMaterial& FbxMaterial, TArray<YMaterialInterface*>& OutMaterials, TArray<FString>& UVSets);
 	bool CreateMaterialProperty(FbxSurfaceMaterial& FbxMaterial,YMaterialInterface* UnrealMaterial,const char* MaterialProperty,bool bSetupAsNormalMap,TArray<FString>& UVSet);
 	YTexture* ImportTexture(FbxFileTexture* FbxTexture, bool bSetupAsNormalMap);
+	FbxAMatrix ComputeTotalMatrix(FbxNode* Node);
+	/**
+	* Check if there are negative scale in the transform matrix and its number is odd.
+	 * @return bool True if there are negative scale and its number is 1 or 3.
+	 */
+	bool IsOddNegativeScale(FbxAMatrix& TotalMatrix);
+	FFbxDataConverter Converter;
 private:
 	FbxManager* SdkManager = nullptr;
 	FbxGeometryConverter* GeometryConverter = nullptr;

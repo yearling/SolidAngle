@@ -1,4 +1,5 @@
 #include "YStaticMesh.h"
+#include "YRawMesh.h"
 
 YStaticMesh::YStaticMesh()
 {
@@ -94,8 +95,29 @@ FArchive& operator<<(FArchive& Ar, YMeshSectionInfo& Info)
 	Ar << Info.MaterialIndex;
 	Ar << Info.bEnableCollision;
 	Ar << Info.bCastShadow;
+	return Ar;
 }
 void YMeshSectionInfoMap::Serialize(FArchive& Ar)
 {
 	Ar << Map;
+}
+
+YStaticMeshSourceModel::YStaticMeshSourceModel()
+{
+	RawMeshBulkData = new YRawMeshBulkData();
+	ScreenSize = 0.0f;
+}
+
+YStaticMeshSourceModel::~YStaticMeshSourceModel()
+{
+	if (RawMeshBulkData)
+	{
+		delete RawMeshBulkData;
+		RawMeshBulkData = NULL;
+	}
+}
+
+void YStaticMeshSourceModel::SerializeBulkData(FArchive& Ar, UObject* Owner)
+{
+	RawMeshBulkData->Serialize(Ar);
 }
