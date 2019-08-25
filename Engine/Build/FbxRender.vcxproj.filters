@@ -84,6 +84,15 @@
     <ClCompile Include="..\Source\Experimental\Private\YMaterial.cpp">
       <Filter>yconverter</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YTexture.cpp">
+      <Filter>yconverter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YStaticMesh.cpp">
+      <Filter>yconverter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YRawMesh.cpp">
+      <Filter>yconverter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Experimental\Public\YYUT.h">
@@ -166,6 +175,15 @@
       <Filter>yconverter</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\YMaterial.h">
+      <Filter>yconverter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YTexture.h">
+      <Filter>yconverter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YStaticMesh.h">
+      <Filter>yconverter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YRawMesh.h">
       <Filter>yconverter</Filter>
     </ClInclude>
   </ItemGroup>

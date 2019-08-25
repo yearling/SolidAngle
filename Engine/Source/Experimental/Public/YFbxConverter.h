@@ -4,6 +4,7 @@
 #include "RawMesh.h"
 #include "fbxsdk\fileio\fbxiosettings.h"
 #include "YMaterial.h"
+#include "YStaticMesh.h"
 
 class UStaticMesh;
 
@@ -243,7 +244,7 @@ protected:
 	bool ConvertScene();
 	int32 GetFbxMeshCount(FbxNode* Node, bool bCountLODs, int32& OutNumLODGroups);
 	void FillFbxMeshArray(FbxNode* Node, TArray<FbxNode*>& outMeshArray);
-	UStaticMesh* ImportStaticMeshAsSingle( TArray<FbxNode*>& MeshNodeArray, const FName InName, UStaticMesh* InStaticMesh, int LODIndex, void *ExistMeshDataPtr);
+	UStaticMesh* ImportStaticMeshAsSingle( TArray<FbxNode*>& MeshNodeArray, const FName InName, TRefCountPtr<YStaticMesh>InStaticMesh, int LODIndex, void *ExistMeshDataPtr);
 	struct YFbxMaterial
 	{
 		FbxSurfaceMaterial* FbxMaterial;
@@ -252,7 +253,7 @@ protected:
 		FString GetName() const { return FbxMaterial ? ANSI_TO_TCHAR(FbxMaterial->GetName()) : TEXT("None"); }
 	};
 
-	bool BuildStaticMeshFromGeometry(FbxNode* Node, UStaticMesh* StaticMesh, TArray<YFbxMaterial>& MeshMaterials, int32 LODIndex, FRawMesh& RawMesh,
+	bool BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<YStaticMesh> StaticMesh, TArray<YFbxMaterial>& MeshMaterials, int32 LODIndex, FRawMesh& RawMesh,
 		EYVertexColorImportOption::Type VertexColorImportOption, const FColor& VertexOverrideColor);
 	int32 CreateNodeMaterials(FbxNode* FbxNode, TArray<YMaterialInterface*>& outMaterials, TArray<FString>& UVSets);
 	void CreateMaterial(FbxSurfaceMaterial& FbxMaterial, TArray<YMaterialInterface*>& OutMaterials, TArray<FString>& UVSets);

@@ -389,6 +389,7 @@ bool UnFbx::FFbxImporter::BuildStaticMeshFromGeometry(FbxNode* Node, UStaticMesh
 	if (LayerElementVertexColor)
 	{
 		VertexColorReferenceMode = LayerElementVertexColor->GetReferenceMode();
+	//renew the base layer
 		VertexColorMappingMode = LayerElementVertexColor->GetMappingMode();
 	}
 

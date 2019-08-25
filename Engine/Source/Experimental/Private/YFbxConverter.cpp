@@ -631,7 +631,7 @@ void YFbxConverter::FillFbxMeshArray(FbxNode * Node, TArray<FbxNode*>& outMeshAr
 	}
 }
 
-UStaticMesh * YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode*>& MeshNodeArray, const FName InName, UStaticMesh * InStaticMesh, int LODIndex, void * ExistMeshDataPtr)
+UStaticMesh * YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode*>& MeshNodeArray, const FName InName, TRefCountPtr<YStaticMesh>InStaticMesh, int LODIndex, void * ExistMeshDataPtr)
 {
 	if (MeshNodeArray.Num() == 0)
 	{
@@ -661,7 +661,7 @@ UStaticMesh * YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode*>& MeshNode
 		{
 			UE_LOG(LogYFbxConverter, Log, TEXT("Prompt_NoSmoothgroupForFBXScene , No smoothing group information was found in this FBX scene.  Please make sure to enable the 'Export Smoothing Groups' option in the FBX Exporter plug-in before exporting the file.  Even for tools that don't support smoothing groups, the FBX Exporter will generate appropriate smoothing data at export-time so that correct vertex normals can be inferred while importing."));
 		}
-		UStaticMesh* StaticMesh = new UStaticMesh();
+		YStaticMesh* StaticMesh = new YStaticMesh();
 		if (StaticMesh->SourceModels.Num() < LODIndex + 1)
 		{
 			new(StaticMesh->SourceModels) FStaticMeshSourceModel();
@@ -838,7 +838,8 @@ struct YFBXUVs
 	TArray<FbxLayerElement::EMappingMode> UVMappingMode;
 	int32 UniqueUVCount;
 };
-bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode * Node, UStaticMesh * StaticMesh, TArray<YFbxMaterial>& MeshMaterials, int32 LODIndex, FRawMesh & RawMesh, EYVertexColorImportOption::Type VertexColorImportOption, const FColor & VertexOverrideColor)
+
+bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<YStaticMesh> StaticMesh, TArray<YFbxMaterial>& MeshMaterials, int32 LODIndex, FRawMesh& RawMesh, EYVertexColorImportOption::Type VertexColorImportOption, const FColor& VertexOverrideColor)
 {
 	check(StaticMesh->SourceModels.IsValidIndex(LODIndex));
 	FbxMesh* Mesh = Node->GetMesh();
@@ -877,6 +878,105 @@ bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode * Node, UStaticMesh * St
 			NewMaterial->Material = Materials[MaterialIndex];
 		}
 	}
+	// Must do this before triangulating the mesh due to an FBX bug in TriangulateMeshAdvance
+
+	int32 LayerSmoothingCount = Mesh->GetLayerCount(FbxLayerElement::eSmoothing);
+	for (int32 i = 0; i < LayerSmoothingCount; ++i)
+	{
+		FbxLayerElementSmoothing const* SmoothingInfo = Mesh->GetLayer(0)->GetSmoothing();
+		if (SmoothingInfo && SmoothingInfo->GetMappingMode() != FbxLayerElement::eByPolygon)
+		{
+			GeometryConverter->ComputePolygonSmoothingFromEdgeSmoothing(Mesh, i);
+		}
+	}
+	if (!Mesh->IsTriangleMesh())
+	{
+		UE_LOG(LogYFbxConverter, Warning, TEXT("Triangulating static mesh %s"), UTF8_TO_TCHAR(Node->GetName()));
+		const bool bReplace = true;
+		FbxNodeAttribute* ConvertedNode = GeometryConverter->Triangulate(Mesh, bReplace);
+		if (ConvertedNode != nullptr && ConvertedNode->GetAttributeType() == FbxNodeAttribute::eMesh)
+		{
+			Mesh = (fbxsdk::FbxMesh*)ConvertedNode;
+		}
+		else
+		{
+			UE_LOG(LogYFbxConverter, Warning, TEXT("Triangulating static mesh %s can not trianguate"), UTF8_TO_TCHAR(Node->GetName()));
+			return false;
+		}
+	}
+
+	//renew the base layer
+	BaseLayer = Mesh->GetLayer(0);
+
+	//	get the "material index" layer.  Do this AFTER the triangulation step as that may reorder material indices
+	FbxLayerElementMaterial* LayerElementMaterial = BaseLayer->GetMaterials();
+	FbxLayerElement::EMappingMode MaterialMappingModel = LayerElementMaterial ? LayerElementMaterial->GetMappingMode() : FbxLayerElement::eByPolygon;
+
+	FBXUVs.Phase2(Mesh);
+
+	//get smooth group layer 
+	bool bSmoothingAvailable = false;
+	FbxLayerElementSmoothing const* SmoothingInfo = BaseLayer->GetSmoothing();
+	FbxLayerElement::EReferenceMode SmoothingReferenceModel(FbxLayerElement::eDirect);
+	FbxLayerElement::EMappingMode SmoothingMappingModel(FbxLayerElement::eByEdge);
+	if (SmoothingInfo)
+	{
+		if (SmoothingInfo->GetMappingMode() == FbxLayerElement::eByPolygon)
+		{
+			bSmoothingAvailable = true;
+		}
+		SmoothingMappingModel = SmoothingInfo->GetMappingMode();
+		SmoothingReferenceModel = SmoothingInfo->GetReferenceMode();
+	}
+
+	// get the first vertex coloer layer 
+	FbxLayerElementVertexColor* LayerElementVertexColor = BaseLayer->GetVertexColors();
+	FbxLayerElement::EReferenceMode VertexColorReferceMode(FbxLayerElement::eDirect);
+	FbxLayerElement::EMappingMode VertexColorMappingMode(FbxLayerElement::eByControlPoint);
+	if (LayerElementVertexColor)
+	{
+		VertexColorReferceMode = LayerElementVertexColor->GetReferenceMode();
+		VertexColorMappingMode = LayerElementVertexColor->GetMappingMode();
+	}
+
+	// get the first normal layer
+	FbxLayerElementNormal* LayerElementNormal = BaseLayer->GetNormals();
+	FbxLayerElementTangent* LayerElementTangent = BaseLayer->GetTangents();
+	FbxLayerElementBinormal* LayerElementBinormal = BaseLayer->GetBinormals();
+	
+	//where there is normal, tangent and binormal data in this mesh
+	bool bHasNTBInformation = LayerElementNormal && LayerElementTangent && LayerElementBinormal;
+	
+	FbxLayerElement::EReferenceMode NormalReferenceMode(FbxLayerElement::eDirect);
+	FbxLayerElement::EMappingMode NormalMappingMode(FbxLayerElement::eByControlPoint);
+	if (LayerElementNormal)
+	{
+		NormalReferenceMode = LayerElementNormal->GetReferenceMode();
+		NormalMappingMode = LayerElementNormal->GetMappingMode();
+	}
+	
+	FbxLayerElement::EReferenceMode TangentReferenceMode(FbxLayerElement::eDirect);
+	FbxLayerElement::EMappingMode TangentMappingMode(FbxLayerElement::eByControlPoint);
+	if (LayerElementTangent)
+	{
+		TangentReferenceMode = LayerElementTangent->GetReferenceMode();
+		TangentMappingMode = LayerElementTangent->GetMappingMode();
+	}
+
+	FbxLayerElement::EReferenceMode BinormalReferenceMode(FbxLayerElement::eDirect);
+	FbxLayerElement::EMappingMode BinormalMappingMode(FbxLayerElement::eByControlPoint);
+	if (LayerElementBinormal)
+	{
+		BinormalReferenceMode = LayerElementBinormal->GetReferenceMode();
+		BinormalMappingMode = LayerElementBinormal->GetMappingMode();
+	}
+
+	for (int32 SectionIndex = MaterialIndexOffset; SectionIndex < MaterialIndexOffset + MaterialCount; ++SectionIndex)
+	{
+
+	}
+
+	
 	return false;
 }
 
