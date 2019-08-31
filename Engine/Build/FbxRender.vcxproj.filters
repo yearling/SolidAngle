@@ -93,6 +93,9 @@
     <ClCompile Include="..\Source\Experimental\Private\YRawMesh.cpp">
       <Filter>yconverter</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\FbxConvertUtilites.cpp">
+      <Filter>yconverter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Experimental\Public\YYUT.h">
@@ -184,6 +187,9 @@
       <Filter>yconverter</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\YRawMesh.h">
+      <Filter>yconverter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\FbxConvertUtilites.h">
       <Filter>yconverter</Filter>
     </ClInclude>
   </ItemGroup>

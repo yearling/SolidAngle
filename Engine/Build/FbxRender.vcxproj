@@ -162,6 +162,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Experimental\Private\Canvas.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\FbxConvertUtilites.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\FbxLibs.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\FbxMainImport.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\FbxMaterialImport.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="..\Source\Experimental\Private\VertexDef.h" />
     <ClInclude Include="..\Source\Experimental\Private\YYDX11.h" />
     <ClInclude Include="..\Source\Experimental\Public\FbxAnimSequenceImportData.h" />
+    <ClInclude Include="..\Source\Experimental\Public\FbxConvertUtilites.h" />
     <ClInclude Include="..\Source\Experimental\Public\FbxImporter.h" />
     <ClInclude Include="..\Source\Experimental\Public\FbxLibs.h" />
     <ClInclude Include="..\Source\Experimental\Public\FbxMeshImportData.h" />

@@ -10,6 +10,7 @@
 #include "YTexture.h"
 #include "YMaterial.h"
 #include "YRawMesh.h"
+#include "FbxConvertUtilites.h"
 
 DEFINE_LOG_CATEGORY(LogYFbxConverter);
 YFbxConverter::YFbxConverter()
@@ -665,7 +666,7 @@ UStaticMesh * YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode*>& MeshNode
 		TRefCountPtr<YStaticMesh> StaticMesh( new YStaticMesh());
 		if (StaticMesh->SourceModels.Num() < LODIndex + 1)
 		{
-			new(StaticMesh->SourceModels) FStaticMeshSourceModel();
+			new(StaticMesh->SourceModels) YStaticMeshSourceModel();
 			if (StaticMesh->SourceModels.Num() < LODIndex + 1)
 			{
 				//有可能进来的lod顺序不对
@@ -1075,7 +1076,7 @@ bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<YSta
 			{
 				FbxVector4 FbxPosition = Mesh->GetControlPoints()[ControlPointIndex];
 				FbxVector4 FinialPostion = TotalMatrix.MultT(FbxPosition);
-				int32 VertexIndex = RawMesh.VertexPositions.Add(Converter.)
+				int32 VertexIndex = RawMesh.VertexPositions.Add(YFbxDataConverter::ConvertPos(FinialPostion));
 			}
 		}
 	}

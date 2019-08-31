@@ -266,7 +266,6 @@ protected:
 	 * @return bool True if there are negative scale and its number is 1 or 3.
 	 */
 	bool IsOddNegativeScale(FbxAMatrix& TotalMatrix);
-	FFbxDataConverter Converter;
 private:
 	FbxManager* SdkManager = nullptr;
 	FbxGeometryConverter* GeometryConverter = nullptr;
