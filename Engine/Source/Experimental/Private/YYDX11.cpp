@@ -187,7 +187,8 @@ void DX11Demo::Initial()
 #else
 	TUniquePtr<YFbxConverter>  FbxConverter = MakeUnique<YFbxConverter>();
 	//FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbx/dummywithlod.FBX"));
-	if (FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbx/multiUVs/box2uv.FBX")))
+	//if (FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbx/multiUVs/box2uv.FBX")))
+	if (FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbx/one_mesh_with_multi_material/box.FBX")))
 	{
 		TUniquePtr<YFBXImportOptions> ImportOptionsy = MakeUnique< YFBXImportOptions>();
 		FbxConverter->Import(std::move(ImportOptionsy));

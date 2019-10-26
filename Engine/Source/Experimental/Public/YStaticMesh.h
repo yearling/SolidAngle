@@ -1,8 +1,10 @@
 #pragma once
 #include "Core.h"
+#include "YMeshBuild.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(LogYStaticMesh, Log, All);
 
-
+extern const int MAX_STATIC_MESH_LOD;
 struct YMeshSectionInfo
 {
 	//Index in to the materials array on YStaticMesh
@@ -57,15 +59,56 @@ struct YStaticMeshSourceModel
 	YStaticMeshSourceModel();
 	~YStaticMeshSourceModel();
 	void SerializeBulkData(FArchive& Ar, UObject* Owner);
+	YMeshBuildSettings BuildSettings;
 };
+
+struct YStaticMaterial
+{
+
+	YStaticMaterial()
+		: MaterialInterface(NULL)
+		, MaterialSlotName(NAME_None)
+		, ImportedMaterialSlotName(NAME_None)
+	{
+
+	}
+
+	YStaticMaterial(class YMaterialInterface* InMaterialInterface
+		, FName InMaterialSlotName = NAME_None
+		, FName InImportedMaterialSlotName = NAME_None)
+		: MaterialInterface(InMaterialInterface)
+		, MaterialSlotName(InMaterialSlotName)
+		, ImportedMaterialSlotName(InImportedMaterialSlotName)
+	{
+
+	}
+
+	friend FArchive& operator<<(FArchive& Ar, YStaticMaterial& Elem);
+
+	friend bool operator==(const YStaticMaterial& LHS, const YStaticMaterial& RHS);
+	friend bool operator==(const YStaticMaterial& LHS, const YMaterialInterface& RHS);
+	friend bool operator==(const YMaterialInterface& LHS, const YStaticMaterial& RHS);
+
+	class YMaterialInterface* MaterialInterface;
+
+	/*This name should be use by the gameplay to avoid error if the skeletal mesh Materials array topology change*/
+	FName MaterialSlotName;
+
+	/*This name should be use when we re-import a skeletal mesh so we can order the Materials array like it should be*/
+	FName ImportedMaterialSlotName;
+};
+
+
 class YStaticMesh:public FRefCountedObject
 {
 public:
 	YStaticMesh();
+	void Build();
 	/** Imported raw mesh bulk data. */
 	TArray<YStaticMeshSourceModel> SourceModels;
 	/** Map of LOD+Section index to per-section info. */
 	YMeshSectionInfoMap SectionInfoMap;
+	TArray<YStaticMaterial> StaticMaterials;
 	FBoxSphereBounds ExtendedBounds;
 	/** Unique ID for tracking/caching this mesh during distributed lighting */
 	FGuid LightingGuid;

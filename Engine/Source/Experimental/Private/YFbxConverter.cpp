@@ -13,6 +13,7 @@
 #include "FbxConvertUtilites.h"
 
 DEFINE_LOG_CATEGORY(LogYFbxConverter);
+static const int32 LARGE_MESH_MATERIAL_INDEX_THRESHOLD = 64;
 YFbxConverter::YFbxConverter()
 {
 	// Create the SdkManager
@@ -87,18 +88,18 @@ bool YFbxConverter::Init(const FString& Filename)
 	UE_LOG(LogYFbxConverter, Log, TEXT("Loading FBX Scene from %s"), *Filename);
 
 
-	 SdkManager->GetIOSettings()->SetBoolProp(IMP_FBX_MATERIAL, true);
-	 SdkManager->GetIOSettings()->SetBoolProp(IMP_FBX_TEXTURE, true);
-	 SdkManager->GetIOSettings()->SetBoolProp(IMP_FBX_LINK, true);
-	 SdkManager->GetIOSettings()->SetBoolProp(IMP_FBX_SHAPE, true);
-	 SdkManager->GetIOSettings()->SetBoolProp(IMP_FBX_GOBO, true);
-	 SdkManager->GetIOSettings()->SetBoolProp(IMP_FBX_ANIMATION, true);
-	 SdkManager->GetIOSettings()->SetBoolProp(IMP_SKINS, true);
-	 SdkManager->GetIOSettings()->SetBoolProp(IMP_DEFORMATION, true);
-	 SdkManager->GetIOSettings()->SetBoolProp(IMP_FBX_GLOBAL_SETTINGS, true);
-	 SdkManager->GetIOSettings()->SetBoolProp(IMP_TAKE, true);
+	SdkManager->GetIOSettings()->SetBoolProp(IMP_FBX_MATERIAL, true);
+	SdkManager->GetIOSettings()->SetBoolProp(IMP_FBX_TEXTURE, true);
+	SdkManager->GetIOSettings()->SetBoolProp(IMP_FBX_LINK, true);
+	SdkManager->GetIOSettings()->SetBoolProp(IMP_FBX_SHAPE, true);
+	SdkManager->GetIOSettings()->SetBoolProp(IMP_FBX_GOBO, true);
+	SdkManager->GetIOSettings()->SetBoolProp(IMP_FBX_ANIMATION, true);
+	SdkManager->GetIOSettings()->SetBoolProp(IMP_SKINS, true);
+	SdkManager->GetIOSettings()->SetBoolProp(IMP_DEFORMATION, true);
+	SdkManager->GetIOSettings()->SetBoolProp(IMP_FBX_GLOBAL_SETTINGS, true);
+	SdkManager->GetIOSettings()->SetBoolProp(IMP_TAKE, true);
 
-	 bool bStatus = Importer->Import(Scene);
+	bool bStatus = Importer->Import(Scene);
 	YFbxSceneInfo SceneInfo;
 	if (GetSceneInfo(Filename, SceneInfo))
 	{
@@ -106,7 +107,7 @@ bool YFbxConverter::Init(const FString& Filename)
 		{
 			bHasSkin = true;
 		}
-		else if(SceneInfo.TotalGeometryNum>0)
+		else if (SceneInfo.TotalGeometryNum > 0)
 		{
 			bHasStaticMesh = true;
 		}
@@ -151,7 +152,7 @@ bool YFbxConverter::Import(TUniquePtr<YFBXImportOptions> ImportOptionsIn)
 				bCombineMeshesLOD = true;
 			}
 		}
-		
+
 		if (RootNodeToImport && InterestingNodeCount > 0)
 		{
 			int32 NodeIndex = 0;
@@ -543,7 +544,7 @@ static void DebugRootInfo(FbxNode* pRoot)
 		return;
 	//UE_LOG(LogYFbxConverter, Log, TEXT("Fbx")
 	FbxVector4 vecLRL = pRoot->EvaluateLocalRotation();
-	FbxAMatrix GlobalMat=  pRoot->EvaluateGlobalTransform();
+	FbxAMatrix GlobalMat = pRoot->EvaluateGlobalTransform();
 	FbxVector4 preRotation = pRoot->GetPreRotation(FbxNode::EPivotSet::eSourcePivot);
 	FbxVector4 vecScale = pRoot->EvaluateLocalScaling();
 }
@@ -654,6 +655,7 @@ UStaticMesh * YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode*>& MeshNode
 		}
 	}
 	FString MeshName = InName.ToString();
+	bool bBuildStatus = true;
 	for (int32 MeshIndex = 0; MeshIndex < MeshNodeArray.Num(); MeshIndex++)
 	{
 		FbxNode* Node = MeshNodeArray[MeshIndex];
@@ -663,34 +665,231 @@ UStaticMesh * YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode*>& MeshNode
 		{
 			UE_LOG(LogYFbxConverter, Log, TEXT("Prompt_NoSmoothgroupForFBXScene , No smoothing group information was found in this FBX scene.  Please make sure to enable the 'Export Smoothing Groups' option in the FBX Exporter plug-in before exporting the file.  Even for tools that don't support smoothing groups, the FBX Exporter will generate appropriate smoothing data at export-time so that correct vertex normals can be inferred while importing."));
 		}
-		TRefCountPtr<YStaticMesh> StaticMesh( new YStaticMesh());
+	}
+	TRefCountPtr<YStaticMesh> StaticMesh(new YStaticMesh());
+	if (StaticMesh->SourceModels.Num() < LODIndex + 1)
+	{
+		new(StaticMesh->SourceModels) YStaticMeshSourceModel();
 		if (StaticMesh->SourceModels.Num() < LODIndex + 1)
 		{
-			new(StaticMesh->SourceModels) YStaticMeshSourceModel();
-			if (StaticMesh->SourceModels.Num() < LODIndex + 1)
+			//有可能进来的lod顺序不对
+			LODIndex = StaticMesh->SourceModels.Num() - 1;
+		}
+	}
+	YStaticMeshSourceModel& SrcModel = StaticMesh->SourceModels[LODIndex];
+	StaticMesh->LightingGuid = FGuid::NewGuid();
+	StaticMesh->LightMapResolution = 64;
+	StaticMesh->LightMapCoordinateIndex = 1;
+	YRawMesh NewRawMesh;
+	SrcModel.RawMeshBulkData->LoadRawMesh(NewRawMesh);
+	TArray< YFbxMaterial> MeshMaterials;
+
+	for (int32 MeshIndex = 0; MeshIndex < MeshNodeArray.Num(); ++MeshIndex)
+	{
+		FbxNode* Node = MeshNodeArray[MeshIndex];
+		if (Node->GetMesh())
+		{
+			if (!BuildStaticMeshFromGeometry(Node, StaticMesh, MeshMaterials, LODIndex, NewRawMesh, ImportOptions->VertexColorImportOption, ImportOptions->VertexOverrideColor))
 			{
-				//有可能进来的lod顺序不对
-				LODIndex = StaticMesh->SourceModels.Num() - 1;
+				bBuildStatus = false;
+				break;
 			}
 		}
-		YStaticMeshSourceModel& SrcModel = StaticMesh->SourceModels[LODIndex];
-		StaticMesh->LightingGuid = FGuid::NewGuid();
-		StaticMesh->LightMapResolution = 64;
-		StaticMesh->LightMapCoordinateIndex = 1;
-		YRawMesh NewRawMesh;
-		SrcModel.RawMeshBulkData->LoadRawMesh(NewRawMesh);
-		TArray< YFbxMaterial> MeshMaterials;
-		for (int32 MeshIndex = 0; MeshIndex < MeshNodeArray.Num(); ++MeshIndex)
-		{
-			FbxNode* Node = MeshNodeArray[MeshIndex];
-			if (Node->GetMesh())
-			{
-				if (BuildStaticMeshFromGeometry(Node, StaticMesh, MeshMaterials,LODIndex,NewRawMesh,ImportOptions->VertexColorImportOption,ImportOptions->VertexOverrideColor))
-				{
+	}
+	SrcModel.RawMeshBulkData->SaveRawMesh(NewRawMesh);
 
+	if (bBuildStatus)
+	{
+		UE_LOG(LogYFbxConverter, Verbose, TEXT("==Initial material list:"));
+		for (int32 MaterialIndex = 0; MaterialIndex < MeshMaterials.Num(); ++MaterialIndex)
+		{
+			UE_LOG(LogYFbxConverter, Verbose, TEXT("%d: %s"), MaterialIndex, *MeshMaterials[MaterialIndex].GetName());
+		}
+		// Compress the material array by removing any duplicates.
+		// 第一步，先压缩Fbx对应的材质，比如Mesh0和Mesh1都引用了同一个FBXMaterial，但是由于Mesh0与Mesh1位于不同的FbxNode下，其材质节点的引入是独立的，所以要合并一下
+		bool bDoRemap = false;
+		TArray<int32> MaterialMap; // odd index to new index
+		TArray<YFbxMaterial> UniqueMaterials;
+		for (int32 MaterialIndex = 0; MaterialIndex < MeshMaterials.Num(); ++MaterialIndex)
+		{
+			bool bUnique = true;
+			for (int32 OtherMaterialIndex = MaterialIndex - 1; OtherMaterialIndex >= 0; --OtherMaterialIndex)
+			{
+				if (MeshMaterials[MaterialIndex].FbxMaterial == MeshMaterials[OtherMaterialIndex].FbxMaterial)
+				{
+					int32 UniqueIndex = MaterialMap[OtherMaterialIndex];
+					MaterialMap.Add(UniqueIndex);
+					bDoRemap = true;
+					bUnique = false;
+					break;
+				}
+			}
+			if (bUnique)
+			{
+				int32 UniqueIndex = UniqueMaterials.Add(MeshMaterials[MaterialIndex]);
+				MaterialMap.Add(UniqueIndex);
+			}
+			else
+			{
+				UE_LOG(LogYFbxConverter, Verbose, TEXT(" remap %d -> %d"), MaterialIndex, MaterialMap[MaterialIndex]);
+			}
+		}
+		//UniqueMaterials 中存的是 YFbxMaterials 
+		//MaterialMap中存的是 index: 原来的材质索引（NewRawMesh.FaceMaterialIndices)中存的索引， value： 重定向的索引，UniqueMaterials[value]才是对应的YFbxMaterial
+		if (UniqueMaterials.Num() > LARGE_MESH_MATERIAL_INDEX_THRESHOLD)
+		{
+			UE_LOG(LogYFbxConverter, Warning, TEXT("StaticMesh has a large number %d materials and may render inefficently. Consider breaking up the mesh into muliple Static Mesh Asset"), UniqueMaterials.Num());
+		}
+		//The fix is required for blender file. The static mesh build have change and now required that
+		//the sections (face declaration) must be declare in the same order as the material index
+		//重排材质的顺序，按mesh引用的材质的顺序来
+		TArray<uint32> SortedMaterialIndex;
+		TArray<int32> UsedMaterials; //哪些材质被使用了，因为材质是统一引进的，也就是说FbxMaterial没有跟mesh一一对应（有些mesh没有引入，但是材质引入了），有可能有些FbxMaterial引进了但是没有被Mesh使用，也就是说这一步的时候，材质比所需要的材质多。
+		for (int32 FaceMaterialIndex = 0; FaceMaterialIndex < NewRawMesh.FaceMaterialIndices.Num(); ++FaceMaterialIndex)
+		{
+			int32 MaterialIndex = NewRawMesh.FaceMaterialIndices[FaceMaterialIndex];
+			if (!UsedMaterials.Contains(MaterialIndex))
+			{
+				int32 NewIndex = UsedMaterials.Add(MaterialIndex);
+				if (NewIndex != MaterialIndex)
+				{
+					bDoRemap = true;
 				}
 			}
 		}
+		// UsedMaterials里存的是按Face引用顺序的MaterialIndex
+		for (int32 MaterialIndex = 0; MaterialIndex < MeshMaterials.Num(); ++MaterialIndex)
+		{
+			int32 SkinIndex = 0xffff;
+			if (bDoRemap)
+			{
+				int32 UsedIndex = 0;
+				if (UsedMaterials.Find(MaterialIndex, UsedIndex))
+				{
+					SkinIndex = UsedIndex;// 如果该Face引用的material比较靠前，那么排序用的index就比较小
+				}
+			}
+			//SkinIndex 如果没有Face引用，则其值比较大，排到靠后
+			int32 RemappedIndex = MaterialMap[MaterialIndex];
+			uint32 SortedMaterialKey = ((uint32)SkinIndex << 16) | ((uint32)RemappedIndex & 0xffff);
+			if (!SortedMaterialIndex.IsValidIndex(SortedMaterialKey)) // 没看懂
+			{
+				SortedMaterialIndex.Add(SortedMaterialKey);
+			}
+		}
+
+		SortedMaterialIndex.Sort(); 
+		UE_LOG(LogYFbxConverter, Verbose, TEXT("== After sorting:"));
+		TArray<YFbxMaterial> SortedMaterials;
+		for (int32 SortedIndex = 0; SortedIndex < SortedMaterialIndex.Num(); ++SortedIndex)
+		{
+			int32 RemmappedIndex = SortedMaterialIndex[SortedIndex] & 0xffff;
+			SortedMaterials.Add(UniqueMaterials[RemmappedIndex]);
+			UE_LOG(LogYFbxConverter, Verbose, TEXT("%d: %s"), SortedIndex, *UniqueMaterials[RemmappedIndex].GetName());
+		}
+		// SortedMaterials存的是重排序后的YFbxMaterials
+		UE_LOG(LogYFbxConverter, Verbose, TEXT("== Mapping table:"));
+		// 接下来更新一个MaterialMap，原来的MaterialMap是材质索引到UniqueMaterial，要更新为材质索引到SortedMaterials
+		for (int32 MaterialIndex = 0; MaterialIndex < MaterialMap.Num(); ++MaterialIndex)
+		{
+			for (int32 SortedIndex = 0; SortedIndex < SortedMaterialIndex.Num(); ++SortedIndex)
+			{
+				int32 RemmappedIndex = SortedMaterialIndex[SortedIndex] & 0xffff;
+				if (MaterialMap[MaterialIndex] == RemmappedIndex)
+				{
+					MaterialMap[MaterialIndex] = SortedIndex;
+					UE_LOG(LogYFbxConverter, Verbose, TEXT(" sort %d -> %d "), MaterialIndex, SortedIndex);
+					break;
+				}
+			}
+		}
+		// Remap material indices in RawMesh
+		int32 MaxMaterialIndex = 0;
+		int32 FirstOpenUVChannel = 1;
+		{
+			YRawMesh LocalRawMesh;
+			SrcModel.RawMeshBulkData->LoadRawMesh(LocalRawMesh);
+			if (bDoRemap)
+			{
+				for (int32 TriIndex = 0; TriIndex < LocalRawMesh.FaceMaterialIndices.Num(); ++TriIndex)
+				{
+					LocalRawMesh.FaceMaterialIndices[TriIndex] = MaterialMap[LocalRawMesh.FaceMaterialIndices[TriIndex]];
+				}
+			}
+
+			// Compact material indices so that we won't have any sections with zero triangles.
+			LocalRawMesh.CompactMaterialIndices();
+
+			if (LocalRawMesh.MaterialIndexToImportIndex.Num() > 0)
+			{
+				TArray<YFbxMaterial> OldSortedMaterials;
+				Exchange(OldSortedMaterials, SortedMaterials);
+				SortedMaterials.Empty(LocalRawMesh.MaterialIndexToImportIndex.Num());
+				for (int32 MaterialIndex = 0; MaterialIndex < LocalRawMesh.MaterialIndexToImportIndex.Num(); ++MaterialIndex)
+				{
+					YFbxMaterial Material;
+					int32 ImportIndex = LocalRawMesh.MaterialIndexToImportIndex[MaterialIndex];
+					if (OldSortedMaterials.IsValidIndex(ImportIndex))
+					{
+						Material = OldSortedMaterials[ImportIndex];
+					}
+					SortedMaterials.Add(Material);
+				}
+			}
+
+			for (int32 TriIndex = 0; TriIndex < LocalRawMesh.FaceMaterialIndices.Num(); ++TriIndex)
+			{
+				MaxMaterialIndex = FMath::Max<int32>(MaxMaterialIndex, LocalRawMesh.FaceMaterialIndices[TriIndex]);
+			}
+			
+			for (int32 i = 0; i < MAX_MESH_TEXTURE_COORDS; i++)
+			{
+				if (LocalRawMesh.WedgeTexCoords[i].Num() == 0)
+				{
+					FirstOpenUVChannel = i;
+					break;
+				}
+			}
+			SrcModel.RawMeshBulkData->SaveRawMesh(LocalRawMesh);
+		}
+
+		// Setup per-section info and the materials array.
+		if (LODIndex == 0)
+		{
+			StaticMesh->StaticMaterials.Empty();
+		}
+
+		int32 NumMaterials = FMath::Min(SortedMaterials.Num(), MaxMaterialIndex + 1);
+		for (int32 MaterialIndex = 0; MaterialIndex < NumMaterials; ++MaterialIndex)
+		{
+			YMeshSectionInfo Info = StaticMesh->SectionInfoMap.Get(LODIndex, MaterialIndex);
+			FName MaterialFName = FName(*(SortedMaterials[MaterialIndex].GetName()));
+			int32 Index = StaticMesh->StaticMaterials.Add(YStaticMaterial(SortedMaterials[MaterialIndex].Material, MaterialFName, MaterialFName));
+			Info.MaterialIndex = Index;
+			StaticMesh->SectionInfoMap.Remove(LODIndex, MaterialIndex);
+			StaticMesh->SectionInfoMap.Set(LODIndex, MaterialIndex, Info);
+		}
+
+		YRawMesh LocalRawMesh;
+		SrcModel.RawMeshBulkData->LoadRawMesh(LocalRawMesh);
+		SrcModel.BuildSettings.bRemoveDegenerates = ImportOptions->bRemoveDegenerates;
+		SrcModel.BuildSettings.bBuildAdjacencyBuffer = ImportOptions->bBuildAdjacencyBuffer;
+		SrcModel.BuildSettings.bBuildReversedIndexBuffer = ImportOptions->bBuildReversedIndexBuffer;
+		SrcModel.BuildSettings.bRecomputeNormals = ImportOptions->NormalGenerationMethod == EYFBXNormalImportMethod::YFBXNIM_ComputeNormals;
+		SrcModel.BuildSettings.bRecomputeTangents = ImportOptions->NormalGenerationMethod != EYFBXNormalImportMethod::YFBXNIM_ImportNormalsAndTangents;
+		SrcModel.BuildSettings.bUseMikkTSpace = (ImportOptions->NormalGenerationMethod == EYFBXNormalGenerationMethod::MikkTSpace) && (!ImportOptions->ShouldImportNormals() || !ImportOptions->ShouldImportTangents());
+		if (ImportOptions->bGenerateLightmapUVs)
+		{
+			SrcModel.BuildSettings.bGenerateLightmapUVs = true;
+			SrcModel.BuildSettings.DstLightmapIndex = FirstOpenUVChannel;
+			StaticMesh->LightMapCoordinateIndex = FirstOpenUVChannel;
+		}
+		else
+		{
+			SrcModel.BuildSettings.bGenerateLightmapUVs = false;
+		}
+
+
 	}
 
 	return nullptr;
@@ -821,7 +1020,7 @@ struct YFBXUVs
 
 	int32 ComputeUVIndex(int32 UVLayerIndex, int32 lControlPointIndex, int32 FaceCornerIndex) const
 	{
-		int32 UVMapIndex = (UVMappingMode[UVLayerIndex] == FbxLayerElement::eByControlPoint)?lControlPointIndex:FaceCornerIndex;
+		int32 UVMapIndex = (UVMappingMode[UVLayerIndex] == FbxLayerElement::eByControlPoint) ? lControlPointIndex : FaceCornerIndex;
 		int32 Ret;
 		if (UVReferenceMode[UVLayerIndex] == FbxLayerElement::eDirect)
 		{
@@ -851,7 +1050,7 @@ bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<YSta
 	FbxLayer* BaseLayer = Mesh->GetLayer(0);
 	if (BaseLayer == nullptr)
 	{
-		UE_LOG(LogYFbxConverter,Error, TEXT("There is no geometry information in mesh %s"), Mesh->GetName());
+		UE_LOG(LogYFbxConverter, Error, TEXT("There is no geometry information in mesh %s"), Mesh->GetName());
 		return false;
 	}
 	YFBXUVs FBXUVs(Mesh);
@@ -945,10 +1144,10 @@ bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<YSta
 	FbxLayerElementNormal* LayerElementNormal = BaseLayer->GetNormals();
 	FbxLayerElementTangent* LayerElementTangent = BaseLayer->GetTangents();
 	FbxLayerElementBinormal* LayerElementBinormal = BaseLayer->GetBinormals();
-	
+
 	//where there is normal, tangent and binormal data in this mesh
 	bool bHasNTBInformation = LayerElementNormal && LayerElementTangent && LayerElementBinormal;
-	
+
 	FbxLayerElement::EReferenceMode NormalReferenceMode(FbxLayerElement::eDirect);
 	FbxLayerElement::EMappingMode NormalMappingMode(FbxLayerElement::eByControlPoint);
 	if (LayerElementNormal)
@@ -956,7 +1155,7 @@ bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<YSta
 		NormalReferenceMode = LayerElementNormal->GetReferenceMode();
 		NormalMappingMode = LayerElementNormal->GetMappingMode();
 	}
-	
+
 	FbxLayerElement::EReferenceMode TangentReferenceMode(FbxLayerElement::eDirect);
 	FbxLayerElement::EMappingMode TangentMappingMode(FbxLayerElement::eByControlPoint);
 	if (LayerElementTangent)
@@ -981,7 +1180,7 @@ bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<YSta
 		Info.bEnableCollision = bEnableCollision;
 		StaticMesh->SectionInfoMap.Set(LODIndex, SectionIndex, Info);
 	}
-	
+
 	FbxAMatrix TotalMatrix;
 	FbxAMatrix TotalMatrixForNormal;
 	TotalMatrix = ComputeTotalMatrix(Node);
@@ -998,7 +1197,7 @@ bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<YSta
 	int32 VertexCount = Mesh->GetControlPointsCount();
 	int32 WedgeCount = TriangleCount * 3;
 	bool OddNegtiveScale = IsOddNegativeScale(TotalMatrix);
-	
+
 	int32 VertexOffset = RawMesh.VertexPositions.Num();
 	int32 WedgeOffset = RawMesh.WedgeIndices.Num();
 	int32 TriangleOffset = RawMesh.FaceMaterialIndices.Num();
@@ -1008,7 +1207,7 @@ bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<YSta
 	RawMesh.FaceMaterialIndices.AddZeroed(TriangleCount);
 	RawMesh.FaceSmoothingMasks.AddZeroed(TriangleCount);
 	RawMesh.WedgeIndices.AddZeroed(WedgeCount);
-	
+
 	if (bHasNTBInformation || RawMesh.WedgeTangentX.Num() > 0 || RawMesh.WedgeTangentY.Num() > 0)
 	{
 		RawMesh.WedgeTangentX.AddZeroed(WedgeOffset + WedgeCount - RawMesh.WedgeTangentX.Num());
@@ -1054,7 +1253,7 @@ bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<YSta
 	}
 
 	int32 TriangleIndex;
-	TMap<int32, int32> IndexMap;
+	TMap<int32, int32> IndexMap; // 因为顶点数组没有扩展，所以要保存一份当前Mesh的每个顶点index到整个staticMesh的顶点index. 注意：没有扩展顶点
 	bool bHasNonDegenrateTriangles = false;
 	for (TriangleIndex = 0; TriangleIndex < TriangleCount; ++TriangleIndex)
 	{
@@ -1066,6 +1265,7 @@ bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<YSta
 			int32 WedgeIndex = WedgeOffset + TriangleIndex * 3 + (OddNegtiveScale ? 2 - CornerIndex : CornerIndex);
 			// Store vertex index and position.
 			int32 ControlPointIndex = Mesh->GetPolygonVertex(TriangleIndex, CornerIndex);
+			int32 TriangleCornerIndex = TriangleIndex * 3 + CornerIndex;
 			int32* ExistingIndex = IndexMap.Find(ControlPointIndex);
 			if (ExistingIndex)
 			{
@@ -1077,10 +1277,145 @@ bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<YSta
 				FbxVector4 FbxPosition = Mesh->GetControlPoints()[ControlPointIndex];
 				FbxVector4 FinialPostion = TotalMatrix.MultT(FbxPosition);
 				int32 VertexIndex = RawMesh.VertexPositions.Add(YFbxDataConverter::ConvertPos(FinialPostion));
+				RawMesh.WedgeIndices[WedgeIndex] = VertexIndex;
+				IndexMap.Add(ControlPointIndex, VertexIndex);
+				CornerPosition[CornerIndex] = RawMesh.VertexPositions[VertexIndex];
+			}
+
+			if (LayerElementNormal)
+			{
+				//normals may have different reference and mapping mode than tangents and binormals
+				int32 NormalMapIndex = (NormalMappingMode == FbxLayerElement::eByControlPoint) ? ControlPointIndex : TriangleCornerIndex;
+				int32 NormalValueIndex = (NormalReferenceMode == FbxLayerElement::eDirect) ? NormalMapIndex : LayerElementNormal->GetIndexArray().GetAt(NormalMapIndex);
+				FbxVector4 TempValue = LayerElementNormal->GetDirectArray().GetAt(NormalValueIndex);
+				TempValue = TotalMatrixForNormal.MultT(TempValue);
+				FVector TangentZ = YFbxDataConverter::ConvertDir(TempValue);
+				RawMesh.WedgeTangentZ[WedgeIndex] = TangentZ.GetSafeNormal();
+
+				//tangents and binormals share the same reference, mapping mode and index array
+				if (bHasNTBInformation)
+				{
+					int32 TangentMapIndex = (TangentMappingMode == FbxLayerElement::eByControlPoint) ? ControlPointIndex : TriangleCornerIndex;
+					int32 TangentValueIndex = (TangentReferenceMode == FbxLayerElement::eDirect) ? TangentMapIndex : LayerElementTangent->GetIndexArray().GetAt(TangentMapIndex);
+					FbxVector4 TempValue = LayerElementTangent->GetDirectArray().GetAt(TangentValueIndex);
+					TempValue = TotalMatrixForNormal.MultT(TempValue);
+					FVector TangentX = YFbxDataConverter::ConvertDir(TempValue);
+					RawMesh.WedgeTangentX[WedgeIndex] = TangentX.GetSafeNormal();
+
+					int32 BinormalMapIndex = (BinormalMappingMode == FbxLayerElement::eByControlPoint) ? ControlPointIndex : TriangleCornerIndex;
+					int32 BinormalValueIndex = (BinormalReferenceMode == FbxLayerElement::eDirect) ? BinormalMapIndex : LayerElementBinormal->GetIndexArray().GetAt(BinormalMapIndex);
+					TempValue = LayerElementBinormal->GetDirectArray().GetAt(BinormalValueIndex);
+					TempValue = TotalMatrixForNormal.MultT(TempValue);
+					FVector TangentY = -YFbxDataConverter::ConvertDir(TempValue); //LHS
+					RawMesh.WedgeTangentY[WedgeIndex] = TangentY.GetSafeNormal();
+				}
+			}
+
+			// vertex color
+			if (VertexColorImportOption == EYVertexColorImportOption::Replace)
+			{
+				if (LayerElementVertexColor)
+				{
+					int32 VertexColorMappingIndex = (VertexColorMappingMode == FbxLayerElement::eByControlPoint) ? ControlPointIndex : TriangleCornerIndex;
+					int32 VertexColorIndex = (VertexColorReferceMode == FbxLayerElement::eDirect) ? VertexColorMappingIndex : LayerElementVertexColor->GetIndexArray().GetAt(VertexColorMappingIndex);
+					FbxColor VertexColor = LayerElementVertexColor->GetDirectArray().GetAt(VertexColorIndex);
+					RawMesh.WedgeColors[WedgeIndex] = FColor(uint8(255.0f*VertexColor.mRed), uint8(255.0f*VertexColor.mGreen), uint8(255.0f*VertexColor.mBlue), uint8(255.0f*VertexColor.mAlpha));
+				}
+			}
+			else if (VertexColorImportOption == EYVertexColorImportOption::Ignore)
+			{
+				// try to match this triangles current vertex with one that existed in the previous mesh.
+				// This is a find in a tmap which uses a fast hash table lookup.
+			}
+			else
+			{
+				// set the triangle's vertex color to a constant override
+				check(VertexColorImportOption == EVertexColorImportOption::Override);
+				RawMesh.WedgeColors[WedgeIndex] = VertexOverrideColor;
 			}
 		}
+		// Check if the triangle just discovered is non-degenerate if we haven't found one yet
+		if (!bHasNonDegenrateTriangles)
+		{
+			float ComparisionThreshold = ImportOptions->bRemoveDegenerates ? THRESH_POINTS_ARE_SAME : 0.0f;
+			if (!(CornerPosition[0].Equals(CornerPosition[1], ComparisionThreshold) || CornerPosition[0].Equals(CornerPosition[2], ComparisionThreshold) || CornerPosition[1].Equals(CornerPosition[2], ComparisionThreshold)))
+			{
+				bHasNonDegenrateTriangles = true;
+			}
+		}
+
+		//smooth mask
+		if (bSmoothingAvailable && SmoothingInfo)
+		{
+			if (SmoothingMappingModel == FbxLayerElement::eByPolygon)
+			{
+				int lSmoothingIndex = (SmoothingReferenceModel == FbxLayerElement::eDirect) ? TriangleIndex : SmoothingInfo->GetIndexArray().GetAt(TriangleIndex);
+				RawMesh.FaceSmoothingMasks[DestTriangleIndex] = SmoothingInfo->GetDirectArray().GetAt(lSmoothingIndex);
+			}
+			else
+			{
+				UE_LOG(LogYFbxConverter, Warning, TEXT("Unsupported smoothing group mapping mode on mesh %s"), UTF8_TO_TCHAR(Mesh->GetName()));
+			}
+		}
+
+		//
+		// uvs
+		//
+		// In FBX file, the same UV may be saved multiple times, i.e., there may be same UV in LayerElementUV
+		// So we don't import the duplicate UVs
+		int32 UVLayerIndex = 0;
+		for (UVLayerIndex = 0; UVLayerIndex < FBXUVs.UniqueUVCount; ++UVLayerIndex)
+		{
+			if (FBXUVs.LayerElementUV[UVLayerIndex] != nullptr)
+			{
+				for (int32 CornerIndex = 0; CornerIndex < 3; ++CornerIndex)
+				{
+					// If there are odd number negative scale, invert the vertex order for triangles
+					int32 WedgeIndex = WedgeOffset + TriangleIndex * 3 + (OddNegtiveScale ? 2 - CornerIndex : CornerIndex);
+					int32 ControlPointIndex = Mesh->GetPolygonVertex(TriangleIndex, CornerIndex);
+					int32 UVMapIndex = (FBXUVs.UVMappingMode[UVLayerIndex] == FbxLayerElement::eByControlPoint) ? ControlPointIndex : TriangleIndex * 3 + CornerIndex;
+					int32 UVIndex = (FBXUVs.UVReferenceMode[UVLayerIndex] == FbxLayerElement::eDirect) ? UVMapIndex : FBXUVs.LayerElementUV[UVLayerIndex]->GetIndexArray().GetAt(UVMapIndex);
+					FbxVector2 UVVector = FBXUVs.LayerElementUV[UVLayerIndex]->GetDirectArray().GetAt(UVIndex);
+					RawMesh.WedgeTexCoords[UVLayerIndex][WedgeIndex].X = static_cast<float>(UVVector[0]);
+					RawMesh.WedgeTexCoords[UVLayerIndex][WedgeIndex].Y = 1 - static_cast<float>(UVVector[1]);
+				}
+			}
+		}
+
+		//material index
+		int32 MaterialIndex = 0;
+		if (MaterialCount > 0)
+		{
+			if (LayerElementMaterial)
+			{
+				switch (MaterialMappingModel)
+				{
+				case fbxsdk::FbxLayerElement::eAllSame:
+				{
+					MaterialIndex = LayerElementMaterial->GetIndexArray().GetAt(0);
+				}
+				break;
+				case fbxsdk::FbxLayerElement::eByPolygon:
+				{
+					MaterialIndex = LayerElementMaterial->GetIndexArray().GetAt(TriangleIndex);
+				}
+				break;
+				default:
+					break;
+				}
+			}
+		}
+		MaterialIndex += MaterialIndexOffset;
+		if (MaterialIndex >= MaterialCount + MaterialIndexOffset || MaterialIndex < 0)
+		{
+			UE_LOG(LogYFbxConverter, Warning, TEXT("Face material index inconsistency - forcing to 0"));
+			MaterialIndex = 0;
+		}
+		RawMesh.FaceMaterialIndices[DestTriangleIndex] = MaterialIndex;
 	}
-	return false;
+	bool bIsValidMesh = bHasNonDegenrateTriangles;
+
+	return bIsValidMesh;
 }
 
 int32 YFbxConverter::CreateNodeMaterials(FbxNode* FbxNode, TArray<YMaterialInterface*>& outMaterials, TArray<FString>& UVSets)
@@ -1158,7 +1493,7 @@ bool YFbxConverter::CreateMaterialProperty(FbxSurfaceMaterial& FbxMaterial, YMat
 		UnsupportedTextureCount += FbxMaterialProperty.GetSrcObjectCount<FbxProceduralTexture>();
 		if (UnsupportedTextureCount > 0)
 		{
-			UE_LOG(LogYFbxConverter,Warning, TEXT("Layered or procedural Textures are not supported (material %s)"), UTF8_TO_TCHAR(FbxMaterial.GetName()));
+			UE_LOG(LogYFbxConverter, Warning, TEXT("Layered or procedural Textures are not supported (material %s)"), UTF8_TO_TCHAR(FbxMaterial.GetName()));
 		}
 		else
 		{
@@ -1178,7 +1513,7 @@ bool YFbxConverter::CreateMaterialProperty(FbxSurfaceMaterial& FbxMaterial, YMat
 						YTextureSampler tmpTextureSampler;
 						tmpTextureSampler.SamplerType = bSetupAsNormalMap ? YTextureSampleType::YTEXUTRESAMPLE_NORMAL : YTextureSampleType::YTEXTURESAMPLE_COLOR;
 						tmpTextureSampler.Texture = Texture;
-						
+
 						//add /find UVSet and set it to the texture
 						FbxString UVSetName = FbxTexture->UVSet.Get();
 						FString LocalUVSetName = UTF8_TO_TCHAR(UVSetName.Buffer());

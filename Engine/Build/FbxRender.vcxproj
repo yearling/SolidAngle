@@ -177,6 +177,7 @@
     <ClCompile Include="..\Source\Experimental\Private\SkeletalMeshImport.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\StaticMeshEdit.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\Texture.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\YStaticMeshRenderData.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YFbxConverter.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YMaterial.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YRawMesh.cpp" />
@@ -212,8 +213,10 @@
     <ClInclude Include="..\Source\Experimental\Public\StaticMeshImportData.h" />
     <ClInclude Include="..\Source\Experimental\Public\YFbxConverter.h" />
     <ClInclude Include="..\Source\Experimental\Public\YMaterial.h" />
+    <ClInclude Include="..\Source\Experimental\Public\YMeshBuild.h" />
     <ClInclude Include="..\Source\Experimental\Public\YRawMesh.h" />
     <ClInclude Include="..\Source\Experimental\Public\YStaticMesh.h" />
+    <ClInclude Include="..\Source\Experimental\Public\YStaticMeshRenderData.h" />
     <ClInclude Include="..\Source\Experimental\Public\YTexture.h" />
     <ClInclude Include="..\Source\Experimental\Public\YYUT.h" />
     <ClInclude Include="..\Source\Experimental\Public\YYUTApplication.h" />

@@ -1,7 +1,6 @@
 # pragma once
 #include "Core.h"
 class YTexture;
-
 enum class YTextureSampleType
 {
 	YTEXUTRESAMPLE_NORMAL,

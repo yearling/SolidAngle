@@ -1,9 +1,24 @@
 #include "YStaticMesh.h"
 #include "YRawMesh.h"
+DEFINE_LOG_CATEGORY(LogYStaticMesh);
 
+const int MAX_STATIC_MESH_LOD = 8;
 YStaticMesh::YStaticMesh()
 {
 
+}
+
+void YStaticMesh::Build()
+{
+	if (SourceModels.Num() < 0)
+	{
+		return;
+	}
+
+	if (SourceModels.Num() > MAX_STATIC_MESH_LOD)
+	{
+		UE_LOG(LogYStaticMesh, Warning, TEXT(""));
+	}
 }
 
 bool operator==(const YMeshSectionInfo& A, const YMeshSectionInfo& B)
@@ -120,4 +135,32 @@ YStaticMeshSourceModel::~YStaticMeshSourceModel()
 void YStaticMeshSourceModel::SerializeBulkData(FArchive& Ar, UObject* Owner)
 {
 	RawMeshBulkData->Serialize(Ar);
+}
+
+FArchive& operator<<(FArchive& Ar, YStaticMaterial& Elem)
+{
+	Ar << Elem.MaterialSlotName;
+	if (!Ar.IsCooking()/* || Ar.CookingTarget()->HasEditorOnlyData()*/)
+	{
+		Ar << Elem.ImportedMaterialSlotName;
+	}
+	return Ar;
+}
+
+bool operator== (const YStaticMaterial& LHS, const YStaticMaterial& RHS)
+{
+	return (LHS.MaterialInterface == RHS.MaterialInterface &&
+		LHS.MaterialSlotName == RHS.MaterialSlotName
+		&& LHS.ImportedMaterialSlotName == RHS.ImportedMaterialSlotName
+		);
+}
+
+bool operator== (const YStaticMaterial& LHS, const YMaterialInterface& RHS)
+{
+	return (LHS.MaterialInterface == &RHS);
+}
+
+bool operator== (const YMaterialInterface& LHS, const YStaticMaterial& RHS)
+{
+	return (RHS.MaterialInterface == &LHS);
 }

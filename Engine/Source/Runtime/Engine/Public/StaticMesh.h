@@ -17,7 +17,7 @@
 //#include "Interfaces/Interface_CollisionDataProvider.h"
 //#include "Engine/MeshMerging.h"
 //#include "UniquePtr.h"
-//#include "StaticMesh.generated.h"
+//#include "StaticMesh.generated.h"ENGINE_API 
 #include "MeshCommon.h"
 #include "EngineTypes.h"
 #include "MeshMerging.h"
