@@ -1,6 +1,7 @@
 #pragma once
 #include "Core.h"
 #include "YMeshBuild.h"
+#include "YStaticMeshRenderData.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(LogYStaticMesh, Log, All);
 
@@ -114,4 +115,5 @@ public:
 	FGuid LightingGuid;
 	int32 LightMapResolution;
 	int32 LightMapCoordinateIndex;
+	TUniquePtr<class YStaticMeshRenderData> RenderData;
 };

@@ -1,8 +1,8 @@
 #include "YStaticMesh.h"
 #include "YRawMesh.h"
+#include "YMeshCommon.h"
 DEFINE_LOG_CATEGORY(LogYStaticMesh);
 
-const int MAX_STATIC_MESH_LOD = 8;
 YStaticMesh::YStaticMesh()
 {
 
@@ -15,10 +15,14 @@ void YStaticMesh::Build()
 		return;
 	}
 
-	if (SourceModels.Num() > MAX_STATIC_MESH_LOD)
+	if (SourceModels.Num() > MAX_YSTATIC_MESH_LODS)
 	{
-		UE_LOG(LogYStaticMesh, Warning, TEXT(""));
+		UE_LOG(LogYStaticMesh, Warning, TEXT("Cannot build LOD %d.  The maximum allowed is %d.  Skipping."),SourceModels.Num(),MAX_YSTATIC_MESH_LODS );
+
 	}
+	
+	RenderData = MakeUnique<YStaticMeshRenderData>();
+
 }
 
 bool operator==(const YMeshSectionInfo& A, const YMeshSectionInfo& B)

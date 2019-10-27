@@ -1,11 +1,7 @@
 #pragma once
 #include "Core.h"
 #include "BulkData.h"
-
-enum 
-{
-	MAX_TEXTURE_COORDS =8 
-};
+#include "YMeshCommon.h"
 
 /**
  * Raw mesh data used to construct optimized runtime rendering streams.
@@ -38,7 +34,7 @@ struct YRawMesh
 	// Normal. Array[WedgeId] = float3(x,y,z)
 	TArray<FVector> WedgeTangentZ;
 	// Texture coordinates. Array[UVId][WedgeId]=float2(u,v)
-	TArray<FVector2D> WedgeTexCoords[MAX_TEXTURE_COORDS];
+	TArray<FVector2D> WedgeTexCoords[MAX_YTEXTURE_COORDS];
 	// color, Array[WedgeId] = float4(r,g,b,a)
 	TArray<FColor> WedgeColors;
 
