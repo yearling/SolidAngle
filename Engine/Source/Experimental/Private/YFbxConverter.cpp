@@ -889,7 +889,7 @@ UStaticMesh * YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode*>& MeshNode
 			SrcModel.BuildSettings.bGenerateLightmapUVs = false;
 		}
 
-
+	
 	}
 
 	return nullptr;
@@ -1233,7 +1233,7 @@ bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<YSta
 
 	// When importing multiple mesh pieces to the same static mesh.  Ensure each mesh piece has the same number of Uv's
 	int32 ExistingUVCount = 0;
-	for (int32 ExistingUVIndex = 0; ExistingUVIndex < MAX_TEXTURE_COORDS; ++ExistingUVIndex)
+	for (int32 ExistingUVIndex = 0; ExistingUVIndex < MAX_YTEXTURE_COORDS; ++ExistingUVIndex)
 	{
 		if (RawMesh.WedgeTexCoords[ExistingUVIndex].Num() > 0)
 		{

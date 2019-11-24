@@ -23,6 +23,7 @@ void YStaticMesh::Build()
 	
 	RenderData = MakeUnique<YStaticMeshRenderData>();
 
+
 }
 
 bool operator==(const YMeshSectionInfo& A, const YMeshSectionInfo& B)

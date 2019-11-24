@@ -9,7 +9,7 @@ void YRawMesh::Empty()
 	WedgeTangentY.Empty();
 	WedgeTangentZ.Empty();
 	WedgeColors.Empty();
-	for (int32 i = 0; i < MAX_TEXTURE_COORDS; ++i)
+	for (int32 i = 0; i < MAX_YTEXTURE_COORDS; ++i)
 	{
 		WedgeTexCoords[i].Empty();
 	}
@@ -36,7 +36,7 @@ bool YRawMesh::IsValid() const
 		&& ValidateArraySize(WedgeTangentZ, NumWedges)
 		&& ValidateArraySize(WedgeColors, NumWedges)
 		&& WedgeTexCoords[0].Num() == NumWedges;
-	for (int32 TexCoordIndex = 1; TexCoordIndex < MAX_TEXTURE_COORDS; ++TexCoordIndex)
+	for (int32 TexCoordIndex = 1; TexCoordIndex < MAX_YTEXTURE_COORDS; ++TexCoordIndex)
 	{
 		bValid = bValid && ValidateArraySize(WedgeTexCoords[TexCoordIndex], NumWedges);
 	}
@@ -68,7 +68,7 @@ bool YRawMesh::IsValidOrFixable() const
 		// All meshes must have a valid texture coordinate.
 		&& NumTexCoords == NumWedges;
 
-	for (int32 TexCoordIndex = 1; TexCoordIndex < MAX_TEXTURE_COORDS; ++TexCoordIndex)
+	for (int32 TexCoordIndex = 1; TexCoordIndex < MAX_YTEXTURE_COORDS; ++TexCoordIndex)
 	{
 		bValidOrFixable = bValidOrFixable && ValidateArraySize(WedgeTexCoords[TexCoordIndex], NumWedges);
 	}
@@ -147,7 +147,7 @@ FArchive& operator<<(FArchive& Ar, YRawMesh& RawMesh)
 	Ar << RawMesh.WedgeTangentX;
 	Ar << RawMesh.WedgeTangentY;
 	Ar << RawMesh.WedgeTangentZ;
-	for (int32 i = 0; i < MAX_TEXTURE_COORDS; ++i)
+	for (int32 i = 0; i < MAX_YTEXTURE_COORDS; ++i)
 	{
 		Ar << RawMesh.WedgeTexCoords[i];
 	}

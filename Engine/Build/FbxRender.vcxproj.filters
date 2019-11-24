@@ -99,6 +99,12 @@
     <ClCompile Include="..\Source\Experimental\Private\YStaticMeshRenderData.cpp">
       <Filter>yconverter</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YMeshUtilities.cpp">
+      <Filter>yconverter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YComputeTangent.cpp">
+      <Filter>yconverter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Experimental\Public\YYUT.h">
@@ -199,6 +205,12 @@
       <Filter>yconverter</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\YStaticMeshRenderData.h">
+      <Filter>yconverter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YMeshCommon.h">
+      <Filter>yconverter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YMeshUtilities.h">
       <Filter>yconverter</Filter>
     </ClInclude>
   </ItemGroup>
