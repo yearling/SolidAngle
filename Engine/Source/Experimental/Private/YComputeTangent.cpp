@@ -42,7 +42,7 @@ void YMeshUtilities::ComputeTriangleTangents(const TArray<FVector>& InVertices, 
 		OutTangentX.Add(TextureToLocal.TransformVector(FVector(1, 0, 0)).GetSafeNormal());
 		OutTangentY.Add(TextureToLocal.TransformVector(FVector(0, 1, 0)).GetSafeNormal());
 		OutTangentZ.Add(Normal);
-
+		//注意不是Gram-Schmidt正交化，只是与Tangent与Normal正交，Bitangent与Normal正交
 		FVector::CreateOrthonormalBasis(OutTangentX[TriangleIndex], OutTangentY[TriangleIndex], OutTangentZ[TriangleIndex]);
 	}
 	check(OutTangentX.Num() == NumTriangles);
@@ -85,5 +85,26 @@ void YMeshUtilities::ComputeTangents_MikkTSpace(YRawMesh& RawMesh, TMultiMap<int
 	{
 		bWedgeNormals = bWedgeNormals && (!RawMesh.WedgeTangentZ[WedgeIndex].IsNearlyZero());
 	}
+}
+
+void YMeshUtilities::ComputeTangents(const TArray<FVector>& InVertices, const TArray<uint32>& InIndices, const TArray<FVector2D> &InUVs, const TArray<uint32>& SmoothingGroupIndices, TArray<FVector>& OutTangentX, TArray<FVector>& OutTangentY, TArray<FVector>& OutTangentZ, const uint32 TangentOptions)
+{
+	bool bBlendOverlappingNormals = (TangentOptions & EYTangentOptions::BlendOverlappingNormals) != 0;
+	bool bIgnoreDegenerateTriangles = (TangentOptions & EYTangentOptions::IgnoreDegenerateTriangles) != 0;
+	float ComparisionThreshold = bIgnoreDegenerateTriangles ? THRESH_POINTS_ARE_SAME : 0.0f;
+
+	// 计算每个面的三角形
+	TArray<FVector> TriangleTangentX;
+	TArray<FVector> TriangleTangentY;
+	TArray<FVector> TriangleTangentZ;
+	ComputeTriangleTangents(InVertices, InIndices, InUVs, TriangleTangentX, TriangleTangentY, TriangleTangentZ, bIgnoreDegenerateTriangles ? SMALL_NUMBER : 0.0f);
+
+	// Declare these out here to avoid reallocations.
+	TArray<YFanFace> RelevantFacesForCorner[3];
+	TArray<int32> AdjacentFaces;
+	TArray<int32> DupVerts;
+
+	int32 NumWedges = InIndices.Num();
+	int32 NumFaces = NumWedges / 3;
 }
 

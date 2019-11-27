@@ -756,7 +756,7 @@ public:
 	 * It may change the directions of the X and Y axes to make the basis orthogonal,
 	 * but it won't change the direction of the Z axis.
 	 * All axes will be normalized.
-	 *
+	 * 注意不是Gram-Schmidt orthogonalization。只是X,Y轴与Z轴垂直而已
 	 * @param XAxis The input basis' XAxis, and upon return the orthonormal basis' XAxis.
 	 * @param YAxis The input basis' YAxis, and upon return the orthonormal basis' YAxis.
 	 * @param ZAxis The input basis' ZAxis, and upon return the orthonormal basis' ZAxis.

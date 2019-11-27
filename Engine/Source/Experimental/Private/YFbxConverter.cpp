@@ -11,6 +11,7 @@
 #include "YMaterial.h"
 #include "YRawMesh.h"
 #include "FbxConvertUtilites.h"
+#include "YMeshUtilities.h"
 
 DEFINE_LOG_CATEGORY(LogYFbxConverter);
 static const int32 LARGE_MESH_MATERIAL_INDEX_THRESHOLD = 64;
@@ -870,8 +871,6 @@ UStaticMesh * YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode*>& MeshNode
 			StaticMesh->SectionInfoMap.Set(LODIndex, MaterialIndex, Info);
 		}
 
-		YRawMesh LocalRawMesh;
-		SrcModel.RawMeshBulkData->LoadRawMesh(LocalRawMesh);
 		SrcModel.BuildSettings.bRemoveDegenerates = ImportOptions->bRemoveDegenerates;
 		SrcModel.BuildSettings.bBuildAdjacencyBuffer = ImportOptions->bBuildAdjacencyBuffer;
 		SrcModel.BuildSettings.bBuildReversedIndexBuffer = ImportOptions->bBuildReversedIndexBuffer;
@@ -888,8 +887,8 @@ UStaticMesh * YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode*>& MeshNode
 		{
 			SrcModel.BuildSettings.bGenerateLightmapUVs = false;
 		}
-
-	
+		TUniquePtr<YStaticMeshRenderData> RenderData = MakeUnique<YStaticMeshRenderData>();
+		YMeshUtilities::BuildStaticMesh(*RenderData, StaticMesh->SourceModels);
 	}
 
 	return nullptr;

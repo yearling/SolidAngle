@@ -10,7 +10,7 @@ class Y3DCanvas
 public:
 	Y3DCanvas();
 	void						DrawLine(FVector StartPos, FVector EndPos, FLinearColor Color);
-	void DrawBall(FVector Pos, FLinearColor Color, float Length = 0.3f);
+	void						DrawBall(FVector Pos, FLinearColor Color, float Length = 0.3f);
 	void						Render(TSharedRef<FRenderInfo> RenderInf);
 	void						Init();
 private:
@@ -18,9 +18,9 @@ private:
 	TComPtr<ID3D11RasterizerState>	m_rs;
 	TComPtr<ID3D11BlendState>		m_bs;
 	TComPtr<ID3D11DepthStencilState>m_ds;
-	TArray<LocalVertex>		LineDatas;
-	TUniquePtr<YVSShader>		m_VSShader;
-	TUniquePtr<YPSShader>		m_PSShader;
+	TArray<LocalVertex>				LineDatas;
+	TUniquePtr<YVSShader>			m_VSShader;
+	TUniquePtr<YPSShader>			m_PSShader;
 	const int						m_MAXVertex = 1024*1024*10;
 };
 

@@ -123,7 +123,8 @@ void DX11Demo::Initial()
 	ImportOptions->ImportRotation = FRotator(0.0, 0.0, 0.0);
 	ImportOptions->ImportUniformScale = 1.0f;
 	ImportOptions->NormalImportMethod = FBXNIM_ComputeNormals;
-	ImportOptions->NormalGenerationMethod = EFBXNormalGenerationMethod::MikkTSpace;
+	//ImportOptions->NormalGenerationMethod = EFBXNormalGenerationMethod::MikkTSpace;
+	ImportOptions->NormalGenerationMethod = EFBXNormalGenerationMethod::BuiltIn;
 	ImportOptions->bTransformVertexToAbsolute = true;
 	ImportOptions->bBakePivotInVertex = false;
 	ImportOptions->bCombineToSingle = true;
@@ -161,7 +162,7 @@ void DX11Demo::Initial()
 	ImportOptions->MaterialCurveSuffixes.Reset();
 	ImportOptions->MaterialCurveSuffixes.Add(TEXT("_mat"));
 	ImportOptions->MaterialBasePath = FName("None");
-#if 0
+//#if 0
 	//FbxImporter->MainImport(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
 	ImportResultPackage ImportResult =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_StaticMesh);
 	//ImportResultPackage ImportResult =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
@@ -185,7 +186,7 @@ void DX11Demo::Initial()
 		
 		
 	}
-#else
+//#else
 	TUniquePtr<YFbxConverter>  FbxConverter = MakeUnique<YFbxConverter>();
 	//FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbx/dummywithlod.FBX"));
 	//if (FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbx/multiUVs/box2uv.FBX")))
@@ -196,14 +197,14 @@ void DX11Demo::Initial()
 		FbxConverter->Import(std::move(ImportOptionsy));
 	}
 	
-	TUniquePtr<FArchive>FileReader(IFileManager::Get().CreateFileReader(TEXT("yy.yyStatic")));
+	/*TUniquePtr<FArchive>FileReader(IFileManager::Get().CreateFileReader(TEXT("yy.yyStatic")));
 	UStaticMesh* pSerialMesh = new UStaticMesh();
 	if (FileReader)
 	{
 		pSerialMesh->Serialize(*FileReader);
 	}
-	m_pSceneRender->RegisterStaticMesh(pSerialMesh);
-#endif
+	m_pSceneRender->RegisterStaticMesh(pSerialMesh);*/
+//#endif
 	m_pSceneRender->AllocResource();
 }
 

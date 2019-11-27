@@ -128,10 +128,12 @@ public:
 					}
 
 					//MikkTSpace should be use only when the user want to recompute the normals or tangents otherwise should always fallback on builtin
-					if (SrcModel.BuildSettings.bUseMikkTSpace && (SrcModel.BuildSettings.bRecomputeNormals || SrcModel.BuildSettings.bRecomputeTangents))
+				/*	if (SrcModel.BuildSettings.bUseMikkTSpace && (SrcModel.BuildSettings.bRecomputeNormals || SrcModel.BuildSettings.bRecomputeTangents))
 					{
 						
-					}
+					}*/
+					uint32 ImportTangentOptions = EYTangentOptions::BlendOverlappingNormals | EYTangentOptions::IgnoreDegenerateTriangles;
+					YMeshUtilities::ComputeTangents(RawMesh.VertexPositions, RawMesh.WedgeIndices, RawMesh.WedgeTexCoords[0], RawMesh.FaceSmoothingMasks, RawMesh.WedgeTangentX, RawMesh.WedgeTangentY, RawMesh.WedgeTangentZ, ImportTangentOptions);
 				}
 
 			}
@@ -168,10 +170,6 @@ bool YMeshUtilities::BuildStaticMesh(class YStaticMeshRenderData& OutRenderData,
 	return true;
 }
 
-void YMeshUtilities::ComputeTangents(const TArray<FVector>& InVertices, const TArray<uint32>& InIndices, const TArray<FVector2D> &InUVs, const TArray<uint32>& SmoothingGroupIndices, TArray<FVector>& OutTangentX, TArray<FVector>& OutTangentY, TArray<FVector>& OutTangentZ, const uint32 TangentOptions)
-{
-
-}
 
 YMeshUtilities::YMeshUtilities()
 {
