@@ -105,6 +105,9 @@
     <ClCompile Include="..\Source\Experimental\Private\YComputeTangent.cpp">
       <Filter>yconverter</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\mikktspace.c">
+      <Filter>yconverter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Experimental\Public\YYUT.h">
@@ -211,6 +214,9 @@
       <Filter>yconverter</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\YMeshUtilities.h">
+      <Filter>yconverter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\mikktspace.h">
       <Filter>yconverter</Filter>
     </ClInclude>
   </ItemGroup>

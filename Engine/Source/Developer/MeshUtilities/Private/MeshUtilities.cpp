@@ -2813,6 +2813,7 @@ static void ComputeTangents(
 										NewConnections++;
 
 										// Only blend tangents if there is no UV seam along the edge with this face.
+										//if (/*OtherFace.bBlendTangents &&*/ CommonTangentVertices > 1)
 										if (OtherFace.bBlendTangents && CommonTangentVertices > 1)
 										{
 											float OtherDeterminant = FVector::Triple(
@@ -2917,6 +2918,314 @@ static void ComputeTangents(
 {
 	const float ComparisonThreshold = (TangentOptions & ETangentOptions::IgnoreDegenerateTriangles) ? THRESH_POINTS_ARE_SAME : 0.0f;
 	ComputeTangents(RawMesh.VertexPositions, RawMesh.WedgeIndices, RawMesh.WedgeTexCoords[0], RawMesh.FaceSmoothingMasks, OverlappingCorners, RawMesh.WedgeTangentX, RawMesh.WedgeTangentY, RawMesh.WedgeTangentZ, TangentOptions);
+}
+static void ComputeFaceTangent(FRawMesh& RawMesh, uint32 TangentOptions, TArray<FVector>& OutTangentX, TArray<FVector>& OutTangentY, TArray<FVector>& OutTangentZ)
+{
+	const float ComparisonThreshold = (TangentOptions& ETangentOptions::IgnoreDegenerateTriangles) ? SMALL_NUMBER : 0.0f;
+	OutTangentX.Empty(RawMesh.WedgeIndices.Num()/3);
+	OutTangentX.AddZeroed(RawMesh.WedgeIndices.Num()/3);
+	OutTangentY.Empty(RawMesh.WedgeIndices.Num()/3);
+	OutTangentY.AddZeroed(RawMesh.WedgeIndices.Num()/3);
+	OutTangentZ.Empty(RawMesh.WedgeIndices.Num()/3);
+	OutTangentZ.AddZeroed(RawMesh.WedgeIndices.Num()/3);
+	for (int32 FaceIndex = 0; FaceIndex < RawMesh.WedgeIndices.Num() / 3; ++FaceIndex)
+	{
+		FVector Point[3];
+		FVector2D UV[3];
+		for (int32 WedgeCornerIndex = 0; WedgeCornerIndex < 3; ++WedgeCornerIndex)
+		{
+			int32 WedgeIndex = FaceIndex * 3 + WedgeCornerIndex;
+			Point[WedgeCornerIndex]= RawMesh.VertexPositions[RawMesh.WedgeIndices[WedgeIndex]];
+			UV[WedgeCornerIndex] = RawMesh.WedgeTexCoords[0][WedgeIndex];
+		}
+		float s1 = UV[1].X - UV[0].X;
+		float s2 = UV[2].X - UV[0].X;
+		float t1 = UV[1].Y - UV[0].Y;
+		float t2 = UV[2].Y - UV[0].Y;
+		FVector Position1 = Point[1] - Point[0];
+		FVector Position2 = Point[2] - Point[0];
+
+		float determint = 1.0f / (s1*t2 - s2 * t1);
+		FVector TangentX = FVector(t2*Position1.X - t1 * Position2.X, t2*Position1.Y - t1 * Position2.Y, t2*Position1.Z - t1 * Position2.Z);
+		TangentX = TangentX * determint;
+		TangentX = TangentX.GetSafeNormal();
+		FVector TangentY = FVector(-s2*Position1.X + s1 * Position2.X, -s2*Position1.Y +s1 * Position2.Y, -s2*Position1.Z + s1 * Position2.Z);
+		TangentY = TangentY * determint;
+		TangentY = TangentY.GetSafeNormal();
+		FVector TangentZ = (Position1 ^ Position2).GetSafeNormal(ComparisonThreshold);
+		
+		FVector::CreateOrthonormalBasis(TangentX, TangentY, TangentZ);
+		OutTangentX[FaceIndex] = TangentX;
+		OutTangentY[FaceIndex] = TangentY;
+		OutTangentZ[FaceIndex] = TangentZ;
+	}
+}
+static void ComputeTangentsTest(FRawMesh& RawMesh, TMultiMap<int32, int32> const& OverlappingCorners, uint32 TangentOptions, FRawMesh& RawMeshGroundTruth)
+{
+	const float ComparisonThreshold = (TangentOptions& ETangentOptions::IgnoreDegenerateTriangles) ? THRESH_POINTS_ARE_SAME : 0.0f;
+	bool bBlendOverlappingNormals = (TangentOptions & ETangentOptions::BlendOverlappingNormals) != 0;
+	bool bIgnoreDegenerateTriangles = (TangentOptions & ETangentOptions::IgnoreDegenerateTriangles) != 0;
+	TArray<FVector> WedgeFaceTangentX;
+	TArray<FVector> WedgeFaceTangentY;
+	TArray<FVector> WedgeFaceTangentZ;
+	//ComputeTriangleTangents();
+	TArray<FVector> WedgeFaceTangentXTest;
+	TArray<FVector> WedgeFaceTangentYTest;
+	TArray<FVector> WedgeFaceTangentZTest;
+	ComputeFaceTangent(RawMesh, TangentOptions, WedgeFaceTangentXTest, WedgeFaceTangentYTest, WedgeFaceTangentZTest);
+	ComputeTriangleTangents(WedgeFaceTangentX, WedgeFaceTangentY, WedgeFaceTangentZ, RawMesh, ComparisonThreshold);
+	bool bEqualTest = true;
+	for (int32 i = 0; i < WedgeFaceTangentX.Num(); ++i)
+	{
+		if (WedgeFaceTangentX[i] != WedgeFaceTangentXTest[i])
+		{
+			bEqualTest = false;
+		}
+	}
+
+	int32 NumWedges = RawMesh.WedgeIndices.Num();
+	int32 NumFaces = NumWedges / 3;
+
+	// allocate for enough memory
+	if (RawMesh.WedgeTangentX.Num() != NumWedges)
+	{
+		RawMesh.WedgeTangentX.Empty(NumWedges);
+		RawMesh.WedgeTangentX.AddZeroed(NumWedges);
+	}
+
+	if (RawMesh.WedgeTangentY.Num() != NumWedges)
+	{
+		RawMesh.WedgeTangentY.Empty(NumWedges);
+		RawMesh.WedgeTangentY.AddZeroed(NumWedges);
+	}
+
+	if (RawMesh.WedgeTangentZ.Num() != NumWedges)
+	{
+		RawMesh.WedgeTangentZ.Empty(NumWedges);
+		RawMesh.WedgeTangentZ.AddZeroed(NumWedges);
+	}
+
+	//build hash z
+	
+	for (int32 FaceIndex = 0; FaceIndex < NumFaces; ++FaceIndex)
+	{
+		int32 WedgeOffsetIndex = FaceIndex * 3;
+		FVector CornerPosition[3];
+		FVector CornerTangentX[3];
+		FVector CornerTangentY[3];
+		FVector CornerTangentZ[3];
+		for (int32 CornerIndex = 0; CornerIndex < 3; ++CornerIndex)
+		{
+			CornerTangentX[CornerIndex] = FVector::ZeroVector;
+			CornerTangentY[CornerIndex] = FVector::ZeroVector;
+			CornerTangentZ[CornerIndex] = FVector::ZeroVector;
+			CornerPosition[CornerIndex] = RawMesh.VertexPositions[RawMesh.WedgeIndices[WedgeOffsetIndex + CornerIndex]];
+		}
+
+		// find degenerate triangles
+		if (PointsEqual(CornerPosition[0], CornerPosition[1], ComparisonThreshold) ||
+			PointsEqual(CornerPosition[0], CornerPosition[2], ComparisonThreshold) ||
+			PointsEqual(CornerPosition[1], CornerPosition[2], ComparisonThreshold))
+		{
+			continue;
+		}
+
+		//No need to process triangles if tangents alread exists
+		bool bCornerHasTangents[3] = { 0 };
+		for (int32 CornerIndex = 0; CornerIndex < 3; ++CornerIndex)
+		{
+			bCornerHasTangents[CornerIndex] = !RawMesh.WedgeTangentX[WedgeOffsetIndex + CornerIndex].IsZero() &&
+				!RawMesh.WedgeTangentY[WedgeOffsetIndex + CornerIndex].IsZero() &&
+				!RawMesh.WedgeTangentZ[WedgeOffsetIndex + CornerIndex].IsZero();
+		}
+
+		if (bCornerHasTangents[0] && bCornerHasTangents[1] && bCornerHasTangents[2])
+			continue;
+		float Determinant = FVector::Triple(WedgeFaceTangentX[FaceIndex], WedgeFaceTangentY[FaceIndex], WedgeFaceTangentZ[FaceIndex]);
+
+		
+		// Start building a list of faces adjacent to this face.
+		TArray<int32> AdjacentFaces;
+		for (int32 CornerIndex = 0; CornerIndex < 3; ++CornerIndex)
+		{
+			TArray<int32> DupVerts;
+			int32 ThisCornerIndex = WedgeOffsetIndex + CornerIndex;
+			OverlappingCorners.MultiFind(ThisCornerIndex,DupVerts);
+			DupVerts.Add(ThisCornerIndex);
+			for (int32 j = 0; j < DupVerts.Num(); ++j)
+			{
+				AdjacentFaces.AddUnique(DupVerts[j] / 3);
+			}
+		}
+		AdjacentFaces.Sort();
+		TArray<FFanFace> RelevantFacesForCorner[3];
+		for (int32 AdjacentFaceIndex = 0; AdjacentFaceIndex < AdjacentFaces.Num(); ++AdjacentFaceIndex)
+		{
+			int32 OtherFaceIndex = AdjacentFaces[AdjacentFaceIndex];
+			for (int32 OurCornerIndex = 0; OurCornerIndex < 3; ++OurCornerIndex)
+			{
+				if (bCornerHasTangents[OurCornerIndex])
+					continue;
+				FFanFace NewFanFace;
+				int CommonIndexCount = 0;
+				if (FaceIndex == OtherFaceIndex) {
+					CommonIndexCount = 3;
+					NewFanFace.LinkedVertexIndex = OurCornerIndex;
+				}
+				else
+				{
+					for (int32 OtherConerIndex = 0; OtherConerIndex < 3; ++OtherConerIndex)
+					{
+						if (PointsEqual(CornerPosition[OurCornerIndex], RawMesh.VertexPositions[RawMesh.WedgeIndices[OtherFaceIndex * 3 + OtherConerIndex]], ComparisonThreshold))
+						{
+							CommonIndexCount++;
+							NewFanFace.LinkedVertexIndex = OtherConerIndex;
+						}
+					}
+				}
+				if (CommonIndexCount > 0)
+				{
+					NewFanFace.FaceIndex = OtherFaceIndex;
+					NewFanFace.bFilled = (FaceIndex == OtherFaceIndex);
+					NewFanFace.bBlendNormals = NewFanFace.bFilled;
+					NewFanFace.bBlendTangents = NewFanFace.bFilled;
+					RelevantFacesForCorner[OurCornerIndex].Add(NewFanFace);
+				}
+			}
+		}
+		
+		for (int32 CornerIndex = 0; CornerIndex < 3; ++CornerIndex)
+		{
+			if (bCornerHasTangents[CornerIndex])
+				continue;
+			int32 NewConnections=0;
+			do {
+				NewConnections = 0;
+				for (int32 OtherFaceIndex = 0; OtherFaceIndex < RelevantFacesForCorner[CornerIndex].Num(); ++OtherFaceIndex)
+				{
+					FFanFace& OtherFanFace = RelevantFacesForCorner[CornerIndex][OtherFaceIndex];
+					if (OtherFanFace.bFilled)
+					{
+						for (int32 NextFaceIndex = 0; NextFaceIndex < RelevantFacesForCorner[CornerIndex].Num(); ++NextFaceIndex)
+						{
+							FFanFace& NextFanFace = RelevantFacesForCorner[CornerIndex][NextFaceIndex];
+							if (!NextFanFace.bFilled)
+							{
+								if ((OtherFaceIndex != NextFaceIndex) && (RawMesh.FaceSmoothingMasks[OtherFanFace.FaceIndex] & RawMesh.FaceSmoothingMasks[NextFanFace.FaceIndex]))
+								{
+									int32 CommonVertex = 0;
+									int32 CommonTangentVertices = 0;
+									int32 CommonNormalVertices = 0;
+									for (int32 OtherCornerIndex = 0; OtherCornerIndex < 3; ++OtherCornerIndex)
+									{
+										for (int32 NextCornerIndex = 0; NextCornerIndex < 3; ++NextCornerIndex)
+										{
+											int32 OtherVertexIndex = OtherFanFace.FaceIndex * 3 + OtherCornerIndex;
+											int32 NextVertexIndex = NextFanFace.FaceIndex * 3 + NextCornerIndex;
+											if (PointsEqual(RawMesh.VertexPositions[RawMesh.WedgeIndices[OtherVertexIndex]],
+												RawMesh.VertexPositions[RawMesh.WedgeIndices[NextVertexIndex]], ComparisonThreshold))
+											{
+												CommonVertex++;
+												const FVector2D& UVOne = RawMesh.WedgeTexCoords[0][OtherVertexIndex];
+												const FVector2D& UVTwo = RawMesh.WedgeTexCoords[0][NextVertexIndex];
+												if (UVsEqual(UVOne, UVTwo))
+												{
+													CommonTangentVertices++;
+												}
+												if (bBlendOverlappingNormals || OtherVertexIndex == NextCornerIndex)
+												{
+													CommonNormalVertices++;
+												}
+											}
+										}
+									}
+									if (CommonVertex > 1)
+									{
+										NewConnections++;
+										NextFanFace.bFilled = true;
+										NextFanFace.bBlendNormals = CommonNormalVertices > 1;
+										if (CommonTangentVertices>1)
+										{
+											float OtherFanFaceDeterninant = FVector::Triple(WedgeFaceTangentX[NextFanFace.FaceIndex], WedgeFaceTangentY[NextFanFace.FaceIndex], WedgeFaceTangentZ[NextFanFace.FaceIndex]);
+											if (OtherFanFaceDeterninant*Determinant > 0)
+											{
+												NextFanFace.bBlendTangents = true;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			} while (NewConnections > 0);
+		}
+		//vertex normal consturction
+		for (int32 CornerIndex = 0; CornerIndex < 3; CornerIndex++)
+		{
+			if (bCornerHasTangents[CornerIndex])
+			{
+				CornerTangentX[CornerIndex] = RawMesh.WedgeTangentX[WedgeOffsetIndex + CornerIndex];
+				CornerTangentY[CornerIndex] = RawMesh.WedgeTangentY[WedgeOffsetIndex + CornerIndex];
+				CornerTangentZ[CornerIndex] = RawMesh.WedgeTangentZ[WedgeOffsetIndex + CornerIndex];
+			}
+			else
+			{
+				for (int32 RelevantFaceIdx = 0; RelevantFaceIdx < RelevantFacesForCorner[CornerIndex].Num(); ++RelevantFaceIdx)
+				{
+						const FFanFace& RelevantFace = RelevantFacesForCorner[CornerIndex][RelevantFaceIdx];
+						if (RelevantFace.bFilled)
+						{
+							int32 OtherFaceIndex = RelevantFace.FaceIndex;
+							if (RelevantFace.bBlendTangents)
+							{
+								CornerTangentX[CornerIndex] += WedgeFaceTangentX[OtherFaceIndex];
+								CornerTangentY[CornerIndex] += WedgeFaceTangentY[OtherFaceIndex];
+							}
+							if (RelevantFace.bBlendNormals)
+							{
+								CornerTangentZ[CornerIndex] += WedgeFaceTangentZ[OtherFaceIndex];
+							}
+						}
+				}
+				if (!RawMesh.WedgeTangentX[WedgeOffsetIndex + CornerIndex].IsZero())
+				{
+					CornerTangentX[CornerIndex] = RawMesh.WedgeTangentX[WedgeOffsetIndex + CornerIndex];
+				}
+				if (!RawMesh.WedgeTangentY[WedgeOffsetIndex + CornerIndex].IsZero())
+				{
+					CornerTangentY[CornerIndex] = RawMesh.WedgeTangentY[WedgeOffsetIndex + CornerIndex];
+				}
+				if (!RawMesh.WedgeTangentZ[WedgeOffsetIndex + CornerIndex].IsZero())
+				{
+					CornerTangentZ[CornerIndex] = RawMesh.WedgeTangentZ[WedgeOffsetIndex + CornerIndex];
+				}
+			}
+		}
+		//Normalization
+		for (int32 CornerIndex = 0; CornerIndex < 3; CornerIndex++)
+		{
+			CornerTangentX[CornerIndex].Normalize();
+			CornerTangentY[CornerIndex].Normalize();
+			CornerTangentZ[CornerIndex].Normalize();
+
+			CornerTangentX[CornerIndex] -= CornerTangentZ[CornerIndex] * (CornerTangentZ[CornerIndex] | CornerTangentX[CornerIndex]);
+			CornerTangentX[CornerIndex].Normalize();
+
+			CornerTangentY[CornerIndex] -= CornerTangentX[CornerIndex] * (CornerTangentX[CornerIndex] | CornerTangentY[CornerIndex]);
+			CornerTangentY[CornerIndex].Normalize();
+
+			CornerTangentY[CornerIndex] -= CornerTangentZ[CornerIndex] * (CornerTangentZ[CornerIndex] | CornerTangentY[CornerIndex]);
+			CornerTangentY[CornerIndex].Normalize();
+		}
+
+		for (int32 CornerIndex = 0; CornerIndex < 3; CornerIndex++)
+		{
+			RawMesh.WedgeTangentX[WedgeOffsetIndex + CornerIndex] = CornerTangentX[CornerIndex];
+			RawMesh.WedgeTangentY[WedgeOffsetIndex + CornerIndex] = CornerTangentY[CornerIndex];
+			RawMesh.WedgeTangentZ[WedgeOffsetIndex + CornerIndex] = CornerTangentZ[CornerIndex];
+		}
+	}
 }
 //
 /*------------------------------------------------------------------------------
@@ -3702,11 +4011,15 @@ public:
 		{
 			FStaticMeshSourceModel& SrcModel = SourceModels[LODIndex];
 			FRawMesh& RawMesh = *new(LODMeshes)FRawMesh;
+			FRawMesh RawMeshTest;
+			FRawMesh RawMeshTestMikkt;
 			TMultiMap<int32, int32>& OverlappingCorners = *new(LODOverlappingCorners)TMultiMap<int32, int32>;
 
 			if (!SrcModel.RawMeshBulkData->IsEmpty())
 			{
 				SrcModel.RawMeshBulkData->LoadRawMesh(RawMesh);
+				SrcModel.RawMeshBulkData->LoadRawMesh(RawMeshTest);
+				SrcModel.RawMeshBulkData->LoadRawMesh(RawMeshTestMikkt);
 				// Make sure the raw mesh is not irreparably malformed.
 				if (!RawMesh.IsValidOrFixable())
 				{
@@ -3732,11 +4045,26 @@ public:
 					RawMesh.WedgeTangentX.AddZeroed(NumWedges);
 					RawMesh.WedgeTangentY.Empty(NumWedges);
 					RawMesh.WedgeTangentY.AddZeroed(NumWedges);
+
+					RawMeshTest.WedgeTangentX.Empty(NumWedges);
+					RawMeshTest.WedgeTangentX.AddZeroed(NumWedges);
+					RawMeshTest.WedgeTangentY.Empty(NumWedges);
+					RawMeshTest.WedgeTangentY.AddZeroed(NumWedges);
+
+					RawMeshTestMikkt.WedgeTangentX.Empty(NumWedges);
+					RawMeshTestMikkt.WedgeTangentX.AddZeroed(NumWedges);
+					RawMeshTestMikkt.WedgeTangentY.Empty(NumWedges);
+					RawMeshTestMikkt.WedgeTangentY.AddZeroed(NumWedges);
 				}
 				if (bRecomputeNormals)
 				{
 					RawMesh.WedgeTangentZ.Empty(NumWedges);
 					RawMesh.WedgeTangentZ.AddZeroed(NumWedges);
+					RawMeshTest.WedgeTangentZ.Empty(NumWedges);
+					RawMeshTest.WedgeTangentZ.AddZeroed(NumWedges);
+
+					RawMeshTestMikkt.WedgeTangentZ.Empty(NumWedges);
+					RawMeshTestMikkt.WedgeTangentZ.AddZeroed(NumWedges);
 				}
 
 				// Compute any missing tangents.
@@ -3757,6 +4085,8 @@ public:
 					else
 					{
 						ComputeTangents(RawMesh, OverlappingCorners, TangentOptions);
+						ComputeTangentsTest(RawMeshTest, OverlappingCorners, TangentOptions, RawMesh);
+						ComputeTangents_MikkTSpace(RawMeshTestMikkt, OverlappingCorners, TangentOptions);
 					}
 				}
 

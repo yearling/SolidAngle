@@ -93,7 +93,9 @@ void DX11Demo::Initial()
 	//FString FileToImport = TEXT("D:/wolf/humanoid.fbx");
 	//FString FileToImport = TEXT("G:\\测试用FBX文件\\身体分多个模型的骨骼动画\\out.fbx");
 	//FString FileToImport = TEXT("G:\\测试用FBX文件\\挂载武器的骨骼动画2\\attack.FBX");
-	FString FileToImport = TEXT("C:/Users/yy/Desktop/fbxtest/lod/smoothgroup.FBX");
+	//FString FileToImport = TEXT("C:/Users/yy/Desktop/fbxtest/lod/smoothgroup.FBX");
+	//FString FileToImport = TEXT("C:/Users/yy/Desktop/fbxtest/nija/uv_mirror_plane.FBX");
+	FString FileToImport = TEXT("C:/Users/yy/Desktop/fbxtest/nija/mirror_nija_no_seam.FBX");
 	int32 ImportType = FbxImporter->GetImportType(FileToImport);
 	//int32 ImportType = 1;
 	if (ImportType == -1)
@@ -191,7 +193,7 @@ void DX11Demo::Initial()
 	//FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbx/dummywithlod.FBX"));
 	//if (FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbx/multiUVs/box2uv.FBX")))
 	//if (FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbx/one_mesh_with_multi_material/box.FBX")))
-	if (FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbxtest/lod/smoothgroup.FBX")))
+	if (FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbxtest/nija/mirror_nija_no_seam.FBX")))
 	{
 		TUniquePtr<YFBXImportOptions> ImportOptionsy = MakeUnique< YFBXImportOptions>();
 		FbxConverter->Import(std::move(ImportOptionsy));

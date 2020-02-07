@@ -9,10 +9,10 @@ struct YIndexAndZ
 	float Z;
 	int32 Index;
 	YIndexAndZ() {}
-	YIndexAndZ(int32 index, FVector V)
+	YIndexAndZ(int32 InIndex, FVector V)
 	{
 		Z = 0.30f * V.X + 0.33f *V.Y + 0.37f *V.Z;
-		Index = Index;
+		Index = InIndex;
 	}
 };
 struct YCompareIndexAndZ
@@ -20,19 +20,6 @@ struct YCompareIndexAndZ
 	FORCEINLINE bool operator()(const YIndexAndZ& A, const YIndexAndZ&B) const {return A.Z < B.Z;}
 };
 
-/**
-* Returns true if the specified points are about equal
-*/
-inline bool PointsEqual(const FVector& V1, const FVector& V2, float ComparisonThreshold)
-{
-	if (FMath::Abs(V1.X - V2.X) > ComparisonThreshold
-		|| FMath::Abs(V1.Y - V2.Y) > ComparisonThreshold
-		|| FMath::Abs(V1.Z - V2.Z) > ComparisonThreshold)
-	{
-		return false;
-	}
-	return true;
-}
 
 static float GetComparisonThreshold(bool bRemoveDegenerates)
 {
@@ -84,7 +71,6 @@ public:
 		{
 			YStaticMeshSourceModel& SrcModel = SourceModels[LODIndex];
 			YRawMesh& RawMesh = *new(LODMeshes)YRawMesh;
-			TMultiMap<int32, int32>& OverlappingCorners = *new(LODOverlappingCorners)TMultiMap<int32, int32>;
 			if (!SrcModel.RawMeshBulkData->IsEmpty())
 			{
 				SrcModel.RawMeshBulkData->LoadRawMesh(RawMesh);
@@ -97,7 +83,6 @@ public:
 				float ComparisonThreshold = GetComparisonThreshold(SrcModel.BuildSettings.bRemoveDegenerates);
 				int32 NumWedges = RawMesh.WedgeIndices.Num();
 				// Find overlapping corners to accelerate adjacency.
-				YMeshUtilities::FindOverlippingCorners(OverlappingCorners, RawMesh.VertexPositions, RawMesh.WedgeIndices, ComparisonThreshold);
 				// Figure out if we should recompute normals and tangents
 				bool bRecomputeNormals = SrcModel.BuildSettings.bRecomputeNormals || RawMesh.WedgeTangentZ.Num() != NumWedges;
 				bool bRecomputeTangents = SrcModel.BuildSettings.bRecomputeTangents || RawMesh.WedgeTangentX.Num() != NumWedges || RawMesh.WedgeTangentY.Num() != NumWedges;
@@ -114,7 +99,7 @@ public:
 				if (bRecomputeNormals)
 				{
 					RawMesh.WedgeTangentZ.Empty(NumWedges);
-					RawMesh.WedgeTangentX.AddZeroed(NumWedges);
+					RawMesh.WedgeTangentZ.AddZeroed(NumWedges);
 				}
 				
 				// Compute any missing tangents
@@ -128,14 +113,13 @@ public:
 					}
 
 					//MikkTSpace should be use only when the user want to recompute the normals or tangents otherwise should always fallback on builtin
-				/*	if (SrcModel.BuildSettings.bUseMikkTSpace && (SrcModel.BuildSettings.bRecomputeNormals || SrcModel.BuildSettings.bRecomputeTangents))
+					if (SrcModel.BuildSettings.bUseMikkTSpace && (SrcModel.BuildSettings.bRecomputeNormals || SrcModel.BuildSettings.bRecomputeTangents))
 					{
-						
-					}*/
+						YMeshUtilities::ComputeTangents_MikkTSpace(RawMesh, TangentOptions);
+					}
 					uint32 ImportTangentOptions = EYTangentOptions::BlendOverlappingNormals | EYTangentOptions::IgnoreDegenerateTriangles;
 					YMeshUtilities::ComputeTangents(RawMesh.VertexPositions, RawMesh.WedgeIndices, RawMesh.WedgeTexCoords[0], RawMesh.FaceSmoothingMasks, RawMesh.WedgeTangentX, RawMesh.WedgeTangentY, RawMesh.WedgeTangentZ, ImportTangentOptions);
 				}
-
 			}
 		}
 		return true;

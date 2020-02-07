@@ -874,7 +874,7 @@ UStaticMesh * YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode*>& MeshNode
 		SrcModel.BuildSettings.bRemoveDegenerates = ImportOptions->bRemoveDegenerates;
 		SrcModel.BuildSettings.bBuildAdjacencyBuffer = ImportOptions->bBuildAdjacencyBuffer;
 		SrcModel.BuildSettings.bBuildReversedIndexBuffer = ImportOptions->bBuildReversedIndexBuffer;
-		SrcModel.BuildSettings.bRecomputeNormals = ImportOptions->NormalGenerationMethod == EYFBXNormalImportMethod::YFBXNIM_ComputeNormals;
+		SrcModel.BuildSettings.bRecomputeNormals = ImportOptions->NormalImportMethod == EYFBXNormalImportMethod::YFBXNIM_ComputeNormals;
 		SrcModel.BuildSettings.bRecomputeTangents = ImportOptions->NormalGenerationMethod != EYFBXNormalImportMethod::YFBXNIM_ImportNormalsAndTangents;
 		SrcModel.BuildSettings.bUseMikkTSpace = (ImportOptions->NormalGenerationMethod == EYFBXNormalGenerationMethod::MikkTSpace) && (!ImportOptions->ShouldImportNormals() || !ImportOptions->ShouldImportTangents());
 		if (ImportOptions->bGenerateLightmapUVs)

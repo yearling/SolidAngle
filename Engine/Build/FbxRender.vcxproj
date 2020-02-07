@@ -172,6 +172,7 @@
     <ClCompile Include="..\Source\Experimental\Private\FbxUtilsImport.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\game_main.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\IShader.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\mikktspace.c" />
     <ClCompile Include="..\Source\Experimental\Private\RenderMesh.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\SkeletalMeshEdit.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\SkeletalMeshImport.cpp" />
@@ -207,6 +208,7 @@
     <ClInclude Include="..\Source\Experimental\Public\FbxSkeletalMeshImportData.h" />
     <ClInclude Include="..\Source\Experimental\Public\GPUSkinPublicDefs.h" />
     <ClInclude Include="..\Source\Experimental\Public\IShader.h" />
+    <ClInclude Include="..\Source\Experimental\Public\mikktspace.h" />
     <ClInclude Include="..\Source\Experimental\Public\SkelImport.h" />
     <ClInclude Include="..\Source\Experimental\Public\SkinWeightVertexBuffer.h" />
     <ClInclude Include="..\Source\Experimental\Public\StaticMeshResources.h" />
