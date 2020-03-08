@@ -7,6 +7,8 @@
 /**
  * An element type independent interface to the resource array.
  */
+// 这货存在的意义就是，TArray没有提供 AllocCPUAccess的功能，通过这个接口提供这个能力。 ResoureArrayInterface是CPU端保存资源用的。这些数据传给GPU后可能要销毁/
+// 使用方法见TResourceArray
 class FResourceArrayInterface
 {
 public:

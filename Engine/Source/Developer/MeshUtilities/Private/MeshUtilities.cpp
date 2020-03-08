@@ -4085,8 +4085,6 @@ public:
 					else
 					{
 						ComputeTangents(RawMesh, OverlappingCorners, TangentOptions);
-						ComputeTangentsTest(RawMeshTest, OverlappingCorners, TangentOptions, RawMesh);
-						ComputeTangents_MikkTSpace(RawMeshTestMikkt, OverlappingCorners, TangentOptions);
 					}
 				}
 

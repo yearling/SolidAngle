@@ -3,8 +3,75 @@
 #include <D3Dcompiler.h>
 #include "DDSTextureLoader.h"
 #include "YYUTDXManager.h"
+#include "YRHIDefinitions.h"
+DEFINE_LOG_CATEGORY(YYUTHELPERLog);
+
+#define D3DERR(x) case x: ErrorCodeText = TEXT(#x); break;
+
+static FString GetD3D11DeviceHungErrorString(HRESULT ErrorCode)
+{
+	FString ErrorCodeText;
+
+	switch (ErrorCode)
+	{
+		D3DERR(DXGI_ERROR_DEVICE_HUNG)
+			D3DERR(DXGI_ERROR_DEVICE_REMOVED)
+			D3DERR(DXGI_ERROR_DEVICE_RESET)
+			D3DERR(DXGI_ERROR_DRIVER_INTERNAL_ERROR)
+			D3DERR(DXGI_ERROR_INVALID_CALL)
+	default: ErrorCodeText = FString::Printf(TEXT("%08X"), (int32)ErrorCode);
+	}
+
+	return ErrorCodeText;
+}
 
 
+static FString GetD3D11ErrorString(HRESULT ErrorCode, ID3D11Device* Device)
+{
+	FString ErrorCodeText;
+
+	switch (ErrorCode)
+	{
+		D3DERR(S_OK);
+		D3DERR(D3D11_ERROR_FILE_NOT_FOUND)
+			D3DERR(D3D11_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS)
+#if WITH_D3DX_LIBS
+			D3DERR(D3DERR_INVALIDCALL)
+			D3DERR(D3DERR_WASSTILLDRAWING)
+#endif	//WITH_D3DX_LIBS
+			D3DERR(E_FAIL)
+			D3DERR(E_INVALIDARG)
+			D3DERR(E_OUTOFMEMORY)
+			D3DERR(DXGI_ERROR_INVALID_CALL)
+			D3DERR(E_NOINTERFACE)
+			D3DERR(DXGI_ERROR_DEVICE_REMOVED)
+	default: ErrorCodeText = FString::Printf(TEXT("%08X"), (int32)ErrorCode);
+	}
+
+	if (ErrorCode == DXGI_ERROR_DEVICE_REMOVED && Device)
+	{
+		HRESULT hResDeviceRemoved = Device->GetDeviceRemovedReason();
+		ErrorCodeText += FString(TEXT(" ")) + GetD3D11DeviceHungErrorString(hResDeviceRemoved);
+	}
+
+	return ErrorCodeText;
+}
+
+void VerifyD3D11Result(HRESULT D3DResult, const ANSICHAR* Code, const ANSICHAR* Filename, uint32 Line, ID3D11Device* Device)
+{
+	check(FAILED(D3DResult));
+
+	const FString& ErrorString = GetD3D11ErrorString(D3DResult, Device);
+
+	UE_LOG(YYUTHELPERLog, Error, TEXT("%s failed \n at %s:%u \n with error %s"), ANSI_TO_TCHAR(Code), ANSI_TO_TCHAR(Filename), Line, *ErrorString);
+
+	///*TerminateOnDeviceRemoved*/(D3DResult, Device);
+	//TerminateOnOutOfMemory(D3DResult, false);
+
+	UE_LOG(YYUTHELPERLog, Fatal, TEXT("%s failed \n at %s:%u \n with error %s"), ANSI_TO_TCHAR(Code), ANSI_TO_TCHAR(Filename), Line, *ErrorString);
+}
+
+#define VERIFYD3D11RESULT_EX(x, Device)	{HRESULT hr = x; if (FAILED(hr)) { VerifyD3D11Result(hr,#x,__FILE__,__LINE__, Device); }}
 void ComplieShaderFromFile(const FString &file_name, const FString& entry_point, const FString& shader_model, TComPtr<ID3DBlob> &blob, bool ColomMajor /*= true*/)
 {
 	HRESULT hr = S_OK;
@@ -383,7 +450,7 @@ void CreateUAVForBuffer(DXGI_FORMAT format, int number, TComPtr<ID3D11Buffer> &b
 	AddAlias(uav, alias);
 #endif
 }
-void CreateVertexBuffer(UINT ByteWidth, const void *pData, TComPtr<ID3D11Buffer> &buffer, const FString& alias/*=""*/)
+void CreateVertexBufferStatic(UINT ByteWidth, const void *pData, TComPtr<ID3D11Buffer> &buffer, const FString& alias/*=""*/)
 {
 	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
@@ -403,6 +470,105 @@ void CreateVertexBuffer(UINT ByteWidth, const void *pData, TComPtr<ID3D11Buffer>
 	AddAlias(buffer, alias);
 #endif
 }
+
+void CreateVertexBufferStatic(YRHIResourceCreateInfo & RHIResourceInfo, TRefCountPtr<ID3D11Buffer> &buffer, const FString& alias /*= ""*/)
+{
+	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	HRESULT hr = S_OK;
+	D3D11_BUFFER_DESC desc;
+	memset(&desc, 0, sizeof(desc));
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.ByteWidth = RHIResourceInfo.ResourceArray->GetResourceDataSize();
+	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	desc.CPUAccessFlags = 0;
+	D3D11_SUBRESOURCE_DATA sub;
+	memset(&sub, 0, sizeof(sub));
+	sub.pSysMem = RHIResourceInfo.ResourceArray->GetResourceData();
+	ID3D11Buffer* D3DBuffer = nullptr;
+	if (FAILED(hr = device->CreateBuffer(&desc, &sub,&D3DBuffer)))
+	{
+
+	}
+	else
+	{
+		buffer = TRefCountPtr<ID3D11Buffer>(D3DBuffer, false);
+	}
+	if (!RHIResourceInfo.ResourceArray->GetAllowCPUAccess())
+	{
+		RHIResourceInfo.ResourceArray->Discard();
+	}
+#if defined DEBUG | defined _DEBUG
+	AddAlias(buffer, alias);
+#endif
+}
+TRefCountPtr<YRHIVertexBuffer> CreateVertexBuffer(uint32 Size, uint32 InUsage, YRHIResourceCreateInfo& CreateInfo)
+{
+	check(Size);
+	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	D3D11_BUFFER_DESC Desc;
+	ZeroMemory(&Desc, sizeof(D3D11_BUFFER_DESC));
+	Desc.ByteWidth = Size;
+	Desc.Usage = (InUsage & YBUF_AnyDynamic) ? D3D11_USAGE_DYNAMIC : D3D11_USAGE_DEFAULT;
+	Desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	Desc.CPUAccessFlags = (InUsage & YBUF_AnyDynamic) ? D3D11_CPU_ACCESS_WRITE : 0;
+	Desc.MiscFlags = 0;
+	Desc.StructureByteStride = 0;
+
+	if (InUsage & YBUF_UnorderedAccess)
+	{
+		Desc.BindFlags |= D3D11_BIND_UNORDERED_ACCESS;
+
+	/*	static bool bRequiresRawView = (GMaxRHIFeatureLevel < ERHIFeatureLevel::SM5);
+		if (bRequiresRawView)
+		{
+			Desc.MiscFlags |= D3D11_RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS;
+		}*/
+	}
+
+	if (InUsage & YBUF_ByteAddressBuffer)
+	{
+		Desc.MiscFlags |= D3D11_RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS;
+	}
+
+	if (InUsage & YBUF_StreamOutput)
+	{
+		Desc.BindFlags |= D3D11_BIND_STREAM_OUTPUT;
+	}
+
+	if (InUsage & YBUF_DrawIndirect)
+	{
+		Desc.MiscFlags |= D3D11_RESOURCE_MISC_DRAWINDIRECT_ARGS;
+	}
+
+	if (InUsage & YBUF_ShaderResource)
+	{
+		Desc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;
+	}
+	// If a resource array was provided for the resource, create the resource pre-populated
+	D3D11_SUBRESOURCE_DATA InitData;
+	D3D11_SUBRESOURCE_DATA* pInitData = NULL;
+	if (CreateInfo.ResourceArray)
+	{
+		check(Size == CreateInfo.ResourceArray->GetResourceDataSize());
+		InitData.pSysMem = CreateInfo.ResourceArray->GetResourceData();
+		InitData.SysMemPitch = Size;
+		InitData.SysMemSlicePitch = 0;
+		pInitData = &InitData;
+	}
+
+	TRefCountPtr<ID3D11Buffer> VertexBufferResource;
+	VERIFYD3D11RESULT_EX(device->CreateBuffer(&Desc, pInitData, VertexBufferResource.GetInitReference()), device);
+
+	//UpdateBufferStats(VertexBufferResource, true);
+
+	if (CreateInfo.ResourceArray)
+	{
+		// Discard the resource array's contents.
+		CreateInfo.ResourceArray->Discard();
+	}
+	return new YRHIVertexBuffer(VertexBufferResource, Size, InUsage);
+}
+
 
 void CreateVertexBufferDynamic(UINT ByteWidth, const void *pData, TComPtr<ID3D11Buffer> &buffer, const FString& alias/*=""*/)
 {
@@ -455,6 +621,60 @@ void CreateIndexBuffer(UINT ByteWidth, const void * pData, TComPtr<ID3D11Buffer>
 	AddAlias(buffer, alias);
 #endif
 }
+
+TRefCountPtr<YRHIIndexBuffer> CreateIndexBuffer(uint32 InStride, uint32 InSize, uint32 InUsage, YRHIResourceCreateInfo& CreateInfo)
+{
+	// Describe the index buffer.
+	D3D11_BUFFER_DESC Desc;
+	ZeroMemory(&Desc, sizeof(D3D11_BUFFER_DESC));
+	Desc.ByteWidth = InSize;
+	Desc.Usage = (InUsage & YBUF_AnyDynamic) ? D3D11_USAGE_DYNAMIC : D3D11_USAGE_DEFAULT;
+	Desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	Desc.CPUAccessFlags = (InUsage & YBUF_AnyDynamic) ? D3D11_CPU_ACCESS_WRITE : 0;
+	Desc.MiscFlags = 0;
+
+	if (InUsage & YBUF_UnorderedAccess)
+	{
+		Desc.BindFlags |= D3D11_BIND_UNORDERED_ACCESS;
+	}
+
+	if (InUsage & YBUF_DrawIndirect)
+	{
+		Desc.MiscFlags |= D3D11_RESOURCE_MISC_DRAWINDIRECT_ARGS;
+	}
+
+	if (InUsage & YBUF_ShaderResource)
+	{
+		Desc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;
+	}
+
+	// If a resource array was provided for the resource, create the resource pre-populated
+	D3D11_SUBRESOURCE_DATA InitData;
+	D3D11_SUBRESOURCE_DATA* pInitData = NULL;
+	if (CreateInfo.ResourceArray)
+	{
+		check(InSize == CreateInfo.ResourceArray->GetResourceDataSize());
+		InitData.pSysMem = CreateInfo.ResourceArray->GetResourceData();
+		InitData.SysMemPitch = InSize;
+		InitData.SysMemSlicePitch = 0;
+		pInitData = &InitData;
+	}
+
+	TRefCountPtr<ID3D11Buffer> IndexBufferResource;
+	TComPtr<ID3D11Device> Direct3DDevice = YYUTDXManager::GetInstance().GetD3DDevice();
+	VERIFYD3D11RESULT_EX(Direct3DDevice->CreateBuffer(&Desc, pInitData, IndexBufferResource.GetInitReference()), Direct3DDevice);
+
+	//UpdateBufferStats(IndexBufferResource, true);
+
+	if (CreateInfo.ResourceArray)
+	{
+		// Discard the resource array's contents.
+		CreateInfo.ResourceArray->Discard();
+	}
+
+	return new YRHIIndexBuffer(IndexBufferResource, InStride, InSize, InUsage);
+}
+
 void CreateSamplerLinearWrap(TComPtr<ID3D11SamplerState> &sample, const FString& alias/*=""*/)
 {
 	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();

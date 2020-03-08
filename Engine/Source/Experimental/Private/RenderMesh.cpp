@@ -307,7 +307,7 @@ void FSkeletalMeshRenderHelper::Init()
 		StaticLodModel.MultiSizeIndexContainer.GetIndexBufferData(IndexData);
 		CreateIndexBuffer((UINT)IndexData.Indices.Num() * sizeof(uint32), &IndexData.Indices[0], IB);
 
-		CreateVertexBuffer((UINT)SkinVertex.Num() * sizeof(FSoftSkinVertex), &SkinVertex[0], VBGPU);
+		CreateVertexBufferStatic((UINT)SkinVertex.Num() * sizeof(FSoftSkinVertex), &SkinVertex[0], VBGPU);
 		TArray<TComPtr<ID3D11Buffer>> BoneMatrix;
 		TArray<TComPtr<ID3D11ShaderResourceView>> BoneMatrixBufferSRV;
 		for (int32 SectionIndex = 0; SectionIndex < StaticLodModel.Sections.Num(); ++SectionIndex)
@@ -524,13 +524,13 @@ void FStaticMeshRenderHelper::Init()
 	const uint32 nVertexBufferElementCount = Meshes.VertexBuffer.GetNumVertices();
 	const uint32 nVertexBufferStride= Meshes.VertexBuffer.GetStride();
 	const uint32 nVertexBufferSize = nVertexBufferElementCount* nVertexBufferStride;
-	CreateVertexBuffer(nVertexBufferSize, pVertexBuffer, VBTangentUV);
+	CreateVertexBufferStatic(nVertexBufferSize, pVertexBuffer, VBTangentUV);
 
 	const uint8* pVertexBufferPosition = Meshes.PositionVertexBuffer.GetPositionVertexBuffer();
 	const uint32 nVertexBufferPositionCount = Meshes.PositionVertexBuffer.GetNumVertices();
 	const uint32 nVertexBufferPositionStride = Meshes.PositionVertexBuffer.GetStride();
 	const uint32 nVertexBufferPositionSize = nVertexBufferPositionCount* nVertexBufferPositionStride;
-	CreateVertexBuffer(nVertexBufferPositionSize, pVertexBufferPosition, VBPosition);
+	CreateVertexBufferStatic(nVertexBufferPositionSize, pVertexBufferPosition, VBPosition);
 
 	FRawStaticIndexBuffer & IndexBuffer = Meshes.IndexBuffer;
 	uint32 nIndexCount = IndexBuffer.GetNumIndices();

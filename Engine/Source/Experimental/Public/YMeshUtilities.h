@@ -3,6 +3,7 @@
 #include "YRawMesh.h"
 #include "YStaticMesh.h"
 #include "YStaticMeshRenderData.h"
+#include "YMeshCommon.h"
 DECLARE_LOG_CATEGORY_EXTERN(LogYMeshUtilities, Log, All);
 namespace EYTangentOptions
 {
@@ -51,4 +52,20 @@ public:
 	static void ComputeTriangleTangents(const TArray<FVector>& InVertices, const TArray<uint32>& InIndices, const TArray<FVector2D>& InUVs, TArray<FVector>& OutTangentX, TArray<FVector>& OutTangentY,TArray<FVector>& OutTangentZ,float ComparisonThreshold);
 	static void ComputeTangents(const TArray<FVector>& InVertices, const TArray<uint32>& InIndices, const TArray<FVector2D> &InUVs, const TArray<uint32>& SmoothingGroupIndices, TArray<FVector>& OutTangentX, TArray<FVector>& OutTangentY, TArray<FVector>& OutTangentZ, const uint32 TangentOptions);
 	static void FindOverlippingCorners(TMultiMap<int32, int32> &outOverlappingCorners, const TArray<FVector>& InVertices, const TArray<uint32>& InIndices, float ComparisionThreshold);
+	static void BuildStaticMeshVertexAndIndexBuffers(
+		TArray<YStaticMeshBuildVertex>& OutVertices,
+		TArray<TArray<uint32> >& OutPerSectionIndices,
+		TArray<int32>& OutWedgeMap,
+		const YRawMesh& RawMesh,
+		const TMap<uint32, uint32>& MaterialToSectionMapping,
+		float ComparisonThreshold
+	);
+
+	static void CacheOptimizeVertexAndIndexBuffer(
+		TArray<YStaticMeshBuildVertex>& Vertices,
+		TArray<TArray<uint32> >& PerSectionIndices,
+		TArray<int32>& WedgeMap
+	);
+	static void CacheOptimizeIndexBuffer(TArray<uint16>& Indices);
+	static void CacheOptimizeIndexBuffer(TArray<uint32>& Indices);
 };

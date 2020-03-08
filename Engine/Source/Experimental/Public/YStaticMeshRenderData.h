@@ -1,11 +1,12 @@
 #pragma once
 #include "core.h"
 #include "YMeshCommon.h"
+#include "YStaticMeshResource.h"
 
 
 struct YStaticMeshLODResources
 {
-
+	TArray<YStaticMeshSection> Sections;
 };
 
 class YStaticMeshRenderData
@@ -26,4 +27,6 @@ public:
 
 	/** UV data used for streaming accuracy debug view modes. In sync for rendering thread */
 	//TArray<FMeshUVChannelInfo> UVChannelDataPerMaterial;
+
+	void AllocateLODResources(int32 NumLODs);
 };

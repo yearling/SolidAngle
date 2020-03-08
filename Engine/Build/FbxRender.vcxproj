@@ -161,6 +161,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Source\Experimental\Private\Allocator2D.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\Canvas.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\FbxConvertUtilites.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\FbxLibs.cpp" />
@@ -170,21 +171,30 @@
     <ClCompile Include="..\Source\Experimental\Private\FbxStaticMeshImport.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\FbxStaticMeshImportData.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\FbxUtilsImport.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\forsythtriangleorderoptimizer.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\game_main.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\IShader.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\LayoutUV.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\mikktspace.c" />
+    <ClCompile Include="..\Source\Experimental\Private\nvtess.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\NvTriStrip.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\NvTriStripObjects.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\RenderMesh.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\YRHI.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\SkeletalMeshEdit.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\SkeletalMeshImport.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\StaticMeshEdit.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\Texture.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YComputeTangent.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YMeshUtilities.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\YPackedNormal.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\YRenderResource.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YStaticMeshRenderData.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YFbxConverter.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YMaterial.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YRawMesh.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YStaticMesh.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\YStaticMeshResource.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YTexture.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YYDX11.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YYUTApplication.cpp" />
@@ -196,19 +206,27 @@
   <ItemGroup>
     <ClInclude Include="..\Source\Experimental\Private\Canvas.h" />
     <ClInclude Include="..\Source\Experimental\Private\FbxUtility.h" />
+    <ClInclude Include="..\Source\Experimental\Private\NvTriStripObjects.h" />
     <ClInclude Include="..\Source\Experimental\Private\RenderMesh.h" />
     <ClInclude Include="..\Source\Experimental\Private\Skeleton.h" />
+    <ClInclude Include="..\Source\Experimental\Private\VertexCache.h" />
     <ClInclude Include="..\Source\Experimental\Private\VertexDef.h" />
     <ClInclude Include="..\Source\Experimental\Private\YYDX11.h" />
+    <ClInclude Include="..\Source\Experimental\Public\Allocator2D.h" />
+    <ClInclude Include="..\Source\Experimental\Public\DisjointSet.h" />
     <ClInclude Include="..\Source\Experimental\Public\FbxAnimSequenceImportData.h" />
     <ClInclude Include="..\Source\Experimental\Public\FbxConvertUtilites.h" />
     <ClInclude Include="..\Source\Experimental\Public\FbxImporter.h" />
     <ClInclude Include="..\Source\Experimental\Public\FbxLibs.h" />
     <ClInclude Include="..\Source\Experimental\Public\FbxMeshImportData.h" />
     <ClInclude Include="..\Source\Experimental\Public\FbxSkeletalMeshImportData.h" />
+    <ClInclude Include="..\Source\Experimental\Public\forsythtriangleorderoptimizer.h" />
     <ClInclude Include="..\Source\Experimental\Public\GPUSkinPublicDefs.h" />
     <ClInclude Include="..\Source\Experimental\Public\IShader.h" />
+    <ClInclude Include="..\Source\Experimental\Public\LayoutUV.h" />
     <ClInclude Include="..\Source\Experimental\Public\mikktspace.h" />
+    <ClInclude Include="..\Source\Experimental\Public\nvtess.h" />
+    <ClInclude Include="..\Source\Experimental\Public\NvTriStrip.h" />
     <ClInclude Include="..\Source\Experimental\Public\SkelImport.h" />
     <ClInclude Include="..\Source\Experimental\Public\SkinWeightVertexBuffer.h" />
     <ClInclude Include="..\Source\Experimental\Public\StaticMeshResources.h" />
@@ -220,9 +238,14 @@
     <ClInclude Include="..\Source\Experimental\Public\YMeshBuild.h" />
     <ClInclude Include="..\Source\Experimental\Public\YMeshCommon.h" />
     <ClInclude Include="..\Source\Experimental\Public\YMeshUtilities.h" />
+    <ClInclude Include="..\Source\Experimental\Public\YPackedNormal.h" />
     <ClInclude Include="..\Source\Experimental\Public\YRawMesh.h" />
+    <ClInclude Include="..\Source\Experimental\Public\YRenderResource.h" />
+    <ClInclude Include="..\Source\Experimental\Public\YRHI.h" />
+    <ClInclude Include="..\Source\Experimental\Public\YRHIDefinitions.h" />
     <ClInclude Include="..\Source\Experimental\Public\YStaticMesh.h" />
     <ClInclude Include="..\Source\Experimental\Public\YStaticMeshRenderData.h" />
+    <ClInclude Include="..\Source\Experimental\Public\YStaticMeshResource.h" />
     <ClInclude Include="..\Source\Experimental\Public\YTexture.h" />
     <ClInclude Include="..\Source\Experimental\Public\YYUT.h" />
     <ClInclude Include="..\Source\Experimental\Public\YYUTApplication.h" />

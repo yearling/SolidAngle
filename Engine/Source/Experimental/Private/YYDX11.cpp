@@ -88,14 +88,14 @@ void DX11Demo::Initial()
 	EFBXImportType OriginalImportType;
 	FFbxImporter* FbxImporter = UnFbx::FFbxImporter::GetInstance();
 	FFbxLoggerSetter Logger(FbxImporter);
-	//FString FileToImport = TEXT("D:/wolf/Wolf_UDK.fbx");
+	FString FileToImport = TEXT("D:/wolf/Wolf_UDK.fbx");
 	//FString FileToImport = TEXT("D:/wolf/Wolf_static.fbx");
 	//FString FileToImport = TEXT("D:/wolf/humanoid.fbx");
 	//FString FileToImport = TEXT("G:\\测试用FBX文件\\身体分多个模型的骨骼动画\\out.fbx");
 	//FString FileToImport = TEXT("G:\\测试用FBX文件\\挂载武器的骨骼动画2\\attack.FBX");
 	//FString FileToImport = TEXT("C:/Users/yy/Desktop/fbxtest/lod/smoothgroup.FBX");
 	//FString FileToImport = TEXT("C:/Users/yy/Desktop/fbxtest/nija/uv_mirror_plane.FBX");
-	FString FileToImport = TEXT("C:/Users/yy/Desktop/fbxtest/nija/mirror_nija_no_seam.FBX");
+	//FString FileToImport = TEXT("C:/Users/yy/Desktop/fbxtest/nija/mirror_nija_no_seam.FBX");
 	int32 ImportType = FbxImporter->GetImportType(FileToImport);
 	//int32 ImportType = 1;
 	if (ImportType == -1)
@@ -166,8 +166,8 @@ void DX11Demo::Initial()
 	ImportOptions->MaterialBasePath = FName("None");
 //#if 0
 	//FbxImporter->MainImport(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
-	ImportResultPackage ImportResult =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_StaticMesh);
-	//ImportResultPackage ImportResult =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
+	//ImportResultPackage ImportResult =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_StaticMesh);
+	ImportResultPackage ImportResult =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
 	if(ImportResult.SkeletalMesh!= nullptr)
 	{ 
 		m_pSceneRender->RegisterSkeletalMesh(ImportResult.SkeletalMesh,ImportResult.AnimSequence[0]);

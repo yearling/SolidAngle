@@ -96,17 +96,47 @@
     <ClCompile Include="..\Source\Experimental\Private\FbxConvertUtilites.cpp">
       <Filter>yconverter</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\YStaticMeshRenderData.cpp">
-      <Filter>yconverter</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\YMeshUtilities.cpp">
       <Filter>yconverter</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\YComputeTangent.cpp">
       <Filter>yconverter</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YRHI.cpp">
+      <Filter>yconverter\RHI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\Allocator2D.cpp">
+      <Filter>yconverter\Tangent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\LayoutUV.cpp">
+      <Filter>yconverter\Tangent</Filter>
+    </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\mikktspace.c">
-      <Filter>yconverter</Filter>
+      <Filter>yconverter\Tangent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\nvtess.cpp">
+      <Filter>yconverter\Tangent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\NvTriStrip.cpp">
+      <Filter>yconverter\Tangent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\NvTriStripObjects.cpp">
+      <Filter>yconverter\Tangent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\forsythtriangleorderoptimizer.cpp">
+      <Filter>yconverter\Tangent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YStaticMeshRenderData.cpp">
+      <Filter>yconverter\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YStaticMeshResource.cpp">
+      <Filter>yconverter\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YPackedNormal.cpp">
+      <Filter>yconverter\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YRenderResource.cpp">
+      <Filter>yconverter\Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -207,17 +237,56 @@
     <ClInclude Include="..\Source\Experimental\Public\YMeshBuild.h">
       <Filter>yconverter</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\YStaticMeshRenderData.h">
-      <Filter>yconverter</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\YMeshCommon.h">
       <Filter>yconverter</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\YMeshUtilities.h">
       <Filter>yconverter</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YRHI.h">
+      <Filter>yconverter\RHI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\Allocator2D.h">
+      <Filter>yconverter\Tangent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\DisjointSet.h">
+      <Filter>yconverter\Tangent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\LayoutUV.h">
+      <Filter>yconverter\Tangent</Filter>
+    </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\mikktspace.h">
-      <Filter>yconverter</Filter>
+      <Filter>yconverter\Tangent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\nvtess.h">
+      <Filter>yconverter\Tangent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\NvTriStrip.h">
+      <Filter>yconverter\Tangent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Private\NvTriStripObjects.h">
+      <Filter>yconverter\Tangent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Private\VertexCache.h">
+      <Filter>yconverter\Tangent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\forsythtriangleorderoptimizer.h">
+      <Filter>yconverter\Tangent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YStaticMeshResource.h">
+      <Filter>yconverter\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YStaticMeshRenderData.h">
+      <Filter>yconverter\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YRHIDefinitions.h">
+      <Filter>yconverter\RHI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YRenderResource.h">
+      <Filter>yconverter\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YPackedNormal.h">
+      <Filter>yconverter\Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -241,6 +310,15 @@
     </Filter>
     <Filter Include="yconverter">
       <UniqueIdentifier>{b0e9f654-fe05-415e-b6b7-8ad09db59088}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="yconverter\RHI">
+      <UniqueIdentifier>{ce7b08ed-3677-4e1a-b00a-741f01e03a79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="yconverter\Render">
+      <UniqueIdentifier>{3c3188be-0764-493b-bfe4-c2591d066d45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="yconverter\Tangent">
+      <UniqueIdentifier>{6fe641e5-044d-40de-a465-cde3a51a917f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

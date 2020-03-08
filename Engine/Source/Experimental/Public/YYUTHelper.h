@@ -2,7 +2,9 @@
 #include "YYUT.h"
 #include <string>
 #include "YYUTDXManager.h"
-
+#include "Templates\RefCounting.h"
+#include "YRHI.h"
+DECLARE_LOG_CATEGORY_EXTERN(YYUTHELPERLog, Log, All)
 template<typename T>
 inline void AddAlias(T & buffer, const FString& alias)
 {
@@ -78,21 +80,29 @@ void									CreateIndirectDrawArgsBuffer(
 	TComPtr<ID3D11Buffer> &buffer,
 	const FString& alias = "");
 
-void									CreateVertexBuffer(
+void									CreateVertexBufferStatic(
 	UINT ByteWidth,
 	const void *pData,
 	TComPtr<ID3D11Buffer> &buffer,
+	const FString& alias = "");
+void									CreateVertexBufferStatic(
+	YRHIResourceCreateInfo & RHIResourceInfo,
+	TRefCountPtr<ID3D11Buffer> &buffer,
 	const FString& alias = "");
 void									CreateVertexBufferDynamic(
 	UINT byteWidth,
 	const void *pData,
 	TComPtr<ID3D11Buffer> &buffer,
 	const FString& alias = "");
+
+	TRefCountPtr<YRHIVertexBuffer> CreateVertexBuffer(uint32 Size, uint32 InUsage, YRHIResourceCreateInfo& CreateInfo);
 void									CreateIndexBuffer(
 	UINT ByteWidth,
 	const void * pData,
 	TComPtr<ID3D11Buffer> &buffer,
 	const FString& alias = "");
+
+	TRefCountPtr<YRHIIndexBuffer> CreateIndexBuffer(uint32 InStride, uint32 InSize, uint32 InUsabe, YRHIResourceCreateInfo& CreateInof);
 //////////////////////////////////////////////////////////////////////////
 //Create Structured buffer
 void CreateStruturedBufferSRV_UAV(int numbers,
