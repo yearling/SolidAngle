@@ -314,6 +314,7 @@ public:
 
 class YStaticMeshTangentUVVertexBuffer :public YVertexBuffer
 {
+public:
 	YStaticMeshTangentUVVertexBuffer();
 	~YStaticMeshTangentUVVertexBuffer();
 	void CleanUp();
@@ -321,21 +322,29 @@ class YStaticMeshTangentUVVertexBuffer :public YVertexBuffer
 	void Serialize(FArchive& Ar, bool bNeedsCPUAccess);
 	FORCEINLINE FVector4 VertexTangentX(uint32 VertexIndex) const
 	{
+		return 		(*VertexData)[VertexIndex].GetTangentX();
 	}
-	FORCEINLINE FVector VertexTangentZ(uint32 VertexIndex) const
+	FORCEINLINE FVector4 VertexTangentZ(uint32 VertexIndex) const
 	{
+		return 		(*VertexData)[VertexIndex].GetTangentZ();
 	}
 	FORCEINLINE FVector VertexTangentY(uint32 VertexIndex) const
 	{
+		return 		(*VertexData)[VertexIndex].GetTangentY();
 	}
 	FORCEINLINE void SetVertexTangents(uint32 VertexIndex, FVector X, FVector Y, FVector Z)
 	{
+		checkSlow(VertexIndex < GetNumVertices());
+		(*VertexData)[VertexIndex].SetTangents(X, Y, Z);
 	}
 	FORCEINLINE void SetVertexUV(uint32 VertexIndex, uint32 UVIndex, const FVector2D& Vec2D)
 	{
+		checkSlow(VertexIndex < GetNumVertices());
+		(*VertexData)[VertexIndex].SetUV(UVIndex, Vec2D);
 	}
 	FORCEINLINE FVector2D GetVertexUV(uint32 VertexIndex, uint32 UVIndex) const
 	{
+		return	(*VertexData)[VertexIndex].GetUV(UVIndex);
 	}
 	FORCEINLINE uint32 GetStride() const
 	{
@@ -445,6 +454,7 @@ private:
 
 class YRawStaticIndexBuffer :public YIndexBuffer
 {
+public:
 	YRawStaticIndexBuffer(bool InNeedsCPUAccess = false);
 	void SetIndices(const TArray<uint32>& InIndices, EYIndexBufferStride::Type DesiredStride);
 	void GetCopy(TArray<uint32>& OutIndices) const;

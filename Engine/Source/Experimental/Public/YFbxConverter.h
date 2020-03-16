@@ -245,7 +245,7 @@ protected:
 	bool ConvertScene();
 	int32 GetFbxMeshCount(FbxNode* Node, bool bCountLODs, int32& OutNumLODGroups);
 	void FillFbxMeshArray(FbxNode* Node, TArray<FbxNode*>& outMeshArray);
-	UStaticMesh* ImportStaticMeshAsSingle( TArray<FbxNode*>& MeshNodeArray, const FName InName, TRefCountPtr<YStaticMesh>InStaticMesh, int LODIndex, void *ExistMeshDataPtr);
+	TRefCountPtr<YStaticMesh> ImportStaticMeshAsSingle( TArray<FbxNode*>& MeshNodeArray, const FName InName, TRefCountPtr<YStaticMesh>InStaticMesh, int LODIndex, void *ExistMeshDataPtr);
 	struct YFbxMaterial
 	{
 		FbxSurfaceMaterial* FbxMaterial;

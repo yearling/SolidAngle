@@ -7,6 +7,22 @@
 struct YStaticMeshLODResources
 {
 	TArray<YStaticMeshSection> Sections;
+	/** The buffer containing vertex data. */
+	YStaticMeshTangentUVVertexBuffer VertexBuffer;
+	/** The buffer containing the position vertex data. */
+	YPositionVertexBuffer PositionVertexBuffer;
+	/** Index buffer resource for rendering. */
+	YRawStaticIndexBuffer IndexBuffer;
+	/** Reversed index buffer, used to prevent changing culling state between drawcalls. */
+	YRawStaticIndexBuffer ReversedIndexBuffer;
+	/** Index buffer resource for rendering in depth only passes. */
+	YRawStaticIndexBuffer DepthOnlyIndexBuffer;
+	/** Reversed depth only index buffer, used to prevent changing culling state between drawcalls. */
+	YRawStaticIndexBuffer ReversedDepthOnlyIndexBuffer;
+	/** Index buffer resource for rendering wireframe mode. */
+	YRawStaticIndexBuffer WireframeIndexBuffer;
+	/** Index buffer containing adjacency information required by tessellation. */
+	YRawStaticIndexBuffer AdjacencyIndexBuffer;
 };
 
 class YStaticMeshRenderData

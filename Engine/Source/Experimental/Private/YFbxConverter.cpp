@@ -635,7 +635,7 @@ void YFbxConverter::FillFbxMeshArray(FbxNode * Node, TArray<FbxNode*>& outMeshAr
 	}
 }
 
-UStaticMesh * YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode*>& MeshNodeArray, const FName InName, TRefCountPtr<YStaticMesh>InStaticMesh, int LODIndex, void * ExistMeshDataPtr)
+TRefCountPtr<YStaticMesh> YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode*>& MeshNodeArray, const FName InName, TRefCountPtr<YStaticMesh>InStaticMesh, int LODIndex, void * ExistMeshDataPtr)
 {
 	if (MeshNodeArray.Num() == 0)
 	{
@@ -888,7 +888,11 @@ UStaticMesh * YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode*>& MeshNode
 			SrcModel.BuildSettings.bGenerateLightmapUVs = false;
 		}
 		TUniquePtr<YStaticMeshRenderData> RenderData = MakeUnique<YStaticMeshRenderData>();
-		YMeshUtilities::BuildStaticMesh(*RenderData, StaticMesh->SourceModels);
+		if (YMeshUtilities::BuildStaticMesh(*RenderData, StaticMesh->SourceModels))
+		{
+			StaticMesh->RenderData = MoveTemp(RenderData);
+			return StaticMesh;
+		}
 	}
 
 	return nullptr;
