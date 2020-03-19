@@ -19,13 +19,11 @@ YFbxConverter::YFbxConverter()
 {
 	// Create the SdkManager
 	SdkManager = FbxManager::Create();
-
 	// create an IOSettings object
 	FbxIOSettings * ios = FbxIOSettings::Create(SdkManager, IOSROOT);
 	SdkManager->SetIOSettings(ios);
-	GeometryConverter = new FbxGeometryConverter(SdkManager);
+	GeometryConverter = MakeUnique<FbxGeometryConverter>(SdkManager);
 }
-
 
 YFbxConverter::~YFbxConverter()
 {
@@ -120,12 +118,10 @@ bool YFbxConverter::Init(const FString& Filename)
 	return true;
 }
 
-
 bool YFbxConverter::Import(TUniquePtr<YFBXImportOptions> ImportOptionsIn)
 {
-	ImportOptions = std::move(ImportOptionsIn);
-	if (!ConvertScene())
-		return false;
+	ImportOptions = MoveTemp(ImportOptionsIn);
+	ConvertScene();
 
 	FbxNode* RootNodeToImport = nullptr;
 	RootNodeToImport = Scene->GetRootNode();
@@ -172,330 +168,6 @@ bool YFbxConverter::Import(TUniquePtr<YFBXImportOptions> ImportOptionsIn)
 	}
 
 	return true;
-}
-
-bool YFbxConverter::GetSceneInfo(const FString& FileName, YFbxSceneInfo& SceneInfo)
-{
-	FbxTimeSpan GlobalTimeSpan(FBXSDK_TIME_INFINITE, FBXSDK_TIME_MINUS_INFINITE);
-	SceneInfo.TotalMaterialNum = Scene->GetMaterialCount();
-	SceneInfo.TotalTextureNum = Scene->GetTextureCount();
-	SceneInfo.TotalGeometryNum = 0;
-	SceneInfo.NonSkinnedMeshNum = 0;
-	SceneInfo.SkinnedMeshNum = 0;
-	for (int32 GeometryIndex = 0; GeometryIndex < Scene->GetGeometryCount(); GeometryIndex++)
-	{
-		FbxGeometry * Geometry = Scene->GetGeometry(GeometryIndex);
-		if (Geometry->GetAttributeType() == FbxNodeAttribute::eMesh)
-		{
-			FbxNode* GeoNode = Geometry->GetNode();
-			FbxMesh* Mesh = (FbxMesh*)Geometry;
-			//Skip staticmesh sub LOD group that will be merge with the other same lod index mesh
-			if (GeoNode && Mesh->GetDeformerCount(FbxDeformer::eSkin) <= 0)
-			{
-				FbxNode* ParentNode = RecursiveFindParentLodGroup(GeoNode->GetParent());
-				if (ParentNode != nullptr && ParentNode->GetNodeAttribute() && ParentNode->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eLODGroup)
-				{
-					bool IsLodRoot = false;
-					for (int32 ChildIndex = 0; ChildIndex < ParentNode->GetChildCount(); ++ChildIndex)
-					{
-						FbxNode *MeshNode = FindLODGroupNode(ParentNode, ChildIndex);
-						if (GeoNode == MeshNode)
-						{
-							IsLodRoot = true;
-							break;
-						}
-					}
-					if (!IsLodRoot)
-					{
-						//Skip static mesh sub LOD
-						// 如下图效果
-						//			root 
-						//			/
-						//		LOD0
-						//   /    |      \
-						//  mesh0  dummy0  mesh1
-						//         /   \
-						//      mesh2  mesh3
-						//  其中mesh3就被continue了，原因是不属于lod子节点的第一个
-						continue;
-					}
-				}
-			}
-			SceneInfo.TotalGeometryNum++;
-
-			SceneInfo.MeshInfo.AddZeroed(1);
-			YFbxMeshInfo& MeshInfo = SceneInfo.MeshInfo.Last();
-			if (Geometry->GetName()[0] != '\0')
-				MeshInfo.Name = MakeName(Geometry->GetName());
-			else
-				MeshInfo.Name = MakeString(GeoNode ? GeoNode->GetName() : "None");
-			MeshInfo.bTriangulated = Mesh->IsTriangleMesh();
-			MeshInfo.MaterialNum = GeoNode ? GeoNode->GetMaterialCount() : 0;
-			MeshInfo.FaceNum = Mesh->GetPolygonCount();
-			MeshInfo.VertexNum = Mesh->GetControlPointsCount();
-
-			// LOD info
-			MeshInfo.LODGroup = NULL;
-			if (GeoNode)
-			{
-				FbxNode* ParentNode = RecursiveFindParentLodGroup(GeoNode->GetParent());
-				if (ParentNode != nullptr && ParentNode->GetNodeAttribute() && ParentNode->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eLODGroup)
-				{
-					MeshInfo.LODGroup = MakeString(ParentNode->GetName());
-					for (int32 LODIndex = 0; LODIndex < ParentNode->GetChildCount(); LODIndex++)
-					{
-						FbxNode *MeshNode = FindLODGroupNode(ParentNode, LODIndex, GeoNode);
-						if (GeoNode == MeshNode)
-						{
-							MeshInfo.LODLevel = LODIndex;
-							break;
-						}
-					}
-				}
-			}
-
-			// skeletal mesh
-			if (Mesh->GetDeformerCount(FbxDeformer::eSkin) > 0)
-			{
-				SceneInfo.SkinnedMeshNum++;
-				MeshInfo.bIsSkelMesh = true;
-				MeshInfo.MorphNum = Mesh->GetShapeCount();
-				// skeleton root
-				FbxSkin* Skin = (FbxSkin*)Mesh->GetDeformer(0, FbxDeformer::eSkin);
-				int32 ClusterCount = Skin->GetClusterCount();
-				FbxNode* Link = NULL;
-				for (int32 ClusterId = 0; ClusterId < ClusterCount; ++ClusterId)
-				{
-					FbxCluster* Cluster = Skin->GetCluster(ClusterId);
-					Link = Cluster->GetLink();
-					while (Link && Link->GetParent() && Link->GetParent()->GetSkeleton())
-					{
-						Link = Link->GetParent();
-					}
-
-					if (Link != NULL)
-					{
-						break;
-					}
-				}
-
-				MeshInfo.SkeletonRoot = MakeString(Link ? Link->GetName() : ("None"));
-				MeshInfo.SkeletonElemNum = Link ? Link->GetChildCount(true) : 0;
-
-				if (Link)
-				{
-					FbxTimeSpan AnimTimeSpan(FBXSDK_TIME_INFINITE, FBXSDK_TIME_MINUS_INFINITE);
-					Link->GetAnimationInterval(AnimTimeSpan);
-					GlobalTimeSpan.UnionAssignment(AnimTimeSpan);
-				}
-			}
-			else
-			{
-				SceneInfo.NonSkinnedMeshNum++;
-				MeshInfo.bIsSkelMesh = false;
-				MeshInfo.SkeletonRoot = NULL;
-			}
-			MeshInfo.UniqueId = Mesh->GetUniqueID();
-		}
-	}
-
-	SceneInfo.bHasAnimation = false;
-	int32 AnimCurveNodeCount = Scene->GetSrcObjectCount<FbxAnimCurveNode>();
-	// sadly Max export with animation curve node by default without any change, so 
-	// we'll have to skip the first two curves, which is translation/rotation
-	// if there is a valid animation, we'd expect there are more curve nodes than 2. 
-	for (int32 AnimCurveNodeIndex = 2; AnimCurveNodeIndex < AnimCurveNodeCount; AnimCurveNodeIndex++)
-	{
-		FbxAnimCurveNode* CurAnimCruveNode = Scene->GetSrcObject<FbxAnimCurveNode>(AnimCurveNodeIndex);
-		if (CurAnimCruveNode->IsAnimated(true))
-		{
-			SceneInfo.bHasAnimation = true;
-			break;
-		}
-	}
-
-	SceneInfo.FrameRate = FbxTime::GetFrameRate(Scene->GetGlobalSettings().GetTimeMode());
-
-	if (GlobalTimeSpan.GetDirection() == FBXSDK_TIME_FORWARD)
-	{
-		SceneInfo.TotalTime = (GlobalTimeSpan.GetDuration().GetMilliSeconds()) / 1000.f * SceneInfo.FrameRate;
-	}
-	else
-	{
-		SceneInfo.TotalTime = 0;
-	}
-
-	FbxNode* RootNode = Scene->GetRootNode();
-	YFbxNodeInfo RootInfo;
-	RootInfo.ObjectName = MakeName(RootNode->GetName());
-	RootInfo.UniqueId = RootNode->GetUniqueID();
-	RootInfo.Transform = RootNode->EvaluateGlobalTransform();
-
-	RootInfo.AttributeName = NULL;
-	RootInfo.AttributeUniqueId = 0;
-	RootInfo.AttributeType = NULL;
-
-	RootInfo.ParentName = NULL;
-	RootInfo.ParentUniqueId = 0;
-
-	//Add the rootnode to the SceneInfo
-	SceneInfo.HierarchyInfo.Add(RootInfo);
-	//Fill the hierarchy info
-	TraverseHierarchyNodeRecursively(SceneInfo, RootNode, RootInfo);
-	return true;
-}
-
-FbxNode* YFbxConverter::RecursiveFindParentLodGroup(FbxNode* pParentNode)
-{
-	if (pParentNode == nullptr)
-	{
-		return nullptr;
-	}
-	if (pParentNode->GetNodeAttribute() && pParentNode->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eLODGroup)
-	{
-		return pParentNode;
-	}
-	return RecursiveFindParentLodGroup(pParentNode->GetParent());
-}
-
-FbxNode* YFbxConverter::FindLODGroupNode(FbxNode* NodeLodGroup, int32 LodIndex, FbxNode *NodeToFind /*= nullptr*/)
-{
-	check(NodeLodGroup);
-	check(NodeLodGroup->GetNodeAttribute() && NodeLodGroup->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eLODGroup);
-	check(NodeLodGroup->GetChildCount() >= LodIndex);
-	FbxNode* ChildNode = NodeLodGroup->GetChild(LodIndex);
-	return RecursiveGetFirstMeshNode(ChildNode, NodeToFind);
-}
-
-FbxNode * YFbxConverter::RecursiveGetFirstMeshNode(FbxNode* Node, FbxNode* NodeToFind /*= nullptr*/)
-{
-	if (Node->GetMesh() != nullptr)
-		return Node;
-	for (int32 ChildIndex = 0; ChildIndex < Node->GetChildCount(); ++ChildIndex)
-	{
-		FbxNode* MeshNode = RecursiveGetFirstMeshNode(Node->GetChild(ChildIndex), NodeToFind);
-		if (NodeToFind == nullptr)
-		{
-			if (MeshNode != nullptr)
-			{
-				return MeshNode;
-			}
-		}
-		else if (MeshNode == NodeToFind)
-		{
-			return MeshNode;
-		}
-	}
-	return nullptr;
-}
-
-void YFbxConverter::TraverseHierarchyNodeRecursively(YFbxSceneInfo& SceneInfo, FbxNode *ParentNode, YFbxNodeInfo &ParentInfo)
-{
-	int32 NodeCount = ParentNode->GetChildCount();
-	for (int32 NodeIndex = 0; NodeIndex < NodeCount; ++NodeIndex)
-	{
-		FbxNode* ChildNode = ParentNode->GetChild(NodeIndex);
-		YFbxNodeInfo ChildInfo;
-		ChildInfo.ObjectName = MakeName(ChildNode->GetName());
-		ChildInfo.UniqueId = ChildNode->GetUniqueID();
-		ChildInfo.ParentName = ParentInfo.ObjectName;
-		ChildInfo.ParentUniqueId = ParentInfo.UniqueId;
-		ChildInfo.RotationPivot = ChildNode->RotationPivot.Get();
-		ChildInfo.ScalePivot = ChildNode->ScalingPivot.Get();
-		ChildInfo.Transform = ChildNode->EvaluateLocalTransform();
-		if (ChildNode->GetNodeAttribute())
-		{
-			FbxNodeAttribute *ChildAttribute = ChildNode->GetNodeAttribute();
-			ChildInfo.AttributeUniqueId = ChildAttribute->GetUniqueID();
-			if (ChildAttribute->GetName()[0] != '\0')
-			{
-				ChildInfo.AttributeName = MakeName(ChildAttribute->GetName());
-			}
-			else
-			{
-				//Get the name of the first node that link this attribute
-				ChildInfo.AttributeName = MakeName(ChildAttribute->GetNode()->GetName());
-			}
-
-			switch (ChildAttribute->GetAttributeType())
-			{
-			case FbxNodeAttribute::eUnknown:
-				ChildInfo.AttributeType = "eUnknown";
-				break;
-			case FbxNodeAttribute::eNull:
-				ChildInfo.AttributeType = "eNull";
-				break;
-			case FbxNodeAttribute::eMarker:
-				ChildInfo.AttributeType = "eMarker";
-				break;
-			case FbxNodeAttribute::eSkeleton:
-				ChildInfo.AttributeType = "eSkeleton";
-				break;
-			case FbxNodeAttribute::eMesh:
-				ChildInfo.AttributeType = "eMesh";
-				break;
-			case FbxNodeAttribute::eNurbs:
-				ChildInfo.AttributeType = "eNurbs";
-				break;
-			case FbxNodeAttribute::ePatch:
-				ChildInfo.AttributeType = "ePatch";
-				break;
-			case FbxNodeAttribute::eCamera:
-				ChildInfo.AttributeType = "eCamera";
-				break;
-			case FbxNodeAttribute::eCameraStereo:
-				ChildInfo.AttributeType = "eCameraStereo";
-				break;
-			case FbxNodeAttribute::eCameraSwitcher:
-				ChildInfo.AttributeType = "eCameraSwitcher";
-				break;
-			case FbxNodeAttribute::eLight:
-				ChildInfo.AttributeType = "eLight";
-				break;
-			case FbxNodeAttribute::eOpticalReference:
-				ChildInfo.AttributeType = "eOpticalReference";
-				break;
-			case FbxNodeAttribute::eOpticalMarker:
-				ChildInfo.AttributeType = "eOpticalMarker";
-				break;
-			case FbxNodeAttribute::eNurbsCurve:
-				ChildInfo.AttributeType = "eNurbsCurve";
-				break;
-			case FbxNodeAttribute::eTrimNurbsSurface:
-				ChildInfo.AttributeType = "eTrimNurbsSurface";
-				break;
-			case FbxNodeAttribute::eBoundary:
-				ChildInfo.AttributeType = "eBoundary";
-				break;
-			case FbxNodeAttribute::eNurbsSurface:
-				ChildInfo.AttributeType = "eNurbsSurface";
-				break;
-			case FbxNodeAttribute::eShape:
-				ChildInfo.AttributeType = "eShape";
-				break;
-			case FbxNodeAttribute::eLODGroup:
-				ChildInfo.AttributeType = "eLODGroup";
-				break;
-			case FbxNodeAttribute::eSubDiv:
-				ChildInfo.AttributeType = "eSubDiv";
-				break;
-			case FbxNodeAttribute::eCachedEffect:
-				ChildInfo.AttributeType = "eCachedEffect";
-				break;
-			case FbxNodeAttribute::eLine:
-				ChildInfo.AttributeType = "eLine";
-				break;
-			}
-		}
-		else
-		{
-			ChildInfo.AttributeType = "eNull";
-			ChildInfo.AttributeName = NULL;
-		}
-
-		SceneInfo.HierarchyInfo.Add(ChildInfo);
-		TraverseHierarchyNodeRecursively(SceneInfo, ChildNode, ChildInfo);
-	}
 }
 
 ANSICHAR* YFbxConverter::MakeName(const ANSICHAR* Name)
@@ -549,7 +221,7 @@ static void DebugRootInfo(FbxNode* pRoot)
 	FbxVector4 preRotation = pRoot->GetPreRotation(FbxNode::EPivotSet::eSourcePivot);
 	FbxVector4 vecScale = pRoot->EvaluateLocalScaling();
 }
-bool YFbxConverter::ConvertScene()
+void YFbxConverter::ConvertScene()
 {
 	FbxNode* pRootNode = Scene->GetRootNode();
 	DebugRootInfo(pRootNode);
@@ -588,8 +260,6 @@ bool YFbxConverter::ConvertScene()
 		DebugRootInfo(pRootNode->GetChild(0));
 		DebugRootInfo(pRootNode->GetChild(0)->GetChild(0));
 	}
-
-	return true;
 }
 
 int32 YFbxConverter::GetFbxMeshCount(FbxNode * Node, bool bCountLODs, int32 & OutNumLODGroups)
@@ -641,22 +311,10 @@ TRefCountPtr<YStaticMesh> YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode
 	{
 		return nullptr;
 	}
-	int32 NumVerts = 0;
-	for (int32 MeshIndex = 0; MeshIndex < MeshNodeArray.Num(); MeshIndex++)
-	{
-		FbxNode* Node = MeshNodeArray[MeshIndex];
-		FbxMesh* FbxMesh = Node->GetMesh();
-		if (FbxMesh)
-		{
-			NumVerts += FbxMesh->GetControlPointsCount();
-			if (!ImportOptions->bCombineToSingle)
-			{
-				NumVerts = 0;
-			}
-		}
-	}
-	FString MeshName = InName.ToString();
+
 	bool bBuildStatus = true;
+
+	// 检查光滑组是否存在
 	for (int32 MeshIndex = 0; MeshIndex < MeshNodeArray.Num(); MeshIndex++)
 	{
 		FbxNode* Node = MeshNodeArray[MeshIndex];
@@ -667,7 +325,9 @@ TRefCountPtr<YStaticMesh> YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode
 			UE_LOG(LogYFbxConverter, Log, TEXT("Prompt_NoSmoothgroupForFBXScene , No smoothing group information was found in this FBX scene.  Please make sure to enable the 'Export Smoothing Groups' option in the FBX Exporter plug-in before exporting the file.  Even for tools that don't support smoothing groups, the FBX Exporter will generate appropriate smoothing data at export-time so that correct vertex normals can be inferred while importing."));
 		}
 	}
+
 	TRefCountPtr<YStaticMesh> StaticMesh(new YStaticMesh());
+	StaticMesh->Name = InName.ToString();
 	if (StaticMesh->SourceModels.Num() < LODIndex + 1)
 	{
 		new(StaticMesh->SourceModels) YStaticMeshSourceModel();
@@ -773,7 +433,7 @@ TRefCountPtr<YStaticMesh> YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode
 			//SkinIndex 如果没有Face引用，则其值比较大，排到靠后
 			int32 RemappedIndex = MaterialMap[MaterialIndex];
 			uint32 SortedMaterialKey = ((uint32)SkinIndex << 16) | ((uint32)RemappedIndex & 0xffff);
-			if (!SortedMaterialIndex.IsValidIndex(SortedMaterialKey)) // 没看懂
+			//if (!SortedMaterialIndex.IsValidIndex(SortedMaterialKey)) // 没看懂
 			{
 				SortedMaterialIndex.Add(SortedMaterialKey);
 			}
@@ -1005,7 +665,7 @@ struct YFBXUVs
 				}
 			}
 		}
-		//限制到4层
+		//限制到8层 uv
 		UniqueUVCount = FMath::Min<int32>(UniqueUVCount, MAX_MESH_TEXTURE_COORDS);
 	}
 
@@ -1048,6 +708,7 @@ bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<YSta
 	check(StaticMesh->SourceModels.IsValidIndex(LODIndex));
 	FbxMesh* Mesh = Node->GetMesh();
 	YStaticMeshSourceModel& SrcModel = StaticMesh->SourceModels[LODIndex];
+	//1. 去掉坏的多边形
 	Mesh->RemoveBadPolygons();
 
 	FbxLayer* BaseLayer = Mesh->GetLayer(0);
@@ -1056,6 +717,7 @@ bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<YSta
 		UE_LOG(LogYFbxConverter, Error, TEXT("There is no geometry information in mesh %s"), Mesh->GetName());
 		return false;
 	}
+	//2. 保存uv信息，方便后面使用
 	YFBXUVs FBXUVs(Mesh);
 	int32 FBXNamedLightMapCoordinateIndex = FBXUVs.FindLightUVIndex();
 	if (FBXNamedLightMapCoordinateIndex != INDEX_NONE)
@@ -1064,7 +726,7 @@ bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<YSta
 	}
 
 	int32 MaterialCount = 0;
-	TArray<YMaterialInterface*> Materials;
+	TArray<YMaterialInterface*> Materials;//Materials中存的是按FBX NODE中Material的顺序来的，mesh用的时候需要索引
 	if (ImportOptions->bImportMaterials)
 	{
 		CreateNodeMaterials(Node, Materials, FBXUVs.UVSets);
@@ -1675,3 +1337,300 @@ bool YFbxConverter::IsOddNegativeScale(FbxAMatrix& TotalMatrix)
 	}
 	return NegtiveNum == 1 || NegtiveNum == 3;
 }
+
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+
+bool YFbxConverter::GetSceneInfo(const FString& FileName, YFbxSceneInfo& SceneInfo)
+{
+	FbxTimeSpan GlobalTimeSpan(FBXSDK_TIME_INFINITE, FBXSDK_TIME_MINUS_INFINITE);
+	SceneInfo.TotalMaterialNum = Scene->GetMaterialCount();
+	SceneInfo.TotalTextureNum = Scene->GetTextureCount();
+	SceneInfo.TotalGeometryNum = 0;
+	SceneInfo.NonSkinnedMeshNum = 0;
+	SceneInfo.SkinnedMeshNum = 0;
+	for (int32 GeometryIndex = 0; GeometryIndex < Scene->GetGeometryCount(); GeometryIndex++)
+	{
+		FbxGeometry * Geometry = Scene->GetGeometry(GeometryIndex);
+		if (Geometry->GetAttributeType() == FbxNodeAttribute::eMesh)
+		{
+			FbxNode* GeoNode = Geometry->GetNode();
+			FbxMesh* Mesh = (FbxMesh*)Geometry;
+			SceneInfo.TotalGeometryNum++;
+			SceneInfo.MeshInfo.AddZeroed(1);
+			YFbxMeshInfo& MeshInfo = SceneInfo.MeshInfo.Last();
+			if (Geometry->GetName()[0] != '\0')
+				MeshInfo.Name = MakeName(Geometry->GetName());
+			else
+				MeshInfo.Name = MakeString(GeoNode ? GeoNode->GetName() : "None");
+			MeshInfo.bTriangulated = Mesh->IsTriangleMesh();
+			MeshInfo.MaterialNum = GeoNode ? GeoNode->GetMaterialCount() : 0;
+			MeshInfo.FaceNum = Mesh->GetPolygonCount();
+			MeshInfo.VertexNum = Mesh->GetControlPointsCount();
+
+			// LOD info
+			MeshInfo.LODGroup = NULL;
+			if (GeoNode)
+			{
+				FbxNode* ParentNode = RecursiveFindParentLodGroup(GeoNode->GetParent());
+				if (ParentNode != nullptr && ParentNode->GetNodeAttribute() && ParentNode->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eLODGroup)
+				{
+					MeshInfo.LODGroup = MakeString(ParentNode->GetName());
+					for (int32 LODIndex = 0; LODIndex < ParentNode->GetChildCount(); LODIndex++)
+					{
+						FbxNode *MeshNode = FindLODGroupNode(ParentNode, LODIndex, GeoNode);
+						if (GeoNode == MeshNode)
+						{
+							MeshInfo.LODLevel = LODIndex;
+							break;
+						}
+					}
+				}
+			}
+
+			// skeletal mesh
+			if (Mesh->GetDeformerCount(FbxDeformer::eSkin) > 0)
+			{
+				SceneInfo.SkinnedMeshNum++;
+				MeshInfo.bIsSkelMesh = true;
+				MeshInfo.MorphNum = Mesh->GetShapeCount();
+				// skeleton root
+				FbxSkin* Skin = (FbxSkin*)Mesh->GetDeformer(0, FbxDeformer::eSkin);
+				int32 ClusterCount = Skin->GetClusterCount();
+				FbxNode* Link = NULL;
+				for (int32 ClusterId = 0; ClusterId < ClusterCount; ++ClusterId)
+				{
+					FbxCluster* Cluster = Skin->GetCluster(ClusterId);
+					Link = Cluster->GetLink();
+					while (Link && Link->GetParent() && Link->GetParent()->GetSkeleton())
+					{
+						Link = Link->GetParent();
+					}
+
+					if (Link != NULL)
+					{
+						break;
+					}
+				}
+
+				MeshInfo.SkeletonRoot = MakeString(Link ? Link->GetName() : ("None"));
+				MeshInfo.SkeletonElemNum = Link ? Link->GetChildCount(true) : 0;
+
+				if (Link)
+				{
+					FbxTimeSpan AnimTimeSpan(FBXSDK_TIME_INFINITE, FBXSDK_TIME_MINUS_INFINITE);
+					Link->GetAnimationInterval(AnimTimeSpan);
+					GlobalTimeSpan.UnionAssignment(AnimTimeSpan);
+				}
+			}
+			else
+			{
+				SceneInfo.NonSkinnedMeshNum++;
+				MeshInfo.bIsSkelMesh = false;
+				MeshInfo.SkeletonRoot = NULL;
+			}
+			MeshInfo.UniqueId = Mesh->GetUniqueID();
+		}
+	}
+
+	SceneInfo.bHasAnimation = false;
+	int32 AnimCurveNodeCount = Scene->GetSrcObjectCount<FbxAnimCurveNode>();
+	// sadly Max export with animation curve node by default without any change, so 
+	// we'll have to skip the first two curves, which is translation/rotation
+	// if there is a valid animation, we'd expect there are more curve nodes than 2. 
+	for (int32 AnimCurveNodeIndex = 2; AnimCurveNodeIndex < AnimCurveNodeCount; AnimCurveNodeIndex++)
+	{
+		FbxAnimCurveNode* CurAnimCruveNode = Scene->GetSrcObject<FbxAnimCurveNode>(AnimCurveNodeIndex);
+		if (CurAnimCruveNode->IsAnimated(true))
+		{
+			SceneInfo.bHasAnimation = true;
+			break;
+		}
+	}
+
+	SceneInfo.FrameRate = FbxTime::GetFrameRate(Scene->GetGlobalSettings().GetTimeMode());
+
+	if (GlobalTimeSpan.GetDirection() == FBXSDK_TIME_FORWARD)
+	{
+		SceneInfo.TotalTime = (GlobalTimeSpan.GetDuration().GetMilliSeconds()) / 1000.f * SceneInfo.FrameRate;
+	}
+	else
+	{
+		SceneInfo.TotalTime = 0;
+	}
+
+	FbxNode* RootNode = Scene->GetRootNode();
+	YFbxNodeInfo RootInfo;
+	RootInfo.ObjectName = MakeName(RootNode->GetName());
+	RootInfo.UniqueId = RootNode->GetUniqueID();
+	RootInfo.Transform = RootNode->EvaluateGlobalTransform();
+
+	RootInfo.AttributeName = NULL;
+	RootInfo.AttributeUniqueId = 0;
+	RootInfo.AttributeType = NULL;
+
+	RootInfo.ParentName = NULL;
+	RootInfo.ParentUniqueId = 0;
+
+	//Add the rootnode to the SceneInfo
+	SceneInfo.HierarchyInfo.Add(RootInfo);
+	//Fill the hierarchy info
+	TraverseHierarchyNodeRecursively(SceneInfo, RootNode, RootInfo);
+	return true;
+}
+
+FbxNode* YFbxConverter::RecursiveFindParentLodGroup(FbxNode* pParentNode)
+{
+	if (pParentNode == nullptr)
+	{
+		return nullptr;
+	}
+	if (pParentNode->GetNodeAttribute() && pParentNode->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eLODGroup)
+	{
+		return pParentNode;
+	}
+	return RecursiveFindParentLodGroup(pParentNode->GetParent());
+}
+
+FbxNode* YFbxConverter::FindLODGroupNode(FbxNode* NodeLodGroup, int32 LodIndex, FbxNode *NodeToFind /*= nullptr*/)
+{
+	check(NodeLodGroup);
+	check(NodeLodGroup->GetNodeAttribute() && NodeLodGroup->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eLODGroup);
+	check(NodeLodGroup->GetChildCount() >= LodIndex);
+	FbxNode* ChildNode = NodeLodGroup->GetChild(LodIndex);
+	return RecursiveGetFirstMeshNode(ChildNode, NodeToFind);
+}
+
+FbxNode * YFbxConverter::RecursiveGetFirstMeshNode(FbxNode* Node, FbxNode* NodeToFind /*= nullptr*/)
+{
+	if (Node->GetMesh() != nullptr)
+		return Node;
+	for (int32 ChildIndex = 0; ChildIndex < Node->GetChildCount(); ++ChildIndex)
+	{
+		FbxNode* MeshNode = RecursiveGetFirstMeshNode(Node->GetChild(ChildIndex), NodeToFind);
+		if (NodeToFind == nullptr)
+		{
+			if (MeshNode != nullptr)
+			{
+				return MeshNode;
+			}
+		}
+		else if (MeshNode == NodeToFind)
+		{
+			return MeshNode;
+		}
+	}
+	return nullptr;
+}
+
+void YFbxConverter::TraverseHierarchyNodeRecursively(YFbxSceneInfo& SceneInfo, FbxNode *ParentNode, YFbxNodeInfo &ParentInfo)
+{
+	int32 NodeCount = ParentNode->GetChildCount();
+	for (int32 NodeIndex = 0; NodeIndex < NodeCount; ++NodeIndex)
+	{
+		FbxNode* ChildNode = ParentNode->GetChild(NodeIndex);
+		YFbxNodeInfo ChildInfo;
+		ChildInfo.ObjectName = MakeName(ChildNode->GetName());
+		ChildInfo.UniqueId = ChildNode->GetUniqueID();
+		ChildInfo.ParentName = ParentInfo.ObjectName;
+		ChildInfo.ParentUniqueId = ParentInfo.UniqueId;
+		ChildInfo.RotationPivot = ChildNode->RotationPivot.Get();
+		ChildInfo.ScalePivot = ChildNode->ScalingPivot.Get();
+		ChildInfo.Transform = ChildNode->EvaluateLocalTransform();
+		if (ChildNode->GetNodeAttribute())
+		{
+			FbxNodeAttribute *ChildAttribute = ChildNode->GetNodeAttribute();
+			ChildInfo.AttributeUniqueId = ChildAttribute->GetUniqueID();
+			if (ChildAttribute->GetName()[0] != '\0')
+			{
+				ChildInfo.AttributeName = MakeName(ChildAttribute->GetName());
+			}
+			else
+			{
+				//Get the name of the first node that link this attribute
+				ChildInfo.AttributeName = MakeName(ChildAttribute->GetNode()->GetName());
+			}
+
+			switch (ChildAttribute->GetAttributeType())
+			{
+			case FbxNodeAttribute::eUnknown:
+				ChildInfo.AttributeType = "eUnknown";
+				break;
+			case FbxNodeAttribute::eNull:
+				ChildInfo.AttributeType = "eNull";
+				break;
+			case FbxNodeAttribute::eMarker:
+				ChildInfo.AttributeType = "eMarker";
+				break;
+			case FbxNodeAttribute::eSkeleton:
+				ChildInfo.AttributeType = "eSkeleton";
+				break;
+			case FbxNodeAttribute::eMesh:
+				ChildInfo.AttributeType = "eMesh";
+				break;
+			case FbxNodeAttribute::eNurbs:
+				ChildInfo.AttributeType = "eNurbs";
+				break;
+			case FbxNodeAttribute::ePatch:
+				ChildInfo.AttributeType = "ePatch";
+				break;
+			case FbxNodeAttribute::eCamera:
+				ChildInfo.AttributeType = "eCamera";
+				break;
+			case FbxNodeAttribute::eCameraStereo:
+				ChildInfo.AttributeType = "eCameraStereo";
+				break;
+			case FbxNodeAttribute::eCameraSwitcher:
+				ChildInfo.AttributeType = "eCameraSwitcher";
+				break;
+			case FbxNodeAttribute::eLight:
+				ChildInfo.AttributeType = "eLight";
+				break;
+			case FbxNodeAttribute::eOpticalReference:
+				ChildInfo.AttributeType = "eOpticalReference";
+				break;
+			case FbxNodeAttribute::eOpticalMarker:
+				ChildInfo.AttributeType = "eOpticalMarker";
+				break;
+			case FbxNodeAttribute::eNurbsCurve:
+				ChildInfo.AttributeType = "eNurbsCurve";
+				break;
+			case FbxNodeAttribute::eTrimNurbsSurface:
+				ChildInfo.AttributeType = "eTrimNurbsSurface";
+				break;
+			case FbxNodeAttribute::eBoundary:
+				ChildInfo.AttributeType = "eBoundary";
+				break;
+			case FbxNodeAttribute::eNurbsSurface:
+				ChildInfo.AttributeType = "eNurbsSurface";
+				break;
+			case FbxNodeAttribute::eShape:
+				ChildInfo.AttributeType = "eShape";
+				break;
+			case FbxNodeAttribute::eLODGroup:
+				ChildInfo.AttributeType = "eLODGroup";
+				break;
+			case FbxNodeAttribute::eSubDiv:
+				ChildInfo.AttributeType = "eSubDiv";
+				break;
+			case FbxNodeAttribute::eCachedEffect:
+				ChildInfo.AttributeType = "eCachedEffect";
+				break;
+			case FbxNodeAttribute::eLine:
+				ChildInfo.AttributeType = "eLine";
+				break;
+			}
+		}
+		else
+		{
+			ChildInfo.AttributeType = "eNull";
+			ChildInfo.AttributeName = NULL;
+		}
+
+		SceneInfo.HierarchyInfo.Add(ChildInfo);
+		TraverseHierarchyNodeRecursively(SceneInfo, ChildNode, ChildInfo);
+	}
+}
+

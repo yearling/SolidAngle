@@ -13,9 +13,9 @@ public:
 	YTextureSampler();
 	YTextureSampleType SamplerType;
 	YTexture* Texture;
-	float ScalingU;
-	float ScalingV;
-	int32 UVIndex;
+	float ScalingU=1.0;
+	float ScalingV=1.0;
+	int32 UVIndex=0;
 };
 
 class YMaterialInterface

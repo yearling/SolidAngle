@@ -180,6 +180,7 @@
     <ClCompile Include="..\Source\Experimental\Private\NvTriStrip.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\NvTriStripObjects.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\RenderMesh.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\YMeshUtilitiesWrap.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YRHI.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\SkeletalMeshEdit.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\SkeletalMeshImport.cpp" />
@@ -234,10 +235,12 @@
     <ClInclude Include="..\Source\Experimental\Public\Texture.h" />
     <ClInclude Include="..\Source\Experimental\Public\StaticMeshImportData.h" />
     <ClInclude Include="..\Source\Experimental\Public\YFbxConverter.h" />
+    <ClInclude Include="..\Source\Experimental\Public\YFbxImportOptions.h" />
     <ClInclude Include="..\Source\Experimental\Public\YMaterial.h" />
     <ClInclude Include="..\Source\Experimental\Public\YMeshBuild.h" />
     <ClInclude Include="..\Source\Experimental\Public\YMeshCommon.h" />
     <ClInclude Include="..\Source\Experimental\Public\YMeshUtilities.h" />
+    <ClInclude Include="..\Source\Experimental\Public\YMeshUtilitiesWrap.h" />
     <ClInclude Include="..\Source\Experimental\Public\YPackedNormal.h" />
     <ClInclude Include="..\Source\Experimental\Public\YRawMesh.h" />
     <ClInclude Include="..\Source\Experimental\Public\YRenderResource.h" />

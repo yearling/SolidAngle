@@ -138,6 +138,9 @@
     <ClCompile Include="..\Source\Experimental\Private\YRenderResource.cpp">
       <Filter>yconverter\Render</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YMeshUtilitiesWrap.cpp">
+      <Filter>yconverter\Tangent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Experimental\Public\YYUT.h">
@@ -287,6 +290,12 @@
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\YPackedNormal.h">
       <Filter>yconverter\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YFbxImportOptions.h">
+      <Filter>yconverter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YMeshUtilitiesWrap.h">
+      <Filter>yconverter\Tangent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

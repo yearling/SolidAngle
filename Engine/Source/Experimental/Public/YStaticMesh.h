@@ -116,4 +116,5 @@ public:
 	int32 LightMapResolution;
 	int32 LightMapCoordinateIndex;
 	TUniquePtr<class YStaticMeshRenderData> RenderData;
+	FString Name;
 };
