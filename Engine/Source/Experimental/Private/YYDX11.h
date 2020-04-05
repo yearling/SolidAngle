@@ -2,6 +2,8 @@
 #include "YYUTApplication.h"
 #include <memory>
 #include "Core.h"
+#include "YScene.h"
+#include "YRenderInterface.h"
 class FBXReader;
 class FirstPersionCamera;
 class ICamera;
@@ -51,4 +53,6 @@ private:
 private:
 	//std::shared_ptr<DepthPeeling::ObjPrimitive> m_spObj;
 	std::shared_ptr<RenderScene>		m_pSceneRender;
+	TRefCountPtr<YScene>            MainScene;
+	TUniquePtr<IYRenderInterface>    MainRender;
 };

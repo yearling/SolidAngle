@@ -384,7 +384,7 @@ public:
 	bool ENGINE_API InitResource();
 	bool bInitResource;
 	bool ReleaseResource();
-	void Render(TSharedRef<FRenderInfo> RenderInf);
+	void Render(TSharedRef<YRenderInfo> RenderInf);
 public:
 	/** Pointer to the data used to render this static mesh. */
 	TUniquePtr<class FStaticMeshRenderData> RenderData;

@@ -118,7 +118,7 @@ bool YFbxConverter::Init(const FString& Filename)
 	return true;
 }
 
-bool YFbxConverter::Import(TUniquePtr<YFBXImportOptions> ImportOptionsIn)
+TRefCountPtr<YStaticMesh>  YFbxConverter::Import(TUniquePtr<YFBXImportOptions> ImportOptionsIn)
 {
 	ImportOptions = MoveTemp(ImportOptionsIn);
 	ConvertScene();
@@ -154,19 +154,29 @@ bool YFbxConverter::Import(TUniquePtr<YFBXImportOptions> ImportOptionsIn)
 		{
 			int32 NodeIndex = 0;
 			int32 ImportedMeshCount = 0;
-			UStaticMesh* NewStaticMesh = NULL;
 			if (bCombineMeshes)
 			{
 				TArray<FbxNode*> FbxMeshArray;
 				FillFbxMeshArray(RootNodeToImport, FbxMeshArray);
 				if (FbxMeshArray.Num() > 0)
 				{
-					ImportStaticMeshAsSingle(FbxMeshArray, "StaticMesh", nullptr, 0, nullptr);
+					FString MeshName = FPaths::GetBaseFilename(FileToImport);
+					TRefCountPtr<YStaticMesh> ImportedStaticMesh =	ImportStaticMeshAsSingle(FbxMeshArray, FName(*MeshName), nullptr, 0, nullptr);
+					if (ImportedStaticMesh)
+					{
+						AlignMaterialSection(ImportedStaticMesh);
+					}
+					return ImportedStaticMesh;
 				}
 			}
 		}
 	}
 
+	return nullptr;
+}
+
+bool YFbxConverter::Save(const FString& DesDir)
+{
 	return true;
 }
 
@@ -307,6 +317,7 @@ void YFbxConverter::FillFbxMeshArray(FbxNode * Node, TArray<FbxNode*>& outMeshAr
 
 TRefCountPtr<YStaticMesh> YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode*>& MeshNodeArray, const FName InName, TRefCountPtr<YStaticMesh>InStaticMesh, int LODIndex, void * ExistMeshDataPtr)
 {
+	//Name = InName;
 	if (MeshNodeArray.Num() == 0)
 	{
 		return nullptr;
@@ -1338,6 +1349,23 @@ bool YFbxConverter::IsOddNegativeScale(FbxAMatrix& TotalMatrix)
 	return NegtiveNum == 1 || NegtiveNum == 3;
 }
 
+
+void YFbxConverter::AlignMaterialSection(TRefCountPtr<YStaticMesh>& InMesh)
+{
+	//lod0 
+	YMeshSectionInfoMap& SectionInfo =InMesh->SectionInfoMap;
+	for (int32 LODResourceIndex = 0; LODResourceIndex < InMesh->RenderData->LODResources.Num(); ++LODResourceIndex)
+	{
+		YStaticMeshLODResources& LOD = InMesh->RenderData->LODResources[LODResourceIndex];
+		int32 NumSections = LOD.Sections.Num();
+		for (int32 SectionIndex = 0; SectionIndex < NumSections; ++SectionIndex)
+		{
+			YMeshSectionInfo Info = SectionInfo.Get(LODResourceIndex, SectionIndex);
+			Info.MaterialIndex = LOD.Sections[SectionIndex].MaterialIndex;
+			SectionInfo.Set(LODResourceIndex, SectionIndex, Info);
+		}
+	}
+}
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////

@@ -10,6 +10,7 @@
 #include "FbxImporter.h"
 #include "Misc/FbxErrors.h"
 #include "YFbxConverter.h"
+#include "ForwardRender.h"
 using std::cout;
 using std::endl;
 
@@ -88,13 +89,13 @@ void DX11Demo::Initial()
 	EFBXImportType OriginalImportType;
 	FFbxImporter* FbxImporter = UnFbx::FFbxImporter::GetInstance();
 	FFbxLoggerSetter Logger(FbxImporter);
-	FString FileToImport = TEXT("D:/wolf/Wolf_UDK.fbx");
+	//FString FileToImport = TEXT("D:/wolf/Wolf_UDK.fbx");
 	//FString FileToImport = TEXT("D:/wolf/Wolf_static.fbx");
 	//FString FileToImport = TEXT("D:/wolf/humanoid.fbx");
 	//FString FileToImport = TEXT("G:\\测试用FBX文件\\身体分多个模型的骨骼动画\\out.fbx");
 	//FString FileToImport = TEXT("G:\\测试用FBX文件\\挂载武器的骨骼动画2\\attack.FBX");
 	//FString FileToImport = TEXT("C:/Users/yy/Desktop/fbxtest/lod/smoothgroup.FBX");
-	//FString FileToImport = TEXT("C:/Users/yy/Desktop/fbxtest/nija/uv_mirror_plane.FBX");
+	FString FileToImport = TEXT("C:/Users/yy/Desktop/fbxtest/nija/uv_mirror_plane.FBX");
 	//FString FileToImport = TEXT("C:/Users/yy/Desktop/fbxtest/nija/mirror_nija_no_seam.FBX");
 	int32 ImportType = FbxImporter->GetImportType(FileToImport);
 	//int32 ImportType = 1;
@@ -125,8 +126,8 @@ void DX11Demo::Initial()
 	ImportOptions->ImportRotation = FRotator(0.0, 0.0, 0.0);
 	ImportOptions->ImportUniformScale = 1.0f;
 	ImportOptions->NormalImportMethod = FBXNIM_ComputeNormals;
-	//ImportOptions->NormalGenerationMethod = EFBXNormalGenerationMethod::MikkTSpace;
-	ImportOptions->NormalGenerationMethod = EFBXNormalGenerationMethod::BuiltIn;
+	ImportOptions->NormalGenerationMethod = EFBXNormalGenerationMethod::MikkTSpace;
+	//ImportOptions->NormalGenerationMethod = EFBXNormalGenerationMethod::BuiltIn;
 	ImportOptions->bTransformVertexToAbsolute = true;
 	ImportOptions->bBakePivotInVertex = false;
 	ImportOptions->bCombineToSingle = true;
@@ -167,47 +168,89 @@ void DX11Demo::Initial()
 //#if 0
 	//FbxImporter->MainImport(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
 	//ImportResultPackage ImportResult =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_StaticMesh);
-	ImportResultPackage ImportResult =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
-	if(ImportResult.SkeletalMesh!= nullptr)
-	{ 
-		m_pSceneRender->RegisterSkeletalMesh(ImportResult.SkeletalMesh,ImportResult.AnimSequence[0]);
-		m_pSceneRender->PlayAnimation(ImportResult.AnimSequence[0]);
-	}
-	else if (ImportResult.StaticMeshes.Num())
-	{
-		for (UStaticMesh* pMesh : ImportResult.StaticMeshes)
-		{
-			m_pSceneRender->RegisterStaticMesh(pMesh);
-	/*		FString NewFileName = pMesh->GetName() + "yy.yyStatic";
+	//ImportResultPackage ImportResult =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
+	//if(ImportResult.SkeletalMesh!= nullptr)
+	//{ 
+		//m_pSceneRender->RegisterSkeletalMesh(ImportResult.SkeletalMesh,ImportResult.AnimSequence[0]);
+		//m_pSceneRender->PlayAnimation(ImportResult.AnimSequence[0]);
+	//}
+	//else if (ImportResult.StaticMeshes.Num())
+	//{
+		//for (UStaticMesh* pMesh : ImportResult.StaticMeshes)
+		//{
+			//m_pSceneRender->RegisterStaticMesh(pMesh);
+			/*FString NewFileName = pMesh->GetName() + "yy.yyStatic";
 			TUniquePtr<FArchive> FileWriter(IFileManager::Get().CreateFileWriter(*NewFileName));
 			if (FileWriter)
 			{
 				pMesh->Serialize(*FileWriter);
 			}*/
-		}
+		//}
 		
 		
-	}
+	//}
 //#else
+	MainScene = TRefCountPtr<YScene>(new YScene);
 	TUniquePtr<YFbxConverter>  FbxConverter = MakeUnique<YFbxConverter>();
 	//FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbx/dummywithlod.FBX"));
 	//if (FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbx/multiUVs/box2uv.FBX")))
 	//if (FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbx/one_mesh_with_multi_material/box.FBX")))
-	if (FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbxtest/nija/mirror_nija_no_seam.FBX")))
+	//if (FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbxtest/nija/mirror_nija_no_seam.FBX")))
+	//FString ImportFilePath = TEXT("C:/Users/yy/Desktop/fbxtest/nija/uv_mirror_plane.FBX");
+	FString ImportFilePath = TEXT("C:/Users/yy/Desktop/fbxtest/nija/mirror_nija_no_seam.FBX");
+#define  EMPORT 0
+#if EMPORT
+	TRefCountPtr<YStaticMesh>  ExporteStaticMesh;
+	if (FbxConverter->Init(ImportFilePath))
 	{
-		TUniquePtr<YFBXImportOptions> ImportOptionsy = MakeUnique< YFBXImportOptions>();
-		FbxConverter->Import(std::move(ImportOptionsy));
+		TUniquePtr<YFBXImportOptions> ImportOptions = MakeUnique< YFBXImportOptions>();
+		ExporteStaticMesh = FbxConverter->Import(MoveTemp(ImportOptions));
+		//ImportedStaticMesh->InitRenderResource();
+		//MainScene->RegisterToScene(ImportedStaticMesh);
 	}
-	
-	/*TUniquePtr<FArchive>FileReader(IFileManager::Get().CreateFileReader(TEXT("yy.yyStatic")));
-	UStaticMesh* pSerialMesh = new UStaticMesh();
+	FString ImportFileName = FPaths::GetBaseFilename(ImportFilePath);
+	FString ExportFileName = ImportFileName + TEXT(".yasset");
+	TUniquePtr<FArchive> FileWriter(IFileManager::Get().CreateFileWriter(*ExportFileName));
+	if (FileWriter)
+	{
+		ExporteStaticMesh->Serialize(*FileWriter);
+	}
+	FileWriter = nullptr;
+	ExporteStaticMesh = nullptr;
+	TRefCountPtr<YStaticMesh>  ImportedStaticMesh(new YStaticMesh());
+	//FString ImportFilePath = TEXT("C:/Users/yy/Desktop/fbxtest/nija/uv_mirror_plane.FBX");
+	//FString ImportFileName = FPaths::GetBaseFilename(ImportFilePath);
+	//FString ExportFileName = ImportFileName + TEXT(".yasset");
+	TUniquePtr<FArchive> FileReader(IFileManager::Get().CreateFileReader(*ExportFileName));
 	if (FileReader)
 	{
-		pSerialMesh->Serialize(*FileReader);
+		ImportedStaticMesh->Serialize(*FileReader);
+		ImportedStaticMesh->InitRenderResource();
+		MainScene->RegisterToScene(ImportedStaticMesh);
 	}
-	m_pSceneRender->RegisterStaticMesh(pSerialMesh);*/
+#else
+	FString ImportFileName = FPaths::GetBaseFilename(ImportFilePath);
+	FString ExportFileName = ImportFileName + TEXT(".yasset");
+	TRefCountPtr<YStaticMesh>  ImportedStaticMesh(new YStaticMesh());
+	TUniquePtr<FArchive> FileReader(IFileManager::Get().CreateFileReader(*ExportFileName));
+	if (FileReader)
+	{
+		ImportedStaticMesh->Serialize(*FileReader);
+		ImportedStaticMesh->InitRenderResource();
+		MainScene->RegisterToScene(ImportedStaticMesh);
+		ImportedStaticMesh->DebugTangent();
+	}
+#endif
+	//UStaticMesh* pSerialMesh = new UStaticMesh();
+	//if (FileReader)
+	//{
+	//	pSerialMesh->Serialize(*FileReader);
+	//}
+	//m_pSceneRender->RegisterStaticMesh(pSerialMesh);
 //#endif
 	m_pSceneRender->AllocResource();
+	MainRender = MakeUnique<YForwardRender>();
+	MainRender->InitRenders();
 }
 
 
@@ -530,11 +573,16 @@ void DX11Demo::Update(float ElapseTime)
 	else
 		m_pCurrentCamera->FrameMove(ElapseTime);
 	//m_pShadow->Update(ElapseTime);
+
+	for (TRefCountPtr<YStaticMesh>& StaticMesh : MainScene->StaticMeshArray)
+	{
+		//StaticMesh->DebugTangent();
+	}
 }
 
 void DX11Demo::Render(float ElapseTime)
 {
-	TSharedRef<FRenderInfo> pRenderInfo = MakeShared<FRenderInfo>();
+	TSharedRef<YRenderInfo> pRenderInfo = MakeShared<YRenderInfo>();
 	pRenderInfo->RenderCameraInfo.View = m_pCamera->GetView();
 	pRenderInfo->RenderCameraInfo.Projection = m_pCamera->GetProject();
 	pRenderInfo->RenderCameraInfo.ViewProjection = m_pCamera->GetViewProject();
@@ -542,6 +590,7 @@ void DX11Demo::Render(float ElapseTime)
 	pRenderInfo->SceneInfo.MainLightDir = m_pLightCamera->GetDir();
 	pRenderInfo->TickTime = ElapseTime;
 	pRenderInfo->FPS = GetFPS();
+	YYUTDXManager::GetInstance().AddRenderEvent([this, pRenderInfo]() {MainRender->RenderScene(MainScene, pRenderInfo); });
 	YYUTDXManager::GetInstance().AddRenderEvent([this, pRenderInfo]() {m_pSceneRender->Render(pRenderInfo); });
 	YYUTDXManager::GetInstance().Render();
 }

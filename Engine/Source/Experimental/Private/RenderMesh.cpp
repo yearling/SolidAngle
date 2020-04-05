@@ -26,7 +26,7 @@ RenderScene::~RenderScene(void)
 
 void RenderScene::Init()
 {
-	TComPtr<ID3D11Device> Device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& Device = YYUTDXManager::GetInstance().GetD3DDevice();
 	CreateRasterState(m_rs);
 	CreateBlendState(m_bs, true, "m_BlendOpaque");
 	CreateDepthStencileState(m_ds, true, "m_DS_Test");
@@ -38,9 +38,9 @@ void RenderScene::Update(float ElpaseTime)
 {
 }
 
-void RenderScene::Render(TSharedRef<FRenderInfo> RenderInfo)
+void RenderScene::Render(TSharedRef<YRenderInfo> RenderInfo)
 {
-	TComPtr<ID3D11DeviceContext> DeviceContext = YYUTDXManager::GetInstance().GetD3DDC();
+	TComPtr<ID3D11DeviceContext>& DeviceContext = YYUTDXManager::GetInstance().GetD3DDC();
 	static bool bSetAniStack = true;
 	if (bSetAniStack)
 	{
@@ -48,15 +48,15 @@ void RenderScene::Render(TSharedRef<FRenderInfo> RenderInfo)
 	}
 	Update(0);
 	HRESULT hr = S_OK;
-	float backcolor[4] = { 0.0f,0.0f,0.0f,0.0f };
-	DeviceContext->ClearRenderTargetView(YYUTDXManager::GetInstance().GetRenderTargetView(), backcolor);
-	DeviceContext->ClearDepthStencilView(YYUTDXManager::GetInstance().GetDepthStencilView(), D3D11_CLEAR_DEPTH, 1.0f, 0);
-	DeviceContext->RSSetState(m_rs);
-	float BlendColor[4] = { 1.0f,1.0f,1.0f,1.0f };
-	DeviceContext->OMSetBlendState(m_bs, BlendColor, 0xffffffff);
-	DeviceContext->OMSetDepthStencilState(m_ds, 0);
-	DeviceContext->OMSetRenderTargets(1, &YYUTDXManager::GetInstance().GetRenderTargetView(), YYUTDXManager::GetInstance().GetDepthStencilView());
-	DeviceContext->RSSetViewports(1, YYUTDXManager::GetInstance().GetDefaultViewPort());
+	//float backcolor[4] = { 0.0f,0.0f,0.0f,0.0f };
+	//DeviceContext->ClearRenderTargetView(YYUTDXManager::GetInstance().GetRenderTargetView(), backcolor);
+	//DeviceContext->ClearDepthStencilView(YYUTDXManager::GetInstance().GetDepthStencilView(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+	//DeviceContext->RSSetState(m_rs);
+	//float BlendColor[4] = { 1.0f,1.0f,1.0f,1.0f };
+	//DeviceContext->OMSetBlendState(m_bs, BlendColor, 0xffffffff);
+	//DeviceContext->OMSetDepthStencilState(m_ds, 0);
+	//DeviceContext->OMSetRenderTargets(1, &YYUTDXManager::GetInstance().GetRenderTargetView(), YYUTDXManager::GetInstance().GetDepthStencilView());
+	//DeviceContext->RSSetViewports(1, YYUTDXManager::GetInstance().GetDefaultViewPort());
 
 	DrawSkeletalMeshes(RenderInfo);
 	DrawGridAndCoordinates();
@@ -118,7 +118,7 @@ void RenderScene::DrawGridAndCoordinates()
 	GCanvas->DrawLine(FVector(0, 0, 0), FVector(0, 0, 5), FLinearColor(0, 0, 1, 1));
 }
 
-void RenderScene::DrawSkeletalMeshes(TSharedRef<FRenderInfo> RenderInfo)
+void RenderScene::DrawSkeletalMeshes(TSharedRef<YRenderInfo> RenderInfo)
 {
 	
 	for(int32 i=0;i<SkeletalMeshes.Num();++i)
@@ -382,7 +382,7 @@ void FSkeletalMeshRenderHelper::SetPos(FCompactPose& CompacePose)
 			check(TransformSkinVertex.Num() == SkinVertex.Num());
 		}
 		D3D11_MAPPED_SUBRESOURCE MapResource;
-		TComPtr<ID3D11DeviceContext> DeviceContext = YYUTDXManager::GetInstance().GetD3DDC();
+		TComPtr<ID3D11DeviceContext>& DeviceContext = YYUTDXManager::GetInstance().GetD3DDC();
 		HRESULT hr = DeviceContext->Map(VB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MapResource);
 		{
 			memcpy(MapResource.pData, &TransformSkinVertex[0], sizeof(FSoftSkinVertex)* TransformSkinVertex.Num());
@@ -406,7 +406,7 @@ void FSkeletalMeshRenderHelper::SetPos(FCompactPose& CompacePose)
 					BoneMatrix.To3x4MatrixTranspose((float*)RefToLocalMatrixRows[iSectionBone].M);
 				}
 				TComPtr<ID3D11Buffer>& CurrentBoneBuffer = FinalBoneMatrix[LodIndex][SectionIndex];
-				TComPtr<ID3D11DeviceContext> DeviceContext = YYUTDXManager::GetInstance().GetD3DDC();
+				TComPtr<ID3D11DeviceContext>& DeviceContext = YYUTDXManager::GetInstance().GetD3DDC();
 				D3D11_MAPPED_SUBRESOURCE MapResource;
 				HRESULT hr = DeviceContext->Map(CurrentBoneBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MapResource);
 				if(SUCCEEDED(hr))
@@ -419,7 +419,7 @@ void FSkeletalMeshRenderHelper::SetPos(FCompactPose& CompacePose)
 	}
 }
 
-void FSkeletalMeshRenderHelper::Render(TSharedRef<FRenderInfo> RenderInfo)
+void FSkeletalMeshRenderHelper::Render(TSharedRef<YRenderInfo> RenderInfo)
 {
 	
 	FSkeletalMeshResource* SkeletalMeshResource = SkeletalMesh->GetResourceForRendering();
@@ -432,7 +432,7 @@ void FSkeletalMeshRenderHelper::Render(TSharedRef<FRenderInfo> RenderInfo)
 			if (MeshSection.NumTriangles == 0)
 				return;
 			
-			TComPtr<ID3D11DeviceContext> dc = YYUTDXManager::GetInstance().GetD3DDC();
+			TComPtr<ID3D11DeviceContext>& dc = YYUTDXManager::GetInstance().GetD3DDC();
 			float BlendColor[4] = { 1.0f,1.0f,1.0f,1.0f };
 			dc->OMSetBlendState(m_bs, BlendColor, 0xffffffff);
 			dc->RSSetState(m_rs);
@@ -542,13 +542,13 @@ void FStaticMeshRenderHelper::Init()
 
 }
 
-void FStaticMeshRenderHelper::Render(TSharedRef<FRenderInfo> RenderInfo)
+void FStaticMeshRenderHelper::Render(TSharedRef<YRenderInfo> RenderInfo)
 {
 	TUniquePtr<FStaticMeshRenderData>& MeshRenderData = StaticMesh->RenderData;
 	check(MeshRenderData->LODResources.Num() >= 1);
 	FStaticMeshLODResources& Meshes = MeshRenderData->LODResources[0];
 
-	TComPtr<ID3D11DeviceContext> dc = YYUTDXManager::GetInstance().GetD3DDC();
+	TComPtr<ID3D11DeviceContext>& dc = YYUTDXManager::GetInstance().GetD3DDC();
 	float BlendColor[4] = { 1.0f,1.0f,1.0f,1.0f };
 	dc->OMSetBlendState(m_bs, BlendColor, 0xffffffff);
 	dc->RSSetState(m_rs);

@@ -23,6 +23,8 @@ struct YStaticMeshLODResources
 	YRawStaticIndexBuffer WireframeIndexBuffer;
 	/** Index buffer containing adjacency information required by tessellation. */
 	YRawStaticIndexBuffer AdjacencyIndexBuffer;
+	uint32 DepthOnlyNumTriangles;
+	void Serialize(FArchive& Ar, UObject* Owner, int32 Idx);
 };
 
 class YStaticMeshRenderData
@@ -45,4 +47,6 @@ public:
 	//TArray<FMeshUVChannelInfo> UVChannelDataPerMaterial;
 
 	void AllocateLODResources(int32 NumLODs);
+	void Serialize(FArchive& Ar);
+	void CaculateScreenSize();
 };

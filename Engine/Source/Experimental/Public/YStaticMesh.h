@@ -2,6 +2,7 @@
 #include "Core.h"
 #include "YMeshBuild.h"
 #include "YStaticMeshRenderData.h"
+#include "RenderInfo.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(LogYStaticMesh, Log, All);
 
@@ -104,7 +105,12 @@ class YStaticMesh:public FRefCountedObject
 {
 public:
 	YStaticMesh();
+	~YStaticMesh();
+	void Serialize(FArchive& Archieve);
+	void Render(TSharedRef<YRenderInfo> RenderInfo);
 	void Build();
+	void InitRenderResource();
+	void DebugTangent();
 	/** Imported raw mesh bulk data. */
 	TArray<YStaticMeshSourceModel> SourceModels;
 	/** Map of LOD+Section index to per-section info. */
@@ -115,6 +121,6 @@ public:
 	FGuid LightingGuid;
 	int32 LightMapResolution;
 	int32 LightMapCoordinateIndex;
-	TUniquePtr<class YStaticMeshRenderData> RenderData;
-	FString Name;
+	TUniquePtr<class YStaticMeshRenderData> RenderData=nullptr;
+	FString Name="";
 };

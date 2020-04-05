@@ -15,11 +15,11 @@ public:
 	void							Init(HWND hwnd);
 
 	static YYUTDXManager &			GetInstance(void);
-	TComPtr<ID3D11Device>			GetD3DDevice(void);
-	TComPtr<ID3D11DeviceContext>	GetD3DDC(void);
-	TComPtr<ID3D11DepthStencilView> GetDepthStencilView(void);
-	TComPtr<ID3D11RenderTargetView> GetRenderTargetView(void);
-	TComPtr<ID3D11ShaderResourceView> GetDepthStecilSRV(void);
+	TComPtr<ID3D11Device>&			GetD3DDevice(void);
+	TComPtr<ID3D11DeviceContext>&	GetD3DDC(void);
+	TComPtr<ID3D11DepthStencilView>& GetDepthStencilView(void);
+	TComPtr<ID3D11RenderTargetView>& GetRenderTargetView(void);
+	TComPtr<ID3D11ShaderResourceView>& GetDepthStecilSRV(void);
 	D3D11_VIEWPORT*					GetDefaultViewPort() { return &m_ViewPort; }
 	virtual void					Tick(DWORD elapse_time);
 	virtual void					Render(void);

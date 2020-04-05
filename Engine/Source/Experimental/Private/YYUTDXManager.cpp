@@ -115,12 +115,12 @@ YYUTDXManager & YYUTDXManager::GetInstance()
 	return m_hInstance;
 }
 
-TComPtr<ID3D11Device> YYUTDXManager::GetD3DDevice()
+TComPtr<ID3D11Device> &YYUTDXManager::GetD3DDevice()
 {
 	return m_Device;
 }
 
-TComPtr<ID3D11DeviceContext> YYUTDXManager::GetD3DDC()
+TComPtr<ID3D11DeviceContext> &YYUTDXManager::GetD3DDC()
 {
 	return m_DC;
 }
@@ -210,17 +210,17 @@ void YYUTDXManager::AddRenderEvent(DX_RENDER_EVENT render_event)
 	m_ListRenderEvents.Add(render_event);
 }
 
-TComPtr<ID3D11DepthStencilView> YYUTDXManager::GetDepthStencilView(void)
+TComPtr<ID3D11DepthStencilView> &YYUTDXManager::GetDepthStencilView(void)
 {
 	return m_DSV;
 }
 
-TComPtr<ID3D11RenderTargetView> YYUTDXManager::GetRenderTargetView(void)
+TComPtr<ID3D11RenderTargetView> &YYUTDXManager::GetRenderTargetView(void)
 {
 	return m_RTV;
 }
 
-TComPtr<ID3D11ShaderResourceView> YYUTDXManager::GetDepthStecilSRV(void)
+TComPtr<ID3D11ShaderResourceView> &YYUTDXManager::GetDepthStecilSRV(void)
 {
 	return m_SRVforDS;
 }

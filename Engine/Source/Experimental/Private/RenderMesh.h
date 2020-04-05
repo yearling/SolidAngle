@@ -33,7 +33,7 @@ public:
 	~FSkeletalMeshRenderHelper();
 	void Init();
 	void SetPos(FCompactPose& CompacePose);
-	void Render(TSharedRef<FRenderInfo> RenderInfo);
+	void Render(TSharedRef<YRenderInfo> RenderInfo);
 private:
 	YSkeletalMesh* SkeletalMesh;
 	UAnimSequence* AnimSequence;
@@ -60,7 +60,7 @@ public:
 	FStaticMeshRenderHelper(UStaticMesh* InMesh);
 	~FStaticMeshRenderHelper();
 	void Init();
-	void Render(TSharedRef<FRenderInfo> RenderInfo);
+	void Render(TSharedRef<YRenderInfo> RenderInfo);
 private:
 	UStaticMesh* StaticMesh;
 	TUniquePtr<YVSShader>		VSShader;
@@ -81,7 +81,7 @@ public:
 	~RenderScene(void);
 	virtual	void					Init();
 	virtual void					Update(float ElpaseTime);
-	virtual void					Render(TSharedRef<FRenderInfo> RenderInfo);
+	virtual void					Render(TSharedRef<YRenderInfo> RenderInfo);
 	virtual void					AllocResource();
 	void							SetScreenWidthHeigth(int width, int height) { m_ScreenWidth = (float)width; m_ScreenHeight = (float)height; }
 	void							RegisterSkeletalMesh(YSkeletalMesh* pSkeletalMesh,UAnimSequence* pAnimationSequence);
@@ -89,7 +89,7 @@ public:
 	void							PlayAnimation(UAnimSequence* pAnimationSequence) { AnimationSequence = pAnimationSequence; }
 	void							CreateMeshResource();
 	void							DrawGridAndCoordinates();
-	void							DrawSkeletalMeshes(TSharedRef<FRenderInfo> RenderInfo);
+	void							DrawSkeletalMeshes(TSharedRef<YRenderInfo> RenderInfo);
 	void							DrawSkeleton(YSkeletalMesh* pSkeletalMesh);
 	void							DrawSkeleton2(YSkeletalMesh* pSkeletalMesh,const FCompactPose& CompacePose);
 private:

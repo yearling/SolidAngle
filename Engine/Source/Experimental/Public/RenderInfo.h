@@ -2,12 +2,12 @@
 #include "Math\Vector.h"
 #include "Math\Matrix.h"
 
-struct FRenderSceneInfo
+struct YRenderSceneInfo
 {
 	FVector MainLightDir;
 };
 
-struct FRenderCameraInfo
+struct YRenderCameraInfo
 {
 	FMatrix View;
 	FMatrix ViewInv;
@@ -16,10 +16,10 @@ struct FRenderCameraInfo
 	FMatrix ViewProjectionInv;
 };
 
-struct FRenderInfo
+struct YRenderInfo
 {
-	FRenderCameraInfo RenderCameraInfo;
-	FRenderSceneInfo  SceneInfo;
+	YRenderCameraInfo RenderCameraInfo;
+	YRenderSceneInfo  SceneInfo;
 	double			  CurrentTime;
 	double			  TickTime;
 	float			  FPS;

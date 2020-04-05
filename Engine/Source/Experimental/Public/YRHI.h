@@ -68,7 +68,7 @@ public:
 	/** @return The usage flags used to create the vertex buffer. e.g. BUF_UnorderedAccess */
 	uint32 GetUsage() const { return Usage; }
 
-private:
+public:
 	uint32 Size;
 	// e.g. BUF_UnorderedAccess
 	uint32 Usage;
@@ -101,7 +101,7 @@ public:
 	/** @return The usage flags used to create the index buffer. */
 	uint32 GetUsage() const { return Usage; }
 
-private:
+public:
 	TRefCountPtr<ID3D11Buffer> IndexBuffer;
 	uint32 Stride;
 	uint32 Size;

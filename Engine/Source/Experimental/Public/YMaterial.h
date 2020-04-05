@@ -22,6 +22,7 @@ class YMaterialInterface
 {
 public:
 	YMaterialInterface();
+	virtual ~YMaterialInterface() {};
 	FString GetPathName() const;
 	bool IsValid() const;
 	FName GetFName() const;
@@ -29,4 +30,10 @@ public:
 	FName MaterialName;
 	YTextureSampler DiffuseTexture;
 	YTextureSampler NormalTexture;
+};
+
+class YMeshMaterial :public YMaterialInterface
+{
+public:
+	YMeshMaterial() {}
 };

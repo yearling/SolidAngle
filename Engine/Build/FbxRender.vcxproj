@@ -172,6 +172,7 @@
     <ClCompile Include="..\Source\Experimental\Private\FbxStaticMeshImportData.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\FbxUtilsImport.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\forsythtriangleorderoptimizer.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\ForwardRender.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\game_main.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\IShader.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\LayoutUV.cpp" />
@@ -180,7 +181,9 @@
     <ClCompile Include="..\Source\Experimental\Private\NvTriStrip.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\NvTriStripObjects.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\RenderMesh.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\YMeshBatch.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YMeshUtilitiesWrap.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\YRenderInterface.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YRHI.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\SkeletalMeshEdit.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\SkeletalMeshImport.cpp" />
@@ -190,6 +193,7 @@
     <ClCompile Include="..\Source\Experimental\Private\YMeshUtilities.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YPackedNormal.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YRenderResource.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\YScene.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YStaticMeshRenderData.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YFbxConverter.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YMaterial.cpp" />
@@ -222,12 +226,15 @@
     <ClInclude Include="..\Source\Experimental\Public\FbxMeshImportData.h" />
     <ClInclude Include="..\Source\Experimental\Public\FbxSkeletalMeshImportData.h" />
     <ClInclude Include="..\Source\Experimental\Public\forsythtriangleorderoptimizer.h" />
+    <ClInclude Include="..\Source\Experimental\Public\ForwardRender.h" />
     <ClInclude Include="..\Source\Experimental\Public\GPUSkinPublicDefs.h" />
     <ClInclude Include="..\Source\Experimental\Public\IShader.h" />
     <ClInclude Include="..\Source\Experimental\Public\LayoutUV.h" />
     <ClInclude Include="..\Source\Experimental\Public\mikktspace.h" />
     <ClInclude Include="..\Source\Experimental\Public\nvtess.h" />
     <ClInclude Include="..\Source\Experimental\Public\NvTriStrip.h" />
+    <ClInclude Include="..\Source\Experimental\Public\YMeshBatch.h" />
+    <ClInclude Include="..\Source\Experimental\Public\YRenderInterface.h" />
     <ClInclude Include="..\Source\Experimental\Public\SkelImport.h" />
     <ClInclude Include="..\Source\Experimental\Public\SkinWeightVertexBuffer.h" />
     <ClInclude Include="..\Source\Experimental\Public\StaticMeshResources.h" />
@@ -246,6 +253,7 @@
     <ClInclude Include="..\Source\Experimental\Public\YRenderResource.h" />
     <ClInclude Include="..\Source\Experimental\Public\YRHI.h" />
     <ClInclude Include="..\Source\Experimental\Public\YRHIDefinitions.h" />
+    <ClInclude Include="..\Source\Experimental\Public\YScene.h" />
     <ClInclude Include="..\Source\Experimental\Public\YStaticMesh.h" />
     <ClInclude Include="..\Source\Experimental\Public\YStaticMeshRenderData.h" />
     <ClInclude Include="..\Source\Experimental\Public\YStaticMeshResource.h" />
@@ -284,6 +292,10 @@
     <None Include="..\Source\Experimental\Private\StaticMesh.hlsl">
       <FileType>Document</FileType>
     </None>
+    <FxCompile Include="..\Source\Experimental\Private\StaticMesh2.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="..\Source\Experimental\Private\UI.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

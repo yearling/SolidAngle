@@ -510,8 +510,8 @@ public:
 			}
 			verifyf(Vertices.Num() != 0, TEXT("No valid vertices found for the mesh."));
 			int32 NumTexCoords = 2;
-			LODModel.VertexBuffer.Init(Vertices);
-			LODModel.PositionVertexBuffer.Init(Vertices);
+			LODModel.VertexBuffer.Init(Vertices, true);
+			LODModel.PositionVertexBuffer.Init(Vertices, true);
 			
 			//Concatenate the per section index buffers
 			TArray<uint32> CombinedIndices;

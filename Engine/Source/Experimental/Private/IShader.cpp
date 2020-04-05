@@ -155,7 +155,7 @@ bool IShaderBind::AddAlias(const FString & AliasName)
 
 bool IShaderBind::Update()
 {
-	TComPtr<ID3D11DeviceContext> DeviceContext = YYUTDXManager::GetInstance().GetD3DDC();
+	TComPtr<ID3D11DeviceContext>& DeviceContext = YYUTDXManager::GetInstance().GetD3DDC();
 	for (TUniquePtr<YConstantBuffer> & ConstantBuffer : ConstantBuffers)
 	{
 		if (!ConstantBuffer->AllocResource())
@@ -488,7 +488,7 @@ YVSShader::~YVSShader()
 bool YVSShader::CreateShader(const FString &FileName, const FString &MainPoint)
 {
 	check(!VertexShader);
-	TComPtr<ID3D11Device> Device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& Device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	TComPtr<ID3DBlob> VSBlob;
 	FString ErrorMsg;
@@ -534,7 +534,7 @@ bool YVSShader::CreateShader(const FString &FileName, const FString &MainPoint)
 bool YVSShader::Update()
 {
 	IShaderBind::Update();
-	TComPtr<ID3D11DeviceContext> DeviceContext = YYUTDXManager::GetInstance().GetD3DDC();
+	TComPtr<ID3D11DeviceContext>& DeviceContext = YYUTDXManager::GetInstance().GetD3DDC();
 	if ( VertexShader)
 	{
 		DeviceContext->VSSetShader(VertexShader, nullptr, 0);
@@ -641,7 +641,7 @@ bool YVSShader::PostReflection(TComPtr<ID3DBlob> &Blob, TComPtr<ID3D11ShaderRefl
 		UE_LOG(ShaderLog, Error, TEXT("InputLayout is not compatible with shader reflection"));
 		return false;
 	}
-	TComPtr<ID3D11Device> Device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& Device = YYUTDXManager::GetInstance().GetD3DDevice();
 	if (FAILED(Device->CreateInputLayout(&InputLayoutDesc[0], ShaderDesc.InputParameters, Blob->GetBufferPointer(), Blob->GetBufferSize(), &InputLayout)))
 	{
 		UE_LOG(ShaderLog, Error, TEXT("VS Shader create layout failed!! FileName %s "), *ShaderPath);
@@ -667,7 +667,7 @@ bool YConstantBuffer::AllocResource()
 	else
 	{
 		HRESULT hr = S_OK;
-		TComPtr<ID3D11Device> Device = YYUTDXManager::GetInstance().GetD3DDevice();
+		TComPtr<ID3D11Device>& Device = YYUTDXManager::GetInstance().GetD3DDevice();
 		D3D11_BUFFER_DESC desc;
 		memset(&desc, 0, sizeof(desc));
 		desc.ByteWidth = CBSize;
@@ -698,7 +698,7 @@ YPSShader::~YPSShader()
 bool YPSShader::CreateShader(const FString &FileName, const FString &MainPoint)
 {
 	check(!PixShader);
-	TComPtr<ID3D11Device> Device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& Device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	TComPtr<ID3DBlob> VSBlob;
 	FString ErrorMsg;
@@ -742,7 +742,7 @@ bool YPSShader::CreateShader(const FString &FileName, const FString &MainPoint)
 
 bool YPSShader::Update()
 {
-	TComPtr<ID3D11DeviceContext> DeviceContext = YYUTDXManager::GetInstance().GetD3DDC();
+	TComPtr<ID3D11DeviceContext>& DeviceContext = YYUTDXManager::GetInstance().GetD3DDC();
 	if (IShaderBind::Update() && PixShader)
 	{
 		DeviceContext->PSSetShader(PixShader, nullptr, 0);

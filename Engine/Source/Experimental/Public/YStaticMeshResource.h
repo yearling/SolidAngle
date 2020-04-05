@@ -163,7 +163,7 @@ struct YPositionVertex
 class YPositionVertexData :public YStaticMeshVertexData<YPositionVertex>
 {
 public:
-	YPositionVertexData(bool InNeedsCUPAccess = false) :
+	explicit YPositionVertexData(bool InNeedsCUPAccess = false) :
 		YStaticMeshVertexData<YPositionVertex>(InNeedsCUPAccess)
 	{
 
@@ -189,7 +189,7 @@ public:
 	* Initializes the buffer with the given vertices, used to convert legacy layouts.
 	* @param InVertices - The vertices to initialize the buffer with.
 	*/
-	void Init(const TArray<YStaticMeshBuildVertex>& InVertices);
+	void Init(const TArray<YStaticMeshBuildVertex>& InVertices, bool bNeedCpuAccess);
 	virtual void InitRHI() override;
 	virtual FString GetFriendlyName() const override { return TEXT("PositionOnly Static-mesh vertices"); }
 	// Vertex data accessors.
@@ -228,7 +228,7 @@ private:
 	uint32 NumVertices;
 
 	/** Allocates the vertex data storage type. */
-	void AllocateData(bool bNeedsCPUAccess = true);
+	void AllocateData(bool bNeedsCPUAccess = false);
 };
 
 struct YStaticMeshTangnetVertexData
@@ -318,7 +318,7 @@ public:
 	YStaticMeshTangentUVVertexBuffer();
 	~YStaticMeshTangentUVVertexBuffer();
 	void CleanUp();
-	void Init(const TArray<YStaticMeshBuildVertex>& InVertices);
+	void Init(const TArray<YStaticMeshBuildVertex>& InVertices, bool bNeedCPUAccess);
 	void Serialize(FArchive& Ar, bool bNeedsCPUAccess);
 	FORCEINLINE FVector4 VertexTangentX(uint32 VertexIndex) const
 	{
@@ -393,7 +393,7 @@ private:
 	bool bUseHighPrecisionTangentBasis;
 
 	/** Allocates the vertex data storage type. */
-	void AllocateData(bool bNeedsCPUAccess = true);
+	void AllocateData(bool bNeedsCPUAccess = false);
 };
 
 namespace EYIndexBufferStride
@@ -455,7 +455,7 @@ private:
 class YRawStaticIndexBuffer :public YIndexBuffer
 {
 public:
-	YRawStaticIndexBuffer(bool InNeedsCPUAccess = false);
+	explicit YRawStaticIndexBuffer(bool InNeedsCPUAccess = false);
 	void SetIndices(const TArray<uint32>& InIndices, EYIndexBufferStride::Type DesiredStride);
 	void GetCopy(TArray<uint32>& OutIndices) const;
 	YIndexArrayView GetArrayView() const;
@@ -481,4 +481,3 @@ private:
 	/** 32bit or 16bit? */
 	bool b32Bit = false;
 };
-

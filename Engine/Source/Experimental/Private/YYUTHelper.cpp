@@ -102,7 +102,7 @@ void ComplieShaderFromFile(const FString &file_name, const FString& entry_point,
 
 void CreateComputerShader(const FString& FileName, const FString& MainPoint, TComPtr<ID3D11ComputeShader> & cs, const FString & alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	TComPtr<ID3DBlob> vs_blob;
 	ComplieShaderFromFile(FileName, MainPoint, "cs_5_0", vs_blob);
@@ -117,7 +117,7 @@ void CreateComputerShader(const FString& FileName, const FString& MainPoint, TCo
 
 void CreateVertexShader(const FString& FileName, const FString& MainPoint, TComPtr<ID3D11VertexShader> &vs, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	TComPtr<ID3DBlob> vs_blob;
 	ComplieShaderFromFile(FileName, MainPoint, "vs_5_0", vs_blob);
@@ -131,7 +131,7 @@ void CreateVertexShader(const FString& FileName, const FString& MainPoint, TComP
 
 void CreatePixelShader(const FString& FileName, const FString& MainPoint, TComPtr<ID3D11PixelShader> &ps, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	TComPtr<ID3DBlob> vs_blob;
 	ComplieShaderFromFile(FileName, MainPoint, "ps_5_0", vs_blob);
@@ -144,7 +144,7 @@ void CreatePixelShader(const FString& FileName, const FString& MainPoint, TComPt
 }
 void CreateInputLayout(const FString& FileName, const FString& VSMainPoint, const D3D11_INPUT_ELEMENT_DESC *pDesc, int number, TComPtr<ID3D11InputLayout> &InputLayout, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	TComPtr<ID3DBlob> vs_blob;
 	ComplieShaderFromFile(FileName, VSMainPoint, "vs_5_0", vs_blob);
@@ -157,7 +157,7 @@ void CreateInputLayout(const FString& FileName, const FString& VSMainPoint, cons
 }
 void CreateStruturedBufferSRV_UAV(int numbers, int perSize, TComPtr<ID3D11Buffer> & buffer, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_BUFFER_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -180,7 +180,7 @@ void CreateStruturedBufferSRV_UAV(int numbers, int perSize, TComPtr<ID3D11Buffer
 
 void CreateStruturedBufferUAV(int numbers, int perSize, TComPtr<ID3D11Buffer> & buffer, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_BUFFER_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -200,7 +200,7 @@ void CreateStruturedBufferUAV(int numbers, int perSize, TComPtr<ID3D11Buffer> & 
 
 void CreateAppendUAVForStructureBuffer(int numbers, TComPtr<ID3D11Buffer> &buffer, TComPtr<ID3D11UnorderedAccessView> &uav, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_UNORDERED_ACCESS_VIEW_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -219,7 +219,7 @@ void CreateAppendUAVForStructureBuffer(int numbers, TComPtr<ID3D11Buffer> &buffe
 
 void CreateStagingReadBackBuffer(int ByteWidth, int StructureByteStride, TComPtr<ID3D11Buffer> & buffer, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_BUFFER_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -238,7 +238,7 @@ void CreateStagingReadBackBuffer(int ByteWidth, int StructureByteStride, TComPtr
 
 void CreateSRVForStruturedBuffer(int number, TComPtr<ID3D11Buffer> &buffer, TComPtr<ID3D11ShaderResourceView> &srv, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_SHADER_RESOURCE_VIEW_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -256,7 +256,7 @@ void CreateSRVForStruturedBuffer(int number, TComPtr<ID3D11Buffer> &buffer, TCom
 
 void CreateSRVForTBuffer(DXGI_FORMAT format, int32 number, TComPtr<ID3D11Buffer> &buffer, TComPtr<ID3D11ShaderResourceView> &srv, const FString& alias /*= ""*/)
 {	
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_SHADER_RESOURCE_VIEW_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -276,7 +276,7 @@ void CreateSRVForTBuffer(DXGI_FORMAT format, int32 number, TComPtr<ID3D11Buffer>
 
 void CreateUAVForStruturedBuffer(int number, TComPtr<ID3D11Buffer> &buffer, TComPtr<ID3D11UnorderedAccessView> &uav, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_UNORDERED_ACCESS_VIEW_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -295,7 +295,7 @@ void CreateUAVForStruturedBuffer(int number, TComPtr<ID3D11Buffer> &buffer, TCom
 
 void CreateConstantBufferCPUWrite(int size, TComPtr<ID3D11Buffer> &buffer, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_BUFFER_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -314,7 +314,7 @@ void CreateConstantBufferCPUWrite(int size, TComPtr<ID3D11Buffer> &buffer, const
 void CreateConstantBufferDefault(int size, TComPtr<ID3D11Buffer> &buffer, const FString& alias /*= ""*/)
 {
 
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_BUFFER_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -332,7 +332,7 @@ void CreateConstantBufferDefault(int size, TComPtr<ID3D11Buffer> &buffer, const 
 
 void Create2DTextureImmuableSRV(UINT width, UINT height, DXGI_FORMAT format, D3D11_SUBRESOURCE_DATA *data, TComPtr<ID3D11Texture2D> &tex2D, const FString& alias /*=""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_TEXTURE2D_DESC desc;
 	ZeroMemory(&desc, sizeof(desc));
@@ -356,7 +356,7 @@ void Create2DTextureImmuableSRV(UINT width, UINT height, DXGI_FORMAT format, D3D
 
 void Create2DTextureRTV_SRV(UINT width, UINT height, DXGI_FORMAT format, TComPtr<ID3D11Texture2D> &tex2D, const FString& alias/*=""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_TEXTURE2D_DESC desc;
 	ZeroMemory(&desc, sizeof(desc));
@@ -379,7 +379,7 @@ void Create2DTextureRTV_SRV(UINT width, UINT height, DXGI_FORMAT format, TComPtr
 
 void CreateSRVForTexture2D(DXGI_FORMAT format, TComPtr<ID3D11Texture2D> &tex2D, TComPtr<ID3D11ShaderResourceView> &srv, const FString& alias/*=""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_SHADER_RESOURCE_VIEW_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -397,7 +397,7 @@ void CreateSRVForTexture2D(DXGI_FORMAT format, TComPtr<ID3D11Texture2D> &tex2D, 
 
 void CreateCountUAVForStruturedBuffer(int number, TComPtr<ID3D11Buffer> &buffer, TComPtr<ID3D11UnorderedAccessView> &uav, const FString& alias/*=""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_UNORDERED_ACCESS_VIEW_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -416,7 +416,7 @@ void CreateCountUAVForStruturedBuffer(int number, TComPtr<ID3D11Buffer> &buffer,
 
 void CreateIndirectDrawArgsBuffer(int ByteWidth, TComPtr<ID3D11Buffer> &buffer, const FString& alias/*=""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_BUFFER_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -434,7 +434,7 @@ void CreateIndirectDrawArgsBuffer(int ByteWidth, TComPtr<ID3D11Buffer> &buffer, 
 
 void CreateUAVForBuffer(DXGI_FORMAT format, int number, TComPtr<ID3D11Buffer> &buffer, TComPtr<ID3D11UnorderedAccessView> &uav, const FString& alias/*=""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_UNORDERED_ACCESS_VIEW_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -452,7 +452,7 @@ void CreateUAVForBuffer(DXGI_FORMAT format, int number, TComPtr<ID3D11Buffer> &b
 }
 void CreateVertexBufferStatic(UINT ByteWidth, const void *pData, TComPtr<ID3D11Buffer> &buffer, const FString& alias/*=""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_BUFFER_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -473,7 +473,7 @@ void CreateVertexBufferStatic(UINT ByteWidth, const void *pData, TComPtr<ID3D11B
 
 void CreateVertexBufferStatic(YRHIResourceCreateInfo & RHIResourceInfo, TRefCountPtr<ID3D11Buffer> &buffer, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_BUFFER_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -504,7 +504,7 @@ void CreateVertexBufferStatic(YRHIResourceCreateInfo & RHIResourceInfo, TRefCoun
 TRefCountPtr<YRHIVertexBuffer> CreateVertexBuffer(uint32 Size, uint32 InUsage, YRHIResourceCreateInfo& CreateInfo)
 {
 	check(Size);
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	D3D11_BUFFER_DESC Desc;
 	ZeroMemory(&Desc, sizeof(D3D11_BUFFER_DESC));
 	Desc.ByteWidth = Size;
@@ -572,7 +572,7 @@ TRefCountPtr<YRHIVertexBuffer> CreateVertexBuffer(uint32 Size, uint32 InUsage, Y
 
 void CreateVertexBufferDynamic(UINT ByteWidth, const void *pData, TComPtr<ID3D11Buffer> &buffer, const FString& alias/*=""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_BUFFER_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -603,7 +603,7 @@ void CreateVertexBufferDynamic(UINT ByteWidth, const void *pData, TComPtr<ID3D11
 
 void CreateIndexBuffer(UINT ByteWidth, const void * pData, TComPtr<ID3D11Buffer> &buffer, const FString& alias/*=""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_BUFFER_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -661,7 +661,7 @@ TRefCountPtr<YRHIIndexBuffer> CreateIndexBuffer(uint32 InStride, uint32 InSize, 
 	}
 
 	TRefCountPtr<ID3D11Buffer> IndexBufferResource;
-	TComPtr<ID3D11Device> Direct3DDevice = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& Direct3DDevice = YYUTDXManager::GetInstance().GetD3DDevice();
 	VERIFYD3D11RESULT_EX(Direct3DDevice->CreateBuffer(&Desc, pInitData, IndexBufferResource.GetInitReference()), Direct3DDevice);
 
 	//UpdateBufferStats(IndexBufferResource, true);
@@ -677,7 +677,7 @@ TRefCountPtr<YRHIIndexBuffer> CreateIndexBuffer(uint32 InStride, uint32 InSize, 
 
 void CreateSamplerLinearWrap(TComPtr<ID3D11SamplerState> &sample, const FString& alias/*=""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_SAMPLER_DESC samDesc;
 	ZeroMemory(&samDesc, sizeof(samDesc));
@@ -697,7 +697,7 @@ void CreateSamplerLinearWrap(TComPtr<ID3D11SamplerState> &sample, const FString&
 
 void CreateSamplerLinearClamp(TComPtr<ID3D11SamplerState> &sample, const FString& alias/*=""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_SAMPLER_DESC samDesc;
 	ZeroMemory(&samDesc, sizeof(samDesc));
@@ -716,7 +716,7 @@ void CreateSamplerLinearClamp(TComPtr<ID3D11SamplerState> &sample, const FString
 
 void CreateSRVFromeFile(const FString& FileName, TComPtr<ID3D11ShaderResourceView> &srv, const FString& alias/*=""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	if (FAILED(hr = CreateDDSTextureFromFile(device, *FileName, NULL, &srv)))
 	{
@@ -728,7 +728,7 @@ void CreateSRVFromeFile(const FString& FileName, TComPtr<ID3D11ShaderResourceVie
 
 void CreateRasterState(TComPtr<ID3D11RasterizerState> &RasterState, const FString& alias/*=""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_RASTERIZER_DESC desc;
 	desc.FillMode = D3D11_FILL_SOLID;
@@ -752,7 +752,7 @@ void CreateRasterState(TComPtr<ID3D11RasterizerState> &RasterState, const FStrin
 
 void CreateRasterState(TComPtr<ID3D11RasterizerState> &RasterState, int DepthDias, float DepthBiasClamp, float SlopeScaledDepthBias, const FString& alias/*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_RASTERIZER_DESC desc;
 	desc.FillMode = D3D11_FILL_SOLID;
@@ -776,7 +776,7 @@ void CreateRasterState(TComPtr<ID3D11RasterizerState> &RasterState, int DepthDia
 
 void CreateRasterStateNonCull(TComPtr<ID3D11RasterizerState> &RasterState, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_RASTERIZER_DESC desc;
 	desc.FillMode = D3D11_FILL_SOLID;
@@ -800,7 +800,7 @@ void CreateRasterStateNonCull(TComPtr<ID3D11RasterizerState> &RasterState, const
 
 void CreateBlendState(TComPtr<ID3D11BlendState> &BlendState, bool Opaque /*= true*/, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_BLEND_DESC desc;
 	desc.AlphaToCoverageEnable = FALSE;
@@ -823,7 +823,7 @@ void CreateBlendState(TComPtr<ID3D11BlendState> &BlendState, bool Opaque /*= tru
 
 void CreateDepthStencileState(TComPtr<ID3D11DepthStencilState> &ds, bool Write /*= true*/, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_DEPTH_STENCIL_DESC desc;
 	desc.DepthEnable = TRUE;
@@ -842,7 +842,7 @@ void CreateDepthStencileState(TComPtr<ID3D11DepthStencilState> &ds, bool Write /
 
 void CreateDepthStencileStateNoWriteNoTest(TComPtr<ID3D11DepthStencilState> &ds, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_DEPTH_STENCIL_DESC desc;
 	desc.DepthEnable = FALSE;
@@ -861,7 +861,7 @@ void CreateDepthStencileStateNoWriteNoTest(TComPtr<ID3D11DepthStencilState> &ds,
 
 void CreateRenderTarget(DXGI_FORMAT format, TComPtr<ID3D11Texture2D>& texture, TComPtr<ID3D11RenderTargetView> &rtv, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_RENDER_TARGET_VIEW_DESC desc;
 	desc.Format = format;
@@ -877,7 +877,7 @@ void CreateRenderTarget(DXGI_FORMAT format, TComPtr<ID3D11Texture2D>& texture, T
 
 void CreateBufferSRV_UAV(int ByteWidth, TComPtr<ID3D11Buffer> &buffer, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_BUFFER_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -897,7 +897,7 @@ void CreateBufferSRV_UAV(int ByteWidth, TComPtr<ID3D11Buffer> &buffer, const FSt
 
 void CreateSRVForBuffer(DXGI_FORMAT format, UINT number, TComPtr<ID3D11Buffer> buffer, TComPtr<ID3D11ShaderResourceView> &srv, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_SHADER_RESOURCE_VIEW_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -915,7 +915,7 @@ void CreateSRVForBuffer(DXGI_FORMAT format, UINT number, TComPtr<ID3D11Buffer> b
 
 void Create2DTextureDSV_SRV(UINT width, UINT height, DXGI_FORMAT format, TComPtr<ID3D11Texture2D> &tex2D, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_TEXTURE2D_DESC desc;
 	ZeroMemory(&desc, sizeof(desc));
@@ -941,7 +941,7 @@ void Create2DTextureDSV_SRV(UINT width, UINT height, DXGI_FORMAT format, TComPtr
 
 void CreateDSVForTexture2D(DXGI_FORMAT format, TComPtr<ID3D11Texture2D> &tex2D, TComPtr<ID3D11DepthStencilView> &dsv, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_DEPTH_STENCIL_VIEW_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -959,7 +959,7 @@ void CreateDSVForTexture2D(DXGI_FORMAT format, TComPtr<ID3D11Texture2D> &tex2D, 
 
 void Create2DTextureArrayDSV_SRV(UINT width, UINT height, DXGI_FORMAT format, UINT ArraySize, TComPtr<ID3D11Texture2D> &tex2D, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_TEXTURE2D_DESC desc;
 	ZeroMemory(&desc, sizeof(desc));
@@ -984,7 +984,7 @@ void Create2DTextureArrayDSV_SRV(UINT width, UINT height, DXGI_FORMAT format, UI
 
 void CreateSamplerComparision(TComPtr<ID3D11SamplerState> &sample, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_SAMPLER_DESC samDesc =
 	{
@@ -1009,7 +1009,7 @@ void CreateSamplerComparision(TComPtr<ID3D11SamplerState> &sample, const FString
 
 void CreateSRVForTexture2DArray(DXGI_FORMAT format, UINT arraySize, TComPtr<ID3D11Texture2D> &tex2D, TComPtr<ID3D11ShaderResourceView> &srv, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_SHADER_RESOURCE_VIEW_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -1030,7 +1030,7 @@ void CreateSRVForTexture2DArray(DXGI_FORMAT format, UINT arraySize, TComPtr<ID3D
 
 void CreateDSVForTexture2DArray(DXGI_FORMAT format, UINT arraySize, TComPtr<ID3D11Texture2D> &tex2D, TComPtr<ID3D11DepthStencilView> &dsv, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_DEPTH_STENCIL_VIEW_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -1050,7 +1050,7 @@ void CreateDSVForTexture2DArray(DXGI_FORMAT format, UINT arraySize, TComPtr<ID3D
 
 void CreateGeometryShader(const FString& FileName, const FString& MainPoint, TComPtr<ID3D11GeometryShader> &gs, const FString& alias /*= ""*/)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	TComPtr<ID3DBlob> vs_blob;
 	ComplieShaderFromFile(FileName, MainPoint, "gs_5_0", vs_blob);
@@ -1066,7 +1066,7 @@ void CreateGeometryShader(const FString& FileName, const FString& MainPoint, TCo
 template<>
 void CreateStruturedBuffer<true, false, true, false>(int numbers, int perSize, TComPtr<ID3D11Buffer> & buffer, const FString& alias)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_BUFFER_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -1087,7 +1087,7 @@ void CreateStruturedBuffer<true, false, true, false>(int numbers, int perSize, T
 template<>
 void CreateStruturedBuffer<false, true, true, false>(int numbers, int perSize, TComPtr<ID3D11Buffer> & buffer, const FString& alias)
 {
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_BUFFER_DESC desc;
 	memset(&desc, 0, sizeof(desc));
@@ -1108,7 +1108,7 @@ void CreateStruturedBuffer<false, true, true, false>(int numbers, int perSize, T
 template<>
 void CreateTBuffer<true,false,true,false>(int32 ByteCounts, TComPtr<ID3D11Buffer> & buffer, const FString& alias)
 {	
-	TComPtr<ID3D11Device> device = YYUTDXManager::GetInstance().GetD3DDevice();
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_BUFFER_DESC desc;
 	memset(&desc, 0, sizeof(desc));

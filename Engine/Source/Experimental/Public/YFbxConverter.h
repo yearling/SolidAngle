@@ -17,7 +17,8 @@ public:
 	YFbxConverter();
 	~YFbxConverter();
 	bool Init(const FString &Filename);
-	bool Import(TUniquePtr<YFBXImportOptions> ImportOptionsIn);
+	TRefCountPtr<YStaticMesh>  Import(TUniquePtr<YFBXImportOptions> ImportOptionsIn);
+	bool Save(const FString& DesDir);
 public:
 	struct YFbxMaterial
 	{
@@ -46,6 +47,7 @@ protected:
 	 * @return bool True if there are negative scale and its number is 1 or 3.
 	 */
 	bool IsOddNegativeScale(FbxAMatrix& TotalMatrix);
+	void AlignMaterialSection(TRefCountPtr<YStaticMesh>& InMesh);
 protected:
 	bool GetSceneInfo(const FString& FileName, YFbxSceneInfo& SceneInfo);
 	// 找到第一个LOD Group Node

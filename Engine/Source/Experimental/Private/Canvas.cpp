@@ -66,9 +66,9 @@ void Y3DCanvas::DrawBall(FVector Pos, FLinearColor Color, float Length /*= 0.1f*
 	DrawLine(Point6*Length+Pos, Point7*Length+Pos, Color);
 }
 
-void Y3DCanvas::Render(TSharedRef<FRenderInfo> RenderInf)
+void Y3DCanvas::Render(TSharedRef<YRenderInfo> RenderInf)
 {
-	TComPtr<ID3D11DeviceContext> DeviceContext = YYUTDXManager::GetInstance().GetD3DDC();
+	TComPtr<ID3D11DeviceContext>& DeviceContext = YYUTDXManager::GetInstance().GetD3DDC();
 	DeviceContext->RSSetState(m_rs);
 	DeviceContext->OMSetDepthStencilState(m_ds, 0);
 	float BlendColor[4] = { 1.0f,1.0f,1.0f,1.0f };

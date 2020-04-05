@@ -24,10 +24,10 @@ void YPositionVertexBuffer::CleanUp()
 	}
 }
 
-void YPositionVertexBuffer::Init(const TArray<YStaticMeshBuildVertex>& InVertices)
+void YPositionVertexBuffer::Init(const TArray<YStaticMeshBuildVertex>& InVertices, bool bNeedCpuAccess)
 {
 	NumVertices = InVertices.Num();
-	AllocateData(true);
+	AllocateData(bNeedCpuAccess);
 	VertexData->ResizeBuffer(NumVertices);
 	Data = VertexData->GetDataPointer();
 	for (int32 VertexIndex = 0; VertexIndex < InVertices.Num(); ++VertexIndex)
@@ -87,10 +87,10 @@ void YStaticMeshTangentUVVertexBuffer::CleanUp()
 	}
 }
 
-void YStaticMeshTangentUVVertexBuffer::Init(const TArray<YStaticMeshBuildVertex>& InVertices)
+void YStaticMeshTangentUVVertexBuffer::Init(const TArray<YStaticMeshBuildVertex>& InVertices, bool bNeedCPUAccess)
 {
 	NumVertices = InVertices.Num();
-	AllocateData();
+	AllocateData(bNeedCPUAccess);
 	VertexData->ResizeBuffer(NumVertices);
 	Data = VertexData->GetDataPointer();
 	for (uint32 VertexIndex = 0; VertexIndex < NumVertices; ++VertexIndex)

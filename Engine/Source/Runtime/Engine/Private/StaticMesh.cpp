@@ -3576,7 +3576,7 @@ ENGINE_API FString UStaticMesh::GetName()
 	return StaticMeshName;
 }
 
-void UStaticMesh::Render(TSharedRef<FRenderInfo> RenderInf)
+void UStaticMesh::Render(TSharedRef<YRenderInfo> RenderInf)
 {
 
 }

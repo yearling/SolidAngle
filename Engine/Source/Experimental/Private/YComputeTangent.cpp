@@ -142,7 +142,7 @@ void YMeshUtilities::ComputeTangents_MikkTSpace(YRawMesh& RawMesh, const uint32 
 	TArray<FVector> TriangleTangentX;
 	TArray<FVector> TriangleTangentY;
 	TArray<FVector> TriangleTangentZ;
-	ComputeTriangleTangents(RawMesh.VertexPositions, RawMesh.WedgeIndices, RawMesh.WedgeTexCoords[0], TriangleTangentX, TriangleTangentY, TriangleTangentZ, ComparisionThreshold);
+	ComputeTriangleTangents(RawMesh.VertexPositions, RawMesh.WedgeIndices, RawMesh.WedgeTexCoords[0], TriangleTangentX, TriangleTangentY, TriangleTangentZ, bIgnoreDegenerateTriangles?SMALL_NUMBER:0.0);
 	int32 NumWedges = RawMesh.WedgeIndices.Num();
 	int32 NumFaces = NumWedges / 3;
 	// Allocate storage for tangents if none were provided.

@@ -11,7 +11,7 @@ public:
 	Y3DCanvas();
 	void						DrawLine(FVector StartPos, FVector EndPos, FLinearColor Color);
 	void						DrawBall(FVector Pos, FLinearColor Color, float Length = 0.3f);
-	void						Render(TSharedRef<FRenderInfo> RenderInf);
+	void						Render(TSharedRef<YRenderInfo> RenderInf);
 	void						Init();
 private:
 	TComPtr<ID3D11Buffer>			m_VB;
