@@ -2,6 +2,7 @@
 #include "YStaticMesh.h"
 #include "YMeshBatch.h"
 #include "YYUTHelper.h"
+#include "WICTextureLoader.h"
 DEFINE_LOG_CATEGORY(LogForwardRender)
 
 struct YDirectionalLightDefaultPolicy:public IYRenderPolicy
@@ -34,6 +35,7 @@ public:
 			VSShader->Update();
 
 			PSShader->BindResource(TEXT("g_lightDir"), RenderInfo->SceneInfo.MainLightDir.GetSafeNormal());
+			PSShader->BindSRV(TEXT("txDiffuse"), ShaderResourceView);
 			PSShader->Update();
 			
 			// RHI Ã»Ð´Íê
@@ -41,6 +43,7 @@ public:
 			dc->IASetVertexBuffers(0, 1, &(VBPosition), &stridPosition, &offset);
 			ID3D11Buffer* VBTangentUV = MeshBatch.VertexBuffer->VertexBufferRHI->VertexBuffer.GetReference();
 			dc->IASetVertexBuffers(1, 1, &(VBTangentUV), &StridTangeUV, &offset);
+			dc->PSSetSamplers(0, 1, &SamplerState);
 			for (YMeshBatchElement& MeshBatchElement : MeshBatch.Elements)
 			{
 				TRefCountPtr<YRHIIndexBuffer> IndexBuffer = MeshBatch.Elements[0].IndexBuffer->IndexBufferRHI;
@@ -66,8 +69,8 @@ public:
 		TArray<D3D11_INPUT_ELEMENT_DESC> Layout =
 		{
 			{ "ATTRIBUTE",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "ATTRIBUTE",  1, DXGI_FORMAT_R8G8B8A8_UNORM,  1, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "ATTRIBUTE",  2, DXGI_FORMAT_R8G8B8A8_UNORM,  1, 4, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "ATTRIBUTE",  1, DXGI_FORMAT_R8G8B8A8_SNORM,  1, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "ATTRIBUTE",  2, DXGI_FORMAT_R8G8B8A8_SNORM,  1, 4, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "ATTRIBUTE",  3, DXGI_FORMAT_R16G16_FLOAT,    1, 8, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "ATTRIBUTE",  4, DXGI_FORMAT_R16G16_FLOAT,    1, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
@@ -84,6 +87,16 @@ public:
 		CreateRasterState(m_rs);
 		CreateBlendState(m_bs, true, "m_BlendOpaque");
 		CreateDepthStencileState(m_ds, true, "m_DS_Test");
+
+		//read texture
+		TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
+		TComPtr<ID3D11DeviceContext>& dc = YYUTDXManager::GetInstance().GetD3DDC();
+		ID3D11Texture2D* TextureResource = nullptr;
+		ID3D11ShaderResourceView* SRV = nullptr;
+		DirectX::CreateWICTextureFromFile((ID3D11Device*)device, (ID3D11DeviceContext*)dc,TEXT("mirror_nija_no_seam_default_Normal.png"),(ID3D11Resource**) &TextureResource, &SRV, 0);
+		NormalTexture.Attach((ID3D11Texture2D*)TextureResource);
+		ShaderResourceView.Attach(SRV);
+		CreateSamplerPointWrap(SamplerState);
 		Initialized = true;
 	}
 	void ReleaseRenderResource() override
@@ -100,6 +113,9 @@ public:
 	TComPtr<ID3D11BlendState>		m_bs;
 	TComPtr<ID3D11DepthStencilState>m_ds;
 	TComPtr<ID3D11RasterizerState>	m_rs;
+	TComPtr<ID3D11SamplerState> SamplerState;
+	TComPtr<ID3D11Texture2D> NormalTexture;
+	TComPtr<ID3D11ShaderResourceView> ShaderResourceView;
 	bool Initialized = false;
 };
 

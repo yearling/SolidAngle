@@ -237,12 +237,12 @@ struct YStaticMeshTangnetVertexData
 	YPackedNormal TangentZ;
 	FORCEINLINE FVector GetTangentX() const
 	{
-		return TangentX;
+		return TangentX.ToFVector();
 	}
 
 	FORCEINLINE FVector4 GetTangentZ() const
 	{
-		return TangentZ;
+		return TangentZ.ToFVector4();
 	}
 
 	FORCEINLINE FVector GetTangentY() const

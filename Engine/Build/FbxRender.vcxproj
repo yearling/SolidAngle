@@ -82,7 +82,7 @@
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LinkIncremental>false</LinkIncremental>
+    <LinkIncremental>true</LinkIncremental>
     <OutDir>..\Binaries\Win64\</OutDir>
     <IntDir>..\Intermediate\Build\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>

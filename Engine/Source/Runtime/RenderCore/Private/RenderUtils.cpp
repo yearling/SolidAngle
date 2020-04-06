@@ -24,9 +24,6 @@ const uint16 GCubeIndices[12*3] =
 /** X=127.5, Y=127.5, Z=1/127.5f, W=-1.0 */
 const VectorRegister GVectorPackingConstants = MakeVectorRegister( 127.5f, 127.5f, 1.0f/127.5f, -1.0f );
 
-/** Zero Normal **/
-FPackedNormal FPackedNormal::ZeroNormal(127, 127, 127, 127);
-
 //
 // FPackedNormal serializer
 //

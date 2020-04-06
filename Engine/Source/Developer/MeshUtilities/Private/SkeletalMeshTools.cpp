@@ -33,17 +33,17 @@ namespace SkeletalMeshTools
 			return false;
 		}
 
-		if(!NormalsEqual(V1.TangentX, V2.TangentX))
+		if(!NormalsEqual(V1.TangentX.ToFVector(), V2.TangentX.ToFVector()))
 		{
 			return false;
 		}
 
-		if(!NormalsEqual(V1.TangentY, V2.TangentY))
+		if(!NormalsEqual(V1.TangentY.ToFVector(), V2.TangentY.ToFVector()))
 		{
 			return false;
 		}
 
-		if(!NormalsEqual(V1.TangentZ, V2.TangentZ))
+		if(!NormalsEqual(V1.TangentZ.ToFVector(), V2.TangentZ.ToFVector()))
 		{
 			return false;
 		}
@@ -473,7 +473,7 @@ namespace SkeletalMeshTools
 					FVector LocalPos = SkeletalMesh->RefBasesInvMatrix[BoneIndex].TransformPosition(SoftVert->Position);
 					Infos[BoneIndex].Positions.Add(LocalPos);
 
-					FVector LocalNormal = SkeletalMesh->RefBasesInvMatrix[BoneIndex].TransformVector(SoftVert->TangentZ);
+					FVector LocalNormal = SkeletalMesh->RefBasesInvMatrix[BoneIndex].TransformVector(SoftVert->TangentZ.ToFVector4());
 					Infos[BoneIndex].Normals.Add(LocalNormal);
 				}
 				else
@@ -487,7 +487,7 @@ namespace SkeletalMeshTools
 							FVector LocalPos = SkeletalMesh->RefBasesInvMatrix[BoneIndex].TransformPosition(SoftVert->Position);
 							Infos[BoneIndex].Positions.Add(LocalPos);
 
-							FVector LocalNormal = SkeletalMesh->RefBasesInvMatrix[BoneIndex].TransformVector(SoftVert->TangentZ);
+							FVector LocalNormal = SkeletalMesh->RefBasesInvMatrix[BoneIndex].TransformVector(SoftVert->TangentZ.ToFVector4());
 							Infos[BoneIndex].Normals.Add(LocalNormal);
 						}
 					}

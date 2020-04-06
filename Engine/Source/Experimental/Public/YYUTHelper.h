@@ -232,6 +232,10 @@ void									CreateSamplerLinearWrap(
 	TComPtr<ID3D11SamplerState> &sample,
 	const FString& alias = "");
 
+void									CreateSamplerPointWrap(
+	TComPtr<ID3D11SamplerState> &sample,
+	const FString& alias = "");
+
 void									CreateSamplerLinearClamp(
 	TComPtr<ID3D11SamplerState> &sample,
 	const FString& alias = "");

@@ -1,29 +1,9 @@
-// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2018 Epic Games, Inc. All Rights Reserved.
 
 
 #pragma once
 
 #include "CoreMinimal.h"
-
-/**
-* Constructs a basis matrix for the axis vectors and returns the sign of the determinant
-*
-* @param XAxis - x axis (tangent)
-* @param YAxis - y axis (binormal)
-* @param ZAxis - z axis (normal)
-* @return sign of determinant either -1 or +1
-*/
-FORCEINLINE float YGetBasisDeterminantSign(const FVector& XAxis, const FVector& YAxis, const FVector& ZAxis)
-{
-	FMatrix Basis(
-		FPlane(XAxis, 0),
-		FPlane(YAxis, 0),
-		FPlane(ZAxis, 0),
-		FPlane(0, 0, 0, 1)
-	);
-	return (Basis.Determinant() < 0) ? -1.0f : +1.0f;
-}
-
 
 /** A normal vector, quantized and packed into 32-bits. */
 struct YPackedNormal
@@ -32,17 +12,8 @@ struct YPackedNormal
 	{
 		struct
 		{
-#if PLATFORM_LITTLE_ENDIAN
-			uint8	X,
-			Y,
-			Z,
-			W;
-#else
-			uint8	W,
-			Z,
-			Y,
-			X;
-#endif
+			int8	X, Y, Z, W;
+
 		};
 		uint32		Packed;
 	}				Vector;
@@ -50,17 +21,17 @@ struct YPackedNormal
 	// Constructors.
 
 	YPackedNormal() { Vector.Packed = 0; }
-	YPackedNormal(uint32 InPacked) { Vector.Packed = InPacked; }
 	YPackedNormal(const FVector& InVector) { *this = InVector; }
-	YPackedNormal(uint8 InX, uint8 InY, uint8 InZ, uint8 InW) { Vector.X = InX; Vector.Y = InY; Vector.Z = InZ; Vector.W = InW; }
+	YPackedNormal(const FVector4& InVector) { *this = InVector; }
 
 	// Conversion operators.
 
 	void operator=(const FVector& InVector);
 	void operator=(const FVector4& InVector);
-	operator FVector() const;
-	operator FVector4() const;
 	VectorRegister GetVectorRegister() const;
+
+	FVector ToFVector() const;
+	FVector4 ToFVector4() const;
 
 	// Set functions.
 	void Set(const FVector& InVector) { *this = InVector; }
@@ -72,65 +43,74 @@ struct YPackedNormal
 
 	// Serializer.
 
-	friend  FArchive& operator<<(FArchive& Ar, YPackedNormal& N);
-
 	FString ToString() const
 	{
 		return FString::Printf(TEXT("X=%d Y=%d Z=%d W=%d"), Vector.X, Vector.Y, Vector.Z, Vector.W);
 	}
 
-	// Zero Normal
-	static  YPackedNormal ZeroNormal;
+	friend  FArchive& operator<<(FArchive& Ar, YPackedNormal& N);
 };
 
-/**
-* Constructs a basis matrix for the axis vectors and returns the sign of the determinant
-*
-* @param XAxis - x axis (tangent)
-* @param YAxis - y axis (binormal)
-* @param ZAxis - z axis (normal)
-* @return sign of determinant either 0 (-1) or +1 (255)
-*/
-FORCEINLINE uint8 YGetBasisDeterminantSignByte(const YPackedNormal& XAxis, const YPackedNormal& YAxis, const YPackedNormal& ZAxis)
+class YDeprecatedSerializedPackedNormal
 {
-	return FMath::TruncToInt(YGetBasisDeterminantSign(XAxis, YAxis, ZAxis) * 127.5f + 127.5f);
-}
+	union
+	{
+		struct
+		{
+			uint8 X, Y, Z, W;
+		};
+		uint32		Packed;
+	} Vector;
 
+public:
+	operator FVector() const
+	{
+		// Rescale [0..255] range to [-1..1]
+		VectorRegister VectorToUnpack = VectorLoadByte4(this);
+		VectorToUnpack = VectorMultiplyAdd(VectorToUnpack, VectorSetFloat1(1.0f / 127.5f), VectorSetFloat1(-1.0f));
 
-/** X=127.5, Y=127.5, Z=1/127.5f, W=-1.0 */
-extern  const VectorRegister YVectorPackingConstants;
+		FVector UnpackedVector;
+		VectorStoreFloat3(VectorToUnpack, &UnpackedVector);
+
+		return UnpackedVector;
+	}
+
+	operator FVector4() const
+	{
+		// Rescale [0..255] range to [-1..1]
+		VectorRegister VectorToUnpack = VectorLoadByte4(this);
+		VectorToUnpack = VectorMultiplyAdd(VectorToUnpack, VectorSetFloat1(1.0f / 127.5f), VectorSetFloat1(-1.0f));
+
+		FVector4 UnpackedVector;
+		VectorStore(VectorToUnpack, &UnpackedVector);
+
+		return UnpackedVector;
+	}
+
+	friend RENDERCORE_API FArchive& operator<<(FArchive& Ar, YDeprecatedSerializedPackedNormal& N);
+};
 
 FORCEINLINE void YPackedNormal::operator=(const FVector& InVector)
 {
-	Vector.X = FMath::Clamp(FMath::TruncToInt(InVector.X * 127.5f + 127.5f),0,255);
-	Vector.Y = FMath::Clamp(FMath::TruncToInt(InVector.Y * 127.5f + 127.5f),0,255);
-	Vector.Z = FMath::Clamp(FMath::TruncToInt(InVector.Z * 127.5f + 127.5f),0,255);
-	Vector.W = 128;
+	const float Scale = MAX_int8;
+	Vector.X = (int8)FMath::Clamp<int32>(FMath::RoundToInt(InVector.X * Scale), MIN_int8, MAX_int8);
+	Vector.Y = (int8)FMath::Clamp<int32>(FMath::RoundToInt(InVector.Y * Scale), MIN_int8, MAX_int8);
+	Vector.Z = (int8)FMath::Clamp<int32>(FMath::RoundToInt(InVector.Z * Scale), MIN_int8, MAX_int8);
+	Vector.W = MAX_int8;
 }
 
 FORCEINLINE void YPackedNormal::operator=(const FVector4& InVector)
 {
-	Vector.X = FMath::Clamp(FMath::TruncToInt(InVector.X * 127.5f + 127.5f),0,255);
-	Vector.Y = FMath::Clamp(FMath::TruncToInt(InVector.Y * 127.5f + 127.5f),0,255);
-	Vector.Z = FMath::Clamp(FMath::TruncToInt(InVector.Z * 127.5f + 127.5f),0,255);
-	Vector.W = FMath::Clamp(FMath::TruncToInt(InVector.W * 127.5f + 127.5f),0,255);
+	const float Scale = MAX_int8;
+	Vector.X = (int8)FMath::Clamp<int32>(FMath::RoundToInt(InVector.X * Scale), MIN_int8, MAX_int8);
+	Vector.Y = (int8)FMath::Clamp<int32>(FMath::RoundToInt(InVector.Y * Scale), MIN_int8, MAX_int8);
+	Vector.Z = (int8)FMath::Clamp<int32>(FMath::RoundToInt(InVector.Z * Scale), MIN_int8, MAX_int8);
+	Vector.W = (int8)FMath::Clamp<int32>(FMath::RoundToInt(InVector.W * Scale), MIN_int8, MAX_int8);
 }
 
 FORCEINLINE bool YPackedNormal::operator==(const YPackedNormal& B) const
 {
-	FVector	V1 = *this;
-	FVector	V2 = B;
-
-	if(FMath::Abs(V1.X - V2.X) > THRESH_NORMALS_ARE_SAME * 4.0f)
-		return 0;
-
-	if(FMath::Abs(V1.Y - V2.Y) > THRESH_NORMALS_ARE_SAME * 4.0f)
-		return 0;
-
-	if(FMath::Abs(V1.Z - V2.Z) > THRESH_NORMALS_ARE_SAME * 4.0f)
-		return 0;
-
-	return 1;
+	return Vector.Packed == B.Vector.Packed;
 }
 
 FORCEINLINE bool YPackedNormal::operator!=(const YPackedNormal& B) const
@@ -138,16 +118,16 @@ FORCEINLINE bool YPackedNormal::operator!=(const YPackedNormal& B) const
 	return !(*this == B);
 }
 
-FORCEINLINE YPackedNormal::operator FVector() const
+FORCEINLINE FVector YPackedNormal::ToFVector() const
 {
 	VectorRegister VectorToUnpack = GetVectorRegister();
 	// Write to FVector and return it.
 	FVector UnpackedVector;
-	VectorStoreFloat3( VectorToUnpack, &UnpackedVector );
+	VectorStoreFloat3(VectorToUnpack, &UnpackedVector);
 	return UnpackedVector;
 }
 
-FORCEINLINE YPackedNormal::operator FVector4() const
+FORCEINLINE FVector4 YPackedNormal::ToFVector4() const
 {
 	VectorRegister VectorToUnpack = GetVectorRegister();
 	// Write to FVector4 and return it.
@@ -159,9 +139,8 @@ FORCEINLINE YPackedNormal::operator FVector4() const
 FORCEINLINE VectorRegister YPackedNormal::GetVectorRegister() const
 {
 	// Rescale [0..255] range to [-1..1]
-	VectorRegister VectorToUnpack		= VectorLoadByte4( this );
-	VectorToUnpack						= VectorMultiplyAdd( VectorToUnpack, VectorReplicate(YVectorPackingConstants,2), VectorReplicate(YVectorPackingConstants,3) );
-	VectorResetFloatRegisters();
+	VectorRegister VectorToUnpack = VectorLoadSignedByte4(this);
+	VectorToUnpack = VectorMultiply(VectorToUnpack, VectorSetFloat1(1.0f / 127.0f));
 	// Return unpacked vector register.
 	return VectorToUnpack;
 }
@@ -186,7 +165,7 @@ struct YPackedRGB10A2N
 #endif
 		};
 
-		struct  
+		struct
 		{
 			uint32 Packed;
 		};
@@ -195,17 +174,13 @@ struct YPackedRGB10A2N
 	// Constructors.
 
 	YPackedRGB10A2N() { Vector.Packed = 0; }
-	YPackedRGB10A2N(uint32 InPacked) { Vector.Packed = InPacked; }
 	YPackedRGB10A2N(const FVector& InVector) { *this = InVector; }
 	YPackedRGB10A2N(const FVector4& InVector) { *this = InVector; }
-	YPackedRGB10A2N(uint32 InX, uint32 InY, uint32 InZ, uint32 InW) { Vector.X = InX; Vector.Y = InY; Vector.Z = InZ; Vector.W = InW; }
 
 	// Conversion operators.
 
 	void operator=(const FVector& InVector);
 	void operator=(const FVector4& InVector);
-	operator FVector() const;
-	operator FVector4() const;
 
 	VectorRegister GetVectorRegister() const;
 
@@ -220,14 +195,14 @@ struct YPackedRGB10A2N
 
 	// Serializer.
 
-	friend FArchive& operator<<(FArchive& Ar, YPackedRGB10A2N& N);
+	friend  FArchive& operator<<(FArchive& Ar, YPackedRGB10A2N& N);
 
 	FString ToString() const
 	{
 		return FString::Printf(TEXT("X=%d Y=%d Z=%d W=%d"), Vector.X, Vector.Y, Vector.Z, Vector.W);
 	}
 
-	static YPackedRGB10A2N ZeroVector;
+	static  YPackedRGB10A2N ZeroVector;
 };
 
 FORCEINLINE void YPackedRGB10A2N::operator=(const FVector& InVector)
@@ -243,47 +218,17 @@ FORCEINLINE void YPackedRGB10A2N::operator=(const FVector4& InVector)
 	Vector.X = FMath::Clamp(FMath::TruncToInt(InVector.X * 511.5f + 511.5f), 0, 1023);
 	Vector.Y = FMath::Clamp(FMath::TruncToInt(InVector.Y * 511.5f + 511.5f), 0, 1023);
 	Vector.Z = FMath::Clamp(FMath::TruncToInt(InVector.Z * 511.5f + 511.5f), 0, 1023);
-	Vector.W = FMath::Clamp(FMath::TruncToInt(InVector.W * 1.5f   + 1.5f),   0, 3);
+	Vector.W = FMath::Clamp(FMath::TruncToInt(InVector.W * 1.5f + 1.5f), 0, 3);
 }
 
 FORCEINLINE bool YPackedRGB10A2N::operator==(const YPackedRGB10A2N& B) const
 {
-	FVector	V1 = *this;
-	FVector V2 = B;
-
-	if (FMath::Abs(V1.X - V2.X) > THRESH_NORMALS_ARE_SAME * 4.0f)
-		return 0;
-
-	if (FMath::Abs(V1.Y - V2.Y) > THRESH_NORMALS_ARE_SAME * 4.0f)
-		return 0;
-
-	if (FMath::Abs(V1.Z - V2.Z) > THRESH_NORMALS_ARE_SAME * 4.0f)
-		return 0;
-
-	return 1;
+	return Vector.Packed == B.Vector.Packed;
 }
 
 FORCEINLINE bool YPackedRGB10A2N::operator!=(const YPackedRGB10A2N& B) const
 {
 	return !(*this == B);
-}
-
-FORCEINLINE YPackedRGB10A2N::operator FVector() const
-{
-	VectorRegister VectorToUnpack = GetVectorRegister();
-	// Write to FVector and return it.
-	FVector UnpackedVector;
-	VectorStoreFloat3(VectorToUnpack, &UnpackedVector);
-	return UnpackedVector;
-}
-
-FORCEINLINE YPackedRGB10A2N::operator FVector4() const
-{
-	VectorRegister VectorToUnpack = GetVectorRegister();
-	// Write to FVector4 and return it.
-	FVector4 UnpackedVector;
-	VectorStore(VectorToUnpack, &UnpackedVector);
-	return UnpackedVector;
 }
 
 FORCEINLINE VectorRegister YPackedRGB10A2N::GetVectorRegister() const
@@ -300,10 +245,10 @@ struct YPackedRGBA16N
 {
 	struct
 	{
-		uint16 X;
-		uint16 Y;
-		uint16 Z;
-		uint16 W;
+		int16 X;
+		int16 Y;
+		int16 Z;
+		int16 W;
 	};
 
 	// Constructors.
@@ -311,14 +256,15 @@ struct YPackedRGBA16N
 	YPackedRGBA16N() { X = 0; Y = 0; Z = 0; W = 0; }
 	YPackedRGBA16N(const FVector& InVector) { *this = InVector; }
 	YPackedRGBA16N(const FVector4& InVector) { *this = InVector; }
-	YPackedRGBA16N(uint16 InX, uint16 InY, uint16 InZ, uint16 InW) { X = InX; Y = InY; Z = InZ; W = InW; }
+	//FPackedRGBA16N(uint16 InX, uint16 InY, uint16 InZ, uint16 InW) { X = InX; Y = InY; Z = InZ; W = InW; }
 
 	// Conversion operators.
 
 	void operator=(const FVector& InVector);
 	void operator=(const FVector4& InVector);
-	operator FVector() const;
-	operator FVector4() const;
+
+	FVector ToFVector() const;
+	FVector4 ToFVector4() const;
 
 	VectorRegister GetVectorRegister() const;
 
@@ -331,49 +277,35 @@ struct YPackedRGBA16N
 	bool operator==(const YPackedRGBA16N& B) const;
 	bool operator!=(const YPackedRGBA16N& B) const;
 
-	// Serializer.
-
-	friend  FArchive& operator<<(FArchive& Ar, YPackedRGBA16N& N);
-
 	FString ToString() const
 	{
 		return FString::Printf(TEXT("X=%d Y=%d Z=%d W=%d"), X, Y, Z, W);
 	}
 
-	static YPackedRGBA16N ZeroVector;
+	friend  FArchive& operator<<(FArchive& Ar, YPackedRGBA16N& N);
 };
 
 FORCEINLINE void YPackedRGBA16N::operator=(const FVector& InVector)
 {
-	X = FMath::Clamp(FMath::TruncToInt(InVector.X * 32767.5f + 32767.5f), 0, 65535);
-	Y = FMath::Clamp(FMath::TruncToInt(InVector.Y * 32767.5f + 32767.5f), 0, 65535);
-	Z = FMath::Clamp(FMath::TruncToInt(InVector.Z * 32767.5f + 32767.5f), 0, 65535);
-	W = 65535;
+	const float Scale = MAX_int16;
+	X = (int16)FMath::Clamp<int32>(FMath::RoundToInt(InVector.X * Scale), MIN_int16, MAX_int16);
+	Y = (int16)FMath::Clamp<int32>(FMath::RoundToInt(InVector.Y * Scale), MIN_int16, MAX_int16);
+	Z = (int16)FMath::Clamp<int32>(FMath::RoundToInt(InVector.Z * Scale), MIN_int16, MAX_int16);
+	W = MAX_int16;
 }
 
 FORCEINLINE void YPackedRGBA16N::operator=(const FVector4& InVector)
 {
-	X = FMath::Clamp(FMath::TruncToInt(InVector.X * 32767.5f + 32767.5f), 0, 65535);
-	Y = FMath::Clamp(FMath::TruncToInt(InVector.Y * 32767.5f + 32767.5f), 0, 65535);
-	Z = FMath::Clamp(FMath::TruncToInt(InVector.Z * 32767.5f + 32767.5f), 0, 65535);
-	W = FMath::Clamp(FMath::TruncToInt(InVector.W * 32767.5f + 32767.5f), 0, 65535);
+	const float Scale = MAX_int16;
+	X = (int16)FMath::Clamp<int32>(FMath::RoundToInt(InVector.X * Scale), MIN_int16, MAX_int16);
+	Y = (int16)FMath::Clamp<int32>(FMath::RoundToInt(InVector.Y * Scale), MIN_int16, MAX_int16);
+	Z = (int16)FMath::Clamp<int32>(FMath::RoundToInt(InVector.Z * Scale), MIN_int16, MAX_int16);
+	W = (int16)FMath::Clamp<int32>(FMath::RoundToInt(InVector.W * Scale), MIN_int16, MAX_int16);
 }
 
 FORCEINLINE bool YPackedRGBA16N::operator==(const YPackedRGBA16N& B) const
 {
-	FVector	V1 = *this;
-	FVector	V2 = B;
-
-	if (FMath::Abs(V1.X - V2.X) > THRESH_NORMALS_ARE_SAME * 4.0f)
-		return 0;
-
-	if (FMath::Abs(V1.Y - V2.Y) > THRESH_NORMALS_ARE_SAME * 4.0f)
-		return 0;
-
-	if (FMath::Abs(V1.Z - V2.Z) > THRESH_NORMALS_ARE_SAME * 4.0f)
-		return 0;
-
-	return 1;
+	return (X == B.X) && (Y == B.Y) && (Z == B.Z) && (W == B.W);
 }
 
 FORCEINLINE bool YPackedRGBA16N::operator!=(const YPackedRGBA16N& B) const
@@ -381,7 +313,7 @@ FORCEINLINE bool YPackedRGBA16N::operator!=(const YPackedRGBA16N& B) const
 	return !(*this == B);
 }
 
-FORCEINLINE YPackedRGBA16N::operator FVector() const
+FORCEINLINE FVector YPackedRGBA16N::ToFVector() const
 {
 	VectorRegister VectorToUnpack = GetVectorRegister();
 	// Write to FVector and return it.
@@ -390,7 +322,7 @@ FORCEINLINE YPackedRGBA16N::operator FVector() const
 	return UnpackedVector;
 }
 
-FORCEINLINE YPackedRGBA16N::operator FVector4() const
+FORCEINLINE FVector4 YPackedRGBA16N::ToFVector4() const
 {
 	VectorRegister VectorToUnpack = GetVectorRegister();
 	// Write to FVector4 and return it.
@@ -401,9 +333,42 @@ FORCEINLINE YPackedRGBA16N::operator FVector4() const
 
 FORCEINLINE VectorRegister YPackedRGBA16N::GetVectorRegister() const
 {
-	VectorRegister VectorToUnpack = VectorLoadURGBA16N((void*)this);
-	VectorToUnpack = VectorMultiplyAdd(VectorToUnpack, MakeVectorRegister(2.0f, 2.0f, 2.0f, 2.0f), MakeVectorRegister(-1.0f, -1.0f, -1.0f, -1.0f));
-	VectorResetFloatRegisters();
+	VectorRegister VectorToUnpack = VectorLoadSRGBA16N((void*)this);
+	VectorToUnpack = VectorMultiply(VectorToUnpack, VectorSetFloat1(1.0f / 32767.0f));
 	// Return unpacked vector register.
 	return VectorToUnpack;
 }
+
+/**
+* Constructs a basis matrix for the axis vectors and returns the sign of the determinant
+*
+* @param XAxis - x axis (tangent)
+* @param YAxis - y axis (binormal)
+* @param ZAxis - z axis (normal)
+* @return sign of determinant either -1 or +1
+*/
+FORCEINLINE float YGetBasisDeterminantSign(const FVector& XAxis, const FVector& YAxis, const FVector& ZAxis)
+{
+	FMatrix Basis(
+		FPlane(XAxis, 0),
+		FPlane(YAxis, 0),
+		FPlane(ZAxis, 0),
+		FPlane(0, 0, 0, 1)
+	);
+	return (Basis.Determinant() < 0) ? -1.0f : +1.0f;
+}
+
+
+/**
+* Constructs a basis matrix for the axis vectors and returns the sign of the determinant
+*
+* @param XAxis - x axis (tangent)
+* @param YAxis - y axis (binormal)
+* @param ZAxis - z axis (normal)
+* @return sign of determinant either -127 (-1) or +1 (127)
+*/
+FORCEINLINE int8 YGetBasisDeterminantSignByte(const YPackedNormal& XAxis, const YPackedNormal& YAxis, const YPackedNormal& ZAxis)
+{
+	return YGetBasisDeterminantSign(XAxis.ToFVector(), YAxis.ToFVector(), ZAxis.ToFVector()) < 0 ? -127 : 127;
+}
+

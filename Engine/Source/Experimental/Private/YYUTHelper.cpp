@@ -695,6 +695,25 @@ void CreateSamplerLinearWrap(TComPtr<ID3D11SamplerState> &sample, const FString&
 }
 
 
+void CreateSamplerPointWrap(TComPtr<ID3D11SamplerState> &sample, const FString& alias /*= ""*/)
+{
+	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
+	HRESULT hr = S_OK;
+	D3D11_SAMPLER_DESC samDesc;
+	ZeroMemory(&samDesc, sizeof(samDesc));
+	samDesc.Filter = D3D11_FILTER_ANISOTROPIC;
+	samDesc.AddressU = samDesc.AddressV = samDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samDesc.MaxAnisotropy = 8;
+	samDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	if (FAILED(hr = device->CreateSamplerState(&samDesc, &sample)))
+	{
+	}
+#if defined DEBUG | defined _DEBUG
+	AddAlias(sample, alias);
+#endif
+}
+
 void CreateSamplerLinearClamp(TComPtr<ID3D11SamplerState> &sample, const FString& alias/*=""*/)
 {
 	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();

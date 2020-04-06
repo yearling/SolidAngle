@@ -26,17 +26,18 @@ FORCEINLINE float GetBasisDeterminantSign( const FVector& XAxis, const FVector& 
 	return (Basis.Determinant() < 0) ? -1.0f : +1.0f;
 }
 
+
 /**
 * Constructs a basis matrix for the axis vectors and returns the sign of the determinant
 *
 * @param XAxis - x axis (tangent)
 * @param YAxis - y axis (binormal)
 * @param ZAxis - z axis (normal)
-* @return sign of determinant either 0 (-1) or +1 (255)
+* @return sign of determinant either -127 (-1) or +1 (127)
 */
-FORCEINLINE uint8 GetBasisDeterminantSignByte( const FPackedNormal& XAxis, const FPackedNormal& YAxis, const FPackedNormal& ZAxis )
+FORCEINLINE int8 GetBasisDeterminantSignByte(const FPackedNormal& XAxis, const FPackedNormal& YAxis, const FPackedNormal& ZAxis)
 {
-	return FMath::TruncToInt(GetBasisDeterminantSign(XAxis,YAxis,ZAxis) * 127.5f + 127.5f);
+	return GetBasisDeterminantSign(XAxis.ToFVector(), YAxis.ToFVector(), ZAxis.ToFVector()) < 0 ? -127 : 127;
 }
 
 /** Information about a pixel format. */
