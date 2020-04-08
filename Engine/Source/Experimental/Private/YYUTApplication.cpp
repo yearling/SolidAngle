@@ -1,4 +1,5 @@
 #include "YYUTApplication.h"
+#include <windowsx.h>
 YYUTApplication *YYUT_application;
 
 YYUTApplication::YYUTApplication(void)
@@ -98,7 +99,7 @@ void YYUTWindow::Init(int width, int Height, const TCHAR *window_name)
 {
 	DWORD $err_hr;
 	m_iWidth = width;
-	m_iHeight = Height;
+	m_iHeight = Height; 
 	WNDCLASSEX wcex;
 	TCHAR _Regstr[] = { _T("YYWINDOW") };
 	wcex.cbSize = sizeof(WNDCLASSEX);
@@ -114,7 +115,9 @@ void YYUTWindow::Init(int width, int Height, const TCHAR *window_name)
 	wcex.lpszClassName = _Regstr;
 	wcex.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
 	$err_hr = RegisterClassEx(&wcex);
-	m_hWnd = CreateWindow(_Regstr, window_name, WS_CAPTION | WS_SIZEBOX,
+	DWORD WindowsWithTitleAndBoderStyle = WS_TILEDWINDOW | WS_SIZEBOX;
+	DWORD WindowsPOPStyle = WS_POPUP;
+	m_hWnd = CreateWindow(_Regstr, window_name, WindowsWithTitleAndBoderStyle,
 		CW_USEDEFAULT, CW_USEDEFAULT, m_iWidth, m_iHeight, NULL, NULL, m_hMainInstance, NULL);
 	$err_hr = GetLastError();
 	if (m_hWnd)
@@ -124,9 +127,9 @@ void YYUTWindow::Init(int width, int Height, const TCHAR *window_name)
 
 			RECT window_rect = { 0,0,m_iWidth,m_iHeight };
 			// make the call to adjust window_rect
-			//::AdjustWindowRectEx(&window_rect, GetWindowStyle(m_hWnd), GetMenu(m_hWnd) != NULL, GetWindowExStyle(m_hWnd));
-			MoveWindow(m_hWnd, 100, // x position
-				50, // y position
+			::AdjustWindowRect(&window_rect, GetWindowStyle(m_hWnd), ::GetMenu(m_hWnd) != NULL);
+			MoveWindow(m_hWnd, 400, // x position
+				200, // y position
 				window_rect.right - window_rect.left, // width
 				window_rect.bottom - window_rect.top, // height
 				FALSE);

@@ -1,4 +1,4 @@
-// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+// Copyright 1998-2018 Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -12,7 +12,7 @@ FORCEINLINE bool VectorIsAligned(const void *Ptr)
 
 // Returns a normalized 4 vector = Vector / |Vector|.
 // There is no handling of zero length vectors, use VectorNormalizeSafe if this is a possible input.
-FORCEINLINE VectorRegister VectorNormalizeAccurate( const VectorRegister& Vector )
+FORCEINLINE VectorRegister VectorNormalizeAccurate(const VectorRegister& Vector)
 {
 	const VectorRegister SquareSum = VectorDot4(Vector, Vector);
 	const VectorRegister InvLength = VectorReciprocalSqrtAccurate(SquareSum);
@@ -22,7 +22,7 @@ FORCEINLINE VectorRegister VectorNormalizeAccurate( const VectorRegister& Vector
 
 // Returns ((Vector dot Vector) >= 1e-8) ? (Vector / |Vector|) : DefaultValue
 // Uses accurate 1/sqrt, not the estimate
-FORCEINLINE VectorRegister VectorNormalizeSafe( const VectorRegister& Vector, const VectorRegister& DefaultValue )
+FORCEINLINE VectorRegister VectorNormalizeSafe(const VectorRegister& Vector, const VectorRegister& DefaultValue)
 {
 	const VectorRegister SquareSum = VectorDot4(Vector, Vector);
 	const VectorRegister NonZeroMask = VectorCompareGE(SquareSum, GlobalVectorConstants::SmallLengthThreshold);
@@ -38,9 +38,9 @@ FORCEINLINE VectorRegister VectorNormalizeSafe( const VectorRegister& Vector, co
  * @param Vec2			2nd source vector
  * @return				Non-zero integer if (Vec1.x < Vec2.x) || (Vec1.y < Vec2.y) || (Vec1.z < Vec2.z) || (Vec1.w < Vec2.w)
  */
-FORCEINLINE uint32 VectorAnyLesserThan( VectorRegister Vec1, VectorRegister Vec2 )
+FORCEINLINE uint32 VectorAnyLesserThan(VectorRegister Vec1, VectorRegister Vec2)
 {
-	return VectorAnyGreaterThan( Vec2, Vec1 );
+	return VectorAnyGreaterThan(Vec2, Vec1);
 }
 
 /**
@@ -50,9 +50,9 @@ FORCEINLINE uint32 VectorAnyLesserThan( VectorRegister Vec1, VectorRegister Vec2
  * @param Vec2			2nd source vector
  * @return				Non-zero integer if (Vec1.x > Vec2.x) && (Vec1.y > Vec2.y) && (Vec1.z > Vec2.z) && (Vec1.w > Vec2.w)
  */
-FORCEINLINE uint32 VectorAllGreaterThan( VectorRegister Vec1, VectorRegister Vec2 )
+FORCEINLINE uint32 VectorAllGreaterThan(VectorRegister Vec1, VectorRegister Vec2)
 {
-	return !VectorAnyGreaterThan( Vec2, Vec1 );
+	return !VectorAnyGreaterThan(Vec2, Vec1);
 }
 
 /**
@@ -62,9 +62,9 @@ FORCEINLINE uint32 VectorAllGreaterThan( VectorRegister Vec1, VectorRegister Vec
  * @param Vec2			2nd source vector
  * @return				Non-zero integer if (Vec1.x < Vec2.x) && (Vec1.y < Vec2.y) && (Vec1.z < Vec2.z) && (Vec1.w < Vec2.w)
  */
-FORCEINLINE uint32 VectorAllLesserThan( VectorRegister Vec1, VectorRegister Vec2 )
+FORCEINLINE uint32 VectorAllLesserThan(VectorRegister Vec1, VectorRegister Vec2)
 {
-	return !VectorAnyGreaterThan( Vec1, Vec2 );
+	return !VectorAnyGreaterThan(Vec1, Vec2);
 }
 
 /*----------------------------------------------------------------------------
@@ -115,18 +115,18 @@ FORCEINLINE VectorRegister VectorNormalizeQuaternion(const VectorRegister& Unnor
 FORCEINLINE VectorRegister VectorNormalizeRotator(const VectorRegister& UnnormalizedRotator)
 {
 	// shift in the range [-360,360]
-	VectorRegister V0	= VectorMod( UnnormalizedRotator, GlobalVectorConstants::Float360);
-	VectorRegister V1	= VectorAdd( V0, GlobalVectorConstants::Float360 );
-	VectorRegister V2	= VectorSelect(VectorCompareGE(V0, VectorZero()), V0, V1);
+	VectorRegister V0 = VectorMod(UnnormalizedRotator, GlobalVectorConstants::Float360);
+	VectorRegister V1 = VectorAdd(V0, GlobalVectorConstants::Float360);
+	VectorRegister V2 = VectorSelect(VectorCompareGE(V0, VectorZero()), V0, V1);
 
 	// shift to [-180,180]
-	VectorRegister V3	= VectorSubtract( V2, GlobalVectorConstants::Float360 );
-	VectorRegister V4	= VectorSelect(VectorCompareGT(V2, GlobalVectorConstants::Float180), V3, V2);
+	VectorRegister V3 = VectorSubtract(V2, GlobalVectorConstants::Float360);
+	VectorRegister V4 = VectorSelect(VectorCompareGT(V2, GlobalVectorConstants::Float180), V3, V2);
 
 	return  V4;
 }
 
-/** 
+/**
  * Fast Linear Quaternion Interpolation for quaternions stored in VectorRegisters.
  * Result is NOT normalized.
  */
@@ -150,7 +150,7 @@ FORCEINLINE VectorRegister VectorLerpQuat(const VectorRegister& A, const VectorR
 	return UnnormalizedResult;
 }
 
-/** 
+/**
  * Bi-Linear Quaternion interpolation for quaternions stored in VectorRegisters.
  * Result is NOT normalized.
  */
@@ -162,8 +162,8 @@ FORCEINLINE VectorRegister VectorBiLerpQuat(const VectorRegister& P00, const Vec
 		FracY);
 }
 
-/** 
- * Inverse quaternion ( -X, -Y, -Z, W) 
+/**
+ * Inverse quaternion ( -X, -Y, -Z, W)
  */
 FORCEINLINE VectorRegister VectorQuaternionInverse(const VectorRegister& NormalizedQuat)
 {
@@ -228,7 +228,7 @@ FORCEINLINE VectorRegister VectorQuaternionInverseRotateVector(const VectorRegis
 * @param Quat		Pointer to the unit quaternion (must not be the destination)
 * @param VectorW0	Pointer to the vector (must not be the destination). W component must be zero.
 */
-FORCEINLINE void VectorQuaternionRotateVectorPtr( void* RESTRICT Result, const void* RESTRICT Quat, const void* RESTRICT VectorW0)
+FORCEINLINE void VectorQuaternionRotateVectorPtr(void* RESTRICT Result, const void* RESTRICT Quat, const void* RESTRICT VectorW0)
 {
 	*((VectorRegister *)Result) = VectorQuaternionRotateVector(*((const VectorRegister *)Quat), *((const VectorRegister *)VectorW0));
 }
@@ -244,3 +244,33 @@ FORCEINLINE void VectorQuaternionInverseRotateVectorPtr(void* RESTRICT Result, c
 {
 	*((VectorRegister *)Result) = VectorQuaternionInverseRotateVector(*((const VectorRegister *)Quat), *((const VectorRegister *)VectorW0));
 }
+
+/**
+ * Counts the number of trailing zeros in the bit representation of the value,
+ * counting from least-significant bit to most.
+ *
+ * @param Value the value to determine the number of leading zeros for
+ * @return the number of zeros before the first "on" bit
+ */
+#if ((PLATFORM_WINDOWS && !PLATFORM_COMPILER_CLANG) || PLATFORM_XBOXONE)
+#pragma intrinsic( _BitScanForward )
+FORCEINLINE uint32 appCountTrailingZeros(uint32 Value)
+{
+	if (Value == 0)
+	{
+		return 32;
+	}
+	unsigned long BitIndex;	// 0-based, where the LSB is 0 and MSB is 31
+	_BitScanForward(&BitIndex, Value);	// Scans from LSB to MSB
+	return BitIndex;
+}
+#else // ((PLATFORM_WINDOWS && !PLATFORM_COMPILER_CLANG) || PLATFORM_XBOXONE)
+FORCEINLINE uint32 appCountTrailingZeros(uint32 Value)
+{
+	if (Value == 0)
+	{
+		return 32;
+	}
+	return __builtin_ffs(Value) - 1;
+}
+#endif // PLATFORM_WINDOWS
