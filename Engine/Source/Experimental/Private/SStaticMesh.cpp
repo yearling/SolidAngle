@@ -1,15 +1,15 @@
-#include "YStaticMesh.h"
+#include "SStaticMesh.h"
 #include "YRawMesh.h"
 #include "YMeshCommon.h"
 #include "YStaticMeshRenderData.h"
 #include "Canvas.h"
 DEFINE_LOG_CATEGORY(LogYStaticMesh);
 
-YStaticMesh::YStaticMesh()
+SStaticMesh::SStaticMesh()
 {
 }
 
-YStaticMesh::~YStaticMesh()
+SStaticMesh::~SStaticMesh()
 {
 	if (RenderData)
 	{
@@ -23,7 +23,7 @@ YStaticMesh::~YStaticMesh()
 	}
 }
 
-void YStaticMesh::Serialize(FArchive& Ar)
+void SStaticMesh::Serialize(FArchive& Ar)
 {
 	if (Ar.IsLoading())
 	{
@@ -33,12 +33,12 @@ void YStaticMesh::Serialize(FArchive& Ar)
 	Ar << ExtendedBounds;
 }
 
-void YStaticMesh::Render(TSharedRef<YRenderInfo> RenderInfo)
+void SStaticMesh::Render(TSharedRef<YRenderInfo> RenderInfo)
 {
 
 }
 
-void YStaticMesh::Build()
+void SStaticMesh::Build()
 {
 	if (SourceModels.Num() < 0)
 	{
@@ -56,7 +56,7 @@ void YStaticMesh::Build()
 
 }
 
-void YStaticMesh::InitRenderResource()
+void SStaticMesh::InitRenderResource()
 {
 	check(RenderData);
 	if (RenderData)
@@ -216,7 +216,7 @@ bool operator== (const YMaterialInterface& LHS, const YStaticMaterial& RHS)
 	return (RHS.MaterialInterface == &LHS);
 }
 
-void YStaticMesh::DebugTangent()
+void SStaticMesh::DebugTangent()
 {
 	if (!RenderData)
 	{

@@ -3,7 +3,7 @@
 #include <fbxsdk.h>
 #include "fbxsdk\fileio\fbxiosettings.h"
 #include "YMaterial.h"
-#include "YStaticMesh.h"
+#include "SStaticMesh.h"
 #include "YRawMesh.h"
 #include "FbxImporter.h"
 #include "YFbxImportOptions.h"
@@ -17,7 +17,7 @@ public:
 	YFbxConverter();
 	~YFbxConverter();
 	bool Init(const FString &Filename);
-	TRefCountPtr<YStaticMesh>  Import(TUniquePtr<YFBXImportOptions> ImportOptionsIn);
+	TRefCountPtr<SStaticMesh>  Import(TUniquePtr<YFBXImportOptions> ImportOptionsIn);
 	bool Save(const FString& DesDir);
 public:
 	struct YFbxMaterial
@@ -28,8 +28,8 @@ public:
 	};
 
 protected:
-	TRefCountPtr<YStaticMesh> ImportStaticMeshAsSingle( TArray<FbxNode*>& MeshNodeArray, const FName InName, TRefCountPtr<YStaticMesh>InStaticMesh, int LODIndex, void *ExistMeshDataPtr);
-	bool BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<YStaticMesh> StaticMesh, TArray<YFbxMaterial>& MeshMaterials, int32 LODIndex, YRawMesh& RawMesh, EYVertexColorImportOption::Type VertexColorImportOption, const FColor& VertexOverrideColor);
+	TRefCountPtr<SStaticMesh> ImportStaticMeshAsSingle( TArray<FbxNode*>& MeshNodeArray, const FName InName, TRefCountPtr<SStaticMesh>InStaticMesh, int LODIndex, void *ExistMeshDataPtr);
+	bool BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<SStaticMesh> StaticMesh, TArray<YFbxMaterial>& MeshMaterials, int32 LODIndex, YRawMesh& RawMesh, EYVertexColorImportOption::Type VertexColorImportOption, const FColor& VertexOverrideColor);
 	void ConvertScene();
 
 	ANSICHAR* MakeName(const ANSICHAR* name);
@@ -47,7 +47,7 @@ protected:
 	 * @return bool True if there are negative scale and its number is 1 or 3.
 	 */
 	bool IsOddNegativeScale(FbxAMatrix& TotalMatrix);
-	void AlignMaterialSection(TRefCountPtr<YStaticMesh>& InMesh);
+	void AlignMaterialSection(TRefCountPtr<SStaticMesh>& InMesh);
 protected:
 	bool GetSceneInfo(const FString& FileName, YFbxSceneInfo& SceneInfo);
 	// 找到第一个LOD Group Node

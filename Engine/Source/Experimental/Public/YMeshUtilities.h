@@ -1,7 +1,7 @@
 #pragma once
 #include "Core.h"
 #include "YRawMesh.h"
-#include "YStaticMesh.h"
+#include "SStaticMesh.h"
 #include "YStaticMeshRenderData.h"
 #include "YMeshCommon.h"
 DECLARE_LOG_CATEGORY_EXTERN(LogYMeshUtilities, Log, All);

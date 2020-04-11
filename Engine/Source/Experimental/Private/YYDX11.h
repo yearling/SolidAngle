@@ -20,6 +20,7 @@ public:
 	virtual void					GameMain(void);
 	virtual void					Update(float ElapseTime);
 	virtual void					Render(float ElapseTime);
+	void							PosetRender();
 	void							OnResize(void);
 	void							OnMinimize(void);
 	float							GetFPS() const;

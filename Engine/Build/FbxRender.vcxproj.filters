@@ -138,9 +138,6 @@
     <ClCompile Include="..\Source\Experimental\Private\YRawMesh.cpp">
       <Filter>yconverter\StaticMesh</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\YStaticMesh.cpp">
-      <Filter>yconverter\StaticMesh</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\YTexture.cpp">
       <Filter>yconverter\Render</Filter>
     </ClCompile>
@@ -155,6 +152,24 @@
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\YMeshBatch.cpp">
       <Filter>yconverter\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\SObject.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\SComponent.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\SActor.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\SObjectManager.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\SStaticMeshComponent.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\SStaticMesh.cpp">
+      <Filter>yconverter\StaticMesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -306,9 +321,6 @@
     <ClInclude Include="..\Source\Experimental\Public\YRawMesh.h">
       <Filter>yconverter\StaticMesh</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\YStaticMesh.h">
-      <Filter>yconverter\StaticMesh</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\YTexture.h">
       <Filter>yconverter\Render</Filter>
     </ClInclude>
@@ -323,6 +335,24 @@
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\YMeshBatch.h">
       <Filter>yconverter\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\SObject.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\SComponent.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\SActor.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\SObjectManager.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\SStaticMeshComponent.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\SStaticMesh.h">
+      <Filter>yconverter\StaticMesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -361,6 +391,9 @@
     </Filter>
     <Filter Include="yconverter\StaticMesh">
       <UniqueIdentifier>{df5b068e-199c-42f0-b2bc-cf2890e473a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{c459708a-1b98-4f13-b72c-19816ee28a69}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,7 @@
 #include "YMeshUtilities.h"
 #include "YMeshCommon.h"
 #include "YRawMesh.h"
-#include "YStaticMesh.h"
+#include "SStaticMesh.h"
 #include "LayoutUV.h"
 #include "YStaticMeshResource.h"
 #include "NvTriStrip.h"

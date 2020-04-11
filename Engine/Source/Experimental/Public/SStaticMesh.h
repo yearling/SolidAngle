@@ -3,6 +3,7 @@
 #include "YMeshBuild.h"
 #include "YStaticMeshRenderData.h"
 #include "RenderInfo.h"
+#include "SObject.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(LogYStaticMesh, Log, All);
 
@@ -101,11 +102,11 @@ struct YStaticMaterial
 };
 
 
-class YStaticMesh:public FRefCountedObject
+class SStaticMesh:public SObject
 {
 public:
-	YStaticMesh();
-	~YStaticMesh();
+	SStaticMesh();
+	~SStaticMesh();
 	void Serialize(FArchive& Archieve);
 	void Render(TSharedRef<YRenderInfo> RenderInfo);
 	void Build();

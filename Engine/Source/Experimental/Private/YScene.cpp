@@ -5,7 +5,7 @@ YScene::YScene()
 }
 
 
-void YScene::RegisterToScene(TRefCountPtr<YStaticMesh> InMesh)
+void YScene::RegisterToScene(TRefCountPtr<SStaticMesh> InMesh)
 {
 	StaticMeshArray.Add(InMesh);
 	//opaque

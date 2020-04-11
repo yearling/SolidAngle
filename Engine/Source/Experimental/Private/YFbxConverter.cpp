@@ -118,7 +118,7 @@ bool YFbxConverter::Init(const FString& Filename)
 	return true;
 }
 
-TRefCountPtr<YStaticMesh>  YFbxConverter::Import(TUniquePtr<YFBXImportOptions> ImportOptionsIn)
+TRefCountPtr<SStaticMesh>  YFbxConverter::Import(TUniquePtr<YFBXImportOptions> ImportOptionsIn)
 {
 	ImportOptions = MoveTemp(ImportOptionsIn);
 	ConvertScene();
@@ -161,7 +161,7 @@ TRefCountPtr<YStaticMesh>  YFbxConverter::Import(TUniquePtr<YFBXImportOptions> I
 				if (FbxMeshArray.Num() > 0)
 				{
 					FString MeshName = FPaths::GetBaseFilename(FileToImport);
-					TRefCountPtr<YStaticMesh> ImportedStaticMesh =	ImportStaticMeshAsSingle(FbxMeshArray, FName(*MeshName), nullptr, 0, nullptr);
+					TRefCountPtr<SStaticMesh> ImportedStaticMesh =	ImportStaticMeshAsSingle(FbxMeshArray, FName(*MeshName), nullptr, 0, nullptr);
 					if (ImportedStaticMesh)
 					{
 						AlignMaterialSection(ImportedStaticMesh);
@@ -315,7 +315,7 @@ void YFbxConverter::FillFbxMeshArray(FbxNode * Node, TArray<FbxNode*>& outMeshAr
 	}
 }
 
-TRefCountPtr<YStaticMesh> YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode*>& MeshNodeArray, const FName InName, TRefCountPtr<YStaticMesh>InStaticMesh, int LODIndex, void * ExistMeshDataPtr)
+TRefCountPtr<SStaticMesh> YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode*>& MeshNodeArray, const FName InName, TRefCountPtr<SStaticMesh>InStaticMesh, int LODIndex, void * ExistMeshDataPtr)
 {
 	//Name = InName;
 	if (MeshNodeArray.Num() == 0)
@@ -337,7 +337,7 @@ TRefCountPtr<YStaticMesh> YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode
 		}
 	}
 
-	TRefCountPtr<YStaticMesh> StaticMesh(new YStaticMesh());
+	TRefCountPtr<SStaticMesh> StaticMesh(new SStaticMesh());
 	StaticMesh->Name = InName.ToString();
 	if (StaticMesh->SourceModels.Num() < LODIndex + 1)
 	{
@@ -714,7 +714,7 @@ struct YFBXUVs
 	int32 UniqueUVCount;
 };
 
-bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<YStaticMesh> StaticMesh, TArray<YFbxMaterial>& MeshMaterials, int32 LODIndex, YRawMesh& RawMesh, EYVertexColorImportOption::Type VertexColorImportOption, const FColor& VertexOverrideColor)
+bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<SStaticMesh> StaticMesh, TArray<YFbxMaterial>& MeshMaterials, int32 LODIndex, YRawMesh& RawMesh, EYVertexColorImportOption::Type VertexColorImportOption, const FColor& VertexOverrideColor)
 {
 	check(StaticMesh->SourceModels.IsValidIndex(LODIndex));
 	FbxMesh* Mesh = Node->GetMesh();
@@ -1350,7 +1350,7 @@ bool YFbxConverter::IsOddNegativeScale(FbxAMatrix& TotalMatrix)
 }
 
 
-void YFbxConverter::AlignMaterialSection(TRefCountPtr<YStaticMesh>& InMesh)
+void YFbxConverter::AlignMaterialSection(TRefCountPtr<SStaticMesh>& InMesh)
 {
 	//lod0 
 	YMeshSectionInfoMap& SectionInfo =InMesh->SectionInfoMap;

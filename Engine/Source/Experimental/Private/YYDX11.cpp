@@ -11,6 +11,9 @@
 #include "Misc/FbxErrors.h"
 #include "YFbxConverter.h"
 #include "ForwardRender.h"
+#include "SActor.h"
+#include "SObjectManager.h"
+
 using std::cout;
 using std::endl;
 
@@ -44,22 +47,6 @@ void DX11Demo::Initial()
 	YYUTDXManager::GetInstance().Init(m_spMainWindow->m_hWnd);
 	YYUTDXManager::GetInstance().ReSize(m_width, m_height);
 
-
-
-	/*FArchive* FileWriter = IFileManager::Get().CreateFileWriter(TEXT("YYTest.yy"));
-	if (FileWriter)
-	{
-		TestOne.Serialize(*FileWriter);
-	}
-	delete FileWriter;
-
-	FArchive* FileReader = IFileManager::Get().CreateFileReader(TEXT("YYTest.yy"));
-	TestSerialize TestNewOne;
-	if (FileReader)
-	{
-		TestNewOne.Serialize(*FileReader);
-	}
-	delete FileReader;*/
 	//YYUTTimer::GetInstance().Start();
 	XMFLOAT3 eye(40.0f, 40.0f, -40.0f);
 	XMFLOAT3 lookat(0.0f, 0.0f, 0.0f);
@@ -201,7 +188,7 @@ void DX11Demo::Initial()
 	//FString ImportFilePath = TEXT("C:/Users/yy/Desktop/fbxtest/ball.FBX");
 #define  EMPORT 0
 #if EMPORT
-	TRefCountPtr<YStaticMesh>  ExporteStaticMesh;
+	TRefCountPtr<SStaticMesh>  ExporteStaticMesh;
 	if (FbxConverter->Init(ImportFilePath))
 	{
 		TUniquePtr<YFBXImportOptions> ImportOptions = MakeUnique< YFBXImportOptions>();
@@ -218,7 +205,7 @@ void DX11Demo::Initial()
 	}
 	FileWriter = nullptr;
 	ExporteStaticMesh = nullptr;
-	TRefCountPtr<YStaticMesh>  ImportedStaticMesh(new YStaticMesh());
+	TRefCountPtr<SStaticMesh>  ImportedStaticMesh(new SStaticMesh());
 	//FString ImportFilePath = TEXT("C:/Users/yy/Desktop/fbxtest/nija/uv_mirror_plane.FBX");
 	//FString ImportFileName = FPaths::GetBaseFilename(ImportFilePath);
 	//FString ExportFileName = ImportFileName + TEXT(".yasset");
@@ -232,7 +219,7 @@ void DX11Demo::Initial()
 #else
 	FString ImportFileName = FPaths::GetBaseFilename(ImportFilePath);
 	FString ExportFileName = ImportFileName + TEXT(".yasset");
-	TRefCountPtr<YStaticMesh>  ImportedStaticMesh(new YStaticMesh());
+	TRefCountPtr<SStaticMesh>  ImportedStaticMesh(new SStaticMesh());
 	TUniquePtr<FArchive> FileReader(IFileManager::Get().CreateFileReader(*ExportFileName));
 	if (FileReader)
 	{
@@ -252,12 +239,14 @@ void DX11Demo::Initial()
 	m_pSceneRender->AllocResource();
 	MainRender = MakeUnique<YForwardRender>();
 	MainRender->InitRenders();
+	TRefCountPtr<SActor> pActor = SObjectManager::ConstructInstance<SActor>(3);
+
 }
 
 
 void DX11Demo::Exit()
 {
-
+	GSObjectManager.Destroy();
 }
 
 LRESULT DX11Demo::MyProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) throw()
@@ -491,6 +480,7 @@ int DX11Demo::Run()
 		m_LastFrameTime = FPlatformTime::Seconds();
 		Update(elapseTime);
 		Render(elapseTime);
+		PosetRender();
 		if (FPlatformTime::Seconds() - m_LastSecond > 1.0)
 		{
 			m_FPS =( (double)m_LastSecondFrames) / (FPlatformTime::Seconds() - m_LastSecond);
@@ -575,7 +565,7 @@ void DX11Demo::Update(float ElapseTime)
 		m_pCurrentCamera->FrameMove(ElapseTime);
 	//m_pShadow->Update(ElapseTime);
 
-	for (TRefCountPtr<YStaticMesh>& StaticMesh : MainScene->StaticMeshArray)
+	for (TRefCountPtr<SStaticMesh>& StaticMesh : MainScene->StaticMeshArray)
 	{
 		//StaticMesh->DebugTangent();
 	}
@@ -594,6 +584,11 @@ void DX11Demo::Render(float ElapseTime)
 	YYUTDXManager::GetInstance().AddRenderEvent([this, pRenderInfo]() {MainRender->RenderScene(MainScene, pRenderInfo); });
 	YYUTDXManager::GetInstance().AddRenderEvent([this, pRenderInfo]() {m_pSceneRender->Render(pRenderInfo); });
 	YYUTDXManager::GetInstance().Render();
+}
+
+void DX11Demo::PosetRender()
+{
+	GSObjectManager.FrameDestroy();
 }
 
 void DX11Demo::SwichCamera()

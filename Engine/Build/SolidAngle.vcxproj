@@ -131,7 +131,7 @@
       <AdditionalIncludeDirectories>..\Source\;..\Source\Runtime\Core\Public\;..\Source\Runtime\Core\Private\;..\Source\Runtime\InputDevice\Public\;..\Source\ThirdParty\IntelTBB\tbb-2017_U5\include;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\Core\Public\Windows;..\Source\Runtime\Core\Public\HAL;..\Source\Runtime\Core\Public\Misc;..\Source\Runtime\Core\Public\Async;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\Core\Public\GenericPlatform;..\Source\Runtime\Core\Public\Math;..\Source\Runtime\Core\Private\Internationalization;..\Source\Runtime\Core\Public\Internationalization;..\Source\Runtime\SynthBenchmark\Public;..\Source\Runtime\Core\Private\Serialization;..\Source\Runtime\Core\Private\Misc;..\Source\;%(AdditionalIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FloatingPointModel>Fast</FloatingPointModel>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
-      <BrowseInformation>true</BrowseInformation>
+      <BrowseInformation>false</BrowseInformation>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <EnablePREfast>false</EnablePREfast>
@@ -180,7 +180,7 @@
       <PreprocessorDefinitions>UE_BUILD_DEVELOPMENT=1;UE_EDITOR=1;WITH_EDITOR=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=1;WITH_PLUGIN_SUPPORT=1;WITH_PERFCOUNTERS=1;HACK_HEADER_GENERATOR=0;UE_BUILD_MINIMAL=0;IS_MONOLITHIC=0;IS_PROGRAM=0;USE_LOGGING_IN_SHIPPING=0;USE_CHECKS_IN_SHIPPING=0;WITH_SERVER_CODE=1;WIN32=1;_WIN32_WINNT=0x0601;WINVER=0x0601;PLATFORM_WINDOWS=1;UE_ENABLE_ICU=0;WITH_DEV_AUTOMATION_TESTS=1;PLATFORM_WINDOWS;CORE_API=__declspec(dllexport);WITH_DIRECTXMATH=0;NDEBUG;_CONSOLE;MALLOC_LEAKDETECTION=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Source\;..\Source\Runtime\Core\Public\;..\Source\Runtime\Core\Private\;..\Source\Runtime\InputDevice\Public\;..\Source\ThirdParty\IntelTBB\tbb-2017_U5\include;..\Source\Runtime\Core\Public\Templates;..\Source\Runtime\Core\Public\Windows;..\Source\Runtime\Core\Public\HAL;..\Source\Runtime\Core\Public\Misc;..\Source\Runtime\Core\Public\Async;..\Source\Runtime\Core\Public\Modules;..\Source\Runtime\Core\Public\GenericPlatform;..\Source\Runtime\Core\Public\Math;..\Source\Runtime\Core\Private\Internationalization;..\Source\Runtime\Core\Public\Internationalization;..\Source\Runtime\SynthBenchmark\Public;..\Source\Runtime\Core\Private\Serialization;..\Source\Runtime\Core\Private\Misc;..\Source\ThirdParty\IntelTBB\tbb-2017_U5\include;%(AdditionalIncludeDirectories);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
-      <BrowseInformation>true</BrowseInformation>
+      <BrowseInformation>false</BrowseInformation>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnablePREfast>true</EnablePREfast>
     </ClCompile>

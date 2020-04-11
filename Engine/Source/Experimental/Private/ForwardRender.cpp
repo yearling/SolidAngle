@@ -1,5 +1,5 @@
 #include "ForwardRender.h"
-#include "YStaticMesh.h"
+#include "SStaticMesh.h"
 #include "YMeshBatch.h"
 #include "YYUTHelper.h"
 #include "WICTextureLoader.h"
