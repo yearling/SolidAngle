@@ -34,6 +34,9 @@ public:
 	SObject(SObject&&) = default;
 	SObject& operator=(const SObject&) = delete;
 	SObject& operator=(SObject&&) = default;
+	virtual bool LoadFromPackage(const FString & Path);
+	virtual void SaveToPackage(const FString & Path);
+	virtual FArchive& Serialize(FArchive& Ar);
 protected:
 	SObject();
 private:

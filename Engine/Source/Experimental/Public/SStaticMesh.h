@@ -107,7 +107,7 @@ class SStaticMesh:public SObject
 public:
 	SStaticMesh();
 	~SStaticMesh();
-	void Serialize(FArchive& Archieve);
+	FArchive& Serialize(FArchive& Archieve);
 	void Render(TSharedRef<YRenderInfo> RenderInfo);
 	void Build();
 	void InitRenderResource();

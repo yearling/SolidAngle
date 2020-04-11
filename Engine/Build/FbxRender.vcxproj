@@ -185,6 +185,7 @@
     <ClCompile Include="..\Source\Experimental\Private\RenderMesh.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\SActor.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\SComponent.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\SMaterial.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\SObjectManager.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YMeshBatch.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YMeshUtilitiesWrap.cpp" />
@@ -242,6 +243,7 @@
     <ClInclude Include="..\Source\Experimental\Public\NvTriStrip.h" />
     <ClInclude Include="..\Source\Experimental\Public\SActor.h" />
     <ClInclude Include="..\Source\Experimental\Public\SComponent.h" />
+    <ClInclude Include="..\Source\Experimental\Public\SMaterial.h" />
     <ClInclude Include="..\Source\Experimental\Public\SObjectManager.h" />
     <ClInclude Include="..\Source\Experimental\Public\YMeshBatch.h" />
     <ClInclude Include="..\Source\Experimental\Public\SObject.h" />

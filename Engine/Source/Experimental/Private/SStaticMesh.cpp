@@ -23,7 +23,7 @@ SStaticMesh::~SStaticMesh()
 	}
 }
 
-void SStaticMesh::Serialize(FArchive& Ar)
+FArchive& SStaticMesh::Serialize(FArchive& Ar)
 {
 	if (Ar.IsLoading())
 	{
@@ -31,6 +31,7 @@ void SStaticMesh::Serialize(FArchive& Ar)
 	}
 	RenderData->Serialize(Ar);
 	Ar << ExtendedBounds;
+	return Ar;
 }
 
 void SStaticMesh::Render(TSharedRef<YRenderInfo> RenderInfo)

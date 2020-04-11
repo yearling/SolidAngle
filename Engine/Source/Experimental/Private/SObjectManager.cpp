@@ -51,7 +51,7 @@ void SObjectManager::Destroy()
 	check(!InstanceLeft);
 }
 
-void SObjectManager::FrameDestory()
+void SObjectManager::FrameDestroy()
 {
 	for (TMap<FName, TRefCountPtr<SObject>>::TIterator iter(UnifyObjects); iter; ++iter)
 	{

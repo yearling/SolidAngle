@@ -171,6 +171,9 @@
     <ClCompile Include="..\Source\Experimental\Private\SStaticMesh.cpp">
       <Filter>yconverter\StaticMesh</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\SMaterial.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Experimental\Public\YYUT.h">
@@ -353,6 +356,9 @@
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\SStaticMesh.h">
       <Filter>yconverter\StaticMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\SMaterial.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

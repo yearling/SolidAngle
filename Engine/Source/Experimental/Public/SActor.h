@@ -4,10 +4,10 @@
 class SActor:public SObject
 {
 public:
-	explicit SActor(int a);
 	virtual ~SActor();
 	static constexpr  bool IsInstance() { return true; };
-	friend class SActorManager;
+	friend class SObjectManager;
 private:
+	explicit SActor(int a);
 	volatile int32 Count;
 };
