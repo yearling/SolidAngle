@@ -8,7 +8,7 @@ class YScene:public FRefCountedObject
 public:
 	YScene();
 	void RegisterToScene(TRefCountPtr<SStaticMesh> InMesh);
-
+	void Clear();
 public:
 	TArray<YMeshBatch> StaticMeshOpaquePrimitives;
 	TArray<YMeshBatch> StaticMeshMaskPrimitives;

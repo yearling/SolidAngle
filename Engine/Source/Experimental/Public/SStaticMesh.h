@@ -4,6 +4,7 @@
 #include "YStaticMeshRenderData.h"
 #include "RenderInfo.h"
 #include "SObject.h"
+#include "SMaterial.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(LogYStaticMesh, Log, All);
 
@@ -69,17 +70,17 @@ struct YStaticMaterial
 {
 
 	YStaticMaterial()
-		: MaterialInterface(NULL)
+		: Material(nullptr)
 		, MaterialSlotName(NAME_None)
 		, ImportedMaterialSlotName(NAME_None)
 	{
 
 	}
 
-	YStaticMaterial(class YMaterialInterface* InMaterialInterface
+	YStaticMaterial(TRefCountPtr<SMaterial>& InMaterialInterface
 		, FName InMaterialSlotName = NAME_None
 		, FName InImportedMaterialSlotName = NAME_None)
-		: MaterialInterface(InMaterialInterface)
+		: Material(InMaterialInterface)
 		, MaterialSlotName(InMaterialSlotName)
 		, ImportedMaterialSlotName(InImportedMaterialSlotName)
 	{
@@ -88,11 +89,11 @@ struct YStaticMaterial
 
 	friend FArchive& operator<<(FArchive& Ar, YStaticMaterial& Elem);
 
-	friend bool operator==(const YStaticMaterial& LHS, const YStaticMaterial& RHS);
-	friend bool operator==(const YStaticMaterial& LHS, const YMaterialInterface& RHS);
-	friend bool operator==(const YMaterialInterface& LHS, const YStaticMaterial& RHS);
+	//friend bool operator==(const YStaticMaterial& LHS, const YStaticMaterial& RHS);
+	//friend bool operator==(const YStaticMaterial& LHS, const YMaterialInterface& RHS);
+	//friend bool operator==(const YMaterialInterface& LHS, const YStaticMaterial& RHS);
 
-	class YMaterialInterface* MaterialInterface;
+	TRefCountPtr<SMaterial>  Material;
 
 	/*This name should be use by the gameplay to avoid error if the skeletal mesh Materials array topology change*/
 	FName MaterialSlotName;
@@ -102,16 +103,21 @@ struct YStaticMaterial
 };
 
 
-class SStaticMesh:public SObject
+class SStaticMesh :public SObject
 {
 public:
 	SStaticMesh();
 	~SStaticMesh();
+	static constexpr  bool IsInstance()
+	{
+		return false;
+	};
 	FArchive& Serialize(FArchive& Archieve);
 	void Render(TSharedRef<YRenderInfo> RenderInfo);
 	void Build();
 	void InitRenderResource();
 	void DebugTangent();
+	virtual bool LoadFromPackage(const FString & Path) override;
 	/** Imported raw mesh bulk data. */
 	TArray<YStaticMeshSourceModel> SourceModels;
 	/** Map of LOD+Section index to per-section info. */
@@ -122,6 +128,6 @@ public:
 	FGuid LightingGuid;
 	int32 LightMapResolution;
 	int32 LightMapCoordinateIndex;
-	TUniquePtr<class YStaticMeshRenderData> RenderData=nullptr;
-	FString Name="";
+	TUniquePtr<class YStaticMeshRenderData> RenderData = nullptr;
+	FName Name;
 };

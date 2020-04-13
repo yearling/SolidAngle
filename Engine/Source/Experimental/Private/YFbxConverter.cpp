@@ -8,10 +8,11 @@
 #include "RawMesh.h"
 #include "StaticMesh.h"
 #include "YTexture.h"
-#include "YMaterial.h"
+#include "SMaterial.h"
 #include "YRawMesh.h"
 #include "FbxConvertUtilites.h"
 #include "YMeshUtilities.h"
+#include "SObjectManager.h"
 
 DEFINE_LOG_CATEGORY(LogYFbxConverter);
 static const int32 LARGE_MESH_MATERIAL_INDEX_THRESHOLD = 64;
@@ -338,7 +339,7 @@ TRefCountPtr<SStaticMesh> YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode
 	}
 
 	TRefCountPtr<SStaticMesh> StaticMesh(new SStaticMesh());
-	StaticMesh->Name = InName.ToString();
+	StaticMesh->Name = *InName.ToString();
 	if (StaticMesh->SourceModels.Num() < LODIndex + 1)
 	{
 		new(StaticMesh->SourceModels) YStaticMeshSourceModel();
@@ -737,7 +738,7 @@ bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<SSta
 	}
 
 	int32 MaterialCount = 0;
-	TArray<YMaterialInterface*> Materials;//Materials中存的是按FBX NODE中Material的顺序来的，mesh用的时候需要索引
+	TArray<TRefCountPtr<SMaterial>> Materials;//Materials中存的是按FBX NODE中Material的顺序来的，mesh用的时候需要索引
 	if (ImportOptions->bImportMaterials)
 	{
 		CreateNodeMaterials(Node, Materials, FBXUVs.UVSets);
@@ -1094,7 +1095,7 @@ bool YFbxConverter::BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<SSta
 	return bIsValidMesh;
 }
 
-int32 YFbxConverter::CreateNodeMaterials(FbxNode* FbxNode, TArray<YMaterialInterface*>& outMaterials, TArray<FString>& UVSets)
+int32 YFbxConverter::CreateNodeMaterials(FbxNode* FbxNode, TArray<TRefCountPtr<SMaterial>>& outMaterials, TArray<FString>& UVSets)
 {
 	int32 MaterialCount = FbxNode->GetMaterialCount();
 	TArray<FbxSurfaceMaterial*> UsedSurfaceMaterials;
@@ -1149,17 +1150,17 @@ int32 YFbxConverter::CreateNodeMaterials(FbxNode* FbxNode, TArray<YMaterialInter
 	return MaterialCount;
 }
 
-void YFbxConverter::CreateMaterial(FbxSurfaceMaterial& FbxMaterial, TArray<YMaterialInterface*>& OutMaterials, TArray<FString>& UVSets)
+void YFbxConverter::CreateMaterial(FbxSurfaceMaterial& FbxMaterial, TArray<TRefCountPtr<SMaterial>>& OutMaterials, TArray<FString>& UVSets)
 {
 	FString MaterialFullName = UTF8_TO_TCHAR(MakeName(FbxMaterial.GetName()));
-	YMaterialInterface* pMaterial = new YMaterialInterface();
+	TRefCountPtr<SMaterial> pMaterial = SObjectManager::ConstructInstance<SMaterial>();
 	pMaterial->MaterialName = FName(*MaterialFullName);
 	CreateMaterialProperty(FbxMaterial, pMaterial, FbxSurfaceMaterial::sDiffuse, false, UVSets);
 	CreateMaterialProperty(FbxMaterial, pMaterial, FbxSurfaceMaterial::sNormalMap, true, UVSets);
 	OutMaterials.Add(pMaterial);
 }
 
-bool YFbxConverter::CreateMaterialProperty(FbxSurfaceMaterial& FbxMaterial, YMaterialInterface* UnrealMaterial, const char* MaterialProperty, bool bSetupAsNormalMap, TArray<FString>& UVSet)
+bool YFbxConverter::CreateMaterialProperty(FbxSurfaceMaterial& FbxMaterial, TRefCountPtr<SMaterial>& UnrealMaterial, const char* MaterialProperty, bool bSetupAsNormalMap, TArray<FString>& UVSet)
 {
 	bool bCreated = false;
 	FbxProperty FbxMaterialProperty = FbxMaterial.FindProperty(MaterialProperty);
@@ -1186,10 +1187,7 @@ bool YFbxConverter::CreateMaterialProperty(FbxSurfaceMaterial& FbxMaterial, YMat
 						float ScaleU = FbxTexture->GetScaleU();
 						float ScaleV = FbxTexture->GetScaleV();
 
-						YTextureSampler tmpTextureSampler;
-						tmpTextureSampler.SamplerType = bSetupAsNormalMap ? YTextureSampleType::YTEXUTRESAMPLE_NORMAL : YTextureSampleType::YTEXTURESAMPLE_COLOR;
-						tmpTextureSampler.Texture = Texture;
-
+						TRefCountPtr<STexture2D> NewTexture = SObjectManager::ConstructInstance<STexture2D>();
 						//add /find UVSet and set it to the texture
 						FbxString UVSetName = FbxTexture->UVSet.Get();
 						FString LocalUVSetName = UTF8_TO_TCHAR(UVSetName.Buffer());
@@ -1198,15 +1196,13 @@ bool YFbxConverter::CreateMaterialProperty(FbxSurfaceMaterial& FbxMaterial, YMat
 							LocalUVSetName = TEXT("UVMap_0");
 						}
 						int SetIndex = UVSet.Find(LocalUVSetName);
-						if ((SetIndex != 0 && SetIndex != INDEX_NONE) || ScaleU != 1.0f || ScaleV != 1.0f)
+						if ((SetIndex != 0 && SetIndex != INDEX_NONE))
 						{
-							tmpTextureSampler.UVIndex = (SetIndex >= 0) ? SetIndex : 0;
-							tmpTextureSampler.ScalingU = ScaleU;
-							tmpTextureSampler.ScalingV = ScaleV;
+							NewTexture->UVIndex = (SetIndex >= 0) ? SetIndex : 0;
 						}
 						if (FCStringAnsi::Strcmp(MaterialProperty, FbxSurfaceMaterial::sDiffuse) == 0)
 						{
-							UnrealMaterial->DiffuseTexture = tmpTextureSampler;
+							UnrealMaterial->AddMaterialTextureParameter(TEXT("DiffuseTexture"), TRefCountPtr<STexture>(NewTexture.GetReference()));
 						}
 						else if (FCStringAnsi::Strcmp(MaterialProperty, FbxSurfaceMaterial::sEmissive) == 0)
 						{
@@ -1218,7 +1214,7 @@ bool YFbxConverter::CreateMaterialProperty(FbxSurfaceMaterial& FbxMaterial, YMat
 						}
 						else if (FCStringAnsi::Strcmp(MaterialProperty, FbxSurfaceMaterial::sNormalMap) == 0)
 						{
-							UnrealMaterial->NormalTexture = tmpTextureSampler;
+							UnrealMaterial->AddMaterialTextureParameter(TEXT("NormalTexture"), TRefCountPtr<STexture>(NewTexture.GetReference()));
 						}
 						else if (FCStringAnsi::Strcmp(MaterialProperty, FbxSurfaceMaterial::sBump) == 0)
 						{

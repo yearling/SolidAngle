@@ -16,9 +16,9 @@ public:
 };
 IMPLEMENT_MODULE(YYGameModel, YYGameModel);
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
-					   _In_opt_ HINSTANCE hPrevInstance,
-					   _In_ LPTSTR    lpCmdLine,
-					   _In_ int       nCmdShow)
+	_In_opt_ HINSTANCE hPrevInstance,
+	_In_ LPTSTR    lpCmdLine,
+	_In_ int       nCmdShow)
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	FCommandLine::Set(lpCmdLine);
@@ -38,12 +38,12 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	//std::cout.clear();//防止在AllocConsole之前调用cout，这样子的话，cout.badbit set会被设置，然后就什么也不能输出了。
 	////见http://stackoverflow.com/questions/18914506/doing-a-stdendl-before-allocconsole-causes-no-display-of-stdcout
 	//std::wcout.clear();
-	int result=0;
-	YYUTApplication* yy_app=GetApplication();
+	int result = 0;
+	YYUTApplication* yy_app = GetApplication();
 	yy_app->SetInstance(hInstance);
 	yy_app->Initial();
 	//std::wcout << "hello" << std::endl;
-	result=yy_app->Run();
+	result = yy_app->Run();
 	yy_app->Exit();
 	//FMallocLeakDetection::Get().SetAllocationCollection(false);
 	//FMallocLeakDetection::Get().DumpPotentialLeakers();

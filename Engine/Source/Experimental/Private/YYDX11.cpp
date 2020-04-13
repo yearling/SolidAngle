@@ -13,11 +13,12 @@
 #include "ForwardRender.h"
 #include "SActor.h"
 #include "SObjectManager.h"
-
+#include "SMaterial.h"
+#include "SStaticMesh.h"
 using std::cout;
 using std::endl;
 
-extern "C" __declspec(dllimport) LRESULT WINAPI SendMessageW( HWND   hWnd,UINT   Msg,WPARAM wParam,LPARAM lParam);
+extern "C" __declspec(dllimport) LRESULT WINAPI SendMessageW(HWND   hWnd, UINT   Msg, WPARAM wParam, LPARAM lParam);
 DEFINE_LOG_CATEGORY(YYDX11);
 #define LOCTEXT_NAMESPACE "FbxMainImport"
 using namespace UnFbx;
@@ -60,7 +61,7 @@ void DX11Demo::Initial()
 	FVector ligntLookatF(0.0f, 0.0f, 0.0f);
 	m_pLightCamera->SetViewParam(lightEyeF, ligntLookatF);
 	m_pLightCamera->SetProjParam(PI / 4, 1, 50.0f, 300.0f);
-	m_pLightCamera->FrameMove(0); 
+	m_pLightCamera->FrameMove(0);
 
 	m_pSceneRender = std::make_shared<RenderScene>();
 	m_pSceneRender->SetScreenWidthHeigth(default_x, default_y);
@@ -91,7 +92,7 @@ void DX11Demo::Initial()
 		FbxImporter->AddTokenizedErrorMessage(FTokenizedMessage::Create(EMessageSeverity::Warning, LOCTEXT("NoImportTypeDetected", "Can't detect import type. No mesh is found or animation track.")), FFbxErrors::Generic_CannotDetectImportType);
 		m_bInit = false;
 	}
-	else 
+	else
 	{
 		MeshTypeToImport = EFBXImportType(ImportType);
 		OriginalImportType = EFBXImportType(ImportType);
@@ -152,31 +153,31 @@ void DX11Demo::Initial()
 	ImportOptions->MaterialCurveSuffixes.Reset();
 	ImportOptions->MaterialCurveSuffixes.Add(TEXT("_mat"));
 	ImportOptions->MaterialBasePath = FName("None");
-//#if 0
-	//FbxImporter->MainImport(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
-	//ImportResultPackage ImportResult =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_StaticMesh);
-	//ImportResultPackage ImportResult =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
-	//if(ImportResult.SkeletalMesh!= nullptr)
-	//{ 
-		//m_pSceneRender->RegisterSkeletalMesh(ImportResult.SkeletalMesh,ImportResult.AnimSequence[0]);
-		//m_pSceneRender->PlayAnimation(ImportResult.AnimSequence[0]);
-	//}
-	//else if (ImportResult.StaticMeshes.Num())
-	//{
-		//for (UStaticMesh* pMesh : ImportResult.StaticMeshes)
-		//{
-			//m_pSceneRender->RegisterStaticMesh(pMesh);
-			/*FString NewFileName = pMesh->GetName() + "yy.yyStatic";
-			TUniquePtr<FArchive> FileWriter(IFileManager::Get().CreateFileWriter(*NewFileName));
-			if (FileWriter)
-			{
-				pMesh->Serialize(*FileWriter);
-			}*/
+	//#if 0
+		//FbxImporter->MainImport(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
+		//ImportResultPackage ImportResult =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_StaticMesh);
+		//ImportResultPackage ImportResult =  FbxImporter->MainInportTest(FileToImport, EFBXImportType::FBXIT_SkeletalMesh);
+		//if(ImportResult.SkeletalMesh!= nullptr)
+		//{ 
+			//m_pSceneRender->RegisterSkeletalMesh(ImportResult.SkeletalMesh,ImportResult.AnimSequence[0]);
+			//m_pSceneRender->PlayAnimation(ImportResult.AnimSequence[0]);
 		//}
-		
-		
-	//}
-//#else
+		//else if (ImportResult.StaticMeshes.Num())
+		//{
+			//for (UStaticMesh* pMesh : ImportResult.StaticMeshes)
+			//{
+				//m_pSceneRender->RegisterStaticMesh(pMesh);
+				/*FString NewFileName = pMesh->GetName() + "yy.yyStatic";
+				TUniquePtr<FArchive> FileWriter(IFileManager::Get().CreateFileWriter(*NewFileName));
+				if (FileWriter)
+				{
+					pMesh->Serialize(*FileWriter);
+				}*/
+				//}
+
+
+			//}
+		//#else
 	MainScene = TRefCountPtr<YScene>(new YScene);
 	TUniquePtr<YFbxConverter>  FbxConverter = MakeUnique<YFbxConverter>();
 	//FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbx/dummywithlod.FBX"));
@@ -217,7 +218,7 @@ void DX11Demo::Initial()
 		MainScene->RegisterToScene(ImportedStaticMesh);
 	}
 #else
-	FString ImportFileName = FPaths::GetBaseFilename(ImportFilePath);
+	/*FString ImportFileName = FPaths::GetBaseFilename(ImportFilePath);
 	FString ExportFileName = ImportFileName + TEXT(".yasset");
 	TRefCountPtr<SStaticMesh>  ImportedStaticMesh(new SStaticMesh());
 	TUniquePtr<FArchive> FileReader(IFileManager::Get().CreateFileReader(*ExportFileName));
@@ -227,7 +228,15 @@ void DX11Demo::Initial()
 		ImportedStaticMesh->InitRenderResource();
 		MainScene->RegisterToScene(ImportedStaticMesh);
 		ImportedStaticMesh->DebugTangent();
+	}*/
+	FString PackagePath = TEXT("Content/mirror_nija_no_seam_pivot/mirror_nija_no_seam_pivot_static_mesh.json");
+	TRefCountPtr<SStaticMesh> StaticMesh = SObjectManager::ConstructUnifyFromPackage<SStaticMesh>(PackagePath);
+	if (StaticMesh)
+	{
+		StaticMesh->InitRenderResource();
+		MainScene->RegisterToScene(StaticMesh);
 	}
+
 #endif
 	//UStaticMesh* pSerialMesh = new UStaticMesh();
 	//if (FileReader)
@@ -240,12 +249,15 @@ void DX11Demo::Initial()
 	MainRender = MakeUnique<YForwardRender>();
 	MainRender->InitRenders();
 	TRefCountPtr<SActor> pActor = SObjectManager::ConstructInstance<SActor>(3);
+	//TRefCountPtr<SMaterial> TestMaterial = SObjectManager::ConstructInstance<SMaterial>();
+	//TestMaterial->LoadFromPackage(TEXT("Content/mirror_nija_no_seam_pivot/mirror_nija_no_seam_pivot.json"));
 
 }
 
 
 void DX11Demo::Exit()
 {
+	MainScene->Clear();
 	GSObjectManager.Destroy();
 }
 
@@ -483,7 +495,7 @@ int DX11Demo::Run()
 		PosetRender();
 		if (FPlatformTime::Seconds() - m_LastSecond > 1.0)
 		{
-			m_FPS =( (double)m_LastSecondFrames) / (FPlatformTime::Seconds() - m_LastSecond);
+			m_FPS = ((double)m_LastSecondFrames) / (FPlatformTime::Seconds() - m_LastSecond);
 			m_LastSecond = FPlatformTime::Seconds();
 			m_LastSecondFrames = 0;
 		}
@@ -588,6 +600,7 @@ void DX11Demo::Render(float ElapseTime)
 
 void DX11Demo::PosetRender()
 {
+
 	GSObjectManager.FrameDestroy();
 }
 

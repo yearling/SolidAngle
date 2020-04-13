@@ -19,7 +19,7 @@ protected:
 class SSceneComponent :public SComponent
 {
 public:
-	SSceneComponent():SComponent(EComponentType::SceneComponent){}
+	SSceneComponent() :SComponent(EComponentType::SceneComponent) {}
 	/** Current bounds of the component */
 	FBoxSphereBounds Bounds;
 	/** Location of the component relative to its parent */

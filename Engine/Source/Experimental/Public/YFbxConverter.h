@@ -2,11 +2,12 @@
 #include "Core.h"
 #include <fbxsdk.h>
 #include "fbxsdk\fileio\fbxiosettings.h"
-#include "YMaterial.h"
+#include "YMaterialInterface.h"
 #include "SStaticMesh.h"
 #include "YRawMesh.h"
 #include "FbxImporter.h"
 #include "YFbxImportOptions.h"
+#include "SMaterial.h"
 class UStaticMesh;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogYFbxConverter, Log, All);
@@ -23,12 +24,12 @@ public:
 	struct YFbxMaterial
 	{
 		FbxSurfaceMaterial* FbxMaterial;
-		YMaterialInterface* Material;
+		TRefCountPtr<SMaterial> Material;
 		FString GetName() const { return FbxMaterial ? ANSI_TO_TCHAR(FbxMaterial->GetName()) : TEXT("None"); }
 	};
 
 protected:
-	TRefCountPtr<SStaticMesh> ImportStaticMeshAsSingle( TArray<FbxNode*>& MeshNodeArray, const FName InName, TRefCountPtr<SStaticMesh>InStaticMesh, int LODIndex, void *ExistMeshDataPtr);
+	TRefCountPtr<SStaticMesh> ImportStaticMeshAsSingle(TArray<FbxNode*>& MeshNodeArray, const FName InName, TRefCountPtr<SStaticMesh>InStaticMesh, int LODIndex, void *ExistMeshDataPtr);
 	bool BuildStaticMeshFromGeometry(FbxNode* Node, TRefCountPtr<SStaticMesh> StaticMesh, TArray<YFbxMaterial>& MeshMaterials, int32 LODIndex, YRawMesh& RawMesh, EYVertexColorImportOption::Type VertexColorImportOption, const FColor& VertexOverrideColor);
 	void ConvertScene();
 
@@ -37,9 +38,9 @@ protected:
 	int32 GetFbxMeshCount(FbxNode* Node, bool bCountLODs, int32& OutNumLODGroups);
 	void FillFbxMeshArray(FbxNode* Node, TArray<FbxNode*>& outMeshArray);
 
-	int32 CreateNodeMaterials(FbxNode* FbxNode, TArray<YMaterialInterface*>& outMaterials, TArray<FString>& UVSets);
-	void CreateMaterial(FbxSurfaceMaterial& FbxMaterial, TArray<YMaterialInterface*>& OutMaterials, TArray<FString>& UVSets);
-	bool CreateMaterialProperty(FbxSurfaceMaterial& FbxMaterial,YMaterialInterface* UnrealMaterial,const char* MaterialProperty,bool bSetupAsNormalMap,TArray<FString>& UVSet);
+	int32 CreateNodeMaterials(FbxNode* FbxNode, TArray<TRefCountPtr<SMaterial>>& outMaterials, TArray<FString>& UVSets);
+	void CreateMaterial(FbxSurfaceMaterial& FbxMaterial, TArray<TRefCountPtr<SMaterial>>&  OutMaterials, TArray<FString>& UVSets);
+	bool CreateMaterialProperty(FbxSurfaceMaterial& FbxMaterial, TRefCountPtr<SMaterial>& UnrealMaterial, const char* MaterialProperty, bool bSetupAsNormalMap, TArray<FString>& UVSet);
 	YTexture* ImportTexture(FbxFileTexture* FbxTexture, bool bSetupAsNormalMap);
 	FbxAMatrix ComputeTotalMatrix(FbxNode* Node);
 	/**

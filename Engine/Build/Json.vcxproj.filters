@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Public">
+      <UniqueIdentifier>{9798739d-112d-4a43-9846-8bfcd9005db7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private">
+      <UniqueIdentifier>{41368f8d-df66-483d-a817-a84481a5a826}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public\Dom">
+      <UniqueIdentifier>{54904e4f-0116-45a8-9702-26496582fa7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public\Policies">
+      <UniqueIdentifier>{bac9179d-d6c1-43b1-9f45-4a0977e49e96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public\Serialization">
+      <UniqueIdentifier>{d9bba636-e94c-4fc0-860d-30cc26de95bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private\Tests">
+      <UniqueIdentifier>{88a8a491-77c9-44a9-a8d6-3b6b2d593d86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private\Dom">
+      <UniqueIdentifier>{5594e284-8dd2-4411-898e-9b8ececd849f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\Runtime\Json\Public\JsonGlobals.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Json\Public\Json.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Json\Public\Dom\JsonValue.h">
+      <Filter>Public\Dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Json\Public\Dom\JsonObject.h">
+      <Filter>Public\Dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Json\Public\Policies\PrettyJsonPrintPolicy.h">
+      <Filter>Public\Policies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Json\Public\Policies\CondensedJsonPrintPolicy.h">
+      <Filter>Public\Policies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Json\Public\Policies\JsonPrintPolicy.h">
+      <Filter>Public\Policies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Json\Public\Serialization\JsonSerializerMacros.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Json\Public\Serialization\JsonTypes.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Json\Public\Serialization\JsonWriter.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Json\Public\Serialization\JsonReader.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Runtime\Json\Public\Serialization\JsonSerializer.h">
+      <Filter>Public\Serialization</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Runtime\Json\Private\JsonModule.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Json\Private\Tests\JsonTests.cpp">
+      <Filter>Private\Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Json\Private\Dom\JsonValue.cpp">
+      <Filter>Private\Dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Runtime\Json\Private\Dom\JsonObject.cpp">
+      <Filter>Private\Dom</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

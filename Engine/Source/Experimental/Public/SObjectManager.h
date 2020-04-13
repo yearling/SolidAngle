@@ -8,34 +8,33 @@ class SObjectManager
 {
 public:
 	SObjectManager();
-	template<typename ClassType,typename...T>
+	template<typename ClassType, typename...T>
 	static TRefCountPtr<ClassType> ConstructInstance(T&&... Args)
 	{
-		//assert(ClassType::IsInstance());
-		//TRefCountPtr<ClassType> Obj{new ClassType(Forward<T>(Args)...),true};
-		//InstancedObjects.Add(Obj);
-		TRefCountPtr<ClassType> Obj( new ClassType(Forward<T>(Args)...), true);
-		//TRefCountPtr<SObject> OjbInst(new SObject());
-		//InstancedObjects.Add(TRefCountPtr<SObject>(Obj.GetReference(),false));
+		check(ClassType::IsInstance());
+		TRefCountPtr<ClassType> Obj(new ClassType(Forward<T>(Args)...), true);
 		GSObjectManager.InstancedObjects.Add(TRefCountPtr<SObject>(Obj.GetReference(), true));
 		return Obj;
 	}
-	template<typename ClassType,typename...T>
+
+	template<typename ClassType, typename...T>
 	static TRefCountPtr<ClassType> ConstructUnifyFromPackage(const FString& PackagePath, T&&... Args)
 	{
-		static_assert(ClassType::IsInstance());
-		FName PackageFName(*PackagePath);
-		TRefCountPtr<ClassType>* FindResult = UnifyObjects.Find(PackageFName);
+		check(!ClassType::IsInstance());
+		FString PackagePathNoSuffix = PackagePath;
+		FPaths::NormalizeFilename(PackagePathNoSuffix);
+		FName PackageFName(*(FPaths::GetBaseFilename(PackagePathNoSuffix, false)));
+		TRefCountPtr<SObject>* FindResult = GSObjectManager.UnifyObjects.Find(PackageFName);
 		if (FindResult)
 		{
-			return *FindResult;
+			return TRefCountPtr<ClassType>(dynamic_cast<ClassType*>((*FindResult).GetReference()), true);
 		}
 		else
 		{
-			TRefCountPtr<ClassType> Obj(new ClassType(Forward<T>(Args...)), true);
+			TRefCountPtr<ClassType> Obj((new ClassType(Forward<T>(Args)...)), true);
 			if (Obj->LoadFromPackage(PackagePath))
 			{
-				UnifyObjects.Add(MoveTemp(PackageFName), Obj);
+				GSObjectManager.UnifyObjects.Add(PackageFName, TRefCountPtr<SObject>(Obj.GetReference(), true));
 				return Obj;
 			}
 			else
@@ -44,6 +43,12 @@ public:
 			}
 		}
 	}
+
+	//template<typename ClassType,typename Pa, typename...T>
+	//static TRefCountPtr<ClassType> ConstructUnifyFromPackage(Pa Var, T&&... Args)
+	//{
+	//	return	ConstructUnifyFromPackage<ClassType>(Var, Forward<T>(Args...));
+	//}
 
 	void Destroy();
 	void FrameDestroy();

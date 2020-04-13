@@ -1,7 +1,7 @@
 #pragma once
 #include "Core.h"
 #include "SObject.h"
-class SActor:public SObject
+class SActor :public SObject
 {
 public:
 	virtual ~SActor();

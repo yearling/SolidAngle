@@ -39,3 +39,11 @@ void YScene::RegisterToScene(TRefCountPtr<SStaticMesh> InMesh)
 	//translucent
 }
 
+void YScene::Clear()
+{
+	StaticMeshArray.Empty();
+	StaticMeshOpaquePrimitives.Empty();
+	StaticMeshMaskPrimitives.Empty();
+	StaticMeshTrunslucentPrimitives.Empty();
+}
+

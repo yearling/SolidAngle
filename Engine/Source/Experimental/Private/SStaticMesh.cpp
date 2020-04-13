@@ -3,6 +3,9 @@
 #include "YMeshCommon.h"
 #include "YStaticMeshRenderData.h"
 #include "Canvas.h"
+#include "Json.h"
+#include "SObjectManager.h"
+#include "SMaterial.h"
 DEFINE_LOG_CATEGORY(LogYStaticMesh);
 
 SStaticMesh::SStaticMesh()
@@ -48,10 +51,10 @@ void SStaticMesh::Build()
 
 	if (SourceModels.Num() > MAX_YSTATIC_MESH_LODS)
 	{
-		UE_LOG(LogYStaticMesh, Warning, TEXT("Cannot build LOD %d.  The maximum allowed is %d.  Skipping."),SourceModels.Num(),MAX_YSTATIC_MESH_LODS );
+		UE_LOG(LogYStaticMesh, Warning, TEXT("Cannot build LOD %d.  The maximum allowed is %d.  Skipping."), SourceModels.Num(), MAX_YSTATIC_MESH_LODS);
 
 	}
-	
+
 	RenderData = MakeUnique<YStaticMeshRenderData>();
 
 
@@ -201,7 +204,7 @@ FArchive& operator<<(FArchive& Ar, YStaticMaterial& Elem)
 
 bool operator== (const YStaticMaterial& LHS, const YStaticMaterial& RHS)
 {
-	return (LHS.MaterialInterface == RHS.MaterialInterface &&
+	return (LHS.Material == RHS.Material &&
 		LHS.MaterialSlotName == RHS.MaterialSlotName
 		&& LHS.ImportedMaterialSlotName == RHS.ImportedMaterialSlotName
 		);
@@ -209,12 +212,12 @@ bool operator== (const YStaticMaterial& LHS, const YStaticMaterial& RHS)
 
 bool operator== (const YStaticMaterial& LHS, const YMaterialInterface& RHS)
 {
-	return (LHS.MaterialInterface == &RHS);
+	return (LHS.Material == &RHS);
 }
 
 bool operator== (const YMaterialInterface& LHS, const YStaticMaterial& RHS)
 {
-	return (RHS.MaterialInterface == &LHS);
+	return (RHS.Material == &LHS);
 }
 
 void SStaticMesh::DebugTangent()
@@ -239,7 +242,7 @@ void SStaticMesh::DebugTangent()
 			//DrawPosition
 			for (int32 i : {0, 1, 2})
 			{
-				uint32 WedgeIndex = FirstIndex + TriangleIndex * 3+i;
+				uint32 WedgeIndex = FirstIndex + TriangleIndex * 3 + i;
 				uint32 PositionIndex = IndexArrayView[WedgeIndex];
 				FVector VertexPosition = LOD.PositionVertexBuffer.VertexPosition(PositionIndex);
 				//GCanvas->DrawBall(VertexPosition, FLinearColor::Green, 0.2);
@@ -262,4 +265,79 @@ void SStaticMesh::DebugTangent()
 	}
 }
 
+bool SStaticMesh::LoadFromPackage(const FString & Path)
+{
+	if (FPaths::GetExtension(Path).Equals(TEXT("json"), ESearchCase::IgnoreCase))
+	{
+		FString JsonTxt;
+		bool bLoad = FFileHelper::LoadFileToString(JsonTxt, *Path);
+		if (!bLoad)
+		{
+			UE_LOG(LogYStaticMesh, Log, TEXT("file: %s not exist"), *Path);
+			return false;
+		}
+		TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(JsonTxt);
+		TSharedPtr<FJsonObject> RootObject;
+		bool bSuccessful = FJsonSerializer::Deserialize(JsonReader, RootObject);
+		if (!bSuccessful)
+		{
+			FString ErrMsg = JsonReader->GetErrorMessage();
+			UE_LOG(LogYStaticMesh, Log, TEXT("Json parse failed! \n %s : %s"), *Path, *ErrMsg);
+			return false;
+		}
 
+		auto Materials = RootObject->Values.Find(TEXT("Materials"));
+		if (Materials && (*Materials)->Type == EJson::Array)
+		{
+			auto& MaterialArray = (*Materials)->AsArray();
+			StaticMaterials.AddZeroed(MaterialArray.Num());
+			for (int32 i = 0; i < MaterialArray.Num(); ++i)
+			{
+				auto& MaterialItem = MaterialArray[i]->AsObject();
+				int32 MaterialIndex = (int32)MaterialItem->Values["MaterialIndex"]->AsNumber();
+				FName SlotUIName = *(MaterialItem->Values["SlotUIName"]->AsString());
+				FString MaterialPackage = MaterialItem->Values["MaterialPackage"]->AsString();
+				assert(MaterialIndex < MaterialArray.Num());
+				YStaticMaterial & StaticMeshMaterial = StaticMaterials[MaterialIndex];
+				StaticMeshMaterial.MaterialSlotName = SlotUIName;
+				StaticMeshMaterial.ImportedMaterialSlotName = SlotUIName;
+				StaticMeshMaterial.Material = SObjectManager::ConstructUnifyFromPackage<SMaterial>(MaterialPackage);
+			}
+		}
+
+		SectionInfoMap.Clear();
+		auto ParametersLODs = RootObject->Values.Find(TEXT("LODs"));
+		if (ParametersLODs && (*ParametersLODs)->Type == EJson::Array)
+		{
+			auto& LODArray = (*ParametersLODs)->AsArray();
+			for (int32 LODIndex = 0; LODIndex < LODArray.Num(); ++LODIndex)
+			{
+				auto& LODItem = LODArray[LODIndex]->AsObject();
+				{
+					int32 LOD = (int32)LODItem->Values["LOD"]->AsNumber();
+					auto& SectionInfoArray = LODItem->Values["SectionInfo"]->AsArray();
+					for (int32 SectionIndex = 0; SectionIndex < SectionInfoArray.Num(); ++SectionIndex)
+					{
+						auto SectionItem = SectionInfoArray[SectionIndex]->AsObject();
+						int32 SectionNum = SectionItem->Values["SectionIndex"]->AsNumber();
+						int32 MaterialIndex = SectionItem->Values["MaterialIndex"]->AsNumber();
+						SectionInfoMap.Set(LOD, SectionNum, YMeshSectionInfo(MaterialIndex));
+					}
+				}
+			}
+		}
+
+		FString AssetPatchPath = RootObject->Values["AssetPackage"]->AsString();
+		TUniquePtr<FArchive> FileReader(IFileManager::Get().CreateFileReader(*AssetPatchPath));
+		if (FileReader)
+		{
+			Serialize(*FileReader);
+		}
+		else
+		{
+			UE_LOG(LogYStaticMesh, Log, TEXT("Can not open file: %s "), *AssetPatchPath);
+			return false;
+		}
+	}
+	return true;
+}

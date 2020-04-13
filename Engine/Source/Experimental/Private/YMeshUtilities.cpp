@@ -23,7 +23,7 @@ struct YIndexAndZ
 };
 struct YCompareIndexAndZ
 {
-	FORCEINLINE bool operator()(const YIndexAndZ& A, const YIndexAndZ&B) const {return A.Z < B.Z;}
+	FORCEINLINE bool operator()(const YIndexAndZ& A, const YIndexAndZ&B) const { return A.Z < B.Z; }
 };
 
 
@@ -73,7 +73,7 @@ static YStaticMeshBuildVertex BuildStaticMeshVertex(YRawMesh const& RawMesh, int
 	return Vertex;
 }
 
-static bool AreVerticesEqual(YStaticMeshBuildVertex const& A,YStaticMeshBuildVertex const& B,float ComparisonThreshold)
+static bool AreVerticesEqual(YStaticMeshBuildVertex const& A, YStaticMeshBuildVertex const& B, float ComparisonThreshold)
 {
 	if (!PointsEqual(A.Position, B.Position, ComparisonThreshold)
 		|| !NormalsEqual(A.TangentX, B.TangentX)
@@ -144,7 +144,7 @@ void YMeshUtilities::BuildStaticMeshVertexAndIndexBuffers(TArray<YStaticMeshBuil
 		for (int32 CornerIndex : {0, 1, 2})
 		{
 			int32 WedgeIndex = FaceIndex * 3 + CornerIndex;
-			WedgePosition[CornerIndex] = GetPositionForWedge(RawMesh,WedgeIndex);
+			WedgePosition[CornerIndex] = GetPositionForWedge(RawMesh, WedgeIndex);
 		}
 		//degenerate triangle
 		if (PointsEqual(WedgePosition[0], WedgePosition[1], ComparisonThreshold) ||
@@ -408,7 +408,7 @@ public:
 		FMemory::Memset(IndexMap.GetData(), 0xFF, NumVertices * sizeof(uint32));
 		for (int32 i = 0; i < VertexIndexZ.Num(); ++i)
 		{
-			uint32 SrcIndex= VertexIndexZ[i].Index;
+			uint32 SrcIndex = VertexIndexZ[i].Index;
 			float Z = VertexIndexZ[i].Z;
 			IndexMap[SrcIndex] = FMath::Min(IndexMap[SrcIndex], SrcIndex);
 			for (int32 j = i + 1; j < VertexIndexZ.Num(); ++j)
@@ -418,12 +418,12 @@ public:
 				{
 					break;
 				}
-				
+
 				{
 					uint32 OtherIndex = VertexIndexZ[j].Index;
-					if (PointsEqual(InVertices[SrcIndex].Position, InVertices[OtherIndex].Position,THRESH_POINTS_ARE_SAME))
+					if (PointsEqual(InVertices[SrcIndex].Position, InVertices[OtherIndex].Position, THRESH_POINTS_ARE_SAME))
 					{
-						IndexMap[SrcIndex] = FMath::Min(IndexMap[SrcIndex],OtherIndex);
+						IndexMap[SrcIndex] = FMath::Min(IndexMap[SrcIndex], OtherIndex);
 						IndexMap[OtherIndex] = FMath::Min(IndexMap[OtherIndex], SrcIndex);
 					}
 				}
@@ -512,7 +512,7 @@ public:
 			int32 NumTexCoords = 2;
 			LODModel.VertexBuffer.Init(Vertices, true);
 			LODModel.PositionVertexBuffer.Init(Vertices, true);
-			
+
 			//Concatenate the per section index buffers
 			TArray<uint32> CombinedIndices;
 			bool bNeeds32BitIndices = false;
@@ -544,7 +544,7 @@ public:
 				}
 			}
 			LODModel.IndexBuffer.SetIndices(CombinedIndices, bNeeds32BitIndices ? EYIndexBufferStride::Force32Bit : EYIndexBufferStride::Force16Bit);
-			
+
 			// build the reversed index buffer
 			{
 				TArray<uint32> InversedIndices;
@@ -644,7 +644,7 @@ private:
 
 	EStage Stage;
 
-	int32 NumValidLODs=0;
+	int32 NumValidLODs = 0;
 
 	TIndirectArray<YRawMesh> LODMeshes;
 	float LODMaxDeviation[MAX_YSTATIC_MESH_LODS];

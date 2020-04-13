@@ -4,7 +4,7 @@ class SObject
 {
 public:
 	virtual ~SObject();
-	static constexpr  bool IsInstance() 
+	static constexpr  bool IsInstance()
 	{
 		return true;
 	};

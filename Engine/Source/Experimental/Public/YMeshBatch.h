@@ -1,6 +1,6 @@
 #pragma once
 #include "core.h"
-#include "YMaterial.h"
+#include "YMaterialInterface.h"
 #include "YRenderResource.h"
 struct YMeshBatchElement
 {

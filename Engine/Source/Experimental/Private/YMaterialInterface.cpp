@@ -1,4 +1,4 @@
-#include "YMaterial.h"
+#include "YMaterialInterface.h"
 
 YTextureSampler::YTextureSampler()
 {

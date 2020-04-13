@@ -129,9 +129,6 @@
     <ClCompile Include="..\Source\Experimental\Private\YStaticMeshResource.cpp">
       <Filter>yconverter\StaticMesh</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\YMaterial.cpp">
-      <Filter>yconverter\Render</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\YMeshUtilities.cpp">
       <Filter>yconverter\Converter</Filter>
     </ClCompile>
@@ -173,6 +170,12 @@
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\SMaterial.cpp">
       <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\STexture.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YMaterialInterface.cpp">
+      <Filter>yconverter\Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -309,9 +312,6 @@
     <ClInclude Include="..\Source\Experimental\Public\YStaticMeshResource.h">
       <Filter>yconverter\StaticMesh</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\YMaterial.h">
-      <Filter>yconverter\Render</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\YMeshBuild.h">
       <Filter>yconverter\Converter</Filter>
     </ClInclude>
@@ -359,6 +359,12 @@
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\SMaterial.h">
       <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\STexture.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YMaterialInterface.h">
+      <Filter>yconverter\Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
