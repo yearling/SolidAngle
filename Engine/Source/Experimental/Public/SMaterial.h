@@ -28,3 +28,10 @@ protected:
 };
 
 
+class SMaterialInstance : public SMaterial
+{
+public:
+	SMaterialInstance();
+	virtual ~SMaterialInstance();
+	static bool constexpr IsInstance() { return false; }
+};

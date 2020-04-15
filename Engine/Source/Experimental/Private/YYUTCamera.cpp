@@ -25,7 +25,7 @@ void ICamera::SetViewParam(const FVector &eye, const FVector &lookat)
 {
 	m_vEye = eye;
 	m_vLookat = lookat;
-	m_matView = FLookAtMatrix(m_vEye, m_vLookat,FVector(.0f,1.0f,.0f));
+	m_matView = FLookAtMatrix(m_vEye, m_vLookat, FVector(.0f, 1.0f, .0f));
 	m_vDir = m_vLookat - m_vEye;
 
 	FVector zBasis(m_matView.M[0][2], m_matView.M[1][2], m_matView.M[2][2]);
@@ -45,7 +45,7 @@ void ICamera::SetProjParam(float FOV, float aspect, float near_plane, float far_
 	m_fAspect = aspect;
 	m_fNearPlane = near_plane;
 	m_fFarPlane = far_plane;
-	m_matProjection = FPerspectiveMatrix(FOV/2, aspect, 1.0f, m_fNearPlane, m_fNearPlane);
+	m_matProjection = FPerspectiveMatrix(FOV / 2, aspect, 1.0f, m_fNearPlane, m_fNearPlane);
 }
 
 void ICamera::SetWindow(int width, int height)
@@ -119,7 +119,7 @@ void ICamera::FrameMove(float elapse_time)
 
 FMatrix ICamera::GetViewProject() const
 {
-	return m_matView* m_matProjection;
+	return m_matView * m_matProjection;
 }
 
 
@@ -150,7 +150,7 @@ void FirstPersionCamera::FrameMove(float elapse_time)
 	//XMMATRIX CamRote = XMMatrixRotationRollPitchYaw(m_fCameraPitchAngle, m_fCameraYawAngle, 0);
 
 	float RAD_2_DEG = 180.0f / PI;
-	FMatrix CamRotate = FRotationMatrix(FRotator(m_fCameraPitchAngle*RAD_2_DEG,m_fCameraYawAngle*RAD_2_DEG,0));
+	FMatrix CamRotate = FRotationMatrix(FRotator(m_fCameraPitchAngle*RAD_2_DEG, m_fCameraYawAngle*RAD_2_DEG, 0));
 	FVector FWorldUP = CamRotate.TransformVector(FVector(0.0f, 1.0f, 0.0f));
 	FVector FWorldAhead = CamRotate.TransformVector(FVector(0.0f, 0.0f, 100.0f));
 	FVector FWorldMove = CamRotate.TransformVector(m_vVelocity);

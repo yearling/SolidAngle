@@ -84,14 +84,15 @@ public:
 	virtual void					Render(TSharedRef<YRenderInfo> RenderInfo);
 	virtual void					AllocResource();
 	void							SetScreenWidthHeigth(int width, int height) { m_ScreenWidth = (float)width; m_ScreenHeight = (float)height; }
-	void							RegisterSkeletalMesh(YSkeletalMesh* pSkeletalMesh,UAnimSequence* pAnimationSequence);
+	void							RegisterSkeletalMesh(YSkeletalMesh* pSkeletalMesh, UAnimSequence* pAnimationSequence);
 	void							RegisterStaticMesh(UStaticMesh* pStaticMesh);
 	void							PlayAnimation(UAnimSequence* pAnimationSequence) { AnimationSequence = pAnimationSequence; }
 	void							CreateMeshResource();
 	void							DrawGridAndCoordinates();
 	void							DrawSkeletalMeshes(TSharedRef<YRenderInfo> RenderInfo);
 	void							DrawSkeleton(YSkeletalMesh* pSkeletalMesh);
-	void							DrawSkeleton2(YSkeletalMesh* pSkeletalMesh,const FCompactPose& CompacePose);
+	void							DrawSkeleton2(YSkeletalMesh* pSkeletalMesh, const FCompactPose& CompacePose);
+	void							DrawText(FString InMsg);
 private:
 	float							m_ScreenWidth;
 	float							m_ScreenHeight;

@@ -34,4 +34,5 @@ public:
 	uint32 bUseForMaterial : 1;	// Whether it can be used in renderpasses requiring material outputs.
 	uint32 bUseAsOccluder : 1;			// Whether it can be used in renderpasses only depending on the raw geometry (i.e. Depth Prepass).
 	uint32 bWireframe : 1;
+	FTransform LocalToWorld;
 };

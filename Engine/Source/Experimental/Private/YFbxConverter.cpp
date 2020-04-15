@@ -562,6 +562,7 @@ TRefCountPtr<SStaticMesh> YFbxConverter::ImportStaticMeshAsSingle(TArray<FbxNode
 		TUniquePtr<YStaticMeshRenderData> RenderData = MakeUnique<YStaticMeshRenderData>();
 		if (YMeshUtilities::BuildStaticMesh(*RenderData, StaticMesh->SourceModels))
 		{
+			StaticMesh->ExtendedBounds = RenderData->Bounds;
 			StaticMesh->RenderData = MoveTemp(RenderData);
 			return StaticMesh;
 		}
@@ -1153,7 +1154,7 @@ int32 YFbxConverter::CreateNodeMaterials(FbxNode* FbxNode, TArray<TRefCountPtr<S
 void YFbxConverter::CreateMaterial(FbxSurfaceMaterial& FbxMaterial, TArray<TRefCountPtr<SMaterial>>& OutMaterials, TArray<FString>& UVSets)
 {
 	FString MaterialFullName = UTF8_TO_TCHAR(MakeName(FbxMaterial.GetName()));
-	TRefCountPtr<SMaterial> pMaterial = SObjectManager::ConstructInstance<SMaterial>();
+	TRefCountPtr<SMaterial> pMaterial = SObjectManager::ConstructUnique<SMaterial>();
 	pMaterial->MaterialName = FName(*MaterialFullName);
 	CreateMaterialProperty(FbxMaterial, pMaterial, FbxSurfaceMaterial::sDiffuse, false, UVSets);
 	CreateMaterialProperty(FbxMaterial, pMaterial, FbxSurfaceMaterial::sNormalMap, true, UVSets);

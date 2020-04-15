@@ -18,6 +18,15 @@ public:
 	}
 
 	template<typename ClassType, typename...T>
+	static TRefCountPtr<ClassType> ConstructUnique(T&&... Args)
+	{
+		check(!ClassType::IsInstance());
+		TRefCountPtr<ClassType> Obj(new ClassType(Forward<T>(Args)...), true);
+		GSObjectManager.InstancedObjects.Add(TRefCountPtr<SObject>(Obj.GetReference(), true));
+		return Obj;
+	}
+
+	template<typename ClassType, typename...T>
 	static TRefCountPtr<ClassType> ConstructUnifyFromPackage(const FString& PackagePath, T&&... Args)
 	{
 		check(!ClassType::IsInstance());

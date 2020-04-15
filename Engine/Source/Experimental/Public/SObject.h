@@ -1,5 +1,6 @@
 #pragma once
 #include "Core.h"
+#include "Json.h"
 class SObject
 {
 public:
@@ -37,6 +38,8 @@ public:
 	virtual bool LoadFromPackage(const FString & Path);
 	virtual void SaveToPackage(const FString & Path);
 	virtual FArchive& Serialize(FArchive& Ar);
+	virtual bool LoadFromJson(const TSharedPtr<FJsonObject>&RootJson);
+	virtual bool PostLoadOp();
 protected:
 	SObject();
 private:

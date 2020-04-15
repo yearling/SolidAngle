@@ -38,7 +38,7 @@ void YYUTDXManager::Init(HWND hwnd)
 	D3D_FEATURE_LEVEL pCreate_level;
 	int feature_counts = _countof(d3d_feature_levels);
 	assert(feature_counts != 0 && "D3D_FEATURE_LEVEL should not be empty!!");
-	uint32 deviceCreationFlags =0;
+	uint32 deviceCreationFlags = 0;
 #ifdef _DEBUG
 	deviceCreationFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
@@ -152,7 +152,7 @@ void YYUTDXManager::ReSize(int width, int height)
 
 	Create2DTextureDSV_SRV(m_iWidth, m_iHeight, DXGI_FORMAT_R32_TYPELESS, m_DepthStencilTexture, "m_DepthStencilTexture");
 	CreateDSVForTexture2D(DXGI_FORMAT_D32_FLOAT, m_DepthStencilTexture, m_DSV, "depth_stencil_dsv");
-	CreateSRVForTexture2D( DXGI_FORMAT_R32_FLOAT, m_DepthStencilTexture, m_SRVforDS, "depth_stencil_srv");
+	CreateSRVForTexture2D(DXGI_FORMAT_R32_FLOAT, m_DepthStencilTexture, m_SRVforDS, "depth_stencil_srv");
 	m_ViewPort.TopLeftX = 0.0f;
 	m_ViewPort.TopLeftY = 0.0f;
 	m_ViewPort.Width = (float)m_iWidth;
@@ -165,15 +165,6 @@ void YYUTDXManager::ReSize(int width, int height)
 void YYUTDXManager::KeyboardMouseProc(void)
 {
 
-}
-
-void YYUTDXManager::Render(void)
-{
-	for(auto &Func:m_ListRenderEvents)
-		(Func)();
-	m_SwapChain->Present(0, 0);
-	m_FPSCounts++;
-	m_ListRenderEvents.Reset();
 }
 
 void YYUTDXManager::Tick(DWORD elapse_time)
@@ -238,6 +229,12 @@ UINT YYUTDXManager::GetBackBufferHeight()
 UINT YYUTDXManager::GetFPS()
 {
 	return m_FPS;
+}
+
+void YYUTDXManager::Present()
+{
+	m_SwapChain->Present(0, 0);
+	m_FPSCounts++;
 }
 
 YYUTDXManager YYUTDXManager::m_hInstance;

@@ -4,6 +4,7 @@
 #include "Core.h"
 #include "YScene.h"
 #include "YRenderInterface.h"
+#include "SWorld.h"
 class FBXReader;
 class FirstPersionCamera;
 class ICamera;
@@ -20,7 +21,7 @@ public:
 	virtual void					GameMain(void);
 	virtual void					Update(float ElapseTime);
 	virtual void					Render(float ElapseTime);
-	void							PosetRender();
+	void							PostRender();
 	void							OnResize(void);
 	void							OnMinimize(void);
 	float							GetFPS() const;
@@ -55,5 +56,6 @@ private:
 	//std::shared_ptr<DepthPeeling::ObjPrimitive> m_spObj;
 	std::shared_ptr<RenderScene>		m_pSceneRender;
 	TRefCountPtr<YScene>            MainScene;
+	TRefCountPtr<SWorld>	        World;
 	TUniquePtr<IYRenderInterface>    MainRender;
 };

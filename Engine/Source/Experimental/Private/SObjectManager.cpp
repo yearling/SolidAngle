@@ -10,6 +10,8 @@ void SObjectManager::Destroy()
 {
 	int32 DestroyUnitfyCount = 0;
 	int32 UnifyLeft = 0;
+	int32 DestroyInstanceCount = 0;
+	int32 InstanceLeft = 0;
 	do
 	{
 		UnifyLeft = 0;
@@ -26,13 +28,7 @@ void SObjectManager::Destroy()
 				UnifyLeft++;
 			}
 		}
-	} while (DestroyUnitfyCount);
-	check(!UnifyLeft);
 
-	int32 DestroyInstanceCount = 0;
-	int32 InstanceLeft = 0;
-	do
-	{
 		DestroyInstanceCount = 0;
 		InstanceLeft = 0;
 		for (TSet<TRefCountPtr<SObject>>::TIterator iter(InstancedObjects); iter; ++iter)
@@ -47,7 +43,9 @@ void SObjectManager::Destroy()
 				InstanceLeft++;
 			}
 		}
-	} while (DestroyInstanceCount);
+
+	} while (DestroyUnitfyCount || DestroyInstanceCount);
+	check(!UnifyLeft);
 	check(!InstanceLeft);
 }
 

@@ -161,7 +161,7 @@ void CreateStruturedBufferSRV_UAV(int numbers, int perSize, TComPtr<ID3D11Buffer
 	HRESULT hr = S_OK;
 	D3D11_BUFFER_DESC desc;
 	memset(&desc, 0, sizeof(desc));
-	desc.ByteWidth = numbers*perSize;
+	desc.ByteWidth = numbers * perSize;
 	desc.StructureByteStride = perSize;
 	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS;
 	desc.Usage = D3D11_USAGE_DEFAULT;
@@ -184,7 +184,7 @@ void CreateStruturedBufferUAV(int numbers, int perSize, TComPtr<ID3D11Buffer> & 
 	HRESULT hr = S_OK;
 	D3D11_BUFFER_DESC desc;
 	memset(&desc, 0, sizeof(desc));
-	desc.ByteWidth = numbers*perSize;
+	desc.ByteWidth = numbers * perSize;
 	desc.StructureByteStride = perSize;
 	desc.BindFlags = D3D11_BIND_UNORDERED_ACCESS;
 	desc.Usage = D3D11_USAGE_DEFAULT;
@@ -255,7 +255,7 @@ void CreateSRVForStruturedBuffer(int number, TComPtr<ID3D11Buffer> &buffer, TCom
 }
 
 void CreateSRVForTBuffer(DXGI_FORMAT format, int32 number, TComPtr<ID3D11Buffer> &buffer, TComPtr<ID3D11ShaderResourceView> &srv, const FString& alias /*= ""*/)
-{	
+{
 	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_SHADER_RESOURCE_VIEW_DESC desc;
@@ -485,7 +485,7 @@ void CreateVertexBufferStatic(YRHIResourceCreateInfo & RHIResourceInfo, TRefCoun
 	memset(&sub, 0, sizeof(sub));
 	sub.pSysMem = RHIResourceInfo.ResourceArray->GetResourceData();
 	ID3D11Buffer* D3DBuffer = nullptr;
-	if (FAILED(hr = device->CreateBuffer(&desc, &sub,&D3DBuffer)))
+	if (FAILED(hr = device->CreateBuffer(&desc, &sub, &D3DBuffer)))
 	{
 
 	}
@@ -518,11 +518,11 @@ TRefCountPtr<YRHIVertexBuffer> CreateVertexBuffer(uint32 Size, uint32 InUsage, Y
 	{
 		Desc.BindFlags |= D3D11_BIND_UNORDERED_ACCESS;
 
-	/*	static bool bRequiresRawView = (GMaxRHIFeatureLevel < ERHIFeatureLevel::SM5);
-		if (bRequiresRawView)
-		{
-			Desc.MiscFlags |= D3D11_RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS;
-		}*/
+		/*	static bool bRequiresRawView = (GMaxRHIFeatureLevel < ERHIFeatureLevel::SM5);
+			if (bRequiresRawView)
+			{
+				Desc.MiscFlags |= D3D11_RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS;
+			}*/
 	}
 
 	if (InUsage & YBUF_ByteAddressBuffer)
@@ -1089,7 +1089,7 @@ void CreateStruturedBuffer<true, false, true, false>(int numbers, int perSize, T
 	HRESULT hr = S_OK;
 	D3D11_BUFFER_DESC desc;
 	memset(&desc, 0, sizeof(desc));
-	desc.ByteWidth = numbers*perSize;
+	desc.ByteWidth = numbers * perSize;
 	desc.StructureByteStride = perSize;
 	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 	desc.Usage = D3D11_USAGE_DYNAMIC;
@@ -1110,7 +1110,7 @@ void CreateStruturedBuffer<false, true, true, false>(int numbers, int perSize, T
 	HRESULT hr = S_OK;
 	D3D11_BUFFER_DESC desc;
 	memset(&desc, 0, sizeof(desc));
-	desc.ByteWidth = numbers*perSize;
+	desc.ByteWidth = numbers * perSize;
 	desc.StructureByteStride = perSize;
 	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 	desc.Usage = D3D11_USAGE_IMMUTABLE;
@@ -1125,8 +1125,8 @@ void CreateStruturedBuffer<false, true, true, false>(int numbers, int perSize, T
 };
 
 template<>
-void CreateTBuffer<true,false,true,false>(int32 ByteCounts, TComPtr<ID3D11Buffer> & buffer, const FString& alias)
-{	
+void CreateTBuffer<true, false, true, false>(int32 ByteCounts, TComPtr<ID3D11Buffer> & buffer, const FString& alias)
+{
 	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;
 	D3D11_BUFFER_DESC desc;

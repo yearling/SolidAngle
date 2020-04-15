@@ -177,6 +177,12 @@
     <ClCompile Include="..\Source\Experimental\Private\YMaterialInterface.cpp">
       <Filter>yconverter\Render</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\SWorld.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\JsonTypeHelper.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Experimental\Public\YYUT.h">
@@ -366,6 +372,12 @@
     <ClInclude Include="..\Source\Experimental\Public\YMaterialInterface.h">
       <Filter>yconverter\Render</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\SWorld.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\JsonTypeHelper.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shader">
@@ -406,6 +418,9 @@
     </Filter>
     <Filter Include="Engine">
       <UniqueIdentifier>{c459708a-1b98-4f13-b72c-19816ee28a69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{b3ea5e50-0d1e-4f87-af86-0ed68f56cc0a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

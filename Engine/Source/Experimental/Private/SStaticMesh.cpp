@@ -341,3 +341,8 @@ bool SStaticMesh::LoadFromPackage(const FString & Path)
 	}
 	return true;
 }
+
+FBoxSphereBounds SStaticMesh::GetBounds() const
+{
+	return ExtendedBounds;
+}

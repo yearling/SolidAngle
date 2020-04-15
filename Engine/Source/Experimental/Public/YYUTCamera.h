@@ -10,8 +10,8 @@ public:
 	virtual void					FrameMove(float elapse_time) = 0;
 
 	virtual void					Reset();
-	virtual void					SetViewParam(const FVector &eye,const FVector &lookat);
-	virtual void					SetProjParam(float FOV,float aspect,float near_plane,float far_plane);
+	virtual void					SetViewParam(const FVector &eye, const FVector &lookat);
+	virtual void					SetProjParam(float FOV, float aspect, float near_plane, float far_plane);
 	void							SetWindow(int width, int height);
 	void							AddPitchYaw(float pitch, float yaw);
 	void							SetVelocity(FVector elocity);
@@ -19,6 +19,7 @@ public:
 	float							GetYaw() const { return m_fCameraYawAngle; }
 	void							SetPitch(float pitch) { m_fCameraPitchAngle = pitch; }
 	void							SetYaw(float yaw) { m_fCameraYawAngle = yaw; }
+	FVector							GetCameraPos() const { return m_vEye; }
 public:
 	FMatrix							GetView() const;
 	FMatrix							GetViewInverse() const;

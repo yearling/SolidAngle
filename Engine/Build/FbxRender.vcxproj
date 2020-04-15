@@ -177,6 +177,7 @@
     <ClCompile Include="..\Source\Experimental\Private\ForwardRender.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\game_main.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\IShader.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\JsonTypeHelper.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\LayoutUV.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\mikktspace.c" />
     <ClCompile Include="..\Source\Experimental\Private\nvtess.cpp" />
@@ -188,6 +189,7 @@
     <ClCompile Include="..\Source\Experimental\Private\SMaterial.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\SObjectManager.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\STexture.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\SWorld.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YMeshBatch.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YMeshUtilitiesWrap.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\SObject.cpp" />
@@ -238,6 +240,7 @@
     <ClInclude Include="..\Source\Experimental\Public\ForwardRender.h" />
     <ClInclude Include="..\Source\Experimental\Public\GPUSkinPublicDefs.h" />
     <ClInclude Include="..\Source\Experimental\Public\IShader.h" />
+    <ClInclude Include="..\Source\Experimental\Public\JsonTypeHelper.h" />
     <ClInclude Include="..\Source\Experimental\Public\LayoutUV.h" />
     <ClInclude Include="..\Source\Experimental\Public\mikktspace.h" />
     <ClInclude Include="..\Source\Experimental\Public\nvtess.h" />
@@ -247,6 +250,7 @@
     <ClInclude Include="..\Source\Experimental\Public\SMaterial.h" />
     <ClInclude Include="..\Source\Experimental\Public\SObjectManager.h" />
     <ClInclude Include="..\Source\Experimental\Public\STexture.h" />
+    <ClInclude Include="..\Source\Experimental\Public\SWorld.h" />
     <ClInclude Include="..\Source\Experimental\Public\YMeshBatch.h" />
     <ClInclude Include="..\Source\Experimental\Public\SObject.h" />
     <ClInclude Include="..\Source\Experimental\Public\YRenderInterface.h" />

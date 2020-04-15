@@ -31,7 +31,7 @@ public:
 			VSShader->BindResource(TEXT("g_projection"), RenderInfo->RenderCameraInfo.Projection);
 			VSShader->BindResource(TEXT("g_VP"), RenderInfo->RenderCameraInfo.ViewProjection);
 			VSShader->BindResource(TEXT("g_InvVP"), RenderInfo->RenderCameraInfo.ViewProjectionInv);
-			VSShader->BindResource(TEXT("g_world"), FMatrix::Identity);
+			VSShader->BindResource(TEXT("g_world"), MeshBatch.LocalToWorld.ToMatrixWithScale());
 			VSShader->Update();
 
 			PSShader->BindResource(TEXT("g_lightDir"), RenderInfo->SceneInfo.MainLightDir.GetSafeNormal());

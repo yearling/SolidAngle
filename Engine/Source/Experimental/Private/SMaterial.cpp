@@ -72,3 +72,13 @@ void SMaterial::AddMaterialTextureParameter(FName ParameterName, TRefCountPtr<ST
 {
 	TextureParameters.FindOrAdd(ParameterName) = Texture;
 }
+
+SMaterialInstance::SMaterialInstance()
+{
+
+}
+
+SMaterialInstance::~SMaterialInstance()
+{
+
+}

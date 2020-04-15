@@ -22,7 +22,6 @@ public:
 	TComPtr<ID3D11ShaderResourceView>& GetDepthStecilSRV(void);
 	D3D11_VIEWPORT*					GetDefaultViewPort() { return &m_ViewPort; }
 	virtual void					Tick(DWORD elapse_time);
-	virtual void					Render(void);
 	void							ReSize(int width, int height);
 	virtual	void					KeyboardMouseProc(void);
 	void							PauseTime(bool pause);
@@ -34,6 +33,7 @@ public:
 	UINT							GetBackBufferWidth();
 	UINT							GetBackBufferHeight();
 	UINT							GetFPS();
+	void							Present();
 protected:
 	TComPtr<ID3D11Device>			m_Device;
 	TComPtr<ID3D11DeviceContext>	m_DC;

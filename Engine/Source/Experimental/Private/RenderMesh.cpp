@@ -13,7 +13,7 @@
 
 
 
-RenderScene::RenderScene(void):
+RenderScene::RenderScene(void) :
 	m_pSkeletalMeshData(nullptr)
 {
 	ScreenLayout = MakeUnique<YYUTFont>();
@@ -70,9 +70,8 @@ void RenderScene::Render(TSharedRef<YRenderInfo> RenderInfo)
 		RenderHelper->Render(RenderInfo);
 	}
 
-	
+
 	ScreenLayout->BeginText();
-	ScreenLayout->DrawTextLine(FString::Printf(TEXT("FPS: %f"), RenderInfo->FPS));
 }
 
 
@@ -120,8 +119,8 @@ void RenderScene::DrawGridAndCoordinates()
 
 void RenderScene::DrawSkeletalMeshes(TSharedRef<YRenderInfo> RenderInfo)
 {
-	
-	for(int32 i=0;i<SkeletalMeshes.Num();++i)
+
+	for (int32 i = 0; i < SkeletalMeshes.Num(); ++i)
 	{
 		YSkeletalMesh* pMesh = SkeletalMeshes[i];
 		//DrawSkeleton(pMesh);
@@ -139,18 +138,18 @@ void RenderScene::DrawSkeletalMeshes(TSharedRef<YRenderInfo> RenderInfo)
 		AnimationTime += RenderInfo->TickTime;
 		AnimationTime = FMath::Fmod(AnimationTime, pAnimSequence->GetPlayLength());
 		pAnimSequence->GetAnimationPose(CompactPose, BlendCurve, FAnimExtractContext(AnimationTime, pAnimSequence->bEnableRootMotion));
-		DrawSkeleton2(pMesh,CompactPose);
+		DrawSkeleton2(pMesh, CompactPose);
 		SkeletalMeshRenderHeplers[i]->SetPos(CompactPose);
 	}
 }
 template<class TAlloc>
-FMatrix GetParentMatrix(const TArray<FMeshBoneInfo>& MeshBoneInfoes, const TArray<FTransform,TAlloc> & BonePoses, int32 iIndex)
+FMatrix GetParentMatrix(const TArray<FMeshBoneInfo>& MeshBoneInfoes, const TArray<FTransform, TAlloc> & BonePoses, int32 iIndex)
 {
 	FMatrix ParentMatrix = FMatrix::Identity;
 	int32 ParentBoneIndex = MeshBoneInfoes[iIndex].ParentIndex;
 	while (ParentBoneIndex != INDEX_NONE)
 	{
-		ParentMatrix = ParentMatrix* BonePoses[ParentBoneIndex].ToMatrixWithScale();
+		ParentMatrix = ParentMatrix * BonePoses[ParentBoneIndex].ToMatrixWithScale();
 		ParentBoneIndex = MeshBoneInfoes[ParentBoneIndex].ParentIndex;
 	}
 	return ParentMatrix;
@@ -160,7 +159,7 @@ void RenderScene::DrawSkeleton(YSkeletalMesh* pSkeletalMesh)
 {
 	if (!pSkeletalMesh)
 		return;
-	const FReferenceSkeleton& Skeleton= pSkeletalMesh->RefSkeleton;
+	const FReferenceSkeleton& Skeleton = pSkeletalMesh->RefSkeleton;
 	const TArray<FMeshBoneInfo> &MeshBoneInfos = Skeleton.GetRefBoneInfo();
 	const TArray<FTransform> & BonePoses = Skeleton.GetRawRefBonePose();
 	for (int32 i = 0; i < MeshBoneInfos.Num(); ++i)
@@ -173,7 +172,7 @@ void RenderScene::DrawSkeleton(YSkeletalMesh* pSkeletalMesh)
 			FVector ParentPos = ParentMatrix.TransformPosition(FVector(0, 0, 0));
 			FVector LocalPos = LocalMatrix.TransformPosition(FVector(0, 0, 0));
 			GCanvas->DrawLine(ParentPos, LocalPos, FLinearColor(1, 1, 0, 1));
-			GCanvas->DrawBall(LocalPos,FLinearColor(1,0,0,1));
+			GCanvas->DrawBall(LocalPos, FLinearColor(1, 0, 0, 1));
 		}
 		else
 		{
@@ -183,12 +182,12 @@ void RenderScene::DrawSkeleton(YSkeletalMesh* pSkeletalMesh)
 }
 
 
-void RenderScene::DrawSkeleton2(YSkeletalMesh* pSkeletalMesh,const FCompactPose& CompacePose)
+void RenderScene::DrawSkeleton2(YSkeletalMesh* pSkeletalMesh, const FCompactPose& CompacePose)
 {
 	if (!pSkeletalMesh)
 		return;
 	const FReferenceSkeleton& Skeleton = pSkeletalMesh->RefSkeleton;
-	const TArray<FTransform,FAnimStackAllocator> & BonePoses = CompacePose.GetBones();
+	const TArray<FTransform, FAnimStackAllocator> & BonePoses = CompacePose.GetBones();
 
 	TArray<FMatrix> CurrentBonePos;
 	CurrentBonePos.Empty(pSkeletalMesh->RefSkeleton.GetRawBoneNum());
@@ -228,11 +227,17 @@ void RenderScene::DrawSkeleton2(YSkeletalMesh* pSkeletalMesh,const FCompactPose&
 	}
 }
 
+void RenderScene::DrawText(FString InMsg)
+{
+
+	ScreenLayout->DrawTextLine(InMsg);
+}
+
 void RenderScene::RegisterSkeletalMesh(YSkeletalMesh* pSkeletalMesh, UAnimSequence* pAnimationSequence)
 {
 	SkeletalMeshes.Add(pSkeletalMesh);
 	AnimationSequences.Add(pAnimationSequence);
-	SkeletalMeshRenderHeplers.Emplace(MakeUnique<FSkeletalMeshRenderHelper>(pSkeletalMesh,pAnimationSequence));
+	SkeletalMeshRenderHeplers.Emplace(MakeUnique<FSkeletalMeshRenderHelper>(pSkeletalMesh, pAnimationSequence));
 }
 
 void RenderScene::RegisterStaticMesh(UStaticMesh* pStaticMesh)
@@ -243,7 +248,7 @@ void RenderScene::RegisterStaticMesh(UStaticMesh* pStaticMesh)
 
 FSkeletalMeshRenderHelper::FSkeletalMeshRenderHelper(YSkeletalMesh* InSkeletalMesh, UAnimSequence* InAnimSequence)
 	:SkeletalMesh(InSkeletalMesh)
-	,AnimSequence(InAnimSequence)
+	, AnimSequence(InAnimSequence)
 	, IsCPURender(false)
 {
 
@@ -313,9 +318,9 @@ void FSkeletalMeshRenderHelper::Init()
 		for (int32 SectionIndex = 0; SectionIndex < StaticLodModel.Sections.Num(); ++SectionIndex)
 		{
 			TComPtr<ID3D11Buffer> BoneMatrixBuffer;
-			CreateTBuffer<true, false, true, false>(StaticLodModel.Sections[SectionIndex].BoneMap.Num() * 3* 16, BoneMatrixBuffer);
+			CreateTBuffer<true, false, true, false>(StaticLodModel.Sections[SectionIndex].BoneMap.Num() * 3 * 16, BoneMatrixBuffer);
 			TComPtr<ID3D11ShaderResourceView> SRV;
-			CreateSRVForTBuffer(DXGI_FORMAT_R32G32B32A32_FLOAT,StaticLodModel.Sections[SectionIndex].BoneMap.Num() * 3, BoneMatrixBuffer,SRV);
+			CreateSRVForTBuffer(DXGI_FORMAT_R32G32B32A32_FLOAT, StaticLodModel.Sections[SectionIndex].BoneMap.Num() * 3, BoneMatrixBuffer, SRV);
 			BoneMatrix.Emplace(MoveTemp(BoneMatrixBuffer));
 			BoneMatrixBufferSRV.Emplace(MoveTemp(SRV));
 		}
@@ -336,7 +341,7 @@ void FSkeletalMeshRenderHelper::SetPos(FCompactPose& CompacePose)
 	const TArray<FMeshBoneInfo> &MeshBoneInfos = SkeletalMesh->RefSkeleton.GetRefBoneInfo();
 	for (int32 BoneID = 0; BoneID < SkeletalMesh->RefSkeleton.GetRawBoneNum(); ++BoneID)
 	{
-		if (BoneID==0)
+		if (BoneID == 0)
 		{
 			check(MeshBoneInfos[BoneID].ParentIndex == INDEX_NONE);
 			CurrentBonePose.Add(CurrentPose[BoneID].ToMatrixWithScale());
@@ -409,7 +414,7 @@ void FSkeletalMeshRenderHelper::SetPos(FCompactPose& CompacePose)
 				TComPtr<ID3D11DeviceContext>& DeviceContext = YYUTDXManager::GetInstance().GetD3DDC();
 				D3D11_MAPPED_SUBRESOURCE MapResource;
 				HRESULT hr = DeviceContext->Map(CurrentBoneBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MapResource);
-				if(SUCCEEDED(hr))
+				if (SUCCEEDED(hr))
 				{
 					memcpy(MapResource.pData, &RefToLocalMatrixRows[0], sizeof(YSkinMatrix3x4)* RefToLocalMatrixRows.Num());
 				}
@@ -421,17 +426,17 @@ void FSkeletalMeshRenderHelper::SetPos(FCompactPose& CompacePose)
 
 void FSkeletalMeshRenderHelper::Render(TSharedRef<YRenderInfo> RenderInfo)
 {
-	
+
 	FSkeletalMeshResource* SkeletalMeshResource = SkeletalMesh->GetResourceForRendering();
 	for (int32 i = 0; i < SkeletalMeshResource->LODModels.Num(); ++i)
 	{
 		FStaticLODModel& StaticLodModel = SkeletalMeshResource->LODModels[i];
-		for(int32 MeshSectionID = 0;MeshSectionID<StaticLodModel.Sections.Num();++MeshSectionID)
+		for (int32 MeshSectionID = 0; MeshSectionID < StaticLodModel.Sections.Num(); ++MeshSectionID)
 		{
 			FSkelMeshSection& MeshSection = StaticLodModel.Sections[MeshSectionID];
 			if (MeshSection.NumTriangles == 0)
 				return;
-			
+
 			TComPtr<ID3D11DeviceContext>& dc = YYUTDXManager::GetInstance().GetD3DDC();
 			float BlendColor[4] = { 1.0f,1.0f,1.0f,1.0f };
 			dc->OMSetBlendState(m_bs, BlendColor, 0xffffffff);
@@ -460,27 +465,27 @@ void FSkeletalMeshRenderHelper::Render(TSharedRef<YRenderInfo> RenderInfo)
 				VSShaderGPU->Update();
 				dc->IASetVertexBuffers(0, 1, &(VBGPU), &strid, &offset);
 			}
-			
+
 			PSShader->BindResource(TEXT("g_lightDir"), RenderInfo->SceneInfo.MainLightDir.GetSafeNormal());
 			PSShader->Update();
-		/*	if(IndexData.DataTypeSize == sizeof(uint16))
-			{ 
-				dc->IASetIndexBuffer(IB, DXGI_FORMAT_R16_UINT, 0);
-			}
-			else if (IndexData.DataTypeSize == sizeof(uint32))*/
+			/*	if(IndexData.DataTypeSize == sizeof(uint16))
+				{
+					dc->IASetIndexBuffer(IB, DXGI_FORMAT_R16_UINT, 0);
+				}
+				else if (IndexData.DataTypeSize == sizeof(uint32))*/
 			{
 				dc->IASetIndexBuffer(IB, DXGI_FORMAT_R32_UINT, 0);
 			}
 			dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-			
-			dc->DrawIndexed(MeshSection.NumTriangles*3, MeshSection.BaseIndex, 0);
+
+			dc->DrawIndexed(MeshSection.NumTriangles * 3, MeshSection.BaseIndex, 0);
 		}
 	}
 }
 
 FStaticMeshRenderHelper::FStaticMeshRenderHelper(UStaticMesh* InMesh)
-:StaticMesh(InMesh)
-,b32bitIndex(false)
+	:StaticMesh(InMesh)
+	, b32bitIndex(false)
 {
 
 }
@@ -519,17 +524,17 @@ void FStaticMeshRenderHelper::Init()
 
 	TUniquePtr<FStaticMeshRenderData>& MeshRenderData = StaticMesh->RenderData;
 	check(MeshRenderData->LODResources.Num() >= 1);
-	FStaticMeshLODResources& Meshes=MeshRenderData->LODResources[0];
+	FStaticMeshLODResources& Meshes = MeshRenderData->LODResources[0];
 	const uint8* pVertexBuffer = Meshes.VertexBuffer.GetRawVertexData();
 	const uint32 nVertexBufferElementCount = Meshes.VertexBuffer.GetNumVertices();
-	const uint32 nVertexBufferStride= Meshes.VertexBuffer.GetStride();
-	const uint32 nVertexBufferSize = nVertexBufferElementCount* nVertexBufferStride;
+	const uint32 nVertexBufferStride = Meshes.VertexBuffer.GetStride();
+	const uint32 nVertexBufferSize = nVertexBufferElementCount * nVertexBufferStride;
 	CreateVertexBufferStatic(nVertexBufferSize, pVertexBuffer, VBTangentUV);
 
 	const uint8* pVertexBufferPosition = Meshes.PositionVertexBuffer.GetPositionVertexBuffer();
 	const uint32 nVertexBufferPositionCount = Meshes.PositionVertexBuffer.GetNumVertices();
 	const uint32 nVertexBufferPositionStride = Meshes.PositionVertexBuffer.GetStride();
-	const uint32 nVertexBufferPositionSize = nVertexBufferPositionCount* nVertexBufferPositionStride;
+	const uint32 nVertexBufferPositionSize = nVertexBufferPositionCount * nVertexBufferPositionStride;
 	CreateVertexBufferStatic(nVertexBufferPositionSize, pVertexBufferPosition, VBPosition);
 
 	FRawStaticIndexBuffer & IndexBuffer = Meshes.IndexBuffer;
@@ -577,7 +582,7 @@ void FStaticMeshRenderHelper::Render(TSharedRef<YRenderInfo> RenderInfo)
 		dc->IASetIndexBuffer(IB, DXGI_FORMAT_R16_UINT, 0);
 	}
 	dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	for (int i = 0; i< Meshes.Sections.Num(); ++i)
+	for (int i = 0; i < Meshes.Sections.Num(); ++i)
 	{
 		uint32 nIndexStart = Meshes.Sections[i].FirstIndex;
 		uint32 nTriangleCount = Meshes.Sections[i].NumTriangles;

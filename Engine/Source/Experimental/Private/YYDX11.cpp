@@ -15,6 +15,7 @@
 #include "SObjectManager.h"
 #include "SMaterial.h"
 #include "SStaticMesh.h"
+#include "SWorld.h"
 using std::cout;
 using std::endl;
 
@@ -51,12 +52,12 @@ void DX11Demo::Initial()
 	//YYUTTimer::GetInstance().Start();
 	XMFLOAT3 eye(40.0f, 40.0f, -40.0f);
 	XMFLOAT3 lookat(0.0f, 0.0f, 0.0f);
-	FVector eyeF(40.0f, 40.0f, -40.0f);
+	FVector eyeF(50.0f, 50.0f, -100.0f);
 	FVector lookatF(0.0f, 0.0f, 0.0f);
 	m_pCamera = new FirstPersionCamera();
 	m_pLightCamera = new FirstPersionCamera();
 	m_pCamera->SetViewParam(eyeF, lookatF);
-	m_pCamera->SetProjParam(PI / 4, m_width / (float)m_height, 1.0f, 1000.0f);
+	m_pCamera->SetProjParam(PI / 3, m_width / (float)m_height, 1.0f, 1000.0f);
 	FVector lightEyeF(-320, 300, -220.3f);
 	FVector ligntLookatF(0.0f, 0.0f, 0.0f);
 	m_pLightCamera->SetViewParam(lightEyeF, ligntLookatF);
@@ -178,7 +179,6 @@ void DX11Demo::Initial()
 
 			//}
 		//#else
-	MainScene = TRefCountPtr<YScene>(new YScene);
 	TUniquePtr<YFbxConverter>  FbxConverter = MakeUnique<YFbxConverter>();
 	//FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbx/dummywithlod.FBX"));
 	//if (FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbx/multiUVs/box2uv.FBX")))
@@ -229,13 +229,13 @@ void DX11Demo::Initial()
 		MainScene->RegisterToScene(ImportedStaticMesh);
 		ImportedStaticMesh->DebugTangent();
 	}*/
-	FString PackagePath = TEXT("Content/mirror_nija_no_seam_pivot/mirror_nija_no_seam_pivot_static_mesh.json");
-	TRefCountPtr<SStaticMesh> StaticMesh = SObjectManager::ConstructUnifyFromPackage<SStaticMesh>(PackagePath);
-	if (StaticMesh)
-	{
-		StaticMesh->InitRenderResource();
-		MainScene->RegisterToScene(StaticMesh);
-	}
+	//FString PackagePath = TEXT("Content/mirror_nija_no_seam_pivot/mirror_nija_no_seam_pivot_static_mesh.json");
+	//TRefCountPtr<SStaticMesh> StaticMesh = SObjectManager::ConstructUnifyFromPackage<SStaticMesh>(PackagePath);
+	//if (StaticMesh)
+	//{
+	//	StaticMesh->InitRenderResource();
+	//	MainScene->RegisterToScene(StaticMesh);
+	//}
 
 #endif
 	//UStaticMesh* pSerialMesh = new UStaticMesh();
@@ -245,20 +245,186 @@ void DX11Demo::Initial()
 	//}
 	//m_pSceneRender->RegisterStaticMesh(pSerialMesh);
 //#endif
+
+	MainScene = TRefCountPtr<YScene>(new YScene);
+	FString WorldPackagePath = TEXT("Content/WorldMap.json");
+	World = SObjectManager::ConstructUnifyFromPackage<SWorld>(WorldPackagePath);
+	if (!World->PostLoadOp())
+	{
+		UE_LOG(YYDX11, Error, TEXT("World Post load error!!!"));
+	}
+	else
+	{
+		UE_LOG(YYDX11, Log, TEXT("World laod success"));
+	}
+	World->CurrentScene = MainScene;
+
 	m_pSceneRender->AllocResource();
 	MainRender = MakeUnique<YForwardRender>();
 	MainRender->InitRenders();
-	TRefCountPtr<SActor> pActor = SObjectManager::ConstructInstance<SActor>(3);
-	//TRefCountPtr<SMaterial> TestMaterial = SObjectManager::ConstructInstance<SMaterial>();
-	//TestMaterial->LoadFromPackage(TEXT("Content/mirror_nija_no_seam_pivot/mirror_nija_no_seam_pivot.json"));
-
 }
 
 
 void DX11Demo::Exit()
 {
+	World = nullptr;
 	MainScene->Clear();
 	GSObjectManager.Destroy();
+}
+
+
+void DX11Demo::GameMain()
+{
+	//YYUTDXManager::GetInstance().Tick(0);
+}
+
+
+
+int DX11Demo::Run()
+{
+	MSG msg;
+	double elapseTime = 0.0f;
+	while (1)
+	{
+		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+			if (WM_QUIT == msg.message)
+				return static_cast<int>(msg.wParam);
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		//elapseTime = FPlatformTime::ToSeconds64(FPlatformTime::Cycles64() - m_LastTickCycles);
+		elapseTime = FPlatformTime::Seconds() - m_LastFrameTime;
+		m_LastFrameTime = FPlatformTime::Seconds();
+		Update(elapseTime);
+		Render(elapseTime);
+		PostRender();
+		if (FPlatformTime::Seconds() - m_LastSecond > 1.0)
+		{
+			m_FPS = ((double)m_LastSecondFrames) / (FPlatformTime::Seconds() - m_LastSecond);
+			m_LastSecond = FPlatformTime::Seconds();
+			m_LastSecondFrames = 0;
+		}
+		else
+		{
+			m_LastSecondFrames++;
+		}
+	}
+	return static_cast<int>(msg.wParam);
+}
+
+void DX11Demo::OnResize()
+{
+	//YYUTDXManager::GetInstance().ReSize(m_width, m_height);
+}
+
+void DX11Demo::OnMinimize(void)
+{
+	//YYUTDXManager::GetInstance().PauseAll(true);
+}
+
+float DX11Demo::GetFPS() const
+{
+	return m_FPS;
+}
+
+DX11Demo::DX11Demo() :
+	m_bResize(false),
+	m_width(0),
+	m_height(0),
+	m_bMouseLDown(false),
+	m_bMouseMDown(false),
+	m_bMouseRDown(false),
+	m_fYawOrigin(0.0f),
+	m_fPitchOrigin(0.0f),
+	m_bSwitchButtonDown(false),
+	m_pCurrentCamera(nullptr),
+	m_pCamera(nullptr),
+	m_pLightCamera(nullptr),
+	m_bInit(false),
+	m_bShowColorLayer(false),
+	m_FPS(0.0f),
+	m_LastSecondFrames(0)
+{
+	//m_vVelocity = XMFLOAT3(0, 0, 0);
+}
+
+DX11Demo::~DX11Demo()
+{
+
+}
+
+void DX11Demo::Update(float ElapseTime)
+{
+	//m_Camera.AddPitchYaw(m_vMouseDelta.y*ElapseTime,m_vMouseDelta.x*ElapseTime);
+	if (!m_bInit)
+		return;
+	//std::cout << "Update::Velocity: " << m_vVelocity.x << "  " << m_vVelocity.z << std::endl;
+	m_pCurrentCamera->SetVelocity(m_vVelocityF);
+	//cout << " x: " << vEyePos.x << " y: " << vEyePos.y << " z: " << vEyePos.z << endl;
+	if (m_bMouseLDown && !m_bMouseRDown)
+	{
+		float fpitch = m_fPitchOrigin + m_vMouseDelta.y*0.005f;
+		float fyaw = m_fYawOrigin + m_vMouseDelta.x*0.005f;
+		m_pCurrentCamera->SetPitch(fpitch);
+		m_pCurrentCamera->SetYaw(fyaw);
+		m_pCurrentCamera->FrameMove(ElapseTime);
+	}
+	else if (m_bMouseRDown && !m_bMouseLDown && m_pCurrentCamera != m_pLightCamera)
+	{
+		float fpitch = m_fPitchOrigin + m_vMouseDelta.y*0.005f;
+		float fyaw = m_fYawOrigin + m_vMouseDelta.x*0.005f;
+		m_pLightCamera->SetPitch(fpitch);
+		m_pLightCamera->SetYaw(fyaw);
+		m_pLightCamera->SetVelocity(FVector(0.0f, 0.0f, 0.0f));
+		m_pLightCamera->FrameMove(ElapseTime);
+	}
+	else
+		m_pCurrentCamera->FrameMove(ElapseTime);
+	//m_pShadow->Update(ElapseTime);
+
+	World->UpdateToScene();
+}
+
+void DX11Demo::Render(float ElapseTime)
+{
+	TSharedRef<YRenderInfo> pRenderInfo = MakeShared<YRenderInfo>();
+	pRenderInfo->RenderCameraInfo.View = m_pCamera->GetView();
+	pRenderInfo->RenderCameraInfo.Projection = m_pCamera->GetProject();
+	pRenderInfo->RenderCameraInfo.ViewProjection = m_pCamera->GetViewProject();
+	pRenderInfo->RenderCameraInfo.ViewProjectionInv = m_pCamera->GetViewProjInv();
+	pRenderInfo->SceneInfo.MainLightDir = m_pLightCamera->GetDir();
+	pRenderInfo->TickTime = ElapseTime;
+	pRenderInfo->FPS = GetFPS();
+
+
+	MainRender->RenderScene(MainScene, pRenderInfo);
+	m_pSceneRender->Render(pRenderInfo);
+
+	m_pSceneRender->DrawText(FString::Printf(TEXT("FPS: %f"), GetFPS()));
+	FVector CameraPos = m_pCurrentCamera->GetCameraPos();
+	m_pSceneRender->DrawText(FString::Printf(TEXT("Camera Pos: %f %f %f"), CameraPos.X, CameraPos.Y, CameraPos.Z));
+
+	YYUTDXManager::GetInstance().Present();
+}
+
+void DX11Demo::PostRender()
+{
+	MainScene->Clear();
+	GSObjectManager.FrameDestroy();
+}
+
+void DX11Demo::SwichCamera()
+{
+	if (m_pCurrentCamera == m_pCamera)
+	{
+		m_pCurrentCamera = m_pLightCamera;
+	}
+	else
+	{
+		m_pCurrentCamera = m_pCamera;
+	}
+	//m_pShadow->SwitchCamera();
 }
 
 LRESULT DX11Demo::MyProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) throw()
@@ -467,154 +633,5 @@ LRESULT DX11Demo::MyProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
-void DX11Demo::GameMain()
-{
-	//YYUTDXManager::GetInstance().Tick(0);
-}
-
-
-
-int DX11Demo::Run()
-{
-	MSG msg;
-	double elapseTime = 0.0f;
-	while (1)
-	{
-		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			if (WM_QUIT == msg.message)
-				return static_cast<int>(msg.wParam);
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-		//elapseTime = FPlatformTime::ToSeconds64(FPlatformTime::Cycles64() - m_LastTickCycles);
-		elapseTime = FPlatformTime::Seconds() - m_LastFrameTime;
-		m_LastFrameTime = FPlatformTime::Seconds();
-		Update(elapseTime);
-		Render(elapseTime);
-		PosetRender();
-		if (FPlatformTime::Seconds() - m_LastSecond > 1.0)
-		{
-			m_FPS = ((double)m_LastSecondFrames) / (FPlatformTime::Seconds() - m_LastSecond);
-			m_LastSecond = FPlatformTime::Seconds();
-			m_LastSecondFrames = 0;
-		}
-		else
-		{
-			m_LastSecondFrames++;
-		}
-	}
-	return static_cast<int>(msg.wParam);
-}
-
-void DX11Demo::OnResize()
-{
-	//YYUTDXManager::GetInstance().ReSize(m_width, m_height);
-}
-
-void DX11Demo::OnMinimize(void)
-{
-	//YYUTDXManager::GetInstance().PauseAll(true);
-}
-
-float DX11Demo::GetFPS() const
-{
-	return m_FPS;
-}
-
-DX11Demo::DX11Demo() :
-	m_bResize(false),
-	m_width(0),
-	m_height(0),
-	m_bMouseLDown(false),
-	m_bMouseMDown(false),
-	m_bMouseRDown(false),
-	m_fYawOrigin(0.0f),
-	m_fPitchOrigin(0.0f),
-	m_bSwitchButtonDown(false),
-	m_pCurrentCamera(nullptr),
-	m_pCamera(nullptr),
-	m_pLightCamera(nullptr),
-	m_bInit(false),
-	m_bShowColorLayer(false),
-	m_FPS(0.0f),
-	m_LastSecondFrames(0)
-{
-	//m_vVelocity = XMFLOAT3(0, 0, 0);
-}
-
-DX11Demo::~DX11Demo()
-{
-
-}
-
-void DX11Demo::Update(float ElapseTime)
-{
-	//m_Camera.AddPitchYaw(m_vMouseDelta.y*ElapseTime,m_vMouseDelta.x*ElapseTime);
-	if (!m_bInit)
-		return;
-	//std::cout << "Update::Velocity: " << m_vVelocity.x << "  " << m_vVelocity.z << std::endl;
-	m_pCurrentCamera->SetVelocity(m_vVelocityF);
-	//cout << " x: " << vEyePos.x << " y: " << vEyePos.y << " z: " << vEyePos.z << endl;
-	if (m_bMouseLDown && !m_bMouseRDown)
-	{
-		float fpitch = m_fPitchOrigin + m_vMouseDelta.y*0.005f;
-		float fyaw = m_fYawOrigin + m_vMouseDelta.x*0.005f;
-		m_pCurrentCamera->SetPitch(fpitch);
-		m_pCurrentCamera->SetYaw(fyaw);
-		m_pCurrentCamera->FrameMove(ElapseTime);
-	}
-	else if (m_bMouseRDown && !m_bMouseLDown && m_pCurrentCamera != m_pLightCamera)
-	{
-		float fpitch = m_fPitchOrigin + m_vMouseDelta.y*0.005f;
-		float fyaw = m_fYawOrigin + m_vMouseDelta.x*0.005f;
-		m_pLightCamera->SetPitch(fpitch);
-		m_pLightCamera->SetYaw(fyaw);
-		m_pLightCamera->SetVelocity(FVector(0.0f, 0.0f, 0.0f));
-		m_pLightCamera->FrameMove(ElapseTime);
-	}
-	else
-		m_pCurrentCamera->FrameMove(ElapseTime);
-	//m_pShadow->Update(ElapseTime);
-
-	for (TRefCountPtr<SStaticMesh>& StaticMesh : MainScene->StaticMeshArray)
-	{
-		//StaticMesh->DebugTangent();
-	}
-}
-
-void DX11Demo::Render(float ElapseTime)
-{
-	TSharedRef<YRenderInfo> pRenderInfo = MakeShared<YRenderInfo>();
-	pRenderInfo->RenderCameraInfo.View = m_pCamera->GetView();
-	pRenderInfo->RenderCameraInfo.Projection = m_pCamera->GetProject();
-	pRenderInfo->RenderCameraInfo.ViewProjection = m_pCamera->GetViewProject();
-	pRenderInfo->RenderCameraInfo.ViewProjectionInv = m_pCamera->GetViewProjInv();
-	pRenderInfo->SceneInfo.MainLightDir = m_pLightCamera->GetDir();
-	pRenderInfo->TickTime = ElapseTime;
-	pRenderInfo->FPS = GetFPS();
-	YYUTDXManager::GetInstance().AddRenderEvent([this, pRenderInfo]() {MainRender->RenderScene(MainScene, pRenderInfo); });
-	YYUTDXManager::GetInstance().AddRenderEvent([this, pRenderInfo]() {m_pSceneRender->Render(pRenderInfo); });
-	YYUTDXManager::GetInstance().Render();
-}
-
-void DX11Demo::PosetRender()
-{
-
-	GSObjectManager.FrameDestroy();
-}
-
-void DX11Demo::SwichCamera()
-{
-	if (m_pCurrentCamera == m_pCamera)
-	{
-		m_pCurrentCamera = m_pLightCamera;
-	}
-	else
-	{
-		m_pCurrentCamera = m_pCamera;
-	}
-	//m_pShadow->SwitchCamera();
-}
 
 #undef LOCTEXT_NAMESPACE
