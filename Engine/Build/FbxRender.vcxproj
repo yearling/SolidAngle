@@ -203,6 +203,7 @@
     <ClCompile Include="..\Source\Experimental\Private\YMeshUtilities.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YPackedNormal.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YRenderResource.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\YRHIResource.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YScene.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\SStaticMeshComponent.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YStaticMeshRenderData.cpp" />
@@ -224,7 +225,6 @@
     <ClInclude Include="..\Source\Experimental\Private\FbxUtility.h" />
     <ClInclude Include="..\Source\Experimental\Private\NvTriStripObjects.h" />
     <ClInclude Include="..\Source\Experimental\Private\RenderMesh.h" />
-    <ClInclude Include="..\Source\Experimental\Private\Skeleton.h" />
     <ClInclude Include="..\Source\Experimental\Private\VertexCache.h" />
     <ClInclude Include="..\Source\Experimental\Private\VertexDef.h" />
     <ClInclude Include="..\Source\Experimental\Private\YYDX11.h" />
@@ -253,6 +253,7 @@
     <ClInclude Include="..\Source\Experimental\Public\SWorld.h" />
     <ClInclude Include="..\Source\Experimental\Public\YMeshBatch.h" />
     <ClInclude Include="..\Source\Experimental\Public\SObject.h" />
+    <ClInclude Include="..\Source\Experimental\Public\YPixelFormat.h" />
     <ClInclude Include="..\Source\Experimental\Public\YRenderInterface.h" />
     <ClInclude Include="..\Source\Experimental\Public\SkelImport.h" />
     <ClInclude Include="..\Source\Experimental\Public\SkinWeightVertexBuffer.h" />
@@ -272,6 +273,7 @@
     <ClInclude Include="..\Source\Experimental\Public\YRenderResource.h" />
     <ClInclude Include="..\Source\Experimental\Public\YRHI.h" />
     <ClInclude Include="..\Source\Experimental\Public\YRHIDefinitions.h" />
+    <ClInclude Include="..\Source\Experimental\Public\YRHIResource.h" />
     <ClInclude Include="..\Source\Experimental\Public\YScene.h" />
     <ClInclude Include="..\Source\Experimental\Public\SStaticMesh.h" />
     <ClInclude Include="..\Source\Experimental\Public\SStaticMeshComponent.h" />

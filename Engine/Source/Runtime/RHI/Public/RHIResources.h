@@ -82,7 +82,8 @@ public:
 
 	FORCEINLINE static bool PlatformNeedsExtraDeletionLatency()
 	{
-		return GRHINeedsExtraDeletionLatency && GIsRHIInitialized;
+		//return GRHINeedsExtraDeletionLatency && GIsRHIInitialized;
+		return true;
 	}
 
 	static bool Bypass();
@@ -100,7 +101,8 @@ private:
 		return false;
 #else
 		// Defer if GRHINeedsExtraDeletionLatency or we are doing threaded rendering (unless otherwise requested).
-		return !bDoNotDeferDelete && (GRHINeedsExtraDeletionLatency || !Bypass());
+		//return !bDoNotDeferDelete && (GRHINeedsExtraDeletionLatency || !Bypass());
+		return true;
 #endif
 	}
 
@@ -441,6 +443,7 @@ public:
 		// Override this in derived classes to expose access to the native texture resource
 		return nullptr;
 	}
+
 
 	/** @return The number of mip-maps in the texture. */
 	uint32 GetNumMips() const { return NumMips; }

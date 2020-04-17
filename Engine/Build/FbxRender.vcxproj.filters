@@ -42,113 +42,68 @@
     <ClCompile Include="..\Source\Experimental\Private\game_main.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\RenderMesh.cpp">
-      <Filter>Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\FbxLibs.cpp">
-      <Filter>Fbx</Filter>
+      <Filter>LegacyConverter</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\YYDX11.cpp">
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\FbxUtilsImport.cpp">
-      <Filter>Fbx</Filter>
+      <Filter>LegacyConverter</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\FbxMainImport.cpp">
-      <Filter>Fbx</Filter>
+      <Filter>LegacyConverter</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\FbxSkeletalMeshImport.cpp">
-      <Filter>Fbx</Filter>
+      <Filter>LegacyConverter</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\SkeletalMeshImport.cpp">
-      <Filter>Fbx</Filter>
+      <Filter>LegacyConverter</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\FbxStaticMeshImport.cpp">
-      <Filter>Fbx</Filter>
+      <Filter>LegacyConverter</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\FbxMaterialImport.cpp">
-      <Filter>Fbx</Filter>
+      <Filter>LegacyConverter</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\Texture.cpp">
-      <Filter>Fbx</Filter>
+      <Filter>LegacyConverter</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\SkeletalMeshEdit.cpp">
-      <Filter>Fbx</Filter>
+      <Filter>LegacyConverter</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\FbxStaticMeshImportData.cpp">
-      <Filter>Fbx</Filter>
+      <Filter>LegacyConverter</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\StaticMeshEdit.cpp">
-      <Filter>Fbx</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\YRHI.cpp">
-      <Filter>yconverter\RHI</Filter>
+      <Filter>LegacyConverter</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\Allocator2D.cpp">
-      <Filter>yconverter\Tangent</Filter>
+      <Filter>Utilities\Tangent</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\LayoutUV.cpp">
-      <Filter>yconverter\Tangent</Filter>
+      <Filter>Utilities\Tangent</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\mikktspace.c">
-      <Filter>yconverter\Tangent</Filter>
+      <Filter>Utilities\Tangent</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\nvtess.cpp">
-      <Filter>yconverter\Tangent</Filter>
+      <Filter>Utilities\Tangent</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\NvTriStrip.cpp">
-      <Filter>yconverter\Tangent</Filter>
+      <Filter>Utilities\Tangent</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\NvTriStripObjects.cpp">
-      <Filter>yconverter\Tangent</Filter>
+      <Filter>Utilities\Tangent</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\forsythtriangleorderoptimizer.cpp">
-      <Filter>yconverter\Tangent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\YPackedNormal.cpp">
-      <Filter>yconverter\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\YRenderResource.cpp">
-      <Filter>yconverter\Render</Filter>
+      <Filter>Utilities\Tangent</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\YMeshUtilitiesWrap.cpp">
-      <Filter>yconverter\Tangent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\FbxConvertUtilites.cpp">
-      <Filter>yconverter\Converter</Filter>
+      <Filter>Utilities\Tangent</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\YComputeTangent.cpp">
-      <Filter>yconverter\Tangent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\YFbxConverter.cpp">
-      <Filter>yconverter\Converter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\YStaticMeshRenderData.cpp">
-      <Filter>yconverter\StaticMesh</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\YStaticMeshResource.cpp">
-      <Filter>yconverter\StaticMesh</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\YMeshUtilities.cpp">
-      <Filter>yconverter\Converter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\YRawMesh.cpp">
-      <Filter>yconverter\StaticMesh</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\YTexture.cpp">
-      <Filter>yconverter\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\ForwardRender.cpp">
-      <Filter>yconverter\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\YRenderInterface.cpp">
-      <Filter>yconverter\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\YScene.cpp">
-      <Filter>yconverter\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\YMeshBatch.cpp">
-      <Filter>yconverter\Render</Filter>
+      <Filter>Utilities\Tangent</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\SObject.cpp">
       <Filter>Engine</Filter>
@@ -165,23 +120,71 @@
     <ClCompile Include="..\Source\Experimental\Private\SStaticMeshComponent.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\SStaticMesh.cpp">
-      <Filter>yconverter\StaticMesh</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\SMaterial.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\STexture.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Experimental\Private\YMaterialInterface.cpp">
-      <Filter>yconverter\Render</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\SWorld.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\JsonTypeHelper.cpp">
       <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\RenderMesh.cpp">
+      <Filter>LegacyConverter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\ForwardRender.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YMaterialInterface.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YMeshBatch.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YPackedNormal.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YRenderInterface.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YRenderResource.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YScene.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YTexture.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YRHI.cpp">
+      <Filter>RHI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\SStaticMesh.cpp">
+      <Filter>StaticMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YRawMesh.cpp">
+      <Filter>StaticMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YStaticMeshRenderData.cpp">
+      <Filter>StaticMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YStaticMeshResource.cpp">
+      <Filter>StaticMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\FbxConvertUtilites.cpp">
+      <Filter>Converter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YFbxConverter.cpp">
+      <Filter>Converter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YMeshUtilities.cpp">
+      <Filter>Converter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YRHIResource.cpp">
+      <Filter>RHI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -210,140 +213,76 @@
       <Filter>YYUT</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Private\FbxUtility.h">
-      <Filter>Fbx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Private\RenderMesh.h">
-      <Filter>Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Private\Skeleton.h">
-      <Filter>Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Private\VertexDef.h">
-      <Filter>Mesh</Filter>
+      <Filter>LegacyConverter</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\RenderInfo.h">
       <Filter>Shader</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\FbxLibs.h">
-      <Filter>Fbx</Filter>
+      <Filter>LegacyConverter</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\StaticMeshImportData.h">
-      <Filter>Fbx</Filter>
+      <Filter>LegacyConverter</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\FbxMeshImportData.h">
-      <Filter>Fbx</Filter>
+      <Filter>LegacyConverter</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Private\YYDX11.h">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\FbxImporter.h">
-      <Filter>Fbx</Filter>
+      <Filter>LegacyConverter</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\FbxSkeletalMeshImportData.h">
-      <Filter>Fbx</Filter>
+      <Filter>LegacyConverter</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\FbxAnimSequenceImportData.h">
-      <Filter>Fbx</Filter>
+      <Filter>LegacyConverter</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\SkelImport.h">
-      <Filter>Fbx</Filter>
+      <Filter>LegacyConverter</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\Texture.h">
-      <Filter>Fbx</Filter>
+      <Filter>LegacyConverter</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\GPUSkinPublicDefs.h" />
     <ClInclude Include="..\Source\Experimental\Public\SkinWeightVertexBuffer.h">
-      <Filter>Fbx</Filter>
+      <Filter>LegacyConverter</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\StaticMeshVertexData.h">
-      <Filter>Fbx</Filter>
+      <Filter>LegacyConverter</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\StaticMeshResources.h">
-      <Filter>Fbx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\YRHI.h">
-      <Filter>yconverter\RHI</Filter>
+      <Filter>LegacyConverter</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\Allocator2D.h">
-      <Filter>yconverter\Tangent</Filter>
+      <Filter>Utilities\Tangent</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\DisjointSet.h">
-      <Filter>yconverter\Tangent</Filter>
+      <Filter>Utilities\Tangent</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\LayoutUV.h">
-      <Filter>yconverter\Tangent</Filter>
+      <Filter>Utilities\Tangent</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\mikktspace.h">
-      <Filter>yconverter\Tangent</Filter>
+      <Filter>Utilities\Tangent</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\nvtess.h">
-      <Filter>yconverter\Tangent</Filter>
+      <Filter>Utilities\Tangent</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\NvTriStrip.h">
-      <Filter>yconverter\Tangent</Filter>
+      <Filter>Utilities\Tangent</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Private\NvTriStripObjects.h">
-      <Filter>yconverter\Tangent</Filter>
+      <Filter>Utilities\Tangent</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Private\VertexCache.h">
-      <Filter>yconverter\Tangent</Filter>
+      <Filter>Utilities\Tangent</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\forsythtriangleorderoptimizer.h">
-      <Filter>yconverter\Tangent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\YRHIDefinitions.h">
-      <Filter>yconverter\RHI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\YRenderResource.h">
-      <Filter>yconverter\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\YPackedNormal.h">
-      <Filter>yconverter\Render</Filter>
+      <Filter>Utilities\Tangent</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\YMeshUtilitiesWrap.h">
-      <Filter>yconverter\Tangent</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\FbxConvertUtilites.h">
-      <Filter>yconverter\Converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\YFbxConverter.h">
-      <Filter>yconverter\Converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\YFbxImportOptions.h">
-      <Filter>yconverter\Converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\YStaticMeshRenderData.h">
-      <Filter>yconverter\StaticMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\YStaticMeshResource.h">
-      <Filter>yconverter\StaticMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\YMeshBuild.h">
-      <Filter>yconverter\Converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\YMeshUtilities.h">
-      <Filter>yconverter\Converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\YMeshCommon.h">
-      <Filter>yconverter\StaticMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\YRawMesh.h">
-      <Filter>yconverter\StaticMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\YTexture.h">
-      <Filter>yconverter\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\ForwardRender.h">
-      <Filter>yconverter\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\YRenderInterface.h">
-      <Filter>yconverter\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\YScene.h">
-      <Filter>yconverter\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\YMeshBatch.h">
-      <Filter>yconverter\Render</Filter>
+      <Filter>Utilities\Tangent</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\SObject.h">
       <Filter>Engine</Filter>
@@ -360,23 +299,92 @@
     <ClInclude Include="..\Source\Experimental\Public\SStaticMeshComponent.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\SStaticMesh.h">
-      <Filter>yconverter\StaticMesh</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\SMaterial.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\STexture.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Experimental\Public\YMaterialInterface.h">
-      <Filter>yconverter\Render</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\SWorld.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\JsonTypeHelper.h">
       <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Private\RenderMesh.h">
+      <Filter>LegacyConverter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Private\VertexDef.h">
+      <Filter>LegacyConverter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\ForwardRender.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YMaterialInterface.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YMeshBatch.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YPackedNormal.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YRenderInterface.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YRenderResource.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YScene.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YTexture.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YRHI.h">
+      <Filter>RHI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YRHIDefinitions.h">
+      <Filter>RHI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\SStaticMesh.h">
+      <Filter>StaticMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YMeshCommon.h">
+      <Filter>StaticMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YRawMesh.h">
+      <Filter>StaticMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YStaticMeshRenderData.h">
+      <Filter>StaticMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YStaticMeshResource.h">
+      <Filter>StaticMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\FbxConvertUtilites.h">
+      <Filter>Converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YFbxConverter.h">
+      <Filter>Converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YFbxImportOptions.h">
+      <Filter>Converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YMeshBuild.h">
+      <Filter>Converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YMeshUtilities.h">
+      <Filter>Converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\GPUSkinPublicDefs.h">
+      <Filter>LegacyConverter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YPixelFormat.h">
+      <Filter>RHI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YRHIResource.h">
+      <Filter>RHI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -389,38 +397,29 @@
     <Filter Include="Game">
       <UniqueIdentifier>{16073f6e-04f6-405f-8e53-af68a25a2105}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Fbx">
-      <UniqueIdentifier>{57209171-c6b6-4ef4-a1b6-bdd6accbeb32}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Mesh">
-      <UniqueIdentifier>{3f60dc12-1262-49bb-97b3-e3f5add1dff6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="conveter">
-      <UniqueIdentifier>{66280312-bfb7-4794-aa01-f11d3d4df7da}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="yconverter">
-      <UniqueIdentifier>{b0e9f654-fe05-415e-b6b7-8ad09db59088}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="yconverter\RHI">
-      <UniqueIdentifier>{ce7b08ed-3677-4e1a-b00a-741f01e03a79}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="yconverter\Render">
-      <UniqueIdentifier>{3c3188be-0764-493b-bfe4-c2591d066d45}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="yconverter\Tangent">
-      <UniqueIdentifier>{6fe641e5-044d-40de-a465-cde3a51a917f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="yconverter\Converter">
-      <UniqueIdentifier>{7496bbff-6d3c-4a41-af31-206a5267d6a0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="yconverter\StaticMesh">
-      <UniqueIdentifier>{df5b068e-199c-42f0-b2bc-cf2890e473a4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine">
       <UniqueIdentifier>{c459708a-1b98-4f13-b72c-19816ee28a69}</UniqueIdentifier>
     </Filter>
     <Filter Include="Utilities">
       <UniqueIdentifier>{b3ea5e50-0d1e-4f87-af86-0ed68f56cc0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LegacyConverter">
+      <UniqueIdentifier>{57209171-c6b6-4ef4-a1b6-bdd6accbeb32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render">
+      <UniqueIdentifier>{e912e9a1-99fb-4f2f-a46a-577bc0a487e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RHI">
+      <UniqueIdentifier>{d5695d3f-7c23-4ef2-9c60-cad23c7133c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StaticMesh">
+      <UniqueIdentifier>{853f0e12-fb88-47da-8cdb-f8cf426e6d0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\Tangent">
+      <UniqueIdentifier>{6fe641e5-044d-40de-a465-cde3a51a917f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Converter">
+      <UniqueIdentifier>{b0e9f654-fe05-415e-b6b7-8ad09db59088}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

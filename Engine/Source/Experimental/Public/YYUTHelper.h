@@ -4,6 +4,7 @@
 #include "YYUTDXManager.h"
 #include "Templates\RefCounting.h"
 #include "YRHI.h"
+#include "YRHIResource.h"
 DECLARE_LOG_CATEGORY_EXTERN(YYUTHELPERLog, Log, All)
 template<typename T>
 inline void AddAlias(T & buffer, const FString& alias)

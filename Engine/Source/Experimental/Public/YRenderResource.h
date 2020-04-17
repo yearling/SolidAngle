@@ -2,6 +2,7 @@
 #include "Core.h"
 #include "YYUT.h"
 #include "YRHI.h"
+#include "YRHIResource.h"
 // RenderResource就是一个接口，用来沟通CPU resource 与 GPU resource的桥梁
 // 子类中包含各种RHIRef，其实就是用组合的方式保存GPU resource的资源 
 // InitRHI, InitDynaimcRHI是用来通知RHI分配GPU资源的

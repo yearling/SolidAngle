@@ -23,17 +23,15 @@ class YMaterialInterface
 public:
 	YMaterialInterface();
 	virtual ~YMaterialInterface() {};
-	FString GetPathName() const;
-	bool IsValid() const;
-	FName GetFName() const;
-	FString PathName;
-	FName MaterialName;
-	YTextureSampler DiffuseTexture;
-	YTextureSampler NormalTexture;
+
 };
 
-class YMeshMaterial :public YMaterialInterface
+class YMaterial :public YMaterialInterface
 {
 public:
-	YMeshMaterial() {}
+	YMaterial();
+	virtual ~YMaterial();
+public:
+	TMap<FName, FVariant> MaterialParameters;
+	TMap<FName, TRefCountPtr<YTexture>> TextureParameters;
 };

@@ -1279,13 +1279,13 @@ YTexture* YFbxConverter::ImportTexture(FbxFileTexture* FbxTexture, bool bSetupAs
 		{
 		}
 
-		Texture = new YTexture();
-		Texture->FileName = FileName;
+		//Texture = new YTexture();
+		//Texture->FileName = FileName;
 	}
 	else
 	{
-		Texture = new YTexture();
-		Texture->FileName = FileName;
+		//Texture = new YTexture();
+		//Texture->FileName = FileName;
 	}
 	return Texture;
 }

@@ -3,7 +3,6 @@
 #include "SStaticMesh.h"
 #include "YMeshBatch.h"
 #include "SStaticMeshComponent.h"
-class IPrimitive;
 class YScene:public FRefCountedObject
 {
 public:

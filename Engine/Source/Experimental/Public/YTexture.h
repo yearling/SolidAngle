@@ -1,7 +1,10 @@
 #pragma once
 #include "Core.h"
-class YTexture
-{
-public:
-	FString	FileName;
-};
+#include "YRenderResource.h"
+//class YTexture:public YRenderResource
+//{
+//public:
+//	 YTexture();
+//	 virtual ~YTexture();
+//public:
+//};
