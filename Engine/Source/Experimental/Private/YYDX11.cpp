@@ -91,7 +91,7 @@ void DX11Demo::Initial()
 	if (ImportType == -1)
 	{
 		FbxImporter->AddTokenizedErrorMessage(FTokenizedMessage::Create(EMessageSeverity::Warning, LOCTEXT("NoImportTypeDetected", "Can't detect import type. No mesh is found or animation track.")), FFbxErrors::Generic_CannotDetectImportType);
-		m_bInit = false;
+		//m_bInit = false;
 	}
 	else
 	{
