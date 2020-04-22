@@ -119,6 +119,7 @@ public:
 	void DebugTangent();
 	virtual bool LoadFromPackage(const FString & Path) override;
 	FBoxSphereBounds GetBounds() const;
+	bool RayCast(const FVector& Origin, const FVector& Dir, TArray<FVector>& OutTriangleVertex, bool bIsCull=true);
 	/** Imported raw mesh bulk data. */
 	TArray<YStaticMeshSourceModel> SourceModels;
 	/** Map of LOD+Section index to per-section info. */

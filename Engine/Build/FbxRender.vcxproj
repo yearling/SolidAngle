@@ -190,6 +190,7 @@
     <ClCompile Include="..\Source\Experimental\Private\SObjectManager.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\STexture.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\SWorld.cpp" />
+    <ClCompile Include="..\Source\Experimental\Private\YIntersection.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YMeshBatch.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YMeshUtilitiesWrap.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\SObject.cpp" />
@@ -251,6 +252,7 @@
     <ClInclude Include="..\Source\Experimental\Public\SObjectManager.h" />
     <ClInclude Include="..\Source\Experimental\Public\STexture.h" />
     <ClInclude Include="..\Source\Experimental\Public\SWorld.h" />
+    <ClInclude Include="..\Source\Experimental\Public\YIntersection.h" />
     <ClInclude Include="..\Source\Experimental\Public\YMeshBatch.h" />
     <ClInclude Include="..\Source\Experimental\Public\SObject.h" />
     <ClInclude Include="..\Source\Experimental\Public\YPixelFormat.h" />

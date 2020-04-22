@@ -6,6 +6,7 @@
 #include "Json.h"
 #include "SObjectManager.h"
 #include "SMaterial.h"
+#include "YIntersection.h"
 DEFINE_LOG_CATEGORY(LogYStaticMesh);
 
 SStaticMesh::SStaticMesh()
@@ -345,4 +346,60 @@ bool SStaticMesh::LoadFromPackage(const FString & Path)
 FBoxSphereBounds SStaticMesh::GetBounds() const
 {
 	return ExtendedBounds;
+}
+
+bool SStaticMesh::RayCast(const FVector& Origin, const FVector& Dir, TArray<FVector>& OutTriangleVertex, bool bIsCull/*=true*/)
+{
+	if (!RenderData)
+	{
+		return false;
+	}
+	//LOD 0
+	check(RenderData->LODResources.Num() >= 1);
+	YStaticMeshLODResources& LOD = RenderData->LODResources[0];
+	bool bHit = false;
+	for (YStaticMeshSection& MeshSection : LOD.Sections)
+	{
+		YIndexArrayView IndexArrayView = LOD.IndexBuffer.GetArrayView();
+		uint32 FirstIndex = MeshSection.FirstIndex;
+		for (uint32 TriangleIndex = 0; TriangleIndex < MeshSection.NumTriangles; ++TriangleIndex)
+		{
+			//DrawPosition
+			FVector VertexPosition[3];
+			for (int32 i : {0, 1, 2})
+			{
+				uint32 WedgeIndex = FirstIndex + TriangleIndex * 3 + i;
+				uint32 PositionIndex = IndexArrayView[WedgeIndex];
+				VertexPosition[i] = LOD.PositionVertexBuffer.VertexPosition(PositionIndex);
+			}
+			float t, u, v, w;
+			if (RayCastTriangle(Origin, Dir, VertexPosition[0], VertexPosition[1], VertexPosition[2], t, u, v, w,true))
+			{
+				OutTriangleVertex.Add(VertexPosition[0]);
+				OutTriangleVertex.Add(VertexPosition[1]);
+				OutTriangleVertex.Add(VertexPosition[2]);
+				
+				bHit = true;
+				for (int32 i : {0, 1, 2})
+				{
+					uint32 WedgeIndex = FirstIndex + TriangleIndex * 3 + i;
+					uint32 PositionIndex = IndexArrayView[WedgeIndex];
+					VertexPosition[i] = LOD.PositionVertexBuffer.VertexPosition(PositionIndex);
+					// Draw Normal
+					FVector TangentX = LOD.VertexBuffer.VertexTangentX(PositionIndex);
+					FVector TangentY = LOD.VertexBuffer.VertexTangentY(PositionIndex);
+					FVector TangentZ = LOD.VertexBuffer.VertexTangentZ(PositionIndex);
+					FMatrix TransTangentToLocal(TangentX, TangentY, TangentZ, VertexPosition[i]);
+					FVector OriginPosition = TransTangentToLocal.TransformPosition(FVector(0, 0, 0));
+					FVector TangentPosition = TransTangentToLocal.TransformPosition(FVector(1, 0, 0));
+					FVector BiTangentPosition = TransTangentToLocal.TransformPosition(FVector(0, 1, 0));
+					FVector NormalPosition = TransTangentToLocal.TransformPosition(FVector(0, 0, 1));
+					//GCanvas->DrawLine(OriginPosition, TangentPosition, FLinearColor::Red);
+					//GCanvas->DrawLine(OriginPosition, BiTangentPosition, FLinearColor::Green);
+					GCanvas->DrawLine(OriginPosition, NormalPosition, FLinearColor::Blue);
+				}
+			}
+		}
+	}
+	return bHit;
 }

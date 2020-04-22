@@ -9,7 +9,7 @@ class FBXReader;
 class FirstPersionCamera;
 class ICamera;
 class RenderScene;
-DECLARE_LOG_CATEGORY_EXTERN(YYDX11, Warning, All);
+DECLARE_LOG_CATEGORY_EXTERN(YYDX11, Log, All);
 class DX11Demo :public YYUTApplication
 {
 public:
@@ -41,6 +41,7 @@ private:
 	XMFLOAT3						m_vVelocity;
 	FVector							m_vVelocityF;
 	POINT							m_LastMousePosition;
+	FVector2D						CurrentMousePose;
 	XMFLOAT2						m_vMouseDelta;
 	float							m_fYawOrigin;
 	float							m_fPitchOrigin;

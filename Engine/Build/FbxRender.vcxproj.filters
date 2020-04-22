@@ -186,6 +186,9 @@
     <ClCompile Include="..\Source\Experimental\Private\YRHIResource.cpp">
       <Filter>RHI</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\YIntersection.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Experimental\Public\YYUT.h">
@@ -385,6 +388,9 @@
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\YRHIResource.h">
       <Filter>RHI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\YIntersection.h">
+      <Filter>Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -16,6 +16,7 @@
 #include "SMaterial.h"
 #include "SStaticMesh.h"
 #include "SWorld.h"
+#include "YIntersection.h"
 using std::cout;
 using std::endl;
 
@@ -52,8 +53,10 @@ void DX11Demo::Initial()
 	//YYUTTimer::GetInstance().Start();
 	XMFLOAT3 eye(40.0f, 40.0f, -40.0f);
 	XMFLOAT3 lookat(0.0f, 0.0f, 0.0f);
-	FVector eyeF(50.0f, 50.0f, -100.0f);
-	FVector lookatF(0.0f, 0.0f, 0.0f);
+	//FVector eyeF(50.0f, 50.0f, -100.0f);
+	//FVector lookatF(0.0f, 0.0f, 0.0f);
+	FVector eyeF(0.0f, 20.0f, -50.0f);
+	FVector lookatF(0.0f, 20.0f, 100.0f);
 	m_pCamera = new FirstPersionCamera();
 	m_pLightCamera = new FirstPersionCamera();
 	m_pCamera->SetViewParam(eyeF, lookatF);
@@ -262,6 +265,17 @@ void DX11Demo::Initial()
 	m_pSceneRender->AllocResource();
 	MainRender = MakeUnique<YForwardRender>();
 	MainRender->InitRenders();
+
+	FVector Point0(1.0, 5.0, 0.0);
+	FVector Point1(0.0, 5.0, 0.0);
+	FVector Point2(0.0, 5.0, -1.0);
+	FVector Original(0, 0, 0);
+	FVector Ray(0, 1, 0);
+	float t, u, v, w;
+	if (RayIntersectTriangle(Original, Ray, Point0, Point1, Point2, t, u, v, w)) 
+	{
+		UE_LOG(YYDX11, Log, TEXT("intersect %f,%f,%f"),u,v,w);
+	}
 }
 
 
@@ -399,12 +413,89 @@ void DX11Demo::Render(float ElapseTime)
 
 
 	MainRender->RenderScene(MainScene, pRenderInfo);
+	
+	
+
+
+//calculate screen ray
+	//CurrentMousePose.X = 1127;
+	//CurrentMousePose.Y = 975;
+	float ScreenCoordinateX = 1 / float(m_width / 2)*CurrentMousePose.X - 1.0f;
+	float ScreenCoordinateY = -1 / float(m_height / 2)*CurrentMousePose.Y + 1.0f;
+	ScreenCoordinateY /= ((float)m_width / (float)m_height);
+	float NearPlaneZ = 1.0 / FMath::Tan(PI / 3 * 0.5);
+	FVector RayInCamera = FVector(ScreenCoordinateX, ScreenCoordinateY, NearPlaneZ);
+	FMatrix ViewToWorld = m_pCamera->GetViewInverse();
+	FVector RayInWorld = ViewToWorld.TransformVector(RayInCamera).GetUnsafeNormal3();
+	FVector RayStart = m_pCamera->GetCameraPos();
+	FVector RayEnd = RayStart + RayInWorld * 1000;
+
+
+	//GCanvas->DrawLine(RayEnd, RayStart-FVector(0.01,0,0), FLinearColor::Yellow);
+#if 1
+	for (auto& Actor : World->Actors)
+	{
+		TArray<SStaticMeshComponent*> StaticMeshComponents;
+		Actor->RecurisveGetTypeComponent<SStaticMeshComponent>(SComponent::StaticMeshComponent, StaticMeshComponents);
+		for (SStaticMeshComponent* MeshComponent : StaticMeshComponents)
+		{
+			FBox BoundingBox = MeshComponent->Bounds.GetBox();
+			FVector BoudingBoxCenter = BoundingBox.GetCenter();
+			FVector BoudingBoxExtent = BoundingBox.GetExtent();
+			FVector BoudingBoxMin = BoudingBoxCenter - BoudingBoxExtent;
+			FVector BoudingBoxMax = BoudingBoxCenter + BoudingBoxExtent;
+			FLinearColor SelectColor = FLinearColor::Green;
+			FLinearColor CommonColor = FLinearColor::Gray;
+			bool bSelect = false;
+			bSelect = FMath::LineBoxIntersection(BoundingBox, RayStart, RayEnd, RayEnd-RayStart);
+			FLinearColor DrawColor = bSelect ? SelectColor : CommonColor;
+			FVector Point0 = FVector(BoudingBoxMin.X, BoudingBoxMin.Y, BoudingBoxMin.Z);
+			FVector Point1 = FVector(BoudingBoxMin.X, BoudingBoxMax.Y, BoudingBoxMin.Z);
+			FVector Point2 = FVector(BoudingBoxMax.X, BoudingBoxMax.Y, BoudingBoxMin.Z);
+			FVector Point3 = FVector(BoudingBoxMax.X, BoudingBoxMin.Y, BoudingBoxMin.Z);
+			FVector Point4 = FVector(BoudingBoxMax.X, BoudingBoxMin.Y, BoudingBoxMax.Z);
+			FVector Point5 = FVector(BoudingBoxMax.X, BoudingBoxMax.Y, BoudingBoxMax.Z);
+			FVector Point6 = FVector(BoudingBoxMin.X, BoudingBoxMax.Y, BoudingBoxMax.Z);
+			FVector Point7 = FVector(BoudingBoxMin.X, BoudingBoxMin.Y, BoudingBoxMax.Z);
+			GCanvas->DrawLine(Point0, Point1, DrawColor);
+			GCanvas->DrawLine(Point1, Point2, DrawColor);
+			GCanvas->DrawLine(Point2, Point3, DrawColor);
+			GCanvas->DrawLine(Point3, Point0, DrawColor);
+			GCanvas->DrawLine(Point2, Point5, DrawColor);
+			GCanvas->DrawLine(Point5, Point4, DrawColor);
+			GCanvas->DrawLine(Point4, Point3, DrawColor);
+			GCanvas->DrawLine(Point5, Point6, DrawColor);
+			GCanvas->DrawLine(Point6, Point7, DrawColor);
+			GCanvas->DrawLine(Point7, Point4, DrawColor);
+			GCanvas->DrawLine(Point6, Point1, DrawColor);
+			GCanvas->DrawLine(Point7, Point0, DrawColor);
+			TRefCountPtr<SStaticMesh> StaticMesh = MeshComponent->GetStaticMesh();
+			FTransform ComponentTransform = MeshComponent->GetComponentTransform();
+			FVector LocalCameraPos = ComponentTransform.InverseTransformPosition(RayStart);
+			FVector LocalCameraDir = ComponentTransform.InverseTransformVector(RayInWorld);
+			TArray<FVector> OutTriangleVertices;
+			if (bSelect)
+			{
+				if (StaticMesh->RayCast(LocalCameraPos, LocalCameraDir, OutTriangleVertices, true))
+				{
+					for (int32 i = 0; i < OutTriangleVertices.Num() / 3; ++i)
+					{
+						GCanvas->DrawLine(ComponentTransform.TransformPosition(OutTriangleVertices[i * 3 + 0]), ComponentTransform.TransformPosition(OutTriangleVertices[i * 3 + 1]), FLinearColor::Red);
+						GCanvas->DrawLine(ComponentTransform.TransformPosition(OutTriangleVertices[i * 3 + 1]), ComponentTransform.TransformPosition(OutTriangleVertices[i * 3 + 2]), FLinearColor::Red);
+						GCanvas->DrawLine(ComponentTransform.TransformPosition(OutTriangleVertices[i * 3 + 2]), ComponentTransform.TransformPosition(OutTriangleVertices[i * 3 + 0]), FLinearColor::Red);
+					}
+				}
+			}
+		}
+	}
+#endif
 	m_pSceneRender->Render(pRenderInfo);
 
 	m_pSceneRender->DrawText(FString::Printf(TEXT("FPS: %f"), GetFPS()));
 	FVector CameraPos = m_pCurrentCamera->GetCameraPos();
 	m_pSceneRender->DrawText(FString::Printf(TEXT("Camera Pos: %f %f %f"), CameraPos.X, CameraPos.Y, CameraPos.Z));
-
+	m_pSceneRender->DrawText(FString::Printf(TEXT("Mouse Pos: %d %d "),(int) CurrentMousePose.X, (int)CurrentMousePose.Y));
+	
 	YYUTDXManager::GetInstance().Present();
 }
 
@@ -536,6 +627,9 @@ LRESULT DX11Demo::MyProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 			m_LastMousePosition.y = y;
 			m_fPitchOrigin = m_pCurrentCamera->GetPitch();
 			m_fYawOrigin = m_pCurrentCamera->GetYaw();
+			CurrentMousePose.X = x;
+			CurrentMousePose.Y = y;
+			ShowCursor(FALSE);
 		}
 		if (message == WM_RBUTTONDOWN)
 		{
@@ -544,6 +638,9 @@ LRESULT DX11Demo::MyProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 			m_LastMousePosition.y = y;
 			m_fPitchOrigin = m_pLightCamera->GetPitch();
 			m_fYawOrigin = m_pLightCamera->GetYaw();
+			CurrentMousePose.X = x;
+			CurrentMousePose.Y = y;
+			ShowCursor(FALSE);
 		}
 		if (message == WM_MBUTTONDOWN)
 		{
@@ -554,12 +651,14 @@ LRESULT DX11Demo::MyProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 			m_bMouseLDown = false;
 			m_vMouseDelta.x = 0.0f;
 			m_vMouseDelta.y = 0.0f;
+			ShowCursor(TRUE);
 		}
 		if (message == WM_RBUTTONUP)
 		{
 			m_bMouseRDown = false;
 			m_vMouseDelta.x = 0.0f;
 			m_vMouseDelta.y = 0.0f;
+			ShowCursor(TRUE);
 		}
 		if (message == WM_MBUTTONUP)
 		{
@@ -571,6 +670,8 @@ LRESULT DX11Demo::MyProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 	{
 		int x = (short)LOWORD(lParam);
 		int y = (short)HIWORD(lParam);
+		CurrentMousePose.X = x;
+		CurrentMousePose.Y = y;
 		if (m_bMouseLDown || m_bMouseRDown)
 		{
 			m_vMouseDelta.x = float(x - m_LastMousePosition.x);
