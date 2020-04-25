@@ -60,6 +60,17 @@ void ICamera::AddPitchYaw(float pitch, float yaw)
 	m_fCameraYawAngle += yaw;
 }
 
+YRay ICamera::GetWorldRayFromScreen(const FVector2D & ScreenCoord) const
+{
+	FVector4 ClipRay(ScreenCoord.X, ScreenCoord.Y, -1.0, 1.0);
+	FMatrix InvProjectionMatrix = GetProjInv();
+	FVector4 RayDirInCamera = InvProjectionMatrix.TransformFVector4(ClipRay).GetSafeNormal();
+	FMatrix ViewToWorld = GetViewInverse();
+	FVector RayDirInWorld = ViewToWorld.TransformVector(RayDirInCamera).GetUnsafeNormal3();
+	FVector RayStart = GetCameraPos();
+	return YRay(RayStart, RayDirInWorld);
+}
+
 FMatrix ICamera::GetView() const
 {
 	return m_matView;

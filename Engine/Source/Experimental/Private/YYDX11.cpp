@@ -265,17 +265,6 @@ void DX11Demo::Initial()
 	m_pSceneRender->AllocResource();
 	MainRender = MakeUnique<YForwardRender>();
 	MainRender->InitRenders();
-
-	FVector Point0(1.0, 5.0, 0.0);
-	FVector Point1(0.0, 5.0, 0.0);
-	FVector Point2(0.0, 5.0, -1.0);
-	FVector Original(0, 0, 0);
-	FVector Ray(0, 1, 0);
-	float t, u, v, w;
-	if (RayIntersectTriangle(Original, Ray, Point0, Point1, Point2, t, u, v, w)) 
-	{
-		UE_LOG(YYDX11, Log, TEXT("intersect %f,%f,%f"),u,v,w);
-	}
 }
 
 
@@ -413,25 +402,12 @@ void DX11Demo::Render(float ElapseTime)
 
 
 	MainRender->RenderScene(MainScene, pRenderInfo);
-	
-	
 
 
 //calculate screen ray
-	//CurrentMousePose.X = 1127;
-	//CurrentMousePose.Y = 975;
 	float ScreenCoordinateX = 1 / float(m_width / 2)*CurrentMousePose.X - 1.0f;
 	float ScreenCoordinateY = -1 / float(m_height / 2)*CurrentMousePose.Y + 1.0f;
-	ScreenCoordinateY /= ((float)m_width / (float)m_height);
-	float NearPlaneZ = 1.0 / FMath::Tan(PI / 3 * 0.5);
-	FVector RayInCamera = FVector(ScreenCoordinateX, ScreenCoordinateY, NearPlaneZ);
-	FMatrix ViewToWorld = m_pCamera->GetViewInverse();
-	FVector RayInWorld = ViewToWorld.TransformVector(RayInCamera).GetUnsafeNormal3();
-	FVector RayStart = m_pCamera->GetCameraPos();
-	FVector RayEnd = RayStart + RayInWorld * 1000;
-
-
-	//GCanvas->DrawLine(RayEnd, RayStart-FVector(0.01,0,0), FLinearColor::Yellow);
+	YRay RayInWorld = m_pCamera->GetWorldRayFromScreen(FVector2D(ScreenCoordinateX, ScreenCoordinateY));
 #if 1
 	for (auto& Actor : World->Actors)
 	{
@@ -447,6 +423,9 @@ void DX11Demo::Render(float ElapseTime)
 			FLinearColor SelectColor = FLinearColor::Green;
 			FLinearColor CommonColor = FLinearColor::Gray;
 			bool bSelect = false;
+			FVector RayStart = RayInWorld.Origin;
+			FVector RayEnd = RayInWorld.Origin + RayInWorld.Direction * 10000;
+			//GCanvas->DrawLine(RayEnd, RayStart-FVector(0.01,0,0), FLinearColor::Yellow);
 			bSelect = FMath::LineBoxIntersection(BoundingBox, RayStart, RayEnd, RayEnd-RayStart);
 			FLinearColor DrawColor = bSelect ? SelectColor : CommonColor;
 			FVector Point0 = FVector(BoudingBoxMin.X, BoudingBoxMin.Y, BoudingBoxMin.Z);
@@ -471,18 +450,31 @@ void DX11Demo::Render(float ElapseTime)
 			GCanvas->DrawLine(Point7, Point0, DrawColor);
 			TRefCountPtr<SStaticMesh> StaticMesh = MeshComponent->GetStaticMesh();
 			FTransform ComponentTransform = MeshComponent->GetComponentTransform();
-			FVector LocalCameraPos = ComponentTransform.InverseTransformPosition(RayStart);
-			FVector LocalCameraDir = ComponentTransform.InverseTransformVector(RayInWorld);
+			FVector LocalCameraPos = ComponentTransform.InverseTransformPosition(RayInWorld.Origin);
+			FVector LocalCameraDir = ComponentTransform.InverseTransformVector(RayInWorld.Direction);
+			YRay Ray(LocalCameraPos, LocalCameraDir);
 			TArray<FVector> OutTriangleVertices;
+			TArray<YRayCastElement> OutResult;
 			if (bSelect)
 			{
-				if (StaticMesh->RayCast(LocalCameraPos, LocalCameraDir, OutTriangleVertices, true))
+				if (StaticMesh->RayCast(Ray, OutResult, true))
 				{
-					for (int32 i = 0; i < OutTriangleVertices.Num() / 3; ++i)
+					OutResult.Sort();
+					YRayCastElement& NearestTriangle = OutResult[0];
 					{
-						GCanvas->DrawLine(ComponentTransform.TransformPosition(OutTriangleVertices[i * 3 + 0]), ComponentTransform.TransformPosition(OutTriangleVertices[i * 3 + 1]), FLinearColor::Red);
-						GCanvas->DrawLine(ComponentTransform.TransformPosition(OutTriangleVertices[i * 3 + 1]), ComponentTransform.TransformPosition(OutTriangleVertices[i * 3 + 2]), FLinearColor::Red);
-						GCanvas->DrawLine(ComponentTransform.TransformPosition(OutTriangleVertices[i * 3 + 2]), ComponentTransform.TransformPosition(OutTriangleVertices[i * 3 + 0]), FLinearColor::Red);
+						GCanvas->DrawLine(ComponentTransform.TransformPosition(NearestTriangle.TrianglePoints[0]), ComponentTransform.TransformPosition(NearestTriangle.TrianglePoints[1]), FLinearColor::Red);
+						GCanvas->DrawLine(ComponentTransform.TransformPosition(NearestTriangle.TrianglePoints[1]), ComponentTransform.TransformPosition(NearestTriangle.TrianglePoints[2]), FLinearColor::Red);
+						GCanvas->DrawLine(ComponentTransform.TransformPosition(NearestTriangle.TrianglePoints[2]), ComponentTransform.TransformPosition(NearestTriangle.TrianglePoints[0]), FLinearColor::Red);
+						FMatrix TransTangentToLocal(NearestTriangle.TangentX, NearestTriangle.TangentY, NearestTriangle.TangentZ, NearestTriangle.RaycastPoint);
+						FMatrix TransLocalToWorld=ComponentTransform.ToMatrixWithScale();
+						FMatrix TransTangnetToWorld = TransTangentToLocal * TransLocalToWorld;
+						FVector OriginPosition = TransTangnetToWorld.TransformPosition(FVector(0, 0, 0));
+						FVector TangentPosition = TransTangnetToWorld.TransformPosition(FVector(1, 0, 0));
+						FVector BiTangentPosition = TransTangnetToWorld.TransformPosition(FVector(0, 1, 0));
+						FVector NormalPosition = TransTangnetToWorld.TransformPosition(FVector(0, 0, 1));
+						GCanvas->DrawLine(OriginPosition, TangentPosition, FLinearColor::Red);
+						GCanvas->DrawLine(OriginPosition, BiTangentPosition, FLinearColor::Green);
+						GCanvas->DrawLine(OriginPosition, NormalPosition, FLinearColor::Blue);
 					}
 				}
 			}

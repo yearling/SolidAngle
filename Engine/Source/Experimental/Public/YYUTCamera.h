@@ -1,5 +1,6 @@
 #pragma once
 #include "YYUT.h"
+#include "YIntersection.h"
 
 class ICamera
 {
@@ -20,6 +21,8 @@ public:
 	void							SetPitch(float pitch) { m_fCameraPitchAngle = pitch; }
 	void							SetYaw(float yaw) { m_fCameraYawAngle = yaw; }
 	FVector							GetCameraPos() const { return m_vEye; }
+	//Screen Coord width:[-1:+1], height:[-1,+1]
+	YRay							GetWorldRayFromScreen(const FVector2D & ScreenCoord) const;
 public:
 	FMatrix							GetView() const;
 	FMatrix							GetViewInverse() const;

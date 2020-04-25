@@ -1,18 +1,18 @@
 #include "YIntersection.h"
 #include "Math/UnrealMathUtility.h"
-bool RayCastTriangleTriangleMethodGeometry(const FVector &Origin, const FVector &RayDir, const FVector &Point0, const FVector &Point1, const FVector& Point2, float &t, float& u, float &v, float &w, bool bCullBackFace/*=true*/)
+bool RayCastTriangleTriangleMethodGeometry(const YRay &Ray, const FVector &Point0, const FVector &Point1, const FVector& Point2, float &t, float& u, float &v, float &w, bool bCullBackFace/*=true*/)
 {
 	FPlane TrianglePlane(Point0, Point1, Point2);
-	if (FMath::Abs(RayDir | TrianglePlane) < SMALL_NUMBER) //parrallel
+	if (FMath::Abs(Ray.Direction | TrianglePlane) < SMALL_NUMBER) //parrallel
 	{
 		return false;
 	}
-	t = ((TrianglePlane.W - (Origin | TrianglePlane)) / (RayDir | TrianglePlane));
+	t = ((TrianglePlane.W - (Ray.Origin | TrianglePlane)) / (Ray.Direction | TrianglePlane));
 	// beind the ray origin
 	if (t < 0)
 		return false;
 
-	FVector IntersectionPoint = Origin + t * RayDir;
+	FVector IntersectionPoint = Ray.Origin + t * Ray.Direction;
 
 	FVector BaryCentricCoordinate = FMath::ComputeBaryCentric2D(IntersectionPoint, Point0, Point1, Point2);
 	if (BaryCentricCoordinate.X < 0 || BaryCentricCoordinate.X>1 ||
@@ -28,7 +28,7 @@ bool RayCastTriangleTriangleMethodGeometry(const FVector &Origin, const FVector 
 		check(TriNorm.SizeSquared() > SMALL_NUMBER && "Collinear points in FMath::ComputeBaryCentric2D()");
 		const FVector N = TriNorm.GetSafeNormal();
 
-		if (bCullBackFace && (N | RayDir) < 0)
+		if (bCullBackFace && (N | Ray.Direction) < 0)
 		{
 			return false;
 		}
@@ -39,11 +39,16 @@ bool RayCastTriangleTriangleMethodGeometry(const FVector &Origin, const FVector 
 	}
 }
 
-bool RayCastTriangle(const FVector &Origin, const FVector &RayDir, const FVector &Point0, const FVector &Point1, const FVector& Point2, float &t, float &u, float &v, float& w, bool bCullBackFace/*= true*/)
+bool operator<(const YRayCastElement&lhs, const YRayCastElement& rhs)
+{
+	return lhs.t < rhs.t;
+}
+
+bool RayCastTriangle(const YRay &Ray, const FVector &Point0, const FVector &Point1, const FVector& Point2, float &t, float &u, float &v, float& w, bool bCullBackFace/*= true*/)
 {
 	FVector V01 = Point1 - Point0;
 	FVector V02 = Point2 - Point0;
-	FVector N = RayDir ^ V02;
+	FVector N = Ray.Direction ^ V02;
 	float det = V01 | N;
 	if (bCullBackFace)
 	{
@@ -60,14 +65,14 @@ bool RayCastTriangle(const FVector &Origin, const FVector &RayDir, const FVector
 		}
 	}
 	float InvDet = 1.0 / det;
-	FVector TVec = Origin - Point0;
+	FVector TVec = Ray.Origin - Point0;
 	u = (TVec | N) * InvDet;
 	if (u < 0 || u >1)
 	{
 		return false;
 	}
 	FVector QVec = TVec ^ V01;
-	v = (RayDir | QVec)*InvDet;
+	v = (Ray.Direction | QVec)*InvDet;
 	if (v < 0 || u + v>1)
 	{
 		return false;
@@ -77,11 +82,51 @@ bool RayCastTriangle(const FVector &Origin, const FVector &RayDir, const FVector
 	return true;
 }
 
-bool RayCastTriangleTriangleMethodMatrix(const FVector &Origin, const FVector &RayDir, const FVector &Point0, const FVector &Point1, const FVector& Point2, float &t, float &u, float &v, float& w, bool bCullBackFace /*= true*/)
+bool RayCastTriangleReturnBackFaceResult(const YRay &Ray, const FVector &Point0, const FVector &Point1, const FVector& Point2, float &t, float& u, float &v, float &w, bool &bBackFace, bool bCullBackFace /*= true*/)
 {
 	FVector V01 = Point1 - Point0;
 	FVector V02 = Point2 - Point0;
-	FMatrix RayMat(FPlane(FVector4(-RayDir, 0)), FPlane(FVector4(V01, 0)), FPlane(FVector4(V02, 0)), FPlane(FVector4(0, 0, 0, 1)));
+	FVector N = Ray.Direction ^ V02;
+	float det = V01 | N;
+	if (bCullBackFace)
+	{
+		if (det > SMALL_NUMBER)
+		{
+			return false;
+		}
+		bBackFace = false;
+	}
+	else
+	{
+		if (FMath::Abs(det) < SMALL_NUMBER)
+		{
+			return false;
+		}
+		bBackFace = det > SMALL_NUMBER ? true : false;
+	}
+	float InvDet = 1.0 / det;
+	FVector TVec = Ray.Origin - Point0;
+	u = (TVec | N) * InvDet;
+	if (u < 0 || u >1)
+	{
+		return false;
+	}
+	FVector QVec = TVec ^ V01;
+	v = (Ray.Direction | QVec)*InvDet;
+	if (v < 0 || u + v>1)
+	{
+		return false;
+	}
+	t = (V02 | QVec)*InvDet;
+	w = 1 - u - v;
+	return true;
+}
+
+bool RayCastTriangleTriangleMethodMatrix(const YRay &Ray, const FVector &Point0, const FVector &Point1, const FVector& Point2, float &t, float &u, float &v, float& w, bool bCullBackFace /*= true*/)
+{
+	FVector V01 = Point1 - Point0;
+	FVector V02 = Point2 - Point0;
+	FMatrix RayMat(FPlane(FVector4(-Ray.Direction, 0)), FPlane(FVector4(V01, 0)), FPlane(FVector4(V02, 0)), FPlane(FVector4(0, 0, 0, 1)));
 	float det = RayMat.Determinant();
 	if (bCullBackFace && det > SMALL_NUMBER)
 	{
@@ -91,7 +136,7 @@ bool RayCastTriangleTriangleMethodMatrix(const FVector &Origin, const FVector &R
 	{
 		return false;
 	}
-	FVector VOA = Origin - Point0;
+	FVector VOA = Ray.Origin - Point0;
 	FMatrix InvRayMat = RayMat.Inverse();
 	FVector4 Result = InvRayMat.TransformFVector4(FVector4(VOA, 0));
 	t = Result.X;

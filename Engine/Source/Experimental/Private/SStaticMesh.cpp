@@ -234,9 +234,6 @@ void SStaticMesh::DebugTangent()
 	for (YStaticMeshSection& MeshSection : LOD.Sections)
 	{
 		YIndexArrayView IndexArrayView = LOD.IndexBuffer.GetArrayView();
-		//LOD.PositionVertexBuffer.VertexPosition()
-		//LOD.VertexBuffer.GetVertexUV()
-		//LOD.VertexBuffer.VertexTangentX();
 		uint32 FirstIndex = MeshSection.FirstIndex;
 		for (uint32 TriangleIndex = 0; TriangleIndex < MeshSection.NumTriangles; ++TriangleIndex)
 		{
@@ -246,7 +243,6 @@ void SStaticMesh::DebugTangent()
 				uint32 WedgeIndex = FirstIndex + TriangleIndex * 3 + i;
 				uint32 PositionIndex = IndexArrayView[WedgeIndex];
 				FVector VertexPosition = LOD.PositionVertexBuffer.VertexPosition(PositionIndex);
-				//GCanvas->DrawBall(VertexPosition, FLinearColor::Green, 0.2);
 				// Draw Normal
 				FVector TangentX = LOD.VertexBuffer.VertexTangentX(PositionIndex);
 				FVector TangentY = LOD.VertexBuffer.VertexTangentY(PositionIndex);
@@ -348,12 +344,13 @@ FBoxSphereBounds SStaticMesh::GetBounds() const
 	return ExtendedBounds;
 }
 
-bool SStaticMesh::RayCast(const FVector& Origin, const FVector& Dir, TArray<FVector>& OutTriangleVertex, bool bIsCull/*=true*/)
+bool SStaticMesh::RayCast(const YRay & Ray, TArray<YRayCastElement>& OutResult, bool bIsCull/*=true*/)
 {
 	if (!RenderData)
 	{
 		return false;
 	}
+	OutResult.Empty();
 	//LOD 0
 	check(RenderData->LODResources.Num() >= 1);
 	YStaticMeshLODResources& LOD = RenderData->LODResources[0];
@@ -373,31 +370,43 @@ bool SStaticMesh::RayCast(const FVector& Origin, const FVector& Dir, TArray<FVec
 				VertexPosition[i] = LOD.PositionVertexBuffer.VertexPosition(PositionIndex);
 			}
 			float t, u, v, w;
-			if (RayCastTriangle(Origin, Dir, VertexPosition[0], VertexPosition[1], VertexPosition[2], t, u, v, w,true))
+			bool bBackFace = false;
+			if (RayCastTriangleReturnBackFaceResult(Ray, VertexPosition[0], VertexPosition[1], VertexPosition[2], t, u, v, w, bBackFace, true))
 			{
-				OutTriangleVertex.Add(VertexPosition[0]);
-				OutTriangleVertex.Add(VertexPosition[1]);
-				OutTriangleVertex.Add(VertexPosition[2]);
-				
+				YRayCastElement& NewResult = * new(OutResult) YRayCastElement();
+				FVector TangentX[3];
+				FVector TangentY[3];
+				FVector TangentZ[3];
+				FVector2D UVs[2][3];
 				bHit = true;
 				for (int32 i : {0, 1, 2})
 				{
 					uint32 WedgeIndex = FirstIndex + TriangleIndex * 3 + i;
 					uint32 PositionIndex = IndexArrayView[WedgeIndex];
 					VertexPosition[i] = LOD.PositionVertexBuffer.VertexPosition(PositionIndex);
-					// Draw Normal
-					FVector TangentX = LOD.VertexBuffer.VertexTangentX(PositionIndex);
-					FVector TangentY = LOD.VertexBuffer.VertexTangentY(PositionIndex);
-					FVector TangentZ = LOD.VertexBuffer.VertexTangentZ(PositionIndex);
-					FMatrix TransTangentToLocal(TangentX, TangentY, TangentZ, VertexPosition[i]);
-					FVector OriginPosition = TransTangentToLocal.TransformPosition(FVector(0, 0, 0));
-					FVector TangentPosition = TransTangentToLocal.TransformPosition(FVector(1, 0, 0));
-					FVector BiTangentPosition = TransTangentToLocal.TransformPosition(FVector(0, 1, 0));
-					FVector NormalPosition = TransTangentToLocal.TransformPosition(FVector(0, 0, 1));
-					//GCanvas->DrawLine(OriginPosition, TangentPosition, FLinearColor::Red);
-					//GCanvas->DrawLine(OriginPosition, BiTangentPosition, FLinearColor::Green);
-					GCanvas->DrawLine(OriginPosition, NormalPosition, FLinearColor::Blue);
+					TangentX[i] = LOD.VertexBuffer.VertexTangentX(PositionIndex);
+					TangentY[i] = LOD.VertexBuffer.VertexTangentY(PositionIndex);
+					TangentZ[i] = LOD.VertexBuffer.VertexTangentZ(PositionIndex);
+					UVs[0][i] = LOD.VertexBuffer.GetVertexUV(PositionIndex, 0);
+					UVs[1][i] = LOD.VertexBuffer.GetVertexUV(PositionIndex, 1);
 				}
+				NewResult.TrianglePoints[0] = VertexPosition[0];
+				NewResult.TrianglePoints[1] = VertexPosition[1];
+				NewResult.TrianglePoints[2] = VertexPosition[2];
+				NewResult.RaycastPoint = VertexPosition[0] * w + VertexPosition[1] * u + VertexPosition[2] * v;
+				NewResult.bBackFace = bBackFace;
+				NewResult.TangentX = TangentX[0] * w + TangentX[1] * u + TangentX[2] * v;
+				NewResult.TangentY = TangentY[0] * w + TangentY[1] * u + TangentY[2] * v;
+				NewResult.TangentZ = TangentZ[0] * w + TangentZ[1] * u + TangentZ[2] * v;
+				NewResult.TangentX.Normalize();
+				NewResult.TangentY.Normalize();
+				NewResult.TangentZ.Normalize();
+				NewResult.UVs[0] = UVs[0][0] * w + UVs[0][1] * u + UVs[0][2] * v;
+				NewResult.UVs[1] = UVs[1][0] * w + UVs[1][1] * u + UVs[1][2] * v;
+				NewResult.t = t;
+				NewResult.u = u;
+				NewResult.v = v;
+				NewResult.w = w;
 			}
 		}
 	}

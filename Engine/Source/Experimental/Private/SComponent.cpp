@@ -85,7 +85,7 @@ bool SSceneComponent::PostLoadOp()
 {
 	UpdateComponentToWorld();
 	bool bChildSuccess = true;
-	for (TRefCountPtr<SComponent> Child : ChildrenComponents)
+	for (TRefCountPtr<SSceneComponent>& Child : ChildrenComponents)
 	{
 		bChildSuccess &= Child->PostLoadOp();
 	}
