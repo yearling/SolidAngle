@@ -1,3 +1,6 @@
 [submodule "Engine/Source/ThirdParty"]
 	path = Engine/Source/ThirdParty
 	url = https://github.com/yearling/SolidAngleThirdPart.git
+[submodule "Engine/Binaries/Win64"]
+	path = Engine/Binaries/Win64
+	url = https://github.com/yearling/SolidAngleResource.git
