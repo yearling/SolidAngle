@@ -31,6 +31,7 @@ protected:
 	int								m_width;
 	int								m_height;
 	void							SwichCamera();
+	void							RayCastTriangleInfo();
 private:
 	FirstPersionCamera*				m_pCamera;
 	FirstPersionCamera*				m_pLightCamera;
@@ -53,6 +54,7 @@ private:
 	float							m_FPS;
 	int32							m_LastSecondFrames;
 	double							m_LastSecond;
+	bool							bRayCastTrianglePerFrame;
 private:
 	//std::shared_ptr<DepthPeeling::ObjPrimitive> m_spObj;
 	std::shared_ptr<RenderScene>		m_pSceneRender;
