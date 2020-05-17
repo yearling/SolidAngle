@@ -61,4 +61,5 @@ private:
 	TRefCountPtr<YScene>            MainScene;
 	TRefCountPtr<SWorld>	        World;
 	TUniquePtr<IYRenderInterface>    MainRender;
+	TUniquePtr<IYRenderInterface>    MainRenderDeffer;
 };

@@ -16,6 +16,9 @@
     <FxCompile Include="..\Source\Experimental\Private\StaticMesh2.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
+    <FxCompile Include="..\Source\Experimental\Private\StaticMeshDeffer.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Experimental\Private\YYUTApplication.cpp">
@@ -188,6 +191,9 @@
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\YIntersection.cpp">
       <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Private\DeferedRender.cpp">
+      <Filter>Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -391,6 +397,9 @@
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\YIntersection.h">
       <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\DeferedRender.h">
+      <Filter>Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

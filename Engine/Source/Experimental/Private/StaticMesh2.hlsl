@@ -47,6 +47,7 @@ VS_OUTPUT VSMain(VS_INPUT Input)
 
 
 Texture2D txDiffuse;
+Texture2D txNormal;
 SamplerState samLinear;
 
 float3 sRGBToLinear(float3 Color)
@@ -71,12 +72,15 @@ float3 LinearToSrgbBranching(float3 lin)
 }
 float4 PSMain(VS_OUTPUT Input) :SV_Target
 {
-	float4 NormalTextureValue = txDiffuse.Sample(samLinear, Input.vTexcoord[0]);
+	float4 Diffuse = txDiffuse.Sample(samLinear, Input.vTexcoord[0]);
+	//Diffuse = pow(Diffuse, 1 / 2.2);
+	float4 NormalTextureValue = txNormal.Sample(samLinear, Input.vTexcoord[0]);
 	float3 NormalizedNormal = normalize((NormalTextureValue * 2.0 - 1.0).xyz);
 	float3 NormalInLocal = normalize(mul(NormalizedNormal, Input.TangentToLocal));
 	//float3 NormalInLocal = normalize(mul(float3(0, 0, 1), Input.TangentToLocal));
 	float NDL = clamp(dot(NormalInLocal, g_lightDir), pow(0.05, 2.2), 1);
-	float4 FinalColorGarma = float4(NDL, NDL, NDL, 1.0);
+	float3 FinalColor = Diffuse * NDL;
+	float4 FinalColorGarma = float4(FinalColor, 1.0);
 	//float FixColor = 0.5;
 	//float4 FinalColorGarma = float4(FixColor, FixColor, FixColor, 1.0);
 	//FinalColorGarma = pow(FinalColorGarma, 1.0 / 2.2);

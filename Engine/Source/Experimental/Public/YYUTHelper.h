@@ -268,7 +268,7 @@ void CreateDepthStencileStateNoWriteNoTest(TComPtr<ID3D11DepthStencilState> &ds,
 	const FString& alias = "");
 //////////////////////////////////////////////////////////////////////////
 //Render Target
-void CreateRenderTarget(DXGI_FORMAT format,
+void CreateRenderTargetView(DXGI_FORMAT format,
 	TComPtr<ID3D11Texture2D>& texture,
 	TComPtr<ID3D11RenderTargetView> &rtv,
 	const FString& alias = "");

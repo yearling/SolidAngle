@@ -878,7 +878,7 @@ void CreateDepthStencileStateNoWriteNoTest(TComPtr<ID3D11DepthStencilState> &ds,
 #endif
 }
 
-void CreateRenderTarget(DXGI_FORMAT format, TComPtr<ID3D11Texture2D>& texture, TComPtr<ID3D11RenderTargetView> &rtv, const FString& alias /*= ""*/)
+void CreateRenderTargetView(DXGI_FORMAT format, TComPtr<ID3D11Texture2D>& texture, TComPtr<ID3D11RenderTargetView> &rtv, const FString& alias /*= ""*/)
 {
 	TComPtr<ID3D11Device>& device = YYUTDXManager::GetInstance().GetD3DDevice();
 	HRESULT hr = S_OK;

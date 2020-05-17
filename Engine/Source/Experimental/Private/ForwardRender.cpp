@@ -35,7 +35,8 @@ public:
 			VSShader->Update();
 
 			PSShader->BindResource(TEXT("g_lightDir"), RenderInfo->SceneInfo.MainLightDir.GetSafeNormal());
-			PSShader->BindSRV(TEXT("txDiffuse"), ShaderResourceView);
+			PSShader->BindSRV(TEXT("txNormal"), ShaderResourceViewNormal);
+			PSShader->BindSRV(TEXT("txDiffuse"), ShaderResourceViewDiffuse);
 			PSShader->Update();
 
 			// RHI Ã»Ð´Íê
@@ -95,7 +96,12 @@ public:
 		ID3D11ShaderResourceView* SRV = nullptr;
 		DirectX::CreateWICTextureFromFile((ID3D11Device*)device, (ID3D11DeviceContext*)dc, TEXT("mirror_nija_no_seam_default_Normal.png"), (ID3D11Resource**)&TextureResource, &SRV, 0);
 		NormalTexture.Attach((ID3D11Texture2D*)TextureResource);
-		ShaderResourceView.Attach(SRV);
+		ShaderResourceViewNormal.Attach(SRV);
+
+		DirectX::CreateWICTextureFromFile((ID3D11Device*)device, (ID3D11DeviceContext*)dc, TEXT("uv.png"), (ID3D11Resource**)&TextureResource, &SRV, 0);
+		DiffuseTexture.Attach((ID3D11Texture2D*)TextureResource);
+		ShaderResourceViewDiffuse.Attach(SRV);
+
 		CreateSamplerPointWrap(SamplerState);
 		Initialized = true;
 	}
@@ -115,7 +121,9 @@ public:
 	TComPtr<ID3D11RasterizerState>	m_rs;
 	TComPtr<ID3D11SamplerState> SamplerState;
 	TComPtr<ID3D11Texture2D> NormalTexture;
-	TComPtr<ID3D11ShaderResourceView> ShaderResourceView;
+	TComPtr<ID3D11Texture2D> DiffuseTexture;
+	TComPtr<ID3D11ShaderResourceView> ShaderResourceViewNormal;
+	TComPtr<ID3D11ShaderResourceView> ShaderResourceViewDiffuse;
 	bool Initialized = false;
 };
 

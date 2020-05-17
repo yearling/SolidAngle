@@ -17,6 +17,7 @@
 #include "SStaticMesh.h"
 #include "SWorld.h"
 #include "YIntersection.h"
+#include "DeferedRender.h"
 using std::cout;
 using std::endl;
 
@@ -265,6 +266,8 @@ void DX11Demo::Initial()
 	m_pSceneRender->AllocResource();
 	MainRender = MakeUnique<YForwardRender>();
 	MainRender->InitRenders();
+	MainRenderDeffer = MakeUnique<YDeferedRender>();
+	MainRenderDeffer->InitRenders();
 }
 
 
@@ -400,7 +403,7 @@ void DX11Demo::Render(float ElapseTime)
 	pRenderInfo->TickTime = ElapseTime;
 	pRenderInfo->FPS = GetFPS();
 
-
+	//MainRenderDeffer->RenderScene(MainScene, pRenderInfo);
 	MainRender->RenderScene(MainScene, pRenderInfo);
 
 
