@@ -403,8 +403,8 @@ void DX11Demo::Render(float ElapseTime)
 	pRenderInfo->TickTime = ElapseTime;
 	pRenderInfo->FPS = GetFPS();
 
-	//MainRenderDeffer->RenderScene(MainScene, pRenderInfo);
-	MainRender->RenderScene(MainScene, pRenderInfo);
+	MainRenderDeffer->RenderScene(MainScene, pRenderInfo);
+	//MainRender->RenderScene(MainScene, pRenderInfo);
 
 
 	if (bRayCastTrianglePerFrame)

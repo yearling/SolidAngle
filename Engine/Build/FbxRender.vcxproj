@@ -221,6 +221,7 @@
     <ClCompile Include="..\Source\Experimental\Private\YYUTDXManager.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YYUTFont.cpp" />
     <ClCompile Include="..\Source\Experimental\Private\YYUTHelper.cpp" />
+    <ClCompile Include="..\Source\Experimental\Public\FullScreenQuad.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Experimental\Private\Canvas.h" />
@@ -241,6 +242,7 @@
     <ClInclude Include="..\Source\Experimental\Public\FbxSkeletalMeshImportData.h" />
     <ClInclude Include="..\Source\Experimental\Public\forsythtriangleorderoptimizer.h" />
     <ClInclude Include="..\Source\Experimental\Public\ForwardRender.h" />
+    <ClInclude Include="..\Source\Experimental\Public\FullScreenQuad.h" />
     <ClInclude Include="..\Source\Experimental\Public\GPUSkinPublicDefs.h" />
     <ClInclude Include="..\Source\Experimental\Public\IShader.h" />
     <ClInclude Include="..\Source\Experimental\Public\JsonTypeHelper.h" />
@@ -308,6 +310,10 @@
     <None Include="..\Source\Experimental\Private\GPUSkin.hlsl">
       <FileType>Document</FileType>
     </None>
+    <FxCompile Include="..\Source\Experimental\Private\quad.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="..\Source\Experimental\Private\RenderMesh.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

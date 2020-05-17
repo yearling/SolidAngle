@@ -19,6 +19,9 @@
     <FxCompile Include="..\Source\Experimental\Private\StaticMeshDeffer.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
+    <FxCompile Include="..\Source\Experimental\Private\quad.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Experimental\Private\YYUTApplication.cpp">
@@ -194,6 +197,9 @@
     </ClCompile>
     <ClCompile Include="..\Source\Experimental\Private\DeferedRender.cpp">
       <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Experimental\Public\FullScreenQuad.cpp">
+      <Filter>StaticMesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -400,6 +406,9 @@
     </ClInclude>
     <ClInclude Include="..\Source\Experimental\Public\DeferedRender.h">
       <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Experimental\Public\FullScreenQuad.h">
+      <Filter>StaticMesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
