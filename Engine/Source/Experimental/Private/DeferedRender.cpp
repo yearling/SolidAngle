@@ -265,14 +265,14 @@ void YDeferedRender::InitRenders()
 	int32 width = YYUTDXManager::GetInstance().GetBackBufferWidth();
 	int32 height = YYUTDXManager::GetInstance().GetBackBufferHeight();
 	Create2DTextureRTV_SRV(width, height, DXGI_FORMAT_R8G8B8A8_UNORM, DiffuseBuffer, TEXT("Deffer_Base_Color"));
-	Create2DTextureRTV_SRV(width, height, DXGI_FORMAT_R8G8B8A8_UNORM, NormalBuffer, TEXT("Deffer_Normal"));
+	Create2DTextureRTV_SRV(width, height, DXGI_FORMAT_R16G16_UNORM, NormalBuffer, TEXT("Deffer_Normal"));
 	Create2DTextureRTV_SRV(width, height, DXGI_FORMAT_R8G8B8A8_UNORM, MRSBuffer, TEXT("Deffer_MSR"));
 	CreateSRVForTexture2D(DXGI_FORMAT_R8G8B8A8_UNORM, DiffuseBuffer, DiffuseSRV, TEXT("Diffse_SRV"));
-	CreateSRVForTexture2D(DXGI_FORMAT_R8G8B8A8_UNORM, NormalBuffer, NormalSRV, TEXT("Diffse_SRV"));
-	CreateSRVForTexture2D(DXGI_FORMAT_R8G8B8A8_UNORM, MRSBuffer, MSRSRV, TEXT("Diffse_SRV"));
+	CreateSRVForTexture2D(DXGI_FORMAT_R16G16_UNORM, NormalBuffer, NormalSRV, TEXT("Normal_SRV"));
+	CreateSRVForTexture2D(DXGI_FORMAT_R8G8B8A8_UNORM, MRSBuffer, MSRSRV, TEXT("MRS_SRV"));
 	CreateRenderTargetView(DXGI_FORMAT_R8G8B8A8_UNORM, DiffuseBuffer, DiffuseRTV, TEXT("Diffuse_RTV"));
-	CreateRenderTargetView(DXGI_FORMAT_R8G8B8A8_UNORM, NormalBuffer, NormalRTV, TEXT("Diffuse_RTV"));
-	CreateRenderTargetView(DXGI_FORMAT_R8G8B8A8_UNORM, MRSBuffer, MSRRTV, TEXT("Diffuse_RTV"));
+	CreateRenderTargetView(DXGI_FORMAT_R16G16_UNORM, NormalBuffer, NormalRTV, TEXT("Normal_RTV"));
+	CreateRenderTargetView(DXGI_FORMAT_R8G8B8A8_UNORM, MRSBuffer, MSRRTV, TEXT("MRS_RTV"));
 	BasePassRenderPolicy = MakeUnique<YBasePassPolicy>();
 	BasePassRenderPolicy->InitRenderReosurce();
 	

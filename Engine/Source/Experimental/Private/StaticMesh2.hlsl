@@ -77,6 +77,7 @@ float4 PSMain(VS_OUTPUT Input) :SV_Target
 	float4 NormalTextureValue = txNormal.Sample(samLinear, Input.vTexcoord[0]);
 	float3 NormalizedNormal = normalize((NormalTextureValue * 2.0 - 1.0).xyz);
 	float3 NormalInLocal = normalize(mul(NormalizedNormal, Input.TangentToLocal));
+
 	//float3 NormalInLocal = normalize(mul(float3(0, 0, 1), Input.TangentToLocal));
 	float NDL = clamp(dot(NormalInLocal, g_lightDir), pow(0.05, 2.2), 1);
 	float3 FinalColor = Diffuse * NDL;

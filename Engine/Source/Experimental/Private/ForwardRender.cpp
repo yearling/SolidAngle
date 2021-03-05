@@ -94,11 +94,15 @@ public:
 		TComPtr<ID3D11DeviceContext>& dc = YYUTDXManager::GetInstance().GetD3DDC();
 		ID3D11Texture2D* TextureResource = nullptr;
 		ID3D11ShaderResourceView* SRV = nullptr;
-		DirectX::CreateWICTextureFromFile((ID3D11Device*)device, (ID3D11DeviceContext*)dc, TEXT("mirror_nija_no_seam_default_Normal.png"), (ID3D11Resource**)&TextureResource, &SRV, 0);
+        HRESULT hr = S_OK;
+        if (FAILED(hr = DirectX::CreateWICTextureFromFile((ID3D11Device*)device, (ID3D11DeviceContext*)dc, TEXT("Content/mirror_nija_no_seam_pivot/mirror_nija_no_seam_default_Normal.png"), (ID3D11Resource**)&TextureResource, &SRV, 0)))
+        {
+            UE_LOG(LogForwardRender, Error, TEXT("can not find texutre %x"), hr);
+        }
 		NormalTexture.Attach((ID3D11Texture2D*)TextureResource);
 		ShaderResourceViewNormal.Attach(SRV);
 
-		DirectX::CreateWICTextureFromFile((ID3D11Device*)device, (ID3D11DeviceContext*)dc, TEXT("uv.png"), (ID3D11Resource**)&TextureResource, &SRV, 0);
+		DirectX::CreateWICTextureFromFile((ID3D11Device*)device, (ID3D11DeviceContext*)dc, TEXT("Content/mirror_nija_no_seam_pivot/uv.png"), (ID3D11Resource**)&TextureResource, &SRV, 0);
 		DiffuseTexture.Attach((ID3D11Texture2D*)TextureResource);
 		ShaderResourceViewDiffuse.Attach(SRV);
 

@@ -403,8 +403,14 @@ void DX11Demo::Render(float ElapseTime)
 	pRenderInfo->TickTime = ElapseTime;
 	pRenderInfo->FPS = GetFPS();
 
-	MainRenderDeffer->RenderScene(MainScene, pRenderInfo);
-	//MainRender->RenderScene(MainScene, pRenderInfo);
+    if (UseDefferedRender)
+    {
+        MainRenderDeffer->RenderScene(MainScene, pRenderInfo);
+    }
+    else
+    {
+        MainRender->RenderScene(MainScene, pRenderInfo);
+    }
 
 
 	if (bRayCastTrianglePerFrame)
@@ -538,6 +544,11 @@ LRESULT DX11Demo::MyProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 				m_bShowColorLayer = false;
 			}
 			break;
+            case 'U':
+            {
+                UseDefferedRender = !UseDefferedRender;
+                break;
+            }
 			default:
 				break;
 			}

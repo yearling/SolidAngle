@@ -76,7 +76,9 @@ float3 LinearToSrgbBranching(float3 lin)
 float4 PSMain(VS_OUTPUT Input) :SV_Target
 {
 	float4 Diffuse = txDiffuse.Sample(samLinear, Input.vTexcoord[0]);
-	float3 Normal = txNormal.Sample(samLinear, Input.vTexcoord[0]).xyz*2.0 - 1.0;
+	float2 NormalXY = txNormal.Sample(samLinear, Input.vTexcoord[0]).xy*2.0 - 1.0;
+    float3 Normal = float3(NormalXY, 1 - NormalXY.x*NormalXY.x - NormalXY.y*NormalXY.y);
+    Normal = normalize(Normal);
 
 	float NDL = clamp(dot(Normal, g_lightDir), pow(0.05, 2.2), 1);
 	float3 FinalColor = Diffuse * NDL;

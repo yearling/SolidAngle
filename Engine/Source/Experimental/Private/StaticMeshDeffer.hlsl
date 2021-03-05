@@ -73,7 +73,7 @@ float3 LinearToSrgbBranching(float3 lin)
 struct PixelShaderOutput
 {
 	float4 Diffuse				: SV_Target0;			//Color
-	float4 Normal				: SV_Target1;			//Normal map
+	float2 Normal				: SV_Target1;			//Normal map
 	float4 MRS       			: SV_Target2;
 };
 
@@ -83,23 +83,13 @@ PixelShaderOutput PSMain(VS_OUTPUT Input)
 	PixelShaderOutput OutPut;
 
 	float4 Diffuse = txDiffuse.Sample(samLinear, Input.vTexcoord[0]);
-	//Diffuse = pow(Diffuse, 1 / 2.2);
+    //Diffuse = pow(Diffuse, 2.2);
 	float4 NormalTextureValue = txNormal.Sample(samLinear, Input.vTexcoord[0]);
 	float3 NormalizedNormal = normalize((NormalTextureValue * 2.0 - 1.0).xyz);
 	float3 NormalInLocal = normalize(mul(NormalizedNormal, Input.TangentToLocal));
-	//float3 NormalInLocal = normalize(mul(float3(0, 0, 1), Input.TangentToLocal));
-	float NDL = clamp(dot(NormalInLocal, g_lightDir), pow(0.05, 2.2), 1);
-	float3 FinalColor = Diffuse * NDL;
-	float4 FinalColorGarma = float4(FinalColor, 1.0);
-	//float FixColor = 0.5;
-	//float4 FinalColorGarma = float4(FixColor, FixColor, FixColor, 1.0);
-	//FinalColorGarma = pow(FinalColorGarma, 1.0 / 2.2);
-	//FinalColorGarma.xyz = LinearToSrgbBranching(FinalColorGarma.xyz);
-	//FinalColorGarma.w = 1.0;
 	OutPut.Diffuse = Diffuse;
-	OutPut.Normal = float4((NormalInLocal + float3(1.0, 1.0, 1.0))*0.5,1.0);
+
+	OutPut.Normal = float2((NormalInLocal.xy + float2(1.0, 1.0))*0.5);
 	OutPut.MRS = float4(1.0, 0.0, 0.0, 1.0);
 	return OutPut;
-	//float3 NormalInLocalToShow = (NormalInLocal + 1.0)*0.5;
-	//return float4(NormalInLocalToShow, 1.0);
 }

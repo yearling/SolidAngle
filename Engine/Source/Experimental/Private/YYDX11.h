@@ -62,4 +62,5 @@ private:
 	TRefCountPtr<SWorld>	        World;
 	TUniquePtr<IYRenderInterface>    MainRender;
 	TUniquePtr<IYRenderInterface>    MainRenderDeffer;
+    bool                            UseDefferedRender=false;
 };
