@@ -23,7 +23,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	FCommandLine::Set(lpCmdLine);
 	GLogConsole = FPlatformOutputDevices::GetLogConsole();
-	GLogConsole->Show(false);
+	GLogConsole->Show(true);
 	FPlatformOutputDevices::SetupOutputDevices();
 	FPlatformMemory::Init();
 	//FMallocLeakDetection::Get().SetAllocationCollection(true);

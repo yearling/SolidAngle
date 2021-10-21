@@ -189,7 +189,7 @@ void DX11Demo::Initial()
 	//if (FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbx/one_mesh_with_multi_material/box.FBX")))
 	//if (FbxConverter->Init(TEXT("C:/Users/yy/Desktop/fbxtest/nija/mirror_nija_no_seam.FBX")))
 	//FString ImportFilePath = TEXT("C:/Users/yy/Desktop/fbxtest/nija/uv_mirror_plane.FBX");
-	FString ImportFilePath = TEXT("C:/Users/yy/Desktop/fbxtest/nija/mirror_nija_no_seam_pivot.FBX");
+	FString ImportFilePath = TEXT("C:/Users/Administrator/Desktop/fbxtest/nijia/nijia_low.fbx");
 	//FString ImportFilePath = TEXT("C:/Users/yy/Desktop/fbxtest/ball.FBX");
 #define  EMPORT 0
 #if EMPORT
